@@ -44,6 +44,10 @@ from .routes_registry import setup_registry_routes
 
 log = logging.getLogger("cymatix.server")
 
+# Hosts that keep the port same-machine-only. Anything else ("0.0.0.0",
+# "::", a LAN IP, a hostname) exposes the HTTP surface to the network.
+_LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
+
 
 def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
     """Factory -- creates the FastAPI app with a CymatixContextManager."""
@@ -86,6 +90,25 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         log.info(
             "Ribosome cost_class=%s backend=%s model=%s",
             _cost_class, config.ribosome.effective_backend, config.ribosome.active_model,
+        )
+
+    # ---- Exposure startup warning (#351 decision 1) ----
+    # Non-loopback bind + no admin token = the unauthenticated admin
+    # surface (/admin/* incl. shutdown and swap-db) plus /ingest and
+    # /consolidate are reachable by ANYONE on the network. Warning only —
+    # the bind is honored unchanged (no behavior change, no refusal).
+    _bind_host = (config.server.host or "").strip().lower()
+    if _bind_host not in _LOOPBACK_HOSTS and not config.server.admin_token:
+        log.warning(
+            "NETWORK-EXPOSED ADMIN SURFACE: [server] host = %r binds beyond "
+            "loopback while [server] admin_token is empty — /admin/* "
+            "(including /admin/shutdown and /admin/swap-db), /ingest and "
+            "/consolidate accept requests from anyone who can reach this "
+            "port, with no authentication. Set [server] admin_token to "
+            "demand 'Authorization: Bearer <token>' on those routes, or "
+            "bind [server] host back to 127.0.0.1. See "
+            "docs/config-reference.md ([server] security knobs, #351).",
+            config.server.host,
         )
 
     cymatix = CymatixContextManager(config)

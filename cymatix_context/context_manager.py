@@ -3381,7 +3381,8 @@ class CymatixContextManager:
         # (mode, content_hash) for fresh deliveries, or None for elided.
         _delivery_log_map: Dict[str, Optional[Tuple[str, str]]] = {}
 
-        # Opt-in control-tag neutralization (2026-08-08 audit): escape
+        # Control-tag neutralization (2026-08-08 audit; default-on since
+        # 2026-08-19, #351 — receipt-gated flip, see config.py): escape
         # content-sourced "<cymatix:" so a document cannot forge the
         # genuine no-match/slate control tags. The genuine no-match tag
         # is emitted on the parts-empty branch below — never through

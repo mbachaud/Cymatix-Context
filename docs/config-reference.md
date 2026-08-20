@@ -195,7 +195,7 @@ calibration adds a per-classifier override path for `foveated_alpha`
 | `legibility_enabled` | `bool` | `true` | Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line metadata header per document in expressed_context — fired tiers, confidence marker, short gene_id, compression ratio. See cymatix_context/legibility.py. Default on; flip off to restore the pre-Sprint-1 plain-dividers format (useful for bench A/B). |
 | `slate_char_budget` | `int` | `1500` | Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate. Counts the rendered string the model actually sees, INCLUDING the <cymatix:slate>...</cymatix:slate> wrapper, JSON braces, quotes, commas, and per-KV separators. Spec §5 default is 1500. Generic and frontier branches do not consult this knob. |
 | `session_delivery_enabled` | `bool` | `true` | Sprint 2 session working-set register: track delivered documents per session, elide repeats with a pointer stub so the consumer doesn't pay full token cost for content it already holds. Enabled 2026-04-19 (saves ~40% tokens on multi-turn conversations); only fires when the caller supplies a session_id. See session_delivery.py. default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
-| `neutralize_control_tags` | `bool` | `false` | Opt-in control-tag neutralization (2026-08-08 audit). When on, the assembly loop escapes content-sourced "<cymatix:" to "&lt;cymatix:" so a document cannot forge the genuine control tags (<cymatix:no_match/>, <cymatix:slate>) that downstream agents adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine no-match tag is emitted on a separate parts-empty branch and is never escaped. Closes tag-forgery only — general indirect prompt injection via document text remains (inherent to context injection). Default off: byte-identical to pre-knob behavior. |
+| `neutralize_control_tags` | `bool` | `true` | Control-tag neutralization (2026-08-08 audit). When on, the assembly loop escapes content-sourced "<cymatix:" to "&lt;cymatix:" so a document cannot forge the genuine control tags (<cymatix:no_match/>, <cymatix:slate>) that downstream agents adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine no-match tag is emitted on a separate parts-empty branch and is never escaped. Closes tag-forgery only — general indirect prompt injection via document text remains (inherent to context injection). 2026-08-19: default flipped to true (#351 decision 2). The escape runs at ASSEMBLY time (after retrieval/fusion/rank publication), so retrieval metrics are unchangeable by construction; the 141-needle 100k-carve A/B receipt measured the delivered basis AND assembled window bytes identical across arms (141/141 windows byte-identical, genuine abstain tags untouched) — receipt: benchmarks/dogfood/erb/receipts/neutralize_ab_100k.json. Set false to opt out (documents legitimately containing literal "<cymatix:" then ship verbatim). |
 | `abstain_enabled` | `bool` | `true` | NEW — see docs/specs/2026-05-02-abstain-tier-design.md |
 | `foveated_enabled` | `bool` | `false` | Foveated-splice (BROAD tier only). Off by default for the measurement period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the phased α-sweep bench (§9) identifies a winning configuration. |
 | `foveated_alpha` | `float` | `1.0` | Power-law exponent for c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle decay, α=1.0 = harmonic-ish, α=2.0 = aggressive top-bias. |
@@ -212,16 +212,24 @@ calibration adds a per-classifier override path for `foveated_alpha`
 `mode` is **not** a `[budget]` key. The token-vs-cache mode lives under
 `[headroom] mode`; see that section below.
 
-**Security (opt-in, 2026-08-08 audit).** `neutralize_control_tags`
-closes control-tag forgery only: with the flag on, a document whose
-*content* contains `<cymatix:` cannot impersonate the genuine
-`<cymatix:no_match/>` / `<cymatix:slate>` control tags — the assembly
-loop escapes it to `&lt;cymatix:`, while the genuine no-match tag
-(emitted on a separate empty-assembly branch) is never escaped. It does
-NOT address general indirect prompt injection via document text, which
-is inherent to context injection. Downstream agents adopting
+**Security (default-on since 2026-08-19, #351; 2026-08-08 audit).**
+`neutralize_control_tags` closes control-tag forgery only: with the
+flag on (the default), a document whose *content* contains `<cymatix:`
+cannot impersonate the genuine `<cymatix:no_match/>` /
+`<cymatix:slate>` control tags — the assembly loop escapes it to
+`&lt;cymatix:`, while the genuine no-match tag (emitted on a separate
+empty-assembly branch) is never escaped. It does NOT address general
+indirect prompt injection via document text, which is inherent to
+context injection. Downstream agents adopting
 `CYMATIX_NO_MATCH_FRAGMENT` (see `docs/agent-sdk-fragment.md`) should
-treat the tag as trustworthy only when this flag is on.
+treat the tag as trustworthy only when this flag is on. The flip is
+receipt-gated: the escape runs at assembly time (after retrieval /
+fusion / rank publication), and the 141-needle 100k-carve A/B measured
+delivered basis and assembled window bytes identical across arms
+(`benchmarks/dogfood/erb/receipts/neutralize_ab_100k.json`). Opt out
+with `neutralize_control_tags = false` — documents legitimately
+containing the literal `<cymatix:` string then ship verbatim
+(byte-identical to pre-knob behavior).
 
 **Example.**
 
@@ -236,7 +244,7 @@ decoder_mode = "condensed"
 legibility_enabled = true
 slate_char_budget = 1500
 session_delivery_enabled = true
-# neutralize_control_tags = true   # escape content-sourced "<cymatix:" (tag-forgery guard)
+neutralize_control_tags = true    # escape content-sourced "<cymatix:" (tag-forgery guard; default on since 2026-08-19, #351 — set false to opt out)
 abstain_enabled = true
 foveated_enabled = false
 foveated_alpha = 1.0
@@ -394,6 +402,14 @@ untouched configs:
   roots; anything else is rejected 403 before a store is opened. Roots
   on a different drive than the target never match (Windows
   `os.path.commonpath` semantics).
+
+**Startup warning (2026-08-19, #351 decision 1).** When `host` is
+non-loopback (not `127.0.0.1` / `localhost` / `::1`) while
+`admin_token` is empty, the app logs a prominent
+`NETWORK-EXPOSED ADMIN SURFACE` warning at startup: that configuration
+leaves `/admin/*` (including `/admin/shutdown` and `/admin/swap-db`),
+`/ingest` and `/consolidate` reachable by anyone on the network with no
+authentication. Warning only — the bind is honored unchanged.
 
 **Example.**
 

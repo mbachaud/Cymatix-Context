@@ -159,16 +159,24 @@ class BudgetConfig:
     # caller supplies a session_id. See session_delivery.py.
     # default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     session_delivery_enabled: bool = True
-    # Opt-in control-tag neutralization (2026-08-08 audit). When on, the
+    # Control-tag neutralization (2026-08-08 audit). When on, the
     # assembly loop escapes content-sourced "<cymatix:" to "&lt;cymatix:"
     # so a document cannot forge the genuine control tags
     # (<cymatix:no_match/>, <cymatix:slate>) that downstream agents
     # adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine no-match tag
     # is emitted on a separate parts-empty branch and is never escaped.
     # Closes tag-forgery only — general indirect prompt injection via
-    # document text remains (inherent to context injection). Default off:
-    # byte-identical to pre-knob behavior.
-    neutralize_control_tags: bool = False
+    # document text remains (inherent to context injection).
+    # 2026-08-19: default flipped to true (#351 decision 2). The escape
+    # runs at ASSEMBLY time (after retrieval/fusion/rank publication), so
+    # retrieval metrics are unchangeable by construction; the 141-needle
+    # 100k-carve A/B receipt measured the delivered basis AND assembled
+    # window bytes identical across arms (141/141 windows byte-identical,
+    # genuine abstain tags untouched) — receipt:
+    # benchmarks/dogfood/erb/receipts/neutralize_ab_100k.json. Set false
+    # to opt out (documents legitimately containing literal "<cymatix:"
+    # then ship verbatim).
+    neutralize_control_tags: bool = True
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
