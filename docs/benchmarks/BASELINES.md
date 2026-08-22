@@ -5,6 +5,18 @@ invalidations):** compare arms only within their own row; measurement runs
 against a frozen tag, never a moving branch; a receipt without a row here is
 not comparable to anything.
 
+**Ingest-concurrency rule (2026-08-22, from cc-exchange EXP-A):** parallel
+ingest is not bed-equivalent — pool=4 LLM tagging vs pool=1 on a pinned
+corpus changed gene content on 105/150 shared genes and tag multisets on
+86/150 at temp 0 (LLM-batching drift; controls held; cc-exchange
+`results/2026-08-08-expa-parallel-ingest-refutation/`). Therefore: every bed
+named in a campaign row records its **ingest_c** (the concurrency it was
+built at; "unknown" is a legal value for legacy beds and means
+not-comparable-across-beds); cross-bed comparisons require matching
+ingest_c; comparable rebuilds ingest sequentially unless the comparator was
+itself built parallel. Beds built before this rule are ingest_c=1 where the
+build was the stock sequential path and ingest_c=unknown otherwise.
+
 ## Standard bench profile (decision 2026-08-11)
 
 Future testing runs the GPU encoder daemon ON with per-box worker counts.
@@ -55,12 +67,16 @@ from †-rows are not comparable to post-ops measurements.
 
 ## Code pins
 
-Board cards in cc-exchange pin `v0.8.6` -- that is a CODE pin (the tree you
-run), not a campaign row. v0.8.6 is the verified-clean venv on the
-collaborator's box (spark-erb-receipts 0018 item 1). Campaign rows above
-freeze measurement baselines; code pins freeze the tree a card executes. A
-card's receipts cite both: its code pin and, when comparing to a campaign,
-that campaign's row.
+Board cards in cc-exchange cut before 2026-08-22 pin `v0.8.6` -- that is a
+CODE pin (the tree you run), not a campaign row. v0.8.6 is the
+verified-clean venv on the collaborator's box (spark-erb-receipts 0018
+item 1). Cards cut or amended from 2026-08-22 onward pin `v0.9.0`
+(= `55162c6`, the shipped-defaults tree) unless the card says otherwise —
+C1's pin was amended v0.8.6 -> v0.9.0 by thread turn spark-erb-receipts
+0020, and lane D pins v0.9.0 from birth. Campaign rows above freeze
+measurement baselines; code pins freeze the tree a card executes. A card's
+receipts cite both: its code pin and, when comparing to a campaign, that
+campaign's row.
 
 Notes: the terra manifest pins `aef12732` as the frozen implementation
 baseline; the run executes from `9312cde` (tree verified clean,
