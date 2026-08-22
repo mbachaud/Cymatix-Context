@@ -1,2 +1,5 @@
 pre_stage5_responses.jsonl text eol=lf
 _capture_pre_stage5_responses.py text eol=lf
+golden_v090_context.json text eol=lf
+golden_v090_worker_samples.json text eol=lf
+_capture_c1_rank_hash_goldens.py text eol=lf
