@@ -66,11 +66,71 @@ Usage::
     python benchmarks/dogfood/run_server_scaling.py --arm mixed
     python benchmarks/dogfood/run_server_scaling.py --concurrency 1,4 \\
         --limit 3 --rounds 1                                        # smoke
+
+C1 rank-hash instrumentation (issue #339 Phase 0.4)
+---------------------------------------------------
+
+Everything in this section is behind one environment gate,
+``CYMATIX_BENCH_RANK_HASH``. Unset, or set to anything outside
+``1 / true / yes / on`` (case-insensitive, whitespace-stripped), the gate is
+OFF and this receipt is key-for-key what the unpatched harness writes: no
+sample column is added, no level key is added, no payload key is added, and
+no existing field is renamed, reordered, reformatted, or recomputed. The same
+gate name and the same truthy word list drive the server-side capture in
+``cymatix_context.context_manager``, so one flip instruments both halves.
+
+Recipe version ``c1-v3``, two DIFFERENT byte recipes, both sha256 over utf-8
+with the gene ids joined by a single newline, no trailing newline, hex
+lowercase, full 64 characters:
+
+* set recipe, order-free membership: ``sorted(set(ids))`` then join. Used by
+  ``candidate_set_sha256`` only, because pool membership has no order.
+* order recipe, order-preserving, no dedupe, no sort: join as served. Used by
+  ``rank_sha256``, ``rank_citations_sha256`` and ``rank_topk_sha256``.
+
+With the gate ON, each per-query success sample gains eleven columns:
+
+===========================  ==================================================
+``candidate_set_sha256``     echo of the server's ``delivery`` key, set recipe
+                             over the ADMITTED candidate pool
+``candidate_count``          echo of ``delivery["pool_size"]``
+``delivered_count``          echo of ``delivery["delivered_count"]``
+``cap_binding``              echo of ``delivery["cap_binding"]``
+``rank_sha256``              order recipe over ``delivery["delivered_gene_ids"]``
+``rank_citations_sha256``    order recipe over the ids in ``agent.citations``,
+                             PRE-truncation
+``rank_topk_sha256``         order recipe over the k-truncated scored list
+``citations_dropped``        delivered ids with no citation row
+``citations_subsequence``    True iff the citations ids are an order-preserved
+                             subsequence of the delivered ids
+``delivered_gold``           any gold gene present in the delivered ids
+``gold_rank_delivered``      1-based position of the first gold delivered id
+===========================  ==================================================
+
+Delivery is absent on paths that never reach assembly (abstain windows,
+shipped behaviour documented in-tree at
+``cymatix_context/server/routes_context.py``). Those samples degrade to nulls
+on the delivery-derived columns and never raise; the two citations-derived
+hashes stay computable.
+
+Each level record additionally gains ``hash_summary`` (per-needle distinct
+hash counts, missing-delivery counts, subsequence violations, all with the
+recipe version stamped) and the top-level payload gains ``hash_gate``, naming
+the env var, its resolved value and the recipe version.
+
+C1 sweep invocation, the blessed grid::
+
+    CYMATIX_BENCH_RANK_HASH=1 python benchmarks/dogfood/run_server_scaling.py \\
+        --concurrency 1,4,8,16
+
+The shipped ``--concurrency`` default is deliberately NOT changed; the grid is
+a sweep-time argument, not a code default.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -93,6 +153,149 @@ sys.path.insert(0, str(_HERE))
 
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 CANARY_PATH = "/debug/pipeline/recent?limit=1"
+
+BENCH_RANK_HASH_ENV = "CYMATIX_BENCH_RANK_HASH"
+RANK_HASH_RECIPE_VERSION = "c1-v3"
+
+
+# --------------------------------------------------- C1 rank-hash (#339) ----
+
+def _rank_hash_enabled() -> bool:
+    """C1 gate, read at call time. Truthy set matches the server side exactly
+    (cymatix_context.context_manager._env_truthy); unset or anything else is OFF.
+    Duplicated rather than imported because worker processes are stdlib-only."""
+    v = os.environ.get(BENCH_RANK_HASH_ENV)
+    if v is None:
+        return False
+    return v.strip().lower() in ("1", "true", "yes", "on")
+
+
+def _gene_set_sha256(ids) -> str:
+    """Set recipe: sorted unique, '\\n'-joined, utf-8, no trailing newline."""
+    return hashlib.sha256("\n".join(sorted(set(ids))).encode("utf-8")).hexdigest()
+
+
+def _gene_order_sha256(ids) -> str:
+    """Order recipe: as served, no sort, no dedupe, '\\n'-joined, utf-8."""
+    return hashlib.sha256("\n".join(ids).encode("utf-8")).hexdigest()
+
+
+def _is_subsequence(sub: list, full: list) -> bool:
+    """True iff ``sub`` appears inside ``full`` in order (gaps allowed).
+
+    A drop count cannot express an ORDER violation: citations can be complete
+    and still transposed. This is the predicate that catches that case.
+    """
+    it = iter(full)
+    return all(any(x == y for y in it) for x in sub)
+
+
+def _hash_columns(resp0: dict, ordered: list, gold: set) -> dict:
+    """The eleven gated per-sample columns. Pure: no I/O, no globals.
+
+    ``resp0`` is the first element of the /context list envelope, ``ordered``
+    is the k-truncated citation id list the scorer above already built, and
+    ``gold`` is this needle's gold id set. Samples whose response carries no
+    ``delivery`` block (abstain windows) degrade to nulls on the
+    delivery-derived columns and never raise. Citation rows without a
+    ``gene_id`` (which the shipped route never emits) are skipped so a
+    malformed row cannot crash a bench worker mid-level.
+    """
+    resp0 = resp0 or {}
+    delivery = resp0.get("delivery")
+    if not isinstance(delivery, dict):
+        delivery = None
+    citations = (resp0.get("agent") or {}).get("citations") or []
+    cited = [c.get("gene_id") for c in citations]
+    cited = [g for g in cited if isinstance(g, str)]
+    topk = [g for g in (ordered or []) if isinstance(g, str)]
+
+    if delivery is None:
+        delivered = None
+        rank_sha = None
+        dropped = None
+        subsequence = None
+        delivered_gold = None
+        gold_rank = None
+    else:
+        delivered = [g for g in (delivery.get("delivered_gene_ids") or [])
+                     if isinstance(g, str)]
+        rank_sha = _gene_order_sha256(delivered)
+        cited_set = set(cited)
+        dropped = sum(1 for g in delivered if g not in cited_set)
+        subsequence = _is_subsequence(cited, delivered)
+        delivered_gold = any(g in gold for g in delivered)
+        gold_rank = next(
+            (i for i, g in enumerate(delivered, 1) if g in gold), None)
+
+    return {
+        "candidate_set_sha256": (
+            delivery.get("candidate_set_sha256") if delivery else None),
+        "candidate_count": delivery.get("pool_size") if delivery else None,
+        "delivered_count": delivery.get("delivered_count") if delivery else None,
+        "cap_binding": delivery.get("cap_binding") if delivery else None,
+        "rank_sha256": rank_sha,
+        "rank_citations_sha256": _gene_order_sha256(cited),
+        "rank_topk_sha256": _gene_order_sha256(topk),
+        "citations_dropped": dropped,
+        "citations_subsequence": subsequence,
+        "delivered_gold": delivered_gold,
+        "gold_rank_delivered": gold_rank,
+    }
+
+
+def _hash_summary(workers: list) -> dict:
+    """Level-record aggregate over whatever worker set it is handed.
+
+    Nothing here is level-aware, so the sweep grid can change without a code
+    change. Distinct counts ignore nulls; ``per_needle`` keys are emitted in
+    sorted order so the receipt is stable across runs.
+    """
+    per_needle: dict = {}
+    with_delivery = 0
+    missing_delivery = 0
+    violations = 0
+    for w in workers or []:
+        for s in (w.get("samples") or []):
+            if "rank_topk_sha256" not in s:
+                continue
+            nd = per_needle.setdefault(s.get("needle"), {
+                "n": 0,
+                "candidate_set": set(),
+                "rank": set(),
+                "rank_topk": set(),
+                "missing_delivery": 0,
+            })
+            nd["n"] += 1
+            if s.get("rank_sha256") is None:
+                missing_delivery += 1
+                nd["missing_delivery"] += 1
+            else:
+                with_delivery += 1
+            if s.get("citations_subsequence") is False:
+                violations += 1
+            for bucket, column in (("candidate_set", "candidate_set_sha256"),
+                                   ("rank", "rank_sha256"),
+                                   ("rank_topk", "rank_topk_sha256")):
+                value = s.get(column)
+                if value is not None:
+                    nd[bucket].add(value)
+    return {
+        "recipe_version": RANK_HASH_RECIPE_VERSION,
+        "samples_with_delivery": with_delivery,
+        "samples_missing_delivery": missing_delivery,
+        "subsequence_violations": violations,
+        "per_needle": {
+            name: {
+                "n": v["n"],
+                "distinct_candidate_set": len(v["candidate_set"]),
+                "distinct_rank": len(v["rank"]),
+                "distinct_rank_topk": len(v["rank_topk"]),
+                "missing_delivery": v["missing_delivery"],
+            }
+            for name, v in sorted(per_needle.items(), key=lambda kv: str(kv[0]))
+        },
+    }
 
 
 # ------------------------------------------------------------------ http ----
@@ -191,6 +394,8 @@ def worker_main(args: argparse.Namespace) -> int:
             samples.append({"needle": nd["name"], "round": rnd,
                             "latency_ms": round(latency_ms, 1), "rank": rank,
                             "status": 200})
+            if _rank_hash_enabled():
+                samples[-1].update(_hash_columns(resp0, ordered, gold))
     t_end = time.time()
 
     Path(args.worker_out).write_text(json.dumps({
@@ -532,6 +737,9 @@ def _run_level(concurrency: int, args: argparse.Namespace, run_dir: Path,
             ),
         }
 
+    if _rank_hash_enabled():
+        level["hash_summary"] = _hash_summary(workers)
+
     return level
 
 
@@ -714,6 +922,9 @@ def main() -> int:
         "scaling_vs_c1": scaling,
         "worker_logs": str(run_dir),
     }
+    if _rank_hash_enabled():
+        payload["hash_gate"] = {"env": BENCH_RANK_HASH_ENV, "value": "1",
+                                "recipe_version": RANK_HASH_RECIPE_VERSION}
     out = REPO_ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
