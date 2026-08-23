@@ -555,6 +555,24 @@ def _env_truthy(name: str) -> bool:
     return v.strip().lower() in ("1", "true", "yes", "on")
 
 
+#: C1 rank-hash instrumentation (issue #339 Phase 0.4). One env gate for the
+#: server capture and the bench harness both; unset or any non-truthy value is
+#: OFF, which is the shipped behaviour. Read at call time via ``_env_truthy``
+#: so a test can flip it after import.
+BENCH_RANK_HASH_ENV = "CYMATIX_BENCH_RANK_HASH"
+
+#: Byte-recipe version for the C1 hashes. Bump if the recipe ever changes.
+BENCH_RANK_HASH_RECIPE = "c1-v3"
+
+
+def _gene_set_sha256(gene_ids) -> str:
+    """sha256 over the SORTED UNIQUE gene ids, '\\n'-joined, utf-8, no trailing
+    newline, hex lowercase. Order-free set membership, recipe ``c1-v3``."""
+    return hashlib.sha256(
+        "\n".join(sorted(set(gene_ids))).encode("utf-8")
+    ).hexdigest()
+
+
 def _compute_foveated_caps(
     n: int,
     alpha: float,
@@ -2138,6 +2156,14 @@ class CymatixContextManager:
         # trim fired). Read below when the window's delivery-visibility
         # block decides cap_binding.
         _applied_assembly_cap: Optional[int] = None
+        # C1 (issue #339 Phase 0.4), env-gated, default OFF: pool MEMBERSHIP at
+        # the admission choke point. Captured HERE, before any assembly cap
+        # trims ``candidates`` below, so the hash describes exactly the set that
+        # ``pool_size`` counts. Nothing is added to the response unless the gate
+        # is on; see the delivery-visibility writer below.
+        _candidate_set_sha256: Optional[str] = None
+        if _env_truthy(BENCH_RANK_HASH_ENV):
+            _candidate_set_sha256 = _gene_set_sha256(g.gene_id for g in candidates)
         _classifier_cap = (
             classifier_result.assembly_max_genes_cap
             if classifier_result is not None and classifier_result.assembly_max_genes_cap is not None
@@ -2402,6 +2428,8 @@ class CymatixContextManager:
                 "delivered_gene_ids": _delivered_ids,
                 "cap_binding": _cap_binding,
             }
+            if _candidate_set_sha256 is not None:
+                window.metadata["delivery"]["candidate_set_sha256"] = _candidate_set_sha256
 
         # Touch retrieved documents (update signals).
         # Read-only contract (Stage 1): clean=true ⇒ read_only=True ⇒ skip
