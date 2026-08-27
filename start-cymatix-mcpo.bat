@@ -16,25 +16,10 @@ REM
 REM To customize: copy to start-cymatix-mcpo.local.bat (gitignored) and
 REM edit there — port, agent identity, log verbosity.
 REM
-REM CYMATIX_* is the canonical env prefix since 0.8.0; the package
-REM mirrors each CYMATIX_X to CYMATIX_X at import. The block below also
-REM adopts any CYMATIX_X already set in your shell, so old-prefix
-REM deployments keep working unchanged.
+REM Environment variables use the canonical CYMATIX_* prefix.
 REM ─────────────────────────────────────────────────────────────────
 
 cd /d "%~dp0"
-
-REM ── Adopt old-prefix env vars if the new ones aren't set ────────
-if not defined CYMATIX_MCPO_PORT   if defined CYMATIX_MCPO_PORT   set "CYMATIX_MCPO_PORT=%CYMATIX_MCPO_PORT%"
-if not defined CYMATIX_MCP_URL    if defined CYMATIX_MCP_URL    set "CYMATIX_MCP_URL=%CYMATIX_MCP_URL%"
-if not defined CYMATIX_ORG        if defined CYMATIX_ORG        set "CYMATIX_ORG=%CYMATIX_ORG%"
-if not defined CYMATIX_PARTY_ID   if defined CYMATIX_PARTY_ID   set "CYMATIX_PARTY_ID=%CYMATIX_PARTY_ID%"
-if not defined CYMATIX_DEVICE     if defined CYMATIX_DEVICE     set "CYMATIX_DEVICE=%CYMATIX_DEVICE%"
-if not defined CYMATIX_USER       if defined CYMATIX_USER       set "CYMATIX_USER=%CYMATIX_USER%"
-if not defined CYMATIX_AGENT      if defined CYMATIX_AGENT      set "CYMATIX_AGENT=%CYMATIX_AGENT%"
-if not defined CYMATIX_AGENT_KIND if defined CYMATIX_AGENT_KIND set "CYMATIX_AGENT_KIND=%CYMATIX_AGENT_KIND%"
-if not defined CYMATIX_MCP_HANDLE if defined CYMATIX_MCP_HANDLE set "CYMATIX_MCP_HANDLE=%CYMATIX_MCP_HANDLE%"
-if not defined CYMATIX_MCP_HOST   if defined CYMATIX_MCP_HOST   set "CYMATIX_MCP_HOST=%CYMATIX_MCP_HOST%"
 
 REM ── mcpo port (Open WebUI registers this as an OpenAPI server) ──
 if "%CYMATIX_MCPO_PORT%"=="" set CYMATIX_MCPO_PORT=8788
@@ -73,7 +58,4 @@ goto wait_cymatix
 echo [mcpo] cymatix is up. Launching mcpo on :%CYMATIX_MCPO_PORT% as agent=%CYMATIX_AGENT%
 
 REM ── Launch mcpo wrapping the stdio cymatix MCP ──────────────────
-REM mcpo re-execs the inner command on every restart; env vars above
-REM propagate to the child python process (the CYMATIX_->CYMATIX_ mirror
-REM runs inside that process at package import).
 mcpo --port %CYMATIX_MCPO_PORT% -- python -m cymatix_context.mcp_server

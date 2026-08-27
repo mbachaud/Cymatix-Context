@@ -4,15 +4,14 @@
 [cymatix-context](https://pypi.org/project/cymatix-context/) in v0.8.0
 (July 2026).**
 
-`pip install helix-context` now installs `cymatix-context`, which includes:
+`pip install helix-context` only installs `cymatix-context`; it contains no
+code, packages, or entry points of its own. Current Cymatix (0.8.5 and later)
+does not provide the removed aliases:
 
-- the `helix_context` import shim — old imports keep working and emit a
-  `DeprecationWarning`;
-- the deprecated `helix` / `helix-server` / `helix-launcher` /
-  `helix-status` / `helix-vault` console-script aliases;
-- `HELIX_*` environment variables honored alongside the canonical
-  `CYMATIX_*` names;
-- `helix.toml` still loading as a config fallback.
+- the `helix_context` import;
+- the `helix*` console-script names;
+- `HELIX_*` environment variables; or
+- the `helix.toml` configuration name.
 
 Migrate by switching to `pip install cymatix-context` and the `cymatix*`
 names. The knowledge-store format is unchanged — no re-ingest needed.

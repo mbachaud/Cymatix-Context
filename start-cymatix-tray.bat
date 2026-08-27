@@ -10,9 +10,7 @@ REM
 REM To customize: edit this file or create start-cymatix-tray.local.bat
 REM (gitignored) alongside it and invoke via cmd /k.
 REM
-REM CYMATIX_* is the canonical env prefix since 0.8.0; the package
-REM mirrors each CYMATIX_X to CYMATIX_X at import, and an explicit
-REM CYMATIX_X already set in your shell wins over the mirror.
+REM Environment variables use the canonical CYMATIX_* prefix.
 REM ─────────────────────────────────────────────────────────────────
 
 cd /d "%~dp0"
@@ -44,7 +42,6 @@ REM ── 4-layer federation attribution (edit to your handle) ─────�
 REM CYMATIX_AGENT is the persona writing genes. If unset, ingests tag
 REM as "manual / no AI persona involved." Set per shell/shortcut for
 REM per-persona tagging (Laude/Taude/Raude each pin their own .bat).
-if not defined CYMATIX_USER if defined CYMATIX_USER set "CYMATIX_USER=%CYMATIX_USER%"
 if not defined CYMATIX_USER set "CYMATIX_USER=max"
 REM set "CYMATIX_AGENT=raude"   REM uncomment + edit if you want persona tagging
 
