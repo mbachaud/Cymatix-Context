@@ -55,8 +55,8 @@ embeddings = ["numpy", "sentence-transformers"]
 # separate artifact that pip never pulls in (#313).
 cpu = ["spacy>=3.8"]
 # MCP SDK — required for `python -m cymatix_context.mcp_server` (Claude Code,
-# Cursor, Claude Desktop integration). Core install does NOT pull this;
-# add the extra if you're a MCP host operator.
+# Codex, Gemini CLI, and Antigravity integration). Core install does NOT pull
+# this; add the extra if you are an MCP host operator.
 mcp = ["mcp>=2,<3"]
 # NLI / DeBERTa cross-encoder backends — only needed when
 # `[ribosome] backend = "deberta"` or relation-graph NLI is enabled.

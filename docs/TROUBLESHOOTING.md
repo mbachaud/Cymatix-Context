@@ -15,11 +15,18 @@ land on the right section in a single hop.
 > launcher UI port is `11438`. Both are configurable in `cymatix.toml`
 > under `[server]` and via `--port` on the launcher CLI.
 
+For host-native MCP setup and status semantics, see the [`cymatix-context`
+overview](clients/cymatix-context.md) and the [Claude Code](clients/claude-code.md),
+[Codex](clients/codex.md), [Gemini CLI](clients/gemini-cli.md), and
+[Antigravity](clients/antigravity.md) guides. Direct MCP does not require the
+model proxy or tray. A healthy headless backend remains available when tray
+dependencies are not installed.
+
 ---
 
 ## Server will not start: port 11437 is already in use
 
-**Symptom.** `python -m uvicorn cymatix_context.server:app --port 11437`
+**Symptom.** `python -m uvicorn cymatix_context._asgi:app --port 11437`
 exits with `OSError: [Errno 98] Address already in use` (POSIX) or
 `OSError: [WinError 10048] Only one usage of each socket address ...`
 (Windows). The launcher variant raises:
@@ -69,7 +76,7 @@ dev script, a different Python venv) can only be cleared manually.
 
 4. Restart cymatix:
    ```bash
-   python -m uvicorn cymatix_context.server:app --host 127.0.0.1 --port 11537
+   python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11537
    ```
 
 **Verify.** From a second shell:
@@ -92,7 +99,7 @@ shutdown at `cymatix_context/server.py:679-743` runs.
 ## Server will not start: missing extras
 
 **Symptom.** `pip install -e .` succeeds but `python -m uvicorn
-cymatix_context.server:app` fails on import with one of:
+cymatix_context._asgi:app` fails on import with one of:
 
 ```
 ImportError: No module named 'sentence_transformers'
@@ -355,8 +362,9 @@ importable in the active Python environment.
 
 **Prevention.** If the tray is core to your workflow, document the
 GNOME extension prerequisite alongside the install instructions.
-Headless servers do not need the tray — drop `--tray` and run the
-launcher in dashboard-only mode.
+The `launcher-tray` extra is required for the tray UI. Headless servers do not
+need it: start the backend with
+`python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437`.
 
 ---
 
