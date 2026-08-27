@@ -29,14 +29,18 @@ PKG_ROOT = REPO_ROOT / "cymatix_context"
 # Keep the active-surface walk deterministic and deliberately narrow.  Historical
 # records, benchmark receipts, and the metadata-only redirect are covered by
 # their own contracts and must not be swept into this lint.
-ACTIVE_DOCS = (
-    REPO_ROOT / "README.md",
-    REPO_ROOT / "CLAUDE.md",
-    REPO_ROOT / "docs/SETUP.md",
-    REPO_ROOT / "docs/TROUBLESHOOTING.md",
-    *sorted((REPO_ROOT / "docs/clients").glob("*.md")),
-    *sorted((REPO_ROOT / "docs/api").rglob("*.md")),
-    *sorted((REPO_ROOT / "docs/ops").rglob("*.md")),
+ACTIVE_DOCS = tuple(
+    path
+    for path in (
+        REPO_ROOT / "README.md",
+        REPO_ROOT / "CLAUDE.md",
+        REPO_ROOT / "docs/SETUP.md",
+        REPO_ROOT / "docs/TROUBLESHOOTING.md",
+        *sorted((REPO_ROOT / "docs/clients").glob("*.md")),
+        *sorted((REPO_ROOT / "docs/api").rglob("*.md")),
+        *sorted((REPO_ROOT / "docs/ops").rglob("*.md")),
+    )
+    if path.is_file()
 )
 ACTIVE_SCRIPTS = tuple(
     path
@@ -44,6 +48,7 @@ ACTIVE_SCRIPTS = tuple(
     for suffix in ("*.bat", "*.ps1", "*.sh")
     for path in sorted(root.glob(suffix) if root == REPO_ROOT else root.rglob(suffix))
     if path.is_file()
+    and "deploy/pypi-tombstone/" not in path.relative_to(REPO_ROOT).as_posix()
 )
 ACTIVE_SKILLS = tuple(
     path for path in sorted((REPO_ROOT / "skills").rglob("*")) if path.is_file()
@@ -334,5 +339,12 @@ def test_pypi_tombstone_is_a_metadata_only_cymatix_redirect():
 
     prose = (tombstone / "README.md").read_text(encoding="utf-8").lower()
     assert "current cymatix" in prose and "does not provide" in prose
+    for contradiction in (
+        "shim",
+        "keep working",
+        "honored alongside",
+        "still loading",
+    ):
+        assert contradiction not in prose
     for removed_alias in ("helix_context", "helix*", "helix_*", "helix.toml"):
         assert removed_alias in prose

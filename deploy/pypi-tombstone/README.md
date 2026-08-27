@@ -20,9 +20,9 @@ names. The knowledge-store format is unchanged — no re-ingest needed.
 
 ## Publishing this tombstone (maintainer notes)
 
-This directory builds a metadata-only distribution — no packages ship
-(the real `helix_context` shim comes from cymatix-context's wheel; a
-second copy here would collide on install).
+This directory builds a metadata-only distribution — no packages, modules, or
+compatibility aliases ship here (a second implementation would collide on
+install).
 
 ```bash
 cd deploy/pypi-tombstone
