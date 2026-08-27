@@ -32,7 +32,7 @@ REM Change to your own party id (operator's preferred stable identifier).
 if not defined CYMATIX_PARTY_ID set "CYMATIX_PARTY_ID=%COMPUTERNAME%"
 if not defined CYMATIX_DEVICE set "CYMATIX_DEVICE=%COMPUTERNAME%"
 if "%CYMATIX_AGENT_KIND%"=="" set CYMATIX_AGENT_KIND=ollama-chat
-if "%CYMATIX_MCP_HANDLE%"=="" set CYMATIX_MCP_HANDLE=%CYMATIX_AGENT%
+if not defined CYMATIX_MCP_HANDLE if defined CYMATIX_AGENT set "CYMATIX_MCP_HANDLE=%CYMATIX_AGENT%"
 if "%CYMATIX_MCP_HOST%"==""   set CYMATIX_MCP_HOST=ollama-chat
 
 REM ── Wait for cymatix :11437 to answer /health (up to ~60s) ──────

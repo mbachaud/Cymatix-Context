@@ -359,6 +359,38 @@ def test_active_scripts_have_no_fixed_identity_defaults():
     )
 
 
+def test_mcpo_handle_fallback_branches_and_runtime_contracts():
+    """MCPO handle fallback must preserve identity and launch/headroom contracts."""
+    mcpo = (REPO_ROOT / "start-cymatix-mcpo.bat").read_text(encoding="utf-8")
+    fallback = (
+        'if not defined CYMATIX_MCP_HANDLE if defined CYMATIX_AGENT '
+        'set "CYMATIX_MCP_HANDLE=%CYMATIX_AGENT%"'
+    )
+    assert fallback in mcpo
+    assert 'set CYMATIX_MCP_HANDLE=%CYMATIX_AGENT%' not in mcpo
+
+    def resolve_handle(existing: str | None, agent: str | None) -> str | None:
+        if existing:
+            return existing
+        if agent:
+            return agent
+        return None
+
+    assert resolve_handle("operator-handle", "agent-handle") == "operator-handle"
+    assert resolve_handle(None, "agent-handle") == "agent-handle"
+    assert resolve_handle(None, None) is None
+
+    assert 'if "%CYMATIX_MCPO_PORT%"=="" set CYMATIX_MCPO_PORT=8788' in mcpo
+    assert "mcpo --port %CYMATIX_MCPO_PORT% -- python -m cymatix_context.mcp_server" in mcpo
+    tray = (REPO_ROOT / "start-cymatix-tray.bat").read_text(encoding="utf-8")
+    for headroom_default in (
+        'set "CYMATIX_HEADROOM_ENABLED=1"',
+        'set "CYMATIX_HEADROOM_AUTOSTART=1"',
+        'set "CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1"',
+    ):
+        assert headroom_default in tray
+
+
 def test_pypi_tombstone_is_a_metadata_only_cymatix_redirect():
     tombstone = REPO_ROOT / "deploy/pypi-tombstone"
     metadata = tomllib.loads((tombstone / "pyproject.toml").read_text(encoding="utf-8"))
