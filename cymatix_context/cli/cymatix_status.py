@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from collections.abc import Mapping
 from dataclasses import dataclass
+import ipaddress
 import json
 import logging
 import os
@@ -34,6 +35,8 @@ log = logging.getLogger(__name__)
 
 DEFAULT_SERVER_URL = os.environ.get("CYMATIX_STATUS_URL", "http://127.0.0.1:11437").rstrip("/")
 DEFAULT_LAUNCHER_URL = os.environ.get("CYMATIX_LAUNCHER_URL", "http://127.0.0.1:11438").rstrip("/")
+MAX_STATUS_RESPONSE_BYTES = 64 * 1024
+_MAX_STATUS_URL_LENGTH = 2048
 
 _DEFAULT_STATUS_TIMEOUT_S = 10.0
 try:
@@ -81,8 +84,152 @@ class McpLiveReport:
     reason: str | None
 
 
+@dataclass(frozen=True)
+class ValidatedStatusUrl:
+    """A structurally safe HTTP(S) base URL, never resolved for trust."""
+
+    request_url: str
+    reported_url: str
+    hostname: str
+
+
+@dataclass(frozen=True)
+class ProbeTarget:
+    """One safe status target or an explanation for a deliberate non-probe."""
+
+    request_url: str | None
+    reported_url: str
+    reason: str | None
+    action: str | None
+
+
 def _bounded_text(value: object, limit: int = 500) -> str:
     return str(value)[:limit]
+
+
+def _reported_url(value: object) -> str:
+    """Render a URL without userinfo, query, or fragment, even when invalid."""
+
+    if not isinstance(value, str) or len(value) > _MAX_STATUS_URL_LENGTH:
+        return "<invalid URL>"
+    try:
+        split = urlsplit(value)
+        hostname = split.hostname
+        port = split.port
+    except (TypeError, ValueError):
+        return "<invalid URL>"
+    if not split.scheme or not hostname:
+        return "<invalid URL>"
+    host = hostname
+    if ":" in host and not host.startswith("["):
+        host = f"[{host}]"
+    netloc = f"{host}:{port}" if port is not None else host
+    return urlunsplit((split.scheme.lower(), netloc, split.path, "", ""))
+
+
+def _validate_status_base_url(value: object) -> tuple[ValidatedStatusUrl | None, str | None]:
+    """Accept only absolute HTTP(S) base URLs with no secret-bearing parts."""
+
+    if not isinstance(value, str) or not value:
+        return None, "URL must be a nonempty absolute HTTP(S) URL."
+    if len(value) > _MAX_STATUS_URL_LENGTH:
+        return None, "URL exceeds the status probe length limit."
+    if any(ord(char) <= 0x20 or ord(char) == 0x7F for char in value):
+        return None, "URL contains whitespace or a control character."
+    try:
+        split = urlsplit(value)
+        hostname = split.hostname
+        _port = split.port
+    except (TypeError, ValueError):
+        return None, "URL is malformed."
+    if split.scheme.lower() not in {"http", "https"} or not hostname:
+        return None, "URL must use HTTP(S) and include a hostname."
+    if split.username is not None or split.password is not None or "@" in split.netloc:
+        return None, "URL must not include userinfo."
+    if split.query or split.fragment or "?" in value or "#" in value:
+        return None, "URL must not include a query or fragment."
+    return (
+        ValidatedStatusUrl(
+            request_url=value.rstrip("/"),
+            reported_url=_reported_url(value),
+            hostname=hostname,
+        ),
+        None,
+    )
+
+
+def _is_loopback_hostname(hostname: str) -> bool:
+    """Recognize local names/IPs without DNS or platform-specific resolution."""
+
+    normalized = hostname.lower().rstrip(".")
+    if normalized == "localhost":
+        return True
+    try:
+        address = ipaddress.ip_address(normalized)
+    except ValueError:
+        return False
+    mapped = getattr(address, "ipv4_mapped", None)
+    return address.is_loopback or (mapped is not None and mapped.is_loopback)
+
+
+def _refused_target(*, reported_url: str, reason: str, action: str) -> ProbeTarget:
+    return ProbeTarget(
+        request_url=None,
+        reported_url=reported_url,
+        reason=_bounded_text(f"Status probe was not probed: {reason}"),
+        action=action,
+    )
+
+
+def _select_server_target(
+    *, explicit_url: str | None, configured_url: str | None
+) -> ProbeTarget:
+    """Prefer a validated explicit target; implicit targets must be loopback."""
+
+    if explicit_url is not None:
+        validated, error = _validate_status_base_url(explicit_url)
+        if validated is None:
+            return _refused_target(
+                reported_url=_reported_url(explicit_url),
+                reason=error or "URL is invalid.",
+                action="Pass a valid absolute HTTP(S) --server-url without credentials, query, or fragment.",
+            )
+        return ProbeTarget(validated.request_url, validated.reported_url, None, None)
+
+    automatic_url = configured_url if configured_url is not None else DEFAULT_SERVER_URL
+    source = "Configured MCP server URL" if configured_url is not None else "Automatic server URL"
+    validated, error = _validate_status_base_url(automatic_url)
+    if validated is None:
+        return _refused_target(
+            reported_url=_reported_url(automatic_url),
+            reason=error or "URL is invalid.",
+            action="Pass a valid absolute HTTP(S) --server-url without credentials, query, or fragment.",
+        )
+    if not _is_loopback_hostname(validated.hostname):
+        return _refused_target(
+            reported_url=validated.reported_url,
+            reason=f"{source} is not loopback.",
+            action=(
+                f"{source} is not loopback; pass --server-url explicitly "
+                "to opt in to remote status probing."
+            ),
+        )
+    return ProbeTarget(validated.request_url, validated.reported_url, None, None)
+
+
+def _select_launcher_target(launcher_url: str | None) -> ProbeTarget | None:
+    """Validate launcher input before requesting it; launcher has no readiness role."""
+
+    if launcher_url is None:
+        return None
+    validated, error = _validate_status_base_url(launcher_url)
+    if validated is None:
+        return _refused_target(
+            reported_url=_reported_url(launcher_url),
+            reason=error or "URL is invalid.",
+            action="Pass a valid absolute HTTP(S) --launcher-url without credentials, query, or fragment.",
+        )
+    return ProbeTarget(validated.request_url, validated.reported_url, None, None)
 
 
 def _parse_json_mapping(body: bytes) -> tuple[Mapping[str, Any] | None, str | None]:
@@ -96,25 +243,39 @@ def _parse_json_mapping(body: bytes) -> tuple[Mapping[str, Any] | None, str | No
     return parsed, None
 
 
+def _read_bounded_status_body(response: Any, *, url: str) -> tuple[bytes | None, str | None]:
+    """Read at most one bounded response body and retain no unbounded content."""
+
+    try:
+        body = response.read(MAX_STATUS_RESPONSE_BYTES + 1)
+    except Exception as exc:
+        log.warning("Could not read status response body for %s: %s", url, exc, exc_info=True)
+        return None, _bounded_text(exc)
+    if not isinstance(body, bytes):
+        return None, "Status response body is not bytes."
+    if len(body) > MAX_STATUS_RESPONSE_BYTES:
+        log.warning("Status response body exceeded %d bytes for %s", MAX_STATUS_RESPONSE_BYTES, url)
+        return None, f"Status response exceeds {MAX_STATUS_RESPONSE_BYTES} byte limit."
+    return body, None
+
+
 def _probe_json(url: str, timeout_s: float = DEFAULT_STATUS_TIMEOUT_S) -> ProbeResult:
     """Probe a JSON endpoint without treating HTTP status as transport failure."""
 
     try:
         with urllib.request.urlopen(url, timeout=timeout_s) as response:
-            payload, parse_error = _parse_json_mapping(response.read())
+            body, body_error = _read_bounded_status_body(response, url=url)
+        if body_error is not None:
+            return ProbeResult("reachable", None, body_error, None)
+        assert body is not None
+        payload, parse_error = _parse_json_mapping(body)
         return ProbeResult("reachable", payload, parse_error, None)
     except urllib.error.HTTPError as exc:
-        try:
-            body = exc.read(500)
-            payload, parse_error = _parse_json_mapping(body)
-        except Exception as body_exc:
-            log.warning(
-                "Could not read status probe error body for %s: %s",
-                url,
-                body_exc,
-                exc_info=True,
-            )
-            payload, parse_error = None, _bounded_text(body_exc)
+        body, body_error = _read_bounded_status_body(exc, url=url)
+        if body_error is not None:
+            return ProbeResult("reachable", None, body_error, f"HTTP {exc.code}")
+        assert body is not None
+        payload, parse_error = _parse_json_mapping(body)
         return ProbeResult("reachable", payload, parse_error, f"HTTP {exc.code}")
     except urllib.error.URLError as exc:
         return ProbeResult("unreachable", None, None, _bounded_text(exc.reason))
@@ -236,14 +397,6 @@ def determine_mcp_live(
     return McpLiveReport("disconnected", registry_url, None)
 
 
-def _reported_server_url(url: str) -> str:
-    """Remove credentials and request-only pieces before displaying a server URL."""
-
-    split = urlsplit(url)
-    netloc = split.netloc.rsplit("@", 1)[-1]
-    return urlunsplit((split.scheme, netloc, split.path, "", ""))
-
-
 def _select_host(
     *,
     host: str,
@@ -306,6 +459,7 @@ def _next_action(
     health: Literal["healthy", "unhealthy", "unknown"],
     skill: SkillReport,
     live: McpLiveReport,
+    target_action: str | None = None,
 ) -> str:
     if selection == "unknown":
         return "Pass --host or add one canonical cymatix-context MCP entry."
@@ -313,6 +467,8 @@ def _next_action(
         return "Multiple host configs contain cymatix-context; pass --host explicitly."
     if configuration != "canonical":
         return "Add or repair the canonical cymatix-context MCP entry for this host."
+    if target_action is not None:
+        return target_action
     if mcp_activation == "disabled":
         return "Enable the cymatix-context MCP entry in the selected host config."
     if mcp_activation == "unknown":
@@ -353,19 +509,28 @@ def collect_status(
         home=home,
     )
 
-    effective_server_url = (
-        parsed.configured_url if parsed is not None and parsed.configured_url else server_url or DEFAULT_SERVER_URL
+    server_target = _select_server_target(
+        explicit_url=server_url,
+        configured_url=parsed.configured_url if parsed is not None else None,
     )
-    reported_server_url = _reported_server_url(effective_server_url)
-    server_probe = _probe_json(f"{effective_server_url.rstrip('/')}/health")
+    server_probe = (
+        _probe_json(f"{server_target.request_url.rstrip('/')}/health")
+        if server_target.request_url is not None
+        else ProbeResult("unreachable", None, None, server_target.reason)
+    )
     server_report = map_server_health(
         server_probe,
-        url=reported_server_url,
+        url=server_target.reported_url,
     )
+    launcher_target = _select_launcher_target(launcher_url)
     launcher_probe = (
         None
-        if launcher_url is None
-        else _probe_json(f"{launcher_url.rstrip('/')}/api/state")
+        if launcher_target is None
+        else (
+            _probe_json(f"{launcher_target.request_url.rstrip('/')}/api/state")
+            if launcher_target.request_url is not None
+            else ProbeResult("unreachable", None, None, launcher_target.reason)
+        )
     )
     launcher_state = map_launcher_state(launcher_probe)
 
@@ -385,7 +550,10 @@ def collect_status(
                 "inspected_paths": [str(path) for path in inspected_paths],
             },
             "server": _server_dict(server_report),
-            "launcher": {"url": launcher_url, "state": launcher_state},
+            "launcher": {
+                "url": launcher_target.reported_url if launcher_target is not None else None,
+                "state": launcher_state,
+            },
             "mcp": {
                 "configuration": configuration,
                 "activation": "unknown",
@@ -408,14 +576,30 @@ def collect_status(
                 health=server_report.health,
                 skill=unknown_skill,
                 live=live,
+                target_action=server_target.action,
             ),
         }
 
-    registry_url = f"{effective_server_url.rstrip('/')}/sessions?status=active"
-    if parsed.handle and parsed.handle.strip() and parsed.mcp_host and parsed.mcp_host.strip():
+    registry_url = (
+        f"{server_target.request_url.rstrip('/')}/sessions?status=active"
+        if server_target.request_url is not None
+        else ""
+    )
+    if (
+        server_target.request_url is not None
+        and parsed.handle
+        and parsed.handle.strip()
+        and parsed.mcp_host
+        and parsed.mcp_host.strip()
+    ):
         registry = _probe_json(registry_url)
     else:
-        registry = ProbeResult("unreachable", None, None, "No configured MCP identity.")
+        registry = ProbeResult(
+            "unreachable",
+            None,
+            None,
+            server_target.reason or "No configured MCP identity.",
+        )
     live = determine_mcp_live(
         handle=parsed.handle,
         configured_host=parsed.mcp_host,
@@ -442,7 +626,10 @@ def collect_status(
             "inspected_paths": [str(path) for path in inspected_paths],
         },
         "server": _server_dict(server_report),
-        "launcher": {"url": launcher_url, "state": launcher_state},
+        "launcher": {
+            "url": launcher_target.reported_url if launcher_target is not None else None,
+            "state": launcher_state,
+        },
         "mcp": {
             "configuration": parsed.configuration,
             "activation": parsed.activation,
@@ -465,6 +652,7 @@ def collect_status(
             health=server_report.health,
             skill=skill,
             live=live,
+            target_action=server_target.action,
         ),
     }
 
@@ -526,8 +714,8 @@ def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     status = collect_status(
         host=args.host,
-        server_url=args.server_url.rstrip("/") if args.server_url else None,
-        launcher_url=args.launcher_url.rstrip("/") if args.launcher_url else None,
+        server_url=args.server_url.rstrip("/") if args.server_url is not None else None,
+        launcher_url=args.launcher_url.rstrip("/") if args.launcher_url is not None else None,
         mcp_config=args.mcp_config,
         skill_dir=args.skill_dir,
     )

@@ -441,6 +441,23 @@ is available; a running tray with an unhealthy server is not.
   file plus healthy `/health` response never fabricates `mcp.live=connected`.
 - Status output names the inspected files and explains unknown activation state.
 
+### 8.3 Status probe trust boundary (security-review amendment)
+
+`CYMATIX_MCP_URL` remains the configured MCP runtime target, but status treats
+it as untrusted diagnostic input. Without an explicit `--server-url`, status
+may probe it only when it is a validated absolute HTTP(S) loopback base URL.
+Validation requires a scheme and hostname and rejects malformed URLs, userinfo,
+query strings, and fragments without DNS resolution. `localhost`, IPv4 loopback,
+and IPv6 loopback are accepted; an implicit non-loopback config URL is reported
+as unprobed with an action to pass `--server-url` explicitly.
+
+An explicitly supplied `--server-url` takes precedence over the parsed config
+and is the operator opt-in for a validated non-loopback target. Server and
+launcher URLs are redacted before JSON/text rendering, and status reads both
+successful and error response bodies with a fixed bound. This policy changes
+only read-only status probing; it does not change MCP runtime connections or
+native config parsing/storage.
+
 The existing text output remains concise. JSON is the authoritative automation
 surface. Exit code zero requires `configured_ready=true`; unknown or false
 returns nonzero with a specific next action. Live state remains a separate

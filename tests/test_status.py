@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import io
+import socket
+import urllib.error
 
 import pytest
 
@@ -10,7 +13,12 @@ import cymatix_context.cli.cymatix_status as status_mod
 from cymatix_context.cli.cymatix_status import ProbeResult
 
 
-def _json_config(path, *, disabled: bool = False):
+def _json_config(
+    path,
+    *,
+    disabled: bool = False,
+    server_url: str = "http://127.0.0.1:19199",
+):
     path.write_text(
         json.dumps(
             {
@@ -20,7 +28,7 @@ def _json_config(path, *, disabled: bool = False):
                         "args": ["-m", "cymatix_context.mcp_server"],
                         "disabled": disabled,
                         "env": {
-                            "CYMATIX_MCP_URL": "http://127.0.0.1:19199",
+                            "CYMATIX_MCP_URL": server_url,
                             "CYMATIX_MCP_HANDLE": "agent-1",
                             "CYMATIX_MCP_HOST": "antigravity",
                             "UNRELATED_SECRET": "do-not-report",
@@ -255,7 +263,9 @@ def test_explicit_recognized_config_selects_its_native_profile(monkeypatch, tmp_
     assert result["server"]["url"] == "http://127.0.0.1:19199"
 
 
-def test_report_redacts_config_environment_and_server_userinfo(monkeypatch, tmp_path):
+def test_report_refuses_credential_bearing_config_url_without_leaking_environment(
+    monkeypatch, tmp_path
+):
     config = tmp_path / ".agents" / "mcp_config.json"
     config.parent.mkdir(parents=True)
     _json_config(config)
@@ -264,15 +274,11 @@ def test_report_redacts_config_environment_and_server_userinfo(monkeypatch, tmp_
         "http://user:token@127.0.0.1:19199/health?debug=1#trace"
     )
     config.write_text(json.dumps(raw), encoding="utf-8")
-    seen_urls = []
-
-    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
-        seen_urls.append(url)
-        if url.endswith("/sessions?status=active"):
-            return ProbeResult("reachable", {"participants": []}, None, None)
-        return ProbeResult("reachable", {"status": "ok"}, None, None)
-
-    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+    monkeypatch.setattr(
+        status_mod.urllib.request,
+        "urlopen",
+        lambda *_args, **_kwargs: pytest.fail("credential-bearing URL must not be opened"),
+    )
     result = status_mod.collect_status(
         host="antigravity",
         start_dir=tmp_path,
@@ -284,7 +290,7 @@ def test_report_redacts_config_environment_and_server_userinfo(monkeypatch, tmp_
     assert "UNRELATED_SECRET" not in serialized
     assert "token" not in serialized
     assert result["server"]["url"] == "http://127.0.0.1:19199/health"
-    assert any(url.startswith("http://user:token@") for url in seen_urls)
+    assert result["server"]["health"] == "unknown"
 
 
 def test_skill_directory_is_not_reported_as_an_installed_file(monkeypatch, tmp_path):
@@ -302,3 +308,255 @@ def test_skill_directory_is_not_reported_as_an_installed_file(monkeypatch, tmp_p
         launcher_url=None,
     )
     assert result["skill"]["installation"] == "missing"
+
+
+def test_explicit_server_url_precedes_configured_url_and_opts_into_remote_probe(
+    monkeypatch, tmp_path
+):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config, server_url="http://127.0.0.1:19199")
+    seen_urls = []
+
+    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
+        seen_urls.append(url)
+        if url.endswith("/health"):
+            return ProbeResult("reachable", {"status": "ok"}, None, None)
+        if url.endswith("/sessions?status=active"):
+            return ProbeResult("reachable", {"participants": []}, None, None)
+        raise AssertionError(url)
+
+    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+    result = status_mod.collect_status(
+        host="antigravity",
+        server_url="https://status.example.test:19444",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert result["server"]["url"] == "https://status.example.test:19444"
+    assert seen_urls == [
+        "https://status.example.test:19444/health",
+        "https://status.example.test:19444/sessions?status=active",
+    ]
+
+
+@pytest.mark.parametrize(
+    "configured_url",
+    [
+        "http://169.254.169.254/latest",
+        "https://status.example.test:19444",
+        "http://user:token@127.0.0.1:19199",
+        "http://127.0.0.1:19199?debug=1",
+        "http://127.0.0.1:19199#fragment",
+        "http:///missing-host",
+        "file:///C:/Windows/system.ini",
+        "http://[::1",
+        "",
+    ],
+)
+def test_implicit_unsafe_or_malformed_configured_url_is_never_probed(
+    monkeypatch, tmp_path, configured_url
+):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config, server_url=configured_url)
+    calls = []
+
+    def fail_urlopen(*args, **kwargs):
+        calls.append((args, kwargs))
+        raise AssertionError("refused config URL must not reach urllib")
+
+    monkeypatch.setattr(status_mod.urllib.request, "urlopen", fail_urlopen)
+    result = status_mod.collect_status(
+        host="antigravity",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert calls == []
+    assert result["server"]["health"] == "unknown"
+    assert result["mcp"]["live"] == "unknown"
+    assert "not probed" in result["server"]["error"].lower()
+    rendered = json.dumps(result)
+    assert "token" not in rendered
+    assert "debug=1" not in rendered
+    assert "#fragment" not in rendered
+
+
+def test_non_loopback_config_explains_explicit_server_url_opt_in(monkeypatch, tmp_path):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config, server_url="https://status.example.test:19444")
+    monkeypatch.setattr(
+        status_mod.urllib.request,
+        "urlopen",
+        lambda *_args, **_kwargs: pytest.fail("non-loopback config was probed"),
+    )
+
+    result = status_mod.collect_status(
+        host="antigravity",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert "pass --server-url explicitly" in result["next_action"].lower()
+
+
+@pytest.mark.parametrize(
+    "explicit_url",
+    [
+        "http://user:token@status.example.test:19444",
+        "https://status.example.test:19444?token=secret",
+        "file:///C:/Windows/system.ini",
+    ],
+)
+def test_invalid_explicit_server_url_wins_but_is_not_probed(
+    monkeypatch, tmp_path, explicit_url
+):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config, server_url="http://127.0.0.1:19199")
+    calls = []
+
+    def fail_urlopen(*args, **kwargs):
+        calls.append((args, kwargs))
+        raise AssertionError("invalid explicit URL must not reach urllib")
+
+    monkeypatch.setattr(status_mod.urllib.request, "urlopen", fail_urlopen)
+    result = status_mod.collect_status(
+        host="antigravity",
+        server_url=explicit_url,
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert calls == []
+    assert result["server"]["health"] == "unknown"
+    assert "valid absolute http" in result["next_action"].lower()
+
+
+@pytest.mark.parametrize(
+    "configured_url",
+    [
+        "http://127.0.0.1:19199",
+        "https://localhost:19199",
+        "http://[::1]:19199",
+        "http://[::ffff:127.0.0.1]:19199",
+    ],
+)
+def test_implicit_loopback_configured_urls_are_probed_without_dns_resolution(
+    monkeypatch, tmp_path, configured_url
+):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config, server_url=configured_url)
+    seen_urls = []
+
+    def fail_dns(*_args, **_kwargs):
+        raise AssertionError("status URL trust must not resolve DNS")
+
+    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
+        seen_urls.append(url)
+        if url.endswith("/health"):
+            return ProbeResult("reachable", {"status": "ok"}, None, None)
+        if url.endswith("/sessions?status=active"):
+            return ProbeResult("reachable", {"participants": []}, None, None)
+        raise AssertionError(url)
+
+    monkeypatch.setattr(socket, "getaddrinfo", fail_dns)
+    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+    result = status_mod.collect_status(
+        host="antigravity",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert result["server"]["health"] == "healthy"
+    assert seen_urls == [
+        f"{configured_url}/health",
+        f"{configured_url}/sessions?status=active",
+    ]
+
+
+def test_launcher_url_is_redacted_and_invalid_launcher_target_is_not_probed(
+    monkeypatch, tmp_path
+):
+    seen_urls = []
+
+    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
+        seen_urls.append(url)
+        return ProbeResult("reachable", {"status": "ok"}, None, None)
+
+    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+    result = status_mod.collect_status(
+        server_url="http://127.0.0.1:11437",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url="http://user:secret@127.0.0.1:11438/api?debug=1#trace",
+    )
+
+    assert seen_urls == ["http://127.0.0.1:11437/health"]
+    assert result["launcher"]["state"] == "unreachable"
+    assert result["launcher"]["url"] == "http://127.0.0.1:11438/api"
+    rendered = json.dumps(result) + status_mod._render_text(result)
+    for secret_part in ("user", "secret", "debug=1", "#trace"):
+        assert secret_part not in rendered
+
+
+def test_successful_status_probe_reads_no_more_than_the_response_limit(monkeypatch):
+    read_sizes = []
+
+    class Response:
+        def read(self, size=-1):
+            read_sizes.append(size)
+            return b"x" * size
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+    monkeypatch.setattr(
+        status_mod.urllib.request,
+        "urlopen",
+        lambda *_args, **_kwargs: Response(),
+    )
+    probe = status_mod._probe_json("http://127.0.0.1:11437/health")
+
+    assert read_sizes == [status_mod.MAX_STATUS_RESPONSE_BYTES + 1]
+    assert probe.payload is None
+    assert "exceeds" in probe.parse_error.lower()
+
+
+def test_http_error_status_probe_reads_no_more_than_the_response_limit(monkeypatch):
+    read_sizes = []
+
+    class ErrorBody(io.BytesIO):
+        def read(self, size=-1):
+            read_sizes.append(size)
+            return super().read(size)
+
+    error = urllib.error.HTTPError(
+        "http://127.0.0.1:11437/health",
+        503,
+        "maintenance",
+        {},
+        ErrorBody(b"x" * (1024 * 1024)),
+    )
+    monkeypatch.setattr(
+        status_mod.urllib.request,
+        "urlopen",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(error),
+    )
+    probe = status_mod._probe_json("http://127.0.0.1:11437/health")
+
+    assert read_sizes == [status_mod.MAX_STATUS_RESPONSE_BYTES + 1]
+    assert probe.error == "HTTP 503"
+    assert "exceeds" in probe.parse_error.lower()

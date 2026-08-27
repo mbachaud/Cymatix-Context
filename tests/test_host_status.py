@@ -240,7 +240,7 @@ def test_collect_status_handles_unselected_host(
 
 def test_probe_retains_http_payload_and_bounded_parse_error(monkeypatch):
     class Response:
-        def read(self):
+        def read(self, _size=-1):
             return b'{"error": "maintenance"}'
 
         def __enter__(self):

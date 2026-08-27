@@ -1088,7 +1088,18 @@ Handle unselected hosts before dereferencing profile-specific reports:
 
 These branches still return the independently probed server and launcher objects, using `server_url or DEFAULT_SERVER_URL` because no configured target can be selected. They do not instantiate a `ParsedHostConfig` with a fake `profile_id`, call `discover_skill`, or query the session registry.
 
-For a selected host, resolve the health target as `effective_server_url = parsed.configured_url or server_url or DEFAULT_SERVER_URL`; a configured MCP URL therefore wins and readiness is always based on the backend that the host adapter will actually call. Call `_probe_json(f"{effective_server_url.rstrip('/')}/health")` and pass that result to `map_server_health`. For launcher state, use `launcher_probe = None` when `launcher_url is None`; otherwise call `_probe_json(f"{launcher_url.rstrip('/')}/api/state")`, then always pass `launcher_probe` to `map_launcher_state`. Use the full internal URL only for the request. Before serializing, derive `reported_server_url` by removing URL userinfo, query, and fragment with `urllib.parse.urlsplit/urlunsplit`; this prevents credentials embedded in a nonstandard URL from appearing in status output. `--server-url` is a fallback diagnostic target when no readable config URL exists, not an override that can make a differently configured host look ready.
+For a selected host, an explicit `server_url` takes precedence over parsed config
+and is the operator opt-in for a validated remote diagnostic target. Without an
+explicit URL, use `parsed.configured_url` only after validating it as an
+absolute HTTP(S) loopback base URL; `localhost`, IPv4 loopback, and IPv6
+loopback are accepted without DNS resolution. Reject malformed, credential-
+bearing, query/fragment-bearing, and implicit non-loopback URLs before calling
+`_probe_json`; return bounded unprobed/unknown server and live evidence with a
+next action that tells the operator to pass `--server-url` explicitly. Validate
+launcher URLs before probing as well, and redact userinfo/query/fragment from
+all displayed server and launcher URLs. Bound both successful and HTTP-error
+response reads. This status-only policy does not alter the configured MCP
+runtime endpoint or Task 4 parsing/storage.
 
 ```python
 {
