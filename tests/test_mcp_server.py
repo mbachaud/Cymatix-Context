@@ -13,8 +13,6 @@ pytest.importorskip(
            "mcp.server.mcpserver (mcp 2.x home of MCPServer — see pyproject floor)",
 )
 
-import pytest
-
 from cymatix_context.mcp_server import (
     _default_ingest_identity,
     _normalize_health_payload,
