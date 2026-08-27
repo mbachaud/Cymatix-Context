@@ -264,9 +264,15 @@ def _entry_state(
     return "noncanonical", entry, "The cymatix-context MCP entry does not use the canonical command, module, or URL."
 
 
-def _gemini_activation(activation_path: Path | None) -> ActivationState:
+def _activation_error_detail(exc: Exception) -> str:
+    """Return a useful parse diagnostic without exposing record contents."""
+
+    return f"{type(exc).__name__} while reading Gemini MCP enablement record."[:500]
+
+
+def _gemini_activation(activation_path: Path | None) -> tuple[ActivationState, str | None]:
     if activation_path is None or not activation_path.is_file():
-        return "unknown"
+        return "unknown", None
     try:
         data = json.loads(activation_path.read_text(encoding="utf-8"))
     except Exception as exc:
@@ -276,41 +282,41 @@ def _gemini_activation(activation_path: Path | None) -> ActivationState:
             exc,
             exc_info=True,
         )
-        return "unknown"
+        return "unknown", _activation_error_detail(exc)
     if not isinstance(data, Mapping):
-        return "unknown"
+        return "unknown", "Gemini MCP enablement record is not a mapping."
     for server_id, state in data.items():
         if not isinstance(server_id, str) or not isinstance(state, Mapping):
-            return "unknown"
+            return "unknown", "Gemini MCP enablement record has an invalid server state."
         if not isinstance(state.get("enabled"), bool):
-            return "unknown"
+            return "unknown", "Gemini MCP enablement record has an invalid server state."
     state = data.get(_SERVER_NAME)
     if state is None:
-        return "enabled"
+        return "enabled", None
     # The validation loop above establishes the type without serializing the
     # untrusted record or retaining any of its values.
-    return "enabled" if state["enabled"] else "disabled"
+    return ("enabled" if state["enabled"] else "disabled"), None
 
 
 def _activation_state(
     profile: HostProfile, entry: Mapping[str, object] | None, activation_path: Path | None
-) -> ActivationState:
+) -> tuple[ActivationState, str | None]:
     if entry is None:
-        return "unknown"
+        return "unknown", None
     if profile.id == "claude-code":
         # A file cannot prove approval or connection in Claude Code.
-        return "unknown"
+        return "unknown", None
     if profile.id == "codex":
         value = entry.get("enabled", True)
         if value is False:
-            return "disabled"
-        return "enabled" if value is True else "unknown"
+            return "disabled", None
+        return ("enabled" if value is True else "unknown"), None
     if profile.id == "gemini-cli":
         return _gemini_activation(activation_path)
     value = entry.get("disabled", False)
     if value is True:
-        return "disabled"
-    return "enabled" if value is False else "unknown"
+        return "disabled", None
+    return ("enabled" if value is False else "unknown"), None
 
 
 def parse_host_config(
@@ -348,15 +354,16 @@ def parse_host_config(
     configured_url = _mapping_value(env, "CYMATIX_MCP_URL")
     handle = _mapping_value(env, "CYMATIX_MCP_HANDLE")
     mcp_host = _mapping_value(env, "CYMATIX_MCP_HOST")
+    activation, activation_detail = _activation_state(profile, entry, activation_path)
     return ParsedHostConfig(
         path=path,
         profile_id=profile.id,
         configuration=configuration,
-        activation=_activation_state(profile, entry, activation_path),
+        activation=activation,
         configured_url=configured_url,
         handle=handle,
         mcp_host=mcp_host,
-        detail=detail,
+        detail=activation_detail or detail,
     )
 
 

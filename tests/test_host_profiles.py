@@ -27,6 +27,99 @@ EXPECTED_IDENTITIES = {
     "antigravity": ("Google Antigravity", "gemini", "antigravity"),
 }
 
+EXPECTED_SNIPPETS = {
+    "claude-code": """```json
+{
+  "mcpServers": {
+    "cymatix-context": {
+      "command": "python",
+      "args": [
+        "-m",
+        "cymatix_context.mcp_server"
+      ],
+      "env": {
+        "CYMATIX_MCP_URL": "http://127.0.0.1:11437",
+        "CYMATIX_ORG": "<org>",
+        "CYMATIX_PARTY_ID": "<party-id>",
+        "CYMATIX_DEVICE": "<party-id>",
+        "CYMATIX_USER": "<user>",
+        "CYMATIX_AGENT": "<agent-handle>",
+        "CYMATIX_AGENT_KIND": "claude-code",
+        "CYMATIX_MCP_HANDLE": "<agent-handle>",
+        "CYMATIX_MCP_HOST": "claude-code"
+      }
+    }
+  }
+}
+```""",
+    "codex": """```toml
+[mcp_servers.cymatix-context]
+command = "python"
+args = ["-m", "cymatix_context.mcp_server"]
+enabled = true
+
+[mcp_servers.cymatix-context.env]
+CYMATIX_MCP_URL = "http://127.0.0.1:11437"
+CYMATIX_ORG = "<org>"
+CYMATIX_PARTY_ID = "<party-id>"
+CYMATIX_DEVICE = "<party-id>"
+CYMATIX_USER = "<user>"
+CYMATIX_AGENT = "<agent-handle>"
+CYMATIX_AGENT_KIND = "codex"
+CYMATIX_MCP_HANDLE = "<agent-handle>"
+CYMATIX_MCP_HOST = "codex"
+```""",
+    "gemini-cli": """```json
+{
+  "mcpServers": {
+    "cymatix-context": {
+      "command": "python",
+      "args": [
+        "-m",
+        "cymatix_context.mcp_server"
+      ],
+      "env": {
+        "CYMATIX_MCP_URL": "http://127.0.0.1:11437",
+        "CYMATIX_ORG": "<org>",
+        "CYMATIX_PARTY_ID": "<party-id>",
+        "CYMATIX_DEVICE": "<party-id>",
+        "CYMATIX_USER": "<user>",
+        "CYMATIX_AGENT": "<agent-handle>",
+        "CYMATIX_AGENT_KIND": "gemini",
+        "CYMATIX_MCP_HANDLE": "<agent-handle>",
+        "CYMATIX_MCP_HOST": "gemini-cli"
+      }
+    }
+  }
+}
+```""",
+    "antigravity": """```json
+{
+  "mcpServers": {
+    "cymatix-context": {
+      "command": "python",
+      "args": [
+        "-m",
+        "cymatix_context.mcp_server"
+      ],
+      "disabled": false,
+      "env": {
+        "CYMATIX_MCP_URL": "http://127.0.0.1:11437",
+        "CYMATIX_ORG": "<org>",
+        "CYMATIX_PARTY_ID": "<party-id>",
+        "CYMATIX_DEVICE": "<party-id>",
+        "CYMATIX_USER": "<user>",
+        "CYMATIX_AGENT": "<agent-handle>",
+        "CYMATIX_AGENT_KIND": "gemini",
+        "CYMATIX_MCP_HANDLE": "<agent-handle>",
+        "CYMATIX_MCP_HOST": "antigravity"
+      }
+    }
+  }
+}
+```""",
+}
+
 
 def _entry(profile_id: str, *, url: str = "http://127.0.0.1:11437") -> dict[str, object]:
     _display_name, _agent_kind, mcp_host = EXPECTED_IDENTITIES[profile_id]
@@ -101,6 +194,7 @@ def test_rendered_snippet_is_native_parseable_and_safe(profile_id: str):
     assert "C:\\Users\\" not in rendered
     assert "/Users/" not in rendered
     assert "CYMATIX_CALLER_MODEL_CLASS" not in rendered
+    assert rendered == EXPECTED_SNIPPETS[profile_id]
 
 
 @pytest.mark.parametrize("profile_id", EXPECTED_IDENTITIES)
@@ -165,6 +259,46 @@ def test_gemini_enablement_requires_a_valid_record(tmp_path: Path):
     assert parse_host_config(config, profile, activation_path=record).activation == "enabled"
     _write_json(record, {"cymatix-context": {"enabled": "false"}})
     assert parse_host_config(config, profile, activation_path=record).activation == "unknown"
+
+
+def test_gemini_malformed_enablement_record_has_safe_bounded_detail(tmp_path: Path):
+    config = _write_config(tmp_path / "settings.json", "gemini-cli")
+    record = tmp_path / "mcp-server-enablement.json"
+    record.write_text('{"activation-record-secret": ', encoding="utf-8")
+
+    parsed = parse_host_config(
+        config, get_profile("gemini-cli"), activation_path=record
+    )
+
+    assert parsed.activation == "unknown"
+    assert parsed.detail == "JSONDecodeError while reading Gemini MCP enablement record."
+    assert len(parsed.detail) <= 500
+    assert "activation-record-secret" not in parsed.detail
+    assert "must-not-escape" not in parsed.detail
+
+
+def test_gemini_unreadable_enablement_record_has_safe_bounded_detail(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    config = _write_config(tmp_path / "settings.json", "gemini-cli")
+    record = _write_json(tmp_path / "mcp-server-enablement.json", {})
+    original_read_text = Path.read_text
+
+    def unreadable_record(path: Path, *args: object, **kwargs: object) -> str:
+        if path == record:
+            raise PermissionError("deterministic unreadable activation record")
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", unreadable_record)
+    parsed = parse_host_config(
+        config, get_profile("gemini-cli"), activation_path=record
+    )
+
+    assert parsed.activation == "unknown"
+    assert parsed.detail == "PermissionError while reading Gemini MCP enablement record."
+    assert len(parsed.detail) <= 500
+    assert "deterministic unreadable activation record" not in parsed.detail
+    assert "must-not-escape" not in parsed.detail
 
 
 @pytest.mark.parametrize(
