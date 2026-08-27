@@ -1,225 +1,304 @@
-"""Tests for the cymatix-status CLI helpers."""
+"""Integration contracts for the host-aware ``cymatix-status`` report."""
 
 from __future__ import annotations
 
 import json
 
-# Packaged module (bugbash BUG-3) — was file-path-loaded from
-# scripts/ops/cymatix_status.py before the move into cymatix_context.cli.
-from cymatix_context.cli import cymatix_status as status_mod
+import pytest
+
+import cymatix_context.cli.cymatix_status as status_mod
+from cymatix_context.cli.cymatix_status import ProbeResult
 
 
-class TestCheckMcpConfig:
-    def test_canonical_config_detected(self, tmp_path):
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
+def _json_config(path, *, disabled: bool = False):
+    path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "cymatix-context": {
+                        "command": "python",
+                        "args": ["-m", "cymatix_context.mcp_server"],
+                        "disabled": disabled,
+                        "env": {
+                            "CYMATIX_MCP_URL": "http://127.0.0.1:19199",
+                            "CYMATIX_MCP_HANDLE": "agent-1",
+                            "CYMATIX_MCP_HOST": "antigravity",
+                            "UNRELATED_SECRET": "do-not-report",
+                        },
+                    }
                 }
             }
-        }), encoding="utf-8")
-        result = status_mod._check_mcp_config(cfg)
-        assert result["status"] == "canonical"
-        assert result["env_var"] == "CYMATIX_MCP_URL"
+        ),
+        encoding="utf-8",
+    )
 
-    def test_legacy_config_detected(self, tmp_path):
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp.server"],
-                    "env": {"CYMATIX_URL": "http://127.0.0.1:11437"},
+
+def _healthy_probes(monkeypatch, *, participants=None):
+    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
+        if url.endswith("/health"):
+            return ProbeResult("reachable", {"status": "ok"}, None, None)
+        if url.endswith("/api/state"):
+            return ProbeResult("unreachable", None, None, "not running")
+        if url.endswith("/sessions?status=active"):
+            return ProbeResult("reachable", {"participants": participants or []}, None, None)
+        raise AssertionError(url)
+
+    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+
+
+@pytest.mark.parametrize(
+    ("host", "config_path", "contents", "expected_activation", "expected_ready"),
+    [
+        (
+            "codex",
+            ".codex/config.toml",
+            "[mcp_servers.cymatix-context]\n"
+            'command = "python"\n'
+            'args = ["-m", "cymatix_context.mcp_server"]\n'
+            "enabled = false\n\n"
+            "[mcp_servers.cymatix-context.env]\n"
+            'CYMATIX_MCP_URL = "http://127.0.0.1:19199"\n',
+            "disabled",
+            False,
+        ),
+        (
+            "gemini-cli",
+            ".gemini/settings.json",
+            json.dumps(
+                {
+                    "mcpServers": {
+                        "cymatix-context": {
+                            "command": "python",
+                            "args": ["-m", "cymatix_context.mcp_server"],
+                            "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:19199"},
+                        }
+                    }
+                }
+            ),
+            "unknown",
+            None,
+        ),
+        (
+            "antigravity",
+            ".agents/mcp_config.json",
+            json.dumps(
+                {
+                    "mcpServers": {
+                        "cymatix-context": {
+                            "command": "python",
+                            "args": ["-m", "cymatix_context.mcp_server"],
+                            "disabled": True,
+                            "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:19199"},
+                        }
+                    }
+                }
+            ),
+            "disabled",
+            False,
+        ),
+    ],
+)
+def test_collect_status_preserves_native_activation_evidence(
+    monkeypatch,
+    tmp_path,
+    host,
+    config_path,
+    contents,
+    expected_activation,
+    expected_ready,
+):
+    config = tmp_path / config_path
+    config.parent.mkdir(parents=True)
+    config.write_text(contents, encoding="utf-8")
+    _healthy_probes(monkeypatch)
+
+    result = status_mod.collect_status(
+        host=host,
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert result["host"]["selection"] == host
+    assert result["mcp"]["activation"] == expected_activation
+    assert result["configured_ready"] is expected_ready
+    assert result["launcher"]["state"] == "not_configured"
+
+
+def test_missing_skill_does_not_change_configured_ready(monkeypatch, tmp_path):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config)
+    _healthy_probes(monkeypatch)
+
+    result = status_mod.collect_status(
+        host="antigravity",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert result["configured_ready"] is True
+    assert result["guided_ready"] is False
+    assert result["skill"]["installation"] == "missing"
+
+
+def test_successfully_read_empty_registry_proves_configured_mcp_is_disconnected(monkeypatch, tmp_path):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config)
+    _healthy_probes(monkeypatch)
+
+    result = status_mod.collect_status(
+        host="antigravity",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert result["configured_ready"] is True
+    assert result["mcp"]["live"] == "disconnected"
+
+
+def test_registry_failure_keeps_live_state_unknown(monkeypatch, tmp_path):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config)
+
+    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
+        if url.endswith("/health"):
+            return ProbeResult("reachable", {"status": "ok"}, None, None)
+        if url.endswith("/sessions?status=active"):
+            return ProbeResult("unreachable", None, None, "connection refused")
+        raise AssertionError(url)
+
+    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+    result = status_mod.collect_status(
+        host="antigravity",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert result["configured_ready"] is True
+    assert result["mcp"]["live"] == "unknown"
+
+
+def test_missing_live_identity_is_unknown_even_when_server_is_healthy(monkeypatch, tmp_path):
+    config = tmp_path / ".mcp.json"
+    config.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "cymatix-context": {
+                        "command": "python",
+                        "args": ["-m", "cymatix_context.mcp_server"],
+                        "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:19199"},
+                    }
                 }
             }
-        }), encoding="utf-8")
-        result = status_mod._check_mcp_config(cfg)
-        assert result["status"] == "legacy"
-        assert "mcp_server" in result["next_action"]
+        ),
+        encoding="utf-8",
+    )
+    _healthy_probes(monkeypatch)
 
-    def test_new_name_and_env_var_detected_as_canonical(self, tmp_path):
-        """README-documented setup: `cymatix-context` key, CYMATIX_MCP_URL."""
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
-        result = status_mod._check_mcp_config(cfg)
-        assert result["status"] == "canonical"
-        assert result["env_var"] == "CYMATIX_MCP_URL"
-        assert result["server_name"] == "cymatix-context"
+    result = status_mod.collect_status(
+        host="claude-code",
+        mcp_config=config,
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
 
-    def test_old_pair_still_canonical(self, tmp_path):
-        """cymatix-context + CYMATIX_MCP_URL must remain canonical — don't nag
-        working setups just because the rename shipped."""
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
-        result = status_mod._check_mcp_config(cfg)
-        assert result["status"] == "canonical"
-        assert result["env_var"] == "CYMATIX_MCP_URL"
-
-    def test_short_server_name_is_noncanonical(self, tmp_path):
-        """Right module + right env var, but the suffix-less `cymatix` key
-        is flagged for rename rather than accepted silently."""
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
-        result = status_mod._check_mcp_config(cfg)
-        assert result["status"] == "noncanonical"
-        assert "cymatix-context" in result["next_action"]
-
-    def test_legacy_shim_module_is_canonical_equivalent(self, tmp_path):
-        """`-m cymatix_context.mcp_server` aliases to the same server via the
-        compatibility shim; it should not be reported as missing/broken."""
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
-        result = status_mod._check_mcp_config(cfg)
-        assert result["status"] == "canonical"
-        assert "note" in result
-
-    def test_missing_config_next_action_points_at_new_name(self, tmp_path):
-        result = status_mod._check_mcp_config(None)
-        assert result["status"] == "missing"
-        assert "cymatix-context" in result["next_action"]
+    assert result["mcp"]["live"] == "unknown"
+    assert result["configured_ready"] is None
 
 
-class TestCollectStatus:
-    def test_collect_status_available(self, tmp_path, monkeypatch):
-        skill_dir = tmp_path / "cymatix-context"
-        skill_dir.mkdir()
-        (skill_dir / "SKILL.md").write_text("ok", encoding="utf-8")
+def test_explicit_unrecognized_json_config_requires_host(monkeypatch, tmp_path):
+    config = tmp_path / "custom.json"
+    _json_config(config)
+    _healthy_probes(monkeypatch)
 
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
+    result = status_mod.collect_status(
+        mcp_config=config,
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
 
-        def fake_get_json(url: str, timeout_s: float = 1.5):
-            if url.endswith("/health"):
-                return {"status": "ok", "genes": 10}
-            if url.endswith("/api/state"):
-                return {"cymatix": {"running": True}}
-            raise AssertionError(url)
+    assert result["host"]["selection"] == "unknown"
+    assert "Pass --host" in result["next_action"]
 
-        monkeypatch.setattr(status_mod, "_get_json", fake_get_json)
 
-        result = status_mod.collect_status(
-            mcp_config=cfg,
-            skill_dir=skill_dir,
-        )
-        assert result["availability"] == "available"
-        assert result["integration_ready"] is True
-        assert result["mcp_config"]["status"] == "canonical"
-        assert result["skill"]["status"] == "present"
+def test_explicit_recognized_config_selects_its_native_profile(monkeypatch, tmp_path):
+    config = tmp_path / ".codex" / "config.toml"
+    config.parent.mkdir()
+    config.write_text(
+        "[mcp_servers.cymatix-context]\n"
+        'command = "python"\n'
+        'args = ["-m", "cymatix_context.mcp_server"]\n'
+        "enabled = true\n\n"
+        "[mcp_servers.cymatix-context.env]\n"
+        'CYMATIX_MCP_URL = "http://127.0.0.1:19199"\n',
+        encoding="utf-8",
+    )
+    _healthy_probes(monkeypatch)
 
-    def test_collect_status_unavailable_points_to_launcher(self, tmp_path, monkeypatch):
-        def fake_get_json(url: str, timeout_s: float = 1.5):
-            return {"reachable": False, "error": "unreachable", "detail": "connection refused"}
+    result = status_mod.collect_status(
+        mcp_config=config,
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
 
-        monkeypatch.setattr(status_mod, "_get_json", fake_get_json)
+    assert result["host"]["selection"] == "codex"
+    assert result["server"]["url"] == "http://127.0.0.1:19199"
 
-        result = status_mod.collect_status(
-            mcp_config=tmp_path / ".mcp.json",
-            skill_dir=tmp_path / "cymatix-context",
-        )
-        assert result["availability"] == "unavailable"
-        assert result["integration_ready"] is False
-        assert "cymatix-launcher" in result["next_action"]
 
-    def test_collect_status_available_but_not_integration_ready_without_skill(self, tmp_path, monkeypatch):
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
+def test_report_redacts_config_environment_and_server_userinfo(monkeypatch, tmp_path):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config)
+    raw = json.loads(config.read_text(encoding="utf-8"))
+    raw["mcpServers"]["cymatix-context"]["env"]["CYMATIX_MCP_URL"] = (
+        "http://user:token@127.0.0.1:19199/health?debug=1#trace"
+    )
+    config.write_text(json.dumps(raw), encoding="utf-8")
+    seen_urls = []
 
-        def fake_get_json(url: str, timeout_s: float = 1.5):
-            if url.endswith("/health"):
-                return {"status": "ok", "genes": 10}
-            if url.endswith("/api/state"):
-                return {"cymatix": {"running": True}}
-            raise AssertionError(url)
+    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
+        seen_urls.append(url)
+        if url.endswith("/sessions?status=active"):
+            return ProbeResult("reachable", {"participants": []}, None, None)
+        return ProbeResult("reachable", {"status": "ok"}, None, None)
 
-        monkeypatch.setattr(status_mod, "_get_json", fake_get_json)
+    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+    result = status_mod.collect_status(
+        host="antigravity",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
 
-        result = status_mod.collect_status(
-            mcp_config=cfg,
-            skill_dir=tmp_path / "missing-skill",
-        )
-        assert result["availability"] == "available"
-        assert result["integration_ready"] is False
-        assert "shared `cymatix-context` skill" in result["next_action"]
+    serialized = json.dumps(result)
+    assert "UNRELATED_SECRET" not in serialized
+    assert "token" not in serialized
+    assert result["server"]["url"] == "http://127.0.0.1:19199/health"
+    assert any(url.startswith("http://user:token@") for url in seen_urls)
 
-    def test_collect_status_available_with_new_documented_setup(self, tmp_path, monkeypatch):
-        """The README-documented setup (cymatix-context key,
-        CYMATIX_MCP_URL) must report integration_ready, not 'missing'."""
-        skill_dir = tmp_path / "cymatix-context"
-        skill_dir.mkdir()
-        (skill_dir / "SKILL.md").write_text("ok", encoding="utf-8")
 
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
+def test_skill_directory_is_not_reported_as_an_installed_file(monkeypatch, tmp_path):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config)
+    skill_file = tmp_path / ".agents" / "skills" / "cymatix-context" / "SKILL.md"
+    skill_file.mkdir(parents=True)
+    _healthy_probes(monkeypatch)
 
-        def fake_get_json(url: str, timeout_s: float = 1.5):
-            if url.endswith("/health"):
-                return {"status": "ok", "genes": 10}
-            if url.endswith("/api/state"):
-                return {"cymatix": {"running": True}}
-            raise AssertionError(url)
-
-        monkeypatch.setattr(status_mod, "_get_json", fake_get_json)
-
-        result = status_mod.collect_status(
-            mcp_config=cfg,
-            skill_dir=skill_dir,
-        )
-        assert result["availability"] == "available"
-        assert result["integration_ready"] is True
-        assert result["mcp_config"]["status"] == "canonical"
-
-    def test_find_mcp_config_accepts_string_start_dir(self, tmp_path):
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text("{}", encoding="utf-8")
-        found = status_mod._find_mcp_config(start_dir=str(tmp_path))
-        assert found == cfg
+    result = status_mod.collect_status(
+        host="antigravity",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+    assert result["skill"]["installation"] == "missing"
