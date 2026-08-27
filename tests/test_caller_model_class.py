@@ -99,6 +99,7 @@ def context_spy(http_client, monkeypatch):
         ({"downstream_model": "legacy"}, "legacy"),
         ({"model": "canonical", "downstream_model": "legacy"}, "canonical"),
         ({"model": None, "downstream_model": "legacy"}, None),
+        ({"model": "", "downstream_model": "legacy"}, ""),
     ],
 )
 def test_context_model_key_precedence(http_client, context_spy, payload, expected_model):
