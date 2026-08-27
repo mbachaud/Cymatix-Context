@@ -14,6 +14,7 @@ import itertools
 import json
 from pathlib import Path
 from typing import List, Tuple
+from unittest.mock import AsyncMock
 
 import pytest
 
@@ -81,6 +82,78 @@ def http_client():
     app.state.cymatix.genome.upsert_gene(g)
     with client as c:
         yield c
+
+
+@pytest.fixture
+def context_spy(http_client, monkeypatch):
+    manager = http_client.app.state.cymatix
+    spy = AsyncMock(wraps=manager.build_context_async)
+    monkeypatch.setattr(manager, "build_context_async", spy)
+    return spy
+
+
+@pytest.mark.parametrize(
+    ("payload", "expected_model"),
+    [
+        ({"model": "qwen3:4b"}, "qwen3:4b"),
+        ({"downstream_model": "legacy"}, "legacy"),
+        ({"model": "canonical", "downstream_model": "legacy"}, "canonical"),
+        ({"model": None, "downstream_model": "legacy"}, None),
+    ],
+)
+def test_context_model_key_precedence(http_client, context_spy, payload, expected_model):
+    """/context forwards canonical model first, preserving a narrow legacy alias."""
+    response = http_client.post("/context", json={"query": "q", **payload})
+
+    assert response.status_code == 200
+    assert context_spy.call_args.kwargs["downstream_model"] == expected_model
+
+
+@pytest.mark.parametrize("caller_class", ["generic", "small_moe", "frontier"])
+def test_context_echoes_effective_caller_class(http_client, caller_class):
+    """The response agent surface exposes the selected retrieval class."""
+    response = http_client.post(
+        "/context",
+        json={"query": "q", "caller_model_class": caller_class},
+    )
+
+    assert response.status_code == 200
+    assert response.json()[0]["agent"]["caller_model_class"] == caller_class
+
+
+def test_invalid_per_call_class_keeps_route_error(http_client):
+    """Invalid per-call classes retain the adapter-consumable validation shape."""
+    response = http_client.post(
+        "/context",
+        json={"query": "q", "caller_model_class": "oversized"},
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "error": "Invalid caller_model_class",
+        "allowed": ["generic", "small_moe", "frontier"],
+    }
+
+
+@pytest.mark.parametrize("caller_class", ["generic", "small_moe", "frontier"])
+def test_mcp_to_context_round_trip_echoes_class(http_client, monkeypatch, caller_class):
+    """The MCP adapter's canonical fields drive the real HTTP route contract."""
+    pytest.importorskip("mcp.server.mcpserver")
+    from cymatix_context.mcp import mcp_server
+
+    def loopback(method, path, body=None):
+        assert method == "POST"
+        response = http_client.post(path, json=body)
+        return response.json()
+
+    monkeypatch.setattr(mcp_server, "_http", loopback)
+    result = mcp_server.cymatix_context(
+        "q",
+        model="qwen3:4b",
+        caller_model_class=caller_class,
+    )
+
+    assert result["agent"]["caller_model_class"] == caller_class
 
 
 def test_caller_model_class_default_is_generic(http_client):
