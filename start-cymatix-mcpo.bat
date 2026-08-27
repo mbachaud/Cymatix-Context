@@ -27,17 +27,10 @@ if "%CYMATIX_MCPO_PORT%"=="" set CYMATIX_MCPO_PORT=8788
 REM ── Cymatix upstream the MCP shim talks to ──────────────────────
 if "%CYMATIX_MCP_URL%"=="" set CYMATIX_MCP_URL=http://127.0.0.1:11437
 
-REM ── 4-layer federation identity — distinct from Claude Code's ──
-REM Collision guard: if CYMATIX_AGENT is empty OR equals "laude", force
-REM "openwebui" so this MCPO session doesn't merge with Claude Code's.
-if "%CYMATIX_ORG%"==""        set CYMATIX_ORG=swiftwing
 REM CYMATIX_PARTY_ID / CYMATIX_DEVICE identify this machine in CWoLa + session registry.
 REM Change to your own party id (operator's preferred stable identifier).
 if not defined CYMATIX_PARTY_ID set "CYMATIX_PARTY_ID=%COMPUTERNAME%"
 if not defined CYMATIX_DEVICE set "CYMATIX_DEVICE=%COMPUTERNAME%"
-if "%CYMATIX_USER%"==""       set CYMATIX_USER=max
-if "%CYMATIX_AGENT%"=="laude" set CYMATIX_AGENT=openwebui
-if "%CYMATIX_AGENT%"==""      set CYMATIX_AGENT=openwebui
 if "%CYMATIX_AGENT_KIND%"=="" set CYMATIX_AGENT_KIND=ollama-chat
 if "%CYMATIX_MCP_HANDLE%"=="" set CYMATIX_MCP_HANDLE=%CYMATIX_AGENT%
 if "%CYMATIX_MCP_HOST%"==""   set CYMATIX_MCP_HOST=ollama-chat

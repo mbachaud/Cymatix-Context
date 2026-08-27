@@ -325,6 +325,40 @@ def test_active_scripts_have_no_old_prefix_adoption_or_mirrors():
     )
 
 
+_IDENTITY_ASSIGNMENT = re.compile(
+    r"\b(?P<name>CYMATIX_(?:ORG|USER|AGENT))\s*=\s*(?P<value>[^;\r\n]+)",
+    re.I,
+)
+
+
+def _is_identity_placeholder(name: str, value: str) -> bool:
+    """Allow environment pass-through and documented placeholder syntax."""
+    value = value.strip().strip("\"'")
+    value = value.split(" REM", 1)[0].strip().strip("\"'")
+    escaped_name = re.escape(name)
+    return bool(
+        re.fullmatch(rf"%{escaped_name}%", value, re.I)
+        or re.fullmatch(rf"\$\{{?{escaped_name}\}}?", value, re.I)
+        or re.fullmatch(rf"\$env:{escaped_name}", value, re.I)
+        or re.fullmatch(r"<[^<>]+>", value)
+    )
+
+
+def test_active_scripts_have_no_fixed_identity_defaults():
+    """Tracked launchers must not bake in a maintainer's org/user/agent."""
+    violations = []
+    for path in ACTIVE_SCRIPTS:
+        rel = path.relative_to(REPO_ROOT).as_posix()
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            for match in _IDENTITY_ASSIGNMENT.finditer(line):
+                if not _is_identity_placeholder(match.group("name"), match.group("value")):
+                    violations.append(f"{rel}:{lineno}: {line.strip()}")
+    assert not violations, (
+        "active scripts contain fixed CYMATIX identity defaults; use operator "
+        "environment values or placeholders:\n" + "\n".join(violations)
+    )
+
+
 def test_pypi_tombstone_is_a_metadata_only_cymatix_redirect():
     tombstone = REPO_ROOT / "deploy/pypi-tombstone"
     metadata = tomllib.loads((tombstone / "pyproject.toml").read_text(encoding="utf-8"))

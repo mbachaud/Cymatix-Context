@@ -41,9 +41,8 @@ set "CYMATIX_BUDGET_ZONE=1"
 REM ── 4-layer federation attribution (edit to your handle) ────────
 REM CYMATIX_AGENT is the persona writing genes. If unset, ingests tag
 REM as "manual / no AI persona involved." Set per shell/shortcut for
-REM per-persona tagging (Laude/Taude/Raude each pin their own .bat).
-if not defined CYMATIX_USER set "CYMATIX_USER=max"
-REM set "CYMATIX_AGENT=raude"   REM uncomment + edit if you want persona tagging
+REM per-persona tagging.
+REM Set CYMATIX_USER and CYMATIX_AGENT in your environment or local shortcut.
 
 REM ── Headroom proxy (OPTIONAL — requires cymatix-context[codec]) ──
 REM When enabled, the launcher adopts or spawns a headroom proxy and
