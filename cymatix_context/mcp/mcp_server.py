@@ -119,6 +119,14 @@ log = logging.getLogger("cymatix.mcp")
 CYMATIX_URL = os.environ.get("CYMATIX_MCP_URL", "http://127.0.0.1:11437").rstrip("/")
 TIMEOUT_S = float(os.environ.get("CYMATIX_MCP_TIMEOUT", "30"))
 
+# HTTP error bodies originate outside the adapter. Eight KiB easily holds the
+# compact validation envelopes returned by Cymatix routes while preventing an
+# upstream error page from consuming the MCP caller's context or memory.
+_HTTP_ERROR_BODY_MAX_BYTES = 8 * 1024
+_HTTP_ERROR_STRING_MAX_CHARS = 512
+_HTTP_ERROR_ALLOWED_MAX_ITEMS = 16
+_HTTP_ERROR_ALLOWED_ITEM_MAX_CHARS = 128
+
 _CALLER_MODEL_CLASS_ALLOWED = frozenset(item.value for item in CallerModelClass)
 
 
@@ -138,6 +146,35 @@ def _configured_caller_model_class(value: Optional[str] = None) -> str:
 
 
 MCP_CALLER_MODEL_CLASS_DEFAULT = _configured_caller_model_class()
+
+
+def _bounded_http_error_string(value: Any) -> Optional[str]:
+    """Return a route-safe error string with a fixed MCP response bound."""
+    if not isinstance(value, str):
+        return None
+    return value[:_HTTP_ERROR_STRING_MAX_CHARS]
+
+
+def _safe_http_error_payload(payload: Any) -> Dict[str, Any]:
+    """Keep only validation-safe, bounded JSON error fields from an HTTP route."""
+    if not isinstance(payload, dict):
+        return {}
+
+    result: Dict[str, Any] = {}
+    error = _bounded_http_error_string(payload.get("error"))
+    if error is not None:
+        result["error"] = error
+
+    # /fingerprint currently emits ``detail: str(exc)`` on internal errors,
+    # so JSON detail/message fields are not safe to expose over MCP.
+    allowed = payload.get("allowed")
+    if isinstance(allowed, list):
+        result["allowed"] = [
+            item[:_HTTP_ERROR_ALLOWED_ITEM_MAX_CHARS]
+            for item in allowed[:_HTTP_ERROR_ALLOWED_MAX_ITEMS]
+            if isinstance(item, str)
+        ]
+    return result
 
 # Stable session_id for this MCP subprocess lifetime. Used to attribute
 # every `cymatix_context` call from this host to the same row in
@@ -206,13 +243,22 @@ def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]
             except json.JSONDecodeError:
                 return {"_raw": raw}
     except urllib.error.HTTPError as exc:
-        raw = exc.read().decode("utf-8", errors="replace")
+        error_body = exc.read(_HTTP_ERROR_BODY_MAX_BYTES + 1)
+        if len(error_body) > _HTTP_ERROR_BODY_MAX_BYTES:
+            return {
+                "_error": f"HTTP {exc.code}",
+                "_detail": (
+                    "HTTP error response body exceeded "
+                    f"{_HTTP_ERROR_BODY_MAX_BYTES}-byte safety limit."
+                ),
+            }
+        raw = error_body.decode("utf-8", errors="replace")
         try:
             payload = json.loads(raw)
         except json.JSONDecodeError:
             payload = None
         if isinstance(payload, dict):
-            return {**payload, "_error": f"HTTP {exc.code}"}
+            return {**_safe_http_error_payload(payload), "_error": f"HTTP {exc.code}"}
         # Preserved: _normalize_health_payload consumes this structured
         # shape to render a readable status card for the MCP host.
         return {"_error": f"HTTP {exc.code}", "_detail": raw[:500]}
