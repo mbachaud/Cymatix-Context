@@ -21,7 +21,8 @@ cp <absolute-repo-path>/skills/cymatix-context/SKILL.md ~/.agents/skills/cymatix
 
 ## Configure native MCP
 
-Add this block to the workspace or user Codex TOML configuration:
+Add this block to the workspace `.codex/config.toml` or user
+`~/.codex/config.toml` Codex TOML configuration:
 
 <!-- BEGIN GENERATED MCP: codex -->
 ```toml

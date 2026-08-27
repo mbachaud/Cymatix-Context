@@ -27,8 +27,8 @@ skill refresh; file presence alone does not prove activation.
 
 ## Configure native MCP
 
-Put this generated block in the project `.mcp.json` or the user Claude Code
-MCP configuration. Do not add a second, forked skill body.
+Put this generated block in the project `.mcp.json` or the user
+`~/.claude.json` MCP configuration. Do not add a second, forked skill body.
 
 <!-- BEGIN GENERATED MCP: claude-code -->
 ```json

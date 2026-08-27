@@ -18,6 +18,11 @@ GUIDES = {
     "antigravity": ROOT / "docs/clients/antigravity.md",
 }
 
+NATIVE_MCP_DESTINATIONS = {
+    "claude-code": (".mcp.json", "~/.claude.json"),
+    "codex": (".codex/config.toml", "~/.codex/config.toml"),
+}
+
 
 def _generated_block(text: str, profile_id: str) -> str:
     start = f"<!-- BEGIN GENERATED MCP: {profile_id} -->"
@@ -29,6 +34,14 @@ def _generated_block(text: str, profile_id: str) -> str:
 def test_client_guide_mcp_block_matches_renderer(profile_id):
     text = GUIDES[profile_id].read_text(encoding="utf-8")
     assert _generated_block(text, profile_id) == render_mcp_snippet(profile_id)
+
+
+@pytest.mark.parametrize("profile_id,destinations", NATIVE_MCP_DESTINATIONS.items())
+def test_native_mcp_destinations_are_named(profile_id, destinations):
+    """Guides name every supported workspace and user MCP config path."""
+    text = GUIDES[profile_id].read_text(encoding="utf-8")
+    for destination in destinations:
+        assert destination in text
 
 
 @pytest.mark.parametrize("path", GUIDES.values())
