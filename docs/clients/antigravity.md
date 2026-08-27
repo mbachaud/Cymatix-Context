@@ -67,7 +67,9 @@ cymatix-status --host antigravity --json
 An entry's `disabled: true` is authoritative. Status separates configuration,
 activation, health, launcher state, skill state, and live evidence. A canonical
 enabled entry plus healthy server yields `configured_ready=true`, but only an
-exact active session/handle match yields `mcp.live=connected`.
+exact active session/handle match yields `mcp.live=connected`. Unknown
+activation or live evidence stays `unknown`; readiness is `null` when that
+missing evidence prevents a conclusion; status never fabricates true/false.
 
 ## Disable or roll back
 

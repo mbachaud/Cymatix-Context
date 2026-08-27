@@ -23,6 +23,8 @@ NATIVE_MCP_DESTINATIONS = {
     "codex": (".codex/config.toml", "~/.codex/config.toml"),
 }
 
+TRI_STATE_GUIDES = ("claude-code", "gemini-cli", "antigravity")
+
 
 def _generated_block(text: str, profile_id: str) -> str:
     start = f"<!-- BEGIN GENERATED MCP: {profile_id} -->"
@@ -42,6 +44,16 @@ def test_native_mcp_destinations_are_named(profile_id, destinations):
     text = GUIDES[profile_id].read_text(encoding="utf-8")
     for destination in destinations:
         assert destination in text
+
+
+@pytest.mark.parametrize("profile_id", TRI_STATE_GUIDES)
+def test_guides_explain_unknown_readiness_state(profile_id):
+    """Host guides preserve unknown activation/live evidence as tri-state."""
+    text = GUIDES[profile_id].read_text(encoding="utf-8").lower()
+    assert "unknown" in text
+    assert "null" in text
+    assert "mcp.live" in text
+    assert "never fabricate" in text
 
 
 @pytest.mark.parametrize("path", GUIDES.values())

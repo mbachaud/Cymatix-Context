@@ -22,8 +22,11 @@ mkdir -p ~/.claude/skills/cymatix-context
 cp <absolute-repo-path>/skills/cymatix-context/SKILL.md ~/.claude/skills/cymatix-context/SKILL.md
 ```
 
-The file is instructional only. Claude Code may discover it after a restart or
-skill refresh; file presence alone does not prove activation.
+The file is instructional only. When this canonical file is present at a
+native destination, `cymatix-status` reports `skill.installation=present` and
+`skill.activation=enabled`. That confirms installation, not that Claude Code
+has loaded or discovered it; restart or refresh the host to establish runtime
+discovery.
 
 ## Configure native MCP
 
@@ -76,7 +79,10 @@ cymatix-status --host claude-code --json
 The report may show `mcp.activation` or skill activation as `unknown`, and
 `mcp.live` remains unknown until an exact active session/handle is observed.
 `configured_ready` means canonical config + known enabled activation + healthy
-server; it is not live-session evidence.
+server; it is not live-session evidence. Unknown activation remains
+`unknown`, and readiness is `null` whenever that missing evidence prevents a
+conclusion. Unknown live evidence remains `mcp.live=unknown`; status never fabricates
+true/false from missing evidence.
 
 ## Disable or roll back
 

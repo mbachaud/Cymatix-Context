@@ -72,6 +72,9 @@ The separate enablement record may be missing or malformed; in that case
 activation is `unknown`, not enabled. `configured_ready` combines canonical
 configuration, known enabled activation, and healthy server. It cannot prove a
 live stdio connection; `mcp.live` requires exact active-session evidence.
+Unknown activation or live evidence stays `unknown`; readiness is `null` when
+that missing evidence prevents a conclusion; status never fabricates
+true/false.
 
 ## Disable or roll back
 
