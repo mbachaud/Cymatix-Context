@@ -11,6 +11,7 @@ import pytest
 from cymatix_context.integrations.host_profiles import render_mcp_snippet
 
 ROOT = Path(__file__).resolve().parents[1]
+SHARED_GUIDE = ROOT / "docs/clients/cymatix-context.md"
 GUIDES = {
     "claude-code": ROOT / "docs/clients/claude-code.md",
     "codex": ROOT / "docs/clients/codex.md",
@@ -24,6 +25,8 @@ NATIVE_MCP_DESTINATIONS = {
 }
 
 TRI_STATE_GUIDES = ("claude-code", "gemini-cli", "antigravity")
+SAFE_MERGE_GUIDES = tuple(GUIDES)
+STATUS_GUIDES = tuple(GUIDES)
 
 
 def _generated_block(text: str, profile_id: str) -> str:
@@ -54,6 +57,31 @@ def test_guides_explain_unknown_readiness_state(profile_id):
     assert "null" in text
     assert "mcp.live" in text
     assert "never fabricate" in text
+
+
+@pytest.mark.parametrize("profile_id", SAFE_MERGE_GUIDES)
+def test_guides_require_backup_and_non_destructive_merge(profile_id):
+    """Native config instructions protect unrelated settings and servers."""
+    text = GUIDES[profile_id].read_text(encoding="utf-8").lower()
+    assert "same-directory backup" in text
+    assert re.search(r"empty/new (?:target|file)", text)
+    for term in ("merge", "canonical", "preserve", "unrelated"):
+        assert term in text
+
+
+@pytest.mark.parametrize("profile_id", STATUS_GUIDES)
+def test_host_status_guides_explain_safe_remote_probe_opt_in(profile_id):
+    """Host status guidance mirrors URL validation and remote opt-in rules."""
+    text = GUIDES[profile_id].read_text(encoding="utf-8").lower()
+    for term in ("loopback", "--server-url", "remote", "credential", "query", "fragment"):
+        assert term in text
+
+
+def test_shared_status_guide_explains_safe_remote_probe_opt_in():
+    """Shared status guidance names automatic loopback and explicit remote probes."""
+    text = SHARED_GUIDE.read_text(encoding="utf-8").lower()
+    for term in ("loopback", "--server-url", "remote", "credential", "query", "fragment"):
+        assert term in text
 
 
 @pytest.mark.parametrize("path", GUIDES.values())

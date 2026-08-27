@@ -32,6 +32,12 @@ discovery.
 
 Put this generated block in the project `.mcp.json` or the user
 `~/.claude.json` MCP configuration. Do not add a second, forked skill body.
+Before editing an existing JSON file, create a same-directory backup, for
+example `cp <config-path> <config-path>.bak-<timestamp>`. The full generated
+object below is suitable only for an otherwise empty/new target. For an
+existing JSON object, merge only the canonical `mcpServers.cymatix-context`
+entry into its existing `mcpServers` object and preserve every unrelated root
+setting and server; do not replace the root object.
 
 <!-- BEGIN GENERATED MCP: claude-code -->
 ```json
@@ -75,6 +81,12 @@ configuration changes, then run `claude mcp get cymatix-context`,
 ```bash
 cymatix-status --host claude-code --json
 ```
+
+A valid loopback configured URL is probed automatically. To deliberately probe
+a remote endpoint, pass `--server-url <validated-url>`; it overrides the
+configured URL. Malformed URLs, URLs containing credentials, query strings, or
+fragments, and implicit non-loopback URLs are not probed. Never put credentials
+in a URL.
 
 The report may show `mcp.activation` or skill activation as `unknown`, and
 `mcp.live` remains unknown until an exact active session/handle is observed.

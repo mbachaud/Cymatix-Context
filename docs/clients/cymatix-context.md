@@ -106,6 +106,13 @@ keeps these dimensions separate:
 | Skill installation / activation | `present`/`missing`; `enabled`/`disabled`/`unknown` |
 | Readiness | `configured_ready` and `guided_ready`, each `true`, `false`, or `null` |
 
+A valid loopback configured URL is probed automatically. To deliberately probe
+a remote endpoint, pass `--server-url <validated-url>`; the explicit URL wins
+over the configured URL. Malformed URLs, URLs containing credentials, query
+strings, or fragments, and implicit non-loopback URLs are not probed. Never put
+credentials in a URL. This validation avoids turning a read-only status check
+into an unexpected request to an untrusted destination.
+
 `configured_ready=true` means canonical configuration, known enabled
 activation, and a healthy backend. It does not mean that the proprietary host
 has launched the adapter. `guided_ready` additionally requires the shared

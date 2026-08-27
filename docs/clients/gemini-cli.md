@@ -28,6 +28,12 @@ cp <absolute-repo-path>/skills/cymatix-context/SKILL.md ~/.gemini/skills/cymatix
 
 Add this block to workspace `.gemini/settings.json` or user
 `~/.gemini/settings.json`:
+Before editing an existing JSON file, create a same-directory backup, for
+example `cp <config-path> <config-path>.bak-<timestamp>`. The full generated
+object below is suitable only for an otherwise empty/new target. For an
+existing JSON object, merge only the canonical `mcpServers.cymatix-context`
+entry into its existing `mcpServers` object and preserve every unrelated root
+setting and server; do not replace the root object.
 
 <!-- BEGIN GENERATED MCP: gemini-cli -->
 ```json
@@ -67,6 +73,12 @@ the six lean tools and call `cymatix_health`. Then inspect read-only status:
 ```bash
 cymatix-status --host gemini-cli --json
 ```
+
+A valid loopback configured URL is probed automatically. To deliberately probe
+a remote endpoint, pass `--server-url <validated-url>`; it overrides the
+configured URL. Malformed URLs, URLs containing credentials, query strings, or
+fragments, and implicit non-loopback URLs are not probed. Never put credentials
+in a URL.
 
 The separate enablement record may be missing or malformed; in that case
 activation is `unknown`, not enabled. `configured_ready` combines canonical

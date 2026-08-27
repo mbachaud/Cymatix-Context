@@ -23,6 +23,13 @@ cp <absolute-repo-path>/skills/cymatix-context/SKILL.md ~/.agents/skills/cymatix
 
 Add this block to the workspace `.codex/config.toml` or user
 `~/.codex/config.toml` Codex TOML configuration:
+Before editing an existing TOML file, create a same-directory backup, for
+example `cp <config-path> <config-path>.bak-<timestamp>`. The full generated
+block below is suitable only for an otherwise empty/new target. For an
+existing TOML file, merge or append only the canonical
+`[mcp_servers.cymatix-context]` and its `.env` table, preserving every
+unrelated setting and server table; preserve those entries and do not replace
+the whole file.
 
 <!-- BEGIN GENERATED MCP: codex -->
 ```toml
@@ -55,6 +62,12 @@ entry and six lean tools, and call `cymatix_health`. A status report is:
 ```bash
 cymatix-status --host codex --json
 ```
+
+A valid loopback configured URL is probed automatically. To deliberately probe
+a remote endpoint, pass `--server-url <validated-url>`; it overrides the
+configured URL. Malformed URLs, URLs containing credentials, query strings, or
+fragments, and implicit non-loopback URLs are not probed. Never put credentials
+in a URL.
 
 Skill activation is separate. `configured_ready=true` means canonical config,
 known enabled MCP activation, and healthy server—not a live host connection.
