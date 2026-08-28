@@ -295,3 +295,219 @@ def test_sharding_builder_threads_cover_walk():
         "cover_walk_append_min_mass", "cover_walk_band_weight",
     ):
         assert f"{name}=retrieval.{name}" in src, name
+
+
+# ═══ Task 4: query_docs wiring — append-below-head + eps-band class ════
+
+# Store-level fixtures reuse the invariance-audit harness (single source
+# of truth for corpora + the canonical 'alpha' query).
+from tests.test_retrieval_invariance import _content, _doc, _fillers, _new_store, _run
+
+
+def _cover_edges(g, rows) -> None:
+    g.conn.executemany(
+        "INSERT OR REPLACE INTO gene_relations "
+        "(gene_id_a, gene_id_b, relation, confidence, updated_at) "
+        "VALUES (?, ?, 5, ?, 0)",
+        rows,
+    )
+    g.conn.commit()
+
+
+def _rescue_corpus():
+    """Two alpha-matching head docs + fillers + rescue_x, which matches the
+    query in NO tier (unique tokens, unique domain) — the static-cohort
+    analog: only a COVER edge can surface it.
+
+    head_a fires multiple tiers (exact tag + fts rank 1); head_b fires fts
+    ONLY (no alpha domain tag), putting its fused score far outside
+    head_a's 5% eps band — at rrf_k=20 two ADJACENT ranks in the same tier
+    are only ~4.5% apart (inside the band by construction), so an
+    out-of-band fixture needs a tier-set gap, not a rank gap."""
+    x_words = " ".join(f"omega{j}" for j in range(12))
+    return [
+        _doc("head_a", _content(3), ["w1", "w2", "w3", "alpha"]),
+        _doc("head_b", _content(1), ["w4", "w5", "w6"]),
+        _doc("rescue_x", x_words, ["omegadom"]),
+    ] + _fillers(8)
+
+
+def test_default_off_never_calls_walk(monkeypatch):
+    import cymatix_context.retrieval.cover_walk as cw
+
+    def _boom(*a, **k):  # pragma: no cover - would mean the walk ran
+        raise AssertionError("cover_walk_mass called with knob off")
+
+    monkeypatch.setattr(cw, "cover_walk_mass", _boom)
+    g = _new_store(_rescue_corpus(), fusion_mode="rrf")
+    try:
+        _cover_edges(g, [("head_a", "rescue_x", 0.9)])
+        ranked, _s, _c = _run(g)
+        assert "rescue_x" not in ranked
+        assert g.last_cover_walk_diag == {}
+    finally:
+        g.close()
+
+
+def test_append_rescues_out_of_pool_doc():
+    g = _new_store(
+        _rescue_corpus(), fusion_mode="rrf", cover_walk_enabled=True,
+    )
+    try:
+        _cover_edges(g, [("head_a", "rescue_x", 0.9)])
+        ranked, _s, _c = _run(g)
+        assert "rescue_x" in ranked  # delivered top-12 window
+        assert "rescue_x" in g.last_ranked_ids[:12]
+        assert g.last_cover_walk_diag["rescues"] == ["rescue_x"]
+        assert g.last_cover_walk_diag["mode"] == "bidirectional"
+    finally:
+        g.close()
+
+
+def test_displaced_doc_slides_below_not_dropped():
+    # 13 alpha-matching docs fill the top-12; the rescue displaces exactly
+    # one tail slot and the displaced doc survives below, not dropped.
+    docs = [
+        _doc(f"hit{i:02d}", _content(min(i % 5 + 1, 5)),
+             [f"h{i}a", f"h{i}b", f"h{i}c", "alpha"])
+        for i in range(13)
+    ]
+    x_words = " ".join(f"omega{j}" for j in range(12))
+    docs.append(_doc("rescue_x", x_words, ["omegadom"]))
+    g = _new_store(docs, fusion_mode="rrf", cover_walk_enabled=True)
+    g_off = _new_store(docs, fusion_mode="rrf")
+    try:
+        for st in (g, g_off):
+            st.conn.executemany(
+                "INSERT OR REPLACE INTO gene_relations "
+                "(gene_id_a, gene_id_b, relation, confidence, updated_at) "
+                "VALUES (?, ?, 5, ?, 0)",
+                [("hit00", "rescue_x", 0.9)],
+            )
+            st.conn.commit()
+        _run(g)
+        _run(g_off)
+        on, off = list(g.last_ranked_ids), list(g_off.last_ranked_ids)
+        assert "rescue_x" in on[:12] and "rescue_x" not in off
+        # Everything the OFF arm ranked is still present ON — displaced
+        # docs slide below the insertion point, they do not vanish.
+        assert set(off) <= set(on)
+        # Order above the insertion point is untouched.
+        n_rescues = 1
+        assert on[: 12 - g._cover_walk_append_slots] == off[: 12 - g._cover_walk_append_slots]
+        assert g.last_cover_walk_diag["rescues"] == ["rescue_x"]
+    finally:
+        g.close()
+        g_off.close()
+
+
+def test_band_additive_only_under_eps_band():
+    # Global combinator stays "additive" (no per-class map fired: the
+    # harness query path passes no classifier override) -> the walk must
+    # NOT touch the rerank maps; the append lane still fires.
+    edges = [("head_a", "head_b", 0.9), ("head_a", "rescue_x", 0.8)]
+    g = _new_store(
+        _rescue_corpus(), fusion_mode="rrf", cover_walk_enabled=True,
+        cover_walk_seed_m=1, rerank_combinator="additive",
+    )
+    try:
+        _cover_edges(g, edges)
+        _ranked, _s, contrib = _run(g)
+        # No BAND contribution for eligible docs under the additive
+        # combinator (the rerank maps stay untouched). The appended
+        # rescue's observability tag is combinator-independent and allowed.
+        assert "cover_walk" not in contrib.get("head_b", {})
+        assert "cover_walk" not in contrib.get("head_a", {})
+        assert "rescue_x" in g.last_ranked_ids[:12]  # append still on
+        assert g.last_cover_walk_diag["band_boosted"] == 0
+    finally:
+        g.close()
+
+    g2 = _new_store(
+        _rescue_corpus(), fusion_mode="rrf", cover_walk_enabled=True,
+        cover_walk_seed_m=1, rerank_combinator="eps_band",
+    )
+    try:
+        _cover_edges(g2, edges)
+        _ranked2, _s2, contrib2 = _run(g2)
+        # head_b is eligible, outside the 1-doc seed set, and linked from
+        # the seed -> it gets the banded cover_walk class.
+        assert contrib2.get("head_b", {}).get("cover_walk", 0.0) > 0.0
+        assert g2.last_cover_walk_diag["band_boosted"] >= 1
+    finally:
+        g2.close()
+
+
+def test_band_mass_cannot_cross_bands():
+    # Under eps_band, a clear fused loser with huge walk mass must not
+    # outrank a clear fused winner: eligible relative order (rescues
+    # excluded) is identical with the walk on and off.
+    docs = _rescue_corpus()
+    on = _new_store(
+        docs, fusion_mode="rrf", cover_walk_enabled=True,
+        cover_walk_seed_m=1, cover_walk_band_weight=1000.0,
+        cover_walk_append_slots=0, rerank_combinator="eps_band",
+    )
+    off = _new_store(docs, fusion_mode="rrf", rerank_combinator="eps_band")
+    try:
+        for st in (on, off):
+            st.conn.executemany(
+                "INSERT OR REPLACE INTO gene_relations "
+                "(gene_id_a, gene_id_b, relation, confidence, updated_at) "
+                "VALUES (?, ?, 5, ?, 0)",
+                [("head_a", "head_b", 0.9)],
+            )
+            st.conn.commit()
+        _run(on)
+        _run(off)
+        # head_a leads by a clear fused margin (3 mentions + exact tag) —
+        # head_b is out of its 5% band, so even a x1000 walk boost cannot
+        # cross it.
+        assert on.last_ranked_ids.index("head_a") < on.last_ranked_ids.index("head_b")
+        assert list(on.last_ranked_ids) == list(off.last_ranked_ids)
+    finally:
+        on.close()
+        off.close()
+
+
+def test_min_mass_floor_blocks_weak_rescues():
+    g = _new_store(
+        _rescue_corpus(), fusion_mode="rrf", cover_walk_enabled=True,
+        cover_walk_append_min_mass=999.0,
+    )
+    try:
+        _cover_edges(g, [("head_a", "rescue_x", 0.9)])
+        _run(g)
+        assert "rescue_x" not in g.last_ranked_ids
+        assert g.last_cover_walk_diag.get("rescues", []) == []
+    finally:
+        g.close()
+
+
+def test_zero_slots_disables_append():
+    g = _new_store(
+        _rescue_corpus(), fusion_mode="rrf", cover_walk_enabled=True,
+        cover_walk_append_slots=0,
+    )
+    try:
+        _cover_edges(g, [("head_a", "rescue_x", 0.9)])
+        _run(g)
+        assert "rescue_x" not in g.last_ranked_ids
+    finally:
+        g.close()
+
+
+def test_enabled_but_no_edges_is_clean_noop():
+    g = _new_store(
+        _rescue_corpus(), fusion_mode="rrf", cover_walk_enabled=True,
+    )
+    g_off = _new_store(_rescue_corpus(), fusion_mode="rrf")
+    try:
+        _run(g)
+        _run(g_off)
+        assert list(g.last_ranked_ids) == list(g_off.last_ranked_ids)
+        assert g.last_cover_walk_diag["mode"] == "bidirectional"
+        assert g.last_cover_walk_diag.get("rescues", []) == []
+    finally:
+        g.close()
+        g_off.close()

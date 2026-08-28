@@ -3879,6 +3879,11 @@ class KnowledgeStore:
         # _fuse_limit == limit, i.e. byte-identical to the pre-#341 branch.
         _rerank_on = self._rerank_effective(rerank_override) and query_text is not None
         _fuse_limit = max(limit, self._rerank_depth) if _rerank_on else limit
+        # W2.1: COVER-walk state — defined for BOTH fusion branches so the
+        # append block below is a no-op under additive (the walk only ever
+        # runs on the RRF path).
+        _cover_mass: Dict[str, float] = {}
+        _cover_diag: Dict[str, Any] = {}
         if self._fusion_mode == "rrf":
             fused_scores = fuser.all_scores()
             # The bm25_shortlist filter mutated gene_scores above; honor
@@ -3907,6 +3912,51 @@ class KnowledgeStore:
             # config load, so a non-None override is a VALID_COMBINATORS member
             # (combine_rerank still raises defensively on a direct mis-call).
             _effective_combinator = rerank_combinator or self._rerank_combinator
+            # ── W2.1: COVER-edge walk ─────────────────────────────────
+            # Mass spread from the pure-fused head over the ingest-built
+            # gene_relations COVER graph (retrieval/cover_walk.py; design +
+            # pre-flight receipts:
+            # docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md).
+            # Two consumers, both confined per the wave-1 banding lesson:
+            # here, mass on ELIGIBLE candidates joins the rerank maps as a
+            # "cover_walk" class ONLY when this query's effective combinator
+            # is eps_band (never a free additive — the w1_map_empty arm
+            # measured unbanded additives dropping semantic r@12 0.32→0.16);
+            # after the #341 seam, the append-below-head block rescues
+            # out-of-window docs into the tail of the delivered top-k.
+            if self._cover_walk_enabled:
+                _cw_t0 = time.monotonic()
+                try:
+                    from .retrieval.cover_walk import cover_walk_mass
+                    _cw_seeds = [
+                        gid for gid, _cw_s in sorted(
+                            fused.items(), key=lambda x: (-x[1], x[0])
+                        )[: self._cover_walk_seed_m]
+                    ]
+                    _cover_mass, _cover_diag = cover_walk_mass(
+                        self, _cw_seeds,
+                        hops=self._cover_walk_hops,
+                        gamma=self._cover_walk_gamma,
+                        degree_cap=self._cover_walk_degree_cap,
+                        frontier_cap=self._cover_walk_frontier_cap,
+                    )
+                    _cw_band_n = 0
+                    if _effective_combinator == "eps_band" and _cover_mass:
+                        for _cw_gid in eligible_ids:
+                            _cw_m = _cover_mass.get(_cw_gid)
+                            if _cw_m:
+                                _cw_b = self._cover_walk_band_weight * _cw_m
+                                rr[_cw_gid] = rr.get(_cw_gid, 0.0) + _cw_b
+                                rr_by_class.setdefault("cover_walk", {})[_cw_gid] = _cw_b
+                                tier_contrib.setdefault(_cw_gid, {})["cover_walk"] = _cw_b
+                                _cw_band_n += 1
+                    _cover_diag["band_boosted"] = _cw_band_n
+                except Exception:
+                    log.warning(
+                        "cover walk failed; fused order untouched", exc_info=True,
+                    )
+                    _cover_mass, _cover_diag = {}, {}
+                _sig("cover_walk", _cw_t0)
             from .retrieval.rerank_combinators import combine_rerank
             final_scores, ranked_ids = combine_rerank(
                 _effective_combinator,
@@ -4005,6 +4055,48 @@ class KnowledgeStore:
             # exit, so a direct merge here would be clobbered.
             _sig("xenc_rerank", _xenc_t0)
 
+        # ── W2.1: COVER-walk append-below-head ────────────────────────
+        # Rescue lane for docs the fused ranking cannot reach (static
+        # semantic gold sits at map rank 10^4..10^5 — no score adjustment
+        # lifts it; only injection into the delivered window can). The top
+        # append_slots walk candidates NOT already in the delivered window
+        # (ranked_ids[:max_genes]) fill the window's LAST slots; displaced
+        # docs slide below the insertion point — membership of the wider
+        # ranked list is preserved, so nothing vanishes from the receipts'
+        # final basis. Placed AFTER the #341 seam and the _evidence_ids
+        # snapshot (#342 invariant: edge evidence accrues from the fused
+        # order) and BEFORE the last_ranked_ids publication so the final
+        # basis and the delivered slice both see rescues.
+        if _cover_mass and self._cover_walk_append_slots > 0 and ranked_ids:
+            _cw_K = min(int(max_genes), len(ranked_ids))
+            _cw_slots = min(self._cover_walk_append_slots, _cw_K)
+            if _cw_slots > 0:
+                _cw_window = set(ranked_ids[:_cw_K])
+                _cw_floor = self._cover_walk_append_min_mass
+                _cw_rescues = [
+                    _gid for _gid, _m in sorted(
+                        _cover_mass.items(), key=lambda x: (-x[1], x[0])
+                    )
+                    if _m >= _cw_floor and _gid not in _cw_window
+                ][:_cw_slots]
+                if _cw_rescues:
+                    _cw_keep = ranked_ids[: _cw_K - len(_cw_rescues)]
+                    _cw_seen: set = set()
+                    _cw_new: List[str] = []
+                    for _gid in _cw_keep + _cw_rescues + ranked_ids[len(_cw_keep):]:
+                        if _gid not in _cw_seen:
+                            _cw_seen.add(_gid)
+                            _cw_new.append(_gid)
+                    _cover_diag["displaced"] = ranked_ids[
+                        _cw_K - len(_cw_rescues): _cw_K
+                    ]
+                    ranked_ids = _cw_new
+                    for _gid in _cw_rescues:
+                        tier_contrib.setdefault(_gid, {})["cover_walk"] = (
+                            _cover_mass[_gid]
+                        )
+                _cover_diag["rescues"] = _cw_rescues
+
         # Issue #341: publish the final order unconditionally — both fusion
         # modes, rerank on or off — so an A/B always compares two orderings
         # produced the same way and the metric basis can never go stale.
@@ -4018,6 +4110,10 @@ class KnowledgeStore:
         # absent, which is an unmeasurable, not a rank of zero.
         with self._last_query_scores_lock:
             self.last_ranked_ids = list(ranked_ids)
+            # W2.1: {} when the walk did not run — same never-stale
+            # contract as last_rerank_diag (the ladder clears + snapshots
+            # it per needle).
+            self.last_cover_walk_diag = dict(_cover_diag)
 
         # Walking tie-break (opt-in via CYMATIX_WALKING_TIEBREAK=1).
         # When adjacent top-k documents have bitwise-identical fused scores,
