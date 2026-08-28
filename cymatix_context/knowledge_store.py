@@ -610,7 +610,11 @@ class KnowledgeStore:
         # under "additive" they are the tier coefficients/caps themselves,
         # under "rrf" they are rank post-multipliers.
         fusion_mode: str = "rrf",
-        rrf_k: int = 60,
+        # rrf_k harmonized with RetrievalConfig.rrf_k (60 → 20, 2026-08-28
+        # wave-1 graduation — see config.py for the receipt trail); the
+        # layer-defaults guard in tests/test_retrieval_invariance.py pins
+        # the equality.
+        rrf_k: int = 20,
         # Issue #260 (2026-07-12): rank/confidence-gated RRF. Default-inert —
         # rrf_gate_enabled=False makes the per-store Fuser byte-identical to
         # today. When enabled, a recall arm contributes RRF mass only for its

@@ -630,7 +630,15 @@ class RetrievalConfig:
     # (pipeline/tier_logic.py skip_absolute_floors) because the absolute
     # floors were calibrated on additive scores.
     fusion_mode: str = "rrf"                # "rrf" | "additive" (legacy)
-    rrf_k: int = 60                         # Cormack 2009 default
+    # rrf_k GRADUATED 60 → 20 (2026-08-28, wave-1 ranking-under-width,
+    # docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md): with
+    # the all-classes eps_band map below, delivered_gold 0.555 → 0.630 and
+    # r@12 0.651 → 0.681 on the 829k-scale v09x bed (n=470, paired +18/−4,
+    # zero question-type regressions; receipts benchmarks/dogfood/erb/
+    # receipts/ladder_v09x_w1c_*_2026-08-28.json). Sharper head: gold wins
+    # by tier-head spikes, noise by multi-tier-mid presence (k=240 mirror
+    # lost symmetrically). 60 restores the Cormack 2009 default.
+    rrf_k: int = 20
     # Issue #260 (2026-07-12): rank/confidence-gated RRF. At true corpus scale
     # (829K ERB blob) unconditional RRF let the dense arm's near-random deep-rank
     # signal (median gold rank 50,357 in a ~178K pool) demote a gold that lexical
@@ -696,8 +704,22 @@ class RetrievalConfig:
     # Classifier disabled => map ignored, global combinator used. Pass an
     # explicit empty dict ({}) in TOML to restore the pre-graduation
     # byte-identical global-combinator behavior.
+    # RE-GRADUATED 2026-08-28 to ALL FIVE classes (wave-1 ranking-under-
+    # width, docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md):
+    # extending eps_band to arithmetic/factual/procedural was +3/−1 r@12 /
+    # +7/−2 delivered on the 829k v09x bed and stacks with rrf_k=20 (combo
+    # receipts ladder_v09x_w1c_*_2026-08-28.json). The band also PROTECTS
+    # paraphrastic gold: unbanded additives (w1_map_empty arm) dropped
+    # semantic r@12 0.32 → 0.16. Classifier_off still bypasses the map
+    # entirely (#255 coupling — attributed 235/235 by that same arm).
     rerank_combinator_by_class: Dict[str, str] = field(
-        default_factory=lambda: {"multi_hop": "eps_band", "default": "eps_band"}
+        default_factory=lambda: {
+            "arithmetic": "eps_band",
+            "factual": "eps_band",
+            "procedural": "eps_band",
+            "multi_hop": "eps_band",
+            "default": "eps_band",
+        }
     )
     # Issue #255 / audit §4 item 5 (2026-07-10): post-fusion BLEND layer mode.
     # The blend layer (cymatics 0.5 / harmonic_bin 1.5 / TCM 0.3) mutates
