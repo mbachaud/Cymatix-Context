@@ -177,6 +177,19 @@ class BudgetConfig:
     # to opt out (documents legitimately containing literal "<cymatix:"
     # then ship verbatim).
     neutralize_control_tags: bool = True
+    # W2.4 (2026-08-28): delivered-seat floor. The Stage-5 trimmer's only
+    # budget tool at shipped defaults is whole-document eviction (the
+    # compressor is off), which is the crater cat-(b) mechanism: gold at
+    # map rank 9-12 evicted, delivered_count 2-8
+    # (docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md).
+    # 0 (default) = legacy eviction-only trim, byte-for-byte. N = evict
+    # only down to N parts (clamped to the candidate count); below that
+    # shrink the LARGEST parts (tail-truncation, header-preserving,
+    # marked " ...[budget-trimmed]") until the prompt fits. The token
+    # budget always wins last: if every part is at the truncation char
+    # floor and the prompt still overflows, eviction resumes below the
+    # floor. Flip is receipt-gated (w24 arm).
+    min_delivered_docs: int = 0
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
@@ -217,6 +230,14 @@ class BudgetConfig:
     tier_focused_ratio: float = 1.8  # Issue #207 item 4: top/mean ratio at-or-above which retrieval enters FOCUSED tier (top 6 docs). Prior literal 1.8 in pipeline/tier_logic.py.
     tier_hard_floor_frac: float = 0.15  # Issue #207 item 4: score-gate hard floor — drop candidates scoring below this fraction of the top score (they move to the shadow pool at 0.5x weight). Prior literal 0.15 in pipeline/tier_logic.py.
     tier_lagrange_frac: float = 0.7  # Issue #207 item 4: Lagrange pull-back threshold — a shadow-pool doc needs standalone score >= this fraction of the winners' floor (plus <20% co-activation overlap) to be pulled back. Prior literal 0.7 in pipeline/tier_logic.py.
+
+    def __post_init__(self) -> None:
+        # W2.4: fail loud at load, not silently at assembly time.
+        if self.min_delivered_docs < 0:
+            raise ValueError(
+                "[budget] min_delivered_docs must be >= 0 "
+                f"(0 = legacy eviction-only trim), got {self.min_delivered_docs!r}"
+            )
 
 
 @dataclass
@@ -1426,6 +1447,8 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             legibility_enabled=bool(b.get("legibility_enabled", cfg.budget.legibility_enabled)),
             session_delivery_enabled=bool(b.get("session_delivery_enabled", cfg.budget.session_delivery_enabled)),
             neutralize_control_tags=bool(b.get("neutralize_control_tags", cfg.budget.neutralize_control_tags)),
+            # W2.4: delivered-seat floor. Default-inert (0).
+            min_delivered_docs=int(b.get("min_delivered_docs", cfg.budget.min_delivered_docs)),
             abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
             foveated_enabled=bool(b.get("foveated_enabled", cfg.budget.foveated_enabled)),
             foveated_alpha=float(b.get("foveated_alpha", cfg.budget.foveated_alpha)),
