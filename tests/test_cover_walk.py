@@ -34,3 +34,141 @@ def test_ddl_creates_reverse_index():
         assert "idx_gene_relations_rel_b" in names
     finally:
         conn.close()
+
+
+# ═══ Task 2: walk module ═══════════════════════════════════════════════
+
+
+class _StubGenome:
+    """The walk module's whole genome contract is ``.read_conn``."""
+
+    def __init__(self, conn: sqlite3.Connection) -> None:
+        self.read_conn = conn
+
+
+def _edges(conn: sqlite3.Connection, rows) -> None:
+    conn.executemany(
+        "INSERT OR REPLACE INTO gene_relations "
+        "(gene_id_a, gene_id_b, relation, confidence, updated_at) "
+        "VALUES (?, ?, 5, ?, 0)",
+        rows,
+    )
+
+
+def _walk(conn, seeds, **kw):
+    from cymatix_context.retrieval.cover_walk import cover_walk_mass
+
+    return cover_walk_mass(_StubGenome(conn), seeds, **kw)
+
+
+def test_one_hop_mass_is_confidence_weighted():
+    conn = _fresh_conn()
+    try:
+        _edges(conn, [("s", "a", 0.8), ("s", "b", 0.2)])
+        mass, diag = _walk(conn, ["s"], hops=1, gamma=0.5)
+        # seed mass 1.0; s's outgoing share is gamma * mass * conf_i / sum(conf)
+        assert mass["a"] == pytest.approx(0.5 * 0.8 / 1.0)
+        assert mass["b"] == pytest.approx(0.5 * 0.2 / 1.0)
+        assert diag["mode"] == "bidirectional"
+        assert diag["seeds_in_graph"] == 1
+    finally:
+        conn.close()
+
+
+def test_gamma_damps_second_hop_with_backflow():
+    conn = _fresh_conn()
+    try:
+        _edges(conn, [("s", "a", 1.0), ("a", "c", 1.0)])
+        mass, _diag = _walk(conn, ["s"], hops=2, gamma=0.5)
+        # hop1: a = 0.5. hop2 from a (neighbors s and c, equal conf):
+        # c = 0.5 * 0.5 * (1/2) = 0.125; the s backflow is absorbed by the
+        # seed and never reported.
+        assert mass["a"] == pytest.approx(0.5)
+        assert mass["c"] == pytest.approx(0.125)
+        assert "s" not in mass
+    finally:
+        conn.close()
+
+
+def test_seeds_never_in_result():
+    conn = _fresh_conn()
+    try:
+        _edges(conn, [("s1", "s2", 1.0), ("s1", "x", 1.0)])
+        mass, _ = _walk(conn, ["s1", "s2"], hops=2)
+        assert "s1" not in mass and "s2" not in mass
+        assert "x" in mass
+    finally:
+        conn.close()
+
+
+def test_hub_reachable_but_never_expanded():
+    conn = _fresh_conn()
+    try:
+        # hub has degree 4 (s + 3 leaves); degree_cap=3 -> hub receives mass
+        # but its leaves get nothing through it.
+        _edges(conn, [("s", "hub", 1.0),
+                      ("hub", "l1", 1.0), ("hub", "l2", 1.0), ("hub", "l3", 1.0)])
+        mass, _ = _walk(conn, ["s"], hops=2, degree_cap=3)
+        assert "hub" in mass
+        assert "l1" not in mass and "l2" not in mass and "l3" not in mass
+    finally:
+        conn.close()
+
+
+def test_frontier_cap_keeps_top_mass_deterministically():
+    conn = _fresh_conn()
+    try:
+        # Three equal-mass children each with a distinct grandchild; cap=2
+        # expands only the lexicographically first two children (mass tie
+        # broken by gene_id asc).
+        _edges(conn, [("s", "c1", 1.0), ("s", "c2", 1.0), ("s", "c3", 1.0),
+                      ("c1", "g1", 1.0), ("c2", "g2", 1.0), ("c3", "g3", 1.0)])
+        mass, _ = _walk(conn, ["s"], hops=2, frontier_cap=2)
+        assert "g1" in mass and "g2" in mass
+        assert "g3" not in mass
+    finally:
+        conn.close()
+
+
+def test_bidirectional_reaches_in_edges():
+    conn = _fresh_conn()
+    try:
+        _edges(conn, [("x", "s", 0.9)])  # x links TO the seed
+        mass, diag = _walk(conn, ["s"], hops=1)
+        assert "x" in mass
+        assert diag["mode"] == "bidirectional"
+    finally:
+        conn.close()
+
+
+def test_forward_only_when_reverse_index_missing():
+    conn = _fresh_conn()
+    try:
+        conn.execute("DROP INDEX idx_gene_relations_rel_b")
+        _edges(conn, [("x", "s", 0.9), ("s", "y", 0.9)])
+        mass, diag = _walk(conn, ["s"], hops=1)
+        assert diag["mode"] == "forward_only"
+        assert "y" in mass
+        assert "x" not in mass
+    finally:
+        conn.close()
+
+
+def test_missing_table_is_soft_noop():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    try:
+        mass, diag = _walk(conn, ["s"], hops=2)
+        assert mass == {}
+        assert diag["mode"] == "absent"
+    finally:
+        conn.close()
+
+
+def test_empty_seeds_is_noop():
+    conn = _fresh_conn()
+    try:
+        mass, diag = _walk(conn, [], hops=2)
+        assert mass == {}
+    finally:
+        conn.close()
