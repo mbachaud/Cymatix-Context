@@ -41,6 +41,13 @@ def _json_config(
     )
 
 
+def _installed_antigravity_skill(tmp_path):
+    skill_file = tmp_path / ".agents" / "skills" / "cymatix-context" / "SKILL.md"
+    skill_file.parent.mkdir(parents=True, exist_ok=True)
+    skill_file.write_text("---\nname: cymatix-context\n---\n", encoding="utf-8")
+    return skill_file
+
+
 def _healthy_probes(monkeypatch, *, participants=None):
     def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
         if url.endswith("/health"):
@@ -291,6 +298,8 @@ def test_report_refuses_credential_bearing_config_url_without_leaking_environmen
     assert "token" not in serialized
     assert result["server"]["url"] == "http://127.0.0.1:19199/health"
     assert result["server"]["health"] == "unknown"
+    assert result["server"]["configured_url_match"] is None
+    assert result["configured_ready"] is False
 
 
 def test_skill_directory_is_not_reported_as_an_installed_file(monkeypatch, tmp_path):
@@ -310,8 +319,99 @@ def test_skill_directory_is_not_reported_as_an_installed_file(monkeypatch, tmp_p
     assert result["skill"]["installation"] == "missing"
 
 
-def test_explicit_server_url_precedes_configured_url_and_opts_into_remote_probe(
+def test_explicit_mismatched_server_url_is_diagnostic_only(monkeypatch, tmp_path):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    # URL identity is structural: localhost is not DNS-equivalent to 127.0.0.1.
+    _json_config(config, server_url="http://localhost:19199")
+    _installed_antigravity_skill(tmp_path)
+    seen_urls = []
+
+    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
+        seen_urls.append(url)
+        if url == "http://127.0.0.1:19199/health":
+            return ProbeResult("reachable", {"status": "ok"}, None, None)
+        pytest.fail(f"mismatched diagnostic target must not supply MCP evidence: {url}")
+
+    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+    result = status_mod.collect_status(
+        host="antigravity",
+        server_url="http://127.0.0.1:19199",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert result["server"]["url"] == "http://127.0.0.1:19199"
+    assert result["server"]["source"] == "explicit"
+    assert result["server"]["configured_url_match"] is False
+    assert result["server"]["health"] == "healthy"
+    assert result["mcp"]["live"] == "unknown"
+    assert result["configured_ready"] is None
+    assert result["guided_ready"] is None
+    assert seen_urls == [
+        "http://127.0.0.1:19199/health",
+    ]
+    assert "update the selected host mcp url" in result["next_action"].lower()
+    rendered_json = json.dumps(result, sort_keys=True)
+    rendered_text = status_mod._render_text(result)
+    assert '"configured_url_match": false' in rendered_json
+    assert "source=explicit" in rendered_text
+    assert "configured_url_match=no" in rendered_text
+
+
+def test_explicit_canonical_equivalent_server_url_preserves_configured_evidence(
     monkeypatch, tmp_path
+):
+    config = tmp_path / ".agents" / "mcp_config.json"
+    config.parent.mkdir(parents=True)
+    _json_config(config, server_url="HTTP://LOCALHOST:80/context/")
+    _installed_antigravity_skill(tmp_path)
+    seen_urls = []
+
+    def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
+        seen_urls.append(url)
+        if url == "http://localhost/context/health":
+            return ProbeResult("reachable", {"status": "ok"}, None, None)
+        if url == "http://localhost/context/sessions?status=active":
+            return ProbeResult(
+                "reachable",
+                {
+                    "participants": [
+                        {
+                            "handle": "agent-1",
+                            "mcp_host": "antigravity",
+                            "status": "active",
+                        }
+                    ]
+                },
+                None,
+                None,
+            )
+        raise AssertionError(url)
+
+    monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+    result = status_mod.collect_status(
+        host="antigravity",
+        server_url="http://localhost/context",
+        start_dir=tmp_path,
+        home_dir=tmp_path,
+        launcher_url=None,
+    )
+
+    assert result["server"]["source"] == "explicit"
+    assert result["server"]["configured_url_match"] is True
+    assert result["mcp"]["live"] == "connected"
+    assert result["configured_ready"] is True
+    assert result["guided_ready"] is True
+    assert seen_urls == [
+        "http://localhost/context/health",
+        "http://localhost/context/sessions?status=active",
+    ]
+
+
+def test_main_exits_nonzero_for_mismatched_explicit_server_url(
+    monkeypatch, tmp_path, capsys
 ):
     config = tmp_path / ".agents" / "mcp_config.json"
     config.parent.mkdir(parents=True)
@@ -320,26 +420,33 @@ def test_explicit_server_url_precedes_configured_url_and_opts_into_remote_probe(
 
     def fake_probe(url, timeout_s=status_mod.DEFAULT_STATUS_TIMEOUT_S):
         seen_urls.append(url)
-        if url.endswith("/health"):
+        if url == "https://status.example.test:19444/health":
             return ProbeResult("reachable", {"status": "ok"}, None, None)
-        if url.endswith("/sessions?status=active"):
-            return ProbeResult("reachable", {"participants": []}, None, None)
-        raise AssertionError(url)
+        if url == "http://127.0.0.1:11438/api/state":
+            return ProbeResult("reachable", {"cymatix": {"running": True}}, None, None)
+        pytest.fail(f"mismatched diagnostic target must not query sessions: {url}")
 
     monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
-    result = status_mod.collect_status(
-        host="antigravity",
-        server_url="https://status.example.test:19444",
-        start_dir=tmp_path,
-        home_dir=tmp_path,
-        launcher_url=None,
+    rc = status_mod.main(
+        [
+            "--host",
+            "antigravity",
+            "--mcp-config",
+            str(config),
+            "--server-url",
+            "https://status.example.test:19444",
+            "--launcher-url",
+            "http://127.0.0.1:11438",
+            "--json",
+        ]
     )
 
-    assert result["server"]["url"] == "https://status.example.test:19444"
-    assert seen_urls == [
-        "https://status.example.test:19444/health",
-        "https://status.example.test:19444/sessions?status=active",
-    ]
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 1
+    assert payload["server"]["source"] == "explicit"
+    assert payload["server"]["configured_url_match"] is False
+    assert payload["configured_ready"] is None
+    assert not any("/sessions?status=active" in url for url in seen_urls)
 
 
 @pytest.mark.parametrize(
@@ -478,6 +585,8 @@ def test_implicit_loopback_configured_urls_are_probed_without_dns_resolution(
     )
 
     assert result["server"]["health"] == "healthy"
+    assert result["server"]["source"] == "configured"
+    assert result["server"]["configured_url_match"] is True
     assert seen_urls == [
         f"{configured_url}/health",
         f"{configured_url}/sessions?status=active",

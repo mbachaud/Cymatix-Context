@@ -372,6 +372,8 @@ collapsing them prematurely:
 | Dimension | Values |
 |---|---|
 | `host.selection` | a profile id, `unknown`, or `ambiguous` |
+| `server.source` | `configured`, `explicit`, or `default` |
+| `server.configured_url_match` | `true`, `false`, or `null` when no valid target/config comparison can be made |
 | `server.transport` | `reachable`, `unreachable` |
 | `server.health` | `healthy`, `unhealthy`, `unknown` plus the unmodified health payload |
 | `launcher.state` | `running`, `stopped`, `unreachable`, `not_configured`; informational only |
@@ -457,6 +459,22 @@ launcher URLs are redacted before JSON/text rendering, and status reads both
 successful and error response bodies with a fixed bound. This policy changes
 only read-only status probing; it does not change MCP runtime connections or
 native config parsing/storage.
+
+The explicit target is a health diagnostic override, not a rewrite of the
+selected host's MCP endpoint. For a selected configuration, status compares
+the effective probe URL and `configured_url` as a strict canonical tuple:
+lowercase scheme and hostname (with normalized IP-literal spelling), effective
+HTTP(S) port, and path with empty/root and trailing-slash normalization. It
+never uses DNS or treats `localhost` and an IP address as equivalent. JSON
+exposes the safe `server.source` and `server.configured_url_match` evidence.
+Only a `true` canonical match may feed `/sessions?status=active`, `mcp.live`,
+`configured_ready`, or `guided_ready` for that host configuration.
+
+When an explicit URL is a canonical mismatch, its `/health` result remains a
+separate diagnostic, but status never queries its session registry as host
+identity evidence. MCP live is `unknown`; readiness is `null` unless an
+independent definitive false condition applies; and the command exits nonzero
+with an action to update the host config or probe the matching configured URL.
 
 The existing text output remains concise. JSON is the authoritative automation
 surface. Exit code zero requires `configured_ready=true`; unknown or false

@@ -91,6 +91,7 @@ class ValidatedStatusUrl:
     request_url: str
     reported_url: str
     hostname: str
+    canonical: tuple[str, str, int, str]
 
 
 @dataclass(frozen=True)
@@ -101,6 +102,7 @@ class ProbeTarget:
     reported_url: str
     reason: str | None
     action: str | None
+    source: Literal["configured", "default", "explicit", "launcher"]
 
 
 def _bounded_text(value: object, limit: int = 500) -> str:
@@ -139,7 +141,7 @@ def _validate_status_base_url(value: object) -> tuple[ValidatedStatusUrl | None,
     try:
         split = urlsplit(value)
         hostname = split.hostname
-        _port = split.port
+        port = split.port
     except (TypeError, ValueError):
         return None, "URL is malformed."
     if split.scheme.lower() not in {"http", "https"} or not hostname:
@@ -148,11 +150,22 @@ def _validate_status_base_url(value: object) -> tuple[ValidatedStatusUrl | None,
         return None, "URL must not include userinfo."
     if split.query or split.fragment or "?" in value or "#" in value:
         return None, "URL must not include a query or fragment."
+    scheme = split.scheme.lower()
+    canonical_host = hostname.lower()
+    try:
+        canonical_host = ipaddress.ip_address(canonical_host).compressed
+    except ValueError:
+        pass
+    path = split.path or "/"
+    if path != "/":
+        path = path.rstrip("/") or "/"
+    canonical_port = port if port is not None else (443 if scheme == "https" else 80)
     return (
         ValidatedStatusUrl(
             request_url=value.rstrip("/"),
             reported_url=_reported_url(value),
             hostname=hostname,
+            canonical=(scheme, canonical_host, canonical_port, path),
         ),
         None,
     )
@@ -172,12 +185,19 @@ def _is_loopback_hostname(hostname: str) -> bool:
     return address.is_loopback or (mapped is not None and mapped.is_loopback)
 
 
-def _refused_target(*, reported_url: str, reason: str, action: str) -> ProbeTarget:
+def _refused_target(
+    *,
+    reported_url: str,
+    reason: str,
+    action: str,
+    source: Literal["configured", "default", "explicit", "launcher"],
+) -> ProbeTarget:
     return ProbeTarget(
         request_url=None,
         reported_url=reported_url,
         reason=_bounded_text(f"Status probe was not probed: {reason}"),
         action=action,
+        source=source,
     )
 
 
@@ -193,17 +213,28 @@ def _select_server_target(
                 reported_url=_reported_url(explicit_url),
                 reason=error or "URL is invalid.",
                 action="Pass a valid absolute HTTP(S) --server-url without credentials, query, or fragment.",
+                source="explicit",
             )
-        return ProbeTarget(validated.request_url, validated.reported_url, None, None)
+        return ProbeTarget(
+            validated.request_url, validated.reported_url, None, None, "explicit"
+        )
 
     automatic_url = configured_url if configured_url is not None else DEFAULT_SERVER_URL
-    source = "Configured MCP server URL" if configured_url is not None else "Automatic server URL"
+    source = (
+        "Configured MCP server URL"
+        if configured_url is not None
+        else "Automatic server URL"
+    )
+    target_source: Literal["configured", "default"] = (
+        "configured" if configured_url is not None else "default"
+    )
     validated, error = _validate_status_base_url(automatic_url)
     if validated is None:
         return _refused_target(
             reported_url=_reported_url(automatic_url),
             reason=error or "URL is invalid.",
             action="Pass a valid absolute HTTP(S) --server-url without credentials, query, or fragment.",
+            source=target_source,
         )
     if not _is_loopback_hostname(validated.hostname):
         return _refused_target(
@@ -213,8 +244,11 @@ def _select_server_target(
                 f"{source} is not loopback; pass --server-url explicitly "
                 "to opt in to remote status probing."
             ),
+            source=target_source,
         )
-    return ProbeTarget(validated.request_url, validated.reported_url, None, None)
+    return ProbeTarget(
+        validated.request_url, validated.reported_url, None, None, target_source
+    )
 
 
 def _select_launcher_target(launcher_url: str | None) -> ProbeTarget | None:
@@ -228,8 +262,43 @@ def _select_launcher_target(launcher_url: str | None) -> ProbeTarget | None:
             reported_url=_reported_url(launcher_url),
             reason=error or "URL is invalid.",
             action="Pass a valid absolute HTTP(S) --launcher-url without credentials, query, or fragment.",
+            source="launcher",
         )
-    return ProbeTarget(validated.request_url, validated.reported_url, None, None)
+    return ProbeTarget(
+        validated.request_url, validated.reported_url, None, None, "launcher"
+    )
+
+
+def _configured_url_match(
+    *, server_target: ProbeTarget, configured_url: str | None
+) -> bool | None:
+    """Compare only validated URL forms; never resolve hostnames for equivalence."""
+
+    if configured_url is None:
+        return None
+    configured, _error = _validate_status_base_url(configured_url)
+    if configured is None:
+        return None
+    if server_target.source == "configured":
+        return True
+    if server_target.source != "explicit" or server_target.request_url is None:
+        return None
+    explicit, _error = _validate_status_base_url(server_target.request_url)
+    if explicit is None:
+        return None
+    return explicit.canonical == configured.canonical
+
+
+def _diagnostic_target_action(configured_url_match: bool | None) -> str | None:
+    """Explain why a different diagnostic backend cannot prove host readiness."""
+
+    if configured_url_match is False:
+        return (
+            "Update the selected host MCP URL to the diagnostic endpoint, or rerun "
+            "--server-url with the matching configured URL; a different endpoint "
+            "cannot prove host readiness."
+        )
+    return None
 
 
 def _parse_json_mapping(body: bytes) -> tuple[Mapping[str, Any] | None, str | None]:
@@ -347,6 +416,32 @@ def configured_ready(
     return False
 
 
+def _configured_readiness_with_target_evidence(
+    *,
+    configuration: ConfigState,
+    activation: ActivationState,
+    health: Literal["healthy", "unhealthy", "unknown"],
+    configured_url_match: bool | None,
+) -> bool | None:
+    """Do not treat health for another endpoint as configured-host evidence."""
+
+    if configuration != "canonical" or activation == "disabled":
+        return False
+    if configured_url_match is False:
+        return None
+    if configured_url_match is None:
+        return configured_ready(
+            configuration=configuration,
+            activation=activation,
+            health="unknown",
+        )
+    return configured_ready(
+        configuration=configuration,
+        activation=activation,
+        health=health,
+    )
+
+
 def guided_ready(
     configured: bool | None,
     installation: Literal["present", "missing"],
@@ -440,9 +535,16 @@ def _select_host(
     )
 
 
-def _server_dict(report: ServerReport) -> dict[str, Any]:
+def _server_dict(
+    report: ServerReport,
+    *,
+    source: Literal["configured", "default", "explicit"],
+    configured_url_match: bool | None,
+) -> dict[str, Any]:
     return {
         "url": report.url,
+        "source": source,
+        "configured_url_match": configured_url_match,
         "transport": report.transport,
         "health": report.health,
         "payload": report.payload,
@@ -460,11 +562,14 @@ def _next_action(
     skill: SkillReport,
     live: McpLiveReport,
     target_action: str | None = None,
+    diagnostic_action: str | None = None,
 ) -> str:
     if selection == "unknown":
         return "Pass --host or add one canonical cymatix-context MCP entry."
     if selection == "ambiguous":
         return "Multiple host configs contain cymatix-context; pass --host explicitly."
+    if diagnostic_action is not None:
+        return diagnostic_action
     if configuration != "canonical":
         return "Add or repair the canonical cymatix-context MCP entry for this host."
     if target_action is not None:
@@ -513,6 +618,11 @@ def collect_status(
         explicit_url=server_url,
         configured_url=parsed.configured_url if parsed is not None else None,
     )
+    configured_url_match = _configured_url_match(
+        server_target=server_target,
+        configured_url=parsed.configured_url if parsed is not None else None,
+    )
+    diagnostic_action = _diagnostic_target_action(configured_url_match)
     server_probe = (
         _probe_json(f"{server_target.request_url.rstrip('/')}/health")
         if server_target.request_url is not None
@@ -549,7 +659,11 @@ def collect_status(
                 "profile": None,
                 "inspected_paths": [str(path) for path in inspected_paths],
             },
-            "server": _server_dict(server_report),
+            "server": _server_dict(
+                server_report,
+                source=server_target.source,
+                configured_url_match=configured_url_match,
+            ),
             "launcher": {
                 "url": launcher_target.reported_url if launcher_target is not None else None,
                 "state": launcher_state,
@@ -577,35 +691,45 @@ def collect_status(
                 skill=unknown_skill,
                 live=live,
                 target_action=server_target.action,
+                diagnostic_action=diagnostic_action,
             ),
         }
 
-    registry_url = (
-        f"{server_target.request_url.rstrip('/')}/sessions?status=active"
-        if server_target.request_url is not None
-        else ""
-    )
-    if (
-        server_target.request_url is not None
-        and parsed.handle
-        and parsed.handle.strip()
-        and parsed.mcp_host
-        and parsed.mcp_host.strip()
-    ):
-        registry = _probe_json(registry_url)
-    else:
-        registry = ProbeResult(
-            "unreachable",
-            None,
-            None,
-            server_target.reason or "No configured MCP identity.",
+    if configured_url_match is True:
+        registry_url = (
+            f"{server_target.request_url.rstrip('/')}/sessions?status=active"
+            if server_target.request_url is not None
+            else ""
         )
-    live = determine_mcp_live(
-        handle=parsed.handle,
-        configured_host=parsed.mcp_host,
-        registry=registry,
-        registry_url=registry_url,
-    )
+        if (
+            server_target.request_url is not None
+            and parsed.handle
+            and parsed.handle.strip()
+            and parsed.mcp_host
+            and parsed.mcp_host.strip()
+        ):
+            registry = _probe_json(registry_url)
+        else:
+            registry = ProbeResult(
+                "unreachable",
+                None,
+                None,
+                server_target.reason or "No configured MCP identity.",
+            )
+        live = determine_mcp_live(
+            handle=parsed.handle,
+            configured_host=parsed.mcp_host,
+            registry=registry,
+            registry_url=registry_url,
+        )
+    else:
+        registry_url = ""
+        match_reason = (
+            "The explicit diagnostic server URL does not match the selected host MCP URL."
+            if configured_url_match is False
+            else "No configured MCP endpoint can be matched to the status probe."
+        )
+        live = McpLiveReport("unknown", registry_url, match_reason)
     skill = discover_skill(
         profile,
         workspace=workspace,
@@ -613,10 +737,11 @@ def collect_status(
         config_path=parsed.path,
         explicit_dir=skill_dir,
     )
-    configured = configured_ready(
+    configured = _configured_readiness_with_target_evidence(
         configuration=parsed.configuration,
         activation=parsed.activation,
         health=server_report.health,
+        configured_url_match=configured_url_match,
     )
     guided = guided_ready(configured, skill.installation, skill.activation)
     return {
@@ -625,7 +750,11 @@ def collect_status(
             "profile": profile.display_name,
             "inspected_paths": [str(path) for path in inspected_paths],
         },
-        "server": _server_dict(server_report),
+        "server": _server_dict(
+            server_report,
+            source=server_target.source,
+            configured_url_match=configured_url_match,
+        ),
         "launcher": {
             "url": launcher_target.reported_url if launcher_target is not None else None,
             "state": launcher_state,
@@ -653,6 +782,7 @@ def collect_status(
             skill=skill,
             live=live,
             target_action=server_target.action,
+            diagnostic_action=diagnostic_action,
         ),
     }
 
@@ -673,7 +803,10 @@ def _render_text(status: Mapping[str, Any]) -> str:
     skill = status["skill"]
     lines = [
         f"Host: {host['selection']} ({host['profile'] or 'unselected'})",
-        f"Server: {server['transport']}/{server['health']} ({server['url']})",
+        "Server: "
+        f"{server['transport']}/{server['health']} ({server['url']}; "
+        f"source={server.get('source', 'unknown')}, "
+        f"configured_url_match={_readiness_label(server.get('configured_url_match'))})",
         f"Launcher: {launcher['state']} ({launcher['url']})",
         f"MCP: configuration={mcp['configuration']}, activation={mcp['activation']}, live={mcp['live']}",
         f"Skill: installation={skill['installation']}, activation={skill['activation']}",

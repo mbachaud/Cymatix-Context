@@ -234,6 +234,7 @@ def test_collect_status_handles_unselected_host(
     assert result["mcp"]["configuration"] == configuration
     assert result["configured_ready"] is False
     assert result["guided_ready"] is False
+    assert result["server"]["configured_url_match"] is None
     assert action_fragment in result["next_action"]
     assert not any("/sessions" in url for url in seen_urls)
 

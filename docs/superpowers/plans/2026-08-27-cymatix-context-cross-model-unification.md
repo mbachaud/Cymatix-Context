@@ -1101,6 +1101,18 @@ all displayed server and launcher URLs. Bound both successful and HTTP-error
 response reads. This status-only policy does not alter the configured MCP
 runtime endpoint or Task 4 parsing/storage.
 
+An explicit URL is only a health diagnostic override. For a selected host,
+compare it with `ParsedHostConfig.configured_url` using lowercase scheme/host,
+normalized IP literal, effective port, and normalized trailing slash/path,
+without DNS equivalence. Report `server.source` and
+`server.configured_url_match` (`true`, `false`, or `null` when no valid
+target/config comparison can be made). Only a canonical match may fetch
+`/sessions`, determine MCP live state, or feed readiness. A mismatched explicit
+health result remains
+diagnostic-only: skip sessions, return live/readiness unknown/null except for
+independent definitive false conditions, exit nonzero, and instruct the
+operator to update config or probe the matching configured URL.
+
 ```python
 {
     "host": {
@@ -1110,6 +1122,8 @@ runtime endpoint or Task 4 parsing/storage.
     },
     "server": {
         "url": reported_server_url,
+        "source": "configured" | "explicit" | "default",
+        "configured_url_match": true | false | null,
         "transport": server_report.transport,
         "health": server_report.health,
         "payload": server_report.payload,

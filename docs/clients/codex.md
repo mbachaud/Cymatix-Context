@@ -64,10 +64,15 @@ cymatix-status --host codex --json
 ```
 
 A valid loopback configured URL is probed automatically. To deliberately probe
-a remote endpoint, pass `--server-url <validated-url>`; it overrides the
-configured URL. Malformed URLs, URLs containing credentials, query strings, or
-fragments, and implicit non-loopback URLs are not probed. Never put credentials
-in a URL.
+a remote endpoint, pass `--server-url <validated-url>`; it is a health
+diagnostic override, not a change to the selected host's MCP endpoint. JSON
+reports `server.source` and `server.configured_url_match`. Only a canonical
+match with the configured URL (case-normalized scheme/host, effective port, and
+normalized trailing slash/path; never DNS equivalence) may supply session,
+live, or readiness evidence. A mismatch can report diagnostic health, but
+returns nonzero and tells you to update the config or probe the matching URL.
+Malformed URLs, URLs containing credentials, query strings, or fragments, and
+implicit non-loopback URLs are not probed. Never put credentials in a URL.
 
 Skill activation is separate. `configured_ready=true` means canonical config,
 known enabled MCP activation, and healthy server—not a live host connection.
