@@ -172,3 +172,126 @@ def test_empty_seeds_is_noop():
         assert mass == {}
     finally:
         conn.close()
+
+
+# ═══ Task 3: config knobs, threaded end-to-end ═════════════════════════
+
+
+def test_retrieval_config_cover_walk_defaults_inert():
+    from cymatix_context.config import RetrievalConfig
+
+    rc = RetrievalConfig()
+    assert rc.cover_walk_enabled is False
+    assert rc.cover_walk_seed_m == 12
+    assert rc.cover_walk_hops == 2
+    assert rc.cover_walk_gamma == 0.5
+    assert rc.cover_walk_degree_cap == 1000
+    assert rc.cover_walk_frontier_cap == 2000
+    assert rc.cover_walk_append_slots == 3
+    assert rc.cover_walk_append_min_mass == 0.0
+    assert rc.cover_walk_band_weight == 1.0
+
+
+def test_toml_threads_cover_walk_knobs(tmp_path):
+    import textwrap
+
+    from cymatix_context.config import load_config
+
+    toml = tmp_path / "cymatix.toml"
+    toml.write_text(textwrap.dedent("""
+        [retrieval]
+        cover_walk_enabled = true
+        cover_walk_seed_m = 8
+        cover_walk_hops = 1
+        cover_walk_gamma = 0.7
+        cover_walk_degree_cap = 500
+        cover_walk_frontier_cap = 100
+        cover_walk_append_slots = 2
+        cover_walk_append_min_mass = 0.01
+        cover_walk_band_weight = 0.5
+    """), encoding="utf-8")
+    r = load_config(str(toml)).retrieval
+    assert r.cover_walk_enabled is True
+    assert r.cover_walk_seed_m == 8
+    assert r.cover_walk_hops == 1
+    assert r.cover_walk_gamma == 0.7
+    assert r.cover_walk_degree_cap == 500
+    assert r.cover_walk_frontier_cap == 100
+    assert r.cover_walk_append_slots == 2
+    assert r.cover_walk_append_min_mass == 0.01
+    assert r.cover_walk_band_weight == 0.5
+
+
+@pytest.mark.parametrize("field,bad", [
+    ("cover_walk_seed_m", 0),
+    ("cover_walk_hops", 0),
+    ("cover_walk_gamma", 0.0),
+    ("cover_walk_gamma", 1.5),
+    ("cover_walk_degree_cap", -1),
+    ("cover_walk_frontier_cap", 0),
+    ("cover_walk_append_slots", -1),
+    ("cover_walk_append_min_mass", -0.1),
+    ("cover_walk_band_weight", -1.0),
+])
+def test_cover_walk_knob_validation_fails_loud(field, bad):
+    from cymatix_context.config import RetrievalConfig
+
+    with pytest.raises(ValueError, match="cover_walk"):
+        RetrievalConfig(**{field: bad})
+
+
+def test_store_threads_cover_walk_kwargs():
+    from cymatix_context.knowledge_store import KnowledgeStore
+
+    ks = KnowledgeStore(
+        path=":memory:", cover_walk_enabled=True, cover_walk_seed_m=5,
+        cover_walk_hops=1, cover_walk_gamma=0.9, cover_walk_degree_cap=10,
+        cover_walk_frontier_cap=50, cover_walk_append_slots=1,
+        cover_walk_append_min_mass=0.5, cover_walk_band_weight=2.0,
+    )
+    try:
+        assert ks._cover_walk_enabled is True
+        assert ks._cover_walk_seed_m == 5
+        assert ks._cover_walk_hops == 1
+        assert ks._cover_walk_gamma == 0.9
+        assert ks._cover_walk_degree_cap == 10
+        assert ks._cover_walk_frontier_cap == 50
+        assert ks._cover_walk_append_slots == 1
+        assert ks._cover_walk_append_min_mass == 0.5
+        assert ks._cover_walk_band_weight == 2.0
+    finally:
+        ks.close()
+
+
+def test_store_cover_walk_kwarg_defaults_agree_with_config():
+    import inspect
+
+    from cymatix_context.config import RetrievalConfig
+    from cymatix_context.knowledge_store import KnowledgeStore
+
+    rc = RetrievalConfig()
+    sig = inspect.signature(KnowledgeStore.__init__).parameters
+    for name in (
+        "cover_walk_enabled", "cover_walk_seed_m", "cover_walk_hops",
+        "cover_walk_gamma", "cover_walk_degree_cap",
+        "cover_walk_frontier_cap", "cover_walk_append_slots",
+        "cover_walk_append_min_mass", "cover_walk_band_weight",
+    ):
+        assert sig[name].default == getattr(rc, name), name
+
+
+def test_sharding_builder_threads_cover_walk():
+    """The shared kwargs builder (sharding.py) must fan the knobs to solo
+    and per-shard Genomes — the ladder flows through this builder."""
+    import inspect
+
+    from cymatix_context import sharding
+
+    src = inspect.getsource(sharding)
+    for name in (
+        "cover_walk_enabled", "cover_walk_seed_m", "cover_walk_hops",
+        "cover_walk_gamma", "cover_walk_degree_cap",
+        "cover_walk_frontier_cap", "cover_walk_append_slots",
+        "cover_walk_append_min_mass", "cover_walk_band_weight",
+    ):
+        assert f"{name}=retrieval.{name}" in src, name

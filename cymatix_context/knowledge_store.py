@@ -624,6 +624,19 @@ class KnowledgeStore:
         rrf_gate_enabled: bool = False,
         rrf_gate_top_m: int = 0,
         rrf_gate_min_score: float = 0.0,
+        # W2.1 (2026-08-28): COVER-edge walk over gene_relations relation=5.
+        # Default-inert (enabled=False == byte-identical retrieval). See
+        # RetrievalConfig for the full knob story; fanned to solo and
+        # per-shard Genomes via the shared kwargs builder (sharding.py).
+        cover_walk_enabled: bool = False,
+        cover_walk_seed_m: int = 12,
+        cover_walk_hops: int = 2,
+        cover_walk_gamma: float = 0.5,
+        cover_walk_degree_cap: int = 1000,
+        cover_walk_frontier_cap: int = 2000,
+        cover_walk_append_slots: int = 3,
+        cover_walk_append_min_mass: float = 0.0,
+        cover_walk_band_weight: float = 1.0,
         # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Only
         # consulted under fusion_mode == "rrf" (the additive branch never
         # touches rerank_additive). Default "additive" reproduces the shipped
@@ -837,6 +850,20 @@ class KnowledgeStore:
             )
         self._rrf_gate_top_m: int = int(rrf_gate_top_m)
         self._rrf_gate_min_score: float = float(rrf_gate_min_score)
+        # W2.1: COVER-edge walk knobs (validated at config load; coerced
+        # here for direct construction). last_cover_walk_diag is the
+        # per-query observability contract — {} when the walk did not run,
+        # same never-stale semantics as last_rerank_diag.
+        self._cover_walk_enabled: bool = bool(cover_walk_enabled)
+        self._cover_walk_seed_m: int = int(cover_walk_seed_m)
+        self._cover_walk_hops: int = int(cover_walk_hops)
+        self._cover_walk_gamma: float = float(cover_walk_gamma)
+        self._cover_walk_degree_cap: int = int(cover_walk_degree_cap)
+        self._cover_walk_frontier_cap: int = int(cover_walk_frontier_cap)
+        self._cover_walk_append_slots: int = int(cover_walk_append_slots)
+        self._cover_walk_append_min_mass: float = float(cover_walk_append_min_mass)
+        self._cover_walk_band_weight: float = float(cover_walk_band_weight)
+        self.last_cover_walk_diag: Dict[str, Any] = {}
         # Issue #255 (PR-2): validate the rerank combinator now so a typo in
         # cymatix.toml fails fast at construction, mirroring the fusion_mode
         # guard above. The four names are the only valid operators (see

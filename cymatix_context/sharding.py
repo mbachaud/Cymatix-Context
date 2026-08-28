@@ -646,6 +646,16 @@ def build_genome_kwargs(config, sema_codec=None) -> dict:
         rrf_gate_enabled=retrieval.rrf_gate_enabled,
         rrf_gate_top_m=retrieval.rrf_gate_top_m,
         rrf_gate_min_score=retrieval.rrf_gate_min_score,
+        # W2.1: COVER-edge walk. Default-inert.
+        cover_walk_enabled=retrieval.cover_walk_enabled,
+        cover_walk_seed_m=retrieval.cover_walk_seed_m,
+        cover_walk_hops=retrieval.cover_walk_hops,
+        cover_walk_gamma=retrieval.cover_walk_gamma,
+        cover_walk_degree_cap=retrieval.cover_walk_degree_cap,
+        cover_walk_frontier_cap=retrieval.cover_walk_frontier_cap,
+        cover_walk_append_slots=retrieval.cover_walk_append_slots,
+        cover_walk_append_min_mass=retrieval.cover_walk_append_min_mass,
+        cover_walk_band_weight=retrieval.cover_walk_band_weight,
         # Issue #255 (PR-2): post-fusion rerank combinator + knobs.
         rerank_combinator=retrieval.rerank_combinator,
         rerank_band_delta=retrieval.rerank_band_delta,

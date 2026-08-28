@@ -660,6 +660,33 @@ class RetrievalConfig:
     # operator knows the arm mix — prefer rrf_gate_top_m on a mixed-arm store
     # (issue #260 v1; a per-arm dict floor is deferred).
     rrf_gate_min_score: float = 0.0
+    # W2.1 (2026-08-28): COVER-edge walk — query-time mass spread over the
+    # ingest-built gene_relations COVER graph (relation=5, entity-overlap
+    # kNN; 8.5M edges on the 947k v09x bed, previously zero query-time
+    # consumers). Grounding + pre-flight:
+    # docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md
+    # (72% of static semantic gold within 2 hops of the head; 16/61 at one
+    # hop in a ~960-doc frontier). Ships INERT (enabled=False). When on,
+    # the walk runs on the RRF path only and enters ranking two ways, both
+    # confined per the wave-1 banding lesson: (a) a "cover_walk" rerank
+    # class applied ONLY when the query's effective combinator is eps_band
+    # (never a free additive), scaled by band_weight; (b) append-below-head:
+    # the top append_slots walk-rescued docs (mass >= append_min_mass, not
+    # already in the kept head) fill the LAST append_slots positions of the
+    # final top-k; displaced head docs slide below, they do not vanish.
+    # seed_m = walk seeds (top-M of the pure-fused order); degree_cap = hub
+    # guard (nodes above it are reachable but never expanded); frontier_cap
+    # bounds per-hop wavefront (SR precedent). Default flip is receipt-gated
+    # (w2_cover_walk arm).
+    cover_walk_enabled: bool = False
+    cover_walk_seed_m: int = 12
+    cover_walk_hops: int = 2
+    cover_walk_gamma: float = 0.5
+    cover_walk_degree_cap: int = 1000
+    cover_walk_frontier_cap: int = 2000
+    cover_walk_append_slots: int = 3
+    cover_walk_append_min_mass: float = 0.0
+    cover_walk_band_weight: float = 1.0
     # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Under
     # fusion_mode=="rrf" the four rerank classes (authority / sema_boost /
     # party_attr / access_rate) combine with the fused RRF score via this
@@ -941,6 +968,44 @@ class RetrievalConfig:
                         f"{_cls!r}] = {_comb!r}: unknown combinator "
                         f"(expected one of {VALID_COMBINATORS})"
                     )
+
+        # W2.1: cover_walk knob bounds — fail loud at load, not silently at
+        # query time (house rule). gamma is a per-hop damping factor, so
+        # (0, 1]; degree_cap 0 is legal (expand nothing = 1-hop-receive
+        # only); append_slots 0 disables the append lane while keeping the
+        # band class.
+        if self.cover_walk_seed_m < 1:
+            raise ValueError(
+                f"[retrieval] cover_walk_seed_m must be >= 1, got {self.cover_walk_seed_m!r}"
+            )
+        if self.cover_walk_hops < 1:
+            raise ValueError(
+                f"[retrieval] cover_walk_hops must be >= 1, got {self.cover_walk_hops!r}"
+            )
+        if not (0.0 < self.cover_walk_gamma <= 1.0):
+            raise ValueError(
+                f"[retrieval] cover_walk_gamma must be in (0, 1], got {self.cover_walk_gamma!r}"
+            )
+        if self.cover_walk_degree_cap < 0:
+            raise ValueError(
+                f"[retrieval] cover_walk_degree_cap must be >= 0, got {self.cover_walk_degree_cap!r}"
+            )
+        if self.cover_walk_frontier_cap < 1:
+            raise ValueError(
+                f"[retrieval] cover_walk_frontier_cap must be >= 1, got {self.cover_walk_frontier_cap!r}"
+            )
+        if self.cover_walk_append_slots < 0:
+            raise ValueError(
+                f"[retrieval] cover_walk_append_slots must be >= 0, got {self.cover_walk_append_slots!r}"
+            )
+        if self.cover_walk_append_min_mass < 0:
+            raise ValueError(
+                f"[retrieval] cover_walk_append_min_mass must be >= 0, got {self.cover_walk_append_min_mass!r}"
+            )
+        if self.cover_walk_band_weight < 0:
+            raise ValueError(
+                f"[retrieval] cover_walk_band_weight must be >= 0, got {self.cover_walk_band_weight!r}"
+            )
 
         # Issue #341: rerank_enabled_by_class validation — mirrors the
         # rerank_combinator_by_class block above (unknown class key fails
@@ -1626,6 +1691,16 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             rrf_gate_enabled=bool(r.get("rrf_gate_enabled", cfg.retrieval.rrf_gate_enabled)),
             rrf_gate_top_m=int(r.get("rrf_gate_top_m", cfg.retrieval.rrf_gate_top_m)),
             rrf_gate_min_score=float(r.get("rrf_gate_min_score", cfg.retrieval.rrf_gate_min_score)),
+            # W2.1: COVER-edge walk. Default-inert (enabled=False).
+            cover_walk_enabled=bool(r.get("cover_walk_enabled", cfg.retrieval.cover_walk_enabled)),
+            cover_walk_seed_m=int(r.get("cover_walk_seed_m", cfg.retrieval.cover_walk_seed_m)),
+            cover_walk_hops=int(r.get("cover_walk_hops", cfg.retrieval.cover_walk_hops)),
+            cover_walk_gamma=float(r.get("cover_walk_gamma", cfg.retrieval.cover_walk_gamma)),
+            cover_walk_degree_cap=int(r.get("cover_walk_degree_cap", cfg.retrieval.cover_walk_degree_cap)),
+            cover_walk_frontier_cap=int(r.get("cover_walk_frontier_cap", cfg.retrieval.cover_walk_frontier_cap)),
+            cover_walk_append_slots=int(r.get("cover_walk_append_slots", cfg.retrieval.cover_walk_append_slots)),
+            cover_walk_append_min_mass=float(r.get("cover_walk_append_min_mass", cfg.retrieval.cover_walk_append_min_mass)),
+            cover_walk_band_weight=float(r.get("cover_walk_band_weight", cfg.retrieval.cover_walk_band_weight)),
             # Issue #255 (PR-2): post-fusion rerank combinator + its two
             # scale-free knobs. Default "additive" is byte-identical to the
             # shipped fused+rerank_additive finalization.
