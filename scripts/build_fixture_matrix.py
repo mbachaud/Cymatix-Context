@@ -731,6 +731,17 @@ PROFILES: dict[str, dict] = {
         "extra_skip_dirs": set(),
         "extra_filename_filters": [],
     },
+    "enronqa": {
+        "label": "EnronQA second-bench corpus (73,772 real Enron emails, CC BY 4.0)",
+        # Second-corpus lane (user-approved 2026-08-28; scouting report
+        # docs/research/2026-08-28-second-corpus-scouting.md). Files emitted
+        # from hf:MichaelR207/enron_qa_0922 by scripts/build_enronqa_corpus.py;
+        # paired original/rephrased needle set under benchmarks/dogfood/enronqa.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\enronqa\corpus"],
+        "extra_skip_dirs": set(),
+        "extra_filename_filters": [],
+    },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
         "active_roots": 13,
