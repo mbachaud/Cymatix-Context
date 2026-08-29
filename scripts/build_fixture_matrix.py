@@ -742,6 +742,23 @@ PROFILES: dict[str, dict] = {
         "extra_skip_dirs": set(),
         "extra_filename_filters": [],
     },
+    "enronqa_padded": {
+        "label": "EnronQA + raw-Enron distractor padding (~500k emails)",
+        # Padded variant of "enronqa": same QA corpus (gold untouched) plus
+        # the remaining raw Enron maildir dump emitted as distractors by
+        # scripts/build_enron_padding.py (QA-covered paths excluded there,
+        # so no email is represented under both roots by path). Parallel
+        # ingest c=6 ruled acceptable by the user 2026-08-29 despite the
+        # strict-gate FAIL (gene_relations -0.13%, query-inert at shipped
+        # defaults — benchmarks/dogfood/receipts/ingest_equivalence_enronqa.json).
+        "active_roots": 2,
+        "roots": [
+            r"F:\Projects\enronqa\corpus",
+            r"F:\Projects\enronqa\padding",
+        ],
+        "extra_skip_dirs": set(),
+        "extra_filename_filters": [],
+    },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
         "active_roots": 13,
