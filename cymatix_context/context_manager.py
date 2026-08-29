@@ -2169,6 +2169,18 @@ class CymatixContextManager:
             if classifier_result is not None and classifier_result.assembly_max_genes_cap is not None
             else None
         )
+        # W2.4 (2026-08-28): the delivered-seat floor also lifts the
+        # classifier's per-rule assembly cap — the w1c receipts pin the
+        # cap (2/5/6/8), not the token budget, as the cat-(b) seat-loser
+        # (splice_n_candidates == delivered_count on every such needle;
+        # the cut happens HERE, before splice). Floor 0 = legacy cap
+        # untouched. The model-class caps below (small_moe=4) are a model-
+        # capability concern, deliberately NOT floored. Wave-1's 235/235
+        # coupling attribution is what unlocked cap raises (phase plan
+        # L1.2); this is the knob-gated form.
+        _seat_floor_cap = int(getattr(self.config.budget, "min_delivered_docs", 0) or 0)
+        if _seat_floor_cap > 0 and _classifier_cap is not None:
+            _classifier_cap = max(_classifier_cap, _seat_floor_cap)
         if _classifier_cap is not None and len(candidates) > _classifier_cap:
             log.debug(
                 "Classifier cap: assembled %d -> %d (class=%s)",

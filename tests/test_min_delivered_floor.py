@@ -132,3 +132,71 @@ def test_floor_zero_never_truncates(manager_five_genes):
     assert "...[budget-trimmed]" not in window.expressed_context
     # Legacy behavior: seats were lost instead.
     assert len(window.expressed_gene_ids) < len(gene_ids)
+
+
+# ═══ Task 2b: the floor also lifts the classifier assembly cap ═════════
+#
+# Diagnosis correction (2026-08-28 probe): the crater cat-(b) seat-loser is
+# NOT the token-budget trimmer — it is the classifier's per-rule
+# assembly_max_genes_cap (2/5/6/8, retrieval/query_classifier.py), applied
+# to the candidate list BEFORE splice (context_manager.py:~2167).
+# splice_n_candidates == delivered_count on every cat-(b) needle in the w1c
+# receipts pins it. min_delivered_docs must floor that cap too, or the knob
+# cannot honor its contract end-to-end.
+
+
+def _seeded_arith_manager(min_delivered: int):
+    from cymatix_context.config import (
+        BudgetConfig, ClassifierConfig, GenomeConfig, CymatixConfig,
+        RibosomeConfig,
+    )
+    from cymatix_context.context_manager import CymatixContextManager
+    from tests.conftest import MockCompressorBackend, make_gene
+
+    cfg = CymatixConfig(
+        ribosome=RibosomeConfig(model="mock", timeout=5),
+        budget=BudgetConfig(
+            max_genes_per_turn=12,
+            min_delivered_docs=min_delivered,
+            # Roomy budget so the trimmer never fires — this test isolates
+            # the CAP mechanism from the trim mechanism.
+            expression_tokens=20000,
+        ),
+        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+        classifier=ClassifierConfig(enabled=True),
+    )
+    mgr = CymatixContextManager(cfg)
+    mgr.ribosome.backend = MockCompressorBackend()
+    for i in range(6):
+        mgr.genome.upsert_gene(make_gene(
+            f"Calculate the total cost of cloud migration project {i} "
+            f"with monthly totals and cost breakdowns",
+            domains=["finance", "migration"],
+            entities=["cost", "calculate", "total"],
+            gene_id=f"cap_gene_{i:010d}",
+        ))
+    return mgr
+
+
+def test_floor_lifts_classifier_assembly_cap():
+    mgr = _seeded_arith_manager(min_delivered=12)
+    try:
+        win = mgr.build_context("Calculate the total cost of migration.")
+        meta = (win.metadata or {}).get("classifier") or {}
+        assert meta.get("class") == "arithmetic"  # guards the fixture
+        # arithmetic's rule cap is 2; the floor must lift it so all
+        # matching candidates keep their seats.
+        assert len(win.expressed_gene_ids) > 2
+    finally:
+        mgr.close()
+
+
+def test_floor_zero_leaves_classifier_cap_binding():
+    mgr = _seeded_arith_manager(min_delivered=0)
+    try:
+        win = mgr.build_context("Calculate the total cost of migration.")
+        meta = (win.metadata or {}).get("classifier") or {}
+        assert meta.get("class") == "arithmetic"
+        assert len(win.expressed_gene_ids) <= 2  # legacy cap untouched
+    finally:
+        mgr.close()

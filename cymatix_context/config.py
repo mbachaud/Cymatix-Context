@@ -177,18 +177,23 @@ class BudgetConfig:
     # to opt out (documents legitimately containing literal "<cymatix:"
     # then ship verbatim).
     neutralize_control_tags: bool = True
-    # W2.4 (2026-08-28): delivered-seat floor. The Stage-5 trimmer's only
-    # budget tool at shipped defaults is whole-document eviction (the
-    # compressor is off), which is the crater cat-(b) mechanism: gold at
-    # map rank 9-12 evicted, delivered_count 2-8
-    # (docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md).
-    # 0 (default) = legacy eviction-only trim, byte-for-byte. N = evict
-    # only down to N parts (clamped to the candidate count); below that
-    # shrink the LARGEST parts (tail-truncation, header-preserving,
-    # marked " ...[budget-trimmed]") until the prompt fits. The token
-    # budget always wins last: if every part is at the truncation char
-    # floor and the prompt still overflows, eviction resumes below the
-    # floor. Flip is receipt-gated (w24 arm).
+    # W2.4 (2026-08-28): delivered-seat floor, guarding BOTH seat-losing
+    # mechanisms. (1) The classifier's per-rule assembly cap (2/5/6/8,
+    # retrieval/query_classifier.py) cuts the candidate list BEFORE splice
+    # — the measured crater cat-(b) mechanism (w1c receipts:
+    # splice_n_candidates == delivered_count on every such needle; gold at
+    # map rank 9-12 above the cap never gets a seat); the floor lifts that
+    # cap to at least N (model-class caps like small_moe=4 are a model-
+    # capability concern and stay untouched). (2) The Stage-5 budget
+    # trimmer's whole-document eviction; at the floor the trimmer switches
+    # to shrinking the LARGEST parts (tail-truncation, header-preserving,
+    # marked " ...[budget-trimmed]") until the prompt fits — and if every
+    # part is at the truncation char floor and the prompt still overflows,
+    # eviction resumes below the floor: the token budget always wins last.
+    # 0 (default) = both mechanisms byte-identical legacy. Wave-1's 235/235
+    # coupling attribution unlocked cap raises (phase-plan L1.2); this is
+    # the knob-gated form. Flip is receipt-gated (w24 arm);
+    # docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md.
     min_delivered_docs: int = 0
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
