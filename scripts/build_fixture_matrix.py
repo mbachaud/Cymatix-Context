@@ -233,6 +233,21 @@ MAX_FILE_SIZE = 200_000
 MIN_FILE_SIZE = 50
 
 
+def _profile_skip_dirs(profile: dict) -> set:
+    """Directory denylist for one profile.
+
+    ``SKIP_DIRS_COMMON`` protects internal-project roots from ingesting
+    their own artifacts (training data, benchmark outputs, caches). For
+    emitted bench corpora (e.g. the EnronQA roots) those names can be REAL
+    data directories — Enron users had mail folders literally named
+    'training' — so a profile may set ``skip_dirs_override`` (any set,
+    including empty) to REPLACE the common list + extras entirely.
+    """
+    if "skip_dirs_override" in profile:
+        return set(profile["skip_dirs_override"])
+    return SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
+
+
 def _is_sqlite_sidecar(path: str) -> bool:
     """Picklable filter for SQLite sidecars in process-pool shard tasks."""
     return any(path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES)
@@ -740,6 +755,11 @@ PROFILES: dict[str, dict] = {
         "active_roots": 1,
         "roots": [r"F:\Projects\enronqa\corpus"],
         "extra_skip_dirs": set(),
+        # Emitted corpus root holds ONLY dataset emails — no internal
+        # artifacts to protect against, and Enron mail folders literally
+        # named 'training' are real bench data (user ruling 2026-08-29:
+        # the internal-data exclusion must not drop QA-corpus files).
+        "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
     "enronqa_padded": {
@@ -757,6 +777,9 @@ PROFILES: dict[str, dict] = {
             r"F:\Projects\enronqa\padding",
         ],
         "extra_skip_dirs": set(),
+        # Same ruling as "enronqa": emitted roots carry no internal
+        # artifacts; 'training'-named Enron mail folders are real data.
+        "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
     "xl": {
@@ -983,7 +1006,7 @@ def build_profile(
         entity_graph=True,
     )
 
-    skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
+    skip_dirs = _profile_skip_dirs(profile)
     extra_filename_filters = profile["extra_filename_filters"]
 
     stats = {
@@ -1805,7 +1828,7 @@ def build_profile_sharded(
         main_path, shard_workers, shard_file_workers,
     )
 
-    skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
+    skip_dirs = _profile_skip_dirs(profile)
     extra_filename_filters = profile["extra_filename_filters"]
 
     totals = {
