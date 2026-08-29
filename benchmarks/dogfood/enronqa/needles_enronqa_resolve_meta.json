@@ -1,0 +1,2515 @@
+{
+ "date": "2026-08-29T07:12:33.766336+00:00",
+ "db": "F:/tmp/enronqa_bed/enronqa.db",
+ "seed": 20260829,
+ "needles_in": 500,
+ "needles_resolvable": 500,
+ "pairs_resolvable": 250,
+ "pairs_dropped": [],
+ "half_pairs": 125,
+ "sha_twin_fallbacks": {},
+ "gold_genes_mean": 1.08,
+ "gold_genes_max": 3,
+ "needles": {
+  "enron_000_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_000_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_001_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_001_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_002_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_002_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_003_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_003_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_004_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_004_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_005_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_005_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_006_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_006_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_007_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_007_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_008_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_008_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_009_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_009_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_010_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_010_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_011_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_011_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_012_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_012_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_013_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_013_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_014_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_014_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_015_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_015_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_016_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_016_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_017_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_017_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_018_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_018_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_019_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_019_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_020_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_020_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_021_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_021_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_022_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_022_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_023_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_023_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_024_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_024_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_025_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_025_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_026_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_026_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_027_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_027_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_028_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_028_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_029_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_029_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_030_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_030_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_031_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_031_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_032_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_032_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_033_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_033_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_034_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_034_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_035_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_035_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_036_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_036_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_037_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_037_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_038_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_038_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_039_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_039_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_040_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_040_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_041_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_041_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_042_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_042_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_043_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_043_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_044_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_044_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_045_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_045_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_046_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_046_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_047_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_047_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_048_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_048_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_049_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_049_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_050_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_050_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_051_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_051_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_052_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_052_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_053_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_053_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_054_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_054_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_055_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_055_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_056_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_056_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_057_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_057_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_058_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_058_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_059_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_059_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_060_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_060_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_061_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_061_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_062_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_062_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_063_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_063_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_064_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_064_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_065_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_065_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_066_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_066_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_067_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_067_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_068_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_068_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_069_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_069_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_070_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_070_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_071_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_071_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_072_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_072_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_073_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_073_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_074_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_074_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_075_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_075_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_076_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_076_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_077_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_077_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_078_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_078_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_079_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_079_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_080_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_080_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_081_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_081_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_082_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_082_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_083_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_083_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_084_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_084_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_085_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_085_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_086_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_086_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_087_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_087_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_088_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_088_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_089_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_089_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_090_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_090_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_091_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_091_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_092_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_092_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_093_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_093_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_094_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_094_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_095_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_095_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_096_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_096_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_097_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_097_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_098_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_098_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_099_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_099_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_100_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_100_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_101_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_101_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_102_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_102_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_103_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_103_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_104_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_104_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_105_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_105_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_106_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_106_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_107_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_107_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_108_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_108_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_109_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_109_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_110_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_110_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_111_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_111_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_112_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_112_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_113_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_113_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_114_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_114_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_115_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_115_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_116_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_116_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_117_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_117_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_118_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_118_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_119_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_119_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_120_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_120_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_121_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_121_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_122_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_122_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_123_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_123_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_124_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_124_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_125_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_125_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_126_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_126_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_127_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_127_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_128_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_128_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_129_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_129_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_130_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_130_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_131_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_131_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_132_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_132_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_133_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_133_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_134_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_134_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_135_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_135_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_136_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_136_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_137_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_137_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_138_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_138_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_139_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_139_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_140_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_140_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_141_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_141_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_142_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_142_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_143_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_143_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_144_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_144_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_145_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_145_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_146_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_146_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_147_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_147_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_148_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_148_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_149_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_149_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_150_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_150_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_151_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_151_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_152_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_152_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_153_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_153_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_154_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_154_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_155_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_155_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_156_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_156_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_157_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_157_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_158_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_158_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_159_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_159_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_160_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_160_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_161_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_161_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_162_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_162_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_163_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_163_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_164_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_164_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_165_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_165_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_166_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_166_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_167_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_167_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_168_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_168_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_169_o": {
+   "question_type": "enron_original",
+   "gold_genes": 3,
+   "via_twin": []
+  },
+  "enron_169_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 3,
+   "via_twin": []
+  },
+  "enron_170_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_170_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_171_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_171_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_172_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_172_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_173_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_173_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_174_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_174_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_175_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_175_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_176_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_176_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_177_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_177_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_178_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_178_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_179_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_179_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_180_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_180_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_181_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_181_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_182_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_182_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_183_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_183_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_184_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_184_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_185_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_185_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_186_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_186_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_187_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_187_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_188_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_188_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_189_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_189_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_190_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_190_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_191_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_191_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_192_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_192_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_193_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_193_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_194_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_194_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_195_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_195_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_196_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_196_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_197_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_197_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_198_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_198_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_199_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_199_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_200_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_200_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_201_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_201_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_202_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_202_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_203_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_203_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_204_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_204_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_205_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_205_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_206_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_206_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_207_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_207_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_208_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_208_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_209_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_209_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_210_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_210_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_211_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_211_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_212_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_212_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_213_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_213_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_214_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_214_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_215_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_215_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_216_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_216_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_217_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_217_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_218_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_218_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_219_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_219_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_220_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_220_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_221_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_221_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_222_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_222_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_223_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_223_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_224_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_224_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_225_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_225_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_226_o": {
+   "question_type": "enron_original",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_226_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 2,
+   "via_twin": []
+  },
+  "enron_227_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_227_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_228_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_228_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_229_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_229_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_230_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_230_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_231_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_231_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_232_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_232_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_233_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_233_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_234_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_234_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_235_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_235_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_236_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_236_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_237_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_237_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_238_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_238_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_239_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_239_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_240_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_240_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_241_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_241_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_242_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_242_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_243_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_243_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_244_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_244_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_245_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_245_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_246_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_246_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_247_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_247_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_248_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_248_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_249_o": {
+   "question_type": "enron_original",
+   "gold_genes": 1,
+   "via_twin": []
+  },
+  "enron_249_r": {
+   "question_type": "enron_rephrased",
+   "gold_genes": 1,
+   "via_twin": []
+  }
+ }
+}
