@@ -88,14 +88,7 @@ Env:
                            Set 1/true/yes/on for the full admin/diagnostic/
                            debug surface, including the legacy bio-named
                            tools cymatix_document_* now fronts.
-    CYMATIX_MCP_COMPAT   - deprecated cymatix_* tool aliases (0.8.0 rename).
-                           Default ON for the deprecation window: every
-                           cymatix_* tool is also callable under its old
-                           cymatix_* name, and the lean core carries its 5
-                           aliases (10 tools total). Set 0/false/off once
-                           clients are migrated to drop the aliases and
-                           their per-turn schema-token cost.
-                           (CYMATIX_MCP_COMPAT is honored equivalently.)
+    CYMATIX_MCP_COMPAT   - historical; unread by current versions.
 
 Composition hook: Headroom already ships `codebase-memory-mcp` (manual
 install, off-by-default as of 2026-04-14 per Tejas on Discord). Its

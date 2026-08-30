@@ -1,4 +1,4 @@
-"""ROSETTA Tier 2: config-layer canonical-term aliases (Task A1).
+"""ROSETTA Tier 2: config-layer canonical-term aliases.
 
 Pins the additive alias contract in ``cymatix_context/config.py``:
 ``[compressor]`` <-> legacy ``[ribosome]``, ``[knowledge_store]`` <->
@@ -7,9 +7,6 @@ legacy ``[genome]``, ``[budget] retrieval_tokens``/``max_docs_per_turn``
 ``CYMATIX_STORE_PATH`` <-> legacy ``CYMATIX_GENOME_PATH``. Collision rule
 throughout: the legacy name wins and a WARNING names both. An unknown
 top-level TOML section also warns (typo guard), never errors.
-
-See docs/ROSETTA.md for the full biology-to-software lexicon and
-.claude/worktrees/.../task-A1-brief.md for the task contract.
 """
 import logging
 from pathlib import Path

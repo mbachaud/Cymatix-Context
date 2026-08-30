@@ -356,8 +356,10 @@ shard router.
 `path`'s generated default (`genome.db`, the bare code-default) differs
 from the **shipped** `cymatix.toml` value (`genomes/main/genome.db`,
 CLAUDE.md's documented default) — see the Migration notes below.
-Override via the `CYMATIX_GENOME_PATH` env var, honored even when the
-`[genome]` section is absent from `cymatix.toml`.
+Override via the `CYMATIX_STORE_PATH` env var (canonical alias for legacy
+`CYMATIX_GENOME_PATH`), honored even when the `[genome]` section is absent
+from `cymatix.toml`. If both are set, `CYMATIX_GENOME_PATH` wins with a
+warning.
 
 **Example.**
 
@@ -373,9 +375,10 @@ replica_sync_interval = 100
 **Migration notes.** No time-based decay. Documents never expire.
 2026-04-16 rebuild migrated from `F:/Projects/cymatix-context/genome.db`
 (old master) and `C:/cymatix-cache/genome.db` (old replica with
-backfill) to the new `genomes/` folder. `CYMATIX_GENOME_PATH` env var
-overrides this path so sharded vs monolithic servers can coexist on
-different ports without duplicating `cymatix.toml`.
+backfill) to the new `genomes/` folder. `CYMATIX_STORE_PATH` (canonical alias
+for legacy `CYMATIX_GENOME_PATH`) overrides this path so sharded vs monolithic
+servers can coexist on different ports without duplicating `cymatix.toml`. If
+both are set, `CYMATIX_GENOME_PATH` wins with a warning.
 
 **Cross-refs.** `cymatix_context/config.py:165-171` (`GenomeConfig`),
 `docs/archive/FUTURE/GENOME_SHARDING.md` (phase-2 sharding plan).
@@ -1398,8 +1401,10 @@ priority order (highest priority wins):
    - `CYMATIX_CONFIG` — path to the TOML file (defaults to
      `cymatix.toml`). Read in
      `cymatix_context/config.py:520-521`.
-   - `CYMATIX_GENOME_PATH` — overrides `[genome] path` after the TOML
-     load. Read in `cymatix_context/config.py:611-612`.
+   - `CYMATIX_STORE_PATH` — canonical alias; overrides `[genome] path` after
+     the TOML load. Legacy `CYMATIX_GENOME_PATH` also works; if both are set,
+     `CYMATIX_GENOME_PATH` wins with a warning. Read in
+     `cymatix_context/config.py:611-612`.
    - `CYMATIX_SERVER_UPSTREAM` — overrides `[server] upstream`. Read in
      `cymatix_context/config.py:616-617`.
    - `CYMATIX_SERVER_UPSTREAM_TIMEOUT` — overrides `[server]

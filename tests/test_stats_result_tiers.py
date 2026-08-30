@@ -2,8 +2,6 @@
 
 from unittest.mock import MagicMock
 
-import pytest
-
 from cymatix_context.api import CymatixSession, StatsResult
 
 
