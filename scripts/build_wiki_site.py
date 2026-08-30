@@ -16,6 +16,14 @@ to the site's URL scheme: href="Page-Name" -> href="/wiki/page-name/", and
 href="Home" -> href="/wiki/". External URLs, anchors, and asset-relative
 hrefs are left untouched (see _rewrite_intrawiki_hrefs).
 
+Diagrams embedded the normal markdown way -- ![alt](assets/foo.svg) --
+render to <img src="assets/foo.svg">, which resolves relative to the page
+(/wiki/<slug>/), not to where wiki/assets/ actually lands
+(/wiki/assets/). Those img srcs are rewritten too:
+src="assets/foo.svg" -> src="/wiki/assets/foo.svg" (see
+_rewrite_asset_img_srcs). Absolute URLs and non-assets/ srcs are left
+untouched.
+
 The page chrome (header, brand mark, footer, /style.css link) is copied
 verbatim from site/public/contributing/index.html, with a Wiki link added
 to the header nav. See PAGE_TEMPLATE below.
@@ -140,6 +148,14 @@ __CONTENT__
 # _rewrite_intrawiki_hrefs for the second gate (must also be a known page).
 _HREF_RE = re.compile(r'(<a\b[^>]*\bhref=")([A-Za-z0-9-]+)(")')
 
+# Same tag-scoped technique as _HREF_RE, for <img src="assets/...">: only
+# src attributes on real <img ...> tags that start with the literal
+# "assets/" prefix are rewritten -- a literal src="assets/x.svg" inside
+# <code>/<pre> or prose never matches because it isn't inside an <img> tag.
+# Absolute URLs (http://, https://, //cdn...) and non-assets/ relative
+# srcs don't start with "assets/" and are left untouched.
+_IMG_SRC_RE = re.compile(r'(<img\b[^>]*\bsrc=")(assets/[^"]*)(")')
+
 _H1_RE = re.compile(r"(?m)^#\s+(.+?)\s*$")
 
 
@@ -183,6 +199,14 @@ def _rewrite_intrawiki_hrefs(html_fragment: str, href_targets: dict[str, str]) -
     return _HREF_RE.sub(_replace, html_fragment)
 
 
+def _rewrite_asset_img_srcs(html_fragment: str) -> str:
+    def _replace(match: re.Match) -> str:
+        prefix, src, suffix = match.group(1), match.group(2), match.group(3)
+        return f"{prefix}/wiki/{src}{suffix}"
+
+    return _IMG_SRC_RE.sub(_replace, html_fragment)
+
+
 def _render_page(title: str, canonical: str, content_html: str) -> str:
     return (
         PAGE_TEMPLATE.replace("__TITLE__", title)
@@ -224,6 +248,7 @@ def build(wiki_dir: Path | str, site_dir: Path | str) -> list[Path]:
         canonical = CANONICAL_BASE + href_targets[page.stem]
         content_html = markdown.markdown(markdown_text, extensions=MARKDOWN_EXTENSIONS)
         content_html = _rewrite_intrawiki_hrefs(content_html, href_targets)
+        content_html = _rewrite_asset_img_srcs(content_html)
         html = _render_page(title, canonical, content_html)
 
         out_path = _output_path(public_wiki_dir, page.stem)

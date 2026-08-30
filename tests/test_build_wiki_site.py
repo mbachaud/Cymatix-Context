@@ -158,6 +158,50 @@ class TestChromePreserved:
         assert 'Prose mention: the literal text href="Home" appears here too.' in idx
 
 
+class TestImageSrcRewrite:
+    def test_asset_img_src_rewritten_code_literal_untouched(self, tmp_path, mod):
+        """Controller-flagged plan gap: wiki pages embed diagrams as
+        ![alt](assets/foo.svg), which markdown renders as
+        <img src="assets/foo.svg">. That resolves relative to the page
+        (/wiki/<slug>/), not to where wiki/assets/ actually lands
+        (/wiki/assets/), so it must be rewritten the same tag-scoped way
+        as the href fix -- and a literal src="assets/x.svg" written as
+        inline code (e.g. a page documenting the embed syntax) must
+        survive untouched."""
+        wiki = tmp_path / "wiki"
+        wiki.mkdir()
+        (wiki / "Home.md").write_text(
+            "# Home\n\n"
+            "![d](assets/x.svg)\n\n"
+            'Inline code sample: `src="assets/x.svg"`\n',
+            encoding="utf-8",
+        )
+        (wiki / "assets").mkdir()
+        (wiki / "assets" / "x.svg").write_text("<svg></svg>", encoding="utf-8")
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        idx = (tmp_path / "site" / "public" / "wiki" / "index.html").read_text(encoding="utf-8")
+
+        # The real image src is rewritten to resolve from /wiki/assets/.
+        assert '<img alt="d" src="/wiki/assets/x.svg" />' in idx
+
+        # The inline-code literal survives verbatim -- not rewritten.
+        assert '<code>src="assets/x.svg"</code>' in idx
+
+    def test_absolute_and_non_assets_img_srcs_untouched(self, tmp_path, mod):
+        wiki = tmp_path / "wiki"
+        wiki.mkdir()
+        (wiki / "Home.md").write_text(
+            "# Home\n\n"
+            "![ext](https://example.com/diagram.png)\n\n"
+            "![other](images/diagram.png)\n",
+            encoding="utf-8",
+        )
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        idx = (tmp_path / "site" / "public" / "wiki" / "index.html").read_text(encoding="utf-8")
+        assert 'src="https://example.com/diagram.png"' in idx
+        assert 'src="images/diagram.png"' in idx
+
+
 class TestAssetsCopied:
     def test_copies_wiki_assets_directory(self, tmp_path, mod):
         wiki = _make_wiki(tmp_path)
