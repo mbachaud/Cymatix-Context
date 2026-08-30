@@ -27,11 +27,17 @@
 
 - `/context` and `/context/packet` take the same body. `query` is the only
   required field; an empty or whitespace-only string returns **400**.
-- `POST /context` with `response_mode: "packet"` is equivalent to calling
-  `/context/packet`. Any other value returns 400.
-- `max_genes` on the packet routes defaults to **8** and is clamped to
-  `[1, 32]` — distinct from the `/context` window cap
-  (`[budget] max_docs_per_turn`, default 12).
+- `POST /context` with `response_mode: "packet"` is a **subset shortcut**, not
+  an alias for `/context/packet`. It honors `query`, `task_type`, `max_genes`,
+  `clean`, and `read_only`, and returns the raw packet dump plus
+  `response_mode`. It does **not** read `include_raw` or `max_item_chars`, does
+  **not** attach `plr_confidence`, and leaves the unused verdict key present as
+  an explicit `null` rather than omitting it. Reach for the dedicated route
+  when you want any of those. Any other `response_mode` value returns 400.
+- **The `max_genes` default differs by route.** On the dedicated
+  `POST /context/packet` and `POST /context/refresh-plan` it is **8**; on the
+  `/context` shortcut it is the window cap (`[budget] max_docs_per_turn`,
+  legacy `max_genes_per_turn`, default **12**). All three clamp to `[1, 32]`.
 - Pass `ignore_delivered: true` to bypass the session working-set elision so
   already-delivered documents can re-fire. Benchmarks need this; production
   callers do not.
@@ -181,8 +187,10 @@ older than its last verification):
 How to read it:
 
 - **Branch on `miss` vs `know` first**, before you read `stale_risk` or
-  `verified`. Exactly one of the two keys is present on every well-formed
-  response; both-set or both-absent is a server bug, not a fall-through case.
+  `verified`. Exactly one of the two is **populated** on every well-formed
+  response; both populated or both empty is a server bug, not a fall-through
+  case. The dedicated route omits the unused key entirely; the `/context`
+  shortcut emits it as `null`.
 - **`do_not_answer_from_genome: true` is the load-bearing bit.** It is always
   `true` on a miss, and agents must honor it. Capable models paint over it
   unless the prompt fragment is in the system prompt — see
