@@ -312,6 +312,16 @@ class IngestionConfig:
     # The loader warns-and-ignores unknown keys, so configs still carrying it
     # get a startup warning, not a failure.
     entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
+    # Posting-count hub cutoff for ingest-time entity auto-linking (the
+    # relation=5 COVER edges). > 0 drops entities with more than this many
+    # entity_graph postings from the probe set before the per-insert GROUP BY
+    # — bounds the O(hub-posting-list) sweep that made ingest O(N^2) on the
+    # enronqa_padded bed (89.5% of writer wall time, 148.9 ms/insert vs
+    # 7.4 ms without the two MIME hubs; benchmarks/dogfood/receipts/
+    # ingest_decay_enronqa_2026-08-30.json). PKI_NOISE_CUTOFF=200 is the
+    # precedent value for the default-flip proposal tracked in #411. 0 =
+    # disabled = legacy behavior, byte-identical.
+    entity_autolink_hub_cutoff: int = 0
     # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
     # (genes.embedding_dense_v2) inline at ingest. This is purely the WRITE
     # path — retrieval gates on [retrieval] dense_embedding_enabled
@@ -1490,6 +1500,12 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             splade_enabled=i.get("splade_enabled", cfg.ingestion.splade_enabled),
             rerank_model=i.get("rerank_model", cfg.ingestion.rerank_model),
             entity_graph=i.get("entity_graph", cfg.ingestion.entity_graph),
+            entity_autolink_hub_cutoff=int(
+                i.get(
+                    "entity_autolink_hub_cutoff",
+                    cfg.ingestion.entity_autolink_hub_cutoff,
+                )
+            ),
             dense_embed_on_ingest=i.get(
                 "dense_embed_on_ingest", cfg.ingestion.dense_embed_on_ingest
             ),

@@ -608,6 +608,7 @@ def build_genome_kwargs(config, sema_codec=None) -> dict:
         splade_auto_enable_below_genes=ingestion.splade_auto_enable_below_genes,
         splade_auto_disable_above_genes=ingestion.splade_auto_disable_above_genes,
         entity_graph=ingestion.entity_graph,
+        entity_autolink_hub_cutoff=ingestion.entity_autolink_hub_cutoff,
         # Tier-0 PR-1 (2026-05-16): inline BGE-M3 dense write at ingest.
         dense_embed_on_ingest=ingestion.dense_embed_on_ingest,
         sr_enabled=retrieval.sr_enabled,

@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- **perf(storage): `[ingestion] entity_autolink_hub_cutoff` — posting-count
+  hub cutoff for entity auto-linking (default `0` = off = legacy,
+  byte-identical; flip proposal tracked in #411).** The 2026-08-30 enronqa_padded profiling receipt
+  (`benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json`)
+  measured `auto_link_by_entity` at 89.5% of writer wall time — the
+  per-insert GROUP BY sweeps every posting row of every probe entity, and
+  MIME-header hubs (`content-type` 171k+ rows) make that O(N²) per build
+  (148.9 ms/insert vs 7.4 ms without the two hubs). With the cutoff > 0,
+  entities whose `entity_graph` posting count exceeds it are dropped from
+  the probe set before the GROUP BY (`PKI_NOISE_CUTOFF` precedent —
+  cardinality strictly greater is skipped); the count probe is
+  LIMIT-bounded, so per-insert cost is O(n_entities × cutoff). This
+  changes which relation=5 COVER edges form (default-inert at query time —
+  W2.1 cover-walk kill receipt), so the flip proposal ships behind the
+  default-off knob with an A/B edge-delta + perf receipt
+  (`benchmarks/dogfood/receipts/entity_hub_cutoff_ab_enronqa_2026-08-30.json`,
+  `scripts/receipt_entity_hub_cutoff.py`).
+
 ## 0.9.0 (2026-08-20)
 
 The post-flip release: the shipped default retrieval path is now fully
