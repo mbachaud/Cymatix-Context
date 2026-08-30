@@ -39,12 +39,16 @@ Tools exposed:
       cymatix_neighbors       — top-k SEMA neighbors for a query (light)
       cymatix_splice_preview  — dry-run retrieval pipeline (skip splice)
 
-    Software-vocabulary aliases (per docs/ROSETTA.md):
-      cymatix_document_get     — alias for cymatix_gene_get
-      cymatix_document_query   — alias for cymatix_context
-      cymatix_document_preview — alias for cymatix_splice_preview
-      All three are thin pass-throughs; callers should prefer the
-      ``document_*`` names in new code. Legacy names remain valid.
+    Software-vocabulary aliases (per docs/ROSETTA.md; R4/#87 core-set
+    promotion -- these five ship in the lean default surface):
+      cymatix_document_get         — alias for cymatix_gene_get
+      cymatix_document_query       — alias for cymatix_context
+      cymatix_document_preview     — alias for cymatix_splice_preview
+      cymatix_document_fingerprint — alias for cymatix_fingerprint
+      cymatix_document_neighbors   — alias for cymatix_neighbors
+      All five are thin pass-throughs; callers should prefer the
+      ``document_*`` names in new code. Legacy names remain valid but
+      carry a deprecation nudge in their docstrings -- no removals.
 
 Run (stdio transport — what MCP hosts spawn):
     python -m cymatix_context.mcp_server
@@ -75,12 +79,15 @@ Env:
     CYMATIX_AGENT          - ingest attribution AI agent handle
     CYMATIX_AGENT_KIND     - optional ingest attribution agent kind
                            (defaults to CYMATIX_MCP_HOST when omitted)
-    CYMATIX_MCP_FULL       - expose the full 24-tool surface. Default (unset)
-                           serves the lean 5-tool core (cymatix_context,
+    CYMATIX_MCP_FULL       - expose the full 24+-tool surface. Default (unset)
+                           serves the lean 10-tool core (cymatix_context,
                            cymatix_context_packet, cymatix_ingest, cymatix_health,
-                           cymatix_sessions_list) to cut ~4-5K schema tokens per
-                           agent session. Set 1/true/yes/on for the full
-                           admin/diagnostic/debug/alias surface.
+                           cymatix_sessions_list, plus the five canonical
+                           cymatix_document_* aliases -- R4/#87 Tier 2) to
+                           cut per-turn schema tokens for agent sessions.
+                           Set 1/true/yes/on for the full admin/diagnostic/
+                           debug surface, including the legacy bio-named
+                           tools cymatix_document_* now fronts.
     CYMATIX_MCP_COMPAT   - deprecated cymatix_* tool aliases (0.8.0 rename).
                            Default ON for the deprecation window: every
                            cymatix_* tool is also callable under its old
@@ -508,8 +515,8 @@ def cymatix_resonance(query: str, k: int = 10, downsample: int = 64) -> Dict[str
 
     Returns SEMA prime vector, cymatic spectrum (256 -> `downsample` bins),
     top-k SEMA neighbors with per-neighbor cymatic similarity, and the
-    harmonic_links edges among those neighbors. Read-only; safe to call
-    anytime without affecting retrieval state.
+    co-activation edges (legacy: harmonic_links) among those neighbors.
+    Read-only; safe to call anytime without affecting retrieval state.
 
     Use this when you want to debug *why* a query is retrieving what it
     does, or to visualize the knowledge store's local structure around a concept.
@@ -831,7 +838,7 @@ def cymatix_bridge_status() -> Dict[str, Any]:
 
 @mcp.tool()
 def cymatix_gene_get(gene_id: str) -> Dict[str, Any]:
-    """Fetch a single document by ID.
+    """Fetch a single document by ID (legacy name — prefer cymatix_document_get).
 
     Returns the full document model as JSON -- content, tags
     (domains, entities, intent, summary), signals (access_rate,
@@ -852,7 +859,7 @@ def cymatix_gene_get(gene_id: str) -> Dict[str, Any]:
 
 @mcp.tool()
 def cymatix_neighbors(query: str, k: int = 10) -> Dict[str, Any]:
-    """Top-k SEMA neighbors for a query (light version of cymatix_resonance).
+    """Top-k SEMA neighbors for a query (light version of cymatix_resonance) (legacy name — prefer cymatix_document_neighbors).
 
     Returns {query, k, neighbors: [{gene_id, sema_cos_sim, preview,
     path}], count}. No cymatic spectrum, no harmonic edges, no query
@@ -873,7 +880,7 @@ def cymatix_neighbors(query: str, k: int = 10) -> Dict[str, Any]:
 
 @mcp.tool()
 def cymatix_splice_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
-    """Preview which documents WOULD be selected for a query's context window.
+    """Preview which documents WOULD be selected for a query's context window (legacy name — prefer cymatix_document_preview).
 
     Runs the cheap half of the /context pipeline: query keyword
     extraction + multi-tier retrieve (tags, FTS, SEMA,
@@ -962,17 +969,20 @@ def cymatix_document_query(
 
 
 @mcp.tool()
-def cymatix_document_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
+def cymatix_document_preview(query: str, max_docs: int = 12) -> Dict[str, Any]:
     """Preview which documents WOULD be selected for a query. Canonical
     alias for ``cymatix_splice_preview``.
 
     Runs the retrieval pipeline through candidate selection, skips the
     final compression step. Cheap; no compressor calls. Prefer this
     name in new code.
+
+    max_docs: forwarded to the underlying ``/debug/preview`` endpoint as
+        ``max_genes`` -- same cap, canonical parameter name.
     """
     path = (
         f"/debug/preview?query={urllib.request.quote(query)}"
-        f"&max_genes={int(max_genes)}"
+        f"&max_genes={int(max_docs)}"
     )
     return _http("GET", path)
 
@@ -990,6 +1000,19 @@ def cymatix_document_fingerprint(
     if profile:
         body["profile"] = profile
     return _http("POST", "/fingerprint", body)
+
+
+@mcp.tool()
+def cymatix_document_neighbors(query: str, k: int = 10) -> Dict[str, Any]:
+    """Top-k co-activation neighbors for a query. Canonical alias for
+    ``cymatix_neighbors``.
+
+    Returns {query, k, neighbors: [{gene_id, sema_cos_sim, preview,
+    path}], count}. Identical behavior to ``cymatix_neighbors`` -- prefer
+    this name in new code.
+    """
+    path = f"/debug/neighbors?query={urllib.request.quote(query)}&k={int(k)}"
+    return _http("GET", path)
 
 
 # ── Future: codebase-memory-mcp composition ──────────────────────────
@@ -1017,18 +1040,33 @@ def cymatix_document_fingerprint(
 
 # ── MCP surface profile (per-turn token cost) ────────────────────────
 # Every registered tool's name + description + JSON input schema is injected
-# into the host's context on EVERY turn. The full 24-tool surface costs
+# into the host's context on EVERY turn. The full 24+-tool surface costs
 # ~4-5K tokens per agent session before any retrieval runs. Default to a lean
 # core set (the agent loop: retrieve, agent-safe packet, ingest, health,
-# sibling-agent awareness); expose the full admin / diagnostic / debug / alias
-# surface only when the operator opts in with CYMATIX_MCP_FULL=1. This is issue
-# #219 Slice 3; see docs/design/2026-07-05-efficiency-cost-reduction.md.
+# sibling-agent awareness -- plus the five canonical document_* aliases, per
+# R4/#87 soft-deprecation of the legacy bio-named tools); expose the full
+# admin / diagnostic / debug surface (including the legacy bio-named tools
+# that document_* now fronts) only when the operator opts in with
+# CYMATIX_MCP_FULL=1. Lean-set growth is issue #219 Slice 3 (original 5) +
+# #87 Tier 2 (document_* promoted into core); see
+# docs/design/2026-07-05-efficiency-cost-reduction.md for the original
+# rationale -- since superseded by the Rosetta Tier 2 canonical-name push.
 _MCP_CORE_TOOLS = frozenset({
     "cymatix_context",         # primary retrieval — the big one
     "cymatix_context_packet",  # agent-safe bundle (know/miss + refresh plan)
     "cymatix_ingest",          # contribute to the knowledge store
     "cymatix_health",          # readiness probe
     "cymatix_sessions_list",   # sibling-agent awareness (identity contract)
+    # Canonical software-vocabulary aliases (docs/ROSETTA.md, #87 R4) —
+    # promoted into the lean default surface; their legacy bio-named
+    # counterparts (cymatix_gene_get, cymatix_splice_preview,
+    # cymatix_neighbors) stay registered under CYMATIX_MCP_FULL=1 only,
+    # soft-deprecated via a docstring nudge -- no removals.
+    "cymatix_document_get",
+    "cymatix_document_query",
+    "cymatix_document_preview",
+    "cymatix_document_fingerprint",
+    "cymatix_document_neighbors",
 })
 
 _TRUTHY = frozenset({"1", "true", "yes", "on"})

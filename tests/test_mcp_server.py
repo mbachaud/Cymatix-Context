@@ -306,12 +306,14 @@ def restore_mcp_profile():
 def test_lean_mcp_profile_is_default(monkeypatch, restore_mcp_profile):
     """Unset CYMATIX_MCP_FULL → only the core tools are registered. After the
     0.8.5 clean break there are no helix_* compat aliases, so the lean surface
-    is exactly the 5 canonical cymatix_* core tools."""
+    is exactly the 10 canonical cymatix_* core tools: the original 5 (issue
+    #219) plus the 5 cymatix_document_* aliases promoted into the core set
+    by R4/#87 (Rosetta Tier 2)."""
     m = _reload_mcp(monkeypatch, full=False)
     names = set(m.mcp._tool_manager._tools.keys())
     assert names == set(m._effective_core_tools())
     assert set(m._MCP_CORE_TOOLS) <= names
-    assert len(names) == 5
+    assert len(names) == 10
 
 
 def test_full_mcp_surface_is_opt_in(monkeypatch, restore_mcp_profile):
@@ -319,8 +321,10 @@ def test_full_mcp_surface_is_opt_in(monkeypatch, restore_mcp_profile):
     m = _reload_mcp(monkeypatch, full=True)
     names = set(m.mcp._tool_manager._tools.keys())
     assert set(m._MCP_CORE_TOOLS) <= names
-    # Non-core admin/diagnostic/alias tools return only under the full flag.
-    assert {"cymatix_stats", "cymatix_swap_db", "cymatix_document_query"} <= names
+    # Non-core admin/diagnostic/legacy-alias tools return only under the
+    # full flag. cymatix_gene_get is the legacy (soft-deprecated, #87 R4)
+    # counterpart of the now-core cymatix_document_get.
+    assert {"cymatix_stats", "cymatix_swap_db", "cymatix_gene_get"} <= names
     assert len(names) > len(m._MCP_CORE_TOOLS)
 
 

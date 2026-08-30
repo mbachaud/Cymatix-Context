@@ -5,9 +5,13 @@ tools. There are no ``helix_*`` aliases and no alias machinery
 (``_CANONICAL_RENAMES`` / ``_register_compat_aliases`` /
 ``_mcp_compat_enabled``) left to test.
 
-By default the server prunes to the lean 5-tool core surface (issue #219);
-the full ~24-tool surface is exposed with ``CYMATIX_MCP_FULL=1``. Both
-surfaces must be 100%% ``cymatix_*`` with zero ``helix`` in any tool name.
+By default the server prunes to a lean core surface: the original 5
+(issue #219) plus the 5 canonical ``cymatix_document_*`` aliases promoted
+into the core set by R4/#87 (Rosetta Tier 2 -- soft-deprecation of the
+legacy bio-named tools, no removals). The full ~24-tool surface, including
+the legacy bio-named tools ``cymatix_document_*`` now fronts, is exposed
+with ``CYMATIX_MCP_FULL=1``. Both surfaces must be 100%% ``cymatix_*``
+with zero ``helix`` in any tool name.
 """
 from __future__ import annotations
 
@@ -33,6 +37,11 @@ _CORE_TOOLS = {
     "cymatix_ingest",
     "cymatix_health",
     "cymatix_sessions_list",
+    "cymatix_document_get",
+    "cymatix_document_query",
+    "cymatix_document_preview",
+    "cymatix_document_fingerprint",
+    "cymatix_document_neighbors",
 }
 
 
@@ -71,7 +80,7 @@ def test_lean_surface_is_all_cymatix_no_helix():
     assert not any("helix" in n for n in names), names
 
 
-def test_lean_surface_is_exactly_the_core_five():
+def test_lean_surface_is_exactly_the_core_set():
     assert _lean_tool_names() == _CORE_TOOLS
 
 
@@ -84,11 +93,11 @@ def test_full_surface_is_all_cymatix_no_helix():
     assert not any("helix" in n for n in names), sorted(names)
 
 
-def test_full_surface_includes_the_core_five():
+def test_full_surface_includes_the_core_set():
     assert _CORE_TOOLS <= _full_tool_names()
 
 
-# ── the 5 core tools exist as functions and are the canonical set ───
+# ── the core tools exist as functions and are the canonical set ─────
 
 
 def test_core_tool_functions_exist():
