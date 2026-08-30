@@ -1,0 +1,52 @@
+{
+ "arms": {
+  "autolink_off": {
+   "content_sha256": "ae4555da73710a3340d8eb7afd7811c40ff593d9e981f9572affad8b7243f323",
+   "cover_edges": 0,
+   "entity_autolink": false,
+   "entity_rows_sha256": "edac0b67c59a5bd161ce2fa8ae795061606f4580f4e43cc3e2116302ef76df2e",
+   "errors": 0,
+   "files": 2000,
+   "gene_id_sha256": "14e18246afe9022891f30bf92ff96364db831a911ceb7c24192bdd8613b13e06",
+   "genes": 2650,
+   "genes_per_s": 11.561,
+   "structure": {
+    "entity_graph": 34323,
+    "filename_index": 2547,
+    "gene_relations": 0,
+    "harmonic_links": 0
+   },
+   "wall_s": 229.22
+  },
+  "autolink_on": {
+   "content_sha256": "ae4555da73710a3340d8eb7afd7811c40ff593d9e981f9572affad8b7243f323",
+   "cover_edges": 22192,
+   "entity_autolink": true,
+   "entity_rows_sha256": "edac0b67c59a5bd161ce2fa8ae795061606f4580f4e43cc3e2116302ef76df2e",
+   "errors": 0,
+   "files": 2000,
+   "gene_id_sha256": "14e18246afe9022891f30bf92ff96364db831a911ceb7c24192bdd8613b13e06",
+   "genes": 2650,
+   "genes_per_s": 9.381,
+   "structure": {
+    "entity_graph": 34323,
+    "filename_index": 2547,
+    "gene_relations": 22192,
+    "harmonic_links": 0
+   },
+   "wall_s": 282.48
+  }
+ },
+ "content_equal": true,
+ "corpus_root": "F:\\Projects\\enronqa\\padding",
+ "documents_equal": true,
+ "edges_delta_as_designed": true,
+ "entity_rows_equal": true,
+ "equivalent": true,
+ "note": "Both arms sequential from the same sample: the ONLY difference is entity_autolink. equivalent=true means documents, content, and the full entity_graph row multiset are byte-identical; the designed delta is gene_relations relation=5 COVER edges (present in arm A, absent in arm B), which are default-inert at query time (W2.1 cover-walk kill) and already order-nondeterministic under --parallel (ingest_equivalence_enronqa.json). Rates here are informative only; the cost receipt is the live-writer py-spy profile.",
+ "sample_files": 2000,
+ "scheduling": "sequential-both-arms",
+ "seed": 20260830,
+ "stamp": "2026-08-30T07:56:42Z",
+ "tool": "receipt_entity_autolink_equivalence"
+}
