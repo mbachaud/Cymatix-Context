@@ -27,7 +27,7 @@ jobs:
           path-to-signatures: signatures/contributors.json
           branch: cla-signatures
           path-to-document: https://cymatixcontext.com/contributing
-          allowlist: mbachaud,addiplus,dependabot[bot],github-actions[bot]
+          allowlist: mbachaud,addiplus,dependabot[bot],github-actions[bot],Claude*
           custom-pr-sign-comment: I have read the Contributor Guidelines and I hereby sign up as a Cymatix Context contributor
           custom-notsigned-prcomment: >
             Thanks for the PR! One quick step before it can be reviewed: complete the
