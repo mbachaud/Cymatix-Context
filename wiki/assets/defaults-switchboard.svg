@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 560" width="860" height="560" role="img" aria-labelledby="ds-title ds-desc">
+  <title id="ds-title">Cymatix Context retrieval defaults switchboard</title>
+  <desc id="ds-desc">Two-column board of retrieval layers at shipped defaults. ON: FTS5 BM25 plus tag lookup, synonym expansion, co-activation graph, cymatics 256-bin spectrum, RRF fusion at rrf_k 20, freshness gate, session delivery register, entity_graph. OFF and opt-in: BGE-M3 dense recall (off 2026-08-15), SPLADE (off 2026-08-16), PKI path-key index (off 2026-08-19), cross-encoder re-rank, sema and dense ingest embeds (off 2026-08-19), min_delivered_docs seat floor, entity_autolink_hub_cutoff.</desc>
+
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+
+    <!-- header -->
+    <text x="40" y="34" font-size="16.5" font-weight="600" fill="#6e7681">Retrieval defaults switchboard &#8212; v0.9.1</text>
+    <text x="40" y="56" font-size="12" fill="#8b949e">What an untouched install actually runs, and when each default was last flipped.</text>
+
+    <!-- panels -->
+    <g fill="#888888" fill-opacity="0.10" stroke="#7d8590" stroke-width="1.5" stroke-opacity="0.55">
+      <rect x="40"  y="84" width="380" height="406" rx="10"/>
+      <rect x="440" y="84" width="380" height="406" rx="10"/>
+    </g>
+
+    <!-- panel headers -->
+    <circle cx="64" cy="101" r="6" fill="#c76a1c"/>
+    <text x="80" y="106" font-size="13" font-weight="600" fill="#c76a1c">ON at shipped defaults</text>
+    <text x="404" y="106" font-size="11" fill="#8b949e" text-anchor="end">8 layers</text>
+
+    <circle cx="464" cy="101" r="6" fill="none" stroke="#7d8590" stroke-width="1.8"/>
+    <text x="480" y="106" font-size="13" font-weight="600" fill="#7d8590">OFF &#8212; opt-in</text>
+    <text x="804" y="106" font-size="11" fill="#8b949e" text-anchor="end">7 layers</text>
+
+    <g stroke="#7d8590" stroke-width="1" stroke-opacity="0.4">
+      <line x1="56"  y1="118" x2="404" y2="118"/>
+      <line x1="456" y1="118" x2="804" y2="118"/>
+    </g>
+
+    <!-- ON toggles -->
+    <g fill="#c76a1c">
+      <circle cx="64" cy="143" r="6"/>
+      <circle cx="64" cy="187" r="6"/>
+      <circle cx="64" cy="231" r="6"/>
+      <circle cx="64" cy="275" r="6"/>
+      <circle cx="64" cy="319" r="6"/>
+      <circle cx="64" cy="363" r="6"/>
+      <circle cx="64" cy="407" r="6"/>
+      <circle cx="64" cy="451" r="6"/>
+    </g>
+
+    <!-- ON labels -->
+    <g font-size="12.5" font-weight="600" fill="#6e7681">
+      <text x="84" y="147">FTS5 BM25 + tag lookup</text>
+      <text x="84" y="191">Synonym expansion</text>
+      <text x="84" y="235">Co-activation graph</text>
+      <text x="84" y="279">Cymatics 256-bin spectrum</text>
+      <text x="84" y="323">RRF fusion &#8212; rrf_k = 20</text>
+      <text x="84" y="367">Freshness gate (Stage 7)</text>
+      <text x="84" y="411">Session delivery register</text>
+      <text x="84" y="455">entity_graph</text>
+    </g>
+    <g font-size="10.5" fill="#8b949e">
+      <text x="84" y="162">the lexical spine of the retrieval path</text>
+      <text x="84" y="206">[synonyms] query-side term map</text>
+      <text x="84" y="250">documents that fire together, retrieve together</text>
+      <text x="84" y="294">experimental &#8212; not yet isolated vs. hashed controls</text>
+      <text x="84" y="338">wave-1, 0.9.1 / #407 &#183; +12pp delivered vs. additive</text>
+      <text x="84" y="382">stale / cold / superseded &#8594; miss</text>
+      <text x="84" y="426">elides documents this session already received</text>
+      <text x="84" y="470">ingest-time entity edges &#8212; ablation still open</text>
+    </g>
+
+    <!-- OFF toggles -->
+    <g fill="none" stroke="#7d8590" stroke-width="1.8">
+      <circle cx="464" cy="143" r="6"/>
+      <circle cx="464" cy="187" r="6"/>
+      <circle cx="464" cy="231" r="6"/>
+      <circle cx="464" cy="275" r="6"/>
+      <circle cx="464" cy="319" r="6"/>
+      <circle cx="464" cy="363" r="6"/>
+      <circle cx="464" cy="407" r="6"/>
+    </g>
+
+    <!-- OFF labels -->
+    <g font-size="12.5" font-weight="600" fill="#7d8590">
+      <text x="484" y="147">Dense recall &#8212; BGE-M3</text>
+      <text x="484" y="191">SPLADE sparse expansion</text>
+      <text x="484" y="235">PKI path-key index</text>
+      <text x="484" y="279">Cross-encoder re-rank</text>
+      <text x="484" y="323">sema / dense ingest embeds</text>
+      <text x="484" y="367">min_delivered_docs seat floor</text>
+      <text x="484" y="411">entity_autolink_hub_cutoff</text>
+    </g>
+    <g font-size="10.5" fill="#8b949e">
+      <text x="484" y="162">off 2026-08-15 &#183; displaced gold at every scale</text>
+      <text x="484" y="206">off 2026-08-16 &#183; null-to-negative at n=469</text>
+      <text x="484" y="250">off 2026-08-19 &#183; -1 delivered needle at n=469</text>
+      <text x="484" y="294">has always shipped off &#183; #341</text>
+      <text x="484" y="338">off 2026-08-19 &#183; dead writes on the neural-free path</text>
+      <text x="484" y="382">0.9.1 &#183; default 0 &#8212; inert until you set it</text>
+      <text x="484" y="426">0.9.1 &#183; default 0 &#8212; inert until you set it</text>
+    </g>
+
+    <!-- row separators -->
+    <g stroke="#7d8590" stroke-width="1" stroke-opacity="0.18">
+      <line x1="56" y1="174" x2="404" y2="174"/>
+      <line x1="56" y1="218" x2="404" y2="218"/>
+      <line x1="56" y1="262" x2="404" y2="262"/>
+      <line x1="56" y1="306" x2="404" y2="306"/>
+      <line x1="56" y1="350" x2="404" y2="350"/>
+      <line x1="56" y1="394" x2="404" y2="394"/>
+      <line x1="56" y1="438" x2="404" y2="438"/>
+
+      <line x1="456" y1="174" x2="804" y2="174"/>
+      <line x1="456" y1="218" x2="804" y2="218"/>
+      <line x1="456" y1="262" x2="804" y2="262"/>
+      <line x1="456" y1="306" x2="804" y2="306"/>
+      <line x1="456" y1="350" x2="804" y2="350"/>
+      <line x1="456" y1="394" x2="804" y2="394"/>
+    </g>
+
+    <!-- footer -->
+    <g font-size="11" fill="#8b949e">
+      <text x="40" y="518">The default retrieval path is fully algorithmic &#8212; zero model calls on the way to an answer.</text>
+      <text x="40" y="536">Every off-by-default layer is still available opt-in, and each flip is backed by a receipt in docs/benchmarks/.</text>
+    </g>
+
+  </g>
+</svg>
