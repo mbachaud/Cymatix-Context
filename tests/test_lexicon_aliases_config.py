@@ -65,7 +65,14 @@ def test_legacy_section_wins_on_collision_with_warning(tmp_path, caplog):
 
 
 def test_legacy_budget_key_wins_on_collision_with_warning(tmp_path, caplog):
-    """Both expression_tokens and retrieval_tokens present: legacy key wins + warns."""
+    """Both expression_tokens and retrieval_tokens present: legacy key wins + warns.
+
+    Regression (review round 1, Finding 1): the alias key must be popped
+    out of the section dict on a collision too, not just on the clean
+    alias-only path — otherwise it survives normalization and
+    ``_warn_unknown`` flags it a second time as an "unknown key", which is
+    a spurious duplicate of the collision warning this already emits.
+    """
     p = tmp_path / "cymatix.toml"
     p.write_text(
         '[budget]\nexpression_tokens = 111\nretrieval_tokens = 222\n',
@@ -74,10 +81,79 @@ def test_legacy_budget_key_wins_on_collision_with_warning(tmp_path, caplog):
     with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
         cfg = load_config(str(p))
     assert cfg.budget.expression_tokens == 111
+    messages = [r.message for r in caplog.records]
     assert any(
-        "retrieval_tokens" in r.message and "expression_tokens" in r.message
+        "retrieval_tokens" in m and "expression_tokens" in m for m in messages
+    ), f"expected a collision WARNING; got: {messages}"
+    assert not any(
+        "Unknown keys" in m for m in messages
+    ), f"alias key must never be flagged as an unknown key; got: {messages}"
+
+
+def test_legacy_budget_key_wins_on_collision_with_warning_max_docs(tmp_path, caplog):
+    """Same collision guarantee for the max_docs_per_turn/max_genes_per_turn pair.
+
+    Regression (review round 1, Finding 1, "applies identically to
+    max_docs_per_turn").
+    """
+    p = tmp_path / "cymatix.toml"
+    p.write_text(
+        '[budget]\nmax_genes_per_turn = 7\nmax_docs_per_turn = 99\n',
+        encoding="utf-8",
+    )
+    with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
+        cfg = load_config(str(p))
+    assert cfg.budget.max_genes_per_turn == 7
+    messages = [r.message for r in caplog.records]
+    assert any(
+        "max_docs_per_turn" in m and "max_genes_per_turn" in m for m in messages
+    ), f"expected a collision WARNING; got: {messages}"
+    assert not any(
+        "Unknown keys" in m for m in messages
+    ), f"alias key must never be flagged as an unknown key; got: {messages}"
+
+
+def test_compressor_non_table_value_warns_and_does_not_crash(tmp_path, caplog):
+    """A stray top-level ``compressor = "..."`` scalar must warn, never raise.
+
+    Regression (review round 1, Finding 2): before the fix, moving
+    ``raw["compressor"]`` onto ``raw["ribosome"]`` with no type check let a
+    non-table alias value (a valid TOML top-level string/int/etc.
+    assignment) reach ``RibosomeConfig(**raw["ribosome"])`` construction
+    and crash with ``AttributeError: 'str' object has no attribute 'get'``.
+    Pre-diff, a stray ``compressor`` key was simply inert (no section
+    literal matched it) — this pins that same non-fatal behavior.
+    """
+    p = tmp_path / "cymatix.toml"
+    p.write_text('compressor = "notadict"\n', encoding="utf-8")
+    with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
+        cfg = load_config(str(p))  # must not raise
+    assert cfg.ribosome.timeout == 120.0  # untouched default (RibosomeConfig.timeout)
+    assert any(
+        "compressor" in r.message and "not a table" in r.message
         for r in caplog.records
-    ), f"expected a collision WARNING; got: {[r.message for r in caplog.records]}"
+    ), f"expected a not-a-table WARNING; got: {[r.message for r in caplog.records]}"
+
+
+def test_knowledge_store_non_table_value_warns_and_does_not_crash(tmp_path, caplog, monkeypatch):
+    """Same non-crash guarantee for a stray top-level ``knowledge_store`` scalar.
+
+    Regression (review round 1, Finding 2, "same for knowledge_store").
+    """
+    # See test_knowledge_store_section_aliases_genome: conftest.py sets
+    # CYMATIX_GENOME_PATH=":memory:" session-wide; clear both env aliases so
+    # the assert below observes the untouched dataclass default.
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
+    monkeypatch.delenv("CYMATIX_STORE_PATH", raising=False)
+    p = tmp_path / "cymatix.toml"
+    p.write_text('knowledge_store = 42\n', encoding="utf-8")
+    with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
+        cfg = load_config(str(p))  # must not raise
+    assert cfg.genome.path == "genomes/main/genome.db"  # untouched default
+    assert any(
+        "knowledge_store" in r.message and "not a table" in r.message
+        for r in caplog.records
+    ), f"expected a not-a-table WARNING; got: {[r.message for r in caplog.records]}"
 
 
 def test_unknown_section_warns(tmp_path, caplog):

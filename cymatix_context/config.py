@@ -1295,30 +1295,54 @@ _KNOWN_TOP_LEVEL_SECTIONS = {
 def _apply_lexicon_aliases(raw: Dict[str, Any]) -> Dict[str, Any]:
     """Normalize Tier 2 canonical-name aliases onto their legacy TOML keys.
 
-    Runs once, on the raw parsed dict, before section dispatch. On
+    Mutates *raw* (and its nested section dicts) in place and also returns
+    it. Runs once, on the raw parsed dict, before section dispatch. On
     collision (both alias and legacy present) the legacy name wins and a
     WARNING names both — mirrors ``_warn_unknown``'s soft-fail style.
+
+    Two invariants callers rely on:
+    - An alias key is ALWAYS removed once handled here — including on a
+      collision — so it can never reach ``_warn_unknown`` as a stray
+      "unknown key" (that would be a spurious duplicate of the collision
+      warning this function already emits).
+    - A malformed alias value (e.g. a top-level ``compressor = "x"``
+      scalar instead of a ``[compressor]`` table) warns and is left alone
+      rather than raising — same soft-fail style as everything else in
+      this module. It stays in ``raw`` afterwards, but harmlessly: no
+      section-dispatch branch below reads the alias name directly, and
+      ``_KNOWN_TOP_LEVEL_SECTIONS`` keeps ``_warn_unknown_sections`` from
+      flagging it either.
     """
     for new, old in _SECTION_ALIASES.items():
-        if new in raw:
-            if old in raw:
-                log.warning(
-                    "[%s] ignored: legacy [%s] also present and wins", new, old,
-                )
-            else:
-                raw[old] = raw.pop(new)
+        if new not in raw:
+            continue
+        if not isinstance(raw[new], dict):
+            log.warning(
+                "[%s] is not a table; ignoring (expected a table aliasing "
+                "legacy [%s])", new, old,
+            )
+            continue
+        if old in raw:
+            log.warning(
+                "[%s] ignored: legacy [%s] also present and wins", new, old,
+            )
+        else:
+            raw[old] = raw.pop(new)
     for section, keys in _KEY_ALIASES.items():
         body = raw.get(section)
         if isinstance(body, dict):
             for new, old in keys.items():
                 if new in body:
+                    # Always pop the alias key — collision or not — so it
+                    # never survives to look like an unrecognized key.
+                    value = body.pop(new)
                     if old in body:
                         log.warning(
                             "[%s] %s ignored: legacy %s also present and wins",
                             section, new, old,
                         )
                     else:
-                        body[old] = body.pop(new)
+                        body[old] = value
     return raw
 
 
