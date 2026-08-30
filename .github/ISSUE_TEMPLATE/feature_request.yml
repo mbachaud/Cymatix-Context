@@ -54,7 +54,7 @@ body:
     id: implement
     attributes:
       label: Would you want to implement this yourself?
-      description: PRs require the one-time contributor sign-up at cymatixcontext.com/contribute.
+      description: PRs require the one-time contributor sign-up at cymatixcontext.com/contributing.
       options:
         - "No — just filing the need"
         - "Maybe, with guidance"

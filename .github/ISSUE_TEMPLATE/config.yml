@@ -4,5 +4,5 @@ contact_links:
     url: https://cymatixcontext.com
     about: What Cymatix Context is, plus benchmark receipts.
   - name: Contributor sign-up (required before PRs)
-    url: https://cymatixcontext.com/contribute
+    url: https://cymatixcontext.com/contributing
     about: One-time step. Issues are open to everyone; pull requests are gated on this.

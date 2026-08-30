@@ -13,7 +13,7 @@ installed version we need to reproduce):
 
 PRs are gated on a one-time sign-up (CLA Assistant Lite). The flow:
 
-1. Read the contributor guidelines at <https://cymatixcontext.com/contribute>.
+1. Read the contributor guidelines at <https://cymatixcontext.com/contributing>.
 2. Open your PR. The **Contributor sign-up** check will fail with a comment.
 3. Post this exact sentence as a comment on your PR:
 

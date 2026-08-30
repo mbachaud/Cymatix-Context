@@ -1,6 +1,6 @@
 name: Contributor sign-up
 # Gates pull requests on the one-time contributor sign-up described at
-# https://cymatixcontext.com/contribute (CLA Assistant Lite). Issues are open
+# https://cymatixcontext.com/contributing (CLA Assistant Lite). Issues are open
 # to everyone; only PRs are gated. Maintainers are allowlisted below.
 on:
   issue_comment:
@@ -26,12 +26,12 @@ jobs:
         with:
           path-to-signatures: signatures/contributors.json
           branch: cla-signatures
-          path-to-document: https://cymatixcontext.com/contribute
+          path-to-document: https://cymatixcontext.com/contributing
           allowlist: mbachaud,addiplus,SwiftWing21,dependabot[bot],github-actions[bot]
           custom-pr-sign-comment: I have read the Contributor Guidelines and I hereby sign up as a Cymatix Context contributor
           custom-notsigned-prcomment: >
             Thanks for the PR! One quick step before it can be reviewed: complete the
-            one-time contributor sign-up by reading https://cymatixcontext.com/contribute
+            one-time contributor sign-up by reading https://cymatixcontext.com/contributing
             and posting the sentence below as a comment on this PR.
           custom-allsigned-prcomment: All contributors have completed the sign-up. ✅
           lock-pullrequest-aftermerge: false

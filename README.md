@@ -1,5 +1,6 @@
 # Cymatix Context
 
+[![Website](https://img.shields.io/badge/website-cymatixcontext.com-ff9f43.svg)](https://cymatixcontext.com)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version](https://img.shields.io/pypi/v/cymatix-context.svg)](https://pypi.org/project/cymatix-context/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
