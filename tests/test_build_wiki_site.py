@@ -65,6 +65,19 @@ class TestBuildRendersPagesAndRewritesLinks:
         assert not (site / "wiki" / "_sidebar").exists()
         assert not (site / "wiki" / "_footer").exists()
 
+    def test_home_link_rewrites_to_wiki_root(self, tmp_path, mod):
+        wiki = tmp_path / "wiki"
+        wiki.mkdir()
+        (wiki / "Home.md").write_text("# Home\nhello", encoding="utf-8")
+        (wiki / "Getting-Started.md").write_text(
+            "# Getting Started\nBack to [Home](Home).", encoding="utf-8"
+        )
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        page = (
+            tmp_path / "site" / "public" / "wiki" / "getting-started" / "index.html"
+        ).read_text(encoding="utf-8")
+        assert 'href="/wiki/"' in page
+
 
 class TestTitleAndCanonical:
     def test_home_page_title_and_canonical(self, tmp_path, mod):
