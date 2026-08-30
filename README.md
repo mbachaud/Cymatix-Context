@@ -96,6 +96,10 @@ Three ways in, same retrieval primitives, same JSON shapes. Configuration lives 
 - **Sharded scale gap.** The sharded path trails the unsharded engine by ~31pp recall@10 / ~30pp MRR on the xl bed ([#275](https://github.com/mbachaud/Cymatix-Context/issues/275)) — prefer unsharded for accuracy-sensitive corpora.
 - **The agent prompt fragment is load-bearing.** Without it, frontier models confabulate past a `miss`. Import `cymatix_context.agent_prompt.full_fragment()`.
 
+## Observability
+
+Optional Grafana/Tempo/Loki sidecar: `scripts\setup-grafana-telem.ps1` (Windows) or `scripts/setup-grafana-telem.sh` (Linux/macOS), dashboards at `localhost:3000`. Full surface: [docs/architecture/OBSERVABILITY.md](docs/architecture/OBSERVABILITY.md) · [wiki: Observability](https://github.com/mbachaud/Cymatix-Context/wiki/Observability).
+
 ## Documentation
 
 The **[wiki](https://github.com/mbachaud/Cymatix-Context/wiki)** is the narrative documentation — 15 pages, [Troubleshooting](https://github.com/mbachaud/Cymatix-Context/wiki/Troubleshooting) included, also rendered at <https://cymatixcontext.com/wiki/>. Questions, and arguments about the receipts: [Discord](https://discord.gg/pX7x7pA3Da).

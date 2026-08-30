@@ -26,6 +26,23 @@ import pytest
 
 SCRIPT_PATH = Path(__file__).resolve().parent.parent / "scripts" / "build_wiki_site.py"
 
+# The `markdown` package ships via the dev extra, not the core install; the
+# fresh-install CI gate (and any minimal env) runs without it. The build
+# script guards its import (see TestMissingMarkdownDependency, which must
+# ALWAYS run — so no module-level importorskip); every test that actually
+# renders pages skips instead, matching the repo's optional-dep pattern.
+try:  # a try/import (not find_spec) so a broken/blocked module also skips
+    import markdown as _markdown_probe  # noqa: F401
+except ImportError:
+    _HAS_MARKDOWN = False
+else:
+    _HAS_MARKDOWN = True
+
+requires_markdown = pytest.mark.skipif(
+    not _HAS_MARKDOWN,
+    reason="needs the 'markdown' package (installed via the dev extra)",
+)
+
 
 def _load_module():
     """Load scripts/build_wiki_site.py as a standalone module (it's a script,
@@ -53,6 +70,7 @@ def _make_wiki(tmp_path: Path) -> Path:
     return wiki
 
 
+@requires_markdown
 class TestBuildRendersPagesAndRewritesLinks:
     def test_build_renders_pages_and_rewrites_links(self, tmp_path, mod):
         wiki = _make_wiki(tmp_path)
@@ -79,6 +97,7 @@ class TestBuildRendersPagesAndRewritesLinks:
         assert 'href="/wiki/"' in page
 
 
+@requires_markdown
 class TestTitleAndCanonical:
     def test_home_page_title_and_canonical(self, tmp_path, mod):
         wiki = _make_wiki(tmp_path)
@@ -100,6 +119,7 @@ class TestTitleAndCanonical:
         )
 
 
+@requires_markdown
 class TestChromePreserved:
     def test_header_brand_footer_and_wiki_nav_link_present(self, tmp_path, mod):
         wiki = _make_wiki(tmp_path)
@@ -158,6 +178,7 @@ class TestChromePreserved:
         assert 'Prose mention: the literal text href="Home" appears here too.' in idx
 
 
+@requires_markdown
 class TestImageSrcRewrite:
     def test_asset_img_src_rewritten_code_literal_untouched(self, tmp_path, mod):
         """Controller-flagged plan gap: wiki pages embed diagrams as
@@ -202,6 +223,7 @@ class TestImageSrcRewrite:
         assert 'src="images/diagram.png"' in idx
 
 
+@requires_markdown
 class TestAssetsCopied:
     def test_copies_wiki_assets_directory(self, tmp_path, mod):
         wiki = _make_wiki(tmp_path)
@@ -219,6 +241,7 @@ class TestAssetsCopied:
         assert (tmp_path / "site" / "public" / "wiki" / "assets").exists() is False
 
 
+@requires_markdown
 class TestMarkdownExtensions:
     def test_tables_and_fenced_code_render(self, tmp_path, mod):
         wiki = tmp_path / "wiki"
@@ -246,6 +269,7 @@ class TestMissingMarkdownDependency:
             mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
 
 
+@requires_markdown
 class TestMainCli:
     def test_main_parses_args_and_builds(self, tmp_path, mod, monkeypatch):
         wiki = _make_wiki(tmp_path)
@@ -263,6 +287,7 @@ class TestMainCli:
         assert (site_dir / "public" / "wiki" / "index.html").exists()
 
 
+@requires_markdown
 class TestSidebarNav:
     def _make_wiki_with_sidebar(self, tmp_path: Path) -> Path:
         wiki = tmp_path / "wiki"
