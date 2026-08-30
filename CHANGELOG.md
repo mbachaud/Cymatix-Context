@@ -2,6 +2,108 @@
 
 ## Unreleased
 
+**ROSETTA Tier 2 — software-lexicon aliases (spec:
+`docs/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`).**
+Additive-only canonical-name aliases across the config, CLI, HTTP, and MCP
+surfaces — every legacy bio-named surface keeps working unchanged. On the
+config/env surfaces, collision (both names present) resolves legacy-wins
+with a warning naming both, so no default or shipped behavior changes; the
+CLI is deliberately exempt from that rule (see the `feat(cli)` entry
+below — explicit dual-flag CLI input gets argparse's native last-wins
+instead). Tier 3 — the wire-surface rename (`<GENE>` assembly blocks,
+decoder prompts, response field names, `/stats` keys) — is out of scope
+here because it alters delivered bytes; deferred to its own byte-level A/B
+gate and tracked as issue #417.
+
+- **feat(config): `[compressor]`/`[knowledge_store]` section aliases,
+  `[budget]` key aliases, `CYMATIX_STORE_PATH` env alias, unknown-section
+  warning (Task A1).** `cymatix_context/config.py` gains
+  `_SECTION_ALIASES` (`compressor` → `ribosome`, `knowledge_store` →
+  `genome`) and `_KEY_ALIASES` (`[budget] retrieval_tokens` →
+  `expression_tokens`, `max_docs_per_turn` → `max_genes_per_turn`);
+  `CYMATIX_STORE_PATH` aliases legacy `CYMATIX_GENOME_PATH`. Any
+  top-level `cymatix.toml` section this loader doesn't recognize now
+  warns via `_warn_unknown_sections` instead of vanishing silently —
+  closes the sharpest pre-existing gap (an unrecognized `[compressor]`
+  used to produce no signal at all). Collision rule: legacy name wins, a
+  warning names both, so no default or shipped behavior changes. Review
+  round 1 fixed two follow-on bugs: a `[budget]` alias/legacy collision
+  was leaking a spurious "Unknown keys in [budget]" warning alongside the
+  intended collision warning (the alias key is now always popped once
+  handled, not only on the non-collision path), and a non-table alias
+  value (e.g. `compressor = "notadict"`) was crashing `load_config` with
+  `AttributeError` inside `RibosomeConfig` construction because the
+  section-alias loop lacked the `isinstance` guard the key-alias loop
+  already had — it now warns and leaves the section alone. That guard
+  only covers the alias names; the same crash reproduces today for
+  *legacy* section values (`ribosome = "notadict"`) on unmodified master
+  with no Tier-2 code involved — filed separately as issue #418. Tests:
+  `tests/test_lexicon_aliases_config.py`.
+
+- **fix(api): `StatsResult` tier counts read the keys `stats()` actually
+  emits (Task A2).** `CymatixSession`'s `StatsResult` construction read
+  `chromatin_open`/`chromatin_euchromatin`/`chromatin_heterochromatin`,
+  but `knowledge_store.stats()` emits `open`/`euchromatin`/
+  `heterochromatin` — every tier count in `cymatix diag corpus` printed 0
+  regardless of corpus state. Now reads the new keys with the old ones as
+  fallback. Tests: `tests/test_stats_result_tiers.py`.
+
+- **feat(cli): `cymatix document get|preview` alias, `--max-docs` flag
+  alias (Task A3).** `document` is a first-class top-level subcommand in
+  `dispatcher.py`, resolved to the same `cmd_gene.run` function object as
+  legacy `gene` (identity-asserted in tests, not just behaviorally
+  equivalent). `--max-docs` shares the `max_genes` argparse dest on
+  `packet` and `refresh-targets`. CLI flags are deliberately exempt from
+  the config/env legacy-wins collision rule: passing both `--max-genes`
+  and `--max-docs` in one invocation is explicit user input, so
+  argparse's native last-flag-wins applies as-is — pinned by
+  `test_flag_alias_collision_last_wins_is_intentional_cli_exemption` plus
+  a comment at each shared-dest `add_argument()` call, so the exemption
+  is deliberate rather than an oversight. Tests:
+  `tests/test_cli_document_alias.py`.
+
+- **feat(server): `GET /documents/{id}` alias of `/genes/{id}` (Task
+  A4).** Registered via `add_api_route` against the same handler with a
+  distinct operation id, so there's no OpenAPI collision; JSON responses
+  are byte-identical to `/genes/{gene_id}` for both the 200 and 404
+  cases. `/genes/{gene_id}` itself is untouched. Tests:
+  `tests/test_http_documents_alias.py`.
+
+- **feat(mcp): `cymatix_document_*` tools join the lean core set, new
+  `cymatix_document_neighbors`, R4 deprecation nudges (#87, Task A5).**
+  `_MCP_CORE_TOOLS` grows from 5 to 10 — the five `cymatix_document_*`
+  tools (`get`, `query`, `preview`, `fingerprint`, and the new
+  `neighbors`) now ship in the default MCP surface alongside the
+  original agent-loop five; the legacy bio-named tools stay registered
+  only under `CYMATIX_MCP_FULL=1`. `cymatix_document_neighbors` is a
+  pass-through-equivalent alias of `cymatix_neighbors` (same `query`/`k`
+  params, same `/debug/neighbors` call). `cymatix_document_preview`'s own
+  parameter is renamed `max_genes` → `max_docs` (still forwarded as
+  `max_genes` on the wire) — safe since it has no prior callers pinning
+  the old name; `cymatix_splice_preview` keeps `max_genes` untouched. R4
+  (#87) soft-deprecation nudges added to the first docstring line of
+  `cymatix_gene_get`, `cymatix_splice_preview`, and `cymatix_neighbors`,
+  each naming its `cymatix_document_*` replacement — no removals. Tests:
+  `tests/test_mcp_document_aliases.py`;
+  `tests/test_mcp_tool_names.py`/`tests/test_mcp_server.py` updated for
+  the 10-tool core.
+
+- **docs: `mcp-tools.md` rewrite (document_* primary), alias-aware
+  config-reference headings (Task A6).** `docs/api/mcp-tools.md` replaces
+  a stale 1.8KB stub with the full 10-tool core (canonical names
+  primary), a legacy-name back-compat table noting the R4 nudge policy,
+  the 15 full-surface-only tools grouped by category, env vars (flagging
+  that `CYMATIX_MCP_COMPAT` is documented but dead code), and a note that
+  Tier 3 wire fields stay legacy-named for now (issue #417).
+  `scripts/gen_config_reference.py` learns a canonical-heading map for
+  sections with a Tier 2 alias — importing
+  `cymatix_context.config._SECTION_ALIASES` off the loaded module rather
+  than duplicating it — emitting `[compressor] (legacy alias:
+  [ribosome])` and `[knowledge_store] (legacy alias: [genome])` headings;
+  `docs/config-reference.md` regenerated, plus hand-authored prose for
+  the `[budget]` key aliases (not separate dataclass fields, so the
+  generated table can't express them).
+
 ## 0.9.0 (2026-08-20)
 
 The post-flip release: the shipped default retrieval path is now fully
