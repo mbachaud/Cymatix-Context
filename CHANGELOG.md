@@ -18,7 +18,7 @@
   wiki-relative links and the shared SVGs resolve under the site's own
   path prefix). 14 new tests in `tests/test_build_wiki_site.py` cover the
   site-render path, including the Home-link and asset-src rewrites.
-- **readme: README.md rewritten 504 → 124 lines as a minimal landing
+- **readme: README.md rewritten 503 → 124 lines as a minimal landing
   page.** Install/quickstart/pipeline-summary/links only; the
   configuration tables, endpoint catalogue, gotchas, and lexicon detail
   that used to live in the README now live on the wiki (`Configuration`,
@@ -62,8 +62,8 @@
     `sema-readgate-decider` row.
   - `docs/architecture/KNOWLEDGE_GRAPH.md`: ASCII diagrams translated
     to engineering vocabulary (padding/headings preserved).
-  - `docs/architecture/PIPELINE_LANES.md`: a chromatin SQL literal
-    (an actual column value, not prose) restored after an earlier pass
+  - `docs/operator-runbooks.md`: a chromatin SQL literal (an actual
+    column value, not prose) restored after an earlier pass
     over-translated it.
 - **docs: `docs/ROSETTA.md` retires to a stub.** The full
   biology-to-software lexicon table moves to the wiki's `Lexicon` page
