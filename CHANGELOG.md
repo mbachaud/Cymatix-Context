@@ -18,6 +18,9 @@
   wiki-relative links and the shared SVGs resolve under the site's own
   path prefix). 14 new tests in `tests/test_build_wiki_site.py` cover the
   site-render path, including the Home-link and asset-src rewrites.
+  The site render also builds a navigation sidebar from `wiki/_Sidebar.md`
+  (the same file GitHub uses): a sticky desktop rail with the current page
+  highlighted, collapsing to a `<details>` "Pages" block on mobile — JS-free.
 - **readme: README.md rewritten 503 → 124 lines as a minimal landing
   page.** Install/quickstart/pipeline-summary/links only; the
   configuration tables, endpoint catalogue, gotchas, and lexicon detail

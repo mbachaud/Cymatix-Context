@@ -6,9 +6,15 @@ Each wiki/<Page-Name>.md becomes <site-dir>/public/wiki/<slug>/index.html,
 where slug is the lowercased filename stem (e.g. Getting-Started.md ->
 public/wiki/getting-started/index.html). wiki/Home.md is special-cased to
 the /wiki/ index itself (public/wiki/index.html), matching how GitHub
-treats Home.md as the wiki's landing page. wiki/_Sidebar.md and
-wiki/_Footer.md are GitHub-wiki chrome files, not content, and are skipped.
-wiki/assets/ is copied verbatim to public/wiki/assets/.
+treats Home.md as the wiki's landing page. wiki/_Footer.md is GitHub-wiki
+chrome and is skipped. wiki/_Sidebar.md is not rendered as a page either,
+but it IS the navigation source: its markdown (the same grouped link list
+GitHub shows beside every wiki page) is rendered into each page twice --
+a sticky desktop <aside class="wiki-nav"> and a collapsible mobile
+<details class="wiki-nav-mobile"> -- with the current page's link marked
+class="current" + aria-current="page". If _Sidebar.md is absent the pages
+build without a nav, single-column. wiki/assets/ is copied verbatim to
+public/wiki/assets/.
 
 Intra-wiki links written the normal markdown way -- [text](Page-Name), the
 form that also resolves correctly on github.com/.../wiki -- are rewritten
@@ -79,7 +85,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f2ed">
 </head>
 <body>
-<div class="shell">
+<div class="shell shell-wide">
   <header class="app-header">
     <a class="brand" href="/">
       <span class="brand-mark" aria-hidden="true">
@@ -125,9 +131,11 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
       </a>
     </div>
   </header>
-  <main class="wiki-page">
+  <div class="wiki-layout">
+__SIDEBAR__    <main class="wiki-page">
 __CONTENT__
-  </main>
+    </main>
+  </div>
   <footer class="app-footer">
     <span>Cymatix Context &middot; Apache-2.0 &middot; <a href="/">Home</a> &middot; <a href="/hosting/">Hosting</a></span>
   </footer>
@@ -207,10 +215,46 @@ def _rewrite_asset_img_srcs(html_fragment: str) -> str:
     return _IMG_SRC_RE.sub(_replace, html_fragment)
 
 
-def _render_page(title: str, canonical: str, content_html: str) -> str:
+def _render_sidebar(wiki_dir: Path, href_targets: dict[str, str]) -> str:
+    """Render wiki/_Sidebar.md (the same grouped link list GitHub shows
+    beside every wiki page) into the site's two nav blocks: a desktop
+    <aside> and a mobile <details>. Returns "" when the file is absent, so
+    pages build nav-less rather than failing."""
+    sidebar_src = wiki_dir / "_Sidebar.md"
+    if not sidebar_src.exists():
+        return ""
+    nav_html = markdown.markdown(
+        sidebar_src.read_text(encoding="utf-8"), extensions=MARKDOWN_EXTENSIONS
+    )
+    nav_html = _rewrite_intrawiki_hrefs(nav_html, href_targets)
+    return (
+        '    <aside class="wiki-nav" aria-label="Wiki pages">\n'
+        f"{nav_html}\n"
+        "    </aside>\n"
+        '    <details class="wiki-nav-mobile">\n'
+        "      <summary>Pages</summary>\n"
+        f"{nav_html}\n"
+        "    </details>\n"
+    )
+
+
+def _mark_current(sidebar_html: str, page_url: str) -> str:
+    """Mark the nav link pointing at page_url as the current page (in both
+    the desktop and mobile nav blocks). The python-markdown renderer always
+    emits intra-wiki nav anchors as exactly `<a href="...">` (href first,
+    double-quoted), which _rewrite_intrawiki_hrefs preserves, so a plain
+    string replace is exact here."""
+    return sidebar_html.replace(
+        f'<a href="{page_url}">',
+        f'<a class="current" aria-current="page" href="{page_url}">',
+    )
+
+
+def _render_page(title: str, canonical: str, content_html: str, sidebar_html: str = "") -> str:
     return (
         PAGE_TEMPLATE.replace("__TITLE__", title)
         .replace("__CANONICAL__", canonical)
+        .replace("__SIDEBAR__", sidebar_html)
         .replace("__CONTENT__", content_html)
     )
 
@@ -240,6 +284,7 @@ def build(wiki_dir: Path | str, site_dir: Path | str) -> list[Path]:
 
     pages = _wiki_pages(wiki_dir)
     href_targets = _href_targets(pages)
+    sidebar_html = _render_sidebar(wiki_dir, href_targets)
 
     written: list[Path] = []
     for page in pages:
@@ -249,7 +294,8 @@ def build(wiki_dir: Path | str, site_dir: Path | str) -> list[Path]:
         content_html = markdown.markdown(markdown_text, extensions=MARKDOWN_EXTENSIONS)
         content_html = _rewrite_intrawiki_hrefs(content_html, href_targets)
         content_html = _rewrite_asset_img_srcs(content_html)
-        html = _render_page(title, canonical, content_html)
+        page_sidebar = _mark_current(sidebar_html, href_targets[page.stem]) if sidebar_html else ""
+        html = _render_page(title, canonical, content_html, page_sidebar)
 
         out_path = _output_path(public_wiki_dir, page.stem)
         out_path.parent.mkdir(parents=True, exist_ok=True)

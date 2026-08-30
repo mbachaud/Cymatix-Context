@@ -261,3 +261,62 @@ class TestMainCli:
         rc = mod.main()
         assert rc == 0
         assert (site_dir / "public" / "wiki" / "index.html").exists()
+
+
+class TestSidebarNav:
+    def _make_wiki_with_sidebar(self, tmp_path: Path) -> Path:
+        wiki = tmp_path / "wiki"
+        wiki.mkdir()
+        (wiki / "Home.md").write_text("# Home\nwelcome", encoding="utf-8")
+        (wiki / "Getting-Started.md").write_text("# Getting Started\nhello", encoding="utf-8")
+        (wiki / "_Sidebar.md").write_text(
+            "**Start**\n\n- [Home](Home)\n- [Getting Started](Getting-Started)\n",
+            encoding="utf-8",
+        )
+        return wiki
+
+    def test_sidebar_rendered_with_rewritten_links_and_current_highlight(self, tmp_path, mod):
+        wiki = self._make_wiki_with_sidebar(tmp_path)
+        site = tmp_path / "site" / "public"
+        site.mkdir(parents=True)
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+
+        sub = (site / "wiki" / "getting-started" / "index.html").read_text(encoding="utf-8")
+        assert '<aside class="wiki-nav"' in sub
+        assert 'href="/wiki/"' in sub  # Home link rewritten inside the nav
+        # The current page's nav link is marked, the other page's is not.
+        assert 'aria-current="page" href="/wiki/getting-started/"' in sub
+        assert 'aria-current="page" href="/wiki/"' not in sub
+
+        home = (site / "wiki" / "index.html").read_text(encoding="utf-8")
+        assert 'aria-current="page" href="/wiki/"' in home
+        assert 'aria-current="page" href="/wiki/getting-started/"' not in home
+
+    def test_sidebar_mobile_details_block_present(self, tmp_path, mod):
+        wiki = self._make_wiki_with_sidebar(tmp_path)
+        site = tmp_path / "site" / "public"
+        site.mkdir(parents=True)
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        sub = (site / "wiki" / "getting-started" / "index.html").read_text(encoding="utf-8")
+        assert '<details class="wiki-nav-mobile">' in sub
+        assert "<summary>Pages</summary>" in sub
+
+    def test_no_sidebar_file_builds_without_nav(self, tmp_path, mod):
+        wiki = tmp_path / "wiki"
+        wiki.mkdir()
+        (wiki / "Home.md").write_text("# Home\nwelcome", encoding="utf-8")
+        site = tmp_path / "site" / "public"
+        site.mkdir(parents=True)
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        home = (site / "wiki" / "index.html").read_text(encoding="utf-8")
+        assert '<aside class="wiki-nav"' not in home
+        assert "wiki-nav-mobile" not in home
+
+    def test_layout_wrapper_and_wide_shell_present(self, tmp_path, mod):
+        wiki = self._make_wiki_with_sidebar(tmp_path)
+        site = tmp_path / "site" / "public"
+        site.mkdir(parents=True)
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        sub = (site / "wiki" / "getting-started" / "index.html").read_text(encoding="utf-8")
+        assert '<div class="wiki-layout">' in sub
+        assert 'class="shell shell-wide"' in sub
