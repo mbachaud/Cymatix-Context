@@ -15,28 +15,28 @@
               ┌────────────────┼────────────────┐
               ▼                ▼                 ▼
         ┌──────────┐   ┌──────────┐      ┌──────────┐
-        │ PROMOTER │   │   FTS5   │      │   ΣĒMA   │
+        │   TAGS   │   │   FTS5   │      │   ΣĒMA   │
         │ D2 match │   │ D1 match │      │ D1 cos.  │
         └────┬─────┘   └────┬─────┘      └────┬─────┘
              │              │                  │
              └──────────────┼──────────────────┘
                             ▼
                    ┌─────────────────┐
-                   │  Candidate Genes │
-                   │  (from genome)   │
+                   │ Candidate Docs   │
+                   │  (from store)    │
                    └────────┬────────┘
                             │
               ┌─────────────┼─────────────┐
               ▼             ▼              ▼
         ┌──────────┐ ┌──────────┐  ┌──────────┐
-        │ CYMATICS │ │ CHROMATIN│  │ WORKING  │
+        │ CYMATICS │ │   TIER   │  │ WORKING  │
         │ D6 score │ │ D5 tier  │  │ SET D4   │
         └────┬─────┘ └────┬─────┘  └────┬─────┘
              │             │              │
              └─────────────┼──────────────┘
                            ▼
                   ┌─────────────────┐
-                  │  Ranked Genes    │
+                  │  Ranked Docs     │
                   │  (top-k scored)  │
                   └────────┬────────┘
                            │
@@ -57,19 +57,19 @@ The fundamental unit. Every piece of knowledge in cymatix is a document.
 
 ```
 ┌─────────────────────────────────────────────┐
-│  GENE: a7f3b2c1                             │
+│  DOCUMENT: a7f3b2c1                         │
 │                                             │
 │  content:    "## Auth Middleware\n..."       │
 │  complement: "JWT auth with session..."     │
 │  source_id:  "fleet/skills/auth.py"         │
-│  chromatin:  0 (OPEN)                       │
+│  tier:  0 (OPEN)                            │
 │                                             │
-│  ┌─ Codons ─────────────────────────────┐   │
+│  ┌─ Fragments ──────────────────────────┐   │
 │  │  auth:1.0  jwt:0.8  session:0.5     │   │
 │  │  security:0.8  middleware:0.6        │   │
 │  └──────────────────────────────────────┘   │
 │                                             │
-│  ┌─ Promoter ───────────────────────────┐   │
+│  ┌─ Tags ───────────────────────────────┐   │
 │  │  domains: [auth, security, backend]  │   │
 │  │  entities: [JWT, OAuth, OWASP]       │   │
 │  └──────────────────────────────────────┘   │
@@ -84,7 +84,7 @@ The fundamental unit. Every piece of knowledge in cymatix is a document.
 │  │  [0.08, 0.01, 0.07, -0.05, ...]     │   │
 │  └──────────────────────────────────────┘   │
 │                                             │
-│  ┌─ Epigenetics ────────────────────────┐   │
+│  ┌─ Signals ────────────────────────────┐   │
 │  │  access_rate: 2.3/hour               │   │
 │  │  decay_score: 0.95                   │   │
 │  │  co_activated_with: [b3e1..., c4f2]  │   │
@@ -95,26 +95,26 @@ The fundamental unit. Every piece of knowledge in cymatix is a document.
 ### Edge Types (connections between documents)
 
 ```
- Gene A ────── co_activated_with ──────► Gene B
-               (epigenetics field)
+ Document A ─── co_activated_with ──────► Document B
+               (epigenetics field; legacy: co-activation)
                "retrieved together in same query"
 
- Gene A ────── harmonic_link ──────────► Gene B
+ Document A ─── harmonic_link ──────────► Document B
                (harmonic_links table)
                "spectral similarity via cymatics"
                weight: cosine of frequency spectra
 
- Gene A ────── entity_link ────────────► Gene B
+ Document A ─── entity_link ────────────► Document B
                (entity_graph table)
                "share a named entity"
                entity: "JWT", "OAuth", etc.
 
- Gene A ────── supersedes ─────────────► Gene B
+ Document A ─── supersedes ─────────────► Document B
                (genes.supersedes field)
                "newer version of same content"
-               version: gene.version
+               version: document.version
 
- Gene A ────── relation ───────────────► Gene B
+ Document A ─── relation ───────────────► Document B
                (gene_relations table)
                "semantic relation"
                type: entails | contradicts | neutral
@@ -131,27 +131,30 @@ Each dimension acts as a filter or scoring function over the graph:
 │                                                             │
 │  D1  Semantic    ─── FTS5 term match + SPLADE expansion     │
 │                      + ΣĒMA cosine similarity               │
-│                      "does this gene CONTAIN relevant terms?"│
+│                      "does this document CONTAIN relevant terms?"│
 │                                                             │
-│  D2  Promoter    ─── domain + entity tag intersection       │
+│  D2  Tags        ─── domain + entity tag intersection       │
 │                      + synonym expansion (cymatix.toml)       │
-│                      "is this gene ABOUT the right topic?"  │
+│                      "is this document ABOUT the right topic?"  │
 │                                                             │
 │  D3  Source      ─── deny-list filter + authority bonus     │
-│                      "is this gene FROM a trusted source?"  │
+│                      "is this document FROM a trusted source?"  │
 │                                                             │
-│  D4  Working-set ─── access_rate(gene, window) tiebreaker   │
-│                      "is this gene RECENTLY active?"        │
+│  D4  Working-set ─── access_rate(document, window) tiebreaker │
+│                      "is this document RECENTLY active?"        │
 │                                                             │
-│  D5  Chromatin   ─── tier filter (hot/warm/cold)            │
+│  D5  Tier        ─── tier filter (hot/warm/cold)            │
 │                      + cold-tier ΣĒMA fallthrough           │
-│                      "is this gene ACCESSIBLE right now?"   │
+│                      "is this document ACCESSIBLE right now?"   │
 │                                                             │
 │  D6  Cymatics    ─── frequency-domain resonance scoring     │
-│                      "does this gene RESONATE with query?"  │
+│                      "does this document RESONATE with query?"  │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+D2 was originally named *Promoter* and D5 *Chromatin*; both dimensions
+are shown above under their canonical software names (Tags, Tier).
 
 ---
 
@@ -165,26 +168,26 @@ Step 1 — Signal extraction
     entities: [auth, middleware, tokens]
 
 Step 2 — Graph traversal (candidate retrieval)
-    D1 FTS5:    "auth" OR "middleware" OR "tokens"  → 47 genes
-    D1 SPLADE:  expanded terms from splade_terms    → +12 genes
-    D2 Promoter: domains ∩ {auth, security, backend} → 31 genes
-    D1 ΣĒMA:    cosine(query_embed, gene_embed) > 0.3 → +8 genes
-    Deduplicate → 52 unique candidate genes
+    D1 FTS5:    "auth" OR "middleware" OR "tokens"  → 47 documents
+    D1 SPLADE:  expanded terms from splade_terms    → +12 documents
+    D2 Tags:    domains ∩ {auth, security, backend} → 31 documents
+    D1 ΣĒMA:    cosine(query_embed, doc_embed) > 0.3 → +8 documents
+    Deduplicate → 52 unique candidate documents
 
 Step 3 — Scoring (dimension fusion)
     D6 Cymatics resonance_rank:
-        Gene "auth.py chunk 1"    → score 0.89  (auth + jwt peaks resonate)
-        Gene "redis session mgr"  → score 0.72  (session + token peaks)
-        Gene "OWASP top 10 ref"   → score 0.41  (security broad match)
+        Document "auth.py chunk 1"    → score 0.89  (auth + jwt peaks resonate)
+        Document "redis session mgr"  → score 0.72  (session + token peaks)
+        Document "OWASP top 10 ref"   → score 0.41  (security broad match)
         ...
-    D5 Chromatin: filter out heterochromatin (unless include_cold)
+    D5 Tier: filter out the cold tier (legacy: heterochromatin) (unless include_cold)
     D4 Working-set: tiebreak by access_rate for equal scores
     D3 Source: authority bonus for fleet/skills/* sources
     Top-12 selected (budget.max_genes_per_turn)
 
 Step 4 — Compression (Headroom)
-    Gene "auth.py chunk 1" (3200 chars) → Kompress → 980 chars
-    Gene "redis session mgr" (2100 chars) → Kompress → 720 chars
+    Document "auth.py chunk 1" (3200 chars) → Kompress → 980 chars
+    Document "redis session mgr" (2100 chars) → Kompress → 720 chars
     ...
 
 Step 5 — Assembly
@@ -231,12 +234,12 @@ genome.db (SQLite)
 │   ├── embedding          (TEXT JSON, 20-dim ΣĒMA vector)
 │   ├── key_values         (TEXT JSON, extracted KV pairs)
 │   ├── source_id          (TEXT, file path or ingest source)
-│   ├── version            (INT, monotonic per gene lineage)
+│   ├── version            (INT, monotonic per document lineage)
 │   └── supersedes         (TEXT, gene_id of prior version)
 │
 ├── genes_fts          ─── FTS5 full-text index (D1)
 ├── splade_terms       ─── Sparse expansion terms (D1)
-├── promoter_index     ─── Promoter tag index (D2)
+├── promoter_index     ─── Tag index (D2)
 │
 ├── harmonic_links     ─── Cymatics spectral edges (D6 → D8)
 │   ├── gene_a, gene_b
@@ -258,7 +261,7 @@ genome.db (SQLite)
 ├── parties            ─── Tenant registry (D7, 0 rows)
 ├── participants       ─── Agent/skill registry (D7, 0 rows)
 ├── hitl_events        ─── HITL pause logger (0 rows)
-└── health_log         ─── Genome health snapshots
+└── health_log         ─── Knowledge-store health snapshots
 ```
 
 ---
@@ -274,9 +277,9 @@ genome.db (SQLite)
 │  │                                                       │  │
 │  │  Ingest ─── Chunk + Tag + Embed + Gate ──► genome.db  │  │
 │  │                                                       │  │
-│  │  Retrieve ── FTS5 + SPLADE + ΣĒMA + Promoter          │  │
+│  │  Retrieve ── FTS5 + SPLADE + ΣĒMA + Tags              │  │
 │  │              + Cymatics resonance scoring              │  │
-│  │              + Chromatin tier filtering                │  │
+│  │              + Lifecycle-tier filtering                │  │
 │  │              + Working-set access rate                 │  │
 │  │              + Cold-tier ΣĒMA fallthrough              │  │
 │  │                                                       │  │
@@ -290,7 +293,7 @@ genome.db (SQLite)
 │  │  Compress ── Kompress (ModernBERT) for prose + code   │  │
 │  │              LogCompressor for build/test output       │  │
 │  │              DiffCompressor for patches                │  │
-│  │              Target: ~1000 chars per gene              │  │
+│  │              Target: ~1000 chars per document           │  │
 │  │                                                       │  │
 │  │  ALL CPU. No LLM calls.                               │  │
 │  └───────────────────────────────────────────────────────┘  │
