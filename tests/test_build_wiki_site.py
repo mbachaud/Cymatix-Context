@@ -129,6 +129,34 @@ class TestChromePreserved:
         assert 'href="#Getting-Started"' in idx
         assert 'href="assets/Getting-Started.png"' in idx
 
+    def test_href_rewrite_scoped_to_anchor_tags_not_prose_or_code(self, tmp_path, mod):
+        """Regression test (review finding, round 1): the intra-wiki href
+        rewrite must only touch real <a href="..."> attributes. A literal
+        occurrence of href="Home" inside inline code, or as plain prose
+        text, is not a link and must survive byte-for-byte -- only the
+        real markdown link should be rewritten."""
+        wiki = tmp_path / "wiki"
+        wiki.mkdir()
+        (wiki / "Home.md").write_text(
+            "# Home\n\n"
+            "Real link: [go](Getting-Started)\n\n"
+            'Inline code sample: `href="Home"`\n\n'
+            'Prose mention: the literal text href="Home" appears here too.\n',
+            encoding="utf-8",
+        )
+        (wiki / "Getting-Started.md").write_text("# Getting Started\nhello", encoding="utf-8")
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        idx = (tmp_path / "site" / "public" / "wiki" / "index.html").read_text(encoding="utf-8")
+
+        # The real markdown link is rewritten.
+        assert '<a href="/wiki/getting-started/">go</a>' in idx
+
+        # The inline-code literal survives verbatim -- not rewritten to /wiki/.
+        assert '<code>href="Home"</code>' in idx
+
+        # The bare-prose literal also survives verbatim.
+        assert 'Prose mention: the literal text href="Home" appears here too.' in idx
+
 
 class TestAssetsCopied:
     def test_copies_wiki_assets_directory(self, tmp_path, mod):

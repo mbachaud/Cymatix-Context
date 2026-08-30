@@ -128,12 +128,17 @@ __CONTENT__
 </html>
 """
 
-# Only bare page-name hrefs (letters, digits, hyphens -- no scheme, slash,
-# or anchor) are candidates for the intra-wiki rewrite. That character
-# class alone already excludes external URLs (contain "://"), anchors
-# (contain "#"), and asset-relative paths (contain "/") -- see
+# Only href attributes on actual <a ...> tags are candidates for the
+# intra-wiki rewrite -- scoping the match to `<a\b...href="..."` (rather
+# than a bare `href="..."` anywhere in the rendered HTML) keeps this from
+# corrupting a literal `href="Home"` that shows up as prose or inside
+# <code>/<pre> (e.g. a wiki page documenting markdown link syntax). Within
+# the href value itself, only bare page-name text (letters, digits,
+# hyphens -- no scheme, slash, or anchor) is even a candidate; that
+# character class alone already excludes external URLs (contain "://"),
+# anchors (contain "#"), and asset-relative paths (contain "/") -- see
 # _rewrite_intrawiki_hrefs for the second gate (must also be a known page).
-_HREF_RE = re.compile(r'href="([A-Za-z0-9-]+)"')
+_HREF_RE = re.compile(r'(<a\b[^>]*\bhref=")([A-Za-z0-9-]+)(")')
 
 _H1_RE = re.compile(r"(?m)^#\s+(.+?)\s*$")
 
@@ -170,9 +175,9 @@ def _extract_title(markdown_text: str, stem: str) -> str:
 
 def _rewrite_intrawiki_hrefs(html_fragment: str, href_targets: dict[str, str]) -> str:
     def _replace(match: re.Match) -> str:
-        stem = match.group(1)
+        prefix, stem, suffix = match.group(1), match.group(2), match.group(3)
         if stem in href_targets:
-            return f'href="{href_targets[stem]}"'
+            return f"{prefix}{href_targets[stem]}{suffix}"
         return match.group(0)
 
     return _HREF_RE.sub(_replace, html_fragment)
