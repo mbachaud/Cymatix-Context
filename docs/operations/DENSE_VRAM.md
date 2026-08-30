@@ -13,7 +13,7 @@ doc is the operator-facing matrix for *using* it.
 torch's CUDA caching allocator keeps a separate cached block per distinct
 input shape, so a long-lived process that batch-encodes many
 differently-sized passages — the daemon `/ingest` route,
-`scripts/backfill_bgem3_v2.py`, a 100k+-file genome build — climbs to the
+`scripts/backfill_bgem3_v2.py`, a 100k+-file knowledge-store build — climbs to the
 card's dedicated VRAM ceiling and then, on **Windows / WDDM in
 particular**, the driver silently transfers allocations to *shared* GPU
 memory (system RAM) rather than hard-OOMing. The run keeps going at

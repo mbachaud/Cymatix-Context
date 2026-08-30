@@ -383,9 +383,9 @@ OpenAI-compatible upstream) at `127.0.0.1:11437` by default.
 
 `bench_enabled` / `bench_port` / `bench_genome_path` are the v0.7.0
 dev/configuration mode: a second cymatix instance on a side port bound to
-a bench genome, so a primary chat session stays attached to the main
-genome while a subagent drives the bench harness against the bench
-port. Default off; flip via `cymatix.toml`, `--bench`, or
+a bench knowledge store, so a primary chat session stays attached to the
+main knowledge store while a subagent drives the bench harness against
+the bench port. Default off; flip via `cymatix.toml`, `--bench`, or
 `CYMATIX_BENCH_ENABLED=1`.
 
 **Security (opt-in, 2026-08-08 audit).** The default loopback bind is
@@ -606,10 +606,10 @@ dense_passage_char_cap = 2000
 
 **Purpose.** Retrieval-time behavior for `context_manager`. The
 cold-tier knobs were added 2026-04-10 (C.2 of the B->C migration).
-Cold-tier is the opt-in retrieval path that consults heterochromatin
-documents via SEMA cosine similarity, returning their preserved content
-(only possible after C.1 made `compress_to_heterochromatin`
-non-destructive).
+Cold-tier is the opt-in retrieval path that consults cold-tier
+(legacy: heterochromatin) documents via SEMA cosine similarity,
+returning their preserved content (only possible after C.1 made
+`compress_to_heterochromatin` non-destructive).
 
 **Keys.**
 
@@ -1074,7 +1074,7 @@ manually append the Stage-7 default coefficient (`+1.5`) to the array.
 The shipped `cymatix.toml` has carried a real 6-element calibration fit
 since the 2026-07-06 rrf-default sweep.
 
-**Cross-refs.** `cymatix_context/know_calibration.py` (pure-function
+**Cross-refs.** `cymatix_context/scoring/know_calibration.py` (pure-function
 loader; soft-fails to defaults), `cymatix_context/context_packet.py`
 (`KnowBlock` / `MissBlock` emit path),
 `docs/specs/2026-05-08-stage-6-know-miss-blocks.md` §3, §11,
@@ -1447,7 +1447,7 @@ invalidation surface:
   Stage-4 spec §8).
 
 **`[know]` hot-reload.** The `[know]` block is **hot-reloaded** via
-the pure-function loader in `cymatix_context/know_calibration.py`. The
+the pure-function loader in `cymatix_context/scoring/know_calibration.py`. The
 calibration table is read on first `/context` after process start and
 cached thereafter; subsequent edits to `[know]` require a
 `/admin/refresh` (or process restart) to invalidate the cache. The

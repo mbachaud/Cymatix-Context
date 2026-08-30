@@ -124,10 +124,10 @@ TOOLS = [
     {
         "name": "cymatix_context",
         "description": (
-            "Query compressed project context from the Cymatix genome. "
+            "Query compressed project context from the Cymatix knowledge store. "
             "Returns 7x compressed codebase knowledge instead of raw files. "
             "Use this BEFORE reading source files to save tokens. "
-            "The genome contains ingested code, docs, and conversation history."
+            "The knowledge store contains ingested code, docs, and conversation history."
         ),
         "inputSchema": {
             "type": "object",
@@ -143,8 +143,8 @@ TOOLS = [
     {
         "name": "cymatix_ingest",
         "description": (
-            "Ingest new content into the Cymatix genome. "
-            "Use after creating or modifying files so the genome stays current. "
+            "Ingest new content into the Cymatix knowledge store. "
+            "Use after creating or modifying files so the knowledge store stays current. "
             "The content is compressed and stored for future context queries."
         ),
         "inputSchema": {
@@ -171,7 +171,7 @@ TOOLS = [
     {
         "name": "cymatix_stats",
         "description": (
-            "Get Cymatix genome health metrics: gene count, compression ratio, "
+            "Get Cymatix knowledge store health metrics: document count, compression ratio, "
             "delta-epsilon health signals, and recent query history."
         ),
         "inputSchema": {
@@ -203,7 +203,7 @@ def _handle_cymatix_context(args: dict) -> str:
 
             data = resp.json()
             if not data or not isinstance(data, list) or not data[0]:
-                return "No context found in genome."
+                return "No context found in knowledge store."
 
             entry = data[0]
             desc = entry.get("description", "")
@@ -243,9 +243,9 @@ def _handle_cymatix_ingest(args: dict) -> str:
             })
             if resp.status_code == 200:
                 data = resp.json()
-                return f"Ingested: {data.get('count', 0)} genes created"
+                return f"Ingested: {data.get('count', 0)} documents created"
             elif resp.status_code == 422:
-                return f"Ingest failed (ribosome error): {resp.json().get('error', 'unknown')}"
+                return f"Ingest failed (compressor error): {resp.json().get('error', 'unknown')}"
             else:
                 return f"Ingest error: HTTP {resp.status_code}"
 
@@ -264,11 +264,11 @@ def _handle_cymatix_stats(args: dict) -> str:
 
             stats = resp.json()
             lines = [
-                "Cymatix Genome Stats",
-                f"  Genes: {stats.get('total_genes', 0)}",
+                "Cymatix Knowledge Store Stats",
+                f"  Documents: {stats.get('total_genes', 0)}",
                 f"  Compression: {stats.get('compression_ratio', 0):.1f}x",
-                f"  Open: {stats.get('open', 0)}, Euchromatin: {stats.get('euchromatin', 0)}, "
-                f"Heterochromatin: {stats.get('heterochromatin', 0)}",
+                f"  Open: {stats.get('open', 0)}, Warm: {stats.get('euchromatin', 0)}, "
+                f"Cold: {stats.get('heterochromatin', 0)}",
                 f"  Raw chars: {stats.get('total_chars_raw', 0):,}",
                 f"  Compressed: {stats.get('total_chars_compressed', 0):,}",
             ]

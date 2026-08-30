@@ -18,7 +18,7 @@
 
   {% if state.database.error %}
     <div class="diagnostics-warn">
-      <strong>Could not read genome registry:</strong>
+      <strong>Could not read knowledge store registry:</strong>
       <span class="muted">{{ state.database.error }}</span>
     </div>
   {% endif %}
@@ -29,7 +29,7 @@
       <dd class="path-value">
         {{ state.database.live.path or "(unknown)" }}
         {% if state.database.live.total_genes is not none %}
-          <span class="muted">— {{ "{:,}".format(state.database.live.total_genes) }} genes</span>
+          <span class="muted">— {{ "{:,}".format(state.database.live.total_genes) }} documents</span>
         {% endif %}
       </dd>
       {% if state.database.live.env_override %}
@@ -56,7 +56,7 @@
                     data-genome-path="{{ entry.path }}">Select</button>
           {% endif %}
           <span class="muted database-entry__stats">
-            {{ "{:,}".format(entry.total_genes) }} genes · {{ entry.size_mb }} MB
+            {{ "{:,}".format(entry.total_genes) }} documents · {{ entry.size_mb }} MB
           </span>
         </div>
         <p class="path-value database-entry__path">{{ entry.path }}</p>
@@ -79,14 +79,14 @@
         {% endif %}
       </li>
     {% else %}
-      <li class="panel-list__item muted">No genomes discovered.</li>
+      <li class="panel-list__item muted">No knowledge stores discovered.</li>
     {% endfor %}
   </ul>
 
   <form class="db-create" data-genome-create>
     <input class="db-create__input" type="text" name="path"
            placeholder="path/to/new.genome.db"
-           aria-label="New genome path" />
+           aria-label="New knowledge store path" />
     <button class="btn btn--mini" type="submit">Create + switch</button>
   </form>
 </section>

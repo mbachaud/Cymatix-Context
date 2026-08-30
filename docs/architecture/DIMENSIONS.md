@@ -113,11 +113,11 @@ Source authority bonus applies per-source scoring weight during retrieval fusion
 
 Windowed access-rate ring buffer replaces monotonic `access_count`.
 
-- `EpigeneticMarkers.recent_accesses` — last 100 access timestamps
+- `DocumentSignals.recent_accesses` (legacy: `EpigeneticMarkers`) — last 100 access timestamps
 - `access_rate(gene, window_seconds)` — sliding-window rate computation
 - Wired into density gate access-override path
 
-### D5 — Chromatin Tier
+### D5 — Lifecycle Tier (legacy: Chromatin)
 
 Three-tier accessibility model with cold-tier reactivation:
 

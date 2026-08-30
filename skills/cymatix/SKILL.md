@@ -52,10 +52,10 @@ Start with `cymatix_context`.
 
 - `cymatix_context`: main compressed retrieval for a query.
 - `cymatix_health`: check whether Cymatix is up before assuming config is broken.
-- `cymatix_ingest`: add meaningful new code, docs, or notes to the genome with full org/party/participant/agent attribution when the MCP env is configured.
+- `cymatix_ingest`: add meaningful new code, docs, or notes to the knowledge store with full org/party/participant/agent attribution when the MCP env is configured.
 - `cymatix_sessions_list`: see active participants.
 - `cymatix_session_recent`: inspect recent work from a handle.
-- `cymatix_stats`: check genome size and health.
+- `cymatix_stats`: check knowledge store size and health.
 
 ## Workflow
 
@@ -65,7 +65,7 @@ Start with `cymatix_context`.
 4. After substantial new work, call `cymatix_ingest` so future queries stay useful and attributable.
 5. When coordinating with sibling agents, use `cymatix_sessions_list` and `cymatix_session_recent` instead of guessing from logs or git state.
 6. Treat session presence and authored ingests as complementary:
-   `cymatix_sessions_list` tells you who is alive now; ingest attribution tells you who authored a stored gene.
+   `cymatix_sessions_list` tells you who is alive now; ingest attribution tells you who authored a stored document.
 7. After your first `cymatix_health` call in a session, also call
    `cymatix_announce(model_id=...)` once with your model identifier
    (e.g., `"claude-opus-4-7"`, `"gpt-5"`, `"gemini-2-5-pro"`) so the
@@ -76,7 +76,7 @@ Start with `cymatix_context`.
 ## Attribution Expectations
 
 - A well-configured Claude session should register as a live participant with `CYMATIX_MCP_HANDLE`.
-- A Cymatix ingest from that same Claude session should attribute authored genes to:
+- A Cymatix ingest from that same Claude session should attribute authored documents to:
   `org = CYMATIX_ORG`
   `party = CYMATIX_DEVICE or CYMATIX_PARTY_ID`
   `participant = CYMATIX_USER`

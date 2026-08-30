@@ -76,7 +76,7 @@ gRPC channel. The endpoint itself is not exported; it resolves via the
 normal env > toml > default chain, so an explicit `[telemetry]
 endpoint` in cymatix.toml is respected.
 
-Open <http://localhost:3000/d/cymatix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, chromatin distribution, harmonic-edges-by-source — all live.
+Open <http://localhost:3000/d/cymatix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, lifecycle-tier distribution (legacy: chromatin), co-activation edges by provenance (legacy: harmonic-edges-by-source) — all live.
 
 **Docker-compose alternative.** If you prefer the containerized stack,
 see [`deploy/otel/README.md`](../../deploy/otel/README.md). Both
@@ -241,7 +241,7 @@ explicit user `CYMATIX_OTEL_ENABLED`, and it does not touch
 
 ## Dashboards
 
-Six dashboards under `deploy/otel/grafana/dashboards/`. All use
+Seven dashboards under `deploy/otel/grafana/dashboards/`. All use
 engineering vocabulary in panel titles; bio-domain legacy terms are
 referenced inline in panel descriptions. See `docs/ROSETTA.md` for the
 full bidirectional vocabulary table.
