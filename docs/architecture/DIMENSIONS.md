@@ -99,7 +99,7 @@ Related live adjuncts, not counted as separate dimensions:
 - `path_key_index` Tier 0 compound retrieval (`path_token` + `kv_key`)
 - optional `filename_anchor` lexical boost (dark-shipped by default)
 
-### D2 — Tagging (promoter index)
+### D2 — Tagging (tag index; legacy: promoter index)
 
 Keyword + entity tag matching at retrieval time. Documents tagged at ingest via `promoter_index`.
 Query terms expanded through `cymatix.toml [synonyms]`.

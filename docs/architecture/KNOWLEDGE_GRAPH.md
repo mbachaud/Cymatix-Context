@@ -127,30 +127,30 @@ The fundamental unit. Every piece of knowledge in cymatix is a document.
 Each dimension acts as a filter or scoring function over the graph:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  D1  Semantic    ─── FTS5 term match + SPLADE expansion     │
-│                      + ΣĒMA cosine similarity               │
+┌──────────────────────────────────────────────────────────────────┐
+│                                                                  │
+│  D1  Semantic    ─── FTS5 term match + SPLADE expansion          │
+│                      + ΣĒMA cosine similarity                    │
 │                      "does this document CONTAIN relevant terms?"│
-│                                                             │
-│  D2  Tags        ─── domain + entity tag intersection       │
-│                      + synonym expansion (cymatix.toml)       │
-│                      "is this document ABOUT the right topic?"  │
-│                                                             │
-│  D3  Source      ─── deny-list filter + authority bonus     │
-│                      "is this document FROM a trusted source?"  │
-│                                                             │
-│  D4  Working-set ─── access_rate(document, window) tiebreaker │
-│                      "is this document RECENTLY active?"        │
-│                                                             │
-│  D5  Tier        ─── tier filter (hot/warm/cold)            │
-│                      + cold-tier ΣĒMA fallthrough           │
-│                      "is this document ACCESSIBLE right now?"   │
-│                                                             │
-│  D6  Cymatics    ─── frequency-domain resonance scoring     │
-│                      "does this document RESONATE with query?"  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+│                                                                  │
+│  D2  Tags        ─── domain + entity tag intersection            │
+│                      + synonym expansion (cymatix.toml)          │
+│                      "is this document ABOUT the right topic?"   │
+│                                                                  │
+│  D3  Source      ─── deny-list filter + authority bonus          │
+│                      "is this document FROM a trusted source?"   │
+│                                                                  │
+│  D4  Working-set ─── access_rate(document, window) tiebreaker    │
+│                      "is this document RECENTLY active?"         │
+│                                                                  │
+│  D5  Tier        ─── tier filter (hot/warm/cold)                 │
+│                      + cold-tier ΣĒMA fallthrough                │
+│                      "is this document ACCESSIBLE right now?"    │
+│                                                                  │
+│  D6  Cymatics    ─── frequency-domain resonance scoring          │
+│                      "does this document RESONATE with query?"   │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 D2 was originally named *Promoter* and D5 *Chromatin*; both dimensions
@@ -269,40 +269,40 @@ genome.db (SQLite)
 ## Cymatix + Headroom Bundle Summary
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     CYMATIX + HEADROOM                      │
-│                                                             │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │                    CYMATIX                             │  │
-│  │                                                       │  │
-│  │  Ingest ─── Chunk + Tag + Embed + Gate ──► genome.db  │  │
-│  │                                                       │  │
-│  │  Retrieve ── FTS5 + SPLADE + ΣĒMA + Tags              │  │
-│  │              + Cymatics resonance scoring              │  │
-│  │              + Lifecycle-tier filtering                │  │
-│  │              + Working-set access rate                 │  │
-│  │              + Cold-tier ΣĒMA fallthrough              │  │
-│  │                                                       │  │
-│  │  ALL CPU. No LLM calls.                               │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                          │                                  │
-│                          ▼                                  │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │                  HEADROOM                              │  │
-│  │                                                       │  │
-│  │  Compress ── Kompress (ModernBERT) for prose + code   │  │
-│  │              LogCompressor for build/test output       │  │
-│  │              DiffCompressor for patches                │  │
+┌───────────────────────────────────────────────────────────────┐
+│                     CYMATIX + HEADROOM                        │
+│                                                               │
+│  ┌────────────────────────────────────────────────────────┐   │
+│  │                    CYMATIX                             │   │
+│  │                                                        │   │
+│  │  Ingest ─── Chunk + Tag + Embed + Gate ──► genome.db   │   │
+│  │                                                        │   │
+│  │  Retrieve ── FTS5 + SPLADE + ΣĒMA + Tags               │   │
+│  │              + Cymatics resonance scoring              │   │
+│  │              + Lifecycle-tier filtering                │   │
+│  │              + Working-set access rate                 │   │
+│  │              + Cold-tier ΣĒMA fallthrough              │   │
+│  │                                                        │   │
+│  │  ALL CPU. No LLM calls.                                │   │
+│  └────────────────────────────────────────────────────────┘   │
+│                          │                                    │
+│                          ▼                                    │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │                  HEADROOM                               │  │
+│  │                                                         │  │
+│  │  Compress ── Kompress (ModernBERT) for prose + code     │  │
+│  │              LogCompressor for build/test output        │  │
+│  │              DiffCompressor for patches                 │  │
 │  │              Target: ~1000 chars per document           │  │
-│  │                                                       │  │
-│  │  ALL CPU. No LLM calls.                               │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                          │                                  │
-│                          ▼                                  │
-│               Compressed, scored context                    │
-│               ready for ANY downstream model                │
-│               (local 4B or frontier API)                    │
-└─────────────────────────────────────────────────────────────┘
+│  │                                                         │  │
+│  │  ALL CPU. No LLM calls.                                 │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                          │                                    │
+│                          ▼                                    │
+│               Compressed, scored context                      │
+│               ready for ANY downstream model                  │
+│               (local 4B or frontier API)                      │
+└───────────────────────────────────────────────────────────────┘
 ```
 
 **Zero LLM calls from ingest to retrieval.** The first LLM in the chain is

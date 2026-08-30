@@ -126,9 +126,10 @@ The main loop (`scripts/backfill_bgem3_v2.py:126-156`):
 1. `_ensure_v2_schema(conn)` (`scripts/backfill_bgem3_v2.py:43-55`) —
    adds the `embedding_dense_v2 BLOB` column when missing, then
    unconditionally `CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot ON
-   genes(gene_id) WHERE embedding_dense_v2 IS NOT NULL AND lifecycle tier <
-   2`. The partial index covers hot-tier rows; the cold tier
-   (lifecycle tier=2; legacy: heterochromatin) is reachable via `query_cold_tier()`.
+   genes(gene_id) WHERE embedding_dense_v2 IS NOT NULL AND chromatin <
+   2` (`chromatin` is the lifecycle-tier column). The partial index
+   covers hot-tier rows; the cold tier (lifecycle tier=2; legacy:
+   heterochromatin) is reachable via `query_cold_tier()`.
 2. Pre-flight coverage report: `genes total=N v2_populated_before=K`.
 3. Selects rows where `embedding_dense_v2 IS NULL OR
    length(embedding_dense_v2) != dim*4` — the length check guards
