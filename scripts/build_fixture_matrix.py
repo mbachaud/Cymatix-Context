@@ -1004,6 +1004,11 @@ def build_profile(
         synonym_map={},
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"),
         entity_graph=True,
+        # 2026-08-30 ingest-decay receipt: off skips per-insert COVER-edge
+        # formation (89.5% of writer wall time at 289k genes on
+        # enronqa_padded); entity_graph rows and all documents+content
+        # digests are unchanged. Default on = byte-identical to prior builds.
+        entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
     )
 
     skip_dirs = _profile_skip_dirs(profile)
@@ -1023,6 +1028,7 @@ def build_profile(
         "missing_roots": [],
         "t0": time.perf_counter(),
         "mode": "parallel" if parallel else "sequential",
+        "entity_autolink": _env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
     }
 
     if parallel:
@@ -1476,6 +1482,7 @@ def _build_one_shard(
     shard = Genome(
         path=str(p), synonym_map={},
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"), entity_graph=True,
+        entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,
@@ -2224,6 +2231,17 @@ def main() -> int:
              "original declared order).",
     )
     parser.add_argument(
+        "--no-entity-autolink", action="store_true",
+        help="Skip per-insert entity COVER-edge formation "
+             "(auto_link_by_entity) during the build. entity_graph rows "
+             "and all documents+content digests are unchanged; only "
+             "gene_relations relation=5 edges (default-inert at query "
+             "time, order-nondeterministic under --parallel) are absent. "
+             "Fixes the O(N^2) ingest decay on hub-entity corpora "
+             "(2026-08-30 enronqa_padded receipt: 89.5%% of writer wall "
+             "time). Equivalent to CYMATIX_BFM_ENTITY_AUTOLINK=0.",
+    )
+    parser.add_argument(
         "--rebuild", action="store_true",
         help="Unconditionally unlink existing per-shard ``.db`` files and "
              "the routing ``main.genome.db`` before building. Default: "
@@ -2264,6 +2282,11 @@ def main() -> int:
     # #151.) Only relevant for the parent process; shard-worker subprocesses
     # inherit Python's default SIGINT and are reaped by the executor.
     _install_sigint_handler()
+
+    if args.no_entity_autolink:
+        # Env (not module attribute) so mp spawn children inherit it —
+        # same idiom as CYMATIX_BFM_SPLADE.
+        os.environ["CYMATIX_BFM_ENTITY_AUTOLINK"] = "0"
 
     profiles = parse_profile_arg(args.profile)
 

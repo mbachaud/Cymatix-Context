@@ -546,6 +546,15 @@ class KnowledgeStore:
         deny_list_extra: Optional[List[str]] = None,
         locale_demotion_enabled: bool = True,
         entity_graph: bool = False,
+        # Scheduling knob for bulk builders (2026-08-30 enronqa_padded
+        # ingest-decay receipt): False skips per-insert COVER-edge
+        # formation (auto_link_by_entity — 89.5% of writer wall time at
+        # 289k genes, O(hub-posting) per insert) while still writing
+        # entity_graph rows. gene_relations relation=5 edges are the only
+        # content affected; they are default-inert at query time (W2.1
+        # cover-walk kill) and already order-nondeterministic under
+        # parallel ingest (ingest_equivalence_enronqa.json).
+        entity_autolink: bool = True,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
         sr_k_steps: int = 4,
@@ -749,6 +758,7 @@ class KnowledgeStore:
         # opted in; avoids hammering COUNT(*) when the toggle is off.
         self._splade_auto_cached_count: int = 0
         self._entity_graph_enabled = entity_graph
+        self._entity_autolink_enabled = bool(entity_autolink)
         # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
         # Separate from _entity_graph_enabled (write-side) — this controls
         # whether entity_graph rows are consulted during query_genes().
@@ -1985,7 +1995,10 @@ class KnowledgeStore:
                     fts_external=self._fts_external,
                     prior_fts_row=prior_fts_row,
                 )
-                sync_entity_graph(cur, gene_id, gene, self._entity_graph_enabled)
+                sync_entity_graph(
+                    cur, gene_id, gene, self._entity_graph_enabled,
+                    autolink_enabled=self._entity_autolink_enabled,
+                )
                 sync_path_key_index(cur, gene_id, gene)
                 sync_filename_index(cur, gene_id, gene.source_id)
                 # Issue #164: size-aware SPLADE auto-toggle. Refresh the cached

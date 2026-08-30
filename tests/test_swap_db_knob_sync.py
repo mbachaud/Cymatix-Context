@@ -208,6 +208,11 @@ def test_shared_builder_covers_every_config_driven_ctor_knob():
         "shard_name",
         "read_only",
         "mem_plan",
+        # Bulk-build scheduling knob (2026-08-30 enronqa ingest-decay
+        # receipt) — caller-level opt-out for bed builders; config-driven
+        # stores must keep the default (True), so it is deliberately not
+        # threaded through cymatix.toml.
+        "entity_autolink",
     }
     expected = set(sig.parameters) - non_config
 

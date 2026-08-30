@@ -205,8 +205,15 @@ def sync_entity_graph(
     gene_id: str,
     gene: Gene,
     entity_graph_enabled: bool,
+    autolink_enabled: bool = True,
 ) -> None:
-    """Index entities and auto-link by shared entities."""
+    """Index entities and auto-link by shared entities.
+
+    ``autolink_enabled=False`` (2026-08-30 ingest-decay receipt) writes the
+    entity rows but skips COVER-edge formation — the per-insert
+    ``auto_link_by_entity`` GROUP BY sweeps every posting row of the gene's
+    entities, O(hub size) per insert, and hub postings grow with the corpus.
+    """
     if not entity_graph_enabled or not gene.promoter.entities:
         return
 
@@ -218,7 +225,8 @@ def sync_entity_graph(
             "INSERT OR IGNORE INTO entity_graph (entity, gene_id) VALUES (?, ?)",
             (ent.lower(), gene_id),
         )
-    auto_link_by_entity(gene_id, gene.promoter.entities, cur)
+    if autolink_enabled:
+        auto_link_by_entity(gene_id, gene.promoter.entities, cur)
 
 
 # ---------------------------------------------------------------------------
