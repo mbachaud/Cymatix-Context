@@ -69,7 +69,7 @@ After the repo restructure, `cymatix_context/` is organized into 16 sub-packages
 
 Top-level modules: `context_manager.py` (pipeline orchestrator), `config.py` (TOML loader), `schemas.py` (Pydantic models), `knowledge_store.py` (SQLite DDL + retrieval), `codons.py` (chunker + encoder), `tagger.py` (CPU ingest tagger).
 
-**Biology-lexicon shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations (the domain metaphor, not the helix brand). See `docs/ROSETTA.md` for the full biology-to-software lexicon. The `helix_context` alias package was removed in 0.8.5 — import `cymatix_context`.
+**Biology-lexicon shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations (the domain metaphor, not the helix brand). See the wiki Lexicon page (docs/ROSETTA.md is a stub) for the full biology-to-software lexicon. The `helix_context` alias package was removed in 0.8.5 — import `cymatix_context`.
 
 ## Configuration
 
@@ -90,7 +90,7 @@ All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
 | `[cymatics]` | enabled, distance_metric (`"cosine"` / `"w1"`), harmonic_links |
 | `[classifier]` | Rule-based query classifier: `enabled` toggle only; per-class caps/decoder hints are code constants pending #205 |
-| `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), dense_embedding_enabled (**default false since 2026-08-15**), pki_enabled (**default false since 2026-08-19**, #370 — −1 delivered needle at n=469; the flip does not reclaim an existing path_key_index table), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled, fts5_candidate_depth (#205: FTS content-tier fetch depth; 0 = auto = max_genes*4), blend_mode (`"scale_relative"` default / `"legacy"` DEPRECATED-FOR-REMOVAL, condition-gated — not calendar-based; target v(N+2) at earliest) |
+| `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), dense_embedding_enabled (**default false since 2026-08-15**), pki_enabled (**default false since 2026-08-17**, #370 — −1 delivered needle at n=469; the flip does not reclaim an existing path_key_index table), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled, fts5_candidate_depth (#205: FTS content-tier fetch depth; 0 = auto = max_genes*4), blend_mode (`"scale_relative"` default / `"legacy"` DEPRECATED-FOR-REMOVAL, condition-gated — not calendar-based; target v(N+2) at earliest) |
 | `[plr]` | Piecewise linear reranker: enabled, model_path |
 | `[know]` | KnowBlock confidence logistic: emit_floor, betas, s_ref, g_ref, stale_after_days (+ calibrated_at / calibrated_on_n written by scripts/calibrate_know_confidence.py) |
 | `[mem_sync]` | Auto-memory-to-cymatix sync: watch_dirs, sync_interval_s |
@@ -178,4 +178,4 @@ See [`docs/architecture/OBSERVABILITY.md`](docs/architecture/OBSERVABILITY.md) f
 - **Session delivery:** `session_delivery_enabled = true` tracks what documents each session has already received and elides repeats. Saves ~40% tokens on multi-turn conversations (unverified design estimate — pending the `cymatix_session_tokens_saved_total` counter). Flip to false or pass `ignore_delivered: true` in /context body for benchmarks.
 - **Ingest concurrency changes the bed:** parallel LLM tagging (client pool > 1 and/or `OLLAMA_NUM_PARALLEL` > 1) produces different gene content and tags than sequential ingest of the same bytes, even at temp 0 (LLM-batching drift, byte-receipted 2026-08-08: content differed on 105/150 shared genes — cc-exchange EXP-A refutation). Cross-bed comparisons must pin ingest concurrency (`ingest_c` in `docs/benchmarks/BASELINES.md`); comparable rebuilds ingest sequentially unless the comparator was built parallel.
 - **Continue IDE:** Use Chat mode, not Agent mode. The proxy doesn't handle tool routing.
-- **Naming lexicon:** Biology terms (gene, genome, ribosome, chromatin, splice) have canonical software equivalents (document, knowledge store, compressor, etc.). See `docs/ROSETTA.md` for the full mapping. Both vocabularies work in code (back-compat shims); new code should use the software terms.
+- **Naming lexicon:** Biology terms (gene, genome, ribosome, chromatin, splice) have canonical software equivalents (document, knowledge store, compressor, etc.). See the wiki Lexicon page (docs/ROSETTA.md is a stub) for the full mapping. Both vocabularies work in code (back-compat shims); new code should use the software terms.
