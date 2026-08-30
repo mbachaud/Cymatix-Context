@@ -39,7 +39,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Risk profile (default: edit — the usual caller).",
     )
     parser.add_argument(
-        "--max-genes", type=int, default=8,
+        "--max-genes", "--max-docs", dest="max_genes", type=int, default=8,
         help="Retrieval top-K cap (default: 8).",
     )
     parser.add_argument(
