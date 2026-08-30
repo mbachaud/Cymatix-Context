@@ -1,0 +1,37 @@
+name: Contributor sign-up
+# Gates pull requests on the one-time contributor sign-up described at
+# https://cymatixcontext.com/contribute (CLA Assistant Lite). Issues are open
+# to everyone; only PRs are gated. Maintainers are allowlisted below.
+on:
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [opened, closed, synchronize]
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+  statuses: write
+
+jobs:
+  contributor-signup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CLA Assistant Lite
+        if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the Contributor Guidelines and I hereby sign up as a Cymatix Context contributor') || github.event_name == 'pull_request_target'
+        uses: contributor-assistant/github-action@v2.6.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path-to-signatures: signatures/contributors.json
+          branch: cla-signatures
+          path-to-document: https://cymatixcontext.com/contribute
+          allowlist: mbachaud,addiplus,SwiftWing21,dependabot[bot],github-actions[bot]
+          custom-pr-sign-comment: I have read the Contributor Guidelines and I hereby sign up as a Cymatix Context contributor
+          custom-notsigned-prcomment: >
+            Thanks for the PR! One quick step before it can be reviewed: complete the
+            one-time contributor sign-up by reading https://cymatixcontext.com/contribute
+            and posting the sentence below as a comment on this PR.
+          custom-allsigned-prcomment: All contributors have completed the sign-up. ✅
+          lock-pullrequest-aftermerge: false

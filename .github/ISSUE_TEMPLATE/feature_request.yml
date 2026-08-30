@@ -1,0 +1,68 @@
+name: Feature request / enhancement
+description: Suggest a new capability or extension
+title: "[Enhancement] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The value of this template is capturing the *need* — an implementation
+        sketch is welcome but never required.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - OpenAI-compatible proxy (/v1/chat/completions)
+        - MCP tools (Claude Code / Claude Desktop)
+        - CLI (cymatix ...)
+        - HTTP API (/context, /context/packet, /ingest, ...)
+        - Retrieval / ranking pipeline
+        - Ingestion / tagging pipeline
+        - Hardware / device backends
+        - Tray launcher / local dashboard
+        - Observability
+        - Docs / website
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: need
+    attributes:
+      label: What you'd like to see, and why it matters
+      description: Use case, who benefits, what's currently blocked or awkward without it.
+    validations:
+      required: true
+  - type: textarea
+    id: sketch
+    attributes:
+      label: Implementation sketch (optional)
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware / environment specifics (if relevant)
+      description: |
+        For hardware-related requests (e.g. a new device backend like Intel XPU,
+        DirectML, Vulkan) include vendor + model, driver/runtime version,
+        OS + Python version, and whether you have a rig to validate a PR on.
+  - type: textarea
+    id: related
+    attributes:
+      label: Related work
+      description: Links to specs, prior issues, PyTorch docs, vendor SDK docs, etc.
+  - type: dropdown
+    id: implement
+    attributes:
+      label: Would you want to implement this yourself?
+      description: PRs require the one-time contributor sign-up at cymatixcontext.com/contribute.
+      options:
+        - "No — just filing the need"
+        - "Maybe, with guidance"
+        - "Yes — I'd complete the contributor sign-up and open a PR"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for this
+          required: true
