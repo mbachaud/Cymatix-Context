@@ -175,6 +175,24 @@ def test_max_genes_and_max_docs_share_dest_on_packet(fake_packet_session):
     assert kwargs_legacy["max_genes"] == kwargs_alias["max_genes"] == 9
 
 
+def test_flag_alias_collision_last_wins_is_intentional_cli_exemption(fake_packet_session):
+    """When BOTH spellings are passed in one invocation, argparse's native
+    last-flag-wins applies — deliberately. Controller ruling (PR A, Task A3
+    review round 1): the wave's "legacy wins + warning on collision" rule
+    targets persistent config/env surfaces where both names can coexist by
+    accident; passing both flags in a single CLI invocation is explicit user
+    input, so CLI flags are exempt and idiomatic argparse last-wins is
+    correct. Pinned here, both orderings, so the exemption is deliberate
+    rather than silent."""
+    with patch("cymatix_context.cli.cmd_packet.open_session", return_value=fake_packet_session):
+        _run(["packet", "q", "--max-genes", "5", "--max-docs", "10"])
+        _, kwargs_genes_then_docs = fake_packet_session.packet.call_args
+        _run(["packet", "q", "--max-docs", "10", "--max-genes", "5"])
+        _, kwargs_docs_then_genes = fake_packet_session.packet.call_args
+    assert kwargs_genes_then_docs["max_genes"] == 10  # last flag (--max-docs) wins
+    assert kwargs_docs_then_genes["max_genes"] == 5  # last flag (--max-genes) wins
+
+
 @pytest.fixture
 def fake_refresh_session():
     sess = MagicMock()
