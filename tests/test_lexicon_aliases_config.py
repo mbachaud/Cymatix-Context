@@ -12,8 +12,12 @@ See docs/ROSETTA.md for the full biology-to-software lexicon and
 .claude/worktrees/.../task-A1-brief.md for the task contract.
 """
 import logging
+from pathlib import Path
 
 from cymatix_context.config import load_config
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SHIPPED_CYMATIX_TOML = REPO_ROOT / "cymatix.toml"
 
 
 def test_compressor_section_aliases_ribosome(tmp_path):
@@ -180,6 +184,42 @@ def test_known_sections_and_aliases_never_warn_as_unknown(tmp_path, caplog):
     assert not any(
         "Unknown top-level section" in r.message for r in caplog.records
     ), f"unexpected unknown-section warning(s): {[r.message for r in caplog.records]}"
+
+
+def test_shipped_cymatix_toml_has_zero_unknown_section_warnings(caplog, monkeypatch):
+    """Loading the REAL shipped repo cymatix.toml must never warn "unknown section".
+
+    Regression (review round 2): ``_KNOWN_TOP_LEVEL_SECTIONS`` was built by
+    enumerating the ``if "<section>" in raw:`` / ``raw.get(...)`` dispatch
+    literals in ``load_config`` — which missed ``[mem_sync]``, a real,
+    documented (CLAUDE.md), shipped section that ``scripts/run_mem_sync.py``
+    parses out of cymatix.toml itself rather than through ``load_config``'s
+    own dispatch. That gap meant loading the actual repo cymatix.toml (not
+    a synthetic fixture) tripped a spurious "Unknown top-level section
+    [mem_sync]" warning on every normal load.
+
+    This test is the decisive guard against that class of gap recurring:
+    it loads the real file, not a hand-picked fixture, so it fails the
+    instant ``_KNOWN_TOP_LEVEL_SECTIONS`` drifts behind whatever sections
+    the shipped config actually contains — today's and any added later.
+    """
+    assert SHIPPED_CYMATIX_TOML.exists(), (
+        f"expected the shipped config at {SHIPPED_CYMATIX_TOML}; repo layout changed?"
+    )
+    # Isolate from the session-wide CYMATIX_GENOME_PATH/STORE_PATH env
+    # aliases (see tests/conftest.py) — irrelevant to this test's concern
+    # (unknown-section warnings) but avoid coupling to env state.
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
+    monkeypatch.delenv("CYMATIX_STORE_PATH", raising=False)
+    with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
+        load_config(str(SHIPPED_CYMATIX_TOML))  # must not raise
+    unknown_section_warnings = [
+        r.message for r in caplog.records if "Unknown top-level section" in r.message
+    ]
+    assert unknown_section_warnings == [], (
+        f"the shipped cymatix.toml must never trip the unknown-section "
+        f"warning; got: {unknown_section_warnings}"
+    )
 
 
 def test_store_path_env_alias(tmp_path, monkeypatch):

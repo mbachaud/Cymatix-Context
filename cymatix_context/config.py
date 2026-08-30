@@ -1280,14 +1280,27 @@ _KEY_ALIASES = {"budget": {"retrieval_tokens": "expression_tokens",
 
 # Top-level TOML sections this loader understands — the literals every
 # ``if "<section>" in raw:`` / ``raw.get("<section>", ...)`` branch below
-# dispatches on, plus the two Tier 2 section aliases. The aliases must be
-# included here because ``_apply_lexicon_aliases`` leaves an alias key
-# un-consumed in ``raw`` on a collision (legacy wins), and that must never
-# be flagged as an unknown section.
+# dispatches on, plus sections that are documented and shipped in
+# cymatix.toml but deliberately NOT dispatched here because a standalone
+# script owns them, plus the two Tier 2 section aliases. Cross-checked
+# against scripts/gen_config_reference.py's SECTION_TO_CLASS table, the
+# other place this repo enumerates "every known cymatix.toml section" —
+# keep the two in sync if either changes.
+#
+# The aliases must be included here because ``_apply_lexicon_aliases``
+# leaves an alias key un-consumed in ``raw`` on a collision (legacy
+# wins), and that must never be flagged as an unknown section.
 _KNOWN_TOP_LEVEL_SECTIONS = {
     "ribosome", "budget", "genome", "server", "encoder_daemon", "telemetry",
     "ingestion", "context", "cymatics", "retrieval", "abstain", "session",
     "plr", "headroom", "classifier", "know", "hardware", "vault", "synonyms",
+    # mem_sync is a real, documented, shipped [mem_sync] section (CLAUDE.md
+    # [mem_sync]: watch_dirs, sync_interval_s) — but scripts/run_mem_sync.py
+    # parses cymatix.toml itself and reads it directly; load_config() never
+    # dispatches on it, so it has no dataclass slot on CymatixConfig. It
+    # must still count as "known" or the shipped cymatix.toml trips a
+    # spurious unknown-section warning on every load.
+    "mem_sync",
     *_SECTION_ALIASES.keys(),
 }
 
