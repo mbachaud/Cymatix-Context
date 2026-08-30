@@ -27,7 +27,7 @@ ingest produces, and the rest are additive or ship off.
 | Delivered-seat floor ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) | New `[budget] min_delivered_docs` knob | Default `0` = off |
 | Entity auto-link hub cutoff ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)) | New `[ingestion] entity_autolink_hub_cutoff` knob | Default `0` = off |
 | Tagger v2 ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) | CPU ingest tagger rejects newline/tab entities and email/MIME header plumbing | **Changes new ingests** |
-| Lexicon Tier 2 + docs | Canonical aliases across config / CLI / HTTP / env / MCP, this wiki, the site, a shorter README | Additive only |
+| Lexicon Tier 2 + docs ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) | Canonical aliases across config / CLI / HTTP / env / MCP, this wiki, the site, a shorter README | Additive only |
 
 ### Wave-1 ranking flip (#407)
 
@@ -79,12 +79,14 @@ ingest produces, and the rest are additive or ship off.
 
 ### Lexicon Tier 2 and the docs pass
 
-- **Tier 2 aliases** land on every operator-facing surface — `[compressor]` /
+- **Tier 2 aliases** ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419))
+  land on every operator-facing surface — `[compressor]` /
   `[knowledge_store]` config sections, `retrieval_tokens` /
   `max_docs_per_turn` keys, `CYMATIX_STORE_PATH`, `cymatix document get`,
   `--max-docs`, `GET /documents/{id}`, canonical `cymatix_document_*` MCP
   tools. Additive only; every legacy spelling keeps working, with legacy
-  winning on collision. This closes the long-deferred R4 phase.
+  winning on collision. This closes the long-deferred R4 phase
+  ([#87](https://github.com/mbachaud/Cymatix-Context/issues/87)).
 - **Tier 3 — the wire surface — was deliberately not taken.** See
   [#417](https://github.com/mbachaud/Cymatix-Context/issues/417) and the
   [Lexicon](Lexicon).

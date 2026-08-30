@@ -79,7 +79,7 @@ it always has been.
 
 ## 0.9.1 measurements
 
-Three of these are open pull requests at the time of writing; each is scoped with
+Four of these are open pull requests at the time of writing; each is scoped with
 its PR number.
 
 ### Wave-1 ranking flip ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407))
