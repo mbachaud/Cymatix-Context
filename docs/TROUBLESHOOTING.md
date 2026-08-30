@@ -830,6 +830,6 @@ reviewers can see what data the threshold was fit against.
 
 If your symptom does not match any section above and `/health`
 reports `genome_genes > 0` and `upstream_reachable = true`, file an
-issue: <https://github.com/SwiftWing21/cymatix-context/issues>. Include
+issue: <https://github.com/mbachaud/Cymatix-Context/issues>. Include
 `/health`, `/stats`, the relevant log lines, and your `cymatix.toml`
 with secrets redacted.
