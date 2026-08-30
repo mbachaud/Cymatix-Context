@@ -1,0 +1,100 @@
+name: Bug report
+description: Something broke or behaved wrong
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The environment fields below are what we need to
+        reproduce — most cymatix bugs are surface- and config-specific.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      description: Where did you hit this?
+      options:
+        - OpenAI-compatible proxy (/v1/chat/completions)
+        - MCP tools (Claude Code / Claude Desktop)
+        - CLI (cymatix ...)
+        - HTTP API (/context, /context/packet, /ingest, ...)
+        - Ingestion / tagging pipeline
+        - Tray launcher / local dashboard
+        - Observability stack (OTel / Grafana)
+        - Other / not sure
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: cymatix-context version
+      description: "`cymatix --version`, or `pip show cymatix-context`"
+      placeholder: "0.9.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.12.4"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Install method
+      options:
+        - pip (PyPI release)
+        - pip install -e . (from source)
+        - Other
+  - type: input
+    id: models
+    attributes:
+      label: Model setup
+      description: "Upstream LLM, `[ribosome]` backend, `[ingestion]` backend (shipped defaults: none / cpu). Write 'defaults' if untouched."
+      placeholder: "upstream: Ollama qwen3-8b · ribosome: none · ingestion: cpu"
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. cymatix ingest ./docs --recursive
+        2. cymatix query "..."
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant cymatix.toml sections
+      description: Only the sections you changed from defaults.
+      render: toml
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / output
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for this
+          required: true
