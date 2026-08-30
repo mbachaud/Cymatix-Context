@@ -2,6 +2,84 @@
 
 ## Unreleased
 
+- **docs(wiki): `wiki/` becomes the source of truth for both the GitHub
+  wiki and cymatixcontext.com/wiki.** 15 pages (`Home`, `Getting-Started`,
+  `Architecture-Map`, `Pipeline`, `Retrieval-Dimensions`, `Configuration`,
+  `HTTP-API`, `CLI`, `MCP-and-IDE-Integration`, `Agent-Contract`,
+  `Observability`, `Benchmarks-and-Receipts`, `Roadmap-and-Releases`,
+  `Troubleshooting`, `Lexicon`) plus `_Sidebar`/`_Footer` and 4 shared SVG
+  diagrams (pipeline flow, surfaces, token economics, defaults
+  switchboard), all in engineering vocabulary with legacy biology terms
+  called out inline. Two consumers render from the same Markdown:
+  `scripts/sync_github_wiki.py` mirrors it verbatim into the
+  `*.wiki` GitHub wiki repo (`--dry-run` supported), and
+  `scripts/build_wiki_site.py` renders it into chrome-wrapped static HTML
+  for `cymatixcontext.com/wiki/` (tag-scoped href/img-src rewrites so
+  wiki-relative links and the shared SVGs resolve under the site's own
+  path prefix). 14 new tests in `tests/test_build_wiki_site.py` cover the
+  site-render path, including the Home-link and asset-src rewrites.
+- **readme: README.md rewritten 504 → 124 lines as a minimal landing
+  page.** Install/quickstart/pipeline-summary/links only; the
+  configuration tables, endpoint catalogue, gotchas, and lexicon detail
+  that used to live in the README now live on the wiki (`Configuration`,
+  `HTTP-API`, `CLI`, `Lexicon`, ...) instead of being duplicated — one
+  place to keep current instead of two drifting copies.
+- **docs: ROSETTA Tier-1 sweep — software-term prose pass across current
+  (non-dated) docs.** Seven commits swapping biology-metaphor prose
+  (gene/genome/ribosome/chromatin/splice, ...) for the canonical
+  software vocabulary in `CLAUDE.md`, `docs/SETUP.md`,
+  `docs/TROUBLESHOOTING.md`, `docs/api/context-endpoint.md`,
+  `docs/api/endpoints.md`, `docs/architecture/{DIMENSIONS,
+  KNOWLEDGE_GRAPH,OBSERVABILITY,PIPELINE_LANES,SESSION_REGISTRY}.md`,
+  `docs/benchmarks/BASELINES.md`, `docs/clients/cli.md`,
+  `docs/config-reference.md`, `docs/operations/DENSE_VRAM.md`,
+  `docs/operator-runbooks.md`, `skills/cymatix/SKILL.md`, the launcher
+  dashboard/database-panel templates, and `cymatix_context/mcp/server.py`'s
+  tool-description strings. Dated docs (benchmarks, council verdicts,
+  dated plans, `docs/archive/`) are deliberately left in their
+  point-in-time vocabulary. Notable fixes carried in the same sweep
+  (found while touching the surrounding prose, not a separate audit):
+  - `CLAUDE.md`: `pki_enabled` default-flip date corrected
+    2026-08-19 → 2026-08-17 (matches issue #370).
+  - `docs/TROUBLESHOOTING.md`: issues URL corrected to
+    `github.com/mbachaud/Cymatix-Context/issues` (was pointing at a
+    stale fork).
+  - `docs/api/endpoints.md`: `/context/packet` response shape corrected
+    to the actual `ContextPacket` (`verified`/`stale_risk` buckets, not
+    a per-item `verdict` field), `GET /fingerprint` corrected to
+    `POST`, the non-existent `/replicate` and top-level `/compact`
+    routes corrected to `/consolidate` and `/admin/compact`, `/stats`
+    tier keys corrected from `chromatin_*`-prefixed to bare
+    (`open`/`euchromatin`/`heterochromatin`), and the
+    `ANTHROPIC_BASE_URL` example removed (cymatix registers no
+    `/v1/messages` route — OpenAI-chat-completions-shaped only).
+  - `docs/architecture/OBSERVABILITY.md`: dashboard count corrected
+    6 → 7 (stale since a dashboard was added).
+  - `docs/api/context-endpoint.md`: `know_decision.py` /
+    `know_calibration.py` source links repointed to their current
+    `cymatix_context/scoring/` location (post-restructure dead links).
+  - `docs/benchmarks/BASELINES.md`: de-duplicated a repeated
+    `sema-readgate-decider` row.
+  - `docs/architecture/KNOWLEDGE_GRAPH.md`: ASCII diagrams translated
+    to engineering vocabulary (padding/headings preserved).
+  - `docs/architecture/PIPELINE_LANES.md`: a chromatin SQL literal
+    (an actual column value, not prose) restored after an earlier pass
+    over-translated it.
+- **docs: `docs/ROSETTA.md` retires to a stub.** The full
+  biology-to-software lexicon table moves to the wiki's `Lexicon` page
+  (mirrored to both `github.com/mbachaud/Cymatix-Context/wiki/Lexicon`
+  and `cymatixcontext.com/wiki/lexicon/`); the stub links there, links
+  the Agentome paper (<https://mbachaud.substack.com/p/agentome>) for
+  the "why biology in the first place" backstory, and tracks the
+  remaining un-renamed wire/SQL surface (`gene_id`, the `genes` table,
+  `/stats` keys, the legacy `<GENE .../>` inline tag — intentionally
+  not renamed to avoid an on-the-wire break) on issue #417. `CLAUDE.md`
+  and `skills/cymatix/SKILL.md` pointers updated to match.
+- **docs:** this branch is written to merge AFTER PR #419 (Tier-2 alias
+  work) — the wiki pages here treat #419's canonical spellings as
+  already primary, so merging in the other order would leave the wiki
+  citing terms PR #419 hasn't landed yet.
+
 ## 0.9.0 (2026-08-20)
 
 The post-flip release: the shipped default retrieval path is now fully
