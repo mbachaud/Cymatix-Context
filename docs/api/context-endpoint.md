@@ -24,7 +24,7 @@ to recover (escalate to a tool, refresh a stale source, ask a human).
 The contract is the **know-vs-go** split: every response has exactly one of
 the two top-level keys non-null. There is no third "maybe" branch — the
 discriminator at
-[`cymatix_context/know_decision.py:304`](../../cymatix_context/know_decision.py#L304)
+[`cymatix_context/scoring/know_decision.py:304`](../../cymatix_context/scoring/know_decision.py#L304)
 collapses every retrieval outcome onto one of the two blocks. Frontier
 agents are expected to branch on the structured tag instead of parsing
 prose out of `expressed_context`.
@@ -122,7 +122,7 @@ Defined at [`schemas.py:490-518`](../../cymatix_context/schemas.py#L490).
 | `confidence` | `float` | `[0.0, 1.0]` | 5-feature logistic, see §3.1.1 |
 | `top_score` | `float` | unconstrained | rank-1 fused retrieval score |
 | `score_gap` | `float` | unconstrained | `top1 - top2` (raw subtraction, NOT ratio) |
-| `lexical_dense_agree` | `bool` | — | `True` if lexical-cluster top-K and dense-cluster top-K share at least one gene_id (k=3); see [`know_decision.py:237-297`](../../cymatix_context/know_decision.py#L237) |
+| `lexical_dense_agree` | `bool` | — | `True` if lexical-cluster top-K and dense-cluster top-K share at least one gene_id (k=3); see [`know_decision.py:237-297`](../../cymatix_context/scoring/know_decision.py#L237) |
 | `gene_id_match` | `str \| null` | — | Beacon: query token that exactly (case-insensitive) matches a top-1 file or path token. `null` when no match. See §3.1.2. |
 | `coordinate_confidence` | `float` | `[0.0, 1.0]` | Blend of folder + file-grain query/source agreement; computed by `context_packet._coordinate_confidence` |
 | `soft_stale` | `bool` | default `false` | **Stage 7.** `True` when top-1 is fresh enough to act on, but `freshness_min < 0.5` indicates lower-ranked supporting documents are stale. Drives `agent.recommendation = "refresh"` even though the agent may answer from the knowledge store. |
@@ -130,9 +130,9 @@ Defined at [`schemas.py:490-518`](../../cymatix_context/schemas.py#L490).
 #### 3.1.1 Confidence formula (Stage 6 + Stage 7)
 
 The 5-feature logistic at
-[`know_calibration.py`](../../cymatix_context/know_calibration.py)
+[`know_calibration.py`](../../cymatix_context/scoring/know_calibration.py)
 (plumbed from `decide_know_or_miss` at
-[`know_decision.py:433`](../../cymatix_context/know_decision.py#L433)):
+[`know_decision.py:433`](../../cymatix_context/scoring/know_decision.py#L433)):
 
 ```
 z = β0
@@ -156,7 +156,7 @@ is treated as neutral (β5 contribution zero).
 #### 3.1.2 `gene_id_match` beacon rules
 
 Implemented at
-[`know_decision.py:157-211`](../../cymatix_context/know_decision.py#L157).
+[`know_decision.py:157-211`](../../cymatix_context/scoring/know_decision.py#L157).
 Filename match wins over path match. Path-token match requires the
 matched token's length `>= 4` AND it must not be in the
 `{"src","lib","app","bin","var","tmp","out"}` blocklist. Equality is
@@ -265,7 +265,7 @@ pydantic-validate time.
 ### 4.4 `escalate_to` ordering rules
 
 `_pick_escalation` at
-[`know_decision.py:96-139`](../../cymatix_context/know_decision.py#L96).
+[`know_decision.py:96-139`](../../cymatix_context/scoring/know_decision.py#L96).
 First matching rule wins; results deduped while preserving order:
 
 1. **Code-shaped query** (matches `[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_]` OR
@@ -453,7 +453,7 @@ a single bracketed line emitted by `format_gene_header` at
 
 `<symbol>` is one of `◆ / ◇ / ·` (z-normalized confidence). Tier slice
 caps at top-3 by default. Size form is `<raw>→<compressed>c` when the
-splice trimmed the document, else `<n>c`. Headers are suppressed for
+compressor trimmed the document, else `<n>c`. Headers are suppressed for
 `small_moe` callers (cost > benefit at 4B params; see Stage 5 spec §4).
 
 ---
@@ -576,8 +576,8 @@ list[str]}`. On error returns 500 with `{"error": ..., "facts_extracted":
 **Why session-scoped (no body).** `/consolidate` operates over the
 active in-process session buffer, not a single document. Any request
 body is silently ignored. This is intentional — consolidation is an
-aggregate-over-the-buffer operation, not a per-gene rewrite. For the
-per-gene rewrite case, the supported path is:
+aggregate-over-the-buffer operation, not a per-document rewrite. For the
+per-document rewrite case, the supported path is:
 
 1. Call `POST /context/refresh-plan` (or read `MissBlock.refresh_targets`
    from a `/context/packet` response) to get the source paths that need
@@ -585,7 +585,7 @@ per-gene rewrite case, the supported path is:
 2. Re-read those sources in the calling agent.
 3. Re-`POST /ingest` the refreshed content.
 
-Targeted per-gene re-consolidation as a server-side endpoint is
+Targeted per-document re-consolidation as a server-side endpoint is
 deliberately not implemented. The reserved shape for that
 hypothetical future endpoint is `POST /consolidate/gene/{gene_id}`
 (path-scoped, no body) — recorded in
@@ -798,7 +798,7 @@ calibrated_on_n = 800
 
 Operator runbook for the recalibration cadence and the
 `bench_needle_1000.py --plant-stale` flag lives at
-[`docs/ops/operator-runbooks.md`](../ops/operator-runbooks.md) — see
+[`docs/operator-runbooks.md`](../operator-runbooks.md) — see
 the "Recalibrate know.confidence" section.
 
 The `agent` block in every `/context` response carries
