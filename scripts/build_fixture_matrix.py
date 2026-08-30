@@ -2091,7 +2091,13 @@ def update_manifest(out_dir: str, profile_stats: dict, mode: str) -> None:
     # Preserve legacy flat layout (mode="blob" historically) while letting
     # sharded entries live under <profile>-sharded keys for clarity.
     key = profile_stats["profile"] if mode == "blob" else f"{profile_stats['profile']}-sharded"
-    manifest["targets"][key] = {"mode": mode, **profile_stats}
+    # Tagger output version is part of bed identity (tags are in the
+    # bed-content digest): cross-bed comparisons require matching values.
+    # Beds whose manifests predate this field are tagger_version=1.
+    from cymatix_context.tagger import TAGGER_VERSION
+    manifest["targets"][key] = {
+        "mode": mode, "tagger_version": TAGGER_VERSION, **profile_stats,
+    }
     manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
 
     with open(manifest_path, "w", encoding="utf-8") as f:
