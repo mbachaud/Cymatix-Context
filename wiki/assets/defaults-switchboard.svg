@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 560" width="860" height="560" role="img" aria-labelledby="ds-title ds-desc">
   <title id="ds-title">Cymatix Context retrieval defaults switchboard</title>
-  <desc id="ds-desc">Two-column board of retrieval layers at shipped defaults. ON: FTS5 BM25 plus tag lookup, synonym expansion, co-activation graph, cymatics 256-bin spectrum, RRF fusion at rrf_k 20, freshness gate, session delivery register, entity_graph. OFF and opt-in: BGE-M3 dense recall (off 2026-08-15), SPLADE (off 2026-08-16), PKI path-key index (off 2026-08-19), cross-encoder re-rank, sema and dense ingest embeds (off 2026-08-19), min_delivered_docs seat floor, entity_autolink_hub_cutoff.</desc>
+  <desc id="ds-desc">Two-column board of retrieval layers at shipped defaults. ON: FTS5 BM25 plus tag lookup, synonym expansion, co-activation graph, cymatics 256-bin spectrum, RRF fusion at rrf_k 20, freshness gate, session delivery register, entity_graph. OFF and opt-in: BGE-M3 dense recall (off 2026-08-15), SPLADE (off 2026-08-16), PKI path-key index (off 2026-08-17), cross-encoder re-rank, sema and dense ingest embeds (off 2026-08-19), min_delivered_docs seat floor, entity_autolink_hub_cutoff.</desc>
 
   <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
 
@@ -87,7 +87,7 @@
     <g font-size="10.5" fill="#8b949e">
       <text x="484" y="162">off 2026-08-15 &#183; displaced gold at every scale</text>
       <text x="484" y="206">off 2026-08-16 &#183; null-to-negative at n=469</text>
-      <text x="484" y="250">off 2026-08-19 &#183; -1 delivered needle at n=469</text>
+      <text x="484" y="250">off 2026-08-17 &#183; -1 delivered needle at n=469</text>
       <text x="484" y="294">has always shipped off &#183; #341</text>
       <text x="484" y="338">off 2026-08-19 &#183; dead writes on the neural-free path</text>
       <text x="484" y="382">0.9.1 &#183; default 0 &#8212; inert until you set it</text>

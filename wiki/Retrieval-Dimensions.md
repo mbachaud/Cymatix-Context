@@ -31,7 +31,7 @@
 Auxiliary tiers that fire but are not numbered dimensions:
 
 - **Path-key index (Tier 0)** — compound `(path_token, key)` lookup.
-  `[retrieval] pki_enabled` **off** since 2026-08-19
+  `[retrieval] pki_enabled` **off** since 2026-08-17
   ([#370](https://github.com/mbachaud/Cymatix-Context/issues/370)).
 - **Filename anchor** — a lexical boost on filename matches, on since
   2026-04-22.
@@ -113,7 +113,7 @@ of current shipped state**, and several defaults have moved since.
 |---|---|---|
 | FTS5 | KEEP-LOAD-BEARING | Still the default backbone |
 | SPLADE | REMOVE for ERB-class serving — four scales, recall never crosses zero | Shipped default-off 2026-08-16 |
-| Path-key index | REMOVE-CANDIDATE — neutral-to-positive to remove at both 100k and 829k, zero delivery flips | Shipped default-off 2026-08-19 ([#370](https://github.com/mbachaud/Cymatix-Context/issues/370)) |
+| Path-key index | REMOVE-CANDIDATE — neutral-to-positive to remove at both 100k and 829k, zero delivery flips | Shipped default-off 2026-08-17 ([#370](https://github.com/mbachaud/Cymatix-Context/issues/370)) |
 | Tags (D2) | **SPLIT** — the delivered-gold gain at 100k did **not** replicate at 829k; the storage half is unmeasured | Still on; a `no_lex_anchor` arm ([#355](https://github.com/mbachaud/Cymatix-Context/issues/355)) is owed before any storage action |
 | Cymatics | KEEP-CHEAP, now measured — indistinguishable from random binning | Still on, still labelled experimental |
 | Co-activation / harmonic | TRIM-CANDIDATE — a post-rank pull-forward, invisible to rank-based recall@12 by construction | Still on; the delivered-basis metric it needs is now armed |

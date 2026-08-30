@@ -22,9 +22,14 @@
 - A rule-based classifier assigns the query one of five classes: `arithmetic`,
   `factual`, `procedural`, `multi_hop`, `default`. **Algorithmic** — pattern
   scans over the query string, no model call.
-- The class selects the decoder mode for the turn (`full` /
-  `condensed_with_slate` / `condensed`) and the per-rule assembly cap that
-  bounds how many documents reach the window.
+- The class selects the decoder mode for the turn and the per-rule assembly cap
+  that bounds how many documents reach the window.
+- **Decoder mode is resolved from the class *and* the caller**, not the class
+  alone. For the default `generic` caller the modes are `minimal`
+  (`arithmetic`), `condensed` (`factual`), `full` (`procedural`, `multi_hop`),
+  and none at all for `default`. A `small_moe` caller gets its own slate-shaped
+  modes for the same classes. Callers select their branch with
+  `caller_model_class` — see [HTTP API](HTTP-API).
 - `[classifier] enabled` is the only toggle that ships. Per-class caps and
   decoder hints are code constants, not config, pending
   [#205](https://github.com/mbachaud/Cymatix-Context/issues/205). With the
@@ -61,7 +66,7 @@
 - **Opt-in, off at shipped defaults:** BGE-M3 dense recall (`[retrieval]
   dense_embedding_enabled`, off since 2026-08-15), SPLADE sparse expansion
   (`[ingestion] splade_enabled`, off since 2026-08-16), and the Tier-0
-  path-key index (`[retrieval] pki_enabled`, off since 2026-08-19). Each flip
+  path-key index (`[retrieval] pki_enabled`, off since 2026-08-17). Each flip
   is receipt-gated; the receipts are on
   [Benchmarks and Receipts](Benchmarks-and-Receipts).
 - **Fusion.** Candidates are ranked by Reciprocal Rank Fusion, the default
