@@ -1,6 +1,17 @@
 # Changelog
 
-## Unreleased
+## 0.9.1 (2026-08-30)
+
+The retrieval-quality release: wave-1 ranking graduation (rrf_k 60→20 +
+all-five-classes eps_band) and the W2.4 delivered-seat floor
+(min_delivered_docs 0→12) ship as defaults, each receipt-gated on paired
+delivered-basis evidence across ERB and the new EnronQA second-corpus
+bench lane (gate receipt:
+benchmarks/dogfood/receipts/sweep_v091_gate_2026-08-30.json, ALL PASS).
+Ingest at scale: entity auto-link hub cutoff (default-off knob, ~340×
+per-link-call, retrieval-null A/B) and tagger v2 entity hygiene
+(TAGGER_VERSION=2, bed-comparability versioned). Cross-host client
+unification (#406). Release gate: PRs #406–#409, #412, #413, #422.
 
 - **tagger v2 — entity hygiene (#410), bed-comparability break.** The CPU
   tagger no longer emits email/MIME plumbing as entities: entities containing
