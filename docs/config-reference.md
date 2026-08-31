@@ -764,6 +764,15 @@ which stay additive) lives in
 | `rrf_gate_enabled` | `bool` | `false` | master switch; False == byte-identical legacy RRF |
 | `rrf_gate_top_m` | `int` | `0` | 0 = ungated; else a tier contributes RRF mass only for its top-M ranks |
 | `rrf_gate_min_score` | `float` | `0.0` | 0.0 = ungated; else a tier's entry contributes only when its raw arm score >= this. NOTE: raw scores are non-commensurate across arms (FTS negative-bm25 vs BGE cosine vs tag {0,3}), so a single global float is only honest when the operator knows the arm mix — prefer rrf_gate_top_m on a mixed-arm store (issue #260 v1; a per-arm dict floor is deferred). |
+| `cover_walk_enabled` | `bool` | `false` | W2.1 (2026-08-28): COVER-edge walk — query-time mass spread over the ingest-built gene_relations COVER graph (relation=5, entity-overlap kNN; 8.5M edges on the 947k v09x bed, previously zero query-time consumers). Grounding + pre-flight: docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md (72% of static semantic gold within 2 hops of the head; 16/61 at one hop in a ~960-doc frontier). Ships INERT (enabled=False). When on, the walk runs on the RRF path only and enters ranking two ways, both confined per the wave-1 banding lesson: (a) a "cover_walk" rerank class applied ONLY when the query's effective combinator is eps_band (never a free additive), scaled by band_weight; (b) append-below-head: the top append_slots walk-rescued docs (mass >= append_min_mass, not already in the kept head) fill the LAST append_slots positions of the final top-k; displaced head docs slide below, they do not vanish. seed_m = walk seeds (top-M of the pure-fused order); degree_cap = hub guard (nodes above it are reachable but never expanded); frontier_cap bounds per-hop wavefront (SR precedent). Default flip is receipt-gated (w2_cover_walk arm). |
+| `cover_walk_seed_m` | `int` | `12` |  |
+| `cover_walk_hops` | `int` | `2` |  |
+| `cover_walk_gamma` | `float` | `0.5` |  |
+| `cover_walk_degree_cap` | `int` | `1000` |  |
+| `cover_walk_frontier_cap` | `int` | `2000` |  |
+| `cover_walk_append_slots` | `int` | `3` |  |
+| `cover_walk_append_min_mass` | `float` | `0.0` |  |
+| `cover_walk_band_weight` | `float` | `1.0` |  |
 | `rerank_combinator` | `str` | `"additive"` | additive \| fused_tier \| eps_band \| off |
 | `rerank_band_delta` | `float` | `0.05` | eps_band relative tie-band width δ (ratio of the leader's fused score). |
 | `rerank_tier_weight` | `float` | `1.0` | fused_tier uniform per-class rank post-multiplier (single weight — a per-class weight would re-introduce hand-picked exchange rates). |
