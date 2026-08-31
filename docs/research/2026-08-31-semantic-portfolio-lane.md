@@ -66,3 +66,41 @@ history on v2. Build mode: locomo sequential (tiny); muloc may run parallel
 c=6 (CPU tagger is content-deterministic under parallel per the
 entity-autolink equivalence receipt; only inert COVER edges drift — note in
 the bed manifest either way).
+
+## Lane 1 results — LoCoMo baseline (2026-08-31, tagger-v2 bed, shipped v0.9.1)
+
+Receipt: `benchmarks/dogfood/locomo/receipts/ladder_locomo_baseline_2026-08-31.json`
+(n=2,378, k=12, per-query; bed 6,276 genes; p50 22.7 ms/query).
+
+| class | delivered | r@12 | pool-absent | med rank |
+|---|---:|---:|---:|---:|
+| singlehop | 489/841 (.581) | .637 | 197 | 5 |
+| temporal | 174/320 (.544) | .597 | 64 | 5 |
+| adversarial | 221/446 (.496) | .563 | 125 | 6 |
+| multihop | 120/281 (.427) | .509 | 85 | 7 |
+| commonsense | 27/89 (.303) | .348 | 47 | 6 |
+| **cognitive** | **3/401 (.007)** | **.007** | **394** | 35 |
+
+Two findings:
+
+1. **The cognitive split is a near-total blackout** (98.3% pool-absent) —
+   the cleanest external confirmation of the ERB/EnronQA blindness: when
+   query and gold share ~no surface vocabulary, the algorithmic path
+   retrieves nothing.
+2. **The paper's own baselines fail it identically** — rank of the gold cue
+   in their candidate pool: bm25 median 631, mpnet 385, bge 378, combined
+   272; r@12 = .025 / .027 / .015 / .027 (needle meta,
+   `paper_ranks_among_401_cues`). **Dense embeddings do NOT fix this
+   class.** The blindness LoCoMo-Plus isolates is representational at a
+   level neither sparse nor dense surface encoders reach — the lane it
+   prices is semantic abstraction added at WRITE time (the parked
+   LLM-ribosome doc-side enrichment path), not an encoder swap. That
+   re-scopes the ERB dense-counterfactual cell too: dense may help the
+   *drowned* sub-case (weak-but-nonzero overlap), but not the
+   cue-disconnect sub-case.
+
+Ready-made follow-up cell: LoCoMo ships an LLM-derived `observation` layer
+(per-session abstraction sentences with dia_id provenance). Ingesting
+observations as bridge documents is a zero-model-cost enrichment A/B for
+the multihop/commonsense classes (the cognitive cues have no observation
+layer — their enrichment requires generating one, i.e. the ribosome lane).
