@@ -1,0 +1,46 @@
+{
+ "stamp": "2026-08-30",
+ "beds": {
+  "a": "enronqa_bed_v2 (cutoff off)",
+  "b": "enronqa_bed_v2c (cutoff 200)"
+ },
+ "expectation": "null deltas at shipped defaults (COVER edges query-inert)",
+ "arms": {
+  "v090": {
+   "v2": {
+    "recall_at_k": 0.784,
+    "final_recall_at_k": 0.788,
+    "delivered_gold_rate": 0.694,
+    "median_rank_of_gold": 5.0
+   },
+   "v2c": {
+    "recall_at_k": 0.784,
+    "final_recall_at_k": 0.788,
+    "delivered_gold_rate": 0.694,
+    "median_rank_of_gold": 5.0
+   },
+   "delivered_delta": 0.0,
+   "per_needle_delivered_flips": 0,
+   "flip_needles": [],
+   "null_confirmed": true
+  },
+  "v091": {
+   "v2": {
+    "recall_at_k": 0.876,
+    "final_recall_at_k": 0.872,
+    "delivered_gold_rate": 0.82,
+    "median_rank_of_gold": 3.0
+   },
+   "v2c": {
+    "recall_at_k": 0.876,
+    "final_recall_at_k": 0.872,
+    "delivered_gold_rate": 0.82,
+    "median_rank_of_gold": 3.0
+   },
+   "delivered_delta": 0.0,
+   "per_needle_delivered_flips": 0,
+   "flip_needles": [],
+   "null_confirmed": true
+  }
+ }
+}

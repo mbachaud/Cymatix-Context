@@ -1,0 +1,125 @@
+{
+ "stamp": "2026-08-30",
+ "integration_commit": "e6dba22",
+ "beds": {
+  "enronqa_v2": {
+   "v090": {
+    "delivered_gold_rate": 0.694,
+    "recall_at_k": 0.784,
+    "final_recall_at_k": 0.788,
+    "median_rank_of_gold": 5.0
+   },
+   "v091": {
+    "delivered_gold_rate": 0.82,
+    "recall_at_k": 0.876,
+    "final_recall_at_k": 0.872,
+    "median_rank_of_gold": 3.0
+   },
+   "delivered_delta": 0.126,
+   "paired_delivered": {
+    "n_paired": 500,
+    "gained": 66,
+    "lost": 3,
+    "net": 63
+   },
+   "paraphrase_delivered": {
+    "v090": {
+     "orig": 0.708,
+     "reph": 0.68
+    },
+    "v091": {
+     "orig": 0.84,
+     "reph": 0.8
+    }
+   },
+   "v091_floor_informational": {
+    "delivered_gold_rate": 0.856,
+    "paired_vs_v091": {
+     "n_paired": 500,
+     "gained": 18,
+     "lost": 0,
+     "net": 18
+    }
+   },
+   "lift_confirmed": true,
+   "status": "PASS"
+  },
+  "erb_100k": {
+   "v090": {
+    "delivered_gold_rate": 0.6099290780141844,
+    "recall_at_k": 0.6879,
+    "final_recall_at_k": 0.695,
+    "median_rank_of_gold": 3.0
+   },
+   "v091": {
+    "delivered_gold_rate": 0.6312056737588653,
+    "recall_at_k": 0.7021,
+    "final_recall_at_k": 0.7021,
+    "median_rank_of_gold": 2.0
+   },
+   "delivered_delta": 0.0213,
+   "paired_delivered": {
+    "n_paired": 141,
+    "gained": 7,
+    "lost": 4,
+    "net": 3
+   },
+   "lift_confirmed": true,
+   "status": "PASS"
+  },
+  "enronqa_padded": {
+   "v090": {
+    "delivered_gold_rate": 0.702,
+    "recall_at_k": 0.752,
+    "final_recall_at_k": 0.754,
+    "median_rank_of_gold": 4.0
+   },
+   "v091": {
+    "delivered_gold_rate": 0.776,
+    "recall_at_k": 0.808,
+    "final_recall_at_k": 0.816,
+    "median_rank_of_gold": 3.0
+   },
+   "delivered_delta": 0.074,
+   "paired_delivered": {
+    "n_paired": 500,
+    "gained": 41,
+    "lost": 4,
+    "net": 37
+   },
+   "paraphrase_delivered": {
+    "v090": {
+     "orig": 0.74,
+     "reph": 0.664
+    },
+    "v091": {
+     "orig": 0.82,
+     "reph": 0.732
+    }
+   },
+   "v091_floor_informational": {
+    "delivered_gold_rate": 0.792,
+    "paired_vs_v091": {
+     "n_paired": 500,
+     "gained": 8,
+     "lost": 0,
+     "net": 8
+    }
+   },
+   "lift_confirmed": true,
+   "status": "PASS"
+  },
+  "erb_829k": {
+   "v091_delivered": 0.6297872340425532,
+   "frozen_v090_delivered": 0.5553191489361702,
+   "frozen_wave1_delivered": 0.6297872340425532,
+   "lift_over_v090": 0.0745,
+   "reproduce_delta_vs_wave1": 0.0,
+   "lift_confirmed": true,
+   "reproduces_wave1": true,
+   "status": "PASS"
+  }
+ },
+ "decision_metric": "delivered_gold_rate",
+ "all_pass": true
+}

@@ -555,6 +555,13 @@ class KnowledgeStore:
         # cover-walk kill) and already order-nondeterministic under
         # parallel ingest (ingest_equivalence_enronqa.json).
         entity_autolink: bool = True,
+        # Posting-count hub cutoff for ingest-time entity auto-linking
+        # ([ingestion] entity_autolink_hub_cutoff). > 0 drops entities with
+        # more postings than this from the COVER-edge probe set — bounds the
+        # O(hub-posting-list) per-insert sweep (enronqa_padded 2026-08-30:
+        # 89.5% of writer wall time). 0 = legacy behavior. Composition with
+        # entity_autolink: off > cutoff > legacy.
+        entity_autolink_hub_cutoff: int = 0,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
         sr_k_steps: int = 4,
@@ -633,6 +640,19 @@ class KnowledgeStore:
         rrf_gate_enabled: bool = False,
         rrf_gate_top_m: int = 0,
         rrf_gate_min_score: float = 0.0,
+        # W2.1 (2026-08-28): COVER-edge walk over gene_relations relation=5.
+        # Default-inert (enabled=False == byte-identical retrieval). See
+        # RetrievalConfig for the full knob story; fanned to solo and
+        # per-shard Genomes via the shared kwargs builder (sharding.py).
+        cover_walk_enabled: bool = False,
+        cover_walk_seed_m: int = 12,
+        cover_walk_hops: int = 2,
+        cover_walk_gamma: float = 0.5,
+        cover_walk_degree_cap: int = 1000,
+        cover_walk_frontier_cap: int = 2000,
+        cover_walk_append_slots: int = 3,
+        cover_walk_append_min_mass: float = 0.0,
+        cover_walk_band_weight: float = 1.0,
         # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Only
         # consulted under fusion_mode == "rrf" (the additive branch never
         # touches rerank_additive). Default "additive" reproduces the shipped
@@ -759,6 +779,7 @@ class KnowledgeStore:
         self._splade_auto_cached_count: int = 0
         self._entity_graph_enabled = entity_graph
         self._entity_autolink_enabled = bool(entity_autolink)
+        self._entity_autolink_hub_cutoff = int(entity_autolink_hub_cutoff)
         # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
         # Separate from _entity_graph_enabled (write-side) — this controls
         # whether entity_graph rows are consulted during query_genes().
@@ -847,6 +868,20 @@ class KnowledgeStore:
             )
         self._rrf_gate_top_m: int = int(rrf_gate_top_m)
         self._rrf_gate_min_score: float = float(rrf_gate_min_score)
+        # W2.1: COVER-edge walk knobs (validated at config load; coerced
+        # here for direct construction). last_cover_walk_diag is the
+        # per-query observability contract — {} when the walk did not run,
+        # same never-stale semantics as last_rerank_diag.
+        self._cover_walk_enabled: bool = bool(cover_walk_enabled)
+        self._cover_walk_seed_m: int = int(cover_walk_seed_m)
+        self._cover_walk_hops: int = int(cover_walk_hops)
+        self._cover_walk_gamma: float = float(cover_walk_gamma)
+        self._cover_walk_degree_cap: int = int(cover_walk_degree_cap)
+        self._cover_walk_frontier_cap: int = int(cover_walk_frontier_cap)
+        self._cover_walk_append_slots: int = int(cover_walk_append_slots)
+        self._cover_walk_append_min_mass: float = float(cover_walk_append_min_mass)
+        self._cover_walk_band_weight: float = float(cover_walk_band_weight)
+        self.last_cover_walk_diag: Dict[str, Any] = {}
         # Issue #255 (PR-2): validate the rerank combinator now so a typo in
         # cymatix.toml fails fast at construction, mirroring the fusion_mode
         # guard above. The four names are the only valid operators (see
@@ -1998,6 +2033,7 @@ class KnowledgeStore:
                 sync_entity_graph(
                     cur, gene_id, gene, self._entity_graph_enabled,
                     autolink_enabled=self._entity_autolink_enabled,
+                    hub_cutoff=self._entity_autolink_hub_cutoff,
                 )
                 sync_path_key_index(cur, gene_id, gene)
                 sync_filename_index(cur, gene_id, gene.source_id)
@@ -3865,6 +3901,11 @@ class KnowledgeStore:
         # _fuse_limit == limit, i.e. byte-identical to the pre-#341 branch.
         _rerank_on = self._rerank_effective(rerank_override) and query_text is not None
         _fuse_limit = max(limit, self._rerank_depth) if _rerank_on else limit
+        # W2.1: COVER-walk state — defined for BOTH fusion branches so the
+        # append block below is a no-op under additive (the walk only ever
+        # runs on the RRF path).
+        _cover_mass: Dict[str, float] = {}
+        _cover_diag: Dict[str, Any] = {}
         if self._fusion_mode == "rrf":
             fused_scores = fuser.all_scores()
             # The bm25_shortlist filter mutated gene_scores above; honor
@@ -3893,6 +3934,51 @@ class KnowledgeStore:
             # config load, so a non-None override is a VALID_COMBINATORS member
             # (combine_rerank still raises defensively on a direct mis-call).
             _effective_combinator = rerank_combinator or self._rerank_combinator
+            # ── W2.1: COVER-edge walk ─────────────────────────────────
+            # Mass spread from the pure-fused head over the ingest-built
+            # gene_relations COVER graph (retrieval/cover_walk.py; design +
+            # pre-flight receipts:
+            # docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md).
+            # Two consumers, both confined per the wave-1 banding lesson:
+            # here, mass on ELIGIBLE candidates joins the rerank maps as a
+            # "cover_walk" class ONLY when this query's effective combinator
+            # is eps_band (never a free additive — the w1_map_empty arm
+            # measured unbanded additives dropping semantic r@12 0.32→0.16);
+            # after the #341 seam, the append-below-head block rescues
+            # out-of-window docs into the tail of the delivered top-k.
+            if self._cover_walk_enabled:
+                _cw_t0 = time.monotonic()
+                try:
+                    from .retrieval.cover_walk import cover_walk_mass
+                    _cw_seeds = [
+                        gid for gid, _cw_s in sorted(
+                            fused.items(), key=lambda x: (-x[1], x[0])
+                        )[: self._cover_walk_seed_m]
+                    ]
+                    _cover_mass, _cover_diag = cover_walk_mass(
+                        self, _cw_seeds,
+                        hops=self._cover_walk_hops,
+                        gamma=self._cover_walk_gamma,
+                        degree_cap=self._cover_walk_degree_cap,
+                        frontier_cap=self._cover_walk_frontier_cap,
+                    )
+                    _cw_band_n = 0
+                    if _effective_combinator == "eps_band" and _cover_mass:
+                        for _cw_gid in eligible_ids:
+                            _cw_m = _cover_mass.get(_cw_gid)
+                            if _cw_m:
+                                _cw_b = self._cover_walk_band_weight * _cw_m
+                                rr[_cw_gid] = rr.get(_cw_gid, 0.0) + _cw_b
+                                rr_by_class.setdefault("cover_walk", {})[_cw_gid] = _cw_b
+                                tier_contrib.setdefault(_cw_gid, {})["cover_walk"] = _cw_b
+                                _cw_band_n += 1
+                    _cover_diag["band_boosted"] = _cw_band_n
+                except Exception:
+                    log.warning(
+                        "cover walk failed; fused order untouched", exc_info=True,
+                    )
+                    _cover_mass, _cover_diag = {}, {}
+                _sig("cover_walk", _cw_t0)
             from .retrieval.rerank_combinators import combine_rerank
             final_scores, ranked_ids = combine_rerank(
                 _effective_combinator,
@@ -3991,6 +4077,48 @@ class KnowledgeStore:
             # exit, so a direct merge here would be clobbered.
             _sig("xenc_rerank", _xenc_t0)
 
+        # ── W2.1: COVER-walk append-below-head ────────────────────────
+        # Rescue lane for docs the fused ranking cannot reach (static
+        # semantic gold sits at map rank 10^4..10^5 — no score adjustment
+        # lifts it; only injection into the delivered window can). The top
+        # append_slots walk candidates NOT already in the delivered window
+        # (ranked_ids[:max_genes]) fill the window's LAST slots; displaced
+        # docs slide below the insertion point — membership of the wider
+        # ranked list is preserved, so nothing vanishes from the receipts'
+        # final basis. Placed AFTER the #341 seam and the _evidence_ids
+        # snapshot (#342 invariant: edge evidence accrues from the fused
+        # order) and BEFORE the last_ranked_ids publication so the final
+        # basis and the delivered slice both see rescues.
+        if _cover_mass and self._cover_walk_append_slots > 0 and ranked_ids:
+            _cw_K = min(int(max_genes), len(ranked_ids))
+            _cw_slots = min(self._cover_walk_append_slots, _cw_K)
+            if _cw_slots > 0:
+                _cw_window = set(ranked_ids[:_cw_K])
+                _cw_floor = self._cover_walk_append_min_mass
+                _cw_rescues = [
+                    _gid for _gid, _m in sorted(
+                        _cover_mass.items(), key=lambda x: (-x[1], x[0])
+                    )
+                    if _m >= _cw_floor and _gid not in _cw_window
+                ][:_cw_slots]
+                if _cw_rescues:
+                    _cw_keep = ranked_ids[: _cw_K - len(_cw_rescues)]
+                    _cw_seen: set = set()
+                    _cw_new: List[str] = []
+                    for _gid in _cw_keep + _cw_rescues + ranked_ids[len(_cw_keep):]:
+                        if _gid not in _cw_seen:
+                            _cw_seen.add(_gid)
+                            _cw_new.append(_gid)
+                    _cover_diag["displaced"] = ranked_ids[
+                        _cw_K - len(_cw_rescues): _cw_K
+                    ]
+                    ranked_ids = _cw_new
+                    for _gid in _cw_rescues:
+                        tier_contrib.setdefault(_gid, {})["cover_walk"] = (
+                            _cover_mass[_gid]
+                        )
+                _cover_diag["rescues"] = _cw_rescues
+
         # Issue #341: publish the final order unconditionally — both fusion
         # modes, rerank on or off — so an A/B always compares two orderings
         # produced the same way and the metric basis can never go stale.
@@ -4004,6 +4132,10 @@ class KnowledgeStore:
         # absent, which is an unmeasurable, not a rank of zero.
         with self._last_query_scores_lock:
             self.last_ranked_ids = list(ranked_ids)
+            # W2.1: {} when the walk did not run — same never-stale
+            # contract as last_rerank_diag (the ladder clears + snapshots
+            # it per needle).
+            self.last_cover_walk_diag = dict(_cover_diag)
 
         # Walking tie-break (opt-in via CYMATIX_WALKING_TIEBREAK=1).
         # When adjacent top-k documents have bitwise-identical fused scores,
@@ -4615,7 +4747,10 @@ class KnowledgeStore:
     def _auto_link_by_entity(self, gene_id: str, entities: List[str], cur) -> None:
         """Delegate to storage.co_activation.auto_link_by_entity."""
         from .storage.co_activation import auto_link_by_entity
-        auto_link_by_entity(gene_id, entities, cur)
+        auto_link_by_entity(
+            gene_id, entities, cur,
+            hub_cutoff=self._entity_autolink_hub_cutoff,
+        )
 
     def _expand_by_entity_graph(
         self, gene_ids: List[str], limit: int, cur

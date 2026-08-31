@@ -12,10 +12,9 @@ license = "Apache-2.0"
 authors = [
     { name = "Michael Bachaud", email = "swiftwing21@users.noreply.github.com" },
 ]
-# The whole point: pulling this package installs the renamed one, which
-# ships the `helix_context` import shim (DeprecationWarning-emitting alias
-# of `cymatix_context`) and the deprecated helix* console-script aliases.
-dependencies = ["cymatix-context>=0.8.0"]
+# The whole point: pulling this package installs the renamed one.  The
+# current package intentionally provides no old-name compatibility aliases.
+dependencies = ["cymatix-context>=0.8.5"]
 classifiers = [
     "Development Status :: 7 - Inactive",
 ]
@@ -24,8 +23,8 @@ classifiers = [
 Homepage = "https://github.com/mbachaud/Cymatix-Context"
 
 # Metadata-only distribution: deliberately ships NO packages/modules.
-# cymatix-context's wheel already provides the `helix_context` package
-# (the live alias shim) — shipping one here too would collide on install.
+# cymatix-context provides the implementation; shipping one here too would
+# collide on install.
 [tool.setuptools]
 py-modules = []
 packages = []

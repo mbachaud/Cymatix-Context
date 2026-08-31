@@ -82,6 +82,7 @@ lazy_encoders = true
 [budget]
 ribosome_tokens = 3000                  # fixed decoder prompt
 expression_tokens = 7000                # ~7K expressions cap (BROAD tighten 2026-05-12, bench-gated #73). Code default matches since the 2026-06-12 default-honesty pass.
+min_delivered_docs = 12                 # W2.4 delivered-seat floor — GRADUATED 2026-08-30 ([w24-floor-flip]): +18/−0, +18/−0, +8/−0 paired delivered on ERB 829k / EnronQA v2 / EnronQA padded; 0 = legacy eviction-only trim
 max_genes_per_turn = 12
 max_fingerprints_per_turn = 40          # navigation-first fingerprint payload cap (final returned count, not frontier width)
 splice_aggressiveness = 0.3             # 0=keep all, 1=ruthless trim (lower preserves more literal detail)
@@ -284,6 +285,15 @@ rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 # colbert_enabled REMOVED (#219 slice 5, 2026-08-19): parsed since the
 # Phase-4 scaffold but zero readers ever shipped — a silent no-op knob.
 entity_graph = true                     # Phase 5: entity-based co-activation links
+# Posting-count hub cutoff for entity auto-linking (relation=5 COVER edges).
+# > 0 drops entities with more than this many entity_graph postings from the
+# probe set before the per-insert GROUP BY — bounds the O(hub-posting-list)
+# sweep that made ingest O(N^2) on the enronqa_padded bed (89.5% of writer
+# wall time, 148.9 ms/insert vs 7.4 ms without the two MIME hubs;
+# benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json).
+# PKI_NOISE_CUTOFF = 200 (storage/indexes.py) is the precedent value for a
+# future default flip. 0 = disabled = legacy behavior, byte-identical.
+entity_autolink_hub_cutoff = 0
 # Compute the 20D MiniLM SEMA embedding (gene.embedding) inline at ingest
 # (the #227 knob). Default off since 2026-08-19 (#371): at shipped defaults
 # its only live retrieval consumer is the Tier-4 sema_boost re-rank

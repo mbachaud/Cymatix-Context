@@ -12,6 +12,7 @@
     "agent.budget_tokens_est",
     "agent.calibration_age_days",
     "agent.calibration_stale",
+    "agent.caller_model_class",
     "agent.citations",
     "agent.citations[].gene_id",
     "agent.citations[].score",

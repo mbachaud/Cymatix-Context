@@ -1,5 +1,11 @@
 """Tests for cymatix_context.mcp_server helper behavior."""
 
+import io
+import json
+import urllib.error
+import urllib.request
+from unittest.mock import Mock
+
 import pytest
 
 pytest.importorskip(
@@ -7,8 +13,6 @@ pytest.importorskip(
     reason="mcp SDK extra not installed, or too old to expose "
            "mcp.server.mcpserver (mcp 2.x home of MCPServer — see pyproject floor)",
 )
-
-import pytest
 
 from cymatix_context.mcp_server import (
     _default_ingest_identity,
@@ -260,6 +264,244 @@ def test_cymatix_context_unwraps_continue_list_shape(monkeypatch):
     assert body["query"] == "what does the splice step do?"
 
 
+def test_context_posts_canonical_model_fields(monkeypatch):
+    """Canonical MCP arguments reach /context without a retired alias."""
+    from cymatix_context import mcp_server
+
+    captured = {}
+
+    def fake_http(method, path, body=None):
+        captured.update({"method": method, "path": path, "body": body})
+        return [{"name": "Cymatix Genome Context", "content": "ok"}]
+
+    monkeypatch.setattr(mcp_server, "_http", fake_http)
+    mcp_server.cymatix_context(
+        "explain routing",
+        model="gpt-5",
+        caller_model_class="frontier",
+    )
+
+    assert captured["body"]["model"] == "gpt-5"
+    assert captured["body"]["caller_model_class"] == "frontier"
+    assert "downstream_model" not in captured["body"]
+
+
+def test_explicit_class_overrides_configured_default(monkeypatch):
+    """A tool caller, rather than the startup default, chooses its class."""
+    from cymatix_context import mcp_server
+
+    sent = {}
+    monkeypatch.setattr(mcp_server, "MCP_CALLER_MODEL_CLASS_DEFAULT", "small_moe")
+    monkeypatch.setattr(
+        mcp_server,
+        "_http",
+        lambda _method, _path, body=None: sent.update(body or {}) or [],
+    )
+
+    mcp_server.cymatix_context("q", caller_model_class="frontier")
+
+    assert sent["caller_model_class"] == "frontier"
+
+
+def test_explicit_class_overrides_environment_default(monkeypatch):
+    """The resolved import-time default cannot override an explicit call."""
+    from cymatix_context import mcp_server
+
+    sent = {}
+    monkeypatch.setenv("CYMATIX_CALLER_MODEL_CLASS", "small_moe")
+    monkeypatch.setattr(mcp_server, "MCP_CALLER_MODEL_CLASS_DEFAULT", "small_moe")
+    monkeypatch.setattr(
+        mcp_server,
+        "_http",
+        lambda _method, _path, body=None: sent.update(body or {}) or [],
+    )
+
+    mcp_server.cymatix_context("q", caller_model_class="frontier")
+
+    assert sent["caller_model_class"] == "frontier"
+
+
+@pytest.mark.parametrize("configured", ["generic", "small_moe", "frontier"])
+def test_configured_caller_model_class_accepts_supported_values(configured):
+    """Each documented startup class is accepted without normalization drift."""
+    from cymatix_context import mcp_server
+
+    assert mcp_server._configured_caller_model_class(configured) == configured
+
+
+def test_configured_caller_model_class_uses_schema_default(monkeypatch):
+    """An absent setting preserves the schema-defined generic default."""
+    from cymatix_context import mcp_server
+    from cymatix_context.schemas import CALLER_MODEL_CLASS_DEFAULT
+
+    monkeypatch.delenv("CYMATIX_CALLER_MODEL_CLASS", raising=False)
+
+    assert mcp_server._configured_caller_model_class(None) == CALLER_MODEL_CLASS_DEFAULT
+
+
+def test_packet_is_model_independent(monkeypatch):
+    """Packet retrieval never sends model-policy knobs to its own route."""
+    from cymatix_context import mcp_server
+
+    sent = {}
+    monkeypatch.setattr(
+        mcp_server,
+        "_http",
+        lambda _method, _path, body=None: sent.update(body or {}) or {},
+    )
+
+    mcp_server.cymatix_context_packet("q")
+
+    assert "model" not in sent
+    assert "caller_model_class" not in sent
+
+
+_HTTP_ERROR_BODY_MAX_BYTES = 8 * 1024
+_HTTP_ERROR_STRING_MAX_CHARS = 512
+_HTTP_ERROR_ALLOWED_MAX_ITEMS = 16
+_HTTP_ERROR_ALLOWED_ITEM_MAX_CHARS = 128
+
+
+class _RecordingBody(io.BytesIO):
+    """In-memory HTTP error body that records bounded reads."""
+
+    def __init__(self, body: bytes):
+        super().__init__(body)
+        self.read_sizes = []
+
+    def read(self, size=-1):
+        self.read_sizes.append(size)
+        return super().read(size)
+
+
+def _http_error_with_body(body: bytes, *, code: int = 400):
+    source = _RecordingBody(body)
+    return (
+        urllib.error.HTTPError(
+            "http://127.0.0.1:11437/context",
+            code,
+            "Bad Request",
+            {},
+            source,
+        ),
+        source,
+    )
+
+
+def test_http_error_preserves_context_validation_payload(monkeypatch):
+    """Structured route validation remains actionable to the MCP caller."""
+    from cymatix_context import mcp_server
+
+    error, source = _http_error_with_body(
+        b'{"error":"Invalid caller_model_class",'
+        b'"allowed":["generic","small_moe","frontier"]}'
+    )
+    monkeypatch.setattr(urllib.request, "urlopen", Mock(side_effect=error))
+
+    result = mcp_server._http("POST", "/context", {"query": "q"})
+
+    assert result["_error"] == "HTTP 400"
+    assert result["error"] == "Invalid caller_model_class"
+    assert result["allowed"] == ["generic", "small_moe", "frontier"]
+    assert source.read_sizes == [_HTTP_ERROR_BODY_MAX_BYTES + 1]
+
+
+def test_http_error_drops_unknown_sensitive_json_fields(monkeypatch):
+    """Only documented route errors reach an MCP caller from JSON bodies."""
+    from cymatix_context import mcp_server
+
+    body = json.dumps(
+        {
+            "error": "Invalid caller_model_class",
+            "allowed": ["generic", "small_moe", "frontier"],
+            "token": "super-secret-token",
+            "raw_environment": {"CYMATIX_API_KEY": "super-secret-key"},
+            "debug_trace": "sensitive trace",
+        }
+    ).encode("utf-8")
+    error, _source = _http_error_with_body(body)
+    monkeypatch.setattr(urllib.request, "urlopen", Mock(side_effect=error))
+
+    result = mcp_server._http("POST", "/context", {"query": "q"})
+
+    assert result == {
+        "_error": "HTTP 400",
+        "error": "Invalid caller_model_class",
+        "allowed": ["generic", "small_moe", "frontier"],
+    }
+
+
+def test_http_error_bounds_safe_json_fields(monkeypatch):
+    """Approved JSON error values cannot consume an unbounded MCP response."""
+    from cymatix_context import mcp_server
+
+    body = json.dumps(
+        {
+            "error": "e" * (_HTTP_ERROR_STRING_MAX_CHARS + 10),
+            "allowed": [
+                "a" * (_HTTP_ERROR_ALLOWED_ITEM_MAX_CHARS + 10)
+                for _ in range(_HTTP_ERROR_ALLOWED_MAX_ITEMS + 3)
+            ],
+            "detail": "diagnostic exception text must not be forwarded",
+        }
+    ).encode("utf-8")
+    assert len(body) <= _HTTP_ERROR_BODY_MAX_BYTES
+    error, _source = _http_error_with_body(body)
+    monkeypatch.setattr(urllib.request, "urlopen", Mock(side_effect=error))
+
+    result = mcp_server._http("POST", "/context", {"query": "q"})
+
+    assert len(result["error"]) == _HTTP_ERROR_STRING_MAX_CHARS
+    assert len(result["allowed"]) == _HTTP_ERROR_ALLOWED_MAX_ITEMS
+    assert all(
+        len(item) == _HTTP_ERROR_ALLOWED_ITEM_MAX_CHARS
+        for item in result["allowed"]
+    )
+    assert "detail" not in result
+
+
+@pytest.mark.parametrize(
+    ("body", "body_kind"),
+    [
+        (
+            b'{"error":"' + b"x" * _HTTP_ERROR_BODY_MAX_BYTES + b'"}',
+            "json",
+        ),
+        (b"not-json:" + b"x" * _HTTP_ERROR_BODY_MAX_BYTES, "non-json"),
+    ],
+    ids=("oversized-json", "oversized-non-json"),
+)
+def test_http_error_rejects_oversized_bodies_without_echo(
+    monkeypatch, body, body_kind
+):
+    """Overflowing JSON and text error bodies are neither parsed nor echoed."""
+    from cymatix_context import mcp_server
+
+    assert len(body) > _HTTP_ERROR_BODY_MAX_BYTES
+    error, source = _http_error_with_body(body)
+    monkeypatch.setattr(urllib.request, "urlopen", Mock(side_effect=error))
+
+    result = mcp_server._http("POST", "/context", {"query": "q"})
+
+    assert result == {
+        "_error": "HTTP 400",
+        "_detail": "HTTP error response body exceeded 8192-byte safety limit.",
+    }
+    assert source.read_sizes == [_HTTP_ERROR_BODY_MAX_BYTES + 1], body_kind
+
+
+def test_http_error_keeps_non_json_detail_bounded(monkeypatch):
+    """A normal-size non-JSON error retains the legacy capped detail field."""
+    from cymatix_context import mcp_server
+
+    error, _source = _http_error_with_body(b"x" * 700)
+    monkeypatch.setattr(urllib.request, "urlopen", Mock(side_effect=error))
+
+    result = mcp_server._http("POST", "/context", {"query": "q"})
+
+    assert result == {"_error": "HTTP 400", "_detail": "x" * 500}
+
+
 def test_cymatix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
     """The cymatix_announce MCP tool delegates to AgentBridge.announce()."""
     from cymatix_context import mcp_server
@@ -306,12 +548,36 @@ def restore_mcp_profile():
 def test_lean_mcp_profile_is_default(monkeypatch, restore_mcp_profile):
     """Unset CYMATIX_MCP_FULL → only the core tools are registered. After the
     0.8.5 clean break there are no helix_* compat aliases, so the lean surface
-    is exactly the 5 canonical cymatix_* core tools."""
+    is exactly the 6 canonical cymatix_* core tools."""
     m = _reload_mcp(monkeypatch, full=False)
     names = set(m.mcp._tool_manager._tools.keys())
     assert names == set(m._effective_core_tools())
     assert set(m._MCP_CORE_TOOLS) <= names
-    assert len(names) == 5
+    assert len(names) == 6
+
+
+def test_lean_profile_is_exactly_six_tools():
+    """The portable skill and the default MCP surface cannot drift apart."""
+    from cymatix_context import mcp_server
+
+    assert mcp_server._effective_core_tools() == {
+        "cymatix_context",
+        "cymatix_context_packet",
+        "cymatix_ingest",
+        "cymatix_health",
+        "cymatix_sessions_list",
+        "cymatix_announce",
+    }
+
+
+def test_protocol_namespace_and_context_schema_are_stable():
+    """The MCP namespace stays stable while context exposes canonical fields."""
+    from cymatix_context import mcp_server
+
+    assert mcp_server.mcp.name == "cymatix"
+    schema = mcp_server.mcp._tool_manager._tools["cymatix_context"].parameters
+    assert {"model", "caller_model_class"} <= set(schema["properties"])
+    assert "downstream_model" not in schema["properties"]
 
 
 def test_full_mcp_surface_is_opt_in(monkeypatch, restore_mcp_profile):

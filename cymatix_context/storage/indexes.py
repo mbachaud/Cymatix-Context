@@ -206,6 +206,7 @@ def sync_entity_graph(
     gene: Gene,
     entity_graph_enabled: bool,
     autolink_enabled: bool = True,
+    hub_cutoff: int = 0,
 ) -> None:
     """Index entities and auto-link by shared entities.
 
@@ -213,6 +214,14 @@ def sync_entity_graph(
     entity rows but skips COVER-edge formation — the per-insert
     ``auto_link_by_entity`` GROUP BY sweeps every posting row of the gene's
     entities, O(hub size) per insert, and hub postings grow with the corpus.
+
+    ``hub_cutoff`` — posting-count bound for the auto-link probe set
+    ([ingestion] entity_autolink_hub_cutoff); 0 = legacy behavior. See
+    :func:`co_activation.auto_link_by_entity`. Counts are taken after
+    this gene's own rows land, so they include the self-posting.
+
+    Composition (off > cutoff > legacy): ``autolink_enabled=False`` skips
+    linking entirely; otherwise ``hub_cutoff`` bounds the probe set.
     """
     if not entity_graph_enabled or not gene.promoter.entities:
         return
@@ -226,7 +235,7 @@ def sync_entity_graph(
             (ent.lower(), gene_id),
         )
     if autolink_enabled:
-        auto_link_by_entity(gene_id, gene.promoter.entities, cur)
+        auto_link_by_entity(gene_id, gene.promoter.entities, cur, hub_cutoff=hub_cutoff)
 
 
 # ---------------------------------------------------------------------------

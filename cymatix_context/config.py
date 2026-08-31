@@ -177,6 +177,30 @@ class BudgetConfig:
     # to opt out (documents legitimately containing literal "<cymatix:"
     # then ship verbatim).
     neutralize_control_tags: bool = True
+    # W2.4 (2026-08-28): delivered-seat floor, guarding BOTH seat-losing
+    # mechanisms. (1) The classifier's per-rule assembly cap (2/5/6/8,
+    # retrieval/query_classifier.py) cuts the candidate list BEFORE splice
+    # — the measured crater cat-(b) mechanism (w1c receipts:
+    # splice_n_candidates == delivered_count on every such needle; gold at
+    # map rank 9-12 above the cap never gets a seat); the floor lifts that
+    # cap to at least N (model-class caps like small_moe=4 are a model-
+    # capability concern and stay untouched). (2) The Stage-5 budget
+    # trimmer's whole-document eviction; at the floor the trimmer switches
+    # to shrinking the LARGEST parts (tail-truncation, header-preserving,
+    # marked " ...[budget-trimmed]") until the prompt fits — and if every
+    # part is at the truncation char floor and the prompt still overflows,
+    # eviction resumes below the floor: the token budget always wins last.
+    # 0 = both mechanisms byte-identical legacy. Wave-1's 235/235
+    # coupling attribution unlocked cap raises (phase-plan L1.2); this is
+    # the knob-gated form.
+    # GRADUATED 12 (2026-08-30, [w24-floor-flip]): receipt-gated on three
+    # corpora with zero paired delivered losses — ERB 829k .630→.668
+    # (+18/−0, w24 arm receipt), EnronQA v2 .820→.856 (+18/−0), EnronQA
+    # padded 597k .776→.792 (+8/−0); ranking bases (r@12/fr@12) untouched
+    # in every cell. Rows: BASELINES 2026-08-30-v091-gate-sweep +
+    # 2026-08-27-ranking-under-width-wave1; revert = git revert of the
+    # [w24-floor-flip] commit.
+    min_delivered_docs: int = 12
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
@@ -217,6 +241,14 @@ class BudgetConfig:
     tier_focused_ratio: float = 1.8  # Issue #207 item 4: top/mean ratio at-or-above which retrieval enters FOCUSED tier (top 6 docs). Prior literal 1.8 in pipeline/tier_logic.py.
     tier_hard_floor_frac: float = 0.15  # Issue #207 item 4: score-gate hard floor — drop candidates scoring below this fraction of the top score (they move to the shadow pool at 0.5x weight). Prior literal 0.15 in pipeline/tier_logic.py.
     tier_lagrange_frac: float = 0.7  # Issue #207 item 4: Lagrange pull-back threshold — a shadow-pool doc needs standalone score >= this fraction of the winners' floor (plus <20% co-activation overlap) to be pulled back. Prior literal 0.7 in pipeline/tier_logic.py.
+
+    def __post_init__(self) -> None:
+        # W2.4: fail loud at load, not silently at assembly time.
+        if self.min_delivered_docs < 0:
+            raise ValueError(
+                "[budget] min_delivered_docs must be >= 0 "
+                f"(0 = legacy eviction-only trim), got {self.min_delivered_docs!r}"
+            )
 
 
 @dataclass
@@ -312,6 +344,16 @@ class IngestionConfig:
     # The loader warns-and-ignores unknown keys, so configs still carrying it
     # get a startup warning, not a failure.
     entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
+    # Posting-count hub cutoff for ingest-time entity auto-linking (the
+    # relation=5 COVER edges). > 0 drops entities with more than this many
+    # entity_graph postings from the probe set before the per-insert GROUP BY
+    # — bounds the O(hub-posting-list) sweep that made ingest O(N^2) on the
+    # enronqa_padded bed (89.5% of writer wall time, 148.9 ms/insert vs
+    # 7.4 ms without the two MIME hubs; benchmarks/dogfood/receipts/
+    # ingest_decay_enronqa_2026-08-30.json). PKI_NOISE_CUTOFF=200 is the
+    # precedent value for the default-flip proposal tracked in #411. 0 =
+    # disabled = legacy behavior, byte-identical.
+    entity_autolink_hub_cutoff: int = 0
     # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
     # (genes.embedding_dense_v2) inline at ingest. This is purely the WRITE
     # path — retrieval gates on [retrieval] dense_embedding_enabled
@@ -660,6 +702,33 @@ class RetrievalConfig:
     # operator knows the arm mix — prefer rrf_gate_top_m on a mixed-arm store
     # (issue #260 v1; a per-arm dict floor is deferred).
     rrf_gate_min_score: float = 0.0
+    # W2.1 (2026-08-28): COVER-edge walk — query-time mass spread over the
+    # ingest-built gene_relations COVER graph (relation=5, entity-overlap
+    # kNN; 8.5M edges on the 947k v09x bed, previously zero query-time
+    # consumers). Grounding + pre-flight:
+    # docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md
+    # (72% of static semantic gold within 2 hops of the head; 16/61 at one
+    # hop in a ~960-doc frontier). Ships INERT (enabled=False). When on,
+    # the walk runs on the RRF path only and enters ranking two ways, both
+    # confined per the wave-1 banding lesson: (a) a "cover_walk" rerank
+    # class applied ONLY when the query's effective combinator is eps_band
+    # (never a free additive), scaled by band_weight; (b) append-below-head:
+    # the top append_slots walk-rescued docs (mass >= append_min_mass, not
+    # already in the kept head) fill the LAST append_slots positions of the
+    # final top-k; displaced head docs slide below, they do not vanish.
+    # seed_m = walk seeds (top-M of the pure-fused order); degree_cap = hub
+    # guard (nodes above it are reachable but never expanded); frontier_cap
+    # bounds per-hop wavefront (SR precedent). Default flip is receipt-gated
+    # (w2_cover_walk arm).
+    cover_walk_enabled: bool = False
+    cover_walk_seed_m: int = 12
+    cover_walk_hops: int = 2
+    cover_walk_gamma: float = 0.5
+    cover_walk_degree_cap: int = 1000
+    cover_walk_frontier_cap: int = 2000
+    cover_walk_append_slots: int = 3
+    cover_walk_append_min_mass: float = 0.0
+    cover_walk_band_weight: float = 1.0
     # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Under
     # fusion_mode=="rrf" the four rerank classes (authority / sema_boost /
     # party_attr / access_rate) combine with the fused RRF score via this
@@ -941,6 +1010,44 @@ class RetrievalConfig:
                         f"{_cls!r}] = {_comb!r}: unknown combinator "
                         f"(expected one of {VALID_COMBINATORS})"
                     )
+
+        # W2.1: cover_walk knob bounds — fail loud at load, not silently at
+        # query time (house rule). gamma is a per-hop damping factor, so
+        # (0, 1]; degree_cap 0 is legal (expand nothing = 1-hop-receive
+        # only); append_slots 0 disables the append lane while keeping the
+        # band class.
+        if self.cover_walk_seed_m < 1:
+            raise ValueError(
+                f"[retrieval] cover_walk_seed_m must be >= 1, got {self.cover_walk_seed_m!r}"
+            )
+        if self.cover_walk_hops < 1:
+            raise ValueError(
+                f"[retrieval] cover_walk_hops must be >= 1, got {self.cover_walk_hops!r}"
+            )
+        if not (0.0 < self.cover_walk_gamma <= 1.0):
+            raise ValueError(
+                f"[retrieval] cover_walk_gamma must be in (0, 1], got {self.cover_walk_gamma!r}"
+            )
+        if self.cover_walk_degree_cap < 0:
+            raise ValueError(
+                f"[retrieval] cover_walk_degree_cap must be >= 0, got {self.cover_walk_degree_cap!r}"
+            )
+        if self.cover_walk_frontier_cap < 1:
+            raise ValueError(
+                f"[retrieval] cover_walk_frontier_cap must be >= 1, got {self.cover_walk_frontier_cap!r}"
+            )
+        if self.cover_walk_append_slots < 0:
+            raise ValueError(
+                f"[retrieval] cover_walk_append_slots must be >= 0, got {self.cover_walk_append_slots!r}"
+            )
+        if self.cover_walk_append_min_mass < 0:
+            raise ValueError(
+                f"[retrieval] cover_walk_append_min_mass must be >= 0, got {self.cover_walk_append_min_mass!r}"
+            )
+        if self.cover_walk_band_weight < 0:
+            raise ValueError(
+                f"[retrieval] cover_walk_band_weight must be >= 0, got {self.cover_walk_band_weight!r}"
+            )
 
         # Issue #341: rerank_enabled_by_class validation — mirrors the
         # rerank_combinator_by_class block above (unknown class key fails
@@ -1426,6 +1533,8 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             legibility_enabled=bool(b.get("legibility_enabled", cfg.budget.legibility_enabled)),
             session_delivery_enabled=bool(b.get("session_delivery_enabled", cfg.budget.session_delivery_enabled)),
             neutralize_control_tags=bool(b.get("neutralize_control_tags", cfg.budget.neutralize_control_tags)),
+            # W2.4: delivered-seat floor. Default-inert (0).
+            min_delivered_docs=int(b.get("min_delivered_docs", cfg.budget.min_delivered_docs)),
             abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
             foveated_enabled=bool(b.get("foveated_enabled", cfg.budget.foveated_enabled)),
             foveated_alpha=float(b.get("foveated_alpha", cfg.budget.foveated_alpha)),
@@ -1512,6 +1621,12 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             splade_enabled=i.get("splade_enabled", cfg.ingestion.splade_enabled),
             rerank_model=i.get("rerank_model", cfg.ingestion.rerank_model),
             entity_graph=i.get("entity_graph", cfg.ingestion.entity_graph),
+            entity_autolink_hub_cutoff=int(
+                i.get(
+                    "entity_autolink_hub_cutoff",
+                    cfg.ingestion.entity_autolink_hub_cutoff,
+                )
+            ),
             dense_embed_on_ingest=i.get(
                 "dense_embed_on_ingest", cfg.ingestion.dense_embed_on_ingest
             ),
@@ -1626,6 +1741,16 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             rrf_gate_enabled=bool(r.get("rrf_gate_enabled", cfg.retrieval.rrf_gate_enabled)),
             rrf_gate_top_m=int(r.get("rrf_gate_top_m", cfg.retrieval.rrf_gate_top_m)),
             rrf_gate_min_score=float(r.get("rrf_gate_min_score", cfg.retrieval.rrf_gate_min_score)),
+            # W2.1: COVER-edge walk. Default-inert (enabled=False).
+            cover_walk_enabled=bool(r.get("cover_walk_enabled", cfg.retrieval.cover_walk_enabled)),
+            cover_walk_seed_m=int(r.get("cover_walk_seed_m", cfg.retrieval.cover_walk_seed_m)),
+            cover_walk_hops=int(r.get("cover_walk_hops", cfg.retrieval.cover_walk_hops)),
+            cover_walk_gamma=float(r.get("cover_walk_gamma", cfg.retrieval.cover_walk_gamma)),
+            cover_walk_degree_cap=int(r.get("cover_walk_degree_cap", cfg.retrieval.cover_walk_degree_cap)),
+            cover_walk_frontier_cap=int(r.get("cover_walk_frontier_cap", cfg.retrieval.cover_walk_frontier_cap)),
+            cover_walk_append_slots=int(r.get("cover_walk_append_slots", cfg.retrieval.cover_walk_append_slots)),
+            cover_walk_append_min_mass=float(r.get("cover_walk_append_min_mass", cfg.retrieval.cover_walk_append_min_mass)),
+            cover_walk_band_weight=float(r.get("cover_walk_band_weight", cfg.retrieval.cover_walk_band_weight)),
             # Issue #255 (PR-2): post-fusion rerank combinator + its two
             # scale-free knobs. Default "additive" is byte-identical to the
             # shipped fused+rerank_additive finalization.

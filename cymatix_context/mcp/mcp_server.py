@@ -76,20 +76,11 @@ Env:
     CYMATIX_AGENT_KIND     - optional ingest attribution agent kind
                            (defaults to CYMATIX_MCP_HOST when omitted)
     CYMATIX_MCP_FULL       - expose the full 24-tool surface. Default (unset)
-                           serves the lean 5-tool core (cymatix_context,
+                           serves the lean 6-tool core (cymatix_context,
                            cymatix_context_packet, cymatix_ingest, cymatix_health,
-                           cymatix_sessions_list) to cut ~4-5K schema tokens per
+                           cymatix_sessions_list, cymatix_announce) to cut ~4-5K schema tokens per
                            agent session. Set 1/true/yes/on for the full
                            admin/diagnostic/debug/alias surface.
-    CYMATIX_MCP_COMPAT   - deprecated cymatix_* tool aliases (0.8.0 rename).
-                           Default ON for the deprecation window: every
-                           cymatix_* tool is also callable under its old
-                           cymatix_* name, and the lean core carries its 5
-                           aliases (10 tools total). Set 0/false/off once
-                           clients are migrated to drop the aliases and
-                           their per-turn schema-token cost.
-                           (CYMATIX_MCP_COMPAT is honored equivalently.)
-
 Composition hook: Headroom already ships `codebase-memory-mcp` (manual
 install, off-by-default as of 2026-04-14 per Tejas on Discord). Its
 scope is the call graph — `trace_call_path(function_name, direction)`
@@ -121,10 +112,69 @@ from typing import Any, Dict, List, Optional
 # exactly what this module needs. See docs/design/2026-08-16-mcp-2x-migration.md.
 from mcp.server.mcpserver import MCPServer
 
+from ..schemas import CALLER_MODEL_CLASS_DEFAULT, CallerModelClass
+
 log = logging.getLogger("cymatix.mcp")
 
 CYMATIX_URL = os.environ.get("CYMATIX_MCP_URL", "http://127.0.0.1:11437").rstrip("/")
 TIMEOUT_S = float(os.environ.get("CYMATIX_MCP_TIMEOUT", "30"))
+
+# HTTP error bodies originate outside the adapter. Eight KiB easily holds the
+# compact validation envelopes returned by Cymatix routes while preventing an
+# upstream error page from consuming the MCP caller's context or memory.
+_HTTP_ERROR_BODY_MAX_BYTES = 8 * 1024
+_HTTP_ERROR_STRING_MAX_CHARS = 512
+_HTTP_ERROR_ALLOWED_MAX_ITEMS = 16
+_HTTP_ERROR_ALLOWED_ITEM_MAX_CHARS = 128
+
+_CALLER_MODEL_CLASS_ALLOWED = frozenset(item.value for item in CallerModelClass)
+
+
+def _configured_caller_model_class(value: Optional[str] = None) -> str:
+    """Return the validated adapter-wide caller-model-class default."""
+    raw = value if value is not None else os.environ.get("CYMATIX_CALLER_MODEL_CLASS")
+    if raw is None or not str(raw).strip():
+        return CALLER_MODEL_CLASS_DEFAULT
+    normalized = str(raw).strip()
+    if normalized not in _CALLER_MODEL_CLASS_ALLOWED:
+        allowed = ", ".join(sorted(_CALLER_MODEL_CLASS_ALLOWED))
+        raise ValueError(
+            "Invalid CYMATIX_CALLER_MODEL_CLASS="
+            f"{normalized!r}; allowed values: {allowed}"
+        )
+    return normalized
+
+
+MCP_CALLER_MODEL_CLASS_DEFAULT = _configured_caller_model_class()
+
+
+def _bounded_http_error_string(value: Any) -> Optional[str]:
+    """Return a route-safe error string with a fixed MCP response bound."""
+    if not isinstance(value, str):
+        return None
+    return value[:_HTTP_ERROR_STRING_MAX_CHARS]
+
+
+def _safe_http_error_payload(payload: Any) -> Dict[str, Any]:
+    """Keep only validation-safe, bounded JSON error fields from an HTTP route."""
+    if not isinstance(payload, dict):
+        return {}
+
+    result: Dict[str, Any] = {}
+    error = _bounded_http_error_string(payload.get("error"))
+    if error is not None:
+        result["error"] = error
+
+    # /fingerprint currently emits ``detail: str(exc)`` on internal errors,
+    # so JSON detail/message fields are not safe to expose over MCP.
+    allowed = payload.get("allowed")
+    if isinstance(allowed, list):
+        result["allowed"] = [
+            item[:_HTTP_ERROR_ALLOWED_ITEM_MAX_CHARS]
+            for item in allowed[:_HTTP_ERROR_ALLOWED_MAX_ITEMS]
+            if isinstance(item, str)
+        ]
+    return result
 
 # Stable session_id for this MCP subprocess lifetime. Used to attribute
 # every `cymatix_context` call from this host to the same row in
@@ -193,12 +243,25 @@ def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]
             except json.JSONDecodeError:
                 return {"_raw": raw}
     except urllib.error.HTTPError as exc:
+        error_body = exc.read(_HTTP_ERROR_BODY_MAX_BYTES + 1)
+        if len(error_body) > _HTTP_ERROR_BODY_MAX_BYTES:
+            return {
+                "_error": f"HTTP {exc.code}",
+                "_detail": (
+                    "HTTP error response body exceeded "
+                    f"{_HTTP_ERROR_BODY_MAX_BYTES}-byte safety limit."
+                ),
+            }
+        raw = error_body.decode("utf-8", errors="replace")
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError:
+            payload = None
+        if isinstance(payload, dict):
+            return {**_safe_http_error_payload(payload), "_error": f"HTTP {exc.code}"}
         # Preserved: _normalize_health_payload consumes this structured
         # shape to render a readable status card for the MCP host.
-        return {
-            "_error": f"HTTP {exc.code}",
-            "_detail": exc.read().decode("utf-8", errors="replace")[:500],
-        }
+        return {"_error": f"HTTP {exc.code}", "_detail": raw[:500]}
     except urllib.error.URLError as exc:
         # Preserved: _normalize_health_payload branches on the literal
         # "cymatix unreachable" marker to surface a restart hint.
@@ -360,7 +423,8 @@ def _default_ingest_identity() -> Dict[str, Any]:
 def cymatix_context(
     query: str,
     decoder_mode: Optional[str] = None,
-    downstream_model: Optional[str] = None,
+    model: Optional[str] = None,
+    caller_model_class: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Build a compressed context window for `query` from the cymatix knowledge store.
@@ -368,19 +432,28 @@ def cymatix_context(
     decoder_mode: "condensed" (default), "broad", or "dense". Controls
         how documents are unfolded into tokens. "broad" → more documents, less
         per-document detail. "condensed" → fewer documents, more detail each.
-    downstream_model: hint string so cymatix can size the budget for the
+    model: hint string so cymatix can size the budget for the
         target model (e.g. "claude-opus-4-6", "gpt-4").
+    caller_model_class: retrieval/render policy: "generic", "small_moe",
+        or "frontier". Explicit call values are validated by the HTTP server.
     session_id: explicit session id for the working-set register. When
         omitted, defaults to MCP_SESSION_ID (CYMATIX_MCP_HANDLE or
         mcp-<pid>) so every call from this MCP subprocess is attributed
         to the same session. Pass a fresh value to isolate benches.
     """
-    body: Dict[str, Any] = {"query": query}
+    body: Dict[str, Any] = {
+        "query": query,
+        "session_id": session_id or MCP_SESSION_ID,
+        "caller_model_class": (
+            caller_model_class
+            if caller_model_class is not None
+            else MCP_CALLER_MODEL_CLASS_DEFAULT
+        ),
+    }
     if decoder_mode:
         body["decoder_mode"] = decoder_mode
-    if downstream_model:
-        body["downstream_model"] = downstream_model
-    body["session_id"] = session_id or MCP_SESSION_ID
+    if model is not None:
+        body["model"] = model
     if MCP_AGENT_HANDLE:
         # Plumb agent identity through so cymatix's per-agent telemetry
         # labels (request rate / latency by agent) reflect THIS shim,
@@ -1029,6 +1102,7 @@ _MCP_CORE_TOOLS = frozenset({
     "cymatix_ingest",          # contribute to the knowledge store
     "cymatix_health",          # readiness probe
     "cymatix_sessions_list",   # sibling-agent awareness (identity contract)
+    "cymatix_announce",        # descriptive model/session registration
 })
 
 _TRUTHY = frozenset({"1", "true", "yes", "on"})

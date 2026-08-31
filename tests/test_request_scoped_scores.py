@@ -37,7 +37,7 @@ from tests.conftest import MockCompressorBackend, make_gene, make_cymatix_config
 def _make_manager():
     cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=12),
+        budget=BudgetConfig(max_genes_per_turn=12, min_delivered_docs=0),  # legacy evict-path tests ([w24-floor-flip])
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )
