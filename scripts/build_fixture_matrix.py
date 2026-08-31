@@ -792,6 +792,17 @@ PROFILES: dict[str, dict] = {
         "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
+    "locomo_obs": {
+        "label": "LoCoMo observation-enrichment variant (turns + cues + observation bridge docs)",
+        # Write-time abstraction A/B vs the base "locomo" bed — emitted by
+        # scripts/build_locomo_obs_variant.py; needle sets under
+        # benchmarks/dogfood/locomo_obs.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\locomo-plus\corpus_obs"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
     "enronqa_padded": {
         "label": "EnronQA + raw-Enron distractor padding (~500k emails)",
         # Padded variant of "enronqa": same QA corpus (gold untouched) plus

@@ -104,3 +104,26 @@ Ready-made follow-up cell: LoCoMo ships an LLM-derived `observation` layer
 observations as bridge documents is a zero-model-cost enrichment A/B for
 the multihop/commonsense classes (the cognitive cues have no observation
 layer — their enrichment requires generating one, i.e. the ribosome lane).
+
+## Lane 1b — observation-enrichment three-way (write-time abstraction, priced)
+
+Receipt: `benchmarks/dogfood/locomo_obs/receipts/obs_enrichment_threeway_2026-08-31.json`.
+
+| cell | bed | gold basis | delivered |
+|---|---|---|---:|
+| base | turns+cues | turns | .4348 |
+| control | +2,541 observation docs | turns only | **.2645** |
+| enriched | +2,541 observation docs | turns ∪ observations | **.5189** |
+
+The control settles the mechanism: **displacement, not bridging.** The
+abstraction docs out-compete raw dialogue for delivery seats (they're
+written in the question register), collapsing turn-gold delivery by 40%
+when they don't count, and lifting answer-carrying delivery by +8.4pp when
+they do. Every QA class gains on the union basis (multihop +12.8pp,
+temporal +13.1pp); cognitive stays at floor (no observation layer exists
+for cues — generating one IS the ribosome lane).
+
+Enrichment-lane design consequence: co-ingested abstractions must carry
+**source linkage** (support_span/provenance, or delivery-time source-set
+dedup) — otherwise the corpus's raw evidence loses its seats to its own
+summaries.
