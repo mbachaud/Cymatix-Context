@@ -40,8 +40,14 @@ def _assemble(mgr, genes, gene_ids, *, expression, ribosome=100):
 # ═══ Task 1: knob ══════════════════════════════════════════════════════
 
 
-def test_default_is_zero_and_inert_field():
-    assert BudgetConfig().min_delivered_docs == 0
+def test_default_is_twelve_post_graduation():
+    # [w24-floor-flip] 2026-08-30: graduated 0 -> 12 on three-corpus
+    # receipts (+18/-0, +18/-0, +8/-0 paired delivered; ranking untouched).
+    assert BudgetConfig().min_delivered_docs == 12
+
+
+def test_zero_restores_legacy_inert_field():
+    assert BudgetConfig(min_delivered_docs=0).min_delivered_docs == 0
 
 
 def test_negative_floor_fails_loud():

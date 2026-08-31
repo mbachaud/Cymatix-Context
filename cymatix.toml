@@ -82,6 +82,7 @@ lazy_encoders = true
 [budget]
 ribosome_tokens = 3000                  # fixed decoder prompt
 expression_tokens = 7000                # ~7K expressions cap (BROAD tighten 2026-05-12, bench-gated #73). Code default matches since the 2026-06-12 default-honesty pass.
+min_delivered_docs = 12                 # W2.4 delivered-seat floor — GRADUATED 2026-08-30 ([w24-floor-flip]): +18/−0, +18/−0, +8/−0 paired delivered on ERB 829k / EnronQA v2 / EnronQA padded; 0 = legacy eviction-only trim
 max_genes_per_turn = 12
 max_fingerprints_per_turn = 40          # navigation-first fingerprint payload cap (final returned count, not frontier width)
 splice_aggressiveness = 0.3             # 0=keep all, 1=ruthless trim (lower preserves more literal detail)

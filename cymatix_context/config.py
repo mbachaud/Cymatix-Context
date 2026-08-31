@@ -190,11 +190,17 @@ class BudgetConfig:
     # marked " ...[budget-trimmed]") until the prompt fits — and if every
     # part is at the truncation char floor and the prompt still overflows,
     # eviction resumes below the floor: the token budget always wins last.
-    # 0 (default) = both mechanisms byte-identical legacy. Wave-1's 235/235
+    # 0 = both mechanisms byte-identical legacy. Wave-1's 235/235
     # coupling attribution unlocked cap raises (phase-plan L1.2); this is
-    # the knob-gated form. Flip is receipt-gated (w24 arm);
-    # docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md.
-    min_delivered_docs: int = 0
+    # the knob-gated form.
+    # GRADUATED 12 (2026-08-30, [w24-floor-flip]): receipt-gated on three
+    # corpora with zero paired delivered losses — ERB 829k .630→.668
+    # (+18/−0, w24 arm receipt), EnronQA v2 .820→.856 (+18/−0), EnronQA
+    # padded 597k .776→.792 (+8/−0); ranking bases (r@12/fr@12) untouched
+    # in every cell. Rows: BASELINES 2026-08-30-v091-gate-sweep +
+    # 2026-08-27-ranking-under-width-wave1; revert = git revert of the
+    # [w24-floor-flip] commit.
+    min_delivered_docs: int = 12
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
