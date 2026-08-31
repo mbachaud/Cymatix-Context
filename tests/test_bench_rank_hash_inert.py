@@ -102,7 +102,7 @@ def _make_manager() -> CymatixContextManager:
     """Same fixture shape as tests/test_packet_delivery_visibility.py."""
     cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=12),
+        budget=BudgetConfig(max_genes_per_turn=12, min_delivered_docs=0),  # goldens frozen under v0.9.0 defaults ([w24-floor-flip])
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
     )
     mgr = CymatixContextManager(cfg)
@@ -124,7 +124,7 @@ def _delivery_from_manager() -> dict:
 
 def _context_response() -> dict:
     client = make_client(
-        make_cymatix_config(budget=BudgetConfig(max_genes_per_turn=12)))
+        make_cymatix_config(budget=BudgetConfig(max_genes_per_turn=12, min_delivered_docs=0)))  # v0.9.0 golden ([w24-floor-flip])
     capture._seed_topic_genes(
         client.app.state.cymatix.genome, capture.SEEDED_GENE_COUNT)
     resp = client.post("/context", json={"query": capture.FACTUAL_QUERY})

@@ -608,6 +608,7 @@ def build_genome_kwargs(config, sema_codec=None) -> dict:
         splade_auto_enable_below_genes=ingestion.splade_auto_enable_below_genes,
         splade_auto_disable_above_genes=ingestion.splade_auto_disable_above_genes,
         entity_graph=ingestion.entity_graph,
+        entity_autolink_hub_cutoff=ingestion.entity_autolink_hub_cutoff,
         # Tier-0 PR-1 (2026-05-16): inline BGE-M3 dense write at ingest.
         dense_embed_on_ingest=ingestion.dense_embed_on_ingest,
         sr_enabled=retrieval.sr_enabled,
@@ -646,6 +647,16 @@ def build_genome_kwargs(config, sema_codec=None) -> dict:
         rrf_gate_enabled=retrieval.rrf_gate_enabled,
         rrf_gate_top_m=retrieval.rrf_gate_top_m,
         rrf_gate_min_score=retrieval.rrf_gate_min_score,
+        # W2.1: COVER-edge walk. Default-inert.
+        cover_walk_enabled=retrieval.cover_walk_enabled,
+        cover_walk_seed_m=retrieval.cover_walk_seed_m,
+        cover_walk_hops=retrieval.cover_walk_hops,
+        cover_walk_gamma=retrieval.cover_walk_gamma,
+        cover_walk_degree_cap=retrieval.cover_walk_degree_cap,
+        cover_walk_frontier_cap=retrieval.cover_walk_frontier_cap,
+        cover_walk_append_slots=retrieval.cover_walk_append_slots,
+        cover_walk_append_min_mass=retrieval.cover_walk_append_min_mass,
+        cover_walk_band_weight=retrieval.cover_walk_band_weight,
         # Issue #255 (PR-2): post-fusion rerank combinator + knobs.
         rerank_combinator=retrieval.rerank_combinator,
         rerank_band_delta=retrieval.rerank_band_delta,

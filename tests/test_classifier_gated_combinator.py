@@ -15,12 +15,17 @@ issues/255#issuecomment-5005983077): the proposed map
 (gold_delivered byte-identical) with the median gold rank halved on both
 semantic beds (10k 10→5, 50k 12→6), lift confined to the mapped classes, and
 byte-identical unmapped (xl literal) rows — so it is now the shipped default.
+RE-GRADUATED 2026-08-28 (wave-1 ranking-under-width,
+docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md): the map now
+covers ALL FIVE classes -> eps_band — extending the band to
+arithmetic/factual/procedural was +7/−2 delivered on the 829k v09x bed and
+stacks with rrf_k=20 (receipts ladder_v09x_w1c_*_2026-08-28.json).
 An explicit empty map (``{}``) in TOML still restores the pre-graduation
 byte-identical global-combinator behavior.
 
 Test families:
-  1. config default: the shipped default routes multi_hop/default -> eps_band
-     (the graduation); an EXPLICIT empty map is still byte-identical to the
+  1. config default: the shipped default routes ALL FIVE classes -> eps_band
+     (the 2026-08-28 re-graduation); an EXPLICIT empty map is still byte-identical to the
      global-combinator path (the pre-graduation escape hatch),
   2. resolver: fake classifier class -> combinator (+ not-in-map / empty /
      disabled-classifier fallbacks all resolve to "use the global"),
@@ -86,19 +91,20 @@ from tests.test_retrieval_invariance import _new_store
 # ═══ 1. config default ═════════════════════════════════════════════════
 
 
-def test_shipped_default_routes_multi_hop_and_default_to_eps_band():
-    """GRADUATED 2026-07-16 (PR #293 receipt, issues/255#issuecomment-5005983077):
-    the shipped default now maps multi_hop and default -> eps_band; the other
-    three classes (arithmetic, factual, procedural) are still unmapped and
-    fall back to the global combinator."""
+def test_shipped_default_routes_all_five_classes_to_eps_band():
+    """GRADUATED 2026-07-16 (PR #293 receipt) to {multi_hop, default} ->
+    eps_band; RE-GRADUATED 2026-08-28 (wave-1 ranking-under-width receipts,
+    ladder_v09x_w1c_*_2026-08-28.json) to ALL FIVE classes -> eps_band."""
     rc = RetrievalConfig()
     assert rc.rerank_combinator_by_class == {
-        "multi_hop": "eps_band", "default": "eps_band",
+        "arithmetic": "eps_band",
+        "factual": "eps_band",
+        "procedural": "eps_band",
+        "multi_hop": "eps_band",
+        "default": "eps_band",
     }
-    assert resolve_class_combinator(rc.rerank_combinator_by_class, "multi_hop") == "eps_band"
-    assert resolve_class_combinator(rc.rerank_combinator_by_class, "default") == "eps_band"
-    for cls in ("arithmetic", "factual", "procedural"):
-        assert resolve_class_combinator(rc.rerank_combinator_by_class, cls) is None
+    for cls in VALID_QUERY_CLASSES:
+        assert resolve_class_combinator(rc.rerank_combinator_by_class, cls) == "eps_band"
 
 
 def test_explicit_empty_map_is_still_byte_identical_and_inert():
@@ -474,11 +480,12 @@ def test_build_context_explicit_empty_map_is_byte_identical_global(monkeypatch):
 
 
 def test_build_context_shipped_default_routes_multi_hop_and_default_to_eps_band(monkeypatch):
-    """GRADUATED 2026-07-16 (PR #293 receipt): the shipped default map routes
-    multi_hop and default classes to eps_band end-to-end through
-    build_context. ``auth middleware compare server routes`` classes
-    multi_hop (the ``compare`` connective, no leading wh-word); ``hello
-    there`` classes default (matches no other class)."""
+    """GRADUATED 2026-07-16 (PR #293 receipt), RE-GRADUATED 2026-08-28 to all
+    five classes: the shipped default map routes multi_hop and default
+    classes to eps_band end-to-end through build_context. ``auth middleware
+    compare server routes`` classes multi_hop (the ``compare`` connective,
+    no leading wh-word); ``hello there`` classes default (matches no other
+    class)."""
     default_map = RetrievalConfig().rerank_combinator_by_class
     mgr = _seeded_manager(default_map)
     seen = _spy_combinator(monkeypatch, mgr)

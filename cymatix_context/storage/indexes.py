@@ -205,8 +205,15 @@ def sync_entity_graph(
     gene_id: str,
     gene: Gene,
     entity_graph_enabled: bool,
+    hub_cutoff: int = 0,
 ) -> None:
-    """Index entities and auto-link by shared entities."""
+    """Index entities and auto-link by shared entities.
+
+    ``hub_cutoff`` — posting-count bound for the auto-link probe set
+    ([ingestion] entity_autolink_hub_cutoff); 0 = legacy behavior. See
+    :func:`co_activation.auto_link_by_entity`. Counts are taken after
+    this gene's own rows land, so they include the self-posting.
+    """
     if not entity_graph_enabled or not gene.promoter.entities:
         return
 
@@ -218,7 +225,7 @@ def sync_entity_graph(
             "INSERT OR IGNORE INTO entity_graph (entity, gene_id) VALUES (?, ?)",
             (ent.lower(), gene_id),
         )
-    auto_link_by_entity(gene_id, gene.promoter.entities, cur)
+    auto_link_by_entity(gene_id, gene.promoter.entities, cur, hub_cutoff=hub_cutoff)
 
 
 # ---------------------------------------------------------------------------

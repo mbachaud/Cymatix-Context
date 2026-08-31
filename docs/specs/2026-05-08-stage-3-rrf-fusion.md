@@ -55,7 +55,11 @@ score(d) = Σ_{t ∈ tiers}  weight_t · 1 / (k + rank_t(d))
 ```
 where `rank_t(d)` is `d`'s 1-based rank in tier `t`'s descending-score-ordered list (documents not in tier `t` contribute 0). Constants:
 
-- `k = 60` (Cormack default; configurable as `[retrieval] rrf_k`).
+- `k = 60` (Cormack default; configurable as `[retrieval] rrf_k`). **Shipped
+  default graduated to `k = 20` on 2026-08-28** — wave-1 ranking-under-width
+  measured the sharper head +18/−4 paired r@12 / delivered 0.555→0.630 at
+  829k scale (receipts `ladder_v09x_w1c_*_2026-08-28.json`; plan
+  `docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md`).
 - `weight_t` from helix.toml (post-multipliers above).
 - **Ties.** Stable rank-by-(score desc, gene_id asc). Documents with bitwise-equal float scores get adjacent ranks (NOT shared rank — keeps RRF strictly monotone in input order).
 - **Float tiers** (FTS5 BM25, dense cosine, SEMA cosine): rank by raw score descending.
