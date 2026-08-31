@@ -1,0 +1,1254 @@
+{
+ "needles": [
+  {
+   "name": "enron_000_o",
+   "query": "What three design elements in the kitchen is Phillip Allen seeking help with, according to the email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_000_r",
+   "query": "What specific kitchen features is Phillip Allen looking to modify or enhance with the recipient's design help?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_002_o",
+   "query": "According to the email, what is expected to happen to the Thai economy's growth rate after recording 1.9% GDP growth during the first half of 2001?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_002_r",
+   "query": "What is the expected outcome for the Thai economy after achieving 1.9% GDP growth during the first half of 2001?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_003_o",
+   "query": "What is Byron Woertz's title, according to the email sent to the \"20participants@caiso.com\" email list on an unspecified date, with the subject \"CAISO Notice - Congestion Management Reform Proposal Posting\", about the CAISO's draft Congestion Management Reform recommendation posted on the CAISO's web site at http://www.caiso.com/clientserv/congestionreform.html, which includes a detailed calendar and mentions Stakeholder meetings on July 13 and 14, and specifically mentions that the revised recommendation will be presented to the CAISO Governing Board for discussion and review only on August 1?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_003_r",
+   "query": "According to the email announcing the CAISO's draft Congestion Management Reform recommendation, what is the title of the person who signed off as the Director responsible for Client Relations?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_004_o",
+   "query": "What is the date of the Houston's Termination Log that was used to create the Master Logs, according to Susan Bailey's email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_004_r",
+   "query": "According to Susan Bailey's email, what is the source of the Master Logs that were attached to the email, specifically the date of the log that they were based on?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_006_o",
+   "query": "Who is the editor-in-chief of Blue Dolphin, according to the email about the free investment guide?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_006_r",
+   "query": "According to the email about the free investment guide, what is the name of the editor-in-chief of Blue Dolphin?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_007_o",
+   "query": "According to Kim Theriot's email, who was rebuilding the code for the ConfirmLogic module?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_007_r",
+   "query": "In Kim Theriot's email, which team was tasked with rebuilding the code for the ConfirmLogic module after the new code caused problems with the fixed price and volume information?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_008_o",
+   "query": "According to Dr. Arusi Agbara's email, what would happen if a civil servant like him were to operate a foreign account in his country?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_008_r",
+   "query": "What would be the consequence for Dr. Arusi Agbara, as a civil servant, if he were to open a foreign account in his home country?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_009_o",
+   "query": "Who provided Mauro Formaggio with a great lot of information and advice during his visit to Enron in Houston, according to his email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_009_r",
+   "query": "Who were the Enron colleagues that Mauro Formaggio thanked for providing him with a great lot of information and advice during his visit to Houston?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_010_o",
+   "query": "What is Steve Touchstone's phone number, according to the email he sent to Sandra Brawner?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_010_r",
+   "query": "What contact information does Steve Touchstone provide at the end of his email to Sandra Brawner?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_013_o",
+   "query": "What type of information does the m100 Journal provide to its users, according to the advertisement from Team Marketocracy?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_013_r",
+   "query": "What kind of investment insights or updates can users expect to receive from the m100 Journal, according to the advertisement from Team Marketocracy?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_014_o",
+   "query": "What type of documents, according to Mary McKendree, list future grants or bonus payments as outlined in employment agreements and include a description that may say \"Guaranteed Grant\"?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_014_r",
+   "query": "What type of documents, according to Mary McKendree, include a description that may say \"Guaranteed Grant\" and list future grants or bonus payments as outlined in employment agreements?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_016_o",
+   "query": "What is the URL of the XMS system that employees should use to complete an expense report if they incur expenses, according to the email from Morris Brassfield?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_016_r",
+   "query": "According to the email from Morris Brassfield, what website should employees use to submit their expense reports if they have incurred expenses during their business travel?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_017_o",
+   "query": "What specific topics will be covered by the Houston bureau and the Washington bureau, respectively, according to the Williams Energy News Live email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_017_r",
+   "query": "What areas of focus will the Houston and Washington bureaus have in their upcoming coverage, according to the Williams Energy News Live email?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_020_o",
+   "query": "What is the title of the book written by Vinita Hampton Wright, according to the \"CHRISTIAN BOOK OF THE DAY\" section of the Christian Quote of the Day email from Emazing dated Tuesday, December 12, 2000?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_020_r",
+   "query": "According to the \"CHRISTIAN BOOK OF THE DAY\" section of the Christian Quote of the Day email from Emazing dated Tuesday, December 12, 2000, what is the title of Vinita Hampton Wright's book?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_022_o",
+   "query": "On what date and time did David Delainey forward the email to Shawn Cumberland, according to the email headers?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_022_r",
+   "query": "According to the email headers, when did David Delainey forward the email to Shawn Cumberland?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_023_o",
+   "query": "What action does James Derrick take in response to Steven Pincus' email about career opportunities at Enron?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_023_r",
+   "query": "What does James Derrick do with the information he receives from Steven Pincus regarding his interest in career opportunities at Enron?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_028_o",
+   "query": "What is the contract number and path for Parcel 8867, according to the email notification from PG&E eTrans?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_028_r",
+   "query": "What are the details of the contract and route for Parcel 8867, as specified in the PG&E eTrans notification?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_029_o",
+   "query": "What are the three specific aspects of the upcoming move to Enron Center South that Elizabeth Webb is asking the recipients to comment on for the newsletter?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_029_r",
+   "query": "What specific details about the upcoming move to Enron Center South is Elizabeth Webb requesting that the recipients provide for inclusion in the newsletter?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_035_o",
+   "query": "What is the margin requirement for the fund brokerage contracts, according to Kent Miller's email about the status of trading activities?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_035_r",
+   "query": "According to Kent Miller's update on trading activities, what is the specified margin requirement for the fund brokerage contracts that are still pending?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_036_o",
+   "query": "What is the deadline for bids on the Columbia Gas capacity, according to Scott Goodell's email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_036_r",
+   "query": "According to Scott Goodell's email, by what time on March 15th must all bids on the posted capacity be submitted?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_039_o",
+   "query": "What is the estimated rate for a backhaul on IT, according to Phil Demoes' email about the Elba pipeline project?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_039_r",
+   "query": "According to Phil Demoes' email, what is the approximate cost of a backhaul on IT for the Elba pipeline project?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_040_o",
+   "query": "According to Marcel Hawiger, what specific location was affected by the alleged abuses by El Paso Natural Gas Co. and other interstate marketers that he mentioned as an example of potential \"gouging\" in the context of the CA regulators' approval of unbundling for SoCalGas' pipe/storage system?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_040_r",
+   "query": "Marcel Hawiger mentioned the alleged abuses by El Paso Natural Gas Co. and other interstate marketers as an example of potential \"gouging\" in the context of the CA regulators' approval of unbundling for SoCalGas' pipe/storage system. What specific location did he say was impacted by these abuses?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_041_o",
+   "query": "What time does Matt Wilson plan to leave Eugene on Thursday, and what time does he expect to arrive at the Starkey camp?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_041_r",
+   "query": "What are Matt Wilson's travel plans for Thursday, and what time does he anticipate arriving at the Starkey camp?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_042_o",
+   "query": "According to Steve Hall's email, what is stated about the physical delivery of power as a result of the parties agreeing to \"book out\" the James River physical deliveries against EPMI sales to BPA at the Mid-C delivery point, specifically in relation to the flow of power?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_042_r",
+   "query": "According to Steve Hall's email, what is the outcome of the \"book out\" agreement on the physical delivery of power between EPMI and BPA at the Mid-C delivery point?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_043_o",
+   "query": "Who is the recipient of the email from Tim Heizenrader regarding public hydro data sources?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_043_r",
+   "query": "To whom is the email from Tim Heizenrader regarding public hydro data sources addressed?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_048_o",
+   "query": "What is the date mentioned in the \"Bible Verse of the Day\" section of the email, and what presidential election is referenced in the same section?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_048_r",
+   "query": "What is the date of the Bible verse, and which presidential candidates are mentioned in the same section?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_049_o",
+   "query": "What type of document productions did Jeff Coltharp assist in managing during his time as a consultant in the Law Department of an energy company?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_049_r",
+   "query": "In what context did Jeff Coltharp assist in managing document productions during his time as a consultant in the Law Department of an energy company?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_050_o",
+   "query": "According to Keith Holst's email to Zachary McCarroll, when will he be out of the office, and when will he return?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_050_r",
+   "query": "On which days will Keith Holst be unavailable, and when can he be reached again?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_052_o",
+   "query": "What is the estimated cost of sponsoring a child in the Enron Kids program, according to Kevin Hyatt?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_052_r",
+   "query": "What price range does Kevin Hyatt provide for sponsoring a child in the program?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_055_o",
+   "query": "According to Larry Roberts' email, what is the requirement of Section 508 of the Rehabilitation Act, as it applies to federal contractors?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_055_r",
+   "query": "According to Larry Roberts' email, what is the main requirement of Section 508 of the Rehabilitation Act?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_058_o",
+   "query": "To whom should the re-start/integration plans be forwarded, according to Jeffrey Gossett's email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_058_r",
+   "query": "Who is the intended recipient of the re-start/integration plans, as specified by Jeffrey Gossett?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_059_o",
+   "query": "According to the email, what organization imposed the new speed limits that led to the change on I-45 between Hobby Airport and NASA Rd. 1?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_059_r",
+   "query": "According to the email, which organization established the new speed limits that resulted in the change on I-45 between Hobby Airport and NASA Rd. 1?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_060_o",
+   "query": "What is the rate per night of Sloane Apartments' 2-bedroom apartment, according to the email from Roy McKenzie to Tammie Schoppe on Tuesday, November 27, 2001, at 11:33 AM, with the subject \"London Serviced Apartments\"?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_060_r",
+   "query": "What is the price per night of a 2-bedroom apartment at Sloane Apartments, according to the email from Roy McKenzie to Tammie Schoppe on Tuesday, November 27, 2001, at 11:33 AM, with the subject \"London Serviced Apartments\"?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_063_o",
+   "query": "What is the name of the student who was the victim of the police shooting, according to the email from President H. Patrick Swygert?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_063_r",
+   "query": "Who was the person shot by police in nearby Virginia, according to the email from President H. Patrick Swygert?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_065_o",
+   "query": "What is the name of the newsletter in which TheInvestorOnline distributes the company's information and reports, according to the company update email about Simtek Corporation (OTCBB:SRAM)?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_065_r",
+   "query": "According to the company update email about Simtek Corporation (OTCBB:SRAM), what is the name of the newsletter used by TheInvestorOnline to distribute the company's information and reports?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_067_o",
+   "query": "What was the location of the final weld that completed the construction phase of the Alliance pipeline, according to the article forwarded by Lorna Brennan?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_067_r",
+   "query": "Where did the construction phase of the Alliance pipeline come to an end, according to the article forwarded by Lorna Brennan?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_068_o",
+   "query": "Who will pick up Debra Thompson's surplus laptop, according to Karon O'Gorman's email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_068_r",
+   "query": "According to Karon O'Gorman, who is responsible for collecting Debra Thompson's surplus laptop?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_070_o",
+   "query": "What is the link or action that needs to be taken to unsubscribe from the PrizeFlow.com email list, according to the email with the subject \"Super Holiday Gift--$10.00 FREE!\" that contains the link http://www.prizeflow.com/freemoney.html and the unsubscribe link http://jdrmedia1.net/unsub.php?client=jdrmedia1&email=plucci@ect.enron.com&listname=SB&msgid=24120100001?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_070_r",
+   "query": "According to the email with the subject \"Super Holiday Gift--$10.00 FREE!\" that contains the link http://www.prizeflow.com/freemoney.html, what is the procedure for removing oneself from the PrizeFlow.com email list?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_071_o",
+   "query": "What time did Michelle stay up until after her argument with Wade on Saturday night, according to her email to Mike Maggi?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_071_r",
+   "query": "According to Michelle's email, what was the latest time she was awake on Saturday night after her disagreement with Wade?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_073_o",
+   "query": "What price range is Jody expecting for a delivered price off of MOPS, based on gas he's buying at El Paso Blessing, according to Mark Knippa's email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_073_r",
+   "query": "According to Mark Knippa's email, what is the price range that Jody anticipates for a delivered price off of MOPS, given his purchases of gas at El Paso Blessing?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_075_o",
+   "query": "What is the purpose of the meeting scheduled for tomorrow from 1:30 to 2:30 in Conference Room EB16C1, according to the email about the Culture Committee Meeting?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_075_r",
+   "query": "What will be discussed during the meeting tomorrow from 1:30 to 2:30 in Conference Room EB16C1, as mentioned in the email about the Culture Committee Meeting?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_077_o",
+   "query": "What is the current capability of the new version of TrueQuote that Kelly is sending to Brad McKay, according to the email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_077_r",
+   "query": "What is the status of the new version of TrueQuote that Kelly is sending to Brad McKay, according to the email?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_079_o",
+   "query": "What is the main goal of the Stage release of PortCalc version 4.2.3s2, according to Norman Lee's email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_079_r",
+   "query": "What is the primary objective of the Stage release of PortCalc version 4.2.3s2, as stated by Norman Lee in his email?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_080_o",
+   "query": "What is the preferred field of study for a candidate's Bachelor's degree, according to the job description for the Real Time Trading position?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_080_r",
+   "query": "What academic background is recommended for a candidate applying for the Real Time Trading position, according to the job description?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_081_o",
+   "query": "What specific part of the transaction did Ryan at PSCO agree to be billed liquidated damages for, according to the email about the cut on Tag 23841?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_081_r",
+   "query": "According to the email about the cut on Tag 23841, what did Ryan at PSCO agree to in terms of billing for the affected hours?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_082_o",
+   "query": "According to the email, what does the company claim is the highest pay available in their industry for stuffing envelopes?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_082_r",
+   "query": "What does the company claim is the highest pay available in their industry for this type of work?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_085_o",
+   "query": "When does Bradley Penn expect Marathon to be in their new offices in Houston, according to the email about the Lease of Platform Space Agreement (LOPSA)?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_085_r",
+   "query": "According to the email about the Lease of Platform Space Agreement (LOPSA), when does Bradley Penn anticipate that Marathon will occupy their new Houston offices?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_087_o",
+   "query": "What is the name of the company mentioned in the disclaimer at the beginning of the email, along with its officers, directors, employees, or affiliates?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_087_r",
+   "query": "Which company, along with its officers, directors, employees, or affiliates, is explicitly stated to potentially have differing opinions from those expressed in the email?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_091_o",
+   "query": "What was the purpose of the historical Nymex settle file created by Vladi Pimenov, according to the email conversation with John Griffith?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_091_r",
+   "query": "In what context was the historical Nymex settle file created by Vladi Pimenov, according to the email conversation with John Griffith?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_093_o",
+   "query": "What specific skill did Carson demonstrate improvement in during the last 6 months of the previous year, according to Kevin Presto's email about Marcello Romano?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_093_r",
+   "query": "In what area did Carson show significant growth during the last 6 months of the previous year, according to Kevin Presto's email about Marcello Romano?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_095_o",
+   "query": "What is the phone number provided in the email for users to contact the ISC Help Desk if they need further assistance with resetting their password?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_095_r",
+   "query": "If a user encounters issues with the password reset process and requires additional support, what is the telephone number they can call to reach the ISC Help Desk for assistance?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_099_o",
+   "query": "At what time was the email from Mary Cook with the subject \"Firm Gas General Terms and Conditions\" sent, according to the email forwarded by Frank Vickers?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_099_r",
+   "query": "What was the time stamp on the original email from Mary Cook with the subject \"Firm Gas General Terms and Conditions\"?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_105_o",
+   "query": "What are the opening prices for NYMEX March crude oil and February heating oil, according to the Platts Energy Bulletin?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_105_r",
+   "query": "What are the predicted opening prices for NYMEX March crude oil and February heating oil, as reported in the Platts Energy Bulletin?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_107_o",
+   "query": "At what time and on which platform will Jeff Skilling's \"open mike\" session take place, according to the email from eThink?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_107_r",
+   "query": "According to the email from eThink, when and where can employees hear from Jeff Skilling in a live session?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_108_o",
+   "query": "What was Carl Eklund trying to schedule when he asked Richard Sanders about the status of the litigation group meeting previously set for Wednesday, May 9, in Houston, in the email with the subject \"Enron Litigation Day\"?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_108_r",
+   "query": "What was Carl Eklund attempting to arrange when he inquired about the status of the litigation group meeting on May 9 in Houston in his email to Richard Sanders?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_111_o",
+   "query": "What is the minimum purchase amount required to receive the $20 discount mentioned in the email to James Schwieger?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_111_r",
+   "query": "What purchase amount must James Schwieger make in order to be eligible for the $20 discount mentioned in the email?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_112_o",
+   "query": "What is one of the things that Susan Scott mentions she hopes will come along to make her feel better, in addition to a job, a guy, or a location, according to her email to Mo with the subject \"RE: yo\"?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_112_r",
+   "query": "According to Susan Scott's email to Mo with the subject \"RE: yo\", what is one of the things she mentions as a potential solution to her current dissatisfaction, alongside a new job, a romantic partner, or a change of location?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_114_o",
+   "query": "What day of the week is mentioned in Sara Shackleton's email as the day when she sent an email to Dick Varner?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_114_r",
+   "query": "Which day of the week is mentioned in Sara Shackleton's email as the day when she sent an email to Dick Varner?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_115_o",
+   "query": "What is the name of the plan that the task force helped design, according to the email from Alan Aronowitz, Harry Collins, Kevin Sweeney, and Scott Earnest?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_115_r",
+   "query": "What is the name of the plan that the task force was part of, according to the email from Alan Aronowitz, Harry Collins, Kevin Sweeney, and Scott Earnest?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_116_o",
+   "query": "According to the email, when were the Administration comments on the Bingaman draft electricity bill released?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_116_r",
+   "query": "How long ago were the Administration comments on the Bingaman draft electricity bill released, according to the email?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_120_o",
+   "query": "What is the name of the online store where U-Haul boxes and moving supplies can be shipped to the user's door, according to the email about eMove?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_120_r",
+   "query": "What website allows users to purchase U-Haul moving equipment and have it shipped directly to their doorstep, according to the email about eMove?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_122_o",
+   "query": "What are the two phone numbers provided in the email for contacting Jerry Ribnick about the Atlanta LDC Forum?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_122_r",
+   "query": "What contact information is provided in the email for reaching Jerry Ribnick about the Atlanta LDC Forum?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_123_o",
+   "query": "What are the two deal numbers mentioned in the email from Laurie Ellis to Theresa Staab on August 21, 2001, as being associated with the sales to Retex at FUGG for 0701, totaling 75,730 MMBtu's?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_123_r",
+   "query": "In the email sent by Laurie Ellis to Theresa Staab on August 21, 2001, what are the two deal numbers associated with the 75,730 MMBtu's sales to Retex at FUGG for 0701?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_126_o",
+   "query": "What is the condition that must be met before Joseph Stepenovitch's course registration can be processed, according to the email from Training Services?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_126_r",
+   "query": "What action is required before Joseph Stepenovitch's course registration can be finalized, according to the email from Training Services?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_130_o",
+   "query": "What three types of traded instruments are mentioned in the email as being part of the IntercontinentalExchange markets?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_130_r",
+   "query": "What three types of financial instruments are included in the IntercontinentalExchange markets?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_133_o",
+   "query": "According to the California Energy Commission's forecast, what is the expected supply surplus in megawatts in California by July 2002, including new generation?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_133_r",
+   "query": "What is the projected electricity supply surplus in California by July 2002, taking into account the new generation expected to come online, according to the California Energy Commission's forecast?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_136_o",
+   "query": "What specific actions does Rebecca Cantrell plan to take in response to Mark Whitt's email about the CIG Rate case intervention, and what will she do after completing those actions?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_136_r",
+   "query": "What will Rebecca Cantrell do to follow up on Mark Whitt's email about the CIG Rate case intervention, and what information will she provide to him after completing her review of the relevant filings?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_137_o",
+   "query": "What is the purpose of the side letter agreement that ENA will enter into with EAMR, according to the email about the Citizens deal structure summary?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_137_r",
+   "query": "According to the email about the Citizens deal structure summary, what arrangement will ENA make with EAMR regarding the insurance premium payment?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_138_o",
+   "query": "What is the new way that the GDS allows users to select pipelines, according to the email from Bob Brooks?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_138_r",
+   "query": "What new pipeline selection option has been added to the GDS, as described in the email from Bob Brooks?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_139_o",
+   "query": "What is the name of the project that is mentioned in the email as being affected by the issue with the ash spec for the 501F turbine?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_139_r",
+   "query": "Which project is being delayed due to the inability to obtain 0% ash fuel oil for the 501F turbine?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_141_o",
+   "query": "In what location was Iris Meunier when she was talking about Greg Whalley and Jay, according to her email to Greg Whalley?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_141_r",
+   "query": "In what city was Iris Meunier when she mentioned Greg Whalley and Jay to her colleagues, according to her email to Greg Whalley?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_142_o",
+   "query": "Who was Casey Evans cc'd on in the email sent by Stacey White on January 8, 2002, with the subject \"RE: PSEG final settlements\"?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_142_r",
+   "query": "In the email with the subject \"RE: PSEG final settlements\" sent by Stacey White to Laurel Bolt on January 8, 2002, who was included in the cc field?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_145_o",
+   "query": "What is the email address provided in the CAISO notification email for Scheduling Coordinators to contact their Client Relations Account Manager with questions about Charge Type 1487?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_145_r",
+   "query": "What contact email is provided for Scheduling Coordinators to reach out to their Client Relations Account Manager regarding inquiries about Charge Type 1487 in the notification email from CAISO?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_147_o",
+   "query": "What is the name of the association whose working procedures for river traffic SLNG is to provide to Enron and BG, according to James McMillan's email about the SLNG Shipper's Meeting?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_147_r",
+   "query": "According to James McMillan's email about the SLNG Shipper's Meeting, what organization's navigation guidelines for river traffic is SLNG supposed to share with Enron and BG?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_149_o",
+   "query": "On what day did John Zufferli have to fly to Houston on last-minute notice, according to his email to Livia Zufferli?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_149_r",
+   "query": "Which day of the week did John Zufferli's last-minute trip to Houston take place, according to his email to Livia Zufferli?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_150_o",
+   "query": "What is the first step in the basic marketing plan for the Stage Coach, according to jsmith@austintx.com's email to Phillip Allen?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_150_r",
+   "query": "What initial action does jsmith@austintx.com propose in the basic marketing plan for the Stage Coach in his email to Phillip Allen?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_152_o",
+   "query": "What was the quarter-over-quarter increase in investment in Q3, according to the email about French GDP growth?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_152_r",
+   "query": "What was the growth rate of investment in Q3, according to the email about French GDP growth?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_153_o",
+   "query": "What is the URL of Steve Peace's personal webpage, according to the forwarded email from Lewis Nash?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_153_r",
+   "query": "According to the forwarded email from Lewis Nash, what is the address of Steve Peace's personal webpage?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_154_o",
+   "query": "What task or activity is Beth Apollo referring to when she mentions that they need the information to \"include them in the preference search we are doing related to settlements\"?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_154_r",
+   "query": "What type of review or analysis is Beth Apollo conducting when she mentions that they need the information to \"include them in the preference search we are doing related to settlements\"?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_157_o",
+   "query": "What is the potential use of the company jet, according to Geynille Dillingham's email about the Wellesley Team Meeting Minutes?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_157_r",
+   "query": "What is the proposed use of the company jet, according to Geynille Dillingham's email about the Wellesley Team Meeting Minutes?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_163_o",
+   "query": "Where was the previous high attendance for a K-State women's game set, according to the email about the WBK vs. Nebraska game?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_163_r",
+   "query": "At which game was the previous attendance record for K-State women's basketball established?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_167_o",
+   "query": "What is the address of the Kingstad Conference Center, where the January 25 Stakeholder Clarification Meeting will be held?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_167_r",
+   "query": "Where will the January 25 Stakeholder Clarification Meeting take place?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_168_o",
+   "query": "According to the email, what is the current status of the tourist who took the picture atop the World Trade Center?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_168_r",
+   "query": "According to the email, what has happened to the tourist who took the picture atop the World Trade Center?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_171_o",
+   "query": "What are the names of the recipients listed in the \"To\" field of the email with the subject \"Fw: men\" sent by Mandie Champagne, excluding the email addresses?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_171_r",
+   "query": "In the email with the subject \"Fw: men\" sent by Mandie Champagne, what are the names of the individuals listed as recipients, excluding their email addresses?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_173_o",
+   "query": "What is the name of the person who was promoted, according to Heath Schiesser's email, which affected the expected move of the Xcelerator?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_173_r",
+   "query": "Who was promoted, resulting in the Xcelerator remaining under Corporate instead of moving to EWS?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_175_o",
+   "query": "What is the reason Lindy Donoho mentions for finally figuring out the digital camera, according to her email to Amy and Ahmed?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_175_r",
+   "query": "What motivates Lindy Donoho to master the digital camera, according to her email to Amy and Ahmed?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_177_o",
+   "query": "According to the Reuters article dated January 29, 2002, what entity had pressured Kenneth Lay to step down as Enron Chairman and CEO?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_177_r",
+   "query": "As reported on January 29, 2002, who had urged Kenneth Lay to resign as Enron Chairman and CEO?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_180_o",
+   "query": "What entities are included in the MTM analysis schedules attached to Shanna Husser's email, according to the text of the email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_180_r",
+   "query": "According to Shanna Husser's email, what entities are listed in the attached MTM analysis schedules?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_181_o",
+   "query": "Who are the two people that John Forney cc'd in his original email about Enpower changes?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_181_r",
+   "query": "Which individuals did John Forney include as carbon copy recipients in his initial email regarding Enpower changes?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_182_o",
+   "query": "Is the meeting that Drew Fossum is referring to in the email with the subject \"Re: San Juan Prices\" the meeting of the recipient, Tino?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_182_r",
+   "query": "Is the meeting that Drew Fossum is referring to in the email with the subject \"Re: San Juan Prices\" the one that Tino is attending?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_184_o",
+   "query": "According to the email forwarded by Rob Gay, what percentage decrease in the shares of Parana state integrated power company Copel on the Sao Paulo stock market is mentioned in the email as the maximum decrease?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_184_r",
+   "query": "What is the maximum percentage decrease in the shares of Copel, a Parana state integrated power company, on the Sao Paulo stock market, as mentioned in the email forwarded by Rob Gay?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_188_o",
+   "query": "Who was Diane Anderson going to ask to contact Darron Giron regarding the Heartland termination, according to her email about the Heartland and Twister unwinds?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_188_r",
+   "query": "According to Diane Anderson's email, who was she going to instruct to drop Darron Giron a line regarding the Heartland termination?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_190_o",
+   "query": "At what time is NYMEX President Robert Collins scheduled to join the newscast to discuss the status of NYMEX operations and trading following the September 11th attacks?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_190_r",
+   "query": "What time is Robert Collins scheduled to appear on the newscast to talk about the impact of the September 11th attacks on NYMEX?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_191_o",
+   "query": "Who is responsible for making the appropriate entries into the DMS (Dispute Management System), according to John Forney's email about settlements issues?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_191_r",
+   "query": "According to John Forney's email, who is tasked with updating the DMS (Dispute Management System) with the necessary information?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_192_o",
+   "query": "Who is defending the case, according to Richard Sanders' email about the Frazier case?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_192_r",
+   "query": "What entity is handling the defense of the case, according to the email discussing the Frazier case?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_193_o",
+   "query": "What is the address of Lopez Velarde, Heftye, Abogados, according to Rogelio Lopez-Velarde's email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_193_r",
+   "query": "What is the office address of Lopez Velarde, Heftye, Abogados, as indicated in the email signature?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_196_o",
+   "query": "What is the status of the netting agreement with ConAgra, according to John Viverito's email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_196_r",
+   "query": "According to John Viverito's email, what is the expected timeline for executing the netting agreement with ConAgra?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_197_o",
+   "query": "What are the titles and departments of Diana Keith Neal, according to the email from Sotheby's Institute of Art?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_197_r",
+   "query": "What roles or positions does Diana Keith Neal hold at Sotheby's, according to the email from Sotheby's Institute of Art?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_198_o",
+   "query": "What are the names and phone numbers of the two contacts provided in the email for questions and technical issues related to the new agreement with MCI WorldCom?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_198_r",
+   "query": "Who are the points of contact and what are their phone numbers for further information related to the new agreement with MCI WorldCom?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_204_o",
+   "query": "According to Tana Jones' email on 02/22/2001, what is the name of the person who had previously approved Western Area Power Administration - CRSP to trade power in July of the previous year, as mentioned in the database?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_204_r",
+   "query": "Who, according to the database, had given approval for Western Area Power Administration - CRSP to trade power in July of the previous year, as mentioned by Tana Jones in her email on 02/22/2001?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_205_o",
+   "query": "What organizations did Jim Schwieger mention as having had a \"tremendous year\", according to his email about the Weather Group's contributions to their success?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_205_r",
+   "query": "Which entities did Jim Schwieger credit with having had a remarkable year, according to his email highlighting the Weather Group's achievements?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_206_o",
+   "query": "What are the four email addresses that Sherri Sera sent the forwarded email with the list of Al Gore quotes to, according to the email header, in the email with the subject \"[Fwd: FW:]\" and the file name \"kean-s/calendar/untitled/1545\", which contains the quote \"As many of you know, I was very instrumental in the founding of the Internet\" from Vice President Al Gore?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_206_r",
+   "query": "In the email with the file name \"kean-s/calendar/untitled/1545\" and the subject \"[Fwd: FW:]\", which includes the quote \"As many of you know, I was very instrumental in the founding of the Internet\" from Vice President Al Gore, what are the four email addresses that Sherri Sera forwarded the email to, according to the email header?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_207_o",
+   "query": "What specific problem does Peter Keavey mention as a challenge for the product he is describing, related to the trading of futures swaps?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_207_r",
+   "query": "What challenge does Peter Keavey mention as a difficulty in managing the futures swaps that are part of the transaction he is describing?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_208_o",
+   "query": "According to the email from Fatbrain, how many J2ME phones did Japan manufacture last year?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_208_r",
+   "query": "What is the number of J2ME phones manufactured by Japan last year, according to the email from Fatbrain?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_209_o",
+   "query": "What is Os Hillman's role at Marketplace Leaders, according to the devotional message \"Seeing a Greater Purpose in Adversity\" from the \"TGIF Marketplace Meditation\" series?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_209_r",
+   "query": "What position does Os Hillman hold at Marketplace Leaders, as mentioned in the \"TGIF Marketplace Meditation\" series?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_210_o",
+   "query": "What regions will the producer focus remain unchanged in, and who will they report to, according to the email about new natural gas origination businesses?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_210_r",
+   "query": "According to the email about new natural gas origination businesses, which regions will not be affected by the changes, and who will be responsible for the producer focus in those regions?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_212_o",
+   "query": "What does John Lavorato say about Punit Rawal's behavior regarding his \"fake trading account\"?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_212_r",
+   "query": "What criticism does John Lavorato express about Punit Rawal's attitude towards his \"fake trading account\"?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_213_o",
+   "query": "What are the two funds mentioned in Jim Zane's email that he suggests Ken Lay should donate the proceeds from his Enron stock sales to?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_213_r",
+   "query": "What two organizations does Jim Zane suggest Ken Lay should donate his Enron stock sale proceeds to in order to help those affected by the company's actions?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_217_o",
+   "query": "What is the volume of the block of east to east capacity with alternate rights to the California border that is being bid on, according to Kevin Hyatt's email about TW Bullets?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_217_r",
+   "query": "What is the size of the east to east capacity block with alternate rights to the California border that is up for bidding, according to Kevin Hyatt's email about TW Bullets?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_218_o",
+   "query": "What is Debra Danburg's seniority ranking in the state office, according to the email from Ed Gonzales?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_218_r",
+   "query": "According to Ed Gonzales, how many years has Debra Danburg been in office, and what is her corresponding seniority ranking?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_225_o",
+   "query": "According to the email, what is the current status of the Click at Home program, and can eligible employees still place orders?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_225_r",
+   "query": "Is the Click at Home program still available, and can eligible employees continue to use it to place orders?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_226_o",
+   "query": "What specific outcome did Ed Husami attribute to the US Ambassador's intervention with the Government of Israel (GOI) regarding the Gaza project?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_226_r",
+   "query": "What was the result of the US Ambassador's intervention with the Government of Israel (GOI) regarding the Gaza project?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_230_o",
+   "query": "What are the BPA account numbers that Mark Guzman set up for CISO to PUGET, CISO to WWP, CISO to SCL, and CISO to Tacoma, according to his email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_230_r",
+   "query": "What are the new BPA account numbers that Mark Guzman has established for the following counterparties: CISO to PUGET, CISO to WWP, CISO to SCL, and CISO to Tacoma?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_231_o",
+   "query": "Where is all past historical data that is not available on the current site located, according to John Oh's email about the new EL Paso URL?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_231_r",
+   "query": "According to John Oh's email, where can you find historical data that is not currently available on the new EL Paso URL?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_233_o",
+   "query": "What is the URL provided in the email for finding more synonyms for the word \"exculpate\" on Thesaurus.com?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_233_r",
+   "query": "What link is provided in the email for accessing additional synonyms for the word \"exculpate\" on Thesaurus.com?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_234_o",
+   "query": "What are the dates of the weekend during which Dan Shelton will be the available Columbia Gulf Representative, according to the forwarded email from navigator@nisource.com?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_234_r",
+   "query": "According to the forwarded email from navigator@nisource.com, on which weekend will Dan Shelton be serving as the Columbia Gulf Representative?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_235_o",
+   "query": "What was the reason for the increased pressures at the San Arroyo Plant, according to the production report forwarded by Ken Krisa?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_235_r",
+   "query": "According to the production report sent by Ken Krisa, what action taken by Wildhorse led to the high pressures at the San Arroyo Plant?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_237_o",
+   "query": "What type of beer will Pig be drinking during the work weekend, according to the email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_237_r",
+   "query": "During the work weekend, what type of beer is Pig expected to drink?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_240_o",
+   "query": "Who gave two lists to Harlan to look at, according to Stephanie's email, in the context of reviewing termination lists?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_240_r",
+   "query": "According to Stephanie's email, who is mentioned as having given Harlan two lists to review in relation to the termination lists that need to be reviewed?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_241_o",
+   "query": "What term does Christian use to affectionately refer to Vladi in the email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_241_r",
+   "query": "What nickname does Christian use to address Vladi in a friendly manner?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_242_o",
+   "query": "What is the effective date of the updated ISO Operating Procedure T-121, according to the CAISO notice?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_242_r",
+   "query": "As of what date does the updated ISO Operating Procedure T-121 take effect, according to the CAISO notice?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_243_o",
+   "query": "What is the first step in exporting contacts from Outlook, according to the email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_243_r",
+   "query": "What is the initial action required to transfer contacts from Outlook, according to the email?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_244_o",
+   "query": "On what day of the week was Joe Quenet scheduled to close on his new house, according to the email?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_244_r",
+   "query": "According to the email, what day of the week was Joe Quenet's house closing scheduled for?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_248_o",
+   "query": "What are the three main topics that the Robust Statistics and Data Mining for Outliers course will cover, according to the email from Insightful?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_248_r",
+   "query": "What will Doug Martin be teaching in his Robust Statistics and Data Mining for Outliers course, according to the email from Insightful?",
+   "question_type": "enron_rephrased"
+  },
+  {
+   "name": "enron_249_o",
+   "query": "What specific role was Dick asked to stay on as by his company, according to Andrea's email to her aunt and uncle?",
+   "question_type": "enron_original"
+  },
+  {
+   "name": "enron_249_r",
+   "query": "What position was Dick asked to remain in by his company, according to Andrea's email to her aunt and uncle?",
+   "question_type": "enron_rephrased"
+  }
+ ]
+}
