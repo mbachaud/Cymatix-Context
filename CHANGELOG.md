@@ -17,6 +17,38 @@
   before/after receipt:
   `benchmarks/dogfood/receipts/tagger_v2_entity_hygiene_2026-08-30.json`.
 
+
+- **perf(storage): `[ingestion] entity_autolink_hub_cutoff` — posting-count
+  hub cutoff for entity auto-linking (default `0` = off = legacy,
+  byte-identical; flip proposal tracked in #411).** The 2026-08-30 enronqa_padded profiling receipt
+  (`benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json`)
+  measured `auto_link_by_entity` at 89.5% of writer wall time — the
+  per-insert GROUP BY sweeps every posting row of every probe entity, and
+  MIME-header hubs (`content-type` 171k+ rows) make that O(N²) per build
+  (148.9 ms/insert vs 7.4 ms without the two hubs). With the cutoff > 0,
+  entities whose `entity_graph` posting count exceeds it are dropped from
+  the probe set before the GROUP BY (`PKI_NOISE_CUTOFF` precedent —
+  cardinality strictly greater is skipped); the count probe is
+  LIMIT-bounded, so per-insert cost is O(n_entities × cutoff). This
+  changes which relation=5 COVER edges form (default-inert at query time —
+  W2.1 cover-walk kill receipt), so the flip proposal ships behind the
+  default-off knob with an A/B edge-delta + perf receipt
+  (`benchmarks/dogfood/receipts/entity_hub_cutoff_ab_enronqa_2026-08-30.json`,
+  `scripts/receipt_entity_hub_cutoff.py`).
+
+
+- **`[budget] min_delivered_docs` GRADUATED 0 → 12 (`[w24-floor-flip]`).**
+  The W2.4 delivered-seat floor is now a shipped default: the classifier's
+  per-rule assembly cap is lifted to at least 12 seats and the Stage-5
+  budget trimmer truncates the largest parts instead of evicting whole
+  documents (token budget still wins last — eviction resumes below the
+  floor on overflow). Receipt-gated on three corpora with zero paired
+  delivered losses: ERB 829k .630→.668 (+18/−0,
+  `benchmarks/dogfood/erb/receipts/ladder_v09x_w24_min_delivered_2026-08-28.json`),
+  EnronQA v2 .820→.856 (+18/−0) and EnronQA padded 597k .776→.792
+  (+8/−0) (BASELINES row `2026-08-30-v091-gate-sweep`); r@12/fr@12
+  identical in every cell. `min_delivered_docs = 0` restores legacy;
+  revert = `git revert` of the `[w24-floor-flip]` commit.
 ## 0.9.0 (2026-08-20)
 
 The post-flip release: the shipped default retrieval path is now fully

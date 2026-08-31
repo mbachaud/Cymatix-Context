@@ -2169,6 +2169,18 @@ class CymatixContextManager:
             if classifier_result is not None and classifier_result.assembly_max_genes_cap is not None
             else None
         )
+        # W2.4 (2026-08-28): the delivered-seat floor also lifts the
+        # classifier's per-rule assembly cap — the w1c receipts pin the
+        # cap (2/5/6/8), not the token budget, as the cat-(b) seat-loser
+        # (splice_n_candidates == delivered_count on every such needle;
+        # the cut happens HERE, before splice). Floor 0 = legacy cap
+        # untouched. The model-class caps below (small_moe=4) are a model-
+        # capability concern, deliberately NOT floored. Wave-1's 235/235
+        # coupling attribution is what unlocked cap raises (phase plan
+        # L1.2); this is the knob-gated form.
+        _seat_floor_cap = int(getattr(self.config.budget, "min_delivered_docs", 0) or 0)
+        if _seat_floor_cap > 0 and _classifier_cap is not None:
+            _classifier_cap = max(_classifier_cap, _seat_floor_cap)
         if _classifier_cap is not None and len(candidates) > _classifier_cap:
             log.debug(
                 "Classifier cap: assembled %d -> %d (class=%s)",
@@ -3547,7 +3559,10 @@ class CymatixContextManager:
         # Phase 0.5 (2026-08-12): minimal trim-site recording — how many
         # documents the budget-eviction loop dropped. Surfaced via
         # window.metadata["budget_evicted"] for the delivery block.
+        # W2.4: _budget_truncated counts seat-preserving part truncations
+        # (min_delivered_docs floor) — a separate fact from evictions.
         _budget_evicted = 0
+        _budget_truncated = 0
         if est_tokens > budget and len(parts) > 1:
             # Default path: drop the lowest-SCORED document regardless of
             # its position in the assembled prompt. Position-based pop()
@@ -3574,10 +3589,46 @@ class CymatixContextManager:
             # delivered_ids / expressed_gene_ids slices stay correct under
             # both directions.
             trim_scores = _req_scores
+            # W2.4 (2026-08-28): delivered-seat floor. Evict only down to
+            # min_delivered_docs parts (clamped to the candidate count);
+            # once the floor is reached, shrink the LARGEST remaining part
+            # (tail-truncate, header-preserving, marked) instead of
+            # evicting a seat — the crater cat-(b) fix (gold at map rank
+            # 9-12 losing its seat, delivered_count 2-8; see
+            # BudgetConfig.min_delivered_docs). If every part is already
+            # at the truncation char floor and the prompt STILL overflows,
+            # the floor yields and eviction resumes — the token budget is
+            # the hard contract with the consumer and always wins last.
+            # Default 0 keeps this loop byte-identical to the legacy trim.
+            _seat_floor = min(
+                int(getattr(self.config.budget, "min_delivered_docs", 0) or 0),
+                len(parts),
+            )
+            _TRUNC_MIN_CHARS = 280
+            _TRUNC_MARK = " ...[budget-trimmed]"
             while est_tokens > budget and len(parts) > 1:
-                if respect_caller_order:
+                if _seat_floor >= 2 and len(parts) <= _seat_floor:
+                    _big = max(range(len(parts)), key=lambda i: len(parts[i]))
+                    if len(parts[_big]) > _TRUNC_MIN_CHARS:
+                        _new_len = max(
+                            _TRUNC_MIN_CHARS, int(len(parts[_big]) * 0.75),
+                        )
+                        parts[_big] = (
+                            parts[_big][: max(1, _new_len - len(_TRUNC_MARK))]
+                            .rstrip() + _TRUNC_MARK
+                        )
+                        _budget_truncated += 1
+                    else:
+                        _seat_floor = 0  # floor exhausted — evict below it
+                        continue
+                elif respect_caller_order:
                     parts.pop(0)
                     sorted_genes.pop(0)
+                    # Phase 0.5 (2026-08-12): count budget evictions so the
+                    # delivery-visibility block can report cap_binding =
+                    # "token_budget" when this loop (not the classifier
+                    # cap) is what truncated delivery.
+                    _budget_evicted += 1
                 else:
                     worst_idx = min(
                         range(len(sorted_genes)),
@@ -3585,11 +3636,7 @@ class CymatixContextManager:
                     )
                     parts.pop(worst_idx)
                     sorted_genes.pop(worst_idx)
-                # Phase 0.5 (2026-08-12): count budget evictions so the
-                # delivery-visibility block can report cap_binding =
-                # "token_budget" when this loop (not the classifier cap)
-                # is what truncated delivery.
-                _budget_evicted += 1
+                    _budget_evicted += 1
                 expressed = "\n---\n".join(parts)
                 expressed_wrapped = f"<expressed_context>\n{expressed}\n</expressed_context>"
                 est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)
@@ -3680,6 +3727,9 @@ class CymatixContextManager:
                 # Phase 0.5 (2026-08-12): documents dropped by the
                 # budget-eviction loop above (0 = budget never bound).
                 "budget_evicted": _budget_evicted,
+                # W2.4: seat-preserving part truncations performed by the
+                # min_delivered_docs floor (0 = floor off or never bound).
+                "budget_truncated": _budget_truncated,
             },
         )
 

@@ -117,7 +117,10 @@ def test_additive_default_knob_still_inverts_like_master():
     assert "authority" not in contrib.get("auth_a", {})
     # The inversion still happens: B outranks A despite strictly worse fused.
     assert ranked.index("auth_b") < ranked.index("auth_a")
-    assert scores["auth_b"] > 10 * scores["auth_a"]
+    # 5x at the graduated rrf_k=20 (was 10x at k=60) — recalibrated
+    # 2026-08-28 with the wave-1 flip, in lockstep with the DEFECT-1 pin in
+    # test_retrieval_invariance.py (B = 2.0 + 9/22 vs A = 9/21).
+    assert scores["auth_b"] > 5 * scores["auth_a"]
 
 
 # ═══ 2. fused_tier — rank contribution, commensurate by construction ══

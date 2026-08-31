@@ -1,0 +1,2274 @@
+{
+  "tool": "benchmarks/dogfood/erb/w2_cover_reachability.py",
+  "stamp": "2026-08-28T19:50:42Z",
+  "git_sha": "7a42576d2e7d482643f927953099ad670c27b83c",
+  "bed": "F:/tmp/erb_blob_v09x.db",
+  "bed_bytes": 24339210240,
+  "cover_edges_rel5": 8504903,
+  "graph_nodes_seen": 860494,
+  "graph_load_s": 22.0,
+  "degree_cap": 1000,
+  "max_hops": 2,
+  "cohort_source": "benchmarks/dogfood/erb/receipts/ladder_v09x_w1c_k20_eps_all_full_2026-08-28.json",
+  "cohort_sizes": {
+    "stalled": 20,
+    "static": 61,
+    "budget_cut": 5
+  },
+  "method_note": "Seeds are PROXY heads: raw FTS5 bm25 OR-queries over the needle's content words (stopword-filtered, len>2), top-50 and its top-12 slice. At shipped defaults the scored map is the bm25-shortlist survivor set, so top-50 is a superset of any fused head; production Stage-1 keyword extraction differs from this tokenizer. BFS bidirectional over gene_relations relation=5; nodes with degree > degree_cap are reached but never expanded. reach_* = hop at which any gold gene entered the frontier (0 = already in seeds), null = not within max_hops. Read-only direct SQL; no manager-mediated access.",
+  "aggregates": {
+    "stalled": {
+      "top12": {
+        "n": 20,
+        "reach_le_1hop": 14,
+        "reach_le_2hop": 19,
+        "rate_2hop": 0.95,
+        "median_frontier_1hop": 255,
+        "median_frontier_2hop": 11536
+      },
+      "top50": {
+        "n": 20,
+        "reach_le_1hop": 18,
+        "reach_le_2hop": 20,
+        "rate_2hop": 1.0,
+        "median_frontier_1hop": 974,
+        "median_frontier_2hop": 44230
+      }
+    },
+    "static": {
+      "top12": {
+        "n": 61,
+        "reach_le_1hop": 4,
+        "reach_le_2hop": 24,
+        "rate_2hop": 0.3934,
+        "median_frontier_1hop": 218,
+        "median_frontier_2hop": 12672
+      },
+      "top50": {
+        "n": 61,
+        "reach_le_1hop": 16,
+        "reach_le_2hop": 44,
+        "rate_2hop": 0.7213,
+        "median_frontier_1hop": 960,
+        "median_frontier_2hop": 47144
+      }
+    },
+    "budget_cut": {
+      "top12": {
+        "n": 5,
+        "reach_le_1hop": 4,
+        "reach_le_2hop": 5,
+        "rate_2hop": 1.0,
+        "median_frontier_1hop": 188,
+        "median_frontier_2hop": 11271
+      },
+      "top50": {
+        "n": 5,
+        "reach_le_1hop": 5,
+        "reach_le_2hop": 5,
+        "rate_2hop": 1.0,
+        "median_frontier_1hop": 813,
+        "median_frontier_2hop": 46626
+      }
+    }
+  },
+  "per_needle": [
+    {
+      "needle": "erb_180",
+      "cohort": "stalled",
+      "gold": [
+        "583a99fa023dfa72",
+        "bb2e1cb2c8d7bfc7"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        12
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        177,
+        7868
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        895,
+        42907
+      ]
+    },
+    {
+      "needle": "erb_182",
+      "cohort": "stalled",
+      "gold": [
+        "309faaf7e5f7b57c",
+        "3b2d151940e9424d",
+        "990e47a5a3a6d7de"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        13,
+        15,
+        26
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        165,
+        10293
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        974,
+        45471
+      ]
+    },
+    {
+      "needle": "erb_184",
+      "cohort": "stalled",
+      "gold": [
+        "7233f10175b9cb26",
+        "cec2af1e4633d986"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        63
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        340,
+        15528
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1178,
+        48494
+      ]
+    },
+    {
+      "needle": "erb_196",
+      "cohort": "stalled",
+      "gold": [
+        "57a594ebc1e2a40a",
+        "a11ca0d3eeae8d76",
+        "a940d1ae4f2674d4"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        13,
+        25
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        229,
+        9882
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1109,
+        47495
+      ]
+    },
+    {
+      "needle": "erb_197",
+      "cohort": "stalled",
+      "gold": [
+        "dd22cc74f2bbab5b",
+        "ea1d5c0ab2484cc4"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        31
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        196,
+        4634
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        819,
+        23033
+      ]
+    },
+    {
+      "needle": "erb_199",
+      "cohort": "stalled",
+      "gold": [
+        "28a114e56916ec49",
+        "5e5d6a8d853e934c"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        10
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        178,
+        9773
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        859,
+        38235
+      ]
+    },
+    {
+      "needle": "erb_208",
+      "cohort": "stalled",
+      "gold": [
+        "9ef7ffd56126a4a4",
+        "bc1fdac43b703a6a"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        93
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        290,
+        9645
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        945,
+        18867
+      ]
+    },
+    {
+      "needle": "erb_209",
+      "cohort": "stalled",
+      "gold": [
+        "b7ece21de9912793",
+        "cb48bb8038c4a7b1",
+        "e2c0de8dabb905bb"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        2,
+        16,
+        28
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        205,
+        11589
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        704,
+        47078
+      ]
+    },
+    {
+      "needle": "erb_212",
+      "cohort": "stalled",
+      "gold": [
+        "28601c97e2538dae",
+        "68c4c571ed03e980"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        10
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        281,
+        13030
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1323,
+        45596
+      ]
+    },
+    {
+      "needle": "erb_229",
+      "cohort": "stalled",
+      "gold": [
+        "13a0a3118b7af7fb",
+        "2b292f9af946b1a9",
+        "aa9307a1a3f28390"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        3,
+        20,
+        90
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        333,
+        11892
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1003,
+        37321
+      ]
+    },
+    {
+      "needle": "erb_231",
+      "cohort": "stalled",
+      "gold": [
+        "17c622500c5e78fa",
+        "ee182592f0e1c23c"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        64
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        309,
+        11227
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1220,
+        43010
+      ]
+    },
+    {
+      "needle": "erb_235",
+      "cohort": "stalled",
+      "gold": [
+        "a84d1ea766c7f68b",
+        "f17801c5a29abc6f",
+        "f9df08514999e02a"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        110,
+        153
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        394,
+        13949
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1620,
+        51925
+      ]
+    },
+    {
+      "needle": "erb_238",
+      "cohort": "stalled",
+      "gold": [
+        "74a4188955f5f91e",
+        "a81b2e62d3cc7a68"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        18
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        312,
+        13390
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        965,
+        46102
+      ]
+    },
+    {
+      "needle": "erb_254",
+      "cohort": "stalled",
+      "gold": [
+        "098a9027c77199be",
+        "1fff0b01b884857a",
+        "bef313b305449b1d"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        12,
+        25,
+        38
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        178,
+        11747
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        840,
+        44065
+      ]
+    },
+    {
+      "needle": "erb_264",
+      "cohort": "stalled",
+      "gold": [
+        "529891857fbe24e2",
+        "9a28944954983c61"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        16,
+        41
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        335,
+        11046
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1009,
+        45715
+      ]
+    },
+    {
+      "needle": "erb_265",
+      "cohort": "stalled",
+      "gold": [
+        "1b3a7ab2902d1fe1",
+        "df14175491f089e5"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        14,
+        55
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        179,
+        7301
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        778,
+        18112
+      ]
+    },
+    {
+      "needle": "erb_273",
+      "cohort": "stalled",
+      "gold": [
+        "569d7ff3d3a97882"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        16
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        255,
+        11988
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        903,
+        38729
+      ]
+    },
+    {
+      "needle": "erb_276",
+      "cohort": "stalled",
+      "gold": [
+        "cb4e20bb4d9b7b62",
+        "ed3df04d5a46a958"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        3,
+        100
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        270,
+        10720
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1349,
+        24411
+      ]
+    },
+    {
+      "needle": "erb_280",
+      "cohort": "stalled",
+      "gold": [
+        "72f5d1ce8cdcd8b0",
+        "97f6935c0c6deb76",
+        "9b791bd9f74e0baa"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        11,
+        13
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        251,
+        11910
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1304,
+        40597
+      ]
+    },
+    {
+      "needle": "erb_294",
+      "cohort": "stalled",
+      "gold": [
+        "037289e31ec7bbcb",
+        "2e0c546932e6e08d"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        11,
+        13
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        162,
+        6887
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        737,
+        35450
+      ]
+    },
+    {
+      "needle": "erb_177",
+      "cohort": "static",
+      "gold": [
+        "2db5b87f2f5c38f6",
+        "b495ce5c37d861f6"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        21,
+        31
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        303,
+        10025
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        911,
+        45597
+      ]
+    },
+    {
+      "needle": "erb_179",
+      "cohort": "static",
+      "gold": [
+        "c0526b38f03f0a52",
+        "e9bc0a1fcca60478",
+        "f3866e7e7772a129"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        27,
+        56
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        197,
+        11907
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        1026,
+        52429
+      ]
+    },
+    {
+      "needle": "erb_183",
+      "cohort": "static",
+      "gold": [
+        "5aea98cf51429be0",
+        "dab3fc0fde34e716"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        293,
+        12759
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        832,
+        46646
+      ]
+    },
+    {
+      "needle": "erb_185",
+      "cohort": "static",
+      "gold": [
+        "836a1b1eb8c0b87c",
+        "d2d2a1cab224e181"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        26,
+        28
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        236,
+        15689
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1112,
+        49390
+      ]
+    },
+    {
+      "needle": "erb_186",
+      "cohort": "static",
+      "gold": [
+        "6b685f3221e1b7a7",
+        "7941d1ba0213472c"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        12
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        596,
+        16885
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        1602,
+        51792
+      ]
+    },
+    {
+      "needle": "erb_188",
+      "cohort": "static",
+      "gold": [
+        "971e8d571b5e5873",
+        "9d30f4c5eab25613"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        15,
+        22
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        218,
+        7016
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        917,
+        29876
+      ]
+    },
+    {
+      "needle": "erb_189",
+      "cohort": "static",
+      "gold": [
+        "283868c88a3b18ef",
+        "39d88864e9c24332",
+        "c2148f0530e7dfaa"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        13,
+        14
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        268,
+        13370
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        751,
+        50386
+      ]
+    },
+    {
+      "needle": "erb_190",
+      "cohort": "static",
+      "gold": [
+        "b7e0ffd568367db3",
+        "f0cef83128cf61f8",
+        "fe976478ead41c9b"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        12,
+        20
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        218,
+        15041
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        1692,
+        62192
+      ]
+    },
+    {
+      "needle": "erb_192",
+      "cohort": "static",
+      "gold": [
+        "474f4c50e544fe86",
+        "e98ee115a874e6ad"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        13,
+        21
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": null,
+      "frontier_top12": [
+        299,
+        12929
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        956,
+        52431
+      ]
+    },
+    {
+      "needle": "erb_195",
+      "cohort": "static",
+      "gold": [
+        "26d4ba9e0296d516",
+        "dafbc787f2ef5b94"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        10
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        203,
+        10767
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        725,
+        45086
+      ]
+    },
+    {
+      "needle": "erb_200",
+      "cohort": "static",
+      "gold": [
+        "53e7901516506fd4",
+        "b71bc54daada0cc8"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        223,
+        13193
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        870,
+        50280
+      ]
+    },
+    {
+      "needle": "erb_202",
+      "cohort": "static",
+      "gold": [
+        "755961d8ddd5a165",
+        "9fe493803e3b6c52"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        46
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        272,
+        12601
+      ],
+      "reach_top50": 1,
+      "frontier_top50": [
+        1370,
+        42602
+      ]
+    },
+    {
+      "needle": "erb_203",
+      "cohort": "static",
+      "gold": [
+        "0cbadfa6c82120d3",
+        "503c2a605579882e"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        197,
+        10197
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1185,
+        24431
+      ]
+    },
+    {
+      "needle": "erb_206",
+      "cohort": "static",
+      "gold": [
+        "3e295f4221cc9fa6",
+        "9d953392c9053f03"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        11,
+        19
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        214,
+        15811
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1239,
+        57037
+      ]
+    },
+    {
+      "needle": "erb_211",
+      "cohort": "static",
+      "gold": [
+        "2ee54ee552fc69da",
+        "60242e4710a78c4e",
+        "97681cd5fe44bbb1"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        10
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        237,
+        15672
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1087,
+        49236
+      ]
+    },
+    {
+      "needle": "erb_213",
+      "cohort": "static",
+      "gold": [
+        "80a82ec800f689fa",
+        "afca4c58e8d1dc65",
+        "fcff8222c456c6da"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        13,
+        70
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        201,
+        15808
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1147,
+        53610
+      ]
+    },
+    {
+      "needle": "erb_215",
+      "cohort": "static",
+      "gold": [
+        "4af315c0c43a0f86",
+        "b53730f6eeeffdb6",
+        "eb03a159989286f8"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        15,
+        171
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        228,
+        13297
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1351,
+        55746
+      ]
+    },
+    {
+      "needle": "erb_217",
+      "cohort": "static",
+      "gold": [
+        "38224e944bf46521",
+        "c22160a18f951894"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        436,
+        13978
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1162,
+        41784
+      ]
+    },
+    {
+      "needle": "erb_218",
+      "cohort": "static",
+      "gold": [
+        "499eebd76be8dd59",
+        "7a4263913fca37d1",
+        "b413b7133cba7ace",
+        "e9b761dee56e2926"
+      ],
+      "gold_in_graph": 4,
+      "gold_degree": [
+        12,
+        23,
+        76,
+        189
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 1,
+      "frontier_top12": [
+        250,
+        9268
+      ],
+      "reach_top50": 1,
+      "frontier_top50": [
+        786,
+        32865
+      ]
+    },
+    {
+      "needle": "erb_219",
+      "cohort": "static",
+      "gold": [
+        "3499737785c1b35f"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        10
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        303,
+        12005
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        977,
+        39521
+      ]
+    },
+    {
+      "needle": "erb_220",
+      "cohort": "static",
+      "gold": [
+        "86dda2394d11a805",
+        "b7a4ae43cfdd5a7a",
+        "ff2100d6530848bf"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        18,
+        33,
+        266
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        377,
+        10863
+      ],
+      "reach_top50": 1,
+      "frontier_top50": [
+        988,
+        41298
+      ]
+    },
+    {
+      "needle": "erb_221",
+      "cohort": "static",
+      "gold": [
+        "329cc89914f753e4",
+        "6c202a025519841a",
+        "a70ac7f0f7af5207",
+        "b1b820cf6a822bc4"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        12,
+        15
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        162,
+        7514
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        580,
+        22903
+      ]
+    },
+    {
+      "needle": "erb_223",
+      "cohort": "static",
+      "gold": [
+        "7aef881b35369ecf",
+        "f12ffab928525a1a"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        67
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        194,
+        12863
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        960,
+        45591
+      ]
+    },
+    {
+      "needle": "erb_225",
+      "cohort": "static",
+      "gold": [
+        "426811ddd3a5efcf",
+        "f6c9f01c40ad3130"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        13
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        186,
+        9699
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        768,
+        42968
+      ]
+    },
+    {
+      "needle": "erb_228",
+      "cohort": "static",
+      "gold": [
+        "4a62d07fc4155271",
+        "99aec94c65f3dcad"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        208,
+        9627
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        977,
+        33672
+      ]
+    },
+    {
+      "needle": "erb_230",
+      "cohort": "static",
+      "gold": [
+        "19ec1593012ffecb",
+        "2bf9d1dd065aa897",
+        "d086587d656a9f7c"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        14,
+        48
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        174,
+        15466
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        785,
+        46359
+      ]
+    },
+    {
+      "needle": "erb_233",
+      "cohort": "static",
+      "gold": [
+        "03c05d5197d56180",
+        "64e4bbfe3378e749",
+        "b66d3031db483467"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        10,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        315,
+        24113
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        1458,
+        67800
+      ]
+    },
+    {
+      "needle": "erb_234",
+      "cohort": "static",
+      "gold": [
+        "0b002481748f2786",
+        "631f329e495b89b3"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        20,
+        22
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        158,
+        13427
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1012,
+        52491
+      ]
+    },
+    {
+      "needle": "erb_239",
+      "cohort": "static",
+      "gold": [
+        "70e991a537fdfd92",
+        "9b56b5282e138c3b"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        199,
+        13391
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        818,
+        47140
+      ]
+    },
+    {
+      "needle": "erb_241",
+      "cohort": "static",
+      "gold": [
+        "54e6f6adf358ff37",
+        "6f5a93c0ecc863d1",
+        "89c27081956e4bae",
+        "957a12e395343c8d"
+      ],
+      "gold_in_graph": 4,
+      "gold_degree": [
+        10,
+        11,
+        13,
+        30
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        293,
+        14293
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        952,
+        55120
+      ]
+    },
+    {
+      "needle": "erb_242",
+      "cohort": "static",
+      "gold": [
+        "5f95dcb0ec5c753c",
+        "6ad4ba7dd181e5f7"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        11,
+        16
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        176,
+        10707
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        722,
+        40890
+      ]
+    },
+    {
+      "needle": "erb_243",
+      "cohort": "static",
+      "gold": [
+        "003acb082ed4820a",
+        "2d2d9eb9da1bb3d4"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": null,
+      "frontier_top12": [
+        262,
+        11738
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        856,
+        32598
+      ]
+    },
+    {
+      "needle": "erb_245",
+      "cohort": "static",
+      "gold": [
+        "59473efcb3bdb752",
+        "c2d52b23778d13f3"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        8,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        371,
+        17127
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1203,
+        48658
+      ]
+    },
+    {
+      "needle": "erb_246",
+      "cohort": "static",
+      "gold": [
+        "01e759fc47fd96ea",
+        "79564453a5037927",
+        "93faec59b03dc2c8",
+        "b543e044bd6773c9",
+        "f4a12176d8f87999"
+      ],
+      "gold_in_graph": 5,
+      "gold_degree": [
+        12,
+        12,
+        15,
+        19,
+        768
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        176,
+        9823
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        866,
+        40171
+      ]
+    },
+    {
+      "needle": "erb_247",
+      "cohort": "static",
+      "gold": [
+        "83e0f51e219151f2",
+        "cfa0711015568133",
+        "eac4b423f5a8e866"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        12,
+        13
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        170,
+        7713
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        733,
+        32469
+      ]
+    },
+    {
+      "needle": "erb_248",
+      "cohort": "static",
+      "gold": [
+        "394a733bc62a0b94",
+        "4e493cd39e10fd27"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        10
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        366,
+        8364
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        1203,
+        34352
+      ]
+    },
+    {
+      "needle": "erb_249",
+      "cohort": "static",
+      "gold": [
+        "4bc9b24dcc320590",
+        "5d9d4b0a7d305c9e",
+        "a6b3298d16a1f646"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        12,
+        12
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": null,
+      "frontier_top12": [
+        194,
+        13429
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        809,
+        50576
+      ]
+    },
+    {
+      "needle": "erb_250",
+      "cohort": "static",
+      "gold": [
+        "d11eb49758c69bd7"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        20
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        262,
+        11688
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        741,
+        27150
+      ]
+    },
+    {
+      "needle": "erb_255",
+      "cohort": "static",
+      "gold": [
+        "50cb84a677659d8c",
+        "cea056756c423965"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        13
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        237,
+        12435
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1184,
+        51875
+      ]
+    },
+    {
+      "needle": "erb_256",
+      "cohort": "static",
+      "gold": [
+        "216457b4d4d25309",
+        "be682f774c5b82f4",
+        "fd62a34e9b5969d5"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        12,
+        52
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        154,
+        13127
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        927,
+        50132
+      ]
+    },
+    {
+      "needle": "erb_259",
+      "cohort": "static",
+      "gold": [
+        "19cb1e816c627e95",
+        "a7cd6b9ba07345db",
+        "fe1c5ef7165789db"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        44,
+        87
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        187,
+        11392
+      ],
+      "reach_top50": 1,
+      "frontier_top50": [
+        1046,
+        59456
+      ]
+    },
+    {
+      "needle": "erb_260",
+      "cohort": "static",
+      "gold": [
+        "2594d3dd2229101c",
+        "c871530feea2265a"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        35
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        184,
+        11175
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        766,
+        39358
+      ]
+    },
+    {
+      "needle": "erb_261",
+      "cohort": "static",
+      "gold": [
+        "928da76f5928495f",
+        "966ce0fceb3f79d9"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        12,
+        18
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        184,
+        12128
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        839,
+        42704
+      ]
+    },
+    {
+      "needle": "erb_262",
+      "cohort": "static",
+      "gold": [
+        "80ce347c092e3f39",
+        "faf88321e539dc1c"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        34,
+        76
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        196,
+        15845
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        898,
+        50065
+      ]
+    },
+    {
+      "needle": "erb_266",
+      "cohort": "static",
+      "gold": [
+        "72ebe7fe099a8690",
+        "f41c5de64eb0c97d"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        24
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        210,
+        11381
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        1023,
+        45443
+      ]
+    },
+    {
+      "needle": "erb_267",
+      "cohort": "static",
+      "gold": [
+        "29ae2c9e27d7f00c",
+        "ae54bf00df1b222f"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        29
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        157,
+        10263
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1119,
+        44168
+      ]
+    },
+    {
+      "needle": "erb_269",
+      "cohort": "static",
+      "gold": [
+        "d03a1c8d9a7a6e84"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        52
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 1,
+      "frontier_top12": [
+        210,
+        18040
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        991,
+        54646
+      ]
+    },
+    {
+      "needle": "erb_271",
+      "cohort": "static",
+      "gold": [
+        "098162ff08ec89e6",
+        "62bae62dda7feac8",
+        "bd88ae13703d9d0b"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        11,
+        15
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        186,
+        8778
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        670,
+        25931
+      ]
+    },
+    {
+      "needle": "erb_274",
+      "cohort": "static",
+      "gold": [
+        "9f5cb57b15338d16",
+        "fe30b60b558aae98"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        19,
+        54
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        143,
+        12754
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        814,
+        56108
+      ]
+    },
+    {
+      "needle": "erb_275",
+      "cohort": "static",
+      "gold": [
+        "03b5bc197daff095",
+        "10514fd93a02d194"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        16,
+        22
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        202,
+        14997
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        1548,
+        52153
+      ]
+    },
+    {
+      "needle": "erb_277",
+      "cohort": "static",
+      "gold": [
+        "1fa1549b7dfb5c0c",
+        "3ae3a7f2e3d26ef0"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        17
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        280,
+        9981
+      ],
+      "reach_top50": 1,
+      "frontier_top50": [
+        885,
+        36245
+      ]
+    },
+    {
+      "needle": "erb_278",
+      "cohort": "static",
+      "gold": [
+        "76a536bd614d093d",
+        "96325acc8390144d"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        21
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        288,
+        8936
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        958,
+        35717
+      ]
+    },
+    {
+      "needle": "erb_281",
+      "cohort": "static",
+      "gold": [
+        "0cd82e2df8495055",
+        "aba0cca857dd66fd",
+        "fa55592cc945ed66"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        39
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        225,
+        12655
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1604,
+        52449
+      ]
+    },
+    {
+      "needle": "erb_284",
+      "cohort": "static",
+      "gold": [
+        "473ca0cb7c181538",
+        "802e004edd755258"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        13,
+        16
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        248,
+        11803
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        914,
+        34935
+      ]
+    },
+    {
+      "needle": "erb_288",
+      "cohort": "static",
+      "gold": [
+        "7491b57d65b85a1b",
+        "e4d463816197b161"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        22,
+        32
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        220,
+        9574
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        694,
+        41261
+      ]
+    },
+    {
+      "needle": "erb_292",
+      "cohort": "static",
+      "gold": [
+        "021353bea4d134a8",
+        "7674f7a507b8f872",
+        "7eb62a6deac8f6c6"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        12,
+        21
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        234,
+        11519
+      ],
+      "reach_top50": null,
+      "frontier_top50": [
+        1468,
+        65463
+      ]
+    },
+    {
+      "needle": "erb_295",
+      "cohort": "static",
+      "gold": [
+        "4e337da73ecb62f0"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        13
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        156,
+        8766
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        930,
+        45474
+      ]
+    },
+    {
+      "needle": "erb_296",
+      "cohort": "static",
+      "gold": [
+        "1a1317bfb84448f7",
+        "b4ea6ce5ebe1f115"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        22
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        184,
+        14135
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1155,
+        48439
+      ]
+    },
+    {
+      "needle": "erb_297",
+      "cohort": "static",
+      "gold": [
+        "22915eb9b93f16e6",
+        "8a6aa90ff99e4ffd",
+        "b96e810a2ddb2c27",
+        "e05f6472480998f0"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        42,
+        43,
+        48
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        185,
+        10198
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1233,
+        41925
+      ]
+    },
+    {
+      "needle": "erb_298",
+      "cohort": "static",
+      "gold": [
+        "3547902449e158e8",
+        "f08f2386eb56fc1b"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        26,
+        36
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": 2,
+      "frontier_top12": [
+        450,
+        16063
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        1065,
+        50772
+      ]
+    },
+    {
+      "needle": "erb_299",
+      "cohort": "static",
+      "gold": [
+        "be6be72d61e871ed",
+        "d2da25cff632b04a"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        45,
+        61
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": false,
+      "reach_top12": null,
+      "frontier_top12": [
+        363,
+        17239
+      ],
+      "reach_top50": 2,
+      "frontier_top50": [
+        980,
+        46297
+      ]
+    },
+    {
+      "needle": "erb_176",
+      "cohort": "budget_cut",
+      "gold": [
+        "0b59c83f95b2e233",
+        "2fc70ff847674ed3",
+        "756e8d2582ee4b90"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        15,
+        18,
+        31
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        188,
+        9716
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        813,
+        38809
+      ]
+    },
+    {
+      "needle": "erb_181",
+      "cohort": "budget_cut",
+      "gold": [
+        "434d340aa25d04e1",
+        "aaa78dbf704a2b79",
+        "fddd18b62c2d160c"
+      ],
+      "gold_in_graph": 3,
+      "gold_degree": [
+        10,
+        15,
+        167
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        291,
+        16805
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        925,
+        47627
+      ]
+    },
+    {
+      "needle": "erb_187",
+      "cohort": "budget_cut",
+      "gold": [
+        "4c467d8e494f8ec5",
+        "68d36e7d236f66ce",
+        "d50d2a5dda985e66"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        11
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 2,
+      "frontier_top12": [
+        171,
+        8760
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        721,
+        38655
+      ]
+    },
+    {
+      "needle": "erb_237",
+      "cohort": "budget_cut",
+      "gold": [
+        "95733a3ddba0b924",
+        "c93c60fc297adcc1"
+      ],
+      "gold_in_graph": 2,
+      "gold_degree": [
+        10,
+        10
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        135,
+        12107
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        620,
+        46006
+      ]
+    },
+    {
+      "needle": "erb_272",
+      "cohort": "budget_cut",
+      "gold": [
+        "ff97c276b63541ce"
+      ],
+      "gold_in_graph": 1,
+      "gold_degree": [
+        35
+      ],
+      "n_seeds": 50,
+      "gold_in_seeds_top50": true,
+      "reach_top12": 0,
+      "frontier_top12": [
+        273,
+        10998
+      ],
+      "reach_top50": 0,
+      "frontier_top50": [
+        1279,
+        49584
+      ]
+    }
+  ]
+}

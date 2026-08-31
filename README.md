@@ -1,20 +1,16 @@
 # Cymatix Context
 
+[![Website](https://img.shields.io/badge/website-cymatixcontext.com-ff9f43.svg)](https://cymatixcontext.com)
+[![Discord](https://img.shields.io/badge/discord-join-5865F2.svg?logo=discord&logoColor=white)](https://discord.gg/pX7x7pA3Da)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version](https://img.shields.io/pypi/v/cymatix-context.svg)](https://pypi.org/project/cymatix-context/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Tests: 4000+](https://img.shields.io/badge/tests-4000%2B-brightgreen.svg)](tests/)
 [![LLM-free pipeline](https://img.shields.io/badge/pipeline-LLM--free-brightgreen.svg)](docs/architecture/PIPELINE_LANES.md)
-[![Paper: Agentome](https://img.shields.io/badge/paper-Agentome-purple.svg)](https://mbachaud.substack.com/p/agentome)
 
 > Coordinate-index engine for LLM agents. Retrieves, weighs, and compresses
 > your codebase into a context window — without a single LLM call on the
 > retrieval path.
-
-**Formerly `helix-context`** — renamed July 2026. As of 0.8.5 the old surface (the
-`helix_context` import, `helix*` CLI names, `HELIX_*` env vars, `helix.toml`)
-has been **removed** — see [Migrating from
-helix-context](#migrating-from-helix-context).
 
 The name comes from the engine's cymatics stage: each term is hashed (MD5) into
 one of 256 bins and given a small Gaussian spread, and query and candidate are
@@ -351,8 +347,7 @@ Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 | `mcp/` | MCP tool surface for Claude Code / Desktop |
 | `integrations/` | ScoreRift bridge |
 
-The import package is `cymatix_context` (the old `helix_context` alias was
-removed in 0.8.5). Biology-named module shims `genome.py`, `ribosome.py`,
+The import package is `cymatix_context`. Biology-named module shims `genome.py`, `ribosome.py`,
 `server.py`, `replication.py`, `hgt.py` persist as the domain lexicon.
 Lexicon: [docs/ROSETTA.md](docs/ROSETTA.md).
 
@@ -461,28 +456,6 @@ scripts/setup-grafana-telem.sh      # Linux / macOS
 
 Dashboard: <http://localhost:3000/d/cymatix-overview>.
 Full surface: [docs/architecture/OBSERVABILITY.md](docs/architecture/OBSERVABILITY.md).
-
-## Migrating from helix-context
-
-**As of 0.8.5 the old `helix` surface has been removed** — this is a clean
-break. The table below maps each removed name to its replacement. If you are
-still on the old names, migrate to the right-hand column, or pin
-`cymatix-context<0.8.5` (0.8.0 keeps the aliases), or the last `helix-context`
-release, until you can.
-
-| Surface | Old (removed in 0.8.5) | New (use this) |
-|---|---|---|
-| Install | `pip install helix-context` | `pip install cymatix-context` |
-| Import | `import helix_context` → `ModuleNotFoundError` | `import cymatix_context` |
-| CLI | `helix`, `helix-server`, `helix-launcher`, `helix-status`, `helix-vault` | `cymatix`, `cymatix-server`, `cymatix-launcher`, `cymatix-status`, `cymatix-vault` |
-| Config file | `helix.toml` (no longer read) | `cymatix.toml` |
-| Env vars | `HELIX_*` (no longer read) | `CYMATIX_*` |
-| MCP `-m` entry | `python -m helix_context.mcp_server` | `python -m cymatix_context.mcp_server` |
-| MCP tools | `helix_*` tool names | `cymatix_*` |
-| ASGI target | `helix_context._asgi:app` | `cymatix_context._asgi:app` |
-
-The knowledge-store file format is unchanged — existing `genome.db` files
-work as-is, no re-ingest needed.
 
 ## Gotchas
 
