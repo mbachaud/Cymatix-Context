@@ -803,6 +803,18 @@ PROFILES: dict[str, dict] = {
         "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
+    "financebench": {
+        "label": "FinanceBench SEC-filing page corpus (368 PDFs, 150 QA, page-level gold)",
+        # Semantic-portfolio lane, queued third by user ordering
+        # (2026-08-31). Page texts extracted by
+        # scripts/build_financebench_corpus.py; needle sets under
+        # benchmarks/dogfood/financebench.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\financebench\corpus"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
     "enronqa_padded": {
         "label": "EnronQA + raw-Enron distractor padding (~500k emails)",
         # Padded variant of "enronqa": same QA corpus (gold untouched) plus
