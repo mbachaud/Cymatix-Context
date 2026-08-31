@@ -1,0 +1,19 @@
+{
+ "stamp": "2026-08-31",
+ "campaign": "W2.2-narrow eps_band_coverage arm \u2014 KILL",
+ "bed": "F:/tmp/erb_blob_v09x.db (947,531 genes)",
+ "n": 470,
+ "k": 12,
+ "arm": "w22_eps_band_coverage.toml (shipped v0.9.1 + all five classes -> eps_band_coverage)",
+ "paired_reference": "ladder_v09x_w24_min_delivered_2026-08-28.json (floor12 = shipped defaults)",
+ "result": {
+  "delivered": "0.6681 -> 0.6681, +0/-0 paired (all classes identical)",
+  "final_recall_at_k": "0.6830 -> 0.6851 (+1 needle on the final basis)",
+  "final_rank_moves": "67/470 (the combinator reorders as designed)",
+  "map_rank_diffs": "1/470 (scores stay pure fused; single-needle anomaly noted, not chased)",
+  "audit_targets_converted": "0/21 (the semantic rank<=100 misses the above-gold audit identified)"
+ },
+ "mechanism_of_death": "band geometry, not signal validity: gold out-covers interlopers on 16/21 targets (semantic_above_gold_947k receipt) but at rrf_k=20 the fused head decays ~36% relative from rank 1 to rank 13, so rank-13+ gold never shares an eps band with the top-12 and in-band coverage sorting cannot cross the delivery boundary. Wave-2 kill-table row 5 pre-registered this ceiling ('banded additives barely moved ranks >= 15'); confirmed at zero.",
+ "disposition": "eps_band_coverage ships DEFAULT-INERT (shipped map stays eps_band; W2.1/cover_walk precedent: infrastructure + kill receipt). Widening the band delta to reach rank-13+ would reintroduce the unbanded-additive failure wave-1 measured (semantic r@12 0.32 -> 0.16). The remaining semantic levers are representational (phrase/title/claims legs; abstraction lane).",
+ "env_note": "arm ran 09:47-13:5x local alongside the FinanceBench extraction tail + bed build + muloc arms; latency axes environment-loaded; CYMATIX_DISABLE_LEARN unset (disclosed) \u2014 ERB pairing validity witnessed by the floor6 0/470 reproduce"
+}
