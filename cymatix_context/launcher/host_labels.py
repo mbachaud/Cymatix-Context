@@ -25,6 +25,7 @@ _VENDOR_MAP = {
 _HOST_MAP = {
     "claude-code": "Claude Code",
     "claude-desktop": "Claude Desktop",
+    "gemini-cli": "Gemini CLI",
     "antigravity": "Antigravity",
     "cursor": "Cursor",
     "vscode": "VS Code",

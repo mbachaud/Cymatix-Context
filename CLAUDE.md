@@ -26,6 +26,12 @@ python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 
 Full CLI reference: `docs/clients/cli.md`.
 
+Cross-host MCP and Agent Skill guidance: [`docs/clients/cymatix-context.md`](docs/clients/cymatix-context.md),
+with native guides for [Claude Code](docs/clients/claude-code.md),
+[Codex](docs/clients/codex.md), [Gemini CLI](docs/clients/gemini-cli.md),
+and [Antigravity](docs/clients/antigravity.md). Direct MCP needs neither the
+model proxy nor the tray; a healthy headless server is sufficient.
+
 ## How It Works
 
 A transparent OpenAI-compatible proxy that intercepts LLM requests and injects compressed context from a persistent SQLite knowledge store.
@@ -64,7 +70,7 @@ After the repo restructure, `cymatix_context/` is organized into 16 sub-packages
 | `telemetry/` | OTel metrics, histogram instrumentation |
 | `vault/` | Obsidian vault export (read-only diagnostic traces) |
 | `launcher/` | System-tray supervisor (backend + telemetry stack) |
-| `mcp/` | MCP tool surface for Claude Code / Desktop |
+| `mcp/` | MCP tool surface for Claude Code, Codex, Gemini CLI, and Antigravity |
 | `integrations/` | ScoreRift bridge |
 
 Top-level modules: `context_manager.py` (pipeline orchestrator), `config.py` (TOML loader), `schemas.py` (Pydantic models), `knowledge_store.py` (SQLite DDL + retrieval), `codons.py` (chunker + encoder), `tagger.py` (CPU ingest tagger).

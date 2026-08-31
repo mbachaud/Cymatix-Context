@@ -155,6 +155,11 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
         cymatix._last_activity_ts = t0
 
         data = await request.json()
+        downstream_model = (
+            data.get("model")
+            if "model" in data
+            else data.get("downstream_model")
+        )
         query = data.get("query", "")
         response_mode = str(
             data.get("response_mode", data.get("format", "continue"))
@@ -270,6 +275,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
 
         window = await cymatix.build_context_async(
             query,
+            downstream_model=downstream_model,
             include_cold=include_cold,
             session_context=session_context,
             party_id=cwola_party_id,
@@ -445,6 +451,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 _warnings.append("calibration_stale")
 
             response["agent"] = {
+                "caller_model_class": caller_model_class,
                 "recommendation": recommendation,
                 "hint": hint,
                 "citations": citations,
