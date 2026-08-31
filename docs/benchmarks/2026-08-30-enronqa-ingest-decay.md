@@ -103,3 +103,37 @@ opted out) — beds built without the flag remain byte-identical to before.
 
 The 4.6 GB partial at `F:/tmp/enronqa_padded_bed` stays valid for option 1
 only; options 2–3 rebuild it.
+
+## Residual decay past ~150k genes: CLOSED (2026-08-30 evening)
+
+The operator resolved the in-flight-build decision as **stop → rebuild with
+the hub cutoff** (`CYMATIX_BFM_HUB_CUTOFF=200`, PR #412 path — not the
+`--no-entity-autolink` scheduling knob): `rebuild_cutoff200_v2` finished the
+full 517,353-file / 596,707-gene bed in 4h58m vs the ~26 h uncapped
+trajectory. The post-cutoff build is the controlled experiment for the
+residual question, and it closes it
+(`benchmarks/dogfood/receipts/ingest_residual_decay_enronqa_2026-08-30.json`):
+
+- **The O(N²) signature is gone.** Worker tagging throughput is flat
+  (~50 genes/s from N=20k to 580k, `observed_at` curve). The writer decays
+  **mildly and linearly**, not hyperbolically: once the tagging workers
+  drained (~09:40 local) the writer alone went 38.4 → 32.7 g/s over
+  479k → 656k processed genes (26.0 → 30.6 ms/gene, +4.6 ms per 177k).
+- **Root cause of the linear residual: the unindexed per-upsert
+  `DELETE FROM filename_index WHERE gene_id = ?`**
+  (`storage/indexes.py sync_filename_index`) — `EXPLAIN QUERY PLAN` shows
+  `SCAN filename_index` (571,999 rows at end of build; only the
+  `(filename_stem, gene_id)` PK and `idx_filename_stem` exist). Measured on
+  the finished bed: **42.7 ms per warm full scan vs 0.002 ms with
+  `idx_filename_gene`** (~20,000×). The magnitudes reconcile: the old
+  build's py-spy 6.6% share at 204 ms/gene ≈ 13.5 ms ≈ a warm scan of the
+  then-~280k-row table, and the clean-tail slope matches the table's growth
+  rate.
+- **FTS5 stays refuted** — no superlinear component in the post-cutoff
+  curves (0.07% in the py-spy receipt).
+
+**Fix = `idx_filename_gene` (commit `a39532f`, this branch).**
+Content-neutral, applied to existing beds on next open by
+`filename_anchor.ensure_schema`. With it, bulk builds become tagging-bound
+at the flat worker ceiling (~3.3 h projected for this bed vs 5.0 h
+measured).
