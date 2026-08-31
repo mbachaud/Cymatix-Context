@@ -127,3 +127,26 @@ Enrichment-lane design consequence: co-ingested abstractions must carry
 **source linkage** (support_span/provenance, or delivery-time source-set
 dedup) — otherwise the corpus's raw evidence loses its seats to its own
 summaries.
+
+## Lane 2 results — MULocBench baseline (2026-08-31, 108k tagger-v2 bed, shipped v0.9.1)
+
+Receipt: `benchmarks/dogfood/muloc/receipts/ladder_muloc_baseline_2026-08-31.json`
+(n=680, k=12, file-level gold, p50 2.9 s/query on 108,375 genes).
+
+- Overall delivered **.444**, r@12 .481, median gold rank 5 when found.
+- **Exact-commit strict subset (n=70): delivered .500, r@12 .571, median
+  rank 4** — the citable MULocBench cells; the drifted majority (.438) is
+  the near-neighbor-snapshot approximation.
+- Miss anatomy mirrors ERB: 239 pool-absent / 77 near-band (13–30) /
+  37 mid — the near-band is a W2.2 coverage-discriminator surface here too
+  (issue texts are long queries, the regime where coverage discriminates).
+- **New regime surfaced: token-budget seat starvation on code.** 25 misses
+  have gold at rank ≤12 but only 6 (23×) or 3 (2×) delivered docs — under
+  the floor-12 default. Code chunks are token-heavy enough that
+  `expression_tokens = 7000` genuinely binds at ~6 seats; the W2.4 cap
+  floor is inert here and the trim-floor half is what runs. Budget scaling
+  on code corpora is its own cell (ERB/EnronQA prose chunks never exposed
+  it).
+- Repo spread: rich .93 / flask .70 / scrapy .63 strongest; yt-dlp 3/39,
+  OpenHands 1/14 weakest (drill-down open: size-gated extractor files and
+  fast-moving snapshots are the suspects).
