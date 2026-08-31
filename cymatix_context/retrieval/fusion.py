@@ -36,9 +36,14 @@ from typing import Dict, Iterable, List, Sequence, Tuple
 __all__ = ["Fuser", "DEFAULT_RRF_K"]
 
 
-# Cormack 2009 default. The original IR paper used 60 across TREC tracks
-# and showed insensitivity in [10, 100]. Surfaced as ``[retrieval] rrf_k``
-# in cymatix.toml for operators who want to tune.
+# Cormack 2009 literature constant. The original IR paper used 60 across
+# TREC tracks and showed insensitivity in [10, 100]. NOTE (2026-08-28): this
+# is NOT the shipped per-store default any more — wave-1 ranking-under-width
+# graduated ``[retrieval] rrf_k`` to 20 (RetrievalConfig.rrf_k, threaded to
+# every per-store Fuser at knowledge_store.py ``k=self._rrf_k``). This
+# constant still governs the two UNMEASURED bare-construction sites — the
+# cross-shard merge fuser (shard_router.py) and Fuser() with no k —
+# deliberately left at 60 until a receipt covers them.
 DEFAULT_RRF_K: int = 60
 
 
