@@ -85,7 +85,8 @@ _ACTIVE_SURFACE_WHITELIST: dict[str, tuple[str, ...]] = {
     ),
 }
 _ACTIVE_SURFACE_EXPECTED_COUNTS = {
-    "README.md": 15,
+    # README.md dropped 2026-08-30: the website-refresh rewrite (merged via
+    # #414) removed every whitelisted migration reference from the README.
     "CLAUDE.md": 4,
     "deploy/windows/setup-cymatix.ps1": 3,
 }
