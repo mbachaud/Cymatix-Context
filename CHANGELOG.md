@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- **tagger v2 — entity hygiene (#410), bed-comparability break.** The CPU
+  tagger no longer emits email/MIME plumbing as entities: entities containing
+  newlines/tabs are rejected, and standard header field names
+  (`content-type`, `mime-version`, …), RFC 822 `x-*` extension headers, and
+  transport artifacts (`javamail`, `quoted-printable`, …) are denylisted.
+  Root cause of the EnronQA `entity_graph` hubs that made per-insert entity
+  auto-linking O(N²) at build time (receipt
+  `benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json`).
+  Because tags are part of the bed-content digest, this ships as
+  `TAGGER_VERSION = 2` (`cymatix_context/tagger.py`), recorded per bed in the
+  fixture-matrix manifest; beds built at different tagger versions are not
+  cross-comparable (rule added to `docs/benchmarks/BASELINES.md`). Fresh
+  before/after receipt:
+  `benchmarks/dogfood/receipts/tagger_v2_entity_hygiene_2026-08-30.json`.
+
+
 - **perf(storage): `[ingestion] entity_autolink_hub_cutoff` — posting-count
   hub cutoff for entity auto-linking (default `0` = off = legacy,
   byte-identical; flip proposal tracked in #411).** The 2026-08-30 enronqa_padded profiling receipt
