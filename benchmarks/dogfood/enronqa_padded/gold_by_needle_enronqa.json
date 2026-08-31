@@ -1,0 +1,1542 @@
+{
+ "enron_000_o": [
+  "07692c98c03ed645"
+ ],
+ "enron_000_r": [
+  "07692c98c03ed645"
+ ],
+ "enron_001_o": [
+  "98f45a796b272a84"
+ ],
+ "enron_001_r": [
+  "98f45a796b272a84"
+ ],
+ "enron_002_o": [
+  "6f0d033f7d08ef09"
+ ],
+ "enron_002_r": [
+  "6f0d033f7d08ef09"
+ ],
+ "enron_003_o": [
+  "bc3c32f8926e935c"
+ ],
+ "enron_003_r": [
+  "bc3c32f8926e935c"
+ ],
+ "enron_004_o": [
+  "fe830e0c6e6c65ff"
+ ],
+ "enron_004_r": [
+  "fe830e0c6e6c65ff"
+ ],
+ "enron_005_o": [
+  "fa08062781fd2ead"
+ ],
+ "enron_005_r": [
+  "fa08062781fd2ead"
+ ],
+ "enron_006_o": [
+  "c20264e52d85031e"
+ ],
+ "enron_006_r": [
+  "c20264e52d85031e"
+ ],
+ "enron_007_o": [
+  "effa99f9cbc360d3"
+ ],
+ "enron_007_r": [
+  "effa99f9cbc360d3"
+ ],
+ "enron_008_o": [
+  "bab6aec76835308a"
+ ],
+ "enron_008_r": [
+  "bab6aec76835308a"
+ ],
+ "enron_009_o": [
+  "7cbc60329ffd47ef"
+ ],
+ "enron_009_r": [
+  "7cbc60329ffd47ef"
+ ],
+ "enron_010_o": [
+  "b5e91ac024cda46f"
+ ],
+ "enron_010_r": [
+  "b5e91ac024cda46f"
+ ],
+ "enron_011_o": [
+  "ba04af172ab22bfb"
+ ],
+ "enron_011_r": [
+  "ba04af172ab22bfb"
+ ],
+ "enron_012_o": [
+  "86187af41f9b552f"
+ ],
+ "enron_012_r": [
+  "86187af41f9b552f"
+ ],
+ "enron_013_o": [
+  "865223fdcb6bead3"
+ ],
+ "enron_013_r": [
+  "865223fdcb6bead3"
+ ],
+ "enron_014_o": [
+  "eed8c6d34cbfbe09"
+ ],
+ "enron_014_r": [
+  "eed8c6d34cbfbe09"
+ ],
+ "enron_015_o": [
+  "e4f4586818c6978a"
+ ],
+ "enron_015_r": [
+  "e4f4586818c6978a"
+ ],
+ "enron_016_o": [
+  "1a6f854378f946cd",
+  "81e46493b2728483"
+ ],
+ "enron_016_r": [
+  "1a6f854378f946cd",
+  "81e46493b2728483"
+ ],
+ "enron_017_o": [
+  "40cf217c94530478"
+ ],
+ "enron_017_r": [
+  "40cf217c94530478"
+ ],
+ "enron_018_o": [
+  "a062d59239273b66"
+ ],
+ "enron_018_r": [
+  "a062d59239273b66"
+ ],
+ "enron_019_o": [
+  "984e6a818019fd1c"
+ ],
+ "enron_019_r": [
+  "984e6a818019fd1c"
+ ],
+ "enron_020_o": [
+  "17f02ff3a2a51ed2"
+ ],
+ "enron_020_r": [
+  "17f02ff3a2a51ed2"
+ ],
+ "enron_021_o": [
+  "7f188523a4902689"
+ ],
+ "enron_021_r": [
+  "7f188523a4902689"
+ ],
+ "enron_022_o": [
+  "233a634f653be40a",
+  "8ac1d1dc00e31e78"
+ ],
+ "enron_022_r": [
+  "233a634f653be40a",
+  "8ac1d1dc00e31e78"
+ ],
+ "enron_023_o": [
+  "a75fc59949e36dd1"
+ ],
+ "enron_023_r": [
+  "a75fc59949e36dd1"
+ ],
+ "enron_024_o": [
+  "3403509d89c091e5"
+ ],
+ "enron_024_r": [
+  "3403509d89c091e5"
+ ],
+ "enron_025_o": [
+  "32f98bc2289bdee2"
+ ],
+ "enron_025_r": [
+  "32f98bc2289bdee2"
+ ],
+ "enron_026_o": [
+  "9c0121a5890262b3"
+ ],
+ "enron_026_r": [
+  "9c0121a5890262b3"
+ ],
+ "enron_027_o": [
+  "48d28664b91a0f5c"
+ ],
+ "enron_027_r": [
+  "48d28664b91a0f5c"
+ ],
+ "enron_028_o": [
+  "779a5f87735ed30f"
+ ],
+ "enron_028_r": [
+  "779a5f87735ed30f"
+ ],
+ "enron_029_o": [
+  "22b2b98526ab1908"
+ ],
+ "enron_029_r": [
+  "22b2b98526ab1908"
+ ],
+ "enron_030_o": [
+  "4cf5a020254901b2"
+ ],
+ "enron_030_r": [
+  "4cf5a020254901b2"
+ ],
+ "enron_031_o": [
+  "ba947648d0b646fc"
+ ],
+ "enron_031_r": [
+  "ba947648d0b646fc"
+ ],
+ "enron_032_o": [
+  "071ddec3bf12cdb1"
+ ],
+ "enron_032_r": [
+  "071ddec3bf12cdb1"
+ ],
+ "enron_033_o": [
+  "2bdaa01ace24f9b7"
+ ],
+ "enron_033_r": [
+  "2bdaa01ace24f9b7"
+ ],
+ "enron_034_o": [
+  "73722b7bd5e93355"
+ ],
+ "enron_034_r": [
+  "73722b7bd5e93355"
+ ],
+ "enron_035_o": [
+  "d8feebbbb694cf82"
+ ],
+ "enron_035_r": [
+  "d8feebbbb694cf82"
+ ],
+ "enron_036_o": [
+  "ea0d0f87e92a4821"
+ ],
+ "enron_036_r": [
+  "ea0d0f87e92a4821"
+ ],
+ "enron_037_o": [
+  "bf4119632c955224"
+ ],
+ "enron_037_r": [
+  "bf4119632c955224"
+ ],
+ "enron_038_o": [
+  "08808848ef7f3760"
+ ],
+ "enron_038_r": [
+  "08808848ef7f3760"
+ ],
+ "enron_039_o": [
+  "67956088a378abd3"
+ ],
+ "enron_039_r": [
+  "67956088a378abd3"
+ ],
+ "enron_040_o": [
+  "07ba0e0e15fc90a1",
+  "3492814342157440"
+ ],
+ "enron_040_r": [
+  "07ba0e0e15fc90a1",
+  "3492814342157440"
+ ],
+ "enron_041_o": [
+  "372c4981a095bc05"
+ ],
+ "enron_041_r": [
+  "372c4981a095bc05"
+ ],
+ "enron_042_o": [
+  "111f3402d44dc2d2"
+ ],
+ "enron_042_r": [
+  "111f3402d44dc2d2"
+ ],
+ "enron_043_o": [
+  "2c0171a479108e76"
+ ],
+ "enron_043_r": [
+  "2c0171a479108e76"
+ ],
+ "enron_044_o": [
+  "33c9ee6332d1a5c3"
+ ],
+ "enron_044_r": [
+  "33c9ee6332d1a5c3"
+ ],
+ "enron_045_o": [
+  "4a7dca3d4cb20360"
+ ],
+ "enron_045_r": [
+  "4a7dca3d4cb20360"
+ ],
+ "enron_046_o": [
+  "f13f25284a43f0c9"
+ ],
+ "enron_046_r": [
+  "f13f25284a43f0c9"
+ ],
+ "enron_047_o": [
+  "c5a082b8ae1128a3"
+ ],
+ "enron_047_r": [
+  "c5a082b8ae1128a3"
+ ],
+ "enron_048_o": [
+  "44d95386da5b4101"
+ ],
+ "enron_048_r": [
+  "44d95386da5b4101"
+ ],
+ "enron_049_o": [
+  "6316f32c33aa9981"
+ ],
+ "enron_049_r": [
+  "6316f32c33aa9981"
+ ],
+ "enron_050_o": [
+  "15343ba1114e2d3b"
+ ],
+ "enron_050_r": [
+  "15343ba1114e2d3b"
+ ],
+ "enron_051_o": [
+  "0b0d00dee77e7c41"
+ ],
+ "enron_051_r": [
+  "0b0d00dee77e7c41"
+ ],
+ "enron_052_o": [
+  "f2f506cc6f5cbe6d"
+ ],
+ "enron_052_r": [
+  "f2f506cc6f5cbe6d"
+ ],
+ "enron_053_o": [
+  "84529c0ddc27ad4b"
+ ],
+ "enron_053_r": [
+  "84529c0ddc27ad4b"
+ ],
+ "enron_054_o": [
+  "caa0355b59dad0ec"
+ ],
+ "enron_054_r": [
+  "caa0355b59dad0ec"
+ ],
+ "enron_055_o": [
+  "6e0b61a1f326b850"
+ ],
+ "enron_055_r": [
+  "6e0b61a1f326b850"
+ ],
+ "enron_056_o": [
+  "51eeaf7387b54255"
+ ],
+ "enron_056_r": [
+  "51eeaf7387b54255"
+ ],
+ "enron_057_o": [
+  "c70dafc13c95e78b"
+ ],
+ "enron_057_r": [
+  "c70dafc13c95e78b"
+ ],
+ "enron_058_o": [
+  "f41db6906198aedc"
+ ],
+ "enron_058_r": [
+  "f41db6906198aedc"
+ ],
+ "enron_059_o": [
+  "44e6ed4bc2125b54"
+ ],
+ "enron_059_r": [
+  "44e6ed4bc2125b54"
+ ],
+ "enron_060_o": [
+  "daf83a96cc7a7163",
+  "f39c6979d023dff3"
+ ],
+ "enron_060_r": [
+  "daf83a96cc7a7163",
+  "f39c6979d023dff3"
+ ],
+ "enron_061_o": [
+  "2b40fa7e826288ad"
+ ],
+ "enron_061_r": [
+  "2b40fa7e826288ad"
+ ],
+ "enron_062_o": [
+  "42ddb10b85bfe82a"
+ ],
+ "enron_062_r": [
+  "42ddb10b85bfe82a"
+ ],
+ "enron_063_o": [
+  "f0de91dbdfe712ad"
+ ],
+ "enron_063_r": [
+  "f0de91dbdfe712ad"
+ ],
+ "enron_064_o": [
+  "00c43550019174c5"
+ ],
+ "enron_064_r": [
+  "00c43550019174c5"
+ ],
+ "enron_065_o": [
+  "121ce1600daee316",
+  "b6fdcb76036c65a2"
+ ],
+ "enron_065_r": [
+  "121ce1600daee316",
+  "b6fdcb76036c65a2"
+ ],
+ "enron_066_o": [
+  "c3de7171246025de"
+ ],
+ "enron_066_r": [
+  "c3de7171246025de"
+ ],
+ "enron_067_o": [
+  "34432ec6c6435e44"
+ ],
+ "enron_067_r": [
+  "34432ec6c6435e44"
+ ],
+ "enron_068_o": [
+  "33e908199435bfe8"
+ ],
+ "enron_068_r": [
+  "33e908199435bfe8"
+ ],
+ "enron_069_o": [
+  "9bd68fd31e6f8f63"
+ ],
+ "enron_069_r": [
+  "9bd68fd31e6f8f63"
+ ],
+ "enron_070_o": [
+  "239a91972552245f"
+ ],
+ "enron_070_r": [
+  "239a91972552245f"
+ ],
+ "enron_071_o": [
+  "7f325582205f7885"
+ ],
+ "enron_071_r": [
+  "7f325582205f7885"
+ ],
+ "enron_072_o": [
+  "8b70d85f76770611"
+ ],
+ "enron_072_r": [
+  "8b70d85f76770611"
+ ],
+ "enron_073_o": [
+  "7ac07a6f7de242ce"
+ ],
+ "enron_073_r": [
+  "7ac07a6f7de242ce"
+ ],
+ "enron_074_o": [
+  "1cd75a9b006b376a"
+ ],
+ "enron_074_r": [
+  "1cd75a9b006b376a"
+ ],
+ "enron_075_o": [
+  "243faf6e2c6aca16"
+ ],
+ "enron_075_r": [
+  "243faf6e2c6aca16"
+ ],
+ "enron_076_o": [
+  "2830cbfbb4ad8e1c"
+ ],
+ "enron_076_r": [
+  "2830cbfbb4ad8e1c"
+ ],
+ "enron_077_o": [
+  "e430a8d7ec5c40d1"
+ ],
+ "enron_077_r": [
+  "e430a8d7ec5c40d1"
+ ],
+ "enron_078_o": [
+  "f4c6b71a8702f523"
+ ],
+ "enron_078_r": [
+  "f4c6b71a8702f523"
+ ],
+ "enron_079_o": [
+  "1c6729c7ea78a447"
+ ],
+ "enron_079_r": [
+  "1c6729c7ea78a447"
+ ],
+ "enron_080_o": [
+  "e9bd29a355affe87"
+ ],
+ "enron_080_r": [
+  "e9bd29a355affe87"
+ ],
+ "enron_081_o": [
+  "ef9a74e1f0c8b755"
+ ],
+ "enron_081_r": [
+  "ef9a74e1f0c8b755"
+ ],
+ "enron_082_o": [
+  "4b5b94b5146a7ced"
+ ],
+ "enron_082_r": [
+  "4b5b94b5146a7ced"
+ ],
+ "enron_083_o": [
+  "571a534a39c46949"
+ ],
+ "enron_083_r": [
+  "571a534a39c46949"
+ ],
+ "enron_084_o": [
+  "9b3661d70c2195a1"
+ ],
+ "enron_084_r": [
+  "9b3661d70c2195a1"
+ ],
+ "enron_085_o": [
+  "4b07e4ee82dd6a4c"
+ ],
+ "enron_085_r": [
+  "4b07e4ee82dd6a4c"
+ ],
+ "enron_086_o": [
+  "20e86fd65ef3db26"
+ ],
+ "enron_086_r": [
+  "20e86fd65ef3db26"
+ ],
+ "enron_087_o": [
+  "a12fac361582bd51"
+ ],
+ "enron_087_r": [
+  "a12fac361582bd51"
+ ],
+ "enron_088_o": [
+  "a9d7730fab70a876"
+ ],
+ "enron_088_r": [
+  "a9d7730fab70a876"
+ ],
+ "enron_089_o": [
+  "a77a1fe480146a93"
+ ],
+ "enron_089_r": [
+  "a77a1fe480146a93"
+ ],
+ "enron_090_o": [
+  "f6f74e188fb9ff5c"
+ ],
+ "enron_090_r": [
+  "f6f74e188fb9ff5c"
+ ],
+ "enron_091_o": [
+  "ec5eb6e4407d2cff"
+ ],
+ "enron_091_r": [
+  "ec5eb6e4407d2cff"
+ ],
+ "enron_092_o": [
+  "f53b6c283bc5f466"
+ ],
+ "enron_092_r": [
+  "f53b6c283bc5f466"
+ ],
+ "enron_093_o": [
+  "b45ce4d840e2ebd1"
+ ],
+ "enron_093_r": [
+  "b45ce4d840e2ebd1"
+ ],
+ "enron_094_o": [
+  "caf91238fd5f8c39"
+ ],
+ "enron_094_r": [
+  "caf91238fd5f8c39"
+ ],
+ "enron_095_o": [
+  "7d2bdb121f71a4ad"
+ ],
+ "enron_095_r": [
+  "7d2bdb121f71a4ad"
+ ],
+ "enron_096_o": [
+  "c2c323db52a992f8"
+ ],
+ "enron_096_r": [
+  "c2c323db52a992f8"
+ ],
+ "enron_097_o": [
+  "02c0520d8a74a17e"
+ ],
+ "enron_097_r": [
+  "02c0520d8a74a17e"
+ ],
+ "enron_098_o": [
+  "5c48f19396dee532"
+ ],
+ "enron_098_r": [
+  "5c48f19396dee532"
+ ],
+ "enron_099_o": [
+  "16f1610247b2988f"
+ ],
+ "enron_099_r": [
+  "16f1610247b2988f"
+ ],
+ "enron_100_o": [
+  "1f5d7a1838ddca5b"
+ ],
+ "enron_100_r": [
+  "1f5d7a1838ddca5b"
+ ],
+ "enron_101_o": [
+  "39051b4c6bdb9c59"
+ ],
+ "enron_101_r": [
+  "39051b4c6bdb9c59"
+ ],
+ "enron_102_o": [
+  "0e8c870faeb1cd9e"
+ ],
+ "enron_102_r": [
+  "0e8c870faeb1cd9e"
+ ],
+ "enron_103_o": [
+  "254a5c107fdfca9e",
+  "887996612201d4ed"
+ ],
+ "enron_103_r": [
+  "254a5c107fdfca9e",
+  "887996612201d4ed"
+ ],
+ "enron_104_o": [
+  "5584c85f23bda4a2"
+ ],
+ "enron_104_r": [
+  "5584c85f23bda4a2"
+ ],
+ "enron_105_o": [
+  "2cbd734b02ef2cf4",
+  "5ed6bca5efda2ce9"
+ ],
+ "enron_105_r": [
+  "2cbd734b02ef2cf4",
+  "5ed6bca5efda2ce9"
+ ],
+ "enron_106_o": [
+  "6b0269980e42b265"
+ ],
+ "enron_106_r": [
+  "6b0269980e42b265"
+ ],
+ "enron_107_o": [
+  "b3abb571eb34a757"
+ ],
+ "enron_107_r": [
+  "b3abb571eb34a757"
+ ],
+ "enron_108_o": [
+  "2a30ddf4785f5ecb"
+ ],
+ "enron_108_r": [
+  "2a30ddf4785f5ecb"
+ ],
+ "enron_109_o": [
+  "e7ac3b24bdc443ce"
+ ],
+ "enron_109_r": [
+  "e7ac3b24bdc443ce"
+ ],
+ "enron_110_o": [
+  "caeb720b9345770e"
+ ],
+ "enron_110_r": [
+  "caeb720b9345770e"
+ ],
+ "enron_111_o": [
+  "854a34c382cb35a8"
+ ],
+ "enron_111_r": [
+  "854a34c382cb35a8"
+ ],
+ "enron_112_o": [
+  "d4db71f50a3a921c"
+ ],
+ "enron_112_r": [
+  "d4db71f50a3a921c"
+ ],
+ "enron_113_o": [
+  "60f67fc74d25e7df"
+ ],
+ "enron_113_r": [
+  "60f67fc74d25e7df"
+ ],
+ "enron_114_o": [
+  "70b361f4d0d007df"
+ ],
+ "enron_114_r": [
+  "70b361f4d0d007df"
+ ],
+ "enron_115_o": [
+  "359114d6bd5a28d2"
+ ],
+ "enron_115_r": [
+  "359114d6bd5a28d2"
+ ],
+ "enron_116_o": [
+  "aac0cdbf47129d8e"
+ ],
+ "enron_116_r": [
+  "aac0cdbf47129d8e"
+ ],
+ "enron_117_o": [
+  "e9e61999a3ec32e6"
+ ],
+ "enron_117_r": [
+  "e9e61999a3ec32e6"
+ ],
+ "enron_118_o": [
+  "cbccdede68f33506"
+ ],
+ "enron_118_r": [
+  "cbccdede68f33506"
+ ],
+ "enron_119_o": [
+  "1787e6fa7c94e464",
+  "343304fa9a1c3d0c"
+ ],
+ "enron_119_r": [
+  "1787e6fa7c94e464",
+  "343304fa9a1c3d0c"
+ ],
+ "enron_120_o": [
+  "028874810827c2b1"
+ ],
+ "enron_120_r": [
+  "028874810827c2b1"
+ ],
+ "enron_121_o": [
+  "c026ff12827b3bd0"
+ ],
+ "enron_121_r": [
+  "c026ff12827b3bd0"
+ ],
+ "enron_122_o": [
+  "4cc071ff58a0103f"
+ ],
+ "enron_122_r": [
+  "4cc071ff58a0103f"
+ ],
+ "enron_123_o": [
+  "6e7d2976e67e5c8f",
+  "bdc2f8432e3dc77a"
+ ],
+ "enron_123_r": [
+  "6e7d2976e67e5c8f",
+  "bdc2f8432e3dc77a"
+ ],
+ "enron_124_o": [
+  "00d16f44ddbddd3e"
+ ],
+ "enron_124_r": [
+  "00d16f44ddbddd3e"
+ ],
+ "enron_125_o": [
+  "2bedb4a47c75dad3",
+  "94bdb538faaa0d3c"
+ ],
+ "enron_125_r": [
+  "2bedb4a47c75dad3",
+  "94bdb538faaa0d3c"
+ ],
+ "enron_126_o": [
+  "f18a15401694025d"
+ ],
+ "enron_126_r": [
+  "f18a15401694025d"
+ ],
+ "enron_127_o": [
+  "61dc36dc153e3f20"
+ ],
+ "enron_127_r": [
+  "61dc36dc153e3f20"
+ ],
+ "enron_128_o": [
+  "64b30db85d4f6cb9"
+ ],
+ "enron_128_r": [
+  "64b30db85d4f6cb9"
+ ],
+ "enron_129_o": [
+  "dd6d29c5f3578614"
+ ],
+ "enron_129_r": [
+  "dd6d29c5f3578614"
+ ],
+ "enron_130_o": [
+  "8efc8a9cdc0d01d9"
+ ],
+ "enron_130_r": [
+  "8efc8a9cdc0d01d9"
+ ],
+ "enron_131_o": [
+  "59730fa4eefb448c"
+ ],
+ "enron_131_r": [
+  "59730fa4eefb448c"
+ ],
+ "enron_132_o": [
+  "c62fcf777fa08425"
+ ],
+ "enron_132_r": [
+  "c62fcf777fa08425"
+ ],
+ "enron_133_o": [
+  "60ffb1e05a5a5bdc",
+  "761e7f0c924c4d10"
+ ],
+ "enron_133_r": [
+  "60ffb1e05a5a5bdc",
+  "761e7f0c924c4d10"
+ ],
+ "enron_134_o": [
+  "e631f9dc7399fe7b"
+ ],
+ "enron_134_r": [
+  "e631f9dc7399fe7b"
+ ],
+ "enron_135_o": [
+  "6488bd235c5c2e6a",
+  "96ce1df6846ca950"
+ ],
+ "enron_135_r": [
+  "6488bd235c5c2e6a",
+  "96ce1df6846ca950"
+ ],
+ "enron_136_o": [
+  "0d5b50a0e1ed8a3e"
+ ],
+ "enron_136_r": [
+  "0d5b50a0e1ed8a3e"
+ ],
+ "enron_137_o": [
+  "db06567b2bdb1b92"
+ ],
+ "enron_137_r": [
+  "db06567b2bdb1b92"
+ ],
+ "enron_138_o": [
+  "2f5e0656d3be6e9b"
+ ],
+ "enron_138_r": [
+  "2f5e0656d3be6e9b"
+ ],
+ "enron_139_o": [
+  "e9b345b6d604bfaa"
+ ],
+ "enron_139_r": [
+  "e9b345b6d604bfaa"
+ ],
+ "enron_140_o": [
+  "9a4fcf8f4d3ddd6e"
+ ],
+ "enron_140_r": [
+  "9a4fcf8f4d3ddd6e"
+ ],
+ "enron_141_o": [
+  "880d64e1ec332000"
+ ],
+ "enron_141_r": [
+  "880d64e1ec332000"
+ ],
+ "enron_142_o": [
+  "107f5cd064e4b122"
+ ],
+ "enron_142_r": [
+  "107f5cd064e4b122"
+ ],
+ "enron_143_o": [
+  "47d5ec6249cbe016"
+ ],
+ "enron_143_r": [
+  "47d5ec6249cbe016"
+ ],
+ "enron_144_o": [
+  "aded7dc1be754085"
+ ],
+ "enron_144_r": [
+  "aded7dc1be754085"
+ ],
+ "enron_145_o": [
+  "a1d5f3fc864c3a06"
+ ],
+ "enron_145_r": [
+  "a1d5f3fc864c3a06"
+ ],
+ "enron_146_o": [
+  "0cb1c037aeeab785"
+ ],
+ "enron_146_r": [
+  "0cb1c037aeeab785"
+ ],
+ "enron_147_o": [
+  "e2161e71bfa69269"
+ ],
+ "enron_147_r": [
+  "e2161e71bfa69269"
+ ],
+ "enron_148_o": [
+  "3c0e409513ac533b"
+ ],
+ "enron_148_r": [
+  "3c0e409513ac533b"
+ ],
+ "enron_149_o": [
+  "b95d91fca1712e1e"
+ ],
+ "enron_149_r": [
+  "b95d91fca1712e1e"
+ ],
+ "enron_150_o": [
+  "17d6b513ce660d2d"
+ ],
+ "enron_150_r": [
+  "17d6b513ce660d2d"
+ ],
+ "enron_151_o": [
+  "9472874552c34e81"
+ ],
+ "enron_151_r": [
+  "9472874552c34e81"
+ ],
+ "enron_152_o": [
+  "da3870c1e0ef7968"
+ ],
+ "enron_152_r": [
+  "da3870c1e0ef7968"
+ ],
+ "enron_153_o": [
+  "5428fbf1038e1695"
+ ],
+ "enron_153_r": [
+  "5428fbf1038e1695"
+ ],
+ "enron_154_o": [
+  "1c9c6d3973a7738a"
+ ],
+ "enron_154_r": [
+  "1c9c6d3973a7738a"
+ ],
+ "enron_155_o": [
+  "602d03047cbbf81b"
+ ],
+ "enron_155_r": [
+  "602d03047cbbf81b"
+ ],
+ "enron_156_o": [
+  "64dd8ca5239cb1eb"
+ ],
+ "enron_156_r": [
+  "64dd8ca5239cb1eb"
+ ],
+ "enron_157_o": [
+  "89f3e1436889be39"
+ ],
+ "enron_157_r": [
+  "89f3e1436889be39"
+ ],
+ "enron_158_o": [
+  "25eb90ba0192fc84"
+ ],
+ "enron_158_r": [
+  "25eb90ba0192fc84"
+ ],
+ "enron_159_o": [
+  "3f2429881415b42b"
+ ],
+ "enron_159_r": [
+  "3f2429881415b42b"
+ ],
+ "enron_160_o": [
+  "35c69fe098a64a8b"
+ ],
+ "enron_160_r": [
+  "35c69fe098a64a8b"
+ ],
+ "enron_161_o": [
+  "46a0706898a78619",
+  "f59fe0b3f9f0ce0e"
+ ],
+ "enron_161_r": [
+  "46a0706898a78619",
+  "f59fe0b3f9f0ce0e"
+ ],
+ "enron_162_o": [
+  "c95d7d797e5e6115"
+ ],
+ "enron_162_r": [
+  "c95d7d797e5e6115"
+ ],
+ "enron_163_o": [
+  "4868c3389b3d7db2",
+  "5fcdc3ae86c0c2de"
+ ],
+ "enron_163_r": [
+  "4868c3389b3d7db2",
+  "5fcdc3ae86c0c2de"
+ ],
+ "enron_164_o": [
+  "d22dfa02b8a0b4ec"
+ ],
+ "enron_164_r": [
+  "d22dfa02b8a0b4ec"
+ ],
+ "enron_165_o": [
+  "207e9673eab17a04"
+ ],
+ "enron_165_r": [
+  "207e9673eab17a04"
+ ],
+ "enron_166_o": [
+  "f77985c9a351d178"
+ ],
+ "enron_166_r": [
+  "f77985c9a351d178"
+ ],
+ "enron_167_o": [
+  "df8f960efb709854"
+ ],
+ "enron_167_r": [
+  "df8f960efb709854"
+ ],
+ "enron_168_o": [
+  "06d7266742013c2f"
+ ],
+ "enron_168_r": [
+  "06d7266742013c2f"
+ ],
+ "enron_169_o": [
+  "2c64939076e2a6b3",
+  "eccd2ecd2d0d289e"
+ ],
+ "enron_169_r": [
+  "2c64939076e2a6b3",
+  "eccd2ecd2d0d289e"
+ ],
+ "enron_170_o": [
+  "7745fc069f3b24bd"
+ ],
+ "enron_170_r": [
+  "7745fc069f3b24bd"
+ ],
+ "enron_171_o": [
+  "353f595682f8a07a"
+ ],
+ "enron_171_r": [
+  "353f595682f8a07a"
+ ],
+ "enron_172_o": [
+  "97e341151ac71f90"
+ ],
+ "enron_172_r": [
+  "97e341151ac71f90"
+ ],
+ "enron_173_o": [
+  "384c93ba823b612a"
+ ],
+ "enron_173_r": [
+  "384c93ba823b612a"
+ ],
+ "enron_174_o": [
+  "01cd9dc08b8c8e0d"
+ ],
+ "enron_174_r": [
+  "01cd9dc08b8c8e0d"
+ ],
+ "enron_175_o": [
+  "404a767a5f641666"
+ ],
+ "enron_175_r": [
+  "404a767a5f641666"
+ ],
+ "enron_176_o": [
+  "3a74f2ab3481f932"
+ ],
+ "enron_176_r": [
+  "3a74f2ab3481f932"
+ ],
+ "enron_177_o": [
+  "3a0608802cc4d834"
+ ],
+ "enron_177_r": [
+  "3a0608802cc4d834"
+ ],
+ "enron_178_o": [
+  "939d25ed64ebbcdf"
+ ],
+ "enron_178_r": [
+  "939d25ed64ebbcdf"
+ ],
+ "enron_179_o": [
+  "9f5e9158d6f80873"
+ ],
+ "enron_179_r": [
+  "9f5e9158d6f80873"
+ ],
+ "enron_180_o": [
+  "98cac0ce71a271c5"
+ ],
+ "enron_180_r": [
+  "98cac0ce71a271c5"
+ ],
+ "enron_181_o": [
+  "e0dd53bb89e8c146"
+ ],
+ "enron_181_r": [
+  "e0dd53bb89e8c146"
+ ],
+ "enron_182_o": [
+  "dc6e2450bcd2c869"
+ ],
+ "enron_182_r": [
+  "dc6e2450bcd2c869"
+ ],
+ "enron_183_o": [
+  "20e2b6ff4c1a5f1b"
+ ],
+ "enron_183_r": [
+  "20e2b6ff4c1a5f1b"
+ ],
+ "enron_184_o": [
+  "b2b7c24799edccb6"
+ ],
+ "enron_184_r": [
+  "b2b7c24799edccb6"
+ ],
+ "enron_185_o": [
+  "d5f4934a85ff20b8"
+ ],
+ "enron_185_r": [
+  "d5f4934a85ff20b8"
+ ],
+ "enron_186_o": [
+  "c67525b255a0affb"
+ ],
+ "enron_186_r": [
+  "c67525b255a0affb"
+ ],
+ "enron_187_o": [
+  "3e64706b6a82226e"
+ ],
+ "enron_187_r": [
+  "3e64706b6a82226e"
+ ],
+ "enron_188_o": [
+  "798d812042690927"
+ ],
+ "enron_188_r": [
+  "798d812042690927"
+ ],
+ "enron_189_o": [
+  "a566cc9c0567f9db"
+ ],
+ "enron_189_r": [
+  "a566cc9c0567f9db"
+ ],
+ "enron_190_o": [
+  "39f845b0bb598b94"
+ ],
+ "enron_190_r": [
+  "39f845b0bb598b94"
+ ],
+ "enron_191_o": [
+  "c84adc5d58131ca3"
+ ],
+ "enron_191_r": [
+  "c84adc5d58131ca3"
+ ],
+ "enron_192_o": [
+  "eac3806ea703f840"
+ ],
+ "enron_192_r": [
+  "eac3806ea703f840"
+ ],
+ "enron_193_o": [
+  "f41613fa33717a58"
+ ],
+ "enron_193_r": [
+  "f41613fa33717a58"
+ ],
+ "enron_194_o": [
+  "8fdf3cf8543c5dca"
+ ],
+ "enron_194_r": [
+  "8fdf3cf8543c5dca"
+ ],
+ "enron_195_o": [
+  "ab8769fb2e7acb3a"
+ ],
+ "enron_195_r": [
+  "ab8769fb2e7acb3a"
+ ],
+ "enron_196_o": [
+  "89e09f0aa376b21e"
+ ],
+ "enron_196_r": [
+  "89e09f0aa376b21e"
+ ],
+ "enron_197_o": [
+  "075376939e2cb9a2"
+ ],
+ "enron_197_r": [
+  "075376939e2cb9a2"
+ ],
+ "enron_198_o": [
+  "c3b4c1cd94283fff"
+ ],
+ "enron_198_r": [
+  "c3b4c1cd94283fff"
+ ],
+ "enron_199_o": [
+  "205c357c8da68b69",
+  "d1d2b4e5774d9b66"
+ ],
+ "enron_199_r": [
+  "205c357c8da68b69",
+  "d1d2b4e5774d9b66"
+ ],
+ "enron_200_o": [
+  "8fd0a2d23f8aeb89",
+  "f7c977e6764bdbc3"
+ ],
+ "enron_200_r": [
+  "8fd0a2d23f8aeb89",
+  "f7c977e6764bdbc3"
+ ],
+ "enron_201_o": [
+  "04ca703623222e8b"
+ ],
+ "enron_201_r": [
+  "04ca703623222e8b"
+ ],
+ "enron_202_o": [
+  "b98841ecdf4c0eda"
+ ],
+ "enron_202_r": [
+  "b98841ecdf4c0eda"
+ ],
+ "enron_203_o": [
+  "38054e200996fb8f"
+ ],
+ "enron_203_r": [
+  "38054e200996fb8f"
+ ],
+ "enron_204_o": [
+  "cfc700e8c506015d"
+ ],
+ "enron_204_r": [
+  "cfc700e8c506015d"
+ ],
+ "enron_205_o": [
+  "6e44bf1d21ccb8aa"
+ ],
+ "enron_205_r": [
+  "6e44bf1d21ccb8aa"
+ ],
+ "enron_206_o": [
+  "d9b923f66460025e"
+ ],
+ "enron_206_r": [
+  "d9b923f66460025e"
+ ],
+ "enron_207_o": [
+  "27cf729180fcd449"
+ ],
+ "enron_207_r": [
+  "27cf729180fcd449"
+ ],
+ "enron_208_o": [
+  "53fde99e7f9e6506",
+  "9957ee9def95aee1"
+ ],
+ "enron_208_r": [
+  "53fde99e7f9e6506",
+  "9957ee9def95aee1"
+ ],
+ "enron_209_o": [
+  "208ba0d2796dda3b"
+ ],
+ "enron_209_r": [
+  "208ba0d2796dda3b"
+ ],
+ "enron_210_o": [
+  "704279f5868bff1f"
+ ],
+ "enron_210_r": [
+  "704279f5868bff1f"
+ ],
+ "enron_211_o": [
+  "f10f704dbba5ed5c"
+ ],
+ "enron_211_r": [
+  "f10f704dbba5ed5c"
+ ],
+ "enron_212_o": [
+  "3242dfe2a887c025"
+ ],
+ "enron_212_r": [
+  "3242dfe2a887c025"
+ ],
+ "enron_213_o": [
+  "f05354016f24afd8"
+ ],
+ "enron_213_r": [
+  "f05354016f24afd8"
+ ],
+ "enron_214_o": [
+  "16ff1dddbc723db4",
+  "92687012886151fc"
+ ],
+ "enron_214_r": [
+  "16ff1dddbc723db4",
+  "92687012886151fc"
+ ],
+ "enron_215_o": [
+  "80c0451a7231d6ff"
+ ],
+ "enron_215_r": [
+  "80c0451a7231d6ff"
+ ],
+ "enron_216_o": [
+  "8e6903813d29b1ed"
+ ],
+ "enron_216_r": [
+  "8e6903813d29b1ed"
+ ],
+ "enron_217_o": [
+  "6a8539630147fba1"
+ ],
+ "enron_217_r": [
+  "6a8539630147fba1"
+ ],
+ "enron_218_o": [
+  "470fda0dcac560fe"
+ ],
+ "enron_218_r": [
+  "470fda0dcac560fe"
+ ],
+ "enron_219_o": [
+  "d82741eba969188e"
+ ],
+ "enron_219_r": [
+  "d82741eba969188e"
+ ],
+ "enron_220_o": [
+  "879a09437f619f40"
+ ],
+ "enron_220_r": [
+  "879a09437f619f40"
+ ],
+ "enron_221_o": [
+  "e6b04ef6074d000f"
+ ],
+ "enron_221_r": [
+  "e6b04ef6074d000f"
+ ],
+ "enron_222_o": [
+  "98d46aa3752386fb"
+ ],
+ "enron_222_r": [
+  "98d46aa3752386fb"
+ ],
+ "enron_223_o": [
+  "c8784f225c56a2cd"
+ ],
+ "enron_223_r": [
+  "c8784f225c56a2cd"
+ ],
+ "enron_224_o": [
+  "522f8c8e9a54017f"
+ ],
+ "enron_224_r": [
+  "522f8c8e9a54017f"
+ ],
+ "enron_225_o": [
+  "1d8855403606b189"
+ ],
+ "enron_225_r": [
+  "1d8855403606b189"
+ ],
+ "enron_226_o": [
+  "1dce7454f1560038",
+  "32dffc0e8c68b4a0"
+ ],
+ "enron_226_r": [
+  "1dce7454f1560038",
+  "32dffc0e8c68b4a0"
+ ],
+ "enron_227_o": [
+  "2c46d06aa5882b25"
+ ],
+ "enron_227_r": [
+  "2c46d06aa5882b25"
+ ],
+ "enron_228_o": [
+  "0b5e3773b08bbb90"
+ ],
+ "enron_228_r": [
+  "0b5e3773b08bbb90"
+ ],
+ "enron_229_o": [
+  "b574944118e0866c"
+ ],
+ "enron_229_r": [
+  "b574944118e0866c"
+ ],
+ "enron_230_o": [
+  "f40a1bc7f196f163"
+ ],
+ "enron_230_r": [
+  "f40a1bc7f196f163"
+ ],
+ "enron_231_o": [
+  "c6f2b7e9319c3e95"
+ ],
+ "enron_231_r": [
+  "c6f2b7e9319c3e95"
+ ],
+ "enron_232_o": [
+  "068ed8a05ef72303"
+ ],
+ "enron_232_r": [
+  "068ed8a05ef72303"
+ ],
+ "enron_233_o": [
+  "e52d5168ec18271b"
+ ],
+ "enron_233_r": [
+  "e52d5168ec18271b"
+ ],
+ "enron_234_o": [
+  "915b2c117d790899"
+ ],
+ "enron_234_r": [
+  "915b2c117d790899"
+ ],
+ "enron_235_o": [
+  "a5821219e6b88095"
+ ],
+ "enron_235_r": [
+  "a5821219e6b88095"
+ ],
+ "enron_236_o": [
+  "07a1449dd0153302"
+ ],
+ "enron_236_r": [
+  "07a1449dd0153302"
+ ],
+ "enron_237_o": [
+  "162ddc473f62e35d"
+ ],
+ "enron_237_r": [
+  "162ddc473f62e35d"
+ ],
+ "enron_238_o": [
+  "763d777872028a13"
+ ],
+ "enron_238_r": [
+  "763d777872028a13"
+ ],
+ "enron_239_o": [
+  "477bcb6f0b713470"
+ ],
+ "enron_239_r": [
+  "477bcb6f0b713470"
+ ],
+ "enron_240_o": [
+  "70feb7cb3d61a701"
+ ],
+ "enron_240_r": [
+  "70feb7cb3d61a701"
+ ],
+ "enron_241_o": [
+  "fee4bdb36bae29e7"
+ ],
+ "enron_241_r": [
+  "fee4bdb36bae29e7"
+ ],
+ "enron_242_o": [
+  "9b4254f2258e75c9"
+ ],
+ "enron_242_r": [
+  "9b4254f2258e75c9"
+ ],
+ "enron_243_o": [
+  "272671eeb38ca086"
+ ],
+ "enron_243_r": [
+  "272671eeb38ca086"
+ ],
+ "enron_244_o": [
+  "d678f6c903581bff"
+ ],
+ "enron_244_r": [
+  "d678f6c903581bff"
+ ],
+ "enron_245_o": [
+  "7d94fac38f2b6ab7"
+ ],
+ "enron_245_r": [
+  "7d94fac38f2b6ab7"
+ ],
+ "enron_246_o": [
+  "d4948d31f06de6e5"
+ ],
+ "enron_246_r": [
+  "d4948d31f06de6e5"
+ ],
+ "enron_247_o": [
+  "d4368f3cda67e8c7"
+ ],
+ "enron_247_r": [
+  "d4368f3cda67e8c7"
+ ],
+ "enron_248_o": [
+  "0fb021a4ded8f474"
+ ],
+ "enron_248_r": [
+  "0fb021a4ded8f474"
+ ],
+ "enron_249_o": [
+  "b6e28bbb2b6926dc"
+ ],
+ "enron_249_r": [
+  "b6e28bbb2b6926dc"
+ ]
+}

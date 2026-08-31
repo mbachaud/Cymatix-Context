@@ -1,6 +1,6 @@
 {
- "date": "2026-08-29T19:43:29.551164+00:00",
- "db": "F:/tmp/enronqa_bed_v2/enronqa.db",
+ "date": "2026-08-30T19:22:40.406745+00:00",
+ "db": "F:/tmp/enronqa_padded_bed/enronqa_padded.db",
  "seed": 20260829,
  "needles_in": 500,
  "needles_resolvable": 500,
@@ -9,7 +9,7 @@
  "half_pairs": 125,
  "sha_twin_fallbacks": {},
  "gold_genes_mean": 1.08,
- "gold_genes_max": 3,
+ "gold_genes_max": 2,
  "needles": {
   "enron_000_o": {
    "question_type": "enron_original",
@@ -1703,12 +1703,12 @@
   },
   "enron_169_o": {
    "question_type": "enron_original",
-   "gold_genes": 3,
+   "gold_genes": 2,
    "via_twin": []
   },
   "enron_169_r": {
    "question_type": "enron_rephrased",
-   "gold_genes": 3,
+   "gold_genes": 2,
    "via_twin": []
   },
   "enron_170_o": {
