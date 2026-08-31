@@ -1,0 +1,144 @@
+{
+  "tool": "receipt_tagger_v2_entity_hygiene",
+  "issue": "https://github.com/mbachaud/Cymatix-Context/issues/410",
+  "stamp": "2026-08-30T08:19:18Z",
+  "tagger_version_after": 2,
+  "arms_note": "v1 = current code with _is_noise_entity bypassed (the gate is the only behavioral change site of the v2 fix); v2 = shipped",
+  "sample": {
+    "roots": [
+      "F:\\Projects\\enronqa\\corpus",
+      "F:\\Projects\\enronqa\\padding"
+    ],
+    "files": 2000,
+    "seed": 20260830
+  },
+  "wall_s": 409.9,
+  "v1": {
+    "genes": 2784,
+    "errors": 0,
+    "entity_graph_rows": 35032,
+    "distinct_entities": 14493,
+    "top25_hubs": {
+      "content-type": 1711,
+      "content-transfer-encoding": 1709,
+      "javamail": 855,
+      "filename": 784,
+      "enron": 712,
+      "x-origin": 706,
+      "mime-version": 574,
+      "na": 405,
+      "pst": 285,
+      "ect": 195,
+      "california": 172,
+      "houston": 169,
+      "davis": 88,
+      "jeff": 85,
+      "jeff dasovich": 79,
+      "ferc": 73,
+      "texas": 71,
+      "kay mann": 67,
+      "john": 66,
+      "mann-k\nx-filename": 64,
+      "mark": 59,
+      "x-origin: kaminski-v\nx-filename": 58,
+      "london": 55,
+      "pg&e": 55,
+      "u.s.": 54
+    },
+    "multiline_entity_kinds": 1974,
+    "multiline_entity_occurrences": 2818,
+    "multiline_examples": [
+      "MANN-K\nX-FileName",
+      "X-Origin: Kaminski-V\nX-FileName",
+      "Taylor-M\nX-FileName",
+      "Vince J Kaminski\nX-",
+      "Steven J Kean\nX-To"
+    ]
+  },
+  "v2": {
+    "genes": 2784,
+    "errors": 0,
+    "entity_graph_rows": 29197,
+    "distinct_entities": 14018,
+    "top25_hubs": {
+      "enron": 740,
+      "na": 408,
+      "pst": 285,
+      "ect": 214,
+      "california": 190,
+      "houston": 187,
+      "jeff": 95,
+      "davis": 95,
+      "john": 94,
+      "jeff dasovich": 83,
+      "texas": 82,
+      "ferc": 80,
+      "mark": 73,
+      "kay mann": 67,
+      "exmerge": 64,
+      "mike": 63,
+      "u.s.": 61,
+      "london": 61,
+      "new york": 60,
+      "chris": 59,
+      "pg&e": 58,
+      "enron north america corp.": 55,
+      "steve": 54,
+      "mark taylor": 54,
+      "richard shapiro": 52
+    },
+    "multiline_entity_kinds": 0,
+    "multiline_entity_occurrences": 0,
+    "multiline_examples": []
+  },
+  "delta": {
+    "entity_graph_rows": -5835,
+    "entity_graph_rows_pct": -16.66,
+    "distinct_entities_removed": 1989,
+    "removed_top25_by_rows": {
+      "content-type": 1711,
+      "content-transfer-encoding": 1709,
+      "javamail": 855,
+      "filename": 784,
+      "x-origin": 706,
+      "mime-version": 574,
+      "mann-k\nx-filename": 64,
+      "x-origin: kaminski-v\nx-filename": 58,
+      "x-origin:": 54,
+      "taylor-m\nx-filename": 40,
+      "vince j kaminski\nx-": 38,
+      "steven j kean\nx-to": 33,
+      "beck-s\nx-filename": 29,
+      "x-origin: rogers-b\nx-filename": 25,
+      "chris germany\nx-to": 24,
+      "guzman-m\nx-filename": 21,
+      "campbell-l\nx-filename": 19,
+      "vince j kaminski\nx-to": 18,
+      "sally beck\nx-": 16,
+      "vince j kaminski\nx-bcc": 16,
+      "subject": 15,
+      "robin rodrigue\nx-to": 13,
+      "haedicke-m\nx-filename": 12,
+      "x-origin: scott-s\nx-filename": 12,
+      "darron c giron\nx-to": 10
+    },
+    "gene_ids_equal": true,
+    "genes_with_changed_tag_multiset": 2235,
+    "genes_total": 2779,
+    "survival_checks": {
+      "enron": {
+        "v1_rows": 712,
+        "v2_rows": 740
+      },
+      "ect": {
+        "v1_rows": 195,
+        "v2_rows": 214
+      },
+      "hou": {
+        "v1_rows": 2,
+        "v2_rows": 2
+      }
+    }
+  },
+  "comparability_note": "gene_ids identical (content untouched) but tag multisets differ on the changed genes -> the ingest_equivalence_gate content digest changes: beds built at tagger_version 2 are not comparable to tagger_version 1 beds (BASELINES.md rule)"
+}

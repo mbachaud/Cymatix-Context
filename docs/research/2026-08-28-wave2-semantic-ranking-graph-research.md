@@ -19,7 +19,7 @@ set). Under the graduated combo config (`w1c_k20_eps_all_full`):
 | category | n | mechanism |
 |---|---|---|
 | (a) delivered | 39 (0.312) | fine |
-| (b) top-12, not delivered | 5 | gold at map rank 9–12 but `delivered_count` 2–8 — the token budget cuts above gold. **A delivery/budget fix, not a ranking lane** — cheapest delivered points on the board. |
+| (b) top-12, not delivered | 5 | gold at map rank 9–12 but `delivered_count` 2–8. **CORRECTED 2026-08-28 (W2.4 probe)**: the seat-loser is the classifier's per-rule `assembly_max_genes_cap` (2/5/6/8, `retrieval/query_classifier.py`), applied BEFORE splice — `splice_n_candidates == delivered_count` on every such needle; the token budget never fired (`budget_tier=broad`, hard floor uncrossed). Still a delivery fix, not a ranking lane — see the W2.4 plan for the cap-floor form. |
 | (c) stalled: in map, rank 13–45 | 20 | 100% band-rescue-reachable by construction — the shipped bm25 shortlist bounds the scored map at 50 docs (max any-gold rank over all 470 needles = 50 in both receipts). |
 | (d) static: absent from map | 61 | shortlist deletes gold. At shortlist-off their gold sits at map rank min 104 / **median 49,310** / p75 109,230 / max 253,017 (n=27 half-set members); only 3 needles under rank 1000; **erb_186 and erb_192 are pool-absent even at off** — unreachable by any ranking lane. Addressable static cohort = 59. |
 

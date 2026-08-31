@@ -166,18 +166,20 @@ def run(argv: list[str]) -> int:
             report["server"] = {"reachable": False, "error": err}
             report["launcher"] = {"reachable": False, "error": err}
         else:
-            # collect_status() / _get_json() already return structured error
-            # payloads with reachable=False on network failure (see
-            # cymatix_status._get_json), so we surface those directly rather
-            # than papering over them with a top-level except. Any *other*
-            # exception here is a real bug — let it propagate.
+            # The host-aware report keeps transport, health, and launcher
+            # state distinct. This compact command preserves its established
+            # network keys without making launcher availability a readiness
+            # gate for direct MCP diagnostics.
             net = collect_status()
             report["server"] = {
-                "reachable": net["server"]["reachable"],
+                "reachable": (
+                    net["server"]["transport"] == "reachable"
+                    and net["server"]["health"] == "healthy"
+                ),
                 "url": net["server"]["url"],
             }
             report["launcher"] = {
-                "reachable": net["launcher"]["reachable"],
+                "reachable": net["launcher"]["state"] in {"running", "stopped"},
                 "url": net["launcher"]["url"],
             }
 

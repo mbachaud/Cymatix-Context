@@ -123,8 +123,15 @@ def test_cymatix_status_console_script_targets_importable_module():
 def _fake_net(server_up: bool, launcher_up: bool):
     def _collect_status():
         return {
-            "server": {"reachable": server_up, "url": "http://127.0.0.1:11437"},
-            "launcher": {"reachable": launcher_up, "url": "http://127.0.0.1:11438"},
+            "server": {
+                "transport": "reachable" if server_up else "unreachable",
+                "health": "healthy" if server_up else "unknown",
+                "url": "http://127.0.0.1:11437",
+            },
+            "launcher": {
+                "state": "running" if launcher_up else "unreachable",
+                "url": "http://127.0.0.1:11438",
+            },
         }
     return _collect_status
 

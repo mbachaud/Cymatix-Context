@@ -17,6 +17,18 @@ ingest_c; comparable rebuilds ingest sequentially unless the comparator was
 itself built parallel. Beds built before this rule are ingest_c=1 where the
 build was the stock sequential path and ingest_c=unknown otherwise.
 
+**Tagger-version rule (2026-08-30, issue #410):** tags are part of the
+bed-content digest (`scripts/ingest_equivalence_gate.py` hashes
+gene_id+content+tags), so any change to CpuTagger output is a bed-content
+change. The tagger declares `TAGGER_VERSION` (`cymatix_context/tagger.py`;
+bumped 1 → 2 by the #410 entity-hygiene fix), and
+`scripts/build_fixture_matrix.py` records it per bed in the fixture
+manifest. Cross-bed comparisons require matching tagger_version. Every bed
+built before 2026-08-30 (erb_*, dogfood, enronqa v1/v2/padded) is
+tagger_version=1; v1 beds stay internally valid, but new-bed baselines must
+be re-established at v2. Receipt for the v1→v2 delta:
+`benchmarks/dogfood/receipts/tagger_v2_entity_hygiene_2026-08-30.json`.
+
 ## Standard bench profile (decision 2026-08-11)
 
 Future testing runs the GPU encoder daemon ON with per-box worker counts.

@@ -72,7 +72,7 @@ if (-not $SkipPipInstall) {
         & python -m pip install --upgrade pip
         & python -m pip install -e ".[otel,launcher-tray,accel,embeddings,cpu]"
         # MCP SDK is a separate top-level package, not an extra.
-        & python -m pip install "mcp>=1.0"
+        & python -m pip install "mcp>=2,<3"
         if ($LASTEXITCODE -ne 0) { throw "pip install failed (exit $LASTEXITCODE)" }
         # The [cpu] extra ships the spaCy library only. CpuTagger loads the
         # en_core_web_sm pipeline at first ingest, so without it every
