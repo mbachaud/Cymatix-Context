@@ -79,7 +79,7 @@ All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8
 |---------|-------------|
 | `[ribosome]` | model, backend (`"none"` default / `"litellm"` / `"deberta"` — only litellm and deberta are honored when enabled; any other value, including legacy `"ollama"` and `"claude"`, dispatches the no-op DisabledBackend), timeout, query_expansion_enabled |
 | `[hardware]` | device auto-detection (CUDA, MPS, ROCm, CPU) |
-| `[budget]` | expression_tokens (default 7000 — code and cymatix.toml unified in the 2026-06-12 default-honesty pass), max_genes_per_turn, splice_aggressiveness, decoder_mode, legibility_enabled, session_delivery_enabled |
+| `[budget]` | expression_tokens (default 7000 — code and cymatix.toml unified in the 2026-06-12 default-honesty pass), max_genes_per_turn, splice_aggressiveness, decoder_mode, legibility_enabled, session_delivery_enabled, min_delivered_docs (**default 0** = legacy eviction-only trim — W2.4 seat floor: N switches the trimmer to largest-part truncation once eviction reaches N seats; flip is receipt-gated on the w24 arm) |
 | `[session]` | synthetic_session_enabled, synthetic_session_window_s, default_party_id |
 | `[genome]` | path (`genomes/main/genome.db`), compact_interval, cold_start_threshold, replicas |
 | `[server]` | host, port, upstream |
