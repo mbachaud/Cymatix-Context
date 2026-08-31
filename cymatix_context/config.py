@@ -350,10 +350,15 @@ class IngestionConfig:
     # — bounds the O(hub-posting-list) sweep that made ingest O(N^2) on the
     # enronqa_padded bed (89.5% of writer wall time, 148.9 ms/insert vs
     # 7.4 ms without the two MIME hubs; benchmarks/dogfood/receipts/
-    # ingest_decay_enronqa_2026-08-30.json). PKI_NOISE_CUTOFF=200 is the
-    # precedent value for the default-flip proposal tracked in #411. 0 =
-    # disabled = legacy behavior, byte-identical.
-    entity_autolink_hub_cutoff: int = 0
+    # ingest_decay_enronqa_2026-08-30.json). Default 200 since 2026-08-31
+    # (#411 flip, PKI_NOISE_CUTOFF precedent) — both flip conditions
+    # receipted: retrieval null on the v2/v2c cutoff twins (gene-id sets
+    # identical, 0/500 delivered flips both arms) and the post-tagger-v2
+    # re-probe (entity_hub_cutoff_reprobe_85k_taggerv2_2026-08-31.json:
+    # natural hubs persist — enron 16,048 postings — 0.22% of entities
+    # hold 30.1% of postings at 200; link call 4.15 -> 0.42 ms at 85k).
+    # 0 = disabled = legacy unbounded probe set.
+    entity_autolink_hub_cutoff: int = 200
     # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
     # (genes.embedding_dense_v2) inline at ingest. This is purely the WRITE
     # path — retrieval gates on [retrieval] dense_embedding_enabled
