@@ -62,8 +62,9 @@ def _make_app(db_a: str, **section_overrides):
 # The value must differ from the KnowledgeStore.__init__ default — a
 # dropped kwarg reverts to that default, which is what the test catches.
 KNOBS = [
-    # ── ingestion-side write knob (matters for read_only=False swaps) ──
+    # ── ingestion-side write knobs (matter for read_only=False swaps) ──
     ("ingestion", "dense_embed_on_ingest", True, "_dense_embed_on_ingest"),
+    ("ingestion", "entity_autolink_hub_cutoff", 200, "_entity_autolink_hub_cutoff"),
     # ── Tier 0.5 filename anchor + BM25 (the 2026-08-09 receipt class) ──
     ("retrieval", "filename_anchor_enabled", True, "_filename_anchor_enabled"),
     ("retrieval", "filename_anchor_weight", 7.25, "_filename_anchor_weight"),

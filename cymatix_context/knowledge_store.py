@@ -546,6 +546,12 @@ class KnowledgeStore:
         deny_list_extra: Optional[List[str]] = None,
         locale_demotion_enabled: bool = True,
         entity_graph: bool = False,
+        # Posting-count hub cutoff for ingest-time entity auto-linking
+        # ([ingestion] entity_autolink_hub_cutoff). > 0 drops entities with
+        # more postings than this from the COVER-edge probe set — bounds the
+        # O(hub-posting-list) per-insert sweep (enronqa_padded 2026-08-30:
+        # 89.5% of writer wall time). 0 = legacy behavior.
+        entity_autolink_hub_cutoff: int = 0,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
         sr_k_steps: int = 4,
@@ -762,6 +768,7 @@ class KnowledgeStore:
         # opted in; avoids hammering COUNT(*) when the toggle is off.
         self._splade_auto_cached_count: int = 0
         self._entity_graph_enabled = entity_graph
+        self._entity_autolink_hub_cutoff = int(entity_autolink_hub_cutoff)
         # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
         # Separate from _entity_graph_enabled (write-side) — this controls
         # whether entity_graph rows are consulted during query_genes().
@@ -2012,7 +2019,10 @@ class KnowledgeStore:
                     fts_external=self._fts_external,
                     prior_fts_row=prior_fts_row,
                 )
-                sync_entity_graph(cur, gene_id, gene, self._entity_graph_enabled)
+                sync_entity_graph(
+                    cur, gene_id, gene, self._entity_graph_enabled,
+                    hub_cutoff=self._entity_autolink_hub_cutoff,
+                )
                 sync_path_key_index(cur, gene_id, gene)
                 sync_filename_index(cur, gene_id, gene.source_id)
                 # Issue #164: size-aware SPLADE auto-toggle. Refresh the cached
@@ -4725,7 +4735,10 @@ class KnowledgeStore:
     def _auto_link_by_entity(self, gene_id: str, entities: List[str], cur) -> None:
         """Delegate to storage.co_activation.auto_link_by_entity."""
         from .storage.co_activation import auto_link_by_entity
-        auto_link_by_entity(gene_id, entities, cur)
+        auto_link_by_entity(
+            gene_id, entities, cur,
+            hub_cutoff=self._entity_autolink_hub_cutoff,
+        )
 
     def _expand_by_entity_graph(
         self, gene_ids: List[str], limit: int, cur

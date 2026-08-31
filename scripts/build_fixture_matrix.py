@@ -843,6 +843,16 @@ def ingest_tree(
 # ── Build one profile ─────────────────────────────────────────────────────
 
 
+def _env_hub_cutoff() -> int:
+    """``CYMATIX_BFM_HUB_CUTOFF`` — entity auto-link posting-count cutoff
+    for bench builds ([ingestion] entity_autolink_hub_cutoff semantics,
+    PR #412). The builder constructs ``Genome`` directly and never loads
+    cymatix.toml, so the knob must arrive via env. 0 (default) = legacy
+    unbounded linking.
+    """
+    return int(os.environ.get("CYMATIX_BFM_HUB_CUTOFF", "0") or 0)
+
+
 def _env_flag(name: str, default: str = "1") -> bool:
     """Read a boolean env toggle. Truthy unless set to 0/false/no/off.
 
@@ -953,7 +963,10 @@ def build_profile(
         synonym_map={},
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"),
         entity_graph=True,
+        entity_autolink_hub_cutoff=_env_hub_cutoff(),
     )
+    log.info("entity_autolink_hub_cutoff=%d (CYMATIX_BFM_HUB_CUTOFF)",
+             _env_hub_cutoff())
 
     skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
     extra_filename_filters = profile["extra_filename_filters"]
@@ -1425,6 +1438,7 @@ def _build_one_shard(
     shard = Genome(
         path=str(p), synonym_map={},
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"), entity_graph=True,
+        entity_autolink_hub_cutoff=_env_hub_cutoff(),
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,

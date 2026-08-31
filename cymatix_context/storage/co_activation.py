@@ -30,14 +30,45 @@ def auto_link_by_entity(
     gene_id: str,
     entities: List[str],
     cur: sqlite3.Cursor,
+    hub_cutoff: int = 0,
 ) -> None:
     """Find documents that share 2+ entities with *gene_id* and create
     co-activation links (relation = COVER = 5).
+
+    ``hub_cutoff`` > 0 drops entities whose entity_graph posting count
+    exceeds the bound from the probe set before the GROUP BY
+    (``PKI_NOISE_CUTOFF`` precedent, storage/indexes.py: cardinality
+    strictly greater than the cutoff is hard-skipped). Hub posting
+    lists are what make this scan O(N^2) per build on header-heavy
+    corpora — 89.5% of writer wall time on the 289k-gene enronqa_padded
+    bed (benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30
+    .json). The count probe is LIMIT-bounded, so the per-entity check
+    reads at most cutoff+1 covering-index entries and per-insert cost
+    is O(n_entities * cutoff). 0 (default) = disabled = legacy
+    behavior. Confidence stays shared / |probed set| — the post-filter
+    set, so it remains internally consistent with the IN list.
     """
     if len(entities) < 2:
         return
 
     ent_lower = [e.lower() for e in entities[:15]]
+
+    if hub_cutoff > 0:
+        ent_lower = [
+            e
+            for e in ent_lower
+            if cur.execute(
+                "SELECT COUNT(*) FROM ("
+                "SELECT 1 FROM entity_graph WHERE entity = ? LIMIT ?)",
+                (e, hub_cutoff + 1),
+            ).fetchone()[0]
+            <= hub_cutoff
+        ]
+        # shared >= 2 needs at least 2 probe entities (entity_graph PK
+        # (entity, gene_id) caps a peer at one row per entity).
+        if len(ent_lower) < 2:
+            return
+
     placeholders = ",".join("?" * len(ent_lower))
 
     rows = cur.execute(
