@@ -958,6 +958,9 @@ def _clear_rank_publication(genome: Any) -> None:
         genome.last_ranked_ids = []
     if hasattr(genome, "last_rerank_diag"):
         genome.last_rerank_diag = {}
+    # W2.1: same staleness discipline for the cover-walk diagnostics.
+    if hasattr(genome, "last_cover_walk_diag"):
+        genome.last_cover_walk_diag = {}
 
 
 def _read_rank_publication(genome: Any) -> Tuple[List[str], Dict[str, Any]]:
@@ -965,6 +968,16 @@ def _read_rank_publication(genome: Any) -> Tuple[List[str], Dict[str, Any]]:
     ranked = list(getattr(genome, "last_ranked_ids", None) or ())
     diag = dict(getattr(genome, "last_rerank_diag", None) or {})
     return ranked, diag
+
+
+def _read_cover_walk_diag(genome: Any) -> Optional[Dict[str, Any]]:
+    """W2.1: snapshot ``last_cover_walk_diag`` — ``None`` when the walk did
+    not run this needle (knob off, additive fusion, or a pre-publication
+    failure), a dict (mode / frontier / band_boosted / rescues / displaced)
+    when it did. Additive receipt field: absent on pre-W2.1 receipts, never
+    renames existing keys."""
+    d = getattr(genome, "last_cover_walk_diag", None)
+    return dict(d) if d else None
 
 
 def run_arm(
@@ -1123,6 +1136,7 @@ def run_arm(
                     err_final = final_order_fields(err_ranked, set(gold), k, err_diag)
                     final_ranks.append(err_final["final_rank_of_first_gold"])
                     error_record.update(err_final)
+                    error_record["cover_walk"] = _read_cover_walk_diag(manager.genome)
                     # #341 splice-interaction receipt: still None on the usual
                     # failure (splice never reached), but a build_context that
                     # raises AFTER splice (e.g. assemble) leaves the entry
@@ -1171,6 +1185,8 @@ def run_arm(
                 # instead of inheriting a prior needle's stale count.
                 record["splice_n_candidates"] = _resolve_splice_n_candidates(
                     ring_mark, name)
+                # W2.1: cover-walk per-needle diag (None = walk did not run).
+                record["cover_walk"] = _read_cover_walk_diag(manager.genome)
                 records.append(record)
 
                 contribs = getattr(manager.genome, "last_tier_contributions", None) or {}

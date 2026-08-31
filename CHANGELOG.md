@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **`[budget] min_delivered_docs` GRADUATED 0 → 12 (`[w24-floor-flip]`).**
+  The W2.4 delivered-seat floor is now a shipped default: the classifier's
+  per-rule assembly cap is lifted to at least 12 seats and the Stage-5
+  budget trimmer truncates the largest parts instead of evicting whole
+  documents (token budget still wins last — eviction resumes below the
+  floor on overflow). Receipt-gated on three corpora with zero paired
+  delivered losses: ERB 829k .630→.668 (+18/−0,
+  `benchmarks/dogfood/erb/receipts/ladder_v09x_w24_min_delivered_2026-08-28.json`),
+  EnronQA v2 .820→.856 (+18/−0) and EnronQA padded 597k .776→.792
+  (+8/−0) (BASELINES row `2026-08-30-v091-gate-sweep`); r@12/fr@12
+  identical in every cell. `min_delivered_docs = 0` restores legacy;
+  revert = `git revert` of the `[w24-floor-flip]` commit.
 ## 0.9.0 (2026-08-20)
 
 The post-flip release: the shipped default retrieval path is now fully
