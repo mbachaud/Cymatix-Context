@@ -10,11 +10,11 @@ Two actions:
 Both wrap :meth:`cymatix_context.api.CymatixSession.gene_get`, which uses
 ``Genome.get_gene`` under the hood. Read-only.
 
-Vocabulary note: the subcommand is ``gene`` to match the legacy MCP
-tool name (``cymatix_gene_get``) — the canonical engineering alias is
-``cymatix_document_get`` per ROSETTA.md. A future ``cymatix document``
-top-level subcommand alias can co-exist once the R4 soft-deprecation
-wave lands.
+Vocabulary note: this module still owns the ``gene`` subcommand to
+match the legacy MCP tool name (``cymatix_gene_get``) — the canonical
+engineering spelling is ``document`` per ROSETTA.md. ``cymatix document
+get|preview`` (dispatcher.py) resolves to this same module's ``run()``;
+``gene`` remains a fully-supported legacy alias, not deprecated.
 """
 from __future__ import annotations
 
