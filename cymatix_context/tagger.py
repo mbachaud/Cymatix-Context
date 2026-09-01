@@ -35,6 +35,24 @@ from .schemas import EpigeneticMarkers, Gene, PromoterTags
 log = logging.getLogger("cymatix.tagger")
 
 
+# ── Tagger output version ────────────────────────────────────────────
+#
+# Bump whenever a change alters what pack() emits for the same input
+# bytes (tags, entities, key_values, ...). Tags are part of the
+# bed-content digest (scripts/ingest_equivalence_gate.py hashes
+# gene_id+content+tags), so beds built under different tagger versions
+# are NOT cross-comparable; scripts/build_fixture_matrix.py records this
+# value in each bed's manifest, and BASELINES.md requires matching
+# versions for cross-bed comparisons.
+#
+#   1: original CpuTagger output (all beds built before 2026-08-30).
+#   2: entity hygiene (issue #410) — entities containing newlines/tabs
+#      rejected; standard email/MIME header field names, x-* extension
+#      headers, and MIME transport artifacts no longer emitted as
+#      entities (EnronQA entity_graph hub fix).
+TAGGER_VERSION = 2
+
+
 # ── Minimal stop words for fragment filtering ────────────────────────
 #
 # Defined at module top because the CpuTagger class below references
@@ -268,6 +286,57 @@ _KV_TYPE_ANNOTATION_NAMES = frozenset({
 })
 
 
+# ── Entity hygiene (issue #410) ───────────────────────────────────
+#
+# On email corpora the extractor's two sources both leak plumbing:
+# spaCy NER tags header tokens (Content-Type, Mime-Version, X-Origin)
+# as ORG/PRODUCT-family entities — and its spans can cross newlines,
+# producing multi-line garbage — while the CamelCase scan harvests
+# FileName (from X-FileName:) and JavaMail (from Message-ID values).
+# On the 2026-08-30 enronqa_padded bed those hubs held >600k of the
+# 3.6M entity_graph rows and made per-insert auto-linking O(N^2)
+# (benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json).
+
+# Standard email/MIME header field names (RFC 5322 / RFC 2045) plus
+# transport artifacts that ride header values. Matched against the
+# whole lowercased entity text — multi-word entities that merely
+# contain one of these words ("Content Management Team") are unaffected.
+_EMAIL_HEADER_DENYLIST = frozenset({
+    # MIME structure
+    "content-type", "content-transfer-encoding", "content-disposition",
+    "content-id", "content-length", "content-description",
+    "mime-version", "charset", "boundary", "multipart", "filename",
+    # Routing / plumbing fields
+    "message-id", "in-reply-to", "references", "received",
+    "return-path", "delivered-to", "reply-to", "envelope-to",
+    "sender", "precedence", "importance", "priority", "user-agent",
+    "list-id", "list-unsubscribe",
+    # Address / date fields
+    "from", "to", "cc", "bcc", "subject", "date",
+    # Transport artifacts (Message-ID generators, encodings)
+    "javamail", "quoted-printable", "us-ascii", "7bit", "8bit",
+})
+
+# RFC 822 extension headers (X-Origin, X-FileName, X-Folder, ...) are an
+# open set, so they are matched by shape rather than enumerated. Known
+# collateral: rare legitimate x-* entities ("X-Men") are also dropped.
+_XHEADER_RE = re.compile(r"^x-[a-z0-9][a-z0-9_-]*$")
+
+
+def _is_noise_entity(text: str) -> bool:
+    """True when a candidate entity is email/MIME plumbing, not an entity."""
+    if any(c in text for c in "\n\r\t"):
+        return True
+    # NER spans sometimes include the header's colon ("X-Origin:") —
+    # strip it so the key still matches the denylist / x-* shape.
+    lower = text.strip().lower().rstrip(":")
+    if lower in _EMAIL_HEADER_DENYLIST:
+        return True
+    if _XHEADER_RE.match(lower):
+        return True
+    return False
+
+
 # ── CpuTagger ─────────────────────────────────────────────────────
 
 class CpuTagger:
@@ -383,7 +452,11 @@ class CpuTagger:
             ):
                 text = ent.text.strip()
                 lower = text.lower()
-                if lower not in seen and len(text) > 1:
+                if (
+                    lower not in seen
+                    and len(text) > 1
+                    and not _is_noise_entity(text)
+                ):
                     seen.add(lower)
                     entities.append(text)
 
@@ -391,7 +464,7 @@ class CpuTagger:
         for match in re.finditer(r'\b([A-Z][a-z]+(?:[A-Z][a-z]+)+)\b', content[:10_000]):
             word = match.group(1)
             lower = word.lower()
-            if lower not in seen:
+            if lower not in seen and not _is_noise_entity(word):
                 seen.add(lower)
                 entities.append(word)
 

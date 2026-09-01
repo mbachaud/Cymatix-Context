@@ -7,7 +7,12 @@ through three workflows: the daily-driver tray flow (Windows-first, runs
 the supervisor + native observability sidecar + headroom proxy + tray
 icon), the proxy-only flow (a headless `/context` server suitable for
 servers and CI), and the agent-SDK flow (consuming `/context` and
-`/context/packet` from a Claude Code or other MCP-aware agent). Section 3
+`/context/packet` from Claude Code, Codex, Gemini CLI, Antigravity, or another
+MCP-aware agent). Native host setup is documented in the
+[`cymatix-context` client overview](clients/cymatix-context.md) and its
+[Claude Code](clients/claude-code.md), [Codex](clients/codex.md),
+[Gemini CLI](clients/gemini-cli.md), and [Antigravity](clients/antigravity.md)
+guides. Section 3
 is the extras decision matrix that tells you which `pip install` extras
 to add for the features you want; the rest of the guide cross-references
 that table. Sections 5 and 6 cover silent-failure modes and the post-2026-05-10
@@ -75,7 +80,7 @@ block, lines 39–113.
 | `accel` ([`pyproject.toml:43`](../pyproject.toml)) | `orjson` fast-path for JSON encode/decode on the `/context` and `/ingest` paths. | Optional perf boost — small but always-on. |
 | `embeddings` ([`pyproject.toml:44`](../pyproject.toml)) | `numpy` + `sentence-transformers`. Powers the SEMA codec (MiniLM 20-dim sparse projection used for cold-tier retrieval) and the BGE-M3 dense recall path. | Semantic retrieval enabled — required for Tier 7 (`ΣĒMA cosine`) and Stage 2 dense recall. |
 | `cpu` ([`pyproject.toml:45`](../pyproject.toml)) | `spacy>=3.7` for ingest-time NER. | `[ingestion] backend = "cpu"` — this is the **default** ingest backend. If you are doing any ingestion at all, install this extra. |
-| `mcp` ([`pyproject.toml:49`](../pyproject.toml)) | `mcp>=2,<3` Python SDK for the MCP shim. Required for `python -m cymatix_context.mcp_server`. | You are integrating with Claude Code, Cursor, Continue, Claude Desktop, or any other MCP host. |
+| `mcp` ([`pyproject.toml:49`](../pyproject.toml)) | `mcp>=2,<3` Python SDK for the MCP shim. Required for `python -m cymatix_context.mcp_server`. | You are integrating with Claude Code, Codex, Gemini CLI, Antigravity, or another MCP host. |
 | `nli` ([`pyproject.toml:54`](../pyproject.toml)) | `torch>=2.0` + `transformers>=4.30` standalone — the path used when `[ribosome] backend = "deberta"` for cross-encoder rerank or relation-graph NLI. | You explicitly flipped `[ribosome] backend = "deberta"` in `cymatix.toml`. If you have `embeddings` already, sentence-transformers transitively pulls torch — you only need this extra for the standalone deberta-only path. |
 | `otel` ([`pyproject.toml:57`](../pyproject.toml)) | OpenTelemetry SDK + OTLP gRPC exporter + FastAPI instrumentation. Emits metrics, traces, and logs to the OTel collector at `localhost:4317`. | **Silently required by `start-cymatix-tray.bat`**, which sets `CYMATIX_OTEL_ENABLED=1` unconditionally. Without this extra the cymatix server starts and serves `/context`, but emits no telemetry — Grafana dashboards will be empty. See section 5. |
 | `launcher` ([`pyproject.toml:62`](../pyproject.toml)) | `jinja2`, `psutil`, `platformdirs`, `py-cpuinfo`. The `cymatix-launcher` and `cymatix-status` console scripts. | Tray / supervisor flow — required by every flow that uses `start-cymatix-tray.bat`, `setup-cymatix.bat`, `backend-with-otel.bat`, or `launcher-with-otel.bat`. |
@@ -223,9 +228,11 @@ cymatix-launcher --tray \
 ```
 
 If `pystray` cannot bind a tray icon on your desktop environment (some
-Wayland sessions, some headless macOS setups), the launcher falls back
-to the native pywebview window if `[launcher-native]` is installed, or
-opens the dashboard in a browser tab.
+Wayland sessions, some headless macOS setups), the tray UI is unavailable.
+The backend remains available when started headlessly; use its browser
+dashboard or native host tools separately. The `launcher-tray` extra is the
+dependency for the tray UI and is not required for a healthy backend or direct
+MCP.
 
 ### Proxy-only flow (no tray, no observability)
 
@@ -250,9 +257,9 @@ python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 > `start-cymatix-tray.bat` flow goes through the launcher's
 > `CymatixSupervisor` which spawns its own uvicorn — this direct command
 > is for headless servers and CI where the supervisor adds no value.
-> An equivalent, also-supported entry-point is
-> `python -m uvicorn cymatix_context.server:app` — that path exists in
-> [`backend-with-otel.bat`](../backend-with-otel.bat) line 12.
+> **Compatibility note.** `cymatix_context.server:app` is retained as an import
+> target for existing runtime scripts such as [`backend-with-otel.bat`](../backend-with-otel.bat);
+> new setup should use `cymatix_context._asgi:app` above.
 
 Verify it's up:
 
@@ -270,9 +277,10 @@ or by editing the TOML.
 
 ### Agent-SDK flow
 
-When Cymatix is consumed *as a context source* by another agent (Claude
-Code via MCP, Continue via OpenAI-compat, Cursor, a custom Claude
-Agent SDK app, etc.), the install is the same as the proxy-only flow.
+When Cymatix is consumed *as a context source* by another agent (Claude Code,
+Codex, Gemini CLI, Antigravity, or another MCP-aware client), the install is
+the same as the proxy-only flow. The install does not require the model proxy
+or tray when using direct MCP.
 The extra step is teaching the *consuming* agent to honor the Stage 6
 KnowBlock / MissBlock contract.
 
@@ -294,8 +302,9 @@ the agent's system prompt. The fragment is exported from
 inclusion, and documented in plain text at
 [`docs/agent-sdk-fragment.md`](agent-sdk-fragment.md).
 
-For Claude Code / MCP, register the cymatix MCP shim in
-`~/.claude/settings.json`:
+For a host-native MCP setup, use the generated blocks and destinations in the
+[client guides](clients/cymatix-context.md). Claude Code users may register
+the cymatix MCP shim in `~/.claude/settings.json`:
 
 ```json
 {

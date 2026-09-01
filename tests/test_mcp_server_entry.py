@@ -25,6 +25,25 @@ pytest.importorskip(
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_invalid_configured_caller_class_fails_startup():
+    """A bad process-wide model class fails before the adapter advertises tools."""
+    env = dict(os.environ)
+    env["CYMATIX_CALLER_MODEL_CLASS"] = "oversized"
+    proc = subprocess.run(
+        [sys.executable, "-c", "import cymatix_context.mcp.mcp_server"],
+        cwd=str(_REPO_ROOT),
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+    )
+    combined = proc.stdout + proc.stderr
+    assert proc.returncode != 0
+    assert "CYMATIX_CALLER_MODEL_CLASS" in combined
+    assert all(value in combined for value in ("generic", "small_moe", "frontier"))
+
+
 def test_python_m_mcp_server_blocks_instead_of_exiting():
     """The -m entry must enter the stdio serve loop (block), not exit 0."""
     env = dict(os.environ)

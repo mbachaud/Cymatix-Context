@@ -1,0 +1,3322 @@
+{
+ "date": "2026-08-27T08:42:20.644789+00:00",
+ "db": "F:/tmp/erb_blob_v09x.db",
+ "seed": 20260827,
+ "questions_total": 500,
+ "needles_resolvable": 470,
+ "half_subset": 235,
+ "per_type_full": {
+  "basic": 175,
+  "completeness": 20,
+  "conflicting_info": 20,
+  "constrained": 30,
+  "intra_document_reasoning": 40,
+  "miscellaneous": 20,
+  "project_related": 40,
+  "semantic": 125
+ },
+ "per_type_half": {
+  "basic": 88,
+  "completeness": 10,
+  "conflicting_info": 10,
+  "constrained": 15,
+  "intra_document_reasoning": 20,
+  "miscellaneous": 10,
+  "project_related": 20,
+  "semantic": 62
+ },
+ "gold_genes_mean": 3.91,
+ "gold_genes_max": 37,
+ "needles": {
+  "erb_000": {
+   "question_id": "qst_0001",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_001": {
+   "question_id": "qst_0002",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_002": {
+   "question_id": "qst_0003",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_003": {
+   "question_id": "qst_0004",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 8
+  },
+  "erb_004": {
+   "question_id": "qst_0005",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_005": {
+   "question_id": "qst_0006",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_006": {
+   "question_id": "qst_0007",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_007": {
+   "question_id": "qst_0008",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_008": {
+   "question_id": "qst_0009",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_009": {
+   "question_id": "qst_0010",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_010": {
+   "question_id": "qst_0011",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_011": {
+   "question_id": "qst_0012",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_012": {
+   "question_id": "qst_0013",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_013": {
+   "question_id": "qst_0014",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 9
+  },
+  "erb_014": {
+   "question_id": "qst_0015",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_015": {
+   "question_id": "qst_0016",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_016": {
+   "question_id": "qst_0017",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_017": {
+   "question_id": "qst_0018",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_018": {
+   "question_id": "qst_0019",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_019": {
+   "question_id": "qst_0020",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_020": {
+   "question_id": "qst_0021",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_021": {
+   "question_id": "qst_0022",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_022": {
+   "question_id": "qst_0023",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_023": {
+   "question_id": "qst_0024",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_024": {
+   "question_id": "qst_0025",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_025": {
+   "question_id": "qst_0026",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_026": {
+   "question_id": "qst_0027",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_027": {
+   "question_id": "qst_0028",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_028": {
+   "question_id": "qst_0029",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_029": {
+   "question_id": "qst_0030",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_030": {
+   "question_id": "qst_0031",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_031": {
+   "question_id": "qst_0032",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_032": {
+   "question_id": "qst_0033",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 7
+  },
+  "erb_033": {
+   "question_id": "qst_0034",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_034": {
+   "question_id": "qst_0035",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_035": {
+   "question_id": "qst_0036",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_036": {
+   "question_id": "qst_0037",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_037": {
+   "question_id": "qst_0038",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_038": {
+   "question_id": "qst_0039",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_039": {
+   "question_id": "qst_0040",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_040": {
+   "question_id": "qst_0041",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 7
+  },
+  "erb_041": {
+   "question_id": "qst_0042",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_042": {
+   "question_id": "qst_0043",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_043": {
+   "question_id": "qst_0044",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_044": {
+   "question_id": "qst_0045",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_045": {
+   "question_id": "qst_0046",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_046": {
+   "question_id": "qst_0047",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_047": {
+   "question_id": "qst_0048",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_048": {
+   "question_id": "qst_0049",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_049": {
+   "question_id": "qst_0050",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_050": {
+   "question_id": "qst_0051",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_051": {
+   "question_id": "qst_0052",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_052": {
+   "question_id": "qst_0053",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_053": {
+   "question_id": "qst_0054",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_054": {
+   "question_id": "qst_0055",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_055": {
+   "question_id": "qst_0056",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_056": {
+   "question_id": "qst_0057",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_057": {
+   "question_id": "qst_0058",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_058": {
+   "question_id": "qst_0059",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_059": {
+   "question_id": "qst_0060",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_060": {
+   "question_id": "qst_0061",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_061": {
+   "question_id": "qst_0062",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_062": {
+   "question_id": "qst_0063",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_063": {
+   "question_id": "qst_0064",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_064": {
+   "question_id": "qst_0065",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_065": {
+   "question_id": "qst_0066",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_066": {
+   "question_id": "qst_0067",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_067": {
+   "question_id": "qst_0068",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_068": {
+   "question_id": "qst_0069",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_069": {
+   "question_id": "qst_0070",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 8
+  },
+  "erb_070": {
+   "question_id": "qst_0071",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_071": {
+   "question_id": "qst_0072",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_072": {
+   "question_id": "qst_0073",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_073": {
+   "question_id": "qst_0074",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_074": {
+   "question_id": "qst_0075",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_075": {
+   "question_id": "qst_0076",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_076": {
+   "question_id": "qst_0077",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_077": {
+   "question_id": "qst_0078",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_078": {
+   "question_id": "qst_0079",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_079": {
+   "question_id": "qst_0080",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_080": {
+   "question_id": "qst_0081",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_081": {
+   "question_id": "qst_0082",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_082": {
+   "question_id": "qst_0083",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_083": {
+   "question_id": "qst_0084",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_084": {
+   "question_id": "qst_0085",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_085": {
+   "question_id": "qst_0086",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_086": {
+   "question_id": "qst_0087",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_087": {
+   "question_id": "qst_0088",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_088": {
+   "question_id": "qst_0089",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_089": {
+   "question_id": "qst_0090",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_090": {
+   "question_id": "qst_0091",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_091": {
+   "question_id": "qst_0092",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_092": {
+   "question_id": "qst_0093",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_093": {
+   "question_id": "qst_0094",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_094": {
+   "question_id": "qst_0095",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_095": {
+   "question_id": "qst_0096",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_096": {
+   "question_id": "qst_0097",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_097": {
+   "question_id": "qst_0098",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_098": {
+   "question_id": "qst_0099",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_099": {
+   "question_id": "qst_0100",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_100": {
+   "question_id": "qst_0101",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 5
+  },
+  "erb_101": {
+   "question_id": "qst_0102",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_102": {
+   "question_id": "qst_0103",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_103": {
+   "question_id": "qst_0104",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_104": {
+   "question_id": "qst_0105",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_105": {
+   "question_id": "qst_0106",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_106": {
+   "question_id": "qst_0107",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_107": {
+   "question_id": "qst_0108",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_108": {
+   "question_id": "qst_0109",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_109": {
+   "question_id": "qst_0110",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_110": {
+   "question_id": "qst_0111",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_111": {
+   "question_id": "qst_0112",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_112": {
+   "question_id": "qst_0113",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_113": {
+   "question_id": "qst_0114",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_114": {
+   "question_id": "qst_0115",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_115": {
+   "question_id": "qst_0116",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_116": {
+   "question_id": "qst_0117",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_117": {
+   "question_id": "qst_0118",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_118": {
+   "question_id": "qst_0119",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_119": {
+   "question_id": "qst_0120",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_120": {
+   "question_id": "qst_0121",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_121": {
+   "question_id": "qst_0122",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_122": {
+   "question_id": "qst_0123",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_123": {
+   "question_id": "qst_0124",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_124": {
+   "question_id": "qst_0125",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_125": {
+   "question_id": "qst_0126",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_126": {
+   "question_id": "qst_0127",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_127": {
+   "question_id": "qst_0128",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_128": {
+   "question_id": "qst_0129",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_129": {
+   "question_id": "qst_0130",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_130": {
+   "question_id": "qst_0131",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_131": {
+   "question_id": "qst_0132",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_132": {
+   "question_id": "qst_0133",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_133": {
+   "question_id": "qst_0134",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_134": {
+   "question_id": "qst_0135",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_135": {
+   "question_id": "qst_0136",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_136": {
+   "question_id": "qst_0137",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_137": {
+   "question_id": "qst_0138",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_138": {
+   "question_id": "qst_0139",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_139": {
+   "question_id": "qst_0140",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_140": {
+   "question_id": "qst_0141",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_141": {
+   "question_id": "qst_0142",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_142": {
+   "question_id": "qst_0143",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_143": {
+   "question_id": "qst_0144",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_144": {
+   "question_id": "qst_0145",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_145": {
+   "question_id": "qst_0146",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_146": {
+   "question_id": "qst_0147",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_147": {
+   "question_id": "qst_0148",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_148": {
+   "question_id": "qst_0149",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_149": {
+   "question_id": "qst_0150",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_150": {
+   "question_id": "qst_0151",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_151": {
+   "question_id": "qst_0152",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_152": {
+   "question_id": "qst_0153",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_153": {
+   "question_id": "qst_0154",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_154": {
+   "question_id": "qst_0155",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_155": {
+   "question_id": "qst_0156",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_156": {
+   "question_id": "qst_0157",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_157": {
+   "question_id": "qst_0158",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_158": {
+   "question_id": "qst_0159",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_159": {
+   "question_id": "qst_0160",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_160": {
+   "question_id": "qst_0161",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_161": {
+   "question_id": "qst_0162",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_162": {
+   "question_id": "qst_0163",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_163": {
+   "question_id": "qst_0164",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_164": {
+   "question_id": "qst_0165",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_165": {
+   "question_id": "qst_0166",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_166": {
+   "question_id": "qst_0167",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_167": {
+   "question_id": "qst_0168",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_168": {
+   "question_id": "qst_0169",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_169": {
+   "question_id": "qst_0170",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_170": {
+   "question_id": "qst_0171",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_171": {
+   "question_id": "qst_0172",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_172": {
+   "question_id": "qst_0173",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_173": {
+   "question_id": "qst_0174",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_174": {
+   "question_id": "qst_0175",
+   "question_type": "basic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_175": {
+   "question_id": "qst_0176",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_176": {
+   "question_id": "qst_0177",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_177": {
+   "question_id": "qst_0178",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_178": {
+   "question_id": "qst_0179",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_179": {
+   "question_id": "qst_0180",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_180": {
+   "question_id": "qst_0181",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_181": {
+   "question_id": "qst_0182",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_182": {
+   "question_id": "qst_0183",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_183": {
+   "question_id": "qst_0184",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_184": {
+   "question_id": "qst_0185",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_185": {
+   "question_id": "qst_0186",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_186": {
+   "question_id": "qst_0187",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_187": {
+   "question_id": "qst_0188",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_188": {
+   "question_id": "qst_0189",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_189": {
+   "question_id": "qst_0190",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_190": {
+   "question_id": "qst_0191",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_191": {
+   "question_id": "qst_0192",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_192": {
+   "question_id": "qst_0193",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_193": {
+   "question_id": "qst_0194",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_194": {
+   "question_id": "qst_0195",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_195": {
+   "question_id": "qst_0196",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_196": {
+   "question_id": "qst_0197",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_197": {
+   "question_id": "qst_0198",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_198": {
+   "question_id": "qst_0199",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_199": {
+   "question_id": "qst_0200",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_200": {
+   "question_id": "qst_0201",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_201": {
+   "question_id": "qst_0202",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_202": {
+   "question_id": "qst_0203",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_203": {
+   "question_id": "qst_0204",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_204": {
+   "question_id": "qst_0205",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_205": {
+   "question_id": "qst_0206",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_206": {
+   "question_id": "qst_0207",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_207": {
+   "question_id": "qst_0208",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_208": {
+   "question_id": "qst_0209",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_209": {
+   "question_id": "qst_0210",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_210": {
+   "question_id": "qst_0211",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_211": {
+   "question_id": "qst_0212",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_212": {
+   "question_id": "qst_0213",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_213": {
+   "question_id": "qst_0214",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_214": {
+   "question_id": "qst_0215",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_215": {
+   "question_id": "qst_0216",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_216": {
+   "question_id": "qst_0217",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_217": {
+   "question_id": "qst_0218",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_218": {
+   "question_id": "qst_0219",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_219": {
+   "question_id": "qst_0220",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_220": {
+   "question_id": "qst_0221",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_221": {
+   "question_id": "qst_0222",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_222": {
+   "question_id": "qst_0223",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_223": {
+   "question_id": "qst_0224",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_224": {
+   "question_id": "qst_0225",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_225": {
+   "question_id": "qst_0226",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_226": {
+   "question_id": "qst_0227",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_227": {
+   "question_id": "qst_0228",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_228": {
+   "question_id": "qst_0229",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_229": {
+   "question_id": "qst_0230",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_230": {
+   "question_id": "qst_0231",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_231": {
+   "question_id": "qst_0232",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_232": {
+   "question_id": "qst_0233",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_233": {
+   "question_id": "qst_0234",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_234": {
+   "question_id": "qst_0235",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_235": {
+   "question_id": "qst_0236",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_236": {
+   "question_id": "qst_0237",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_237": {
+   "question_id": "qst_0238",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_238": {
+   "question_id": "qst_0239",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_239": {
+   "question_id": "qst_0240",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_240": {
+   "question_id": "qst_0241",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_241": {
+   "question_id": "qst_0242",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_242": {
+   "question_id": "qst_0243",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_243": {
+   "question_id": "qst_0244",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_244": {
+   "question_id": "qst_0245",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_245": {
+   "question_id": "qst_0246",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_246": {
+   "question_id": "qst_0247",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 5
+  },
+  "erb_247": {
+   "question_id": "qst_0248",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_248": {
+   "question_id": "qst_0249",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_249": {
+   "question_id": "qst_0250",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_250": {
+   "question_id": "qst_0251",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_251": {
+   "question_id": "qst_0252",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_252": {
+   "question_id": "qst_0253",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_253": {
+   "question_id": "qst_0254",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_254": {
+   "question_id": "qst_0255",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_255": {
+   "question_id": "qst_0256",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_256": {
+   "question_id": "qst_0257",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_257": {
+   "question_id": "qst_0258",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_258": {
+   "question_id": "qst_0259",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 5
+  },
+  "erb_259": {
+   "question_id": "qst_0260",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_260": {
+   "question_id": "qst_0261",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_261": {
+   "question_id": "qst_0262",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_262": {
+   "question_id": "qst_0263",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_263": {
+   "question_id": "qst_0264",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_264": {
+   "question_id": "qst_0265",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_265": {
+   "question_id": "qst_0266",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_266": {
+   "question_id": "qst_0267",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_267": {
+   "question_id": "qst_0268",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_268": {
+   "question_id": "qst_0269",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_269": {
+   "question_id": "qst_0270",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_270": {
+   "question_id": "qst_0271",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_271": {
+   "question_id": "qst_0272",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_272": {
+   "question_id": "qst_0273",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_273": {
+   "question_id": "qst_0274",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_274": {
+   "question_id": "qst_0275",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_275": {
+   "question_id": "qst_0276",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_276": {
+   "question_id": "qst_0277",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_277": {
+   "question_id": "qst_0278",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_278": {
+   "question_id": "qst_0279",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_279": {
+   "question_id": "qst_0280",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_280": {
+   "question_id": "qst_0281",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_281": {
+   "question_id": "qst_0282",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_282": {
+   "question_id": "qst_0283",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_283": {
+   "question_id": "qst_0284",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_284": {
+   "question_id": "qst_0285",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_285": {
+   "question_id": "qst_0286",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_286": {
+   "question_id": "qst_0287",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_287": {
+   "question_id": "qst_0288",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_288": {
+   "question_id": "qst_0289",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_289": {
+   "question_id": "qst_0290",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_290": {
+   "question_id": "qst_0291",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_291": {
+   "question_id": "qst_0292",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_292": {
+   "question_id": "qst_0293",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_293": {
+   "question_id": "qst_0294",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_294": {
+   "question_id": "qst_0295",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_295": {
+   "question_id": "qst_0296",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_296": {
+   "question_id": "qst_0297",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_297": {
+   "question_id": "qst_0298",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_298": {
+   "question_id": "qst_0299",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_299": {
+   "question_id": "qst_0300",
+   "question_type": "semantic",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_300": {
+   "question_id": "qst_0301",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_301": {
+   "question_id": "qst_0302",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_302": {
+   "question_id": "qst_0303",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_303": {
+   "question_id": "qst_0304",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_304": {
+   "question_id": "qst_0305",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_305": {
+   "question_id": "qst_0306",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_306": {
+   "question_id": "qst_0307",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_307": {
+   "question_id": "qst_0308",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_308": {
+   "question_id": "qst_0309",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_309": {
+   "question_id": "qst_0310",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 4
+  },
+  "erb_310": {
+   "question_id": "qst_0311",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_311": {
+   "question_id": "qst_0312",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_312": {
+   "question_id": "qst_0313",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_313": {
+   "question_id": "qst_0314",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_314": {
+   "question_id": "qst_0315",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_315": {
+   "question_id": "qst_0316",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_316": {
+   "question_id": "qst_0317",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_317": {
+   "question_id": "qst_0318",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_318": {
+   "question_id": "qst_0319",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_319": {
+   "question_id": "qst_0320",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_320": {
+   "question_id": "qst_0321",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_321": {
+   "question_id": "qst_0322",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_322": {
+   "question_id": "qst_0323",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_323": {
+   "question_id": "qst_0324",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_324": {
+   "question_id": "qst_0325",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_325": {
+   "question_id": "qst_0326",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_326": {
+   "question_id": "qst_0327",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_327": {
+   "question_id": "qst_0328",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_328": {
+   "question_id": "qst_0329",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_329": {
+   "question_id": "qst_0330",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_330": {
+   "question_id": "qst_0331",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_331": {
+   "question_id": "qst_0332",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_332": {
+   "question_id": "qst_0333",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 6
+  },
+  "erb_333": {
+   "question_id": "qst_0334",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_334": {
+   "question_id": "qst_0335",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_335": {
+   "question_id": "qst_0336",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_336": {
+   "question_id": "qst_0337",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_337": {
+   "question_id": "qst_0338",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_338": {
+   "question_id": "qst_0339",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_339": {
+   "question_id": "qst_0340",
+   "question_type": "intra_document_reasoning",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_340": {
+   "question_id": "qst_0341",
+   "question_type": "project_related",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 7
+  },
+  "erb_341": {
+   "question_id": "qst_0342",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 18
+  },
+  "erb_342": {
+   "question_id": "qst_0343",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 8
+  },
+  "erb_343": {
+   "question_id": "qst_0344",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 14
+  },
+  "erb_344": {
+   "question_id": "qst_0345",
+   "question_type": "project_related",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 8
+  },
+  "erb_345": {
+   "question_id": "qst_0346",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 8
+  },
+  "erb_346": {
+   "question_id": "qst_0347",
+   "question_type": "project_related",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_347": {
+   "question_id": "qst_0348",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 14
+  },
+  "erb_348": {
+   "question_id": "qst_0349",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 7
+  },
+  "erb_349": {
+   "question_id": "qst_0350",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 9
+  },
+  "erb_350": {
+   "question_id": "qst_0351",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 15
+  },
+  "erb_351": {
+   "question_id": "qst_0352",
+   "question_type": "project_related",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 6
+  },
+  "erb_352": {
+   "question_id": "qst_0353",
+   "question_type": "project_related",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 8
+  },
+  "erb_353": {
+   "question_id": "qst_0354",
+   "question_type": "project_related",
+   "gold_files": 8,
+   "gold_files_in_bed": 8,
+   "gold_genes": 34
+  },
+  "erb_354": {
+   "question_id": "qst_0355",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 11
+  },
+  "erb_355": {
+   "question_id": "qst_0356",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 16
+  },
+  "erb_356": {
+   "question_id": "qst_0357",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 12
+  },
+  "erb_357": {
+   "question_id": "qst_0358",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 16
+  },
+  "erb_358": {
+   "question_id": "qst_0359",
+   "question_type": "project_related",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 18
+  },
+  "erb_359": {
+   "question_id": "qst_0360",
+   "question_type": "project_related",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_360": {
+   "question_id": "qst_0361",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 12
+  },
+  "erb_361": {
+   "question_id": "qst_0362",
+   "question_type": "project_related",
+   "gold_files": 9,
+   "gold_files_in_bed": 9,
+   "gold_genes": 29
+  },
+  "erb_362": {
+   "question_id": "qst_0363",
+   "question_type": "project_related",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 21
+  },
+  "erb_363": {
+   "question_id": "qst_0364",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 13
+  },
+  "erb_364": {
+   "question_id": "qst_0365",
+   "question_type": "project_related",
+   "gold_files": 9,
+   "gold_files_in_bed": 9,
+   "gold_genes": 32
+  },
+  "erb_365": {
+   "question_id": "qst_0366",
+   "question_type": "project_related",
+   "gold_files": 9,
+   "gold_files_in_bed": 9,
+   "gold_genes": 35
+  },
+  "erb_366": {
+   "question_id": "qst_0367",
+   "question_type": "project_related",
+   "gold_files": 9,
+   "gold_files_in_bed": 9,
+   "gold_genes": 30
+  },
+  "erb_367": {
+   "question_id": "qst_0368",
+   "question_type": "project_related",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_368": {
+   "question_id": "qst_0369",
+   "question_type": "project_related",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 19
+  },
+  "erb_369": {
+   "question_id": "qst_0370",
+   "question_type": "project_related",
+   "gold_files": 5,
+   "gold_files_in_bed": 5,
+   "gold_genes": 20
+  },
+  "erb_370": {
+   "question_id": "qst_0371",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 9
+  },
+  "erb_371": {
+   "question_id": "qst_0372",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 12
+  },
+  "erb_372": {
+   "question_id": "qst_0373",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 11
+  },
+  "erb_373": {
+   "question_id": "qst_0374",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 10
+  },
+  "erb_374": {
+   "question_id": "qst_0375",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 13
+  },
+  "erb_375": {
+   "question_id": "qst_0376",
+   "question_type": "project_related",
+   "gold_files": 3,
+   "gold_files_in_bed": 3,
+   "gold_genes": 12
+  },
+  "erb_376": {
+   "question_id": "qst_0377",
+   "question_type": "project_related",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 21
+  },
+  "erb_377": {
+   "question_id": "qst_0378",
+   "question_type": "project_related",
+   "gold_files": 4,
+   "gold_files_in_bed": 4,
+   "gold_genes": 16
+  },
+  "erb_378": {
+   "question_id": "qst_0379",
+   "question_type": "project_related",
+   "gold_files": 8,
+   "gold_files_in_bed": 8,
+   "gold_genes": 37
+  },
+  "erb_379": {
+   "question_id": "qst_0380",
+   "question_type": "project_related",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_380": {
+   "question_id": "qst_0381",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 8
+  },
+  "erb_381": {
+   "question_id": "qst_0382",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_382": {
+   "question_id": "qst_0383",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_383": {
+   "question_id": "qst_0384",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 8
+  },
+  "erb_384": {
+   "question_id": "qst_0385",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 7
+  },
+  "erb_385": {
+   "question_id": "qst_0386",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_386": {
+   "question_id": "qst_0387",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_387": {
+   "question_id": "qst_0388",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_388": {
+   "question_id": "qst_0389",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_389": {
+   "question_id": "qst_0390",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_390": {
+   "question_id": "qst_0391",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_391": {
+   "question_id": "qst_0392",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_392": {
+   "question_id": "qst_0393",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_393": {
+   "question_id": "qst_0394",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 8
+  },
+  "erb_394": {
+   "question_id": "qst_0395",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_395": {
+   "question_id": "qst_0396",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_396": {
+   "question_id": "qst_0397",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_397": {
+   "question_id": "qst_0398",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_398": {
+   "question_id": "qst_0399",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_399": {
+   "question_id": "qst_0400",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 6
+  },
+  "erb_400": {
+   "question_id": "qst_0401",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_401": {
+   "question_id": "qst_0402",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 7
+  },
+  "erb_402": {
+   "question_id": "qst_0403",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 7
+  },
+  "erb_403": {
+   "question_id": "qst_0404",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 6
+  },
+  "erb_404": {
+   "question_id": "qst_0405",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_405": {
+   "question_id": "qst_0406",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_406": {
+   "question_id": "qst_0407",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  },
+  "erb_407": {
+   "question_id": "qst_0408",
+   "question_type": "constrained",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 8
+  },
+  "erb_408": {
+   "question_id": "qst_0409",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_409": {
+   "question_id": "qst_0410",
+   "question_type": "constrained",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_410": {
+   "question_id": "qst_0411",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_411": {
+   "question_id": "qst_0412",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_412": {
+   "question_id": "qst_0413",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 1
+  },
+  "erb_413": {
+   "question_id": "qst_0414",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_414": {
+   "question_id": "qst_0415",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_415": {
+   "question_id": "qst_0416",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_416": {
+   "question_id": "qst_0417",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 12
+  },
+  "erb_417": {
+   "question_id": "qst_0418",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 7
+  },
+  "erb_418": {
+   "question_id": "qst_0419",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 7
+  },
+  "erb_419": {
+   "question_id": "qst_0420",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 7
+  },
+  "erb_420": {
+   "question_id": "qst_0421",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 7
+  },
+  "erb_421": {
+   "question_id": "qst_0422",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_422": {
+   "question_id": "qst_0423",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 3
+  },
+  "erb_423": {
+   "question_id": "qst_0424",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_424": {
+   "question_id": "qst_0425",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 5
+  },
+  "erb_425": {
+   "question_id": "qst_0426",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 6
+  },
+  "erb_426": {
+   "question_id": "qst_0427",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 4
+  },
+  "erb_427": {
+   "question_id": "qst_0428",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 8
+  },
+  "erb_428": {
+   "question_id": "qst_0429",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 4
+  },
+  "erb_429": {
+   "question_id": "qst_0430",
+   "question_type": "conflicting_info",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 10
+  },
+  "erb_430": {
+   "question_id": "qst_0431",
+   "question_type": "completeness",
+   "gold_files": 2,
+   "gold_files_in_bed": 2,
+   "gold_genes": 4
+  },
+  "erb_431": {
+   "question_id": "qst_0432",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 6
+  },
+  "erb_432": {
+   "question_id": "qst_0433",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 6
+  },
+  "erb_433": {
+   "question_id": "qst_0434",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 6
+  },
+  "erb_434": {
+   "question_id": "qst_0435",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 6
+  },
+  "erb_435": {
+   "question_id": "qst_0436",
+   "question_type": "completeness",
+   "gold_files": 10,
+   "gold_files_in_bed": 10,
+   "gold_genes": 10
+  },
+  "erb_436": {
+   "question_id": "qst_0437",
+   "question_type": "completeness",
+   "gold_files": 9,
+   "gold_files_in_bed": 9,
+   "gold_genes": 9
+  },
+  "erb_437": {
+   "question_id": "qst_0438",
+   "question_type": "completeness",
+   "gold_files": 9,
+   "gold_files_in_bed": 9,
+   "gold_genes": 9
+  },
+  "erb_438": {
+   "question_id": "qst_0439",
+   "question_type": "completeness",
+   "gold_files": 5,
+   "gold_files_in_bed": 5,
+   "gold_genes": 5
+  },
+  "erb_439": {
+   "question_id": "qst_0440",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 11
+  },
+  "erb_440": {
+   "question_id": "qst_0441",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 12
+  },
+  "erb_441": {
+   "question_id": "qst_0442",
+   "question_type": "completeness",
+   "gold_files": 8,
+   "gold_files_in_bed": 8,
+   "gold_genes": 10
+  },
+  "erb_442": {
+   "question_id": "qst_0443",
+   "question_type": "completeness",
+   "gold_files": 5,
+   "gold_files_in_bed": 5,
+   "gold_genes": 5
+  },
+  "erb_443": {
+   "question_id": "qst_0444",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 8
+  },
+  "erb_444": {
+   "question_id": "qst_0445",
+   "question_type": "completeness",
+   "gold_files": 8,
+   "gold_files_in_bed": 8,
+   "gold_genes": 11
+  },
+  "erb_445": {
+   "question_id": "qst_0446",
+   "question_type": "completeness",
+   "gold_files": 5,
+   "gold_files_in_bed": 5,
+   "gold_genes": 6
+  },
+  "erb_446": {
+   "question_id": "qst_0447",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 6
+  },
+  "erb_447": {
+   "question_id": "qst_0448",
+   "question_type": "completeness",
+   "gold_files": 7,
+   "gold_files_in_bed": 7,
+   "gold_genes": 7
+  },
+  "erb_448": {
+   "question_id": "qst_0449",
+   "question_type": "completeness",
+   "gold_files": 6,
+   "gold_files_in_bed": 6,
+   "gold_genes": 6
+  },
+  "erb_449": {
+   "question_id": "qst_0450",
+   "question_type": "completeness",
+   "gold_files": 8,
+   "gold_files_in_bed": 8,
+   "gold_genes": 19
+  },
+  "erb_450": {
+   "question_id": "qst_0451",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_451": {
+   "question_id": "qst_0452",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_452": {
+   "question_id": "qst_0453",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_453": {
+   "question_id": "qst_0454",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_454": {
+   "question_id": "qst_0455",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_455": {
+   "question_id": "qst_0456",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_456": {
+   "question_id": "qst_0457",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_457": {
+   "question_id": "qst_0458",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_458": {
+   "question_id": "qst_0459",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_459": {
+   "question_id": "qst_0460",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_460": {
+   "question_id": "qst_0461",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_461": {
+   "question_id": "qst_0462",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_462": {
+   "question_id": "qst_0463",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_463": {
+   "question_id": "qst_0464",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_464": {
+   "question_id": "qst_0465",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_465": {
+   "question_id": "qst_0466",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_466": {
+   "question_id": "qst_0467",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_467": {
+   "question_id": "qst_0468",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 1
+  },
+  "erb_468": {
+   "question_id": "qst_0469",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 2
+  },
+  "erb_469": {
+   "question_id": "qst_0470",
+   "question_type": "miscellaneous",
+   "gold_files": 1,
+   "gold_files_in_bed": 1,
+   "gold_genes": 3
+  }
+ }
+}

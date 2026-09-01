@@ -140,7 +140,7 @@ Pick extras for the features you turn on:
 | *(core)* | HTTP server, `/context`, `/context/packet`, FTS5 retrieval | light |
 | `embeddings` | BGE-M3 dense recall (opt-in; default-off since 2026-08-15 — [receipts](docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md)) | torch via sentence-transformers |
 | `cpu` | spaCy NER ingest tagging | spacy |
-| `mcp` | `python -m cymatix_context.mcp_server` (Claude Code / Cursor / Desktop) | mcp SDK |
+| `mcp` | `python -m cymatix_context.mcp_server` (Claude Code, Codex, Gemini CLI, Antigravity) | mcp SDK |
 | `otel` | Grafana/Tempo/Loki observability | opentelemetry |
 | `launcher-tray` | System-tray supervisor (Windows) | pystray (LGPL, opt-in) |
 | `ast` | Tree-sitter code chunking | tree-sitter grammars |
@@ -177,7 +177,7 @@ Three surfaces, same retrieval primitives, same JSON shapes:
 | Surface | Best for | Example |
 |---------|----------|---------|
 | **CLI** | Scripts, CI, cold-start agents | `cymatix query "..." --json` |
-| **MCP** | Claude Code, Cursor, Claude Desktop | see below |
+| **MCP** | Claude Code, Codex, Gemini CLI, Antigravity | [client guides](docs/clients/cymatix-context.md) |
 | **HTTP proxy** | Continue IDE, `OPENAI_BASE_URL` redirect | `POST /context` |
 
 ```bash
@@ -356,23 +356,13 @@ Lexicon: [docs/ROSETTA.md](docs/ROSETTA.md).
 ## IDE + MCP integration
 
 <details>
-<summary><strong>MCP setup (Claude Code / Cursor / Claude Desktop)</strong></summary>
-
-```json
-{
-  "mcpServers": {
-    "cymatix-context": {
-      "command": "python",
-      "args": ["-m", "cymatix_context.mcp_server"],
-      "cwd": "/absolute/path/to/your/project",
-      "env": { "CYMATIX_MCP_URL": "http://127.0.0.1:11437" }
-    }
-  }
-}
-```
+<summary><strong>MCP setup (Claude Code, Codex, Gemini CLI, Antigravity)</strong></summary>
 
 The server self-identifies as `cymatix`, so client tools appear as
-`mcp__cymatix__*`.
+`mcp__cymatix__*`. Use the [shared integration overview](docs/clients/cymatix-context.md)
+and native [Claude Code](docs/clients/claude-code.md), [Codex](docs/clients/codex.md),
+[Gemini CLI](docs/clients/gemini-cli.md), or [Antigravity](docs/clients/antigravity.md)
+guide. Direct MCP does not require the model proxy or tray.
 
 </details>
 

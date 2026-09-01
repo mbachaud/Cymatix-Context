@@ -233,6 +233,21 @@ MAX_FILE_SIZE = 200_000
 MIN_FILE_SIZE = 50
 
 
+def _profile_skip_dirs(profile: dict) -> set:
+    """Directory denylist for one profile.
+
+    ``SKIP_DIRS_COMMON`` protects internal-project roots from ingesting
+    their own artifacts (training data, benchmark outputs, caches). For
+    emitted bench corpora (e.g. the EnronQA roots) those names can be REAL
+    data directories — Enron users had mail folders literally named
+    'training' — so a profile may set ``skip_dirs_override`` (any set,
+    including empty) to REPLACE the common list + extras entirely.
+    """
+    if "skip_dirs_override" in profile:
+        return set(profile["skip_dirs_override"])
+    return SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
+
+
 def _is_sqlite_sidecar(path: str) -> bool:
     """Picklable filter for SQLite sidecars in process-pool shard tasks."""
     return any(path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES)
@@ -731,6 +746,42 @@ PROFILES: dict[str, dict] = {
         "extra_skip_dirs": set(),
         "extra_filename_filters": [],
     },
+    "enronqa": {
+        "label": "EnronQA second-bench corpus (73,772 real Enron emails, CC BY 4.0)",
+        # Second-corpus lane (user-approved 2026-08-28; scouting report
+        # docs/research/2026-08-28-second-corpus-scouting.md). Files emitted
+        # from hf:MichaelR207/enron_qa_0922 by scripts/build_enronqa_corpus.py;
+        # paired original/rephrased needle set under benchmarks/dogfood/enronqa.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\enronqa\corpus"],
+        "extra_skip_dirs": set(),
+        # Emitted corpus root holds ONLY dataset emails — no internal
+        # artifacts to protect against, and Enron mail folders literally
+        # named 'training' are real bench data (user ruling 2026-08-29:
+        # the internal-data exclusion must not drop QA-corpus files).
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "enronqa_padded": {
+        "label": "EnronQA + raw-Enron distractor padding (~500k emails)",
+        # Padded variant of "enronqa": same QA corpus (gold untouched) plus
+        # the remaining raw Enron maildir dump emitted as distractors by
+        # scripts/build_enron_padding.py (QA-covered paths excluded there,
+        # so no email is represented under both roots by path). Parallel
+        # ingest c=6 ruled acceptable by the user 2026-08-29 despite the
+        # strict-gate FAIL (gene_relations -0.13%, query-inert at shipped
+        # defaults — benchmarks/dogfood/receipts/ingest_equivalence_enronqa.json).
+        "active_roots": 2,
+        "roots": [
+            r"F:\Projects\enronqa\corpus",
+            r"F:\Projects\enronqa\padding",
+        ],
+        "extra_skip_dirs": set(),
+        # Same ruling as "enronqa": emitted roots carry no internal
+        # artifacts; 'training'-named Enron mail folders are real data.
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
         "active_roots": 13,
@@ -843,6 +894,16 @@ def ingest_tree(
 # ── Build one profile ─────────────────────────────────────────────────────
 
 
+def _env_hub_cutoff() -> int:
+    """``CYMATIX_BFM_HUB_CUTOFF`` — entity auto-link posting-count cutoff
+    for bench builds ([ingestion] entity_autolink_hub_cutoff semantics,
+    PR #412). The builder constructs ``Genome`` directly and never loads
+    cymatix.toml, so the knob must arrive via env. 0 (default) = legacy
+    unbounded linking.
+    """
+    return int(os.environ.get("CYMATIX_BFM_HUB_CUTOFF", "0") or 0)
+
+
 def _env_flag(name: str, default: str = "1") -> bool:
     """Read a boolean env toggle. Truthy unless set to 0/false/no/off.
 
@@ -953,9 +1014,12 @@ def build_profile(
         synonym_map={},
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"),
         entity_graph=True,
+        entity_autolink_hub_cutoff=_env_hub_cutoff(),
     )
+    log.info("entity_autolink_hub_cutoff=%d (CYMATIX_BFM_HUB_CUTOFF)",
+             _env_hub_cutoff())
 
-    skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
+    skip_dirs = _profile_skip_dirs(profile)
     extra_filename_filters = profile["extra_filename_filters"]
 
     stats = {
@@ -1425,6 +1489,7 @@ def _build_one_shard(
     shard = Genome(
         path=str(p), synonym_map={},
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"), entity_graph=True,
+        entity_autolink_hub_cutoff=_env_hub_cutoff(),
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,
@@ -1777,7 +1842,7 @@ def build_profile_sharded(
         main_path, shard_workers, shard_file_workers,
     )
 
-    skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
+    skip_dirs = _profile_skip_dirs(profile)
     extra_filename_filters = profile["extra_filename_filters"]
 
     totals = {
@@ -2091,7 +2156,13 @@ def update_manifest(out_dir: str, profile_stats: dict, mode: str) -> None:
     # Preserve legacy flat layout (mode="blob" historically) while letting
     # sharded entries live under <profile>-sharded keys for clarity.
     key = profile_stats["profile"] if mode == "blob" else f"{profile_stats['profile']}-sharded"
-    manifest["targets"][key] = {"mode": mode, **profile_stats}
+    # Tagger output version is part of bed identity (tags are in the
+    # bed-content digest): cross-bed comparisons require matching values.
+    # Beds whose manifests predate this field are tagger_version=1.
+    from cymatix_context.tagger import TAGGER_VERSION
+    manifest["targets"][key] = {
+        "mode": mode, "tagger_version": TAGGER_VERSION, **profile_stats,
+    }
     manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
 
     with open(manifest_path, "w", encoding="utf-8") as f:

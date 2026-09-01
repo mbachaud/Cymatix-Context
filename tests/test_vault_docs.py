@@ -105,13 +105,19 @@ def test_generated_readme_local_doc_paths_resolve(vault_manager):
     )
 
 
-def test_claude_code_doc_local_paths_resolve():
-    """Same guard applied to the Claude Code operator doc.
-
-    `docs/clients/claude-code.md` is the primary operator-facing intro and
-    must not contain broken local pointers either.
-    """
-    doc = REPO_ROOT / "docs" / "clients" / "claude-code.md"
+@pytest.mark.parametrize(
+    "doc_name",
+    (
+        "cymatix-context.md",
+        "claude-code.md",
+        "codex.md",
+        "gemini-cli.md",
+        "antigravity.md",
+    ),
+)
+def test_client_doc_local_paths_resolve(doc_name: str):
+    """Every client guide's local pointers must resolve from the repository."""
+    doc = REPO_ROOT / "docs" / "clients" / doc_name
     text = doc.read_text(encoding="utf-8")
     local_paths = _extract_local_paths(text)
 
@@ -128,6 +134,6 @@ def test_claude_code_doc_local_paths_resolve():
             if not alt.exists():
                 missing.append(raw)
     assert not missing, (
-        f"docs/clients/claude-code.md references local paths that do not "
+        f"docs/clients/{doc_name} references local paths that do not "
         f"exist: {missing}. Update the doc or restore the missing files."
     )

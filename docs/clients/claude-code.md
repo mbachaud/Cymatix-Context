@@ -1,229 +1,113 @@
-# Claude Code → Cymatix Routing
+# Claude Code + `cymatix-context`
 
-How a Claude Code session reaches the Cymatix server, what env identity
-travels with each call, and where the agent-side skill lives.
+Official references: [Claude Code skills](https://code.claude.com/docs/en/slash-commands)
+and [Claude Code MCP](https://code.claude.com/docs/en/mcp) (accessed 2026-08-27).
+For the shared contract, identity fields, status semantics, and smoke test, see
+the [`cymatix-context` overview](cymatix-context.md).
 
-**See also:**
-- [`skills/cymatix/SKILL.md`](../../skills/cymatix/SKILL.md) — the agent-side skill (identity contract + tool-use rules)
-- [`docs/architecture/SESSION_REGISTRY.md`](../architecture/SESSION_REGISTRY.md) — server-side presence + attribution model
-- [`docs/ops/SKILLS_BUNDLE.md`](../ops/SKILLS_BUNDLE.md) — how a skills.md file becomes retrievable documents (a different lifecycle — content ingest, not connection routing)
+Related operator references: [session registry](../architecture/SESSION_REGISTRY.md),
+[skills bundle](../ops/SKILLS_BUNDLE.md), and [vault status](../ops/OBSIDIAN_VAULT_STATUS.md).
 
-## The shape
+## Install the shared skill
 
-```
-┌─────────────────────────┐    stdio JSON-RPC    ┌─────────────────────────┐
-│   Claude Code (host)    │ ───────────────────► │  cymatix_context.mcp    │
-│   spawns subprocess     │                       │  (MCP adapter)          │
-│   per .mcp.json entry   │ ◄─── tool results ── │                          │
-└─────────────────────────┘                       └────────────┬────────────┘
-                                                                │ HTTP
-                                                                ▼ (CYMATIX_MCP_URL)
-                                                  ┌─────────────────────────┐
-                                                  │  cymatix-context server │
-                                                  │  http://127.0.0.1:11437 │
-                                                  └─────────────────────────┘
+Copy the one canonical artifact to either supported destination:
+
+```bash
+# Workspace scope
+mkdir -p .claude/skills/cymatix-context
+cp <absolute-repo-path>/skills/cymatix-context/SKILL.md .claude/skills/cymatix-context/SKILL.md
+
+# User scope
+mkdir -p ~/.claude/skills/cymatix-context
+cp <absolute-repo-path>/skills/cymatix-context/SKILL.md ~/.claude/skills/cymatix-context/SKILL.md
 ```
 
-Two hops. Claude Code spawns the MCP adapter as a stdio subprocess and
-talks JSON-RPC. The adapter proxies every tool call over HTTP to the
-cymatix server. The adapter is a thin shim — it does no retrieval logic
-of its own. See [`cymatix_context/mcp_server.py`](../../cymatix_context/mcp_server.py)
-for the full tool list.
+The file is instructional only. When this canonical file is present at a
+native destination, `cymatix-status` reports `skill.installation=present` and
+`skill.activation=enabled`. That confirms installation, not that Claude Code
+has loaded or discovered it; restart or refresh the host to establish runtime
+discovery.
 
-## .mcp.json wiring
+## Configure native MCP
 
-Drop this into your Claude Code MCP config (project-level
-`.mcp.json` or user-level `~/.claude/mcp.json`):
+Put this generated block in the project `.mcp.json` or the user
+`~/.claude.json` MCP configuration. Do not add a second, forked skill body.
+Before editing an existing JSON file, create a same-directory backup, for
+example `cp <config-path> <config-path>.bak-<timestamp>`. The full generated
+object below is suitable only for an otherwise empty/new target. For an
+existing JSON object, merge only the canonical `mcpServers.cymatix-context`
+entry into its existing `mcpServers` object and preserve every unrelated root
+setting and server; do not replace the root object.
 
+<!-- BEGIN GENERATED MCP: claude-code -->
 ```json
 {
   "mcpServers": {
     "cymatix-context": {
       "command": "python",
-      "args": ["-m", "cymatix_context.mcp_server"],
+      "args": [
+        "-m",
+        "cymatix_context.mcp_server"
+      ],
       "env": {
         "CYMATIX_MCP_URL": "http://127.0.0.1:11437",
-        "CYMATIX_ORG":         "swiftwing",
-        "CYMATIX_PARTY_ID":    "swift_wing21",
-        "CYMATIX_DEVICE":      "swift_wing21",
-        "CYMATIX_USER":        "max",
-        "CYMATIX_AGENT":       "laude",
-        "CYMATIX_AGENT_KIND":  "claude-code",
-        "CYMATIX_MCP_HANDLE":  "laude",
-        "CYMATIX_MCP_HOST":    "claude-code"
+        "CYMATIX_ORG": "<org>",
+        "CYMATIX_PARTY_ID": "<party-id>",
+        "CYMATIX_DEVICE": "<party-id>",
+        "CYMATIX_USER": "<user>",
+        "CYMATIX_AGENT": "<agent-handle>",
+        "CYMATIX_AGENT_KIND": "claude-code",
+        "CYMATIX_MCP_HANDLE": "<agent-handle>",
+        "CYMATIX_MCP_HOST": "claude-code"
       }
     }
   }
 }
 ```
+<!-- END GENERATED MCP: claude-code -->
 
-On Windows, wrap stdio launchers per global guidance — use `cmd /c python ...`
-if `python` isn't directly resolvable in the host's spawn environment.
+The adapter identifies its stable MCP protocol namespace as `cymatix`, so the
+host-visible tool namespace remains `cymatix_*`. Direct MCP does not require
+the optional model proxy or tray.
 
-The eight identity vars are not optional in spirit. Anything you omit
-falls back to a default that erodes attribution. Defaults are documented
-in [`mcp_server.py`](../../cymatix_context/mcp_server.py) — the registry
-will still accept the registration, but the badges in the dashboard and
-the `authored_by_*` columns in the knowledge store will read as `unknown` or
-`mcp-<pid>` instead of `laude` / `claude-code`.
+## Activate, refresh, and verify
 
-## Per-host variants
-
-Same env contract, different `CYMATIX_AGENT` and `CYMATIX_MCP_HOST`
-combinations. The `CYMATIX_MCP_HOST` value is what the dashboard's
-session pill uses to tag which IDE spawned a given participant.
-
-| Host                  | `CYMATIX_MCP_HOST`  | Typical `CYMATIX_AGENT` |
-|-----------------------|-------------------|------------------------|
-| Claude Code (CLI)     | `claude-code`     | `laude`                |
-| Claude Desktop        | `claude-desktop`  | `laude`                |
-| Antigravity (Gemini)  | `antigravity`     | `raude`                |
-| Cursor                | `cursor`          | `taude`                |
-| VS Code Continue      | `vscode-continue` | `laude` or per-user    |
-
-`CYMATIX_AGENT_KIND` is the vendor/family axis (`claude-code`, `gemini`,
-`codex`) — orthogonal to host. The skill's
-[Identity Contract](../../skills/cymatix/SKILL.md#identity-contract)
-defines both.
-
-As of 2026-05-05, `CYMATIX_AGENT_KIND` and `CYMATIX_MCP_HOST` are
-persisted as first-class columns on the `participants` row (not
-only smuggled in via `capabilities`). The dashboard's Agents and
-Identities panels render a "Claude Code + VS Code" pretty-label
-chip when both are present.
-
-As of 2026-05-06, the MCP adapter additionally **auto-detects** the
-host IDE from intentional env vars (`VSCODE_PID`, `CURSOR_TRACE_ID`)
-and the agent **self-reports** its model via the new `cymatix_announce`
-MCP tool. Together they populate three new columns on the
-`participants` row — `ide_detected`, `ide_detection_via`, `model_id`
-— and the dashboard renders the full identity in a tooltip on the
-agent host chip. See
-[`SESSION_REGISTRY.md`](../architecture/SESSION_REGISTRY.md#announce-endpoint)
-for the API and [`skills/cymatix/SKILL.md`](../../skills/cymatix/SKILL.md#workflow)
-for the agent contract.
-
-The legacy `CYMATIX_MCP_HOST` env var is now optional — the adapter
-will detect the IDE without it. Set it only when you want to override
-the auto-detection (e.g., running Claude Code from a non-VS-Code
-terminal but want the chip to say `"vscode"` anyway).
-
-## Request lifecycle
-
-**On MCP subprocess start** — `mcp_server.py:_register_with_registry()`:
-
-1. Reads `CYMATIX_MCP_HANDLE`, `CYMATIX_PARTY_ID` (or `CYMATIX_DEVICE` / `CYMATIX_PARTY` /
-   hostname), `CYMATIX_MCP_HOST`, and the workspace cwd.
-2. Calls `AgentBridge.register_participant(...)` over HTTP — that posts
-   to `/sessions/register` and starts a heartbeat.
-3. Capability tags `["mcp_tools", "host:<CYMATIX_MCP_HOST>"]` are attached
-   to the participant row so dashboards can filter by host/IDE.
-4. Registration failure is **non-fatal**. Tool calls still proxy. A
-   warning is logged.
-
-**On every tool call** (e.g., `cymatix_context`, `cymatix_ingest`):
-
-1. Claude Code emits a JSON-RPC `tools/call` over stdio.
-2. The MCP adapter wraps the args into an HTTP request and posts to
-   the cymatix server (`CYMATIX_MCP_URL`).
-3. For ingest paths, the adapter attaches the four identity layers
-   (`org`, `party`, `participant`, `agent`) so authored documents carry
-   attribution. See the contract in
-   [SKILL.md "Attribution Expectations"](../../skills/cymatix/SKILL.md#attribution-expectations).
-4. The HTTP server returns the result; the adapter forwards it back
-   over stdio.
-
-**On heartbeat** — the bridge pings `/sessions/<participant>/heartbeat`
-on a timer so the dashboard's "active 26.7s ago" stays current. Stop
-the host process and the participant TTLs out naturally.
-
-## Installing the agent-side skill
-
-The skill at [`skills/cymatix/SKILL.md`](../../skills/cymatix/SKILL.md) is
-the contract Claude follows when it calls Cymatix tools. Two install
-choices:
-
-**Project-scoped** — copy or symlink into the project's
-`.claude/skills/`:
+Project approval and the host session determine activation; a configured file
+cannot prove that approval. Restart Claude Code after project approval or MCP
+configuration changes, then run `claude mcp get cymatix-context`,
+`claude mcp list`, or `/mcp`. Confirm the six lean tools are listed and call
+`cymatix_health`. For a read-only machine summary, run:
 
 ```bash
-mkdir -p .claude/skills/cymatix
-cp <repo>/skills/cymatix/SKILL.md .claude/skills/cymatix/SKILL.md
+cymatix-status --host claude-code --json
 ```
 
-**User-global** — install once, applies to every project:
+A valid loopback configured URL is probed automatically. To deliberately probe
+a remote endpoint, pass `--server-url <validated-url>`; it is a health
+diagnostic override, not a change to the selected host's MCP endpoint. JSON
+reports `server.source` and `server.configured_url_match`. Only a canonical
+match with the configured URL (case-normalized scheme/host, effective port, and
+normalized trailing slash/path; never DNS equivalence) may supply session,
+live, or readiness evidence. A mismatch can report diagnostic health, but
+returns nonzero and tells you to update the config or probe the matching URL.
+Malformed URLs, URLs containing credentials, query strings, or fragments, and
+implicit non-loopback URLs are not probed. Never put credentials in a URL.
+
+The report may show `mcp.activation` or skill activation as `unknown`, and
+`mcp.live` remains unknown until an exact active session/handle is observed.
+`configured_ready` means canonical config + known enabled activation + healthy
+server; it is not live-session evidence. Unknown activation remains
+`unknown`, and readiness is `null` whenever that missing evidence prevents a
+conclusion. Unknown live evidence remains `mcp.live=unknown`; status never fabricates
+true/false from missing evidence.
+
+## Disable or roll back
+
+Use Claude Code's native `/mcp` disable/rejection control, or restore a
+timestamped backup of the config. File presence alone remains activation
+unknown. If MCP is disabled or unavailable, continue with native repository
+and file tools; the backend can still be started independently with:
 
 ```bash
-mkdir -p ~/.claude/skills/cymatix
-cp <repo>/skills/cymatix/SKILL.md ~/.claude/skills/cymatix/SKILL.md
+python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 ```
-
-Either way, Claude Code's skill loader picks up `SKILL.md` and exposes
-the skill via the `using-superpowers` priority rules. The skill itself
-is purely instructional — it does not run code.
-
-## Verifying the route
-
-After wiring `.mcp.json` and starting Claude Code, ask Claude to call
-`cymatix_health`. Then check the dashboard at
-`http://127.0.0.1:11437/launcher` (or the launcher tray):
-
-1. **Parties** panel should show your `CYMATIX_PARTY_ID`.
-2. **Identities** panel should show a row for your `CYMATIX_USER`
-   workspace.
-3. **Agents** panel should show a participant whose handle matches
-   `CYMATIX_MCP_HANDLE`, with capability tag `host:<CYMATIX_MCP_HOST>`.
-
-If the host tag is `host:unknown`, your MCP env didn't carry
-`CYMATIX_MCP_HOST`. If the agent appears as `mcp-<pid>` instead of your
-chosen handle, `CYMATIX_MCP_HANDLE` didn't carry. In both cases, fix the
-`.mcp.json` env block — the server is doing what the env said.
-
-## Troubleshooting
-
-| Symptom | Likely cause | Fix |
-|---|---|---|
-| MCP tool calls return network errors | `CYMATIX_MCP_URL` unreachable; server not running | Start `python -m uvicorn cymatix_context.server:app --host 127.0.0.1 --port 11437` |
-| Tool calls work but participant never appears in dashboard | Registration silently failed | Check the MCP adapter's stderr for the warning from `_register_with_registry` |
-| Authored documents show `agent=unknown` | `CYMATIX_AGENT` (or fallback chain) unset in MCP env | Set `CYMATIX_AGENT` in `.mcp.json` |
-| Two Claude panels collide on one handle | Both panels share `CYMATIX_MCP_HANDLE` | Give each panel a distinct handle, or omit it (`mcp-<pid>` is unique per process) |
-| `cymatix_sessions_list` empty | Cymatix bridge import failed at adapter startup | Check the adapter's startup log; likely a missing dep in the spawn env |
-
-## What's not covered here
-
-- The knowledge store lifecycle of an ingested skill — see
-  [`docs/ops/SKILLS_BUNDLE.md`](../ops/SKILLS_BUNDLE.md).
-- Federation / cross-tenant routing — see
-  [`docs/architecture/FEDERATION_LOCAL.md`](../architecture/FEDERATION_LOCAL.md).
-- Antigravity / Gemini-as-Raude persona — see
-  [`docs/architecture/raude_antigravity_persona.md`](../architecture/raude_antigravity_persona.md).
-  This doc covers Claude Code specifically; per-host variants follow the
-  same env contract with different `CYMATIX_MCP_HOST` / `CYMATIX_AGENT` values.
-
-## Obsidian vault export (v1, opt-in)
-
-As of 2026-05-06, cymatix can export the knowledge store to a configurable directory as
-an Obsidian-compatible markdown vault. v1 is read-only — operator edits in
-Obsidian are not synced back. Diagnostic traces of every `/context` call are
-auto-exported and TTL-pruned (default 48h).
-
-Enable in `cymatix.toml`:
-
-```toml
-[vault]
-enabled = true
-path = "~/.cymatix/vault"
-# party_id = ""           # empty = server's primary party
-# redact_body = false     # set true if Obsidian Sync / iCloud watches the path
-
-[vault.traces]
-retention_hours = 48
-# max_retention_hours_hard = 720    # hard cap for compliance retention
-```
-
-CLI: `cymatix-vault {export, status, trace, pin, unpin}`. See
-[`docs/ops/OBSIDIAN_VAULT_STATUS.md`](../ops/OBSIDIAN_VAULT_STATUS.md) for the
-current operator status (what works today, what's deferred to v1.1+, and the
-smoke-test path). The original design specs are archived under
-`docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-design.md`
-and `docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md`.

@@ -14,14 +14,82 @@ tiny, explicit read-compat whitelist.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 PKG_ROOT = REPO_ROOT / "cymatix_context"
+
+
+# Keep the active-surface walk deterministic and deliberately narrow.  Historical
+# records, benchmark receipts, and the metadata-only redirect are covered by
+# their own contracts and must not be swept into this lint.
+ACTIVE_DOCS = tuple(
+    path
+    for path in (
+        REPO_ROOT / "README.md",
+        REPO_ROOT / "CLAUDE.md",
+        REPO_ROOT / "docs/SETUP.md",
+        REPO_ROOT / "docs/TROUBLESHOOTING.md",
+        *sorted((REPO_ROOT / "docs/clients").glob("*.md")),
+        *sorted((REPO_ROOT / "docs/api").rglob("*.md")),
+        *sorted((REPO_ROOT / "docs/ops").rglob("*.md")),
+    )
+    if path.is_file()
+)
+ACTIVE_SCRIPTS = tuple(
+    path
+    for root in (REPO_ROOT, REPO_ROOT / "deploy")
+    for suffix in ("*.bat", "*.ps1", "*.sh")
+    for path in sorted(root.glob(suffix) if root == REPO_ROOT else root.rglob(suffix))
+    if path.is_file()
+    and "deploy/pypi-tombstone/" not in path.relative_to(REPO_ROOT).as_posix()
+)
+ACTIVE_SKILLS = tuple(
+    path for path in sorted((REPO_ROOT / "skills").rglob("*")) if path.is_file()
+)
+
+_ACTIVE_SURFACE_WHITELIST: dict[str, tuple[str, ...]] = {
+    "README.md": (
+        "formerly `helix-context`",
+        "`helix_context` import",
+        "helix-context](#migrating",
+        "old `helix_context` alias",
+        "migrating from helix-context",
+        "old `helix` surface",
+        "`cymatix-context<0.8.5`",
+        "| install | `pip install helix-context`",
+        "| import | `import helix_context`",
+        "| cli | `helix`, `helix-server`",
+        "| config file | `helix.toml`",
+        "| env vars | `helix_*`",
+        "| mcp `-m` entry | `python -m helix_context.mcp_server`",
+        "| mcp tools | `helix_*`",
+        "| asgi target | `helix_context._asgi:app`",
+    ),
+    "CLAUDE.md": (
+        "renamed from helix-context",
+        "old `helix_context` alias package",
+        "not the helix brand",
+        "the `helix.toml` fallback",
+    ),
+    "deploy/windows/setup-cymatix.ps1": (
+        "retire pre-rename 'helix' shortcuts",
+        "a helix.lnk for some other install",
+        'join-path $desktop "helix.lnk"',
+    ),
+}
+_ACTIVE_SURFACE_EXPECTED_COUNTS = {
+    # README.md dropped 2026-08-30: the website-refresh rewrite (merged via
+    # #414) removed every whitelisted migration reference from the README.
+    "CLAUDE.md": 4,
+    "deploy/windows/setup-cymatix.ps1": 3,
+}
 
 
 # ── (a) the helix_context alias package is gone ─────────────────────
@@ -94,6 +162,7 @@ def test_setting_cymatix_env_does_not_create_helix_mirror():
         text=True,
         timeout=120,
         env=env,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
     )
     assert proc.returncode == 0, proc.stderr
     assert proc.stdout.strip() == "<absent>", (
@@ -156,8 +225,8 @@ def test_mcp_server_identifies_as_cymatix():
 # The only intentional ``helix`` mentions left in cymatix_context are
 # read-compat carve-outs, whitelisted here by (relative path → allowed
 # ASCII fragments). Every helix-bearing source line must match one of
-# these fragments, and the total count is pinned so a *new* whitelisted-
-# looking line still trips the guard.
+# these fragments, and the path-specific counts are pinned so a *new*
+# whitelisted-looking line still trips the guard.
 
 _WHITELIST: dict[str, tuple[str, ...]] = {
     # Accept the legacy bundle key on import (write only the cymatix key).
@@ -165,7 +234,10 @@ _WHITELIST: dict[str, tuple[str, ...]] = {
     # Read-only fallback to a pre-rename ~/.helix launcher selection record.
     "launcher/genome_registry.py": (".helix", "helix-era"),
 }
-_EXPECTED_WHITELISTED_LINES = 6
+_EXPECTED_WHITELISTED_LINES = {
+    "cross_store_import.py": 2,
+    "launcher/genome_registry.py": 4,
+}
 
 
 def _iter_source_helix_lines():
@@ -180,19 +252,166 @@ def _iter_source_helix_lines():
 class TestNoHelixInSource:
     def test_only_whitelisted_helix_references_remain(self):
         violations = []
-        whitelisted = 0
+        whitelisted_counts: dict[str, int] = {}
         for rel, lineno, line in _iter_source_helix_lines():
             fragments = _WHITELIST.get(rel)
-            if fragments and any(frag in line for frag in fragments):
-                whitelisted += 1
+            if fragments and any(frag in line.lower() for frag in fragments):
+                whitelisted_counts[rel] = whitelisted_counts.get(rel, 0) + 1
                 continue
             violations.append(f"{rel}:{lineno}: {line.strip()}")
         assert not violations, (
             "unexpected 'helix' literal(s) in cymatix_context/:\n"
             + "\n".join(violations)
         )
-        assert whitelisted == _EXPECTED_WHITELISTED_LINES, (
-            "whitelisted helix read-compat line count drifted: expected "
-            f"{_EXPECTED_WHITELISTED_LINES}, found {whitelisted}. Update the "
+        assert whitelisted_counts == _EXPECTED_WHITELISTED_LINES, (
+            "whitelisted helix read-compat line counts drifted: expected "
+            f"{_EXPECTED_WHITELISTED_LINES}, found {whitelisted_counts}. Update the "
             "whitelist deliberately if the read-compat surface changed."
         )
+
+
+def test_active_surfaces_have_only_count_pinned_migration_references():
+    """Current docs, scripts, and skills are Cymatix-only except named notices."""
+    violations = []
+    whitelisted_counts: dict[str, int] = {}
+    active_paths = (*ACTIVE_DOCS, *ACTIVE_SCRIPTS, *ACTIVE_SKILLS)
+    for path in active_paths:
+        rel = path.relative_to(REPO_ROOT).as_posix()
+        fragments = _ACTIVE_SURFACE_WHITELIST.get(rel, ())
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if "helix" not in line.lower():
+                continue
+            if fragments and any(fragment in line.lower() for fragment in fragments):
+                whitelisted_counts[rel] = whitelisted_counts.get(rel, 0) + 1
+                continue
+            violations.append(f"{rel}:{lineno}: {line.strip()}")
+
+    assert not violations, (
+        "unexpected Helix reference on an active surface:\n" + "\n".join(violations)
+    )
+    assert whitelisted_counts == _ACTIVE_SURFACE_EXPECTED_COUNTS, (
+        "active migration-reference counts drifted: expected "
+        f"{_ACTIVE_SURFACE_EXPECTED_COUNTS}, found {whitelisted_counts}"
+    )
+
+
+_OLD_PREFIX_ADOPTION = re.compile(r"adopt[\s_-]+old[\s_-]+prefix|legacy[\s_-]+prefix", re.I)
+_HELIX_ENV = re.compile(r"\bHELIX_[A-Z0-9_]*\b", re.I)
+_CYMATIX_SELF_ASSIGNMENT = re.compile(
+    r"\b(CYMATIX_[A-Z0-9_]+)\s*=\s*(?:%\s*([A-Z0-9_]+)\s*%|"
+    r"\$\{?([A-Z0-9_]+)\}?|['\"]?\$env:([A-Z0-9_]+)['\"]?)",
+    re.I,
+)
+
+
+def test_active_scripts_have_no_old_prefix_adoption_or_mirrors():
+    violations = []
+    for path in ACTIVE_SCRIPTS:
+        rel = path.relative_to(REPO_ROOT).as_posix()
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if _OLD_PREFIX_ADOPTION.search(line) or _HELIX_ENV.search(line):
+                violations.append(f"{rel}:{lineno}: {line.strip()}")
+                continue
+            match = _CYMATIX_SELF_ASSIGNMENT.search(line)
+            rhs_name = (
+                next((group for group in match.groups()[1:] if group), None)
+                if match
+                else None
+            )
+            if match and match.group(1).upper() == f"CYMATIX_{rhs_name.upper()}":
+                violations.append(f"{rel}:{lineno}: {line.strip()}")
+    assert not violations, (
+        "active scripts contain a legacy-prefix adoption/mirror surface:\n"
+        + "\n".join(violations)
+    )
+
+
+_IDENTITY_ASSIGNMENT = re.compile(
+    r"\b(?P<name>CYMATIX_(?:ORG|USER|AGENT))\s*=\s*(?P<value>[^;\r\n]+)",
+    re.I,
+)
+
+
+def _is_identity_placeholder(name: str, value: str) -> bool:
+    """Allow environment pass-through and documented placeholder syntax."""
+    value = value.strip().strip("\"'")
+    value = value.split(" REM", 1)[0].strip().strip("\"'")
+    escaped_name = re.escape(name)
+    return bool(
+        re.fullmatch(rf"%{escaped_name}%", value, re.I)
+        or re.fullmatch(rf"\$\{{?{escaped_name}\}}?", value, re.I)
+        or re.fullmatch(rf"\$env:{escaped_name}", value, re.I)
+        or re.fullmatch(r"<[^<>]+>", value)
+    )
+
+
+def test_active_scripts_have_no_fixed_identity_defaults():
+    """Tracked launchers must not bake in a maintainer's org/user/agent."""
+    violations = []
+    for path in ACTIVE_SCRIPTS:
+        rel = path.relative_to(REPO_ROOT).as_posix()
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            for match in _IDENTITY_ASSIGNMENT.finditer(line):
+                if not _is_identity_placeholder(match.group("name"), match.group("value")):
+                    violations.append(f"{rel}:{lineno}: {line.strip()}")
+    assert not violations, (
+        "active scripts contain fixed CYMATIX identity defaults; use operator "
+        "environment values or placeholders:\n" + "\n".join(violations)
+    )
+
+
+def test_mcpo_handle_fallback_branches_and_runtime_contracts():
+    """MCPO handle fallback must preserve identity and launch/headroom contracts."""
+    mcpo = (REPO_ROOT / "start-cymatix-mcpo.bat").read_text(encoding="utf-8")
+    fallback = (
+        'if not defined CYMATIX_MCP_HANDLE if defined CYMATIX_AGENT '
+        'set "CYMATIX_MCP_HANDLE=%CYMATIX_AGENT%"'
+    )
+    assert fallback in mcpo
+    assert 'set CYMATIX_MCP_HANDLE=%CYMATIX_AGENT%' not in mcpo
+
+    def resolve_handle(existing: str | None, agent: str | None) -> str | None:
+        if existing:
+            return existing
+        if agent:
+            return agent
+        return None
+
+    assert resolve_handle("operator-handle", "agent-handle") == "operator-handle"
+    assert resolve_handle(None, "agent-handle") == "agent-handle"
+    assert resolve_handle(None, None) is None
+
+    assert 'if "%CYMATIX_MCPO_PORT%"=="" set CYMATIX_MCPO_PORT=8788' in mcpo
+    assert "mcpo --port %CYMATIX_MCPO_PORT% -- python -m cymatix_context.mcp_server" in mcpo
+    tray = (REPO_ROOT / "start-cymatix-tray.bat").read_text(encoding="utf-8")
+    for headroom_default in (
+        'set "CYMATIX_HEADROOM_ENABLED=1"',
+        'set "CYMATIX_HEADROOM_AUTOSTART=1"',
+        'set "CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1"',
+    ):
+        assert headroom_default in tray
+
+
+def test_pypi_tombstone_is_a_metadata_only_cymatix_redirect():
+    tombstone = REPO_ROOT / "deploy/pypi-tombstone"
+    metadata = tomllib.loads((tombstone / "pyproject.toml").read_text(encoding="utf-8"))
+    project = metadata["project"]
+    assert project["name"] == "helix-context"
+    assert any(dep.lower().startswith("cymatix-context") for dep in project["dependencies"])
+    assert not project.get("scripts")
+    setuptools = metadata.get("tool", {}).get("setuptools", {})
+    assert setuptools.get("packages") == []
+    assert setuptools.get("py-modules") == []
+    assert not setuptools.get("entry-points")
+
+    prose = (tombstone / "README.md").read_text(encoding="utf-8").lower()
+    assert "current cymatix" in prose and "does not provide" in prose
+    for contradiction in (
+        "shim",
+        "keep working",
+        "honored alongside",
+        "still loading",
+    ):
+        assert contradiction not in prose
+    for removed_alias in ("helix_context", "helix*", "helix_*", "helix.toml"):
+        assert removed_alias in prose

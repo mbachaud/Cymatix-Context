@@ -6,7 +6,8 @@ R4 = soft-deprecation only, no removals. Three things under test:
    pass-through equivalent of ``cymatix_neighbors`` (same call, same
    result) -- not just present under a new name.
 2. All five ``cymatix_document_*`` aliases are part of the lean default
-   ``_MCP_CORE_TOOLS`` surface (grown from the original 5 to 10).
+   ``_MCP_CORE_TOOLS`` surface (grown from the original 5 -- plus
+   ``cymatix_announce``, added by the model-contract work on master -- to 11).
 3. Every legacy bio-named tool this task touches
    (``cymatix_gene_get``, ``cymatix_splice_preview``, ``cymatix_neighbors``)
    carries a deprecation nudge on its docstring's first line, and
@@ -80,8 +81,9 @@ def test_core_set_exposes_document_aliases():
     } <= set(_MCP_CORE_TOOLS)
 
 
-def test_core_set_grew_from_five_to_ten():
-    """Original 5 (issue #219 Slice 3) + 5 document_* aliases (#87 R4)."""
+def test_core_set_grew_to_eleven():
+    """Original 5 (issue #219 Slice 3) + cymatix_announce (model contract)
+    + 5 document_* aliases (#87 R4)."""
     from cymatix_context.mcp.mcp_server import _MCP_CORE_TOOLS
 
     original_five = {
@@ -92,7 +94,8 @@ def test_core_set_grew_from_five_to_ten():
         "cymatix_sessions_list",
     }
     assert original_five <= set(_MCP_CORE_TOOLS)
-    assert len(_MCP_CORE_TOOLS) == 10
+    assert "cymatix_announce" in _MCP_CORE_TOOLS
+    assert len(_MCP_CORE_TOOLS) == 11
 
 
 def test_lean_surface_matches_grown_core_set(monkeypatch):
