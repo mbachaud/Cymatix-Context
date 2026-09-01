@@ -200,7 +200,7 @@ staleness:
 - `staleness` — best-effort, from the store's health summary. Prints
   `(unavailable)` when the summary cannot be computed rather than failing.
 
-**Fixed in 0.9.1:** the tier counts were previously reported as zero. The CLI's
+**Fixed after the 0.9.1 tag ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)):** the tier counts were previously reported as zero. The CLI's
 stats projection read `chromatin_open` / `chromatin_euchromatin` /
 `chromatin_heterochromatin`, but `/stats` emits `open` / `euchromatin` /
 `heterochromatin`. The projection now accepts both, so `cymatix diag corpus`

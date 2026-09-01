@@ -12,8 +12,8 @@
 - This page documents **v0.9.1**. The wave-1 ranking flip
   ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)) and the
   `min_delivered_docs` seat floor
-  ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) are part of
-  that release and are marked where they appear.
+  ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) shipped in
+  that release (2026-08-30) and are marked where they appear.
 
 ![The seven-stage pipeline](assets/pipeline-flow.svg)
 
@@ -150,14 +150,15 @@
   since 2026-08-19) escapes a literal `<cymatix:` in retrieved content so an
   ingested document cannot forge the genuine no-match control tags.
 - **0.9.1 seat floor (`[budget] min_delivered_docs`,
-  [#409](https://github.com/mbachaud/Cymatix-Context/pull/409), default `0` =
-  off).** When set, the floor lifts the classifier's per-rule assembly cap to
-  at least N and truncates the last document instead of evicting it. Measured
-  at floor 12: delivered **0.630 → 0.668** (**+18/−0** needles), per-type
-  completeness **0.65 → 0.85**, the constrained slice **0.80 → 0.97**. **The
-  default flip was not taken** — the benchmark measures delivery, not answer
-  quality under a widened seat count, so the receipts justify the knob but not
-  the flip.
+  [#409](https://github.com/mbachaud/Cymatix-Context/pull/409), default
+  **12** since 2026-08-30; `0` = legacy eviction-only trim).** The floor lifts
+  the classifier's per-rule assembly cap to at least N and truncates the
+  largest parts instead of evicting whole documents. Measured at floor 12:
+  delivered **0.630 → 0.668** (**+18/−0** needles), per-type completeness
+  **0.65 → 0.85**, the constrained slice **0.80 → 0.97**; graduated on three
+  corpora with zero paired delivered losses and the ranking bases untouched.
+  The receipts grade delivery, not answer quality under a widened seat count —
+  that lane is still owed.
 
 ## Stage 6 — Persist
 

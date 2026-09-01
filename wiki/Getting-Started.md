@@ -43,7 +43,7 @@ install two or three extras, not `[all]`.
 | *(core)* | HTTP server, `/context`, `/context/packet`, FTS5 retrieval | Always — it is the base wheel |
 | `cpu` | spaCy NER ingest tagging (`[ingestion] backend = "cpu"`, the default) | You are ingesting anything at all |
 | `embeddings` | `numpy` + `sentence-transformers`: the SEMA codec and the BGE-M3 dense recall path | You opt in to dense recall or cold-tier retrieval (both default-off) |
-| `mcp` | `python -m cymatix_context.mcp_server` | Claude Code, Cursor, Claude Desktop, or any MCP host |
+| `mcp` | `python -m cymatix_context.mcp_server` | Claude Code, Codex, Gemini CLI, Antigravity, or any MCP host |
 | `ast` | Tree-sitter chunking for Python / Rust / JS / TS | You ingest source code, not just prose |
 | `nli` | Standalone `torch` + `transformers` for the DeBERTa backend | You flipped the compressor backend to `"deberta"` |
 | `otel` | OpenTelemetry SDK + OTLP gRPC exporter + FastAPI instrumentation | You want the Grafana dashboards to have data |
@@ -180,7 +180,7 @@ workflow below does not need one.
   the port. Set `[server] admin_token` to gate `/admin/*`, `/ingest`, and
   `/consolidate`. Reference: [HTTP API](HTTP-API), [Configuration](Configuration).
 
-### MCP — Claude Code, Cursor, Claude Desktop
+### MCP — Claude Code, Codex, Gemini CLI, Antigravity
 
 - Install the `mcp` extra, run the backend, then register the shim:
 
@@ -206,7 +206,9 @@ workflow below does not need one.
   models paint over `do_not_answer_from_genome=true` and answer from their
   training prior. Prepend `cymatix_context.agent_prompt.full_fragment()` to
   the system prompt. See [Agent Contract](Agent-Contract).
-- Reference: [MCP and IDE Integration](MCP-and-IDE-Integration).
+- Reference: [MCP and IDE Integration](MCP-and-IDE-Integration), and the
+  per-host guides under [`docs/clients/`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/clients/cymatix-context.md).
+  Direct MCP needs neither the model proxy nor the tray.
 
 ## When something goes wrong
 

@@ -15,14 +15,18 @@
 - **Canonical names are shown first.** `[compressor]` and `[knowledge_store]`
   are the software-lexicon spellings; `[ribosome]` and `[genome]` are the
   legacy spellings the file on disk still uses, and both resolve. See
-  [Lexicon](Lexicon).
-- This page documents **v0.9.1**. Two new knobs
-  ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409),
-  [#412](https://github.com/mbachaud/Cymatix-Context/pull/412)), the wave-1
-  ranking defaults ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)),
-  and the tagger v2 behavior change
-  ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) are marked
-  where they appear.
+  [Lexicon](Lexicon). The aliases come from the Tier-2 lexicon pass
+  ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)), which follows the 0.9.1 tag — on a 0.9.1 wheel only the legacy
+  spellings resolve.
+- This page documents **v0.9.1** (released 2026-08-30). The wave-1 ranking
+  defaults ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)),
+  the delivered-seat floor and its graduation to 12
+  ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)), the entity
+  auto-link hub cutoff knob
+  ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)), and the
+  tagger v2 behavior change
+  ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) all shipped
+  in it and are cited where they appear.
 
 ## Where a value comes from
 
@@ -42,14 +46,16 @@ Two typo guards run at load, both warning-only:
 - An unrecognized **key** inside a known section logs
   `Unknown-key check` output naming the section and key.
 - An unrecognized **top-level section** logs
-  `Unknown top-level section [<name>] in cymatix.toml`. New in 0.9.1 — it
+  `Unknown top-level section [<name>] in cymatix.toml`. Added by the Tier-2
+  lexicon pass ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419), after the 0.9.1 tag) — it
   catches a mistyped `[retreival]` that would previously have been silently
   ignored while you wondered why the flip did nothing.
 
 ## Canonical and legacy names
 
-The 0.9.1 lexicon pass adds canonical software-term aliases across the config
-surface. They are **additive**: every legacy spelling keeps working, unchanged.
+The Tier-2 lexicon pass ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419), merged after the 0.9.1 tag — not in the
+0.9.1 wheel) adds canonical software-term aliases across the config surface.
+They are **additive**: every legacy spelling keeps working, unchanged.
 
 | Canonical | Legacy | Surface |
 |---|---|---|
@@ -75,7 +81,7 @@ destination, so passing both is plain last-wins. See [CLI](CLI).)
 |---|---|---|
 | `[compressor]` *(legacy `[ribosome]`)* | The optional compression / enrichment layer. Off the retrieval hot path entirely. | `enabled = false`, `backend = "none"` (only `"litellm"` and `"deberta"` are honored when enabled; anything else, including `"claude"` and legacy `"ollama"`, dispatches the no-op DisabledBackend), `model = "gemma4:e2b"`, `timeout = 120`, `query_expansion_enabled = false` |
 | `[hardware]` | Device picker and per-model batch-size policy. | `device = "auto"` (cuda → rocm → mps → cpu), `batch_sizes = "auto"`, `low_vram_threshold_gb = 4.0`, `lazy_encoders = true` |
-| `[budget]` | Token caps, per-turn document caps, decoder mode, assembly-time safety. | `retrieval_tokens = 7000` *(legacy `expression_tokens`)*, `max_docs_per_turn = 12` *(legacy `max_genes_per_turn`)*, `decoder_mode = "condensed"`, `splice_aggressiveness = 0.3`, `legibility_enabled = true`, `session_delivery_enabled = true`, `abstain_enabled = true`, `neutralize_control_tags = true`, `min_delivered_docs = 0` |
+| `[budget]` | Token caps, per-turn document caps, decoder mode, assembly-time safety. | `retrieval_tokens = 7000` *(legacy `expression_tokens`)*, `max_docs_per_turn = 12` *(legacy `max_genes_per_turn`)*, `decoder_mode = "condensed"`, `splice_aggressiveness = 0.3`, `legibility_enabled = true`, `session_delivery_enabled = true`, `abstain_enabled = true`, `neutralize_control_tags = true`, `min_delivered_docs = 12` *(0.9.1; graduated from 0)* |
 | `[session]` | Session and party attribution fallbacks for the CWoLa label logger. | `default_party_id = "default"`, `synthetic_session_enabled = true`, `synthetic_session_window_s = 300` |
 | `[knowledge_store]` *(legacy `[genome]`)* | Store path, compaction cadence, write durability. | `path = "genomes/main/genome.db"`, `compact_interval = 3600`, `cold_start_threshold = 10`, `replicas = []`, `synchronous = "NORMAL"` (WAL-safe; skips SQLite's per-commit fsync) |
 | `[server]` | HTTP bind, chat upstream, and the two admin-surface hardening knobs. | `host = "127.0.0.1"`, `port = 11437`, `upstream = "http://localhost:11434"`, `upstream_timeout = 180`, `admin_token = ""`, `swap_db_roots = []`, `bench_enabled = false`, `bench_port = 11439` |
@@ -85,7 +91,7 @@ destination, so passing both is plain last-wins. See [CLI](CLI).)
 | `[context]` | Cold-tier fallthrough and the fingerprint profile. | `cold_tier_enabled = false`, `cold_tier_k = 3`, `cold_tier_min_cosine = 0.15`, `fingerprint_mode_profile = "balanced"` |
 | `[cymatics]` | The 256-bin term-spectrum scorer. Blends as a bonus, never re-sorts. | `enabled = true`, `harmonic_links = true`, `distance_metric = "cosine"` (or `"w1"`), `peak_width` unset (derives from `[budget] splice_aggressiveness`) |
 | `[classifier]` | The Stage-0 rule-based query classifier. | `enabled = true` — and that is the whole surface. Per-class caps and decoder hints are code constants pending [#205](https://github.com/mbachaud/Cymatix-Context/issues/205) |
-| `[retrieval]` | The big one: every recall tier, the fuser, the rerank layer. | `fusion_mode = "rrf"`, `rrf_k = 20` *(0.9.1; was 60)*, `dense_embedding_enabled = false`, `pki_enabled = false`, `rerank_enabled = false`, `filename_anchor_enabled = true`, `bm25_shortlist_enabled = true`, `sr_enabled = false`, `seeded_edges_enabled = false`, `blend_mode = "scale_relative"` |
+| `[retrieval]` | The big one: every recall tier, the fuser, the rerank layer. | `fusion_mode = "rrf"`, `rrf_k = 20` *(0.9.1; was 60)*, `rerank_combinator_by_class` = all five classes → `eps_band` *(0.9.1; was `{multi_hop, default}`)*, `cover_walk_enabled = false` *(0.9.1, W2.1 — shipped inert, killed by its receipt, [#408](https://github.com/mbachaud/Cymatix-Context/pull/408))*, `dense_embedding_enabled = false`, `pki_enabled = false`, `rerank_enabled = false`, `filename_anchor_enabled = true`, `bm25_shortlist_enabled = true`, `sr_enabled = false`, `seeded_edges_enabled = false`, `blend_mode = "scale_relative"` |
 | `[plr]` | The PLR query-confidence head that decorates `/context/packet`. | `enabled = true`, `model_path = "training/models/stacked_plr.joblib"`, `expected_sha256 = ""` (empty trusts the trainer's `.sha256` sidecar), `high_risk_threshold = 0.5` |
 | `[know]` | The KnowBlock confidence logistic and its calibration provenance. | `emit_floor = 0.45`, `s_ref = 4.2503`, `g_ref = 0.4386`, `betas` (6 coefficients), `calibrated_at` / `calibrated_on_n` written by `scripts/calibrate_know_confidence.py`, `stale_after_days = 30` |
 | `[mem_sync]` | Auto-sync of a watched notes directory into the store. Consumed by `scripts/run_mem_sync.py`, not by the server. | `enabled = false`, `watch_dirs = []`, `sync_interval_s = 60`, `agent_kind = "claude-code"` |
@@ -131,7 +137,7 @@ mitigation has not landed.
 
 ```toml
 [budget]
-min_delivered_docs = 0    # default: off, byte-identical legacy behavior
+min_delivered_docs = 12   # default since 2026-08-30 ([w24-floor-flip]); 0 = legacy eviction-only trim
 ```
 
 - Guards **both** mechanisms that cost a document its seat. It lifts the
@@ -146,10 +152,17 @@ min_delivered_docs = 0    # default: off, byte-identical legacy behavior
   **0.630 → 0.668**, **+18 / −0** needles — zero paired losses, and the map and
   final rank bases came back byte-identical per needle, so this is a pure
   delivery change ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)).
-- **The default flip was not taken.** The benchmark measures delivery, not
-  answer quality under a widened seat count — more documents in the window is
-  not automatically a better answer. The receipts justify shipping the knob,
-  not flipping it.
+- **Graduated 0 → 12 in the same release** (the commit subject-tagged
+  `[w24-floor-flip]`), gated on a cross-corpus confirm with zero paired
+  delivered losses: EnronQA v2 **0.820 → 0.856** (+18/−0) and EnronQA padded
+  597k **0.776 → 0.792** (+8/−0) alongside the 829k row; recall@12 / final
+  recall@12 identical in every cell. `min_delivered_docs = 0` restores the
+  legacy eviction-only trim byte-for-byte; the revert is one `git revert` of
+  the flip commit.
+- **What the receipts do not grade:** answer quality under a widened seat
+  count. More documents in the window is not automatically a better answer,
+  and twelve full-length documents per window costs real tokens — that lane is
+  still owed.
 
 ### `[ingestion] entity_autolink_hub_cutoff` — bound the auto-link sweep
 
@@ -166,8 +179,9 @@ entity_autolink_hub_cutoff = 0    # default: off, byte-identical legacy behavior
 - Set above `0` and entities whose posting count exceeds the bound are dropped
   from the probe set before the `GROUP BY`. The count probe is `LIMIT`-bounded,
   so per-insert cost becomes O(n_entities × cutoff). `PKI_NOISE_CUTOFF = 200`
-  is the precedent value for a future flip
-  ([#411](https://github.com/mbachaud/Cymatix-Context/issues/411)).
+  is the precedent value for the flip proposed in [#425](https://github.com/mbachaud/Cymatix-Context/pull/425)
+  (conditions on [#411](https://github.com/mbachaud/Cymatix-Context/issues/411);
+  open at the time of writing — the 0.9.1 default is `0`).
 - **Measured on a 500-document read-only replay at cutoff 200:** 0.53% of
   distinct entities held 56.9% of all postings; the per-link call went
   **210.5 ms → 0.62 ms (~340×)**
@@ -176,6 +190,12 @@ entity_autolink_hub_cutoff = 0    # default: off, byte-identical legacy behavior
   COVER edges form — 4,842 → 2,867 on that bed. A store built with the cutoff
   on is not edge-identical to one built without it. Those edges are
   default-inert at query time, but "inert" is not "absent".
+- **Retrieval-side null, measured after the fact:** a paired EnronQA A/B
+  (n=500; two beds differing only in the cutoff, gene-id sets identical) was
+  null in both the 0.9.0 and 0.9.1 configs — 0/500 per-needle delivered flips
+  (ledger row `2026-08-30-entity-hub-cutoff-retrieval-ab`). That is the
+  retrieval half of #411's flip condition; the edge delta above is the ingest
+  half.
 
 ### Wave-1 ranking defaults ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407))
 

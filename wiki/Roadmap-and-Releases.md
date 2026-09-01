@@ -12,26 +12,30 @@
   [`docs/ROADMAP.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROADMAP.md)** —
   the sequencing layer that says which track a piece of work sits under.
 - **Install from PyPI:** `pip install cymatix-context`. Released versions are
-  git-tagged (`v0.9.0`, `v0.8.6`, …) on the repository.
-- This wiki documents **0.9.1**, which is in flight at the time of writing.
-  Each item below carries its PR or issue number.
+  git-tagged (`v0.9.1`, `v0.9.0`, …) on the repository.
+- This wiki documents **0.9.1**, released 2026-08-30. Each item below carries
+  its PR or issue number.
 
-## 0.9.1 — in flight
+## 0.9.1 (2026-08-30) — the retrieval-quality release
 
-Five threads. One moves the retrieval defaults, one changes what a fresh
-ingest produces, and the rest are additive or ship off.
+Six threads shipped. Two move retrieval defaults, one changes what a fresh
+ingest produces, and the rest are additive or ship off. The release gate was
+PRs [#406](https://github.com/mbachaud/Cymatix-Context/pull/406)–[#409](https://github.com/mbachaud/Cymatix-Context/pull/409), [#412](https://github.com/mbachaud/Cymatix-Context/pull/412), [#413](https://github.com/mbachaud/Cymatix-Context/pull/413), [#422](https://github.com/mbachaud/Cymatix-Context/pull/422), certified by the three-arm
+sweep in ledger row `2026-08-30-v091-gate-sweep` (ALL PASS) — see
+[Benchmarks and Receipts](Benchmarks-and-Receipts).
 
 | Thread | What it is | Default impact |
 |---|---|---|
 | Wave-1 ranking flip ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)) | `rrf_k` 60 → 20, `eps_band` combinator extended to all five classifier classes | **Changes defaults** |
-| Delivered-seat floor ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) | New `[budget] min_delivered_docs` knob | Default `0` = off |
-| Entity auto-link hub cutoff ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)) | New `[ingestion] entity_autolink_hub_cutoff` knob | Default `0` = off |
+| Delivered-seat floor ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) | New `[budget] min_delivered_docs` knob, graduated **0 → 12** in the same release | **Changes defaults** |
+| Entity auto-link hub cutoff ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)) | New `[ingestion] entity_autolink_hub_cutoff` knob | Default `0` = off (flip to `200` proposed in [#425](https://github.com/mbachaud/Cymatix-Context/pull/425), open) |
 | Tagger v2 ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) | CPU ingest tagger rejects newline/tab entities and email/MIME header plumbing | **Changes new ingests** |
-| Lexicon Tier 2 + docs ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) | Canonical aliases across config / CLI / HTTP / env / MCP, this wiki, the site, a shorter README | Additive only |
+| Cross-host client unification ([#406](https://github.com/mbachaud/Cymatix-Context/pull/406)) | One MCP contract and native guides for Claude Code, Codex, Gemini CLI, and Antigravity under `docs/clients/`; `cymatix status` reports host readiness and live MCP state | Additive only |
+| EnronQA second-corpus bench lane ([#422](https://github.com/mbachaud/Cymatix-Context/pull/422)) | 73,772-email corpus, 250 paired original / rephrased needles, a padded 597k bed, and the v0.9.1 gate receipts | Bench only |
 
 ### Wave-1 ranking flip (#407)
 
-- The one default change in the release. On the 829k bed at full needle power,
+- The first of the release's two default changes. On the 829k bed at full needle power,
   gold-document delivery moves **0.555 → 0.630** (+43 / −8 paired), recall@12
   **0.651 → 0.681**, median gold rank **3 → 2**, with **zero question-type
   regressions**.
@@ -45,22 +49,33 @@ ingest produces, and the rest are additive or ship off.
   shipped-defaults 0.565 row are on
   [Benchmarks and Receipts](Benchmarks-and-Receipts).
 
-### Two new knobs, both shipped off (#409, #412)
+### Delivered-seat floor (#409) — knob and flip, both in the release
 
-- **`[budget] min_delivered_docs`** (default `0` = byte-identical legacy
-  behavior). At floor 12 the receipts measure delivery **0.630 → 0.668** with
-  **zero losses**, and per-needle ranking bases byte-identical — a pure
-  delivery change. **The flip was deliberately not taken:** the benchmark
-  measures *delivery*, not answer quality under a wider seat count, and twelve
-  full-length documents per window costs real tokens. The answer-quality lane
-  has to run before the default moves.
+- **`[budget] min_delivered_docs`** ships at **12**, graduated from `0` on
+  2026-08-30 by the commit subject-tagged `[w24-floor-flip]`; `0` restores the
+  byte-identical eviction-only legacy trim. At floor 12 the receipts measure
+  delivery **0.630 → 0.668** on the 829k bed with **zero losses**, and
+  per-needle ranking bases byte-identical — a pure delivery change.
+- The flip was gated on a cross-corpus confirm, not the 829k row alone:
+  EnronQA v2 **0.820 → 0.856** (+18/−0) and EnronQA padded 597k
+  **0.776 → 0.792** (+8/−0) — three corpora, zero paired delivered losses,
+  recall@12 / final recall@12 identical in every cell.
+- **What the receipts still do not grade:** answer quality under a wider seat
+  count. Twelve full-length documents per window costs real tokens, and ERB
+  does not grade that trade — the answer-quality lane is still owed.
+
+### Entity auto-link hub cutoff (#412) — knob shipped off
+
 - **`[ingestion] entity_autolink_hub_cutoff`** (default `0` = off, pinned
   byte-identical by test). On a hub-heavy 289k-document bed it takes the mean
-  per-link call from 210.5 ms to 0.62 ms — roughly **340×**. **The default
-  stays 0** because the edge delta is real: the graph that comes out is a
-  different graph, so the knob ships opt-in with the receipt attached. Flip
+  per-link call from 210.5 ms to 0.62 ms — roughly **340×**. **The 0.9.1
+  default stays 0** because the edge delta is real: the graph that comes out is
+  a different graph, so the knob ships opt-in with the receipt attached. Flip
   conditions live on
-  [#411](https://github.com/mbachaud/Cymatix-Context/issues/411).
+  [#411](https://github.com/mbachaud/Cymatix-Context/issues/411); the
+  retrieval-side condition has since been measured null (a paired EnronQA A/B,
+  0/500 delivered flips in both configs), and the flip to `200` is proposed in
+  [#425](https://github.com/mbachaud/Cymatix-Context/pull/425) — open at the time of writing.
 
 ### Tagger v2 (#413) — a behavior change with a version bump
 
@@ -77,7 +92,12 @@ ingest produces, and the rest are additive or ship off.
   produce hybrid v1/v2 beds. v2 beds are fresh builds.
 - Origin issue: [#410](https://github.com/mbachaud/Cymatix-Context/issues/410).
 
-### Lexicon Tier 2 and the docs pass
+### After the 0.9.1 tag — Lexicon Tier 2 and the docs pass
+
+Neither of these is in the 0.9.1 wheel: both follow the 0.9.1 tag on `master`
+and ship in the next release. This wiki presents their spellings as canonical
+because it is written for that state; on a 0.9.1 install, use the legacy
+spellings.
 
 - **Tier 2 aliases** ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419))
   land on every operator-facing surface — `[compressor]` /
@@ -90,7 +110,7 @@ ingest produces, and the rest are additive or ship off.
 - **Tier 3 — the wire surface — was deliberately not taken.** See
   [#417](https://github.com/mbachaud/Cymatix-Context/issues/417) and the
   [Lexicon](Lexicon).
-- **Documentation:** this wiki (also rendered at
+- **Documentation** ([#420](https://github.com/mbachaud/Cymatix-Context/pull/420)): this wiki (also rendered at
   <https://cymatixcontext.com/wiki/>),
   [`docs/ROSETTA.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROSETTA.md)
   retired to a stub pointing at [Lexicon](Lexicon), a repo-wide software-term
@@ -172,7 +192,8 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
 |---|---|
 | [#417](https://github.com/mbachaud/Cymatix-Context/issues/417) | Tier 3 lexicon — `<GENE>` blocks, decoder prompts, wire field names, `/stats` keys. Needs its own byte-level A/B gate; v1.0-scale work |
 | [#418](https://github.com/mbachaud/Cymatix-Context/issues/418) | Pre-existing config bug: a known `cymatix.toml` section given a scalar instead of a table crashes `load_config` with an uncaught `AttributeError` |
-| [#411](https://github.com/mbachaud/Cymatix-Context/issues/411) | Flip proposal and conditions for `entity_autolink_hub_cutoff` |
+| [#411](https://github.com/mbachaud/Cymatix-Context/issues/411) | Flip proposal and conditions for `entity_autolink_hub_cutoff`; the flip itself (0 → 200) is [#425](https://github.com/mbachaud/Cymatix-Context/pull/425), open |
+| [#421](https://github.com/mbachaud/Cymatix-Context/issues/421) | `docs/architecture/DIMENSIONS.md` is stale on several default states and contradicts the shipped `cymatix.toml`; the wiki pages follow the TOML |
 | [#410](https://github.com/mbachaud/Cymatix-Context/issues/410) | The tagger-hygiene root cause that #413 fixes |
 
 ## How releases work here
@@ -184,11 +205,14 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
 - **No formal cadence.** Nothing ships to a date. The gate is a receipt, and
   when the receipt says a change is null or negative the change does not ship —
   the wave-2 COVER-walk arm in this same 0.9.x window was killed by its own
-  receipt.
+  receipt ([#408](https://github.com/mbachaud/Cymatix-Context/pull/408) shipped the infrastructure inert, `cover_walk_enabled =
+  false`).
 - **Defaults move separately from features.** A knob and its default flip are
   different pull requests: the knob ships default-inert with a test pinning
   byte-identical legacy behavior, and the flip is its own receipt-gated
-  change. Both #409 and #412 in 0.9.1 are knobs whose flips were not taken.
+  change. In 0.9.1, #412's knob shipped without its flip (proposed separately
+  in #425), and #409's knob landed default-inert before its flip followed as
+  its own receipt-gated commit inside the same release.
 - **Disclosures ship with the release, not after it.** If a flip costs
   latency, or a surface silently stops working at defaults, it goes in the
   release notes next to the win.

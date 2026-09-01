@@ -29,7 +29,7 @@
 | `telemetry/` | OpenTelemetry metrics and histogram instrumentation |
 | `vault/` | Obsidian vault export — read-only diagnostic traces |
 | `launcher/` | System-tray supervisor for the backend and telemetry stack |
-| `mcp/` | The MCP tool surface for Claude Code and Claude Desktop |
+| `mcp/` | The MCP tool surface for Claude Code, Codex, Gemini CLI, and Antigravity |
 | `integrations/` | ScoreRift bridge |
 
 Top-level orchestration modules:
@@ -129,7 +129,10 @@ cutoff 200: **0.53% of distinct entities hold 56.9% of all postings**; mean
 per-link cost falls **210.5 ms → 0.62 ms (~340×)**. **The edge delta is why the
 default stays 0** — the same replay lost **3,143 of 4,842** COVER relation
 edges (gaining 1,168). Those edges are default-inert at query time, but a
-substantial edge-set change is not something to ship silently.
+substantial edge-set change is not something to ship silently. A paired
+retrieval A/B on EnronQA has since measured the cutoff null at query time
+(0/500 delivered flips, ledger row `2026-08-30-entity-hub-cutoff-retrieval-ab`);
+the flip to `200` is proposed in [#425](https://github.com/mbachaud/Cymatix-Context/pull/425), open at the time of writing.
 
 **0.9.1 tag hygiene
 ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)).** The ingest

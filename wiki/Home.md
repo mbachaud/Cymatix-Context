@@ -4,8 +4,11 @@ Coordinate-index engine for LLM agents. It retrieves, weighs, and compresses
 a corpus into a context window — without a single LLM call on the retrieval
 path.
 
-- **Version:** this wiki documents **v0.9.1**. Items still in flight for that
-  release are marked with their PR number where they are mentioned; see
+- **Version:** this wiki documents **v0.9.1**, released 2026-08-30 (tag
+  `v0.9.1`, PyPI `0.9.1`). Changes are cited by PR number where they appear.
+  The Tier-2 lexicon aliases the pages present as canonical
+  ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) follow the 0.9.1 tag and are not in the 0.9.1 wheel — on that
+  wheel the legacy spellings are the ones that resolve. See
   [Roadmap and Releases](Roadmap-and-Releases) for the release contents.
 - **Install:** `pip install cymatix-context` (Python 3.11+). Start at
   [Getting Started](Getting-Started).

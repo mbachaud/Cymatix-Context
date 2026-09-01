@@ -53,9 +53,9 @@ LLM-free configuration. N=15 query shapes, May 2026.
   ("equal-or-better task completion at fewer input tokens"), and it is future
   work.
 
-## Shipped-defaults operating point
+## Shipped-defaults operating point (0.9.0)
 
-What an untouched 0.9.0 install does, measured on the 829K-fragment
+What an untouched 0.9.0 install did, measured on the 829K-fragment
 EnterpriseRAG-Bench bed at full needle power. The default retrieval path is fully
 algorithmic here — dense, SPLADE and PKI all off, the cross-encoder rerank off as
 it always has been.
@@ -76,11 +76,26 @@ it always has been.
   rule](#the-erb-pair-quote-rule).
 - The abstain set on this run was 16 of 469, all `score_below_floor`, and
   byte-identical to the baseline's zero-delivery set.
+- The 0.9.1 defaults are measured in the next section, as their own rows.
 
 ## 0.9.1 measurements
 
-Four of these are open pull requests at the time of writing; each is scoped with
-its PR number.
+All four shipped in the 0.9.1 release (2026-08-30); each is cited by PR number.
+The release gate itself is ledger row `2026-08-30-v091-gate-sweep` — three config
+arms over four beds, receipt
+`benchmarks/dogfood/receipts/sweep_v091_gate_2026-08-30.json`, **ALL PASS**.
+Delivered basis, paired per needle:
+
+| Bed | Frozen 0.9.0 defaults | Wave-1 flip, floor 0 | + `min_delivered_docs = 12` (the shipped 0.9.1) |
+|---|---|---|---|
+| EnronQA v2 (84,677 documents, n=500) | 0.694 | 0.820 (+66 / −3) | **0.856** (+18 / −0) |
+| EnronQA padded (596,707 documents, n=500) | 0.702 | 0.776 (+41 / −4) | **0.792** (+8 / −0) |
+| ERB 100k carve (n=141) | 0.6099 | 0.6312 (+7 / −4) | not run |
+| ERB 829k v09x (n=470) | 0.5553 | 0.6298 — reproduces the wave-1 confirm to the digit (Δ = 0.0) | **0.668** (+18 / −0) |
+
+The exact reproduction on the 829k bed is the witness that the rest of the
+merged stack (#406, #408, #409's knob, #412, #413) is inert at shipped defaults
+there. All beds in this row are `tagger_version = 1`.
 
 ### Wave-1 ranking flip ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407))
 
@@ -108,10 +123,12 @@ classes mapped to `eps_band`. Full-470 confirm at 829k scale:
   ledger's own rules do **not** license reading 0.630 as a successor to the 0.565
   in the previous section — they are different rows.
 
-### Delivered-seat floor ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) — knob shipped, flip not taken
+### Delivered-seat floor ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) — knob shipped, then graduated 0 → 12
 
-`[budget] min_delivered_docs`, **default `0`** = byte-identical legacy behavior.
-At floor 12, on the same 470-needle sequence as the wave-1 confirm:
+`[budget] min_delivered_docs`, **default `12`** since 2026-08-30 (the commit
+subject-tagged `[w24-floor-flip]`); `0` restores the byte-identical legacy
+eviction-only trim. At floor 12, on the same 470-needle sequence as the wave-1
+confirm:
 
 | Metric | Wave-1 baseline | Floor 12 |
 |---|---|---|
@@ -124,11 +141,15 @@ At floor 12, on the same 470-needle sequence as the wave-1 confirm:
 
 - Zero losses anywhere, and the map and final-rank bases are **byte-identical
   per-needle** — this is a pure delivery change, not a ranking change.
-- **The default flip was not taken, deliberately.** The receipts justify the
-  knob, but the benchmark measures *delivery*, not answer quality under a widened
-  seat count: twelve full-length documents per window costs real tokens, and ERB
-  does not grade that trade. The answer-quality lane has to run before the
-  default moves.
+- **The flip was taken after a cross-corpus confirm**, not on the 829k row
+  alone: EnronQA v2 **0.820 → 0.856** (+18 / −0) and EnronQA padded 597k
+  **0.776 → 0.792** (+8 / −0) — three corpora, zero paired delivered losses,
+  recall@12 / final recall@12 identical in every cell (ledger row
+  `2026-08-30-v091-gate-sweep`, `v091_floor` arm). Revert is one `git revert`
+  of the flip commit.
+- **What the receipts still do not grade:** answer quality under a widened seat
+  count. Twelve full-length documents per window costs real tokens, and ERB
+  does not grade that trade — the answer-quality lane is still owed.
 - The plan doc for this arm also records a mid-flight diagnosis correction: the
   original token-budget attribution was **refuted** by an effective-lever probe
   (budget tier `broad`, hard floor uncrossed, zero evictions), and the
@@ -155,8 +176,17 @@ pinned byte-identical by test. Read-only replay on the 289k-document
 - The mitigating context, not a justification: COVER edges are **default-inert at
   query time** — the wave-2 COVER-walk arm was killed by its own receipt — and
   they are already order-nondeterministic under parallel ingest.
+- **The retrieval-side condition has since been measured null.** A paired
+  EnronQA A/B (n=500; beds `enronqa_bed_v2` vs `enronqa_bed_v2c`, differing only
+  in the cutoff, gene-id-set digests identical) came back with delivered,
+  recall@12, final recall@12, and median rank identical to full precision in
+  both the 0.9.0 and 0.9.1 configs — **0/500 per-needle delivered flips**
+  (ledger row `2026-08-30-entity-hub-cutoff-retrieval-ab`). It pairs with a
+  ~5× end-to-end build win on the padded bed (4h58m against a ~26h trajectory).
 - Flip conditions are specified on
-  [#411](https://github.com/mbachaud/Cymatix-Context/issues/411).
+  [#411](https://github.com/mbachaud/Cymatix-Context/issues/411); the flip
+  itself — default `0 → 200` — is proposed in [#425](https://github.com/mbachaud/Cymatix-Context/pull/425) and was open at the
+  time of writing. The 0.9.1 default is `0`.
 
 ### Tagger v2 ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) — a behavior change with a version bump
 
@@ -331,6 +361,11 @@ From the 2026-08-09 receipt invalidations onward, the ledger enforces:
   2 — because they certify what an untouched install does. The standard bench
   profile (encoder daemon on, per-box worker counts) is for *comparative* work and
   is a documented exception, not the release path.
+
+Large captures, gitignored research outputs, and archived knowledge-store
+snapshots are mirrored to the companion repository
+<https://github.com/mbachaud/cymatix-receipts> — private while its bed contents
+are audited; ask the maintainer for access.
 
 ## Why the benchmarks look like this
 

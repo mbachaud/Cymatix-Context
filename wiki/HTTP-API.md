@@ -83,7 +83,7 @@
 | `GET /health` | Readiness and provenance: `status` (`ok` / `degraded`), compressor model and backend, cost class, document count, upstream URL and reachability, a `hardware` block, and a `calibration` block (`ann_threshold_mode`, `abstain_mode`, `abstain_classes`) |
 | `GET /stats` | Corpus metrics — see the key list below. Cheap synchronous read; safe to poll |
 | `GET /genes/{gene_id}` | Single document detail |
-| `GET /documents/{gene_id}` | **Canonical alias of the route above.** Same handler, same response, its own OpenAPI operation id. New in 0.9.1 |
+| `GET /documents/{gene_id}` | **Canonical alias of the route above.** Same handler, same response, its own OpenAPI operation id. Added by [#419](https://github.com/mbachaud/Cymatix-Context/pull/419) after the 0.9.1 tag — not on a 0.9.1 wheel |
 | `GET /debug/neighbors` | Top-k SEMA neighbors for a query |
 | `GET /debug/preview` | Which documents *would* be selected — retrieval through candidate selection, no compression |
 | `GET /debug/resonance` | Tier activation profile |

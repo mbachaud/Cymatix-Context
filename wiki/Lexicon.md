@@ -205,16 +205,16 @@ verbatim rather than faking a rename the code does not have.
 | **R3 C** | Internal method renames (`pack→encode`, `splice→trim`, `replicate→persist`, `re_rank→rerank`, `upsert_gene→upsert_doc`, `query_genes*→query_docs*`, `get_gene→get_doc`, `_express→_retrieve`) | **shipped** PR #88 (2026-05-13) |
 | **R3 D** | Local-variable and parameter sweep in module bodies | **shipped** PR #89 (2026-05-13) |
 | **R3 E** | Phase-table refresh + R3 design spec | **shipped** PR #89 (2026-05-13) |
-| **R4** | Deprecation nudges on the legacy MCP tool names, canonical names in the default tool set, and additive config / CLI / HTTP / env aliases. No removals. | **shipped in 0.9.1** ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) — closes [#87](https://github.com/mbachaud/Cymatix-Context/issues/87) |
+| **R4** | Deprecation nudges on the legacy MCP tool names, canonical names in the default tool set, and additive config / CLI / HTTP / env aliases. No removals. | **shipped after the 0.9.1 tag** ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) — closes [#87](https://github.com/mbachaud/Cymatix-Context/issues/87) |
 
 R4 sat deferred ([#87](https://github.com/mbachaud/Cymatix-Context/issues/87))
 from May 2026 through the 0.9.1 cycle. It ships as the **Tier 2** half of the
-0.9.1 lexicon pass; the three tiers are:
+lexicon pass that followed the 0.9.1 tag; the three tiers are:
 
 - **Tier 1** — documentation prose. Repo docs use software terms; dated
   records keep their original vocabulary untouched.
-- **Tier 2** — additive aliases on every operator-facing surface. Shipped in
-  0.9.1 via
+- **Tier 2** — additive aliases on every operator-facing surface. Shipped
+  after the 0.9.1 tag via
   [#419](https://github.com/mbachaud/Cymatix-Context/pull/419); listed below.
 - **Tier 3** — the wire surface. Deferred to
   [#417](https://github.com/mbachaud/Cymatix-Context/issues/417).

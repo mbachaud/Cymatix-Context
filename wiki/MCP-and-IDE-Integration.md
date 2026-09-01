@@ -1,7 +1,8 @@
 # MCP and IDE Integration
 
 - Three ways an editor or agent host reaches Cymatix: the **MCP shim**
-  (Claude Code, Cursor, Claude Desktop), the **OpenAI-compatible proxy**
+  (Claude Code, Codex, Gemini CLI, Antigravity — any MCP host), the
+  **OpenAI-compatible proxy**
   (Continue, or any client that honors `OPENAI_BASE_URL`), and raw
   [HTTP API](HTTP-API).
 - **The MCP adapter is a thin shim, not a second engine.** It speaks stdio
@@ -10,11 +11,13 @@
   up, and everything on [Configuration](Configuration) applies unchanged.
 - The default tool surface is deliberately **lean**. Every registered tool's
   name, description, and JSON schema is injected into the host's context on
-  *every* turn, so 0.9.1 ships ten core tools and hides the admin, diagnostic,
-  and legacy surface behind `CYMATIX_MCP_FULL=1`.
+  *every* turn, so the default profile is ten core tools, hiding the admin,
+  diagnostic, and legacy surface behind `CYMATIX_MCP_FULL=1`.
 - **Canonical `cymatix_document_*` names are the ones to call.** The legacy
   biology-named tools still work under the full surface, with a deprecation
-  nudge in their docstrings. Nothing was removed.
+  nudge in their docstrings. Nothing was removed. (The canonical names come
+  from the Tier-2 lexicon pass, [#419](https://github.com/mbachaud/Cymatix-Context/pull/419), which follows the 0.9.1 tag — on a
+  0.9.1 wheel call the legacy names.)
 - **The consuming agent must carry the prompt fragment.** Without it, capable
   models paint over `do_not_answer_from_genome: true` and answer from their
   training prior anyway. See [Agent Contract](Agent-Contract).
@@ -44,8 +47,14 @@ cymatix-server                      # binds 127.0.0.1:11437
 ```
 
 - Claude Code reads this from a project-level `.mcp.json` or a user-level
-  `~/.claude/mcp.json`. Cursor and Continue take the same `mcpServers` block
-  under their own MCP config file.
+  `~/.claude/mcp.json`. Gemini CLI (`.gemini/settings.json`) and Antigravity
+  (`~/.gemini/config/mcp_config.json`) take the same `mcpServers` entry;
+  Codex takes the equivalent `[mcp_servers.cymatix-context]` table in
+  `.codex/config.toml`. The native shapes and the per-host `CYMATIX_MCP_HOST`
+  values (`codex`, `gemini-cli`, `antigravity`) are in the guides under
+  [`docs/clients/`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/clients/cymatix-context.md).
+  Direct MCP needs neither the model proxy nor the tray; a healthy headless
+  server is sufficient.
 - The server self-identifies as `cymatix`, so tools appear to the host as
   `mcp__cymatix__*`.
 - On Windows, wrap the stdio launcher as `cmd /c python ...` when `python` is
@@ -176,18 +185,20 @@ show your `CYMATIX_PARTY_ID`, **Identities** your `CYMATIX_USER` workspace, and
 
 ## The agent-side skill
 
-[`skills/cymatix/SKILL.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/skills/cymatix/SKILL.md)
-is the contract Claude follows when calling these tools — the identity contract
-and the tool-use rules. It is purely instructional; it runs no code. Install it
-project-scoped or user-global:
+[`skills/cymatix-context/SKILL.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/skills/cymatix-context/SKILL.md)
+is the contract the agent follows when calling these tools — the identity
+contract and the tool-use rules, portable across the four hosts. It is purely
+instructional; it runs no code. Install it project-scoped or user-global (the
+Claude Code paths are shown; Gemini CLI and Antigravity paths are in their
+guides):
 
 ```bash
-mkdir -p .claude/skills/cymatix
-cp <repo>/skills/cymatix/SKILL.md .claude/skills/cymatix/SKILL.md
+mkdir -p .claude/skills/cymatix-context
+cp <repo>/skills/cymatix-context/SKILL.md .claude/skills/cymatix-context/SKILL.md
 
 # or once, for every project
-mkdir -p ~/.claude/skills/cymatix
-cp <repo>/skills/cymatix/SKILL.md ~/.claude/skills/cymatix/SKILL.md
+mkdir -p ~/.claude/skills/cymatix-context
+cp <repo>/skills/cymatix-context/SKILL.md ~/.claude/skills/cymatix-context/SKILL.md
 ```
 
 ## Continue IDE
@@ -224,7 +235,7 @@ pipeline, injects the assembled window into the system message, and forwards to
 
 | Surface | Best for | Trade-off |
 |---|---|---|
-| **MCP** | Claude Code, Cursor, Claude Desktop — agents that should *decide* when to retrieve | Costs schema tokens every turn; needs the backend running |
+| **MCP** | Claude Code, Codex, Gemini CLI, Antigravity — agents that should *decide* when to retrieve | Costs schema tokens every turn; needs the backend running |
 | **HTTP proxy** | Continue, or any OpenAI-compatible app you cannot modify | Retrieval is automatic and unconditional; no tool routing |
 | **CLI** | Scripts, CI, subprocess-driving agents, cold starts | No daemon at all, but pays process start-up per call. See [CLI](CLI) |
 
@@ -241,9 +252,10 @@ taken in 0.9.1 because it breaks every existing consumer. See
 
 ## Go deeper
 
+- [`docs/clients/cymatix-context.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/clients/cymatix-context.md) — the shared cross-host overview, with native guides for [Codex](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/clients/codex.md), [Gemini CLI](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/clients/gemini-cli.md), and [Antigravity](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/clients/antigravity.md)
 - [`docs/clients/claude-code.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/clients/claude-code.md) — the routing reference: the two hops, the full identity contract, per-host variants, request lifecycle
 - [`docs/api/mcp-tools.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/api/mcp-tools.md) — per-tool input schemas
-- [`skills/cymatix/SKILL.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/skills/cymatix/SKILL.md) — the agent-side identity contract and tool-use rules
+- [`skills/cymatix-context/SKILL.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/skills/cymatix-context/SKILL.md) — the agent-side identity contract and tool-use rules
 - [`docs/architecture/SESSION_REGISTRY.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/architecture/SESSION_REGISTRY.md) — the server-side presence and attribution model
 - [`docs/agent-sdk-fragment.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/agent-sdk-fragment.md) — the prompt fragment the consuming agent must carry
 - Next: [Agent Contract](Agent-Contract) · [HTTP API](HTTP-API) · [CLI](CLI) · [Getting Started](Getting-Started)
