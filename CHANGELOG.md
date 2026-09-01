@@ -36,7 +36,7 @@
   KNOWLEDGE_GRAPH,OBSERVABILITY,PIPELINE_LANES,SESSION_REGISTRY}.md`,
   `docs/benchmarks/BASELINES.md`, `docs/clients/cli.md`,
   `docs/config-reference.md`, `docs/operations/DENSE_VRAM.md`,
-  `docs/operator-runbooks.md`, `skills/cymatix/SKILL.md`, the launcher
+  `docs/operator-runbooks.md`, the launcher
   dashboard/database-panel templates, and `cymatix_context/mcp/server.py`'s
   tool-description strings. Dated docs (benchmarks, council verdicts,
   dated plans, `docs/archive/`) are deliberately left in their
@@ -77,12 +77,72 @@
   remaining un-renamed wire/SQL surface (`gene_id`, the `genes` table,
   `/stats` keys, the legacy `<GENE .../>` inline tag — intentionally
   not renamed to avoid an on-the-wire break) on issue #417. `CLAUDE.md`
-  and `skills/cymatix/SKILL.md` pointers updated to match.
+  pointers updated to match.
 - **docs:** this branch is written to merge AFTER PR #419 (Tier-2 alias
   work) — the wiki pages here treat #419's canonical spellings as
   already primary, so merging in the other order would leave the wiki
   citing terms PR #419 hasn't landed yet.
 
+## 0.9.1 (2026-08-30)
+
+The retrieval-quality release: wave-1 ranking graduation (rrf_k 60→20 +
+all-five-classes eps_band) and the W2.4 delivered-seat floor
+(min_delivered_docs 0→12) ship as defaults, each receipt-gated on paired
+delivered-basis evidence across ERB and the new EnronQA second-corpus
+bench lane (gate receipt:
+benchmarks/dogfood/receipts/sweep_v091_gate_2026-08-30.json, ALL PASS).
+Ingest at scale: entity auto-link hub cutoff (default-off knob, ~340×
+per-link-call, retrieval-null A/B) and tagger v2 entity hygiene
+(TAGGER_VERSION=2, bed-comparability versioned). Cross-host client
+unification (#406). Release gate: PRs #406–#409, #412, #413, #422.
+
+- **tagger v2 — entity hygiene (#410), bed-comparability break.** The CPU
+  tagger no longer emits email/MIME plumbing as entities: entities containing
+  newlines/tabs are rejected, and standard header field names
+  (`content-type`, `mime-version`, …), RFC 822 `x-*` extension headers, and
+  transport artifacts (`javamail`, `quoted-printable`, …) are denylisted.
+  Root cause of the EnronQA `entity_graph` hubs that made per-insert entity
+  auto-linking O(N²) at build time (receipt
+  `benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json`).
+  Because tags are part of the bed-content digest, this ships as
+  `TAGGER_VERSION = 2` (`cymatix_context/tagger.py`), recorded per bed in the
+  fixture-matrix manifest; beds built at different tagger versions are not
+  cross-comparable (rule added to `docs/benchmarks/BASELINES.md`). Fresh
+  before/after receipt:
+  `benchmarks/dogfood/receipts/tagger_v2_entity_hygiene_2026-08-30.json`.
+
+
+- **perf(storage): `[ingestion] entity_autolink_hub_cutoff` — posting-count
+  hub cutoff for entity auto-linking (default `0` = off = legacy,
+  byte-identical; flip proposal tracked in #411).** The 2026-08-30 enronqa_padded profiling receipt
+  (`benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json`)
+  measured `auto_link_by_entity` at 89.5% of writer wall time — the
+  per-insert GROUP BY sweeps every posting row of every probe entity, and
+  MIME-header hubs (`content-type` 171k+ rows) make that O(N²) per build
+  (148.9 ms/insert vs 7.4 ms without the two hubs). With the cutoff > 0,
+  entities whose `entity_graph` posting count exceeds it are dropped from
+  the probe set before the GROUP BY (`PKI_NOISE_CUTOFF` precedent —
+  cardinality strictly greater is skipped); the count probe is
+  LIMIT-bounded, so per-insert cost is O(n_entities × cutoff). This
+  changes which relation=5 COVER edges form (default-inert at query time —
+  W2.1 cover-walk kill receipt), so the flip proposal ships behind the
+  default-off knob with an A/B edge-delta + perf receipt
+  (`benchmarks/dogfood/receipts/entity_hub_cutoff_ab_enronqa_2026-08-30.json`,
+  `scripts/receipt_entity_hub_cutoff.py`).
+
+
+- **`[budget] min_delivered_docs` GRADUATED 0 → 12 (`[w24-floor-flip]`).**
+  The W2.4 delivered-seat floor is now a shipped default: the classifier's
+  per-rule assembly cap is lifted to at least 12 seats and the Stage-5
+  budget trimmer truncates the largest parts instead of evicting whole
+  documents (token budget still wins last — eviction resumes below the
+  floor on overflow). Receipt-gated on three corpora with zero paired
+  delivered losses: ERB 829k .630→.668 (+18/−0,
+  `benchmarks/dogfood/erb/receipts/ladder_v09x_w24_min_delivered_2026-08-28.json`),
+  EnronQA v2 .820→.856 (+18/−0) and EnronQA padded 597k .776→.792
+  (+8/−0) (BASELINES row `2026-08-30-v091-gate-sweep`); r@12/fr@12
+  identical in every cell. `min_delivered_docs = 0` restores legacy;
+  revert = `git revert` of the `[w24-floor-flip]` commit.
 ## 0.9.0 (2026-08-20)
 
 The post-flip release: the shipped default retrieval path is now fully

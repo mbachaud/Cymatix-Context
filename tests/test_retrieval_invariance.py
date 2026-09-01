@@ -307,7 +307,9 @@ def test_defect1_authority_bonus_dominates_rrf_ordering():
     """Doc A ranks strictly better than doc B in EVERY fused tier, but B's
     source_id contains the query term ('alpha' in 'notes/alpha_setup.md'
     -> +2.0 source-authority bonus).  Today B outranks A: one authority
-    hit is ~13x the entire fused budget of a 4-tier sweep (9/61 ~ 0.148).
+    hit is ~4.7x the entire fused budget of a 4-tier sweep (9/21 ~ 0.429
+    at the graduated rrf_k=20; it was ~13x at the pre-2026-08-28 k=60 —
+    the wave-1 flip GREW the fused scale but the additive still dwarfs it).
     """
     docs = [
         # A: better fts rank (3 mentions vs 1, equal length), and wins all
@@ -342,7 +344,10 @@ def test_defect1_authority_bonus_dominates_rrf_ordering():
 
     # …yet TODAY the additive-scale bonus decides the ranking outright.
     assert ranked.index("auth_b") < ranked.index("auth_a")
-    assert scores["auth_b"] > 10 * scores["auth_a"], (
+    # 5x at rrf_k=20 (B = 2.0 + 9/22 ~ 2.41 vs A = 9/21 ~ 0.43); the
+    # multiplier was 10x under k=60 — recalibrated 2026-08-28 with the
+    # wave-1 rrf_k graduation, the dominance defect itself is unchanged.
+    assert scores["auth_b"] > 5 * scores["auth_a"], (
         "expected the +2.0 authority bonus to dwarf the fused scale "
         f"(B={scores['auth_b']:.4f}, A={scores['auth_a']:.4f})"
     )
@@ -363,11 +368,20 @@ def test_layer_defaults_agree():
     ks = KnowledgeStore(path=":memory:")
     try:
         assert ks._fusion_mode == config_default
+        # rrf_k joined the guard 2026-08-28 (wave-1 graduation moved it
+        # 60 → 20 at both layers; ladder_v09x_w1c_*_2026-08-28.json).
+        assert ks._rrf_k == RetrievalConfig().rrf_k
     finally:
         ks.close()
 
+    assert inspect.signature(
+        KnowledgeStore.__init__
+    ).parameters["rrf_k"].default == RetrievalConfig().rrf_k
+
     # And the shipped default is RRF (the #247 flip, SIKE Run-2 receipts).
     assert config_default == "rrf"
+    # The graduated fusion shape (wave-1 ranking-under-width).
+    assert RetrievalConfig().rrf_k == 20
 
 
 def test_additive_mode_not_rescale_invariant():

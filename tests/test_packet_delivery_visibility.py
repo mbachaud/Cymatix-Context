@@ -89,7 +89,7 @@ def _make_manager(budget: BudgetConfig) -> CymatixContextManager:
 
 @pytest.fixture
 def manager():
-    mgr = _make_manager(BudgetConfig(max_genes_per_turn=12))
+    mgr = _make_manager(BudgetConfig(max_genes_per_turn=12, min_delivered_docs=0))  # legacy-mechanism tests ([w24-floor-flip])
     yield mgr
     mgr.close()
 
@@ -98,7 +98,7 @@ def manager():
 def tiny_budget_manager():
     """Budget so small that assembly's eviction loop must fire."""
     mgr = _make_manager(
-        BudgetConfig(max_genes_per_turn=12, ribosome_tokens=1, expression_tokens=1)
+        BudgetConfig(max_genes_per_turn=12, ribosome_tokens=1, expression_tokens=1, min_delivered_docs=0)  # legacy-mechanism tests ([w24-floor-flip])
     )
     yield mgr
     mgr.close()
@@ -146,7 +146,7 @@ class TestWindowDeliveryRecording:
 @pytest.fixture
 def client():
     c = make_client(
-        make_cymatix_config(budget=BudgetConfig(max_genes_per_turn=12))
+        make_cymatix_config(budget=BudgetConfig(max_genes_per_turn=12, min_delivered_docs=0))  # legacy cap-binding route test ([w24-floor-flip])
     )
     yield c
 

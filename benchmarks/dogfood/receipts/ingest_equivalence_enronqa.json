@@ -1,0 +1,51 @@
+{
+  "arms": {
+    "parallel": {
+      "content_sha256": "7908768f37d9fdf15e35a1357969bee823058ca7d396e9893236a8d16ca9a37d",
+      "errors": 0,
+      "files": 2000,
+      "files_per_s": 48.418,
+      "gene_id_sha256": "b0dbb292b4c142778aeff1f56d9f93be7429e8e10f461b85c119ae35911cf0fa",
+      "genes": 2303,
+      "genes_per_s": 55.754,
+      "ingest_c": 6,
+      "structure": {
+        "entity_graph": 26374,
+        "filename_index": 2199,
+        "gene_relations": 8664,
+        "harmonic_links": 0
+      },
+      "wall_s": 41.31
+    },
+    "sequential": {
+      "content_sha256": "7908768f37d9fdf15e35a1357969bee823058ca7d396e9893236a8d16ca9a37d",
+      "errors": 0,
+      "files": 2000,
+      "files_per_s": 10.442,
+      "gene_id_sha256": "b0dbb292b4c142778aeff1f56d9f93be7429e8e10f461b85c119ae35911cf0fa",
+      "genes": 2303,
+      "genes_per_s": 12.024,
+      "ingest_c": 1,
+      "structure": {
+        "entity_graph": 26374,
+        "filename_index": 2199,
+        "gene_relations": 8675,
+        "harmonic_links": 0
+      },
+      "wall_s": 191.54
+    }
+  },
+  "content_equal": true,
+  "corpus_root": "F:\\Projects\\enronqa\\corpus",
+  "detail": {},
+  "documents_equal": true,
+  "equivalent": false,
+  "note": "FAIL on structure only: gene_relations 8675 (seq) vs 8664 (par), -11 edges (-0.13%); documents + content byte-identical (CPU tagger, no LLM-batching drift). Mechanism: auto_link_by_entity (storage/co_activation.py) links incrementally at ingest time against the entity_graph visible at that moment, ORDER BY shared DESC LIMIT 10 with no deterministic tie-break -- both peer visibility and tie order at the cap depend on ingest order. Enron's dense correspondent-entity overlap makes LIMIT-10 ties common; the ERB sample (same gate, 2026-08) did not trip this. The diverging table is relation=5 COVER edges, which have zero query-time consumers at shipped defaults (W2.1 cover-walk KILLED, ships default-inert -- ladder_v09x_w2_cover_walk_2026-08-28.json). Verdict: parallel NOT blessed by the strict byte-equivalence bar; padded EnronQA build defaults to sequential (ingest_c=1) pending an explicit user ruling on the pragmatic exception.",
+  "sample_files": 2000,
+  "seed": 20260829,
+  "speedup": 4.64,
+  "stamp": "2026-08-29T07:07:19Z",
+  "structure_equal": false,
+  "tool": "ingest_equivalence_gate",
+  "workers": 6
+}

@@ -74,12 +74,12 @@ Seven stages per turn, all LLM-free except the optional splice. Stage by stage, 
 
 ## Surfaces
 
-Three ways in, same retrieval primitives, same JSON shapes. Configuration lives in `cymatix.toml`; env vars use the `CYMATIX_*` prefix. Reference: [CLI](https://github.com/mbachaud/Cymatix-Context/wiki/CLI) · [HTTP API](https://github.com/mbachaud/Cymatix-Context/wiki/HTTP-API) · [MCP and IDE Integration](https://github.com/mbachaud/Cymatix-Context/wiki/MCP-and-IDE-Integration) · [Configuration](https://github.com/mbachaud/Cymatix-Context/wiki/Configuration).
+Three ways in, same retrieval primitives, same JSON shapes. Direct MCP needs neither the model proxy nor the tray — a healthy headless server is sufficient. Configuration lives in `cymatix.toml`; env vars use the `CYMATIX_*` prefix. Reference: [CLI](https://github.com/mbachaud/Cymatix-Context/wiki/CLI) · [HTTP API](https://github.com/mbachaud/Cymatix-Context/wiki/HTTP-API) · [MCP and IDE Integration](https://github.com/mbachaud/Cymatix-Context/wiki/MCP-and-IDE-Integration) · [Configuration](https://github.com/mbachaud/Cymatix-Context/wiki/Configuration).
 
 | Surface | Best for | Example |
 |---|---|---|
 | **CLI** | Scripts, CI, cold-start agents | `cymatix document get abc123 --json` *(legacy: `cymatix gene get`)* |
-| **MCP** | Claude Code, Cursor, Claude Desktop | `python -m cymatix_context.mcp_server` |
+| **MCP** | Claude Code, Codex, Gemini CLI, Antigravity | `python -m cymatix_context.mcp_server` · [client guides](docs/clients/cymatix-context.md) |
 | **HTTP** | Continue IDE, `OPENAI_BASE_URL` redirect | `POST /context/packet` |
 
 ## The know/miss contract

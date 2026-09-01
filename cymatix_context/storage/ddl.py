@@ -232,6 +232,14 @@ def _create_gene_relations(cur: sqlite3.Cursor) -> None:
         "CREATE INDEX IF NOT EXISTS idx_gene_relations_rel_a "
         "ON gene_relations(relation, gene_id_a)"
     )
+    # W2.1 (2026-08-28): reverse adjacency for the COVER walk
+    # (retrieval/cover_walk.py) — in-edge lookups (gene_id_b -> a) are
+    # full-table scans without this on 8.5M-row beds. Existing beds:
+    # scripts/add_gene_relations_reverse_index.py (idempotent).
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_gene_relations_rel_b "
+        "ON gene_relations(relation, gene_id_b)"
+    )
 
 
 # ---------------------------------------------------------------------------

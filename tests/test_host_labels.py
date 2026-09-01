@@ -12,6 +12,8 @@ below) — `model_labels.py` is a sibling pure-function module that follows
 map to canonical display form, unknown IDs echo verbatim, None/empty
 returns None.
 """
+import pytest
+
 from cymatix_context.launcher.host_labels import (
     vendor_pretty,
     host_pretty,
@@ -38,6 +40,7 @@ def test_vendor_pretty_none():
 
 def test_host_pretty_known():
     assert host_pretty("claude-code") == "Claude Code"
+    assert host_pretty("gemini-cli") == "Gemini CLI"
     assert host_pretty("antigravity") == "Antigravity"
     assert host_pretty("cursor") == "Cursor"
     assert host_pretty("vscode") == "VS Code"
@@ -85,6 +88,21 @@ def test_compose_label_dedupes_case_insensitive():
     dedup collapses them to a single 'Codex' chip rather than 'Codex + codex'.
     Observed in the wild: Codex's MCP wrapper sends agent_kind=mcp_host=codex."""
     assert compose_label("codex", "codex") == "Codex"
+
+
+@pytest.mark.parametrize(
+    ("agent_kind", "mcp_host", "expected"),
+    [
+        ("claude-code", "claude-code", "Claude Code"),
+        ("codex", "codex", "Codex"),
+        ("gemini", "gemini-cli", "Gemini + Gemini CLI"),
+        ("gemini", "antigravity", "Gemini + Antigravity"),
+    ],
+)
+def test_compose_label_for_supported_host_profiles(
+    agent_kind: str, mcp_host: str, expected: str
+):
+    assert compose_label(agent_kind, mcp_host) == expected
 
 
 class TestModelLabels:
