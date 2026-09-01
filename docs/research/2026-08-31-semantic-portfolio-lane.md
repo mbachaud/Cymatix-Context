@@ -150,3 +150,28 @@ Receipt: `benchmarks/dogfood/muloc/receipts/ladder_muloc_baseline_2026-08-31.jso
 - Repo spread: rich .93 / flask .70 / scrapy .63 strongest; yt-dlp 3/39,
   OpenHands 1/14 weakest (drill-down open: size-gated extractor files and
   fast-moving snapshots are the suspects).
+
+## Budget-doubling cell — CLOSED, NULL on both corpus families (2026-08-31)
+
+`expression_tokens` 7000 → 14000, shipped v0.9.1 config otherwise
+(loader-verified). Receipts: `muloc_budget_ab_2026-08-31.json`,
+`erb/receipts/budget14000_null_2026-08-31.json`.
+
+- **MULocBench (code):** NULL — net −3/680 delivered (+4/−7, noise); the
+  228-query delivered_count=6 cohort is unchanged. The seat cap on code is
+  the `tier_hard_floor_frac` 15%-of-top hard score floor, not the token
+  budget: candidates are gated out before the trimmer ever sees them.
+  Next lever cell: `tier_hard_floor_frac` ladder (0.15/0.10/0.05/0).
+- **ERB-947k (prose control):** NULL exactly as registered — **470/470
+  per-needle rows identical** to the floor-12 baseline on every non-timing
+  field; delivered_count distribution (152×6, 318×12) byte-identical. The
+  trimmer never fires at 7000, so 14000 is unused headroom; delivery is
+  seat-capped (classifier caps + `max_genes_per_turn`), not token-capped.
+- Side receipt: the ERB arm is the second exact-reproduce witness on the
+  947k bed (cold-vs-cold, 3 days apart) — run-to-run jitter is
+  bed/state-dependent (muloc ~71/680), not pipeline-wide.
+
+Verdict: `expression_tokens` is not a delivered-recall lever at shipped
+seat settings on either family. The insight the doubling bought is
+negative but load-bearing: seat structure, not token budget, is the
+binding constraint everywhere we've measured.
