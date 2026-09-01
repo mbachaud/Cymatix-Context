@@ -1,0 +1,3014 @@
+{
+ "stamp": "2026-08-31",
+ "tag": "locomo",
+ "bed": "F:/tmp/locomo_bed/locomo.db",
+ "basis_receipt": "ladder_locomo_baseline_2026-08-31.json",
+ "hits": [
+  {
+   "needle": "cog_140",
+   "class": "locomo_cognitive",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.1416,
+    0.1354,
+    0.125,
+    0.1212,
+    0.1161,
+    0.1117,
+    0.1071,
+    0.1034,
+    0.1,
+    0.0968,
+    0.094
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1354,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q009",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2877,
+    0.2539,
+    0.222,
+    0.2026,
+    0.1872,
+    0.1845,
+    0.1565,
+    0.154,
+    0.1451,
+    0.1385,
+    0.1386,
+    0.1325
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.1451,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q026",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2458,
+    0.1837,
+    0.1725,
+    0.1465,
+    0.1369,
+    0.1259,
+    0.1227,
+    0.121,
+    0.1163,
+    0.1113,
+    0.1113,
+    0.1081
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1725,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q036",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3283,
+    0.2395,
+    0.236,
+    0.2207,
+    0.2196,
+    0.201,
+    0.1993,
+    0.1827,
+    0.1494,
+    0.1454,
+    0.1444,
+    0.1381
+   ],
+   "gold_rank": 11,
+   "gold_score": 0.1444,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q058",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4434,
+    0.4408,
+    0.2374,
+    0.2229,
+    0.2211,
+    0.2059
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.4434,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q071",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3427,
+    0.2911,
+    0.273,
+    0.2509,
+    0.2334,
+    0.2317,
+    0.2321,
+    0.2127,
+    0.1992,
+    0.1983,
+    0.176,
+    0.1734
+   ],
+   "gold_rank": 10,
+   "gold_score": 0.1983,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q080",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3665,
+    0.3221,
+    0.2134,
+    0.2028,
+    0.1991,
+    0.1975,
+    0.1868,
+    0.183,
+    0.1782,
+    0.171,
+    0.167,
+    0.1665
+   ],
+   "gold_rank": 8,
+   "gold_score": 0.183,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q098",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3943,
+    0.1487,
+    0.1415,
+    0.1308,
+    0.1274,
+    0.1222
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1487,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q110",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3105,
+    0.2482,
+    0.2412,
+    0.2082,
+    0.2032,
+    0.1785,
+    0.1486,
+    0.1455,
+    0.1454,
+    0.1355,
+    0.1333,
+    0.1304
+   ],
+   "gold_rank": 7,
+   "gold_score": 0.1486,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q118",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3345,
+    0.2466,
+    0.2218,
+    0.2116,
+    0.2015,
+    0.1807,
+    0.1777,
+    0.1734,
+    0.1728,
+    0.166,
+    0.1585,
+    0.1591
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.2466,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q131",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1758,
+    0.1424,
+    0.1415,
+    0.1332,
+    0.1304,
+    0.1286,
+    0.128,
+    0.125,
+    0.1212,
+    0.1171,
+    0.1164,
+    0.1112
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1758,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q144",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2654,
+    0.2156,
+    0.1869,
+    0.1633,
+    0.1373,
+    0.1368,
+    0.1329,
+    0.1308,
+    0.1285,
+    0.1175,
+    0.1157,
+    0.1114
+   ],
+   "gold_rank": 11,
+   "gold_score": 0.1157,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q157",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3369,
+    0.3114,
+    0.2806,
+    0.1831,
+    0.1764,
+    0.166,
+    0.1633,
+    0.1626,
+    0.162,
+    0.1555,
+    0.1518,
+    0.15
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.2806,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q166",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2511,
+    0.2228,
+    0.2116,
+    0.1944,
+    0.192,
+    0.1715,
+    0.1456,
+    0.1449,
+    0.1252,
+    0.1204,
+    0.1201,
+    0.1164
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.2511,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q179",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4488,
+    0.4295,
+    0.1482,
+    0.1252,
+    0.1201,
+    0.1154
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1482,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-26_q189",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3142,
+    0.2448,
+    0.2311,
+    0.2117,
+    0.2095,
+    0.177,
+    0.1572,
+    0.1432,
+    0.1414,
+    0.1304,
+    0.1154,
+    0.1117
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.2117,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-30_q000",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3588,
+    0.32,
+    0.2776,
+    0.1429,
+    0.1305,
+    0.1267
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-30_q014",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3787,
+    0.2829,
+    0.218,
+    0.2009,
+    0.1436,
+    0.1364
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1436,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-30_q024",
+   "class": "locomo_multihop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.354,
+    0.2723,
+    0.1833,
+    0.1708,
+    0.1429,
+    0.1364
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1708,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-30_q038",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3034,
+    0.2884,
+    0.2837,
+    0.2717,
+    0.2653,
+    0.2361,
+    0.2328,
+    0.2182,
+    0.145,
+    0.1382,
+    0.1335,
+    0.1213
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.145,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-30_q054",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4262,
+    0.326,
+    0.2397,
+    0.2188,
+    0.1457,
+    0.1364
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1457,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-30_q066",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3553,
+    0.2772,
+    0.2092,
+    0.164,
+    0.1433,
+    0.1364
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1364,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-30_q079",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3719,
+    0.2996,
+    0.2139,
+    0.1979,
+    0.1967,
+    0.1442
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1442,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-30_q095",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3638,
+    0.3222,
+    0.3173,
+    0.2973,
+    0.2832,
+    0.2782,
+    0.266,
+    0.2627,
+    0.2453,
+    0.2236,
+    0.1429,
+    0.125
+   ],
+   "gold_rank": 11,
+   "gold_score": 0.1429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q011",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2716,
+    0.2668,
+    0.209,
+    0.1941,
+    0.1706,
+    0.1563,
+    0.1437,
+    0.1371,
+    0.1365,
+    0.1312,
+    0.1314,
+    0.1257
+   ],
+   "gold_rank": 8,
+   "gold_score": 0.1371,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q023",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.334,
+    0.3193,
+    0.2282,
+    0.211,
+    0.2004,
+    0.1861,
+    0.1555,
+    0.1545,
+    0.1467,
+    0.1429,
+    0.1415,
+    0.1364
+   ],
+   "gold_rank": 12,
+   "gold_score": 0.1364,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q036",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2064,
+    0.1483,
+    0.1415,
+    0.125,
+    0.124,
+    0.122,
+    0.12,
+    0.1154,
+    0.1113,
+    0.1035,
+    0.1,
+    0.0939
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.124,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q047",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.1437,
+    0.1415,
+    0.1354,
+    0.1353,
+    0.1304,
+    0.1154,
+    0.1112,
+    0.1071,
+    0.1048,
+    0.1034,
+    0.0968
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1437,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q055",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.1416,
+    0.1353,
+    0.125,
+    0.12,
+    0.1157,
+    0.1135,
+    0.1071,
+    0.1034,
+    0.1001,
+    0.0968,
+    0.0938
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1482,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q063",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4287,
+    0.2866,
+    0.1503,
+    0.1364,
+    0.1343,
+    0.125
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.2866,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q073",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1889,
+    0.1482,
+    0.1415,
+    0.1304,
+    0.125,
+    0.122,
+    0.1157,
+    0.1111,
+    0.109,
+    0.1034,
+    0.1,
+    0.0968
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1415,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q082",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.349,
+    0.1915,
+    0.1847,
+    0.16,
+    0.1482,
+    0.1462
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1462,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q089",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2046,
+    0.1603,
+    0.1556,
+    0.1429,
+    0.1304,
+    0.1314,
+    0.1279,
+    0.125,
+    0.1208,
+    0.12,
+    0.1194,
+    0.1167
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1304,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q099",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.2412,
+    0.1497,
+    0.1415,
+    0.1354,
+    0.1329,
+    0.125
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1497,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q106",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.2642,
+    0.1482,
+    0.1415,
+    0.1321,
+    0.125,
+    0.1243
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1415,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q117",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1787,
+    0.1678,
+    0.1505,
+    0.1376,
+    0.1329,
+    0.1306,
+    0.1259,
+    0.12,
+    0.1127,
+    0.1095,
+    0.1079,
+    0.1044
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1505,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q127",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2041,
+    0.1688,
+    0.1648,
+    0.1553,
+    0.1476,
+    0.1364,
+    0.1252,
+    0.1201,
+    0.1175,
+    0.1153,
+    0.1128,
+    0.1124
+   ],
+   "gold_rank": 8,
+   "gold_score": 0.1201,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q137",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1895,
+    0.177,
+    0.1631,
+    0.1451,
+    0.1442,
+    0.1439,
+    0.139,
+    0.1354,
+    0.1313,
+    0.12,
+    0.1165,
+    0.1161
+   ],
+   "gold_rank": 7,
+   "gold_score": 0.139,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q143",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2197,
+    0.198,
+    0.1712,
+    0.1448,
+    0.1331,
+    0.1268,
+    0.1224,
+    0.1181,
+    0.1179,
+    0.1136,
+    0.1084,
+    0.1069
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1448,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q154",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.1415,
+    0.1353,
+    0.125,
+    0.124,
+    0.1222,
+    0.1216,
+    0.1194,
+    0.1193,
+    0.1176,
+    0.1157,
+    0.1146
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1415,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q163",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.2554,
+    0.1992,
+    0.1415,
+    0.1304,
+    0.12,
+    0.1154
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1304,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q177",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2027,
+    0.1697,
+    0.1492,
+    0.1364,
+    0.1314,
+    0.1301,
+    0.128,
+    0.125,
+    0.1204,
+    0.1154,
+    0.1113,
+    0.1034
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1492,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-41_q187",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.2694,
+    0.1539,
+    0.1495,
+    0.1399,
+    0.1347,
+    0.1335
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1495,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q007",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4063,
+    0.3853,
+    0.2787,
+    0.2048,
+    0.1632,
+    0.1611
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1632,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q020",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3439,
+    0.3345,
+    0.3294,
+    0.2925,
+    0.2804,
+    0.2775,
+    0.2763,
+    0.2655,
+    0.2689,
+    0.2609,
+    0.257,
+    0.2545
+   ],
+   "gold_rank": 12,
+   "gold_score": 0.2545,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q028",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1484,
+    0.1416,
+    0.1353,
+    0.1251,
+    0.12,
+    0.1164,
+    0.1124,
+    0.108,
+    0.1044,
+    0.1002,
+    0.0969,
+    0.0942
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1484,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q037",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.1415,
+    0.1353,
+    0.125,
+    0.1203,
+    0.1154,
+    0.1111,
+    0.1071,
+    0.1034,
+    0.1002,
+    0.0968,
+    0.0938
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1415,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q045",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4166,
+    0.2795,
+    0.2285,
+    0.2195,
+    0.1864,
+    0.1842
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.2795,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q055",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2588,
+    0.2429,
+    0.2087,
+    0.1916,
+    0.1704,
+    0.1577,
+    0.1447,
+    0.1397,
+    0.1288,
+    0.1283,
+    0.1274,
+    0.1267
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.2429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q071",
+   "class": "locomo_multihop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4131,
+    0.4136,
+    0.2683,
+    0.2449,
+    0.2384,
+    0.2047
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.4136,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q079",
+   "class": "locomo_multihop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3935,
+    0.207,
+    0.1537,
+    0.1481,
+    0.1377,
+    0.1365
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1481,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q093",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.1415,
+    0.1353,
+    0.125,
+    0.12,
+    0.1164,
+    0.1111,
+    0.1081,
+    0.1036,
+    0.1003,
+    0.0968,
+    0.0938
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1482,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q107",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1515,
+    0.1456,
+    0.1392,
+    0.1286,
+    0.1235,
+    0.1196,
+    0.114,
+    0.1102,
+    0.1067,
+    0.1032,
+    0.0996,
+    0.096
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.1067,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q118",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3317,
+    0.2526,
+    0.2457,
+    0.2001,
+    0.1893,
+    0.185,
+    0.1846,
+    0.1824,
+    0.1675,
+    0.1516,
+    0.1481,
+    0.1469
+   ],
+   "gold_rank": 7,
+   "gold_score": 0.1846,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q127",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3807,
+    0.3068,
+    0.2833,
+    0.1928,
+    0.1897,
+    0.1795
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1928,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q133",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1492,
+    0.1415,
+    0.1353,
+    0.1256,
+    0.12,
+    0.1154,
+    0.1111,
+    0.1071,
+    0.1034,
+    0.1,
+    0.0968,
+    0.0938
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1415,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q144",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.423,
+    0.243,
+    0.2246,
+    0.1722,
+    0.155,
+    0.1496
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1722,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q156",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2253,
+    0.1489,
+    0.1421,
+    0.131,
+    0.1255,
+    0.1215,
+    0.1159,
+    0.1115,
+    0.1076,
+    0.1039,
+    0.1022,
+    0.0972
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1489,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q164",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1499,
+    0.1444,
+    0.1369,
+    0.1266,
+    0.1214,
+    0.1167,
+    0.1122,
+    0.1084,
+    0.1044,
+    0.1022,
+    0.0987,
+    0.0953
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1499,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q176",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4519,
+    0.3308,
+    0.286,
+    0.1871,
+    0.1689,
+    0.1643
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.4519,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q183",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.1415,
+    0.1354,
+    0.125,
+    0.12,
+    0.1174,
+    0.1111,
+    0.1071,
+    0.1043,
+    0.1016,
+    0.0983,
+    0.0944
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1482,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q192",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2719,
+    0.253,
+    0.2475,
+    0.1757,
+    0.1488,
+    0.1449,
+    0.1423,
+    0.1377,
+    0.1296,
+    0.1254,
+    0.118,
+    0.1164
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.2475,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q203",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2983,
+    0.2047,
+    0.1747,
+    0.1626,
+    0.1583,
+    0.1502,
+    0.148,
+    0.1459,
+    0.1442,
+    0.1429,
+    0.1406,
+    0.1242
+   ],
+   "gold_rank": 10,
+   "gold_score": 0.1429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q226",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3391,
+    0.2408,
+    0.1482,
+    0.1376,
+    0.1304,
+    0.1251
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1482,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q235",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1483,
+    0.1422,
+    0.1366,
+    0.1259,
+    0.1207,
+    0.1166,
+    0.112,
+    0.1077,
+    0.1035,
+    0.1,
+    0.0982,
+    0.0938
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1483,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q244",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3727,
+    0.3546,
+    0.2238,
+    0.2048,
+    0.165,
+    0.1492
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.165,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-42_q252",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3473,
+    0.1482,
+    0.1415,
+    0.1304,
+    0.125,
+    0.12
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1304,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q002",
+   "class": "locomo_multihop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3504,
+    0.1866,
+    0.1809,
+    0.1584,
+    0.1442,
+    0.143
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.143,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q012",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3118,
+    0.1623,
+    0.142,
+    0.1304,
+    0.125,
+    0.12
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1623,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q019",
+   "class": "locomo_commonsense",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2327,
+    0.2027,
+    0.176,
+    0.1604,
+    0.1504,
+    0.1366,
+    0.1358,
+    0.1304,
+    0.1271,
+    0.125,
+    0.1248,
+    0.1176
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1366,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q029",
+   "class": "locomo_multihop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.2691,
+    0.1822,
+    0.1582,
+    0.1464,
+    0.1387,
+    0.126
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1464,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q044",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3403,
+    0.1704,
+    0.1645,
+    0.1472,
+    0.1469,
+    0.1392
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1469,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q057",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1858,
+    0.1815,
+    0.1695,
+    0.1443,
+    0.1384,
+    0.1364,
+    0.1318,
+    0.1304,
+    0.1251,
+    0.1231,
+    0.12,
+    0.1165
+   ],
+   "gold_rank": 12,
+   "gold_score": 0.1165,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q068",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2517,
+    0.1963,
+    0.1811,
+    0.1585,
+    0.1575,
+    0.1434,
+    0.1364,
+    0.1327,
+    0.1294,
+    0.126,
+    0.1254,
+    0.125
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1963,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q076",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.271,
+    0.253,
+    0.2344,
+    0.2221,
+    0.2189,
+    0.2068,
+    0.1952,
+    0.19,
+    0.1841,
+    0.1815,
+    0.1756,
+    0.1562
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.2344,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q086",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3085,
+    0.2326,
+    0.1924,
+    0.1429,
+    0.1364,
+    0.1343
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q094",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1949,
+    0.1846,
+    0.1837,
+    0.1739,
+    0.15,
+    0.1208,
+    0.1194,
+    0.1154,
+    0.1114,
+    0.1071,
+    0.1035,
+    0.1
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1837,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q103",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1704,
+    0.1519,
+    0.1482,
+    0.1364,
+    0.1342,
+    0.1244,
+    0.125,
+    0.116,
+    0.1111,
+    0.1071,
+    0.1034,
+    0.1015
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1482,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q114",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2375,
+    0.2184,
+    0.1593,
+    0.1463,
+    0.1432,
+    0.1422,
+    0.1367,
+    0.1315,
+    0.1307,
+    0.1287,
+    0.1253,
+    0.1241
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1593,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q125",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2128,
+    0.1771,
+    0.1711,
+    0.1635,
+    0.1364,
+    0.125,
+    0.12,
+    0.1195,
+    0.116,
+    0.1132,
+    0.1111,
+    0.1071
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1635,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q133",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1491,
+    0.1414,
+    0.1419,
+    0.1308,
+    0.1258,
+    0.125,
+    0.12,
+    0.1159,
+    0.1118,
+    0.1051,
+    0.0985,
+    0.095
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1491,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q140",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1759,
+    0.1501,
+    0.1482,
+    0.1364,
+    0.126,
+    0.12,
+    0.1154,
+    0.1111,
+    0.1071,
+    0.1041,
+    0.1,
+    0.0976
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1501,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q146",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.2969,
+    0.1835,
+    0.1838,
+    0.1698,
+    0.162,
+    0.1581
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.162,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q154",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2245,
+    0.1538,
+    0.1483,
+    0.1394,
+    0.1366,
+    0.1305,
+    0.1227,
+    0.1154,
+    0.1112,
+    0.1071,
+    0.1035,
+    0.1006
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1483,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q163",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2412,
+    0.2217,
+    0.1843,
+    0.1509,
+    0.1446,
+    0.1267,
+    0.125,
+    0.1152,
+    0.1154,
+    0.1134,
+    0.1111,
+    0.1071
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1446,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q172",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3818,
+    0.2069,
+    0.2007,
+    0.1903,
+    0.1835,
+    0.1595
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1903,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q190",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3357,
+    0.2073,
+    0.1635,
+    0.1567,
+    0.1554,
+    0.1443
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1443,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q203",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3682,
+    0.1861,
+    0.1483,
+    0.1419,
+    0.139,
+    0.1384
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1483,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q214",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2237,
+    0.212,
+    0.1827,
+    0.1641,
+    0.1455,
+    0.1377,
+    0.1364,
+    0.1305,
+    0.1304,
+    0.1277,
+    0.1268,
+    0.101
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1455,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q224",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1785,
+    0.1619,
+    0.1482,
+    0.1364,
+    0.1313,
+    0.1263,
+    0.12,
+    0.1154,
+    0.1071,
+    0.1034,
+    0.1,
+    0.0968
+   ],
+   "gold_rank": 7,
+   "gold_score": 0.12,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-43_q234",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1753,
+    0.1497,
+    0.1482,
+    0.1398,
+    0.1364,
+    0.1356,
+    0.1303,
+    0.13,
+    0.125,
+    0.1216,
+    0.1151,
+    0.1071
+   ],
+   "gold_rank": 12,
+   "gold_score": 0.1071,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q004",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2507,
+    0.2337,
+    0.229,
+    0.2149,
+    0.2146,
+    0.2029,
+    0.1786,
+    0.1627,
+    0.162,
+    0.1514,
+    0.1516,
+    0.1446
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.162,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q012",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1508,
+    0.1424,
+    0.1372,
+    0.1266,
+    0.1214,
+    0.1161,
+    0.1119,
+    0.108,
+    0.105,
+    0.1006,
+    0.0974,
+    0.0947
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1424,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q032",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2188,
+    0.1924,
+    0.172,
+    0.1577,
+    0.1566,
+    0.1448,
+    0.1311,
+    0.12,
+    0.1187,
+    0.1154,
+    0.1111,
+    0.1049
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1924,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q044",
+   "class": "locomo_commonsense",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3625,
+    0.3407,
+    0.3141,
+    0.2996,
+    0.2853,
+    0.2602,
+    0.1758,
+    0.1694,
+    0.1651,
+    0.1632,
+    0.159,
+    0.1565
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.1651,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q064",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.241,
+    0.2325,
+    0.1846,
+    0.1644,
+    0.1522,
+    0.1502,
+    0.1451,
+    0.1369,
+    0.1361,
+    0.1304,
+    0.1279,
+    0.1223
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1846,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q070",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2454,
+    0.2286,
+    0.1854,
+    0.1392,
+    0.1389,
+    0.1364,
+    0.1339,
+    0.1261,
+    0.1124,
+    0.1075,
+    0.1044,
+    0.1008
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.2454,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q077",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3705,
+    0.3098,
+    0.254,
+    0.2391,
+    0.191,
+    0.1867,
+    0.1769,
+    0.1644,
+    0.1636,
+    0.1618,
+    0.1611,
+    0.1507
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.1636,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q085",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3162,
+    0.3072,
+    0.264,
+    0.2097,
+    0.1995,
+    0.1985,
+    0.1911,
+    0.1878,
+    0.1726,
+    0.1565,
+    0.1504,
+    0.144
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.2097,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q099",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.314,
+    0.3043,
+    0.2998,
+    0.2714,
+    0.2508,
+    0.2493,
+    0.2232,
+    0.1794,
+    0.1785,
+    0.1699,
+    0.1676,
+    0.161
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.2493,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q106",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2265,
+    0.1901,
+    0.1891,
+    0.173,
+    0.1684,
+    0.1489,
+    0.1319,
+    0.1304,
+    0.1298,
+    0.125,
+    0.12,
+    0.1194
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.173,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q114",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.2762,
+    0.1482,
+    0.1417,
+    0.1304,
+    0.125,
+    0.121
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1482,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q128",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.145,
+    0.1368,
+    0.1265,
+    0.123,
+    0.1167,
+    0.1123,
+    0.1082,
+    0.1047,
+    0.1012,
+    0.0978,
+    0.0948
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.123,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q138",
+   "class": "locomo_adversarial",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3553,
+    0.3069,
+    0.1505,
+    0.1386,
+    0.1308,
+    0.1273
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1505,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-44_q153",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1975,
+    0.1834,
+    0.1497,
+    0.1434,
+    0.1376,
+    0.1372,
+    0.1315,
+    0.129,
+    0.1238,
+    0.1154,
+    0.114,
+    0.1123
+   ],
+   "gold_rank": 8,
+   "gold_score": 0.129,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q014",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3094,
+    0.2546,
+    0.1431,
+    0.1326,
+    0.1319,
+    0.1292
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.2546,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q035",
+   "class": "locomo_commonsense",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2598,
+    0.2187,
+    0.1759,
+    0.1478,
+    0.1433,
+    0.1429,
+    0.1371,
+    0.1289,
+    0.1252,
+    0.12,
+    0.1164,
+    0.1154
+   ],
+   "gold_rank": 10,
+   "gold_score": 0.12,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q044",
+   "class": "locomo_commonsense",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.45,
+    0.1522,
+    0.1484,
+    0.14,
+    0.1395,
+    0.1349
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.45,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q058",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2405,
+    0.2307,
+    0.193,
+    0.1851,
+    0.1827,
+    0.1725,
+    0.1712,
+    0.1708,
+    0.1685,
+    0.1569,
+    0.1486,
+    0.1462
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1827,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q066",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1746,
+    0.1581,
+    0.1513,
+    0.1429,
+    0.1336,
+    0.1285,
+    0.128,
+    0.1265,
+    0.1216,
+    0.1213,
+    0.114,
+    0.1121
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q074",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2446,
+    0.1647,
+    0.1584,
+    0.1364,
+    0.1322,
+    0.1304,
+    0.1252,
+    0.119,
+    0.1169,
+    0.1154,
+    0.1139,
+    0.1112
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1647,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q083",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4574,
+    0.3278,
+    0.2105,
+    0.1788,
+    0.1735,
+    0.1627
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.4574,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q095",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2622,
+    0.2596,
+    0.2307,
+    0.2172,
+    0.2049,
+    0.1879,
+    0.1868,
+    0.1817,
+    0.1772,
+    0.1685,
+    0.1394,
+    0.1304
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.1772,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q105",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4443,
+    0.4331,
+    0.2456,
+    0.1803,
+    0.1653,
+    0.1266
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1803,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q114",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4552,
+    0.4232,
+    0.4157,
+    0.3017,
+    0.2008,
+    0.1419
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.3017,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q123",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2749,
+    0.2172,
+    0.1822,
+    0.1647,
+    0.1443,
+    0.1355,
+    0.1311,
+    0.1263,
+    0.1206,
+    0.1183,
+    0.116,
+    0.1119
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1822,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q134",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2161,
+    0.1768,
+    0.1642,
+    0.1418,
+    0.1364,
+    0.1349,
+    0.1304,
+    0.1242,
+    0.1212,
+    0.1168,
+    0.1165,
+    0.1104
+   ],
+   "gold_rank": 3,
+   "gold_score": 0.1642,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q146",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2285,
+    0.1696,
+    0.1469,
+    0.141,
+    0.1364,
+    0.1306,
+    0.1219,
+    0.12,
+    0.1194,
+    0.1185,
+    0.113,
+    0.1066
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1696,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q156",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1731,
+    0.147,
+    0.1463,
+    0.1366,
+    0.1316,
+    0.131,
+    0.1247,
+    0.1206,
+    0.1203,
+    0.1074,
+    0.1051,
+    0.1046
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1731,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q173",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1915,
+    0.1814,
+    0.1483,
+    0.1304,
+    0.125,
+    0.12,
+    0.1154,
+    0.1111,
+    0.1034,
+    0.1,
+    0.0968,
+    0.0946
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.12,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-47_q188",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2667,
+    0.2077,
+    0.1993,
+    0.162,
+    0.1497,
+    0.1472,
+    0.1429,
+    0.1412,
+    0.1367,
+    0.1366,
+    0.1328,
+    0.1313
+   ],
+   "gold_rank": 12,
+   "gold_score": 0.1313,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q009",
+   "class": "locomo_temporal",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3289,
+    0.2547,
+    0.1533,
+    0.1429,
+    0.1356,
+    0.12
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1356,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q020",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2255,
+    0.204,
+    0.1617,
+    0.1437,
+    0.1389,
+    0.1324,
+    0.1257,
+    0.1207,
+    0.1176,
+    0.1117,
+    0.1078,
+    0.104
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1437,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q029",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3025,
+    0.2968,
+    0.232,
+    0.1934,
+    0.1897,
+    0.1833,
+    0.1676,
+    0.1433,
+    0.125,
+    0.12,
+    0.1115,
+    0.1074
+   ],
+   "gold_rank": 8,
+   "gold_score": 0.1433,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q042",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3223,
+    0.2241,
+    0.1916,
+    0.1738,
+    0.1647,
+    0.159
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1738,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q059",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3403,
+    0.2774,
+    0.1869,
+    0.1773,
+    0.1628,
+    0.1577
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1577,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q067",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2529,
+    0.2341,
+    0.2108,
+    0.1599,
+    0.1552,
+    0.1487,
+    0.1455,
+    0.125,
+    0.1207,
+    0.119,
+    0.1154,
+    0.1133
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1599,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q079",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2414,
+    0.1678,
+    0.1549,
+    0.1473,
+    0.1439,
+    0.1419,
+    0.12,
+    0.1111,
+    0.1071,
+    0.1034,
+    0.1019,
+    0.1
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1678,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q095",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.243,
+    0.2325,
+    0.2243,
+    0.1759,
+    0.1733,
+    0.1604,
+    0.1518,
+    0.1491,
+    0.1396,
+    0.1291,
+    0.128,
+    0.1249
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.243,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q105",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2694,
+    0.2394,
+    0.1908,
+    0.163,
+    0.1602,
+    0.1429,
+    0.1384,
+    0.1304,
+    0.1279,
+    0.125,
+    0.12,
+    0.1171
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q115",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2189,
+    0.1754,
+    0.1602,
+    0.1517,
+    0.143,
+    0.1372,
+    0.1322,
+    0.125,
+    0.1206,
+    0.1198,
+    0.1099,
+    0.1095
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.1754,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q125",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.239,
+    0.1882,
+    0.1845,
+    0.1762,
+    0.1726,
+    0.1605,
+    0.1601,
+    0.1514,
+    0.1458,
+    0.1363,
+    0.1342,
+    0.1327
+   ],
+   "gold_rank": 7,
+   "gold_score": 0.1601,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q132",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2648,
+    0.2382,
+    0.2232,
+    0.2121,
+    0.1451,
+    0.1385,
+    0.1325,
+    0.1266,
+    0.1215,
+    0.1173,
+    0.1114,
+    0.1088
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1385,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q147",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.1482,
+    0.1415,
+    0.1402,
+    0.1305,
+    0.1251,
+    0.1209,
+    0.1154,
+    0.1111,
+    0.1095,
+    0.105,
+    0.1016,
+    0.0989
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.1482,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q153",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3299,
+    0.2678,
+    0.2265,
+    0.1773,
+    0.1769,
+    0.1761,
+    0.1655,
+    0.159,
+    0.1572,
+    0.1408,
+    0.1368,
+    0.1296
+   ],
+   "gold_rank": 7,
+   "gold_score": 0.1655,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q163",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4515,
+    0.445,
+    0.221,
+    0.1952,
+    0.1952,
+    0.1742
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.4515,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q170",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2092,
+    0.1994,
+    0.1791,
+    0.172,
+    0.1686,
+    0.1684,
+    0.1668,
+    0.1573,
+    0.1435,
+    0.137,
+    0.1314,
+    0.1293
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.1435,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q182",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2588,
+    0.2287,
+    0.2282,
+    0.2004,
+    0.1902,
+    0.1747,
+    0.1726,
+    0.1709,
+    0.1693,
+    0.1692,
+    0.1576,
+    0.1484
+   ],
+   "gold_rank": 2,
+   "gold_score": 0.2287,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q191",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2368,
+    0.1694,
+    0.1613,
+    0.1508,
+    0.1455,
+    0.1389,
+    0.1348,
+    0.1303,
+    0.1275,
+    0.1268,
+    0.1225,
+    0.1222
+   ],
+   "gold_rank": 5,
+   "gold_score": 0.1455,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q209",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2273,
+    0.2207,
+    0.2113,
+    0.1898,
+    0.1875,
+    0.1668,
+    0.1612,
+    0.1494,
+    0.142,
+    0.1372,
+    0.1371,
+    0.1329
+   ],
+   "gold_rank": 9,
+   "gold_score": 0.142,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q224",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.203,
+    0.1827,
+    0.1632,
+    0.1515,
+    0.1501,
+    0.1492,
+    0.1478,
+    0.137,
+    0.1353,
+    0.1258,
+    0.1206,
+    0.12
+   ],
+   "gold_rank": 1,
+   "gold_score": 0.203,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-48_q235",
+   "class": "locomo_adversarial",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.264,
+    0.2565,
+    0.2319,
+    0.2217,
+    0.2187,
+    0.2169,
+    0.1976,
+    0.1927,
+    0.1504,
+    0.1308,
+    0.1263,
+    0.121
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.2217,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-49_q012",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3383,
+    0.2696,
+    0.2437,
+    0.2336,
+    0.2288,
+    0.1882,
+    0.1757,
+    0.1756,
+    0.1731,
+    0.1432,
+    0.1313,
+    0.1215
+   ],
+   "gold_rank": 10,
+   "gold_score": 0.1432,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-49_q029",
+   "class": "locomo_multihop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.4388,
+    0.4254,
+    0.4252,
+    0.2792,
+    0.2406,
+    0.233
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.2792,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-49_q053",
+   "class": "locomo_temporal",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.3932,
+    0.3158,
+    0.2944,
+    0.2686,
+    0.265,
+    0.1867,
+    0.1793,
+    0.1631,
+    0.1591,
+    0.1555,
+    0.1518,
+    0.1326
+   ],
+   "gold_rank": 7,
+   "gold_score": 0.1793,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-49_q064",
+   "class": "locomo_multihop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2713,
+    0.219,
+    0.2091,
+    0.1964,
+    0.1715,
+    0.1304,
+    0.12,
+    0.1154,
+    0.1111,
+    0.1071,
+    0.1035,
+    0.1007
+   ],
+   "gold_rank": 8,
+   "gold_score": 0.1154,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-49_q085",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3531,
+    0.2727,
+    0.1702,
+    0.1429,
+    0.1403,
+    0.1364
+   ],
+   "gold_rank": 4,
+   "gold_score": 0.1429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-49_q098",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.2978,
+    0.2749,
+    0.2269,
+    0.1653,
+    0.1438,
+    0.1429
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.1429,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-49_q106",
+   "class": "locomo_singlehop",
+   "delivered_count": 12,
+   "delivered_scores": [
+    0.2626,
+    0.1975,
+    0.1737,
+    0.1594,
+    0.1429,
+    0.1364,
+    0.1304,
+    0.1283,
+    0.12,
+    0.1154,
+    0.1127,
+    0.1071
+   ],
+   "gold_rank": 7,
+   "gold_score": 0.1304,
+   "gold_delivered": 1
+  },
+  {
+   "needle": "conv-49_q121",
+   "class": "locomo_singlehop",
+   "delivered_count": 6,
+   "delivered_scores": [
+    0.3295,
+    0.2121,
+    0.1482,
+    0.1369,
+    0.1304,
+    0.125
+   ],
+   "gold_rank": 6,
+   "gold_score": 0.125,
+   "gold_delivered": 1
+  }
+ ]
+}
