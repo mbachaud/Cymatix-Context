@@ -348,6 +348,20 @@ gate and tracked as issue #417.
   pointers updated to match.
 - **docs:** the wiki pages treat PR #419's canonical spellings as primary;
   that branch is merged into this one, so the two land in either order.
+- **process: beta-branch release flow.** `beta` is the standing integration
+  branch and default PR base; `master` holds released code and tags only;
+  releases are `release/vX.Y.Z` cuts from `beta` merged to `master` by PR,
+  hotfixes are `hotfix/*` from `master` back-merged into `beta`. CI runs on
+  pushes to `beta` and `release/**` and on PRs targeting `beta` (master
+  unchanged); `cla.yml` was already unfiltered. Pre-releases (`vX.Y.ZbN` on
+  `beta`, GitHub pre-release, `publish.yml` to PyPI, `pip install --pre
+  cymatix-context`) are the new way to ship an integration snapshot. Runbook:
+  `docs/RELEASING.md` (branch model, receipt gate, exact commands, proposed
+  branch protection and default-branch change); helper: `scripts/release.py`
+  (`check` / `pre --n N` / `final --version X.Y.Z` / `tag-message`, dry-run
+  by default, never runs git itself; `tests/test_release_script.py`); PR
+  template `.github/PULL_REQUEST_TEMPLATE.md`; `CONTRIBUTING.md` "Branches
+  and releases".
 
 ## 0.9.1 (2026-08-30)
 

@@ -75,6 +75,8 @@ Full matrix with the exact `pyproject.toml` line numbers:
 ```bash
 # 1. Install (README's recommended working set)
 pip install "cymatix-context[embeddings,cpu,mcp]"
+# Betas of the next release (vX.Y.ZbN, cut from the beta branch) are opt-in:
+# pip install --pre "cymatix-context[embeddings,cpu,mcp]"
 
 # 2. Install the spaCy pipeline — pip never pulls it, and ingest fails without it
 python -m spacy download en_core_web_sm

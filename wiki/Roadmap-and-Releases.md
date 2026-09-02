@@ -12,10 +12,11 @@
   [`docs/ROADMAP.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROADMAP.md)** —
   the sequencing layer that says which track a piece of work sits under.
 - **Install from PyPI:** `pip install cymatix-context`. Released versions are
-  git-tagged (`v0.9.1`, `v0.9.0`, …) on the repository.
+  git-tagged (`v0.9.1`, `v0.9.0`, …) on the repository; pre-releases
+  (`vX.Y.ZbN`, cut from `beta`) install with `pip install --pre cymatix-context`.
 - This wiki documents **0.9.1**, released 2026-08-30. Each item below carries
-  its PR or issue number. The first section lists what is queued for `master`
-  since the tag and is headed for **0.9.2**.
+  its PR or issue number. The first section lists what has landed on `beta`,
+  the integration branch, since the tag and is headed for **0.9.2**.
 
 ## Unreleased / 0.9.2 — what follows the 0.9.1 tag
 
@@ -227,28 +228,44 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
 
 ## How releases work here
 
-- **Versioning is `MAJOR.MINOR.PATCH`, but the number alone will not tell you
-  whether an upgrade is safe.** 0.8.5 was a deliberate breaking change shipped
-  as a patch-level bump — called out as breaking in the changelog, with a pin
-  instruction. Read the changelog entry, not the digits.
-- **No formal cadence.** Nothing ships to a date. The gate is a receipt, and
-  when the receipt says a change is null or negative the change does not ship —
-  the wave-2 COVER-walk arm in this same 0.9.x window was killed by its own
-  receipt ([#408](https://github.com/mbachaud/Cymatix-Context/pull/408) shipped the infrastructure inert, `cover_walk_enabled =
-  false`).
-- **Defaults move separately from features.** A knob and its default flip are
-  different pull requests: the knob ships default-inert with a test pinning
-  byte-identical legacy behavior, and the flip is its own receipt-gated
-  change. In 0.9.1, #412's knob shipped without its flip (which followed
-  separately in #425 for 0.9.2), and #409's knob landed default-inert before
-  its flip followed as its own receipt-gated commit inside the same release.
+- **Two branches carry the code.** `master` holds released code and release
+  tags only, so `master` always equals the latest tag. `beta` is the
+  integration branch and the default base for pull requests; everything
+  headed for the next release lands there first. A release is a
+  `release/vX.Y.Z` branch cut from `beta` and merged to `master` by pull
+  request; a `hotfix/*` branch is cut from `master` and merged back into
+  `beta` afterwards.
+- **Pre-releases come from `beta`.** A `vX.Y.ZbN` tag on `beta` is published
+  as a GitHub pre-release and lands on PyPI as a beta. Opt in with
+  `pip install --pre cymatix-context`; a plain install keeps resolving to the
+  last final release.
+- **Releases are receipt-gated, not calendar-gated.** A shipped-default
+  change needs its paired receipt and `BASELINES.md` row before it merges to
+  `beta`, and a final release needs a merged-stack witness ladder on the 947k
+  bed (0.9.1: `sweep_v091_gate_2026-08-30.json`, ALL PASS). When the receipt
+  says a change is null or negative, the change does not ship: the wave-2
+  COVER-walk arm in the 0.9.x window was killed by its own receipt
+  ([#408](https://github.com/mbachaud/Cymatix-Context/pull/408) shipped the
+  infrastructure inert, `cover_walk_enabled = false`).
+- **Defaults move separately from features.** A knob and its default flip
+  are different pull requests: the knob ships default-inert with a test
+  pinning byte-identical legacy behavior, and the flip is its own
+  receipt-gated change. #412's knob shipped in 0.9.1 without its flip, which
+  followed in 0.9.2 as #425.
+- **Versioning is `MAJOR.MINOR.PATCH`, but the number alone will not tell
+  you whether an upgrade is safe.** 0.8.5 was a deliberate breaking change
+  shipped as a patch-level bump, called out as breaking in the changelog with
+  a pin instruction. Read the changelog entry, not the digits.
 - **Disclosures ship with the release, not after it.** If a flip costs
   latency, or a surface silently stops working at defaults, it goes in the
-  release notes next to the win.
-- **Comparability rules are part of the release contract.** `tagger_version`
-  and ingest concurrency (`ingest_c`) are bed identity; a receipt measured on
-  one bed does not license a claim about another. See
+  release notes next to the win. Comparability rules (`tagger_version`,
+  `ingest_c`) are part of the same contract; see
   [Benchmarks and Receipts](Benchmarks-and-Receipts).
+- **The runbook is
+  [`docs/RELEASING.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/RELEASING.md)**:
+  exact commands for pre-releases, the final cut, the post-release wiki
+  sync, and the `scripts/release.py` helper that bumps the version and rolls
+  the changelog.
 
 ## Go deeper
 
