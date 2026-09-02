@@ -741,8 +741,14 @@ class RetrievalConfig:
     #                  (tier_weight/(k+rank)); no exchange rate to hand-pick.
     #   "eps_band"   — rerank breaks ties only inside a relative fused-score
     #                  band of width rerank_band_delta (a ratio, scale-free).
+    #   "eps_band_coverage" — eps_band whose in-band tie-break is distinct
+    #                  query-term coverage (W2.2-narrow, PR #428; KILLED by
+    #                  receipt at 947k, +0/-0 delivered — kept as an arm).
     #   "off"        — pure fused ranking (rerank ignored; floor arm).
-    rerank_combinator: str = "additive"     # additive | fused_tier | eps_band | off
+    # The valid set is retrieval/rerank_combinators.py::VALID_COMBINATORS
+    # (single source of truth — validated there at load and in
+    # KnowledgeStore.__init__); the list above is documentation only.
+    rerank_combinator: str = "additive"     # one of VALID_COMBINATORS: additive | fused_tier | eps_band | eps_band_coverage | off
     # eps_band relative tie-band width δ (ratio of the leader's fused score).
     rerank_band_delta: float = 0.05
     # fused_tier uniform per-class rank post-multiplier (single weight — a
