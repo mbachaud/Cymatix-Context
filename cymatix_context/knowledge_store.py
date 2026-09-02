@@ -400,6 +400,35 @@ def _iter_in_batches(items, batch_size: int = _IN_BATCH_SIZE):
         yield ",".join("?" * len(batch)), batch
 
 
+# Fallback when the connection cannot report its bind-parameter cap
+# (Python < 3.11 lacks ``Connection.getlimit``). 999 is SQLite's historical
+# compile default and the most conservative value any supported build uses.
+_SQLITE_VARIABLE_LIMIT_FALLBACK = 999
+
+
+def _sqlite_variable_limit(conn) -> int:
+    """Return SQLITE_LIMIT_VARIABLE_NUMBER for ``conn`` (fallback 999).
+
+    Probed rather than assumed because the cap varies by build (999 on the
+    historical default, 32,766 on the CPython 3.14 Windows wheel — #431).
+    Callers that would bind more placeholders than this in a single
+    statement must batch or skip; otherwise SQLite raises
+    ``OperationalError: too many SQL variables``.
+    """
+    getlimit = getattr(conn, "getlimit", None)
+    if getlimit is None:
+        return _SQLITE_VARIABLE_LIMIT_FALLBACK
+    try:
+        limit = int(getlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER))
+    except Exception:
+        log.warning(
+            "SQLITE_LIMIT_VARIABLE_NUMBER probe failed; assuming %d",
+            _SQLITE_VARIABLE_LIMIT_FALLBACK, exc_info=True,
+        )
+        return _SQLITE_VARIABLE_LIMIT_FALLBACK
+    return limit if limit > 0 else _SQLITE_VARIABLE_LIMIT_FALLBACK
+
+
 def _dense_matrix_dtype():
     """Resident dtype for the per-shard dense matrix (A2 RAM lever).
 
@@ -919,6 +948,9 @@ class KnowledgeStore:
         self._sema_cold_weight: float = float(sema_cold_weight)
         self._lex_anchor_weight: float = float(lex_anchor_weight)
         self._harmonic_weight: float = float(harmonic_weight)
+        # #431: once-per-store guard for the Tier 5 bind-limit warning so a
+        # large bed logs the skipped harmonic query once, not per retrieval.
+        self._harmonic_limit_warned: bool = False
         self._entity_graph_weight: float = float(entity_graph_weight)
         self._dense_weight: float = float(dense_weight)
         # Tier-0 PR-3: additive-mode dense merge weight (see ctor param).
@@ -3685,31 +3717,60 @@ class KnowledgeStore:
             if _has_harmonic:
                 try:
                     candidate_ids = list(gene_scores.keys())
-                    cid_ph = ",".join("?" * len(candidate_ids))
-                    harmonic_rows = cur.execute(
-                        f"SELECT gene_id_a, gene_id_b, weight "
-                        f"FROM harmonic_links "
-                        f"WHERE gene_id_a IN ({cid_ph}) "
-                        f"  AND gene_id_b IN ({cid_ph})",
-                        (*candidate_ids, *candidate_ids),
-                    ).fetchall()
-                    harmonic_bonus: Dict[str, float] = {}
-                    for hr in harmonic_rows:
-                        for gid in (hr["gene_id_a"], hr["gene_id_b"]):
-                            harmonic_bonus[gid] = min(
-                                harmonic_bonus.get(gid, 0) + self._harmonic_weight,
-                                3.0 * self._harmonic_weight,
-                            )
-                    _harmonic_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
-                    for gid, bonus in harmonic_bonus.items():
-                        gene_scores[gid] = gene_scores.get(gid, 0) + bonus
-                        tier_contrib.setdefault(gid, {})["harmonic"] = bonus
-                        _harmonic_ranked.append((gid, bonus))
-                    fuser.add_tier(
-                        "harmonic", _harmonic_ranked, weight=self._harmonic_weight,
+                    # #431: the candidate list is bound TWICE below (one IN
+                    # per side of the edge). On bulk beds the pre-shortlist
+                    # pool is far larger than SQLITE_LIMIT_VARIABLE_NUMBER
+                    # (ERB 947k: median ~172k candidates vs a 32,766 cap),
+                    # so the statement would raise "too many SQL variables".
+                    # Logging-only tier of the fix: probe the cap, skip the
+                    # query with a once-per-store warning when it would be
+                    # exceeded. Below the cap the tier runs exactly as before
+                    # (ranking byte-identical). Batching / post-shortlist
+                    # bounding is the receipt-gated behavior change.
+                    _n_bound = 2 * len(candidate_ids)
+                    _bind_limit = _sqlite_variable_limit(
+                        getattr(cur, "connection", None)
                     )
+                    if _n_bound > _bind_limit:
+                        if not self._harmonic_limit_warned:
+                            self._harmonic_limit_warned = True
+                            log.warning(
+                                "Harmonic tier skipped: %d candidates would "
+                                "bind %d parameters, over "
+                                "SQLITE_LIMIT_VARIABLE_NUMBER=%d (#431); "
+                                "further skips on this store are silent",
+                                len(candidate_ids), _n_bound, _bind_limit,
+                            )
+                    else:
+                        cid_ph = ",".join("?" * len(candidate_ids))
+                        harmonic_rows = cur.execute(
+                            f"SELECT gene_id_a, gene_id_b, weight "
+                            f"FROM harmonic_links "
+                            f"WHERE gene_id_a IN ({cid_ph}) "
+                            f"  AND gene_id_b IN ({cid_ph})",
+                            (*candidate_ids, *candidate_ids),
+                        ).fetchall()
+                        harmonic_bonus: Dict[str, float] = {}
+                        for hr in harmonic_rows:
+                            for gid in (hr["gene_id_a"], hr["gene_id_b"]):
+                                harmonic_bonus[gid] = min(
+                                    harmonic_bonus.get(gid, 0)
+                                    + self._harmonic_weight,
+                                    3.0 * self._harmonic_weight,
+                                )
+                        _harmonic_ranked: List[Tuple[str, float]] = []  # RRF
+                        for gid, bonus in harmonic_bonus.items():
+                            gene_scores[gid] = gene_scores.get(gid, 0) + bonus
+                            tier_contrib.setdefault(gid, {})["harmonic"] = bonus
+                            _harmonic_ranked.append((gid, bonus))
+                        fuser.add_tier(
+                            "harmonic", _harmonic_ranked,
+                            weight=self._harmonic_weight,
+                        )
                 except Exception:
-                    log.debug("Harmonic boost failed", exc_info=True)
+                    # #431: was log.debug — a swallowed OperationalError hid
+                    # the tier's absence on every large bed.
+                    log.warning("Harmonic boost failed", exc_info=True)
 
         # ── Tier 5.5: Successor Representation boost ──────────────
         # Discounted future-occupancy over the co-activation graph.
