@@ -194,6 +194,20 @@ best-effort staleness from the knowledge store's health summary.
 
 Exit codes: `0` success, `1` stats call failed.
 
+### `cymatix diag bed [--db PATH] [--identity] [--json]`
+
+Reads the append-only `bed_provenance` log inside any bed file on disk
+(default: the configured genome path) over a read-only connection —
+no retrieval stack, no config load beyond resolving the path. Reports
+file size, live gene / FTS counts, every recorded build / ingest /
+stamp event (cymatix version, git sha + dirty flag, `ingest_c`,
+gene count, notes) and the config drift between consecutive events.
+`--identity` also computes the live gene-id digest (full scan; slow on
+large beds). A bed that predates stamping reports `events: (none ...)`;
+retro-stamp it with `scripts/stamp_bed_provenance.py --db PATH`.
+
+Exit codes: `0` success, `1` bed missing or unreadable.
+
 ### `cymatix config show [--text] [--config PATH]`
 
 Print the effective configuration (cymatix.toml merged with env

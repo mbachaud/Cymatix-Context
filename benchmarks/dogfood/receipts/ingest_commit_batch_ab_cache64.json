@@ -1,0 +1,91 @@
+{
+  "receipt": "ingest_commit_batch_ab",
+  "date": "2026-08-27T05:22:55.695602+00:00",
+  "question": "does commit-per-gene cadence own the ingest write amplification (806 ops / 2.06 MB per gene)?",
+  "base_db": "F:\\tmp\\erb_blob_v09x.db",
+  "base_bytes": 24338374656,
+  "base_genes": 947531,
+  "treatment_files": 848,
+  "treatment_roots": [
+    "F:\\Projects\\cymatix-context\\.claude\\worktrees\\backlog-clearing-v0-9-0-534508\\docs",
+    "F:\\Projects\\cymatix-context\\.claude\\worktrees\\backlog-clearing-v0-9-0-534508\\cymatix_context",
+    "F:\\Projects\\cymatix-context\\.claude\\worktrees\\backlog-clearing-v0-9-0-534508\\tests"
+  ],
+  "treatment_genes": 4488,
+  "cache_mb_pinned": 64,
+  "env_pins": {
+    "CYMATIX_BFM_SPLADE": "0",
+    "CYMATIX_BFM_DENSE_BACKFILL": "0",
+    "CYMATIX_BFM_SEED_EDGES": "0",
+    "CYMATIX_DISABLE_LEARN": "1",
+    "CYMATIX_SQLITE_CACHE_SIZE": "-65536"
+  },
+  "note": "single process, sequential; identical pre-chunked gene stream replayed per arm; each arm on a fresh copy of base_db; io_* from psutil Process.io_counters deltas",
+  "arms": [
+    {
+      "commit_batch": 0,
+      "genes": 4488,
+      "errors": 0,
+      "batched_commits": 0,
+      "valve_trips": 0,
+      "sqlite_commits": 4488,
+      "drain_wall_s": 693.39,
+      "close_wall_s": 0.01,
+      "genes_per_s": 6.47,
+      "io_drain": {
+        "read_bytes": 296975855334,
+        "write_bytes": 5806621824,
+        "read_count": 72503943,
+        "write_count": 2231621
+      },
+      "io_total": {
+        "read_bytes": 296975855334,
+        "write_bytes": 5806621824,
+        "read_count": 72503943,
+        "write_count": 2231621
+      },
+      "write_mb_per_gene": 1.234,
+      "write_ops_per_gene": 497.2,
+      "wal_end_bytes": 6649712,
+      "bed_delta_bytes": 89780224,
+      "new_rows": 4328,
+      "new_rows_digest": "185d15429238d4f280937479ce22856e56ebeaad55d707c6cc22b303592d59a6",
+      "gene_relations_delta": 32707,
+      "avail_ram_mb_before": 31818.0,
+      "avail_ram_mb_after": 32047.0
+    },
+    {
+      "commit_batch": 5000,
+      "genes": 4488,
+      "errors": 0,
+      "batched_commits": 1,
+      "valve_trips": 0,
+      "sqlite_commits": 1,
+      "drain_wall_s": 578.8,
+      "close_wall_s": 0.01,
+      "genes_per_s": 7.75,
+      "io_drain": {
+        "read_bytes": 292505073072,
+        "write_bytes": 5429501341,
+        "read_count": 71411396,
+        "write_count": 2572595
+      },
+      "io_total": {
+        "read_bytes": 292505073072,
+        "write_bytes": 5429501341,
+        "read_count": 71411396,
+        "write_count": 2572595
+      },
+      "write_mb_per_gene": 1.154,
+      "write_ops_per_gene": 573.2,
+      "wal_end_bytes": 0,
+      "bed_delta_bytes": 89780224,
+      "new_rows": 4328,
+      "new_rows_digest": "185d15429238d4f280937479ce22856e56ebeaad55d707c6cc22b303592d59a6",
+      "gene_relations_delta": 32707,
+      "avail_ram_mb_before": 31283.0,
+      "avail_ram_mb_after": 31600.0
+    }
+  ],
+  "content_equivalent_across_arms": true
+}

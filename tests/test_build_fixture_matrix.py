@@ -432,11 +432,9 @@ class TestParallel:
         with ProcessPoolExecutor(max_workers=1) as pool:
             assert pool.submit(_nested_pool_probe, 0).result(timeout=10) == 1
 
-    def test_inner_file_worker_iter_uses_pool(self, monkeypatch):
-        """Shard-local file workers run chunk+tag in a CPU-only pool."""
-        import build_fixture_matrix as bfm
-
-        calls = {"workers": None, "chunksize": None, "initialized": 0}
+    @staticmethod
+    def _fake_pool_factory(calls):
+        """Pool double recording which imap variant the drain selected."""
 
         class FakePool:
             def __init__(self, workers, initializer=None):
@@ -451,11 +449,22 @@ class TestParallel:
             def __exit__(self, exc_type, exc, tb):
                 return False
 
-            def imap_unordered(self, func, files, chunksize=1):
+            def imap(self, func, files, chunksize=1):
                 calls["chunksize"] = chunksize
+                calls["variant"] = "imap"
                 return [func(f) for f in files]
 
-        monkeypatch.setattr(bfm.mp, "Pool", FakePool)
+            def imap_unordered(self, func, files, chunksize=1):
+                calls["chunksize"] = chunksize
+                calls["variant"] = "imap_unordered"
+                return [func(f) for f in files]
+
+        return FakePool
+
+    def _patch_pool(self, monkeypatch, calls):
+        import build_fixture_matrix as bfm
+
+        monkeypatch.setattr(bfm.mp, "Pool", self._fake_pool_factory(calls))
         monkeypatch.setattr(
             bfm, "_init_worker",
             lambda: calls.__setitem__("initialized", calls["initialized"] + 1),
@@ -464,14 +473,69 @@ class TestParallel:
             bfm, "_chunk_and_tag_file",
             lambda f: [{"source_id": f[0]}],
         )
+        return bfm
+
+    def test_inner_file_worker_iter_uses_pool(self, monkeypatch):
+        """Shard-local file workers run chunk+tag in a CPU-only pool."""
+        calls = {"workers": None, "chunksize": None, "initialized": 0, "variant": None}
+        bfm = self._patch_pool(monkeypatch, calls)
 
         files = [("a.py", ".py"), ("b.py", ".py")]
         rows = list(bfm._iter_chunked_file_gene_dicts(
             files, file_workers=3, chunksize=2,
         ))
 
-        assert calls == {"workers": 3, "chunksize": 2, "initialized": 1}
+        assert calls == {
+            "workers": 3, "chunksize": 2, "initialized": 1, "variant": "imap",
+        }
         assert rows == [[{"source_id": "a.py"}], [{"source_id": "b.py"}]]
+
+    def test_inner_file_worker_iter_defaults_to_ordered_drain(self, monkeypatch):
+        """Default drain is ordered.
+
+        Chunk+tag is pure at v0.9.x defaults (``backend = "cpu"``), so drain
+        order is the only thing worker parallelism varies -- and
+        ``gene_relations`` is order-sensitive. A 2,000-file ERB sample measured
+        28,767 rows under ``imap_unordered`` vs 28,765 sequential; ordered
+        drain reproduces the sequential value exactly. Receipt:
+        ``benchmarks/dogfood/receipts/ingest_equivalence_erb.json``.
+        """
+        calls = {"workers": None, "chunksize": None, "initialized": 0, "variant": None}
+        bfm = self._patch_pool(monkeypatch, calls)
+
+        list(bfm._iter_chunked_file_gene_dicts(
+            [("a.py", ".py")], file_workers=2, chunksize=1,
+        ))
+        assert calls["variant"] == "imap"
+
+    def test_inner_file_worker_iter_unordered_is_opt_in(self, monkeypatch):
+        """The pre-2026-08-24 unordered drain stays reachable explicitly."""
+        calls = {"workers": None, "chunksize": None, "initialized": 0, "variant": None}
+        bfm = self._patch_pool(monkeypatch, calls)
+
+        list(bfm._iter_chunked_file_gene_dicts(
+            [("a.py", ".py")], file_workers=2, chunksize=1, ordered=False,
+        ))
+        assert calls["variant"] == "imap_unordered"
+
+    def test_blob_parallel_drain_defaults_to_ordered(self, monkeypatch):
+        """The blob path carries the same ordered-drain contract."""
+        calls = {"workers": None, "chunksize": None, "initialized": 0, "variant": None}
+        bfm = self._patch_pool(monkeypatch, calls)
+        monkeypatch.setattr(
+            bfm, "_drain_with_batched_splade",
+            lambda it, genome, stats, batch_size=64: list(it),
+        )
+
+        bfm._parallel_ingest_to_genome(
+            [("a.py", ".py")], genome=object(), stats={}, n_workers=2,
+        )
+        assert calls["variant"] == "imap"
+
+        bfm._parallel_ingest_to_genome(
+            [("a.py", ".py")], genome=object(), stats={}, n_workers=2, ordered=False,
+        )
+        assert calls["variant"] == "imap_unordered"
 
     def test_build_profile_sharded_passes_shard_file_workers(self, tmp_path, monkeypatch):
         """Programmatic sharded builds include shard-local CPU worker count."""
@@ -1307,3 +1371,251 @@ class TestSilentFail:
             f"per exception type), got {len(bench_warnings)}: "
             f"{[r.getMessage() for r in bench_warnings]}"
         )
+
+
+class TestBlobResume:
+    """Blob mode honours --rebuild / file-level resume (2026-08-24).
+
+    Before this, ``build_profile`` unconditionally deleted the target ``.db``
+    and ignored ``--rebuild`` entirely, so a killed 500k-file blob build lost
+    every gene. The sharded path has had file-level resume since issue #150.
+    """
+
+    def _profile(self, monkeypatch, root):
+        import build_fixture_matrix as bfm
+
+        monkeypatch.setattr(bfm, "PROFILES", {
+            "tinyresume": {
+                "label": "blob resume",
+                "active_roots": 1,
+                "roots": [str(root)],
+                "extra_skip_dirs": set(),
+                "extra_filename_filters": [],
+            }
+        })
+        return bfm
+
+    def test_rebuild_true_unlinks_existing_bed(self, tmp_path, monkeypatch):
+        root = tmp_path / "src"
+        root.mkdir()
+        (root / "a.py").write_text("x = 1\n", encoding="utf-8")
+        bfm = self._profile(monkeypatch, root)
+
+        db = tmp_path / "tinyresume.db"
+        db.write_bytes(b"not a database")
+
+        removed = []
+        monkeypatch.setattr(bfm.os, "remove", lambda p: removed.append(str(p)))
+        monkeypatch.setattr(bfm, "Genome", lambda **kw: (_ for _ in ()).throw(RuntimeError("stop")))
+
+        with pytest.raises(RuntimeError):
+            bfm.build_profile("tinyresume", str(db), rebuild=True)
+        assert str(db) in removed
+
+    def test_rebuild_false_keeps_existing_bed(self, tmp_path, monkeypatch):
+        root = tmp_path / "src"
+        root.mkdir()
+        (root / "a.py").write_text("x = 1\n", encoding="utf-8")
+        bfm = self._profile(monkeypatch, root)
+
+        db = tmp_path / "tinyresume.db"
+        db.write_bytes(b"existing bed")
+
+        removed = []
+        monkeypatch.setattr(bfm.os, "remove", lambda p: removed.append(str(p)))
+        monkeypatch.setattr(bfm, "Genome", lambda **kw: (_ for _ in ()).throw(RuntimeError("stop")))
+
+        with pytest.raises(RuntimeError):
+            bfm.build_profile("tinyresume", str(db), rebuild=False)
+        assert removed == []
+        assert db.read_bytes() == b"existing bed"
+
+    def test_resume_filters_already_ingested_files(self, tmp_path, monkeypatch):
+        """The parallel branch drops files whose source_id is already present."""
+        import sqlite3
+
+        root = tmp_path / "src"
+        root.mkdir()
+        done = root / "done.py"
+        todo = root / "todo.py"
+        # both must clear the 50-byte floor _iter_ingestable_files enforces
+        done.write_text("# done\n" + "a = 1\n" * 20, encoding="utf-8")
+        todo.write_text("# todo\n" + "b = 2\n" * 20, encoding="utf-8")
+        bfm = self._profile(monkeypatch, root)
+
+        db = tmp_path / "tinyresume.db"
+        conn = sqlite3.connect(str(db))
+        conn.execute("CREATE TABLE genes (gene_id TEXT, source_id TEXT)")
+        conn.execute("INSERT INTO genes VALUES ('g1', ?)", (str(done),))
+        conn.commit()
+        conn.close()
+
+        seen = {}
+
+        def fake_parallel(files, genome, stats, n_workers, batch_size=64,
+                          chunksize=4, ordered=True):
+            seen["files"] = [f[0] for f in files]
+
+        class FakeGenome:
+            def __init__(self, **kw):
+                self.conn = sqlite3.connect(":memory:")
+
+            def stats(self):
+                return {"total_genes": 1, "compression_ratio": 1.0}
+
+            def close(self):
+                self.conn.close()
+
+        monkeypatch.setattr(bfm, "Genome", FakeGenome)
+        monkeypatch.setattr(bfm, "_parallel_ingest_to_genome", fake_parallel)
+        monkeypatch.setattr(
+            bfm, "_backfill_dense",
+            lambda p: {"skipped": True, "dense_coverage": 0.0,
+                       "rows_processed": 0},
+        )
+
+        bfm.build_profile("tinyresume", str(db), parallel=True, n_workers=2,
+                          rebuild=False)
+
+        assert seen["files"] == [str(todo)], "already-ingested file not skipped"
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# TestCommitBatcher (2026-08-26 write-amplification fix)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestCommitBatcher:
+    """``_CommitBatcher`` groups drained genes into ``deferred_commits()``
+    scopes. Contract under test: batch=0 is fully inert; batch=K commits
+    every K genes plus once at drain end; a deliberate pause COMMITS the
+    open scope before raising (the #151/#183 pause contract assumes all
+    flushed genes are durable); a producer crash ROLLS BACK the open
+    scope; the RAM valve closes a scope early."""
+
+    @staticmethod
+    def _stub_modules(monkeypatch):
+        import types
+
+        class _StubGene:
+            def __init__(self, **kw):
+                self.content = kw.get("content", "x" * 50)
+
+        class _StubSplade:
+            @staticmethod
+            def encode_batch(_texts):
+                return [None] * len(_texts)
+
+        fake_backends = types.ModuleType("cymatix_context.backends")
+        fake_backends.splade_backend = _StubSplade
+        fake_schemas = types.ModuleType("cymatix_context.schemas")
+        fake_schemas.Gene = _StubGene
+        monkeypatch.setitem(
+            sys.modules, "cymatix_context.backends", fake_backends)
+        monkeypatch.setitem(
+            sys.modules, "cymatix_context.schemas", fake_schemas)
+        monkeypatch.setenv("CYMATIX_BFM_SPLADE", "0")
+
+    @staticmethod
+    def _recording_genome():
+        from contextlib import contextmanager
+
+        class _RecordingGenome:
+            def __init__(self):
+                self.events = []
+
+            def upsert_doc(self, *a, **kw):
+                self.events.append("upsert")
+
+            @contextmanager
+            def deferred_commits(self):
+                self.events.append("begin")
+                try:
+                    yield self
+                except BaseException:
+                    self.events.append("rollback")
+                    raise
+                else:
+                    self.events.append("commit")
+
+        return _RecordingGenome()
+
+    @staticmethod
+    def _gene_batches(n):
+        return iter([[{"content": f"gene {i}"}] for i in range(n)])
+
+    def test_batch_zero_is_inert(self, monkeypatch):
+        self._stub_modules(monkeypatch)
+        genome = self._recording_genome()
+        stats = {"files": 0, "genes": 0, "errors": 0, "t0": 0.0}
+        bfm._drain_with_batched_splade(
+            self._gene_batches(3), genome, stats,
+            batch_size=1, commit_batch=0,
+        )
+        assert "begin" not in genome.events, (
+            "batch=0 must never open a deferred_commits scope")
+        assert stats["commit_batch"] == 0
+        assert stats["genes"] == 3
+
+    def test_commits_every_k_genes_plus_final(self, monkeypatch):
+        self._stub_modules(monkeypatch)
+        genome = self._recording_genome()
+        stats = {"files": 0, "genes": 0, "errors": 0, "t0": 0.0}
+        bfm._drain_with_batched_splade(
+            self._gene_batches(5), genome, stats,
+            batch_size=1, commit_batch=2,
+        )
+        # 5 genes at K=2 -> commits after gene 2, gene 4, and the final
+        # 1-gene remainder at drain end.
+        assert genome.events.count("commit") == 3
+        assert genome.events.count("rollback") == 0
+        assert stats["batched_commits"] == 3
+        # Every upsert ran inside a scope: first event must be "begin".
+        assert genome.events[0] == "begin"
+        assert stats["genes"] == 5
+
+    def test_pause_commits_open_scope_before_raise(self, monkeypatch):
+        self._stub_modules(monkeypatch)
+        genome = self._recording_genome()
+        monkeypatch.setattr(bfm, "_PAUSE_REQUESTED", True)
+        stats = {"files": 0, "genes": 0, "errors": 0, "t0": 0.0}
+        with pytest.raises(bfm._PauseRequested):
+            bfm._drain_with_batched_splade(
+                self._gene_batches(3), genome, stats,
+                batch_size=1, commit_batch=10,
+            )
+        # The flushed gene must be durably committed, not rolled back —
+        # file-level resume treats pause boundaries as committed state.
+        assert genome.events == ["begin", "upsert", "commit"]
+
+    def test_producer_crash_rolls_back_open_scope(self, monkeypatch):
+        self._stub_modules(monkeypatch)
+        genome = self._recording_genome()
+
+        def _exploding_iter():
+            yield [{"content": "ok"}]
+            raise RuntimeError("producer died")
+
+        stats = {"files": 0, "genes": 0, "errors": 0, "t0": 0.0}
+        with pytest.raises(RuntimeError, match="producer died"):
+            bfm._drain_with_batched_splade(
+                _exploding_iter(), genome, stats,
+                batch_size=1, commit_batch=10,
+            )
+        assert genome.events.count("rollback") == 1
+        assert genome.events.count("commit") == 0
+
+    def test_ram_valve_closes_scope_early(self, monkeypatch):
+        self._stub_modules(monkeypatch)
+        genome = self._recording_genome()
+        # 100 MiB available < 3072 MiB default floor -> valve trips on
+        # every after_flush, so each flush becomes its own commit even
+        # though commit_batch is far larger.
+        monkeypatch.setattr(bfm, "_available_ram_mb", lambda: 100.0)
+        stats = {"files": 0, "genes": 0, "errors": 0, "t0": 0.0}
+        bfm._drain_with_batched_splade(
+            self._gene_batches(3), genome, stats,
+            batch_size=1, commit_batch=100,
+        )
+        assert genome.events.count("commit") == 3
+        assert stats["valve_trips"] >= 3

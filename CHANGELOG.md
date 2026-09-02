@@ -68,6 +68,47 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   `docs/benchmarks/2026-08-30-enronqa-ingest-decay.md`. Tests:
   `tests/test_entity_autolink_schedule.py`.
 
+- **perf(ingest): `bed_provenance` table + `cymatix diag bed`, the
+  `bulk_load` SQLite memory profile, and the bench-builder commit batcher —
+  port of the never-committed 2026-08-24..27 perf/ingest lane (worktree
+  `claude/v0-9-0-planning-dc7564`, base `5f5c677`).** Every writable open
+  now creates the append-only `bed_provenance` table (`CREATE TABLE IF NOT
+  EXISTS`; content-neutral — no document, tag, or edge changes) so a bed
+  carries its own history: `scripts/stamp_bed_provenance.py` and
+  `scripts/build_erb_blob_v09x.py` append build / ingest / stamp rows
+  (cymatix version, git sha + dirty flag, `ingest_c`, the ingest-affecting
+  config subset, gene/FTS counts, optional gene-id digest), and
+  `cymatix diag bed [--db PATH] [--identity] [--json]` reads them back over a
+  `mode=ro` connection with config drift between rows — the bed-identity /
+  `ingest_c` house rule in `docs/benchmarks/BASELINES.md` now has code behind
+  it. `CYMATIX_MEM_PROFILE=bulk_load` (single-writer ingest only; NOT for the
+  server) gives the writer a page cache up to 4 GiB: 64 MiB vs 4 GiB measured
+  **6.47 vs 16.16 genes/s** on the 22.7 GiB ERB bed with identical write
+  volume, i.e. the whole 2.5× is upsert-path lookups
+  (`benchmarks/dogfood/receipts/ingest_commit_batch_ab.json`,
+  `…_cache64.json`). This closes two latent breaks in beta's already-shipped
+  `scripts/build_erb_blob_v09x.py`, which imports
+  `cymatix_context.storage.provenance` unconditionally (ImportError after the
+  multi-hour build) and defaults `--mem-profile bulk_load` (silently fell
+  back to the 64 MiB `auto` cache via `_MEM_PROFILES.get(profile, auto)`).
+  Bench builder `scripts/build_fixture_matrix.py` (env knobs, no
+  `cymatix.toml` surface): `CYMATIX_BFM_COMMIT_BATCH` (default `0` = inert
+  commit-per-gene; `K` = one durable commit per K genes with
+  `CYMATIX_BFM_WAL_VALVE_MB` / `CYMATIX_BFM_RAM_FLOOR_MB` early-flush valves;
+  1.234 → 0.929 write MB/gene at 5000, content-equivalent across arms),
+  `CYMATIX_BFM_MAX_FILES` (deterministic prefix cap for scale curves),
+  blob-mode `--rebuild` now honoured (default = file-level resume; before,
+  blob mode always rebuilt and ignored the flag), and parallel drains are
+  **ordered** by default (`imap` rather than `imap_unordered`) so
+  `gene_relations` matches the sequential path (28,767 vs 28,765 rows
+  observed; `ingest_equivalence_erb.json`: content_equal=true, 4.85× at
+  workers=6). Also ships `scripts/ingest_commit_batch_ab.py`,
+  `scripts/sqlite_cache_ab.py`, and the `ingest_write_path_ab.json`
+  (deferred-index arm: negative, 0.05×), `ingest_scale_100k_curve.csv` /
+  `_250k_curve.csv` receipts. Shipped server and CLI defaults unchanged.
+  Tests: `tests/test_bed_provenance.py` (15), `tests/test_mem_budget.py`
+  (+2), `tests/test_build_fixture_matrix.py` (+12).
+
 - **feat(retrieval): `eps_band_coverage` combinator — opt-in, default-inert
   (#428; W2.2-narrow, KILLED by its own receipt, kept as an arm).** Identical
   ε-band walk to `eps_band`; inside a band, distinct-query-term coverage breaks
