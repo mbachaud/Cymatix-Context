@@ -1397,6 +1397,112 @@ def _warn_unknown(section: str, raw_section: Dict[str, Any], dataclass_type: typ
         log.warning("Unknown-key check failed for [%s]", section, exc_info=True)
 
 
+# ── ROSETTA Tier 2: canonical software-term aliases for legacy TOML ──
+# section/key names (docs/ROSETTA.md). Additive only: every legacy name
+# keeps working unaliased; the new alias section/key auto-maps onto the
+# legacy name the rest of this module already parses, so no dispatch
+# branch below needs to change. Collision rule: the LEGACY name wins and
+# a WARNING names both, so no default or shipped behavior changes.
+_SECTION_ALIASES = {"compressor": "ribosome", "knowledge_store": "genome"}
+_KEY_ALIASES = {"budget": {"retrieval_tokens": "expression_tokens",
+                           "max_docs_per_turn": "max_genes_per_turn"}}
+
+# Top-level TOML sections this loader understands — the literals every
+# ``if "<section>" in raw:`` / ``raw.get("<section>", ...)`` branch below
+# dispatches on, plus sections that are documented and shipped in
+# cymatix.toml but deliberately NOT dispatched here because a standalone
+# script owns them, plus the two Tier 2 section aliases. Cross-checked
+# against scripts/gen_config_reference.py's SECTION_TO_CLASS table, the
+# other place this repo enumerates "every known cymatix.toml section" —
+# keep the two in sync if either changes.
+#
+# The aliases must be included here because ``_apply_lexicon_aliases``
+# leaves an alias key un-consumed in ``raw`` on a collision (legacy
+# wins), and that must never be flagged as an unknown section.
+_KNOWN_TOP_LEVEL_SECTIONS = {
+    "ribosome", "budget", "genome", "server", "encoder_daemon", "telemetry",
+    "ingestion", "context", "cymatics", "retrieval", "abstain", "session",
+    "plr", "headroom", "classifier", "know", "hardware", "vault", "synonyms",
+    # mem_sync is a real, documented, shipped [mem_sync] section (CLAUDE.md
+    # [mem_sync]: watch_dirs, sync_interval_s) — but scripts/run_mem_sync.py
+    # parses cymatix.toml itself and reads it directly; load_config() never
+    # dispatches on it, so it has no dataclass slot on CymatixConfig. It
+    # must still count as "known" or the shipped cymatix.toml trips a
+    # spurious unknown-section warning on every load.
+    "mem_sync",
+    *_SECTION_ALIASES.keys(),
+}
+
+
+def _apply_lexicon_aliases(raw: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalize Tier 2 canonical-name aliases onto their legacy TOML keys.
+
+    Mutates *raw* (and its nested section dicts) in place and also returns
+    it. Runs once, on the raw parsed dict, before section dispatch. On
+    collision (both alias and legacy present) the legacy name wins and a
+    WARNING names both — mirrors ``_warn_unknown``'s soft-fail style.
+
+    Two invariants callers rely on:
+    - An alias key is ALWAYS removed once handled here — including on a
+      collision — so it can never reach ``_warn_unknown`` as a stray
+      "unknown key" (that would be a spurious duplicate of the collision
+      warning this function already emits).
+    - A malformed alias value (e.g. a top-level ``compressor = "x"``
+      scalar instead of a ``[compressor]`` table) warns and is left alone
+      rather than raising — same soft-fail style as everything else in
+      this module. It stays in ``raw`` afterwards, but harmlessly: no
+      section-dispatch branch below reads the alias name directly, and
+      ``_KNOWN_TOP_LEVEL_SECTIONS`` keeps ``_warn_unknown_sections`` from
+      flagging it either.
+    """
+    for new, old in _SECTION_ALIASES.items():
+        if new not in raw:
+            continue
+        if not isinstance(raw[new], dict):
+            log.warning(
+                "[%s] is not a table; ignoring (expected a table aliasing "
+                "legacy [%s])", new, old,
+            )
+            continue
+        if old in raw:
+            log.warning(
+                "[%s] ignored: legacy [%s] also present and wins", new, old,
+            )
+        else:
+            raw[old] = raw.pop(new)
+    for section, keys in _KEY_ALIASES.items():
+        body = raw.get(section)
+        if isinstance(body, dict):
+            for new, old in keys.items():
+                if new in body:
+                    # Always pop the alias key — collision or not — so it
+                    # never survives to look like an unrecognized key.
+                    value = body.pop(new)
+                    if old in body:
+                        log.warning(
+                            "[%s] %s ignored: legacy %s also present and wins",
+                            section, new, old,
+                        )
+                    else:
+                        body[old] = value
+    return raw
+
+
+def _warn_unknown_sections(raw: Dict[str, Any]) -> None:
+    """Log a warning for any top-level cymatix.toml section this loader
+    doesn't recognize.
+
+    Lightweight typo guard, mirrors ``_warn_unknown`` but at the section
+    level. Never raises — a bad section name must not break startup.
+    """
+    try:
+        for section in sorted(set(raw.keys()) - _KNOWN_TOP_LEVEL_SECTIONS):
+            log.warning("Unknown top-level section [%s] in cymatix.toml", section)
+    except Exception:
+        # Defensive: never let this check break startup.
+        log.warning("Unknown-section check failed", exc_info=True)
+
+
 def _positive_float(
     section: str, key: str, raw_section: Dict[str, Any], default: float
 ) -> float:
@@ -1439,8 +1545,20 @@ def _apply_env_overrides(cfg: CymatixConfig) -> CymatixConfig:
     # on different ports without duplicating cymatix.toml. Typical use:
     # ``CYMATIX_GENOME_PATH=genomes/main.genome.db CYMATIX_USE_SHARDS=1`` for a
     # sharded bench server on a side port; defaults still serve monolithic.
-    if os.environ.get("CYMATIX_GENOME_PATH"):
-        cfg.genome.path = os.environ["CYMATIX_GENOME_PATH"]
+    # ROSETTA Tier 2: CYMATIX_STORE_PATH is the canonical-name alias for the
+    # legacy CYMATIX_GENOME_PATH. Same collision rule as the TOML aliases —
+    # legacy wins, warn naming both.
+    genome_path_legacy = os.environ.get("CYMATIX_GENOME_PATH")
+    genome_path_alias = os.environ.get("CYMATIX_STORE_PATH")
+    if genome_path_legacy:
+        cfg.genome.path = genome_path_legacy
+        if genome_path_alias and genome_path_alias != genome_path_legacy:
+            log.warning(
+                "CYMATIX_STORE_PATH=%r ignored: legacy CYMATIX_GENOME_PATH=%r "
+                "also set and wins", genome_path_alias, genome_path_legacy,
+            )
+    elif genome_path_alias:
+        cfg.genome.path = genome_path_alias
 
     # Server env overrides — lets launchers/profiles redirect Cymatix to a
     # different chat upstream without rewriting cymatix.toml on disk.
@@ -1488,6 +1606,12 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
         except tomllib.TOMLDecodeError as exc:
             log.error("cymatix.toml is malformed (%s) — using defaults", exc)
             return _apply_env_overrides(CymatixConfig())
+
+    # ROSETTA Tier 2: fold canonical-name aliases onto their legacy TOML
+    # keys before any section dispatch below sees ``raw``, then flag any
+    # top-level section neither dispatch nor the alias table recognizes.
+    raw = _apply_lexicon_aliases(raw)
+    _warn_unknown_sections(raw)
 
     cfg = CymatixConfig()
 

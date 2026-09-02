@@ -338,15 +338,16 @@ class CymatixSession:
         return StatsResult(
             total_genes=int(raw.get("total_genes", 0) or 0),
             total_codons=int(raw.get("total_codons", 0) or 0),
-            chromatin_open=int(raw.get("chromatin_open", 0) or 0),
-            chromatin_eu=int(raw.get("chromatin_euchromatin", 0) or 0),
-            chromatin_hetero=int(raw.get("chromatin_heterochromatin", 0) or 0),
+            chromatin_open=int(raw.get("open", raw.get("chromatin_open", 0)) or 0),
+            chromatin_eu=int(raw.get("euchromatin", raw.get("chromatin_euchromatin", 0)) or 0),
+            chromatin_hetero=int(raw.get("heterochromatin", raw.get("chromatin_heterochromatin", 0)) or 0),
             compression_ratio=float(raw.get("compression_ratio", 0.0) or 0.0),
             metadata={
                 k: v
                 for k, v in raw.items()
                 if k not in {
                     "total_genes", "total_codons",
+                    "open", "euchromatin", "heterochromatin",
                     "chromatin_open", "chromatin_euchromatin",
                     "chromatin_heterochromatin", "compression_ratio",
                 }

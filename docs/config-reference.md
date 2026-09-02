@@ -42,9 +42,22 @@ the markers (this intro, each section's **Purpose**, **Example**,
 `tests/test_config_reference_sync.py` fails if a generated region ever
 drifts from a fresh run of the script (issue #219 slice 4).
 
+Two section headings are also generator-managed
+(`<name>.heading` marker regions): `[ribosome]` and `[genome]` carry a
+ROSETTA Tier 2 (`docs/ROSETTA.md`) canonical software-term alias —
+`[compressor]` and `[knowledge_store]` respectively — sourced from
+`cymatix_context.config._SECTION_ALIASES` and rendered canonical-name
+primary, legacy name in parentheses:
+`## [compressor] (legacy alias: [ribosome])`. Both TOML spellings work
+in `cymatix.toml`; on a collision the legacy `[ribosome]` /
+`[genome]` table wins and the loader logs a `WARNING` naming both. Every
+other section heading below has no alias and stays fully hand-authored.
+
 ---
 
-## `[ribosome]`
+<!-- BEGIN GENERATED: config-tables:ribosome.heading -->
+## `[compressor]` (legacy alias: `[ribosome]`)
+<!-- END GENERATED -->
 
 **Purpose.** The compressor is the optional enrichment layer that runs an
 LLM (Ollama / DeBERTa / LiteLLM / Claude) for ingest-time document packing,
@@ -180,7 +193,15 @@ character cap inside the foveated splice schedule. Stage-4
 calibration adds a per-classifier override path for `foveated_alpha`
 (see `[abstain]`).
 
-**Keys.**
+**Keys.** `retrieval_tokens` and `max_docs_per_turn` are ROSETTA Tier 2
+(`docs/ROSETTA.md`) canonical-name aliases for the legacy
+`expression_tokens` / `max_genes_per_turn` keys below — see
+`cymatix_context.config._KEY_ALIASES`. Either spelling works in
+`[budget]`; on a collision the legacy key wins and the loader logs a
+`WARNING` naming both. The alias spellings are not separate
+`BudgetConfig` dataclass fields, so the generated table (field-derived,
+see the intro above) lists only the legacy names actually stored on
+the dataclass.
 
 <!-- BEGIN GENERATED: config-tables:budget -->
 | Key | Type | Default | Description |
@@ -310,7 +331,9 @@ synthetic_session_enabled = true
 
 ---
 
-## `[genome]`
+<!-- BEGIN GENERATED: config-tables:genome.heading -->
+## `[knowledge_store]` (legacy alias: `[genome]`)
+<!-- END GENERATED -->
 
 **Purpose.** SQLite knowledge store path, compaction cadence, persistence
 shape. The 2026-04-16 fresh-rebuild swapped to `genomes/main/` as the
@@ -334,8 +357,10 @@ shard router.
 `path`'s generated default (`genome.db`, the bare code-default) differs
 from the **shipped** `cymatix.toml` value (`genomes/main/genome.db`,
 CLAUDE.md's documented default) — see the Migration notes below.
-Override via the `CYMATIX_GENOME_PATH` env var, honored even when the
-`[genome]` section is absent from `cymatix.toml`.
+Override via the `CYMATIX_STORE_PATH` env var (canonical alias for legacy
+`CYMATIX_GENOME_PATH`), honored even when the `[genome]` section is absent
+from `cymatix.toml`. If both are set, `CYMATIX_GENOME_PATH` wins with a
+warning.
 
 **Example.**
 
@@ -351,9 +376,10 @@ replica_sync_interval = 100
 **Migration notes.** No time-based decay. Documents never expire.
 2026-04-16 rebuild migrated from `F:/Projects/cymatix-context/genome.db`
 (old master) and `C:/cymatix-cache/genome.db` (old replica with
-backfill) to the new `genomes/` folder. `CYMATIX_GENOME_PATH` env var
-overrides this path so sharded vs monolithic servers can coexist on
-different ports without duplicating `cymatix.toml`.
+backfill) to the new `genomes/` folder. `CYMATIX_STORE_PATH` (canonical alias
+for legacy `CYMATIX_GENOME_PATH`) overrides this path so sharded vs monolithic
+servers can coexist on different ports without duplicating `cymatix.toml`. If
+both are set, `CYMATIX_GENOME_PATH` wins with a warning.
 
 **Cross-refs.** `cymatix_context/config.py:165-171` (`GenomeConfig`),
 `docs/archive/FUTURE/GENOME_SHARDING.md` (phase-2 sharding plan).
@@ -1389,8 +1415,10 @@ priority order (highest priority wins):
    - `CYMATIX_CONFIG` — path to the TOML file (defaults to
      `cymatix.toml`). Read in
      `cymatix_context/config.py:520-521`.
-   - `CYMATIX_GENOME_PATH` — overrides `[genome] path` after the TOML
-     load. Read in `cymatix_context/config.py:611-612`.
+   - `CYMATIX_STORE_PATH` — canonical alias; overrides `[genome] path` after
+     the TOML load. Legacy `CYMATIX_GENOME_PATH` also works; if both are set,
+     `CYMATIX_GENOME_PATH` wins with a warning. Read in
+     `cymatix_context/config.py:611-612`.
    - `CYMATIX_SERVER_UPSTREAM` — overrides `[server] upstream`. Read in
      `cymatix_context/config.py:616-617`.
    - `CYMATIX_SERVER_UPSTREAM_TIMEOUT` — overrides `[server]
