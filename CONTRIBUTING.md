@@ -26,9 +26,10 @@ Unsigned PRs stay blocked from merging. Maintainers are allowlisted.
 
 ## Branches and releases
 
-- Open PRs against **`beta`**, the integration branch. `master` holds released
-  code and tags only; the only PRs that target it are `release/vX.Y.Z` cuts
-  and `hotfix/*` branches.
+- Open PRs against **`beta`**, the integration branch. It is the repository's
+  default branch, so a new PR already targets it. `master` holds released code
+  and tags only; the only PRs that target it are `release/vX.Y.Z` cuts and
+  `hotfix/*` branches, and a `release-source` check rejects anything else.
 - A default flip needs its receipt and `docs/benchmarks/BASELINES.md` row in
   the same PR, and the knob ships default-inert in a separate PR first.
 - Pre-releases (`vX.Y.ZbN`, `pip install --pre cymatix-context`) are cut from

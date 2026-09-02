@@ -22,7 +22,14 @@ Subcommands:
                                 and leave a fresh empty "## Unreleased"
                                 heading above it
     tag-message --version X     print the annotated-tag message drafted
-                                from that CHANGELOG section
+                                from that CHANGELOG section; --body-only
+                                omits the leading "vX.Y.Z" title line, which
+                                is what `gh release create --notes-file`
+                                wants (it already shows the title)
+
+`pre` and `final` both refuse an empty "## Unreleased" section: a release
+with no changelog body has nothing to put in its tag message or its release
+notes, and that is true of a pre-release too.
 
 Every editing subcommand is a dry run by default and prints a unified
 diff; pass --write to apply. --repo-root points at a different checkout
@@ -338,6 +345,13 @@ def cmd_pre(root: Path, n: int, write: bool, date: str, version_base: str | None
     current = read_pyproject_version(files[PYPROJECT][0])
     if current != read_init_version(files[INIT][0]):
         raise ReleaseError("version files disagree; run `release.py check` first")
+    # Same precondition as `final`: the pre-release's tag message and GitHub
+    # release notes are drafted from "## Unreleased" (see cmd_tag_message's
+    # fallback), so an empty section would ship an empty release.
+    if not unreleased_body(files[CHANGELOG][0]).strip():
+        raise ReleaseError(
+            f"{CHANGELOG}: '## Unreleased' is empty; nothing to pre-release"
+        )
     base = next_prerelease_base(current, version_base)
     version = f"{base}b{n}"
     tag = f"v{version}"
@@ -357,9 +371,10 @@ def cmd_pre(root: Path, n: int, write: bool, date: str, version_base: str | None
         f'git commit -m "release: {tag} pre-release"',
         "git push origin HEAD:refs/heads/beta",
         f"python scripts/release.py tag-message --version {version} > tagmsg.txt",
+        f"python scripts/release.py tag-message --version {version} --body-only > notes.md",
         f"git tag -a {tag} -F tagmsg.txt",
         f"git push origin {tag}",
-        f'gh release create {tag} --prerelease --title "{tag}" --notes-file tagmsg.txt',
+        f'gh release create {tag} --prerelease --title "{tag}" --notes-file notes.md',
         "(publish.yml fires on the published pre-release and uploads it to PyPI)",
     ])
     return 0
@@ -385,21 +400,22 @@ def cmd_final(root: Path, version: str, write: bool, date: str) -> int:
     _print_next([
         "python -m pytest tests/test_version.py -q",
         f"python scripts/release.py tag-message --version {version} > tagmsg.txt",
+        f"python scripts/release.py tag-message --version {version} --body-only > notes.md",
         f"git add {PYPROJECT} {INIT} {CHANGELOG}",
         f'git commit -m "release: {tag}"',
         f"git push origin HEAD:refs/heads/release/{tag}",
-        f'gh pr create --base master --head release/{tag} --title "release: {tag}" --body-file tagmsg.txt',
+        f'gh pr create --base master --head release/{tag} --title "release: {tag}" --body-file notes.md',
         "(after the PR merges with a merge commit)",
         "git fetch origin && git checkout master && git pull --ff-only",
         f"git tag -a {tag} -F tagmsg.txt",
         f"git push origin {tag}",
-        f'gh release create {tag} --title "{tag}" --notes-file tagmsg.txt',
+        f'gh release create {tag} --title "{tag}" --notes-file notes.md',
         "(publish.yml fires on the published release and uploads it to PyPI)",
     ])
     return 0
 
 
-def cmd_tag_message(root: Path, version: str) -> int:
+def cmd_tag_message(root: Path, version: str, body_only: bool = False) -> int:
     parse_version(version)
     text, _ = _read(root / CHANGELOG)
     try:
@@ -414,7 +430,10 @@ def cmd_tag_message(root: Path, version: str) -> int:
     body = body.strip("\n")
     if not body:
         raise ReleaseError(f"{CHANGELOG}: section for {version} is empty")
-    sys.stdout.write(f"v{version}\n\n{body}\n")
+    # An annotated tag has no title field, so `git tag -F` wants the "vX.Y.Z"
+    # line; a GitHub release renders its own title, so --notes-file wants the
+    # body alone rather than the version repeated above it.
+    sys.stdout.write(f"{body}\n" if body_only else f"v{version}\n\n{body}\n")
     return 0
 
 
@@ -466,6 +485,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_tag = sub.add_parser("tag-message", help="print the annotated-tag message for a version")
     p_tag.add_argument("--version", required=True)
+    p_tag.add_argument(
+        "--body-only",
+        action="store_true",
+        help="omit the leading vX.Y.Z line (for `gh release create --notes-file`, "
+             "which already renders the title)",
+    )
     return ap
 
 
@@ -485,7 +510,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "final":
             return cmd_final(root, version=args.version, write=args.write, date=date)
         if args.command == "tag-message":
-            return cmd_tag_message(root, version=args.version)
+            return cmd_tag_message(root, version=args.version, body_only=args.body_only)
     except ReleaseError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
