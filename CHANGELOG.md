@@ -117,6 +117,36 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   the behavior-changing variant (bound or batch the list so Tier 5 can fire on
   large populated beds) stays open on #431.
 
+- **fix(retrieval): the ΣĒMA vectorless auto-gate now arms by a one-shot
+  probe on full-pool queries, not only on the undersized-pool cycle (port of
+  campaign-branch `2259cbf`; default-inert).** The gate (`_sema_vectorless`)
+  was armed exclusively from `_build_sema_cache()`, which runs only when the
+  lexical tiers leave the candidate pool undersized (`len(gene_scores) <
+  limit // 2`) — so on a vectorless bed whose queries always fill the pool
+  (100k / 829k) it never armed and every query paid the Tier-4
+  `codec.encode()` RTT for a tier that cannot produce a candidate.
+  `KnowledgeStore._probe_sema_vectorless()` closes that with a single
+  `SELECT 1 FROM genes WHERE embedding IS NOT NULL LIMIT 1`, memoized per
+  store lifetime by `_sema_probe_done` and re-armed by
+  `invalidate_sema_cache()`; a failing probe degrades to the pre-gate
+  behaviour. Beds with vectors are byte-identical (the probe finds a row and
+  arms nothing). **At shipped defaults this is unreachable**: `[ingestion]
+  sema_embed_on_ingest = false` (#371) leaves `_sema_codec` `None`, so only
+  opt-in ΣĒMA beds are affected. `ShardedGenomeAdapter` gets the matching
+  no-op shim. Tests: `tests/test_sema_vectorless_gate.py` (4 new; 3 were
+  red on beta before the port), plus two entity-graph delivered-set
+  blast-radius regression tests in `tests/test_d8_entity_graph.py` (port of
+  `cf101bc`; already green on beta, pure coverage).
+
+- **docs: the 2026-08-09 A/B data campaign's analysis and plan are ported
+  from `claude/ab-data-cymatics-pki-dff9c6`** —
+  `docs/benchmarks/2026-08-09-candidate-cascade-map.md` (`daaa6af`, "PKI
+  admits zero gold") and `docs/superpowers/plans/2026-08-09-ab-data-campaign.md`
+  (`fe2ef73`/`b164be4`), each with a port-provenance block; their ~5.4 MB of
+  wave0a/wave3b/wave3d ladder receipts are archived in the `cymatix-receipts`
+  repository (`mirror-branches/claude__ab-data-cymatics-pki-dff9c6/`), not
+  ported, and ledger Addendum 7's receipt pointer now cites that mirror.
+
 - **bench (no default moves):**
   - **#427 — 947k `min_delivered_docs` width curve, 12 confirmed:** delivered
     **0.6298 → 0.6447 → 0.6681** at floor 0 / 6 / 12, delivered sets strictly
