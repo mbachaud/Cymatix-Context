@@ -178,10 +178,14 @@ def test_store_cutoff_drops_hub_dependent_edges(tmp_path):
 
 # ── config level ─────────────────────────────────────────────────────
 
-def test_ingestion_config_default_is_disabled():
+def test_ingestion_config_default_is_200():
+    # #411 flip (2026-08-31): shipped default = 200 (PKI precedent).
+    # Legacy behavior is the explicit opt-out `entity_autolink_hub_cutoff
+    # = 0`; the bare KnowledgeStore kwarg stays 0 (non-config constructors
+    # keep byte-identical legacy linking).
     from cymatix_context.config import CymatixConfig
 
-    assert CymatixConfig().ingestion.entity_autolink_hub_cutoff == 0
+    assert CymatixConfig().ingestion.entity_autolink_hub_cutoff == 200
 
 
 def test_ingestion_config_parses_hub_cutoff(tmp_path):

@@ -291,9 +291,12 @@ entity_graph = true                     # Phase 5: entity-based co-activation li
 # sweep that made ingest O(N^2) on the enronqa_padded bed (89.5% of writer
 # wall time, 148.9 ms/insert vs 7.4 ms without the two MIME hubs;
 # benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json).
-# PKI_NOISE_CUTOFF = 200 (storage/indexes.py) is the precedent value for a
-# future default flip. 0 = disabled = legacy behavior, byte-identical.
-entity_autolink_hub_cutoff = 0
+# PKI_NOISE_CUTOFF = 200 (storage/indexes.py) is the precedent value.
+# Default 200 since 2026-08-31 (#411 flip) — condition receipts: retrieval
+# null on the v2/v2c cutoff twins (0/500 flips) + post-tagger-v2 hub
+# re-probe (natural hubs persist; 0.22% of entities hold 30.1% of
+# postings at 200). 0 = disabled = legacy unbounded probe set.
+entity_autolink_hub_cutoff = 200
 # Compute the 20D MiniLM SEMA embedding (gene.embedding) inline at ingest
 # (the #227 knob). Default off since 2026-08-19 (#371): at shipped defaults
 # its only live retrieval consumer is the Tier-4 sema_boost re-rank

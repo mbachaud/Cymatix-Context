@@ -1,0 +1,184 @@
+{
+ "tool": "scripts/receipt_entity_hub_cutoff.py (read-only SQL replay)",
+ "stamp": "2026-08-31T08:29:51Z",
+ "subject": {
+  "db": "F:/tmp/enronqa_bed_v3/enronqa.db",
+  "code": "911fd12",
+  "genes": 84677,
+  "genes_after_run": 84677,
+  "bed_stable_during_run": true,
+  "entity_graph_rows": 925220,
+  "gene_relations_rows": 702631,
+  "sample": 500,
+  "seed": 53416,
+  "linkable_genes": 83032
+ },
+ "method_caveats": [
+  "probe sets read back from entity_graph: deduplicated lowercase, insertion order lost (order-invariant for the SELECT and the confidence denominator; dedup only differs for genes that carried case-duplicate entities)",
+  "replay against FINAL bed state; real edges form against insert-time state (both arms replay identically, so the A/B delta is like-for-like)",
+  "ORDER BY shared DESC LIMIT 10 tie order is unspecified; edge sets compared as sets, and real ingest is already order-nondeterministic under --parallel (ingest_equivalence_enronqa.json)",
+  "no writes: edges computed in Python from the SELECT rows (the linker's INSERT is deterministic from them)"
+ ],
+ "hub_probe": {
+  "scan_wall_s": 0.18,
+  "distinct_entities": 202844,
+  "total_postings": 925220,
+  "median_postings_per_entity": 1.0,
+  "top20": {
+   "enron": 16048,
+   "houston": 8696,
+   "ect": 8133,
+   "california": 5116,
+   "jeff": 4117,
+   "texas": 3549,
+   "john": 3276,
+   "fyi": 3146,
+   "mark": 3053,
+   "ferc": 2794,
+   "enron north america corp.": 2674,
+   "us": 2368,
+   "chris": 2317,
+   "u.s.": 2212,
+   "mike": 2159,
+   "london": 2129,
+   "steve": 2129,
+   "new york": 2120,
+   "jim": 2064,
+   "ena": 1949
+  },
+  "cutoff_ladder": {
+   "50": {
+    "entities_above": 2111,
+    "entities_above_pct": 1.0407,
+    "postings_held": 432454,
+    "postings_held_pct": 46.74
+   },
+   "100": {
+    "entities_above": 996,
+    "entities_above_pct": 0.491,
+    "postings_held": 355308,
+    "postings_held_pct": 38.4
+   },
+   "200": {
+    "entities_above": 441,
+    "entities_above_pct": 0.2174,
+    "postings_held": 278153,
+    "postings_held_pct": 30.06
+   },
+   "500": {
+    "entities_above": 150,
+    "entities_above_pct": 0.0739,
+    "postings_held": 188726,
+    "postings_held_pct": 20.4
+   },
+   "1000": {
+    "entities_above": 51,
+    "entities_above_pct": 0.0251,
+    "postings_held": 121939,
+    "postings_held_pct": 13.18
+   },
+   "5000": {
+    "entities_above": 4,
+    "entities_above_pct": 0.002,
+    "postings_held": 37993,
+    "postings_held_pct": 4.11
+   },
+   "10000": {
+    "entities_above": 1,
+    "entities_above_pct": 0.0005,
+    "postings_held": 16048,
+    "postings_held_pct": 1.73
+   },
+   "50000": {
+    "entities_above": 0,
+    "entities_above_pct": 0.0,
+    "postings_held": 0,
+    "postings_held_pct": 0.0
+   }
+  }
+ },
+ "ab_replay": {
+  "genes_probed": 500,
+  "posting_rows_swept_per_call": {
+   "mean": 8306.83,
+   "median": 4409.0,
+   "p95": 25495.0
+  },
+  "arm_a_ms_run1": {
+   "mean": 4.15,
+   "median": 2.23,
+   "p95": 13.47
+  },
+  "arm_a_ms_run2_warm": {
+   "mean": 3.73,
+   "median": 1.88,
+   "p95": 12.44
+  },
+  "cutoffs": {
+   "100": {
+    "arm_b_ms": {
+     "mean": 0.39,
+     "median": 0.37,
+     "p95": 0.74
+    },
+    "entities_filtered_mean": 4.15,
+    "edges_a": 4548,
+    "edges_b": 2368,
+    "lost": 3088,
+    "gained": 908,
+    "kept_same": 245,
+    "kept_conf_changed": 1215,
+    "genes_skipped_lt2_survivors": 24,
+    "genes_edge_set_identical": 39
+   },
+   "200": {
+    "arm_b_ms": {
+     "mean": 0.42,
+     "median": 0.39,
+     "p95": 0.87
+    },
+    "entities_filtered_mean": 3.28,
+    "edges_a": 4548,
+    "edges_b": 2984,
+    "lost": 2746,
+    "gained": 1182,
+    "kept_same": 361,
+    "kept_conf_changed": 1441,
+    "genes_skipped_lt2_survivors": 12,
+    "genes_edge_set_identical": 52
+   },
+   "500": {
+    "arm_b_ms": {
+     "mean": 0.6,
+     "median": 0.55,
+     "p95": 1.34
+    },
+    "entities_filtered_mean": 2.21,
+    "edges_a": 4548,
+    "edges_b": 3672,
+    "lost": 2219,
+    "gained": 1343,
+    "kept_same": 592,
+    "kept_conf_changed": 1737,
+    "genes_skipped_lt2_survivors": 7,
+    "genes_edge_set_identical": 84
+   },
+   "1000": {
+    "arm_b_ms": {
+     "mean": 0.9,
+     "median": 0.76,
+     "p95": 2.18
+    },
+    "entities_filtered_mean": 1.42,
+    "edges_a": 4548,
+    "edges_b": 4102,
+    "lost": 1708,
+    "gained": 1262,
+    "kept_same": 1168,
+    "kept_conf_changed": 1672,
+    "genes_skipped_lt2_survivors": 3,
+    "genes_edge_set_identical": 150
+   }
+  }
+ }
+}
