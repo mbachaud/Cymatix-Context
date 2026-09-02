@@ -2,6 +2,168 @@
 
 ## Unreleased
 
+**Ingest at scale and the #411 default flip (PRs #424, #425), a
+default-inert W2.2 combinator with its kill receipt (#428), a never-swallow
+fix on the harmonic tier (#432), and the 0.9.2 bench ledger (#426, #427,
+#429). One default moves — `[ingestion] entity_autolink_hub_cutoff` — and it
+supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
+
+- **DEFAULT FLIP: `[ingestion] entity_autolink_hub_cutoff` `0` → `200`
+  (#425, closes #411).** The 0.9.1 entry below ("default `0` = off = legacy,
+  byte-identical; flip proposal tracked in #411") is superseded — a fresh
+  install now drops entities with more than 200 `entity_graph` postings from
+  the auto-link probe set. Both #411 flip conditions are receipted:
+  (1) **retrieval null** —
+  `benchmarks/dogfood/receipts/entity_hub_cutoff_retrieval_ab_enronqa_2026-08-30.json`,
+  the `enronqa_bed_v2` / `v2c` cutoff twins (0 vs 200, gene-id-set digests
+  identical `158fa8a3…` = content-equality proof, n=500): delivered / r@12 /
+  fr@12 / median rank identical to full precision, **0/500 per-needle
+  delivered flips in both the 0.9.0 and 0.9.1 configs**; (2) **post-tagger-v2
+  re-measure** —
+  `benchmarks/dogfood/receipts/entity_hub_cutoff_reprobe_85k_taggerv1_2026-08-30.json`
+  and `…_reprobe_85k_taggerv2_2026-08-31.json`, paired 500-document read-only
+  replays on content-identical 84,677-gene beds (v2 = tagger v1, v3 = tagger
+  v2): tagger v2 removes 15.2% of distinct entities (239,302 → 202,844) but the
+  natural hub population persists and grows slightly (`enron` 15,397 → 16,048
+  postings — junk removal frees slots in the 15-entity cap); at cutoff 200,
+  **0.22% of entities (441) still hold 30.1% of postings**, and the mean
+  per-link call falls **4.15 → 0.42 ms** at 85k (~340× in the #412 padded-bed
+  receipt). What changes on disk: which relation=5
+  COVER edges form (v3 replay sample: 4,548 → 2,984 edges, 2,746 lost / 1,182
+  gained) — query-inert at shipped defaults (W2.1 cover-walk kill receipt,
+  #408), and the padded 597k bed built at cutoff 200 is the same bed the 0.9.1
+  gate sweep certified. Scope: `IngestionConfig`, shipped `cymatix.toml`, and
+  `docs/config-reference.md` move to `200`; the bare `KnowledgeStore` kwarg
+  default stays `0` (non-config constructors keep byte-identical legacy
+  linking — the `rrf_k` flip pattern); the bench builder is unchanged and reads
+  the cutoff only from `CYMATIX_BFM_HUB_CUTOFF`. **Opt back in to legacy
+  linking: `entity_autolink_hub_cutoff = 0`.** Tests:
+  `tests/test_entity_autolink_hub_cutoff.py` (default assertion flipped),
+  `tests/test_config_default_honesty.py` ratchet.
+
+- **perf(storage): `idx_filename_gene` index on `filename_index(gene_id)` +
+  `KnowledgeStore(entity_autolink=False)` scheduling knob (#424) — the
+  residual >150k-document ingest decay is closed.** The per-upsert
+  `DELETE FROM filename_index WHERE gene_id = ?`
+  (`storage/indexes.py::sync_filename_index`) was a full-table scan (`EXPLAIN`
+  = `SCAN filename_index`; 571,999 rows on the finished bed), i.e. O(N) per
+  insert: **42.7 ms warm scan at 572k rows vs 0.002 ms indexed (~20,000×)**.
+  Receipt
+  `benchmarks/dogfood/receipts/ingest_residual_decay_enronqa_2026-08-30.json`
+  (the cutoff-200 full rebuild, 596,707 documents in 4h58m against a ~26h
+  uncapped trajectory): the O(N²) signature is gone, worker tagging throughput
+  is flat ~50 docs/s to 580k, and the writer's residual decay is linear in N
+  (38.4 → 32.7 docs/s over 479k → 656k processed) — it reconciles exactly with
+  the unindexed DELETE; FTS5 stays refuted (0.07% of writer wall). The index
+  is content-neutral (no document, tag, or edge changes); **existing stores
+  gain it on their next writable open** (the DDL pass calls
+  `filename_anchor.ensure_schema`). With it, bulk builds become tagging-bound
+  (~3.3 h projected for the 517k-file bed). The scheduling knob —
+  `KnowledgeStore(entity_autolink=False)`, and `--no-entity-autolink` /
+  `CYMATIX_BFM_ENTITY_AUTOLINK=0` on `scripts/build_fixture_matrix.py` — skips
+  COVER-edge formation while still writing `entity_graph` rows (equivalence
+  receipt: only default-inert relation=5 edges differ); `sync_entity_graph`
+  threads it with the hub cutoff as **off > cutoff > legacy**. Default
+  unchanged (auto-link on). Narrative:
+  `docs/benchmarks/2026-08-30-enronqa-ingest-decay.md`. Tests:
+  `tests/test_entity_autolink_schedule.py`.
+
+- **feat(retrieval): `eps_band_coverage` combinator — opt-in, default-inert
+  (#428; W2.2-narrow, KILLED by its own receipt, kept as an arm).** Identical
+  ε-band walk to `eps_band`; inside a band, distinct-query-term coverage breaks
+  the tie first (then rerank, then fused, then id). Coverage is computed only
+  when a query's effective combinator selects it (top-60 fused head, one
+  SELECT, `coverage_tiebreak` signal), so the shipped map (all five classes →
+  `eps_band`) pays nothing. `retrieval/rerank_combinators.py::VALID_COMBINATORS`
+  is now the single source of truth for the combinator names (validated at
+  config load and in `KnowledgeStore.__init__`, replacing a drifted literal
+  tuple). The evidence for it —
+  `benchmarks/dogfood/erb/receipts/semantic_above_gold_947k_2026-08-31.json`,
+  gold out-covers the interloper majority on 16/21 rank-reachable ERB semantic
+  misses — and the kill —
+  `benchmarks/dogfood/erb/receipts/w22_coverage_kill_2026-08-31.json`, full
+  470-needle arm on the 947k bed vs the floor-12 reference: **delivered 0.6681
+  → 0.6681, +0/−0 paired in every class**, 0/21 audit targets converted, fr@12
+  +1 needle, 67/470 final-rank moves (the mechanism ran as designed). Cause of
+  death is band geometry, not signal validity: at `rrf_k = 20` the fused head
+  decays ~36% relative by rank 13, so rank-13+ gold never shares an ε band with
+  the top-12, and widening δ reintroduces the unbanded-additive failure wave-1
+  measured (semantic r@12 0.32 → 0.16). Opt in per class with
+  `rerank_combinator_by_class = { <class> = "eps_band_coverage" }`. Tests: 8
+  new in the combinator suite; `tests/test_sharded_adapter_parity.py`
+  whitelists `_coverage_for` (per-shard `query_docs` helper, same convention
+  as `_rerank_effective` / `_score_rerank`).
+
+- **fix(retrieval): the harmonic tier warns and skips over
+  `SQLITE_LIMIT_VARIABLE_NUMBER` instead of silently failing (#432, closes
+  #431 tier 1).** Tier 5 binds the whole pre-shortlist candidate pool twice
+  (`gene_id_a IN (...) AND gene_id_b IN (...)`). On bulk beds that pool comes
+  off the unbounded tag lanes — receipt
+  `benchmarks/dogfood/erb/receipts/harmonic_off_dilution_2026-09-01.json`
+  (`harmonic_tier_liveness`, PR #429): ERB 947k median 171,745 candidates, max
+  550,202, i.e. ~343k bound parameters against `SQLITE_LIMIT_VARIABLE_NUMBER`
+  = 32,766 — so SQLite raised `OperationalError: too many SQL variables` and
+  the bare `except Exception:` swallowed it at DEBUG; the tier never fired on
+  any large bed and nobody was told (a never-swallow-rule violation).
+  `query_docs` now probes `connection.getlimit(SQLITE_LIMIT_VARIABLE_NUMBER)`
+  (new `_sqlite_variable_limit` helper, fallback 999 where `getlimit` is
+  unavailable), skips the harmonic query with **one `log.warning` per store
+  instance** when `2 × len(candidate_ids)` exceeds it, and the bare except now
+  logs at WARNING with `exc_info`. **Ranking is byte-identical below the
+  limit** — same SQL, same bonus arithmetic, same `fuser.add_tier` call, pinned
+  by `tests/test_harmonic_tier_limit.py` (dict-equal `last_query_scores` /
+  `last_tier_contributions` against a never-skip run). `harmonic_links` holds 0
+  rows on every current bench bed, so shipped ranking is unaffected either way;
+  the behavior-changing variant (bound or batch the list so Tier 5 can fire on
+  large populated beds) stays open on #431.
+
+- **bench (no default moves):**
+  - **#427 — 947k `min_delivered_docs` width curve, 12 confirmed:** delivered
+    **0.6298 → 0.6447 → 0.6681** at floor 0 / 6 / 12, delivered sets strictly
+    nested (+7/−0, then +11/−0), map + final ranks byte-identical across all
+    three arms; floor 6 forfeits 11 needles because the classifier's 8-cap
+    class is never lifted (BASELINES row `2026-08-31-floor-width-curve-947k`,
+    receipt `benchmarks/dogfood/erb/receipts/floor_width_curve_947k_2026-08-31.json`).
+    The EnronQA paraphrase crater is closed as a lane — lexical anchor loss on
+    25/31 orig-hit/rephrase-miss pairs, coverage discrimination killed for
+    that corpus (`docs/benchmarks/2026-08-30-enronqa-paraphrase-crater.md`);
+    the ERB semantic-cap decomposition (`semantic_vocab_gap_947k` /
+    `semantic_above_gold_947k` receipts) is what revived W2.2 for #428.
+  - **#426 — semantic-portfolio lane: LoCoMo(+Plus), MULocBench, and
+    FinanceBench adapters + baselines** (emitter → profile → resolver → ladder,
+    the EnronQA pattern; all beds tagger-v2). Baselines on shipped v0.9.1
+    defaults: LoCoMo delivered 0.4348 / r@12 0.4857 (n=2,378; the cognitive
+    split is a 3/401 blackout that the paper's own dense baselines fail
+    identically), MULocBench delivered 0.444 / r@12 0.481 (n=680; exact-commit
+    subset n=70: 0.500 / 0.571), FinanceBench delivered 0.153 (n=150;
+    metrics-generated 0/50 — a doc-routing blackout). **New-corpus rows, NOT
+    comparable to any ERB or EnronQA row.** Receipts under
+    `benchmarks/dogfood/{locomo,muloc,financebench}/receipts/`; campaign doc
+    `docs/research/2026-08-31-semantic-portfolio-lane.md`; the
+    `expression_tokens` 7000 → 14000 cell is NULL on both corpus families.
+  - **#429 — ERB 947k Phase-1/2 admission campaign, verdict doc
+    `docs/research/2026-09-01-erb-phase2-admission-verdict.md`:** the
+    admission thesis LIVES with corrections — 66 of the 109 pool-absent misses
+    have gold at candidate depth 1000 (pre-registered kill under 30), but depth
+    never improves gold's fused rank (0 better / 38 same / 69 worse of 107) and
+    a bare depth-1000 flip projects **0.634 [0.572, 0.661] vs 0.668 shipped**;
+    no default moves. Receipts
+    `benchmarks/dogfood/erb/receipts/pool_depth_forensics_2026-09-01.json`,
+    `pool_depth_addendum_2026-09-01.json` (+ `.NOTE.md`), and the four
+    `verify_a1_*_2026-09-01.json` lenses.
+
+- **Known (0.9.2):** `[budget] min_delivered_docs` does not floor the
+  TIGHT/FOCUSED budget-tier cuts (`pipeline/tier_logic.py` `candidates[:3]` /
+  `candidates[:6]`, applied before the floored classifier cap): **152 of 470
+  ERB 947k needles deliver 6 seats at floor 12**, including 119 of the 314
+  hits, and the seat count flips 6 ↔ 12 on 33/216 needles when only admission
+  knobs move — every delivery-based A/B on that bed is confounded until the
+  floor reaches the tier cut. Receipt
+  `benchmarks/dogfood/erb/receipts/verify_a1_completeness_2026-09-01.json`.
+  The fix (extend the same knob to the tier cuts) changes shipped seat counts
+  on ~32% of ERB needles, so it is receipt-gated and tracked in #430, not
+  patched here.
+
 **ROSETTA Tier 2 — software-lexicon aliases (spec:
 `docs/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`).**
 Additive-only canonical-name aliases across the config, CLI, HTTP, and MCP
