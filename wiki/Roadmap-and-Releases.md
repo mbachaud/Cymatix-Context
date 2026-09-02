@@ -14,7 +14,35 @@
 - **Install from PyPI:** `pip install cymatix-context`. Released versions are
   git-tagged (`v0.9.1`, `v0.9.0`, …) on the repository.
 - This wiki documents **0.9.1**, released 2026-08-30. Each item below carries
-  its PR or issue number.
+  its PR or issue number. The first section lists what has landed on `master`
+  since the tag and is headed for **0.9.2**.
+
+## Unreleased / 0.9.2 — what follows the 0.9.1 tag
+
+Nine threads follow the 0.9.1 tag. One moves a default —
+`[ingestion] entity_autolink_hub_cutoff` 0 → 200 — and the rest are additive,
+default-inert, a logging fix, or bench-only. Every number here is copied from
+the receipt named in the matching `CHANGELOG.md` Unreleased entry.
+
+| Thread | What it is | Default impact |
+|---|---|---|
+| Tier-2 lexicon aliases ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) | `[compressor]` / `[knowledge_store]` config sections, `retrieval_tokens` / `max_docs_per_turn` keys, `CYMATIX_STORE_PATH`, `cymatix document get`, `--max-docs`, `GET /documents/{id}`, canonical `cymatix_document_*` MCP tools | Additive only; legacy wins on collision |
+| Wiki, README, Tier-1 prose sweep ([#420](https://github.com/mbachaud/Cymatix-Context/pull/420)) | This wiki as the docs source of truth (GitHub wiki + cymatixcontext.com/wiki), README cut to a landing page, `docs/ROSETTA.md` retired to a stub | Docs only |
+| `filename_index` gene_id index + auto-link scheduling knob ([#424](https://github.com/mbachaud/Cymatix-Context/pull/424)) | The per-upsert `DELETE` was a full-table scan — **42.7 ms → 0.002 ms** at 572k rows; `KnowledgeStore(entity_autolink=False)` skips COVER-edge formation | Content-neutral; existing stores gain the index on their next writable open |
+| Entity auto-link hub cutoff flip ([#425](https://github.com/mbachaud/Cymatix-Context/pull/425), closes [#411](https://github.com/mbachaud/Cymatix-Context/issues/411)) | `[ingestion] entity_autolink_hub_cutoff` **0 → 200**; both flip conditions receipted (retrieval null 0/500; hubs persist under tagger v2, per-link 4.15 → 0.42 ms) | **Changes defaults** — ingest-side only; `0` opts back out |
+| Semantic-portfolio bench lane ([#426](https://github.com/mbachaud/Cymatix-Context/pull/426)) | LoCoMo(+Plus), MULocBench, and FinanceBench adapters + baselines (delivered 0.4348 / 0.444 / 0.153) | Bench only — new-corpus rows, not comparable to ERB or EnronQA rows |
+| Paraphrase crater, floor width curve, semantic-cap decomposition ([#427](https://github.com/mbachaud/Cymatix-Context/pull/427)) | Floor 0 / 6 / 12 → delivered **0.6298 / 0.6447 / 0.6681** on the 947k bed, strictly nested — 12 confirmed | Bench only |
+| `eps_band_coverage` combinator ([#428](https://github.com/mbachaud/Cymatix-Context/pull/428)) | W2.2-narrow distinct-term tie-break inside the ε band; killed by its own receipt (**+0 / −0** delivered on 947k) | Default-inert; opt in per class |
+| ERB Phase-1/2 admission campaign ([#429](https://github.com/mbachaud/Cymatix-Context/pull/429)) | Pool-depth forensics: the admission thesis lives with corrections (66/109 pool-absent misses have gold at depth 1000), but a bare depth-1000 flip projects 0.634 vs 0.668 shipped | Bench only, no default moves |
+| Harmonic-tier bind-limit warning ([#432](https://github.com/mbachaud/Cymatix-Context/pull/432), closes [#431](https://github.com/mbachaud/Cymatix-Context/issues/431) tier 1) | Tier 5 skips with one warning per store when the candidate list would exceed `SQLITE_LIMIT_VARIABLE_NUMBER`, instead of swallowing the error at DEBUG | Ranking byte-identical below the limit |
+
+- **Known, tracked as [#430](https://github.com/mbachaud/Cymatix-Context/issues/430):**
+  `[budget] min_delivered_docs` does not floor the TIGHT/FOCUSED budget-tier
+  cuts — **152 of 470 ERB 947k needles deliver 6 seats at floor 12**, including
+  119 of the 314 hits, and the seat count flips 6 ↔ 12 on 33/216 needles when
+  only admission knobs move. The fix changes shipped seat counts on ~32% of ERB
+  needles, so it is receipt-gated (a paired ERB 947k ladder plus the v0.9.1
+  gate beds) rather than patched in 0.9.2.
 
 ## 0.9.1 (2026-08-30) — the retrieval-quality release
 
@@ -28,7 +56,7 @@ sweep in ledger row `2026-08-30-v091-gate-sweep` (ALL PASS) — see
 |---|---|---|
 | Wave-1 ranking flip ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)) | `rrf_k` 60 → 20, `eps_band` combinator extended to all five classifier classes | **Changes defaults** |
 | Delivered-seat floor ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) | New `[budget] min_delivered_docs` knob, graduated **0 → 12** in the same release | **Changes defaults** |
-| Entity auto-link hub cutoff ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)) | New `[ingestion] entity_autolink_hub_cutoff` knob | Default `0` = off (flip to `200` proposed in [#425](https://github.com/mbachaud/Cymatix-Context/pull/425), open) |
+| Entity auto-link hub cutoff ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)) | New `[ingestion] entity_autolink_hub_cutoff` knob | Default `0` = off in 0.9.1 (flipped to `200` in 0.9.2 by [#425](https://github.com/mbachaud/Cymatix-Context/pull/425)) |
 | Tagger v2 ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) | CPU ingest tagger rejects newline/tab entities and email/MIME header plumbing | **Changes new ingests** |
 | Cross-host client unification ([#406](https://github.com/mbachaud/Cymatix-Context/pull/406)) | One MCP contract and native guides for Claude Code, Codex, Gemini CLI, and Antigravity under `docs/clients/`; `cymatix status` reports host readiness and live MCP state | Additive only |
 | EnronQA second-corpus bench lane ([#422](https://github.com/mbachaud/Cymatix-Context/pull/422)) | 73,772-email corpus, 250 paired original / rephrased needles, a padded 597k bed, and the v0.9.1 gate receipts | Bench only |
@@ -74,8 +102,9 @@ sweep in ledger row `2026-08-30-v091-gate-sweep` (ALL PASS) — see
   conditions live on
   [#411](https://github.com/mbachaud/Cymatix-Context/issues/411); the
   retrieval-side condition has since been measured null (a paired EnronQA A/B,
-  0/500 delivered flips in both configs), and the flip to `200` is proposed in
-  [#425](https://github.com/mbachaud/Cymatix-Context/pull/425) — open at the time of writing.
+  0/500 delivered flips in both configs), the post-tagger-v2 re-measure shows
+  the hubs persist, and the flip to `200` ships in 0.9.2 via
+  [#425](https://github.com/mbachaud/Cymatix-Context/pull/425) — see the Unreleased section above.
 
 ### Tagger v2 (#413) — a behavior change with a version bump
 
@@ -192,7 +221,7 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
 |---|---|
 | [#417](https://github.com/mbachaud/Cymatix-Context/issues/417) | Tier 3 lexicon — `<GENE>` blocks, decoder prompts, wire field names, `/stats` keys. Needs its own byte-level A/B gate; v1.0-scale work |
 | [#418](https://github.com/mbachaud/Cymatix-Context/issues/418) | Pre-existing config bug: a known `cymatix.toml` section given a scalar instead of a table crashes `load_config` with an uncaught `AttributeError` |
-| [#411](https://github.com/mbachaud/Cymatix-Context/issues/411) | Flip proposal and conditions for `entity_autolink_hub_cutoff`; the flip itself (0 → 200) is [#425](https://github.com/mbachaud/Cymatix-Context/pull/425), open |
+| [#411](https://github.com/mbachaud/Cymatix-Context/issues/411) | Flip proposal and conditions for `entity_autolink_hub_cutoff`; both conditions receipted, the flip itself (0 → 200) is [#425](https://github.com/mbachaud/Cymatix-Context/pull/425) in 0.9.2 |
 | [#421](https://github.com/mbachaud/Cymatix-Context/issues/421) | `docs/architecture/DIMENSIONS.md` is stale on several default states and contradicts the shipped `cymatix.toml`; the wiki pages follow the TOML |
 | [#410](https://github.com/mbachaud/Cymatix-Context/issues/410) | The tagger-hygiene root cause that #413 fixes |
 
@@ -210,9 +239,9 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
 - **Defaults move separately from features.** A knob and its default flip are
   different pull requests: the knob ships default-inert with a test pinning
   byte-identical legacy behavior, and the flip is its own receipt-gated
-  change. In 0.9.1, #412's knob shipped without its flip (proposed separately
-  in #425), and #409's knob landed default-inert before its flip followed as
-  its own receipt-gated commit inside the same release.
+  change. In 0.9.1, #412's knob shipped without its flip (which followed
+  separately in #425 for 0.9.2), and #409's knob landed default-inert before
+  its flip followed as its own receipt-gated commit inside the same release.
 - **Disclosures ship with the release, not after it.** If a flip costs
   latency, or a surface silently stops working at defaults, it goes in the
   release notes next to the win.

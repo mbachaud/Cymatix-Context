@@ -118,21 +118,26 @@ pull a document back toward hot as it gets used.
 | Supersession | Document lineage column | Newer version of the same content |
 | Relation | `gene_relations` | `entails` / `contradicts` / `neutral` |
 
-**0.9.1 ingest-cost knob
-([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)).** On
+**Ingest-cost knob — shipped off in 0.9.1
+([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)), on by default in 0.9.2
+([#425](https://github.com/mbachaud/Cymatix-Context/pull/425)).** On
 entity-hub-heavy corpora the auto-linker sweeps every posting row of every
 probe entity before grouping, which made entity auto-linking 89.5% of writer
 wall time on the EnronQA bed. `[ingestion] entity_autolink_hub_cutoff`
-(**default `0` = off = legacy, byte-identical**) drops entities whose posting
-count exceeds the bound from the probe set. The read-only replay receipt at
-cutoff 200: **0.53% of distinct entities hold 56.9% of all postings**; mean
-per-link cost falls **210.5 ms → 0.62 ms (~340×)**. **The edge delta is why the
-default stays 0** — the same replay lost **3,143 of 4,842** COVER relation
-edges (gaining 1,168). Those edges are default-inert at query time, but a
-substantial edge-set change is not something to ship silently. A paired
-retrieval A/B on EnronQA has since measured the cutoff null at query time
-(0/500 delivered flips, ledger row `2026-08-30-entity-hub-cutoff-retrieval-ab`);
-the flip to `200` is proposed in [#425](https://github.com/mbachaud/Cymatix-Context/pull/425), open at the time of writing.
+(**default `200` since 0.9.2; `0` = off = legacy, byte-identical**) drops
+entities whose posting count exceeds the bound from the probe set. The
+read-only replay receipt at cutoff 200: **0.53% of distinct entities hold
+56.9% of all postings**; mean per-link cost falls **210.5 ms → 0.62 ms
+(~340×)**. **The edge delta is why the knob shipped off first** — the same
+replay lost **3,143 of 4,842** COVER relation edges (gaining 1,168). Those
+edges are default-inert at query time, but a substantial edge-set change is
+not something to ship silently, so the flip waited for two receipts: a paired
+retrieval A/B on EnronQA (0/500 delivered flips, ledger row
+`2026-08-30-entity-hub-cutoff-retrieval-ab`) and a post-tagger-v2 re-measure
+showing the hubs persist (0.22% of entities hold 30.1% of postings at cutoff
+200; per-link 4.15 → 0.42 ms at 85k, ledger row
+`2026-08-31-entity-hub-cutoff-reprobe-85k`). Opt out with
+`entity_autolink_hub_cutoff = 0` — see [Configuration](Configuration).
 
 **0.9.1 tag hygiene
 ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)).** The ingest

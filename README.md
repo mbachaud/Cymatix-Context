@@ -111,7 +111,7 @@ The **[wiki](https://github.com/mbachaud/Cymatix-Context/wiki)** is the narrativ
 | [docs/api/endpoints.md](docs/api/endpoints.md) | Full HTTP schema |
 | [docs/clients/cli.md](docs/clients/cli.md) | Full CLI reference |
 | [docs/benchmarks/BASELINES.md](docs/benchmarks/BASELINES.md) | The receipt ledger and its comparability rules |
-| [docs/ROSETTA.md](docs/ROSETTA.md) | Biology-to-software lexicon |
+| [wiki: Lexicon](https://github.com/mbachaud/Cymatix-Context/wiki/Lexicon) | Biology-to-software lexicon ([docs/ROSETTA.md](docs/ROSETTA.md) is now a stub that points there) |
 
 Built on [spaCy](https://spacy.io/) NER, SQLite FTS5 BM25, [BGE-M3](https://huggingface.co/BAAI/bge-m3), [Kompress](https://huggingface.co/chopratejas/kompress-base), [Headroom](https://github.com/chopratejas/headroom), and the Howard 2005 TCM / Stachenfeld 2017 SR literature — full attributions in [NOTICE](NOTICE).
 

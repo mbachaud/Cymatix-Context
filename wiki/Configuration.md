@@ -87,7 +87,7 @@ destination, so passing both is plain last-wins. See [CLI](CLI).)
 | `[server]` | HTTP bind, chat upstream, and the two admin-surface hardening knobs. | `host = "127.0.0.1"`, `port = 11437`, `upstream = "http://localhost:11434"`, `upstream_timeout = 180`, `admin_token = ""`, `swap_db_roots = []`, `bench_enabled = false`, `bench_port = 11439` |
 | `[telemetry]` | OpenTelemetry export defaults. | `enabled = false`, `endpoint = "localhost:4317"`, `insecure = true`, `sampler_ratio = 1.0`, `redact_query = true`, `logs_enabled = true`, `logs_level = "INFO"` |
 | `[headroom]` | Optional Headroom compression-proxy lifecycle — launcher only. | `enabled = true`, `autostart = true`, `port = 8787`, `mode = "token"`, `route_upstream = false` |
-| `[ingestion]` | What happens to content on the way in. | `backend = "cpu"` (spaCy + regex), `entity_graph = true`, `splade_enabled = false`, `sema_embed_on_ingest = false`, `dense_embed_on_ingest = false`, `symbol_graph = false`, `entity_autolink_hub_cutoff = 0`, `locale_demotion_enabled = true` |
+| `[ingestion]` | What happens to content on the way in. | `backend = "cpu"` (spaCy + regex), `entity_graph = true`, `splade_enabled = false`, `sema_embed_on_ingest = false`, `dense_embed_on_ingest = false`, `symbol_graph = false`, `entity_autolink_hub_cutoff = 200` *(0.9.2; was 0)*, `locale_demotion_enabled = true` |
 | `[context]` | Cold-tier fallthrough and the fingerprint profile. | `cold_tier_enabled = false`, `cold_tier_k = 3`, `cold_tier_min_cosine = 0.15`, `fingerprint_mode_profile = "balanced"` |
 | `[cymatics]` | The 256-bin term-spectrum scorer. Blends as a bonus, never re-sorts. | `enabled = true`, `harmonic_links = true`, `distance_metric = "cosine"` (or `"w1"`), `peak_width` unset (derives from `[budget] splice_aggressiveness`) |
 | `[classifier]` | The Stage-0 rule-based query classifier. | `enabled = true` — and that is the whole surface. Per-class caps and decoder hints are code constants pending [#205](https://github.com/mbachaud/Cymatix-Context/issues/205) |
@@ -168,7 +168,7 @@ min_delivered_docs = 12   # default since 2026-08-30 ([w24-floor-flip]); 0 = leg
 
 ```toml
 [ingestion]
-entity_autolink_hub_cutoff = 0    # default: off, byte-identical legacy behavior
+entity_autolink_hub_cutoff = 200  # default since 0.9.2 (#425, closes #411); 0 = off = legacy linking
 ```
 
 - Ingest-time entity auto-linking sweeps every `entity_graph` posting row of
@@ -176,26 +176,39 @@ entity_autolink_hub_cutoff = 0    # default: off, byte-identical legacy behavior
   that is O(N²) per build: on a 289k-document EnronQA bed, `auto_link_by_entity`
   was **89.5% of writer wall time** — 148.9 ms/insert, versus 7.4 ms without
   the two MIME-header hubs.
-- Set above `0` and entities whose posting count exceeds the bound are dropped
-  from the probe set before the `GROUP BY`. The count probe is `LIMIT`-bounded,
-  so per-insert cost becomes O(n_entities × cutoff). `PKI_NOISE_CUTOFF = 200`
-  is the precedent value for the flip proposed in [#425](https://github.com/mbachaud/Cymatix-Context/pull/425)
-  (conditions on [#411](https://github.com/mbachaud/Cymatix-Context/issues/411);
-  open at the time of writing — the 0.9.1 default is `0`).
+- Above `0`, entities whose posting count exceeds the bound are dropped from
+  the probe set before the `GROUP BY`. The count probe is `LIMIT`-bounded, so
+  per-insert cost becomes O(n_entities × cutoff). The shipped `200` is the
+  `PKI_NOISE_CUTOFF` precedent value. The knob shipped **off** in 0.9.1
+  ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)); the flip to `200` lands in 0.9.2
+  ([#425](https://github.com/mbachaud/Cymatix-Context/pull/425)) with both conditions on
+  [#411](https://github.com/mbachaud/Cymatix-Context/issues/411) receipted — see the two bullets below.
 - **Measured on a 500-document read-only replay at cutoff 200:** 0.53% of
   distinct entities held 56.9% of all postings; the per-link call went
   **210.5 ms → 0.62 ms (~340×)**
   ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)).
-- **Caveat, and the reason it ships off:** the cutoff changes which relation=5
-  COVER edges form — 4,842 → 2,867 on that bed. A store built with the cutoff
-  on is not edge-identical to one built without it. Those edges are
-  default-inert at query time, but "inert" is not "absent".
-- **Retrieval-side null, measured after the fact:** a paired EnronQA A/B
-  (n=500; two beds differing only in the cutoff, gene-id sets identical) was
-  null in both the 0.9.0 and 0.9.1 configs — 0/500 per-needle delivered flips
-  (ledger row `2026-08-30-entity-hub-cutoff-retrieval-ab`). That is the
-  retrieval half of #411's flip condition; the edge delta above is the ingest
-  half.
+- **What the cutoff changes, and why it was gated:** which relation=5 COVER
+  edges form — 4,842 → 2,867 on that bed. A store built with the cutoff on is
+  not edge-identical to one built without it. Those edges are default-inert at
+  query time (the W2.1 cover-walk arm was killed by its own receipt), but
+  "inert" is not "absent" — which is why the flip waited for the retrieval-side
+  measurement.
+- **Flip condition 1 — retrieval null:** a paired EnronQA A/B (n=500; two beds
+  differing only in the cutoff, gene-id sets identical) was null in both the
+  0.9.0 and 0.9.1 configs — **0/500 per-needle delivered flips** (ledger row
+  `2026-08-30-entity-hub-cutoff-retrieval-ab`, receipt
+  `benchmarks/dogfood/receipts/entity_hub_cutoff_retrieval_ab_enronqa_2026-08-30.json`).
+- **Flip condition 2 — the hubs survive tagger v2:** paired 500-document
+  replays on content-identical 85k beds, one tagger-v1 and one tagger-v2
+  (`benchmarks/dogfood/receipts/entity_hub_cutoff_reprobe_85k_taggerv1_2026-08-30.json`,
+  `…_reprobe_85k_taggerv2_2026-08-31.json`, ledger row
+  `2026-08-31-entity-hub-cutoff-reprobe-85k`). Tagger v2 removes 15.2% of
+  distinct entities, but the natural hub population persists: at cutoff 200,
+  **0.22% of entities still hold 30.1% of postings**, and the mean per-link
+  call falls **4.15 → 0.42 ms**.
+- **Opt out:** `entity_autolink_hub_cutoff = 0` restores byte-identical legacy
+  linking. The bare `KnowledgeStore` constructor default stays `0`, and the
+  bench builder reads the cutoff only from `CYMATIX_BFM_HUB_CUTOFF`.
 
 ### Wave-1 ranking defaults ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407))
 

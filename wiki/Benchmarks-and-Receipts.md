@@ -156,10 +156,11 @@ confirm:
   classifier's per-rule assembly cap was pinned as the real lever before any bench
   compute was spent on the wrong fix.
 
-### Entity auto-link hub cutoff ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)) — knob shipped, default 0
+### Entity auto-link hub cutoff ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)) — knob shipped at 0, flipped to 200 in 0.9.2 ([#425](https://github.com/mbachaud/Cymatix-Context/pull/425))
 
-`[ingestion] entity_autolink_hub_cutoff`, **default `0`** = off = legacy behavior,
-pinned byte-identical by test. Read-only replay on the 289k-document
+`[ingestion] entity_autolink_hub_cutoff` shipped in 0.9.1 at **default `0`**
+(off = legacy behavior, pinned byte-identical by test) and flips to **`200`**
+in 0.9.2 via #425; `0` stays the opt-out. Read-only replay on the 289k-document
 `enronqa_padded` bed, seed 53416, 500 linkable documents:
 
 | Measurement | Value |
@@ -169,10 +170,11 @@ pinned byte-identical by test. Read-only replay on the 289k-document
 | p95 per-link call | 419.8 ms → **1.07 ms** |
 | Ingest wall-time share before the fix | 148.9 ms/insert = **89.5%** of writer wall time |
 
-- **Why the default stays 0:** the edge delta is substantial. On the sample, the
-  uncut arm formed 4,842 `relation=5` COVER edges; at cutoff 200 it forms 2,867 —
-  **3,143 lost, 1,168 gained, 1,699 kept**. That is a real change to the graph,
-  so the knob ships opt-in with the receipt attached.
+- **Why the default stayed 0 in 0.9.1:** the edge delta is substantial. On the
+  sample, the uncut arm formed 4,842 `relation=5` COVER edges; at cutoff 200 it
+  forms 2,867 — **3,143 lost, 1,168 gained, 1,699 kept**. That is a real change
+  to the graph, so the knob shipped opt-in with the receipt attached and the
+  flip waited for its conditions.
 - The mitigating context, not a justification: COVER edges are **default-inert at
   query time** — the wave-2 COVER-walk arm was killed by its own receipt — and
   they are already order-nondeterministic under parallel ingest.
@@ -183,10 +185,21 @@ pinned byte-identical by test. Read-only replay on the 289k-document
   both the 0.9.0 and 0.9.1 configs — **0/500 per-needle delivered flips**
   (ledger row `2026-08-30-entity-hub-cutoff-retrieval-ab`). It pairs with a
   ~5× end-to-end build win on the padded bed (4h58m against a ~26h trajectory).
-- Flip conditions are specified on
-  [#411](https://github.com/mbachaud/Cymatix-Context/issues/411); the flip
-  itself — default `0 → 200` — is proposed in [#425](https://github.com/mbachaud/Cymatix-Context/pull/425) and was open at the
-  time of writing. The 0.9.1 default is `0`.
+- **The second flip condition — the hubs survive tagger v2 — is also
+  measured.** Paired 500-document replays on content-identical 85k beds, one
+  tagger-v1 and one tagger-v2
+  (`benchmarks/dogfood/receipts/entity_hub_cutoff_reprobe_85k_taggerv1_2026-08-30.json`,
+  `…_reprobe_85k_taggerv2_2026-08-31.json`; ledger row
+  `2026-08-31-entity-hub-cutoff-reprobe-85k`): tagger v2 removes 15.2% of
+  distinct entities (239,302 → 202,844), but the natural hub population
+  persists and grows slightly (`enron` 15,397 → 16,048 postings). At cutoff
+  200, **0.22% of entities still hold 30.1% of postings**; the mean per-link
+  call falls **4.15 → 0.42 ms**.
+- Flip conditions were specified on
+  [#411](https://github.com/mbachaud/Cymatix-Context/issues/411); with both
+  receipted, the flip itself — default `0 → 200` — ships in 0.9.2 via
+  [#425](https://github.com/mbachaud/Cymatix-Context/pull/425). The 0.9.1
+  default was `0`; `0` remains the opt-out.
 
 ### Tagger v2 ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) — a behavior change with a version bump
 
