@@ -1,0 +1,80 @@
+=== A1 resume started Tue Sep  1 14:38:38 PDT 2026 ===
+targets: 156 misses + 60 hit controls = 216
+  [deep1000] resuming: 113 needles already checkpointed
+  [deep1000] 25/103 (this segment)
+  [deep1000] 50/103 (this segment)
+  [deep1000] 75/103 (this segment)
+  [deep1000] 100/103 (this segment)
+deep1000 done p50=19293.2ms map_med=1000.0
+  [shipped] 25/216 (this segment)
+  [shipped] 50/216 (this segment)
+  [shipped] 75/216 (this segment)
+  [shipped] 100/216 (this segment)
+  [shipped] 125/216 (this segment)
+  [shipped] 150/216 (this segment)
+  [shipped] 175/216 (this segment)
+  [shipped] 200/216 (this segment)
+shipped done p50=18705.0ms map_med=50.0
+bm25 proxy done p50=2976.1ms
+
+VERDICT PASS: pool_absent gold found at depth<=1000 = 66/109 (threshold 30)
+{
+  "pool_absent_n": 109,
+  "pool_absent_gold_found_at_1000": 66,
+  "pool_absent_hist": {
+    "le_48": 8,
+    "r49_200": 29,
+    "r201_1000": 29,
+    "absent_at_1000": 43
+  },
+  "semantic_pool_absent_n": 61,
+  "semantic_pool_absent_found": 33,
+  "nonsemantic_pool_absent_n": 48,
+  "nonsemantic_pool_absent_found": 33
+}
+{
+  "arm_order": "deep1000 ran FIRST (cold SQLite page cache), shipped SECOND (warm) -- the ratio therefore OVERSTATES the cost of depth",
+  "shipped_p50_ms": 18705.0,
+  "deep1000_p50_ms": 19293.2,
+  "ratio_p50": 1.031,
+  "shipped_p95_ms": 35073.6,
+  "deep1000_p95_ms": 34567.2,
+  "bm25_proxy_p50_ms": 2976.1
+}
+receipt -> F:\Projects\cymatix-context\.claude\worktrees\wave-1-semantic-ranking-5f1dab\benchmarks\dogfood\erb\receipts\pool_depth_forensics_2026-09-01.json
+=== main exit=0 Tue Sep  1 16:40:20 PDT 2026 ===
+sweep subsample n=25
+  [depth_0] 25/25 (this segment)
+  depth 0: p50=20380.7ms found=8/25
+  [depth_200] 25/25 (this segment)
+  depth 200: p50=20994.8ms found=13/25
+  [depth_500] 25/25 (this segment)
+  depth 500: p50=20604.2ms found=15/25
+  [depth_1000] 25/25 (this segment)
+  depth 1000: p50=20882.1ms found=17/25
+  [depth_2000] 25/25 (this segment)
+  depth 2000: p50=20818.7ms found=20/25
+{
+  "n_needles": 470,
+  "baseline_delivered_gold": 314,
+  "phase1_observed_pool_ceiling": 0.768,
+  "phase1_note": "(314+47)/470 -- a perfect re-ranker over the shipped ~48-deep observed map",
+  "n_misses": 156,
+  "misses_with_gold_in_deep_pool": 113,
+  "oracle_ceiling_over_deep_pool": 0.9085,
+  "misses_with_gold_in_bm25_20000": 151,
+  "oracle_ceiling_over_bm25_20000": 0.9894,
+  "headroom_vs_phase1": 0.1405,
+  "meets_080_target": true,
+  "semantics": "ORACLE ceiling: assumes a perfect selector over the admitted pool. It is an UPPER BOUND on what any re-ranking or gating work can reach at that admission depth, not a prediction of any shipped arm."
+}
+{
+  "n": 109,
+  "gold_survives_shortlist_50": 0,
+  "gold_deleted_by_shortlist_50": 104,
+  "gold_unreachable_at_bm25_20000": 5,
+  "fts_depth_alone_could_admit": 0,
+  "fts_depth_alone_provably_inert_for": 109
+}
+receipt -> F:\Projects\cymatix-context\.claude\worktrees\wave-1-semantic-ranking-5f1dab\benchmarks\dogfood\erb\receipts\pool_depth_addendum_2026-09-01.json
+=== addendum exit=0 Tue Sep  1 17:27:44 PDT 2026 ===

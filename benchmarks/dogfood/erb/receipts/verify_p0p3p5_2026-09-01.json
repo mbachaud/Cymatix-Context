@@ -1,0 +1,615 @@
+{
+ "A1_order_inference_audit": {
+  "p5_claim": "P5 receipt section_0: 'genes has no explicit ordinal column (no chunk_index / offset; support_span is NULL on this bed)' -- chunk order INFERRED from rowid.",
+  "FINDING_claim_is_false": {
+   "column": "json_extract(promoter,'$.sequence_index')",
+   "n_genes": 947531,
+   "n_with_null_sequence_index": 0,
+   "n_where_sequence_index_EQUALS_rowid_position": 947154,
+   "n_where_it_differs": 377,
+   "pct_agreement": 99.96,
+   "reading": "A measured per-chunk ordinal exists and is populated on every row. P5 did not have to infer anything. The inference is nevertheless CORRECT: it agrees with the stored ordinal on 99.96% of rows (the residual are docs whose ordinal starts at 1, an offset, not a reordering)."
+  },
+  "created_at_validator_is_NOT_vacuous": {
+   "n_multi_chunk_docs": 329133,
+   "n_with_all_created_at_IDENTICAL": 0,
+   "n_with_created_at_VARYING": 329133,
+   "n_varying_that_strictly_increase_along_rowid": 329133,
+   "reading": "The suspected failure mode -- one shared timestamp per document making 'cre < last_created' unfireable -- does NOT occur: created_at varies inside every one of the 329,133 multi-chunk documents and strictly increases along rowid in all of them. P5's validator had real power."
+  },
+  "independent_corroboration_without_created_at": {
+   "n_multi_chunk_docs": 329133,
+   "pct_docs_where_max_rowid_chunk_is_the_shortest": 100.0,
+   "pct_nonlast_at_cap": 100.0,
+   "pct_last_at_cap": 0.092,
+   "reading": "A fixed-4000 no-overlap chunker emits full chunks then a remainder. Under an arbitrary within-doc rowid order the remainder would land uniformly and pct_last_at_cap would approach pct_nonlast_at_cap. It does not."
+  },
+  "verdict": "P5's order inference is SOUND; its stated justification is wrong (a measured ordinal existed)."
+ },
+ "A2_head_chunk_monopoly_REFUTATION": {
+  "p5_claim": "P5 bottom_line: 'The rank-1 seat is a HEAD-CHUNK monopoly that length cannot explain. All 156/156 top-1 winners are the first chunk (142) or the only chunk (14) of their document -- zero middles, zero tails ... expected_middle_if_length_only 37.6, p_of_observing_zero_middle 1.122e-19.'",
+  "defect": {
+   "what_top1_winner_actually_is": "mine_interlopers.py takes 'top-1 winner' = delivered[0], i.e. the first seat of the ASSEMBLED slate, not the highest-scoring candidate.",
+   "assembler_sort_key": "cymatix_context/context_manager.py:3355 (the dense / non-slate / non-frontier branch): sorted_genes = sorted(candidates, key=lambda g: g.promoter.sequence_index or 0)",
+   "delivered_order_is_sequence_index_nondecreasing": "156/156",
+   "n_slates_containing_a_sequence_index_0_chunk": 156,
+   "n_misses": 156,
+   "the_null_has_no_support_either_way": {
+    "mean_seats_per_slate": 10.73,
+    "expected_slates_with_NO_head_chunk_at_corpus_head_share_0.528": 0.05,
+    "expected_slates_with_NO_head_chunk_at_observed_pool_head_share_0.779": 1.4e-05,
+    "observed_slates_with_no_head_chunk": 0,
+    "reading": "Even under the CORPUS head-chunk share -- i.e. assuming no admission effect at all -- fewer than one slate in 156 would be expected to lack a head chunk. Combined with an ascending-ordinal sort, 156/156 head-or-only at seat 1 was the only observable outcome under every null on the table."
+   },
+   "reading": "The slate is sorted by chunk ordinal ASCENDING, so seat 1 is argmin(sequence_index) over the slate. Every one of the 156 slates contains a sequence_index==0 chunk, so P(seat 1 is head-or-only) = 1 EXACTLY, by the sort key. The published p = 1.122e-19 is computed against a null with zero support on this bed. This is the metric-pinned-by-construction failure mode."
+  },
+  "non_tautological_recomputation_in_SCORE_order": {
+   "assembly_seat1": {
+    "label": "delivered[0] = ASSEMBLY order seat 1",
+    "n": 156,
+    "posclass": {
+     "first": 142,
+     "only": 14
+    },
+    "head_or_only_pct": 100.0,
+    "at_cap_pct": 91.03,
+    "n_at_cap": 142,
+    "observed_middles": 0,
+    "conditional_expected_middles": 33.33,
+    "middle_obs_over_exp": 0.0,
+    "z_vs_conditional_null": -8.3,
+    "middle_share_among_at_cap_pct": 0.0
+   },
+   "score_rank1": {
+    "label": "map_top[0] = SCORE order rank 1",
+    "n": 156,
+    "posclass": {
+     "middle": 23,
+     "first": 110,
+     "only": 14,
+     "last": 9
+    },
+    "head_or_only_pct": 79.49,
+    "at_cap_pct": 85.26,
+    "n_at_cap": 133,
+    "observed_middles": 23,
+    "conditional_expected_middles": 38.83,
+    "middle_obs_over_exp": 0.592,
+    "z_vs_conditional_null": -3.72,
+    "middle_share_among_at_cap_pct": 17.29
+   },
+   "score_rank2_15": {
+    "label": "map_top[2..15] SCORE order",
+    "n": 2184,
+    "posclass": {
+     "first": 1531,
+     "middle": 324,
+     "only": 154,
+     "last": 175
+    },
+    "head_or_only_pct": 77.15,
+    "at_cap_pct": 84.94,
+    "n_at_cap": 1855,
+    "observed_middles": 324,
+    "conditional_expected_middles": 462.16,
+    "middle_obs_over_exp": 0.701,
+    "z_vs_conditional_null": -9.54,
+    "middle_share_among_at_cap_pct": 17.47
+   },
+   "all_delivered_seats": {
+    "label": "all 1674 delivered seats",
+    "n": 1674,
+    "posclass": {
+     "first": 1186,
+     "only": 118,
+     "middle": 237,
+     "last": 133
+    },
+    "head_or_only_pct": 77.9,
+    "at_cap_pct": 85.01,
+    "n_at_cap": 1423,
+    "observed_middles": 237,
+    "conditional_expected_middles": 344.11,
+    "middle_obs_over_exp": 0.689,
+    "z_vs_conditional_null": -8.54,
+    "middle_share_among_at_cap_pct": 16.65
+   }
+  },
+  "rank_carries_no_head_chunk_information_inside_the_pool": {
+   "score_rank1_middle_share_among_at_cap_pct": 17.29,
+   "score_rank2_15_middle_share_among_at_cap_pct": 17.47,
+   "reading": "Flat. Inside the retrieved pool, score rank tells you nothing about whether a chunk is a head or a middle. There is no rank-1 head-chunk effect at all."
+  },
+  "what_actually_survives": {
+   "effect": "POOL COMPOSITION (admission), not ordering",
+   "all_map_top15_at_cap_middle_obs_over_exp": 0.693,
+   "score_rank1_middle_obs_over_exp": 0.592,
+   "score_rank1_z": -3.72,
+   "score_rank2_15_z": -9.54,
+   "null_used": "conditional on each chunk's OWN parent-document depth: among the (n-1) at-cap chunks of an n-chunk document, P(middle) = (n-2)/(n-1). The corpus marginal P(middle|at-cap) = 0.2646 that P5 used is NOT matched to the treatment population, whose parent docs are shallower than the corpus average.",
+   "reading": "Head chunks are about 1.4x more ADMISSIBLE than middle chunks of identical 4000-char length. That is a real, non-tautological, non-length effect -- and it is an admission property, consistent with the campaign's pool-absent thesis. It is emphatically NOT a rank-1 monopoly and carries no p=1e-19."
+  },
+  "head_or_only_at_rank1": {
+   "published_assembly_order_pct": 100.0,
+   "corrected_score_order_pct": 79.49
+  }
+ },
+ "A3_gold_first_is_an_arbitrary_chunk": {
+  "definition_in_the_miner": "benchmarks/dogfood/mine_interlopers.py: 'for gid in sorted(gold): ... if gold_info is None: gold_info = doc_info(gid, ...)' -- gold_first is the LEXICOGRAPHICALLY SMALLEST gold gene_id, and gene_id is a hex content hash. It is a random gold chunk: not the best-covering one, not the highest-ranked one, not the head one.",
+  "gold_first_kw_cov_reproduced_from_bed": "156/156",
+  "n_misses_with_more_than_one_gold_chunk": 139,
+  "n_of_those_where_gold_first_is_also_argmax_coverage": 54,
+  "pct_argmax": 38.8,
+  "mean_kw_cov_gold_first_arbitrary": 6.974,
+  "mean_kw_cov_best_gold_chunk": 9.712,
+  "understatement_terms_per_miss": 2.737,
+  "at_cap_rate_pct": {
+   "corpus": 47.32,
+   "gold_first_arbitrary_PUBLISHED_BASIS": 42.95,
+   "ALL_gold_chunks_unbiased": 54.4,
+   "best_covering_gold_chunk_upper_bound": 80.13
+  },
+  "tail_share_pct": {
+   "corpus": 52.77,
+   "gold_first_arbitrary_PUBLISHED_BASIS": 57.05,
+   "ALL_gold_chunks_unbiased": 45.6,
+   "best_covering_gold_chunk_upper_bound": 19.87
+  },
+  "campaign_claim_corrected": {
+   "claim": "'Gold is NOT short: 47.8% of the corpus is at the 4,000-char cap, so gold's 42.9% is the base rate. The anomaly is entirely winner-side.'",
+   "why_wrong": "42.9% is not gold's at-cap rate; it is the at-cap rate of a hash-ordered arbitrary gold chunk, one per needle. Over all 386 gold chunks -- P5's own unbiased population -- gold is at cap 54.40% of the time against a corpus base of 47.32%, a lift of 1.150. Gold IS at-cap-enriched; the anomaly is not entirely winner-side."
+  },
+  "P5_C1_survives_every_gold_representation": {
+   "threshold_for_confound": 1.25,
+   "tail_lift_gold_first_published": 1.081,
+   "tail_lift_all_gold_chunks": 0.864,
+   "tail_lift_best_gold_chunk": 0.377,
+   "C1_holds_confound": false,
+   "so_P5_verdict_PASS_stands": true
+  }
+ },
+ "A4_P3_scope_verbosity": {
+  "reproduction": {
+   "receipt_rerun_diff": "bit-identical apart from git_sha and wall_s (5665 leaf keys compared, 2 differ)",
+   "independent_recompute_band_matched": {
+    "n_pairs": 92,
+    "winner_beats": 59,
+    "ties": 2,
+    "gold_beats": 31,
+    "mean_delta_kw_cov": 1.084,
+    "p_two_sided": 0.00416511,
+    "passes_P3_criterion": true
+   },
+   "published_band_matched": {
+    "mean_delta_kw_cov": 1.084,
+    "published_sign_test_p": 0.00416511,
+    "published_win_tie_loss": "59/2/31"
+   },
+   "agrees": true
+  },
+  "attack_1_gold_aggregation_sensitivity": {
+   "why": "The headline compares an ARBITRARY gold chunk against the MEAN of the winner seats. Two asymmetries ride on that: gold is a single random draw while winners are averaged, and the draw ignores which gold chunk actually carries the query.",
+   "sweep": {
+    "gold=ARBITRARY(published) / winner=MEAN | band_matched": {
+     "n_pairs": 92,
+     "winner_beats": 59,
+     "ties": 2,
+     "gold_beats": 31,
+     "mean_delta_kw_cov": 1.084,
+     "p_two_sided": 0.00416511,
+     "passes_P3_criterion": true
+    },
+    "gold=ARBITRARY(published) / winner=MEAN | both_at_cap": {
+     "n_pairs": 67,
+     "winner_beats": 43,
+     "ties": 1,
+     "gold_beats": 23,
+     "mean_delta_kw_cov": 1.191,
+     "p_two_sided": 0.01865726,
+     "passes_P3_criterion": true
+    },
+    "gold=ARBITRARY(published) / winner=MEAN | tight_250": {
+     "n_pairs": 88,
+     "winner_beats": 56,
+     "ties": 3,
+     "gold_beats": 29,
+     "mean_delta_kw_cov": 1.169,
+     "p_two_sided": 0.00451164,
+     "passes_P3_criterion": true
+    },
+    "gold=ARBITRARY(published) / winner=MEAN | unmatched": {
+     "n_pairs": 156,
+     "winner_beats": 117,
+     "ties": 1,
+     "gold_beats": 38,
+     "mean_delta_kw_cov": 3.12,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=ARBITRARY(published) / winner=MAX | band_matched": {
+     "n_pairs": 92,
+     "winner_beats": 76,
+     "ties": 7,
+     "gold_beats": 9,
+     "mean_delta_kw_cov": 3.043,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=ARBITRARY(published) / winner=MAX | both_at_cap": {
+     "n_pairs": 67,
+     "winner_beats": 59,
+     "ties": 4,
+     "gold_beats": 4,
+     "mean_delta_kw_cov": 3.746,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=ARBITRARY(published) / winner=MAX | tight_250": {
+     "n_pairs": 88,
+     "winner_beats": 76,
+     "ties": 7,
+     "gold_beats": 5,
+     "mean_delta_kw_cov": 3.5,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=ARBITRARY(published) / winner=MAX | unmatched": {
+     "n_pairs": 156,
+     "winner_beats": 145,
+     "ties": 6,
+     "gold_beats": 5,
+     "mean_delta_kw_cov": 5.936,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=MAX / winner=MEAN | band_matched": {
+     "n_pairs": 147,
+     "winner_beats": 81,
+     "ties": 7,
+     "gold_beats": 59,
+     "mean_delta_kw_cov": 0.352,
+     "p_two_sided": 0.07555083,
+     "passes_P3_criterion": false
+    },
+    "gold=MAX / winner=MEAN | both_at_cap": {
+     "n_pairs": 125,
+     "winner_beats": 69,
+     "ties": 5,
+     "gold_beats": 51,
+     "mean_delta_kw_cov": 0.424,
+     "p_two_sided": 0.12032783,
+     "passes_P3_criterion": false
+    },
+    "gold=MAX / winner=MEAN | tight_250": {
+     "n_pairs": 141,
+     "winner_beats": 75,
+     "ties": 6,
+     "gold_beats": 60,
+     "mean_delta_kw_cov": 0.332,
+     "p_two_sided": 0.22810348,
+     "passes_P3_criterion": false
+    },
+    "gold=MAX / winner=MEAN | unmatched": {
+     "n_pairs": 156,
+     "winner_beats": 87,
+     "ties": 2,
+     "gold_beats": 67,
+     "mean_delta_kw_cov": 0.382,
+     "p_two_sided": 0.12547871,
+     "passes_P3_criterion": false
+    },
+    "gold=MAX / winner=MAX | band_matched": {
+     "n_pairs": 147,
+     "winner_beats": 120,
+     "ties": 12,
+     "gold_beats": 15,
+     "mean_delta_kw_cov": 2.673,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=MAX / winner=MAX | both_at_cap": {
+     "n_pairs": 125,
+     "winner_beats": 107,
+     "ties": 9,
+     "gold_beats": 9,
+     "mean_delta_kw_cov": 3.088,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=MAX / winner=MAX | tight_250": {
+     "n_pairs": 141,
+     "winner_beats": 118,
+     "ties": 12,
+     "gold_beats": 11,
+     "mean_delta_kw_cov": 2.872,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=MAX / winner=MAX | unmatched": {
+     "n_pairs": 156,
+     "winner_beats": 136,
+     "ties": 11,
+     "gold_beats": 9,
+     "mean_delta_kw_cov": 3.199,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=MEAN / winner=MEAN | band_matched": {
+     "n_pairs": 73,
+     "winner_beats": 51,
+     "ties": 6,
+     "gold_beats": 16,
+     "mean_delta_kw_cov": 1.495,
+     "p_two_sided": 2.169e-05,
+     "passes_P3_criterion": true
+    },
+    "gold=MEAN / winner=MEAN | both_at_cap": {
+     "n_pairs": 0,
+     "winner_beats": 0,
+     "ties": 0,
+     "gold_beats": 0,
+     "mean_delta_kw_cov": null,
+     "p_two_sided": null,
+     "passes_P3_criterion": false
+    },
+    "gold=MEAN / winner=MEAN | tight_250": {
+     "n_pairs": 59,
+     "winner_beats": 39,
+     "ties": 4,
+     "gold_beats": 16,
+     "mean_delta_kw_cov": 1.051,
+     "p_two_sided": 0.00266726,
+     "passes_P3_criterion": true
+    },
+    "gold=MEAN / winner=MEAN | unmatched": {
+     "n_pairs": 156,
+     "winner_beats": 139,
+     "ties": 0,
+     "gold_beats": 17,
+     "mean_delta_kw_cov": 2.735,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    },
+    "gold=MEAN / winner=MAX | band_matched": {
+     "n_pairs": 73,
+     "winner_beats": 53,
+     "ties": 9,
+     "gold_beats": 11,
+     "mean_delta_kw_cov": 1.84,
+     "p_two_sided": 1e-07,
+     "passes_P3_criterion": true
+    },
+    "gold=MEAN / winner=MAX | both_at_cap": {
+     "n_pairs": 0,
+     "winner_beats": 0,
+     "ties": 0,
+     "gold_beats": 0,
+     "mean_delta_kw_cov": null,
+     "p_two_sided": null,
+     "passes_P3_criterion": false
+    },
+    "gold=MEAN / winner=MAX | tight_250": {
+     "n_pairs": 59,
+     "winner_beats": 44,
+     "ties": 7,
+     "gold_beats": 8,
+     "mean_delta_kw_cov": 2.165,
+     "p_two_sided": 4e-07,
+     "passes_P3_criterion": true
+    },
+    "gold=MEAN / winner=MAX | unmatched": {
+     "n_pairs": 156,
+     "winner_beats": 153,
+     "ties": 2,
+     "gold_beats": 1,
+     "mean_delta_kw_cov": 5.552,
+     "p_two_sided": 0.0,
+     "passes_P3_criterion": true
+    }
+   },
+   "reading": "The only cell that fails P3's pre-registered rule is gold=MAX / winner=MEAN (+0.352, p=0.076) -- an asymmetric, gold-favouring comparison (max on one side, mean on the other). Both SYMMETRIC re-aggregations pass and pass harder than the published cell: mean/mean +1.495 p=2.2e-05, max/max +2.673 p<1e-6. The conclusion is robust to the defect; the published effect SIZE is not."
+  },
+  "attack_2_missing_chance_level": {
+   "why": "P3's corpus sample carries n_distinct and avg_tf but never a corpus kw_cov, so the receipt gives no scale for 'winner 10.54 vs gold 9.24'.",
+   "mean_n_kw_per_query": 37.44,
+   "mean_kw_cov_RANDOM_at_cap_corpus_chunk": 2.825,
+   "mean_kw_cov_gold_first_at_cap": 9.239,
+   "mean_kw_cov_best_gold_at_cap": 10.24,
+   "mean_kw_cov_winner_seats_at_cap": 10.543,
+   "winner_minus_chance": 7.718,
+   "gold_first_minus_chance": 6.414,
+   "published_winner_minus_gold_both_at_cap": 1.191,
+   "reading": "Gold and winners both sit ~7 distinct query terms above a random at-cap chunk. The published mechanism is a ~12% residual on top of a large shared signal, not a separation. P3's own verdict already narrows it ('not generic scope'); this puts a number on how narrow."
+  },
+  "attack_3_selection_conditioning": {
+   "finding": "Winners are the documents a LEXICAL ranker selected, and kw_cov is a LEXICAL feature. Comparing selected-on-lexical-score winners against unselected gold on distinct query-term coverage is conditioned on the selection. No control anywhere in P3 breaks that circularity.",
+   "effect_on_the_arithmetic": "none",
+   "effect_on_the_mechanistic_reading": "downgrades it: the surviving +1.084 is partly the definition of who won, not an independent property of the winners."
+  },
+  "attack_4_threshold_off_by_one": {
+   "P3_at_cap_min": 3990,
+   "P5_cap": 4000,
+   "disclosed_in_P3_receipt": true,
+   "note": "P3 line 792 states the >=3990 band picks up 2 extra winner seats; gold reconciles at 67/156.",
+   "is_a_defect": false
+  },
+  "attack_5_denominator": {
+   "n_misses": 156,
+   "n_with_a_band_matched_winner": 92,
+   "note": "The headline sign test runs on 92 of 156 misses. This IS disclosed in the receipt's length_match_coverage_caveat, and the mechanism_decomposition reports both halves. Not a hidden denominator.",
+   "is_a_defect": false
+  },
+  "verdict": "CONFIRMED with corrections"
+ },
+ "A5_P0_bucket_ledger_and_rloss": {
+  "reproduction": {
+   "receipt_rerun_diff": "bit-identical apart from git_sha (2833 leaf keys, 1 differs)"
+  },
+  "independent_bucket_recompute_from_the_RAW_mine": {
+   "mined_miss_set_equals_basis_delivered_gold_zero": true,
+   "n": 156,
+   "buckets": {
+    "near_band": 41,
+    "pool_absent": 109,
+    "seat_capped": 6
+   },
+   "published": {
+    "near_band": 41,
+    "pool_absent": 109,
+    "seat_capped": 6
+   },
+   "class_x_bucket": {
+    "basic": {
+     "near_band": 18,
+     "pool_absent": 37,
+     "seat_capped": 5
+    },
+    "completeness": {
+     "pool_absent": 3
+    },
+    "conflicting_info": {
+     "pool_absent": 2
+    },
+    "constrained": {
+     "pool_absent": 1
+    },
+    "intra_document_reasoning": {
+     "pool_absent": 5,
+     "near_band": 1
+    },
+    "miscellaneous": {
+     "near_band": 2
+    },
+    "semantic": {
+     "pool_absent": 61,
+     "near_band": 20,
+     "seat_capped": 1
+    }
+   },
+   "agrees": true
+  },
+  "chunk_split_DEFINITION_DEFECT": {
+   "receipt_wording": "'gold_kw_cov (UNION ...) >= delivered[0].kw_cov AND gold_first.kw_cov < delivered[0].kw_cov -- the gold DOCUMENT would tie or beat the rank-1 winner ..., but gold's BEST single CHUNK does not.'",
+   "what_the_code_uses": "gold_first = an arbitrary (hash-ordered) gold chunk, not the best one",
+   "published_all_156": 65,
+   "recomputed_with_arbitrary_gold_first_all_156": 65,
+   "recomputed_with_BEST_gold_chunk_all_156": 30,
+   "published_reachable_95": 39,
+   "recomputed_with_BEST_gold_chunk_reachable": 16,
+   "carry_arithmetic_correction": {
+    "needles_needed_for_0_80": 62,
+    "published_perfect_lane_ceiling_reachable_pct_of_62": 62.9,
+    "corrected_perfect_lane_ceiling_reachable_pct_of_62": 25.8,
+    "published_perfect_lane_ceiling_all156_pct_of_62": 104.8,
+    "corrected_perfect_lane_ceiling_all156_pct_of_62": 48.4
+   },
+   "reading": "The ledger's own kill criterion clause (c) checks the recomputed chunk_split equals 65 -- which it does, because the recomputation reuses the same arbitrary field. It validated an implementation against itself, not against the stated definition. Under the definition the receipt actually WRITES DOWN, chunk_split is 30/156, not 65, and the reachable ceiling is 16, not 39. chunk_split is still the largest single mechanism on the board, but it covers about a quarter of the +62 gap, not two thirds."
+  },
+  "rloss_scorer_audit": {
+   "identity_independent_reimplementation": {
+    "n_shared": 470,
+    "hurt": 0,
+    "helped": 0,
+    "rloss_hurt": 0,
+    "rloss_helped": 0,
+    "agree": true
+   },
+   "baseline_rate_recomputed": 0.668085,
+   "randomised_negative_control_200_trials_random_flip_counts": {
+    "mismatches": 0
+   },
+   "shuffle_control_with_COPIED_objects": 0,
+   "guards": {
+    "duplicate": "raised: duplicate needle 'erb_000' in per_query",
+    "missing_needle_key": "raised: per_query record without a 'needle' key",
+    "bad_basis": "raised: unknown basis 'nonsense'; expected one of ['delivered', 'final', 'pool']"
+   },
+   "hit_semantics": {
+    "bool_true": true,
+    "float_0_5": true,
+    "field_absent": false,
+    "error_record_with_hit": false
+   },
+   "ROBUSTNESS_GAP_dropped_needles": {
+    "scenario": "arm silently omits 40 needles the baseline delivered gold on",
+    "arm_length": 430,
+    "reported_r_loss": 0,
+    "reported_n": 430,
+    "reported_baseline_rate": 0.637209,
+    "true_baseline_rate_over_470": 0.668085,
+    "baseline_only_len": 40,
+    "finding": "r_loss scores only the intersection and the rates use the shrunken denominator, so 40 dropped baseline hits report as ZERO r-loss. The names ARE disclosed in baseline_only/arm_only and nothing is silently wrong -- but a caller reading only count / robustness_index / delta_rate sees a clean arm. RECOMMENDATION for Phase 2: add strict=True raising when baseline_only or arm_only is non-empty, and quote n_paired in every arm receipt.",
+    "is_a_correctness_bug": false
+   },
+   "verdict": "the scorer is CORRECT; one usage hazard, disclosed but not enforced"
+  },
+  "verdict": "CORRECTED (ledger sound; chunk_split definition/count wrong)"
+ },
+ "per_probe_verdicts": {
+  "P3_scope_verbosity": {
+   "verdict": "CONFIRMED",
+   "headline_recomputed_by_a_different_route": "+1.084 kw_cov, 59/2/31, p=0.00416511 (exact match)",
+   "corrections": [
+    "gold_first is an arbitrary hash-ordered gold chunk, not 'the' gold chunk; it is argmax-coverage in only 54/139 multi-gold misses",
+    "effect size is aggregation-sensitive: +0.352 (max/mean, p=0.076) to +2.673 (max/max); both symmetric aggregations pass",
+    "no chance-level baseline was computed; a random at-cap chunk scores 2.83, so the effect is a ~12% residual on a shared ~7.7-term signal",
+    "winner-vs-gold on a lexical feature is conditioned on lexical selection; uncontrolled"
+   ]
+  },
+  "P5_atcap_confound": {
+   "verdict": "CORRECTED",
+   "pre_registered_criterion_still_PASSES": true,
+   "why_pass_stands": "C1 (gold tail-share lift >= 1.25) fails under every gold representation: 1.081 arbitrary, 0.864 all-gold, 0.377 best-gold.",
+   "REFUTED_sub_claim": "the 'HEAD-CHUNK MONOPOLY' in bottom_line.the_bigger_finding_length_does_not_explain. 156/156 head-or-only at seat 1 with p=1.122e-19 is a restatement of the assembler's sequence_index sort key: seat 1 is argmin(sequence_index) and all 156 slates contain a sequence_index==0 chunk, so the null had zero support. In score order the figure is 79.49%, and inside the pool rank carries no head-chunk information (17.29% vs 17.47% middle share among at-cap chunks at rank 1 vs ranks 2-15).",
+   "what_survives": "a genuine ADMISSION effect: at-cap head chunks are admitted to the pool about 1.4x more often than at-cap middle chunks of identical length (obs/exp middles 0.592 at score rank 1, 0.701 at ranks 2-15). Real, non-tautological, length-free -- and an admission property, not an ordering one.",
+   "other_corrections": [
+    "'genes has no explicit ordinal column' is false: promoter.sequence_index is populated on all 947531 rows and agrees with the rowid inference on 99.96%",
+    "gold at-cap 42.9% is an arbitrary-chunk statistic; over all 386 gold chunks it is 54.40% (lift 1.150), so 'the anomaly is entirely winner-side' is wrong",
+    "the 'expected 37.6 middles' null used the corpus marginal P(middle|at-cap)=0.2646 rather than a null conditioned on each winner's own parent-document depth"
+   ]
+  },
+  "P0_bucket_ledger_rloss": {
+   "verdict": "CORRECTED",
+   "ledger": "SOUND -- buckets independently recomputed from the raw mine, every cell agrees; the 156 mined misses are exactly the basis receipt's delivered_gold==0 set",
+   "rloss": "CORRECT -- independent reimplementation agrees, 200 randomised negative-control trials with 0 mismatches, all three guards raise",
+   "correction": "chunk_split is 65 only under an arbitrary gold chunk; under the definition the receipt states ('gold's best single CHUNK') it is 30/156 and 16/95 reachable, cutting the perfect-lane ceiling from 62.9% to 25.8% of the +62 gap"
+  }
+ },
+ "bottom_line": {
+  "campaigns_only_surviving_positive_lead": "the P5 head-chunk monopoly is REFUTED as stated. It measured the assembler's sequence_index sort, not the ranker. Any Phase-2 arm that was going to exploit 'rank-1 is always a head chunk' would have been exploiting sorted(candidates, key=sequence_index).",
+  "what_replaces_it": "a weaker but real ADMISSION effect -- head chunks are ~1.4x more likely to enter the pool than equally-long middle chunks. That points at the same place Phase 1's central finding did (admission / what gets indexed), not at re-ranking.",
+  "scorer": "rloss.py is safe to score every Phase-2 arm with, subject to quoting n_paired.",
+  "scope": "ERB 947k, this bed only."
+ },
+ "stamp": "2026-09-01",
+ "arm": "A5-verify",
+ "probe": "A5 adversarial verification of P0 / P3 / P5",
+ "tool": "benchmarks/dogfood/erb/verify_p0p3p5.py",
+ "tool_sha256": "f11e9eef4abe8bbaa54f9bec89f99d0c4700ef911d6d8cb3794b2254e72b0542",
+ "verified_tool_sha256": {
+  "probe_scope_verbosity.py": "f9031d7db33752ce2f0ad172a404291b7e251ab18547d6f6693643b789015ee3",
+  "probe_atcap_confound.py": "f720d9dbda8cebb0524ceaa1c73d74f675f0f77b2c710e605f46edbad5caf761",
+  "probe_bucket_ledger.py": "c7a0124043af5996dd5de53b842e9e324146b2c5dac6b769f7636cf934c2ba4e",
+  "rloss.py": "cf023830e20e936ac8bb5645c6931770a4c6e3f4a8c21fa8c13cb792018115b1",
+  "mine_interlopers.py": "a601561d913e856c77b444e0d369887dbcf7952a33d87bb9be9a641ae3694fc6"
+ },
+ "git_sha": "6268b6fa67c09d0f9026a18933b3b11c10e19614",
+ "bed": "F:/tmp/erb_blob_v09x.db",
+ "bed_bytes": 24571052032,
+ "bed_access": "read-only (mode=ro, PRAGMA query_only=ON); one full scan + PK lookups; no writes, no indexes, no VACUUM",
+ "basis_receipts": [
+  "benchmarks/dogfood/erb/receipts/atcap_confound_2026-09-01.json",
+  "benchmarks/dogfood/erb/receipts/scope_verbosity_2026-09-01.json",
+  "benchmarks/dogfood/erb/receipts/bucket_ledger_2026-09-01.json",
+  "benchmarks/dogfood/erb/receipts/interloper_mine_erb947k_2026-08-31.json",
+  "benchmarks/dogfood/erb/receipts/ladder_v09x_w24_min_delivered_2026-08-28.json"
+ ],
+ "n_misses": 156,
+ "n_corpus_chunks": 947531,
+ "n_corpus_docs": 500000,
+ "n_gold_chunks": 386,
+ "kill_criterion": "Per probe: REFUTED if the probe's own coded/pre-registered decision rule flips once a defect is corrected, OR if its headline number is pinned by construction (measured against a null with no support on this bed). CORRECTED if a headline number or a stated definition is wrong but the probe's verdict on its own pre-registered criterion still stands. CONFIRMED only if the receipt reproduces AND the headline survives an independent recomputation AND no matched-null / selection / definition defect changes its reading. Arm verdict: KILL if any probe is REFUTED, PASS if all three CONFIRMED, INCONCLUSIVE if corrections were needed but the conclusions stand.",
+ "verdict": "KILL",
+ "verdict_reason": "A Phase-1 conclusion is REFUTED, and the arm rubric is KILL if any is. P5's bottom-line finding -- 'the rank-1 seat is a HEAD-CHUNK monopoly that length cannot explain', 156/156 at p=1.122e-19 -- measures the assembler's sequence_index sort, not the ranker; the null it was tested against has zero support on this bed, which is exactly the pinned-by-construction clause of this arm's own pre-registered REFUTED criterion. That was the campaign's only surviving positive lead. Two published magnitudes are also wrong (P0 chunk_split 65 -> 30; P5 gold at-cap 42.9% -> 54.4%), both traced to the same root cause: the miner's gold_first is a hash-ordered arbitrary gold chunk. What each probe's OWN pre-registered decision rule returned is unchanged -- P5 still PASSes C1 under every gold representation, P3 still PASSes under both symmetric re-aggregations, P0's ledger and rloss.py are sound -- so this is a KILL of a lead and of three numbers, not of the probes' verdicts.",
+ "elapsed_seconds": 15.04
+}

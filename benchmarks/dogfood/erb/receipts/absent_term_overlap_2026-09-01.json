@@ -1,0 +1,1374 @@
+{
+  "stamp": "2026-09-01",
+  "probe": "FOLLOW-UP 1 to ARM 1 -- term overlap for the 20 gold-absent pool_absent needles",
+  "tool": "benchmarks/dogfood/erb/probe_absent_term_overlap.py",
+  "tool_sha256": "a665ec73055f7012370175778ac536004367dda147138cfbbf1da7b7c23ffcc0",
+  "git_sha": "0c17c5f9ef8b8ca9bf568715ceae9c828f77148d",
+  "bed": "F:/tmp/erb_blob_v09x.db",
+  "bed_bytes": 24571269120,
+  "bed_access": "READ-ONLY (mode=ro URI). No index created on the bed; the fts5vocab('row') shadow used for document frequencies is a TEMP virtual table in the connection's temp database. The pipeline was NOT run.",
+  "basis_receipts": [
+    "benchmarks/dogfood/erb/receipts/pool_depth_forensics_2026-09-01.json",
+    "benchmarks/dogfood/erb/receipts/pool_depth_capture_2026-09-01.sqlite",
+    "benchmarks/dogfood/erb/receipts/verify_a1_completeness_2026-09-01.json",
+    "benchmarks/dogfood/erb/receipts/verify_a1_recompute_2026-09-01.json"
+  ],
+  "basis_sha256": {
+    "pool_depth_forensics_2026-09-01.json": "2147203c6757d1b5902fd7f48a6947e7d697b6e340165c2f74b862d2688896f8",
+    "pool_depth_capture_2026-09-01.sqlite": "e688eca20dfe19c96bbc97e54c969f0f91d9a7f1cbae181d7c6384470e31b512",
+    "verify_a1_completeness_2026-09-01.json": "0ea6208ae06b906c8601b014134815a0dc3de792813a5f01eebf9fb72d0b959e",
+    "verify_a1_recompute_2026-09-01.json": "d35450233ee8bd80b1e2dd69723c39626a7331923d40e1e5fb74bad1e710d8d2",
+    "gold_by_needle_v09x.json": "d0d203b88281fecf4b86948b0f86b37c6878f48ce5f7d7506088e4546f2b223a",
+    "needles_resolved_v09x_full.json": "c09b630613cb18d317195148254f3e3cd68980add29e3d79dc09c88a2e850cae"
+  },
+  "kill_criterion": "PRE-REGISTERED BEFORE THE BED WAS QUERIED. (a) = number of DISTINCT captured query terms (len > 2, the BM25 shortlist's own filter) that occur in the needle's gold chunk text (genes.content), occurrence decided by FTS5 phrase match under the same default unicode61 tokenizer genes_fts uses. A needle is a TRUE VOCABULARY GAP iff (a) == 0; it is OUTRANKED iff (a) > 0. No third bucket, no tunable threshold.",
+  "pre_registration": "PRE-REGISTERED BEFORE THE BED WAS QUERIED. (a) = number of DISTINCT captured query terms (len > 2, the BM25 shortlist's own filter) that occur in the needle's gold chunk text (genes.content), occurrence decided by FTS5 phrase match under the same default unicode61 tokenizer genes_fts uses. A needle is a TRUE VOCABULARY GAP iff (a) == 0; it is OUTRANKED iff (a) > 0. No third bucket, no tunable threshold.",
+  "population_rule": "GROUP A = pool_depth_forensics rows with bucket='pool_absent', question_type='semantic', bm25_proxy_rank IS NULL (gold absent from the raw BM25 pool even at depth 20000). GROUP B = rows with bucket='pool_absent', question_type != 'semantic', bm25_proxy_rank > 1000 (absent at depth 1000, present by 20000). Derived from the receipt, not hardcoded; the expected membership (5 / 15) is asserted.",
+  "population": {
+    "group_A": [
+      "erb_186",
+      "erb_189",
+      "erb_266",
+      "erb_295",
+      "erb_296"
+    ],
+    "group_B": [
+      "erb_042",
+      "erb_076",
+      "erb_091",
+      "erb_092",
+      "erb_099",
+      "erb_108",
+      "erb_115",
+      "erb_120",
+      "erb_127",
+      "erb_133",
+      "erb_138",
+      "erb_146",
+      "erb_169",
+      "erb_172",
+      "erb_311"
+    ]
+  },
+  "method": {
+    "query_terms_source": "the ARM-1 capture's terms table -- the pipeline's OWN expanded terms as passed to query_docs, not a re-extraction",
+    "term_filter": "len(t) > 2 (the BM25 shortlist's own filter)",
+    "occurrence_oracle": "FTS5 phrase match ('\"term\"') against an in-memory fts5 table holding the gold chunk text, created with the same DEFAULT tokenizer as genes_fts",
+    "primary_gold_text": "genes.content for each gold gene_id",
+    "secondary_gold_text": "genes_fts_source (gene_id + source_id + promoter tags + content + complement) -- what BM25 actually indexes; reported as a_terms_in_gold_indexed_text but NOT used for the pre-registered classification",
+    "bm25_sql": "SELECT gene_id FROM genes_fts WHERE genes_fts MATCH ? ORDER BY rank LIMIT ? -- verbatim the shortlist SQL at knowledge_store.py:3849-3853, LIMIT widened to 20000",
+    "match_construction": "\" OR \".join('\"' + t + '\"') over the RAW captured term list (duplicates preserved), identical to knowledge_store.py:3848",
+    "df_definition": "document frequency from fts5vocab('row') over genes_fts. Single-token terms: exact. Multi-token terms (e.g. 'us-west-2', 'incident/oncall' -> several unicode61 tokens): min over constituent token DFs, a strict UPPER bound on the phrase DF -- stated because it is what the top-3 ranking uses",
+    "n_dropped": 3,
+    "depth": 20000
+  },
+  "tokenizer": {
+    "genes_fts_ddl": "CREATE VIRTUAL TABLE genes_fts USING fts5(\n    gene_id,\n    content,\n    complement,\n    content='genes_fts_source',\n    content_rowid='rowid'\n)",
+    "resolved": "unicode61 (FTS5 default; no tokenize= clause)",
+    "note": "genes_fts DDL carries no tokenize= clause -> SQLite FTS5 DEFAULT tokenizer 'unicode61' (remove_diacritics=1, Unicode L*/N* token characters, case-folded). Matching is delegated to an in-memory FTS5 table built with the same default tokenizer, so no re-implementation is involved."
+  },
+  "verdict": "ALL_OUTRANKED",
+  "summary": {
+    "group_A_semantic_bm25_absent_at_20000": {
+      "n": 5,
+      "true_vocabulary_gap": 0,
+      "true_vocabulary_gap_needles": [],
+      "outranked": 5,
+      "outranked_needles": [
+        "erb_186",
+        "erb_189",
+        "erb_266",
+        "erb_295",
+        "erb_296"
+      ],
+      "a_min": 4,
+      "a_median": 11,
+      "a_max": 14,
+      "a_indexed_zero": 0,
+      "minus_top3_df_improved": 0,
+      "minus_top3_df_worsened": 0,
+      "minus_top3_df_rescued_from_absent": 0,
+      "minus_top3_df_lost_to_absent": 0,
+      "minus_top3_df_rank_le_1000": 0,
+      "minus_top3_df_rank_le_50": 0,
+      "full_query_rank_reproduces_receipt": true
+    },
+    "group_B_nonsemantic_bm25_1001_20000": {
+      "n": 15,
+      "true_vocabulary_gap": 0,
+      "true_vocabulary_gap_needles": [],
+      "outranked": 15,
+      "outranked_needles": [
+        "erb_042",
+        "erb_076",
+        "erb_091",
+        "erb_092",
+        "erb_099",
+        "erb_108",
+        "erb_115",
+        "erb_120",
+        "erb_127",
+        "erb_133",
+        "erb_138",
+        "erb_146",
+        "erb_169",
+        "erb_172",
+        "erb_311"
+      ],
+      "a_min": 4,
+      "a_median": 8,
+      "a_max": 14,
+      "a_indexed_zero": 0,
+      "minus_top3_df_improved": 6,
+      "minus_top3_df_worsened": 9,
+      "minus_top3_df_rescued_from_absent": 0,
+      "minus_top3_df_lost_to_absent": 0,
+      "minus_top3_df_rank_le_1000": 2,
+      "minus_top3_df_rank_le_50": 0,
+      "full_query_rank_reproduces_receipt": true
+    },
+    "overall": {
+      "n": 20,
+      "true_vocabulary_gap": 0,
+      "true_vocabulary_gap_needles": [],
+      "outranked": 20,
+      "outranked_needles": [
+        "erb_186",
+        "erb_189",
+        "erb_266",
+        "erb_295",
+        "erb_296",
+        "erb_042",
+        "erb_076",
+        "erb_091",
+        "erb_092",
+        "erb_099",
+        "erb_108",
+        "erb_115",
+        "erb_120",
+        "erb_127",
+        "erb_133",
+        "erb_138",
+        "erb_146",
+        "erb_169",
+        "erb_172",
+        "erb_311"
+      ],
+      "a_min": 4,
+      "a_median": 8.5,
+      "a_max": 14,
+      "a_indexed_zero": 0,
+      "minus_top3_df_improved": 6,
+      "minus_top3_df_worsened": 9,
+      "minus_top3_df_rescued_from_absent": 0,
+      "minus_top3_df_lost_to_absent": 0,
+      "minus_top3_df_rank_le_1000": 2,
+      "minus_top3_df_rank_le_50": 0,
+      "full_query_rank_reproduces_receipt": true
+    }
+  },
+  "per_needle": [
+    {
+      "needle": "erb_186",
+      "group": "A",
+      "question_type": "semantic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": null,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 7556,
+      "n_terms_raw": 59,
+      "n_terms_bm25": 59,
+      "n_terms_distinct": 49,
+      "a_terms_in_gold_content": 14,
+      "a_frac_of_distinct": 0.2857,
+      "terms_in_gold_content": [
+        "configuration",
+        "model",
+        "sustained",
+        "action",
+        "automated",
+        "evaluation",
+        "incident",
+        "increase",
+        "notifications",
+        "outputs",
+        "platform",
+        "traffic",
+        "window",
+        "windows"
+      ],
+      "a_terms_in_gold_indexed_text": 14,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "model",
+          "df": 362100,
+          "tokens": [
+            "model"
+          ]
+        },
+        {
+          "term": "window",
+          "df": 327495,
+          "tokens": [
+            "window"
+          ]
+        },
+        {
+          "term": "action",
+          "df": 232837,
+          "tokens": [
+            "action"
+          ]
+        }
+      ],
+      "n_terms_kept": 55,
+      "bm25_rank_full_query": null,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": null,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": null,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 3521.8,
+      "wall_ms_reduced": 2987.1
+    },
+    {
+      "needle": "erb_189",
+      "group": "A",
+      "question_type": "semantic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": null,
+      "n_gold_chunks": 3,
+      "gold_content_chars": 9366,
+      "n_terms_raw": 48,
+      "n_terms_bm25": 48,
+      "n_terms_distinct": 43,
+      "a_terms_in_gold_content": 11,
+      "a_frac_of_distinct": 0.2558,
+      "terms_in_gold_content": [
+        "2026",
+        "inference",
+        "update",
+        "changes",
+        "failure",
+        "field",
+        "need",
+        "product",
+        "removed",
+        "route",
+        "start"
+      ],
+      "a_terms_in_gold_indexed_text": 11,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "field",
+          "df": 533747,
+          "tokens": [
+            "field"
+          ]
+        },
+        {
+          "term": "need",
+          "df": 452021,
+          "tokens": [
+            "need"
+          ]
+        },
+        {
+          "term": "inference",
+          "df": 410967,
+          "tokens": [
+            "inference"
+          ]
+        }
+      ],
+      "n_terms_kept": 44,
+      "bm25_rank_full_query": null,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": null,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": null,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 3857.9,
+      "wall_ms_reduced": 3079.1
+    },
+    {
+      "needle": "erb_266",
+      "group": "A",
+      "question_type": "semantic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": null,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 4860,
+      "n_terms_raw": 63,
+      "n_terms_bm25": 63,
+      "n_terms_distinct": 54,
+      "a_terms_in_gold_content": 9,
+      "a_frac_of_distinct": 0.1667,
+      "terms_in_gold_content": [
+        "gpu",
+        "load",
+        "test",
+        "growth",
+        "latency",
+        "memory",
+        "runtime",
+        "tail",
+        "tests"
+      ],
+      "a_terms_in_gold_indexed_text": 9,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "latency",
+          "df": 390879,
+          "tokens": [
+            "latency"
+          ]
+        },
+        {
+          "term": "test",
+          "df": 277239,
+          "tokens": [
+            "test"
+          ]
+        },
+        {
+          "term": "runtime",
+          "df": 253511,
+          "tokens": [
+            "runtime"
+          ]
+        }
+      ],
+      "n_terms_kept": 59,
+      "bm25_rank_full_query": null,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": null,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": null,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 3293.5,
+      "wall_ms_reduced": 2816.5
+    },
+    {
+      "needle": "erb_295",
+      "group": "A",
+      "question_type": "semantic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": null,
+      "n_gold_chunks": 1,
+      "gold_content_chars": 3182,
+      "n_terms_raw": 33,
+      "n_terms_bm25": 33,
+      "n_terms_distinct": 28,
+      "a_terms_in_gold_content": 4,
+      "a_frac_of_distinct": 0.1429,
+      "terms_in_gold_content": [
+        "short",
+        "team",
+        "demo",
+        "renewal"
+      ],
+      "a_terms_in_gold_indexed_text": 4,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "short",
+          "df": 523042,
+          "tokens": [
+            "short"
+          ]
+        },
+        {
+          "term": "team",
+          "df": 378573,
+          "tokens": [
+            "team"
+          ]
+        },
+        {
+          "term": "review",
+          "df": 315408,
+          "tokens": [
+            "review"
+          ]
+        }
+      ],
+      "n_terms_kept": 28,
+      "bm25_rank_full_query": null,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": null,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": null,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2650.1,
+      "wall_ms_reduced": 1361.9
+    },
+    {
+      "needle": "erb_296",
+      "group": "A",
+      "question_type": "semantic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": null,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 6282,
+      "n_terms_raw": 67,
+      "n_terms_bm25": 67,
+      "n_terms_distinct": 57,
+      "a_terms_in_gold_content": 11,
+      "a_frac_of_distinct": 0.193,
+      "terms_in_gold_content": [
+        "tiny",
+        "error",
+        "errors",
+        "evict",
+        "first",
+        "hours",
+        "keep",
+        "latency",
+        "pass",
+        "rate",
+        "tail"
+      ],
+      "a_terms_in_gold_indexed_text": 11,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "first",
+          "df": 517175,
+          "tokens": [
+            "first"
+          ]
+        },
+        {
+          "term": "latency",
+          "df": 390879,
+          "tokens": [
+            "latency"
+          ]
+        },
+        {
+          "term": "model",
+          "df": 362100,
+          "tokens": [
+            "model"
+          ]
+        }
+      ],
+      "n_terms_kept": 63,
+      "bm25_rank_full_query": null,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": null,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": null,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 4117.5,
+      "wall_ms_reduced": 3213.1
+    },
+    {
+      "needle": "erb_042",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 7198,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 4066,
+      "n_terms_raw": 35,
+      "n_terms_bm25": 35,
+      "n_terms_distinct": 31,
+      "a_terms_in_gold_content": 8,
+      "a_frac_of_distinct": 0.2581,
+      "terms_in_gold_content": [
+        "p99",
+        "applied",
+        "back",
+        "down",
+        "hosted",
+        "text",
+        "us-west-2",
+        "west"
+      ],
+      "a_terms_in_gold_indexed_text": 8,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "latency",
+          "df": 390879,
+          "tokens": [
+            "latency"
+          ]
+        },
+        {
+          "term": "text",
+          "df": 220260,
+          "tokens": [
+            "text"
+          ]
+        },
+        {
+          "term": "hosted",
+          "df": 171804,
+          "tokens": [
+            "hosted"
+          ]
+        }
+      ],
+      "n_terms_kept": 31,
+      "bm25_rank_full_query": 7198,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 12939,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -5741,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2489.2,
+      "wall_ms_reduced": 1827.1
+    },
+    {
+      "needle": "erb_076",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 1456,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 6658,
+      "n_terms_raw": 30,
+      "n_terms_bm25": 30,
+      "n_terms_distinct": 26,
+      "a_terms_in_gold_content": 7,
+      "a_frac_of_distinct": 0.2692,
+      "terms_in_gold_content": [
+        "message",
+        "new",
+        "cross",
+        "handshake",
+        "sdks",
+        "streaming",
+        "three"
+      ],
+      "a_terms_in_gold_indexed_text": 7,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "message",
+          "df": 437203,
+          "tokens": [
+            "message"
+          ]
+        },
+        {
+          "term": "messages",
+          "df": 412879,
+          "tokens": [
+            "messages"
+          ]
+        },
+        {
+          "term": "steps",
+          "df": 319460,
+          "tokens": [
+            "steps"
+          ]
+        }
+      ],
+      "n_terms_kept": 26,
+      "bm25_rank_full_query": 1456,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 1409,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": 47,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2531.5,
+      "wall_ms_reduced": 1791.2
+    },
+    {
+      "needle": "erb_091",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 17745,
+      "n_gold_chunks": 1,
+      "gold_content_chars": 3764,
+      "n_terms_raw": 31,
+      "n_terms_bm25": 31,
+      "n_terms_distinct": 26,
+      "a_terms_in_gold_content": 6,
+      "a_frac_of_distinct": 0.2308,
+      "terms_in_gold_content": [
+        "rollout",
+        "canary",
+        "deployment",
+        "planned",
+        "ramp",
+        "traffic"
+      ],
+      "a_terms_in_gold_indexed_text": 6,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "region",
+          "df": 265226,
+          "tokens": [
+            "region"
+          ]
+        },
+        {
+          "term": "canary",
+          "df": 256642,
+          "tokens": [
+            "canary"
+          ]
+        },
+        {
+          "term": "time",
+          "df": 255003,
+          "tokens": [
+            "time"
+          ]
+        }
+      ],
+      "n_terms_kept": 28,
+      "bm25_rank_full_query": 17745,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 17452,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": 293,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2545.4,
+      "wall_ms_reduced": 2099.5
+    },
+    {
+      "needle": "erb_092",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 3062,
+      "n_gold_chunks": 1,
+      "gold_content_chars": 3539,
+      "n_terms_raw": 33,
+      "n_terms_bm25": 33,
+      "n_terms_distinct": 28,
+      "a_terms_in_gold_content": 6,
+      "a_frac_of_distinct": 0.2143,
+      "terms_in_gold_content": [
+        "audit",
+        "borders",
+        "data",
+        "founder",
+        "hosted",
+        "logging"
+      ],
+      "a_terms_in_gold_indexed_text": 6,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "data",
+          "df": 215463,
+          "tokens": [
+            "data"
+          ]
+        },
+        {
+          "term": "audit",
+          "df": 203381,
+          "tokens": [
+            "audit"
+          ]
+        },
+        {
+          "term": "hosted",
+          "df": 171804,
+          "tokens": [
+            "hosted"
+          ]
+        }
+      ],
+      "n_terms_kept": 30,
+      "bm25_rank_full_query": 3062,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 8142,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -5080,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 1890.7,
+      "wall_ms_reduced": 1419.4
+    },
+    {
+      "needle": "erb_099",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 1964,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 5822,
+      "n_terms_raw": 41,
+      "n_terms_bm25": 41,
+      "n_terms_distinct": 36,
+      "a_terms_in_gold_content": 13,
+      "a_frac_of_distinct": 0.3611,
+      "terms_in_gold_content": [
+        "applied",
+        "change",
+        "latency",
+        "reduce",
+        "spike",
+        "batching",
+        "cache",
+        "continuous",
+        "eviction",
+        "inference",
+        "regression",
+        "us-west-2",
+        "west"
+      ],
+      "a_terms_in_gold_indexed_text": 13,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "inference",
+          "df": 410967,
+          "tokens": [
+            "inference"
+          ]
+        },
+        {
+          "term": "latency",
+          "df": 390879,
+          "tokens": [
+            "latency"
+          ]
+        },
+        {
+          "term": "cache",
+          "df": 250315,
+          "tokens": [
+            "cache"
+          ]
+        }
+      ],
+      "n_terms_kept": 37,
+      "bm25_rank_full_query": 1964,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 2405,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -441,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 3244.2,
+      "wall_ms_reduced": 2454.7
+    },
+    {
+      "needle": "erb_108",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 3440,
+      "n_gold_chunks": 1,
+      "gold_content_chars": 2819,
+      "n_terms_raw": 31,
+      "n_terms_bm25": 31,
+      "n_terms_distinct": 22,
+      "a_terms_in_gold_content": 4,
+      "a_frac_of_distinct": 0.1818,
+      "terms_in_gold_content": [
+        "short",
+        "solo",
+        "demo",
+        "founder"
+      ],
+      "a_terms_in_gold_indexed_text": 4,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "short",
+          "df": 523042,
+          "tokens": [
+            "short"
+          ]
+        },
+        {
+          "term": "request",
+          "df": 362184,
+          "tokens": [
+            "request"
+          ]
+        },
+        {
+          "term": "requests",
+          "df": 203766,
+          "tokens": [
+            "requests"
+          ]
+        }
+      ],
+      "n_terms_kept": 26,
+      "bm25_rank_full_query": 3440,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 2316,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": 1124,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2287.7,
+      "wall_ms_reduced": 1311.3
+    },
+    {
+      "needle": "erb_115",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 1105,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 5908,
+      "n_terms_raw": 21,
+      "n_terms_bm25": 21,
+      "n_terms_distinct": 17,
+      "a_terms_in_gold_content": 7,
+      "a_frac_of_distinct": 0.4118,
+      "terms_in_gold_content": [
+        "notes",
+        "readiness",
+        "retention",
+        "soc2",
+        "note",
+        "risk",
+        "risks"
+      ],
+      "a_terms_in_gold_indexed_text": 7,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "note",
+          "df": 336858,
+          "tokens": [
+            "note"
+          ]
+        },
+        {
+          "term": "notes",
+          "df": 330631,
+          "tokens": [
+            "notes"
+          ]
+        },
+        {
+          "term": "log",
+          "df": 161371,
+          "tokens": [
+            "log"
+          ]
+        }
+      ],
+      "n_terms_kept": 17,
+      "bm25_rank_full_query": 1105,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 1419,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -314,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 1996.0,
+      "wall_ms_reduced": 1315.4
+    },
+    {
+      "needle": "erb_120",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 5680,
+      "n_gold_chunks": 3,
+      "gold_content_chars": 10285,
+      "n_terms_raw": 21,
+      "n_terms_bm25": 21,
+      "n_terms_distinct": 16,
+      "a_terms_in_gold_content": 8,
+      "a_frac_of_distinct": 0.5,
+      "terms_in_gold_content": [
+        "benchmark",
+        "dedicated",
+        "latency",
+        "throughput",
+        "48-hours",
+        "benchmarks",
+        "hours",
+        "pool"
+      ],
+      "a_terms_in_gold_indexed_text": 8,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "latency",
+          "df": 390879,
+          "tokens": [
+            "latency"
+          ]
+        },
+        {
+          "term": "dedicated",
+          "df": 271742,
+          "tokens": [
+            "dedicated"
+          ]
+        },
+        {
+          "term": "pool",
+          "df": 166342,
+          "tokens": [
+            "pool"
+          ]
+        }
+      ],
+      "n_terms_kept": 16,
+      "bm25_rank_full_query": 5680,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 13296,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -7616,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 1995.3,
+      "wall_ms_reduced": 1310.5
+    },
+    {
+      "needle": "erb_127",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 1256,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 6328,
+      "n_terms_raw": 26,
+      "n_terms_bm25": 26,
+      "n_terms_distinct": 21,
+      "a_terms_in_gold_content": 9,
+      "a_frac_of_distinct": 0.4286,
+      "terms_in_gold_content": [
+        "changes",
+        "production",
+        "change",
+        "configuration",
+        "default",
+        "deployment",
+        "hours",
+        "window",
+        "windows"
+      ],
+      "a_terms_in_gold_indexed_text": 9,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "window",
+          "df": 327495,
+          "tokens": [
+            "window"
+          ]
+        },
+        {
+          "term": "change",
+          "df": 233908,
+          "tokens": [
+            "change"
+          ]
+        },
+        {
+          "term": "changes",
+          "df": 171437,
+          "tokens": [
+            "changes"
+          ]
+        }
+      ],
+      "n_terms_kept": 22,
+      "bm25_rank_full_query": 1256,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 7551,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -6295,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2107.1,
+      "wall_ms_reduced": 1629.8
+    },
+    {
+      "needle": "erb_133",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 6821,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 7430,
+      "n_terms_raw": 35,
+      "n_terms_bm25": 35,
+      "n_terms_distinct": 30,
+      "a_terms_in_gold_content": 14,
+      "a_frac_of_distinct": 0.4667,
+      "terms_in_gold_content": [
+        "cause",
+        "burst",
+        "bursts",
+        "causes",
+        "chat",
+        "during",
+        "hosted",
+        "inference",
+        "latency",
+        "route",
+        "routes",
+        "small",
+        "spikes",
+        "traffic"
+      ],
+      "a_terms_in_gold_indexed_text": 14,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "inference",
+          "df": 410967,
+          "tokens": [
+            "inference"
+          ]
+        },
+        {
+          "term": "latency",
+          "df": 390879,
+          "tokens": [
+            "latency"
+          ]
+        },
+        {
+          "term": "small",
+          "df": 329212,
+          "tokens": [
+            "small"
+          ]
+        }
+      ],
+      "n_terms_kept": 32,
+      "bm25_rank_full_query": 6821,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 9391,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -2570,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2759.6,
+      "wall_ms_reduced": 2117.3
+    },
+    {
+      "needle": "erb_138",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 4426,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 5851,
+      "n_terms_raw": 35,
+      "n_terms_bm25": 35,
+      "n_terms_distinct": 27,
+      "a_terms_in_gold_content": 11,
+      "a_frac_of_distinct": 0.4074,
+      "terms_in_gold_content": [
+        "false",
+        "positive",
+        "assistant",
+        "code",
+        "comment",
+        "comments",
+        "criteria",
+        "evaluation",
+        "review",
+        "reviews",
+        "suggested"
+      ],
+      "a_terms_in_gold_indexed_text": 11,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "review",
+          "df": 315408,
+          "tokens": [
+            "review"
+          ]
+        },
+        {
+          "term": "set",
+          "df": 251036,
+          "tokens": [
+            "set"
+          ]
+        },
+        {
+          "term": "criteria",
+          "df": 129658,
+          "tokens": [
+            "criteria"
+          ]
+        }
+      ],
+      "n_terms_kept": 32,
+      "bm25_rank_full_query": 4426,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 3617,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": 809,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2072.0,
+      "wall_ms_reduced": 1567.7
+    },
+    {
+      "needle": "erb_146",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 1848,
+      "n_gold_chunks": 3,
+      "gold_content_chars": 8357,
+      "n_terms_raw": 35,
+      "n_terms_bm25": 35,
+      "n_terms_distinct": 26,
+      "a_terms_in_gold_content": 5,
+      "a_frac_of_distinct": 0.1923,
+      "terms_in_gold_content": [
+        "model",
+        "capability",
+        "models",
+        "write",
+        "writes"
+      ],
+      "a_terms_in_gold_indexed_text": 6,
+      "terms_in_gold_indexed_only": [
+        "old"
+      ],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "model",
+          "df": 362100,
+          "tokens": [
+            "model"
+          ]
+        },
+        {
+          "term": "deployment",
+          "df": 119238,
+          "tokens": [
+            "deployment"
+          ]
+        },
+        {
+          "term": "date",
+          "df": 94611,
+          "tokens": [
+            "date"
+          ]
+        }
+      ],
+      "n_terms_kept": 29,
+      "bm25_rank_full_query": 1848,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 647,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": 1201,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 1976.7,
+      "wall_ms_reduced": 1337.2
+    },
+    {
+      "needle": "erb_169",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 1058,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 5153,
+      "n_terms_raw": 46,
+      "n_terms_bm25": 46,
+      "n_terms_distinct": 41,
+      "a_terms_in_gold_content": 13,
+      "a_frac_of_distinct": 0.3171,
+      "terms_in_gold_content": [
+        "response",
+        "automated",
+        "content",
+        "drafts",
+        "generation",
+        "goals",
+        "lead",
+        "saas",
+        "single",
+        "small",
+        "social",
+        "support",
+        "triage"
+      ],
+      "a_terms_in_gold_indexed_text": 13,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "content",
+          "df": 547321,
+          "tokens": [
+            "content"
+          ]
+        },
+        {
+          "term": "request",
+          "df": 362184,
+          "tokens": [
+            "request"
+          ]
+        },
+        {
+          "term": "small",
+          "df": 329212,
+          "tokens": [
+            "small"
+          ]
+        }
+      ],
+      "n_terms_kept": 43,
+      "bm25_rank_full_query": 1058,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 877,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": 181,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 3415.4,
+      "wall_ms_reduced": 2870.6
+    },
+    {
+      "needle": "erb_172",
+      "group": "B",
+      "question_type": "basic",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 2395,
+      "n_gold_chunks": 1,
+      "gold_content_chars": 3904,
+      "n_terms_raw": 43,
+      "n_terms_bm25": 43,
+      "n_terms_distinct": 33,
+      "a_terms_in_gold_content": 10,
+      "a_frac_of_distinct": 0.303,
+      "terms_in_gold_content": [
+        "expected",
+        "maintenance",
+        "window",
+        "canary",
+        "capacity",
+        "dedicated",
+        "downtimes",
+        "nodes",
+        "rollout",
+        "rollouts"
+      ],
+      "a_terms_in_gold_indexed_text": 10,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "window",
+          "df": 327495,
+          "tokens": [
+            "window"
+          ]
+        },
+        {
+          "term": "dedicated",
+          "df": 271742,
+          "tokens": [
+            "dedicated"
+          ]
+        },
+        {
+          "term": "canary",
+          "df": 256642,
+          "tokens": [
+            "canary"
+          ]
+        }
+      ],
+      "n_terms_kept": 39,
+      "bm25_rank_full_query": 2395,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 3676,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -1281,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2724.1,
+      "wall_ms_reduced": 2127.9
+    },
+    {
+      "needle": "erb_311",
+      "group": "B",
+      "question_type": "intra_document_reasoning",
+      "bucket": "pool_absent",
+      "receipt_bm25_proxy_rank": 1268,
+      "n_gold_chunks": 2,
+      "gold_content_chars": 7894,
+      "n_terms_raw": 19,
+      "n_terms_bm25": 19,
+      "n_terms_distinct": 15,
+      "a_terms_in_gold_content": 8,
+      "a_frac_of_distinct": 0.5333,
+      "terms_in_gold_content": [
+        "due",
+        "on-call",
+        "runbook",
+        "updated",
+        "call",
+        "confluence",
+        "path",
+        "runbooks"
+      ],
+      "a_terms_in_gold_indexed_text": 8,
+      "terms_in_gold_indexed_only": [],
+      "classification": "OUTRANKED",
+      "df_top3_dropped": [
+        {
+          "term": "call",
+          "df": 299525,
+          "tokens": [
+            "call"
+          ]
+        },
+        {
+          "term": "on-call",
+          "df": 299525,
+          "tokens": [
+            "on",
+            "call"
+          ]
+        },
+        {
+          "term": "path",
+          "df": 235419,
+          "tokens": [
+            "path"
+          ]
+        }
+      ],
+      "n_terms_kept": 15,
+      "bm25_rank_full_query": 1268,
+      "bm25_pool_full_query": 20000,
+      "bm25_rank_minus_top3_df": 11748,
+      "bm25_pool_minus_top3_df": 20000,
+      "rank_delta_minus_top3": -10480,
+      "full_query_rank_matches_receipt": true,
+      "wall_ms_full": 2130.3,
+      "wall_ms_reduced": 1591.8
+    }
+  ],
+  "wall_s_total": 94.9
+}

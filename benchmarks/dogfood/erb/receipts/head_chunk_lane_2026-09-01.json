@@ -1,0 +1,6007 @@
+{
+ "stamp": "2026-09-01",
+ "arm": "ARM 3 -- head-chunk lane attribution",
+ "tool": "benchmarks/dogfood/erb/probe_head_chunk_lane.py",
+ "tool_sha256": "e696609d1bb9682af5617f0564a4254569498d5b41dac48d545155f70ca20ed3",
+ "helper_tools": {
+  "benchmarks/dogfood/erb/probe_head_lane_cache.py": "9778436e3ce1b35fb19a569c025b39eb56e95e4720ea9cd1fb95bd72d733aeff",
+  "benchmarks/dogfood/erb/probe_head_lane_live.py": "08e38a9987a18c0501963c6b4d0c71afaeddd56065ce90fa680434b0844e92a4",
+  "benchmarks/dogfood/erb/probe_head_chunk_delivery_order.py": "6199b9c37b6a5b755d95058d563a437eeac3e18628a2e052b4a0f2e8bd9bdf5d"
+ },
+ "git_sha": "6268b6fa67c09d0f9026a18933b3b11c10e19614",
+ "bed": "F:/tmp/erb_blob_v09x.db",
+ "bed_bytes": 24571056128,
+ "bed_access": "read-only (mode=ro, PRAGMA query_only); 2 cached full scans + FTS reads",
+ "basis_receipts": [
+  "benchmarks/dogfood/erb/receipts/interloper_mine_erb947k_2026-08-31.json",
+  "benchmarks/dogfood/erb/receipts/ladder_v09x_w24_min_delivered_2026-08-28.json",
+  "benchmarks/dogfood/erb/receipts/atcap_confound_2026-09-01.json",
+  "benchmarks/dogfood/erb/receipts/bucket_ledger_2026-09-01.json"
+ ],
+ "prereg": {
+  "kill_criterion": "KILL if the first-vs-middle rank gap collapses once BM25 term frequency and IDF are controlled instead of the kw_cov distinct-term diagnostic. If head chunks simply carry the document title/metadata header and therefore have genuinely higher tf on the query's key terms, then there is a real CONTENT difference and no positional bias to exploit -- that is a clean kill and it should be taken, not argued around.",
+  "K1_kill": "WITHIN-DOCUMENT, at-cap (both exactly 4000 chars), same-query paired BM25: head beats middle sibling in >= 60% of pairs, two-sided binomial sign test p < 0.01 vs 50% -> advantage is earned content -> KILL.",
+  "K2_cause": "Among K1 head-wins, ablating the head's first 400 content characters (exact tf and D recompute) drops it below the middle sibling in >= 50% of them -> the title/metadata block is named as the mechanism. Confirmatory only.",
+  "K3_survive": "SURVIVE only if (a) head wins < 60% of paired BM25 while the rank gap persists, OR (b) within narrow BM25 bands over a selection-free deep FTS-only ranking, first chunks still out-rank middles.",
+  "inconclusive_if": "fewer than 200 within-document at-cap pairs across the 156 miss queries",
+  "declared_before_results": true
+ },
+ "n_misses": 156,
+ "n_corpus_chunks": 947531,
+ "avgdl": 715.517748,
+ "n_fts_docs": 947531,
+ "section_1_lane_inventory": {
+  "genes_fts_ddl": "CREATE VIRTUAL TABLE genes_fts USING fts5(\n    gene_id,\n    content,\n    complement,\n    content='genes_fts_source',\n    content_rowid='rowid'\n)",
+  "genes_fts_source_view": "CREATE VIEW genes_fts_source AS\nSELECT\n    g.rowid AS rowid,\n    g.gene_id AS gene_id,\n    COALESCE(g.source_id,'') || ' ' ||\n    COALESCE((SELECT GROUP_CONCAT(t.tag_value, ' ') FROM (\n        SELECT pi.tag_value FROM promoter_index pi\n        WHERE pi.gene_id = g.gene_id ORDER BY pi.rowid) t), '')\n    || ' ' || g.content AS content,\n    COALESCE(g.complement, '') AS complement\nFROM genes g",
+  "finding_fts_text_is_not_raw_content": "genes_fts.content is NOT genes.content: the external-content view splices source_id || ' ' || GROUP_CONCAT(promoter_index.tag_value) || ' ' || genes.content. Every chunk is therefore indexed with its document's source PATH and its promoter tags prepended -- a doc-level prefix identical across siblings except for the per-chunk entity tags.",
+  "admission_gate": "[retrieval] bm25_shortlist_enabled = true, bm25_shortlist_size = 50 (RetrievalConfig defaults). knowledge_store.py post-filters gene_scores AND tier_contrib to the FTS5 top-50 bm25 list BEFORE the RRF sort, so nothing outside FTS5's top-50 can be delivered whatever the tag lanes scored.",
+  "rrf_tie_rule": "retrieval/fusion.py: every tier is re-sorted by (score desc, gene_id asc). gene_id is a content hash, so RRF tie-order is position-BLIND. The only position-sensitive tie in the pipeline is SQLite's own ORDER BY rank truncation, which breaks bm25 ties by rowid ascending (= head chunk first)."
+ },
+ "section_2_tag_lane_position_blindness": {
+  "n_multi_chunk_sources": 329133,
+  "n_with_identical_promoter_domains_across_all_chunks": 172102,
+  "pct_identical_domains": 52.2895,
+  "n_with_identical_promoter_entities_across_all_chunks": 4,
+  "pct_identical_entities": 0.0012,
+  "mean_n_entities_by_posclass": {
+   "first": 14.0305,
+   "last": 7.5044,
+   "middle": 14.4864,
+   "only": 11.7325
+  },
+  "reading": "promoter.domains (the document slug + doc-level tags) are the tag lanes' high-weight keys and are byte-identical across every chunk of a document, so tag_exact / tag_prefix / lex_anchor cannot prefer a head chunk. promoter.entities ARE per-chunk, but they are extracted FROM the chunk's own text -- a content difference, not a position rule."
+ },
+ "section_3_document_header_census": {
+  "method": "stratified random sample of up to 6,000 chunks per position class; inspect the first 400 characters of genes.content",
+  "by_posclass": {
+   "only": {
+    "n_sampled": 6000,
+    "pct_content_starts_with_json_brace": 99.73,
+    "pct_first_400ch_carries_a_title_key": 0.62
+   },
+   "first": {
+    "n_sampled": 6000,
+    "pct_content_starts_with_json_brace": 100.0,
+    "pct_first_400ch_carries_a_title_key": 63.32
+   },
+   "middle": {
+    "n_sampled": 6000,
+    "pct_content_starts_with_json_brace": 0.13,
+    "pct_first_400ch_carries_a_title_key": 0.0
+   },
+   "last": {
+    "n_sampled": 6000,
+    "pct_content_starts_with_json_brace": 0.32,
+    "pct_first_400ch_carries_a_title_key": 6.08
+   }
+  }
+ },
+ "section_4_selection_free_depth_composition": {
+  "method": "per miss query, a deep FTS5-ONLY ranking (ORDER BY rank LIMIT 2000). Not conditioned on being seated -- answers the P5 author's selection flag directly.",
+  "corpus_share_pct": {
+   "first": 34.74,
+   "middle": 12.5,
+   "last": 34.74,
+   "only": 18.03
+  },
+  "matched_pool_share_pct": {
+   "middle": 17.78,
+   "first": 59.72,
+   "only": 10.22,
+   "last": 12.28
+  },
+  "by_depth_band_pct": {
+   "1-12": {
+    "middle": 15.06,
+    "first": 68.86,
+    "only": 7.59,
+    "last": 8.49
+   },
+   "13-50": {
+    "first": 67.39,
+    "last": 8.76,
+    "middle": 15.45,
+    "only": 8.4
+   },
+   "51-200": {
+    "middle": 16.81,
+    "first": 64.3,
+    "only": 8.72,
+    "last": 10.17
+   },
+   "201-500": {
+    "middle": 17.53,
+    "first": 61.17,
+    "last": 11.69,
+    "only": 9.61
+   },
+   "501-2000": {
+    "first": 58.71,
+    "last": 12.73,
+    "middle": 18.01,
+    "only": 10.56
+   }
+  },
+  "by_depth_band_counts": {
+   "1-12": {
+    "middle": 282,
+    "first": 1289,
+    "only": 142,
+    "last": 159
+   },
+   "13-50": {
+    "first": 3995,
+    "last": 519,
+    "middle": 916,
+    "only": 498
+   },
+   "51-200": {
+    "middle": 3934,
+    "first": 15046,
+    "only": 2040,
+    "last": 2380
+   },
+   "201-500": {
+    "middle": 8204,
+    "first": 28628,
+    "last": 5469,
+    "only": 4499
+   },
+   "501-2000": {
+    "first": 137379,
+    "last": 29783,
+    "middle": 42137,
+    "only": 24701
+   }
+  }
+ },
+ "section_4b_atcap_first_vs_middle_unconditioned": {
+  "note": "at-cap (exactly 4000 chars) chunks only, so length is held constant",
+  "first": {
+   "n": 186337,
+   "mean_bm25": 37.1942,
+   "mean_deep_fts_rank": 982.7114
+  },
+  "middle": {
+   "n": 55473,
+   "mean_bm25": 36.1185,
+   "mean_deep_fts_rank": 1014.1435
+  }
+ },
+ "section_5_within_document_paired_bm25": {
+  "design": "same query, same parent document, both chunks exactly 4000 chars; the head is paired against its STRONGEST middle sibling (hardest test for the head).",
+  "n_pairs": 5538,
+  "n_ties": 0,
+  "n_decided": 5538,
+  "head_wins": 3009,
+  "head_win_pct": 54.33,
+  "binomial_two_sided_p_vs_50pct": 1.1903050130422785e-10,
+  "mean_bm25_delta_head_minus_mid": 0.9986,
+  "median_bm25_delta": 0.5301,
+  "mean_head_bm25": 39.0252,
+  "mean_mid_bm25": 38.0266,
+  "mean_head_deep_rank": 751.385,
+  "mean_mid_deep_rank": 816.286,
+  "n_pairs_dropped_no_content_anchor": 0
+ },
+ "section_6_header_ablation_K2": {
+  "design": "delete the first 400 characters of the head chunk's genes.content and recompute BM25 EXACTLY (tf and doc length D both adjusted), then re-run the same paired comparison.",
+  "n_head_wins": 3009,
+  "n_head_wins_that_flip_when_header_removed": 61,
+  "pct_flipped": 2.03,
+  "mean_header_tokens": 46.4453,
+  "mean_head_bm25_with_header": 42.1451,
+  "mean_head_bm25_without_header": 42.2494,
+  "mean_mid_bm25_in_those_pairs": 36.4498,
+  "mean_prefix_tokens_source_id_plus_tags": 62.4845,
+  "head_qterm_tf_share_inside_header_pct": 5.06,
+  "header_token_share_of_head_doc_pct": 4.81,
+  "prefix_counterfactual_both_stripped": {
+   "note": "delete the view's synthetic source_id+tags prefix from BOTH chunks (the doc-level part of the FTS text) and re-run the sign test",
+   "head_wins": 3369,
+   "n_decided": 5538
+  }
+ },
+ "section_7_bm25_replica_validation": {
+  "n_rows_checked": 3000,
+  "max_abs_delta_vs_sqlite_bm25": 2.842170943040401e-14,
+  "tokenizer_validation": "300/300 sampled rows reproduce genes_fts_docsize exactly",
+  "status": "BIT-EXACT"
+ },
+ "section_8_tie_order": {
+  "n_rows_examined": 312000,
+  "n_rows_in_a_bm25_tie": 135,
+  "n_tied_groups": 67,
+  "n_tied_groups_mixed_posclass": 2,
+  "pct_rows_in_a_tie": 0.043,
+  "reading": "the only position-sensitive tie in the pipeline is SQLite's ORDER BY rank tie-break (rowid ascending = head first). Its size bounds any position bias that is NOT a bm25 difference."
+ },
+ "section_10_K3b_post_admission_reordering": {
+  "source_receipt": "benchmarks/dogfood/erb/receipts/head_lane_live_2026-09-01.json",
+  "n_queries": 40,
+  "n_eligible_candidates_outside_fts5_top50": 292,
+  "admission_gate_confirmed": false,
+  "by_posclass": {
+   "first": {
+    "n": 1122,
+    "mean_bm25_rank_in_top50": 23.6533,
+    "mean_final_rank": 24.7032,
+    "mean_delta_final_minus_bm25_rank": 1.0499
+   },
+   "last": {
+    "n": 147,
+    "mean_bm25_rank_in_top50": 23.8912,
+    "mean_final_rank": 25.3197,
+    "mean_delta_final_minus_bm25_rank": 1.4286
+   },
+   "middle": {
+    "n": 292,
+    "mean_bm25_rank_in_top50": 23.2842,
+    "mean_final_rank": 22.9212,
+    "mean_delta_final_minus_bm25_rank": -0.363
+   },
+   "only": {
+    "n": 124,
+    "mean_bm25_rank_in_top50": 22.879,
+    "mean_final_rank": 24.8548,
+    "mean_delta_final_minus_bm25_rank": 1.9758
+   }
+  },
+  "mean_lane_score_by_posclass": {
+   "first": {
+    "authority": 2.3926,
+    "fts5": 6.0,
+    "lex_anchor": 6.552,
+    "tag_exact": 5.0751,
+    "tag_prefix": 4.9483
+   },
+   "last": {
+    "authority": 2.3548,
+    "fts5": 6.0,
+    "lex_anchor": 6.5171,
+    "tag_exact": 4.7822,
+    "tag_prefix": 4.5132
+   },
+   "middle": {
+    "authority": 2.5258,
+    "fts5": 6.0,
+    "lex_anchor": 6.7731,
+    "tag_exact": 5.1571,
+    "tag_prefix": 5.228
+   },
+   "only": {
+    "authority": 2.3333,
+    "fts5": 6.0,
+    "lex_anchor": 6.5439,
+    "tag_exact": 5.3684,
+    "tag_prefix": 4.4477
+   }
+  },
+  "reading": "delta = final rank minus bm25 rank inside the admitted top-50. A systematically POSITIVE delta for middles would be a positional demotion that bm25 does not explain; a delta near zero (or negative) means the post-admission machinery is position-neutral and everything the P5 observation saw was already decided by bm25 admission."
+ },
+ "section_9_addressable_population": {
+  "n_misses": 156,
+  "n_misses_gold_first_is_middle_or_tail": 89,
+  "n_misses_gold_reachable_in_deep_fts_2000": 132,
+  "deep_fts_rank_of_first_gold_hist": {
+   "13-50": 38,
+   "51-200": 30,
+   "1-12": 16,
+   "201-2000": 48
+  },
+  "gold_posclass_when_reachable": {
+   "first": 87,
+   "middle": 18,
+   "only": 16,
+   "last": 11
+  }
+ },
+ "per_query": [
+  {
+   "needle": "erb_001",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 19
+  },
+  {
+   "needle": "erb_003",
+   "n_terms": 40,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 63
+  },
+  {
+   "needle": "erb_006",
+   "n_terms": 49,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 10
+  },
+  {
+   "needle": "erb_021",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 181
+  },
+  {
+   "needle": "erb_025",
+   "n_terms": 39,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 129
+  },
+  {
+   "needle": "erb_027",
+   "n_terms": 27,
+   "n_deep": 2000,
+   "n_pairs": 4,
+   "deep_fts_rank_of_first_gold": 484
+  },
+  {
+   "needle": "erb_030",
+   "n_terms": 28,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 59
+  },
+  {
+   "needle": "erb_031",
+   "n_terms": 25,
+   "n_deep": 2000,
+   "n_pairs": 15,
+   "deep_fts_rank_of_first_gold": 677
+  },
+  {
+   "needle": "erb_036",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 22,
+   "deep_fts_rank_of_first_gold": 4
+  },
+  {
+   "needle": "erb_042",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 30,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_045",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 5
+  },
+  {
+   "needle": "erb_046",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 7
+  },
+  {
+   "needle": "erb_049",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 37
+  },
+  {
+   "needle": "erb_050",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 46
+  },
+  {
+   "needle": "erb_053",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 6
+  },
+  {
+   "needle": "erb_054",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 222
+  },
+  {
+   "needle": "erb_057",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 127
+  },
+  {
+   "needle": "erb_061",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 31
+  },
+  {
+   "needle": "erb_063",
+   "n_terms": 27,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 460
+  },
+  {
+   "needle": "erb_064",
+   "n_terms": 41,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 19
+  },
+  {
+   "needle": "erb_068",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 8
+  },
+  {
+   "needle": "erb_071",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 37,
+   "deep_fts_rank_of_first_gold": 429
+  },
+  {
+   "needle": "erb_073",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 94
+  },
+  {
+   "needle": "erb_074",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 34,
+   "deep_fts_rank_of_first_gold": 13
+  },
+  {
+   "needle": "erb_076",
+   "n_terms": 30,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1456
+  },
+  {
+   "needle": "erb_081",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 34
+  },
+  {
+   "needle": "erb_086",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 90
+  },
+  {
+   "needle": "erb_089",
+   "n_terms": 25,
+   "n_deep": 2000,
+   "n_pairs": 27,
+   "deep_fts_rank_of_first_gold": 137
+  },
+  {
+   "needle": "erb_091",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_092",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_099",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 9,
+   "deep_fts_rank_of_first_gold": 1602
+  },
+  {
+   "needle": "erb_107",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 3
+  },
+  {
+   "needle": "erb_108",
+   "n_terms": 23,
+   "n_deep": 2000,
+   "n_pairs": 39,
+   "deep_fts_rank_of_first_gold": 455
+  },
+  {
+   "needle": "erb_109",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 196
+  },
+  {
+   "needle": "erb_111",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 42
+  },
+  {
+   "needle": "erb_115",
+   "n_terms": 21,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1105
+  },
+  {
+   "needle": "erb_120",
+   "n_terms": 21,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_121",
+   "n_terms": 39,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 8
+  },
+  {
+   "needle": "erb_124",
+   "n_terms": 39,
+   "n_deep": 2000,
+   "n_pairs": 39,
+   "deep_fts_rank_of_first_gold": 103
+  },
+  {
+   "needle": "erb_127",
+   "n_terms": 23,
+   "n_deep": 2000,
+   "n_pairs": 24,
+   "deep_fts_rank_of_first_gold": 1747
+  },
+  {
+   "needle": "erb_130",
+   "n_terms": 43,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 18
+  },
+  {
+   "needle": "erb_133",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 23,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_136",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 25,
+   "deep_fts_rank_of_first_gold": 130
+  },
+  {
+   "needle": "erb_137",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 8,
+   "deep_fts_rank_of_first_gold": 42
+  },
+  {
+   "needle": "erb_138",
+   "n_terms": 27,
+   "n_deep": 2000,
+   "n_pairs": 38,
+   "deep_fts_rank_of_first_gold": 1567
+  },
+  {
+   "needle": "erb_139",
+   "n_terms": 39,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 566
+  },
+  {
+   "needle": "erb_141",
+   "n_terms": 38,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 194
+  },
+  {
+   "needle": "erb_143",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 27
+  },
+  {
+   "needle": "erb_144",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 4
+  },
+  {
+   "needle": "erb_145",
+   "n_terms": 41,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 8
+  },
+  {
+   "needle": "erb_146",
+   "n_terms": 25,
+   "n_deep": 2000,
+   "n_pairs": 30,
+   "deep_fts_rank_of_first_gold": 739
+  },
+  {
+   "needle": "erb_149",
+   "n_terms": 25,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 21
+  },
+  {
+   "needle": "erb_152",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 43
+  },
+  {
+   "needle": "erb_157",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 110
+  },
+  {
+   "needle": "erb_158",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 23
+  },
+  {
+   "needle": "erb_162",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1
+  },
+  {
+   "needle": "erb_165",
+   "n_terms": 31,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 15
+  },
+  {
+   "needle": "erb_167",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 14
+  },
+  {
+   "needle": "erb_169",
+   "n_terms": 46,
+   "n_deep": 2000,
+   "n_pairs": 24,
+   "deep_fts_rank_of_first_gold": 1058
+  },
+  {
+   "needle": "erb_172",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1203
+  },
+  {
+   "needle": "erb_177",
+   "n_terms": 41,
+   "n_deep": 2000,
+   "n_pairs": 16,
+   "deep_fts_rank_of_first_gold": 72
+  },
+  {
+   "needle": "erb_179",
+   "n_terms": 39,
+   "n_deep": 2000,
+   "n_pairs": 13,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_180",
+   "n_terms": 57,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 22
+  },
+  {
+   "needle": "erb_182",
+   "n_terms": 61,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 28
+  },
+  {
+   "needle": "erb_183",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_184",
+   "n_terms": 49,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 31
+  },
+  {
+   "needle": "erb_185",
+   "n_terms": 55,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 324
+  },
+  {
+   "needle": "erb_186",
+   "n_terms": 49,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_187",
+   "n_terms": 49,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 9
+  },
+  {
+   "needle": "erb_188",
+   "n_terms": 51,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 55
+  },
+  {
+   "needle": "erb_189",
+   "n_terms": 43,
+   "n_deep": 2000,
+   "n_pairs": 28,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_190",
+   "n_terms": 67,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 130
+  },
+  {
+   "needle": "erb_192",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 416
+  },
+  {
+   "needle": "erb_195",
+   "n_terms": 43,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_196",
+   "n_terms": 41,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 22
+  },
+  {
+   "needle": "erb_197",
+   "n_terms": 58,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 13
+  },
+  {
+   "needle": "erb_199",
+   "n_terms": 65,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 43
+  },
+  {
+   "needle": "erb_200",
+   "n_terms": 63,
+   "n_deep": 2000,
+   "n_pairs": 26,
+   "deep_fts_rank_of_first_gold": 391
+  },
+  {
+   "needle": "erb_202",
+   "n_terms": 74,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 127
+  },
+  {
+   "needle": "erb_203",
+   "n_terms": 48,
+   "n_deep": 2000,
+   "n_pairs": 2,
+   "deep_fts_rank_of_first_gold": 1881
+  },
+  {
+   "needle": "erb_206",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_208",
+   "n_terms": 68,
+   "n_deep": 2000,
+   "n_pairs": 2,
+   "deep_fts_rank_of_first_gold": 22
+  },
+  {
+   "needle": "erb_209",
+   "n_terms": 59,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 65
+  },
+  {
+   "needle": "erb_211",
+   "n_terms": 55,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 586
+  },
+  {
+   "needle": "erb_212",
+   "n_terms": 44,
+   "n_deep": 2000,
+   "n_pairs": 23,
+   "deep_fts_rank_of_first_gold": 48
+  },
+  {
+   "needle": "erb_213",
+   "n_terms": 55,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_215",
+   "n_terms": 39,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 286
+  },
+  {
+   "needle": "erb_217",
+   "n_terms": 47,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 49
+  },
+  {
+   "needle": "erb_218",
+   "n_terms": 43,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 889
+  },
+  {
+   "needle": "erb_219",
+   "n_terms": 54,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 585
+  },
+  {
+   "needle": "erb_220",
+   "n_terms": 41,
+   "n_deep": 2000,
+   "n_pairs": 16,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_221",
+   "n_terms": 56,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 53
+  },
+  {
+   "needle": "erb_223",
+   "n_terms": 41,
+   "n_deep": 2000,
+   "n_pairs": 37,
+   "deep_fts_rank_of_first_gold": 242
+  },
+  {
+   "needle": "erb_225",
+   "n_terms": 55,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 142
+  },
+  {
+   "needle": "erb_228",
+   "n_terms": 59,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 744
+  },
+  {
+   "needle": "erb_229",
+   "n_terms": 71,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 47
+  },
+  {
+   "needle": "erb_230",
+   "n_terms": 49,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_231",
+   "n_terms": 58,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 18
+  },
+  {
+   "needle": "erb_233",
+   "n_terms": 45,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 151
+  },
+  {
+   "needle": "erb_234",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1084
+  },
+  {
+   "needle": "erb_235",
+   "n_terms": 55,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 15
+  },
+  {
+   "needle": "erb_238",
+   "n_terms": 43,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 30
+  },
+  {
+   "needle": "erb_239",
+   "n_terms": 55,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 276
+  },
+  {
+   "needle": "erb_241",
+   "n_terms": 45,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_242",
+   "n_terms": 57,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 692
+  },
+  {
+   "needle": "erb_243",
+   "n_terms": 49,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 227
+  },
+  {
+   "needle": "erb_245",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 318
+  },
+  {
+   "needle": "erb_246",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1136
+  },
+  {
+   "needle": "erb_247",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1404
+  },
+  {
+   "needle": "erb_248",
+   "n_terms": 51,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_249",
+   "n_terms": 41,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 240
+  },
+  {
+   "needle": "erb_250",
+   "n_terms": 50,
+   "n_deep": 2000,
+   "n_pairs": 9,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_254",
+   "n_terms": 39,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 22
+  },
+  {
+   "needle": "erb_255",
+   "n_terms": 87,
+   "n_deep": 2000,
+   "n_pairs": 32,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_256",
+   "n_terms": 59,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 55
+  },
+  {
+   "needle": "erb_259",
+   "n_terms": 41,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_260",
+   "n_terms": 47,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 70
+  },
+  {
+   "needle": "erb_261",
+   "n_terms": 88,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_262",
+   "n_terms": 53,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 352
+  },
+  {
+   "needle": "erb_264",
+   "n_terms": 43,
+   "n_deep": 2000,
+   "n_pairs": 38,
+   "deep_fts_rank_of_first_gold": 23
+  },
+  {
+   "needle": "erb_265",
+   "n_terms": 58,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 12
+  },
+  {
+   "needle": "erb_266",
+   "n_terms": 53,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_267",
+   "n_terms": 59,
+   "n_deep": 2000,
+   "n_pairs": 30,
+   "deep_fts_rank_of_first_gold": 323
+  },
+  {
+   "needle": "erb_269",
+   "n_terms": 51,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 204
+  },
+  {
+   "needle": "erb_271",
+   "n_terms": 27,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 20
+  },
+  {
+   "needle": "erb_273",
+   "n_terms": 45,
+   "n_deep": 2000,
+   "n_pairs": 29,
+   "deep_fts_rank_of_first_gold": 13
+  },
+  {
+   "needle": "erb_274",
+   "n_terms": 58,
+   "n_deep": 2000,
+   "n_pairs": 16,
+   "deep_fts_rank_of_first_gold": 1282
+  },
+  {
+   "needle": "erb_275",
+   "n_terms": 63,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1251
+  },
+  {
+   "needle": "erb_276",
+   "n_terms": 54,
+   "n_deep": 2000,
+   "n_pairs": 0,
+   "deep_fts_rank_of_first_gold": 21
+  },
+  {
+   "needle": "erb_277",
+   "n_terms": 62,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 66
+  },
+  {
+   "needle": "erb_278",
+   "n_terms": 39,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 153
+  },
+  {
+   "needle": "erb_280",
+   "n_terms": 45,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 4
+  },
+  {
+   "needle": "erb_281",
+   "n_terms": 49,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_284",
+   "n_terms": 63,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 188
+  },
+  {
+   "needle": "erb_288",
+   "n_terms": 51,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 773
+  },
+  {
+   "needle": "erb_292",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 338
+  },
+  {
+   "needle": "erb_294",
+   "n_terms": 43,
+   "n_deep": 2000,
+   "n_pairs": 35,
+   "deep_fts_rank_of_first_gold": 32
+  },
+  {
+   "needle": "erb_295",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_296",
+   "n_terms": 49,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": null
+  },
+  {
+   "needle": "erb_297",
+   "n_terms": 45,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 278
+  },
+  {
+   "needle": "erb_298",
+   "n_terms": 53,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 306
+  },
+  {
+   "needle": "erb_299",
+   "n_terms": 62,
+   "n_deep": 2000,
+   "n_pairs": 32,
+   "deep_fts_rank_of_first_gold": 105
+  },
+  {
+   "needle": "erb_302",
+   "n_terms": 33,
+   "n_deep": 2000,
+   "n_pairs": 32,
+   "deep_fts_rank_of_first_gold": 89
+  },
+  {
+   "needle": "erb_311",
+   "n_terms": 19,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1268
+  },
+  {
+   "needle": "erb_323",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 38
+  },
+  {
+   "needle": "erb_324",
+   "n_terms": 21,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 849
+  },
+  {
+   "needle": "erb_328",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 25,
+   "deep_fts_rank_of_first_gold": 430
+  },
+  {
+   "needle": "erb_339",
+   "n_terms": 37,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 8
+  },
+  {
+   "needle": "erb_409",
+   "n_terms": 70,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 71
+  },
+  {
+   "needle": "erb_416",
+   "n_terms": 21,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 59
+  },
+  {
+   "needle": "erb_427",
+   "n_terms": 25,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 221
+  },
+  {
+   "needle": "erb_436",
+   "n_terms": 25,
+   "n_deep": 2000,
+   "n_pairs": 7,
+   "deep_fts_rank_of_first_gold": 434
+  },
+  {
+   "needle": "erb_438",
+   "n_terms": 35,
+   "n_deep": 2000,
+   "n_pairs": 19,
+   "deep_fts_rank_of_first_gold": 1888
+  },
+  {
+   "needle": "erb_447",
+   "n_terms": 27,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 34
+  },
+  {
+   "needle": "erb_450",
+   "n_terms": 29,
+   "n_deep": 2000,
+   "n_pairs": 3,
+   "deep_fts_rank_of_first_gold": 40
+  },
+  {
+   "needle": "erb_451",
+   "n_terms": 48,
+   "n_deep": 2000,
+   "n_pairs": 40,
+   "deep_fts_rank_of_first_gold": 1
+  }
+ ],
+ "pairs_sample": [
+  {
+   "needle": "erb_001",
+   "head_gid": "a4ad31ef10d208cd",
+   "mid_gid": "f82e2e113e8a98f8",
+   "head_bm25": 33.308977031893534,
+   "mid_bm25": 35.30475173794501,
+   "head_bm25_no_header": 33.724967407469116,
+   "head_bm25_no_prefix": 33.810426789686716,
+   "mid_bm25_no_prefix": 35.76598309339677,
+   "head_deep_rank": 199,
+   "mid_deep_rank": 80,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 45,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 919,
+   "mid_dl": 1088
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "a239b8ba2df861e5",
+   "mid_gid": "feec2e76dd6245c9",
+   "head_bm25": 29.380449504845938,
+   "mid_bm25": 30.86906307812871,
+   "head_bm25_no_header": 29.839283070644182,
+   "head_bm25_no_prefix": 29.922176287591526,
+   "mid_bm25_no_prefix": 31.251613165425837,
+   "head_deep_rank": 749,
+   "mid_deep_rank": 442,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 29,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 919,
+   "mid_dl": 698
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "84b40d984123d5e1",
+   "mid_gid": "59cea892157885c4",
+   "head_bm25": 30.733788048904895,
+   "mid_bm25": 31.00564587986449,
+   "head_bm25_no_header": 30.99364253856697,
+   "head_bm25_no_prefix": 31.110428905742776,
+   "mid_bm25_no_prefix": 30.185152600515806,
+   "head_deep_rank": 460,
+   "mid_deep_rank": 412,
+   "n_header_tokens": 40,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 45,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 966,
+   "mid_dl": 988
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "c32961918554c7f1",
+   "mid_gid": "03c5ebfea41c7916",
+   "head_bm25": 27.892622395984844,
+   "mid_bm25": 27.66060706261739,
+   "head_bm25_no_header": 28.10192339704238,
+   "head_bm25_no_prefix": 28.29972525905479,
+   "mid_bm25_no_prefix": 28.12604639362888,
+   "head_deep_rank": 1280,
+   "mid_deep_rank": 1377,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 32,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1006,
+   "mid_dl": 796
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "a3a58a2a677410dc",
+   "mid_gid": "5e0c32e27e3de96d",
+   "head_bm25": 29.043865776590906,
+   "mid_bm25": 31.615763318444394,
+   "head_bm25_no_header": 29.40024608922897,
+   "head_bm25_no_prefix": 29.59053943750095,
+   "mid_bm25_no_prefix": 32.36969982114124,
+   "head_deep_rank": 857,
+   "mid_deep_rank": 333,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 29,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 753,
+   "mid_dl": 727
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "f7796425d98642cb",
+   "mid_gid": "97f931d1a0110bc8",
+   "head_bm25": 29.891031775345553,
+   "mid_bm25": 31.606307001057854,
+   "head_bm25_no_header": 30.231998187743088,
+   "head_bm25_no_prefix": 30.338361862460488,
+   "mid_bm25_no_prefix": 32.22686530081138,
+   "head_deep_rank": 628,
+   "mid_deep_rank": 336,
+   "n_header_tokens": 52,
+   "n_prefix_tokens": 70,
+   "head_qterm_tf_total": 59,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 856,
+   "mid_dl": 729
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "7f52fa43ecdbd7b3",
+   "mid_gid": "f155827c54c44e8f",
+   "head_bm25": 29.611957848252384,
+   "mid_bm25": 30.405865613627448,
+   "head_bm25_no_header": 29.94149965937129,
+   "head_bm25_no_prefix": 29.97516557278844,
+   "mid_bm25_no_prefix": 30.80719999886528,
+   "head_deep_rank": 700,
+   "mid_deep_rank": 519,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 67,
+   "head_qterm_tf_total": 41,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 1064,
+   "mid_dl": 1109
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "6ae20264031a67ca",
+   "mid_gid": "e4c70e1445a3bc5b",
+   "head_bm25": 28.00128960377627,
+   "mid_bm25": 27.11245571112496,
+   "head_bm25_no_header": 28.40449817414826,
+   "head_bm25_no_prefix": 28.493794706617567,
+   "mid_bm25_no_prefix": 27.430489929843553,
+   "head_deep_rank": 1226,
+   "mid_deep_rank": 1596,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 56,
+   "head_qterm_tf_total": 27,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 995,
+   "mid_dl": 938
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "e4b1188c729749bb",
+   "mid_gid": "472f7db983630bd4",
+   "head_bm25": 28.388057723604735,
+   "mid_bm25": 29.01896256767747,
+   "head_bm25_no_header": 28.410691057920097,
+   "head_bm25_no_prefix": 28.808553540607843,
+   "mid_bm25_no_prefix": 29.49712994407602,
+   "head_deep_rank": 1061,
+   "mid_deep_rank": 865,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 31,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 993,
+   "mid_dl": 1051
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "67fe9b7dff2fa374",
+   "mid_gid": "72458be8517f65ec",
+   "head_bm25": 26.876844453526374,
+   "mid_bm25": 27.34424754544225,
+   "head_bm25_no_header": 27.032965372224307,
+   "head_bm25_no_prefix": 27.188729682283572,
+   "mid_bm25_no_prefix": 27.90163518131992,
+   "head_deep_rank": 1719,
+   "mid_deep_rank": 1498,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 50,
+   "head_qterm_tf_total": 43,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 876,
+   "mid_dl": 894
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "d947ba00356481bd",
+   "mid_gid": "55097518f849f2c9",
+   "head_bm25": 26.470445865344317,
+   "mid_bm25": 32.453488256807326,
+   "head_bm25_no_header": 26.701440483662033,
+   "head_bm25_no_prefix": 26.696710581201863,
+   "mid_bm25_no_prefix": 32.71626285011412,
+   "head_deep_rank": 1964,
+   "mid_deep_rank": 256,
+   "n_header_tokens": 52,
+   "n_prefix_tokens": 56,
+   "head_qterm_tf_total": 60,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1041,
+   "mid_dl": 833
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "b2b7c8a46dad14cf",
+   "mid_gid": "e834f979c13be776",
+   "head_bm25": 34.047154418854824,
+   "mid_bm25": 31.01267610016569,
+   "head_bm25_no_header": 34.29585645863624,
+   "head_bm25_no_prefix": 34.32079799649361,
+   "mid_bm25_no_prefix": 30.546049844100455,
+   "head_deep_rank": 140,
+   "mid_deep_rank": 411,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 55,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1010,
+   "mid_dl": 952
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "f31743dd268f0f59",
+   "mid_gid": "acaea7dee30690a0",
+   "head_bm25": 31.886464780009263,
+   "mid_bm25": 31.169961270118872,
+   "head_bm25_no_header": 32.28570421420645,
+   "head_bm25_no_prefix": 32.533149846036295,
+   "mid_bm25_no_prefix": 31.74961988148617,
+   "head_deep_rank": 303,
+   "mid_deep_rank": 387,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 77,
+   "head_qterm_tf_total": 34,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 894,
+   "mid_dl": 915
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "0ef8ae39f4382e92",
+   "mid_gid": "5281200e8c240fcd",
+   "head_bm25": 28.556809057660384,
+   "mid_bm25": 33.37633385360496,
+   "head_bm25_no_header": 28.85216168169259,
+   "head_bm25_no_prefix": 29.115512445504084,
+   "mid_bm25_no_prefix": 34.01421113985906,
+   "head_deep_rank": 1008,
+   "mid_deep_rank": 192,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 26,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 819,
+   "mid_dl": 827
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "986d1d4f8d0b16de",
+   "mid_gid": "1cc122be8eccac96",
+   "head_bm25": 29.986916606825282,
+   "mid_bm25": 49.92081163933074,
+   "head_bm25_no_header": 30.297809559243618,
+   "head_bm25_no_prefix": 30.33431750895715,
+   "mid_bm25_no_prefix": 50.03767438239001,
+   "head_deep_rank": 611,
+   "mid_deep_rank": 1,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 34,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 986,
+   "mid_dl": 907
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "6356fabf064954d6",
+   "mid_gid": "e90c1f9e955a4410",
+   "head_bm25": 28.278996684899305,
+   "mid_bm25": 31.564161928553425,
+   "head_bm25_no_header": 28.768652170913,
+   "head_bm25_no_prefix": 28.428900503733146,
+   "mid_bm25_no_prefix": 32.15590316750662,
+   "head_deep_rank": 1111,
+   "mid_deep_rank": 340,
+   "n_header_tokens": 53,
+   "n_prefix_tokens": 73,
+   "head_qterm_tf_total": 26,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 940,
+   "mid_dl": 836
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "ef54da23dbe6ed86",
+   "mid_gid": "62daca13c824d80f",
+   "head_bm25": 32.286209873491444,
+   "mid_bm25": 27.522069583112938,
+   "head_bm25_no_header": 32.704742845395856,
+   "head_bm25_no_prefix": 32.78700661365688,
+   "mid_bm25_no_prefix": 27.773943447940812,
+   "head_deep_rank": 269,
+   "mid_deep_rank": 1436,
+   "n_header_tokens": 51,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 38,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 893,
+   "mid_dl": 819
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "262895b888f40993",
+   "mid_gid": "f8529cd082b44e72",
+   "head_bm25": 28.288827346343275,
+   "mid_bm25": 26.88001183417785,
+   "head_bm25_no_header": 28.554633509041704,
+   "head_bm25_no_prefix": 28.344831651935884,
+   "mid_bm25_no_prefix": 25.146570594503984,
+   "head_deep_rank": 1105,
+   "mid_deep_rank": 1716,
+   "n_header_tokens": 53,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 38,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1101,
+   "mid_dl": 1006
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "250f4a0fdc44e568",
+   "mid_gid": "62f4f0707cde84df",
+   "head_bm25": 28.58692581076201,
+   "mid_bm25": 34.06873286129424,
+   "head_bm25_no_header": 28.902107519918932,
+   "head_bm25_no_prefix": 28.555475628944492,
+   "mid_bm25_no_prefix": 34.360162926282435,
+   "head_deep_rank": 998,
+   "mid_deep_rank": 135,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 44,
+   "head_qterm_tf_total": 50,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 1030,
+   "mid_dl": 1119
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "a3fd471630a779b5",
+   "mid_gid": "ef6ec86811fae4a9",
+   "head_bm25": 26.529090844868648,
+   "mid_bm25": 27.818424999112047,
+   "head_bm25_no_header": 26.179004430677747,
+   "head_bm25_no_prefix": 26.434591637928644,
+   "mid_bm25_no_prefix": 26.925329896764772,
+   "head_deep_rank": 1919,
+   "mid_deep_rank": 1309,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 47,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 928,
+   "mid_dl": 955
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "80ce7bf9900f83a0",
+   "mid_gid": "43a98211d6e549a1",
+   "head_bm25": 26.516765770838575,
+   "mid_bm25": 27.27927925229625,
+   "head_bm25_no_header": 26.905742210317943,
+   "head_bm25_no_prefix": 26.96709612314001,
+   "mid_bm25_no_prefix": 27.28507375206008,
+   "head_deep_rank": 1927,
+   "mid_deep_rank": 1523,
+   "n_header_tokens": 51,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 34,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 896,
+   "mid_dl": 901
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "81e83b868cf50c59",
+   "mid_gid": "63c7fc73a3a59d5f",
+   "head_bm25": 27.073887428348716,
+   "mid_bm25": 31.375815174544716,
+   "head_bm25_no_header": 27.479749911616228,
+   "head_bm25_no_prefix": 27.413705667221386,
+   "mid_bm25_no_prefix": 32.15828589821285,
+   "head_deep_rank": 1620,
+   "mid_deep_rank": 364,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 33,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 783,
+   "mid_dl": 750
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "a19281556f30a479",
+   "mid_gid": "29bacdd804bdb5d7",
+   "head_bm25": 28.283143177073388,
+   "mid_bm25": 27.125037188973632,
+   "head_bm25_no_header": 28.52885648945321,
+   "head_bm25_no_prefix": 28.76810837731401,
+   "mid_bm25_no_prefix": 27.69883492304903,
+   "head_deep_rank": 1107,
+   "mid_deep_rank": 1587,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 36,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 816,
+   "mid_dl": 840
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "c0f267ca9198e28b",
+   "mid_gid": "9e4792309f5d017b",
+   "head_bm25": 29.27902443021572,
+   "mid_bm25": 34.96517597866902,
+   "head_bm25_no_header": 29.597722250202338,
+   "head_bm25_no_prefix": 28.84532368701609,
+   "mid_bm25_no_prefix": 35.492262360089406,
+   "head_deep_rank": 781,
+   "mid_deep_rank": 92,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 37,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 953,
+   "mid_dl": 998
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "25c6f6dc143a64d2",
+   "mid_gid": "85d4e526917139c8",
+   "head_bm25": 26.88034247079006,
+   "mid_bm25": 27.502825128476594,
+   "head_bm25_no_header": 27.248510199923327,
+   "head_bm25_no_prefix": 27.340001608688006,
+   "mid_bm25_no_prefix": 27.444603647200392,
+   "head_deep_rank": 1715,
+   "mid_deep_rank": 1443,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 35,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 771,
+   "mid_dl": 827
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "7ec87885219702f7",
+   "mid_gid": "5cc394d1b7519905",
+   "head_bm25": 27.4680460152372,
+   "mid_bm25": 28.988289085226697,
+   "head_bm25_no_header": 27.931971192328028,
+   "head_bm25_no_prefix": 27.472862452580017,
+   "mid_bm25_no_prefix": 29.57991491638984,
+   "head_deep_rank": 1456,
+   "mid_deep_rank": 876,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 25,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 948,
+   "mid_dl": 983
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "0f57fe0367b65456",
+   "mid_gid": "496d15007aa2ae14",
+   "head_bm25": 28.125880322344823,
+   "mid_bm25": 27.893375938423702,
+   "head_bm25_no_header": 28.32541477515864,
+   "head_bm25_no_prefix": 28.48803311661854,
+   "mid_bm25_no_prefix": 28.169910386296632,
+   "head_deep_rank": 1173,
+   "mid_deep_rank": 1279,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 54,
+   "head_qterm_tf_total": 34,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 804,
+   "mid_dl": 805
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "443fa0db07732c61",
+   "mid_gid": "7fb4a8e62e069fc0",
+   "head_bm25": 28.618192470888793,
+   "mid_bm25": 30.09283366125747,
+   "head_bm25_no_header": 28.92962236906172,
+   "head_bm25_no_prefix": 28.936205761581554,
+   "mid_bm25_no_prefix": 30.34266649277265,
+   "head_deep_rank": 983,
+   "mid_deep_rank": 584,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 49,
+   "head_qterm_tf_total": 49,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 920,
+   "mid_dl": 908
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "076fd9ca0bc4f86b",
+   "mid_gid": "d1ff5641002a58e5",
+   "head_bm25": 26.573797163171555,
+   "mid_bm25": 26.43218734177137,
+   "head_bm25_no_header": 26.964152936403945,
+   "head_bm25_no_prefix": 26.970921226237643,
+   "mid_bm25_no_prefix": 26.64216564021875,
+   "head_deep_rank": 1889,
+   "mid_deep_rank": 1981,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 67,
+   "head_qterm_tf_total": 31,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 847,
+   "mid_dl": 909
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "6ad1f3e151031652",
+   "mid_gid": "3c3659f19d5804c8",
+   "head_bm25": 31.68227241869139,
+   "mid_bm25": 33.76924633831061,
+   "head_bm25_no_header": 32.056455436580784,
+   "head_bm25_no_prefix": 32.165356271725166,
+   "mid_bm25_no_prefix": 34.141655604480796,
+   "head_deep_rank": 327,
+   "mid_deep_rank": 162,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 43,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 984,
+   "mid_dl": 689
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "4dc244b9b5f4b7fd",
+   "mid_gid": "eb3a872db4536155",
+   "head_bm25": 26.67135096242517,
+   "mid_bm25": 31.888237831734266,
+   "head_bm25_no_header": 26.823595138132074,
+   "head_bm25_no_prefix": 26.97211609682938,
+   "mid_bm25_no_prefix": 32.26011984451238,
+   "head_deep_rank": 1823,
+   "mid_deep_rank": 302,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 40,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1118,
+   "mid_dl": 998
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "ea5fce79aad4e696",
+   "mid_gid": "4f57e7de51c52f4a",
+   "head_bm25": 30.223973822460145,
+   "mid_bm25": 29.953929140496676,
+   "head_bm25_no_header": 30.666158548441338,
+   "head_bm25_no_prefix": 30.643132223180935,
+   "mid_bm25_no_prefix": 30.51990876945786,
+   "head_deep_rank": 558,
+   "mid_deep_rank": 616,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 53,
+   "head_qterm_tf_total": 22,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 804,
+   "mid_dl": 716
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "aadd92d05e2abc6a",
+   "mid_gid": "763f738a7b0acc42",
+   "head_bm25": 29.684710610285634,
+   "mid_bm25": 30.448166540872265,
+   "head_bm25_no_header": 30.06815729435096,
+   "head_bm25_no_prefix": 30.265697272387396,
+   "mid_bm25_no_prefix": 30.148686548832952,
+   "head_deep_rank": 686,
+   "mid_deep_rank": 509,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 69,
+   "head_qterm_tf_total": 32,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1061,
+   "mid_dl": 909
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "b3b2774884192fb4",
+   "mid_gid": "40cebb13d1476318",
+   "head_bm25": 28.585666434687475,
+   "mid_bm25": 27.82289642202941,
+   "head_bm25_no_header": 29.004935096026962,
+   "head_bm25_no_prefix": 29.07266484815785,
+   "mid_bm25_no_prefix": 27.981866690525855,
+   "head_deep_rank": 1000,
+   "mid_deep_rank": 1306,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 66,
+   "head_qterm_tf_total": 31,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 868,
+   "mid_dl": 1105
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "33d369fb45ba2f5c",
+   "mid_gid": "f0b18c33dae68091",
+   "head_bm25": 28.588055225994335,
+   "mid_bm25": 28.88645233447051,
+   "head_bm25_no_header": 29.09493361230019,
+   "head_bm25_no_prefix": 29.2152159744117,
+   "mid_bm25_no_prefix": 28.672991917636185,
+   "head_deep_rank": 997,
+   "mid_deep_rank": 908,
+   "n_header_tokens": 52,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 26,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 819,
+   "mid_dl": 674
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "87334726e509c1a3",
+   "mid_gid": "88a18c85e38c9228",
+   "head_bm25": 29.087734071778442,
+   "mid_bm25": 34.239581573539674,
+   "head_bm25_no_header": 29.361419729109397,
+   "head_bm25_no_prefix": 29.412122791414905,
+   "mid_bm25_no_prefix": 34.38068377528101,
+   "head_deep_rank": 840,
+   "mid_deep_rank": 129,
+   "n_header_tokens": 51,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 41,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1030,
+   "mid_dl": 869
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "a7aff059bba1c715",
+   "mid_gid": "14f365c9877e507e",
+   "head_bm25": 29.149557812299545,
+   "mid_bm25": 33.46349745498992,
+   "head_bm25_no_header": 29.671924686124648,
+   "head_bm25_no_prefix": 29.755843625640956,
+   "mid_bm25_no_prefix": 34.07773646502921,
+   "head_deep_rank": 816,
+   "mid_deep_rank": 184,
+   "n_header_tokens": 51,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 29,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 928,
+   "mid_dl": 1130
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "67e300e91b438caf",
+   "mid_gid": "41134b18edf14096",
+   "head_bm25": 26.818654148146045,
+   "mid_bm25": 33.61752666123968,
+   "head_bm25_no_header": 27.231677369060044,
+   "head_bm25_no_prefix": 27.36101372632101,
+   "mid_bm25_no_prefix": 33.59499819096838,
+   "head_deep_rank": 1752,
+   "mid_deep_rank": 174,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 22,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 961,
+   "mid_dl": 798
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "04670b7862f5afd2",
+   "mid_gid": "47c3d53a9ff1fa74",
+   "head_bm25": 29.991550989762487,
+   "mid_bm25": 27.71049717097083,
+   "head_bm25_no_header": 29.519719861070012,
+   "head_bm25_no_prefix": 30.572249812659884,
+   "mid_bm25_no_prefix": 27.55260867930194,
+   "head_deep_rank": 609,
+   "mid_deep_rank": 1357,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 45,
+   "head_qterm_tf_total": 19,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 739,
+   "mid_dl": 670
+  },
+  {
+   "needle": "erb_001",
+   "head_gid": "cff033fb1ad0f236",
+   "mid_gid": "b7878d4e77978453",
+   "head_bm25": 27.417120459437623,
+   "mid_bm25": 26.910294956886425,
+   "head_bm25_no_header": 27.794918574577796,
+   "head_bm25_no_prefix": 27.891242468350903,
+   "mid_bm25_no_prefix": 27.45212133410311,
+   "head_deep_rank": 1468,
+   "mid_deep_rank": 1700,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 28,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 896,
+   "mid_dl": 917
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "3fce6289ce446029",
+   "mid_gid": "d4c1393692d21818",
+   "head_bm25": 42.38525594945541,
+   "mid_bm25": 44.314592829222626,
+   "head_bm25_no_header": 42.784265034663235,
+   "head_bm25_no_prefix": 42.88625692095118,
+   "mid_bm25_no_prefix": 41.50179793279722,
+   "head_deep_rank": 734,
+   "mid_deep_rank": 550,
+   "n_header_tokens": 42,
+   "n_prefix_tokens": 74,
+   "head_qterm_tf_total": 32,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 901,
+   "mid_dl": 834
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "5b4e726532cd565d",
+   "mid_gid": "2cb8e0646d775d10",
+   "head_bm25": 51.12857088059183,
+   "mid_bm25": 46.715480628246404,
+   "head_bm25_no_header": 51.00799508061387,
+   "head_bm25_no_prefix": 48.06614324296226,
+   "mid_bm25_no_prefix": 32.10733600224332,
+   "head_deep_rank": 217,
+   "mid_deep_rank": 389,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 53,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 1075,
+   "mid_dl": 1039
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "6b68cfa8ed0a83d6",
+   "mid_gid": "8b8a39f25c0bab60",
+   "head_bm25": 81.19898597007167,
+   "mid_bm25": 47.637619254744244,
+   "head_bm25_no_header": 82.00249096422681,
+   "head_bm25_no_prefix": 78.72845170603406,
+   "mid_bm25_no_prefix": 38.60778838285017,
+   "head_deep_rank": 1,
+   "mid_deep_rank": 339,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 90,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 965,
+   "mid_dl": 817
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "17399bd9a814ec78",
+   "mid_gid": "c55839881afc14b0",
+   "head_bm25": 54.84740467573241,
+   "mid_bm25": 54.07854468522587,
+   "head_bm25_no_header": 53.78430035379915,
+   "head_bm25_no_prefix": 53.78480605618792,
+   "mid_bm25_no_prefix": 55.0083465768244,
+   "head_deep_rank": 136,
+   "mid_deep_rank": 145,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 48,
+   "head_qterm_tf_total": 66,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 850,
+   "mid_dl": 812
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "ba690eb239edbb34",
+   "mid_gid": "cc45d2e94fbcd789",
+   "head_bm25": 40.357674405652894,
+   "mid_bm25": 37.5076471761501,
+   "head_bm25_no_header": 40.71096509088119,
+   "head_bm25_no_prefix": 40.58034136454598,
+   "mid_bm25_no_prefix": 37.47680975165139,
+   "head_deep_rank": 1039,
+   "mid_deep_rank": 1794,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 58,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 950,
+   "mid_dl": 1150
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "27da11c84906fa23",
+   "mid_gid": "f74e7d478449b4fa",
+   "head_bm25": 38.55511952323035,
+   "mid_bm25": 49.01421076651335,
+   "head_bm25_no_header": 38.66853860121164,
+   "head_bm25_no_prefix": 38.70688559439917,
+   "mid_bm25_no_prefix": 45.79739565717372,
+   "head_deep_rank": 1480,
+   "mid_deep_rank": 287,
+   "n_header_tokens": 40,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 41,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 992,
+   "mid_dl": 943
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "0cfa60baccde7716",
+   "mid_gid": "8dc7e700225672bf",
+   "head_bm25": 38.24497497268253,
+   "mid_bm25": 49.056055088676324,
+   "head_bm25_no_header": 38.36144806744986,
+   "head_bm25_no_prefix": 38.75168532408434,
+   "mid_bm25_no_prefix": 49.785886255681746,
+   "head_deep_rank": 1564,
+   "mid_deep_rank": 284,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 56,
+   "head_qterm_tf_total": 35,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1017,
+   "mid_dl": 1016
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "2514fe37bd29c17b",
+   "mid_gid": "6d3af4dee1cc7636",
+   "head_bm25": 37.720769495333315,
+   "mid_bm25": 38.43244068802995,
+   "head_bm25_no_header": 37.99362664521446,
+   "head_bm25_no_prefix": 36.61364458880612,
+   "mid_bm25_no_prefix": 38.161130363181194,
+   "head_deep_rank": 1723,
+   "mid_deep_rank": 1510,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 54,
+   "head_qterm_tf_total": 44,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 896,
+   "mid_dl": 984
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "edf5612dd61ee17b",
+   "mid_gid": "77ad16f9e35e740c",
+   "head_bm25": 72.7888217714776,
+   "mid_bm25": 60.503270588387,
+   "head_bm25_no_header": 73.00900142929527,
+   "head_bm25_no_prefix": 72.77349152566326,
+   "mid_bm25_no_prefix": 58.73046855314947,
+   "head_deep_rank": 5,
+   "mid_deep_rank": 54,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 106,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 796,
+   "mid_dl": 1007
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "ff2462c20ec599a3",
+   "mid_gid": "5e9b2e22faea852a",
+   "head_bm25": 42.86759301131751,
+   "mid_bm25": 37.684452729317925,
+   "head_bm25_no_header": 43.33836034694832,
+   "head_bm25_no_prefix": 42.94562609906239,
+   "mid_bm25_no_prefix": 37.465944927946666,
+   "head_deep_rank": 687,
+   "mid_deep_rank": 1737,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 49,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 973,
+   "mid_dl": 940
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "f4192b659ab7f5ff",
+   "mid_gid": "c58dca0d30f81122",
+   "head_bm25": 62.04858721253356,
+   "mid_bm25": 48.381633226194005,
+   "head_bm25_no_header": 62.64192905617011,
+   "head_bm25_no_prefix": 59.96020695931252,
+   "mid_bm25_no_prefix": 45.88352398849117,
+   "head_deep_rank": 42,
+   "mid_deep_rank": 310,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 124,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1083,
+   "mid_dl": 941
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "732f84f3a681873b",
+   "mid_gid": "1d4a60f01ead92bb",
+   "head_bm25": 44.16681799669688,
+   "mid_bm25": 41.97910180282531,
+   "head_bm25_no_header": 44.566772197578345,
+   "head_bm25_no_prefix": 42.19528213127454,
+   "mid_bm25_no_prefix": 41.240333842164226,
+   "head_deep_rank": 567,
+   "mid_deep_rank": 776,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 56,
+   "head_qterm_tf_total": 69,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 1198,
+   "mid_dl": 1162
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "4240b18fd60b3288",
+   "mid_gid": "d12dfab16f2091bb",
+   "head_bm25": 54.06376629619458,
+   "mid_bm25": 68.25556247298097,
+   "head_bm25_no_header": 53.995189480206086,
+   "head_bm25_no_prefix": 53.38061803736946,
+   "mid_bm25_no_prefix": 67.70435765254614,
+   "head_deep_rank": 146,
+   "mid_deep_rank": 16,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 121,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 935,
+   "mid_dl": 1021
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "1c43605d097aa4de",
+   "mid_gid": "5d3eb17bac0e7793",
+   "head_bm25": 44.279524173826445,
+   "mid_bm25": 43.43240255294173,
+   "head_bm25_no_header": 44.6066534360984,
+   "head_bm25_no_prefix": 44.489297275233916,
+   "mid_bm25_no_prefix": 42.91139877848295,
+   "head_deep_rank": 554,
+   "mid_deep_rank": 630,
+   "n_header_tokens": 42,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 65,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 908,
+   "mid_dl": 954
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "ec384bd020ca2f15",
+   "mid_gid": "b686b15939148a1c",
+   "head_bm25": 41.874290782687886,
+   "mid_bm25": 45.68239248667081,
+   "head_bm25_no_header": 42.213438372426396,
+   "head_bm25_no_prefix": 42.38660513740489,
+   "mid_bm25_no_prefix": 46.34102406796974,
+   "head_deep_rank": 787,
+   "mid_deep_rank": 460,
+   "n_header_tokens": 39,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 87,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 861,
+   "mid_dl": 855
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "6099b34a672906b7",
+   "mid_gid": "1fccfbfff4ae5fea",
+   "head_bm25": 45.869559721655826,
+   "mid_bm25": 38.38705670903331,
+   "head_bm25_no_header": 46.088758416879095,
+   "head_bm25_no_prefix": 45.25310171125725,
+   "mid_bm25_no_prefix": 38.519375424753854,
+   "head_deep_rank": 446,
+   "mid_deep_rank": 1521,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 65,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 906,
+   "mid_dl": 946
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "fed1a02e1ddc1979",
+   "mid_gid": "b4b1356866669f2e",
+   "head_bm25": 39.12642041553948,
+   "mid_bm25": 38.9481908034044,
+   "head_bm25_no_header": 39.42029804743262,
+   "head_bm25_no_prefix": 39.45707905471335,
+   "mid_bm25_no_prefix": 38.598399032410505,
+   "head_deep_rank": 1308,
+   "mid_deep_rank": 1366,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 69,
+   "head_qterm_tf_total": 81,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 931,
+   "mid_dl": 890
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "049a8bffe6e1efeb",
+   "mid_gid": "07430d3c031c7007",
+   "head_bm25": 58.17436121138338,
+   "mid_bm25": 50.66914087621641,
+   "head_bm25_no_header": 58.761773199011586,
+   "head_bm25_no_prefix": 56.464987487965175,
+   "mid_bm25_no_prefix": 48.55773554563906,
+   "head_deep_rank": 85,
+   "mid_deep_rank": 230,
+   "n_header_tokens": 51,
+   "n_prefix_tokens": 73,
+   "head_qterm_tf_total": 55,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1021,
+   "mid_dl": 990
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "6c9e052b42d60952",
+   "mid_gid": "73e6643fc4dd5819",
+   "head_bm25": 54.91539771697859,
+   "mid_bm25": 49.2244829866745,
+   "head_bm25_no_header": 55.04361794722669,
+   "head_bm25_no_prefix": 54.06456695015738,
+   "mid_bm25_no_prefix": 49.07574202932932,
+   "head_deep_rank": 135,
+   "mid_deep_rank": 278,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 73,
+   "head_qterm_tf_total": 90,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 926,
+   "mid_dl": 849
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "250fabe31f6b942a",
+   "mid_gid": "ed7217897bf2c178",
+   "head_bm25": 39.099029941016184,
+   "mid_bm25": 37.18426137940788,
+   "head_bm25_no_header": 39.44703481848062,
+   "head_bm25_no_prefix": 39.60665765540878,
+   "mid_bm25_no_prefix": 37.79801001773078,
+   "head_deep_rank": 1322,
+   "mid_deep_rank": 1914,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 48,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1020,
+   "mid_dl": 944
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "a5a6099d26982eb5",
+   "mid_gid": "b0f3f4075b82dd5b",
+   "head_bm25": 51.74566107943833,
+   "mid_bm25": 37.79432410604764,
+   "head_bm25_no_header": 52.38446456913338,
+   "head_bm25_no_prefix": 49.61992361858776,
+   "mid_bm25_no_prefix": 35.51854120383603,
+   "head_deep_rank": 202,
+   "mid_deep_rank": 1694,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 72,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 893,
+   "mid_dl": 1075
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "e43b533f488376c2",
+   "mid_gid": "5b528c5f0e250d15",
+   "head_bm25": 50.344864289320675,
+   "mid_bm25": 41.22569031969801,
+   "head_bm25_no_header": 51.08615636226005,
+   "head_bm25_no_prefix": 46.87853863120696,
+   "mid_bm25_no_prefix": 32.31671625890986,
+   "head_deep_rank": 243,
+   "mid_deep_rank": 894,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 43,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 967,
+   "mid_dl": 945
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "7caa54e366300e0a",
+   "mid_gid": "1180f10b01c8c10c",
+   "head_bm25": 61.71012071681966,
+   "mid_bm25": 54.60523816418956,
+   "head_bm25_no_header": 62.294481527600624,
+   "head_bm25_no_prefix": 62.67300699239846,
+   "mid_bm25_no_prefix": 53.413359422715615,
+   "head_deep_rank": 45,
+   "mid_deep_rank": 139,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 78,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 969,
+   "mid_dl": 852
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "a6b527c80c57612a",
+   "mid_gid": "b9225da860e543fd",
+   "head_bm25": 44.15576163841608,
+   "mid_bm25": 45.16739077759352,
+   "head_bm25_no_header": 44.55376451465242,
+   "head_bm25_no_prefix": 44.65380385071608,
+   "mid_bm25_no_prefix": 45.52036006637099,
+   "head_deep_rank": 569,
+   "mid_deep_rank": 489,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 44,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 983,
+   "mid_dl": 1028
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "7a4c8b23385127d6",
+   "mid_gid": "9ece064486368bd2",
+   "head_bm25": 50.377338303183876,
+   "mid_bm25": 41.44463137569558,
+   "head_bm25_no_header": 50.5951963636029,
+   "head_bm25_no_prefix": 50.54602755364898,
+   "mid_bm25_no_prefix": 41.50687727285383,
+   "head_deep_rank": 242,
+   "mid_deep_rank": 857,
+   "n_header_tokens": 40,
+   "n_prefix_tokens": 51,
+   "head_qterm_tf_total": 49,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 768,
+   "mid_dl": 930
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "46a2bfd9ebd5a516",
+   "mid_gid": "7587dcfb8f2a289e",
+   "head_bm25": 49.927184762596895,
+   "mid_bm25": 60.360407043526344,
+   "head_bm25_no_header": 50.110137896917564,
+   "head_bm25_no_prefix": 47.311348570717705,
+   "mid_bm25_no_prefix": 54.79407319902191,
+   "head_deep_rank": 254,
+   "mid_deep_rank": 57,
+   "n_header_tokens": 39,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 60,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 840,
+   "mid_dl": 812
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "265faf02563b3e85",
+   "mid_gid": "5032aae877b3aae2",
+   "head_bm25": 38.710654303705816,
+   "mid_bm25": 43.98149633374187,
+   "head_bm25_no_header": 39.05036154342565,
+   "head_bm25_no_prefix": 38.85115547966302,
+   "mid_bm25_no_prefix": 43.63744546896976,
+   "head_deep_rank": 1432,
+   "mid_deep_rank": 583,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 51,
+   "head_qterm_tf_total": 44,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 849,
+   "mid_dl": 848
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "2bcb65600f2f9268",
+   "mid_gid": "41b41261940bbdbe",
+   "head_bm25": 71.14049995323467,
+   "mid_bm25": 54.27928079031161,
+   "head_bm25_no_header": 69.50729518814146,
+   "head_bm25_no_prefix": 71.69657384829632,
+   "mid_bm25_no_prefix": 54.49317323911701,
+   "head_deep_rank": 10,
+   "mid_deep_rank": 143,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 105,
+   "head_qterm_tf_in_header": 9,
+   "head_dl": 1098,
+   "mid_dl": 968
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "9bc4d0ab79280b17",
+   "mid_gid": "9d989a1611782164",
+   "head_bm25": 56.72943165255106,
+   "mid_bm25": 40.85880018794723,
+   "head_bm25_no_header": 57.066274613692165,
+   "head_bm25_no_prefix": 57.347015031404545,
+   "mid_bm25_no_prefix": 40.96492108484772,
+   "head_deep_rank": 103,
+   "mid_deep_rank": 963,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 98,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 832,
+   "mid_dl": 940
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "3656eabf190a4328",
+   "mid_gid": "fb752811c28a6995",
+   "head_bm25": 41.17754447062718,
+   "mid_bm25": 38.581565711356966,
+   "head_bm25_no_header": 41.60861222197233,
+   "head_bm25_no_prefix": 36.44011095439028,
+   "mid_bm25_no_prefix": 36.1254436336114,
+   "head_deep_rank": 903,
+   "mid_deep_rank": 1470,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 78,
+   "head_qterm_tf_total": 87,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 956,
+   "mid_dl": 1016
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "996176dcf6f9ed7f",
+   "mid_gid": "19e7296bfd5ce95b",
+   "head_bm25": 59.264699276178014,
+   "mid_bm25": 52.86548753098218,
+   "head_bm25_no_header": 58.729920442463005,
+   "head_bm25_no_prefix": 58.767418657607934,
+   "mid_bm25_no_prefix": 44.71042147721104,
+   "head_deep_rank": 73,
+   "mid_deep_rank": 175,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 90,
+   "head_qterm_tf_in_header": 9,
+   "head_dl": 925,
+   "mid_dl": 1027
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "e1d07966b69e1f74",
+   "mid_gid": "726b82f14b4432b0",
+   "head_bm25": 38.75467352267021,
+   "mid_bm25": 39.079255576358975,
+   "head_bm25_no_header": 38.55179676504505,
+   "head_bm25_no_prefix": 37.806455651162814,
+   "mid_bm25_no_prefix": 28.850962418136906,
+   "head_deep_rank": 1417,
+   "mid_deep_rank": 1329,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 46,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 875,
+   "mid_dl": 808
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "c04a26b42d7f4d54",
+   "mid_gid": "5bcce123fd517f32",
+   "head_bm25": 65.42036080457093,
+   "mid_bm25": 40.36273390417979,
+   "head_bm25_no_header": 66.09890437512297,
+   "head_bm25_no_prefix": 66.48322209027758,
+   "mid_bm25_no_prefix": 41.12097229093487,
+   "head_deep_rank": 24,
+   "mid_deep_rank": 1038,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 59,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 978,
+   "mid_dl": 951
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "e59d3a71b9525ccb",
+   "mid_gid": "7bca24563452bbc0",
+   "head_bm25": 42.02926860011108,
+   "mid_bm25": 41.43142303219232,
+   "head_bm25_no_header": 42.24660841792284,
+   "head_bm25_no_prefix": 40.77674313118421,
+   "mid_bm25_no_prefix": 40.924646435690065,
+   "head_deep_rank": 771,
+   "mid_deep_rank": 859,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 43,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 987,
+   "mid_dl": 974
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "99631410d3f88a95",
+   "mid_gid": "dc2990c4e19ed38a",
+   "head_bm25": 53.10919317997604,
+   "mid_bm25": 40.993578284073436,
+   "head_bm25_no_header": 53.703417140757665,
+   "head_bm25_no_prefix": 52.86121468394502,
+   "mid_bm25_no_prefix": 41.49310804161774,
+   "head_deep_rank": 172,
+   "mid_deep_rank": 931,
+   "n_header_tokens": 40,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 46,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 871,
+   "mid_dl": 911
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "7a28485a4f84214c",
+   "mid_gid": "9e94e35a2ae34e98",
+   "head_bm25": 43.55522969214701,
+   "mid_bm25": 40.07264299127198,
+   "head_bm25_no_header": 41.6875322659895,
+   "head_bm25_no_prefix": 41.543810930164135,
+   "mid_bm25_no_prefix": 35.041693739245865,
+   "head_deep_rank": 620,
+   "mid_deep_rank": 1086,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 31,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 884,
+   "mid_dl": 875
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "e7971bb769cef16f",
+   "mid_gid": "9fbb5362b8f72a88",
+   "head_bm25": 37.871712924237826,
+   "mid_bm25": 40.559125377473215,
+   "head_bm25_no_header": 34.860264885031434,
+   "head_bm25_no_prefix": 36.96809995214624,
+   "mid_bm25_no_prefix": 35.66014143082731,
+   "head_deep_rank": 1671,
+   "mid_deep_rank": 1004,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 60,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 973,
+   "mid_dl": 914
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "00d3824f3b497cfb",
+   "mid_gid": "336a501611a37824",
+   "head_bm25": 48.12419314725818,
+   "mid_bm25": 37.52345061399831,
+   "head_bm25_no_header": 48.40065476944158,
+   "head_bm25_no_prefix": 48.42571826402308,
+   "mid_bm25_no_prefix": 37.7528557393241,
+   "head_deep_rank": 320,
+   "mid_deep_rank": 1788,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 92,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 970,
+   "mid_dl": 981
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "f086d1ba3a022ec3",
+   "mid_gid": "e8745dbac5ea8240",
+   "head_bm25": 46.071365281039554,
+   "mid_bm25": 44.35834070974008,
+   "head_bm25_no_header": 46.399307426438604,
+   "head_bm25_no_prefix": 43.602022780769424,
+   "mid_bm25_no_prefix": 40.33316564008551,
+   "head_deep_rank": 433,
+   "mid_deep_rank": 543,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 57,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 1010,
+   "mid_dl": 1051
+  },
+  {
+   "needle": "erb_003",
+   "head_gid": "3682f08ee94024f5",
+   "mid_gid": "2e1acd1ed170f27e",
+   "head_bm25": 44.493765349561066,
+   "mid_bm25": 37.87382193400054,
+   "head_bm25_no_header": 44.55158729375891,
+   "head_bm25_no_prefix": 44.28958120811896,
+   "mid_bm25_no_prefix": 36.445062365860366,
+   "head_deep_rank": 538,
+   "mid_deep_rank": 1670,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 59,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 1054,
+   "mid_dl": 934
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "06124b1089836455",
+   "mid_gid": "c003d8adece825ad",
+   "head_bm25": 46.611406747203915,
+   "mid_bm25": 36.2852168798649,
+   "head_bm25_no_header": 47.49411457241701,
+   "head_bm25_no_prefix": 47.641826811663265,
+   "mid_bm25_no_prefix": 36.947640275584575,
+   "head_deep_rank": 167,
+   "mid_deep_rank": 1582,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 55,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 834,
+   "mid_dl": 1092
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "303b5558ab472506",
+   "mid_gid": "02e4b82b215b0164",
+   "head_bm25": 36.65075899191904,
+   "mid_bm25": 35.42887627327012,
+   "head_bm25_no_header": 37.06091830138712,
+   "head_bm25_no_prefix": 36.940645259990994,
+   "mid_bm25_no_prefix": 35.320065789824916,
+   "head_deep_rank": 1476,
+   "mid_deep_rank": 1874,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 67,
+   "head_qterm_tf_total": 43,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1039,
+   "mid_dl": 866
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "e0bd679752123c28",
+   "mid_gid": "73966a6e9fbcef71",
+   "head_bm25": 38.17576398657971,
+   "mid_bm25": 42.49199810156363,
+   "head_bm25_no_header": 38.23311258660363,
+   "head_bm25_no_prefix": 38.1866003179368,
+   "mid_bm25_no_prefix": 40.498838170691094,
+   "head_deep_rank": 1083,
+   "mid_deep_rank": 428,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 65,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 1021,
+   "mid_dl": 912
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "f9f7b89df6b387ca",
+   "mid_gid": "563ea6b5d1fa2b34",
+   "head_bm25": 44.82110994631327,
+   "mid_bm25": 39.773584150053956,
+   "head_bm25_no_header": 45.52050869371493,
+   "head_bm25_no_prefix": 45.91223544305696,
+   "mid_bm25_no_prefix": 40.54576366603212,
+   "head_deep_rank": 259,
+   "mid_deep_rank": 766,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 45,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 884,
+   "mid_dl": 956
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "81445786b1bebe36",
+   "mid_gid": "2a8f2a53966847be",
+   "head_bm25": 41.08005822787909,
+   "mid_bm25": 45.54048276022746,
+   "head_bm25_no_header": 41.56489297447713,
+   "head_bm25_no_prefix": 41.12068358839702,
+   "mid_bm25_no_prefix": 46.107890526911504,
+   "head_deep_rank": 599,
+   "mid_deep_rank": 216,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 71,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 840,
+   "mid_dl": 1136
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "95837277a766cbe0",
+   "mid_gid": "8edaddd0dac99cb4",
+   "head_bm25": 37.53871425337922,
+   "mid_bm25": 39.472322384287395,
+   "head_bm25_no_header": 37.48428655704589,
+   "head_bm25_no_prefix": 35.35872946212694,
+   "mid_bm25_no_prefix": 29.792377495098858,
+   "head_deep_rank": 1232,
+   "mid_deep_rank": 819,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 66,
+   "head_qterm_tf_total": 48,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 887,
+   "mid_dl": 931
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "087f5ef5abf8d96c",
+   "mid_gid": "9114881d30017c4a",
+   "head_bm25": 43.3592206126259,
+   "mid_bm25": 38.78770324386491,
+   "head_bm25_no_header": 44.05605978677499,
+   "head_bm25_no_prefix": 44.22651763758798,
+   "mid_bm25_no_prefix": 37.613333474356054,
+   "head_deep_rank": 353,
+   "mid_deep_rank": 953,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 43,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 742,
+   "mid_dl": 917
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "2193ad04e028233b",
+   "mid_gid": "1dce82aa6562987d",
+   "head_bm25": 41.35234775342237,
+   "mid_bm25": 35.97927812965889,
+   "head_bm25_no_header": 41.52459588254551,
+   "head_bm25_no_prefix": 40.62956675905761,
+   "mid_bm25_no_prefix": 26.31695232991457,
+   "head_deep_rank": 557,
+   "mid_deep_rank": 1676,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 37,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 998,
+   "mid_dl": 955
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "740bd20be3f645be",
+   "mid_gid": "f390c321ec61653a",
+   "head_bm25": 46.55944013967468,
+   "mid_bm25": 43.41497087451418,
+   "head_bm25_no_header": 47.23204457176364,
+   "head_bm25_no_prefix": 47.584852507095604,
+   "mid_bm25_no_prefix": 42.09594819676347,
+   "head_deep_rank": 169,
+   "mid_deep_rank": 349,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 52,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 865,
+   "mid_dl": 932
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "3cb0b39a359c76bb",
+   "mid_gid": "d7e9f7dc525d43a8",
+   "head_bm25": 49.794138573890685,
+   "mid_bm25": 50.806006402762726,
+   "head_bm25_no_header": 49.17750628110753,
+   "head_bm25_no_prefix": 49.07765509256191,
+   "mid_bm25_no_prefix": 46.181912081684175,
+   "head_deep_rank": 83,
+   "mid_deep_rank": 67,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 80,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 995,
+   "mid_dl": 915
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "f8005d6f03a9299e",
+   "mid_gid": "7a94a8f7a77520c9",
+   "head_bm25": 37.41802658896636,
+   "mid_bm25": 37.220254459847446,
+   "head_bm25_no_header": 38.0301595017637,
+   "head_bm25_no_prefix": 38.13041389891268,
+   "mid_bm25_no_prefix": 37.85618437399996,
+   "head_deep_rank": 1267,
+   "mid_deep_rank": 1313,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 40,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 898,
+   "mid_dl": 1154
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "5b42e19ccc37eeb4",
+   "mid_gid": "4848ff40e39adea8",
+   "head_bm25": 39.59704009600003,
+   "mid_bm25": 47.34942796250835,
+   "head_bm25_no_header": 40.10967788300138,
+   "head_bm25_no_prefix": 40.448754345687014,
+   "mid_bm25_no_prefix": 48.31303238519948,
+   "head_deep_rank": 795,
+   "mid_deep_rank": 150,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 73,
+   "head_qterm_tf_total": 78,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 1027,
+   "mid_dl": 1069
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "314e841ed737dcc9",
+   "mid_gid": "23729e3b46d6765e",
+   "head_bm25": 41.73872858912271,
+   "mid_bm25": 36.01136886454496,
+   "head_bm25_no_header": 42.59985244982354,
+   "head_bm25_no_prefix": 42.776660078926604,
+   "mid_bm25_no_prefix": 36.64467403364144,
+   "head_deep_rank": 508,
+   "mid_deep_rank": 1665,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 33,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 791,
+   "mid_dl": 732
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "d0989c27c6d94258",
+   "mid_gid": "b10e1a605f48d3cd",
+   "head_bm25": 36.77354384110171,
+   "mid_bm25": 43.02564569611411,
+   "head_bm25_no_header": 35.66906530082939,
+   "head_bm25_no_prefix": 34.74705765944543,
+   "mid_bm25_no_prefix": 32.60048399007898,
+   "head_deep_rank": 1432,
+   "mid_deep_rank": 382,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 77,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 1157,
+   "mid_dl": 1001
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "ec5fc8d35fc0761c",
+   "mid_gid": "4de08f8b18991e8b",
+   "head_bm25": 40.39367153405254,
+   "mid_bm25": 35.87966536801543,
+   "head_bm25_no_header": 40.67792987617829,
+   "head_bm25_no_prefix": 41.03144720723325,
+   "mid_bm25_no_prefix": 36.52250713741113,
+   "head_deep_rank": 680,
+   "mid_deep_rank": 1708,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 70,
+   "head_qterm_tf_total": 75,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 915,
+   "mid_dl": 1132
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "2500b0d6070be4a1",
+   "mid_gid": "b766679a33fdd5fc",
+   "head_bm25": 47.91289979997352,
+   "mid_bm25": 42.194392205236,
+   "head_bm25_no_header": 48.38651854272371,
+   "head_bm25_no_prefix": 48.60444801076296,
+   "mid_bm25_no_prefix": 40.956333848612104,
+   "head_deep_rank": 129,
+   "mid_deep_rank": 459,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 66,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 1112,
+   "mid_dl": 890
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "b84caa2bbf4cd8f2",
+   "mid_gid": "4151fddd12c89f07",
+   "head_bm25": 35.40170309989296,
+   "mid_bm25": 35.33624607913674,
+   "head_bm25_no_header": 35.418865642224645,
+   "head_bm25_no_prefix": 35.372069236054436,
+   "mid_bm25_no_prefix": 25.585456748488102,
+   "head_deep_rank": 1886,
+   "mid_deep_rank": 1913,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 71,
+   "head_qterm_tf_total": 67,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 1122,
+   "mid_dl": 1167
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "3d6354ce856f1712",
+   "mid_gid": "3719ee6fe64eae9e",
+   "head_bm25": 36.51343725162284,
+   "mid_bm25": 45.40120399693533,
+   "head_bm25_no_header": 36.16342544242227,
+   "head_bm25_no_prefix": 37.071058213110064,
+   "mid_bm25_no_prefix": 45.865737748508884,
+   "head_deep_rank": 1515,
+   "mid_deep_rank": 221,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 40,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 967,
+   "mid_dl": 1139
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "2758adc0138db637",
+   "mid_gid": "9207a1f92d01c7ae",
+   "head_bm25": 51.52561640686883,
+   "mid_bm25": 37.74893146040048,
+   "head_bm25_no_header": 51.95201852316857,
+   "head_bm25_no_prefix": 52.27182477474285,
+   "mid_bm25_no_prefix": 36.589800934396244,
+   "head_deep_rank": 58,
+   "mid_deep_rank": 1189,
+   "n_header_tokens": 42,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 88,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 981,
+   "mid_dl": 920
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "6850d9518a14e272",
+   "mid_gid": "acc70dfec82546d8",
+   "head_bm25": 41.893395730767935,
+   "mid_bm25": 35.82746943753561,
+   "head_bm25_no_header": 42.3144763214256,
+   "head_bm25_no_prefix": 41.956391252071526,
+   "mid_bm25_no_prefix": 35.138438806578876,
+   "head_deep_rank": 490,
+   "mid_deep_rank": 1724,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 66,
+   "head_qterm_tf_total": 52,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 837,
+   "mid_dl": 1121
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "81292ab4f51793c7",
+   "mid_gid": "cff08a33da3d5b57",
+   "head_bm25": 36.48262077074843,
+   "mid_bm25": 50.570831153549804,
+   "head_bm25_no_header": 36.422891582303215,
+   "head_bm25_no_prefix": 36.56423493091567,
+   "mid_bm25_no_prefix": 44.63984210607561,
+   "head_deep_rank": 1521,
+   "mid_deep_rank": 71,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 65,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 988,
+   "mid_dl": 992
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "19756cd08bc7cbb3",
+   "mid_gid": "211d0be52edbf1cb",
+   "head_bm25": 53.09177585790152,
+   "mid_bm25": 46.26673185426008,
+   "head_bm25_no_header": 52.383137513717756,
+   "head_bm25_no_prefix": 54.243779168265945,
+   "mid_bm25_no_prefix": 47.21949001947426,
+   "head_deep_rank": 44,
+   "mid_deep_rank": 183,
+   "n_header_tokens": 51,
+   "n_prefix_tokens": 72,
+   "head_qterm_tf_total": 54,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 986,
+   "mid_dl": 840
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "55d1102a781b96a0",
+   "mid_gid": "32e8f65f9a2fb6bc",
+   "head_bm25": 42.60192311470027,
+   "mid_bm25": 36.74464185318145,
+   "head_bm25_no_header": 42.90456741514525,
+   "head_bm25_no_prefix": 43.0040959586858,
+   "mid_bm25_no_prefix": 37.46189412116616,
+   "head_deep_rank": 422,
+   "mid_deep_rank": 1444,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 73,
+   "head_qterm_tf_total": 80,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1018,
+   "mid_dl": 1048
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "74ed42cb39654c08",
+   "mid_gid": "673bfba55f541b3d",
+   "head_bm25": 45.24874016477781,
+   "mid_bm25": 56.33916242487908,
+   "head_bm25_no_header": 45.10620045598252,
+   "head_bm25_no_prefix": 44.82912942341353,
+   "mid_bm25_no_prefix": 49.74108905120511,
+   "head_deep_rank": 226,
+   "mid_deep_rank": 20,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 94,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 1165,
+   "mid_dl": 1042
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "933413388e6f3dcd",
+   "mid_gid": "a834bd7c6c622a7e",
+   "head_bm25": 41.95668788828713,
+   "mid_bm25": 41.10483974255693,
+   "head_bm25_no_header": 41.87010989080724,
+   "head_bm25_no_prefix": 40.54921681799442,
+   "mid_bm25_no_prefix": 38.349765588547,
+   "head_deep_rank": 482,
+   "mid_deep_rank": 592,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 77,
+   "head_qterm_tf_total": 101,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 1032,
+   "mid_dl": 906
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "f972345af5a5b7a1",
+   "mid_gid": "f920567bd5bf6a25",
+   "head_bm25": 45.2494904221486,
+   "mid_bm25": 41.86321242969278,
+   "head_bm25_no_header": 45.96679543433725,
+   "head_bm25_no_prefix": 46.11037983842194,
+   "mid_bm25_no_prefix": 42.59468970308719,
+   "head_deep_rank": 225,
+   "mid_deep_rank": 495,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 49,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 824,
+   "mid_dl": 1187
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "b094b36780752bd6",
+   "mid_gid": "bae0e15efd56a583",
+   "head_bm25": 41.95114466848483,
+   "mid_bm25": 39.00789356128023,
+   "head_bm25_no_header": 41.89513076066074,
+   "head_bm25_no_prefix": 41.63915398960437,
+   "mid_bm25_no_prefix": 29.828910296829186,
+   "head_deep_rank": 483,
+   "mid_deep_rank": 909,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 56,
+   "head_qterm_tf_total": 58,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 1000,
+   "mid_dl": 1129
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "c55ef1fd1e3d5b4e",
+   "mid_gid": "4e764bcef403d240",
+   "head_bm25": 45.66434465966577,
+   "mid_bm25": 38.312684264841536,
+   "head_bm25_no_header": 45.75792853432297,
+   "head_bm25_no_prefix": 43.63054456634089,
+   "mid_bm25_no_prefix": 34.68118377223186,
+   "head_deep_rank": 209,
+   "mid_deep_rank": 1052,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 82,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 918,
+   "mid_dl": 1064
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "eeda7d21e9f2cfe5",
+   "mid_gid": "660aac4100d61788",
+   "head_bm25": 49.750169328694135,
+   "mid_bm25": 46.307049599656615,
+   "head_bm25_no_header": 50.29904918028289,
+   "head_bm25_no_prefix": 50.320006165815904,
+   "mid_bm25_no_prefix": 46.994927463384094,
+   "head_deep_rank": 91,
+   "mid_deep_rank": 180,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 50,
+   "head_qterm_tf_total": 144,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 1136,
+   "mid_dl": 948
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "2bf8b241740bb92f",
+   "mid_gid": "ac28abd9f7d92396",
+   "head_bm25": 38.08819100199302,
+   "mid_bm25": 36.66056963783006,
+   "head_bm25_no_header": 38.35534265950436,
+   "head_bm25_no_prefix": 37.47717297486783,
+   "mid_bm25_no_prefix": 35.751891167539725,
+   "head_deep_rank": 1106,
+   "mid_deep_rank": 1472,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 140,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 881,
+   "mid_dl": 1041
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "5d0b5d18ccfb36a9",
+   "mid_gid": "2784965651959a47",
+   "head_bm25": 38.042099270523366,
+   "mid_bm25": 36.98617520739856,
+   "head_bm25_no_header": 38.40340025836294,
+   "head_bm25_no_prefix": 38.472069624090004,
+   "mid_bm25_no_prefix": 34.366926836287924,
+   "head_deep_rank": 1118,
+   "mid_deep_rank": 1381,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 64,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 951,
+   "mid_dl": 1261
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "e5c43584a6c59f7c",
+   "mid_gid": "41f07648296a2d6b",
+   "head_bm25": 38.22574446426055,
+   "mid_bm25": 44.732034143010985,
+   "head_bm25_no_header": 38.49386356093736,
+   "head_bm25_no_prefix": 38.40364877750877,
+   "mid_bm25_no_prefix": 44.885276163943324,
+   "head_deep_rank": 1071,
+   "mid_deep_rank": 263,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 72,
+   "head_qterm_tf_total": 132,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 1096,
+   "mid_dl": 1080
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "b558f42fec9b7f85",
+   "mid_gid": "a49dc680b83da99c",
+   "head_bm25": 36.2592408659415,
+   "mid_bm25": 36.76677915347277,
+   "head_bm25_no_header": 35.937257176833405,
+   "head_bm25_no_prefix": 33.754573971318166,
+   "mid_bm25_no_prefix": 32.21378227042858,
+   "head_deep_rank": 1593,
+   "mid_deep_rank": 1436,
+   "n_header_tokens": 40,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 65,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 855,
+   "mid_dl": 1064
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "95df410b79be48e1",
+   "mid_gid": "fafaac8a32bef92e",
+   "head_bm25": 39.704064333597984,
+   "mid_bm25": 38.1563441791939,
+   "head_bm25_no_header": 40.2091129405253,
+   "head_bm25_no_prefix": 40.34333135169979,
+   "mid_bm25_no_prefix": 38.61402055743726,
+   "head_deep_rank": 776,
+   "mid_deep_rank": 1087,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 40,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 1039,
+   "mid_dl": 1041
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "30c3a70bf296d16b",
+   "mid_gid": "10cce598c012bfc7",
+   "head_bm25": 35.82039297981109,
+   "mid_bm25": 36.20904598711007,
+   "head_bm25_no_header": 36.333205631550456,
+   "head_bm25_no_prefix": 36.013990043056694,
+   "mid_bm25_no_prefix": 36.552595715906065,
+   "head_deep_rank": 1726,
+   "mid_deep_rank": 1605,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 78,
+   "head_qterm_tf_total": 50,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 1041,
+   "mid_dl": 816
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "0b946a6f212954ec",
+   "mid_gid": "1e61f3cd3a3767b8",
+   "head_bm25": 44.49940486398201,
+   "mid_bm25": 47.05090177588049,
+   "head_bm25_no_header": 44.875668845436344,
+   "head_bm25_no_prefix": 44.83924091944946,
+   "mid_bm25_no_prefix": 47.0140205790849,
+   "head_deep_rank": 276,
+   "mid_deep_rank": 154,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 110,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1062,
+   "mid_dl": 1098
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "8aa44a247258ff4a",
+   "mid_gid": "67b1b3f0169aa529",
+   "head_bm25": 48.02381786674516,
+   "mid_bm25": 42.47833056202196,
+   "head_bm25_no_header": 48.321915237946286,
+   "head_bm25_no_prefix": 48.40201336234803,
+   "mid_bm25_no_prefix": 42.847854611629096,
+   "head_deep_rank": 127,
+   "mid_deep_rank": 431,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 59,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 786,
+   "mid_dl": 786
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "409a653fa4083901",
+   "mid_gid": "36eed6249c246ea2",
+   "head_bm25": 37.87372071807407,
+   "mid_bm25": 35.78480319793795,
+   "head_bm25_no_header": 38.16604721322216,
+   "head_bm25_no_prefix": 38.081138209806326,
+   "mid_bm25_no_prefix": 32.32882434253124,
+   "head_deep_rank": 1156,
+   "mid_deep_rank": 1736,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 66,
+   "head_qterm_tf_total": 86,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 898,
+   "mid_dl": 917
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "bab3a6803228726a",
+   "mid_gid": "4df58a519284f372",
+   "head_bm25": 38.993070800830594,
+   "mid_bm25": 35.647247651829026,
+   "head_bm25_no_header": 39.26669018454341,
+   "head_bm25_no_prefix": 39.27389311743282,
+   "mid_bm25_no_prefix": 25.435593266122247,
+   "head_deep_rank": 912,
+   "mid_deep_rank": 1794,
+   "n_header_tokens": 42,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 68,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 946,
+   "mid_dl": 819
+  },
+  {
+   "needle": "erb_006",
+   "head_gid": "5bc70d0f95781e6d",
+   "mid_gid": "c349166d9e9ff73b",
+   "head_bm25": 44.17108085871643,
+   "mid_bm25": 38.312831778395456,
+   "head_bm25_no_header": 43.657849125946505,
+   "head_bm25_no_prefix": 42.65574785816475,
+   "mid_bm25_no_prefix": 23.92915626271108,
+   "head_deep_rank": 302,
+   "mid_deep_rank": 1051,
+   "n_header_tokens": 42,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 111,
+   "head_qterm_tf_in_header": 9,
+   "head_dl": 837,
+   "mid_dl": 993
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "660583c98c0dbe5b",
+   "mid_gid": "b9426d8c75ecd463",
+   "head_bm25": 37.012171142612026,
+   "mid_bm25": 38.54901637641023,
+   "head_bm25_no_header": 36.19518147579772,
+   "head_bm25_no_prefix": 37.50000496085657,
+   "mid_bm25_no_prefix": 38.338541705053956,
+   "head_deep_rank": 1816,
+   "mid_deep_rank": 1380,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 34,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 890,
+   "mid_dl": 990
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "2592f6d5b37e493d",
+   "mid_gid": "d2cd5e956e020b54",
+   "head_bm25": 45.59196767414637,
+   "mid_bm25": 42.378523920774775,
+   "head_bm25_no_header": 45.233657148055585,
+   "head_bm25_no_prefix": 44.096546162736125,
+   "mid_bm25_no_prefix": 43.169730117132524,
+   "head_deep_rank": 305,
+   "mid_deep_rank": 627,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 49,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 927,
+   "mid_dl": 935
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "503efecbbfde3a89",
+   "mid_gid": "b5bb35ef34d080f4",
+   "head_bm25": 37.327184817184396,
+   "mid_bm25": 39.18452325601178,
+   "head_bm25_no_header": 37.623746975779866,
+   "head_bm25_no_prefix": 36.69338211826039,
+   "mid_bm25_no_prefix": 36.884892441637724,
+   "head_deep_rank": 1722,
+   "mid_deep_rank": 1248,
+   "n_header_tokens": 39,
+   "n_prefix_tokens": 56,
+   "head_qterm_tf_total": 54,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 931,
+   "mid_dl": 938
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "e7f8338634b75f70",
+   "mid_gid": "acfa4903fca35315",
+   "head_bm25": 38.99246199276621,
+   "mid_bm25": 43.047212150454826,
+   "head_bm25_no_header": 38.037060774646704,
+   "head_bm25_no_prefix": 38.79217081387765,
+   "mid_bm25_no_prefix": 42.74193052357229,
+   "head_deep_rank": 1291,
+   "mid_deep_rank": 529,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 48,
+   "head_qterm_tf_total": 45,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 844,
+   "mid_dl": 1078
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "81785e42a7785610",
+   "mid_gid": "ca481c4e9874b684",
+   "head_bm25": 36.40911168264944,
+   "mid_bm25": 39.50315186953475,
+   "head_bm25_no_header": 36.79045894916614,
+   "head_bm25_no_prefix": 36.95709406204394,
+   "mid_bm25_no_prefix": 39.130322564477225,
+   "head_deep_rank": 1996,
+   "mid_deep_rank": 1167,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 67,
+   "head_qterm_tf_total": 48,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1005,
+   "mid_dl": 912
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "03c9bbca47763bf1",
+   "mid_gid": "8387863d4daf9cc5",
+   "head_bm25": 38.24411727471466,
+   "mid_bm25": 40.521421202240354,
+   "head_bm25_no_header": 38.409760773260544,
+   "head_bm25_no_prefix": 38.5063279255383,
+   "mid_bm25_no_prefix": 41.235783730531075,
+   "head_deep_rank": 1475,
+   "mid_deep_rank": 949,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 69,
+   "head_qterm_tf_total": 42,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1056,
+   "mid_dl": 858
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "855f815cc4f8b0ac",
+   "mid_gid": "fd76ff976338a69d",
+   "head_bm25": 37.00342640737407,
+   "mid_bm25": 43.066404223381134,
+   "head_bm25_no_header": 37.16222752606383,
+   "head_bm25_no_prefix": 36.48256190936431,
+   "mid_bm25_no_prefix": 42.85654906536073,
+   "head_deep_rank": 1820,
+   "mid_deep_rank": 528,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 51,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 972,
+   "mid_dl": 1223
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "297b2f8ed7bdfa47",
+   "mid_gid": "7ec1ddc55229d426",
+   "head_bm25": 40.568567336762506,
+   "mid_bm25": 38.74465804063857,
+   "head_bm25_no_header": 39.79502786495223,
+   "head_bm25_no_prefix": 36.64718666899663,
+   "mid_bm25_no_prefix": 33.776406198055064,
+   "head_deep_rank": 939,
+   "mid_deep_rank": 1336,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 26,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 961,
+   "mid_dl": 1002
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "710d5615340e756b",
+   "mid_gid": "26139d0ad8ce5149",
+   "head_bm25": 48.238535022350604,
+   "mid_bm25": 37.91384596970386,
+   "head_bm25_no_header": 47.73755731177259,
+   "head_bm25_no_prefix": 42.88130888994408,
+   "mid_bm25_no_prefix": 35.29177936745842,
+   "head_deep_rank": 163,
+   "mid_deep_rank": 1554,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 73,
+   "head_qterm_tf_total": 82,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 1018,
+   "mid_dl": 975
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "a193302ddd87264a",
+   "mid_gid": "8edcbcdd24b47a8e",
+   "head_bm25": 39.533796080632804,
+   "mid_bm25": 37.798802616933536,
+   "head_bm25_no_header": 39.99998628197727,
+   "head_bm25_no_prefix": 39.82014478046468,
+   "mid_bm25_no_prefix": 34.5821892246974,
+   "head_deep_rank": 1159,
+   "mid_deep_rank": 1580,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 41,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 929,
+   "mid_dl": 936
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "dc7d99fa15dd1432",
+   "mid_gid": "2258e43043bf3d95",
+   "head_bm25": 40.78170192239851,
+   "mid_bm25": 48.151477747984316,
+   "head_bm25_no_header": 40.38981547019085,
+   "head_bm25_no_prefix": 38.66647057254882,
+   "mid_bm25_no_prefix": 47.03154749778537,
+   "head_deep_rank": 911,
+   "mid_deep_rank": 168,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 74,
+   "head_qterm_tf_total": 68,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 1027,
+   "mid_dl": 842
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "291c1c86c665e0af",
+   "mid_gid": "8e968a5747d1cd79",
+   "head_bm25": 44.774756786350274,
+   "mid_bm25": 39.65257226528552,
+   "head_bm25_no_header": 44.685444447743755,
+   "head_bm25_no_prefix": 45.33218019811335,
+   "mid_bm25_no_prefix": 40.102084561075486,
+   "head_deep_rank": 372,
+   "mid_deep_rank": 1124,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 74,
+   "head_qterm_tf_in_header": 9,
+   "head_dl": 989,
+   "mid_dl": 986
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "bafaf7058b1634d6",
+   "mid_gid": "c055166a41f02078",
+   "head_bm25": 36.56808834860953,
+   "mid_bm25": 50.59275196419993,
+   "head_bm25_no_header": 35.796344387432576,
+   "head_bm25_no_prefix": 35.43945129015102,
+   "mid_bm25_no_prefix": 47.1597671072069,
+   "head_deep_rank": 1942,
+   "mid_deep_rank": 83,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 62,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 939,
+   "mid_dl": 932
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "c716a4baf7fc8fe2",
+   "mid_gid": "0d2f4621e923ce00",
+   "head_bm25": 38.60896981671519,
+   "mid_bm25": 42.54679800260523,
+   "head_bm25_no_header": 38.90713168232455,
+   "head_bm25_no_prefix": 39.095985489486324,
+   "mid_bm25_no_prefix": 43.25532377548493,
+   "head_deep_rank": 1366,
+   "mid_deep_rank": 602,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 61,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 945,
+   "mid_dl": 864
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "fa59ea6e621148e1",
+   "mid_gid": "09b0bb68d960e59b",
+   "head_bm25": 42.442061292162144,
+   "mid_bm25": 40.84833791854814,
+   "head_bm25_no_header": 42.64624591313789,
+   "head_bm25_no_prefix": 42.37328845873407,
+   "mid_bm25_no_prefix": 40.70291563085759,
+   "head_deep_rank": 615,
+   "mid_deep_rank": 898,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 65,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 987,
+   "mid_dl": 957
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "b98ace58365715ee",
+   "mid_gid": "75f0342ba2f9bd9d",
+   "head_bm25": 39.69853867418794,
+   "mid_bm25": 47.36682246162186,
+   "head_bm25_no_header": 39.8100532125593,
+   "head_bm25_no_prefix": 38.35395607035577,
+   "mid_bm25_no_prefix": 47.37247661670645,
+   "head_deep_rank": 1112,
+   "mid_deep_rank": 194,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 52,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 996,
+   "mid_dl": 959
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "6ef93345f51df1fc",
+   "mid_gid": "0de45627c6cc19a2",
+   "head_bm25": 42.14051709665237,
+   "mid_bm25": 47.71553604814227,
+   "head_bm25_no_header": 39.3001494890232,
+   "head_bm25_no_prefix": 40.47231150208911,
+   "mid_bm25_no_prefix": 43.54494162194889,
+   "head_deep_rank": 666,
+   "mid_deep_rank": 185,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 48,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 991,
+   "mid_dl": 997
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "197ba0628d26099e",
+   "mid_gid": "8400ec5cdc1d97c4",
+   "head_bm25": 37.58183070973949,
+   "mid_bm25": 56.6133263616934,
+   "head_bm25_no_header": 37.69307344546505,
+   "head_bm25_no_prefix": 37.4205184125209,
+   "mid_bm25_no_prefix": 56.877670582282484,
+   "head_deep_rank": 1640,
+   "mid_deep_rank": 9,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 71,
+   "head_qterm_tf_total": 56,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 894,
+   "mid_dl": 1047
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "e5b33f8471a65042",
+   "mid_gid": "085a3f047ccc4d8a",
+   "head_bm25": 44.17734313887291,
+   "mid_bm25": 37.253796162838995,
+   "head_bm25_no_header": 44.366077336639115,
+   "head_bm25_no_prefix": 44.87343862900817,
+   "mid_bm25_no_prefix": 36.62644366250994,
+   "head_deep_rank": 421,
+   "mid_deep_rank": 1753,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 69,
+   "head_qterm_tf_total": 45,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 992,
+   "mid_dl": 1037
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "b6832cbee73178dd",
+   "mid_gid": "5536e1f3b37cb942",
+   "head_bm25": 37.40609459695273,
+   "mid_bm25": 39.85534203807048,
+   "head_bm25_no_header": 37.47567186283117,
+   "head_bm25_no_prefix": 35.61403011580308,
+   "mid_bm25_no_prefix": 39.77458262212327,
+   "head_deep_rank": 1702,
+   "mid_deep_rank": 1078,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 41,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 992,
+   "mid_dl": 829
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "9aecd155b93035ee",
+   "mid_gid": "9e1fcbe00f699da0",
+   "head_bm25": 38.61634462999712,
+   "mid_bm25": 42.29049656489184,
+   "head_bm25_no_header": 37.836408656766096,
+   "head_bm25_no_prefix": 38.34188148527895,
+   "mid_bm25_no_prefix": 29.67133161939376,
+   "head_deep_rank": 1363,
+   "mid_deep_rank": 644,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 48,
+   "head_qterm_tf_total": 49,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 997,
+   "mid_dl": 916
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "8d8bf1aead094adc",
+   "mid_gid": "deebb20f7a6c3a8b",
+   "head_bm25": 50.21075946993331,
+   "mid_bm25": 37.43605058332809,
+   "head_bm25_no_header": 49.91937647664534,
+   "head_bm25_no_prefix": 50.40552644910565,
+   "mid_bm25_no_prefix": 36.43585574529811,
+   "head_deep_rank": 103,
+   "mid_deep_rank": 1691,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 73,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 1173,
+   "mid_dl": 1007
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "48dd3999c9104101",
+   "mid_gid": "e3650dd00a8e4c97",
+   "head_bm25": 41.52672503814727,
+   "mid_bm25": 49.28774599456862,
+   "head_bm25_no_header": 40.266149101292854,
+   "head_bm25_no_prefix": 41.93668361072181,
+   "mid_bm25_no_prefix": 48.39048533953962,
+   "head_deep_rank": 783,
+   "mid_deep_rank": 128,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 51,
+   "head_qterm_tf_total": 63,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 1020,
+   "mid_dl": 868
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "ed610c385c52f33f",
+   "mid_gid": "28edba0c396f1868",
+   "head_bm25": 41.08470660155028,
+   "mid_bm25": 36.8151587485552,
+   "head_bm25_no_header": 41.42603900072865,
+   "head_bm25_no_prefix": 41.62989867719847,
+   "mid_bm25_no_prefix": 37.63930930750417,
+   "head_deep_rank": 858,
+   "mid_deep_rank": 1874,
+   "n_header_tokens": 42,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 45,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 865,
+   "mid_dl": 904
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "df359fba0c34c55b",
+   "mid_gid": "e85a90e477221f54",
+   "head_bm25": 45.10463452872022,
+   "mid_bm25": 44.82417129503174,
+   "head_bm25_no_header": 45.03302333915274,
+   "head_bm25_no_prefix": 44.0214636642891,
+   "mid_bm25_no_prefix": 42.968976878536765,
+   "head_deep_rank": 347,
+   "mid_deep_rank": 366,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 66,
+   "head_qterm_tf_total": 76,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 1088,
+   "mid_dl": 863
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "b97eb956e3ee8861",
+   "mid_gid": "36ba66162d0a35b9",
+   "head_bm25": 44.18613915568429,
+   "mid_bm25": 47.15595838516413,
+   "head_bm25_no_header": 44.2969556848842,
+   "head_bm25_no_prefix": 44.61007517561891,
+   "mid_bm25_no_prefix": 47.201144697092516,
+   "head_deep_rank": 419,
+   "mid_deep_rank": 203,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 47,
+   "head_qterm_tf_total": 57,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 1010,
+   "mid_dl": 976
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "6439f4a100001a1a",
+   "mid_gid": "06ad0249784acb21",
+   "head_bm25": 37.114146832615916,
+   "mid_bm25": 44.54207273730884,
+   "head_bm25_no_header": 37.07322027598132,
+   "head_bm25_no_prefix": 37.499739733434076,
+   "mid_bm25_no_prefix": 44.894972858142225,
+   "head_deep_rank": 1781,
+   "mid_deep_rank": 391,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 53,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 1073,
+   "mid_dl": 928
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "0eef49afb227c761",
+   "mid_gid": "c081cf2e1c791629",
+   "head_bm25": 50.87269037013227,
+   "mid_bm25": 41.65359574537128,
+   "head_bm25_no_header": 51.02281186880037,
+   "head_bm25_no_prefix": 45.43105982777493,
+   "mid_bm25_no_prefix": 38.457404558253785,
+   "head_deep_rank": 74,
+   "mid_deep_rank": 754,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 79,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 895,
+   "mid_dl": 907
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "1c6be8d7389dab3f",
+   "mid_gid": "93acf9e28403038c",
+   "head_bm25": 42.24578291900588,
+   "mid_bm25": 45.73431296307216,
+   "head_bm25_no_header": 42.27744775491691,
+   "head_bm25_no_prefix": 40.105305801387686,
+   "mid_bm25_no_prefix": 44.478750138791675,
+   "head_deep_rank": 649,
+   "mid_deep_rank": 295,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 46,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 999,
+   "mid_dl": 1050
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "b3ac234d5455c0c3",
+   "mid_gid": "eac2bea21641317b",
+   "head_bm25": 39.49235250427387,
+   "mid_bm25": 36.56815819048968,
+   "head_bm25_no_header": 39.46107739660405,
+   "head_bm25_no_prefix": 39.74938404937549,
+   "mid_bm25_no_prefix": 36.961136745600825,
+   "head_deep_rank": 1171,
+   "mid_deep_rank": 1941,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 42,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1007,
+   "mid_dl": 816
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "120a7fbb826931c4",
+   "mid_gid": "1ec3679e68c4f615",
+   "head_bm25": 40.21393733178334,
+   "mid_bm25": 38.88005987444453,
+   "head_bm25_no_header": 40.52422603695205,
+   "head_bm25_no_prefix": 40.74857509623384,
+   "mid_bm25_no_prefix": 39.24292828695613,
+   "head_deep_rank": 1003,
+   "mid_deep_rank": 1307,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 59,
+   "head_qterm_tf_total": 65,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 998,
+   "mid_dl": 996
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "eaebb5f8604b3ccf",
+   "mid_gid": "dafe4317245aa6d3",
+   "head_bm25": 39.79127167786023,
+   "mid_bm25": 41.829767834053655,
+   "head_bm25_no_header": 39.248577962474606,
+   "head_bm25_no_prefix": 39.59112340746364,
+   "mid_bm25_no_prefix": 41.745836286589416,
+   "head_deep_rank": 1094,
+   "mid_deep_rank": 716,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 38,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 921,
+   "mid_dl": 1058
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "954b56839d965869",
+   "mid_gid": "a5ebf95262911161",
+   "head_bm25": 38.95198772963417,
+   "mid_bm25": 43.31313780800245,
+   "head_bm25_no_header": 38.49328521667184,
+   "head_bm25_no_prefix": 38.69661428860377,
+   "mid_bm25_no_prefix": 42.359326440896844,
+   "head_deep_rank": 1301,
+   "mid_deep_rank": 500,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 45,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 956,
+   "mid_dl": 874
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "ff08cb981d4039a8",
+   "mid_gid": "04a73e6161b84c7c",
+   "head_bm25": 46.26659008655273,
+   "mid_bm25": 37.96239375045003,
+   "head_bm25_no_header": 46.74654116062874,
+   "head_bm25_no_prefix": 46.07455270678984,
+   "mid_bm25_no_prefix": 37.105492768114935,
+   "head_deep_rank": 255,
+   "mid_deep_rank": 1541,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 67,
+   "head_qterm_tf_total": 43,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 914,
+   "mid_dl": 1028
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "c9afbd2ccf7a29bb",
+   "mid_gid": "e952a6c0e607588b",
+   "head_bm25": 50.50502182928729,
+   "mid_bm25": 54.53963359615819,
+   "head_bm25_no_header": 50.6830235569334,
+   "head_bm25_no_prefix": 50.79707106316016,
+   "mid_bm25_no_prefix": 53.97522527980902,
+   "head_deep_rank": 85,
+   "mid_deep_rank": 17,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 56,
+   "head_qterm_tf_total": 76,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 939,
+   "mid_dl": 997
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "42ce75006c4bb5ab",
+   "mid_gid": "2c194ef3e850bb52",
+   "head_bm25": 46.42490224225688,
+   "mid_bm25": 38.72932571006622,
+   "head_bm25_no_header": 45.50341597496417,
+   "head_bm25_no_prefix": 39.213807980059585,
+   "mid_bm25_no_prefix": 33.104238387167484,
+   "head_deep_rank": 249,
+   "mid_deep_rank": 1343,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 52,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 916,
+   "mid_dl": 945
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "b64bae8595ee0646",
+   "mid_gid": "ecfd7a789e3f5171",
+   "head_bm25": 40.962457273205665,
+   "mid_bm25": 48.0090364805786,
+   "head_bm25_no_header": 41.185454384327706,
+   "head_bm25_no_prefix": 41.30832285560666,
+   "mid_bm25_no_prefix": 47.812115003266356,
+   "head_deep_rank": 874,
+   "mid_deep_rank": 174,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 53,
+   "head_qterm_tf_total": 42,
+   "head_qterm_tf_in_header": 2,
+   "head_dl": 935,
+   "mid_dl": 951
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "effa843885252198",
+   "mid_gid": "6ecd555c5b180d0d",
+   "head_bm25": 37.94801121723421,
+   "mid_bm25": 40.89957152859875,
+   "head_bm25_no_header": 38.318788813326705,
+   "head_bm25_no_prefix": 38.39760702905692,
+   "mid_bm25_no_prefix": 41.54731350167485,
+   "head_deep_rank": 1545,
+   "mid_deep_rank": 889,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 69,
+   "head_qterm_tf_total": 39,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 1025,
+   "mid_dl": 960
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "decdbba3dc38f7a3",
+   "mid_gid": "cc43df783f89e837",
+   "head_bm25": 39.66637272154607,
+   "mid_bm25": 36.701667911841746,
+   "head_bm25_no_header": 40.04589034999045,
+   "head_bm25_no_prefix": 40.20707138930963,
+   "mid_bm25_no_prefix": 36.88634310260954,
+   "head_deep_rank": 1118,
+   "mid_deep_rank": 1909,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 55,
+   "head_qterm_tf_in_header": 1,
+   "head_dl": 1089,
+   "mid_dl": 967
+  },
+  {
+   "needle": "erb_021",
+   "head_gid": "e274324851e80274",
+   "mid_gid": "276d99f47f5bba8c",
+   "head_bm25": 38.5279024328154,
+   "mid_bm25": 43.58475646581251,
+   "head_bm25_no_header": 38.246786002131735,
+   "head_bm25_no_prefix": 36.8677320646208,
+   "mid_bm25_no_prefix": 43.01085067191528,
+   "head_deep_rank": 1390,
+   "mid_deep_rank": 475,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 63,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 1020,
+   "mid_dl": 1224
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "218e8711e7d6544e",
+   "mid_gid": "3264613f0a9ed430",
+   "head_bm25": 61.84492493071827,
+   "mid_bm25": 57.76059642465393,
+   "head_bm25_no_header": 62.25213428661965,
+   "head_bm25_no_prefix": 61.97040038378451,
+   "mid_bm25_no_prefix": 52.45324879763983,
+   "head_deep_rank": 16,
+   "mid_deep_rank": 38,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 174,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 900,
+   "mid_dl": 928
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "b3b5867c273b4972",
+   "mid_gid": "ce136176aa22acde",
+   "head_bm25": 54.67748494585808,
+   "mid_bm25": 38.38656629926026,
+   "head_bm25_no_header": 54.95372467787152,
+   "head_bm25_no_prefix": 55.279946775130746,
+   "mid_bm25_no_prefix": 38.73408559060105,
+   "head_deep_rank": 60,
+   "mid_deep_rank": 1302,
+   "n_header_tokens": 51,
+   "n_prefix_tokens": 56,
+   "head_qterm_tf_total": 90,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 899,
+   "mid_dl": 925
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "7228f5c9203b86a9",
+   "mid_gid": "11df9c3ca665ba55",
+   "head_bm25": 43.843953462014184,
+   "mid_bm25": 46.347770326064754,
+   "head_bm25_no_header": 43.68350827376898,
+   "head_bm25_no_prefix": 43.594130364240435,
+   "mid_bm25_no_prefix": 38.16086471328775,
+   "head_deep_rank": 513,
+   "mid_deep_rank": 329,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 102,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 1037,
+   "mid_dl": 837
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "332e3d29ae712f64",
+   "mid_gid": "e2a14b8cf2b92543",
+   "head_bm25": 37.545627315162406,
+   "mid_bm25": 42.73653109268149,
+   "head_bm25_no_header": 38.0988655996477,
+   "head_bm25_no_prefix": 38.131472140135685,
+   "mid_bm25_no_prefix": 43.00142828128264,
+   "head_deep_rank": 1507,
+   "mid_deep_rank": 629,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 64,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 823,
+   "mid_dl": 756
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "9dd368930d9a41c0",
+   "mid_gid": "dfa715d4c7488ecf",
+   "head_bm25": 48.165961833416894,
+   "mid_bm25": 48.10635948568801,
+   "head_bm25_no_header": 48.391334670079225,
+   "head_bm25_no_prefix": 48.687937330963315,
+   "mid_bm25_no_prefix": 47.63608640742737,
+   "head_deep_rank": 235,
+   "mid_deep_rank": 241,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 121,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 868,
+   "mid_dl": 1069
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "4005a476d0becf24",
+   "mid_gid": "8ee3c928056f75c3",
+   "head_bm25": 43.042389042183984,
+   "mid_bm25": 62.26967528401835,
+   "head_bm25_no_header": 43.25540274167783,
+   "head_bm25_no_prefix": 43.34253892347365,
+   "mid_bm25_no_prefix": 62.437312278259576,
+   "head_deep_rank": 596,
+   "mid_deep_rank": 13,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 55,
+   "head_qterm_tf_total": 78,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 977,
+   "mid_dl": 968
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "4d8f611d2479e8bc",
+   "mid_gid": "31f9770a3bd60714",
+   "head_bm25": 54.323910202992465,
+   "mid_bm25": 39.859798670912284,
+   "head_bm25_no_header": 54.74749420085991,
+   "head_bm25_no_prefix": 54.42850971205984,
+   "mid_bm25_no_prefix": 35.745950352979726,
+   "head_deep_rank": 64,
+   "mid_deep_rank": 1001,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 73,
+   "head_qterm_tf_total": 164,
+   "head_qterm_tf_in_header": 10,
+   "head_dl": 1055,
+   "mid_dl": 1035
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "38bf4407f31b8b2b",
+   "mid_gid": "1a3af7e0e1915b35",
+   "head_bm25": 59.74407062417022,
+   "mid_bm25": 42.76253559644375,
+   "head_bm25_no_header": 60.52441794707819,
+   "head_bm25_no_prefix": 60.62577177555528,
+   "mid_bm25_no_prefix": 38.0119097232612,
+   "head_deep_rank": 23,
+   "mid_deep_rank": 626,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 67,
+   "head_qterm_tf_total": 56,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 967,
+   "mid_dl": 894
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "ff2dee33d67e691c",
+   "mid_gid": "0cc9c9bd0959221b",
+   "head_bm25": 38.6235291223304,
+   "mid_bm25": 39.66597046372932,
+   "head_bm25_no_header": 38.90491997369288,
+   "head_bm25_no_prefix": 38.716829490647214,
+   "mid_bm25_no_prefix": 38.03210358375141,
+   "head_deep_rank": 1254,
+   "mid_deep_rank": 1041,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 65,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 929,
+   "mid_dl": 884
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "ec48632a4bbbc0d0",
+   "mid_gid": "4cb009ec4c331e3c",
+   "head_bm25": 42.620176515305026,
+   "mid_bm25": 36.370053167726056,
+   "head_bm25_no_header": 42.57181385461033,
+   "head_bm25_no_prefix": 42.99242508387151,
+   "mid_bm25_no_prefix": 36.53479603347024,
+   "head_deep_rank": 645,
+   "mid_deep_rank": 1884,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 74,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 780,
+   "mid_dl": 806
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "83715e4e775c8939",
+   "mid_gid": "ab8e667983819e10",
+   "head_bm25": 43.00666937209843,
+   "mid_bm25": 40.991590701498474,
+   "head_bm25_no_header": 41.85466960970677,
+   "head_bm25_no_prefix": 41.880007605273654,
+   "mid_bm25_no_prefix": 41.681417260138275,
+   "head_deep_rank": 602,
+   "mid_deep_rank": 846,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 60,
+   "head_qterm_tf_total": 75,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 937,
+   "mid_dl": 1060
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "0d23a75dccaaeb18",
+   "mid_gid": "370e392efdf6dfa7",
+   "head_bm25": 49.64161094200206,
+   "mid_bm25": 37.03332177582178,
+   "head_bm25_no_header": 49.92919439239711,
+   "head_bm25_no_prefix": 49.040748754980626,
+   "mid_bm25_no_prefix": 35.93984712525334,
+   "head_deep_rank": 169,
+   "mid_deep_rank": 1653,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 101,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 769,
+   "mid_dl": 730
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "56b0acab16bc76b1",
+   "mid_gid": "386d0fc64ae7910b",
+   "head_bm25": 44.61543392577956,
+   "mid_bm25": 40.79429796320209,
+   "head_bm25_no_header": 44.162904628698016,
+   "head_bm25_no_prefix": 45.34619356583186,
+   "mid_bm25_no_prefix": 40.74096514245911,
+   "head_deep_rank": 447,
+   "mid_deep_rank": 867,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 81,
+   "head_qterm_tf_in_header": 9,
+   "head_dl": 840,
+   "mid_dl": 780
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "9716f7c7ffc0c69d",
+   "mid_gid": "1adf39fbe445f3f9",
+   "head_bm25": 38.3668616183921,
+   "mid_bm25": 51.06215340661827,
+   "head_bm25_no_header": 38.59407401900014,
+   "head_bm25_no_prefix": 38.27591394183234,
+   "mid_bm25_no_prefix": 44.58044615902541,
+   "head_deep_rank": 1311,
+   "mid_deep_rank": 124,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 50,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 877,
+   "mid_dl": 831
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "c1e441aaffd43ac7",
+   "mid_gid": "32f01a66fd592ee1",
+   "head_bm25": 47.429681920183754,
+   "mid_bm25": 59.47023101802386,
+   "head_bm25_no_header": 47.50241589220706,
+   "head_bm25_no_prefix": 47.43287095797692,
+   "mid_bm25_no_prefix": 53.08391582461901,
+   "head_deep_rank": 277,
+   "mid_deep_rank": 25,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 70,
+   "head_qterm_tf_total": 178,
+   "head_qterm_tf_in_header": 14,
+   "head_dl": 1046,
+   "mid_dl": 866
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "cc415a420d297bb2",
+   "mid_gid": "a6a96d7ff77bc7b7",
+   "head_bm25": 44.1791094508292,
+   "mid_bm25": 41.308765335678785,
+   "head_bm25_no_header": 44.4099166573652,
+   "head_bm25_no_prefix": 42.51845914224254,
+   "mid_bm25_no_prefix": 34.05841361605479,
+   "head_deep_rank": 483,
+   "mid_deep_rank": 797,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 113,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 1062,
+   "mid_dl": 1182
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "e825148fb9ce7122",
+   "mid_gid": "ba9edddcf8176c32",
+   "head_bm25": 39.168350738401976,
+   "mid_bm25": 45.24349374350707,
+   "head_bm25_no_header": 39.674704854821194,
+   "head_bm25_no_prefix": 39.6730207603276,
+   "mid_bm25_no_prefix": 39.98125180506663,
+   "head_deep_rank": 1142,
+   "mid_deep_rank": 405,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 101,
+   "head_qterm_tf_in_header": 9,
+   "head_dl": 852,
+   "mid_dl": 1106
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "c01c19aac7b0372e",
+   "mid_gid": "0d4310d0973fd410",
+   "head_bm25": 37.53750783537279,
+   "mid_bm25": 43.50405600770668,
+   "head_bm25_no_header": 37.90336008621767,
+   "head_bm25_no_prefix": 38.10731532448429,
+   "mid_bm25_no_prefix": 44.10823464218392,
+   "head_deep_rank": 1508,
+   "mid_deep_rank": 548,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 60,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 852,
+   "mid_dl": 906
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "6a1ef78b9a0a0ca5",
+   "mid_gid": "80020ef6bee48135",
+   "head_bm25": 51.03059291126791,
+   "mid_bm25": 37.16490468216211,
+   "head_bm25_no_header": 50.76127725631523,
+   "head_bm25_no_prefix": 49.207100071152865,
+   "mid_bm25_no_prefix": 27.110173609087134,
+   "head_deep_rank": 126,
+   "mid_deep_rank": 1619,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 145,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 943,
+   "mid_dl": 963
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "b8c7b997a7d31467",
+   "mid_gid": "59680b4330d507dd",
+   "head_bm25": 60.59513679913175,
+   "mid_bm25": 58.985362737595146,
+   "head_bm25_no_header": 60.77441257469747,
+   "head_bm25_no_prefix": 60.964727056955795,
+   "mid_bm25_no_prefix": 59.039801527177424,
+   "head_deep_rank": 20,
+   "mid_deep_rank": 30,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 125,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 1132,
+   "mid_dl": 944
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "9a3aa187690c4712",
+   "mid_gid": "a5f1302e2ad0dcc6",
+   "head_bm25": 37.14786103536917,
+   "mid_bm25": 37.49463691807256,
+   "head_bm25_no_header": 37.56150509072694,
+   "head_bm25_no_prefix": 37.540854381441974,
+   "mid_bm25_no_prefix": 38.27792542387443,
+   "head_deep_rank": 1623,
+   "mid_deep_rank": 1517,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 48,
+   "head_qterm_tf_total": 89,
+   "head_qterm_tf_in_header": 0,
+   "head_dl": 852,
+   "mid_dl": 1060
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "edc12c488fcb7fcb",
+   "mid_gid": "b40da527dd5c93d3",
+   "head_bm25": 40.61487637734291,
+   "mid_bm25": 38.30291762125161,
+   "head_bm25_no_header": 40.414032225936005,
+   "head_bm25_no_prefix": 39.27224030125137,
+   "mid_bm25_no_prefix": 25.93319464050687,
+   "head_deep_rank": 888,
+   "mid_deep_rank": 1330,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 95,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 907,
+   "mid_dl": 720
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "c010a2231c1b8e69",
+   "mid_gid": "c2d08e99754c1ef8",
+   "head_bm25": 42.55690623142194,
+   "mid_bm25": 45.90847746647832,
+   "head_bm25_no_header": 42.649416618762864,
+   "head_bm25_no_prefix": 42.396984941227316,
+   "mid_bm25_no_prefix": 37.646709690617165,
+   "head_deep_rank": 653,
+   "mid_deep_rank": 355,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 69,
+   "head_qterm_tf_total": 72,
+   "head_qterm_tf_in_header": 6,
+   "head_dl": 894,
+   "mid_dl": 1019
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "8dd68956296dc560",
+   "mid_gid": "07eb587e43ea38bd",
+   "head_bm25": 42.01586857299386,
+   "mid_bm25": 37.12038779211693,
+   "head_bm25_no_header": 42.35984198434281,
+   "head_bm25_no_prefix": 42.36021110443613,
+   "mid_bm25_no_prefix": 28.75739640666022,
+   "head_deep_rank": 712,
+   "mid_deep_rank": 1631,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 114,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 938,
+   "mid_dl": 879
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "151959821200a399",
+   "mid_gid": "25afc7f6ba652b61",
+   "head_bm25": 38.30193663918267,
+   "mid_bm25": 36.499955922937005,
+   "head_bm25_no_header": 38.53706055205054,
+   "head_bm25_no_prefix": 38.44429136453341,
+   "mid_bm25_no_prefix": 36.22234296751735,
+   "head_deep_rank": 1331,
+   "mid_deep_rank": 1841,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 114,
+   "head_qterm_tf_in_header": 7,
+   "head_dl": 1070,
+   "mid_dl": 866
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "e99bcd1ea4b0eb3a",
+   "mid_gid": "dd4df663e24a40a2",
+   "head_bm25": 41.00532901282908,
+   "mid_bm25": 38.59804686008029,
+   "head_bm25_no_header": 41.41334795311752,
+   "head_bm25_no_prefix": 40.8511524799136,
+   "mid_bm25_no_prefix": 32.35698982634261,
+   "head_deep_rank": 842,
+   "mid_deep_rank": 1257,
+   "n_header_tokens": 51,
+   "n_prefix_tokens": 67,
+   "head_qterm_tf_total": 82,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 934,
+   "mid_dl": 949
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "1eda53056a0842d6",
+   "mid_gid": "138bac7e88eff34b",
+   "head_bm25": 39.520356778225064,
+   "mid_bm25": 36.948389842424284,
+   "head_bm25_no_header": 39.91320696896612,
+   "head_bm25_no_prefix": 40.13794054914927,
+   "mid_bm25_no_prefix": 32.37984520271962,
+   "head_deep_rank": 1063,
+   "mid_deep_rank": 1686,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 68,
+   "head_qterm_tf_total": 69,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 994,
+   "mid_dl": 971
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "b608f39708840125",
+   "mid_gid": "10fcc23f39649b17",
+   "head_bm25": 44.59150835891744,
+   "mid_bm25": 50.46607042886096,
+   "head_bm25_no_header": 44.99028403128496,
+   "head_bm25_no_prefix": 44.91266963675214,
+   "mid_bm25_no_prefix": 50.792326301869544,
+   "head_deep_rank": 449,
+   "mid_deep_rank": 145,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 68,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 882,
+   "mid_dl": 847
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "1e4386c09957099b",
+   "mid_gid": "48a0d9de120cea8b",
+   "head_bm25": 50.91891989689637,
+   "mid_bm25": 36.219179217698155,
+   "head_bm25_no_header": 51.31414733571124,
+   "head_bm25_no_prefix": 50.99381059332251,
+   "mid_bm25_no_prefix": 28.04849219669079,
+   "head_deep_rank": 130,
+   "mid_deep_rank": 1941,
+   "n_header_tokens": 46,
+   "n_prefix_tokens": 57,
+   "head_qterm_tf_total": 79,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 895,
+   "mid_dl": 849
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "26093219cb24e1bf",
+   "mid_gid": "42749c1af4f3eb5e",
+   "head_bm25": 52.208284375259524,
+   "mid_bm25": 48.72002007381032,
+   "head_bm25_no_header": 52.505016740710985,
+   "head_bm25_no_prefix": 51.9799912256925,
+   "mid_bm25_no_prefix": 39.91979010370746,
+   "head_deep_rank": 102,
+   "mid_deep_rank": 213,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 61,
+   "head_qterm_tf_total": 81,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 935,
+   "mid_dl": 1107
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "0bcc44ed1bacacff",
+   "mid_gid": "35818d3d95476a2b",
+   "head_bm25": 50.77702510447528,
+   "mid_bm25": 44.39138242451067,
+   "head_bm25_no_header": 51.18442266218751,
+   "head_bm25_no_prefix": 51.298950921231175,
+   "mid_bm25_no_prefix": 40.38326457933414,
+   "head_deep_rank": 132,
+   "mid_deep_rank": 465,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 63,
+   "head_qterm_tf_total": 158,
+   "head_qterm_tf_in_header": 4,
+   "head_dl": 885,
+   "mid_dl": 1005
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "e513843a33c78b4b",
+   "mid_gid": "ebca89ebf94fca8e",
+   "head_bm25": 46.72217008396897,
+   "mid_bm25": 40.96605335503946,
+   "head_bm25_no_header": 47.06824567069933,
+   "head_bm25_no_prefix": 46.71089524645681,
+   "mid_bm25_no_prefix": 36.32250307704442,
+   "head_deep_rank": 302,
+   "mid_deep_rank": 850,
+   "n_header_tokens": 47,
+   "n_prefix_tokens": 72,
+   "head_qterm_tf_total": 61,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 1054,
+   "mid_dl": 1042
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "b9b57f8d925fe7c2",
+   "mid_gid": "0fd334bbb81f3627",
+   "head_bm25": 41.56788361140171,
+   "mid_bm25": 67.96593835704975,
+   "head_bm25_no_header": 41.82441926953846,
+   "head_bm25_no_prefix": 41.71879090599867,
+   "mid_bm25_no_prefix": 69.13535768296144,
+   "head_deep_rank": 770,
+   "mid_deep_rank": 5,
+   "n_header_tokens": 44,
+   "n_prefix_tokens": 64,
+   "head_qterm_tf_total": 141,
+   "head_qterm_tf_in_header": 5,
+   "head_dl": 934,
+   "mid_dl": 964
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "478b97e38e160380",
+   "mid_gid": "dfd2a4190f26e9a4",
+   "head_bm25": 36.18435308164425,
+   "mid_bm25": 38.06470445359102,
+   "head_bm25_no_header": 36.29700768594438,
+   "head_bm25_no_prefix": 36.19473700354648,
+   "mid_bm25_no_prefix": 29.996209530268327,
+   "head_deep_rank": 1954,
+   "mid_deep_rank": 1383,
+   "n_header_tokens": 50,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 88,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 1052,
+   "mid_dl": 986
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "64c65de02170e430",
+   "mid_gid": "4986bb8cc4caa83c",
+   "head_bm25": 42.1975548351327,
+   "mid_bm25": 36.930513239287464,
+   "head_bm25_no_header": 42.47900584773728,
+   "head_bm25_no_prefix": 42.48307843156216,
+   "mid_bm25_no_prefix": 34.59033322779379,
+   "head_deep_rank": 694,
+   "mid_deep_rank": 1693,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 83,
+   "head_qterm_tf_in_header": 9,
+   "head_dl": 899,
+   "mid_dl": 925
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "c740cafb315c4411",
+   "mid_gid": "c792a0a9d577c063",
+   "head_bm25": 49.18546386595364,
+   "mid_bm25": 37.40622064653601,
+   "head_bm25_no_header": 49.09060452874558,
+   "head_bm25_no_prefix": 49.445618444636295,
+   "mid_bm25_no_prefix": 37.6818304770691,
+   "head_deep_rank": 194,
+   "mid_deep_rank": 1550,
+   "n_header_tokens": 48,
+   "n_prefix_tokens": 50,
+   "head_qterm_tf_total": 84,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 869,
+   "mid_dl": 834
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "e76b1f42f982b2c4",
+   "mid_gid": "1ef045857ff649c6",
+   "head_bm25": 65.55270418317113,
+   "mid_bm25": 53.72693813459585,
+   "head_bm25_no_header": 65.70920172238101,
+   "head_bm25_no_prefix": 64.35588214208914,
+   "mid_bm25_no_prefix": 52.671648017517164,
+   "head_deep_rank": 8,
+   "mid_deep_rank": 70,
+   "n_header_tokens": 45,
+   "n_prefix_tokens": 58,
+   "head_qterm_tf_total": 105,
+   "head_qterm_tf_in_header": 8,
+   "head_dl": 896,
+   "mid_dl": 1094
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "03ed9c417f3aedab",
+   "mid_gid": "ca3df3fe9b8b4f1f",
+   "head_bm25": 51.12428922144506,
+   "mid_bm25": 36.8495031322275,
+   "head_bm25_no_header": 51.4349524980853,
+   "head_bm25_no_prefix": 51.538747328724824,
+   "mid_bm25_no_prefix": 32.71344468292242,
+   "head_deep_rank": 123,
+   "mid_deep_rank": 1725,
+   "n_header_tokens": 41,
+   "n_prefix_tokens": 65,
+   "head_qterm_tf_total": 104,
+   "head_qterm_tf_in_header": 10,
+   "head_dl": 869,
+   "mid_dl": 1004
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "01fff042eb6ab00f",
+   "mid_gid": "5087744bf3107108",
+   "head_bm25": 43.313544127151715,
+   "mid_bm25": 36.14634648779045,
+   "head_bm25_no_header": 43.70524908388668,
+   "head_bm25_no_prefix": 43.55704998139678,
+   "mid_bm25_no_prefix": 28.54651464162149,
+   "head_deep_rank": 572,
+   "mid_deep_rank": 1969,
+   "n_header_tokens": 49,
+   "n_prefix_tokens": 62,
+   "head_qterm_tf_total": 61,
+   "head_qterm_tf_in_header": 3,
+   "head_dl": 906,
+   "mid_dl": 912
+  },
+  {
+   "needle": "erb_025",
+   "head_gid": "2a587583a6f4126f",
+   "mid_gid": "41c3e01108996651",
+   "head_bm25": 37.65363969529432,
+   "mid_bm25": 46.46522890582648,
+   "head_bm25_no_header": 37.930374387065626,
+   "head_bm25_no_prefix": 37.47978223636447,
+   "mid_bm25_no_prefix": 41.36240648797011,
+   "head_deep_rank": 1470,
+   "mid_deep_rank": 321,
+   "n_header_tokens": 43,
+   "n_prefix_tokens": 71,
+   "head_qterm_tf_total": 133,
+   "head_qterm_tf_in_header": 11,
+   "head_dl": 830,
+   "mid_dl": 864
+  }
+ ],
+ "gold_deep": [
+  {
+   "needle": "erb_001",
+   "deep_fts_rank_of_first_gold": 19,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_003",
+   "deep_fts_rank_of_first_gold": 63,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_006",
+   "deep_fts_rank_of_first_gold": 10,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_021",
+   "deep_fts_rank_of_first_gold": 181,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_025",
+   "deep_fts_rank_of_first_gold": 129,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_027",
+   "deep_fts_rank_of_first_gold": 484,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_030",
+   "deep_fts_rank_of_first_gold": 59,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_031",
+   "deep_fts_rank_of_first_gold": 677,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_036",
+   "deep_fts_rank_of_first_gold": 4,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_042",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_045",
+   "deep_fts_rank_of_first_gold": 5,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_046",
+   "deep_fts_rank_of_first_gold": 7,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_049",
+   "deep_fts_rank_of_first_gold": 37,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_050",
+   "deep_fts_rank_of_first_gold": 46,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_053",
+   "deep_fts_rank_of_first_gold": 6,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_054",
+   "deep_fts_rank_of_first_gold": 222,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_057",
+   "deep_fts_rank_of_first_gold": 127,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_061",
+   "deep_fts_rank_of_first_gold": 31,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_063",
+   "deep_fts_rank_of_first_gold": 460,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_064",
+   "deep_fts_rank_of_first_gold": 19,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_068",
+   "deep_fts_rank_of_first_gold": 8,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_071",
+   "deep_fts_rank_of_first_gold": 429,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_073",
+   "deep_fts_rank_of_first_gold": 94,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_074",
+   "deep_fts_rank_of_first_gold": 13,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_076",
+   "deep_fts_rank_of_first_gold": 1456,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_081",
+   "deep_fts_rank_of_first_gold": 34,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_086",
+   "deep_fts_rank_of_first_gold": 90,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_089",
+   "deep_fts_rank_of_first_gold": 137,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_091",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_092",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_099",
+   "deep_fts_rank_of_first_gold": 1602,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_107",
+   "deep_fts_rank_of_first_gold": 3,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_108",
+   "deep_fts_rank_of_first_gold": 455,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_109",
+   "deep_fts_rank_of_first_gold": 196,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_111",
+   "deep_fts_rank_of_first_gold": 42,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_115",
+   "deep_fts_rank_of_first_gold": 1105,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_120",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_121",
+   "deep_fts_rank_of_first_gold": 8,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_124",
+   "deep_fts_rank_of_first_gold": 103,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_127",
+   "deep_fts_rank_of_first_gold": 1747,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_130",
+   "deep_fts_rank_of_first_gold": 18,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_133",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_136",
+   "deep_fts_rank_of_first_gold": 130,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_137",
+   "deep_fts_rank_of_first_gold": 42,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_138",
+   "deep_fts_rank_of_first_gold": 1567,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_139",
+   "deep_fts_rank_of_first_gold": 566,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_141",
+   "deep_fts_rank_of_first_gold": 194,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_143",
+   "deep_fts_rank_of_first_gold": 27,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_144",
+   "deep_fts_rank_of_first_gold": 4,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_145",
+   "deep_fts_rank_of_first_gold": 8,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_146",
+   "deep_fts_rank_of_first_gold": 739,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_149",
+   "deep_fts_rank_of_first_gold": 21,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_152",
+   "deep_fts_rank_of_first_gold": 43,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_157",
+   "deep_fts_rank_of_first_gold": 110,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_158",
+   "deep_fts_rank_of_first_gold": 23,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_162",
+   "deep_fts_rank_of_first_gold": 1,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_165",
+   "deep_fts_rank_of_first_gold": 15,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_167",
+   "deep_fts_rank_of_first_gold": 14,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_169",
+   "deep_fts_rank_of_first_gold": 1058,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_172",
+   "deep_fts_rank_of_first_gold": 1203,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_177",
+   "deep_fts_rank_of_first_gold": 72,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_179",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_180",
+   "deep_fts_rank_of_first_gold": 22,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_182",
+   "deep_fts_rank_of_first_gold": 28,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_183",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_184",
+   "deep_fts_rank_of_first_gold": 31,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_185",
+   "deep_fts_rank_of_first_gold": 324,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_186",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_187",
+   "deep_fts_rank_of_first_gold": 9,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_188",
+   "deep_fts_rank_of_first_gold": 55,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_189",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_190",
+   "deep_fts_rank_of_first_gold": 130,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_192",
+   "deep_fts_rank_of_first_gold": 416,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_195",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_196",
+   "deep_fts_rank_of_first_gold": 22,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_197",
+   "deep_fts_rank_of_first_gold": 13,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_199",
+   "deep_fts_rank_of_first_gold": 43,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_200",
+   "deep_fts_rank_of_first_gold": 391,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_202",
+   "deep_fts_rank_of_first_gold": 127,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_203",
+   "deep_fts_rank_of_first_gold": 1881,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_206",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_208",
+   "deep_fts_rank_of_first_gold": 22,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_209",
+   "deep_fts_rank_of_first_gold": 65,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_211",
+   "deep_fts_rank_of_first_gold": 586,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_212",
+   "deep_fts_rank_of_first_gold": 48,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_213",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_215",
+   "deep_fts_rank_of_first_gold": 286,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_217",
+   "deep_fts_rank_of_first_gold": 49,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_218",
+   "deep_fts_rank_of_first_gold": 889,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_219",
+   "deep_fts_rank_of_first_gold": 585,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_220",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_221",
+   "deep_fts_rank_of_first_gold": 53,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_223",
+   "deep_fts_rank_of_first_gold": 242,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_225",
+   "deep_fts_rank_of_first_gold": 142,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_228",
+   "deep_fts_rank_of_first_gold": 744,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_229",
+   "deep_fts_rank_of_first_gold": 47,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_230",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_231",
+   "deep_fts_rank_of_first_gold": 18,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_233",
+   "deep_fts_rank_of_first_gold": 151,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_234",
+   "deep_fts_rank_of_first_gold": 1084,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_235",
+   "deep_fts_rank_of_first_gold": 15,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_238",
+   "deep_fts_rank_of_first_gold": 30,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_239",
+   "deep_fts_rank_of_first_gold": 276,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_241",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_242",
+   "deep_fts_rank_of_first_gold": 692,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_243",
+   "deep_fts_rank_of_first_gold": 227,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_245",
+   "deep_fts_rank_of_first_gold": 318,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_246",
+   "deep_fts_rank_of_first_gold": 1136,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_247",
+   "deep_fts_rank_of_first_gold": 1404,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_248",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_249",
+   "deep_fts_rank_of_first_gold": 240,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_250",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_254",
+   "deep_fts_rank_of_first_gold": 22,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_255",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_256",
+   "deep_fts_rank_of_first_gold": 55,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_259",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_260",
+   "deep_fts_rank_of_first_gold": 70,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_261",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_262",
+   "deep_fts_rank_of_first_gold": 352,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_264",
+   "deep_fts_rank_of_first_gold": 23,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_265",
+   "deep_fts_rank_of_first_gold": 12,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_266",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_267",
+   "deep_fts_rank_of_first_gold": 323,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_269",
+   "deep_fts_rank_of_first_gold": 204,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_271",
+   "deep_fts_rank_of_first_gold": 20,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_273",
+   "deep_fts_rank_of_first_gold": 13,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_274",
+   "deep_fts_rank_of_first_gold": 1282,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_275",
+   "deep_fts_rank_of_first_gold": 1251,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_276",
+   "deep_fts_rank_of_first_gold": 21,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_277",
+   "deep_fts_rank_of_first_gold": 66,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_278",
+   "deep_fts_rank_of_first_gold": 153,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_280",
+   "deep_fts_rank_of_first_gold": 4,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_281",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_284",
+   "deep_fts_rank_of_first_gold": 188,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_288",
+   "deep_fts_rank_of_first_gold": 773,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_292",
+   "deep_fts_rank_of_first_gold": 338,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_294",
+   "deep_fts_rank_of_first_gold": 32,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_295",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_296",
+   "deep_fts_rank_of_first_gold": null,
+   "gold_posclass": null
+  },
+  {
+   "needle": "erb_297",
+   "deep_fts_rank_of_first_gold": 278,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_298",
+   "deep_fts_rank_of_first_gold": 306,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_299",
+   "deep_fts_rank_of_first_gold": 105,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_302",
+   "deep_fts_rank_of_first_gold": 89,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_311",
+   "deep_fts_rank_of_first_gold": 1268,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_323",
+   "deep_fts_rank_of_first_gold": 38,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_324",
+   "deep_fts_rank_of_first_gold": 849,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_328",
+   "deep_fts_rank_of_first_gold": 430,
+   "gold_posclass": "last"
+  },
+  {
+   "needle": "erb_339",
+   "deep_fts_rank_of_first_gold": 8,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_409",
+   "deep_fts_rank_of_first_gold": 71,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_416",
+   "deep_fts_rank_of_first_gold": 59,
+   "gold_posclass": "first"
+  },
+  {
+   "needle": "erb_427",
+   "deep_fts_rank_of_first_gold": 221,
+   "gold_posclass": "middle"
+  },
+  {
+   "needle": "erb_436",
+   "deep_fts_rank_of_first_gold": 434,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_438",
+   "deep_fts_rank_of_first_gold": 1888,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_447",
+   "deep_fts_rank_of_first_gold": 34,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_450",
+   "deep_fts_rank_of_first_gold": 40,
+   "gold_posclass": "only"
+  },
+  {
+   "needle": "erb_451",
+   "deep_fts_rank_of_first_gold": 1,
+   "gold_posclass": "only"
+  }
+ ],
+ "elapsed_seconds": 438.5,
+ "section_11_ranking_vs_presentation": {
+  "question": "the P5 receipt calls delivered[0] the 'top-1 winner'. Is that a RANKING position or a PRESENTATION position?",
+  "n_queries": 40,
+  "delivered_set_equals_score_top_k": {
+   "mean_overlap": 1.0,
+   "n_queries": 40,
+   "reading": "1.000 means the delivered SET is exactly the top-k of the fused+combined score map. Nothing about position changes WHICH documents are returned."
+  },
+  "delivered_order_is_sorted_by_sequence_index": {
+   "n_matching": 36,
+   "n_queries": 40,
+   "pct": 90.0,
+   "predictor": "sorted(score-ordered delivered set, key=promoter.sequence_index or 0) -- context_manager.py:3355, the default dense-decoder emission branch (non-slate, non-frontier)",
+   "residual_note": "the non-matching queries are the ones where the assembly trim/eviction pass drops a part after the sort"
+  },
+  "delivered_order_is_non_decreasing_in_sequence_index": {
+   "n_matching": 40,
+   "n_queries": 40,
+   "pct": 100.0,
+   "reading": "the weaker, assumption-free version of the same claim: the delivered list never puts a later chunk before an earlier one"
+  },
+  "sequence_index_vs_rowid_inferred_position": {
+   "n_agree": 1962,
+   "n_disagree": 0,
+   "n_null": 0,
+   "pct_agree": 100.0,
+   "reading": "promoter.sequence_index IS the chunk's index within its source document, so sorting by it is literally sorting by position class"
+  }
+ },
+ "section_12_composition_by_stage": {
+  "note": "composition by chunk-position class at every stage. 'mid_share' is middles as a percentage of first+middle, i.e. restricted to the at-cap population where P5 measured 0/142.",
+  "stages": {
+   "fts_rank1": {
+    "counts": {
+     "middle": 8,
+     "first": 28,
+     "last": 2,
+     "only": 2
+    },
+    "share_pct": {
+     "first": 70.0,
+     "last": 5.0,
+     "middle": 20.0,
+     "only": 5.0
+    },
+    "mid_share_of_first_plus_middle_pct": 22.22
+   },
+   "fts_top3": {
+    "counts": {
+     "middle": 26,
+     "first": 79,
+     "last": 8,
+     "only": 7
+    },
+    "share_pct": {
+     "first": 65.83,
+     "last": 6.67,
+     "middle": 21.67,
+     "only": 5.83
+    },
+    "mid_share_of_first_plus_middle_pct": 24.76
+   },
+   "fts_top12": {
+    "counts": {
+     "middle": 89,
+     "first": 312,
+     "only": 39,
+     "last": 40
+    },
+    "share_pct": {
+     "first": 65.0,
+     "last": 8.33,
+     "middle": 18.54,
+     "only": 8.12
+    },
+    "mid_share_of_first_plus_middle_pct": 22.19
+   },
+   "fts_top50": {
+    "counts": {
+     "middle": 332,
+     "first": 1334,
+     "only": 159,
+     "last": 175
+    },
+    "share_pct": {
+     "first": 66.7,
+     "last": 8.75,
+     "middle": 16.6,
+     "only": 7.95
+    },
+    "mid_share_of_first_plus_middle_pct": 19.93
+   },
+   "score_rank1": {
+    "counts": {
+     "middle": 7,
+     "first": 27,
+     "only": 3,
+     "last": 3
+    },
+    "share_pct": {
+     "first": 67.5,
+     "last": 7.5,
+     "middle": 17.5,
+     "only": 7.5
+    },
+    "mid_share_of_first_plus_middle_pct": 20.59
+   },
+   "score_top3": {
+    "counts": {
+     "middle": 24,
+     "first": 80,
+     "only": 9,
+     "last": 7
+    },
+    "share_pct": {
+     "first": 66.67,
+     "last": 5.83,
+     "middle": 20.0,
+     "only": 7.5
+    },
+    "mid_share_of_first_plus_middle_pct": 23.08
+   },
+   "score_top12": {
+    "counts": {
+     "middle": 93,
+     "first": 321,
+     "only": 30,
+     "last": 36
+    },
+    "share_pct": {
+     "first": 66.88,
+     "last": 7.5,
+     "middle": 19.38,
+     "only": 6.25
+    },
+    "mid_share_of_first_plus_middle_pct": 22.46
+   },
+   "score_13_48": {
+    "counts": {
+     "first": 977,
+     "last": 128,
+     "middle": 238,
+     "only": 97
+    },
+    "share_pct": {
+     "first": 67.85,
+     "last": 8.89,
+     "middle": 16.53,
+     "only": 6.74
+    },
+    "mid_share_of_first_plus_middle_pct": 19.59
+   },
+   "delivered_set": {
+    "counts": {
+     "first": 277,
+     "only": 23,
+     "middle": 71,
+     "last": 31
+    },
+    "share_pct": {
+     "first": 68.91,
+     "last": 7.71,
+     "middle": 17.66,
+     "only": 5.72
+    },
+    "mid_share_of_first_plus_middle_pct": 20.4
+   },
+   "delivered_rank1": {
+    "counts": {
+     "first": 37,
+     "only": 3
+    },
+    "share_pct": {
+     "first": 92.5,
+     "only": 7.5
+    },
+    "mid_share_of_first_plus_middle_pct": 0.0
+   },
+   "delivered_top3": {
+    "counts": {
+     "first": 104,
+     "middle": 3,
+     "only": 12,
+     "last": 1
+    },
+    "share_pct": {
+     "first": 86.67,
+     "last": 0.83,
+     "middle": 2.5,
+     "only": 10.0
+    },
+    "mid_share_of_first_plus_middle_pct": 2.8
+   }
+  },
+  "corpus_baseline_mid_share_of_first_plus_middle_pct": 26.46,
+  "reading": "the position signal is FLAT from the FTS bm25 ranking through the fused score ranking -- middles hold roughly a fifth of every band including rank 1 -- and then collapses to exactly 0 at delivered rank 1. The collapse happens at the presentation sort, not in retrieval."
+ },
+ "section_13_sort_arithmetic": {
+  "question": "does the sequence_index sort explain 156/156 head-or-only at rank 1?",
+  "mean_P_no_head_or_only_chunk_among_the_delivered_seats": 0.00504315,
+  "expected_n_queries_out_of_156_with_no_head_chunk_to_sort_to_front": 0.7867,
+  "reading": "head-or-only chunks are ~78% of the admitted pool, so a 12-seat delivery essentially always contains at least one sequence_index==0 chunk, and that chunk is placed at position 0 by the sort. 156/156 is the arithmetic of the sort key, not evidence about scoring."
+ },
+ "verdict": "KILL",
+ "verdict_detail": {
+  "headline": "The head-chunk monopoly is REAL and it is a PRESENTATION-ORDER artefact with zero retrieval content. context_manager.py:3355 emits the delivered set as sorted(candidates, key=promoter.sequence_index or 0) on the default dense branch, i.e. it literally sorts by chunk position within the parent document. The delivered SET is bit-identical to the score top-k (mean overlap 1.000), so the effect cannot move a single needle.",
+  "prereg_outcome": {
+   "K1_earned_by_content": "FAILED. Within-document, at-cap, same-query paired BM25 gives the head only 54.33% wins (n=5538 decided, p=1.19e-10). Significant, but far below the pre-registered 60% bar, and the mean edge is +1.00 BM25 on a base of ~38.0 (2.6%).",
+   "K2_cause_named": "FAILED, and REFUTED as a hypothesis. Deleting the head chunk's leading 400 content characters flips only 2.03% of head wins, and the head's mean BM25 does not fall (42.145 with header vs 42.249 without). Query-term occurrences inside the header are 5.06% of the head's total against a 4.81% token share -- i.e. UNIFORM. The document title/metadata block is NOT doing the work.",
+   "K3a_survive_coin_flip_with_persistent_rank_gap": "NOT MET. The paired BM25 comparison is near-coin-flip as K3(a) requires, but the RANK gap does not persist: middles hold 20.6% of score-rank-1 slots and 22.5% of the score top-12 against a 19.9% share of the FTS top-50 pool. There is no ranking gap left to survive on.",
+   "K3b_survive_post_admission_demotion": "NOT MET. Inside the admitted top-50 the mean (final rank - bm25 rank) is +1.05 for first chunks and -0.36 for middles: middles are very slightly PROMOTED, not demoted.",
+   "honesty_note": "The pre-registration anticipated exactly two outcomes -- a content-difference kill (K1/K2) or a surviving positional bias (K3). Neither happened. The effect dissolved at a layer the pre-registration did not cover: it is not in the scorer at all. The kill stands on evidence the pre-registration did not name, and that is stated here rather than retrofitted into K1."
+  },
+  "what_P5_actually_measured": "P5's 'seat rank' is the index into window.expressed_gene_ids, which is the presentation order. Its mean_seat_rank_by_posclass (only 5.16 / first 5.22 / middle 9.33 / last 9.56) is a readout of the sort key itself. P5's own delivered-seat composition already showed the SET is position-neutral: 237/1423 = 16.7% of at-cap seats are middles, against a 17-22% share of the admitted pool.",
+  "addressable_population": "ZERO needles. The mechanism never changes which documents are delivered, so no re-ordering of it can convert a miss into a hit. The 89 misses whose gold sits at a middle or tail chunk are NOT addressable by this lead; they are an admission problem (only 132 of 156 have gold anywhere in a 2000-deep FTS-only ranking, and only 54 inside the top 50 that the bm25 shortlist admits).",
+  "incidental_findings_for_other_arms": [
+   "ADMISSION GATE IS 50, NOT 48. [retrieval] bm25_shortlist_enabled defaults to true with bm25_shortlist_size = 50; knowledge_store.py post-filters the scored set to FTS5's bm25 top-50 before RRF. That -- not fts5_candidate_depth (48) -- is why the published score map bottoms out at ~45-48 entries. M8 should be benched against bm25_shortlist_size, and fts5_candidate_depth alone cannot widen admission past 50.",
+   "THE FTS TEXT IS NOT genes.content. genes_fts is external-content over the view genes_fts_source, whose content column is source_id || ' ' || GROUP_CONCAT(promoter_index.tag_value) || ' ' || genes.content. Every chunk is indexed with its document's PATH and tags prepended (mean 62.5 tokens). Any lexical arm that reasons about 'the chunk text' is reasoning about the wrong string.",
+   "BUDGET TRUNCATION IS POSITION-CORRELATED AND POINTS THE OTHER WAY. Under the W2.4 seat floor the trim shortens the LARGEST remaining part, which on this bed is almost always an at-cap non-tail chunk. If anything the assembler penalises head chunks on content, not middles.",
+   "BM25 TIES ARE A NON-MECHANISM. 135 of 312,000 deep-ranked rows sit in a bm25 tie (0.043%), and only 2 tied groups mix position classes -- so SQLite's rowid-ascending tie-break cannot produce any measurable position bias."
+  ]
+ },
+ "elapsed_seconds_addendum": 0.7,
+ "section_14_trim_path_audit": {
+  "question": "the presentation sort is position-driven. Can it leak into the delivered SET through the budget trim?",
+  "code": "cymatix_context/context_manager.py, budget-eviction loop ~:3607-3634",
+  "finding": "No. The default eviction branch picks worst_idx = argmin over the request-scoped SCORE map, explicitly so that sequence_index ordering cannot decide who is dropped (the code comments say as much). The respect_caller_order positional pop(0) branch is the foveated reverse-rank path, which this bed's default config does not take. The W2.4 seat floor (min_delivered_docs=12) truncates the LARGEST remaining part instead of evicting, which is position-correlated -- at-cap chunks are non-tail -- but it works AGAINST head chunks (they are the ones shortened) and still never changes membership.",
+  "empirical_confirmation": "delivered SET vs score top-k overlap = 1.000 across all 40 live replays; delivered-set middle share 20.4%% against 19.9%% of the admitted FTS top-50."
+ }
+}
