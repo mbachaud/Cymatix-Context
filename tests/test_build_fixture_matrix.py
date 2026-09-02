@@ -1379,6 +1379,12 @@ class TestBlobResume:
     Before this, ``build_profile`` unconditionally deleted the target ``.db``
     and ignored ``--rebuild`` entirely, so a killed 500k-file blob build lost
     every gene. The sharded path has had file-level resume since issue #150.
+
+    Resume is **parallel-only**: the sequential branch walks roots through
+    ``ingest_tree`` and never builds a file list, so ``_filter_to_unseen``
+    has nothing to filter. ``rebuild=False`` there therefore keeps the
+    historical delete-and-rebuild rather than re-ingesting every root into
+    a bed that already holds them.
     """
 
     def _profile(self, monkeypatch, root):
@@ -1412,7 +1418,9 @@ class TestBlobResume:
             bfm.build_profile("tinyresume", str(db), rebuild=True)
         assert str(db) in removed
 
-    def test_rebuild_false_keeps_existing_bed(self, tmp_path, monkeypatch):
+    def test_rebuild_false_keeps_existing_bed_under_parallel(
+        self, tmp_path, monkeypatch,
+    ):
         root = tmp_path / "src"
         root.mkdir()
         (root / "a.py").write_text("x = 1\n", encoding="utf-8")
@@ -1426,9 +1434,76 @@ class TestBlobResume:
         monkeypatch.setattr(bfm, "Genome", lambda **kw: (_ for _ in ()).throw(RuntimeError("stop")))
 
         with pytest.raises(RuntimeError):
-            bfm.build_profile("tinyresume", str(db), rebuild=False)
+            bfm.build_profile("tinyresume", str(db), parallel=True,
+                              rebuild=False)
         assert removed == []
         assert db.read_bytes() == b"existing bed"
+
+    def test_sequential_rebuild_false_still_deletes(self, tmp_path, monkeypatch,
+                                                    caplog):
+        """The default (sequential, no --rebuild) is delete-and-rebuild.
+
+        Regression guard: the sequential branch has no ``_filter_to_unseen``,
+        so honouring ``rebuild=False`` there would silently re-ingest every
+        root into the existing bed instead of resuming. Historical
+        behaviour -- always delete -- is what an operator running
+        ``--profile medium`` a second time gets.
+        """
+        root = tmp_path / "src"
+        root.mkdir()
+        (root / "a.py").write_text("x = 1\n", encoding="utf-8")
+        bfm = self._profile(monkeypatch, root)
+
+        db = tmp_path / "tinyresume.db"
+        db.write_bytes(b"existing bed")
+
+        removed = []
+        monkeypatch.setattr(bfm.os, "remove", lambda p: removed.append(str(p)))
+        monkeypatch.setattr(bfm, "Genome", lambda **kw: (_ for _ in ()).throw(RuntimeError("stop")))
+
+        with caplog.at_level(logging.WARNING, logger=bfm.log.name):
+            with pytest.raises(RuntimeError):
+                bfm.build_profile("tinyresume", str(db), parallel=False,
+                                  rebuild=False)
+
+        assert str(db) in removed, "sequential blob mode must delete-and-rebuild"
+        assert any(
+            "sequential blob mode has no file-level resume" in r.getMessage()
+            for r in caplog.records
+        ), "operator was not told the bed was rebuilt rather than resumed"
+
+    def test_main_blob_default_is_sequential_and_not_rebuild(
+        self, tmp_path, monkeypatch,
+    ):
+        """``main()`` forwards the flags the default behaviour hangs on.
+
+        ``--rebuild`` is ``store_true`` (default False) and ``--parallel``
+        likewise, so the default blob invocation reaches ``build_profile``
+        as ``parallel=False, rebuild=False`` -- the combination
+        ``test_sequential_rebuild_false_still_deletes`` pins to
+        delete-and-rebuild.
+        """
+        import build_fixture_matrix as bfm
+
+        seen = {}
+
+        def fake_build_profile(name, db_path, **kw):
+            seen["kwargs"] = kw
+            return {"total_genes": 0, "bytes": 0, "elapsed_s": 0.0,
+                    "files": 0, "errors": 0, "missing_roots": []}
+
+        monkeypatch.setattr(bfm, "build_profile", fake_build_profile)
+        monkeypatch.setattr(bfm, "update_manifest", lambda *a, **kw: None)
+        monkeypatch.setattr(bfm, "_install_sigint_handler", lambda: None)
+        monkeypatch.setattr(
+            sys, "argv",
+            ["build_fixture_matrix.py", "--profile", "small",
+             "--out-dir", str(tmp_path)],
+        )
+
+        assert bfm.main() == 0
+        assert seen["kwargs"]["parallel"] is False
+        assert seen["kwargs"]["rebuild"] is False
 
     def test_resume_filters_already_ingested_files(self, tmp_path, monkeypatch):
         """The parallel branch drops files whose source_id is already present."""

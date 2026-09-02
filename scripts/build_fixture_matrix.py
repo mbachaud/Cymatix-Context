@@ -47,6 +47,11 @@ Parallel modes (issue #92)
                             is enabled: pre-scan eligible bytes per shard
                             so the long pole dispatches first (issue #97).
     --batch-size N          SPLADE batch size in the writer (default 64).
+    --rebuild               Delete the existing output before building.
+                            Sharded mode and ``--parallel`` blob mode
+                            otherwise resume into it (issue #150); the
+                            sequential blob path has no resume and always
+                            deletes and rebuilds, with or without the flag.
 
 Examples:
     python scripts/build_fixture_matrix.py --profile medium --parallel
@@ -1242,14 +1247,34 @@ def build_profile(
     ``source_id`` is already present via :func:`_filter_to_unseen`, i.e. the
     file-level resume the sharded path has had since issue #150.  A 500k-file
     blob build runs for many hours, so losing all of it to a kill -- or to a
-    mid-flight retune -- was pure waste.  Resume applies to the **parallel**
-    branch only; the sequential branch walks roots through
-    :func:`ingest_tree` and has no file list to filter.
+    mid-flight retune -- was pure waste.
+
+    Resume applies to the **parallel** branch only.  The sequential branch
+    walks roots through :func:`ingest_tree` and never materialises a file
+    list, so :func:`_filter_to_unseen` has nothing to filter: honouring
+    ``rebuild=False`` there would keep the old ``.db`` and re-ingest every
+    root into it -- a double-ingested bed, not a resume.  So
+    ``rebuild=False`` on the sequential path falls back to the historical
+    delete-and-rebuild (with a warning), which is what blob mode did for
+    every invocation before 2026-08-24.
     """
     profile = PROFILES[name]
 
     out_dir = os.path.dirname(os.path.abspath(db_path))
     os.makedirs(out_dir, exist_ok=True)
+
+    # ``rebuild=False`` is only meaningful where a resume exists (parallel).
+    if not rebuild and not parallel:
+        if os.path.exists(db_path):
+            log.warning(
+                "sequential blob mode has no file-level resume "
+                "(ingest_tree walks roots, there is no file list for "
+                "_filter_to_unseen); rebuilding %s from scratch as before. "
+                "Pass --parallel to resume into an existing .db, or "
+                "--rebuild to make the delete explicit.",
+                db_path,
+            )
+        rebuild = True
 
     if rebuild and os.path.exists(db_path):
         log.info("removing existing %s", db_path)
@@ -2534,8 +2559,10 @@ def main() -> int:
              "file-level resume — complete shards are skipped via "
              "``_try_salvage_complete_shard`` and already-ingested files are "
              "dropped via ``_filter_to_unseen`` (issue #150). Blob mode "
-             "honours this too as of 2026-08-24; before that it always "
-             "rebuilt and silently ignored the flag. Use --rebuild for the "
+             "honours this as of 2026-08-24, but only under --parallel: "
+             "there is no resume for the sequential blob path, so "
+             "``--mode blob`` without --parallel always deletes and rebuilds "
+             "(unchanged historical behaviour). Use --rebuild for the "
              "'nuke and start fresh' case (schema migration, corrupt bed).",
     )
     parser.add_argument(
