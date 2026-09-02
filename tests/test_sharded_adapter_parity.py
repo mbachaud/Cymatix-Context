@@ -167,6 +167,13 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # per shard before the router's cross-shard merge. The adapter never
     # scores pairs itself.
     "_rerank_effective", "_score_rerank",
+    # W2.2 eps_band_coverage (PR #428): distinct-query-term coverage over
+    # the fused head. Same shape again — called on `self` inside each
+    # per-shard KnowledgeStore.query_docs against that shard's `genes`
+    # table. The adapter's `conn` is the main routing DB (no `genes`
+    # table), so a delegating mirror would raise; the combinator degrades
+    # to plain eps_band when no coverage map is supplied.
+    "_coverage_for",
     "_init_db", "_refresh_snapshot", "_row_to_gene",
 
     # FTS / KV / indexing helpers that operate on a single .db file's

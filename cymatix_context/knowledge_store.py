@@ -42,6 +42,17 @@ from .backends.sema_codec import decode_embedding, sema_vec_to_blob
 
 log = logging.getLogger(__name__)
 
+# W2.2-narrow (eps_band_coverage): how deep into the fused head the
+# distinct-term coverage map is computed. The bands that can move delivery
+# live in the head; 60 covers the receipted 13-45 target range with margin
+# at ~60 point content fetches per query (evidence:
+# benchmarks/dogfood/erb/receipts/semantic_above_gold_947k_2026-08-31.json).
+COVERAGE_TIEBREAK_DEPTH = 60
+
+# Tokenizer for the coverage tie-break — the same token family as
+# accel.extract_query_signals so query terms and content tokens agree.
+_COVERAGE_TOKEN_RE = re.compile(r"[a-z0-9_/\-]+")
+
 
 # ── Struggle 1 fix: source-path deny list ───────────────────────────────
 #
@@ -884,13 +895,15 @@ class KnowledgeStore:
         self.last_cover_walk_diag: Dict[str, Any] = {}
         # Issue #255 (PR-2): validate the rerank combinator now so a typo in
         # cymatix.toml fails fast at construction, mirroring the fusion_mode
-        # guard above. The four names are the only valid operators (see
-        # retrieval/rerank_combinators.py).
-        if rerank_combinator not in ("additive", "fused_tier", "eps_band", "off"):
+        # guard above. Single source of truth: VALID_COMBINATORS
+        # (retrieval/rerank_combinators.py) — was a duplicated literal tuple
+        # until the W2.2 eps_band_coverage addition exposed the drift.
+        from .retrieval.rerank_combinators import VALID_COMBINATORS as _VALID_COMB
+        if rerank_combinator not in _VALID_COMB:
             raise ValueError(
                 "rerank_combinator must be one of "
-                "'additive'|'fused_tier'|'eps_band'|'off', "
-                f"got {rerank_combinator!r}"
+                + "|".join(repr(c) for c in _VALID_COMB)
+                + f", got {rerank_combinator!r}"
             )
         self._rerank_combinator: str = rerank_combinator
         self._rerank_band_delta: float = float(rerank_band_delta)
@@ -2146,6 +2159,29 @@ class KnowledgeStore:
         return sorted(expanded)
 
     # ── Authority boosts: distinguish "about X" from "mentions X" ──
+
+
+    def _coverage_for(
+        self, gene_ids: List[str], terms: List[str]
+    ) -> Dict[str, float]:
+        """Distinct-query-term coverage per candidate (W2.2 eps_band_coverage).
+
+        Counts how many DISTINCT ``terms`` occur in each candidate's content
+        (token-level, same token family as the query extractor). One SELECT
+        for the whole id set; absent ids simply score 0.0.
+        """
+        term_set = {t.lower() for t in terms if len(t) > 2}
+        if not gene_ids or not term_set:
+            return {}
+        out: Dict[str, float] = {}
+        marks = ",".join("?" for _ in gene_ids)
+        for gid, content in self.conn.execute(
+            f"SELECT gene_id, content FROM genes WHERE gene_id IN ({marks})",
+            list(gene_ids),
+        ):
+            tokens = set(_COVERAGE_TOKEN_RE.findall((content or "").lower()))
+            out[gid] = float(sum(1 for t in term_set if t in tokens))
+        return out
 
     def _apply_authority_boosts(
         self,
@@ -3979,6 +4015,31 @@ class KnowledgeStore:
                     )
                     _cover_mass, _cover_diag = {}, {}
                 _sig("cover_walk", _cw_t0)
+            # ── W2.2-narrow: distinct-term coverage for the band tie-break ──
+            # Computed ONLY when this query's combinator is eps_band_coverage
+            # (default map ships eps_band, so this block is inert at shipped
+            # defaults). Coverage = number of DISTINCT expanded query terms
+            # present in the candidate's content, over the top-D fused head —
+            # the bands that can affect delivery live there. Evidence:
+            # semantic_above_gold_947k_2026-08-31.json (gold out-covers the
+            # interloper majority on 16/21 rank-reachable semantic misses).
+            _coverage_map: Optional[Dict[str, float]] = None
+            if _effective_combinator == "eps_band_coverage":
+                _cov_t0 = time.monotonic()
+                try:
+                    _cov_head = [
+                        gid for gid, _cv_s in sorted(
+                            fused.items(), key=lambda x: (-x[1], x[0])
+                        )[:COVERAGE_TIEBREAK_DEPTH]
+                    ]
+                    _coverage_map = self._coverage_for(_cov_head, query_terms)
+                except Exception:
+                    log.warning(
+                        "coverage tie-break failed; falling back to eps_band "
+                        "order", exc_info=True,
+                    )
+                    _coverage_map = None
+                _sig("coverage_tiebreak", _cov_t0)
             from .retrieval.rerank_combinators import combine_rerank
             final_scores, ranked_ids = combine_rerank(
                 _effective_combinator,
@@ -3989,6 +4050,7 @@ class KnowledgeStore:
                 self._rerank_tier_weight,
                 self._rerank_band_delta,
                 _fuse_limit,
+                coverage=_coverage_map,
             )
             # last_query_scores semantics under RRF: the combined final
             # score, NOT the raw additive accumulator. This is what

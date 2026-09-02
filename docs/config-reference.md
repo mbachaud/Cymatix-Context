@@ -802,7 +802,7 @@ which stay additive) lives in
 | `cover_walk_append_slots` | `int` | `3` |  |
 | `cover_walk_append_min_mass` | `float` | `0.0` |  |
 | `cover_walk_band_weight` | `float` | `1.0` |  |
-| `rerank_combinator` | `str` | `"additive"` | additive \| fused_tier \| eps_band \| off |
+| `rerank_combinator` | `str` | `"additive"` | one of VALID_COMBINATORS: additive \| fused_tier \| eps_band \| eps_band_coverage \| off |
 | `rerank_band_delta` | `float` | `0.05` | eps_band relative tie-band width δ (ratio of the leader's fused score). |
 | `rerank_tier_weight` | `float` | `1.0` | fused_tier uniform per-class rank post-multiplier (single weight — a per-class weight would re-introduce hand-picked exchange rates). |
 | `rerank_combinator_by_class` | `Dict[str, str]` | `{arithmetic = "eps_band", factual = "eps_band", procedural = "eps_band", multi_hop = "eps_band", default = "eps_band"}` | Issue #255 (classifier-gated combinator, 2026-07-12): per-query-class rerank combinator override map {classifier_class: combinator_name}. The stage-0 rule-based query classifier assigns each query a class (arithmetic / factual / procedural / multi_hop / default); a populated entry makes THAT class use its mapped combinator instead of the global rerank_combinator above. An empty map => every query uses the global combinator (byte-identical fallback). The design is per-class (not a global flip) because the winning combinator is CORPUS-DEPENDENT: the desk test found rerank additives are load-bearing on literal beds while eps_band/off win the semantic 10k ERB bed (docs/research/2026-07-10- rerank-combinator-desktest.md + the 2026-07-11 semantic-arm re-run). GRADUATED 2026-07-16 on the knob-graduation receipt (PR #293, docs/research/2026-07-16-knob-graduation-receipts.md / issues/255#issuecomment-5005983077): {multi_hop: eps_band, default: eps_band} vs the empty-map control replicated flat delivery (gold_delivered byte-identical) with the median gold rank halved on both semantic beds (10k 10→5, 50k 12→6); lift was confined to the mapped classes and unmapped rows (xl literal, 37/50 needles) came back byte-identical, so this is now the shipped default. Keys are validated against the classifier class set and values against VALID_COMBINATORS at load (RetrievalConfig.__post_init__); an unknown key or value is a hard config error (fail loud at load, not silently at query time). Classifier disabled => map ignored, global combinator used. Pass an explicit empty dict ({}) in TOML to restore the pre-graduation byte-identical global-combinator behavior. RE-GRADUATED 2026-08-28 to ALL FIVE classes (wave-1 ranking-under- width, docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md): extending eps_band to arithmetic/factual/procedural was +3/−1 r@12 / +7/−2 delivered on the 829k v09x bed and stacks with rrf_k=20 (combo receipts ladder_v09x_w1c_*_2026-08-28.json). The band also PROTECTS paraphrastic gold: unbanded additives (w1_map_empty arm) dropped semantic r@12 0.32 → 0.16. Classifier_off still bypasses the map entirely (#255 coupling — attributed 235/235 by that same arm). |
@@ -844,9 +844,11 @@ the issue #255 post-fusion rerank combinator (PR-2, 2026-07-10): under
 / party_attr / access_rate) combine with the fused RRF score via this
 operator. Default `"additive"` is byte-identical to the shipped
 fused+rerank_additive block so this knob ships inert; the alternatives
-(`"fused_tier"`, `"eps_band"`, `"off"`) are bench-gated on the
-50-needle beds — see
-`docs/research/2026-07-09-scoring-combinator-exploration.md`.
+(`"fused_tier"`, `"eps_band"`, `"eps_band_coverage"`, `"off"`) are
+bench-gated on the 50-needle beds — see
+`docs/research/2026-07-09-scoring-combinator-exploration.md`. The valid
+set is `retrieval/rerank_combinators.py::VALID_COMBINATORS` (single
+source of truth, validated at config load).
 `semantic_dense_additive_weight` / `semantic_broaden_routing` are the
 2026-06-02 semantic-wiring arm (env-gated, `CYMATIX_SEMANTIC_ARM=1`) —
 see `docs/prds/2026-06-02-semantic-wiring-arm.md`.

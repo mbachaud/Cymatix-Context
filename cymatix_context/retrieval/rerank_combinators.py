@@ -55,7 +55,9 @@ __all__ = [
 
 # The only valid operators. ``KnowledgeStore.__init__`` validates against this
 # same set so a typo in cymatix.toml fails fast at construction.
-VALID_COMBINATORS: Tuple[str, ...] = ("additive", "fused_tier", "eps_band", "off")
+VALID_COMBINATORS: Tuple[str, ...] = (
+    "additive", "fused_tier", "eps_band", "eps_band_coverage", "off",
+)
 
 
 def combine_rerank(
@@ -67,6 +69,7 @@ def combine_rerank(
     tier_weight: float,
     delta: float,
     limit: int,
+    coverage: Optional[Dict[str, float]] = None,
 ) -> Tuple[Dict[str, float], List[str]]:
     """Combine fused RRF scores with the post-fusion rerank classes.
 
@@ -82,6 +85,11 @@ def combine_rerank(
         tier_weight: uniform per-class rank post-multiplier (``fused_tier``).
         delta: relative tie-band width δ (``eps_band``).
         limit: return at most this many ranked ids (``limit <= 0`` -> all).
+        coverage: ``{gene_id: distinct-query-term coverage}`` — read ONLY by
+            ``eps_band_coverage`` (W2.2-narrow, evidence
+            ``semantic_above_gold_947k_2026-08-31.json``); ignored by every
+            other combinator. ``None``/empty degrades ``eps_band_coverage``
+            to exactly ``eps_band``.
 
     Returns:
         ``(final_scores, ranked_ids)``. ``final_scores`` maps every eligible
@@ -117,6 +125,12 @@ def combine_rerank(
 
     if combinator == "eps_band":
         return _eps_band(fused, rerank, delta, limit)
+
+    if combinator == "eps_band_coverage":
+        # W2.2-narrow: same band walk as eps_band; inside a band,
+        # distinct-query-term coverage breaks the tie FIRST, then rerank,
+        # then fused, then gene_id. Empty coverage == eps_band exactly.
+        return _eps_band(fused, rerank, delta, limit, coverage=coverage or {})
 
     raise ValueError(
         "unknown rerank combinator "
@@ -177,6 +191,7 @@ def _eps_band(
     rerank: Dict[str, float],
     delta: float,
     limit: int,
+    coverage: Optional[Dict[str, float]] = None,
 ) -> Tuple[Dict[str, float], List[str]]:
     """ε-band lexicographic tie-break on the fused order.
 
@@ -186,7 +201,12 @@ def _eps_band(
     (``(-rerank, -fused, gene_id)``); a leader with non-positive fused forms a
     singleton band (rerank can never manufacture rank out of a zero-fused
     doc). Final scores stay pure fused — only the emitted order changes.
+
+    ``coverage`` (W2.2-narrow): when provided, the in-band key becomes
+    ``(-coverage, -rerank, -fused, gene_id)`` — an all-zero/absent coverage
+    map is byte-identical to the plain eps_band order.
     """
+    cov = coverage or {}
     final = dict(fused)
     # Base order: fused desc, gene_id asc (the Fuser tie-break).
     base = sorted(fused, key=lambda g: (-fused[g], g))
@@ -209,8 +229,10 @@ def _eps_band(
         while j < n and fused[base[j]] >= threshold:
             j += 1
         band = base[i:j]
-        # Within the band, rerank decides; ties fall back to fused then id.
-        band.sort(key=lambda g: (-rerank.get(g, 0.0), -fused[g], g))
+        # Within the band: coverage (when supplied) decides first, then
+        # rerank; ties fall back to fused then id.
+        band.sort(key=lambda g: (-cov.get(g, 0.0), -rerank.get(g, 0.0),
+                                 -fused[g], g))
         ordered.extend(band)
         i = j
 
