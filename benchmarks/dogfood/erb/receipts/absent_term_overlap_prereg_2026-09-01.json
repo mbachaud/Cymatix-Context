@@ -1,0 +1,14 @@
+{
+  "stamp": "2026-09-01",
+  "kind": "PRE-REGISTRATION (written before the tool was run against the bed)",
+  "probe": "FOLLOW-UP 1 to ARM 1 -- term overlap for the 20 gold-absent pool_absent needles",
+  "tool": "benchmarks/dogfood/erb/probe_absent_term_overlap.py",
+  "tool_sha256_at_preregistration": "a665ec73055f7012370175778ac536004367dda147138cfbbf1da7b7c23ffcc0",
+  "git_sha": "0c17c5f9ef8b8ca9bf568715ceae9c828f77148d",
+  "written_at_epoch": 1788310387.6594543,
+  "written_at_local": "2026-09-01 17:53:07",
+  "population_rule": "GROUP A = pool_depth_forensics rows with bucket=pool_absent, question_type=semantic, bm25_proxy_rank IS NULL (5 needles: erb_186, erb_189, erb_266, erb_295, erb_296). GROUP B = rows with bucket=pool_absent, question_type != semantic, bm25_proxy_rank > 1000 (15 needles: 14 basic + erb_311 intra_document_reasoning).",
+  "classification_rule": "(a) = number of DISTINCT captured query terms (len > 2, the BM25 shortlist filter) that occur in the needle gold chunk text (genes.content), occurrence decided by FTS5 phrase match under the same default unicode61 tokenizer genes_fts uses. A needle is a TRUE VOCABULARY GAP iff (a) == 0; it is OUTRANKED iff (a) > 0. No third bucket, no tunable threshold.",
+  "second_measurement": "(b) gold BM25 rank under the same SQL the pipeline shortlist uses (SELECT gene_id FROM genes_fts WHERE genes_fts MATCH ? ORDER BY rank LIMIT 20000) with the query 3 highest-document-frequency distinct terms removed (all occurrences).",
+  "note": "No result had been observed when this file was written. The bed had not been opened by this tool."
+}
