@@ -644,6 +644,12 @@ def main(argv=None) -> int:
                 "the receipt written by the pre-registered sha, and the "
                 "checkpoint jsonl (harmonic_off_ck_2026-09-01/"
                 "deep1000_harmonic_off.jsonl) is the independent record."),
+            "wall_s_total_note": (
+                "the top-level wall_s_total below is the REGENERATING run's "
+                "own wall clock (sub-second, checkpoint replay only). The "
+                "measuring run took 2027.2 s; the arm's own per-needle sum "
+                "is latency.wall_ms_total = 1,995,746 ms, which is derived "
+                "from the checkpoint and is unchanged."),
             "knob_check_note": (
                 "knob_check_on_store was captured on the measuring run and "
                 "is carried forward verbatim here; the regenerating run "

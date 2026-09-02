@@ -224,12 +224,22 @@ tier fix (section 4) is the one lever with a plausible positive sign that has no
    (`retrieval.harmonic_weight = 0.0`; `[cymatics] harmonic_links` is not a live retrieval knob) and
    the deep knobs unchanged, gold's fused rank over the 107 both-found needles is identical to the
    deep1000 arm on every needle (0 better / 107 same / 0 worse), so 69 of 107 remain worse than
-   shipped. The harmonic tier never appears in tier contributions on this bed (its query-learned graph
-   is empty on bulk beds), and pre-shortlist pools measure 59k–377k documents. Head dilution is
-   genuine competition from the ~950 newly admitted candidates under RRF, not a tie artefact; the
-   depth lever cannot be salvaged by a head-confined tier computation. What remains is ordering
+   shipped. The harmonic tier never fires on this bed for two independent reasons: `harmonic_links`
+   holds 0 rows, and the tier's own SQL binds one parameter per pre-shortlist candidate (median
+   171,745, max 550,202 documents off the unbounded tag lanes) against SQLite's 32,766-parameter
+   limit, so it would raise and be swallowed by a bare `except Exception: log.debug` even if the
+   table were populated. That swallowed error is a shipped-default defect, not a deep-arm one (task
+   chip filed). Tiers that actually fire: `tag_exact`, `tag_prefix`, `lex_anchor`, `authority`,
+   `fts5`; the three unbounded lanes are the next suspects for dilution. Head dilution is genuine
+   competition from the ~950 newly admitted candidates under RRF, not a tie artefact; the depth
+   lever cannot be salvaged by a head-confined tier computation. What remains is ordering
    protection: admit deep candidates below the shipped head, or a re-ranker gated on not displacing
-   shipped seats.
+   shipped seats. Byproduct: `rank_of_first_gold` on the deep arm is bit-stable run to run on all
+   107 needles (the slate order is not; the set and the ranks are). Disclosed in the receipt: the
+   pre-registered switch `[cymatics] harmonic_links` is inert under `read_only`, so the arm used
+   `[retrieval] harmonic_weight = 0.0` with the decision rule unchanged, and a post-run prose-only
+   edit of the tool regenerated the receipt from the untouched checkpoint with zero numeric
+   differences.
 3. **Term overlap for the 20 hard-absent needles** — DONE the same evening
    (`probe_absent_term_overlap.py`, receipt `absent_term_overlap_2026-09-01.json`, pre-registration
    receipt beside it): verdict ALL_OUTRANKED, 0 of 20 are vocabulary gaps (section 5). The ceiling
