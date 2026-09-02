@@ -1,0 +1,529 @@
+{
+  "stamp": "smoke3",
+  "probe": "ARM 1 -- pool-absence forensics (candidate-admission depth)",
+  "tool": "benchmarks/dogfood/erb/probe_pool_depth.py",
+  "tool_sha256": "34d86b2a519d6ae5fbe249b8bb2becfa32e78b5dc05a0a2a17d9f98b9b9ec7cf",
+  "git_sha": "6268b6fa67c09d0f9026a18933b3b11c10e19614",
+  "bed": "F:/tmp/erb_blob_v09x.db",
+  "bed_bytes": 24571056128,
+  "bed_access": "read-write open by KnowledgeStore construction (idempotent DDL); all queries read_only=True, CYMATIX_DISABLE_LEARN=1; raw BM25 proxy opened mode=ro",
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\wave-1-semantic-ranking-5f1dab\\benchmarks\\dogfood\\erb\\configs\\w24_min_delivered_12.toml",
+  "basis_receipts": [
+    "benchmarks/dogfood/erb/receipts/ladder_v09x_w24_min_delivered_2026-08-28.json",
+    "benchmarks/dogfood/erb/receipts/interloper_mine_erb947k_2026-08-31.json",
+    "benchmarks/dogfood/erb/receipts/bucket_ledger_2026-09-01.json"
+  ],
+  "kill_criterion": "KILL the entire admission thesis -- and with it the candidate-depth A/B and the density-at-admission arm -- if FEWER THAN 30 of the 109 pool_absent misses have gold anywhere in a 1000-deep candidate pool (deep1000 arm, retrieval.fts5_candidate_depth=1000 + retrieval.bm25_shortlist_size=1000, shipped pipeline otherwise untouched). If that fires, the misses are a genuine recall-substrate problem, every remaining lexical lever is dead, and the honest recommendation is to re-scope the 0.80 target for this bed.",
+  "verdict": "KILL",
+  "k": 12,
+  "deep_depth": 1000,
+  "bm25_proxy_depth": 20000,
+  "n_misses": 4,
+  "n_hit_controls": 0,
+  "control_seed": 20260901,
+  "admission_trace": {
+    "limit": "knowledge_store.py:2806  limit = max_genes * 2 = 24",
+    "fts_fetch_depth": "knowledge_store.py:2812  _fts_fetch_depth = self._fts5_candidate_depth or (limit*2) = 48",
+    "fts_lane": "knowledge_store.py:3195-3211 Tier-3 FTS5 content lane -- the ONLY consumer of _fts_fetch_depth",
+    "tag_lanes_unbounded": "knowledge_store.py:3155 (tag_exact) / :3180 (tag_prefix) carry no LIMIT",
+    "bm25_shortlist": "knowledge_store.py:3838-3868 -- post-filter, retrieval.bm25_shortlist_enabled default TRUE, bm25_shortlist_size default 50; deletes every candidate not in the BM25 top-50",
+    "rrf_eligibility": "knowledge_store.py:3899-3906 eligible_ids = set(gene_scores) -- the shortlist governs the fused output too",
+    "map_publication": "knowledge_store.py:3987-3988 last_query_scores = final_scores",
+    "conclusion": "The observed ~45-deep map floor is bm25_shortlist_size=50, NOT fts5_candidate_depth=48."
+  },
+  "basis_semantics": {
+    "deep_rank": "shipped fused pipeline with BOTH admission bounds raised to 1000; real tiers, real RRF, real combinator",
+    "bm25_proxy_rank": "PROXY -- raw FTS5 bm25 order of the pipeline's own OR-joined query_terms to depth 20000; NOT the fused ranking"
+  },
+  "arms": {
+    "shipped": {
+      "arm": "shipped",
+      "knobs": {},
+      "n": 4,
+      "errors": [],
+      "wall_ms_p50": 25509.3,
+      "wall_ms_mean": 25227.8,
+      "wall_ms_p95": 26183.5,
+      "wall_ms_total": 100911.3,
+      "map_size_median": 49.5,
+      "map_size_max": 50
+    },
+    "deep1000": {
+      "arm": "deep1000",
+      "knobs": {
+        "retrieval.fts5_candidate_depth": 1000,
+        "retrieval.bm25_shortlist_size": 1000
+      },
+      "n": 4,
+      "errors": [],
+      "wall_ms_p50": 19069.6,
+      "wall_ms_mean": 19766.4,
+      "wall_ms_p95": 20647.5,
+      "wall_ms_total": 79065.7,
+      "map_size_median": 1000.0,
+      "map_size_max": 1000
+    }
+  },
+  "latency": {
+    "shipped_p50_ms": 25509.3,
+    "deep1000_p50_ms": 19069.6,
+    "ratio_p50": 0.748,
+    "shipped_p95_ms": 26183.5,
+    "deep1000_p95_ms": 20647.5,
+    "bm25_proxy_p50_ms": 2984.8
+  },
+  "headline": {
+    "pool_absent_n": 3,
+    "pool_absent_gold_found_at_1000": 3,
+    "pool_absent_hist": {
+      "le_48": 2,
+      "r49_200": 1,
+      "r201_1000": 0,
+      "absent_at_1000": 0
+    },
+    "semantic_pool_absent_n": 0,
+    "semantic_pool_absent_found": 0,
+    "nonsemantic_pool_absent_n": 3,
+    "nonsemantic_pool_absent_found": 3
+  },
+  "by_bucket": {
+    "pool_absent": {
+      "n": 3,
+      "deep_hist": {
+        "le_48": 2,
+        "r49_200": 1,
+        "r201_1000": 0,
+        "absent_at_1000": 0
+      },
+      "n_found_at_1000": 3,
+      "found_rate": 1.0,
+      "deep_rank_median": 40,
+      "deep_rank_max": 62,
+      "bm25_proxy_found": 3,
+      "bm25_proxy_median": 63,
+      "deep_delivered_gold": 0,
+      "shipped_delivered_gold": 0,
+      "bm25_window_attribution": {
+        "gold_in_bm25_top50": 0,
+        "gold_bm25_51_1000": 3,
+        "gold_bm25_1001_20000": 0,
+        "gold_bm25_absent_20000": 0
+      }
+    },
+    "near_band": {
+      "n": 1,
+      "deep_hist": {
+        "le_48": 1,
+        "r49_200": 0,
+        "r201_1000": 0,
+        "absent_at_1000": 0
+      },
+      "n_found_at_1000": 1,
+      "found_rate": 1.0,
+      "deep_rank_median": 25,
+      "deep_rank_max": 25,
+      "bm25_proxy_found": 1,
+      "bm25_proxy_median": 19,
+      "deep_delivered_gold": 0,
+      "shipped_delivered_gold": 0,
+      "bm25_window_attribution": {
+        "gold_in_bm25_top50": 1,
+        "gold_bm25_51_1000": 0,
+        "gold_bm25_1001_20000": 0,
+        "gold_bm25_absent_20000": 0
+      }
+    },
+    "seat_capped": {
+      "n": 0,
+      "deep_hist": {
+        "le_48": 0,
+        "r49_200": 0,
+        "r201_1000": 0,
+        "absent_at_1000": 0
+      },
+      "n_found_at_1000": 0,
+      "found_rate": null,
+      "deep_rank_median": null,
+      "deep_rank_max": null,
+      "bm25_proxy_found": 0,
+      "bm25_proxy_median": null,
+      "deep_delivered_gold": 0,
+      "shipped_delivered_gold": 0,
+      "bm25_window_attribution": {
+        "gold_in_bm25_top50": 0,
+        "gold_bm25_51_1000": 0,
+        "gold_bm25_1001_20000": 0,
+        "gold_bm25_absent_20000": 0
+      }
+    },
+    "all_misses": {
+      "n": 4,
+      "deep_hist": {
+        "le_48": 3,
+        "r49_200": 1,
+        "r201_1000": 0,
+        "absent_at_1000": 0
+      },
+      "n_found_at_1000": 4,
+      "found_rate": 1.0,
+      "deep_rank_median": 36.0,
+      "deep_rank_max": 62,
+      "bm25_proxy_found": 4,
+      "bm25_proxy_median": 59.0,
+      "deep_delivered_gold": 0,
+      "shipped_delivered_gold": 0,
+      "bm25_window_attribution": {
+        "gold_in_bm25_top50": 1,
+        "gold_bm25_51_1000": 3,
+        "gold_bm25_1001_20000": 0,
+        "gold_bm25_absent_20000": 0
+      }
+    },
+    "hit_control": {
+      "n": 0,
+      "deep_hist": {
+        "le_48": 0,
+        "r49_200": 0,
+        "r201_1000": 0,
+        "absent_at_1000": 0
+      },
+      "n_found_at_1000": 0,
+      "found_rate": null,
+      "deep_rank_median": null,
+      "deep_rank_max": null,
+      "bm25_proxy_found": 0,
+      "bm25_proxy_median": null,
+      "deep_delivered_gold": 0,
+      "shipped_delivered_gold": 0,
+      "bm25_window_attribution": {
+        "gold_in_bm25_top50": 0,
+        "gold_bm25_51_1000": 0,
+        "gold_bm25_1001_20000": 0,
+        "gold_bm25_absent_20000": 0
+      }
+    }
+  },
+  "by_question_type_misses": {
+    "basic": {
+      "n": 4,
+      "deep_hist": {
+        "le_48": 3,
+        "r49_200": 1,
+        "r201_1000": 0,
+        "absent_at_1000": 0
+      },
+      "n_found_at_1000": 4,
+      "n_pool_absent": 3
+    }
+  },
+  "p2_residual_near_band": {
+    "n_near_band": 1,
+    "n_shipped_rank_gt_15": 1,
+    "n_found_deep": 1,
+    "deep_rank_hist": {
+      "le_48": 1,
+      "r49_200": 0,
+      "r201_1000": 0,
+      "absent_at_1000": 0
+    },
+    "deep_delivered_gold": 0,
+    "doc_rollup": {
+      "definition": "parent source_id rollup; doc score = MAX (realizable) or SUM of member chunk scores; rescue = gold DOCUMENT reaches doc-rank <= 12",
+      "erb_caveat": "ERB gold is DOCUMENT-COMPLETE, so this measures only whether NON-gold multi-chunk docs fragment the ranking; it is NOT a 'gold chunk vs non-gold sibling' metric (empty set on this bed)",
+      "source_scan_s": 5.3,
+      "near_band": {
+        "n": 1,
+        "shipped": {
+          "n_scored": 1,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": 19,
+          "n_docs_median": 47
+        },
+        "deep1000": {
+          "n_scored": 1,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": 23,
+          "n_docs_median": 962
+        }
+      },
+      "near_band_rank_gt_15": {
+        "n": 1,
+        "shipped": {
+          "n_scored": 1,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": 19,
+          "n_docs_median": 47
+        },
+        "deep1000": {
+          "n_scored": 1,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": 23,
+          "n_docs_median": 962
+        }
+      },
+      "pool_absent": {
+        "n": 3,
+        "shipped": {
+          "n_scored": 3,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": null,
+          "n_docs_median": 47
+        },
+        "deep1000": {
+          "n_scored": 3,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 1,
+          "doc_rank_max_median": 32,
+          "n_docs_median": 805
+        }
+      },
+      "seat_capped": {
+        "n": 0,
+        "shipped": {
+          "n_scored": 0,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": null,
+          "n_docs_median": null
+        },
+        "deep1000": {
+          "n_scored": 0,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": null,
+          "n_docs_median": null
+        }
+      },
+      "all_misses": {
+        "n": 4,
+        "shipped": {
+          "n_scored": 4,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": 19,
+          "n_docs_median": 47.0
+        },
+        "deep1000": {
+          "n_scored": 4,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 1,
+          "doc_rank_max_median": 31.5,
+          "n_docs_median": 870.5
+        }
+      },
+      "hit_control": {
+        "n": 0,
+        "shipped": {
+          "n_scored": 0,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": null,
+          "n_docs_median": null
+        },
+        "deep1000": {
+          "n_scored": 0,
+          "rescued_max_rule": 0,
+          "rescued_sum_rule": 0,
+          "doc_rank_max_median": null,
+          "n_docs_median": null
+        }
+      }
+    }
+  },
+  "capture_artifact": {
+    "path": "C:\\Users\\max\\AppData\\Local\\Temp\\claude\\F--Projects-cymatix-context--claude-worktrees-wave-1-semantic-ranking-5f1dab\\c81df3a0-0a0c-4160-81ee-e68db3b02372\\scratchpad\\smoke3.sqlite",
+    "bytes": 4096,
+    "rows": 4197,
+    "schema": "pool(arm, needle, rank, gene_id, score, is_gold) + terms(needle, query_terms JSON)",
+    "note": "Full score map of BOTH arms for all 216 targets. Reuse this instead of re-running the deep pass."
+  },
+  "rollup_rows": [
+    {
+      "needle": "erb_001",
+      "cohort": "miss",
+      "bucket": "near_band",
+      "shipped_rank": 20,
+      "deep_rank": 25,
+      "shipped": {
+        "n_docs": 47,
+        "doc_rank_max_rule": 19,
+        "doc_rank_sum_rule": 19,
+        "rescued_max_rule": 0,
+        "rescued_sum_rule": 0
+      },
+      "deep1000": {
+        "n_docs": 962,
+        "doc_rank_max_rule": 23,
+        "doc_rank_sum_rule": 23,
+        "rescued_max_rule": 0,
+        "rescued_sum_rule": 0
+      }
+    },
+    {
+      "needle": "erb_003",
+      "cohort": "miss",
+      "bucket": "pool_absent",
+      "shipped_rank": null,
+      "deep_rank": 40,
+      "shipped": {
+        "n_docs": 46,
+        "doc_rank_max_rule": null,
+        "doc_rank_sum_rule": null,
+        "rescued_max_rule": 0,
+        "rescued_sum_rule": 0
+      },
+      "deep1000": {
+        "n_docs": 805,
+        "doc_rank_max_rule": 32,
+        "doc_rank_sum_rule": 11,
+        "rescued_max_rule": 0,
+        "rescued_sum_rule": 1
+      }
+    },
+    {
+      "needle": "erb_006",
+      "cohort": "miss",
+      "bucket": "pool_absent",
+      "shipped_rank": null,
+      "deep_rank": 62,
+      "shipped": {
+        "n_docs": 48,
+        "doc_rank_max_rule": null,
+        "doc_rank_sum_rule": null,
+        "rescued_max_rule": 0,
+        "rescued_sum_rule": 0
+      },
+      "deep1000": {
+        "n_docs": 936,
+        "doc_rank_max_rule": 60,
+        "doc_rank_sum_rule": 65,
+        "rescued_max_rule": 0,
+        "rescued_sum_rule": 0
+      }
+    },
+    {
+      "needle": "erb_021",
+      "cohort": "miss",
+      "bucket": "pool_absent",
+      "shipped_rank": null,
+      "deep_rank": 32,
+      "shipped": {
+        "n_docs": 47,
+        "doc_rank_max_rule": null,
+        "doc_rank_sum_rule": null,
+        "rescued_max_rule": 0,
+        "rescued_sum_rule": 0
+      },
+      "deep1000": {
+        "n_docs": 795,
+        "doc_rank_max_rule": 31,
+        "doc_rank_sum_rule": 29,
+        "rescued_max_rule": 0,
+        "rescued_sum_rule": 0
+      }
+    }
+  ],
+  "deep_arm_delivery": {
+    "misses_rescued_by_deep_arm": 0,
+    "hit_controls_lost_by_deep_arm": 0,
+    "hit_controls_kept": 0,
+    "note": "Delivery numbers here are a SIDE OBSERVATION on a non-random subset (all 156 misses + 60 sampled hits); they are NOT a delivered_gold_rate estimate for the bed."
+  },
+  "wall_s_total": 267.9,
+  "rows": [
+    {
+      "needle": "erb_001",
+      "cohort": "miss",
+      "bucket": "near_band",
+      "question_type": "basic",
+      "shipped_map_size": 48,
+      "shipped_rank": 20,
+      "shipped_delivered_gold": 0,
+      "deep_map_size": 1000,
+      "deep_rank": 25,
+      "deep_gold_ranks": [
+        25
+      ],
+      "deep_delivered_gold": 0,
+      "deep_delivered_gold_rank": null,
+      "bm25_proxy_rank": 19,
+      "bm25_proxy_pool": 20000,
+      "shipped_wall_ms": 26183.5,
+      "deep_wall_ms": 17491.7,
+      "query_terms_n": 31
+    },
+    {
+      "needle": "erb_003",
+      "cohort": "miss",
+      "bucket": "pool_absent",
+      "question_type": "basic",
+      "shipped_map_size": 50,
+      "shipped_rank": null,
+      "shipped_delivered_gold": 0,
+      "deep_map_size": 1000,
+      "deep_rank": 40,
+      "deep_gold_ranks": [
+        40,
+        78,
+        104,
+        166,
+        511
+      ],
+      "deep_delivered_gold": 0,
+      "deep_delivered_gold_rank": null,
+      "bm25_proxy_rank": 63,
+      "bm25_proxy_pool": 20000,
+      "shipped_wall_ms": 24835.2,
+      "deep_wall_ms": 20647.5,
+      "query_terms_n": 40
+    },
+    {
+      "needle": "erb_006",
+      "cohort": "miss",
+      "bucket": "pool_absent",
+      "question_type": "basic",
+      "shipped_map_size": 49,
+      "shipped_rank": null,
+      "shipped_delivered_gold": 0,
+      "deep_map_size": 1000,
+      "deep_rank": 62,
+      "deep_gold_ranks": [
+        62
+      ],
+      "deep_delivered_gold": 0,
+      "deep_delivered_gold_rank": null,
+      "bm25_proxy_rank": 55,
+      "bm25_proxy_pool": 20000,
+      "shipped_wall_ms": 38179.9,
+      "deep_wall_ms": 29855.9,
+      "query_terms_n": 65
+    },
+    {
+      "needle": "erb_021",
+      "cohort": "miss",
+      "bucket": "pool_absent",
+      "question_type": "basic",
+      "shipped_map_size": 50,
+      "shipped_rank": null,
+      "shipped_delivered_gold": 0,
+      "deep_map_size": 1000,
+      "deep_rank": 32,
+      "deep_gold_ranks": [
+        32,
+        181
+      ],
+      "deep_delivered_gold": 0,
+      "deep_delivered_gold_rank": null,
+      "bm25_proxy_rank": 181,
+      "bm25_proxy_pool": 20000,
+      "shipped_wall_ms": 11712.7,
+      "deep_wall_ms": 11070.6,
+      "query_terms_n": 29
+    }
+  ]
+}

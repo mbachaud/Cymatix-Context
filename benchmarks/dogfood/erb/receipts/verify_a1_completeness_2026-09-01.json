@@ -1,0 +1,385 @@
+{
+ "stamp": "2026-09-01",
+ "arm": "A1-verify",
+ "lens": "COMPLETENESS CRITIC -- what the method/code-trace/recompute lenses left untested",
+ "tool": "benchmarks/dogfood/erb/verify_a1_completeness.py",
+ "tool_sha256": "b7e881d2c073a7f1b450a30a83e287a68504bb81cd21f07723dc3db06a00ccf9",
+ "git_sha": "2ebafd998fbf4c0851cb4b17f15a297d259521eb",
+ "bed": "F:/tmp/erb_blob_v09x.db",
+ "bed_access": "NONE -- never opened. Inputs: receipt rows, checkpoints, addendum receipt, 08-28 ladder per_query, needles file, worktree source.",
+ "verified_sha256": {
+  "pool_depth_forensics": "2147203c6757d1b5902fd7f48a6947e7d697b6e340165c2f74b862d2688896f8",
+  "pool_depth_addendum": "852549421e284bae4f430c44d0135d7a14786cdd13d6274dee281d65fe1a2d43",
+  "ladder_08_28": "2b1026bc7edfebd33dc6b70f5a5281505a5f194e8d9222b1b5c9a96915d6d9c1",
+  "shipped_ckpt": "bab95da24dba85bc45563eebf30f8c277b17b9a1feb2f469e7dcab75037a6a7e",
+  "deep1000_ckpt": "57357f8c9b2432598eb70447b5a85bd1f3ae504656cd5ec71db51554a860c420",
+  "verify_a1_method_basis": "2f4609906f57b9c2bf6337c72902463ac8b7cd8dc2870e05e65e00ae83203792",
+  "verify_a1_code_trace": "178d8dc599226cb1bb707a43005f2a5ab044d12164b285092695cd07ceb8abf1",
+  "verify_a1_recompute": "d35450233ee8bd80b1e2dd69723c39626a7331923d40e1e5fb74bad1e710d8d2"
+ },
+ "kill_criterion": "This lens does not re-litigate the ARM-1 gate (66/109 >= 30; three lenses agree). It KILLS a candidate-depth default flip as a delivery lever if the deep arm's delivery effect is confounded by a truncation the receipt did not identify, OR if the three lenses' licences contradict each other on evidence one of them produced. It CORRECTS the '61 semantic pool-absent are a vocabulary gap / unreachable by any lexical lever' statement if the ARM-1 rows show BM25 reach for them.",
+ "verdict": "LIVES_WITH_CORRECTIONS",
+ "delivered_count_flips_shipped_to_deep": {
+  "12->12": 148,
+  "12->6": 14,
+  "6->12": 19,
+  "6->6": 35
+ },
+ "delivered_count_flips_by_cohort": {
+  "miss/near_band": {
+   "12->12": 29,
+   "12->6": 2,
+   "6->6": 8,
+   "6->12": 2
+  },
+  "miss/pool_absent": {
+   "12->12": 82,
+   "12->6": 10,
+   "6->12": 9,
+   "6->6": 8
+  },
+  "miss/seat_capped": {
+   "6->12": 5,
+   "6->6": 1
+  },
+  "hit_control/None": {
+   "6->6": 18,
+   "12->12": 37,
+   "6->12": 3,
+   "12->6": 2
+  }
+ },
+ "hit_controls_delivered_6_in_shipped": {
+  "n": 21,
+  "of": 60
+ },
+ "lost_hit_controls": [
+  [
+   "erb_015",
+   "basic",
+   11,
+   13,
+   12,
+   12
+  ],
+  [
+   "erb_055",
+   "basic",
+   12,
+   20,
+   12,
+   12
+  ],
+  [
+   "erb_060",
+   "basic",
+   2,
+   14,
+   12,
+   12
+  ],
+  [
+   "erb_357",
+   "project_related",
+   5,
+   13,
+   12,
+   12
+  ]
+ ],
+ "rescued_misses": [
+  [
+   "erb_045",
+   "seat_capped",
+   7,
+   12,
+   6,
+   12
+  ],
+  [
+   "erb_049",
+   "seat_capped",
+   7,
+   12,
+   6,
+   12
+  ],
+  [
+   "erb_144",
+   "seat_capped",
+   9,
+   12,
+   6,
+   12
+  ],
+  [
+   "erb_302",
+   "pool_absent",
+   null,
+   2,
+   12,
+   12
+  ],
+  [
+   "erb_416",
+   "pool_absent",
+   null,
+   3,
+   6,
+   12
+  ]
+ ],
+ "ladder_08_28_baseline": {
+  "n": 470,
+  "delivered_count_hist": {
+   "6": 152,
+   "12": 318
+  },
+  "hits": 314,
+  "hits_delivered_6": 119,
+  "hits_delivered_12_gold_rank_7_12": 22,
+  "misses_delivered_6": 33,
+  "misses_delivered_6_gold_rank_7_12": 6,
+  "splice_n_equals_delivered_on_all": true,
+  "ladder_config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\w24-floor-arm\\benchmarks\\dogfood\\erb\\configs\\w24_min_delivered_12.toml",
+  "signal_ms_median": {
+   "body_fetch": 13.1,
+   "coact_expand": 0.2,
+   "fts5": 2719.2,
+   "lex_anchor": 1550.3,
+   "tag_exact": 1262.5,
+   "tag_prefix": 1984.6
+  },
+  "wall_ms_p50": 18933.0
+ },
+ "code": {
+  "tier_logic_focused_cut_lines": [
+   268
+  ],
+  "tier_logic_tight_cut_lines": [
+   258
+  ],
+  "tier_logic_ratio_over_candidates_lines": [
+   106
+  ],
+  "tier_logic_min_delivered_hook_lines": [],
+  "cm_tier_candidates_assign_lines": [
+   2137
+  ],
+  "cm_seat_floor_cap_lines": [
+   2181
+  ],
+  "cm_learn_link_lines": [
+   2466
+  ],
+  "ks_harmonic_candidate_ids_lines": [
+   3639
+  ],
+  "ks_shortlist_guard_lines": [
+   3839
+  ],
+  "ks_entity_graph_in_pool_lines": [
+   3712
+  ],
+  "harmonic_runs_before_shortlist": true,
+  "tier_cut_precedes_floored_classifier_cap": true
+ },
+ "arm_toml_live": {
+  "entity_graph_retrieval_enabled": "entity_graph_retrieval_enabled = false",
+  "sr_enabled": "sr_enabled = false",
+  "harmonic_links": "harmonic_links = true",
+  "min_delivered_docs": "min_delivered_docs = 12",
+  "bm25_shortlist_size": "bm25_shortlist_size = 50",
+  "decoder_mode": "decoder_mode = \"condensed\"",
+  "abstain_enabled": "abstain_enabled = true",
+  "session_delivery_enabled": "session_delivery_enabled = true"
+ },
+ "semantic_pool_absent_61": {
+  "n": 61,
+  "bm25_window": {
+   "r51_1000": 33,
+   "r1001_20000": 23,
+   "absent_20000": 5
+  },
+  "share_vocabulary_with_query_bm25_le_20000": 56,
+  "deep_fused_ranks_found": [
+   39,
+   55,
+   79,
+   90,
+   95,
+   100,
+   112,
+   121,
+   144,
+   156,
+   159,
+   170,
+   172,
+   186,
+   227,
+   234,
+   258,
+   265,
+   284,
+   326,
+   329,
+   330,
+   339,
+   344,
+   350,
+   357,
+   377,
+   389,
+   443,
+   695,
+   810,
+   873,
+   919
+  ],
+  "deep_fused_le_12": 0,
+  "deep_fused_le_48": 1
+ },
+ "nonsemantic_pool_absent_absent_at_1000": [
+  [
+   "erb_042",
+   "basic",
+   7198
+  ],
+  [
+   "erb_076",
+   "basic",
+   1456
+  ],
+  [
+   "erb_091",
+   "basic",
+   17745
+  ],
+  [
+   "erb_092",
+   "basic",
+   3062
+  ],
+  [
+   "erb_099",
+   "basic",
+   1964
+  ],
+  [
+   "erb_108",
+   "basic",
+   3440
+  ],
+  [
+   "erb_115",
+   "basic",
+   1105
+  ],
+  [
+   "erb_120",
+   "basic",
+   5680
+  ],
+  [
+   "erb_127",
+   "basic",
+   1256
+  ],
+  [
+   "erb_133",
+   "basic",
+   6821
+  ],
+  [
+   "erb_138",
+   "basic",
+   4426
+  ],
+  [
+   "erb_146",
+   "basic",
+   1848
+  ],
+  [
+   "erb_169",
+   "basic",
+   1058
+  ],
+  [
+   "erb_172",
+   "basic",
+   2395
+  ],
+  [
+   "erb_311",
+   "intra_document_reasoning",
+   1268
+  ]
+ ],
+ "classifier_cross": {
+  "status": "ok",
+  "queries_resolved": 216,
+  "missing": 0,
+  "classes": {
+   "default": 63,
+   "multi_hop": 128,
+   "procedural": 6,
+   "factual": 4,
+   "arithmetic": 15
+  },
+  "class_x_shipped_delivered_count": {
+   "default": {
+    "12": 47,
+    "6": 16
+   },
+   "multi_hop": {
+    "12": 101,
+    "6": 27
+   },
+   "procedural": {
+    "6": 2,
+    "12": 4
+   },
+   "factual": {
+    "12": 2,
+    "6": 2
+   },
+   "arithmetic": {
+    "6": 7,
+    "12": 8
+   }
+  }
+ },
+ "latency": {
+  "paired_delta_ms_median_deep_segment1": 704.3,
+  "paired_delta_ms_median_deep_segment2": 137.1,
+  "query_terms_n_median": 42.5,
+  "query_terms_n_min": 19,
+  "query_terms_n_max": 97,
+  "addendum_sweep_p50_ratio_by_depth": {
+   "shipped(48 fts / 50 shortlist)": 1.0,
+   "200": 1.03,
+   "500": 1.011,
+   "1000": 1.025,
+   "2000": 1.021
+  },
+  "addendum_sweep_found_by_depth": {
+   "shipped(48 fts / 50 shortlist)": 8,
+   "200": 13,
+   "500": 15,
+   "1000": 17,
+   "2000": 20
+  },
+  "addendum_sweep_delivered_by_depth": {
+   "shipped(48 fts / 50 shortlist)": 0,
+   "200": 1,
+   "500": 1,
+   "1000": 1,
+   "2000": 0
+  },
+  "addendum_sweep_has_hit_controls": false,
+  "concurrency_measured_anywhere": false
+ },
+ "not_touched": "bed not opened; no existing receipt modified; nothing committed."
+}

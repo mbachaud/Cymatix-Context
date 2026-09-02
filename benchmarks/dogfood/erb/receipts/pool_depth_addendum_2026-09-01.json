@@ -1,0 +1,181 @@
+{
+  "stamp": "2026-09-01",
+  "probe": "ARM 1 addendum -- ceiling arithmetic, knob inertness, latency curve",
+  "tool": "benchmarks/dogfood/erb/probe_pool_depth_addendum.py",
+  "tool_sha256": "4a826213712980d335d987b845ac2272eabe68a0d6965ad80e4564ac48f7e283",
+  "main_probe_tool_sha256": "86ef68934865cdef1de20513eba0e92bd964c3eef249371cd3b5a6ddf23e3bba",
+  "git_sha": "2ebafd998fbf4c0851cb4b17f15a297d259521eb",
+  "bed": "F:/tmp/erb_blob_v09x.db",
+  "bed_bytes": 24571269120,
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\wave-1-semantic-ranking-5f1dab\\benchmarks\\dogfood\\erb\\configs\\w24_min_delivered_12.toml",
+  "basis_receipts": [
+    "F:\\Projects\\cymatix-context\\.claude\\worktrees\\wave-1-semantic-ranking-5f1dab\\benchmarks\\dogfood\\erb\\receipts\\pool_depth_forensics_2026-09-01.json",
+    "benchmarks/dogfood/erb/receipts/ladder_v09x_w24_min_delivered_2026-08-28.json",
+    "benchmarks/dogfood/erb/receipts/interloper_mine_erb947k_2026-08-31.json",
+    "benchmarks/dogfood/erb/receipts/bucket_ledger_2026-09-01.json"
+  ],
+  "kill_criterion": "No kill of its own -- this addendum is descriptive. The ARM 1 kill criterion is carried in pool_depth_forensics_2026-09-01.json and is NOT re-litigated here. Section A's ceiling is reported as an ORACLE upper bound and must not be quoted as a projected delivered_gold_rate.",
+  "verdict": "PASS",
+  "section_a_ceiling": {
+    "n_needles": 470,
+    "baseline_delivered_gold": 314,
+    "phase1_observed_pool_ceiling": 0.768,
+    "phase1_note": "(314+47)/470 -- a perfect re-ranker over the shipped ~48-deep observed map",
+    "n_misses": 156,
+    "misses_with_gold_in_deep_pool": 113,
+    "oracle_ceiling_over_deep_pool": 0.9085,
+    "misses_with_gold_in_bm25_20000": 151,
+    "oracle_ceiling_over_bm25_20000": 0.9894,
+    "headroom_vs_phase1": 0.1405,
+    "meets_080_target": true,
+    "semantics": "ORACLE ceiling: assumes a perfect selector over the admitted pool. It is an UPPER BOUND on what any re-ranking or gating work can reach at that admission depth, not a prediction of any shipped arm."
+  },
+  "section_b_knob_inertness": {
+    "identity": "bm25_proxy_rank uses byte-identical SQL and terms to the shipped shortlist query (knowledge_store.py:3848-3851), so bm25_proxy_rank <= bm25_shortlist_size IS the shortlist-survival predicate. No extra run needed.",
+    "all_misses": {
+      "n": 156,
+      "gold_survives_shortlist_50": 47,
+      "gold_deleted_by_shortlist_50": 104,
+      "gold_unreachable_at_bm25_20000": 5,
+      "fts_depth_alone_could_admit": 47,
+      "fts_depth_alone_provably_inert_for": 109
+    },
+    "pool_absent": {
+      "n": 109,
+      "gold_survives_shortlist_50": 0,
+      "gold_deleted_by_shortlist_50": 104,
+      "gold_unreachable_at_bm25_20000": 5,
+      "fts_depth_alone_could_admit": 0,
+      "fts_depth_alone_provably_inert_for": 109
+    },
+    "near_band": {
+      "n": 41,
+      "gold_survives_shortlist_50": 41,
+      "gold_deleted_by_shortlist_50": 0,
+      "gold_unreachable_at_bm25_20000": 0,
+      "fts_depth_alone_could_admit": 41,
+      "fts_depth_alone_provably_inert_for": 0
+    },
+    "seat_capped": {
+      "n": 6,
+      "gold_survives_shortlist_50": 6,
+      "gold_deleted_by_shortlist_50": 0,
+      "gold_unreachable_at_bm25_20000": 0,
+      "fts_depth_alone_could_admit": 6,
+      "fts_depth_alone_provably_inert_for": 0
+    },
+    "conclusion_template": "A candidate-depth A/B that moves ONLY fts5_candidate_depth cannot admit the 'provably_inert_for' misses at any depth; bm25_shortlist_size must move with it."
+  },
+  "section_c_latency_curve": {
+    "skipped": false,
+    "subsample_seed": 20260901,
+    "subsample_n": 25,
+    "subsample": [
+      "erb_036",
+      "erb_045",
+      "erb_063",
+      "erb_109",
+      "erb_124",
+      "erb_146",
+      "erb_169",
+      "erb_180",
+      "erb_182",
+      "erb_184",
+      "erb_188",
+      "erb_189",
+      "erb_195",
+      "erb_200",
+      "erb_202",
+      "erb_206",
+      "erb_218",
+      "erb_235",
+      "erb_250",
+      "erb_261",
+      "erb_264",
+      "erb_273",
+      "erb_323",
+      "erb_438",
+      "erb_447"
+    ],
+    "subsample_note": "misses only, stratified by bucket -- an admission curve on the population that can actually move; NOT a bed-level recall estimate",
+    "per_depth": [
+      {
+        "depth": "shipped(48 fts / 50 shortlist)",
+        "knobs": {},
+        "n": 25,
+        "wall_ms_p50": 20380.7,
+        "wall_ms_p95": 35019.2,
+        "wall_ms_mean": 21470.7,
+        "map_size_median": 50,
+        "gold_found_in_map": 8,
+        "delivered_gold": 0,
+        "errors": [],
+        "p50_ratio_vs_shipped": 1.0
+      },
+      {
+        "depth": 200,
+        "knobs": {
+          "retrieval.fts5_candidate_depth": 200,
+          "retrieval.bm25_shortlist_size": 200
+        },
+        "n": 25,
+        "wall_ms_p50": 20994.8,
+        "wall_ms_p95": 35484.5,
+        "wall_ms_mean": 21550.3,
+        "map_size_median": 200,
+        "gold_found_in_map": 13,
+        "delivered_gold": 1,
+        "errors": [],
+        "p50_ratio_vs_shipped": 1.03
+      },
+      {
+        "depth": 500,
+        "knobs": {
+          "retrieval.fts5_candidate_depth": 500,
+          "retrieval.bm25_shortlist_size": 500
+        },
+        "n": 25,
+        "wall_ms_p50": 20604.2,
+        "wall_ms_p95": 34121.0,
+        "wall_ms_mean": 22324.2,
+        "map_size_median": 500,
+        "gold_found_in_map": 15,
+        "delivered_gold": 1,
+        "errors": [],
+        "p50_ratio_vs_shipped": 1.011
+      },
+      {
+        "depth": 1000,
+        "knobs": {
+          "retrieval.fts5_candidate_depth": 1000,
+          "retrieval.bm25_shortlist_size": 1000
+        },
+        "n": 25,
+        "wall_ms_p50": 20882.1,
+        "wall_ms_p95": 34347.8,
+        "wall_ms_mean": 21601.7,
+        "map_size_median": 1000,
+        "gold_found_in_map": 17,
+        "delivered_gold": 1,
+        "errors": [],
+        "p50_ratio_vs_shipped": 1.025
+      },
+      {
+        "depth": 2000,
+        "knobs": {
+          "retrieval.fts5_candidate_depth": 2000,
+          "retrieval.bm25_shortlist_size": 2000
+        },
+        "n": 25,
+        "wall_ms_p50": 20818.7,
+        "wall_ms_p95": 34448.0,
+        "wall_ms_mean": 21603.3,
+        "map_size_median": 2000,
+        "gold_found_in_map": 20,
+        "delivered_gold": 0,
+        "errors": [],
+        "p50_ratio_vs_shipped": 1.021
+      }
+    ]
+  }
+}
