@@ -70,8 +70,9 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
 
 - **perf(ingest): `bed_provenance` table + `cymatix diag bed`, the
   `bulk_load` SQLite memory profile, and the bench-builder commit batcher —
-  port of the never-committed 2026-08-24..27 perf/ingest lane (worktree
-  `claude/v0-9-0-planning-dc7564`, base `5f5c677`).** Every writable open
+  port of the never-committed 2026-08-24..27 perf/ingest lane (#438;
+  worktree `claude/v0-9-0-planning-dc7564`, base `5f5c677`).** Every
+  writable open
   now creates the append-only `bed_provenance` table (`CREATE TABLE IF NOT
   EXISTS`; content-neutral — no document, tag, or edge changes) so a bed
   carries its own history: `scripts/stamp_bed_provenance.py` and
