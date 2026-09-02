@@ -9,6 +9,11 @@ import random
 import re
 import pytest
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    # Annotation-only: TestClient itself is imported lazily in make_client.
+    from fastapi.testclient import TestClient
 
 # Guard: the module-level `app = create_app()` in server.py (used by uvicorn
 # --reload) runs at import time. Without a real genome path it raises

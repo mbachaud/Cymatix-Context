@@ -25,7 +25,14 @@ import sqlite3
 import threading
 import time
 from contextlib import contextmanager
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
+
+if TYPE_CHECKING:
+    # Annotation-only imports: numpy and the BGE-M3 codec are heavy,
+    # optional deps loaded lazily at their call sites.
+    import numpy as np
+
+    from .backends.bgem3_codec import BGEM3Codec
 
 from .accel import (
     json_loads,
