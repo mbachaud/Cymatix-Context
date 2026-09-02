@@ -1,0 +1,489 @@
+{
+ "financebench_id_03029": [
+  "3M_2018_10K/page_0059.txt"
+ ],
+ "financebench_id_04672": [
+  "3M_2018_10K/page_0057.txt"
+ ],
+ "financebench_id_00499": [
+  "3M_2022_10K/page_0047.txt",
+  "3M_2022_10K/page_0049.txt",
+  "3M_2022_10K/page_0051.txt"
+ ],
+ "financebench_id_01226": [
+  "3M_2022_10K/page_0026.txt"
+ ],
+ "financebench_id_01865": [
+  "3M_2022_10K/page_0024.txt"
+ ],
+ "financebench_id_00807": [
+  "3M_2023Q2_10Q/page_0004.txt"
+ ],
+ "financebench_id_00941": [
+  "3M_2023Q2_10Q/page_0000.txt"
+ ],
+ "financebench_id_01858": [
+  "3M_2023Q2_10Q/page_0061.txt"
+ ],
+ "financebench_id_02987": [
+  "ACTIVISIONBLIZZARD_2019_10K/page_0068.txt",
+  "ACTIVISIONBLIZZARD_2019_10K/page_0069.txt"
+ ],
+ "financebench_id_07966": [
+  "ACTIVISIONBLIZZARD_2019_10K/page_0069.txt",
+  "ACTIVISIONBLIZZARD_2019_10K/page_0072.txt"
+ ],
+ "financebench_id_04735": [
+  "ADOBE_2015_10K/page_0058.txt",
+  "ADOBE_2015_10K/page_0062.txt"
+ ],
+ "financebench_id_07507": [
+  "ADOBE_2016_10K/page_0061.txt"
+ ],
+ "financebench_id_03856": [
+  "ADOBE_2017_10K/page_0056.txt",
+  "ADOBE_2017_10K/page_0060.txt"
+ ],
+ "financebench_id_00438": [
+  "ADOBE_2022_10K/page_0053.txt"
+ ],
+ "financebench_id_00591": [
+  "ADOBE_2022_10K/page_0056.txt"
+ ],
+ "financebench_id_01319": [
+  "AES_2022_10K/page_0131.txt"
+ ],
+ "financebench_id_00540": [
+  "AES_2022_10K/page_0129.txt",
+  "AES_2022_10K/page_0131.txt"
+ ],
+ "financebench_id_10420": [
+  "AES_2022_10K/page_0129.txt",
+  "AES_2022_10K/page_0131.txt"
+ ],
+ "financebench_id_06655": [
+  "AMAZON_2017_10K/page_0037.txt",
+  "AMAZON_2017_10K/page_0039.txt"
+ ],
+ "financebench_id_08135": [
+  "AMAZON_2017_10K/page_0037.txt"
+ ],
+ "financebench_id_08286": [
+  "AMAZON_2019_10K/page_0037.txt"
+ ],
+ "financebench_id_03882": [
+  "AMCOR_2020_10K/page_0049.txt"
+ ],
+ "financebench_id_01935": [
+  "AMCOR_2022_8K_dated-2022-07-01/page_0001.txt"
+ ],
+ "financebench_id_00799": [
+  "AMCOR_2023_10K/page_0051.txt"
+ ],
+ "financebench_id_01079": [
+  "AMCOR_2023_10K/page_0063.txt"
+ ],
+ "financebench_id_01148": [
+  "AMCOR_2023_10K/page_0004.txt"
+ ],
+ "financebench_id_00684": [
+  "AMCOR_2023_10K/page_0049.txt"
+ ],
+ "financebench_id_01936": [
+  "AMCOR_2023Q2_10Q/page_0014.txt"
+ ],
+ "financebench_id_01928": [
+  "AMCOR_2023Q4_EARNINGS/page_0011.txt"
+ ],
+ "financebench_id_01930": [
+  "AMCOR_2023Q4_EARNINGS/page_0009.txt"
+ ],
+ "financebench_id_03069": [
+  "AMD_2015_10K/page_0055.txt",
+  "AMD_2015_10K/page_0059.txt"
+ ],
+ "financebench_id_00222": [
+  "AMD_2022_10K/page_0055.txt"
+ ],
+ "financebench_id_00995": [
+  "AMD_2022_10K/page_0003.txt"
+ ],
+ "financebench_id_01198": [
+  "AMD_2022_10K/page_0042.txt"
+ ],
+ "financebench_id_00917": [
+  "AMD_2022_10K/page_0042.txt"
+ ],
+ "financebench_id_01279": [
+  "AMD_2022_10K/page_0057.txt"
+ ],
+ "financebench_id_00563": [
+  "AMD_2022_10K/page_0047.txt"
+ ],
+ "financebench_id_00757": [
+  "AMD_2022_10K/page_0011.txt"
+ ],
+ "financebench_id_00476": [
+  "AMERICANEXPRESS_2022_10K/page_0000.txt"
+ ],
+ "financebench_id_01028": [
+  "AMERICANEXPRESS_2022_10K/page_0154.txt"
+ ],
+ "financebench_id_00723": [
+  "AMERICANEXPRESS_2022_10K/page_0095.txt"
+ ],
+ "financebench_id_00720": [
+  "AMERICANEXPRESS_2022_10K/page_0095.txt"
+ ],
+ "financebench_id_01351": [
+  "AMERICANEXPRESS_2022_10K/page_0043.txt"
+ ],
+ "financebench_id_01964": [
+  "AMERICANEXPRESS_2022_10K/page_0097.txt"
+ ],
+ "financebench_id_01981": [
+  "AMERICANEXPRESS_2022_10K/page_0044.txt"
+ ],
+ "financebench_id_05718": [
+  "AMERICANWATERWORKS_2020_10K/page_0085.txt"
+ ],
+ "financebench_id_04254": [
+  "AMERICANWATERWORKS_2021_10K/page_0085.txt",
+  "AMERICANWATERWORKS_2021_10K/page_0087.txt"
+ ],
+ "financebench_id_00070": [
+  "AMERICANWATERWORKS_2022_10K/page_0080.txt",
+  "AMERICANWATERWORKS_2022_10K/page_0081.txt"
+ ],
+ "financebench_id_02608": [
+  "BESTBUY_2017_10K/page_0055.txt"
+ ],
+ "financebench_id_04417": [
+  "BESTBUY_2019_10K/page_0051.txt"
+ ],
+ "financebench_id_00685": [
+  "BESTBUY_2023_10K/page_0039.txt"
+ ],
+ "financebench_id_01077": [
+  "BESTBUY_2023_10K/page_0050.txt"
+ ],
+ "financebench_id_01275": [
+  "BESTBUY_2023_10K/page_0041.txt"
+ ],
+ "financebench_id_00288": [
+  "BESTBUY_2024Q2_10Q/page_0019.txt"
+ ],
+ "financebench_id_00460": [
+  "BESTBUY_2024Q2_10Q/page_0016.txt"
+ ],
+ "financebench_id_01902": [
+  "BESTBUY_2024Q2_10Q/page_0017.txt"
+ ],
+ "financebench_id_04660": [
+  "BLOCK_2016_10K/page_0067.txt"
+ ],
+ "financebench_id_03838": [
+  "BLOCK_2020_10K/page_0085.txt"
+ ],
+ "financebench_id_07661": [
+  "BLOCK_2020_10K/page_0089.txt"
+ ],
+ "financebench_id_10285": [
+  "BOEING_2018_10K/page_0051.txt"
+ ],
+ "financebench_id_00517": [
+  "BOEING_2022_10K/page_0061.txt"
+ ],
+ "financebench_id_01091": [
+  "BOEING_2022_10K/page_0112.txt"
+ ],
+ "financebench_id_00678": [
+  "BOEING_2022_10K/page_0054.txt"
+ ],
+ "financebench_id_01290": [
+  "BOEING_2022_10K/page_0007.txt",
+  "BOEING_2022_10K/page_0009.txt",
+  "BOEING_2022_10K/page_0013.txt"
+ ],
+ "financebench_id_00464": [
+  "BOEING_2022_10K/page_0007.txt"
+ ],
+ "financebench_id_00494": [
+  "BOEING_2022_10K/page_0008.txt"
+ ],
+ "financebench_id_00585": [
+  "BOEING_2022_10K/page_0054.txt"
+ ],
+ "financebench_id_03473": [
+  "COCACOLA_2017_10K/page_0073.txt",
+  "COCACOLA_2017_10K/page_0075.txt"
+ ],
+ "financebench_id_09724": [
+  "COCACOLA_2021_10K/page_0061.txt"
+ ],
+ "financebench_id_06272": [
+  "COCACOLA_2022_10K/page_0062.txt",
+  "COCACOLA_2022_10K/page_0065.txt"
+ ],
+ "financebench_id_10130": [
+  "CORNING_2020_10K/page_0069.txt",
+  "CORNING_2020_10K/page_0071.txt"
+ ],
+ "financebench_id_02981": [
+  "CORNING_2021_10K/page_0064.txt"
+ ],
+ "financebench_id_01346": [
+  "CORNING_2022_10K/page_0023.txt"
+ ],
+ "financebench_id_00005": [
+  "CORNING_2022_10K/page_0059.txt"
+ ],
+ "financebench_id_04209": [
+  "COSTCO_2021_10K/page_0037.txt"
+ ],
+ "financebench_id_05915": [
+  "CVSHEALTH_2018_10K/page_0301.txt",
+  "CVSHEALTH_2018_10K/page_0303.txt"
+ ],
+ "financebench_id_00790": [
+  "CVSHEALTH_2022_10K/page_0107.txt",
+  "CVSHEALTH_2022_10K/page_0109.txt"
+ ],
+ "financebench_id_01107": [
+  "CVSHEALTH_2022_10K/page_0172.txt",
+  "CVSHEALTH_2022_10K/page_0173.txt"
+ ],
+ "financebench_id_01244": [
+  "CVSHEALTH_2022_10K/page_0067.txt"
+ ],
+ "financebench_id_00839": [
+  "FOOTLOCKER_2022_8K_dated_2022-08-19/page_0001.txt"
+ ],
+ "financebench_id_00822": [
+  "FOOTLOCKER_2022_8K_dated-2022-05-20/page_0001.txt"
+ ],
+ "financebench_id_04103": [
+  "GENERALMILLS_2019_10K/page_0052.txt",
+  "GENERALMILLS_2019_10K/page_0054.txt"
+ ],
+ "financebench_id_03471": [
+  "GENERALMILLS_2020_10K/page_0049.txt"
+ ],
+ "financebench_id_04854": [
+  "GENERALMILLS_2020_10K/page_0051.txt"
+ ],
+ "financebench_id_10136": [
+  "GENERALMILLS_2022_10K/page_0044.txt",
+  "GENERALMILLS_2022_10K/page_0048.txt"
+ ],
+ "financebench_id_00956": [
+  "JOHNSON_JOHNSON_2022_10K/page_0027.txt"
+ ],
+ "financebench_id_00669": [
+  "JOHNSON_JOHNSON_2022_10K/page_0033.txt"
+ ],
+ "financebench_id_00711": [
+  "JOHNSON_JOHNSON_2022_10K/page_0045.txt",
+  "JOHNSON_JOHNSON_2022_10K/page_0046.txt"
+ ],
+ "financebench_id_00651": [
+  "JOHNSON_JOHNSON_2022Q4_EARNINGS/page_0000.txt"
+ ],
+ "financebench_id_01484": [
+  "JOHNSON_JOHNSON_2022Q4_EARNINGS/page_0001.txt"
+ ],
+ "financebench_id_01488": [
+  "JOHNSON_JOHNSON_2023_8K_dated-2023-08-30/page_0003.txt"
+ ],
+ "financebench_id_01490": [
+  "JOHNSON_JOHNSON_2023_8K_dated-2023-08-30/page_0003.txt"
+ ],
+ "financebench_id_01491": [
+  "JOHNSON_JOHNSON_2023_8K_dated-2023-08-30/page_0003.txt"
+ ],
+ "financebench_id_01487": [
+  "JOHNSON_JOHNSON_2023Q2_EARNINGS/page_0009.txt"
+ ],
+ "financebench_id_00299": [
+  "JPMORGAN_2021Q1_10Q/page_0018.txt"
+ ],
+ "financebench_id_02119": [
+  "JPMORGAN_2021Q1_10Q/page_0005.txt"
+ ],
+ "financebench_id_00206": [
+  "JPMORGAN_2022_10K/page_0002.txt"
+ ],
+ "financebench_id_00394": [
+  "JPMORGAN_2022Q2_10Q/page_0020.txt"
+ ],
+ "financebench_id_02049": [
+  "JPMORGAN_2023Q2_10Q/page_0084.txt"
+ ],
+ "financebench_id_10499": [
+  "KRAFTHEINZ_2019_10K/page_0049.txt",
+  "KRAFTHEINZ_2019_10K/page_0051.txt"
+ ],
+ "financebench_id_04412": [
+  "LOCKHEEDMARTIN_2020_10K/page_0066.txt",
+  "LOCKHEEDMARTIN_2020_10K/page_0068.txt"
+ ],
+ "financebench_id_03031": [
+  "LOCKHEEDMARTIN_2021_10K/page_0067.txt"
+ ],
+ "financebench_id_03718": [
+  "LOCKHEEDMARTIN_2022_10K/page_0062.txt"
+ ],
+ "financebench_id_04171": [
+  "MGMRESORTS_2018_10K/page_0056.txt"
+ ],
+ "financebench_id_03849": [
+  "MGMRESORTS_2020_10K/page_0064.txt",
+  "MGMRESORTS_2020_10K/page_0066.txt"
+ ],
+ "financebench_id_01254": [
+  "MGMRESORTS_2022_10K/page_0031.txt"
+ ],
+ "financebench_id_00382": [
+  "MGMRESORTS_2022Q4_EARNINGS/page_0012.txt"
+ ],
+ "financebench_id_01911": [
+  "MGMRESORTS_2022Q4_EARNINGS/page_0013.txt"
+ ],
+ "financebench_id_01912": [
+  "MGMRESORTS_2022Q4_EARNINGS/page_0002.txt",
+  "MGMRESORTS_2022Q4_EARNINGS/page_0003.txt"
+ ],
+ "financebench_id_00407": [
+  "MGMRESORTS_2023Q2_10Q/page_0010.txt"
+ ],
+ "financebench_id_04700": [
+  "MICROSOFT_2016_10K/page_0051.txt"
+ ],
+ "financebench_id_00552": [
+  "MICROSOFT_2023_10K/page_0059.txt"
+ ],
+ "financebench_id_04458": [
+  "NETFLIX_2015_10K/page_0039.txt",
+  "NETFLIX_2015_10K/page_0041.txt"
+ ],
+ "financebench_id_03282": [
+  "NETFLIX_2017_10K/page_0044.txt"
+ ],
+ "financebench_id_04302": [
+  "NIKE_2018_10K/page_0045.txt"
+ ],
+ "financebench_id_03531": [
+  "NIKE_2019_10K/page_0053.txt"
+ ],
+ "financebench_id_04080": [
+  "NIKE_2021_10K/page_0058.txt",
+  "NIKE_2021_10K/page_0060.txt"
+ ],
+ "financebench_id_01163": [
+  "NIKE_2023_10K/page_0061.txt"
+ ],
+ "financebench_id_00080": [
+  "PAYPAL_2022_10K/page_0060.txt"
+ ],
+ "financebench_id_04980": [
+  "PEPSICO_2021_10K/page_0062.txt"
+ ],
+ "financebench_id_01009": [
+  "PEPSICO_2022_10K/page_0003.txt",
+  "PEPSICO_2022_10K/page_0004.txt"
+ ],
+ "financebench_id_00735": [
+  "PEPSICO_2022_10K/page_0025.txt"
+ ],
+ "financebench_id_01328": [
+  "PEPSICO_2022_10K/page_0077.txt"
+ ],
+ "financebench_id_03620": [
+  "PEPSICO_2022_10K/page_0061.txt",
+  "PEPSICO_2022_10K/page_0063.txt"
+ ],
+ "financebench_id_04481": [
+  "PEPSICO_2022_10K/page_0061.txt",
+  "PEPSICO_2022_10K/page_0063.txt"
+ ],
+ "financebench_id_01482": [
+  "PEPSICO_2023_8K_dated-2023-05-05/page_0003.txt"
+ ],
+ "financebench_id_00705": [
+  "PEPSICO_2023_8K_dated-2023-05-30/page_0001.txt"
+ ],
+ "financebench_id_00882": [
+  "PEPSICO_2023_8K_dated-2023-05-30/page_0001.txt"
+ ],
+ "financebench_id_01474": [
+  "PEPSICO_2023Q1_EARNINGS/page_0000.txt"
+ ],
+ "financebench_id_01476": [
+  "PEPSICO_2023Q1_EARNINGS/page_0000.txt"
+ ],
+ "financebench_id_00302": [
+  "PFIZER_2021_10K/page_0058.txt"
+ ],
+ "financebench_id_00702": [
+  "PFIZER_2021_10K/page_0056.txt"
+ ],
+ "financebench_id_02416": [
+  "PFIZER_2021_10K/page_0069.txt",
+  "PFIZER_2021_10K/page_0070.txt"
+ ],
+ "financebench_id_00283": [
+  "Pfizer_2023Q2_10Q/page_0040.txt"
+ ],
+ "financebench_id_00724": [
+  "Pfizer_2023Q2_10Q/page_0037.txt"
+ ],
+ "financebench_id_02419": [
+  "Pfizer_2023Q2_10Q/page_0040.txt"
+ ],
+ "financebench_id_00746": [
+  "ULTABEAUTY_2023_10K/page_0000.txt"
+ ],
+ "financebench_id_00521": [
+  "ULTABEAUTY_2023_10K/page_0056.txt"
+ ],
+ "financebench_id_00601": [
+  "ULTABEAUTY_2023Q4_EARNINGS/page_0001.txt"
+ ],
+ "financebench_id_00603": [
+  "ULTABEAUTY_2023Q4_EARNINGS/page_0002.txt"
+ ],
+ "financebench_id_00605": [
+  "ULTABEAUTY_2023Q4_EARNINGS/page_0002.txt"
+ ],
+ "financebench_id_00606": [
+  "ULTABEAUTY_2023Q4_EARNINGS/page_0001.txt"
+ ],
+ "financebench_id_00859": [
+  "VERIZON_2021_10K/page_0084.txt"
+ ],
+ "financebench_id_02024": [
+  "VERIZON_2021_10K/page_0062.txt",
+  "VERIZON_2021_10K/page_0093.txt"
+ ],
+ "financebench_id_00216": [
+  "VERIZON_2022_10K/page_0055.txt"
+ ],
+ "financebench_id_00215": [
+  "VERIZON_2022_10K/page_0022.txt",
+  "VERIZON_2022_10K/page_0055.txt"
+ ],
+ "financebench_id_00566": [
+  "VERIZON_2022_10K/page_0076.txt"
+ ],
+ "financebench_id_06247": [
+  "WALMART_2018_10K/page_0056.txt",
+  "WALMART_2018_10K/page_0058.txt"
+ ],
+ "financebench_id_04784": [
+  "WALMART_2019_10K/page_0047.txt"
+ ],
+ "financebench_id_06741": [
+  "WALMART_2020_10K/page_0050.txt",
+  "WALMART_2020_10K/page_0055.txt"
+ ]
+}

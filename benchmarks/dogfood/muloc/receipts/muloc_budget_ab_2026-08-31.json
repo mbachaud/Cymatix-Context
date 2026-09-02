@@ -1,0 +1,29 @@
+{
+ "stamp": "2026-08-31",
+ "campaign": "muloc expression_tokens 7000-vs-14000 (budget-doubling cell) + cold baseline",
+ "bed": "F:/tmp/muloc_bed/muloc.db (108,375 genes, tagger v2, hub cutoff 200)",
+ "arms": {
+  "baseline_cold_7000": {
+   "receipt": "ladder_muloc_baseline_cold_2026-08-31.json",
+   "delivered": 0.4485,
+   "r_at_12": 0.4824,
+   "note": "the CITABLE muloc baseline (cold-gated 1h)"
+  },
+  "budget_14000_cold": {
+   "receipt": "ladder_muloc_budget14000_2026-08-31.json",
+   "delivered": 0.4441,
+   "r_at_12": 0.4838
+  },
+  "baseline_warm_DEPRECATED": {
+   "receipt": "ladder_muloc_baseline_2026-08-31.json",
+   "delivered": 0.4441,
+   "note": "ran ~10 min after bed build \u2014 warm-access outlier, kept for the coupling analysis only"
+  }
+ },
+ "verdict": "NULL \u2014 doubling expression_tokens changes delivered by net -3/680 (+4/-7, noise); 1/23 rank<=12-undelivered converted; the delivered_count=6 cohort (228 queries) is unchanged: the seat cap on code corpora is the 15%-of-top hard score floor (tier_hard_floor_frac), not the token budget. Next cell: tier_hard_floor_frac ladder (0.15/0.10/0.05/0).",
+ "prediction_registered": "ERB-947k budget-14000 control arm expected ~null on prose (trimmer never fired at shipped budgets) \u2014 runs after the W2.2 arm frees the bed",
+ "caveats": [
+  "cross-run rank jitter ~71-75/680 persists even cold-vs-cold \u2014 suspected in-run access-trail coupling (per-query access writes during a run feed the access_rate rerank class; arms with different deliveries leave different trails). ERB-947k shows ZERO such jitter (floor6 reproduced the 08-28 receipt 0/470), so the effect is bed/state-dependent. Deserves a #339-style determinism card on the muloc bed.",
+  "tonight's ladder launches omitted CYMATIX_DISABLE_LEARN=1 (BASELINES convention) \u2014 disclosed; ERB pairing validity unaffected (0-diff reproduce witnessed), muloc cross-arm rank-basis comparisons carry the jitter above; delivered-basis verdicts are outside the jitter band"
+ ]
+}

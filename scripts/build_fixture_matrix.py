@@ -762,6 +762,59 @@ PROFILES: dict[str, dict] = {
         "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
+    "locomo": {
+        "label": "LoCoMo + LoCoMo-Plus (per-turn conversation memory + 401 cognitive cues)",
+        # Semantic-portfolio lane (user-approved 2026-08-30, Sol's benchmark
+        # reference doc). Files emitted from the LoCoMo-Plus repo data by
+        # scripts/build_locomo_corpus.py; needle sets (1,986 LoCoMo QA +
+        # 401 cognitive triggers) under benchmarks/dogfood/locomo.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\locomo-plus\corpus"],
+        "extra_skip_dirs": set(),
+        # Emitted corpus root holds only dataset turns/cues — nothing
+        # internal to protect (same ruling as the enronqa profiles).
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "muloc": {
+        "label": "MULocBench 45-repo Python snapshot corpus (issue -> file localization)",
+        # Semantic-portfolio lane (user-approved 2026-08-30). Snapshots
+        # fetched + extracted by scripts/build_mulocbench_corpus.py (one
+        # pinned base_commit per repo; allowlisted text/code files only);
+        # needle set (842 issues, file-level gold) under
+        # benchmarks/dogfood/muloc.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\mulocbench\corpus"],
+        "extra_skip_dirs": set(),
+        # Extracted snapshots are the bench data; 'test(s)'/'training'
+        # directories inside them are real gold surface (same ruling as
+        # the enronqa profiles).
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "locomo_obs": {
+        "label": "LoCoMo observation-enrichment variant (turns + cues + observation bridge docs)",
+        # Write-time abstraction A/B vs the base "locomo" bed — emitted by
+        # scripts/build_locomo_obs_variant.py; needle sets under
+        # benchmarks/dogfood/locomo_obs.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\locomo-plus\corpus_obs"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "financebench": {
+        "label": "FinanceBench SEC-filing page corpus (368 PDFs, 150 QA, page-level gold)",
+        # Semantic-portfolio lane, queued third by user ordering
+        # (2026-08-31). Page texts extracted by
+        # scripts/build_financebench_corpus.py; needle sets under
+        # benchmarks/dogfood/financebench.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\financebench\corpus"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
     "enronqa_padded": {
         "label": "EnronQA + raw-Enron distractor padding (~500k emails)",
         # Padded variant of "enronqa": same QA corpus (gold untouched) plus

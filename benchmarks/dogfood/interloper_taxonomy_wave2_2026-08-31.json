@@ -1,0 +1,960 @@
+{
+ "stamp": "2026-08-31",
+ "workflow": "interloper-taxonomy-wave2 (wf_86a640b4-913)",
+ "agents": [
+  {
+   "bed": "ERB 947k (erb947k, F:/tmp/erb_blob_v09x.db, k=12, 156 misses mined, rank_match 156/156)",
+   "headline": "When ERB loses, the seats go to same-genre near-duplicate siblings of the gold \u2014 full-size 4000-char chunks of OTHER incident tickets / rollout PRs / email threads in the gold's own document family that scatter more distinct query keywords than gold's best chunk (top-1 winner ~10.9 vs gold-chunk ~6.8 on drowned semantic) \u2014 and there is NO hub effect: 1,645 unique winners fill 1,674 seats (repeaters hold 3.2%).",
+   "categories": [
+    {
+     "name": "Semantic drowned under sibling decoys (pool-absent)",
+     "n_misses": 61,
+     "share_pct": 39.1,
+     "mechanism": "Paraphrase queries carry the biggest keyword bags (mean n_kw 45.0) but strip gold's anchor terms: gold's best chunk covers only 15% of query terms (6.82/45.0) vs top-1 winner 25% (10.92); top-1 out-covers gold in 47/61. Winners are 86.9% at the 4000-char chunk cap (gold at cap 50.8%, mean 3,186 chars) \u2014 length is a coverage subsidy (kw_cov~n_chars r=0.279; at-cap winners avg 10.54 distinct terms vs 7.88 under-cap). The seats are NOT random high-DF junk: 45% of delivered docs share gold's genre (5.7x base-rate lift; majority-same-genre slate in 30/61), and the slate is more like itself than like gold (winner-winner head jaccard 0.133 vs winner-gold 0.073) \u2014 a coherent topic-sibling cluster with gold below its floor. Sharpener: in 26/61 the gold DOC would tie/beat the top winner at doc granularity (union kw_cov 11.67 >= top-1) but its best CHUNK loses \u2014 chunk-split dilution (mean gold_n 2.4, union-minus-first gap 4.9 terms).",
+     "evidence": "n_kw 45.0; gold_first kw_cov 6.82 vs top1 10.92 (top1>gold 47/61, tie 4); winners at cap 86.9% vs gold 50.8%; same-genre frac 0.45 = 5.7x lift; slate jaccard 0.133 vs 0.073; union>=top1 while first<top1 in 26/61; repeat-winner seats only 1.1% of 900 semantic seats"
+    },
+    {
+     "name": "Near-band RRF fusion losses (live_rank 13-100)",
+     "n_misses": 41,
+     "share_pct": 26.3,
+     "mechanism": "20 semantic + 18 basic + 3 other; gold IS in the pool at median live_rank 20 (range 13-45). Coverage is NOT what beats it: gold UNION out-covers the delivered majority in 14/20 semantic (15/21 incl. the seat-capped one) \u2014 reproducing PR #428's receipt (b) \u2014 while individual top-1 winners out-cover gold_first (12.55 vs 7.75). The loss is rank aggregation: winners place in more RRF lanes (FTS+tag+synonym), and gold sits just over the lip \u2014 for the 6 misses with gold visible in map_top15, seat-12-to-gold relative score gap is 1.5%-30.3%, median 11.2%. Tightest sibling crowding of any category: same-genre frac 0.60 (6.0x lift), majority-same-genre 25/41, winner-winner jaccard 0.184. Exemplar erb_036: gold 5xx incident SUP-700707 outranked by four OTHER 5xx incident tickets.",
+     "evidence": "live_rank med 20, max 45; gold union out-covers majority 14/20 sem; gold visible in map_top15 for 6, gap 1.5/3.8/5.6/11.2(med)/16.8/24.7/30.3%; same-genre 0.60, lift 6.0x; winners at cap 82.7% vs gold 39.0%"
+    },
+    {
+     "name": "Basic scattered-term outranking (pool-absent, phrase-bearing gold)",
+     "n_misses": 37,
+     "share_pct": 23.7,
+     "mechanism": "Confirms receipt (c): gold holds the exact phrase (37/37 return on phrase probe; phrase DF 166 vs best-term DF>=3001) but never enters the live pool because unstructured term-breadth wins: top-1 winner scatters 8.92 distinct query words vs gold's 6.65 (top1>gold 24/37, tie 5), and 86.5% of winners sit at the 4000-char cap vs gold 35.1% (gold mean 3,041 chars \u2014 often short thread chunks like erb_001's 1,528-char PR comment). Winners skew to big JSON ticket bodies: ENG/PM/SUP ticket chunks take 183/612 basic seats (30%) vs gold being a ticket in only 8/60 basic misses; same-genre frac 0.41 (3.0x lift). A 4000-char P1 ticket scattering 9/28 query words outranks the short chunk containing the answer phrase.",
+     "evidence": "top1 kw_cov 8.92 vs gold 6.65; top1>gold 24/37; winners at cap 86.5% vs gold 35.1%; mean n_kw 27.6; same-genre 0.41/3.0x; prior probe 37/37 phrase-return"
+    },
+    {
+     "name": "Other-class pool-absent (aggregation-shaped queries)",
+     "n_misses": 11,
+     "share_pct": 7.1,
+     "mechanism": "completeness 3 + intra_document_reasoning 5 + conflicting_info 2 + constrained 1. Gold is the most fragmented here (mean gold_n 4.8 chunks; per-chunk coverage 27% of query terms vs 41% union) \u2014 cross-chunk questions dilute every individual gold chunk below single-chunk competitors. Winners are meta/process docs ABOUT the topic instead of instance docs: erb_436 ('which team got most postmortem action items') delivers the postmortem TEMPLATE, an action-items BOT ticket, and follow-up-tracker threads \u2014 topically dead-on, evidentially useless. union>=top1 while first<top1 in 6/11.",
+     "evidence": "gold_n 4.8 (highest); gold_first cov/n_kw 0.27 vs union 0.41; union>=top1-but-first<top1 6/11; same-genre frac 0.38"
+    },
+    {
+     "name": "Seat-capped (live_rank 7-12, class cap delivered 6)",
+     "n_misses": 6,
+     "share_pct": 3.8,
+     "mechanism": "The ONLY delivery-side loss channel on this bed. Gold made the pool top-12 (live_rank 7,7,9,9,11,11) but the class cap shipped 6 seats; k=12 delivery recovers all 6 by definition. 5 basic + 1 semantic (erb_045/046/049/053/144/187). All 6 slates are majority same-genre siblings (frac 0.83 \u2014 e.g. erb_045: Medicore email thread gold beaten by four OTHER Medicore/procurement email threads). Delivery machinery is otherwise exonerated: across all 156 misses, delivered = map_top prefix as a SET (0 skipped pool docs, 0 docs pulled from beyond map_top15, 0 gold pass-overs by freshness gate or elision); the eps-band combinator only REORDERS within the delivered set (120/156 slates permuted).",
+     "evidence": "6/156 = 3.8%; delivered_count=6 on 33 misses total but only these 6 have live_rank<=12; ranks 7,7,9,9,11,11; same-genre 0.83; 0/156 gold pass-overs; 120/156 slates reordered vs map order, 0 skips"
+    }
+   ],
+   "quantitative": {
+    "n_misses": 156,
+    "rank_match": "156/156",
+    "bucket_counts": {
+     "pool_absent": 109,
+     "near_band_13_100": 41,
+     "delivery_side_lte12": 6
+    },
+    "class_x_bucket": {
+     "semantic": {
+      "pool_absent": 61,
+      "near_band": 20,
+      "seat_capped": 1
+     },
+     "basic": {
+      "pool_absent": 37,
+      "near_band": 18,
+      "seat_capped": 5
+     },
+     "intra_document_reasoning": {
+      "pool_absent": 5,
+      "near_band": 1
+     },
+     "completeness": {
+      "pool_absent": 3
+     },
+     "conflicting_info": {
+      "pool_absent": 2
+     },
+     "constrained": {
+      "pool_absent": 1
+     },
+     "miscellaneous": {
+      "near_band": 2
+     }
+    },
+    "hub_concentration": {
+     "total_delivered_seats": 1674,
+     "unique_winners": 1645,
+     "winners_appearing_ge2": 24,
+     "seats_held_by_repeaters": "53 (3.2%)",
+     "top_repeater": "80c31f192118a5fa onprem-inference-sales-playbook x6",
+     "second": "84b54415c3689db2 eng-17421 x3",
+     "semantic_repeat_seat_share": "1.1%",
+     "basic_repeat_seat_share": "2.8%"
+    },
+    "coverage_duels": {
+     "semantic_pool_absent": {
+      "n_kw": 45,
+      "gold_first": 6.82,
+      "gold_union": 11.67,
+      "top1_winner": 10.92,
+      "winner_mean": 10.97,
+      "top1_beats_gold": "47/61"
+     },
+     "basic_pool_absent": {
+      "n_kw": 27.6,
+      "gold_first": 6.65,
+      "gold_union": 9.76,
+      "top1_winner": 8.92,
+      "top1_beats_gold": "24/37"
+     },
+     "semantic_near_band": {
+      "n_kw": 48.2,
+      "gold_first": 7.75,
+      "gold_union": 14.4,
+      "top1_winner": 12.55,
+      "gold_union_outcovers_delivered_majority": "14/20 (15/21 incl seat-capped)"
+     }
+    },
+    "length_skew": {
+     "winner_seats_at_4000_cap": "1423/1674 (85.0%)",
+     "gold_at_cap": "67/156 (42.9%)",
+     "winner_mean_n_chars": 3850,
+     "gold_mean_n_chars": 3043,
+     "kw_cov_vs_n_chars_pearson_r": 0.279,
+     "at_cap_winner_kw_cov": 10.54,
+     "under_cap_winner_kw_cov": 7.88
+    },
+    "genre_sibling_lift": {
+     "same_genre_frac_semantic_drowned": "0.45 (5.7x base)",
+     "near_band": "0.60 (6.0x)",
+     "basic_outranked": "0.41 (3.0x)",
+     "seat_capped": "0.83",
+     "majority_same_genre_slates": "82/156",
+     "winner_winner_head_jaccard_vs_winner_gold": {
+      "semantic_drowned": "0.133 vs 0.073",
+      "basic": "0.144 vs 0.091",
+      "near_band": "0.184 vs 0.122"
+     }
+    },
+    "chunk_split_dilution": {
+     "misses_where_gold_union_ge_top1_but_gold_first_lt_top1": "65/156 (41.7%): 26 semantic_drowned + 22 near_band + 9 basic + 6 other + 2 seat_capped",
+     "mean_gold_n": {
+      "semantic": 2.4,
+      "basic": 2.2,
+      "other_pool_absent": 4.8
+     },
+     "mean_union_minus_first_gap_terms": {
+      "semantic": 4.9,
+      "near_band": 5,
+      "other": 4.4
+     }
+    },
+    "delivery_faithfulness": {
+     "delivered_set_equals_map_top_prefix": "156/156 (0 skips, 0 beyond map_top15)",
+     "gold_passed_over_by_gate_or_elision": "0/156",
+     "slates_reordered_within_set": "120/156 (eps-band combinator)"
+    },
+    "seat_cap": {
+     "misses_with_delivered_6": 33,
+     "of_those_live_rank_7_12": 6,
+     "of_those_near_band": 10,
+     "of_those_pool_absent": 17,
+     "recoverable_at_k12_delivery": 6
+    },
+    "near_band_score_gaps": {
+     "gold_visible_in_map_top15": 6,
+     "relative_gap_seat12_to_gold_pct": [
+      1.5,
+      3.8,
+      5.6,
+      16.8,
+      24.7,
+      30.3
+     ],
+     "median_pct": 11.2
+    },
+    "winner_identity_seats": {
+     "eng_ticket": 280,
+     "timestamped_thread_convo_email": 298,
+     "company_doc": 161,
+     "pm_ticket": 82,
+     "support_ticket": 70,
+     "pr_thread": 66,
+     "other_doc": 676,
+     "note": "gold identity skews opposite: pr-thread 20/156 and timestamped 37/156 vs eng-ticket only 8/156"
+    },
+    "n_kw_by_class": {
+     "semantic": 45.8,
+     "basic": 28.1,
+     "constrained": 66,
+     "miscellaneous": 33.5,
+     "intra_document_reasoning": 26.2,
+     "completeness": 24,
+     "conflicting_info": 18
+    }
+   },
+   "exemplars": [
+    {
+     "needle": "erb_179",
+     "query": "In our rollout system, what is the name of the new mechanism that prevents a candidate release from getting full user traffic until a dry run with replayed requests and smoke checks has passed?",
+     "gold_head": "pr-874321 traffic-escrow: 'a9d3b7e: controller: add TrafficEscrow CRD and basic reconciliation / b4f2f11: middleware: rehearse proxy routing...' (1,569-char commit-list chunk, kw_cov=2)",
+     "winner_head": "r1 pr-957431 'Dual-track handshake with fallback crediting for progressive model swaps' (kw_cov=11); r2 ENG-217563 'version-gardening sweep... for embedding + reranker rollouts' (13); r3 pr-418579 'postmortem-driven-release-throttle' (12); r4 ENG-50321 'Shadow probe fencing and rollback rate-limiter for staged rollouts' (13)",
+     "note": "Archetype semantic drown: the answer term 'TrafficEscrow' is never in the paraphrase, gold's chunk is a commit list covering 2/35 query terms, and four sibling rollout-gating docs cover 11-13 generic terms each."
+    },
+    {
+     "needle": "erb_036",
+     "query": "What caused the spike in 502 and 503 errors on the embeddings endpoint for the us-east dedicated pool around March 13, 2026?",
+     "gold_head": "SUP-700707 'Bursting 5xx errors caused by API gateway backpressure amplifying runtime thread exhaustion on dedicated pool' (kw_cov=10, at live_rank 14)",
+     "winner_head": "r1 SUP-1404200 'API gateway 502/503 flood correlated with upstream runtime crashwave during large embeddi...' (kw_cov=10); r2 SUP-258741 hedged-retry 5xx (8); r3 SUP-707707 thread-allocator 5xx bursts (6); r4 SUP-627181 gradual 5xx drift (9)",
+     "note": "Near-band loss to a wall of NEAR-DUPLICATE 5xx incident tickets \u2014 even the ticket number (707707 vs 700707) is a designed decoy. Gold ties top-1 on coverage; RRF lane placement decides."
+    },
+    {
+     "needle": "erb_183",
+     "query": "When is the 60 to 90 minute technical deep dive scheduled with the healthcare client about running model serving inside their own isolated network, and what is the time window in Pacific time?",
+     "gold_head": "20281020 CytoHealth architecture-review booking email ('...See you Tue the 24th. Alex, Head of Product | CytoHealth', kw_cov=1)",
+     "winner_head": "r2 20260212 'Technical deep dive \u2014 scheduling and agenda (60\u201390 min)' for Nimbus \u2014 the WRONG customer (kw_cov=8); r4 20270719 'Pacific evening swaps... deep dives across US/EU/APAC windows' (9)",
+     "note": "The bed contains a literal title-match decoy for a different client; gold's chunk is the sign-off tail of the email with almost no query vocabulary (kw_cov 1/32)."
+    },
+    {
+     "needle": "erb_001",
+     "query": "What is the name of the new metric added so SRE can track when server-side streaming sessions get finalized due to hitting the time limit?",
+     "gold_head": "pr-129874 timebox-abort thread, 1,528-char comment chunk ('Checkpoints store only a 64-bit idempotency hash...', kw_cov=5)",
+     "winner_head": "r1 ENG-420420 'Graceful rate-limit throttling and credit-repair for active streaming sessions' 4,000-char P1 ticket (kw_cov=10); r4 ENG-403218 'Session watermark finality and rate-limit reconciliation for streaming metering' (7)",
+     "note": "Basic-class pattern: gold is a short PR-comment chunk holding the answer; winners are max-length streaming-metering ENG tickets that scatter twice as many distinct query words with no phrase."
+    },
+    {
+     "needle": "erb_045",
+     "query": "In the Medicore procurement email thread about data use and telemetry, what turnaround timeline did Redwood propose for delivering the operational runbook?",
+     "gold_head": "20261116 telemetry-optout thread, 1,434-char chunk ('...will aim to send the redline within 3 business days... Deal ID MED-2319', kw_cov=9) at live_rank 7",
+     "winner_head": "r1 20260615 'Renewal: Geo scope update & APAC hot-standby commitment' Medicore thread (kw_cov=6); r2 20261129 'MAP Kickoff \u2014 Medicore evaluation roadmap' (7)",
+     "note": "Seat-capped: gold at pool rank 7 but class cap delivered 6; every seat is another Medicore/procurement email thread. Recovered trivially at k=12 delivery."
+    },
+    {
+     "needle": "erb_436",
+     "query": "Across all incident postmortems, which Redwood team was assigned the most follow-up action items?",
+     "gold_head": "'P0 Incident Postmortem: Dedicated cluster routing loop causes elevated latency' (one of 9 gold postmortem chunks, kw_cov=7)",
+     "winner_head": "r1 ENG-5430 'Incident-bot: surface related postmortems + open action items' (kw_cov=10); r2 'Postmortem Template (v2): Required Incident Taxonomy + Ownership + Remediation SLA Fields' (9); r3 slack 'postmortem-followup-owners-plan' (11)",
+     "note": "Aggregation query: meta/process docs ABOUT postmortem follow-ups out-cover every individual postmortem instance (gold_n=9, per-chunk coverage diluted to 7/20)."
+    }
+   ],
+   "surprises": "Four things cut against going-in assumptions. (1) The hub-doc hypothesis is dead on this bed: 1,645 unique winners fill 1,674 seats; docs winning >=2 misses hold 3.2% of seats and the top repeater wins only 6 \u2014 there is no generic-vocabulary monopolist at 947k; the interloper population is a diffuse long tail of one-off topical siblings, so no blocklist/downweight of specific genes can help. (2) The delivery machinery is fully exonerated: in all 156 misses the delivered set equals the map_top prefix set (0 skips, 0 pulls from beyond rank 15, 0 gold pass-overs by freshness gate or session elision); the eps-band combinator reorders 120/156 slates but never changes membership \u2014 the only delivery-side loss is the 6-seat class cap (6 misses, 3.8%). (3) Length is a quiet subsidy: 85% of winning seats are 4000-char cap chunks vs 43% of golds (gold mean 3,043 chars), and at-cap chunks average 10.5 distinct query terms vs 7.9 under-cap \u2014 distinct-term kw_cov, as used by the lanes, structurally favors the longest chunk in a sibling family. (4) Chunk-split dilution is a first-class mechanism, not a footnote: in 65/156 misses (41.7%) the gold DOCUMENT's union coverage ties or beats the top winner while its best single chunk loses \u2014 doc-level (or fielded/grouped) coverage aggregation would flip the duel in over 40% of misses, which converges with the cc-exchange 0017 chunk-granularity finding and suggests the highest-leverage fix is aggregating lane evidence per source doc before RRF seating rather than any per-chunk score change.",
+   "class_notes": "semantic (82 misses): 61 drowned pool-absent + 20 near-band + 1 seat-capped; longest keyword bags (n_kw 45.8) make coverage a diffuse bag-of-generic-terms contest that max-length siblings win; prior receipts (a)/(b) both reproduced \u2014 near-band gold union out-covers the delivered majority in 14/20, so banded coverage stays a dead discriminator (PR #428 stands). basic (60): 37 pool-absent are OUTRANKED not unreachable (receipt (c) confirmed) \u2014 phrase-bearing golds are short chunks (35% at cap, mean 3,041 chars) beaten by 4000-char ticket JSON scattering ~2.3 more distinct terms; plus 18 near-band and 5 of the 6 seat-cap losses \u2014 basic is the class the 6-seat floor actually taxes. intra_document_reasoning (6), completeness (3), conflicting_info (2), constrained (1): aggregation-shaped queries with the most fragmented golds (gold_n up to 9); winners are process/template docs about the topic rather than instance docs \u2014 a distinct failure flavor where topical relevance is high but evidential value is zero. miscellaneous (2): both near-band, nothing distinctive. constrained (1): n_kw=66 query, gold chunk covers 4/66 \u2014 pure keyword-bag dilution."
+  },
+  {
+   "bed": "EnronQA-padded \u2014 829k genes (85k Enron emails + ~744k ERB engineering padding), same 500 queries as native; 104 misses (.792) vs native 72 (.856); rank_match 104/104",
+   "headline": "Padding takes ZERO of the 1122 delivered seats \u2014 when gold loses, other Enron emails win (thread siblings, correspondent mail, mailbox copies), and the .856\u2192.792 decay is gold being crowded out of the fixed-depth candidate pool (pool-absent 22\u219249) plus small internal rank slides that drop it from top-12 to 13-30.",
+   "categories": [
+    {
+     "name": "Pool-absent candidate crowd-out",
+     "n_misses": 42,
+     "share_pct": 40.4,
+     "mechanism": "Gold never enters the fused score map at all (live_rank None, and not shadowed by a delivered copy). These golds are lexically weak: mean gold_kw_cov 4.51 of 17.9 kw (cov ratio 0.249) vs 7.71 of 22.6 (0.335) for pool-present misses; 28/42 are rephrased-class (paraphrase stripped the anchor phrase). This is where the padding actually bites: with the only change being +744k ERB docs, pool-absent jumped 22 (native) \u2192 49 (padded) and 15 shared needles went present\u2192absent \u2014 padding consumes candidate-fetch depth (fts5_candidate_depth = max_genes*4) and shifts term-frequency mass, evicting low-coverage golds from candidacy, yet never scores high enough to reach the fused head itself (map_top is 100% Enron). The seats gold vacates go to higher-coverage Enron mail: in 32/49 absent misses the top winner's kw_cov exceeds gold's union coverage (e.g. 'AGT Critical System Warning' ops mail, cov 8, beats the Amazon order email, cov 5, on generic query terms customer/action/order/email).",
+     "evidence": "absent n=49 total, 42 without a delivered near-copy; gold_kw_cov 4.51 vs 7.71 (present); cov ratio 0.249 vs 0.335; rephrased 28/42; native\u2192padded absent 22\u219249; shared present\u2192absent = 15; top-winner-cov>gold in 32/49"
+    },
+    {
+     "name": "Correspondent / thread-sibling outrank",
+     "n_misses": 24,
+     "share_pct": 23.1,
+     "mechanism": "Gold is in the pool at 13-100 but the seats go to mail from the SAME correspondent pair \u2014 reply legs, other threads between the same two people, or other mail from the query-named sender. The query's strongest tokens are person names, and every email that person touched matches them equally; gold's distinguishing content words are diluted. Across all 104 misses, 471/1122 seats (42.0%) share an email address with gold's header, and in 50/104 misses at least half the winners do. Short reply legs win despite LOWER coverage: enron_001_r's rank-1 winner is John Arnold's 561-char reply with kw_cov 4, score 0.3513, while gold (Gapinski's 2713-char original, kw_cov 7) sits at rank 35 score 0.1256 \u2014 the reply's subject/tag-tier rank feeds RRF harder than gold's body-term coverage. Not hub docs: only 8 genes win across \u22652 distinct questions (max 2), so these are per-query thread neighborhoods, not global magnets.",
+     "evidence": "24 misses (16 new); seats sharing an email addr with gold: 471/1122 = 42.0%; \u2265half-winners-share in 50/104 misses; genes recurring across distinct questions: 8, all x2; 15/24 rephrased"
+    },
+    {
+     "name": "Near-duplicate copy shadowing",
+     "n_misses": 16,
+     "share_pct": 15.4,
+     "mechanism": "A near-copy of gold itself wins the seat (best delivered-head Jaccard vs gold head \u2265 0.5) \u2014 the same newsletter or thread email ingested from a different mailbox/folder. The copy has equal-or-higher kw_cov (chunk boundaries differ slightly), so gold's own content outranks gold: enron_017_o's gold is the Williams Energy News Live newscast in crandell-s/deleted_items (cov 8, pool-absent) while the identical newscast in zipper-a wins rank 1 with cov 9 and two more copies (mckay-b, carson-m) take ranks 2-3. In enron_041_r two byte-identical Matt Wilson elk-hunt copies hold ranks 1-2 (scores .3825/.3651) above gold at 16. From the answer's standpoint many of these are benign (content delivered), but the receipt scores them as misses. 7 of the 49 pool-absent misses also had a J\u22650.5 copy delivered and are counted here.",
+     "evidence": "best-dup Jaccard \u22650.5 in 17/104 misses (16 after trim takes precedence, 7 of them new); \u22650.8 in 5; among pool-absent, 7 had a near-copy delivered; exemplars show identical Subject+Sender, different File: mailbox paths"
+    },
+    {
+     "name": "Delivery-side trim / abstain",
+     "n_misses": 8,
+     "share_pct": 7.7,
+     "mechanism": "Gold IS in the pool top-12 but delivery shipped fewer seats: 7 misses got 6-seat deliveries with gold at pool rank 7-10 (enron_025_r lr10, 036_o lr8, 100_o lr9, 100_r lr8, 125_r lr7, 193_r lr10, 242_o lr7), and enron_173_r shipped ZERO docs with gold at pool rank 2 (score 0.372 vs head 0.383 \u2014 an abstain/empty delivery, the single most avoidable miss in the dump). The 6-seat rate is not padding-driven: 19/104 padded deliveries were 6-seat vs 21/72 native. 7 of these 8 are NEW misses \u2014 on native the same golds ranked \u22646 and made the narrow delivery; the padded bed's small rank pressure (one to four positions) pushed them into the trimmed 7-12 band.",
+     "evidence": "8 misses (7 new): 7 with ndel=6 and lr 7-10, 1 with ndel=0 and lr=2; delivered-width distribution 12-seat:84, 6-seat:19, 0-seat:1; native 6-seat:21/72"
+    },
+    {
+     "name": "Near-band rank slide, mixed winners",
+     "n_misses": 8,
+     "share_pct": 7.7,
+     "mechanism": "Gold sits just below band (lr 13-32 in 7/8) with no dominant winner signature: winners are a grab-bag of Enron mail with kw_cov within \u00b12 of gold, no correspondent overlap majority, no copy, top winner cov \u2264 gold cov. This is pure fused-rank churn from the corpus change: e.g. enron_026_o (Shell Houston Open, gold cov 9 at lr 14) loses to perfmgmt and GCP counterparty mail at cov 8-10. Consistent with the paired shift measurement: for shared misses present in both pools, 15/19 got worse (median live_rank 16\u219218) and only 2 improved \u2014 the same reshuffle that also RECOVERED 16 native misses into padded hits (churn is bidirectional; net \u221232).",
+     "evidence": "8 misses (4 new), 6/8 original-class; shared both-present pairs: worse 15 / better 2 / same 2, median 16\u219218; recovered needles = 16"
+    },
+    {
+     "name": "Coverage outgun by unrelated mail",
+     "n_misses": 6,
+     "share_pct": 5.8,
+     "mechanism": "Gold in pool 13-100 but strangers (no correspondent link, no copy) simply match more extracted keywords: top winner kw_cov > gold union cov, on generic vocabulary shared across a genre \u2014 enron_018_o's casino-odds promo (gold cov 3, lr 32) loses to other casino spam at cov 4-5 ('Win up to $1,000,000', 'FREE X-MAS CASINO CHIPS'). Genre-mates outgun a lexically thin gold. Bed-wide the coverage duel favors winners: top winner cov > gold in 45/103, == in 29, < in 29; in 50/103 misses ALL delivered docs have cov \u2265 gold; mean 5.26 of 12 winners strictly beat gold's coverage. Winners are also longer (median 2279 chars vs gold 1708) \u2014 more text, more keyword hits.",
+     "evidence": "6 misses (3 new); duel: >45/==29/<29 of 103 with non-empty delivery; all-12-\u2265-gold in 50; mean strict-beaters 5.26; winner chars med 2279 vs gold 1708"
+    }
+   ],
+   "quantitative": {
+    "beds": {
+     "native_misses": 72,
+     "native_recall": 0.856,
+     "padded_misses": 104,
+     "padded_recall": 0.792,
+     "padded_bed_genes": "829k = 85k enron + ~744k ERB padding"
+    },
+    "needle_pairing": {
+     "new_misses_padded_only": 48,
+     "shared_misses": 56,
+     "recovered_native_miss_padded_hit": 16,
+     "net_delta": 32,
+     "recovered_list": [
+      "enron_000_r",
+      "enron_016_r",
+      "enron_043_o",
+      "enron_043_r",
+      "enron_057_r",
+      "enron_096_o",
+      "enron_101_o",
+      "enron_117_o",
+      "enron_140_r",
+      "enron_187_r",
+      "enron_191_r",
+      "enron_220_o",
+      "enron_220_r",
+      "enron_223_r",
+      "enron_227_o",
+      "enron_234_r"
+     ]
+    },
+    "padding_seat_share": {
+     "delivered_seats_total": 1122,
+     "padding_seats_total": 0,
+     "padding_pct": 0,
+     "new_miss_seats": 522,
+     "padding_seats_on_new": 0,
+     "map_top_entries": 1560,
+     "padding_in_map_top": 0,
+     "classifier_residue": "3 unique unclassified docs, all verified Enron (enron_mentions news chunks, archives folder); native no-padding bed shows same residue 3/738 seats; engineering-marker regex: 4 hits, all false positives (contract/analyst prose)"
+    },
+    "live_rank_buckets_padded": {
+     "le6": 1,
+     "r7_12": 7,
+     "r13_30": 31,
+     "r31_100": 16,
+     "gt100": 0,
+     "pool_absent": 49
+    },
+    "live_rank_buckets_native": {
+     "le12": 10,
+     "r13_30": 36,
+     "r31_100": 4,
+     "pool_absent": 22
+    },
+    "new_miss_buckets": {
+     "le6_abstain": 1,
+     "r7_12_trim": 6,
+     "r13_30": 21,
+     "r31_100": 8,
+     "pool_absent": 12
+    },
+    "shared_miss_shifts": {
+     "both_absent": 22,
+     "present_to_absent": 15,
+     "both_present": 19,
+     "worse": 15,
+     "better": 2,
+     "same": 2,
+     "median_native": 16,
+     "median_padded": 18
+    },
+    "coverage_duel": {
+     "top_gt_gold": 45,
+     "top_eq_gold": 29,
+     "top_lt_gold": 29,
+     "n": 103,
+     "all_delivered_ge_gold": 50,
+     "mean_strict_beaters_of_12": 5.26
+    },
+    "pool_absent_profile": {
+     "gold_kw_cov_absent": 4.51,
+     "gold_kw_cov_present": 7.71,
+     "cov_ratio_absent": 0.249,
+     "cov_ratio_present": 0.335,
+     "rephrased_absent": "32/49",
+     "absent_top_winner_outguns_gold": "32/49"
+    },
+    "interloper_concentration": {
+     "unique_winners": 965,
+     "total_seats": 1122,
+     "genes_across_ge2_distinct_questions": 8,
+     "max_distinct_questions_per_gene": 2,
+     "seats_from_ge3x_genes_pct": 1.1
+    },
+    "correspondent_overlap": {
+     "seats_sharing_email_with_gold": 471,
+     "seats_pct": 42,
+     "misses_ge_half_winners_share": 50,
+     "misses_ge1_winner_shares": 62
+    },
+    "near_dup": {
+     "J_ge_0.5_misses": 17,
+     "J_ge_0.8_misses": 5,
+     "pool_absent_with_copy_delivered": 7
+    },
+    "lengths_chars": {
+     "gold_mean": 1914,
+     "gold_median": 1708,
+     "winner_mean": 2394,
+     "winner_median": 2279
+    },
+    "delivery_width": {
+     "12_seat": 84,
+     "6_seat": 19,
+     "0_seat": 1,
+     "native_6_seat": 21
+    },
+    "class_split": {
+     "rephrased": 62,
+     "original": 42,
+     "rephrased_of_new": 30
+    },
+    "native_cascade_same_code_n72": {
+     "pool_absent": 19,
+     "near_dup_copy": 18,
+     "correspondent_thread": 11,
+     "trim_abstain": 10,
+     "rank_slide_other": 10,
+     "coverage_outgun": 4
+    },
+    "padded_cascade_n104": {
+     "pool_absent": 42,
+     "correspondent_thread": 24,
+     "near_dup_copy": 16,
+     "trim_abstain": 8,
+     "rank_slide_other": 8,
+     "coverage_outgun": 6
+    }
+   },
+   "exemplars": [
+    {
+     "needle": "enron_017_o",
+     "query": "What specific topics will be covered by the Houston bureau and the Washington bureau, respectively, according to the Williams Energy News Live email?",
+     "gold_head": "Subject: Williams Energy News Live -- today's video newscast Sender: ecenter@williams.com ... File: crandell-s/deleted_items/86 (cov 8, pool-absent)",
+     "winner_head": "Identical newscast, File: zipper-a/... cov 9 score .2726 at rank 1; two more copies (mckay-b, carson-m) at ranks 2-3",
+     "note": "Near-duplicate copy shadowing: the same newsletter in three other mailboxes fills the head while gold's copy is pool-absent \u2014 gold's own content outranks gold."
+    },
+    {
+     "needle": "enron_001_r",
+     "query": "According to Michael Gapinski's email, when is the Tamarack International Fund likely to have its initial closing?",
+     "gold_head": "Subject: Additional offerings to round out your portfolio Sender: michael.gapinski@ubspainewebber.com -> john.arnold (2713 chars, cov 7, rank 35, score .1256)",
+     "winner_head": "Rank 1: john.arnold@enron.com -> michael.gapinski RE: Receipt of Hedge Fund Information, 561 chars, cov 4, score .3513; ranks 2-3 also Gapinski<->Arnold mail",
+     "note": "Correspondent thread: the query names the sender, so every leg of the correspondence matches the name tokens; a short reply with HALF gold's coverage wins on subject/tag-tier RRF rank."
+    },
+    {
+     "needle": "enron_010_r",
+     "query": "What contact information does Steve Touchstone provide at the end of his email to Sandra Brawner?",
+     "gold_head": "Subject: FW: My concern Sender: stouchstone@natsource.com -> sandra.f.brawner (cov 4, rank 33)",
+     "winner_head": "Ranks 1-3: three near-identical copies of sandra.brawner@enron.com -> stouchstone reply (834-843 chars, cov 4, scores .237/.197/.167)",
+     "note": "Thread siblings AND copies at once: the reply leg, duplicated across folders, sweeps the head; gold (the forward containing the answer) sits at 33 with equal coverage but worse per-tier ranks."
+    },
+    {
+     "needle": "enron_005_o",
+     "query": "What action does the customer need to take regarding the delayed order, according to the email from Amazon.com?",
+     "gold_head": "Subject: Your Amazon.com order ... your approval Sender: order-update@amazon.com (cov 5, POOL-ABSENT)",
+     "winner_head": "Rank 1: 'Latest settlement information for West Desk Service Customers' cov 8; ranks 2-3: 'AGT Critical System Warning' infopost@duke-energy.com cov 8",
+     "note": "Pool-absent crowd-out + coverage outgun: generic query terms (customer/action/order/email) light up ops broadcast mail at cov 8; gold with cov 5 never makes the candidate pool on the 829k bed (it was a hit on native)."
+    },
+    {
+     "needle": "enron_025_r",
+     "query": "What is one of the topics that will be covered in the Technical Analysis Class ... in addition to Chart Patterns and Forecasting Basics...?",
+     "gold_head": "Subject: Technical Analysis Class, Early Bird 'Til 11/05 Sender: deanrodgers@kaseco.com (cov 14, pool rank 10)",
+     "winner_head": "6-seat delivery: sibling kaseco.com class announcements \u2014 'Discount til 6/14, Technical Analysis Class' cov 15, 'Technical Trading Class, Dec 4-5' cov 14, deanrodgers cov 16",
+     "note": "6-seat trim: gold is in the pool top-12 (rank 10) but the classifier capped delivery at 6; near-identical course-promo siblings with cov 14-16 hold all six seats. New miss \u2014 on native gold made the cut."
+    },
+    {
+     "needle": "enron_173_r",
+     "query": "Who was promoted, resulting in the Xcelerator remaining under Corporate instead of moving to EWS?",
+     "gold_head": "Subject: Fw: support for Xcelerator Sender: james.derrick@enron.com \u2014 pool rank 2, score .372 (head is .383)",
+     "winner_head": "NOTHING \u2014 delivered list is empty (receipt_delivered_count 0)",
+     "note": "Abstain/empty delivery with gold at rank 2 and 0.011 behind the head: the cheapest recoverable miss in the dump; counted in trim_abstain."
+    }
+   ],
+   "surprises": "1) Zero padding seats ANYWHERE despite padding being ~90% of the corpus \u2014 not one of 1122 delivered seats or 1560 map_top entries is an ERB engineering doc (verified three ways: header/folder-tag classifier with the native bed as false-positive control at the same 3-doc residue rate, an engineering-marker regex with only 4 false positives, and eyeballing all 30 unclassified heads). The distractor mass loses every fused-head duel to Enron mail, yet still costs 6.4pp of recall purely at the candidate-fetch/pool tier. 2) The task brief predicted 32 new misses; the truth is 48 new + 16 RECOVERED = net 32 \u2014 a quarter of the native misses were healed by the same reshuffle that created the new ones, so the padding effect is bidirectional rank churn with a negative mean, not one-way suppression. 3) enron_173_r shipped an empty delivery with gold at pool rank 2, score gap 0.011 \u2014 an abstain-gate miss, not a retrieval miss. 4) No mega-hub interlopers on this bed: the strongest recurring winner appears in only 2 distinct questions (native-style correspondent 'hubs' operate per-query as thread neighborhoods here, holding 42% of seats via header identity rather than via a few globally magnetic docs).",
+   "class_notes": "Rephrased-class misses dominate: 62/104 (59.6%) overall and 30/48 of the new misses. Rephrased is over-represented exactly where lexical anchors matter: 28/42 of pool-absent-crowd-out misses (66.7%) and its absent-gold cov ratio (0.249) shows the paraphrase stripped the anchor phrase that FTS needs \u2014 anchor loss makes gold fragile, and the padded bed's tighter candidate competition converts fragile into absent (the native bed tolerated more of these at ranks 13-30). Original-class misses skew toward pure rank churn: 6/8 of the rank_slide_other category is original-class, gold cov \u2248 winners' cov, just below band. n_kw runs 21.0 (original) vs 19.9 (rephrased); gold union coverage 6.9 vs 5.7 \u2014 rephrased queries are both slightly shorter and markedly worse-covered by their golds."
+  },
+  {
+   "bed": "MULocBench (muloc) \u2014 issue\u2192file localization, 45 repos, 108,375 genes, 680 file_loc needles, 375 mined misses",
+   "headline": "When gold loses on muloc, the winner is overwhelmingly the repo's own process boilerplate (GitHub issue templates, CONTRIBUTING, README, troubleshooting docs) or a vocabulary-aggregating sibling code file (sysinfo/collect_env/entry-point modules): the queries are filled-in issue templates, so the template file itself out-covers the gold source file ~5x on extracted keywords (winner median kw_cov 14-21 vs gold-chunk median 4-5 on ~124-keyword queries), while gold's coverage is diluted across a median 7 chunks.",
+   "categories": [
+    {
+     "name": "Meta/process-boilerplate capture (issue templates, CONTRIBUTING, README, troubleshooting)",
+     "n_misses": 140,
+     "share_pct": 37.3,
+     "mechanism": "MULocBench queries are filled GitHub issue forms; the repo's own .github/ISSUE_TEMPLATE/*.yml (95 rank-1 wins) and CONTRIBUTING/README/troubleshooting docs (54 more incl. post-precedence overlap) contain the exact boilerplate half of the query verbatim ('I have searched the existing issues', checklists, 'provide a description that is worded well'). On n_kw med=166 queries the template covers med=21.5 distinct keywords vs gold_first chunk 5.0 \u2014 winner out-covers gold_first in 137/140. FTS+RRF has no way to discount form boilerplate, and the informative tokens (site name, function name) are a handful of terms drowned by dozens of template hits. 76/140 same-repo (own template beats own extractor), 64 cross-repo (another repo's template bleeds in). Buckets: 91 pool-absent, 49 near-band.",
+     "evidence": "rank-1 true path types (all 372 resolved via corpus substring match): meta_template=95, meta_docs=54. yt-dlp+ytdl gold misses (43): 97% of their 510 delivered seats (495) are template/CONTRIBUTING/README chunks; yt-dlp's 4 template .yml files are each ingested twice (ISSUE_TEMPLATE/ + ISSUE_TEMPLATE_tmpl/), the 8 gene copies appear in 41-44 misses each. 30/35 yt-dlp misses have a yt-dlp ISSUE_TEMPLATE at rank-1."
+    },
+    {
+     "name": "Code-sibling capture (env/sysinfo aggregators, entry points named in the issue, docstring-rich sibling modules, tests)",
+     "n_misses": 129,
+     "share_pct": 34.4,
+     "mechanism": "Winner is another source file: path-verified rank-1 types code=113, test=28, init=1 (across all misses). 83/129 (64%) same-repo \u2014 the strongest same-repo category. Three recurring shapes: (1) environment-info aggregators (sysinfo.py, collect_env.py, launch_utils.py, print_versions.py) that enumerate the version/os/cuda/pip vocabulary of the pasted 'System Info' block (muloc_0009: sysinfo.py kw_cov=20 score .386 vs gold styles.py kw_cov=13); (2) entry-point files literally named in the issue's snippet/traceback (demo_toolbox.py, manimlib/imports.py from 'from manimlib.imports import *', train.py, webui.py) which match the filename tokens while gold is the file that implements the behavior; (3) docstring/import-dense siblings and __init__ hubs covering scattered API names (muloc_0613: sklearn _mean_shift.py kw_cov=14 vs gold _samples_generator.py kw_cov=2). Winner med kw_cov 12 vs gold_first 4; out-covers in 123/129.",
+     "evidence": "buckets: 88 pool-absent, 41 near-band; same-repo 83/129; recurring seat-holders include pytorch collect_env.py, AUTOMATIC1111 sysinfo.py/launch_utils.py, yolov5 train.py, cpython Lib/urllib/request.py"
+    },
+    {
+     "name": "Cross-project docs/tutorial capture (non-meta markdown, changelogs)",
+     "n_misses": 55,
+     "share_pct": 14.7,
+     "mechanism": "Winner is a docs/tutorial/changelog page, and only 18/55 (33%) same-repo \u2014 the most cross-repo-prone category. Two drivers: (1) generic-troubleshooting vocabulary hubs \u2014 OpenHands docs/llms/local-llms.md (rank-1 in 15 misses) and troubleshooting.md match any 'error/install/docker/ollama/llm' issue regardless of repo (muloc_0063: localstack S3 Content-MD5 bug loses to OpenHands local-llms.md kw_cov 19 vs gold 6); (2) entity traps \u2014 the issue names an external project and that project's own README wins (muloc_0121: 'Support for ChatGLM' in text-generation-webui \u2192 THUDM ChatGLM-6B README.md takes ranks 1-3, gold repo files at live_rank 36). Winner med kw_cov 10 vs gold_first 4; out-covers in 51/55.",
+     "evidence": "rank-1 docs=53 + changelog=5 path-verified overall; buckets 42 pool-absent, 13 near-band; hub docs: local-llms.md x27 slices, fastapi tutorial pages, pandas whatsnew/v0.12.0.txt"
+    },
+    {
+     "name": "Delivery-side seat starvation (gold in live top-12 but slice trimmed to 6/3 by the tier floor)",
+     "n_misses": 27,
+     "share_pct": 7.2,
+     "mechanism": "Gold is literally visible in map_top at ranks 5-12 (all 27/27 confirmed, scores 0.10-0.18 = 21-63% of the top score) but delivery shipped only 6 seats (24 rows) or 3 seats (2 rows; 1 drift row shipped 12). The naive 15%-of-top check on the FUSED score does NOT reproduce the cut (0/135 slices have the first cut doc below 15% of top; min delivered/top ratio 0.24) \u2014 the tier_hard_floor_frac gate must fire on tier-level scores upstream of the fused map. Observational signature: trimmed slices have steep score decay (map[6]/map[0] median 0.416 vs 0.618 for full-12 slices; abs score at seat 6: 0.146 vs 0.201). Seats are held by higher-fused-score docs of the SAME mixture as other categories: 105/180 same-repo; head-shape docs 31%/code 26%/prose 22%/config 8%; recurring holders: repo README.md hubs, sysinfo/collect_env aggregators, launch_utils.py, troubleshooting.md.",
+     "evidence": "27 rows: live_rank 5-12, n_del dist {6:24, 3:2, 12:1}; gold/top score ratios 0.21-0.63; 7/27 are rank_match-drift rows (muloc_0169/0271/0273/0432/0444/0456/0772). Corpus-wide 132/375 misses ran with only 6 seats, 3 with 3 seats, 3 with 0."
+    },
+    {
+     "name": "Config/script capture (requirements, yaml/toml config, shell scripts)",
+     "n_misses": 21,
+     "share_pct": 5.6,
+     "mechanism": "Winner is a non-meta config or script file (config_script=19 + other=4 path-verified rank-1 overall). Split mechanism: half are dependency-vocabulary matches \u2014 a requirements/config file enumerating the packages the issue mentions; half are tag-tier wins where FTS coverage is nearly absent: 10 misses have a rank-1 winner with kw_cov<=2 despite n_kw>=20, topped by muloc_0193 where deepfakes requirements-gpu-python36-cuda9.txt wins at score 0.4226 with kw_cov=1 \u2014 tag lookup (dlib/keras/opencv tags) alone crowned it. 9/21 same-repo. Buckets: 15 pool-absent, 6 near-band.",
+     "evidence": "winner med kw_cov 13 vs gold_first 5 on n_kw med=167; out-covers 20/21; examples: OpenHands config.template.toml, ChatGLM ptuning/train.sh, faceswap requirements-gpu"
+    },
+    {
+     "name": "Keyword-extraction blank on CJK queries",
+     "n_misses": 3,
+     "share_pct": 0.8,
+     "mechanism": "Three all-Chinese issue texts (gpt_academic, ChatGLM-style questions) produced n_kw=0 \u2014 the heuristic keyword extractor emits nothing for CJK \u2014 so gold_kw_cov=0, nothing was delivered (n_del=0), and gold is pool-absent by construction. Curiously map_top is still populated with scores up to 0.337 via non-lexical tiers, but the delivery gates abstained.",
+     "evidence": "muloc_0177, muloc_0694, muloc_0715: n_kw=0, gold_kw_cov=0, n_del=0, live_rank=None"
+    }
+   ],
+   "quantitative": {
+    "n_misses": 375,
+    "live_rank_buckets": {
+     "pool_absent": 239,
+     "near_band_13_100": 109,
+     "delivery_loss_le12": 27
+    },
+    "rank_match": {
+     "match": 342,
+     "drift": 33,
+     "drift_buckets": {
+      "near_band": 26,
+      "delivery_loss": 7
+     }
+    },
+    "delivered_count_dist": {
+     "0": 3,
+     "3": 3,
+     "6": 132,
+     "12": 237
+    },
+    "rank1_winner_true_path_types_all375": {
+     "code": 113,
+     "meta_template": 95,
+     "meta_docs": 54,
+     "docs": 53,
+     "test": 28,
+     "config_script": 19,
+     "changelog": 5,
+     "other": 4,
+     "init": 1
+    },
+    "path_recovery": {
+     "rank1_resolved": "372/372 via whitespace-normalized substring match into F:/Projects/mulocbench/corpus (49,575 files, 290M chars)",
+     "sample60_validation": {
+      "same_repo": 38,
+      "cross_repo": 22,
+      "unresolved": 0
+     },
+     "head_classifier_confusion_note": "head classifier over-calls docs_markdown: 35 'docs' heads were .py files (leading # comment lines / module docstrings); config_data heads with 'name:/description:' = ISSUE_TEMPLATE ymls 67/72"
+    },
+    "same_vs_cross_repo_rank1": {
+     "same": 205,
+     "cross": 167,
+     "same_pct": 55,
+     "by_category_same": {
+      "meta": "76/140",
+      "code_sibling": "83/129",
+      "docs": "18/55",
+      "starved": "19/27",
+      "config": "9/21"
+     }
+    },
+    "coverage_duels": {
+     "n_kw_med": 124,
+     "n_kw_mean": 134.5,
+     "rank1_winner_kw_cov_med": 14,
+     "gold_first_kw_cov_med": 4,
+     "gold_union_kw_cov_med": 13,
+     "winner_beats_gold_first": "354/372 (95%)",
+     "winner_beats_gold_union": "176 win / 15 tie / 181 lose",
+     "mean_cov_fraction": {
+      "winner": 0.292,
+      "gold_first": 0.048
+     },
+     "gold_n_chunks_med": 7,
+     "gold_n_chunks_mean": 16
+    },
+    "length": {
+     "rank1_winner_n_chars_med": 3546,
+     "gold_first_n_chars_med": 3303
+    },
+    "hubs": {
+     "unique_delivered_genes": 2000,
+     "total_delivered_slots": 3705,
+     "genes_in_ge5_misses": 96,
+     "slots_held_by_those": "1244 (34%)",
+     "top": [
+      [
+       "yt-dlp 4_bug_report.yml (x2 copies)",
+       "44+41 misses"
+      ],
+      [
+       "yt-dlp 1_broken_site.yml (x2)",
+       "43+43"
+      ],
+      [
+       "yt-dlp 2_site_support_request.yml (x2)",
+       "43+41"
+      ],
+      [
+       "yt-dlp 3_site_feature_request.yml (x2)",
+       "43+43"
+      ],
+      [
+       "yt-dlp CONTRIBUTING.md",
+       43
+      ],
+      [
+       "ytdl-org CONTRIBUTING/README",
+       39
+      ],
+      [
+       "sklearn bug_report.yml",
+       34
+      ],
+      [
+       "OpenHands troubleshooting.md (+fr/zh i18n copies)",
+       "28+22+18"
+      ],
+      [
+       "OpenHands local-llms.md",
+       27
+      ],
+      [
+       "ytdl-org ISSUE_TEMPLATE.md",
+       27
+      ],
+      [
+       "cpython crash.md",
+       19
+      ],
+      [
+       "pandas CONTRIBUTING.md",
+       19
+      ],
+      [
+       "Fooocus bug_report.yml",
+       20
+      ],
+      [
+       "yolov5 bug-report.md",
+       18
+      ]
+     ]
+    },
+    "meta_boilerplate": {
+     "misses_with_ge1_meta_doc_delivered": "224/375 (60%)",
+     "meta_share_of_all_delivered_slots": "1085/3705 (29%)",
+     "mean_meta_per_slice": 2.89
+    },
+    "duplicate_seat_burn": {
+     "repeat_path_seats_all": "814/3705 (22%)",
+     "slices_with_ge1_repeat": "262/375",
+     "ytdlp_misses_repeat_seats": "187/510 (37%)"
+    },
+    "seat_starvation": {
+     "claimed": 25,
+     "found": "27 with live_rank<=12 (24 at n_del=6, 2 at n_del=3, 1 drift row at n_del=12)",
+     "gold_visible_in_map_top15": "27/27 at ranks 5-12, scores 0.10-0.18",
+     "gold_over_top_score_ratio_range": "0.21-0.63",
+     "fused_15pct_check": "0/135 trimmed slices have first-cut doc below 15% of top fused score -> gate fires on tier scores, not fused",
+     "decay_signature": "map[6]/map[0] med 0.416 (n_del=6) vs 0.618 (n_del=12)",
+     "seat_holders_same_repo": "105/180"
+    },
+    "gold_shape": {
+     "needles_gold_all_py": "296/375 (79%)",
+     "rank1_winner_non_py_while_gold_all_py": "178/375 (47%)"
+    },
+    "tag_tier_wins": {
+     "rank1_kw_cov_le2_despite_nkw_ge20": 10
+    }
+   },
+   "exemplars": [
+    {
+     "needle": "muloc_0364",
+     "query": "on.orf.at not complete DRM detection ### DO NOT REMOVE OR SKIP THE ISSUE TEMPLATE ### Checklist - [x] I understand that I will be blocked ... I'm reporting that yt-dlp is broken on a supported site (n_kw=245)",
+     "gold_head": "yt_dlp/extractor/orf.py \u2014 't StopIteration: pass else: req = HEADRequest(http_url) self._request_webpage(...' (kw_cov=8)",
+     "winner_head": ".github/ISSUE_TEMPLATE/1_broken_site.yml \u2014 'name: Broken site support description: Report broken or misfunctioning site labels: [triage, site-bug] body: - type: checkboxes...' (kw_cov=60, score .390; seats 1-2 are the SAME file twice via ISSUE_TEMPLATE_tmpl dup, seats 3-6 the other templates)",
+     "note": "Template echo: the query IS the filled template, so the template file covers 60/245 keywords vs gold's 8; the informative tokens (orf, DRM) are 2 terms against dozens of boilerplate hits. Same-repo but useless; duplicate ingest burns two seats per template."
+    },
+    {
+     "needle": "muloc_0009",
+     "query": "[Bug]: KeyError 'do_not_save' when trying to save a prompt (stable-diffusion-webui, n_kw=220, filled template + pasted traceback)",
+     "gold_head": "modules/styles.py \u2014 'def save_styles(self, path...)' kw_cov=13, live_rank=9, score .134",
+     "winner_head": "modules/sysinfo.py \u2014 'import json import os import sys import platform import hashlib import pkg_resources import psutil...' kw_cov=20 score .386; seat 4 = pytorch collect_env.py kw_cov=29 cross-repo",
+     "note": "Seat starvation + env-aggregator capture: gold sits at live rank 9 but only 6 seats shipped (steep decay slice); the seats go to sysinfo/launch_utils files that enumerate the issue's pasted system-info vocabulary."
+    },
+    {
+     "needle": "muloc_0063",
+     "query": "bug: The Content-MD5 you specified did not match what we received (localstack S3, n_kw=217)",
+     "gold_head": "localstack/services/s3/s3_listener.py + tests/integration/test_s3.py \u2014 gold_first kw_cov=6, live_rank=13",
+     "winner_head": "All-Hands-AI__OpenHands/docs/modules/usage/llms/local-llms.md \u2014 '# Local LLM with Ollama :::warning...' kw_cov=19 score .280; seats 2-3 = OpenHands troubleshooting.md + bug_template.yml",
+     "note": "Cross-repo generic-troubleshooting hub: OpenHands docs match install/error/docker vocabulary of any bug report; gold at near-band rank 13 in a 6-seat slice."
+    },
+    {
+     "needle": "muloc_0121",
+     "query": "Support for ChatGLM ... [ChatGLM-6B](github.com/THUDM/ChatGLM-6B) A Chinese chat AI based on GLM (n_kw=26, gold = text-generation-webui)",
+     "gold_head": "oobabooga__text-generation-webui README.md/models.py etc \u2014 gold_first kw_cov=3, live_rank=36",
+     "winner_head": "THUDM__ChatGLM-6B/README.md \u2014 '# ChatGLM-6B <p align=center> Blog \u2022 HF Repo...' kw_cov=10 score .402 (ranks 1-3 all ChatGLM-6B files)",
+     "note": "Entity trap: the issue names an external project, so that project's own README out-scores every file in the repo where support must be added \u2014 repo identity is invisible to the ranker."
+    },
+    {
+     "needle": "muloc_0613",
+     "query": "Ensure that we have an example in the docstring of each public function or class ... numpydoc did not find (sklearn, n_kw=222, lists many API names)",
+     "gold_head": "sklearn/datasets/_samples_generator.py \u2014 'def make_friedman3(...)' kw_cov=2, pool-absent",
+     "winner_head": "sklearn/cluster/_mean_shift.py \u2014 'Mean shift clustering algorithm...' kw_cov=14; seats 2-4 = discriminant_analysis.py, multiclass.py, cluster/__init__.py",
+     "note": "Same-repo sibling capture with gold dilution: gold's 27-kw union coverage is spread over 23 chunks (best chunk covers 2), while docstring-dense sibling modules each concentrate 12-15 of the listed API names."
+    },
+    {
+     "needle": "muloc_0193",
+     "query": "Some faces with one eye hair covered can't be recognized (deepfakes/faceswap, n_kw=148)",
+     "gold_head": "lib/FaceLandmarksExtractor.py \u2014 'def extract(input_image, use_cnn_face_detector...' kw_cov=5, pool-absent",
+     "winner_head": "requirements-gpu-python36-cuda9.txt \u2014 'pathlib==1.0.1 scandir==1.6 h5py==2.7.1 Keras==2.1.2 opencv-python...' kw_cov=1, score .4226",
+     "note": "Tag-tier freak: rank-1 with ONE keyword covered \u2014 dlib/keras/opencv tag lookups alone put a requirements file on top of a 148-keyword query; 10 misses show this kw_cov<=2 pattern."
+    }
+   ],
+   "surprises": "1) Duplicate ingestion is a silent seat tax: 22% of ALL delivered seats (814/3705) repeat a file already seated in the same slice \u2014 yt-dlp's templates exist in both ISSUE_TEMPLATE/ and ISSUE_TEMPLATE_tmpl/, and OpenHands ships fr/zh i18n copies of troubleshooting.md that each independently rank (28+22+18 appearances); on yt-dlp misses 37% of seats are repeats. Deduping identical/near-identical chunks at delivery would free 1-4 seats per slice for free. 2) The fused-score map cannot reproduce the 6/3-seat trim: 0/135 trimmed slices have the cut doc below 15% of top fused score, so the tier_hard_floor_frac gate must operate on per-tier scores before RRF \u2014 the receipts show the symptom (steep decay, map[6]/map[0] 0.416 vs 0.618) but not the mechanism. 3) Gold can out-cover every winner and still lose: muloc_0201's gold config.py covers 27 keywords vs winner's 19 yet ranks 7 \u2014 RRF rank fusion across tiers, not raw coverage, decides, and then the 6-seat trim removes it. 4) Three CJK queries extract zero keywords yet still produce a scored map (non-lexical tiers fire) while delivery abstains entirely. 5) In muloc_0774 the pipeline nearly localized correctly \u2014 demo_toolbox.py, the file the user ran, sat at rank 2 \u2014 but a cross-repo cpython crash-report template with kw_cov=3 took rank 1. 6) 47% of all misses hand a non-.py file to a query whose gold is entirely .py: on a file-localization bed, boilerplate prose is structurally advantaged because issues are written in prose-form vocabulary, not code vocabulary.",
+   "class_notes": "Single-class bed: all 375 misses are class muloc_file_loc, so no per-class contrast is possible. Drift caveat honored: 33/375 rows have rank_match=False (26 land in near-band, 7 in delivery-loss buckets) \u2014 their bucket assignment is approximate; notably 7 of the 27 seat-starvation rows (muloc_0169/0271/0273/0432/0444/0456/0772) are drift rows, so the starvation count is 20 clean + 7 approximate (the receipt's claimed 25 vs my 27 is within this jitter). The 3 CJK-blank rows are a query-language subgroup (Chinese-language repos gpt_academic/ChatGLM/PaddleOCR) that behaves as a distinct failure class despite the shared label."
+  },
+  {
+   "cross_bed_mechanisms": [
+    {
+     "mechanism": "M1 \u2014 Query-vocabulary echo beats answer-vocabulary gold (anchor loss): the winner is whatever document speaks the QUESTION's words \u2014 question-echo turns, filled-template boilerplate, third-person observations, formula/analytic prose, paraphrase-stripped topic siblings \u2014 while gold states the answer in different words and under-covers the extracted keyword bag. The dominant pool-absent driver on every bed.",
+     "beds_affected": [
+      "locomo",
+      "locomo_obs",
+      "enron_v2",
+      "enron_padded",
+      "erb947k",
+      "financebench",
+      "muloc"
+     ],
+     "evidence": "locomo: 912/1344 pool-absent; gold covers 15% of query kws (1.48/11.9); a question-echo turn with kw_cov>=gold sits in top-6 in 68% of weak-anchor misses (369/542); cognitive zero-anchor 370 (335 cov0), winner-to-gold-cue Jaccard 0.010 < 0.015 random-cue baseline. locomo_obs: 399 cue orphans (335 cov0, 397/399 pool-absent) + 357 crowd-outs where the obs restates the scene in the question's third-person vocabulary (rank1-vs-gold_first duel 285W/67T/5L). enron_v2: outgun 21/72, max-interloper coverage duel 21W/0T/0L, 13/21 pool-absent, rephrased-only misses skew here 9/24. enron_padded: pool-absent crowd-out 42/104, absent-gold cov 4.51 vs 7.71 for pool-present, 28/42 rephrased. erb947k: semantic drowned 61/156 \u2014 gold-first covers 15% of terms (6.82/45.0) vs top-1 winner 25% (10.92), top1>gold 47/61; plus the meta-vs-instance flavor (erb other-class 11: postmortem TEMPLATE beats postmortems; financebench wrong_doctype 9: 10-K prose DEFINING EBITDAR beats the earnings table CONTAINING it). financebench: 118/127 pool-absent, gold covers 18.6% of kws vs winner 26.8%, comp-plan/proxy prose is a near-perfect lexical mimic of metric-formula boilerplate ('round' 28/50, 'decimal' 28/50 of metrics queries). muloc: meta/boilerplate capture 140/375 \u2014 the query IS the filled issue template, so the template file covers med 21.5 kws vs gold-chunk 5.0 (winner>gold_first 137/140).",
+     "estimated_recoverable_needles": "Largest population, weakest direct lever. Bed category counts (disjoint within bed): locomo 912, locomo_obs ~610 (399 orphans + majority of 357 crowd-outs), enron_v2 21, enron_padded 42, erb947k ~72 (61 drowned + 11 other-class), financebench ~118, muloc 140 (template-echo variant). Basis: per-bed taxonomy category partitions. Only sub-slices are recoverable via ladder legs (identity/KV/phrase peel off the misses where the query carries an unused anchor); the zero-anchor core \u2014 locomo cognitive 335 cov0 + locomo_obs 335 cov0 (same needles, two beds) \u2014 is unrecoverable by ANY lexical lever by construction."
+    },
+    {
+     "mechanism": "M2 \u2014 Seat-cap / delivery-width capacity loss: gold is inside the k=12 score map (live_rank 7-12) but the classifier assembly cap ships 6 (or 3, or 0) seats. Pure width loss, not a ranking defeat; delivered==map_top prefix verified on the beds that checked.",
+     "beds_affected": [
+      "locomo",
+      "locomo_obs",
+      "muloc",
+      "enron_v2",
+      "enron_padded",
+      "erb947k"
+     ],
+     "evidence": "locomo: 121/1344 (9.0%), delivered==map_top[:6] as set in 120/121, live ranks 7-12; recoverable-by-definition at 12 seats. locomo_obs: 79/1144 (6.9%), all 79 delivered exactly 6. muloc: 27/375 (20 clean + 7 rank-drift-approximate; receipt claimed 25), gold visible in map_top at ranks 5-12; the fused-score 15% check reproduces the cut in 0/135 trimmed slices \u2014 the gate fires on TIER-level scores upstream of RRF. enron_v2: 10/72 (13.9%), ranks 7,7,7,7,8,8,8,9,11,12, delivered==map_top[:6] 9/10. enron_padded: 8/104 (7 trims at lr 7-10 + 1 abstain: enron_173_r shipped ZERO docs with gold at pool rank 2, gap 0.011). erb947k: 6/156 (3.8%), ranks 7,7,9,9,11,11; delivery machinery otherwise exonerated (0 skips, 0 gold pass-overs in 156/156). financebench: 0/127 \u2014 width is never the culprit there.",
+     "estimated_recoverable_needles": "251 total by-definition at a true 12-seat delivery: locomo 121 (+5.1pp of 2378, matching the delivered .435 vs final_r@12 .487 gap in crossbed_stats), locomo_obs 79 (+3.3pp), muloc 27 (+4.0pp of 680; crossbed anatomy says 23 \u2014 the 4-row gap is the drift jitter), enron_v2 10 (+2.0pp), enron_padded 8 (+1.6pp incl. the abstain row), erb947k 6 (+1.3pp). Basis: live_rank<=12 with delivered<12, delivered-set==map-prefix verified per bed. The cleanest, most receipt-ready win in the whole synthesis; directly quantifies the in-flight 947k 12-vs-6 floor A/B."
+    },
+    {
+     "mechanism": "M3 \u2014 Identity-anchor asymmetry: identity signals (person, company, year, repo, speaker) either fail to match (alias/multiword/concatenated tag tokens, extraction death) or fire on the WRONG documents (addressee-tagged turns, the named person's other mail, the named external project's own README) \u2014 so the tag/name lane rewards proximity to the entity instead of possession of the answer.",
+     "beds_affected": [
+      "financebench",
+      "muloc",
+      "locomo",
+      "locomo_obs",
+      "enron_v2",
+      "enron_padded",
+      "erb947k"
+     ],
+     "evidence": "financebench: 109/127 misses have wrong_company (68) or wrong_year (41) delivered majorities; identity tags are present and correct on every gold (mean 8) yet buy nothing \u2014 13 alias-named (JPM/MGM/J&J) + 15 multiword ('bestbuy','cocacola' unmatchable by any query token) + '3M' apparently dies in keyword extraction (0/12 3M docs delivered on all 8 3M misses); year never constrains (older winners 254:65 despite year stated in 36/41 queries). muloc: 167/372 rank-1 winners are cross-repo; entity trap muloc_0121 (ChatGLM-6B's own README ranks 1-3 over the repo where support must be added); docs-capture category only 33% same-repo. locomo: addressee-tag inversion \u2014 gold is spoken BY the queried person in 80% of name-bearing misses but carries no self-name tag, while 'Wow, Caroline!' turns are name-tagged: w1-tagged-gold-not in 631 misses; near-band tag duel w1 0.89 vs gold 0.17, gold ahead 0/311. locomo_obs: 73% (33/45) of wrong-conversation rank-1 obs are same-first-name speaker collisions. enron_v2: correspondent/person hub 25/72 \u2014 the person-hub 6 LOSE the coverage duel (0W/1T/5L) yet win on name-list rank. enron_padded: 24/104; 42% of all delivered seats share an email address with gold's header. erb947k: exemplar-level only (erb_183 wrong-customer 'deep dive' title decoy).",
+     "estimated_recoverable_needles": "financebench: bounded above by 109/127 (identity-majority misses) \u2014 but the same-filing category (9 misses, gold kw_cov 1-5) shows in-filing gold can still lose, so identity confinement alone does not close the bed. muloc: bounded by 167 cross-repo rank-1 misses (basis: path-verified winners); same-repo capture (205) needs other levers. locomo: a speaker-attribution field attacks the 207/311 near-band misses decided by the tag lane plus 95/121 seat-cap misses where the winner carries the name tag \u2014 the taxonomy's own claim is ~70% of conv-gold misses touched at mechanism level. enron beds: 25+24 category misses. All are mechanism-touched upper bounds, not guaranteed flips."
+    },
+    {
+     "mechanism": "M4 \u2014 Chunk-split / fragmentation dilution: the gold DOCUMENT's union keyword coverage ties or beats the top winner, but every individual gold chunk sits below single-chunk competitors \u2014 per-chunk scoring taxes fragmented golds on multi-fact and long-doc beds.",
+     "beds_affected": [
+      "erb947k",
+      "muloc",
+      "enron_v2",
+      "financebench",
+      "locomo"
+     ],
+     "evidence": "erb947k: 65/156 (41.7%) have gold_union >= top1 while gold_first < top1 (26 semantic drowned + 22 near-band + 9 basic + 6 other + 2 seat-capped); mean union-minus-first gap ~5 terms; gold_n up to 9 on aggregation queries. muloc: gold union med 13 vs gold_first med 4 on n_kw med 124 (gold spread over med 7 / mean 16 chunks); rank-1 winner beats gold_union in only 176/372 vs beats gold_first in 354/372 \u2014 i.e. gold union ties-or-beats the winner in 196/372. enron_v2: 8/72 golds are headerless later chunks whose Subject/Sender anchors live in a sibling gene (feeds the hub category). financebench variant: same-filing wrong-page 9/127 \u2014 right filing, prose neighbors beat the statement page. locomo: multihop pool-absence (85/161) \u2014 each gold turn holds one hop of a multi-fact query.",
+     "estimated_recoverable_needles": "Duel-flip basis (necessary, not sufficient, for a rank flip): erb947k 65/156; muloc up to 196/372 union-ties-or-beats. Doc-level (or fielded/grouped) lane-evidence aggregation before RRF seating would flip the coverage duel in >40% of erb misses \u2014 the erb taxonomy names it the single highest-leverage fix, converging with the cc-exchange 0017 chunk-granularity finding. Do NOT sum with M1/M3: these rows overlap those categories within each bed (the erb 65 spans four of its five categories)."
+    },
+    {
+     "mechanism": "M5 \u2014 Length/shape subsidy (direction FLIPS by bed): the scoring pipeline's length handling systematically favors the interloper's document shape over gold's. On document beds, distinct-term kw_cov subsidizes max-length chunks; on conversation beds, bm25 normalization plus tag count subsidizes short dense turns/obs. The invariant is that gold's shape loses, not that any one shape wins.",
+     "beds_affected": [
+      "erb947k",
+      "financebench",
+      "enron_padded",
+      "enron_v2",
+      "muloc",
+      "locomo",
+      "locomo_obs"
+     ],
+     "evidence": "Long-wins family \u2014 erb947k: 85.0% of winner seats (1423/1674) are 4000-char-cap chunks vs 42.9% of golds; at-cap winners average 10.54 distinct query terms vs 7.88 under-cap; kw_cov~n_chars r=0.279. financebench: winner mean 3436 chars vs gold 2144; gold digit_frac 0.104 vs winner 0.043 (number-dense statement pages have no room for query words \u2014 fin-statement pages are 72/127 golds but only 20/1440 winner seats). enron_padded: winner med 2279 vs gold 1708. enron_v2: 1899 vs 1634. muloc: 3546 vs 3303 (mild). Short-wins family \u2014 locomo: w1 median 177-192 chars vs gold 244-271 across near-band and seat-cap buckets; w1 kw-density 1.20 vs 0.97/100ch. locomo_obs: obs median 134 chars vs gold turn 232.5, 2.0x keyword density (1.63 vs 0.82), 6.9 vs 4.6 tags; winner shorter than gold in 554/745 non-cognitive misses.",
+     "estimated_recoverable_needles": "Not separable \u2014 this is a cross-cutting modifier of M1/M4/M6 misses, not a partition (erb's 85%-at-cap stat spans all its categories). No count claimed. The flip in direction is itself the finding: any single global length-normalization change helps one bed family and hurts the other, so shape must be addressed per-lane (doc-level aggregation neutralizes the long-chunk subsidy; a fielded evidence index neutralizes the short-obs subsidy) rather than by retuning bm25."
+    },
+    {
+     "mechanism": "M6 \u2014 Near-band losses are RRF lane-placement losses, not coverage losses: when gold is in the pool at rank 13-100, it frequently ties or WINS the keyword-coverage duel yet loses on fused rank because winners place in more lanes (tag/name/synonym) or higher per-lane ranks. Coverage-based diagnoses and coverage tie-breaks are dead in this band.",
+     "beds_affected": [
+      "enron_v2",
+      "locomo",
+      "locomo_obs",
+      "erb947k",
+      "muloc",
+      "enron_padded"
+     ],
+     "evidence": "enron_v2: rank-1 interloper LOSES the coverage duel in 39/72 misses while outscoring gold a median 2.33x. locomo near-band: gold cov >= w1 in 259/311; gold ahead on tags 0/311. locomo_obs near-band: union-coverage duel favors gold 145 vs 47, median RRF margin to the rank-12 seat only 0.091. erb947k near-band: gold union out-covers the delivered majority in 14/20 semantic \u2014 reproducing PR #428 receipt (b); for the 6 with gold visible in map_top15, seat-12-to-gold gap median 11.2% (min 1.5%). muloc: muloc_0201 gold covers 27 kws vs winner 19 yet ranks 7, then the trim removes it. enron_padded: top winner cov < gold in 29/103 and == in 29 among pool-present misses.",
+     "estimated_recoverable_needles": "Near-band populations (bucket basis, overlapping M1/M3 categories): enron_v2 40, locomo 311, locomo_obs 309, erb947k 41, muloc 109, enron_padded 47, financebench 9 \u2014 ~866 cross-bed misses sit in the band where a NEW independent lane (phrase, identity field, KV) can act, since re-weighting existing coverage evidence demonstrably cannot (W2.2 kill confirmed by these duels). No recovery count claimed for the mechanism itself \u2014 it is the constraint that selects which levers can work."
+    },
+    {
+     "mechanism": "M7 \u2014 Near-duplicate / copy seat burn: duplicate ingests and near-copies of the same text either win the seat instead of the graded gene (answer often delivered under the wrong id) or burn multiple seats per slice on repeated content.",
+     "beds_affected": [
+      "muloc",
+      "enron_v2",
+      "enron_padded"
+     ],
+     "evidence": "muloc: 22% of ALL delivered seats (814/3705) repeat a file already seated in the same slice (262/375 slices affected; yt-dlp misses 37% \u2014 its 4 template ymls are each ingested twice via ISSUE_TEMPLATE/ + ISSUE_TEMPLATE_tmpl/, plus OpenHands fr/zh i18n copies each ranking independently). enron_v2: 16/72 \u2014 9 exact broadcast copies (Williams newscast: gold pool-absent while identical copies take ranks 1-3), 3 RE/FW siblings, 4 quoting emails. enron_padded: 16/104 with best-dup Jaccard >=0.5 (5 at >=0.8); 7 pool-absent golds had a near-copy delivered. erb947k explicitly does NOT show this (1645 unique winners / 1674 seats).",
+     "estimated_recoverable_needles": "muloc: dedup frees 1-4 seats per slice for free (814 repeat seats basis) \u2014 indirect recovery, magnitude untested. enron beds: the 16+16 category misses are partly grading false negatives (answer text WAS delivered under a sibling gene_id \u2014 the enron_v2 taxonomy calls the Williams case a scoring artifact), so 'recovery' there is as much a union-gold/grading fix as a retrieval fix. Flag: these misses are already counted inside M1/M3 bed partitions where categories overlap; the 16/16/muloc-seat numbers are the mechanism-specific basis."
+    },
+    {
+     "mechanism": "M8 \u2014 Candidate-pool depth crowd-out: corpus mass that never wins a seat still evicts gold from the fixed-depth candidate fetch (fts5_candidate_depth = max_genes*4). Pool-tier damage is invisible to any seat-share analysis.",
+     "beds_affected": [
+      "enron_padded",
+      "locomo_obs",
+      "financebench"
+     ],
+     "evidence": "enron_padded is the controlled experiment: +744k ERB padding takes ZERO of 1122 delivered seats and ZERO of 1560 map_top entries (verified 3 ways), yet pool-absent jumps 22 -> 49, 15 shared needles flip present->absent, and recall drops .856 -> .792 (net -32 needles: 48 new misses, 16 recovered \u2014 bidirectional churn, negative mean). locomo_obs: crowd-out 357/1144 where gold HAS lexical hooks (gold_first cov>=1 in 325/357) but shorter denser obs fill the depth-capped fetch first. financebench: older filings win partly on sheer candidate-page volume (5-8 older filings x ~100+ pages per company).",
+     "estimated_recoverable_needles": "enron_padded: the 15 present->absent shared needles are the clean depth-casualty basis; the other 27 absent-crowd-out misses are coverage-outranked (top winner out-covers gold's union in 32/49) and deeper fetch alone would not seat them. locomo_obs: up to 357 mechanism-touched, but seating them still requires surviving the obs rank duel. A depth raise is a cheap probe (knob exists, #205) but is NOT a fix for out-covered golds."
+    },
+    {
+     "mechanism": "M9 \u2014 Hub-doc concentration (bed-LOCAL, not universal): a small set of globally magnetic documents takes rank-1 repeatedly on template/phatic beds \u2014 and is provably absent on the large document beds, so hub-targeted levers do not generalize.",
+     "beds_affected": [
+      "muloc",
+      "locomo",
+      "financebench"
+     ],
+     "evidence": "Hubby: muloc \u2014 96 genes appearing in >=5 misses hold 34% of all delivered slots (1244/3705); yt-dlp template files appear in 41-44 misses EACH; OpenHands local-llms.md rank-1 in 15 misses. locomo \u2014 20 phatic addressee-praise docs take rank-1 on 18% of 1344 misses (top: 'Wow, Jolene!' x24) \u2014 the entity-hub story (#412) reappearing at turn level. financebench \u2014 moderate: top repeaters 7x (WALMART_2016_10K p60 comp-plan), Walmart 57 winner slots. NOT hubby: erb947k \u2014 1645 unique winners fill 1674 seats, repeaters hold 3.2%, top repeater wins 6; enron_padded \u2014 max 2 distinct questions per winner gene, >=3x genes hold 1.1% of seats; enron_v2 \u2014 correspondent 'hubs' are per-query thread neighborhoods, not global magnets.",
+     "estimated_recoverable_needles": "No blocklist/downweight of specific genes can help erb947k or the enron beds (taxonomy states this outright). On muloc, hub suppression is largely the same lever as M1's boilerplate stripping + M7's dedup (the hubs ARE templates and their duplicate copies) \u2014 do not double-count. No independent recovery estimate claimed."
+    }
+   ],
+   "lever_map": [
+    {
+     "mechanism": "M2 seat-cap capacity loss",
+     "lever": "min_delivered_docs=12 floor ([budget], shipped knob, default 0; W2.4 arm; 947k 12-vs-6 A/B in flight)",
+     "status": "shipped",
+     "expected_effect": "+251 misses cross-bed by definition (locomo 121 / obs 79 / muloc 27 / enron_v2 10 / enron_padded 8 / erb 6), i.e. +1.3 to +5.1pp per bed \u2014 the deltas already visible as delivered-vs-final_r@12 gaps in crossbed_stats. Zero effect on financebench. Caveat: on muloc the trim is enforced by a tier-level gate (fused 15% check reproduces 0/135), so the floor must actually override that gate or muloc's 27 stay lost."
+    },
+    {
+     "mechanism": "M2 seat-cap on code corpora",
+     "lever": "tier_hard_floor_frac ladder (0.15/0.10/0.05/0)",
+     "status": "planned-ladder-leg",
+     "expected_effect": "Same misses as the floor lever on muloc \u2014 these two levers overlap 100% on that bed; run them as one experiment, not two. The muloc receipts pin the firing point to tier scores upstream of RRF (steep-decay signature map[6]/map[0] 0.416 vs 0.618), which tells you which code path the ladder leg must touch."
+    },
+    {
+     "mechanism": "M1 (basic-class variant: phrase-bearing short gold outranked by scattered-term long siblings)",
+     "lever": "phrase/proximity leg \u2014 separate detail=full evidence FTS index with exact-phrase + NEAR()",
+     "status": "planned-ladder-leg",
+     "expected_effect": "Up to +37 on erb basic (37/37 return on phrase probe; phrase DF 166 vs best-term DF>=3001 \u2014 ~90x selectivity is receipt-backed) plus a share of erb's 18 near-band basic; also neutralizes M5's long-chunk subsidy for phrase-bearing golds. Scope limit the ladder must state: paraphrase-class misses get NOTHING (the query no longer contains the phrase) \u2014 this leg is for basic/original-form queries only."
+    },
+    {
+     "mechanism": "M3 identity-anchor asymmetry",
+     "lever": "title/doc-identity leg \u2014 filenames, doc/company names, years, doctypes as first-class matchable fields, WITH alias/multiword normalization",
+     "status": "planned-ladder-leg",
+     "expected_effect": "financebench is the gate: bounded above by 109/127 identity-majority misses, but the leg no-ops on ~28/68 wrong-company misses unless it ships alias handling (13 abbrev + 15 multiword tag-unmatchable name forms, and '3M' dying in keyword extraction is a Stage-1 bug the field index can't see past). muloc: attacks up to 167 cross-repo rank-1 misses via repo-identity confinement. erb: kills the erb_183-style wrong-customer title decoy. Residual floor: financebench same-filing (9 misses) proves gold can still lose INSIDE the right doc \u2014 identity confinement composes with the KV leg, it doesn't replace it."
+    },
+    {
+     "mechanism": "M3 (speaker variant: addressee-tag inversion on conversational beds)",
+     "lever": "speaker-attribution tag/field at ingest (tag the SPEAKER of a turn, not just addressee mentions) \u2014 natural extension of the identity leg",
+     "status": "new-proposal",
+     "expected_effect": "locomo: mechanism-touches ~70% of conv-gold misses (631 w1-name-tagged-gold-not; near-band tag duel gold ahead 0/311 \u2014 the asymmetry is total, so even parity is a large swing); biggest beneficiaries singlehop + temporal ('When did X...' queries are name + 1-2 content words). Cheap: an ingest-tagger rule, re-ingest required (tagger_version bump \u2014 pre-change beds not comparable, per v2 precedent)."
+    },
+    {
+     "mechanism": "M1 (number-dense gold: query's analytic/metric vocabulary absent from statement/table pages)",
+     "lever": "claims/KV column \u2014 value-index the key_values already extracted at ingest",
+     "status": "planned-ladder-leg",
+     "expected_effect": "financebench metrics is the gate: 0/50 delivered, gold is a fin-statement page in 45/50 covering 16.9% of a 41.8-kw bag \u2014 no lexical lane can ever rank these; a value/claims lane is the only path. Also the EnronQA KV gate. Must land ON TOP of the identity leg: KV matches without company+year confinement would just add another lane the wrong filing can win."
+    },
+    {
+     "mechanism": "M4 chunk-split dilution",
+     "lever": "doc-level lane-evidence aggregation before RRF seating (group per-chunk lane evidence by source doc, seat the doc, then pick its best chunk)",
+     "status": "new-proposal",
+     "expected_effect": "Flips the coverage duel in 65/156 erb misses (41.7%) and up to 196/372 on muloc (gold union ties-or-beats rank-1 winner) \u2014 duel-flip is necessary-not-sufficient, so expect a fraction of that. The erb taxonomy names it the highest-leverage single fix on the 947k bed; converges with cc-exchange 0017's chunk-granularity finding. NOT on the current ladder \u2014 this is the biggest uncovered lever."
+    },
+    {
+     "mechanism": "M7 duplicate/copy seat burn",
+     "lever": "delivery-time near-duplicate suppression (drop chunks with high head-Jaccard to an already-seated doc; count dup ingest paths once)",
+     "status": "new-proposal",
+     "expected_effect": "muloc: frees 1-4 seats/slice (814/3705 repeat seats; 37% on yt-dlp) \u2014 pure seat-efficiency, compounds with the 12-floor. enron beds: converts copy-shadowing misses into either hits or honest grading (union-gold over copies) \u2014 16+16 category misses, several arguably scoring false negatives today. Cheap and receipt-friendly; zero effect on erb947k (no dups there)."
+    },
+    {
+     "mechanism": "M1 (template-echo variant) + M9 muloc hubs",
+     "lever": "query-side boilerplate stripping at Stage-1 extract (drop filled-template/checklist boilerplate from the keyword bag; per-class, classifier already identifies the query family)",
+     "status": "new-proposal",
+     "expected_effect": "muloc: attacks the 140-miss meta-capture category at its root \u2014 the informative tokens (site name, function name, traceback symbols) are 2-5 terms drowned by dozens of boilerplate hits; stripping the boilerplate raises their relative weight in every lane at once. financebench metrics: same move for 'round/decimal/answer in/defined as' formula boilerplate (28/50 queries each). Risk: needs a curated boilerplate lexicon per bed family; keep it classifier-gated to avoid harming clean queries."
+    },
+    {
+     "mechanism": "M6 near-band rescue via graph",
+     "lever": "W2.1 COVER graph walk (query-time walk over gene_relations, rescue lane)",
+     "status": "known-killed",
+     "expected_effect": "Killed by receipt (PR #408): walk mass goes to hubs, not gold. The taxonomies retroactively explain the kill from both sides: on muloc/locomo the graph would amplify the exact hub docs that already win (M9), and on erb947k there are NO recurring winners to route around (1645/1674 unique) \u2014 the interloper population is a diffuse long tail, so a walk has no structure to exploit. No surviving variant; the surviving near-band levers are new independent LANES (phrase/identity/KV), not graph traversal."
+    },
+    {
+     "mechanism": "M6 near-band coverage tie-break",
+     "lever": "W2.2 in-band coverage tie-break",
+     "status": "known-killed",
+     "expected_effect": "Killed on band geometry \u2014 and the cross-bed duels confirm the kill was right at mechanism level: in the near band gold already ties or WINS coverage (locomo 259/311, obs union 145v47, enron_v2 39/72, erb 14/20 reproducing PR #428(b)) and loses anyway. Coverage is a spent signal in-band. What distinguishes the surviving versions (phrase, identity fields, KV): they inject NEW rank evidence into RRF as additional lanes rather than re-weighting the coverage evidence that already failed to discriminate."
+    },
+    {
+     "mechanism": "M1 anchor loss (expansion as a bridge)",
+     "lever": "PRF/PPMI expansion",
+     "status": "known-killed",
+     "expected_effect": "Killed previously; the taxonomies show it would have been anti-productive: expansion grows the query-surface vocabulary, and query-surface vocabulary is what the WINNERS already speak (question-echo in top-6 68% on locomo, template echo on muloc, third-person obs vocabulary on locomo_obs). Surviving version: curated [synonyms] entries plus the identity/KV legs, which bridge to ANSWER-side vocabulary instead of amplifying question-side vocabulary."
+    },
+    {
+     "mechanism": "M3 wrong-year winners (financebench)",
+     "lever": "freshness gate",
+     "status": "known-killed",
+     "expected_effect": "Known constraint, now receipt-hardened: wrong-year winners skew OLDER 254:65 and the gate runs at assembly, but gold is pool-absent in 118/127 before assembly begins \u2014 the gate literally never sees the fight. Surviving version: year as a first-class identity FIELD (leg 3), which acts at retrieval where the loss actually happens."
+    },
+    {
+     "mechanism": "M1 zero-anchor paraphrase core (locomo cognitive family)",
+     "lever": "LSA plateau checkpoint (ladder leg 6) / condition-gated dense fallback on cov~0 queries",
+     "status": "planned-ladder-leg (checkpoint) + new-proposal (gated dense)",
+     "expected_effect": "The checkpoint is an acknowledgment, not a lever \u2014 335 cov0 needles (locomo cognitive; same needles again on the obs bed) cannot be reached lexically, full stop, and retrieval is measurably ANTI-correlated with gold there (winner-cue J 0.010 < 0.015 random baseline). A dense lane fired ONLY when Stage-1 extraction yields ~zero anchors is distinguishable from the killed default-ON dense: the 2026-08-14 isolation receipts measured dense DISPLACING gold that held lexical rank (-0.20..-0.33); cov0 queries have no lexical gold rank to displace, so the kill's mechanism does not apply. Still receipt-gated: run it as its own arm before believing it."
+    },
+    {
+     "mechanism": "M8 pool-depth crowd-out",
+     "lever": "fts5_candidate_depth raise ([retrieval], #205 knob, 0=auto=max_genes*4)",
+     "status": "shipped",
+     "expected_effect": "Cheap probe on enron_padded: the 15 present->absent needles are the clean casualty list a deeper fetch could re-admit (+3pp ceiling on that bed). Will NOT recover the 32/49 absent golds that are out-covered even at union level \u2014 depth re-admits candidates, it does not re-rank them. Latency cost scales with depth; measure before defaulting."
+    },
+    {
+     "mechanism": "M2 (abstain flavor: empty delivery with gold in pool)",
+     "lever": "abstain-gate audit under RRF (ratio-only gates)",
+     "status": "new-proposal",
+     "expected_effect": "One documented miss (enron_173_r: 0 docs shipped, gold at pool rank 2, 0.011 behind head) \u2014 the single cheapest recoverable miss in any dump. Tiny count, but it is a gate-calibration smell worth one look since the abstain floors were additive-calibrated and run ratio-only under RRF."
+    },
+    {
+     "mechanism": "Stage-1 extraction gaps (CJK)",
+     "lever": "CJK-aware keyword extraction / tokenizer fallback",
+     "status": "new-proposal",
+     "expected_effect": "muloc: 3 all-Chinese queries extract n_kw=0, delivery abstains entirely (n_del=0) while non-lexical tiers still score a map. 3 needles, but it is a hard functional gap (any CJK corpus gets 0% from the lexical path), not a ranking nuance."
+    },
+    {
+     "mechanism": "M8/M1 obs displacement (locomo_obs)",
+     "lever": "abstraction->source linkage (obs docs carry a pointer to their source turn; seating an obs credits/co-delivers the turn)",
+     "status": "new-proposal",
+     "expected_effect": "Known open item from the research synthesis ('obs-enrichment displaces rather than bridges'). The obs-bed receipts quantify the prize: rank-1 winners are same-conversation obs in 92%+ of non-cognitive misses and 42-47 near-band + 42 crowd-out rank-1 obs are from gold's OWN SESSION (shadowing their own turn) \u2014 linkage converts shadowing from a loss into a hit at zero ranking change. Also partially a union-gold grading question (conv-44_q049's winning obs literally answers the question)."
+    }
+   ],
+   "headline": "Across all seven beds, what wins when Cymatix is wrong is almost never random junk \u2014 it is a same-family sibling that speaks the QUERY's vocabulary while gold speaks the ANSWER's: question-echo turns, filled-template boilerplate, third-person observations, comp-plan/definitional prose, and max-length topic siblings. Two structural taxes compound this everywhere: a 6-seat delivery trim that discards gold at pool ranks 7-12 (251 misses across six beds, recoverable by definition at true k=12 \u2014 the cleanest receipt-ready win, directly feeding the in-flight 12-vs-6 floor A/B), and chunk-split dilution where the gold DOCUMENT out-covers the winner but its best chunk loses (41.7% of ERB misses; ~half of muloc duels) \u2014 a mechanism the current ladder does not touch. In the near band, RRF lane placement, not coverage, decides (gold frequently out-covers and still loses), which validates the killed coverage tie-break and means the surviving levers must add new independent lanes \u2014 phrase, fielded identity (incl. speaker), KV values \u2014 rather than re-weight existing evidence.",
+   "not_covered_by_ladder": "Seven gaps. (1) Chunk-split dilution / doc-level lane aggregation before RRF seating \u2014 the largest uncovered mechanism (erb 65/156 duel-flips, muloc 196/372 union-ties-or-beats); no ladder leg groups chunk evidence per source doc, yet the erb taxonomy calls it the highest-leverage single fix and it converges with cc-exchange 0017. (2) Delivery-time near-duplicate suppression \u2014 22% of muloc seats are repeats (dup ingest paths, i18n copies) and enron copy-shadowing is 16+16 misses; nothing on the ladder dedups. (3) The zero-anchor paraphrase core (locomo cognitive: 335 cov0 needles, 99% class miss rate, winners anti-correlated with gold) \u2014 the LSA plateau checkpoint acknowledges the wall but is not a lever; the only candidate (condition-gated dense on cov~0 queries) is a new proposal that must be distinguished from, and receipted separately from, the killed default-ON dense. (4) Query-side boilerplate/template stripping at Stage-1 extract \u2014 the root fix for muloc's 140 template-echo misses and financebench's formula-boilerplate flooding; the ladder's legs all act on the index side, none on the query side. (5) The length/shape subsidy \u2014 no leg addresses it, and since its direction FLIPS between bed families (long wins on erb/finbench/enron, short-dense wins on locomo/obs), it can only be fixed per-lane, never by a global normalization change. (6) Aggregation-shaped queries where meta/process docs beat instance docs (erb other-class 11, financebench wrong_doctype 9) \u2014 cross-chunk/cross-doc reasoning has no lever anywhere. (7) Housekeeping with real needle counts: obs abstraction->source linkage (known open), the abstain empty-delivery gate (enron_173_r), CJK extraction (muloc 3), and the grading/union-gold artifacts where the answer text IS delivered under a sibling gene_id or a non-gold obs (enron copies, conv-44_q049) \u2014 those inflate miss counts without being retrieval failures.",
+   "contradictions": "Nine, ranked by consequence. (1) Length direction flips between bed families: erb/finbench/enron winners are LONGER than gold (85% of erb winner seats at the 4000-char cap), locomo/obs winners are SHORTER (obs 134 chars, 2x density) \u2014 any single length-normalization tweak is a cross-bed trade, so treat 'length' claims as bed-scoped. (2) Hub concentration flips: muloc (34% of slots held by 96 repeat genes) and locomo (20 docs take 18% of rank-1s) are hubby; erb947k (1645 unique winners/1674 seats) and enron_padded (max 2 questions per gene) are diffuse \u2014 hub-targeted levers are bed-local, and the W2.1 kill's 'mass->hubs' mechanism literally has no substrate on erb. (3) Coverage duels flip by bucket: pool-absent winners out-cover gold everywhere, but near-band winners LOSE the coverage duel on four beds (enron_v2 39/72, locomo 259/311, obs 145v47, erb 14/20) \u2014 headline 'coverage outgun' framings are bucket-specific, and this is direct confirmation the W2.2 coverage tie-break kill was mechanistically correct. (4) muloc's seat trim cannot be reproduced from the fused-score 15% check (0/135 trimmed slices) \u2014 contradicting the assumption that the floor gate operates on fused scores; it fires on tier-level scores, which changes where the tier_hard_floor_frac ladder leg must be implemented. Also muloc's receipt claimed 25 starved rows vs 27 found (7 are rank-drift rows \u2014 within jitter, but say 20 clean when precision matters). (5) enron_padded's brief predicted 32 one-way new misses; truth is 48 new + 16 RECOVERED (net 32) \u2014 padding is bidirectional rank churn with a negative mean, not one-way suppression. (6) Padding takes ZERO of 1122 seats yet costs 6.4pp \u2014 seat-share/winner-identity analyses structurally cannot see pool-tier damage; any future 'distractor' study must instrument the candidate fetch, not just delivered slates. (7) EnronQA native's feared generic-boilerplate spam category is EMPTY ('essentially never wins') while boilerplate is muloc's #1 winner (37%) \u2014 boilerplate wins only when the query itself embeds the boilerplate (filled templates), not as a universal spam problem. (8) locomo_obs enrichment is simultaneously the biggest shipped win (+8.4pp delivered) and the dominant residual-miss winner (obs take 94.4% of non-cognitive rank-1s, sometimes shadowing gold from its own session) \u2014 'obs displace rather than bridge' is confirmed, and some displacing obs literally contain the answer, so part of the residual is union-gold labeling, not retrieval. (9) Minor ledger drift: crossbed_stats anatomy says muloc trim=23 vs taxonomy 27 (drift rows; locomo 121, obs 79, enron 10/8, erb 6 all reconcile), and enron trim counts include one abstain row (0 seats, gold rank 2) that is a gate loss, not a cap loss \u2014 keep it flagged separately in the floor A/B accounting."
+  }
+ ]
+}

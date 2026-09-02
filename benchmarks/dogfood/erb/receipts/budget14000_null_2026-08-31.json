@@ -1,0 +1,35 @@
+{
+ "stamp": "2026-08-31",
+ "campaign": "ERB-947k expression_tokens 7000-vs-14000 (budget-doubling cell, prose control for the muloc budget A/B)",
+ "bed": "F:/tmp/erb_blob_v09x.db (947k genes)",
+ "arms": {
+  "floor12_7000_baseline": {
+   "receipt": "ladder_v09x_w24_min_delivered_2026-08-28.json (w24 floor-12 arm, graduated shipped config)",
+   "delivered": 0.6681,
+   "final_r_at_12": 0.683,
+   "score_map_r_at_12": 0.6809
+  },
+  "budget_14000": {
+   "receipt": "ladder_v09x_budget14000_2026-08-31.json",
+   "config": "benchmarks/dogfood/erb/configs/budget_14000.toml (shipped v0.9.1 toml, ONLY expression_tokens 7000->14000; loader-verified expression_tokens=14000, min_delivered_docs=12, max_genes_per_turn=12)",
+   "env": "CYMATIX_DISABLE_LEARN=1, CYMATIX_SQLITE_CACHE_SIZE=-12582912, encoder url unset",
+   "delivered": 0.6681,
+   "final_r_at_12": 0.683,
+   "score_map_r_at_12": 0.6809
+  }
+ },
+ "paired_result": {
+  "n_needles": 470,
+  "rows_differing_on_any_nontiming_field": 0,
+  "fields_compared": ["gold_ranks", "rank_of_first_gold", "recall_hit", "delivered_gold", "delivered_count", "delivered_gold_rank", "final_rank_of_first_gold", "final_recall_hit", "gate_kept", "floor_appended", "splice_n_candidates"],
+  "delivered_flips": "+0/-0",
+  "delivered_count_distribution_both_arms": {"6": 152, "12": 318}
+ },
+ "verdict": "NULL, exactly as registered in muloc_budget_ab_2026-08-31.json — doubling expression_tokens on the 947k prose bed changes NOTHING: 470/470 per-needle rows identical to the floor-12 baseline on every non-timing field. Mechanism: delivery on ERB is seat-capped (classifier caps + max_genes_per_turn=12 + min_delivered_docs floor), and the seat structure (152 queries at 6 seats, 318 at 12) is byte-identical across arms; the token trimmer never fires at 7000, so 14000 is unused headroom. Three-corpus budget verdict: muloc NULL (seat cap = tier_hard_floor_frac 15%-of-top hard floor), ERB NULL (seat caps, trimmer idle). expression_tokens is not a lever for delivered recall at shipped seat settings on either corpus family.",
+ "determinism_side_receipt": "the 14000 arm reproduced the 2026-08-28 floor-12 arm 470/470 exactly (cold-vs-cold, 3 days apart, different worktree checkout, prior killed partial run had warmed the OS page cache) — second exact-reproduce witness on ERB-947k (first: floor6 arm 0/470 vs its 08-28 counterpart). Contrast muloc ~71/680 cold-vs-cold jitter: run-to-run nondeterminism is bed/state-dependent, not pipeline-wide.",
+ "provenance": {
+  "gate": "cold gate shortened to 15 min by user instruction 2026-08-31 (bed idle 50+ min at launch anyway; prior 1h convention traced to muloc warm-access contamination, ERB measured zero access-trail coupling and this arm ran with CYMATIX_DISABLE_LEARN=1)",
+  "run": "launched 14:35, receipt 17:04 local (2h29m); a first launch gated to 13:46 was killed ~47 min in on the user's restart instruction — no partial receipt is ever written (--out writes at end) and DISABLE_LEARN left no bed state"
+ },
+ "next": "tier_hard_floor_frac ladder (0.15/0.10/0.05/0) is the live seat-cap lever cell (muloc receipt names it); ERB seat levers are the classifier caps (#205 constants), not the token budget"
+}
