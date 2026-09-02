@@ -41,6 +41,7 @@ def _config(**ingestion_kw):
         dense_embed_on_ingest=False,
         sema_embed_on_ingest=False,
         entity_graph=True,
+        entity_autolink_hub_cutoff=200,
         symbol_graph=False,
         splade_content_cap=1000,
         dense_passage_char_cap=2000,
@@ -189,6 +190,32 @@ def test_snapshot_records_missing_knobs_as_none():
     assert snap["ingestion.backend"] == "cpu"
     assert snap["ingestion.entity_graph"] is None
     assert set(snap) == {f"{s}.{k}" for s, k in provenance._INGEST_KNOBS}
+
+
+def test_fully_specified_config_snapshots_every_knob():
+    """``_config()`` must cover every knob in ``_INGEST_KNOBS``.
+
+    Pins the helper to the module: a knob added to ``_INGEST_KNOBS``
+    without a value in ``_config()`` shows up here as a ``None``, which
+    is what a real config drifting behind the list would look like too.
+    """
+    snap = provenance.ingest_config_snapshot(_config())
+    missing = sorted(k for k, v in snap.items() if v is None)
+    assert missing == [], f"_config() does not set: {missing}"
+    assert snap["ingestion.entity_autolink_hub_cutoff"] == 200
+
+
+def test_config_drift_names_the_hub_cutoff():
+    """#411's hub cutoff changes gene_relations edges -> it must drift."""
+    events = [
+        {"config": provenance.ingest_config_snapshot(_config())},
+        {"config": provenance.ingest_config_snapshot(
+            _config(entity_autolink_hub_cutoff=0))},
+    ]
+    (drift,) = provenance.config_drift(events)
+    assert drift["changed"] == {
+        "ingestion.entity_autolink_hub_cutoff": {"from": 200, "to": 0}
+    }
 
 
 # ---------------------------------------------------------------------------

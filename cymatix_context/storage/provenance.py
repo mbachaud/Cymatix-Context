@@ -50,6 +50,10 @@ _INGEST_KNOBS: tuple[tuple[str, str], ...] = (
     ("ingestion", "dense_embed_on_ingest"),
     ("ingestion", "sema_embed_on_ingest"),
     ("ingestion", "entity_graph"),
+    # #411 (2026-08-30, after this lane's base): drops hub entities from the
+    # ingest-time auto-link probe set, so it changes the gene_relations
+    # relation=5 COVER edges a bed carries.  Bed content -> provenance.
+    ("ingestion", "entity_autolink_hub_cutoff"),
     ("ingestion", "symbol_graph"),
     ("ingestion", "splade_content_cap"),
     ("ingestion", "dense_passage_char_cap"),
