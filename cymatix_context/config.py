@@ -751,8 +751,10 @@ class RetrievalConfig:
     #                  receipt at 947k, +0/-0 delivered — kept as an arm).
     #   "off"        — pure fused ranking (rerank ignored; floor arm).
     # The valid set is retrieval/rerank_combinators.py::VALID_COMBINATORS
-    # (single source of truth — validated there at load and in
-    # KnowledgeStore.__init__); the list above is documentation only.
+    # (single source of truth). rerank_combinator_by_class values are
+    # validated against it at config load (RetrievalConfig.__post_init__);
+    # this global rerank_combinator is validated in KnowledgeStore.__init__.
+    # The list above is documentation only.
     rerank_combinator: str = "additive"     # one of VALID_COMBINATORS: additive | fused_tier | eps_band | eps_band_coverage | off
     # eps_band relative tie-band width δ (ratio of the leader's fused score).
     rerank_band_delta: float = 0.05

@@ -848,7 +848,8 @@ fused+rerank_additive block so this knob ships inert; the alternatives
 bench-gated on the 50-needle beds — see
 `docs/research/2026-07-09-scoring-combinator-exploration.md`. The valid
 set is `retrieval/rerank_combinators.py::VALID_COMBINATORS` (single
-source of truth, validated at config load).
+source of truth; `rerank_combinator_by_class` values are validated at config
+load, the global `rerank_combinator` in `KnowledgeStore.__init__`).
 `semantic_dense_additive_weight` / `semantic_broaden_routing` are the
 2026-06-02 semantic-wiring arm (env-gated, `CYMATIX_SEMANTIC_ARM=1`) —
 see `docs/prds/2026-06-02-semantic-wiring-arm.md`.
