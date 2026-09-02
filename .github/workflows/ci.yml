@@ -1,10 +1,17 @@
 name: CI
 
+# Branch model (docs/RELEASING.md): master holds released code only, beta is
+# the integration branch and default PR base, release/vX.Y.Z is cut from beta,
+# hotfix/* is cut from master. The same jobs run on every push to master, beta
+# and release/**, and on every pull request whose base is master or beta. A
+# hotfix/* branch is exercised by its PR to master, so it is not listed under
+# push; a release/** branch runs on push because its PR to master is opened
+# after the tree is already final.
 on:
   push:
-    branches: [master]
+    branches: [master, beta, "release/**"]
   pull_request:
-    branches: [master]
+    branches: [master, beta]
 
 # Cancel in-progress runs on the same ref so a fast follow-up push
 # doesn't keep a stale run alive.
