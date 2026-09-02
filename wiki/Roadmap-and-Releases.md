@@ -14,7 +14,7 @@
 - **Install from PyPI:** `pip install cymatix-context`. Released versions are
   git-tagged (`v0.9.1`, `v0.9.0`, …) on the repository.
 - This wiki documents **0.9.1**, released 2026-08-30. Each item below carries
-  its PR or issue number. The first section lists what has landed on `master`
+  its PR or issue number. The first section lists what is queued for `master`
   since the tag and is headed for **0.9.2**.
 
 ## Unreleased / 0.9.2 — what follows the 0.9.1 tag
@@ -30,7 +30,7 @@ the receipt named in the matching `CHANGELOG.md` Unreleased entry.
 | Wiki, README, Tier-1 prose sweep ([#420](https://github.com/mbachaud/Cymatix-Context/pull/420)) | This wiki as the docs source of truth (GitHub wiki + cymatixcontext.com/wiki), README cut to a landing page, `docs/ROSETTA.md` retired to a stub | Docs only |
 | `filename_index` gene_id index + auto-link scheduling knob ([#424](https://github.com/mbachaud/Cymatix-Context/pull/424)) | The per-upsert `DELETE` was a full-table scan — **42.7 ms → 0.002 ms** at 572k rows; `KnowledgeStore(entity_autolink=False)` skips COVER-edge formation | Content-neutral; existing stores gain the index on their next writable open |
 | Entity auto-link hub cutoff flip ([#425](https://github.com/mbachaud/Cymatix-Context/pull/425), closes [#411](https://github.com/mbachaud/Cymatix-Context/issues/411)) | `[ingestion] entity_autolink_hub_cutoff` **0 → 200**; both flip conditions receipted (retrieval null 0/500; hubs persist under tagger v2, per-link 4.15 → 0.42 ms) | **Changes defaults** — ingest-side only; `0` opts back out |
-| Semantic-portfolio bench lane ([#426](https://github.com/mbachaud/Cymatix-Context/pull/426)) | LoCoMo(+Plus), MULocBench, and FinanceBench adapters + baselines (delivered 0.4348 / 0.444 / 0.153) | Bench only — new-corpus rows, not comparable to ERB or EnronQA rows |
+| Semantic-portfolio bench lane ([#426](https://github.com/mbachaud/Cymatix-Context/pull/426)) | LoCoMo(+Plus), MULocBench, and FinanceBench adapters + baselines (delivered 0.4348 / 0.4485 cold-gated / 0.153) | Bench only — new-corpus rows, not comparable to ERB or EnronQA rows |
 | Paraphrase crater, floor width curve, semantic-cap decomposition ([#427](https://github.com/mbachaud/Cymatix-Context/pull/427)) | Floor 0 / 6 / 12 → delivered **0.6298 / 0.6447 / 0.6681** on the 947k bed, strictly nested — 12 confirmed | Bench only |
 | `eps_band_coverage` combinator ([#428](https://github.com/mbachaud/Cymatix-Context/pull/428)) | W2.2-narrow distinct-term tie-break inside the ε band; killed by its own receipt (**+0 / −0** delivered on 947k) | Default-inert; opt in per class |
 | ERB Phase-1/2 admission campaign ([#429](https://github.com/mbachaud/Cymatix-Context/pull/429)) | Pool-depth forensics: the admission thesis lives with corrections (66/109 pool-absent misses have gold at depth 1000), but a bare depth-1000 flip projects 0.634 vs 0.668 shipped | Bench only, no default moves |

@@ -134,7 +134,7 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
     the EnronQA pattern; all beds tagger-v2). Baselines on shipped v0.9.1
     defaults: LoCoMo delivered 0.4348 / r@12 0.4857 (n=2,378; the cognitive
     split is a 3/401 blackout that the paper's own dense baselines fail
-    identically), MULocBench delivered 0.444 / r@12 0.481 (n=680; exact-commit
+    identically), MULocBench delivered 0.4485 / r@12 0.4824 cold-gated (the 0.444 / 0.481 warm run is marked deprecated in `muloc_budget_ab_2026-08-31.json`; n=680; exact-commit
     subset n=70: 0.500 / 0.571), FinanceBench delivered 0.153 (n=150;
     metrics-generated 0/50 — a doc-routing blackout). **New-corpus rows, NOT
     comparable to any ERB or EnronQA row.** Receipts under
