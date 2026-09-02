@@ -403,11 +403,24 @@ gate and tracked as issue #417.
   Document deletes already sweep `filename_index` via
   `KnowledgeStore.delete_gene`'s `optional_tables` loop; the new
   `tests/test_filename_index_delete.py` pins that so it cannot regress
-  silently. Ported from audit commit 363f700. Deliberately not ported from
-  that branch: f2b8a06 (concurrency) and 44d0327 (docs) — stale claims
-  superseded by #350/#354/#357/#388/#396; the README "Security" section —
-  the wiki `Configuration` and `HTTP-API` pages already carry a fuller,
-  current equivalent.
+  silently. Ported from audit commit 363f700. Not ported from that branch:
+  **f2b8a06 (concurrency) — deferred, not superseded**: only its
+  `knowledge_store.py` `TYPE_CHECKING` rider is here (see the ci entry
+  above), and three fixes it carries are still absent on `beta` — the SPLADE
+  `_ensure_loaded` first-load lock (`splade_backend.py:112-142`, N-thread
+  cold start constructs the model N times), the bounded freshness mtime
+  cache with its `/admin/refresh` clear (`freshness.py:133,145` grow for the
+  process lifetime; `routes_admin.py:653-658` never clears the cache that
+  `context_manager.py:1211` documents it as clearing), and `blend.py`'s
+  copy-under-lock score-map publication (`blend.py:204-207,235,283` still
+  alias the #350 request-local dict into the shared
+  `genome.last_query_scores`, plus the unlocked cold-tier write at
+  `knowledge_store.py:1571-1574`). They need a hand re-apply against #350
+  rather than a cherry-pick — **tracked in #439**. 44d0327 (docs) is
+  genuinely superseded — stale claims retired by #354/#388, #357, #396 and
+  865d34d — as is the README "Security" section, where the wiki
+  `Configuration` and `HTTP-API` pages already carry a fuller, current
+  equivalent.
 
 ## 0.9.1 (2026-08-30)
 
