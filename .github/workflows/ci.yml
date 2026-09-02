@@ -6,7 +6,9 @@ name: CI
 # and release/**, and on every pull request whose base is master or beta. A
 # hotfix/* branch is exercised by its PR to master, so it is not listed under
 # push; a release/** branch runs on push because its PR to master is opened
-# after the tree is already final.
+# after the tree is already final. The release-source job at the bottom is the
+# source-branch guard for master; it is scoped by a job-level `if` and skips on
+# every event that is not a PR against master.
 on:
   push:
     branches: [master, beta, "release/**"]
@@ -185,3 +187,20 @@ jobs:
       # follow-up enhancement.
       - name: Run hardware test suite
         run: pytest tests/test_hardware.py tests/test_hardware_real_device.py tests/test_hardware_mps_smoke.py -v
+
+  # Only release/** and hotfix/** heads may merge to master (docs/RELEASING.md
+  # section 1). GitHub cannot express a head-branch condition in branch
+  # protection or in a ruleset, so the guard is this status check, required on
+  # master. The job-level `if` scopes it to pull requests whose base is master:
+  # on a push to beta or release/**, and on a PR targeting beta, the job is
+  # skipped and the other five jobs are unaffected.
+  release-source:
+    if: github.event_name == 'pull_request' && github.base_ref == 'master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Head branch must be release/** or hotfix/**
+        run: |
+          case "${{ github.head_ref }}" in
+            release/*|hotfix/*) echo "ok: ${{ github.head_ref }}" ;;
+            *) echo "PRs to master must come from release/** or hotfix/**; retarget this PR to beta (docs/RELEASING.md)"; exit 1 ;;
+          esac

@@ -7,11 +7,12 @@ tree, the network, or git (`check` is exercised with --skip-git only).
 Covers:
   - pre: X.Y.Z -> X.Y.(Z+1)bN in both version files (or the --version
     given), one pre-release note directly under "## Unreleased", dry run
-    by default, --write applies, refuses a base that is already released
+    by default, --write applies, refuses a base that is already released,
+    refuses an empty "## Unreleased" the way `final` does
   - final: bump, "## Unreleased" rolled into "## X.Y.Z (date)" with a fresh
     empty "## Unreleased" above it, older sections untouched
   - tag-message: drafted from the matching section, Unreleased fallback
-    for a pre-release version
+    for a pre-release version, --body-only drops the leading vX.Y.Z line
   - check: version drift and an empty Unreleased section fail
   - newline style of each file is preserved (CRLF working copies)
 """
@@ -157,6 +158,19 @@ class TestPre:
         assert mod.main(["--repo-root", str(root), "pre", "--n", "0"]) == 1
         assert "--n must be >= 1" in capsys.readouterr().err
 
+    def test_rejects_empty_unreleased(self, tmp_path, mod, capsys):
+        # Same guard as `final`: the pre-release's tag message and GitHub
+        # release notes come from "## Unreleased", so an empty section would
+        # ship an empty release. The version files must stay untouched.
+        empty = CHANGELOG.replace(
+            CHANGELOG[CHANGELOG.index("**Summary"):CHANGELOG.index("## 0.9.1")], ""
+        )
+        root = _make_tree(tmp_path, changelog=empty)
+        assert mod.main(["--repo-root", str(root), "pre", "--n", "1", "--write"]) == 1
+        assert "empty" in capsys.readouterr().err
+        assert _read(root, "pyproject.toml") == PYPROJECT
+        assert _read(root, "CHANGELOG.md") == empty
+
 
 class TestFinal:
     def test_rolls_unreleased_into_dated_section(self, tmp_path, mod):
@@ -229,6 +243,28 @@ class TestTagMessage:
         root = _make_tree(tmp_path)
         assert mod.main(["--repo-root", str(root), "tag-message", "--version", "0.5.0"]) == 1
         assert "no section" in capsys.readouterr().err
+
+    def test_body_only_drops_the_title_line(self, tmp_path, mod, capsys):
+        # `gh release create --notes-file` renders its own title, so the body
+        # alone is what it wants; the annotated tag still gets the v-line form.
+        root = _make_tree(tmp_path)
+        assert mod.main(
+            ["--repo-root", str(root), "tag-message", "--version", "0.9.1", "--body-only"]
+        ) == 0
+        body_only = capsys.readouterr().out
+        assert body_only == "The previous release.\n\n- **tagger v2** entry.\n"
+
+        assert mod.main(["--repo-root", str(root), "tag-message", "--version", "0.9.1"]) == 0
+        assert capsys.readouterr().out == "v0.9.1\n\n" + body_only
+
+    def test_body_only_works_for_a_prerelease_version(self, tmp_path, mod, capsys):
+        root = _make_tree(tmp_path)
+        assert mod.main(
+            ["--repo-root", str(root), "tag-message", "--version", "0.9.2b1", "--body-only"]
+        ) == 0
+        out = capsys.readouterr().out
+        assert out.startswith("**Summary paragraph")
+        assert "v0.9.2b1" not in out
 
 
 class TestCheck:
