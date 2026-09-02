@@ -195,6 +195,8 @@ under FOCUSED. At minimum, record `budget_tier` per needle in every receipt.
 | "depth 1000 is latency-neutral" | RETRACTED | paired +264 ms median, +10% p90 | `verify_a1_recompute` |
 | bare candidate-depth flip as a delivery lever | KILL (projection) | 0/38/69, 0.634 [0.572, 0.661] vs 0.668 | `pool_depth_forensics` + verify receipts |
 | `fts5_candidate_depth` alone | INERT | 0/109 survive the shortlist | `pool_depth_addendum_2026-09-01.json` §B |
+| head dilution as a harmonic-tier tie artefact | KILL | harmonic off reproduces deep1000 exactly, 0/107/0; 69/107 still worse than shipped | `harmonic_off_dilution_2026-09-01.json` |
+| "true vocabulary gap" for the 20 hard-absent needles | NULL | 0/20; gold carries 4–14 distinct query terms in every case | `absent_term_overlap_2026-09-01.json` |
 
 ## 7. Ceiling arithmetic, honestly
 
@@ -216,10 +218,18 @@ tier fix (section 4) is the one lever with a plausible positive sign that has no
 1. **Floor the budget tier** (`min_delivered_docs` → `tier_logic`), re-run the 08-28 ladder baseline
    paired; re-grade ARM-1's rescues with tier flips in their own column. ~10 lines + tests; one
    470-needle ladder (~2.5 h at 19 s/query).
-2. **Head-dilution attribution**: `deep1000` with the harmonic tier off on the 107 both-found
-   needles, paired against the existing capture (pre-registered rule: dilution is a harmonic/tie
-   artefact if worse ≤ 20 and better+same ≥ 87; real if worse ≥ 50). ~35 min. If it is an artefact,
-   a head-confined tier computation salvages the depth lever cheaply.
+2. **Head-dilution attribution** — DONE the same evening, verdict **KILL** for the harmonic-tie
+   hypothesis (`probe_harmonic_off_dilution.py`, receipt `harmonic_off_dilution_2026-09-01.json`,
+   pre-registration receipt written before the run). With the harmonic tier removed
+   (`retrieval.harmonic_weight = 0.0`; `[cymatics] harmonic_links` is not a live retrieval knob) and
+   the deep knobs unchanged, gold's fused rank over the 107 both-found needles is identical to the
+   deep1000 arm on every needle (0 better / 107 same / 0 worse), so 69 of 107 remain worse than
+   shipped. The harmonic tier never appears in tier contributions on this bed (its query-learned graph
+   is empty on bulk beds), and pre-shortlist pools measure 59k–377k documents. Head dilution is
+   genuine competition from the ~950 newly admitted candidates under RRF, not a tie artefact; the
+   depth lever cannot be salvaged by a head-confined tier computation. What remains is ordering
+   protection: admit deep candidates below the shipped head, or a re-ranker gated on not displacing
+   shipped seats.
 3. **Term overlap for the 20 hard-absent needles** — DONE the same evening
    (`probe_absent_term_overlap.py`, receipt `absent_term_overlap_2026-09-01.json`, pre-registration
    receipt beside it): verdict ALL_OUTRANKED, 0 of 20 are vocabulary gaps (section 5). The ceiling
@@ -233,7 +243,9 @@ tier fix (section 4) is the one lever with a plausible positive sign that has no
    gold past ~950 new competitors without the head dilution measured here, graded paired against the
    08-28 ladder with `rloss.py` quoting `n_paired` on hits, not on the 156 misses alone.
 
-Do not flip any candidate-depth default before 1, 2 and 5.
+Do not flip any candidate-depth default before 1, 4 and 5. Items 2 and 3 closed the same evening:
+dilution is real competition and the substrate has no vocabulary-gap floor, so the campaign's
+remaining budget belongs to ordering under width (items 4 and 6) and to the delivery floor (item 1).
 
 ## 9. Verified nulls (do not re-run)
 
