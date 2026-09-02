@@ -205,9 +205,7 @@ def test_ingestion_config_parses_hub_cutoff_opt_out(tmp_path):
     from cymatix_context.config import load_config
 
     toml = tmp_path / "cymatix.toml"
-    toml.write_text("[ingestion]
-entity_autolink_hub_cutoff = 0
-")
+    toml.write_text("[ingestion]\nentity_autolink_hub_cutoff = 0\n")
     cfg = load_config(str(toml))
     assert cfg.ingestion.entity_autolink_hub_cutoff == 0
 
