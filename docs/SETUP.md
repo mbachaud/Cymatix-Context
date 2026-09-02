@@ -271,7 +271,7 @@ curl -s -X POST http://127.0.0.1:11437/context \
 ```
 
 This flow expects the knowledge store to live at the path configured in
-[`cymatix.toml`](../cymatix.toml) line 127 (`[knowledge store] path =
+[`cymatix.toml`](../cymatix.toml) line 178 (`[genome] path =
 "genomes/main/genome.db"`). Override with `CYMATIX_GENOME_PATH=/abs/path`
 or by editing the TOML.
 
@@ -763,7 +763,7 @@ tray's state JSON, the launcher's update-check cache, and any
 session-registry metadata. Deleting it forces a fresh launcher boot;
 no documents are lost (documents live in `genomes/`).
 
-### 3. Delete the genome(s)
+### 3. Delete the knowledge store(s)
 
 ```bash
 # All genomes

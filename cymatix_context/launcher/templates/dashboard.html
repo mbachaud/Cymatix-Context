@@ -14,7 +14,7 @@
     </button>
     <button type="button" class="tab" data-tab="genome">
       <span class="tab-icon" aria-hidden="true">x</span>
-      <span>Genome</span>
+      <span>Knowledge store</span>
     </button>
     <button type="button" class="tab" data-tab="monitoring">
       <span class="tab-icon" aria-hidden="true">~</span>
@@ -41,15 +41,15 @@
       <button class="btn btn--mini modal-close" data-db-modal-close
               type="button" aria-label="Dismiss dialog">&#10005;</button>
       <h2 id="db-modal-title">Select a database</h2>
-      <p class="muted">No genome was found at the active path. Pick an
+      <p class="muted">No knowledge store was found at the active path. Pick an
         existing knowledge store or create a new one to start Cymatix.</p>
       <ul class="modal-genomes" data-db-modal-list>
-        <li class="muted">Scanning for genomes…</li>
+        <li class="muted">Scanning for knowledge stores…</li>
       </ul>
       <form class="db-create" data-genome-create>
         <input class="db-create__input" type="text" name="path"
                placeholder="path/to/new.genome.db"
-               aria-label="New genome path" />
+               aria-label="New knowledge store path" />
         <button class="btn btn--mini" type="submit">Create + start</button>
       </form>
     </div>

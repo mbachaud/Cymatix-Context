@@ -66,31 +66,49 @@ described in `cymatix_context/encoding/legibility.py`.
 
 ### POST /context/packet
 
-Agent-safe retrieval. Returns pointers + verdict without assembling content.
+Agent-safe retrieval. Returns pointers grouped by freshness status,
+without assembling content.
 
 **Request:** same as `/context`
 
-**Response:**
+**Response:** a `ContextPacket` (see
+[`cymatix_context/schemas.py`](../../cymatix_context/schemas.py) for
+the full model) — items are bucketed into `verified` / `stale_risk`,
+not tagged with a per-item `verdict` field:
+
 ```json
 {
-  "items": [
+  "task_type": "explain",
+  "query": "how does auth work?",
+  "verified": [
     {
       "gene_id": "c084a6dc",
+      "title": "auth.py",
+      "content": "...",
+      "relevance_score": 0.92,
+      "live_truth_score": 0.88,
       "source_id": "/path/to/file.py",
-      "source_path": "/path/to/file.py",
-      "verdict": "verified",
-      "coord_confidence": 0.92,
-      "freshness": 0.88,
-      "refresh_targets": []
+      "status": "verified",
+      "citations": []
     }
   ],
-  "context_health": {}
+  "stale_risk": [],
+  "contradictions": [],
+  "refresh_targets": [],
+  "working_set_id": "ws-...",
+  "notes": [],
+  "coordinate_confidence": 0.92,
+  "file_coverage": 1.0
 }
 ```
 
-Verdict values: `verified` | `stale_risk` | `needs_refresh`
+`ContextItem.status` values: `verified` | `stale_risk` | `needs_refresh`.
+Only `status == "verified"` items land in the `verified` list; both
+`stale_risk` and `needs_refresh` items land in `stale_risk` (the item's
+own `status` field still distinguishes the two). `contradictions` stays
+empty until the Phase 2 claims work lands.
 
-### GET /fingerprint
+### POST /fingerprint
 
 Navigation-first retrieval — scores and metadata without content. Supports `score_floor` filtering and honest accounting (`evaluated_total / above_floor_total / filtered_by_floor / truncated_by_cap`).
 
@@ -110,27 +128,35 @@ Ingest a document or conversation exchange into the knowledge store.
 }
 ```
 
-### POST /replicate
+### POST /consolidate
 
-Persist a context exchange back into the knowledge store (co-activation learning).
+Persist the session buffer back into the knowledge store as new,
+distilled documents (co-activation learning). No request body — it
+operates on the active session buffer, not a single document. See
+[`docs/api/context-endpoint.md`](context-endpoint.md), section 9.4,
+for the full contract. (There is no separate `/replicate` route.)
 
-### POST /compact
+### POST /admin/compact
 
-Compact the knowledge store — run the density gate over all OPEN documents and demote low-signal ones to EUCHROMATIN/HETEROCHROMATIN.
+Compact the knowledge store — run the density gate over all OPEN
+documents and demote low-signal ones to EUCHROMATIN/HETEROCHROMATIN.
+Admin-auth gated. (There is no separate top-level `/compact` route.)
 
 ## Admin / Maintenance
 
 ### GET /stats
 
-Returns knowledge store size, compression ratio, and tier metrics.
+Returns knowledge store size, compression ratio, and tier metrics. The
+tier keys are the bare tier names (`open` / `euchromatin` /
+`heterochromatin`), not `chromatin_*`-prefixed:
 
 ```json
 {
   "total_genes": 18547,
   "compression_ratio": 5.0,
-  "chromatin_open": 14200,
-  "chromatin_euchromatin": 3100,
-  "chromatin_heterochromatin": 1247
+  "open": 14200,
+  "euchromatin": 3100,
+  "heterochromatin": 1247
 }
 ```
 
@@ -149,6 +175,9 @@ Hot-reload cymatix.toml config without restarting the server.
 Drop-in replacement for the OpenAI chat completions endpoint. Cymatix intercepts the messages, runs `/context` to build the context window, injects it into the system message, then forwards to the configured downstream model.
 
 ```bash
-ANTHROPIC_BASE_URL=http://localhost:11437 claude
 OPENAI_BASE_URL=http://localhost:11437/v1 your-app
 ```
+
+(Cymatix does not register a `/v1/messages` route, so pointing
+`ANTHROPIC_BASE_URL` at it will not work — the proxy is
+OpenAI-chat-completions-shaped only.)

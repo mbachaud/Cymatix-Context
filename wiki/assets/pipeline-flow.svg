@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 736" width="820" height="736" role="img" aria-labelledby="pf-title pf-desc">
+  <title id="pf-title">Cymatix Context retrieval pipeline</title>
+  <desc id="pf-desc">Seven stages run per turn: 0 Classify, 1 Extract, 2 Retrieve, 3 Re-rank (optional), 4 Splice (optional), 5 Assemble with the freshness gate and session delivery, 6 Persist in the background. The pipeline terminates in a know / miss fork.</desc>
+
+  <defs>
+    <marker id="pf-ar" markerUnits="userSpaceOnUse" viewBox="0 0 9 9" refX="8.5" refY="4.5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0,0.6 L8.5,4.5 L0,8.4 Z" fill="#7d8590"/>
+    </marker>
+    <marker id="pf-ara" markerUnits="userSpaceOnUse" viewBox="0 0 9 9" refX="8.5" refY="4.5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0,0.6 L8.5,4.5 L0,8.4 Z" fill="#c76a1c"/>
+    </marker>
+  </defs>
+
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+
+    <!-- header -->
+    <text x="40" y="34" font-size="16.5" font-weight="600" fill="#6e7681">Cymatix Context &#8212; retrieval pipeline</text>
+    <text x="40" y="56" font-size="12" fill="#8b949e">Seven stages per turn &#8212; the default path makes zero model calls.</text>
+
+    <!-- stage boxes + connectors -->
+    <g fill="#888888" fill-opacity="0.27" stroke="#7d8590" stroke-width="1.5">
+      <rect x="40" y="88"  width="250" height="46" rx="8"/>
+      <rect x="40" y="156" width="250" height="46" rx="8"/>
+      <rect x="40" y="224" width="250" height="46" rx="8"/>
+      <rect x="40" y="292" width="250" height="46" rx="8"/>
+      <rect x="40" y="360" width="250" height="46" rx="8"/>
+      <rect x="40" y="428" width="250" height="46" rx="8"/>
+      <rect x="40" y="496" width="250" height="46" rx="8"/>
+    </g>
+
+    <g stroke="#7d8590" stroke-width="1.5" fill="none" marker-end="url(#pf-ar)">
+      <line x1="165" y1="134" x2="165" y2="155"/>
+      <line x1="165" y1="202" x2="165" y2="223"/>
+      <line x1="165" y1="270" x2="165" y2="291"/>
+      <line x1="165" y1="338" x2="165" y2="359"/>
+      <line x1="165" y1="406" x2="165" y2="427"/>
+      <line x1="165" y1="474" x2="165" y2="495"/>
+    </g>
+
+    <!-- stage badges -->
+    <g fill="none" stroke="#c76a1c" stroke-width="1.5">
+      <circle cx="68" cy="111" r="13"/>
+      <circle cx="68" cy="179" r="13"/>
+      <circle cx="68" cy="247" r="13"/>
+      <circle cx="68" cy="315" r="13"/>
+      <circle cx="68" cy="383" r="13"/>
+      <circle cx="68" cy="451" r="13"/>
+      <circle cx="68" cy="519" r="13"/>
+    </g>
+    <g font-size="12" font-weight="600" fill="#c76a1c" text-anchor="middle">
+      <text x="68" y="115.5">0</text>
+      <text x="68" y="183.5">1</text>
+      <text x="68" y="251.5">2</text>
+      <text x="68" y="319.5">3</text>
+      <text x="68" y="387.5">4</text>
+      <text x="68" y="455.5">5</text>
+      <text x="68" y="523.5">6</text>
+    </g>
+
+    <!-- stage labels -->
+    <g font-size="14" font-weight="600" fill="#6e7681">
+      <text x="92" y="116">Classify</text>
+      <text x="92" y="184">Extract</text>
+      <text x="92" y="252">Retrieve</text>
+      <text x="92" y="320">Re-rank</text>
+      <text x="92" y="388">Splice</text>
+      <text x="92" y="456">Assemble</text>
+      <text x="92" y="524">Persist</text>
+    </g>
+
+    <!-- stage annotations -->
+    <g font-size="11.5" fill="#8b949e">
+      <text x="310" y="107">rule-based classifier picks decoder mode + assembly cap</text>
+      <text x="310" y="122">no model call</text>
+
+      <text x="310" y="175">heuristic keyword + entity extraction from the query</text>
+      <text x="310" y="190">no model call</text>
+
+      <text x="310" y="236">FTS5 BM25 + tag lookup &#183; synonym expansion &#183; co-activation</text>
+      <text x="310" y="251">SR &#183; cymatics 256-bin spectrum &#183; ranked by RRF fusion</text>
+      <text x="310" y="266">opt-in, off by default: BGE-M3 dense &#183; SPLADE sparse</text>
+
+      <text x="310" y="311">CPU cross-encoder scores the candidate list</text>
+      <text x="310" y="326">optional &#8212; off at shipped defaults</text>
+
+      <text x="310" y="379">Headroom Kompress (CPU) or LLM compressor</text>
+      <text x="310" y="394">optional &#8212; off at shipped defaults</text>
+
+      <text x="310" y="440">token budget + per-document legibility headers</text>
+      <text x="310" y="455">+ freshness gate (Stage 7): stale / cold / superseded</text>
+      <text x="310" y="470">+ session delivery elides already-delivered documents</text>
+
+      <text x="310" y="515">query + response packed back into the knowledge store</text>
+      <text x="310" y="530">background &#8212; off the response path</text>
+    </g>
+
+    <!-- terminal fork -->
+    <g stroke="#7d8590" stroke-width="1.5" fill="none">
+      <path d="M165,542 L165,568 L450,568"/>
+      <line x1="450" y1="568" x2="450" y2="595" marker-end="url(#pf-ar)"/>
+    </g>
+    <line x1="165" y1="568" x2="165" y2="595" stroke="#c76a1c" stroke-width="1.5" fill="none" marker-end="url(#pf-ara)"/>
+
+    <rect x="40"  y="598" width="250" height="48" rx="8" fill="#e8883a" fill-opacity="0.15" stroke="#c76a1c" stroke-width="2"/>
+    <rect x="325" y="598" width="250" height="48" rx="8" fill="#888888" fill-opacity="0.27" stroke="#7d8590" stroke-width="2"/>
+
+    <text x="58"  y="621" font-size="14" font-weight="600" fill="#c76a1c">know</text>
+    <text x="343" y="621" font-size="14" font-weight="600" fill="#7d8590">miss</text>
+    <g font-size="10.5" fill="#8b949e">
+      <text x="58"  y="637">found &#183; confidence &#183; gene_id_match</text>
+      <text x="343" y="637">reason &#183; escalate_to</text>
+    </g>
+
+    <!-- footer -->
+    <g font-size="11" fill="#8b949e">
+      <text x="40" y="678">Terminal fork &#8212; know: the delivered context is grounded, the agent may answer from it.</text>
+      <text x="40" y="696">miss: do not answer from the store &#8212; escalate via escalate_to, or refetch from refresh_targets.</text>
+      <text x="40" y="720">Stages 0&#8211;2 and 5&#8211;6 are algorithmic. Stages 3 and 4 are the only model-capable steps, and both ship off.</text>
+    </g>
+
+  </g>
+</svg>
