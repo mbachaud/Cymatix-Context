@@ -1,0 +1,83 @@
+{
+ "tool": "py-spy 0.4.2 record --nonblocking --rate 50 --duration 90 + read-only SQL probes on the live bed",
+ "stamp": "2026-08-30T07:48:00Z",
+ "subject": {
+  "build_cmd": "python -u scripts/build_fixture_matrix.py --profile enronqa_padded --mode blob --out-dir F:/tmp/enronqa_padded_bed --parallel --workers 6",
+  "branch": "claude/enronqa-bed @ ad5f33a",
+  "bed": "F:/tmp/enronqa_padded_bed/enronqa_padded.db",
+  "writer_pid": 21936,
+  "build_started": "2026-08-29T18:07:14 local",
+  "discovered_files": 517353,
+  "state_at_profile": {
+   "genes_committed": 288954,
+   "upserts_logged": 318016,
+   "entity_graph_rows": 3623506,
+   "gene_relations_rows": 2754317,
+   "filename_index_rows": 278902,
+   "db_bytes": 4604436480
+  }
+ },
+ "question": "Is FTS5 segment-merge amplification the serial-writer hot path behind the ingest throughput decay?",
+ "verdict": "NO — refuted. FTS5 is 0.07% of writer wall time. The decay is auto_link_by_entity (entity-graph COVER-edge formation): 89.5% of writer wall time, O(hub-posting-list) per insert, O(N^2) per build. Second-order: unindexed filename_index DELETE (6.6%, also O(N) per insert).",
+ "pyspy_profile": {
+  "raw": "ingest_decay_enronqa_writer90s_2026-08-30.speedscope.json",
+  "main_thread_samples": 4352,
+  "wall_share": {
+   "auto_link_by_entity (storage/co_activation.py:51 GROUP BY fetchall)": 0.895,
+   "sync_filename_index (storage/indexes.py:492 unindexed DELETE)": 0.066,
+   "_write_unit commit": 0.027,
+   "sync_path_key_index": 0.005,
+   "rebuild_promoter_index": 0.002,
+   "sync_fts5 + fts_insert_from_source": 0.0007
+  }
+ },
+ "live_query_probe": {
+  "note": "auto_link_by_entity's exact SQL, run read-only against the live bed with the newest gene's 15 entities",
+  "posting_rows_swept": 364245,
+  "wall_ms_full_entity_set": 148.9,
+  "wall_ms_without_two_mime_hubs": 7.4,
+  "plan": "SEARCH entity_graph USING COVERING INDEX (entity=?); USE TEMP B-TREE FOR GROUP BY; USE TEMP B-TREE FOR ORDER BY",
+  "filename_index_delete_plan": "SCAN filename_index (no gene_id index; 278,902 rows at probe time)"
+ },
+ "entity_hubs_top10": {
+  "content-type": 171696,
+  "content-transfer-encoding": 171352,
+  "javamail": 86547,
+  "x-origin": 82618,
+  "filename": 79003,
+  "enron": 64869,
+  "mime-version": 58151,
+  "na": 33368,
+  "pst": 31188,
+  "ect": 24657
+ },
+ "decay_curve": {
+  "note": "instantaneous genes/s over ~10k-gene windows from the 18:07 build log; rate*N ~ constant (~2.0e6 -> 1.85e6) from 136k on = O(N^2) signature. Rise to 61 g/s through the EnronQA core (low hub density, tagging-bound), collapse once padding-root MIME hubs accumulate.",
+  "points": [
+   {"genes": 63040, "inst_genes_per_s": 61.7},
+   {"genes": 94528, "inst_genes_per_s": 44.3},
+   {"genes": 126016, "inst_genes_per_s": 19.8},
+   {"genes": 157056, "inst_genes_per_s": 17.5},
+   {"genes": 199040, "inst_genes_per_s": 10.8},
+   {"genes": 241024, "inst_genes_per_s": 8.3},
+   {"genes": 282560, "inst_genes_per_s": 8.1},
+   {"genes": 314048, "inst_genes_per_s": 5.9},
+   {"genes": 322224, "inst_genes_per_s": 4.91, "source": "MAX(rowid) delta over 257s live window"}
+  ],
+  "projection_status_quo": "~670k total genes expected (517,353 files x 1.296 genes/file); remaining (670k^2-322k^2)/(2*1.85e6) ~ 93,000 s ~ 26 h",
+  "projection_with_fix": "writer residual ~4% of current per-insert cost -> tagging-bound again (~50 g/s with 6 workers); remaining ~348k genes ~ 2 h"
+ },
+ "fts5_answers": {
+  "a_automerge_tuning": "Moot at this scale: genes_fts_config holds only version=4 (pure defaults: automerge=4, usermerge=4, crisismerge=16); segment tree healthy at probe time (23 segments, 9 levels, one level-4 merge in flight, 117,662 index pages ~ 460MB); total FTS share of writer wall time 0.07% (3/4352 samples). Tuning or periodic explicit merges could recover at most that.",
+  "b_defer_fts_population": "Not the win: at most 0.07% today. Rebuild machinery exists if ever needed (external-content 'rebuild' command, storage/ddl.py:485-529). Deferral only becomes worth re-profiling after the entity-autolink and filename-index fixes, on a bed 5-10x this size.",
+  "c_contentless_external_content": "Already shipped: genes_fts has been the external-content form since issue #338 (no genes_fts_content shadow table in the live bed) — insert cost is tokenize + level-0 write only, which is what the 0.07% measures."
+ },
+ "fixes": {
+  "idx_filename_gene": "filename_anchor.ensure_schema now creates idx_filename_gene ON filename_index(gene_id). Content-neutral (an index changes no query results); existing beds pick it up on next open. Kills the 6.6% O(N) DELETE scan.",
+  "entity_autolink_knob": "KnowledgeStore(entity_autolink=False) / build_fixture_matrix --no-entity-autolink / CYMATIX_BFM_ENTITY_AUTOLINK=0 skips per-insert COVER-edge formation; entity_graph rows still written. documents+content+entity-row digests byte-identical (see entity_autolink_equivalence_enronqa.json); the only delta is gene_relations relation=5 edges, which are default-inert at query time (W2.1 cover-walk kill, ladder_v09x_w2_cover_walk_2026-08-28.json) and already order-nondeterministic under --parallel (ingest_equivalence_enronqa.json: 8675 vs 8664)."
+ },
+ "not_fixed_here": {
+  "auto_link_hub_cutoff": "A posting-count cutoff in auto_link_by_entity (PKI_NOISE_CUTOFF precedent, storage/indexes.py) would bound per-insert cost for ingest paths that keep linking ON — but it changes which edges form, so it needs its own receipt + issue, not a scheduling change.",
+  "tagger_mime_header_entities": "'content-type'/'content-transfer-encoding'/'mime-version'/'x-origin' as extracted entities are MIME plumbing, not entities; multi-line garbage entities also observed ('john martin - baylor\\ncc: ...'). Fixing the CPU tagger changes gene tags = bed content; out of scope for a scheduling fix."
+ }
+}
