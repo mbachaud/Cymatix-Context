@@ -8,6 +8,13 @@ fix on the harmonic tier (#432), and the 0.9.2 bench ledger (#426, #427,
 #429). One default moves — `[ingestion] entity_autolink_hub_cutoff` — and it
 supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
 
+- **docs: hosted-session security, RBAC, and encryption review** lands as
+  `docs/reviews/2026-09-01-hosted-session-security-review.md` — read-only
+  source review of the auth/identity/retrieval-scope/encryption surface for a
+  hosted multi-VM deployment, with a P0/P1/P2 roadmap; pointers re-verified
+  against `beta` (drift noted in-doc) and the top finding filed as #434
+  (`deploy/otel` compose publishes all ports with Grafana `admin/admin` +
+  anonymous Viewer). No code or default changes.
 - **DEFAULT FLIP: `[ingestion] entity_autolink_hub_cutoff` `0` → `200`
   (#425, closes #411).** The 0.9.1 entry below ("default `0` = off = legacy,
   byte-identical; flip proposal tracked in #411") is superseded — a fresh
