@@ -1,0 +1,5725 @@
+{
+ "stamp": "2026-08-31",
+ "bed": "F:/tmp/erb_blob_v09x.db",
+ "config": "shipped cymatix.toml v0.9.1 (floor 12)",
+ "basis_receipt": "ladder_v09x_w24_min_delivered_2026-08-28.json",
+ "targets": [
+  {
+   "needle": "erb_180",
+   "receipt_rank": 36,
+   "live_rank": 36,
+   "rank_match": true,
+   "wall_ms": 18823.6,
+   "n_kw": 53,
+   "gold_kw_cov": 18,
+   "interloper_kw_cov_mean": 15.5,
+   "n_above_weaker": 12,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "12d71aef16cff872",
+     "score": 0.3014,
+     "tags": [
+      "eng-91234-hosted-api-transient-5xx-pattern-during-batch-upload-routing-fallbacks",
+      "eng",
+      "91234",
+      "hosted",
+      "transient",
+      "5xx",
+      "pattern",
+      "during",
+      "batch",
+      "upload"
+     ],
+     "head": "{   \"key\": \"ENG-91234\",   \"team\": \"engineering\",   \"title\": \"Investigate transient 5xx pattern durin",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "a8b1b6c78b5a8b14",
+     "score": 0.2608,
+     "tags": [
+      "sup-702468-unexpected-5xx-during-large-sparse-embedding-upload-and-accept-queue-collapse",
+      "sup",
+      "702468",
+      "unexpected",
+      "5xx",
+      "during",
+      "large",
+      "sparse",
+      "upload",
+      "and"
+     ],
+     "head": "{   \"key\": \"SUP-702468\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "ae63076f74e6a53a",
+     "score": 0.2113,
+     "tags": [
+      "sup-702468-unexpected-5xx-during-large-sparse-embedding-upload-and-accept-queue-collapse",
+      "sup",
+      "702468",
+      "unexpected",
+      "5xx",
+      "during",
+      "large",
+      "sparse",
+      "upload",
+      "and"
+     ],
+     "head": "3-13 18:28 UTC - SRE (Diego Rivera) confirmed accept-queue metric spike correlated with embedders fr",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "5e2a3b89a44e65e4",
+     "score": 0.1406,
+     "tags": [
+      "sup-271000-delegated-account-refresh-loop-consuming-burst-credits",
+      "sup",
+      "271000",
+      "delegated",
+      "account",
+      "refresh",
+      "loop",
+      "consuming",
+      "burst",
+      "credits"
+     ],
+     "head": "{   \"key\": \"SUP-271000\",   \"project\": \"customer-support\",   \"issue_type\": \"Support Request\",   \"summ",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "c1f103610e630a9d",
+     "score": 0.1332,
+     "tags": [
+      "sup-829101-epoll-wake-storm-from-embedding-subtenant-triggering-5xx-and-runtime-restarts",
+      "sup",
+      "829101",
+      "epoll",
+      "wake",
+      "storm",
+      "from",
+      "subtenant",
+      "triggering",
+      "5xx"
+     ],
+     "head": "r embedding pipeline.\",     \"2026-03-12 10:12 UTC - Eng (Liam): Deployed kernel-side socket handling",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "752b1b1884e84789",
+     "score": 0.1282,
+     "tags": [
+      "sup-634120-ephemeral-keepalive-fd-starvation-during-mixed-embed-chat-burst",
+      "sup",
+      "634120",
+      "ephemeral",
+      "keepalive",
+      "starvation",
+      "during",
+      "mixed",
+      "embed",
+      "chat"
+     ],
+     "head": "{   \"key\": \"SUP-634120\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "68f9d569636e414f",
+     "score": 0.1252,
+     "tags": [
+      "int-531807-runner-credential-refresh-stalemate-during-multi-region-key-roll",
+      "int",
+      "531807",
+      "runner",
+      "credential",
+      "refresh",
+      "stalemate",
+      "during",
+      "multi",
+      "region"
+     ],
+     "head": "{   \"key\": \"INT-531807\",   \"project\": \"internal-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Runne",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "c7a65f582ca356ef",
+     "score": 0.1171,
+     "tags": [
+      "sup-536211-multiplexed-stream-502s-ephemeral-worker-throttle",
+      "sup",
+      "536211",
+      "multiplexed",
+      "stream",
+      "502s",
+      "ephemeral",
+      "throttle",
+      "customer-support",
+      "customer"
+     ],
+     "head": "{   \"key\": \"SUP-536211\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "5b546de786ad6643",
+     "score": 0.113,
+     "tags": [
+      "sup-221111-chunked-body-abort-triggering-502s",
+      "sup",
+      "221111",
+      "chunked",
+      "body",
+      "abort",
+      "triggering",
+      "502s",
+      "customer-support",
+      "customer"
+     ],
+     "head": "{   \"key\": \"SUP-221111\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "e8f363deaf884970",
+     "score": 0.1091,
+     "tags": [
+      "api-operators-labbook-timeouts-429-streams",
+      "api",
+      "operators",
+      "labbook",
+      "timeouts",
+      "429",
+      "streams",
+      "site-reliability-engineering",
+      "site",
+      "reliability"
+     ],
+     "head": "se-size cap or lower max_tokens at the edge if the client supports it (per-route weight).\\n- Notes t",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "3b186b6a3e9e0607",
+     "score": 0.1053,
+     "tags": [
+      "sup-481256-half-closed-socket-storm-fd-exhaustion-5xx-burst",
+      "sup",
+      "481256",
+      "half",
+      "closed",
+      "socket",
+      "storm",
+      "exhaustion",
+      "5xx",
+      "burst"
+     ],
+     "head": " hardening + client coordination).\\n- Customer notified and incident postmortem published.\\n\",   \"in",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "b76d2aa51dc18f50",
+     "score": 0.0986,
+     "tags": [
+      "sup-271432-staggered-retry-warmups-triggering-tenant-429s",
+      "sup",
+      "271432",
+      "staggered",
+      "retry",
+      "warmups",
+      "triggering",
+      "tenant",
+      "429s",
+      "customer-support"
+     ],
+     "head": "{   \"key\": \"SUP-271432\",   \"project\": \"customer-support\",   \"issue_type\": \"Support Request\",   \"summ",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "86904145efc90b92",
+     "score": 0.0983,
+     "tags": [
+      "int-448210-git-lfs-credential-refresh-race-on-ephemeral-runner-during-kms-rewrap",
+      "int",
+      "448210",
+      "lfs",
+      "credential",
+      "refresh",
+      "race",
+      "ephemeral",
+      "runner",
+      "during"
+     ],
+     "head": "{   \"key\": \"INT-448210\",   \"project\": \"internal-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Git L",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "9b0e6cff8fe58214",
+     "score": 0.0959,
+     "tags": [
+      "sup-829101-epoll-wake-storm-from-embedding-subtenant-triggering-5xx-and-runtime-restarts",
+      "sup",
+      "829101",
+      "epoll",
+      "wake",
+      "storm",
+      "from",
+      "subtenant",
+      "triggering",
+      "5xx"
+     ],
+     "head": "{   \"key\": \"SUP-829101\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "bc493dd676d47e32",
+     "score": 0.0934,
+     "tags": [
+      "sup-150330-high-5xx-handoff-retry-amplification",
+      "sup",
+      "150330",
+      "high",
+      "5xx",
+      "handoff",
+      "retry",
+      "amplification",
+      "customer-support",
+      "customer"
+     ],
+     "head": "{   \"key\": \"SUP-150330\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 14
+    }
+   ]
+  },
+  {
+   "needle": "erb_182",
+   "receipt_rank": 26,
+   "live_rank": 26,
+   "rank_match": true,
+   "wall_ms": 21844.6,
+   "n_kw": 56,
+   "gold_kw_cov": 20,
+   "interloper_kw_cov_mean": 16.9,
+   "n_above_weaker": 14,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "9b2875636acceb11",
+     "score": 0.1672,
+     "tags": [
+      "cheaper-config-quality-gates-scenarios",
+      "cheaper",
+      "quality",
+      "gates",
+      "scenarios",
+      "optimize",
+      "config",
+      "latency",
+      "embedding",
+      "rag"
+     ],
+     "head": "{   \"title\": \"Cheaper-config quality gates and eval scenarios\",   \"owner\": \"Priya Kapoor\",   \"drive_",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "2c51be1f49c523a1",
+     "score": 0.1519,
+     "tags": [
+      "eng-996743-adaptive-embed-rollforward-kl-fence",
+      "eng",
+      "996743",
+      "adaptive",
+      "embed",
+      "rollforward",
+      "fence",
+      "engineering",
+      "embedding",
+      "latency"
+     ],
+     "head": "{   \"key\": \"ENG-996743\",   \"team\": \"engineering\",   \"title\": \"Adaptive embedding model lifecycle: st",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "8164f5b07f4bac51",
+     "score": 0.1462,
+     "tags": [
+      "eng-44122-kl-boundary-search-for-bitwidth-and-quant-safety-gates",
+      "eng",
+      "44122",
+      "boundary",
+      "search",
+      "for",
+      "bitwidth",
+      "and",
+      "quant",
+      "safety"
+     ],
+     "head": "{   \"key\": \"ENG-44122\",   \"team\": \"engineering\",   \"title\": \"KL boundary search for bitwidth and qua",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "1451311fccb7ed30",
+     "score": 0.132,
+     "tags": [
+      "eng-66001-vector-quant-sanity-calibration-and-sim-guard",
+      "eng",
+      "66001",
+      "quant",
+      "sanity",
+      "calibration",
+      "and",
+      "sim",
+      "guard",
+      "engineering"
+     ],
+     "head": "{   \"key\": \"ENG-66001\",   \"team\": \"engineering\",   \"title\": \"Vector quantization sanity: INT8/FP16 c",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "d39ec1236d267d1d",
+     "score": 0.1282,
+     "tags": [
+      "eng-15324-config-driven-embedding-rerank-quality-playbook",
+      "eng",
+      "15324",
+      "driven",
+      "rerank",
+      "quality",
+      "playbook",
+      "engineering",
+      "embedding",
+      "ci"
+     ],
+     "head": "{   \"key\": \"ENG-15324\",   \"team\": \"engineering\",   \"title\": \"Config-driven embedding + reranker qual",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "9e4db2b5ee0e10c5",
+     "score": 0.127,
+     "tags": [
+      "eng-882341-introspective-quant-auditbench-with-contextual-goldens",
+      "eng",
+      "882341",
+      "introspective",
+      "quant",
+      "auditbench",
+      "with",
+      "contextual",
+      "goldens",
+      "engineering"
+     ],
+     "head": "{   \"key\": \"ENG-882341\",   \"team\": \"engineering\",   \"title\": \"Introspective Quant Auditbench with Co",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "69d6dc457684b243",
+     "score": 0.1211,
+     "tags": [
+      "fp8-int8-profile-policy-for-hosted-catalog",
+      "fp8",
+      "int8",
+      "profile",
+      "policy",
+      "for",
+      "hosted",
+      "catalog",
+      "quantization-profiles",
+      "quantization"
+     ],
+     "head": "16k; always include a long-context slice in evals)\\n- **Tool calling / structured output** (must inc",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "5253788a7b33b980",
+     "score": 0.1088,
+     "tags": [
+      "eng-40872-embed-vanguard-staging-strategy-model-migration-telemetry",
+      "eng",
+      "40872",
+      "embed",
+      "vanguard",
+      "staging",
+      "strategy",
+      "model",
+      "migration",
+      "telemetry"
+     ],
+     "head": "{   \"key\": \"ENG-40872\",   \"team\": \"engineering\",   \"title\": \"Vanguard staging strategy for embedding",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "badb5babcc13df07",
+     "score": 0.1087,
+     "tags": [
+      "quality-gate-metrics-and-thresholds-v1",
+      "quality",
+      "gate",
+      "metrics",
+      "and",
+      "thresholds",
+      "quality-guardrails",
+      "guardrails",
+      "cache",
+      "ci"
+     ],
+     "head": "ort prompts, high throughput) in Tier 2.\\n\\nh3. Prefix/KV caching settings\\nRisks: cache key collisi",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "93fc17b7f01a601d",
+     "score": 0.1049,
+     "tags": [
+      "eng-9410-guardrail-evals-for-cost-optimizations",
+      "eng",
+      "9410",
+      "guardrail",
+      "evals",
+      "for",
+      "cost",
+      "optimizations",
+      "engineering",
+      "ci"
+     ],
+     "head": "{   \"key\": \"ENG-9410\",   \"team\": \"engineering\",   \"title\": \"Guardrail evals for automated cost optim",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "ae4ef2b2763e4ce5",
+     "score": 0.1026,
+     "tags": [
+      "eval-cost-regression-thresholds-notes",
+      "eval",
+      "cost",
+      "regression",
+      "thresholds",
+      "notes",
+      "optimize",
+      "config",
+      "cache",
+      "github"
+     ],
+     "head": "{   \"title\": \"Eval: cost vs regression thresholds and cheap-config gating\",   \"owner\": \"Priya Natara",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "25cbacb9f1c7c0f9",
+     "score": 0.1024,
+     "tags": [
+      "eng-913579-int8-fp8-backstop-comparative-eval-ci",
+      "eng",
+      "913579",
+      "int8",
+      "fp8",
+      "backstop",
+      "comparative",
+      "eval",
+      "product-management",
+      "product"
+     ],
+     "head": "{   \"key\": \"ENG-913579\",   \"team\": \"engineering\",   \"title\": \"Comparative CI for INT8 weight-only pr",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "f48a8d502c06e0eb",
+     "score": 0.0956,
+     "tags": [
+      "eng-7291-cost-tuner-safe-rollbacks",
+      "eng",
+      "7291",
+      "cost",
+      "tuner",
+      "safe",
+      "rollbacks",
+      "engineering",
+      "config",
+      "cache"
+     ],
+     "head": "{   \"key\": \"ENG-7291\",   \"team\": \"engineering\",   \"title\": \"Automated Cost-Tuner: Batching & Cache R",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "2f6609fec34628e3",
+     "score": 0.0942,
+     "tags": [
+      "borealis-inference-cost-retrofit-proposal",
+      "borealis",
+      "inference",
+      "cost",
+      "retrofit",
+      "proposal",
+      "solutions-engineering-and-professional-services",
+      "solutions",
+      "engineering",
+      "and"
+     ],
+     "head": ").\\\\n\\\\n4) Batching and autoscaling policy tweaks:\\\\n   - For async embedding jobs: use batch size 9",
+     "kw_cov": 20
+    },
+    {
+     "gene_id": "fbcfb8e2efdd27bb",
+     "score": 0.0921,
+     "tags": [
+      "quantization-rollout-safety-and-quality-gate-playbook-2026",
+      "quantization",
+      "rollout",
+      "safety",
+      "and",
+      "quality",
+      "gate",
+      "playbook",
+      "2026",
+      "runbooks"
+     ],
+     "head": "{   \"title\": \"quantization-rollout-safety-and-quality-gate-playbook\",   \"space\": \"eng-serving-runtim",
+     "kw_cov": 17
+    }
+   ]
+  },
+  {
+   "needle": "erb_184",
+   "receipt_rank": 32,
+   "live_rank": 32,
+   "rank_match": true,
+   "wall_ms": 10038.5,
+   "n_kw": 45,
+   "gold_kw_cov": 10,
+   "interloper_kw_cov_mean": 8.8,
+   "n_above_weaker": 10,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "c74175f1743b80ac",
+     "score": 0.2744,
+     "tags": [
+      "20261115-multi-year-split-pay-scenario-sla-credit-request",
+      "20261115",
+      "multi",
+      "year",
+      "split",
+      "pay",
+      "scenario",
+      "sla",
+      "credit",
+      "request"
+     ],
+     "head": "{   \"thread_id\": \"thread-olga-20261115-0007\",   \"mailbox_owner\": \"olga_petrov\",   \"subject\": \"Multi-",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "24bbab1afd1c74ef",
+     "score": 0.1521,
+     "tags": [
+      "1762000456-multi-region-gpu-commitments-discussion",
+      "1762000456",
+      "multi",
+      "region",
+      "commitments",
+      "discussion",
+      "product",
+      "gpu",
+      "latency",
+      "go"
+     ],
+     "head": "{   \"channel\": \"eng-infra\",   \"thread_ts\": \"1762000456\",   \"first_message_ts\": \"1762000456\",   \"last",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "bdffae7f00b2638f",
+     "score": 0.1443,
+     "tags": [
+      "1802001111-billing-mismatch-network-egress-reclassification",
+      "1802001111",
+      "billing",
+      "mismatch",
+      "network",
+      "egress",
+      "reclassification",
+      "finance",
+      "gpu",
+      "config"
+     ],
+     "head": "{   \"channel\": \"finance\",   \"thread_ts\": \"1802001111\",   \"first_message_ts\": \"1802001111\",   \"last_m",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "28492c1b5b3d6fca",
+     "score": 0.1335,
+     "tags": [
+      "absorptive-buffer-runway-forecast-oct-2024",
+      "absorptive",
+      "buffer",
+      "runway",
+      "forecast",
+      "oct",
+      "2024",
+      "infrastructure",
+      "gpu",
+      "latency"
+     ],
+     "head": "{   \"title\": \"Absorptive buffer runway forecast \\u2014 Oct 2024\",   \"owner\": \"Aisha Kapoor\",   \"driv",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "2dae541415452587",
+     "score": 0.1276,
+     "tags": [
+      "capacity-readiness-matrix-na-eu-apac-phased-surge-2026-q3",
+      "capacity",
+      "readiness",
+      "matrix",
+      "apac",
+      "phased",
+      "surge",
+      "2026",
+      "private-deployments",
+      "private"
+     ],
+     "head": "{   \"title\": \"Capacity readiness matrix - NA/EU/APAC phased surge plan 2026 Q3\",   \"owner\": \"Maya Ch",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "2077ca268017eed1",
+     "score": 0.1229,
+     "tags": [
+      "stochastic-peaking-ensemble-token-surge-sim-2026q2",
+      "stochastic",
+      "peaking",
+      "ensemble",
+      "token",
+      "surge",
+      "sim",
+      "2026q2",
+      "infrastructure",
+      "latency"
+     ],
+     "head": "her via burst credits to dedicated fleets or cross-region fallback capacity totaling 9.5M tokens/s g",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "3caffb77a8293162",
+     "score": 0.1182,
+     "tags": [
+      "1770219804",
+      "architecture",
+      "queue",
+      "config",
+      "gpu",
+      "latency",
+      "throughput",
+      "deploy",
+      "Noah Patel",
+      "Lena Fischer"
+     ],
+     "head": "{   \"channel\": \"architecture\",   \"thread_ts\": \"1770219804\",   \"first_message_ts\": \"1770219804\",   \"l",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "23f2bba9a87ac2bb",
+     "score": 0.1139,
+     "tags": [
+      "regional-gpu-scaling-scenarios-2026-2027",
+      "regional",
+      "scaling",
+      "scenarios",
+      "2026",
+      "2027",
+      "infrastructure",
+      "gpu",
+      "go",
+      "throughput"
+     ],
+     "head": "{   \"title\": \"regional-gpu-scaling-scenarios-2026-2027\",   \"owner\": \"Aditi Raman\",   \"drive_area\": \"",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "669d595c2ad4b6a5",
+     "score": 0.1095,
+     "tags": [
+      "1769801111-novatech-cross-cloud-provisioning",
+      "1769801111",
+      "novatech",
+      "cross",
+      "cloud",
+      "provisioning",
+      "eng-infra",
+      "eng",
+      "infra",
+      "gpu"
+     ],
+     "head": "{   \"channel\": \"eng-infra\",   \"thread_ts\": \"1769801111\",   \"first_message_ts\": \"1769801111\",   \"last",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "c5f5e41f6f917397",
+     "score": 0.1061,
+     "tags": [
+      "multi-region-gpu-commitment-and-egress-guide",
+      "multi",
+      "region",
+      "commitment",
+      "and",
+      "egress",
+      "guide",
+      "gpu-fleet-and-capacity",
+      "fleet",
+      "capacity"
+     ],
+     "head": "4% discount (effective ~21.6) |\\n\\n### Egress risk (qualitative)\\n- us-east \\u2192 US users: low\\n- ",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "88c5cdf7a4fc7e5a",
+     "score": 0.106,
+     "tags": [
+      "20260914-brightloop-multi-year-commit-accelerator-approval",
+      "20260914",
+      "brightloop",
+      "multi",
+      "year",
+      "commit",
+      "accelerator",
+      "approval",
+      "rachel_kim",
+      "rachel"
+     ],
+     "head": ".park@brightloop.ai>\\nTo: Ben Carter <ben.carter@redwood.ai>, Rachel Kim <rachel.kim@redwood.ai>\\nCc",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "c358b240bb3239ea",
+     "score": 0.1025,
+     "tags": [
+      "ops-triage-and-forecast-2026-05-14",
+      "ops",
+      "triage",
+      "and",
+      "forecast",
+      "2026",
+      "infrastructure",
+      "gpu",
+      "fleet",
+      "latency"
+     ],
+     "head": "{   \"title\": \"Ops triage and forecast \\u2014 weekly readout (May 14 2026)\",   \"owner\": \"Leila Chen\",",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "798098c010b17603",
+     "score": 0.0994,
+     "tags": [
+      "1765432100-eu4-high-density-nodepool-ip-and-gpu-quota-request",
+      "1765432100",
+      "eu4",
+      "high",
+      "density",
+      "nodepool",
+      "and",
+      "quota",
+      "request",
+      "eng-infra"
+     ],
+     "head": "{   \"channel\": \"eng-infra\",   \"thread_ts\": \"1765432100\",   \"first_message_ts\": \"1765432100\",   \"last",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "57ab9a632e6d193b",
+     "score": 0.0928,
+     "tags": [
+      "cross-border-gpu-onboard-checklist-and-forecast-2026",
+      "cross",
+      "border",
+      "onboard",
+      "checklist",
+      "and",
+      "forecast",
+      "2026",
+      "infrastructure",
+      "gpu"
+     ],
+     "head": "{   \"title\": \"Cross-border GPU Onboard Checklist and Forecast \\u2014 Q4 2026\",   \"owner\": \"Aisha Kap",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "f216332befd72257",
+     "score": 0.09,
+     "tags": [
+      "capacity-tranche-matrix-na-eu-apac-activation-2026",
+      "capacity",
+      "tranche",
+      "matrix",
+      "apac",
+      "activation",
+      "2026",
+      "infrastructure",
+      "gpu",
+      "latency"
+     ],
+     "head": "{   \"title\": \"Regional capacity tranche matrix & activation plan (NA/EU/APAC)\",   \"owner\": \"Evan Kim",
+     "kw_cov": 9
+    }
+   ]
+  },
+  {
+   "needle": "erb_187",
+   "receipt_rank": 9,
+   "live_rank": 9,
+   "rank_match": true,
+   "wall_ms": 13451.6,
+   "n_kw": 44,
+   "gold_kw_cov": 13,
+   "interloper_kw_cov_mean": 9.5,
+   "n_above_weaker": 8,
+   "n_above": 8,
+   "above_gold": [
+    {
+     "gene_id": "4a28973982b4ba75",
+     "score": 0.3177,
+     "tags": [
+      "equity-minded-offer-calibration-and-onboard-access-log",
+      "equity",
+      "minded",
+      "offer",
+      "calibration",
+      "and",
+      "onboard",
+      "access",
+      "log",
+      "misc"
+     ],
+     "head": "(use this to track gating items; fill dates and owner):\\n- Preboard: offer accepted -> People Ops cr",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "ea9af66e71b2306f",
+     "score": 0.15,
+     "tags": [
+      "1722003456-qle-hsa-fsa-401k-offer-wording",
+      "1722003456",
+      "qle",
+      "hsa",
+      "fsa",
+      "401k",
+      "offer",
+      "wording",
+      "people-ops",
+      "people"
+     ],
+     "head": "{   \"channel\": \"people-ops\",   \"thread_ts\": \"1722003456\",   \"first_message_ts\": \"1722003456\",   \"las",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "0afa1bae7e709c11",
+     "score": 0.1439,
+     "tags": [
+      "2601234567-canada-relocate-grossup-signon-exception",
+      "2601234567",
+      "canada",
+      "relocate",
+      "grossup",
+      "signon",
+      "exception",
+      "people-ops",
+      "people",
+      "ops"
+     ],
+     "head": "{   \"channel\": \"people-ops\",   \"thread_ts\": \"2601234567\",   \"first_message_ts\": \"2601234567\",   \"las",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "321ba12d233c47e6",
+     "score": 0.1341,
+     "tags": [
+      "20271220-offer-call-phased-start-redline-triage",
+      "20271220",
+      "offer",
+      "call",
+      "phased",
+      "start",
+      "redline",
+      "triage",
+      "kimberly_park",
+      "kimberly"
+     ],
+     "head": "{   \"thread_id\": \"thr_20271220_kpark_tnguyen_001\",   \"mailbox_owner\": \"kimberly_park\",   \"subject\": ",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "b13ae84a339cdee1",
+     "score": 0.134,
+     "tags": [
+      "20270505-erinw-sign-amend-start-adjust",
+      "20270505",
+      "erinw",
+      "sign",
+      "amend",
+      "start",
+      "adjust",
+      "priyom_das",
+      "priyom",
+      "das"
+     ],
+     "head": "tems I'd like to cover on the call:\\\\n> 1) Visa timing I have a short immigration extension in mid-J",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "6d92aa7711d99e91",
+     "score": 0.1323,
+     "tags": [
+      "20261207-onboarding-timing-docsign-redline-request",
+      "20261207",
+      "onboarding",
+      "timing",
+      "docsign",
+      "redline",
+      "request",
+      "ava_chen",
+      "ava",
+      "chen"
+     ],
+     "head": "{   \"thread_id\": \"gmail-20261207-ava-014\",   \"mailbox_owner\": \"ava_chen\",   \"subject\": \"Onboarding t",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "cf8d3bc92027e161",
+     "score": 0.1243,
+     "tags": [
+      "20261107-employee-option-timing-and-board-slot-request",
+      "20261107",
+      "employee",
+      "option",
+      "timing",
+      "and",
+      "board",
+      "slot",
+      "request",
+      "neha_kapoor"
+     ],
+     "head": "{   \"thread_id\": \"thr-20261107-neha-emily-option-timing-01\",   \"mailbox_owner\": \"neha_kapoor\",   \"su",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "4bfb517a18b047e0",
+     "score": 0.1209,
+     "tags": [
+      "20270505-erinw-sign-amend-start-adjust",
+      "20270505",
+      "erinw",
+      "sign",
+      "amend",
+      "start",
+      "adjust",
+      "priyom_das",
+      "priyom",
+      "das"
+     ],
+     "head": "{   \"thread_id\": \"thd-20270505-erinw-eamend-01\",   \"mailbox_owner\": \"priyom_das\",   \"subject\": \"Offe",
+     "kw_cov": 8
+    }
+   ]
+  },
+  {
+   "needle": "erb_196",
+   "receipt_rank": 24,
+   "live_rank": 24,
+   "rank_match": true,
+   "wall_ms": 13085.3,
+   "n_kw": 36,
+   "gold_kw_cov": 14,
+   "interloper_kw_cov_mean": 8.5,
+   "n_above_weaker": 15,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "0aaf1c2be562de88",
+     "score": 0.3192,
+     "tags": [
+      "major-cloud-provider-outage-customer-communication-and-remediation-playbook-2025",
+      "major",
+      "cloud",
+      "provider",
+      "outage",
+      "customer",
+      "communication",
+      "and",
+      "remediation",
+      "playbook"
+     ],
+     "head": "{   \"title\": \"Major Cloud Provider Outage \\u2014 Customer Communication & Remediation Playbook\",   \"",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "93a478ded04c4d3d",
+     "score": 0.2855,
+     "tags": [
+      "service-outage-coordination-and-stakeholder-briefing-kit-2026",
+      "service",
+      "outage",
+      "coordination",
+      "and",
+      "stakeholder",
+      "briefing",
+      "kit",
+      "2026",
+      "oncall-and-incident-response"
+     ],
+     "head": "ribe\\n  - Maintains the incident timeline, captures logs, and preserves evidence for postmortem.\\n\\n",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "923f8aad972b1400",
+     "score": 0.17,
+     "tags": [
+      "major-cloud-provider-outage-customer-communication-and-remediation-playbook-2025",
+      "major",
+      "cloud",
+      "provider",
+      "outage",
+      "customer",
+      "communication",
+      "and",
+      "remediation",
+      "playbook"
+     ],
+     "head": "ed (high-level vendor or configuration cause)\\n3) What we did to mitigate and when\\n4) What we will ",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "d61ab9a6d00acc26",
+     "score": 0.14,
+     "tags": [
+      "respond-recover-review-playbook-and-game-day-syllabus-2025",
+      "respond",
+      "recover",
+      "review",
+      "playbook",
+      "and",
+      "game",
+      "day",
+      "syllabus",
+      "2025"
+     ],
+     "head": "{   \"title\": \"Respond, Recover, Review: Incident Playbook and Game Day Syllabus\",   \"space\": \"oncall",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "a2309892c73ec53c",
+     "score": 0.1337,
+     "tags": [
+      "rapid-restoration-sprint-and-exec-briefing-playbook-2028",
+      "rapid",
+      "restoration",
+      "sprint",
+      "and",
+      "exec",
+      "briefing",
+      "playbook",
+      "2028",
+      "oncall-and-incident-response"
+     ],
+     "head": "{   \"title\": \"Rapid restoration sprint and executive briefing playbook\",   \"space\": \"oncall-and-inci",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "6588aaf4337539de",
+     "score": 0.1264,
+     "tags": [
+      "tf-module-release-scenario-matrix",
+      "module",
+      "scenario",
+      "matrix",
+      "private-deployments",
+      "private",
+      "deployments",
+      "release",
+      "ci",
+      "api"
+     ],
+     "head": "odule>-vX.Y.Z and push\",     \"Trigger registry publish job (terraform registry or internal artifact ",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "1bd217c952ebccda",
+     "score": 0.1219,
+     "tags": [
+      "status-orchestration-and-staged-customer-notices-operator-playbook-2026",
+      "status",
+      "orchestration",
+      "and",
+      "staged",
+      "customer",
+      "notices",
+      "operator",
+      "playbook",
+      "2026"
+     ],
+     "head": "pen --service serving-runtime --incident-id $INCIDENT_ID --summary \\\\\\\"Initial triage: [short summar",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "05ebd7b89d88c92c",
+     "score": 0.1181,
+     "tags": [
+      "responder-operations-manual-synthesized-procedures-2026",
+      "responder",
+      "operations",
+      "manual",
+      "synthesized",
+      "procedures",
+      "2026",
+      "oncall-and-incident-response",
+      "oncall",
+      "and"
+     ],
+     "head": "{   \"title\": \"Responder Operations Manual: Synthesized Procedures and Communication Templates\",   \"s",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "7a18afec95bdd0c0",
+     "score": 0.1126,
+     "tags": [
+      "2105007890-primary-throttle-cascade-crossroute-coord",
+      "2105007890",
+      "primary",
+      "throttle",
+      "cascade",
+      "crossroute",
+      "coord",
+      "incidents",
+      "cache",
+      "queue"
+     ],
+     "head": "present): n/a\\ninfra-rotation: Still seeing occasional ProvisionFailed from provider but rate much l",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "90256a1c53f96c4d",
+     "score": 0.1076,
+     "tags": [
+      "eng-349721-tenant-debt-reconciler-progressive-backpressure-adapter",
+      "eng",
+      "349721",
+      "tenant",
+      "debt",
+      "reconciler",
+      "progressive",
+      "backpressure",
+      "adapter",
+      "business-ops"
+     ],
+     "head": "{   \"key\": \"ENG-349721\",   \"team\": \"engineering\",   \"title\": \"Tenant Debt Reconciler & Progressive B",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "3edad4cb4f0fa4f2",
+     "score": 0.1071,
+     "tags": [
+      "first-principles-triage-and-runbook-ops-playbook-2024",
+      "first",
+      "principles",
+      "triage",
+      "and",
+      "runbook",
+      "ops",
+      "playbook",
+      "2024",
+      "oncall-and-incident-response"
+     ],
+     "head": "{   \"title\": \"First Principles Triage and Runbook Ops Playbook\",   \"space\": \"oncall-and-incident-res",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "73310a6ae135997a",
+     "score": 0.1017,
+     "tags": [
+      "20261004-streaming-metrics-contract-language-request",
+      "20261004",
+      "streaming",
+      "metrics",
+      "contract",
+      "language",
+      "request",
+      "ben_carter",
+      "ben",
+      "carter"
+     ],
+     "head": "ll attach our call log and expected session distribution.\\\\n\\\\nMeasurement notes (our preference):\\\\",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "41468d044e4c2c0e",
+     "score": 0.0983,
+     "tags": [
+      "risk-tier-mapping-escalation-playbook",
+      "risk",
+      "tier",
+      "mapping",
+      "escalation",
+      "playbook",
+      "customer-success",
+      "customer",
+      "success",
+      "audit"
+     ],
+     "head": "{   \"title\": \"Risk tier mapping & escalation playbook\",   \"owner\": \"Marina Lopez\",   \"drive_area\": \"",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "bf9b552b7813a764",
+     "score": 0.0973,
+     "tags": [
+      "first-responder-protocols-availability-matrix-and-comm-templates-2028",
+      "first",
+      "responder",
+      "protocols",
+      "availability",
+      "matrix",
+      "and",
+      "comm",
+      "templates",
+      "2028"
+     ],
+     "head": "{   \"title\": \"First Responder Protocols, Availability Matrix, and Communication Templates\",   \"space",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "d53ae2f6728c5882",
+     "score": 0.0958,
+     "tags": [
+      "operator-shift-orchestra-playbook-and-branded-status-bundles-2025",
+      "operator",
+      "shift",
+      "orchestra",
+      "playbook",
+      "and",
+      "branded",
+      "status",
+      "bundles",
+      "2025"
+     ],
+     "head": "tion / cold-cache storm\\n   - Detect: Sudden increase in model token processing time; cache hit-rate",
+     "kw_cov": 12
+    }
+   ]
+  },
+  {
+   "needle": "erb_197",
+   "receipt_rank": 14,
+   "live_rank": 14,
+   "rank_match": true,
+   "wall_ms": 19626.0,
+   "n_kw": 53,
+   "gold_kw_cov": 18,
+   "interloper_kw_cov_mean": 13.8,
+   "n_above_weaker": 13,
+   "n_above": 13,
+   "above_gold": [
+    {
+     "gene_id": "00bdbbef818f3e0f",
+     "score": 0.1512,
+     "tags": [
+      "1742624321-streaming-missing-finish-reason",
+      "1742624321",
+      "streaming",
+      "missing",
+      "finish",
+      "reason",
+      "support",
+      "deploy",
+      "json",
+      "proxy"
+     ],
+     "head": "{   \"channel\": \"support\",   \"thread_ts\": \"1742624321\",   \"first_message_ts\": \"1742624321\",   \"last_m",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "89a7a9250b7ba932",
+     "score": 0.1452,
+     "tags": [
+      "sup-820411-reconnect-seqnum-wrap-suppressed-terminal-fragment",
+      "sup",
+      "820411",
+      "reconnect",
+      "seqnum",
+      "wrap",
+      "suppressed",
+      "terminal",
+      "fragment",
+      "customer-support"
+     ],
+     "head": "{   \"key\": \"SUP-820411\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "2b75de08e5c7c76d",
+     "score": 0.1371,
+     "tags": [
+      "pr-128675-ephemeral-route-signatures-and-stream-keepalive-auth",
+      "128675",
+      "ephemeral",
+      "route",
+      "signatures",
+      "and",
+      "stream",
+      "keepalive",
+      "redwood",
+      "test"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"128675\",   \"title\": \"ephemeral-route-signatures-and-stream-ke",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "6f997a854b6bba1f",
+     "score": 0.1272,
+     "tags": [
+      "sup-220501-azure-appgw-probe-teardown-suppresses-terminal-sse-event",
+      "sup",
+      "220501",
+      "azure",
+      "appgw",
+      "probe",
+      "teardown",
+      "suppresses",
+      "terminal",
+      "event"
+     ],
+     "head": "{   \"key\": \"SUP-220501\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "bd9e453768e377b7",
+     "score": 0.1223,
+     "tags": [
+      "sup-868686-sse-midstream-hold-then-ghosted-prefetch-frames",
+      "sup",
+      "868686",
+      "midstream",
+      "hold",
+      "then",
+      "ghosted",
+      "prefetch",
+      "frames",
+      "customer-support"
+     ],
+     "head": "{   \"key\": \"SUP-868686\",   \"project\": \"customer-support\",   \"issue_type\": \"Support Request\",   \"summ",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "55cf38f68d0ebccb",
+     "score": 0.118,
+     "tags": [
+      "1901234567-client-rtt-spike-reset-triage",
+      "1901234567",
+      "client",
+      "rtt",
+      "spike",
+      "reset",
+      "triage",
+      "support",
+      "api",
+      "proxy"
+     ],
+     "head": "{   \"channel\": \"support\",   \"thread_ts\": \"1901234567\",   \"first_message_ts\": \"1901234567\",   \"last_m",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "5d476fe769b679b5",
+     "score": 0.113,
+     "tags": [
+      "sup-622999-sticky-session-partial-sentence-on-sse-switchover",
+      "sup",
+      "622999",
+      "sticky",
+      "session",
+      "partial",
+      "sentence",
+      "switchover",
+      "customer-support",
+      "customer"
+     ],
+     "head": "{   \"key\": \"SUP-622999\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "b9c46be36a984243",
+     "score": 0.1092,
+     "tags": [
+      "sup-870999-browser-suspended-serviceworker-resumes-with-split-terminal-markdown-and-socket-flap",
+      "sup",
+      "870999",
+      "browser",
+      "suspended",
+      "serviceworker",
+      "resumes",
+      "with",
+      "split",
+      "terminal"
+     ],
+     "head": "{   \"key\": \"SUP-870999\",   \"project\": \"customer-support\",   \"issue_type\": \"Support Request\",   \"summ",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "99fb2f739beb269d",
+     "score": 0.1048,
+     "tags": [
+      "4623456789-ingress-auth-refresh-stream-handoff",
+      "4623456789",
+      "ingress",
+      "refresh",
+      "stream",
+      "handoff",
+      "architecture",
+      "auth",
+      "redis",
+      "gateway"
+     ],
+     "head": "{   \"channel\": \"architecture\",   \"thread_ts\": \"4623456789\",   \"first_message_ts\": \"4623456789\",   \"l",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "99177477107d5ed4",
+     "score": 0.1023,
+     "tags": [
+      "1854123456-edge-strip-auth-sse-midstream-drop-repro",
+      "1854123456",
+      "edge",
+      "strip",
+      "midstream",
+      "drop",
+      "repro",
+      "support",
+      "auth",
+      "cache"
+     ],
+     "head": "{   \"channel\": \"support\",   \"thread_ts\": \"1854123456\",   \"first_message_ts\": \"1854123456\",   \"last_m",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "d0f01939f9da1a0d",
+     "score": 0.1006,
+     "tags": [
+      "1995601234-streaming-reconnect-provisional-billing-ui",
+      "1995601234",
+      "streaming",
+      "reconnect",
+      "provisional",
+      "billing",
+      "eng-platform",
+      "eng",
+      "platform",
+      "cache"
+     ],
+     "head": "{   \"channel\": \"eng-platform\",   \"thread_ts\": \"1995601234\",   \"first_message_ts\": \"1995601234\",   \"l",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "3586f4b552606676",
+     "score": 0.1002,
+     "tags": [
+      "1945054321-streaming-resync-auth-latency-escalation",
+      "1945054321",
+      "streaming",
+      "resync",
+      "auth",
+      "latency",
+      "escalation",
+      "incidents",
+      "gateway",
+      "cache"
+     ],
+     "head": "{   \"channel\": \"incidents\",   \"thread_ts\": \"1945054321\",   \"first_message_ts\": \"1945054321\",   \"last",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "1571bda447409f11",
+     "score": 0.0934,
+     "tags": [
+      "1786412300-streaming-keepalive-reconnect-billing",
+      "1786412300",
+      "streaming",
+      "keepalive",
+      "reconnect",
+      "billing",
+      "support",
+      "proxy",
+      "sse",
+      "api"
+     ],
+     "head": "{   \"channel\": \"support\",   \"thread_ts\": \"1786412300\",   \"first_message_ts\": \"1786412300\",   \"last_m",
+     "kw_cov": 13
+    }
+   ]
+  },
+  {
+   "needle": "erb_199",
+   "receipt_rank": 45,
+   "live_rank": 45,
+   "rank_match": true,
+   "wall_ms": 24476.0,
+   "n_kw": 61,
+   "gold_kw_cov": 17,
+   "interloper_kw_cov_mean": 12.1,
+   "n_above_weaker": 14,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "6b9dfcab46605392",
+     "score": 0.1515,
+     "tags": [
+      "opalcare-health-partner-scratchbook",
+      "opalcare",
+      "health",
+      "partner",
+      "scratchbook",
+      "solutions-engineering-and-professional-services",
+      "solutions",
+      "engineering",
+      "and",
+      "professional"
+     ],
+     "head": "{   \"title\": \"OpalCare Health \\u2014 pilot outreach & technical sketch\",   \"owner\": \"Maya Rodriguez\"",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "7e282fe41e710570",
+     "score": 0.1437,
+     "tags": [
+      "company-caduceus-shield-contact-hub",
+      "company",
+      "caduceus",
+      "shield",
+      "contact",
+      "hub",
+      "hubspot",
+      "agent",
+      "security",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"cmp-0094821\",   \"company_name\": \"Caduceus Shield Contact Hub\",   \"company_domain\"",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "f557d0c389922362",
+     "score": 0.138,
+     "tags": [
+      "company-aurora-health-systems",
+      "company",
+      "aurora",
+      "health",
+      "systems",
+      "hubspot",
+      "security",
+      "go",
+      "api",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"hs-9284471\",   \"company_name\": \"Aurora Health Systems\",   \"company_domain\": \"auro",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "be5f97d5f1e9eba5",
+     "score": 0.1264,
+     "tags": [
+      "company-saffron-bridge-careflow",
+      "company",
+      "saffron",
+      "bridge",
+      "careflow",
+      "hubspot",
+      "security",
+      "audit",
+      "agent",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"saffronbridge-001-2026\",   \"company_name\": \"Saffron Bridge CareFlow\",   \"company_",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "3c2e803bd965968c",
+     "score": 0.1223,
+     "tags": [
+      "aureon-health-account-scout-notes",
+      "aureon",
+      "health",
+      "account",
+      "scout",
+      "notes",
+      "go-to-market",
+      "market",
+      "compliance",
+      "latency"
+     ],
+     "head": "{   \"title\": \"Aureon Health \\u2014 account scout & pilot notes\",   \"owner\": \"Maya Chen\",   \"drive_ar",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "7973f4c08550f2be",
+     "score": 0.1182,
+     "tags": [
+      "northgrove-medops-integration-field-scrap",
+      "northgrove",
+      "medops",
+      "integration",
+      "field",
+      "scrap",
+      "users",
+      "rag",
+      "deploy",
+      "latency"
+     ],
+     "head": "{   \"title\": \"Northgrove MedOps integration field scrap\",   \"owner\": \"Elena Morales\",   \"drive_area\"",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "0147dab0539a9a4d",
+     "score": 0.1125,
+     "tags": [
+      "company-veridian-medintel-search",
+      "company",
+      "veridian",
+      "medintel",
+      "search",
+      "hubspot",
+      "audit",
+      "latency",
+      "cache",
+      "security"
+     ],
+     "head": "\"Integration: EHR connectors (HL7/FHIR) will be handled by internal ETL; need Redwood private contro",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "1532038ac780e6a4",
+     "score": 0.1085,
+     "tags": [
+      "medtech-poc-hosting-synthesis",
+      "medtech",
+      "poc",
+      "hosting",
+      "synthesis",
+      "solutions-engineering-and-professional-services",
+      "solutions",
+      "engineering",
+      "and",
+      "professional"
+     ],
+     "head": "{   \"title\": \"MedTech POC hosting synthesis and proposed hybrid topology\",   \"owner\": \"Leah Kim\",   ",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "096c489dfa603dc8",
+     "score": 0.1056,
+     "tags": [
+      "company-clarityrx-indexing-solutions",
+      "company",
+      "clarityrx",
+      "indexing",
+      "solutions",
+      "exports",
+      "security",
+      "gpu",
+      "audit",
+      "embedding"
+     ],
+     "head": "{   \"company_id\": \"hub-009482\",   \"company_name\": \"ClarityRx Indexing Solutions\",   \"company_domain\"",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "bd465e0794b508ab",
+     "score": 0.1027,
+     "tags": [
+      "company-arcadia-transport-ops-support",
+      "company",
+      "arcadia",
+      "transport",
+      "ops",
+      "support",
+      "hubspot",
+      "agent",
+      "security",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"ARC-000932\",   \"company_name\": \"Arcadia Transport Ops Support\",   \"company_domain",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "a0aaa6fe4aedd5f8",
+     "score": 0.0993,
+     "tags": [
+      "company-lucentwell-ehr-rerank",
+      "company",
+      "lucentwell",
+      "ehr",
+      "rerank",
+      "hubspot",
+      "embedding",
+      "security",
+      "audit",
+      "vector"
+     ],
+     "head": "{   \"company_id\": \"hub-001842\",   \"company_name\": \"LucentWell EHR Solutions\",   \"company_domain\": \"l",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "01026641e2005d2d",
+     "score": 0.0954,
+     "tags": [
+      "moorland-healthcare-outbound-sketch",
+      "moorland",
+      "healthcare",
+      "outbound",
+      "sketch",
+      "users",
+      "security",
+      "audit",
+      "test",
+      "compliance"
+     ],
+     "head": "{   \"title\": \"Moorland Health \\u2014 outbound pilot & security-first approach\",   \"owner\": \"Ethan Ca",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "ac3e53d503284f60",
+     "score": 0.0929,
+     "tags": [
+      "company-archipelago-health-systems",
+      "company",
+      "archipelago",
+      "health",
+      "systems",
+      "hubspot",
+      "latency",
+      "config",
+      "api",
+      "throughput"
+     ],
+     "head": "{   \"company_id\": \"RH-2025-0742\",   \"company_name\": \"Archipelago Health Systems\",   \"company_domain\"",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "b1cc6005af3872f1",
+     "score": 0.0906,
+     "tags": [
+      "elmwood-health-integration-brain-dump",
+      "elmwood",
+      "health",
+      "integration",
+      "brain",
+      "dump",
+      "users",
+      "audit",
+      "latency",
+      "security"
+     ],
+     "head": "{   \"title\": \"Elmwood Health \\u2013 integration brain dump\",   \"owner\": \"Sofia Patel\",   \"drive_area",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "00c2b80334147fe7",
+     "score": 0.0879,
+     "tags": [
+      "meridian-labs-early-integration-notebook",
+      "meridian",
+      "labs",
+      "early",
+      "integration",
+      "notebook",
+      "users",
+      "latency",
+      "cache",
+      "audit"
+     ],
+     "head": "{   \"title\": \"Meridian Labs early integration notebook\",   \"owner\": \"Lena Ortiz\",   \"drive_area\": \"u",
+     "kw_cov": 13
+    }
+   ]
+  },
+  {
+   "needle": "erb_208",
+   "receipt_rank": 25,
+   "live_rank": 25,
+   "rank_match": true,
+   "wall_ms": 20290.2,
+   "n_kw": 64,
+   "gold_kw_cov": 21,
+   "interloper_kw_cov_mean": 17.1,
+   "n_above_weaker": 14,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "ac8cc9428ad6cb28",
+     "score": 0.1511,
+     "tags": [
+      "company-willowwick-assistify",
+      "company",
+      "willowwick",
+      "assistify",
+      "hubspot",
+      "latency",
+      "test",
+      "api",
+      "soc2",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"hb-000884-willowwick\",   \"company_name\": \"Willowwick Assistify\",   \"company_domai",
+     "kw_cov": 21
+    },
+    {
+     "gene_id": "63b44e883069edf7",
+     "score": 0.1449,
+     "tags": [
+      "company-amberhollow-chatforge",
+      "company",
+      "amberhollow",
+      "chatforge",
+      "exports",
+      "test",
+      "latency",
+      "throughput",
+      "security",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"amberhollow-001\",   \"company_name\": \"AmberHollow ChatForge\",   \"company_domain\": ",
+     "kw_cov": 20
+    },
+    {
+     "gene_id": "92d78c106e259f29",
+     "score": 0.1384,
+     "tags": [
+      "company-lilypad-logic",
+      "company",
+      "lilypad",
+      "logic",
+      "hubspot",
+      "security",
+      "latency",
+      "go",
+      "api",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"HB-0012487\",   \"company_name\": \"Lilypad Logic\",   \"company_domain\": \"lilypadlogic",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "193ce08db5cdb70c",
+     "score": 0.1272,
+     "tags": [
+      "company-labyrinth-answers",
+      "company",
+      "labyrinth",
+      "answers",
+      "hubspot",
+      "latency",
+      "api",
+      "compliance",
+      "security",
+      "cache"
+     ],
+     "head": "{   \"company_id\": \"hb-008743\",   \"company_name\": \"Labyrinth Answers\",   \"company_domain\": \"labyrinth",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "11506ad618da16c2",
+     "score": 0.1227,
+     "tags": [
+      "company-glassfinch-inapp",
+      "company",
+      "glassfinch",
+      "inapp",
+      "hubspot",
+      "latency",
+      "security",
+      "soc2",
+      "test",
+      "api"
+     ],
+     "head": "{   \"company_id\": \"GF-20260220-01\",   \"company_name\": \"GlassFinch Labs\",   \"company_domain\": \"glassf",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "d8e97f61424e1424",
+     "score": 0.1185,
+     "tags": [
+      "company-mapleforge-cx-intelligence",
+      "company",
+      "mapleforge",
+      "intelligence",
+      "hubspot",
+      "embedding",
+      "api",
+      "agent",
+      "throughput",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"mf-000732\",   \"company_name\": \"MapleForge CX Intelligence\",   \"company_domain\": \"",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "0fdeee7d8d79dabb",
+     "score": 0.1134,
+     "tags": [
+      "company-zenport-chatsmith",
+      "company",
+      "zenport",
+      "chatsmith",
+      "hubspot",
+      "latency",
+      "security",
+      "soc2",
+      "api",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"cmp-0008745\",   \"company_name\": \"Zenport Chatsmith\",   \"company_domain\": \"zenport",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "2105c6aee1d4b52d",
+     "score": 0.1089,
+     "tags": [
+      "company-chatflo-stack",
+      "company",
+      "chatflo",
+      "stack",
+      "hubspot",
+      "latency",
+      "security",
+      "api",
+      "audit",
+      "config"
+     ],
+     "head": "{   \"company_id\": \"cmp-2026-00458\",   \"company_name\": \"ChatFlo Stack\",   \"company_domain\": \"chatflos",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "a69280aa7fceb886",
+     "score": 0.1055,
+     "tags": [
+      "company-polaris-sprint-assist",
+      "company",
+      "polaris",
+      "sprint",
+      "assist",
+      "hubspot",
+      "latency",
+      "soc2",
+      "audit",
+      "benchmark"
+     ],
+     "head": "{   \"company_id\": \"HUB-2026-0891\",   \"company_name\": \"Polaris Sprint Assist\",   \"company_domain\": \"p",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "fba8e57019f7ba22",
+     "score": 0.1022,
+     "tags": [
+      "company-vergechat-systems",
+      "company",
+      "vergechat",
+      "systems",
+      "hubspot",
+      "latency",
+      "api",
+      "soc2",
+      "audit",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"vc-004283\",   \"company_name\": \"VergeChat Systems\",   \"company_domain\": \"vergechat",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "90035d8df9ede394",
+     "score": 0.099,
+     "tags": [
+      "company-microglint-assistly",
+      "company",
+      "microglint",
+      "assistly",
+      "hubspot",
+      "latency",
+      "security",
+      "audit",
+      "api",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"hub-00098761\",   \"company_name\": \"MicroGlint Assistly\",   \"company_domain\": \"micr",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "3339378cec0984d9",
+     "score": 0.096,
+     "tags": [
+      "company-kelpstream-assistive",
+      "company",
+      "kelpstream",
+      "assistive",
+      "hubspot",
+      "latency",
+      "test",
+      "security",
+      "api",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"hub-0094821\",   \"company_name\": \"KelpStream Assistive\",   \"company_domain\": \"kelp",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "9f4de7235245d1db",
+     "score": 0.0931,
+     "tags": [
+      "company-surgegrid-chatly",
+      "company",
+      "surgegrid",
+      "chatly",
+      "hubspot",
+      "security",
+      "latency",
+      "api",
+      "audit",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"SG-2026-0123\",   \"company_name\": \"SurgeGrid\",   \"company_domain\": \"surgegrid.com\"",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "cdf63a340eddc0cd",
+     "score": 0.0909,
+     "tags": [
+      "company-midridge-saasworks",
+      "company",
+      "midridge",
+      "saasworks",
+      "hubspot",
+      "embedding",
+      "security",
+      "api",
+      "latency",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"midridge-000273\",   \"company_name\": \"Midridge SaaSWorks\",   \"company_domain\": \"mi",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "72a4e81e6022d3e0",
+     "score": 0.0876,
+     "tags": [
+      "company-riverwood-catalyst-products",
+      "company",
+      "riverwood",
+      "catalyst",
+      "products",
+      "hubspot",
+      "api",
+      "throughput",
+      "agent",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"RW-2038-riverwood\",   \"company_name\": \"Riverwood Catalyst Products\",   \"company_d",
+     "kw_cov": 14
+    }
+   ]
+  },
+  {
+   "needle": "erb_209",
+   "receipt_rank": 41,
+   "live_rank": 41,
+   "rank_match": true,
+   "wall_ms": 26042.2,
+   "n_kw": 54,
+   "gold_kw_cov": 16,
+   "interloper_kw_cov_mean": 14.1,
+   "n_above_weaker": 12,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "7ce8d67d43963d19",
+     "score": 0.1523,
+     "tags": [
+      "slice-error-modes-post-onboard-awq-gptq-int4-int8",
+      "slice",
+      "error",
+      "modes",
+      "post",
+      "onboard",
+      "awq",
+      "gptq",
+      "int4",
+      "int8"
+     ],
+     "head": "ases\\\\n- multi-turn-instruction-following: AWQ-int4 shows higher dialog state drift on turn 3+ (meas",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "e3a161af3656d4c8",
+     "score": 0.144,
+     "tags": [
+      "1759994321-siro12b-int6-kvcache-latency-onboard",
+      "1759994321",
+      "siro12b",
+      "int6",
+      "kvcache",
+      "onboard",
+      "eng-ml",
+      "eng",
+      "latency",
+      "test"
+     ],
+     "head": "{   \"channel\": \"eng-ml\",   \"thread_ts\": \"1759994321\",   \"first_message_ts\": \"1759994321\",   \"last_me",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "37e27bab26fa8590",
+     "score": 0.1381,
+     "tags": [
+      "eng-945678-compact-numeric-presets-auditable-calibration-pipeline",
+      "eng",
+      "945678",
+      "compact",
+      "numeric",
+      "presets",
+      "auditable",
+      "calibration",
+      "pipeline",
+      "engineering"
+     ],
+     "head": "clude validation artifacts and must pass a regression check. Failure mode: automatic mark as 'unsafe",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "d6141a3b55206f06",
+     "score": 0.127,
+     "tags": [
+      "review-observability-lint-bot-notes-arjun",
+      "review",
+      "observability",
+      "lint",
+      "bot",
+      "notes",
+      "arjun",
+      "users",
+      "test",
+      "ci"
+     ],
+     "head": "{   \"title\": \"PR observability + lint-bot scratchpad\",   \"owner\": \"Arjun Patel\",   \"drive_area\": \"us",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "bec773debb10d2e5",
+     "score": 0.1225,
+     "tags": [
+      "eng-276543-config-curator-graded-rollback-oracle",
+      "eng",
+      "276543",
+      "curator",
+      "graded",
+      "rollback",
+      "oracle",
+      "engineering",
+      "ci",
+      "config"
+     ],
+     "head": "{   \"key\": \"ENG-276543\",   \"team\": \"engineering\",   \"title\": \"Config Curator: graded rollback oracle",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "c8f19aa351a1793c",
+     "score": 0.117,
+     "tags": [
+      "6823456789-quant-priming-longcontext-routing-playbook",
+      "6823456789",
+      "quant",
+      "priming",
+      "longcontext",
+      "routing",
+      "playbook",
+      "eng-ml",
+      "eng",
+      "deploy"
+     ],
+     "head": "{   \"channel\": \"eng-ml\",   \"thread_ts\": \"6823456789\",   \"first_message_ts\": \"6823456789\",   \"last_me",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "62c9a16d35288907",
+     "score": 0.113,
+     "tags": [
+      "eng-275999-autofence-config-healing-and-trigger-synthesis",
+      "eng",
+      "275999",
+      "autofence",
+      "healing",
+      "and",
+      "trigger",
+      "synthesis",
+      "engineering",
+      "ci"
+     ],
+     "head": "{   \"key\": \"ENG-275999\",   \"team\": \"engineering\",   \"title\": \"AutoFence: Config change fencing, heal",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "fc5922a2301c1783",
+     "score": 0.1101,
+     "tags": [
+      "eng-20913-embedding-rerank-continuity-and-delta-detector",
+      "eng",
+      "20913",
+      "rerank",
+      "continuity",
+      "and",
+      "delta",
+      "detector",
+      "engineering",
+      "embedding"
+     ],
+     "head": "{   \"key\": \"ENG-20913\",   \"team\": \"engineering\",   \"title\": \"Embedding and Reranker Continuity \\u201",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "b67df58339fd2ee3",
+     "score": 0.1057,
+     "tags": [
+      "activation-signal-synthesis-and-ops-decision-log-wip",
+      "activation",
+      "signal",
+      "synthesis",
+      "and",
+      "ops",
+      "decision",
+      "log",
+      "wip",
+      "console-and-rollouts"
+     ],
+     "head": "{   \"title\": \"Activation signal synthesis and ops decision log (working draft)\",   \"owner\": \"Marcus ",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "dd7d42344c0a4d72",
+     "score": 0.1015,
+     "tags": [
+      "pm-11012-juried-eval-weighting-and-uncertainty-calibration",
+      "11012",
+      "juried",
+      "eval",
+      "weighting",
+      "and",
+      "uncertainty",
+      "calibration",
+      "product-management",
+      "product"
+     ],
+     "head": "{   \"key\": \"PM-11012\",   \"team\": \"product-management\",   \"title\": \"juried-eval-weighting-and-uncerta",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "2372dfc19b3b6c73",
+     "score": 0.0986,
+     "tags": [
+      "eng-128403-lq-watchtower-config-probe",
+      "eng",
+      "128403",
+      "watchtower",
+      "probe",
+      "engineering",
+      "config",
+      "latency",
+      "ci",
+      "cache"
+     ],
+     "head": "{   \"key\": \"ENG-128403\",   \"team\": \"engineering\",   \"title\": \"LQ Watchtower: proactive latency-vs-qu",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "4f1ecbff01fd9d86",
+     "score": 0.0956,
+     "tags": [
+      "eng-40123-schema-fidelity-regressor-for-rollbacks",
+      "eng",
+      "40123",
+      "schema",
+      "fidelity",
+      "regressor",
+      "for",
+      "rollbacks",
+      "engineering",
+      "config"
+     ],
+     "head": "{   \"key\": \"ENG-40123\",   \"team\": \"engineering\",   \"title\": \"Schema-fidelity scoring and rollback tr",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "7de74b66c98da5de",
+     "score": 0.0934,
+     "tags": [
+      "activation-signal-synthesis-and-ops-decision-log-wip",
+      "activation",
+      "signal",
+      "synthesis",
+      "and",
+      "ops",
+      "decision",
+      "log",
+      "wip",
+      "console-and-rollouts"
+     ],
+     "head": ", delay next step): small deviations in p95 (10\\u201325%), or business signals with no prior correla",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "2bfb9721e2992927",
+     "score": 0.0908,
+     "tags": [
+      "canary-scripting-and-ops-cheatpad-wip",
+      "canary",
+      "scripting",
+      "and",
+      "ops",
+      "cheatpad",
+      "wip",
+      "site-reliability-engineering",
+      "site",
+      "reliability"
+     ],
+     "head": "{   \"title\": \"Canary scripting and ops cheatpad (working) - tactical scripts and comms\",   \"owner\": ",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "06eec417b749ed7f",
+     "score": 0.0874,
+     "tags": [
+      "promptset-coverage-heatmap-and-regression-journal",
+      "promptset",
+      "coverage",
+      "heatmap",
+      "and",
+      "regression",
+      "journal",
+      "applied-ml",
+      "applied",
+      "ci"
+     ],
+     "head": "{   \"title\": \"promptset-coverage-heatmap-and-regression-journal\",   \"owner\": \"Ava Martinez\",   \"driv",
+     "kw_cov": 10
+    }
+   ]
+  },
+  {
+   "needle": "erb_212",
+   "receipt_rank": 23,
+   "live_rank": 23,
+   "rank_match": true,
+   "wall_ms": 12898.7,
+   "n_kw": 39,
+   "gold_kw_cov": 7,
+   "interloper_kw_cov_mean": 6.8,
+   "n_above_weaker": 4,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "c02ce50de0004515",
+     "score": 0.1521,
+     "tags": [
+      "company-saplingpress-studio",
+      "company",
+      "saplingpress",
+      "studio",
+      "hubspot",
+      "api",
+      "security",
+      "audit",
+      "latency",
+      "compliance"
+     ],
+     "head": "{   \"company_id\": \"hub-00021457\",   \"company_name\": \"SaplingPress Studio\",   \"company_domain\": \"sapl",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "3de99ef35a8cb11e",
+     "score": 0.1453,
+     "tags": [
+      "company-penumbra-capital-knowledge-search",
+      "company",
+      "penumbra",
+      "capital",
+      "knowledge",
+      "search",
+      "hubspot",
+      "security",
+      "soc2",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"PEN-2026-0043\",   \"company_name\": \"Penumbra Capital Knowledge Services\",   \"compa",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "2c2cebabc8415b4f",
+     "score": 0.1402,
+     "tags": [
+      "company-lynxforge-codex",
+      "company",
+      "lynxforge",
+      "codex",
+      "hubspot",
+      "embedding",
+      "security",
+      "vector",
+      "soc2",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"LF-100732\",   \"company_name\": \"LynxForge Codex\",   \"company_domain\": \"lynxforge.c",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "1164bea8903b48fc",
+     "score": 0.1285,
+     "tags": [
+      "burst-crediting-raw-notes",
+      "burst",
+      "crediting",
+      "raw",
+      "notes",
+      "users",
+      "go",
+      "embedding",
+      "test",
+      "json"
+     ],
+     "head": "{   \"title\": \"Burst crediting pricing \\u2014 raw notes\",   \"owner\": \"Maya Chen\",   \"drive_area\": \"us",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "f56f238aa92bc2ff",
+     "score": 0.1235,
+     "tags": [
+      "company-papyrusly-contentcraft",
+      "company",
+      "papyrusly",
+      "contentcraft",
+      "hubspot",
+      "security",
+      "config",
+      "latency",
+      "api",
+      "cache"
+     ],
+     "head": "{   \"company_id\": \"cmp-00012987\",   \"company_name\": \"Papyrusly ContentCraft\",   \"company_domain\": \"p",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "4a4d7a51a324a3f6",
+     "score": 0.1231,
+     "tags": [
+      "company-skyward-semantic-ops",
+      "company",
+      "skyward",
+      "semantic",
+      "ops",
+      "hubspot",
+      "embedding",
+      "throughput",
+      "latency",
+      "security"
+     ],
+     "head": "{   \"company_id\": \"cmp-004728\",   \"company_name\": \"Skyward SemanticOps\",   \"company_domain\": \"skywar",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "5d68af587fb35553",
+     "score": 0.1179,
+     "tags": [
+      "20270502-reserve-sizing-calibration-qna",
+      "20270502",
+      "reserve",
+      "sizing",
+      "calibration",
+      "qna",
+      "dev_patel",
+      "dev",
+      "patel",
+      "gpu"
+     ],
+     "head": " \\u2014 technical calibration notes\\\\n\\\\nKarthik / Alex \\u2014 added more concrete tech assumptions ",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "25a2ee7946648b2c",
+     "score": 0.1145,
+     "tags": [
+      "company-inkquarry-synthworks",
+      "company",
+      "inkquarry",
+      "synthworks",
+      "hubspot",
+      "api",
+      "audit",
+      "security",
+      "throughput",
+      "cache"
+     ],
+     "head": "{   \"company_id\": \"HUB-10493\",   \"company_name\": \"InkQuarry Synthworks\",   \"company_domain\": \"inkqua",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "bfc24ff2384f29d2",
+     "score": 0.1102,
+     "tags": [
+      "company-heliocare-retrieval-systems",
+      "company",
+      "heliocare",
+      "retrieval",
+      "systems",
+      "hubspot",
+      "security",
+      "embedding",
+      "audit",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"hc-001247\",   \"company_name\": \"HelioCare Retrieval Systems\",   \"company_domain\": ",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "32a7a6dff39d28ee",
+     "score": 0.1066,
+     "tags": [
+      "company-helmbridge-inference-solutions",
+      "company",
+      "helmbridge",
+      "inference",
+      "solutions",
+      "hubspot",
+      "throughput",
+      "latency",
+      "test",
+      "gpu"
+     ],
+     "head": "2014 product fit, initial throughput numbers collected (fireflies ff_20260212_8321 reference).\",    ",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "5abdb8b72460f2c7",
+     "score": 0.1021,
+     "tags": [
+      "company-coastline-spark-ai",
+      "company",
+      "coastline",
+      "spark",
+      "exports",
+      "audit",
+      "api",
+      "security",
+      "rest",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"hub-0009274\",   \"company_name\": \"Coastline Spark AI\",   \"company_domain\": \"coastl",
+     "kw_cov": 4
+    },
+    {
+     "gene_id": "8c6284d2760131fc",
+     "score": 0.1014,
+     "tags": [
+      "company-content-lynx-ai",
+      "company",
+      "content",
+      "lynx",
+      "hubspot",
+      "api",
+      "audit",
+      "soc2",
+      "throughput",
+      "cache"
+     ],
+     "head": "{   \"company_id\": \"CLX-000742\",   \"company_name\": \"Content Lynx AI\",   \"company_domain\": \"contentlyn",
+     "kw_cov": 4
+    },
+    {
+     "gene_id": "aa02bb3d690fe930",
+     "score": 0.0996,
+     "tags": [
+      "20260518-acme-pricing-credit-extension-request",
+      "20260518",
+      "acme",
+      "pricing",
+      "credit",
+      "extension",
+      "request",
+      "rafael_mendes",
+      "rafael",
+      "mendes"
+     ],
+     "head": "{   \"thread_id\": \"thread-20260512-acme-pricing-clarify-1\",   \"mailbox_owner\": \"rafael_mendes\",   \"su",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "e8903f44317a1226",
+     "score": 0.0968,
+     "tags": [
+      "company-covenant-discovery-systems",
+      "company",
+      "covenant",
+      "discovery",
+      "systems",
+      "hubspot",
+      "audit",
+      "embedding",
+      "compliance",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"COV-000982\",   \"company_name\": \"Covenant Discovery Systems\",   \"company_domain\": ",
+     "kw_cov": 5
+    },
+    {
+     "gene_id": "ef7d609c8290fc14",
+     "score": 0.095,
+     "tags": [
+      "company-ivyline-content-labs",
+      "company",
+      "ivyline",
+      "content",
+      "labs",
+      "hubspot",
+      "security",
+      "soc2",
+      "latency",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"HB-009213\",   \"company_name\": \"Ivyline Content Labs\",   \"company_domain\": \"ivylin",
+     "kw_cov": 8
+    }
+   ]
+  },
+  {
+   "needle": "erb_229",
+   "receipt_rank": 15,
+   "live_rank": 15,
+   "rank_match": true,
+   "wall_ms": 13160.8,
+   "n_kw": 66,
+   "gold_kw_cov": 25,
+   "interloper_kw_cov_mean": 19.9,
+   "n_above_weaker": 14,
+   "n_above": 14,
+   "above_gold": [
+    {
+     "gene_id": "17765d1ef79f5b41",
+     "score": 0.1724,
+     "tags": [
+      "eng-79921-streaming-trajectory-checkpoints-heuristic-reconnect",
+      "eng",
+      "79921",
+      "streaming",
+      "trajectory",
+      "checkpoints",
+      "heuristic",
+      "reconnect",
+      "engineering",
+      "sse"
+     ],
+     "head": "{   \"key\": \"ENG-79921\",   \"team\": \"engineering\",   \"title\": \"streaming-trajectory-checkpoints-heuris",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "df90d6a575a071bf",
+     "score": 0.163,
+     "tags": [
+      "eng-991122-chat-completions-proxy-streaming-functioncall-fidelity",
+      "eng",
+      "991122",
+      "chat",
+      "completions",
+      "streaming",
+      "functioncall",
+      "fidelity",
+      "engineering",
+      "sse"
+     ],
+     "head": "{   \"key\": \"ENG-991122\",   \"team\": \"engineering\",   \"title\": \"Streaming proxy to preserve OpenAI Cha",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "89cc2c90dd4b903c",
+     "score": 0.163,
+     "tags": [
+      "pr-53002-stream-session-reconciliation-keepalive-heartbeat-openai-compat",
+      "53002",
+      "stream",
+      "session",
+      "reconciliation",
+      "keepalive",
+      "heartbeat",
+      "openai",
+      "compat",
+      "github"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"53002\",   \"title\": \"stream session reconciliation + keepalive",
+     "kw_cov": 21
+    },
+    {
+     "gene_id": "7a1aabdf0385f8bb",
+     "score": 0.1498,
+     "tags": [
+      "pr-153421-reconnect-handshake-handoff-and-server-lease-refresh-openai-compat",
+      "153421",
+      "reconnect",
+      "handshake",
+      "handoff",
+      "and",
+      "server",
+      "lease",
+      "refresh",
+      "openai"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"153421\",   \"title\": \"Reconnect handshake handoff and server l",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "26fe0d7973c163ed",
+     "score": 0.1404,
+     "tags": [
+      "eng-891457-chat-compat-sidecar-stream-normalizer",
+      "eng",
+      "891457",
+      "chat",
+      "compat",
+      "sidecar",
+      "stream",
+      "normalizer",
+      "engineering",
+      "sse"
+     ],
+     "head": "{   \"key\": \"ENG-891457\",   \"team\": \"engineering\",   \"title\": \"Chat Compatibility Sidecar: Stream + T",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "9d54840aeaeb702a",
+     "score": 0.1388,
+     "tags": [
+      "eng-99101-sse-heartbeat-ack-mismatch-late-final-token",
+      "eng",
+      "99101",
+      "heartbeat",
+      "ack",
+      "mismatch",
+      "late",
+      "final",
+      "token",
+      "engineering"
+     ],
+     "head": "{   \"key\": \"ENG-99101\",   \"team\": \"engineering\",   \"title\": \"SSE heartbeat / ACK mismatch causing fi",
+     "kw_cov": 21
+    },
+    {
+     "gene_id": "893ee2c4134b0d14",
+     "score": 0.133,
+     "tags": [
+      "pr-991237-stream-abort-confirmation-resume-jitter-idempotent-toolcall-openai-bridge",
+      "991237",
+      "stream",
+      "abort",
+      "confirmation",
+      "resume",
+      "jitter",
+      "idempotent",
+      "toolcall",
+      "openai"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"991237\",   \"title\": \"Stream abort confirmation, resume-jitter",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "affef1c40753955d",
+     "score": 0.1274,
+     "tags": [
+      "eng-556001-opportunistic-sse-patch-idempotent-reconnect",
+      "eng",
+      "556001",
+      "opportunistic",
+      "patch",
+      "idempotent",
+      "reconnect",
+      "engineering",
+      "sse",
+      "json"
+     ],
+     "head": "{   \"key\": \"ENG-556001\",   \"team\": \"engineering\",   \"title\": \"Opportunistic SSE patch tokens and ide",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "5e6f3bd8890d1ad2",
+     "score": 0.1246,
+     "tags": [
+      "pr-361234-soft-termination-tombstone-resume-negotiator-openai-compat",
+      "361234",
+      "soft",
+      "termination",
+      "tombstone",
+      "resume",
+      "negotiator",
+      "openai",
+      "compat",
+      "redwood"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"361234\",   \"title\": \"soft-termination-tombstone-and-resume-ne",
+     "kw_cov": 20
+    },
+    {
+     "gene_id": "0fbccfe3a87d1967",
+     "score": 0.119,
+     "tags": [
+      "eng-753842-graceful-client-detach-partial-compaction-and-functioncall-backpressure",
+      "eng",
+      "753842",
+      "graceful",
+      "client",
+      "detach",
+      "partial",
+      "compaction",
+      "and",
+      "functioncall"
+     ],
+     "head": "{   \"key\": \"ENG-753842\",   \"team\": \"engineering\",   \"title\": \"Graceful client detach, partial-output",
+     "kw_cov": 24
+    },
+    {
+     "gene_id": "84fd36285aa2b38c",
+     "score": 0.1162,
+     "tags": [
+      "eng-78455-sse-client-backpressure-hints-and-reconnect-negotiation",
+      "eng",
+      "78455",
+      "client",
+      "backpressure",
+      "hints",
+      "and",
+      "reconnect",
+      "negotiation",
+      "engineering"
+     ],
+     "head": "{   \"key\": \"ENG-78455\",   \"team\": \"engineering\",   \"title\": \"SSE client backpressure hints and recon",
+     "kw_cov": 21
+    },
+    {
+     "gene_id": "b7d9db4ff227fb5a",
+     "score": 0.1131,
+     "tags": [
+      "eng-24608-sse-resume-strategy-and-reassembly-for-multiplexed-streams",
+      "eng",
+      "24608",
+      "resume",
+      "strategy",
+      "and",
+      "reassembly",
+      "for",
+      "multiplexed",
+      "streams"
+     ],
+     "head": "{   \"key\": \"ENG-24608\",   \"team\": \"engineering\",   \"title\": \"SSE resume & reassembly strategy for mu",
+     "kw_cov": 23
+    },
+    {
+     "gene_id": "50eef2e567c83988",
+     "score": 0.1106,
+     "tags": [
+      "pr-257901-ack-window-coalescing-reconnect-probe-openai-compat",
+      "257901",
+      "ack",
+      "window",
+      "coalescing",
+      "reconnect",
+      "probe",
+      "openai",
+      "compat",
+      "github"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"257901\",   \"title\": \"ack-window-coalescing-and-reconnect-prob",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "e47e1a33fb57c9cd",
+     "score": 0.109,
+     "tags": [
+      "eng-221007-checkpointed-fragment-handshake-and-seal-protocol",
+      "eng",
+      "221007",
+      "checkpointed",
+      "fragment",
+      "handshake",
+      "and",
+      "seal",
+      "protocol",
+      "engineering"
+     ],
+     "head": "{   \"key\": \"ENG-221007\",   \"team\": \"engineering\",   \"title\": \"Checkpointed Fragment Handshake and Se",
+     "kw_cov": 21
+    }
+   ]
+  },
+  {
+   "needle": "erb_231",
+   "receipt_rank": 25,
+   "live_rank": 25,
+   "rank_match": true,
+   "wall_ms": 26375.1,
+   "n_kw": 53,
+   "gold_kw_cov": 13,
+   "interloper_kw_cov_mean": 14.7,
+   "n_above_weaker": 0,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "89cf6f1f16add018",
+     "score": 0.1974,
+     "tags": [
+      "pr-56378-parallel-tool-returns-reconciliation",
+      "56378",
+      "parallel",
+      "tool",
+      "returns",
+      "reconciliation",
+      "github",
+      "api",
+      "json",
+      "latency"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"56378\",   \"title\": \"parallel tool returns reconciliation and ",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "5a81a192b46cc59c",
+     "score": 0.1851,
+     "tags": [
+      "pr-32901-toolchain-conductor-api-retries",
+      "32901",
+      "toolchain",
+      "conductor",
+      "retries",
+      "github",
+      "api",
+      "llm",
+      "pr_number",
+      "32901"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"32901\",   \"title\": \"Toolchain Conductor: API for multi-tool o",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "9a6599a3f17b20fb",
+     "score": 0.1499,
+     "tags": [
+      "pr-43011-fanout-orchestration-and-result-hydration",
+      "43011",
+      "fanout",
+      "orchestration",
+      "and",
+      "result",
+      "hydration",
+      "github",
+      "python",
+      "api"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"43011\",   \"title\": \"fanout orchestration and result hydration",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "747e395171b374ce",
+     "score": 0.1386,
+     "tags": [
+      "pr-92755-invocation-harness-parallel-adaptor",
+      "92755",
+      "invocation",
+      "harness",
+      "parallel",
+      "adaptor",
+      "github",
+      "test",
+      "go",
+      "api"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"92755\",   \"title\": \"Invocation harness: parallel-safe ergonom",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "abbccc32e83666db",
+     "score": 0.1237,
+     "tags": [
+      "eng-7310-tool-orchestration-result-injection-guardrails",
+      "eng",
+      "7310",
+      "tool",
+      "orchestration",
+      "result",
+      "injection",
+      "guardrails",
+      "engineering",
+      "api"
+     ],
+     "head": "{   \"key\": \"ENG-7310\",   \"team\": \"engineering\",   \"title\": \"Tool orchestration: result injection, ch",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "ee316ae0714c2a09",
+     "score": 0.1189,
+     "tags": [
+      "pr-40567-invocation-plumbing-parallel-safe-injection",
+      "40567",
+      "invocation",
+      "plumbing",
+      "parallel",
+      "safe",
+      "injection",
+      "eval-harness",
+      "eval",
+      "harness"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"40567\",   \"title\": \"Invocation plumbing: parallel-safe tool i",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "9962a5d06eef2fea",
+     "score": 0.1154,
+     "tags": [
+      "pr-24612-tool-execution-coordinator-deterministic-ordering",
+      "24612",
+      "tool",
+      "execution",
+      "coordinator",
+      "deterministic",
+      "ordering",
+      "github",
+      "api",
+      "go"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"24612\",   \"title\": \"tool-execution-coordinator: deterministic",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "af9d1cf64b8445d2",
+     "score": 0.1153,
+     "tags": [
+      "eng-987654-adaptive-iterator-orchestration-halt-policy-output-normalization",
+      "eng",
+      "987654",
+      "adaptive",
+      "iterator",
+      "orchestration",
+      "halt",
+      "policy",
+      "output",
+      "normalization"
+     ],
+     "head": "{   \"key\": \"ENG-987654\",   \"team\": \"engineering\",   \"title\": \"Adaptive iterator orchestration, halt ",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "38c135ce3de82b75",
+     "score": 0.1057,
+     "tags": [
+      "pr-38644-tool-call-bridge-concurrency-surface",
+      "38644",
+      "tool",
+      "call",
+      "bridge",
+      "concurrency",
+      "surface",
+      "github",
+      "go",
+      "api"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"38644\",   \"title\": \"tool-call-bridge-concurrency-surface: erg",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "97970fcd65af8de4",
+     "score": 0.103,
+     "tags": [
+      "pr-50501-toolchain-invocation-ergonomics-async-hydration",
+      "50501",
+      "toolchain",
+      "invocation",
+      "ergonomics",
+      "async",
+      "hydration",
+      "github",
+      "go",
+      "ci"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"50501\",   \"title\": \"Toolchain invocation ergonomics: async hy",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "2912c31321846949",
+     "score": 0.0981,
+     "tags": [
+      "pr-37210-multi-invoker-surface-stability",
+      "37210",
+      "multi",
+      "invoker",
+      "surface",
+      "stability",
+      "github",
+      "test",
+      "api",
+      "pipeline"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"37210\",   \"title\": \"API: multi-invoker surface and determinis",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "e7aec0be21c485cc",
+     "score": 0.0956,
+     "tags": [
+      "eng-843219-multichain-invoker-stream-injection-loop-defenses",
+      "eng",
+      "843219",
+      "multichain",
+      "invoker",
+      "stream",
+      "injection",
+      "loop",
+      "defenses",
+      "business-ops"
+     ],
+     "head": "{   \"key\": \"ENG-843219\",   \"team\": \"engineering\",   \"title\": \"Multichain Invoker: progressive result",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "5bbfcedb4f634572",
+     "score": 0.093,
+     "tags": [
+      "eng-23011-stream-continuation-adapter-legacy-fn-escape-hatch",
+      "eng",
+      "23011",
+      "stream",
+      "continuation",
+      "adapter",
+      "legacy",
+      "escape",
+      "hatch",
+      "engineering"
+     ],
+     "head": "{   \"key\": \"ENG-23011\",   \"team\": \"engineering\",   \"title\": \"Streaming-continuation adapter for lega",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "034986fb3c911f20",
+     "score": 0.0907,
+     "tags": [
+      "1719001234-parallel-multi-step-tool-calling",
+      "1719001234",
+      "parallel",
+      "multi",
+      "step",
+      "tool",
+      "calling",
+      "product",
+      "api",
+      "latency"
+     ],
+     "head": "{   \"channel\": \"product\",   \"thread_ts\": \"1719001234\",   \"first_message_ts\": \"1719001234\",   \"last_m",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "22de225b9deff303",
+     "score": 0.0903,
+     "tags": [
+      "pr-91422-convergent-toolflow-ergonomics",
+      "91422",
+      "convergent",
+      "toolflow",
+      "ergonomics",
+      "github",
+      "go",
+      "test",
+      "api",
+      "typescript"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"91422\",   \"title\": \"Convergent toolflow ergonomics: determini",
+     "kw_cov": 14
+    }
+   ]
+  },
+  {
+   "needle": "erb_235",
+   "receipt_rank": 15,
+   "live_rank": 15,
+   "rank_match": true,
+   "wall_ms": 37562.6,
+   "n_kw": 51,
+   "gold_kw_cov": 15,
+   "interloper_kw_cov_mean": 8.5,
+   "n_above_weaker": 14,
+   "n_above": 14,
+   "above_gold": [
+    {
+     "gene_id": "525b9b1977a3ceb8",
+     "score": 0.1509,
+     "tags": [
+      "transit-vpc-and-private-dns-casebook",
+      "transit",
+      "vpc",
+      "and",
+      "private",
+      "dns",
+      "casebook",
+      "solutions-engineering-and-professional-services",
+      "solutions",
+      "engineering"
+     ],
+     "head": "{   \"title\": \"Transit VPC and Private DNS casebook for POC\",   \"owner\": \"Maya Chen\",   \"drive_area\":",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "299990169864d43b",
+     "score": 0.1452,
+     "tags": [
+      "persona-edgecase-elicitation-notes",
+      "persona",
+      "edgecase",
+      "elicitation",
+      "notes",
+      "applied-ml",
+      "applied",
+      "ci",
+      "test",
+      "json"
+     ],
+     "head": "{   \"title\": \"Persona edge-case elicitation and tool-protocol notes\",   \"owner\": \"Maya Thompson\",   ",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "5df38d678afe7208",
+     "score": 0.1379,
+     "tags": [
+      "sdkenv-mini-course-curriculum-draft",
+      "sdkenv",
+      "mini",
+      "course",
+      "curriculum",
+      "draft",
+      "developer-experience",
+      "developer",
+      "experience",
+      "env"
+     ],
+     "head": "-inference/sdks-mini-course.git\\n2) cp labs/module-0/.env.example labs/module-0/.env && set REDWOOD_",
+     "kw_cov": 5
+    },
+    {
+     "gene_id": "e1215f177d89ca57",
+     "score": 0.1301,
+     "tags": [
+      "compute-request-queue-sprint-planner-q1-2026",
+      "compute",
+      "request",
+      "sprint",
+      "planner",
+      "2026",
+      "infrastructure",
+      "gpu",
+      "embedding",
+      "github"
+     ],
+     "head": "{   \"title\": \"Compute request queue \\u2014 sprint planner Q1 2026\",   \"owner\": \"Daniel Chen\",   \"dri",
+     "kw_cov": 5
+    },
+    {
+     "gene_id": "f9b861fcbb151bc7",
+     "score": 0.1238,
+     "tags": [
+      "bandwidth-aware-mini-batch-fallbacks-and-typed-tool-contracts-draft",
+      "bandwidth",
+      "aware",
+      "mini",
+      "batch",
+      "fallbacks",
+      "and",
+      "typed",
+      "tool",
+      "contracts"
+     ],
+     "head": "{   \"title\": \"Bandwidth-Aware Mini-Batch Fallbacks and Typed Tool Contracts \\u2014 PRD Sketch\",   \"o",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "1118ae00891d6c7b",
+     "score": 0.122,
+     "tags": [
+      "gpu-ci-release-safety-lab-and-slo-simulator",
+      "safety",
+      "lab",
+      "and",
+      "slo",
+      "simulator",
+      "ci-cd-and-build",
+      "ci",
+      "gpu",
+      "release"
+     ],
+     "head": "{   \"title\": \"GPU CI Release Safety Lab and SLO Simulator\",   \"space\": \"eng-infra/ci-cd-and-build\", ",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "65b64e64cbb9a555",
+     "score": 0.1201,
+     "tags": [
+      "1749302468-hosted-infer-runner-coredump-503s-multi-customer-escalation",
+      "1749302468",
+      "hosted",
+      "infer",
+      "runner",
+      "coredump",
+      "503s",
+      "multi",
+      "customer",
+      "escalation"
+     ],
+     "head": "{   \"channel\": \"incidents\",   \"thread_ts\": \"1749302468\",   \"first_message_ts\": \"1749302468\",   \"last",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "6f5f0467e869255a",
+     "score": 0.1121,
+     "tags": [
+      "slo-driven-shortfall-simulation-hosted-api-2028q2",
+      "slo",
+      "driven",
+      "shortfall",
+      "simulation",
+      "hosted",
+      "2028q2",
+      "infrastructure",
+      "gpu",
+      "latency"
+     ],
+     "head": "{   \"title\": \"SLO-driven shortfall simulation and buffer targets for hosted endpoints\",   \"owner\": \"",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "8824cd91ef9773cc",
+     "score": 0.1063,
+     "tags": [
+      "kv-cache-suballocation-signatures-and-rewrite-scheduler-sketch",
+      "suballocation",
+      "signatures",
+      "and",
+      "rewrite",
+      "sketch",
+      "serving-runtime",
+      "serving",
+      "runtime",
+      "test"
+     ],
+     "head": "s run available for target size class (rolling 1m window).\\n- Use weighted frag score = alpha*hole_d",
+     "kw_cov": 5
+    },
+    {
+     "gene_id": "e3702fd9134a61f5",
+     "score": 0.1029,
+     "tags": [
+      "cohort-poc-studio-facilitator-guide",
+      "cohort",
+      "poc",
+      "studio",
+      "facilitator",
+      "guide",
+      "solutions-engineering-and-professional-services",
+      "solutions",
+      "engineering",
+      "and"
+     ],
+     "head": "{   \"title\": \"Cohort POC Studio \\u2014 Facilitator Guide & Slide Outline\",   \"owner\": \"Aisha Patel\",",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "2e337a7c373376ee",
+     "score": 0.0989,
+     "tags": [
+      "support-sla-vs-engineering-slo-mapping",
+      "support",
+      "sla",
+      "engineering",
+      "slo",
+      "mapping",
+      "slo-and-error-budgets",
+      "and",
+      "error",
+      "budgets"
+     ],
+     "head": "rt should collect request IDs + client details. |\\n| Control plane availability (Console/SSO/config)",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "0fffd5fcca8e03c0",
+     "score": 0.0959,
+     "tags": [
+      "kv-reuse-decay-and-bw-noise-experiments",
+      "reuse",
+      "decay",
+      "and",
+      "noise",
+      "experiments",
+      "serving-runtime",
+      "serving",
+      "runtime",
+      "latency"
+     ],
+     "head": "{   \"title\": \"KV reuse decay and bandwidth noise experiments\",   \"owner\": \"Priya Natarajan\",   \"driv",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "87b05e8032942067",
+     "score": 0.0938,
+     "tags": [
+      "sandboxed-burst-experiments-and-autoscale-operator-qa-notes",
+      "sandboxed",
+      "burst",
+      "experiments",
+      "and",
+      "autoscale",
+      "operator",
+      "notes",
+      "dedicated",
+      "latency"
+     ],
+     "head": "{   \"title\": \"Sandboxed burst experiments and autoscale operator QA notes\",   \"owner\": \"Priya Nair\",",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "d15b41d86a3d4dfe",
+     "score": 0.0909,
+     "tags": [
+      "eng-9759-multi-environment-escalation-and-rollback-protocol",
+      "eng",
+      "9759",
+      "multi",
+      "environment",
+      "escalation",
+      "and",
+      "rollback",
+      "protocol",
+      "engineering"
+     ],
+     "head": "{   \"key\": \"ENG-9759\",   \"team\": \"engineering\",   \"title\": \"Multi-environment escalation and rollbac",
+     "kw_cov": 11
+    }
+   ]
+  },
+  {
+   "needle": "erb_238",
+   "receipt_rank": 32,
+   "live_rank": 32,
+   "rank_match": true,
+   "wall_ms": 18079.0,
+   "n_kw": 38,
+   "gold_kw_cov": 8,
+   "interloper_kw_cov_mean": 8.1,
+   "n_above_weaker": 5,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "52fa8f557b3d2f6f",
+     "score": 0.3068,
+     "tags": [
+      "papertrail-fintech-pilot-soundboard",
+      "papertrail",
+      "fintech",
+      "pilot",
+      "soundboard",
+      "users",
+      "soc2",
+      "compliance",
+      "security",
+      "llm"
+     ],
+     "head": "toil with inference suggestions that integrate into existing QA flows. Would love 10 minutes to shar",
+     "kw_cov": 5
+    },
+    {
+     "gene_id": "9053f42321c12a43",
+     "score": 0.1991,
+     "tags": [
+      "merchant-integration-sampler-scratchpad",
+      "merchant",
+      "integration",
+      "sampler",
+      "scratchpad",
+      "users",
+      "latency",
+      "llm",
+      "deploy",
+      "security"
+     ],
+     "head": "{   \"title\": \"merchant-integration-sampler-scratchpad\",   \"owner\": \"Maya Desai\",   \"drive_area\": \"us",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "0f8ab79de4d8c27e",
+     "score": 0.1546,
+     "tags": [
+      "papertrail-fintech-pilot-soundboard",
+      "papertrail",
+      "fintech",
+      "pilot",
+      "soundboard",
+      "users",
+      "llm",
+      "api",
+      "latency",
+      "throughput"
+     ],
+     "head": "{   \"title\": \"PaperTrail Fintech \\u2014 pilot soundboard and outbound drafts\",   \"owner\": \"Maya Chen",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "5cfd52f854fcc256",
+     "score": 0.147,
+     "tags": [
+      "company-wrenfield-paytech",
+      "company",
+      "wrenfield",
+      "paytech",
+      "hubspot",
+      "soc2",
+      "security",
+      "api",
+      "latency",
+      "agent"
+     ],
+     "head": "{   \"company_id\": \"WF-00087\",   \"company_name\": \"WrenField PayTech\",   \"company_domain\": \"wrenfieldp",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "4e84cc20e486a03b",
+     "score": 0.1398,
+     "tags": [
+      "north-summit-payments-prospect-scratchbook",
+      "north",
+      "summit",
+      "payments",
+      "prospect",
+      "scratchbook",
+      "users",
+      "latency",
+      "release",
+      "embedding"
+     ],
+     "head": "{   \"title\": \"north-summit-payments-prospect-scratchbook\",   \"owner\": \"Maya Chen\",   \"drive_area\": \"",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "66654aa76f6355b6",
+     "score": 0.1275,
+     "tags": [
+      "mercury-arc-opportunity-scrapbook",
+      "mercury",
+      "arc",
+      "opportunity",
+      "scrapbook",
+      "users",
+      "embedding",
+      "latency",
+      "compliance",
+      "throughput"
+     ],
+     "head": "{   \"title\": \"Mercury Arc \\u2014 outbound prospecting scrapbook\",   \"owner\": \"Aisha Kapoor\",   \"driv",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "23323df0859157a8",
+     "score": 0.1236,
+     "tags": [
+      "outreach-scratchpad-aurora-fintech",
+      "outreach",
+      "scratchpad",
+      "aurora",
+      "fintech",
+      "product",
+      "latency",
+      "deploy",
+      "gpu",
+      "test"
+     ],
+     "head": "{   \"title\": \"Aurora Fintech outbound + objection handling scratchpad\",   \"owner\": \"Jordan Rawlings\"",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "09a6b509c2ffb734",
+     "score": 0.1188,
+     "tags": [
+      "mariner-payments-account-outreach-notes",
+      "mariner",
+      "payments",
+      "account",
+      "outreach",
+      "notes",
+      "users",
+      "compliance",
+      "latency",
+      "audit"
+     ],
+     "head": "{   \"title\": \"Mariner Payments \\u2014 account outreach notes\",   \"owner\": \"Aisha Patel\",   \"drive_ar",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "53beb77deb220ecb",
+     "score": 0.1175,
+     "tags": [
+      "prospector-logbook-banyan-fintech-outbound",
+      "prospector",
+      "logbook",
+      "banyan",
+      "fintech",
+      "outbound",
+      "users",
+      "latency",
+      "security",
+      "audit"
+     ],
+     "head": "{   \"title\": \"Prospector logbook \\u2014 Banyan Fintech outbound\",   \"owner\": \"Riya Menon\",   \"drive_",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "58c44acedc7a6330",
+     "score": 0.1138,
+     "tags": [
+      "company-lilypad-fintech-solutions",
+      "company",
+      "lilypad",
+      "fintech",
+      "solutions",
+      "hubspot",
+      "soc2",
+      "api",
+      "embedding",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"HBSP-2026-08412\",   \"company_name\": \"Lilypad Fintech Solutions\",   \"company_domai",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "5a5f8b6fe09cc512",
+     "score": 0.1097,
+     "tags": [
+      "forkstream-payment-partner-dossier",
+      "forkstream",
+      "payment",
+      "partner",
+      "dossier",
+      "users",
+      "latency",
+      "endpoint",
+      "llm",
+      "api"
+     ],
+     "head": "{   \"title\": \"Forkstream payments \\u2014 partner engagement dossier\",   \"owner\": \"Aisha Patel\",   \"d",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "db0c40613e3d3afd",
+     "score": 0.1064,
+     "tags": [
+      "company-aurumly-payments",
+      "company",
+      "aurumly",
+      "payments",
+      "hubspot",
+      "soc2",
+      "audit",
+      "security",
+      "api",
+      "agent"
+     ],
+     "head": "{   \"company_id\": \"HSP-2026-004512\",   \"company_name\": \"Aurumly Payments\",   \"company_domain\": \"auru",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "c170f675a672948d",
+     "score": 0.1023,
+     "tags": [
+      "company-mariner-pulse-financial-tech",
+      "company",
+      "mariner",
+      "pulse",
+      "financial",
+      "tech",
+      "hubspot",
+      "soc2",
+      "test",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"hub-98762\",   \"company_name\": \"Mariner Pulse Financial Tech\",   \"company_domain\":",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "2f6b98e7695cd0ce",
+     "score": 0.0993,
+     "tags": [
+      "company-inkwell-payments",
+      "company",
+      "inkwell",
+      "payments",
+      "hubspot",
+      "soc2",
+      "security",
+      "embedding",
+      "api",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"CP-2026-00471\",   \"company_name\": \"Inkwell Payments\",   \"company_domain\": \"inkwel",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "1ba9a2a42fa28bfe",
+     "score": 0.0958,
+     "tags": [
+      "company-sycamore-ledgerwise",
+      "company",
+      "sycamore",
+      "ledgerwise",
+      "hubspot",
+      "embedding",
+      "soc2",
+      "latency",
+      "api",
+      "security"
+     ],
+     "head": "{   \"company_id\": \"HB-0937-SY-2026\",   \"company_name\": \"Sycamore Ledgerwise\",   \"company_domain\": \"s",
+     "kw_cov": 8
+    }
+   ]
+  },
+  {
+   "needle": "erb_254",
+   "receipt_rank": 21,
+   "live_rank": 21,
+   "rank_match": true,
+   "wall_ms": 24824.3,
+   "n_kw": 34,
+   "gold_kw_cov": 7,
+   "interloper_kw_cov_mean": 7.4,
+   "n_above_weaker": 6,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "a67b286f8eadb86b",
+     "score": 0.1515,
+     "tags": [
+      "onboarding-prompt-labs-and-runloop-recipes-notes",
+      "onboarding",
+      "prompt",
+      "labs",
+      "and",
+      "runloop",
+      "recipes",
+      "notes",
+      "developer-experience",
+      "developer"
+     ],
+     "head": "System prompt templates for safety + hallucination reduction (short checklist).\\\\n- Few-shot scaffol",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "54923dd2e786e799",
+     "score": 0.1454,
+     "tags": [
+      "20260618-system-walkthrough-venue-interop",
+      "20260618",
+      "system",
+      "walkthrough",
+      "venue",
+      "interop",
+      "karthik_iyer",
+      "karthik",
+      "iyer",
+      "go"
+     ],
+     "head": "{   \"thread_id\": \"gmail-alex-20260618-001\",   \"mailbox_owner\": \"alex_martinez\",   \"subject\": \"System",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "f903dc627dc5aaee",
+     "score": 0.1388,
+     "tags": [
+      "20261207-helix-video-case-brief-release-logistics",
+      "20261207",
+      "helix",
+      "video",
+      "case",
+      "brief",
+      "logistics",
+      "monica_patel",
+      "monica",
+      "patel"
+     ],
+     "head": "14\\n\\nHi all,\\n\\nThanks for the quick turnaround. Attached is our proposed shotlist and crew call sh",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "009f51f62bed6285",
+     "score": 0.1271,
+     "tags": [
+      "marketplace-i18n-accessibility-preflight",
+      "marketplace",
+      "i18n",
+      "accessibility",
+      "preflight",
+      "go-to-market",
+      "market",
+      "latency",
+      "security",
+      "go"
+     ],
+     "head": "ow-latency, embeddings, private-deployments, gpu-optimized, dedicated-capacity, compliance. Marketpl",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "4ac5d510f6a84a55",
+     "score": 0.1221,
+     "tags": [
+      "20260225-falcon-launch-horizontal-status-check",
+      "20260225",
+      "falcon",
+      "launch",
+      "horizontal",
+      "status",
+      "check",
+      "grace_oconnor",
+      "grace",
+      "oconnor"
+     ],
+     "head": "oogle.com/falcon-launch-runbook\\n> \\n> Thanks \\u2014 keep it tight.\\n> \\n> Grace\",     \"From: Mariss",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "6ce00b220fd9b0cf",
+     "score": 0.1178,
+     "tags": [
+      "20260517-regional-demo-stitch-rotation-plan",
+      "20260517",
+      "regional",
+      "demo",
+      "stitch",
+      "rotation",
+      "plan",
+      "markus_klein",
+      "markus",
+      "klein"
+     ],
+     "head": "nks,\\nMarkus Klein\\nHead of Solutions | Redwood Inference\\nmarkus_klein@redwood.com\\n\\nOn Mon, May 1",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "c3e8c995aa960c70",
+     "score": 0.1142,
+     "tags": [
+      "remote-conference-checklist-taxes-and-rapid-contacts",
+      "remote",
+      "conference",
+      "checklist",
+      "taxes",
+      "and",
+      "rapid",
+      "contacts",
+      "users",
+      "json"
+     ],
+     "head": "{   \"title\": \"Remote conference checklist - taxes, receipts & rapid contacts\",   \"owner\": \"Maya Chen",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "c62ead784c85a8d3",
+     "score": 0.1084,
+     "tags": [
+      "per-diem-microbudget-and-qr-vendor-map",
+      "per",
+      "diem",
+      "microbudget",
+      "and",
+      "vendor",
+      "map",
+      "users",
+      "json",
+      "Ravi Shah"
+     ],
+     "head": "{   \"title\": \"Per-diem microbudget and QR vendor map\",   \"owner\": \"Ravi Shah\",   \"drive_area\": \"user",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "28a46944fd18facd",
+     "score": 0.1064,
+     "tags": [
+      "20270519-novainteract-pilot-sidelined-staffing-travel-block",
+      "20270519",
+      "novainteract",
+      "pilot",
+      "sidelined",
+      "staffing",
+      "travel",
+      "block",
+      "dev_patel",
+      "dev"
+     ],
+     "head": "ized, next steps\\n\\nLaura / Sergio \\u2014\\n\\nForwarding Alex's note \\u2014 NovaInteract pulled the p",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "08982d0496a697d6",
+     "score": 0.1022,
+     "tags": [
+      "20260308-acme-health-testimonial-production-plan",
+      "20260308",
+      "acme",
+      "health",
+      "testimonial",
+      "production",
+      "plan",
+      "marissa_cole",
+      "marissa",
+      "cole"
+     ],
+     "head": "{   \"thread_id\": \"gmail-thread-20260302-acme-video-01\",   \"mailbox_owner\": \"marissa_cole\",   \"subjec",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "4bd2eda4b44b5575",
+     "score": 0.0981,
+     "tags": [
+      "20260729-brief-onsite-tour-shifts-to-recorded-plus-live-qna",
+      "20260729",
+      "brief",
+      "onsite",
+      "tour",
+      "shifts",
+      "recorded",
+      "plus",
+      "live",
+      "qna"
+     ],
+     "head": "For the live Q&A, we're leaning toward 8:30\\u20139:00am PT Wednesday (our team flies out late mornin",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "35eb9615f6dd02dc",
+     "score": 0.0966,
+     "tags": [
+      "20261006-finapp-demo-compact-preview-request-conference-season",
+      "20261006",
+      "finapp",
+      "demo",
+      "compact",
+      "preview",
+      "request",
+      "conference",
+      "season",
+      "marcus_lin"
+     ],
+     "head": "mplest approach may be:\\n1) A 30-minute recorded executive walkthrough from your side (we can watch ",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "514d5b54bbe6f445",
+     "score": 0.093,
+     "tags": [
+      "20250901-align-demo-with-finance-gate-and-travel",
+      "20250901",
+      "align",
+      "demo",
+      "with",
+      "finance",
+      "gate",
+      "and",
+      "travel",
+      "karthik_iyer"
+     ],
+     "head": "{   \"thread_id\": \"gmail-karthik-20250901-3a9f\",   \"mailbox_owner\": \"karthik_iyer\",   \"subject\": \"Ali",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "02dceebedc7263b5",
+     "score": 0.0893,
+     "tags": [
+      "bootstrapper-devexp-pocket-manifest-draft",
+      "bootstrapper",
+      "devexp",
+      "pocket",
+      "manifest",
+      "draft",
+      "developer-experience",
+      "developer",
+      "experience",
+      "json"
+     ],
+     "head": "{   \"title\": \"Bootstrapper DevExp Pocket Manifest (draft)\",   \"owner\": \"Ava Chen\",   \"drive_area\": \"",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "4e0872e9b4fe3d30",
+     "score": 0.0887,
+     "tags": [
+      "20260530-infra-review-video-ops-logistics",
+      "20260530",
+      "infra",
+      "review",
+      "video",
+      "ops",
+      "logistics",
+      "mateo_alvarez",
+      "mateo",
+      "alvarez"
+     ],
+     "head": "{   \"thread_id\": \"thread-20260530-connor-arch-video-ops-001\",   \"mailbox_owner\": \"connor_obrien\",   ",
+     "kw_cov": 6
+    }
+   ]
+  },
+  {
+   "needle": "erb_264",
+   "receipt_rank": 27,
+   "live_rank": 27,
+   "rank_match": true,
+   "wall_ms": 15734.5,
+   "n_kw": 38,
+   "gold_kw_cov": 12,
+   "interloper_kw_cov_mean": 8.9,
+   "n_above_weaker": 15,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "851f6661d0c72bbc",
+     "score": 0.1823,
+     "tags": [
+      "sup-158903-console-dimension-aggregation-trim-on-extended-range",
+      "sup",
+      "158903",
+      "console",
+      "dimension",
+      "aggregation",
+      "trim",
+      "extended",
+      "range",
+      "customer-support"
+     ],
+     "head": "{   \"key\": \"SUP-158903\",   \"project\": \"customer-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Conso",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "dc485d1cc918b86d",
+     "score": 0.1502,
+     "tags": [
+      "sup-214987-funnel-conversion-metrics-zeroed-after-compaction",
+      "sup",
+      "214987",
+      "funnel",
+      "conversion",
+      "metrics",
+      "zeroed",
+      "after",
+      "compaction",
+      "customer-support"
+     ],
+     "head": "{   \"key\": \"SUP-214987\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "8210237676231f68",
+     "score": 0.1493,
+     "tags": [
+      "1860001234-eu-filter-intersection-zeroed-charts",
+      "1860001234",
+      "filter",
+      "intersection",
+      "zeroed",
+      "charts",
+      "support",
+      "go",
+      "test",
+      "api"
+     ],
+     "head": "{   \"channel\": \"support\",   \"thread_ts\": \"1860001234\",   \"first_message_ts\": \"1860001234\",   \"last_m",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "88d1289d519e9125",
+     "score": 0.128,
+     "tags": [
+      "des-137999-signal-harbor-route-inspector-ux",
+      "des",
+      "137999",
+      "signal",
+      "harbor",
+      "route",
+      "inspector",
+      "design",
+      "latency",
+      "throughput"
+     ],
+     "head": "{   \"key\": \"DES-137999\",   \"team\": \"design\",   \"title\": \"Signal Harbor \\u2014 Route & Model Inspecto",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "00bbe679f83b809c",
+     "score": 0.1263,
+     "tags": [
+      "sup-92145-cohort-retention-model-attribution-swapped-after-version-pin-change",
+      "sup",
+      "92145",
+      "cohort",
+      "retention",
+      "model",
+      "attribution",
+      "swapped",
+      "after",
+      "version"
+     ],
+     "head": "{   \"key\": \"SUP-92145\",   \"project\": \"customer-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Cohort",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "cadad2f0b220affb",
+     "score": 0.1183,
+     "tags": [
+      "sup-74512-console-heatmap-bucketization-zoom-artifacts",
+      "sup",
+      "74512",
+      "console",
+      "heatmap",
+      "bucketization",
+      "zoom",
+      "artifacts",
+      "customer-support",
+      "customer"
+     ],
+     "head": "{   \"key\": \"SUP-74512\",   \"project\": \"customer-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Consol",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "fea7f1d04f9b8522",
+     "score": 0.113,
+     "tags": [
+      "sup-8317-dashboard-sparklines-stale-after-retention-policy",
+      "sup",
+      "8317",
+      "dashboard",
+      "sparklines",
+      "stale",
+      "after",
+      "retention",
+      "policy",
+      "customer-support"
+     ],
+     "head": "{   \"key\": \"SUP-8317\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"Da",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "9e04244fb3e1372d",
+     "score": 0.1103,
+     "tags": [
+      "sup-13317-streaming-trace-hook-attribution-eval-window-mismatch",
+      "sup",
+      "13317",
+      "streaming",
+      "trace",
+      "hook",
+      "attribution",
+      "eval",
+      "window",
+      "mismatch"
+     ],
+     "head": "{   \"key\": \"SUP-13317\",   \"project\": \"customer-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Stream",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "b05c4d167dcd628a",
+     "score": 0.105,
+     "tags": [
+      "sup-860321-dashboard-snapshot-export-row-filter-drop",
+      "sup",
+      "860321",
+      "dashboard",
+      "snapshot",
+      "export",
+      "row",
+      "filter",
+      "drop",
+      "customer-support"
+     ],
+     "head": "{   \"key\": \"SUP-860321\",   \"project\": \"customer-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Dashb",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "df22703b79f7e15b",
+     "score": 0.1025,
+     "tags": [
+      "sup-4821-console-analytics-metrics-retention-gap",
+      "sup",
+      "4821",
+      "console",
+      "analytics",
+      "metrics",
+      "retention",
+      "gap",
+      "customer-support",
+      "customer"
+     ],
+     "head": "{   \"key\": \"SUP-4821\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"Co",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "3c721f944714a816",
+     "score": 0.1019,
+     "tags": [
+      "sup-384999-dashboard-query-optimizer-inserts-noop-filter-causing-empty-results-and-missing-trace-links",
+      "sup",
+      "384999",
+      "dashboard",
+      "query",
+      "optimizer",
+      "inserts",
+      "noop",
+      "filter",
+      "causing"
+     ],
+     "head": "{   \"key\": \"SUP-384999\",   \"project\": \"customer-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Dashb",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "a672fda0c157ed0c",
+     "score": 0.0977,
+     "tags": [
+      "1758201234-mobile-legend-zeroes-on-filtered-team",
+      "1758201234",
+      "mobile",
+      "legend",
+      "zeroes",
+      "filtered",
+      "team",
+      "support",
+      "ci",
+      "cache"
+     ],
+     "head": "{   \"channel\": \"support\",   \"thread_ts\": \"1758201234\",   \"first_message_ts\": \"1758201234\",   \"last_m",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "39f59f066c06960a",
+     "score": 0.0952,
+     "tags": [
+      "1763009999-observer-metrics-gap",
+      "1763009999",
+      "observer",
+      "metrics",
+      "gap",
+      "support",
+      "api",
+      "json",
+      "sql",
+      "jordan"
+     ],
+     "head": "{   \"channel\": \"support\",   \"thread_ts\": \"1763009999\",   \"first_message_ts\": \"1763009999\",   \"last_m",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "76ea2a5cef0a47c4",
+     "score": 0.0926,
+     "tags": [
+      "sup-11723-slo-card-percentile-dimension-loss-after-retention",
+      "sup",
+      "11723",
+      "slo",
+      "card",
+      "percentile",
+      "dimension",
+      "loss",
+      "after",
+      "retention"
+     ],
+     "head": "{   \"key\": \"SUP-11723\",   \"project\": \"customer-support\",   \"issue_type\": \"Bug\",   \"summary\": \"SLO ov",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "2db55d3c37dc0fdd",
+     "score": 0.0922,
+     "tags": [
+      "sup-359823-dashboard-annotation-flicker-time-shift",
+      "sup",
+      "359823",
+      "dashboard",
+      "annotation",
+      "flicker",
+      "time",
+      "shift",
+      "customer-support",
+      "customer"
+     ],
+     "head": "{   \"key\": \"SUP-359823\",   \"project\": \"customer-support\",   \"issue_type\": \"Bug\",   \"summary\": \"Dashb",
+     "kw_cov": 8
+    }
+   ]
+  },
+  {
+   "needle": "erb_265",
+   "receipt_rank": 19,
+   "live_rank": 19,
+   "rank_match": true,
+   "wall_ms": 22558.7,
+   "n_kw": 54,
+   "gold_kw_cov": 16,
+   "interloper_kw_cov_mean": 17.0,
+   "n_above_weaker": 4,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "92b6489f30232a38",
+     "score": 0.2559,
+     "tags": [
+      "eng-412345-stream-checkpointing-retry-signals-client-sdk-contract",
+      "eng",
+      "412345",
+      "stream",
+      "checkpointing",
+      "retry",
+      "signals",
+      "client",
+      "sdk",
+      "contract"
+     ],
+     "head": "{   \"key\": \"ENG-412345\",   \"team\": \"engineering\",   \"title\": \"Stream checkpoint tokens and explicit ",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "b3a8c1b340c69a86",
+     "score": 0.221,
+     "tags": [
+      "eng-18765-cross-sdk-invocation-adapters",
+      "eng",
+      "18765",
+      "cross",
+      "sdk",
+      "invocation",
+      "adapters",
+      "engineering",
+      "go",
+      "python"
+     ],
+     "head": "{   \"key\": \"ENG-18765\",   \"team\": \"engineering\",   \"title\": \"Cross-SDK invocation adapters with tole",
+     "kw_cov": 20
+    },
+    {
+     "gene_id": "1fdb440ba0055d1e",
+     "score": 0.1899,
+     "tags": [
+      "pr-155001-harmonize-credential-handshake-and-stream-interfaces-across-sdks",
+      "155001",
+      "harmonize",
+      "credential",
+      "handshake",
+      "and",
+      "stream",
+      "interfaces",
+      "across",
+      "sdks"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"155001\",   \"title\": \"Harmonize credential handshake and strea",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "77e59c3cd4b16c9a",
+     "score": 0.1687,
+     "tags": [
+      "pr-219101-crosslang-credential-sanity-and-stream-handoff-polish",
+      "219101",
+      "crosslang",
+      "credential",
+      "sanity",
+      "and",
+      "stream",
+      "handoff",
+      "polish",
+      "redwood"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"219101\",   \"title\": \"crosslang-credential-sanity-and-stream-h",
+     "kw_cov": 20
+    },
+    {
+     "gene_id": "c8688d90ee312ad8",
+     "score": 0.1438,
+     "tags": [
+      "pm-215789-hybrid-fetch-abstraction-for-resumable-streams-and-compatibility",
+      "215789",
+      "hybrid",
+      "fetch",
+      "abstraction",
+      "for",
+      "resumable",
+      "streams",
+      "and",
+      "compatibility"
+     ],
+     "head": "g, HTTP/2, and gRPC transport with consistent resume tokens\",     \"Security: Resume tokens are short",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "6493cf0fe3d20e3b",
+     "score": 0.1436,
+     "tags": [
+      "pr-221909-normalize-sdk-credential-shape-and-stream-signatures",
+      "221909",
+      "normalize",
+      "sdk",
+      "credential",
+      "shape",
+      "and",
+      "stream",
+      "signatures",
+      "redwood"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"221909\",   \"title\": \"normalize-sdk-credential-shape-and-strea",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "b67e26d3aed22044",
+     "score": 0.1407,
+     "tags": [
+      "pr-90123-cross-sdk-cursor-adapter-token-swap",
+      "90123",
+      "cross",
+      "sdk",
+      "cursor",
+      "adapter",
+      "token",
+      "swap",
+      "github",
+      "go"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"90123\",   \"title\": \"cross-sdk cursor-adapter and token-swap r",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "562a956f1442c285",
+     "score": 0.1296,
+     "tags": [
+      "eng-99001-sdk-gradual-typing-function-hints-and-resilient-stream-wrappers",
+      "eng",
+      "99001",
+      "sdk",
+      "gradual",
+      "typing",
+      "function",
+      "hints",
+      "and",
+      "resilient"
+     ],
+     "head": "{   \"key\": \"ENG-99001\",   \"team\": \"engineering\",   \"title\": \"SDK: gradual typing function hints + re",
+     "kw_cov": 20
+    },
+    {
+     "gene_id": "069ded3d4d87db38",
+     "score": 0.1289,
+     "tags": [
+      "pr-973410-toolcall-boundary-preservation-and-progress-checkpoint-resume-handshake-openai-compat",
+      "973410",
+      "toolcall",
+      "boundary",
+      "preservation",
+      "and",
+      "progress",
+      "checkpoint",
+      "resume",
+      "handshake"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"973410\",   \"title\": \"toolcall-boundary-preservation-and-progr",
+     "kw_cov": 19
+    },
+    {
+     "gene_id": "0ce4149f1c6890bc",
+     "score": 0.1278,
+     "tags": [
+      "eng-9427-sdk-credential-lifecycle-and-streaming-auth-best-practices",
+      "eng",
+      "9427",
+      "sdk",
+      "credential",
+      "lifecycle",
+      "and",
+      "streaming",
+      "best",
+      "practices"
+     ],
+     "head": "Ps.\",     \"Liam O'Neill (2026-03-04): Implementation note: Python keyring will be optional dependenc",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "680b9dd639ff37ee",
+     "score": 0.1253,
+     "tags": [
+      "pr-1006783-mosaic-auth-tiling-and-checkpointed-streams",
+      "1006783",
+      "mosaic",
+      "tiling",
+      "and",
+      "checkpointed",
+      "streams",
+      "redwood",
+      "go",
+      "test"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"1006783\",   \"title\": \"mosaic-auth-tiling-and-checkpointed-str",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "ecec8deefa733bbe",
+     "score": 0.1162,
+     "tags": [
+      "pr-318456-triad-sdk-credential-clarify-and-stream-iterator-simplify",
+      "318456",
+      "triad",
+      "sdk",
+      "credential",
+      "clarify",
+      "and",
+      "stream",
+      "iterator",
+      "simplify"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"318456\",   \"title\": \"triad-sdk-credential-clarify-and-stream-",
+     "kw_cov": 17
+    },
+    {
+     "gene_id": "e127aa2b29fdea7d",
+     "score": 0.1152,
+     "tags": [
+      "pr-467890-unify-credential-interfaces-add-typed-stream-batteries-included",
+      "467890",
+      "unify",
+      "credential",
+      "interfaces",
+      "add",
+      "typed",
+      "stream",
+      "batteries",
+      "included"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"467890\",   \"title\": \"Unify credential interfaces and add type",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "75d6bc234c58e074",
+     "score": 0.1112,
+     "tags": [
+      "pr-234567-streaming-ergonomics-slim-retry-presets-cred-resilience",
+      "234567",
+      "streaming",
+      "ergonomics",
+      "slim",
+      "retry",
+      "presets",
+      "cred",
+      "resilience",
+      "github"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"234567\",   \"title\": \"Slim streaming ergonomics, consolidated ",
+     "kw_cov": 18
+    },
+    {
+     "gene_id": "8137434df5c1f0c9",
+     "score": 0.1087,
+     "tags": [
+      "pr-197654-fast-fail-reconnect-probe-and-commit-log-for-streams",
+      "197654",
+      "fast",
+      "fail",
+      "reconnect",
+      "probe",
+      "and",
+      "commit",
+      "log",
+      "for"
+     ],
+     "head": "{   \"repo\": \"redwood\",   \"pr_number\": \"197654\",   \"title\": \"Stream resilience: fast-fail reconnect p",
+     "kw_cov": 18
+    }
+   ]
+  },
+  {
+   "needle": "erb_273",
+   "receipt_rank": 13,
+   "live_rank": 13,
+   "rank_match": true,
+   "wall_ms": 39033.0,
+   "n_kw": 40,
+   "gold_kw_cov": 11,
+   "interloper_kw_cov_mean": 9.4,
+   "n_above_weaker": 9,
+   "n_above": 12,
+   "above_gold": [
+    {
+     "gene_id": "d86dc1cc30511525",
+     "score": 0.1529,
+     "tags": [
+      "company-lyric-legal-services",
+      "company",
+      "lyric",
+      "legal",
+      "services",
+      "hubspot",
+      "api",
+      "audit",
+      "security",
+      "embedding"
+     ],
+     "head": "{   \"company_id\": \"LYR-000874\",   \"company_name\": \"Lyric Legal Services\",   \"company_domain\": \"lyric",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "20d8a4c070244aa8",
+     "score": 0.1435,
+     "tags": [
+      "company-skyquill-interactives",
+      "company",
+      "skyquill",
+      "interactives",
+      "hubspot",
+      "api",
+      "latency",
+      "throughput",
+      "agent",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"hub-20260312-042\",   \"company_name\": \"SkyQuill Interactives\",   \"company_domain\":",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "872c48f297b032b3",
+     "score": 0.1371,
+     "tags": [
+      "company-clausecraft-llc",
+      "company",
+      "clausecraft",
+      "llc",
+      "hubspot",
+      "audit",
+      "api",
+      "security",
+      "compliance",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"HBSP-0008271\",   \"company_name\": \"ClauseCraft LLC\",   \"company_domain\": \"clausecr",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "c5bf8d255e736d65",
+     "score": 0.1265,
+     "tags": [
+      "company-sealedbrief-technologies",
+      "company",
+      "sealedbrief",
+      "technologies",
+      "hubspot",
+      "audit",
+      "security",
+      "api",
+      "rest",
+      "encryption"
+     ],
+     "head": "{   \"company_id\": \"hub-000874\",   \"company_name\": \"SealedBrief Technologies\",   \"company_domain\": \"s",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "3ab5e0d546576e0f",
+     "score": 0.1218,
+     "tags": [
+      "company-briefdock-smb",
+      "company",
+      "briefdock",
+      "smb",
+      "hubspot",
+      "audit",
+      "api",
+      "embedding",
+      "soc2",
+      "compliance"
+     ],
+     "head": "{   \"company_id\": \"HB-00098734\",   \"company_name\": \"BriefDock\",   \"company_domain\": \"briefdock.io\", ",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "e1f34c8863b1aa01",
+     "score": 0.117,
+     "tags": [
+      "company-rallygate-product-journeys",
+      "company",
+      "rallygate",
+      "product",
+      "journeys",
+      "hubspot",
+      "latency",
+      "security",
+      "audit",
+      "api"
+     ],
+     "head": "{   \"company_id\": \"RG-2026-002\",   \"company_name\": \"RallyGate Product Journeys\",   \"company_domain\":",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "0ad1e643f4de3e22",
+     "score": 0.1142,
+     "tags": [
+      "company-meridian-legal-analytics",
+      "company",
+      "meridian",
+      "legal",
+      "analytics",
+      "hubspot",
+      "security",
+      "latency",
+      "vector",
+      "embedding"
+     ],
+     "head": "{   \"company_id\": \"hub-992174\",   \"company_name\": \"Meridian Legal Analytics\",   \"company_domain\": \"m",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "8fc2cb171fe7dc44",
+     "score": 0.1089,
+     "tags": [
+      "company-polaris-telecom-networks",
+      "company",
+      "polaris",
+      "telecom",
+      "networks",
+      "hubspot",
+      "security",
+      "gpu",
+      "soc2",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"polaris-0008421\",   \"company_name\": \"Polaris Telecom Networks\",   \"company_domain",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "121999ee6c9a327c",
+     "score": 0.1048,
+     "tags": [
+      "company-argyle-legalworks",
+      "company",
+      "argyle",
+      "legalworks",
+      "hubspot",
+      "audit",
+      "api",
+      "security",
+      "soc2",
+      "embedding"
+     ],
+     "head": "{   \"company_id\": \"cmp-202603-ARG-01\",   \"company_name\": \"Argyle Legalworks\",   \"company_domain\": \"a",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "d204a843ef684146",
+     "score": 0.1017,
+     "tags": [
+      "company-brightweave-interactive-support",
+      "company",
+      "brightweave",
+      "interactive",
+      "support",
+      "hubspot",
+      "latency",
+      "agent",
+      "security",
+      "api"
+     ],
+     "head": "{   \"company_id\": \"bw-00314\",   \"company_name\": \"BrightWeave Interactive\",   \"company_domain\": \"brig",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "047dcaba0c2cef8a",
+     "score": 0.0991,
+     "tags": [
+      "company-pinegrove-interactives",
+      "company",
+      "pinegrove",
+      "interactives",
+      "hubspot",
+      "soc2",
+      "security",
+      "embedding",
+      "python",
+      "cache"
+     ],
+     "head": "{   \"company_id\": \"pg-001299\",   \"company_name\": \"Pinegrove Interactives\",   \"company_domain\": \"pine",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "e49435ce86f4ca6a",
+     "score": 0.0953,
+     "tags": [
+      "company-fortress-discovery-systems",
+      "company",
+      "fortress",
+      "discovery",
+      "systems",
+      "hubspot",
+      "audit",
+      "security",
+      "latency",
+      "compliance"
+     ],
+     "head": "{   \"company_id\": \"FD-2026-0017\",   \"company_name\": \"Fortress Discovery Systems\",   \"company_domain\"",
+     "kw_cov": 8
+    }
+   ]
+  },
+  {
+   "needle": "erb_276",
+   "receipt_rank": 23,
+   "live_rank": 23,
+   "rank_match": true,
+   "wall_ms": 35778.4,
+   "n_kw": 50,
+   "gold_kw_cov": 16,
+   "interloper_kw_cov_mean": 13.9,
+   "n_above_weaker": 13,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "0a9283344bdce504",
+     "score": 0.1841,
+     "tags": [
+      "company-salesflow-savant",
+      "company",
+      "salesflow",
+      "savant",
+      "hubspot",
+      "security",
+      "api",
+      "latency",
+      "audit",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"sf-002178\",   \"company_name\": \"SalesFlow Savant\",   \"company_domain\": \"salesflows",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "2c39154a2f144100",
+     "score": 0.1642,
+     "tags": [
+      "company-clarity-outboundworks",
+      "company",
+      "clarity",
+      "outboundworks",
+      "hubspot",
+      "latency",
+      "security",
+      "agent",
+      "audit",
+      "api"
+     ],
+     "head": "{   \"company_id\": \"cmp_clarity_outbound_001\",   \"company_name\": \"Clarity OutboundWorks\",   \"company_",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "4a14bbfe46cbf0f3",
+     "score": 0.1552,
+     "tags": [
+      "company-sundial-conversant",
+      "company",
+      "sundial",
+      "conversant",
+      "hubspot",
+      "latency",
+      "security",
+      "agent",
+      "audit",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"hb-004217-sundial\",   \"company_name\": \"Sundial Conversant\",   \"company_domain\": \"",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "c6c8f2c2aba9ae76",
+     "score": 0.1364,
+     "tags": [
+      "company-aperture-catalyst-software",
+      "company",
+      "aperture",
+      "catalyst",
+      "software",
+      "hubspot",
+      "security",
+      "embedding",
+      "audit",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"hub-009218\",   \"company_name\": \"Aperture Catalyst Software\",   \"company_domain\": ",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "166f5f9f98c4255b",
+     "score": 0.1352,
+     "tags": [
+      "company-polaris-sdr-automation",
+      "company",
+      "polaris",
+      "sdr",
+      "automation",
+      "hubspot",
+      "latency",
+      "api",
+      "security",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"hub-2026-00078\",   \"company_name\": \"Polaris SDR Automation\",   \"company_domain\": ",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "4a11a3c56ef64ba8",
+     "score": 0.129,
+     "tags": [
+      "company-shiftbuffer-contactworks",
+      "company",
+      "shiftbuffer",
+      "contactworks",
+      "hubspot",
+      "security",
+      "soc2",
+      "agent",
+      "latency",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"shftbfr-0007\",   \"company_name\": \"ShiftBuffer ContactWorks\",   \"company_domain\": ",
+     "kw_cov": 14
+    },
+    {
+     "gene_id": "1a3b35beea444e2d",
+     "score": 0.1249,
+     "tags": [
+      "company-echoatlas-cx-automation",
+      "company",
+      "echoatlas",
+      "automation",
+      "hubspot",
+      "security",
+      "agent",
+      "audit",
+      "latency",
+      "test"
+     ],
+     "head": "{   \"company_id\": \"comp-echoatlas-6742\",   \"company_name\": \"EchoAtlas CX Automation\",   \"company_dom",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "0c24df82a2f65497",
+     "score": 0.1191,
+     "tags": [
+      "company-redoak-sdr-studio",
+      "company",
+      "redoak",
+      "sdr",
+      "studio",
+      "hubspot",
+      "security",
+      "latency",
+      "api",
+      "agent"
+     ],
+     "head": "{   \"company_id\": \"ro-2026-0310-088\",   \"company_name\": \"RedOak SDR Studio\",   \"company_domain\": \"re",
+     "kw_cov": 20
+    },
+    {
+     "gene_id": "a46e0d43679daa3c",
+     "score": 0.1185,
+     "tags": [
+      "company-fieldline-agentworks",
+      "company",
+      "fieldline",
+      "agentworks",
+      "hubspot",
+      "agent",
+      "latency",
+      "security",
+      "api",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"fld-000824\",   \"company_name\": \"Fieldline AgentWorks\",   \"company_domain\": \"field",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "27b8aa73d78328fe",
+     "score": 0.117,
+     "tags": [
+      "company-railgate-conversational",
+      "company",
+      "railgate",
+      "conversational",
+      "hubspot",
+      "latency",
+      "agent",
+      "security",
+      "api",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"RG-9042\",   \"company_name\": \"Railgate Conversational\",   \"company_domain\": \"railg",
+     "kw_cov": 16
+    },
+    {
+     "gene_id": "3e4e635faa2b8020",
+     "score": 0.112,
+     "tags": [
+      "company-nautilus-edge-software",
+      "company",
+      "nautilus",
+      "edge",
+      "software",
+      "hubspot",
+      "embedding",
+      "latency",
+      "security",
+      "api"
+     ],
+     "head": "{   \"company_id\": \"NH-2026-0047\",   \"company_name\": \"Nautilus Edge Software\",   \"company_domain\": \"n",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "26e8078028a3d90d",
+     "score": 0.1115,
+     "tags": [
+      "company-kairo-support-labs",
+      "company",
+      "kairo",
+      "support",
+      "labs",
+      "hubspot",
+      "security",
+      "latency",
+      "soc2",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"comp-2026-0481\",   \"company_name\": \"Kairo Support Labs\",   \"company_domain\": \"kai",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "62c76da5628372a2",
+     "score": 0.1066,
+     "tags": [
+      "company-summitwise-software",
+      "company",
+      "summitwise",
+      "software",
+      "hubspot",
+      "security",
+      "agent",
+      "latency",
+      "api",
+      "audit"
+     ],
+     "head": "{   \"company_id\": \"cmp-summitwise-0019\",   \"company_name\": \"SummitWise Software\",   \"company_domain\"",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "b6b2e936b0619261",
+     "score": 0.1026,
+     "tags": [
+      "company-signalforge-conversant",
+      "company",
+      "signalforge",
+      "conversant",
+      "hubspot",
+      "latency",
+      "security",
+      "api",
+      "agent",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"sf-conversant-20260218\",   \"company_name\": \"SignalForge Conversant\",   \"company_d",
+     "kw_cov": 15
+    },
+    {
+     "gene_id": "9bae5b085ead2795",
+     "score": 0.0997,
+     "tags": [
+      "company-bayfront-assistive-platform",
+      "company",
+      "bayfront",
+      "assistive",
+      "platform",
+      "hubspot",
+      "security",
+      "latency",
+      "api",
+      "agent"
+     ],
+     "head": "{   \"company_id\": \"BF-7842\",   \"company_name\": \"Bayfront Assistive Platform\",   \"company_domain\": \"b",
+     "kw_cov": 13
+    }
+   ]
+  },
+  {
+   "needle": "erb_280",
+   "receipt_rank": 23,
+   "live_rank": 23,
+   "rank_match": true,
+   "wall_ms": 47663.7,
+   "n_kw": 41,
+   "gold_kw_cov": 16,
+   "interloper_kw_cov_mean": 9.4,
+   "n_above_weaker": 15,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "1f05cda366a5b48d",
+     "score": 0.1512,
+     "tags": [
+      "tidewater-pharma-inference-requirements-jot",
+      "tidewater",
+      "pharma",
+      "inference",
+      "requirements",
+      "jot",
+      "solutions-engineering-and-professional-services",
+      "solutions",
+      "engineering",
+      "and"
+     ],
+     "head": "{   \"title\": \"Tidewater Pharma \\u2014 inference requirements & POC scratchpad\",   \"owner\": \"Priya Sh",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "b6dd4fad4d94e100",
+     "score": 0.1474,
+     "tags": [
+      "kinesis-pharma-cache-warmup-cost-sla-study-2028-06",
+      "kinesis",
+      "pharma",
+      "warmup",
+      "cost",
+      "sla",
+      "study",
+      "2028",
+      "serving-runtime",
+      "serving"
+     ],
+     "head": "{   \"title\": \"Kinesis Pharma \\u2014 cache warmup, coldstart and SLO stability study\",   \"owner\": \"Pr",
+     "kw_cov": 13
+    },
+    {
+     "gene_id": "a358ca9feada2489",
+     "score": 0.1395,
+     "tags": [
+      "company-scarborough-robotics-ai",
+      "company",
+      "scarborough",
+      "robotics",
+      "hubspot",
+      "test",
+      "security",
+      "gpu",
+      "throughput",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"comp-2025-00832\",   \"company_name\": \"Scarborough Robotics & AI\",   \"company_domai",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "782f88b63544f0f0",
+     "score": 0.1286,
+     "tags": [
+      "company-empiria-financial-ai",
+      "company",
+      "empiria",
+      "financial",
+      "hubspot",
+      "gpu",
+      "security",
+      "latency",
+      "throughput",
+      "proxy"
+     ],
+     "head": "{   \"company_id\": \"CMP-005782-EFAI\",   \"company_name\": \"Empiria Financial AI\",   \"company_domain\": \"",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "df8a61c9eb0e654e",
+     "score": 0.1236,
+     "tags": [
+      "company-ceres-capacity-partners",
+      "company",
+      "ceres",
+      "capacity",
+      "partners",
+      "hubspot",
+      "throughput",
+      "gpu",
+      "security",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"ceres-cap-001\",   \"company_name\": \"Ceres Capacity Partners\",   \"company_domain\": ",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "a4cec0bdc89eab61",
+     "score": 0.1185,
+     "tags": [
+      "company-cobalt-sentinel-analytics",
+      "company",
+      "cobalt",
+      "sentinel",
+      "analytics",
+      "hubspot",
+      "latency",
+      "test",
+      "security",
+      "throughput"
+     ],
+     "head": "{   \"company_id\": \"co-009384\",   \"company_name\": \"Cobalt Sentinel Analytics\",   \"company_domain\": \"c",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "f8edb44d99726a33",
+     "score": 0.1141,
+     "tags": [
+      "eng-54012-proactive-spend-sheriff-and-topology-aware-allocator",
+      "eng",
+      "54012",
+      "proactive",
+      "spend",
+      "sheriff",
+      "and",
+      "topology",
+      "aware",
+      "allocator"
+     ],
+     "head": "-spend between allocator and scheduler; reservations expire in 2s if not confirmed by scheduler\",   ",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "8989439e39a3c0df",
+     "score": 0.1105,
+     "tags": [
+      "company-silverpine-inference-platform",
+      "company",
+      "silverpine",
+      "inference",
+      "platform",
+      "hubspot",
+      "latency",
+      "gpu",
+      "throughput",
+      "config"
+     ],
+     "head": "{   \"company_id\": \"SP-20260211\",   \"company_name\": \"Silverpine Inference Platform\",   \"company_domai",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "dc9982df8b11a22a",
+     "score": 0.107,
+     "tags": [
+      "sup-673221-rate-limit-tuning-for-scheduled-model-warmups-and-bulk-writes",
+      "sup",
+      "673221",
+      "rate",
+      "limit",
+      "tuning",
+      "for",
+      "scheduled",
+      "model",
+      "warmups"
+     ],
+     "head": "{   \"key\": \"SUP-673221\",   \"project\": \"customer-support\",   \"issue_type\": \"Support Request\",   \"summ",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "1e90bf7106ef01fc",
+     "score": 0.1039,
+     "tags": [
+      "eng-700101-scaling-escrow-and-guardrail-engine",
+      "eng",
+      "700101",
+      "scaling",
+      "escrow",
+      "and",
+      "guardrail",
+      "engine",
+      "engineering",
+      "cache"
+     ],
+     "head": "{   \"key\": \"ENG-700101\",   \"team\": \"engineering\",   \"title\": \"Scaling Escrow & Guardrail Engine: com",
+     "kw_cov": 4
+    },
+    {
+     "gene_id": "d80b2fb6777638bb",
+     "score": 0.0997,
+     "tags": [
+      "mariposa-pharma-cost-reduction-synthesis",
+      "mariposa",
+      "pharma",
+      "cost",
+      "reduction",
+      "synthesis",
+      "optimize",
+      "embedding",
+      "latency",
+      "api"
+     ],
+     "head": "{   \"title\": \"Mariposa Pharma cost reduction synthesis\",   \"owner\": \"Priya Nair\",   \"drive_area\": \"s",
+     "kw_cov": 12
+    },
+    {
+     "gene_id": "37100ac26d14cfa6",
+     "score": 0.0962,
+     "tags": [
+      "company-northforge-rankengine",
+      "company",
+      "northforge",
+      "rankengine",
+      "hubspot",
+      "endpoint",
+      "security",
+      "api",
+      "test",
+      "soc2"
+     ],
+     "head": "{   \"company_id\": \"NFR-2026-0042\",   \"company_name\": \"Northforge RankEngine\",   \"company_domain\": \"n",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "44a60b77506530db",
+     "score": 0.0958,
+     "tags": [
+      "company-cerulean-quantum-insights",
+      "company",
+      "cerulean",
+      "quantum",
+      "insights",
+      "hubspot",
+      "security",
+      "gpu",
+      "throughput",
+      "latency"
+     ],
+     "head": "{   \"company_id\": \"hub-009472\",   \"company_name\": \"Cerulean Quantum Insights\",   \"company_domain\": \"",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "1f44ffda84fb1822",
+     "score": 0.0945,
+     "tags": [
+      "company-sapphire-stream-analytics",
+      "company",
+      "sapphire",
+      "stream",
+      "analytics",
+      "hubspot",
+      "security",
+      "soc2",
+      "latency",
+      "api"
+     ],
+     "head": "{   \"company_id\": \"sapp-00421\",   \"company_name\": \"Sapphire Stream Analytics\",   \"company_domain\": \"",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "c0096a9f23a450a4",
+     "score": 0.0907,
+     "tags": [
+      "kinesis-pharma-cache-warmup-cost-sla-study-2028-06",
+      "kinesis",
+      "pharma",
+      "warmup",
+      "cost",
+      "sla",
+      "study",
+      "2028",
+      "serving-runtime",
+      "serving"
+     ],
+     "head": "aign windows. Needs a control-plane hook and safe eviction policy.\\\\n- Verify patch for kernel-selec",
+     "kw_cov": 6
+    }
+   ]
+  },
+  {
+   "needle": "erb_294",
+   "receipt_rank": 35,
+   "live_rank": 35,
+   "rank_match": true,
+   "wall_ms": 40245.8,
+   "n_kw": 38,
+   "gold_kw_cov": 8,
+   "interloper_kw_cov_mean": 7.2,
+   "n_above_weaker": 10,
+   "n_above": 15,
+   "above_gold": [
+    {
+     "gene_id": "ba7164083837d9e4",
+     "score": 0.1519,
+     "tags": [
+      "int-62015-cross-currency-remit-suspense-blocking-scheduled-payout",
+      "int",
+      "62015",
+      "cross",
+      "currency",
+      "remit",
+      "suspense",
+      "blocking",
+      "scheduled",
+      "payout"
+     ],
+     "head": "{   \"key\": \"INT-62015\",   \"project\": \"internal-support\",   \"issue_type\": \"Support Request\",   \"summa",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "b8fda271237e7c35",
+     "score": 0.1451,
+     "tags": [
+      "int-13542-thermal-shutdowns-after-bios-rollout",
+      "int",
+      "13542",
+      "thermal",
+      "shutdowns",
+      "after",
+      "bios",
+      "rollout",
+      "internal-support",
+      "internal"
+     ],
+     "head": "{   \"key\": \"INT-13542\",   \"project\": \"internal-support\",   \"issue_type\": \"Incident\",   \"summary\": \"W",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "216aed8cb704e22f",
+     "score": 0.1385,
+     "tags": [
+      "2059876543-namespace-deploylock-exemption-and-release-notes",
+      "2059876543",
+      "namespace",
+      "deploylock",
+      "exemption",
+      "and",
+      "notes",
+      "eng-releases",
+      "eng",
+      "releases"
+     ],
+     "head": "{   \"channel\": \"eng-releases\",   \"thread_ts\": \"2059876543\",   \"first_message_ts\": \"2059876543\",   \"l",
+     "kw_cov": 8
+    },
+    {
+     "gene_id": "1f94b346a8b43a2a",
+     "score": 0.1273,
+     "tags": [
+      "2790012345-postmerge-staggered-rollout-pinchpoint",
+      "2790012345",
+      "postmerge",
+      "staggered",
+      "rollout",
+      "pinchpoint",
+      "eng-releases",
+      "eng",
+      "releases",
+      "release"
+     ],
+     "head": "{   \"channel\": \"eng-releases\",   \"thread_ts\": \"2790012345\",   \"first_message_ts\": \"2790012345\",   \"l",
+     "kw_cov": 9
+    },
+    {
+     "gene_id": "daabc3e00afe64c0",
+     "score": 0.1228,
+     "tags": [
+      "fidelity-rollout-two-track-checkpad-and-release-notes-march-2026-draft",
+      "fidelity",
+      "rollout",
+      "two",
+      "track",
+      "checkpad",
+      "and",
+      "notes",
+      "march",
+      "2026"
+     ],
+     "head": "ces.\\\\n\\\\nRollback criteria (automated + manual):\\\\n- Automated: error rate > 1% absolute increase O",
+     "kw_cov": 10
+    },
+    {
+     "gene_id": "50b91464518aac9c",
+     "score": 0.1225,
+     "tags": [
+      "20250305-us-eu-dst-week-gap-demo-rebook",
+      "20250305",
+      "dst",
+      "week",
+      "gap",
+      "demo",
+      "rebook",
+      "jordan_blake",
+      "jordan",
+      "blake"
+     ],
+     "head": "{   \"thread_id\": \"thread-20250305-jb-finovate-dst-gap-01\",   \"mailbox_owner\": \"jordan_blake\",   \"sub",
+     "kw_cov": 5
+    },
+    {
+     "gene_id": "92c84346d2be0b36",
+     "score": 0.118,
+     "tags": [
+      "int-556421-legacy-supplier-credit-term-repricing-affects-early-payment-discounts",
+      "int",
+      "556421",
+      "legacy",
+      "supplier",
+      "credit",
+      "term",
+      "repricing",
+      "affects",
+      "early"
+     ],
+     "head": "- Priya Kapoor (Payments): Found that payment service intentionally blocks retro-active modification",
+     "kw_cov": 4
+    },
+    {
+     "gene_id": "de9aa0edb97ef31a",
+     "score": 0.1127,
+     "tags": [
+      "20270615-credit-risk-committee-action-hedgecore",
+      "20270615",
+      "credit",
+      "risk",
+      "committee",
+      "action",
+      "hedgecore",
+      "avery_johnson",
+      "avery",
+      "johnson"
+     ],
+     "head": " hold, communicated by AM).\\\\n- Define immediate negotiation levers: 30/60/90-day payment plan, part",
+     "kw_cov": 6
+    },
+    {
+     "gene_id": "da4718e584eb9b91",
+     "score": 0.1095,
+     "tags": [
+      "20260220-euro-late-night-apac-morning-resync",
+      "20260220",
+      "euro",
+      "late",
+      "night",
+      "apac",
+      "morning",
+      "resync",
+      "grace_oconnor",
+      "grace"
+     ],
+     "head": "ng (local) on 1 March; I can reliably join in the UTC afternoon window (Option A: 15:00 UTC) but Opt",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "a6cbe50d87eb23b8",
+     "score": 0.1056,
+     "tags": [
+      "20260220-euro-late-night-apac-morning-resync",
+      "20260220",
+      "euro",
+      "late",
+      "night",
+      "apac",
+      "morning",
+      "resync",
+      "grace_oconnor",
+      "grace"
+     ],
+     "head": "{   \"thread_id\": \"thr_20260220_grace_0032\",   \"mailbox_owner\": \"grace_oconnor\",   \"subject\": \"Re: Re",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "8bcbe49a1dc1f706",
+     "score": 0.1024,
+     "tags": [
+      "1765001234-pioneer-analytics-collections-eom-transfer-failed",
+      "1765001234",
+      "pioneer",
+      "analytics",
+      "collections",
+      "eom",
+      "transfer",
+      "failed",
+      "finance",
+      "Anna (Finance"
+     ],
+     "head": "{   \"channel\": \"finance\",   \"thread_ts\": \"1765001234\",   \"first_message_ts\": \"1765001234\",   \"last_m",
+     "kw_cov": 5
+    },
+    {
+     "gene_id": "253e209c737f6827",
+     "score": 0.099,
+     "tags": [
+      "int-90234-batch-payout-blocked-by-bank-identifier-validation-change",
+      "int",
+      "90234",
+      "batch",
+      "payout",
+      "blocked",
+      "bank",
+      "identifier",
+      "validation",
+      "change"
+     ],
+     "head": "{   \"key\": \"INT-90234\",   \"project\": \"internal-support\",   \"issue_type\": \"Support Request\",   \"summa",
+     "kw_cov": 11
+    },
+    {
+     "gene_id": "5fbba635ae2bbb5a",
+     "score": 0.0958,
+     "tags": [
+      "sup-864321-apigw-shutdown-race-ephemeral-livelock-503s",
+      "sup",
+      "864321",
+      "apigw",
+      "shutdown",
+      "race",
+      "ephemeral",
+      "livelock",
+      "503s",
+      "customer-support"
+     ],
+     "head": "{   \"key\": \"SUP-864321\",   \"project\": \"customer-support\",   \"issue_type\": \"Incident\",   \"summary\": \"",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "01f07215f4e2758b",
+     "score": 0.0922,
+     "tags": [
+      "20260320-clock-change-demo-window-margin",
+      "20260320",
+      "clock",
+      "change",
+      "demo",
+      "window",
+      "margin",
+      "evelyn_hart",
+      "evelyn",
+      "hart"
+     ],
+     "head": "ick intro last week. NimbusBank's payments platform team (me + Chen in APAC) is keen to see Redwood'",
+     "kw_cov": 7
+    },
+    {
+     "gene_id": "0051c7385d189115",
+     "score": 0.0912,
+     "tags": [
+      "1891234567-duty-swap-late-shift-coverage-checkpoints",
+      "1891234567",
+      "duty",
+      "swap",
+      "late",
+      "shift",
+      "coverage",
+      "checkpoints",
+      "eng-oncall",
+      "eng"
+     ],
+     "head": "{   \"channel\": \"eng-oncall\",   \"thread_ts\": \"1891234567\",   \"first_message_ts\": \"1891234567\",   \"las",
+     "kw_cov": 5
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "n_targets": 21,
+  "rank_match": 21,
+  "gold_beats_interloper_majority_on_coverage": 16
+ }
+}

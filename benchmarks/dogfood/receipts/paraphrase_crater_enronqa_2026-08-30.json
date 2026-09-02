@@ -1,0 +1,150 @@
+{
+ "stamp": "2026-08-30",
+ "tool": "scratchpad/paraphrase_mine.py + paraphrase_above_gold.py (session cutoff-paraphrase-gene-issues)",
+ "basis": "2026-08-30 v0.9.1 gate-sweep per-query ladder receipts (integration e6dba22); above-gold audit replayed live on the padded bed, 31/31 rank_match vs receipt",
+ "beds": {
+  "v2": "F:/tmp/enronqa_bed_v2/enronqa.db (84,677 genes, tagger v1)",
+  "padded": "F:/tmp/enronqa_padded_bed/enronqa_padded.db (596,707 genes, hub_cutoff=200, tagger v1)"
+ },
+ "pair_analysis": {
+  "v2/v090": {
+   "n_pairs": 250,
+   "delivered_orig": 0.708,
+   "delivered_reph": 0.68,
+   "gap_pp": 2.8,
+   "fates": {
+    "both": 152,
+    "orig_only": 25,
+    "reph_only": 18,
+    "neither": 55
+   },
+   "reph_miss_map_rank_buckets": {
+    "13-30": 7,
+    "31-100": 2,
+    "<=12": 10,
+    "absent": 6
+   }
+  },
+  "v2/v091_floor0": {
+   "n_pairs": 250,
+   "delivered_orig": 0.84,
+   "delivered_reph": 0.8,
+   "gap_pp": 4.0,
+   "fates": {
+    "both": 182,
+    "orig_only": 28,
+    "reph_only": 18,
+    "neither": 22
+   },
+   "reph_miss_map_rank_buckets": {
+    "13-30": 9,
+    "31-100": 1,
+    "<=12": 10,
+    "absent": 8
+   }
+  },
+  "v2/v091_shipped_floor12": {
+   "n_pairs": 250,
+   "delivered_orig": 0.88,
+   "delivered_reph": 0.832,
+   "gap_pp": 4.8,
+   "fates": {
+    "both": 196,
+    "orig_only": 24,
+    "reph_only": 12,
+    "neither": 18
+   },
+   "reph_miss_map_rank_buckets": {
+    "13-30": 11,
+    "31-100": 1,
+    "<=12": 4,
+    "absent": 8
+   }
+  },
+  "padded/v090": {
+   "n_pairs": 250,
+   "delivered_orig": 0.74,
+   "delivered_reph": 0.664,
+   "gap_pp": 7.6,
+   "fates": {
+    "both": 149,
+    "orig_only": 36,
+    "reph_only": 17,
+    "neither": 48
+   },
+   "reph_miss_map_rank_buckets": {
+    "13-30": 14,
+    "31-100": 3,
+    "<=12": 8,
+    "absent": 11
+   }
+  },
+  "padded/v091_floor0": {
+   "n_pairs": 250,
+   "delivered_orig": 0.82,
+   "delivered_reph": 0.732,
+   "gap_pp": 8.8,
+   "fates": {
+    "both": 171,
+    "orig_only": 34,
+    "reph_only": 12,
+    "neither": 33
+   },
+   "reph_miss_map_rank_buckets": {
+    "13-30": 11,
+    "31-100": 5,
+    "<=12": 6,
+    "absent": 12
+   }
+  },
+  "padded/v091_shipped_floor12": {
+   "n_pairs": 250,
+   "delivered_orig": 0.832,
+   "delivered_reph": 0.752,
+   "gap_pp": 8.0,
+   "fates": {
+    "both": 177,
+    "orig_only": 31,
+    "reph_only": 11,
+    "neither": 31
+   },
+   "reph_miss_map_rank_buckets": {
+    "13-30": 11,
+    "31-100": 5,
+    "<=12": 3,
+    "absent": 12
+   }
+  }
+ },
+ "above_gold_audit": {
+  "arm": "padded / v091_shipped_floor12",
+  "n_targets": 31,
+  "rank_match_vs_receipt": 31,
+  "lost_gold_hitting_keywords": 26,
+  "pool_absent": 12,
+  "named_entity_losses": "schiesser, maggi, mike, cooper, steve, richard, sanders, rogelio, lopez-velarde, eugene, heath, reuters, gds, pge, mtm",
+  "detail_receipt": "paraphrase_above_gold_padded_2026-08-30.json"
+ },
+ "abstain_false_negatives": {
+  "v2/v090": [
+   "enron_003_o"
+  ],
+  "v2/v091_floor0": [],
+  "v2/v091_shipped_floor12": [],
+  "padded/v090": [
+   "enron_173_r"
+  ],
+  "padded/v091_floor0": [
+   "enron_173_r"
+  ],
+  "padded/v091_shipped_floor12": [
+   "enron_173_r"
+  ]
+ },
+ "coverage_discrimination_kill": {
+  "question": "do above-gold interlopers match fewer DISTINCT rephrased-query terms than gold (coverage-aware rerank target)?",
+  "method": "per near-band needle (rank 13-46): distinct-keyword coverage of gold vs each interloper full content",
+  "result": "NO TARGET \u2014 gold beats the interloper majority on 5/16 needles only (11/16 losses); interlopers legitimately match the residual generic terms",
+  "verdict": "coverage/coordination discrimination lane KILLED for the EnronQA paraphrase crater (mirrors W2.1 mass->hubs kill)"
+ }
+}
