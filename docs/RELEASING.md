@@ -30,11 +30,20 @@ Rules that fall out of the table:
 
 ## 2. What CI runs where
 
-`.github/workflows/ci.yml` runs five jobs (`test-linux`, `test-symbol-graph`,
-`test-full-suite`, `test-macos-mps`, `test-windows`) on:
+`.github/workflows/ci.yml` runs five test jobs (`test-linux`,
+`test-symbol-graph`, `test-full-suite`, `test-macos-mps`, `test-windows`) on:
 
 - every push to `master`, `beta` and `release/**`;
 - every pull request whose base is `master` or `beta`.
+
+The same file carries a sixth job, `release-source`, which enforces the
+source-branch rule from section 1: it has a job-level
+`if: github.event_name == 'pull_request' && github.base_ref == 'master'`, so it
+runs on pull requests targeting `master` and is skipped on everything else —
+pushes to `beta` and `release/**`, and pull requests targeting `beta`, are
+unaffected by it. It passes when the head branch matches `release/*` or
+`hotfix/*` and fails otherwise, telling the author to retarget to `beta`. It is
+a required check on `master` (section 8).
 
 `.github/workflows/cla.yml` (job `contributor-signup`) runs on every pull
 request against any base branch; it has no branch filter on purpose, so PRs
@@ -101,12 +110,20 @@ git commit -m "release: v0.9.2b1 pre-release"
 git push origin HEAD:refs/heads/beta
 
 python scripts/release.py tag-message --version 0.9.2b1 > tagmsg.txt
+python scripts/release.py tag-message --version 0.9.2b1 --body-only > notes.md
 git tag -a v0.9.2b1 -F tagmsg.txt
 git push origin v0.9.2b1
-gh release create v0.9.2b1 --prerelease --title "v0.9.2b1" --notes-file tagmsg.txt
+gh release create v0.9.2b1 --prerelease --title "v0.9.2b1" --notes-file notes.md
 ```
 
 Notes:
+
+- Two forms of the same text: an annotated tag has no title field, so
+  `git tag -F` wants the message that opens with the `v0.9.2b1` line, while a
+  GitHub release renders its own title and would show the version twice.
+  `--body-only` drops that leading line, which is the form `--notes-file`
+  wants. Both `tagmsg.txt` and `notes.md` are scratch files; neither is
+  committed.
 
 - `pre` picks the previewed version for you: on a tree at a released
   `X.Y.Z` it moves to `X.Y.(Z+1)`; on a tree already at `X.Y.ZbM` it stays
@@ -138,11 +155,17 @@ python scripts/release.py final --version 0.9.2 --write    # bump + roll "## Unr
 python -m pytest tests/test_version.py -q
 
 python scripts/release.py tag-message --version 0.9.2 > tagmsg.txt
+python scripts/release.py tag-message --version 0.9.2 --body-only > notes.md
 git add pyproject.toml cymatix_context/__init__.py CHANGELOG.md
 git commit -m "release: v0.9.2"
 git push origin HEAD:refs/heads/release/v0.9.2
-gh pr create --base master --head release/v0.9.2 --title "release: v0.9.2" --body-file tagmsg.txt
+gh pr create --base master --head release/v0.9.2 --title "release: v0.9.2" --body-file notes.md
 ```
+
+`tagmsg.txt` keeps the leading `v0.9.2` line for `git tag -F`; `notes.md` is
+the same body with that line dropped (`--body-only`), which is what the PR
+body and `gh release create --notes-file` want, since both render the title
+themselves. Neither file is committed.
 
 Wait for CI on the PR (the `release/**` push and the PR to `master` both
 run the full job set) and merge it with a merge commit, so the release
@@ -154,7 +177,7 @@ git fetch origin
 git checkout master && git pull --ff-only origin master
 git tag -a v0.9.2 -F tagmsg.txt            # annotated tag on the merge commit
 git push origin v0.9.2
-gh release create v0.9.2 --title "v0.9.2" --notes-file tagmsg.txt
+gh release create v0.9.2 --title "v0.9.2" --notes-file notes.md
 ```
 
 `publish.yml` fires on the published release, builds the sdist and wheel,
@@ -212,17 +235,27 @@ Final release:
 - [ ] `sync_github_wiki.py` and `build_wiki_site.py` run, site deployed
 - [ ] Ledger issue #377 updated
 
-## 8. Branch protection (owner runs these)
+## 8. Branch protection
 
-These are proposals; nothing in the repo applies them. Today `master`
-requires only the `contributor-signup` check, with `enforce_admins` and
-`strict` both false, and `beta` has no protection.
+Both rule sets below are applied, as of 2026-09-01. They are classic branch
+protection, set through the API; the JSON and `gh` commands are kept here as
+the record of what is in force and how to reapply it after an edit in the
+GitHub UI. Read the live state with
+`gh api repos/mbachaud/Cymatix-Context/branches/<branch>/protection`.
+
+In force on both branches: `enforce_admins` false, `strict` false, force
+pushes blocked, deletion blocked.
+
+- `beta` requires six checks: `contributor-signup`, `test-linux`,
+  `test-symbol-graph`, `test-full-suite`, `test-macos-mps`, `test-windows`.
+- `master` requires those six plus `release-source`, and a pull request with
+  0 required approving reviews.
 
 ### `beta`
 
-Required checks: the five CI jobs plus `contributor-signup`; no force-push,
-no deletion; `enforce_admins` stays false so the owner can still push a
-locally merged integration head directly (required status checks apply to
+Required checks: the five CI test jobs plus `contributor-signup`; no
+force-push, no deletion. `enforce_admins` is false so the owner can still push
+a locally merged integration head directly (required status checks apply to
 direct pushes as well, and a local merge commit has no check runs, so with
 `enforce_admins: true` every integration would have to go through a PR).
 
@@ -253,32 +286,25 @@ gh api -X PUT repos/mbachaud/Cymatix-Context/branches/beta/protection --input be
 
 ### `master`
 
-Same checks as `beta`, plus a pull request is required and only
-`release/**` or `hotfix/**` heads are acceptable.
+Same checks as `beta`, plus the `release-source` check and a required pull
+request (0 approving reviews), so only `release/**` or `hotfix/**` heads can
+merge.
 
 GitHub cannot restrict a protected branch by the PR's source branch. Neither
 classic branch protection nor repository rulesets have a head-branch
 condition: rulesets filter on the target ref, the repository, and actors,
 and they add "require pull request", "require status checks", "block force
 pushes", "restrict deletions" and bypass lists, but not "only from these
-branches". The workable guard is a status check that fails when the head is
-not `release/**` or `hotfix/**`, made required on `master`. Add this job to
-`.github/workflows/ci.yml` when the protection goes live (it is not in the
-file today so that PRs already open against `master` are not affected):
+branches". The guard is therefore a status check that fails when the head is
+not `release/**` or `hotfix/**`.
 
-```yaml
-  # Only release/** and hotfix/** heads may merge to master (docs/RELEASING.md).
-  release-source:
-    if: github.event_name == 'pull_request' && github.base_ref == 'master'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Head branch must be release/** or hotfix/**
-        run: |
-          case "${{ github.head_ref }}" in
-            release/*|hotfix/*) echo "ok: ${{ github.head_ref }}" ;;
-            *) echo "PRs to master must come from release/** or hotfix/**; retarget to beta"; exit 1 ;;
-          esac
-```
+That check is the `release-source` job in `.github/workflows/ci.yml`, and it
+is one of `master`'s required contexts. Its job-level
+`if: github.event_name == 'pull_request' && github.base_ref == 'master'` keeps
+it off every other event, so it never runs on a `beta` push or a PR whose base
+is `beta`. On a PR to `master` it passes for a `release/*` or `hotfix/*` head
+and otherwise fails with "PRs to master must come from release/** or
+hotfix/**; retarget this PR to beta".
 
 Classic protection:
 
@@ -310,10 +336,11 @@ JSON
 gh api -X PUT repos/mbachaud/Cymatix-Context/branches/master/protection --input master-protection.json
 ```
 
-Rulesets alternative (one ruleset for `master`; the source-branch guard is
-still the `release-source` status check, because rulesets cannot express it
-either). The bypass actor is the repository admin role so the owner keeps an
-escape hatch:
+Rulesets alternative — **not applied**; kept as the equivalent if the
+repository ever moves off classic protection (one ruleset for `master`; the
+source-branch guard is still the `release-source` status check, because
+rulesets cannot express it either). The bypass actor is the repository admin
+role so the owner keeps an escape hatch:
 
 ```bash
 cat > master-ruleset.json <<'JSON'
@@ -354,25 +381,26 @@ or keep both and accept that the stricter rule wins.
 
 ### Default branch
 
-Recommendation: make `beta` the default branch.
+`beta` has been the repository's default branch since 2026-09-01. New pull
+requests land on the integration branch without the contributor having to
+change the base, `git clone` and the repository landing page show `beta`, and
+GitHub's "compare" and "new branch" defaults point at it.
 
 ```bash
 gh repo edit mbachaud/Cymatix-Context --default-branch beta
 ```
 
-What it buys: new PRs default to `beta` without the contributor having to
-change the base; `git clone` and the repository landing page show the
-integration head, which is what contributors work against; GitHub's
-"compare" and "new branch" defaults point at `beta`.
-
-What it costs, and how the docs already handle it:
+What it costs, and how the docs handle it:
 
 - The landing-page README is `beta`'s. The README on `master` stays the
   released doc, and every wiki and docs link that should describe a shipped
   version points at `blob/master/...` explicitly, so those links keep
-  describing the release regardless of the default branch. `beta`'s README
-  may describe defaults that are not on PyPI yet; the wiki header line
-  ("This wiki documents 0.9.x") is where that is disclosed.
+  describing the release regardless of the default branch. Links to files
+  that only exist on the integration branch — this runbook among them — point
+  at `blob/beta/...` instead, because `blob/master/` would 404 until the next
+  release carries the file across. `beta`'s README may describe defaults that
+  are not on PyPI yet; the wiki header line ("This wiki documents 0.9.x") is
+  where that is disclosed.
 - `pip install git+https://github.com/mbachaud/Cymatix-Context` installs
   `beta`. Anyone who wants the release installs from PyPI or pins
   `@v0.9.2`.
@@ -383,7 +411,5 @@ What it costs, and how the docs already handle it:
 - Existing clones are unaffected; `origin/HEAD` only changes on a fresh
   clone or `git remote set-head origin -a`.
 
-If the owner prefers the landing page to keep showing the released README,
-leave `master` as default and accept that every contributor must pick
-`beta` as the PR base by hand; the `release-source` check above catches the
-ones who forget.
+The `release-source` check is what catches a contributor who still opens a
+pull request against `master`.

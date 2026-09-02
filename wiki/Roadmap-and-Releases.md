@@ -262,10 +262,12 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
   `ingest_c`) are part of the same contract; see
   [Benchmarks and Receipts](Benchmarks-and-Receipts).
 - **The runbook is
-  [`docs/RELEASING.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/RELEASING.md)**:
+  [`docs/RELEASING.md`](https://github.com/mbachaud/Cymatix-Context/blob/beta/docs/RELEASING.md)**:
   exact commands for pre-releases, the final cut, the post-release wiki
   sync, and the `scripts/release.py` helper that bumps the version and rolls
-  the changelog.
+  the changelog. It links to `beta`, not `master`, because it describes the
+  process rather than a shipped version — and because it reaches `master`
+  only with the next release.
 
 ## Go deeper
 

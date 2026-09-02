@@ -349,19 +349,27 @@ gate and tracked as issue #417.
 - **docs:** the wiki pages treat PR #419's canonical spellings as primary;
   that branch is merged into this one, so the two land in either order.
 - **process: beta-branch release flow.** `beta` is the standing integration
-  branch and default PR base; `master` holds released code and tags only;
-  releases are `release/vX.Y.Z` cuts from `beta` merged to `master` by PR,
-  hotfixes are `hotfix/*` from `master` back-merged into `beta`. CI runs on
+  branch and, since 2026-09-01, the repository's **default branch** — new pull
+  requests and fresh clones land on it. `master` holds released code and tags
+  only; releases are `release/vX.Y.Z` cuts from `beta` merged to `master` by
+  PR, hotfixes are `hotfix/*` from `master` back-merged into `beta`. CI runs on
   pushes to `beta` and `release/**` and on PRs targeting `beta` (master
-  unchanged); `cla.yml` was already unfiltered. Pre-releases (`vX.Y.ZbN` on
-  `beta`, GitHub pre-release, `publish.yml` to PyPI, `pip install --pre
-  cymatix-context`) are the new way to ship an integration snapshot. Runbook:
-  `docs/RELEASING.md` (branch model, receipt gate, exact commands, proposed
-  branch protection and default-branch change); helper: `scripts/release.py`
-  (`check` / `pre --n N` / `final --version X.Y.Z` / `tag-message`, dry-run
-  by default, never runs git itself; `tests/test_release_script.py`); PR
-  template `.github/PULL_REQUEST_TEMPLATE.md`; `CONTRIBUTING.md` "Branches
-  and releases".
+  unchanged); `cla.yml` was already unfiltered. A sixth CI job,
+  `release-source`, fails a pull request to `master` whose head is not
+  `release/**` or `hotfix/**`, and is scoped by a job-level `if` to PRs against
+  `master` so `beta` pushes and `beta` PRs skip it. **Branch protection is
+  applied** on both branches (classic, `enforce_admins` false, no force-push,
+  no deletion): `beta` requires `contributor-signup` plus the five test jobs;
+  `master` requires those six plus `release-source` and a pull request with 0
+  approvals. Pre-releases (`vX.Y.ZbN` on `beta`, GitHub pre-release,
+  `publish.yml` to PyPI, `pip install --pre cymatix-context`) are the new way
+  to ship an integration snapshot. Runbook: `docs/RELEASING.md` (branch model,
+  receipt gate, exact commands, and the applied protection JSON as the reapply
+  record); helper: `scripts/release.py` (`check` / `pre --n N` /
+  `final --version X.Y.Z` / `tag-message [--body-only]`, dry-run by default,
+  never runs git itself; `tests/test_release_script.py`); PR template
+  `.github/PULL_REQUEST_TEMPLATE.md`; `CONTRIBUTING.md` "Branches and
+  releases".
 
 ## 0.9.1 (2026-08-30)
 
