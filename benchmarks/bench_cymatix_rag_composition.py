@@ -35,7 +35,7 @@ high pointer / low content = pointed right but didn't fetch enough.
 low pointer / high content = dumb luck (content overlap without
 coordinate resolution).
 
-Requires helix-context server running at 127.0.0.1:11437 AND raw
+Requires cymatix-context server running at 127.0.0.1:11437 AND raw
 access to the genome.db file for the pure-RAG cell.
 """
 
@@ -54,12 +54,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import httpx  # noqa: E402
 from cymatix_context.backends.sema_codec import decode_embedding  # noqa: E402
-from cymatix_context.lexical_rescue import (  # noqa: E402
+from cymatix_context.retrieval.lexical_rescue import (  # noqa: E402
     lexical_rescue_sources,
     merge_source_ids,
 )
-from cymatix_context.chunk_fetch import fetch_relevant_chunks  # noqa: E402
-from cymatix_context.relevance_window import (  # noqa: E402
+from cymatix_context.encoding.chunk_fetch import fetch_relevant_chunks  # noqa: E402
+from cymatix_context.retrieval.relevance_window import (  # noqa: E402
     annotate_window,
     best_relevance_window,
 )

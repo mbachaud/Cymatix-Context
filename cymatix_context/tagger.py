@@ -27,10 +27,13 @@ import hashlib
 import logging
 import os
 import re
-from typing import Dict, List, Optional, Set
+from typing import TYPE_CHECKING, Dict, List, Optional, Set
 
 from .codons import CodonEncoder
 from .schemas import EpigeneticMarkers, Gene, PromoterTags
+
+if TYPE_CHECKING:
+    from .schemas import IntentClass
 
 log = logging.getLogger("cymatix.tagger")
 

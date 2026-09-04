@@ -407,6 +407,57 @@ gate and tracked as issue #417.
   never runs git itself; `tests/test_release_script.py`); PR template
   `.github/PULL_REQUEST_TEMPLATE.md`; `CONTRIBUTING.md` "Branches and
   releases".
+- **ci: ruff error-gate + `[nli]` extra in the full-suite job.** New fast
+  `lint` job runs `ruff check --select E9,F63,F7,F82 .` (syntax errors,
+  invalid comparisons, logic errors, undefined names — deliberately not a
+  style linter; the selection is pinned in `[tool.ruff.lint]` so local
+  `ruff check .` and CI agree). `test-full-suite` now installs
+  `.[dev,ast,mcp,nli]` so the fully-mocked transformers-gated tests (incl.
+  the #341 rerank device-routing test) stop silently skipping — torch is
+  already the CPU wheel, so no CUDA wheel is pulled in. The gate's only
+  hits on `beta` were 4 annotation-only forward references
+  (`knowledge_store.py` `BGEM3Codec`/`np`, `tagger.py` `IntentClass`,
+  `tests/conftest.py` `TestClient`), fixed with `TYPE_CHECKING` imports —
+  no runtime import changes. Ported from the 2026-08-08 audit branch
+  (`claude/codebase-audit-weaknesses-96a7da`, c193c20 + the f2b8a06
+  `knowledge_store.py` rider).
+- **bench: `benchmarks/bench_cymatix_rag_composition.py` imports repaired.**
+  The script still imported `cymatix_context.lexical_rescue` /
+  `chunk_fetch` / `relevance_window`, which moved under `retrieval/` and
+  `encoding/` in the #90 restructure — it has been import-broken since.
+  Repointed at the current module locations. `bench_needle.py` and
+  `bench_claude_matrix.py`: `helix-context/helix.toml` restored as the gold
+  label for the 11 toml needles — the frozen bench beds predate the 0.8.5
+  rename, so the codemodded `helix-context/cymatix.toml` label matched no
+  bed (`docs/benchmarks/MULTI_VALID_GOLD.md`); `cymatix.toml` stays as an
+  ANY-match sibling for post-rename beds. Ported from audit commit 5c12c16
+  minus its `ablate_cymatics.py` "peak_width is inert" annotation (false
+  since #357 wired the knob; beta already carries the #354/#357 label fix).
+- **chore: dead code removed.** `scripts/codemod_cymatix_rename.py`
+  (self-neutralized since the 0.8.5 clean break — `OLD_PKG == NEW_PKG`;
+  working version recoverable at 2e3f90e), `scripts/_write_tcm.py` (4-line
+  dead scaffold), and `filename_anchor.remove_gene` (zero callers).
+  Document deletes already sweep `filename_index` via
+  `KnowledgeStore.delete_gene`'s `optional_tables` loop; the new
+  `tests/test_filename_index_delete.py` pins that so it cannot regress
+  silently. Ported from audit commit 363f700. Not ported from that branch:
+  **f2b8a06 (concurrency) — deferred, not superseded**: only its
+  `knowledge_store.py` `TYPE_CHECKING` rider is here (see the ci entry
+  above), and three fixes it carries are still absent on `beta` — the SPLADE
+  `_ensure_loaded` first-load lock (`splade_backend.py:112-142`, N-thread
+  cold start constructs the model N times), the bounded freshness mtime
+  cache with its `/admin/refresh` clear (`freshness.py:133,145` grow for the
+  process lifetime; `routes_admin.py:653-658` never clears the cache that
+  `context_manager.py:1211` documents it as clearing), and `blend.py`'s
+  copy-under-lock score-map publication (`blend.py:204-207,235,283` still
+  alias the #350 request-local dict into the shared
+  `genome.last_query_scores`, plus the unlocked cold-tier write at
+  `knowledge_store.py:1571-1574`). They need a hand re-apply against #350
+  rather than a cherry-pick — **tracked in #439**. 44d0327 (docs) is
+  genuinely superseded — stale claims retired by #354/#388, #357, #396 and
+  865d34d — as is the README "Security" section, where the wiki
+  `Configuration` and `HTTP-API` pages already carry a fuller, current
+  equivalent.
 
 ## 0.9.1 (2026-08-30)
 

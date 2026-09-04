@@ -126,16 +126,6 @@ def index_gene(conn: sqlite3.Connection, gene_id: str, source_id: Optional[str])
         log.warning("filename_anchor index failed for gene=%s", gene_id, exc_info=True)
 
 
-def remove_gene(conn: sqlite3.Connection, gene_id: str) -> None:
-    """Remove a document from filename_index. Called when a document is deleted."""
-    try:
-        conn.execute(
-            "DELETE FROM filename_index WHERE gene_id = ?", (gene_id,)
-        )
-    except Exception:
-        log.warning("filename_anchor remove failed for gene=%s", gene_id, exc_info=True)
-
-
 def is_enabled() -> bool:
     """Check env-var override. Toml flag is read separately by the caller."""
     return os.environ.get("CYMATIX_FILENAME_ANCHOR_ENABLED", "").lower() in {"1", "true", "yes", "on"}
