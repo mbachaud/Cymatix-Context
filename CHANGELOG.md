@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- **feat(launcher): graph summary panel on the Knowledge store tab.** The
+  dashboard now shows how much of each graph layer the active genome actually
+  holds: documents and how many of them a COVER relation touches, distinct
+  undirected COVER links beside the stored row count, `CHUNK_OF` structure
+  links, harmonic co-activation links, and distinct entities beside their
+  membership rows. Implements
+  `docs/superpowers/specs/2026-07-13-launcher-graph-summary-design.md`; it is a
+  ledger, not a renderer, and nothing is drawn. New
+  `cymatix_context/launcher/graph_summary.py` reads the genome over a
+  short-lived `mode=ro` connection with `PRAGMA query_only=ON`, does not modify
+  the genome, and caches by resolved path for 30 seconds, so the 2-second poll
+  costs a dict lookup. The read-only URI comes from `Path.as_uri()`, the form
+  `cymatix_context/cli/cmd_status.py` uses: it percent-encodes, so a genome
+  path containing `#` cannot re-parse and drop `?mode=ro`. The
+  distinct-pair count needs a temp B-tree over every COVER row (measured 1.7 s
+  at 800,000 rows, ~10 s at 7.2M), so it is skipped above
+  `COVER_LINKS_MAX_ROWS = 500_000` and the panel reports stored rows instead.
+  An unreadable store renders the unavailable state with the reason in the log
+  and never on the page. Panel omits itself when the active genome file is not
+  on disk. No new dependency, endpoint, config key or client-side script.
+  `tests/test_launcher_graph_summary.py`.
+
 - **fix(launcher): the collector publishes the real active genome path.**
   `_database_panel` lowercased `active_genome_path()` before publishing it as
   `state["database"]["active_path"]`. On a case-sensitive filesystem the result
