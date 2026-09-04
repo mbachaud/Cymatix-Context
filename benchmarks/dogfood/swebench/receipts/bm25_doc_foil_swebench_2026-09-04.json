@@ -1,0 +1,2020 @@
+{
+ "tool": "benchmarks/dogfood/code/bm25_doc_foil.py",
+ "tag": "swebench",
+ "corpus_root": "F:\\Projects\\swebench\\corpus",
+ "files_admitted": 10464,
+ "files_size_gated": 1113,
+ "files_ext_skipped": 1918,
+ "documents_after_dedup": 10350,
+ "byte_duplicate_collisions": 114,
+ "dedup": true,
+ "bm25": {
+  "k1": 1.5,
+  "b": 0.75,
+  "idf": "floored at 0",
+  "tokenizer": "[A-Za-z_][A-Za-z_0-9]*"
+ },
+ "query": "needles_<tag>.json query text verbatim",
+ "gold": "gold_paths_<tag>.json (document level, first gold)",
+ "build_s": 7.9,
+ "total": {
+  "n": 489,
+  "gold_absent": 4,
+  "ndcg@10": 0.341,
+  "recall@1": 0.182,
+  "recall@5": 0.4049,
+  "recall@10": 0.5337,
+  "recall@12": 0.5583,
+  "mrr": 0.2941
+ },
+ "by_type": {
+  "swebench_file_loc": {
+   "n": 489,
+   "gold_absent": 4,
+   "ndcg@10": 0.341,
+   "recall@1": 0.182,
+   "recall@5": 0.4049,
+   "recall@10": 0.5337,
+   "recall@12": 0.5583,
+   "mrr": 0.2941
+  }
+ },
+ "per_query": [
+  {
+   "needle": "swe_astropy__astropy-12907",
+   "rank": 1
+  },
+  {
+   "needle": "swe_astropy__astropy-13033",
+   "rank": 358
+  },
+  {
+   "needle": "swe_astropy__astropy-13236",
+   "rank": 9
+  },
+  {
+   "needle": "swe_astropy__astropy-13398",
+   "rank": 7
+  },
+  {
+   "needle": "swe_astropy__astropy-13453",
+   "rank": 527
+  },
+  {
+   "needle": "swe_astropy__astropy-13579",
+   "rank": 397
+  },
+  {
+   "needle": "swe_astropy__astropy-13977",
+   "rank": 1
+  },
+  {
+   "needle": "swe_astropy__astropy-14096",
+   "rank": 2
+  },
+  {
+   "needle": "swe_astropy__astropy-14182",
+   "rank": 660
+  },
+  {
+   "needle": "swe_astropy__astropy-14309",
+   "rank": 9
+  },
+  {
+   "needle": "swe_astropy__astropy-14365",
+   "rank": 1
+  },
+  {
+   "needle": "swe_astropy__astropy-14369",
+   "rank": 5
+  },
+  {
+   "needle": "swe_astropy__astropy-14508",
+   "rank": 2
+  },
+  {
+   "needle": "swe_astropy__astropy-14539",
+   "rank": 2
+  },
+  {
+   "needle": "swe_astropy__astropy-14598",
+   "rank": 3
+  },
+  {
+   "needle": "swe_astropy__astropy-14995",
+   "rank": 1
+  },
+  {
+   "needle": "swe_astropy__astropy-7166",
+   "rank": 14
+  },
+  {
+   "needle": "swe_astropy__astropy-7336",
+   "rank": 1
+  },
+  {
+   "needle": "swe_astropy__astropy-7606",
+   "rank": 1
+  },
+  {
+   "needle": "swe_astropy__astropy-7671",
+   "rank": 1
+  },
+  {
+   "needle": "swe_astropy__astropy-8707",
+   "rank": 2
+  },
+  {
+   "needle": "swe_astropy__astropy-8872",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-10097",
+   "rank": 331
+  },
+  {
+   "needle": "swe_django__django-10554",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-10880",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-10914",
+   "rank": 8
+  },
+  {
+   "needle": "swe_django__django-10973",
+   "rank": 332
+  },
+  {
+   "needle": "swe_django__django-10999",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-11066",
+   "rank": 23
+  },
+  {
+   "needle": "swe_django__django-11087",
+   "rank": 613
+  },
+  {
+   "needle": "swe_django__django-11095",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-11099",
+   "rank": 292
+  },
+  {
+   "needle": "swe_django__django-11119",
+   "rank": 41
+  },
+  {
+   "needle": "swe_django__django-11133",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-11138",
+   "rank": 10
+  },
+  {
+   "needle": "swe_django__django-11141",
+   "rank": 8
+  },
+  {
+   "needle": "swe_django__django-11149",
+   "rank": 30
+  },
+  {
+   "needle": "swe_django__django-11163",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-11179",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-11206",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-11211",
+   "rank": 37
+  },
+  {
+   "needle": "swe_django__django-11239",
+   "rank": 4
+  },
+  {
+   "needle": "swe_django__django-11265",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-11276",
+   "rank": 58
+  },
+  {
+   "needle": "swe_django__django-11292",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-11299",
+   "rank": 36
+  },
+  {
+   "needle": "swe_django__django-11333",
+   "rank": 47
+  },
+  {
+   "needle": "swe_django__django-11400",
+   "rank": 10
+  },
+  {
+   "needle": "swe_django__django-11433",
+   "rank": 8
+  },
+  {
+   "needle": "swe_django__django-11451",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-11477",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-11490",
+   "rank": 12
+  },
+  {
+   "needle": "swe_django__django-11532",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-11551",
+   "rank": 12
+  },
+  {
+   "needle": "swe_django__django-11555",
+   "rank": 4
+  },
+  {
+   "needle": "swe_django__django-11603",
+   "rank": 51
+  },
+  {
+   "needle": "swe_django__django-11728",
+   "rank": 15
+  },
+  {
+   "needle": "swe_django__django-11734",
+   "rank": 11
+  },
+  {
+   "needle": "swe_django__django-11740",
+   "rank": 112
+  },
+  {
+   "needle": "swe_django__django-11749",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-11790",
+   "rank": 19
+  },
+  {
+   "needle": "swe_django__django-11815",
+   "rank": 386
+  },
+  {
+   "needle": "swe_django__django-11820",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-11848",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-11880",
+   "rank": 32
+  },
+  {
+   "needle": "swe_django__django-11885",
+   "rank": 16
+  },
+  {
+   "needle": "swe_django__django-11951",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-11964",
+   "rank": 331
+  },
+  {
+   "needle": "swe_django__django-11999",
+   "rank": 17
+  },
+  {
+   "needle": "swe_django__django-12039",
+   "rank": 301
+  },
+  {
+   "needle": "swe_django__django-12050",
+   "rank": 7
+  },
+  {
+   "needle": "swe_django__django-12125",
+   "rank": 363
+  },
+  {
+   "needle": "swe_django__django-12143",
+   "rank": 42
+  },
+  {
+   "needle": "swe_django__django-12155",
+   "rank": 62
+  },
+  {
+   "needle": "swe_django__django-12193",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-12209",
+   "rank": 31
+  },
+  {
+   "needle": "swe_django__django-12262",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-12273",
+   "rank": 23
+  },
+  {
+   "needle": "swe_django__django-12276",
+   "rank": 7
+  },
+  {
+   "needle": "swe_django__django-12304",
+   "rank": 1156
+  },
+  {
+   "needle": "swe_django__django-12308",
+   "rank": 30
+  },
+  {
+   "needle": "swe_django__django-12325",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-12406",
+   "rank": 11
+  },
+  {
+   "needle": "swe_django__django-12419",
+   "rank": 14
+  },
+  {
+   "needle": "swe_django__django-12663",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-12708",
+   "rank": 4
+  },
+  {
+   "needle": "swe_django__django-12713",
+   "rank": 76
+  },
+  {
+   "needle": "swe_django__django-12741",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-12754",
+   "rank": 71
+  },
+  {
+   "needle": "swe_django__django-12774",
+   "rank": 23
+  },
+  {
+   "needle": "swe_django__django-12858",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-12965",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-13012",
+   "rank": 7
+  },
+  {
+   "needle": "swe_django__django-13023",
+   "rank": 9
+  },
+  {
+   "needle": "swe_django__django-13028",
+   "rank": 254
+  },
+  {
+   "needle": "swe_django__django-13033",
+   "rank": 12
+  },
+  {
+   "needle": "swe_django__django-13089",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-13109",
+   "rank": 43
+  },
+  {
+   "needle": "swe_django__django-13112",
+   "rank": 58
+  },
+  {
+   "needle": "swe_django__django-13121",
+   "rank": 4
+  },
+  {
+   "needle": "swe_django__django-13128",
+   "rank": 4
+  },
+  {
+   "needle": "swe_django__django-13158",
+   "rank": 42
+  },
+  {
+   "needle": "swe_django__django-13195",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-13212",
+   "rank": 104
+  },
+  {
+   "needle": "swe_django__django-13279",
+   "rank": 175
+  },
+  {
+   "needle": "swe_django__django-13297",
+   "rank": 203
+  },
+  {
+   "needle": "swe_django__django-13315",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-13343",
+   "rank": 9
+  },
+  {
+   "needle": "swe_django__django-13344",
+   "rank": 22
+  },
+  {
+   "needle": "swe_django__django-13346",
+   "rank": 98
+  },
+  {
+   "needle": "swe_django__django-13363",
+   "rank": 23
+  },
+  {
+   "needle": "swe_django__django-13401",
+   "rank": 53
+  },
+  {
+   "needle": "swe_django__django-13406",
+   "rank": 13
+  },
+  {
+   "needle": "swe_django__django-13410",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-13417",
+   "rank": 7
+  },
+  {
+   "needle": "swe_django__django-13449",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-13512",
+   "rank": 212
+  },
+  {
+   "needle": "swe_django__django-13513",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-13516",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-13551",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-13568",
+   "rank": 11
+  },
+  {
+   "needle": "swe_django__django-13569",
+   "rank": 948
+  },
+  {
+   "needle": "swe_django__django-13590",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-13658",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-13670",
+   "rank": 24
+  },
+  {
+   "needle": "swe_django__django-13741",
+   "rank": 44
+  },
+  {
+   "needle": "swe_django__django-13786",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-13794",
+   "rank": 4
+  },
+  {
+   "needle": "swe_django__django-13807",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-13809",
+   "rank": 55
+  },
+  {
+   "needle": "swe_django__django-13810",
+   "rank": 23
+  },
+  {
+   "needle": "swe_django__django-13820",
+   "rank": 46
+  },
+  {
+   "needle": "swe_django__django-13821",
+   "rank": 569
+  },
+  {
+   "needle": "swe_django__django-13837",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-13925",
+   "rank": 47
+  },
+  {
+   "needle": "swe_django__django-13933",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-13964",
+   "rank": 8
+  },
+  {
+   "needle": "swe_django__django-14007",
+   "rank": 13
+  },
+  {
+   "needle": "swe_django__django-14011",
+   "rank": 8
+  },
+  {
+   "needle": "swe_django__django-14017",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-14034",
+   "rank": 20
+  },
+  {
+   "needle": "swe_django__django-14053",
+   "rank": 22
+  },
+  {
+   "needle": "swe_django__django-14089",
+   "rank": 716
+  },
+  {
+   "needle": "swe_django__django-14122",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-14140",
+   "rank": 56
+  },
+  {
+   "needle": "swe_django__django-14155",
+   "rank": 40
+  },
+  {
+   "needle": "swe_django__django-14170",
+   "rank": 103
+  },
+  {
+   "needle": "swe_django__django-14238",
+   "rank": 175
+  },
+  {
+   "needle": "swe_django__django-14311",
+   "rank": 14
+  },
+  {
+   "needle": "swe_django__django-14315",
+   "rank": 60
+  },
+  {
+   "needle": "swe_django__django-14349",
+   "rank": 288
+  },
+  {
+   "needle": "swe_django__django-14351",
+   "rank": 236
+  },
+  {
+   "needle": "swe_django__django-14373",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-14376",
+   "rank": 18
+  },
+  {
+   "needle": "swe_django__django-14404",
+   "rank": 16
+  },
+  {
+   "needle": "swe_django__django-14434",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-14493",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-14500",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-14534",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-14539",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-14559",
+   "rank": 12
+  },
+  {
+   "needle": "swe_django__django-14580",
+   "rank": 246
+  },
+  {
+   "needle": "swe_django__django-14608",
+   "rank": 16
+  },
+  {
+   "needle": "swe_django__django-14631",
+   "rank": 4
+  },
+  {
+   "needle": "swe_django__django-14672",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-14725",
+   "rank": 116
+  },
+  {
+   "needle": "swe_django__django-14752",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-14765",
+   "rank": 36
+  },
+  {
+   "needle": "swe_django__django-14771",
+   "rank": 4
+  },
+  {
+   "needle": "swe_django__django-14787",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-14792",
+   "rank": 7
+  },
+  {
+   "needle": "swe_django__django-14855",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-14915",
+   "rank": 9
+  },
+  {
+   "needle": "swe_django__django-14999",
+   "rank": 13
+  },
+  {
+   "needle": "swe_django__django-15022",
+   "rank": 26
+  },
+  {
+   "needle": "swe_django__django-15037",
+   "rank": 252
+  },
+  {
+   "needle": "swe_django__django-15098",
+   "rank": 23
+  },
+  {
+   "needle": "swe_django__django-15103",
+   "rank": 19
+  },
+  {
+   "needle": "swe_django__django-15104",
+   "rank": 147
+  },
+  {
+   "needle": "swe_django__django-15127",
+   "rank": 3149
+  },
+  {
+   "needle": "swe_django__django-15128",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-15161",
+   "rank": 257
+  },
+  {
+   "needle": "swe_django__django-15252",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-15268",
+   "rank": 216
+  },
+  {
+   "needle": "swe_django__django-15277",
+   "rank": 7
+  },
+  {
+   "needle": "swe_django__django-15278",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-15280",
+   "rank": 68
+  },
+  {
+   "needle": "swe_django__django-15315",
+   "rank": 55
+  },
+  {
+   "needle": "swe_django__django-15368",
+   "rank": 16
+  },
+  {
+   "needle": "swe_django__django-15375",
+   "rank": 380
+  },
+  {
+   "needle": "swe_django__django-15380",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-15382",
+   "rank": 93
+  },
+  {
+   "needle": "swe_django__django-15467",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-15499",
+   "rank": 8
+  },
+  {
+   "needle": "swe_django__django-15503",
+   "rank": 92
+  },
+  {
+   "needle": "swe_django__django-15525",
+   "rank": 57
+  },
+  {
+   "needle": "swe_django__django-15554",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-15561",
+   "rank": 30
+  },
+  {
+   "needle": "swe_django__django-15563",
+   "rank": 56
+  },
+  {
+   "needle": "swe_django__django-15569",
+   "rank": 26
+  },
+  {
+   "needle": "swe_django__django-15572",
+   "rank": 1187
+  },
+  {
+   "needle": "swe_django__django-15629",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-15695",
+   "rank": 7
+  },
+  {
+   "needle": "swe_django__django-15731",
+   "rank": 228
+  },
+  {
+   "needle": "swe_django__django-15732",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-15741",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-15814",
+   "rank": 70
+  },
+  {
+   "needle": "swe_django__django-15851",
+   "rank": 448
+  },
+  {
+   "needle": "swe_django__django-15863",
+   "rank": 16
+  },
+  {
+   "needle": "swe_django__django-15916",
+   "rank": 15
+  },
+  {
+   "needle": "swe_django__django-15930",
+   "rank": 5
+  },
+  {
+   "needle": "swe_django__django-15957",
+   "rank": 190
+  },
+  {
+   "needle": "swe_django__django-15973",
+   "rank": 14
+  },
+  {
+   "needle": "swe_django__django-15987",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-16032",
+   "rank": 15
+  },
+  {
+   "needle": "swe_django__django-16082",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-16100",
+   "rank": 16
+  },
+  {
+   "needle": "swe_django__django-16116",
+   "rank": 42
+  },
+  {
+   "needle": "swe_django__django-16136",
+   "rank": 14
+  },
+  {
+   "needle": "swe_django__django-16139",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-16145",
+   "rank": 100
+  },
+  {
+   "needle": "swe_django__django-16255",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-16256",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-16263",
+   "rank": 9
+  },
+  {
+   "needle": "swe_django__django-16315",
+   "rank": 14
+  },
+  {
+   "needle": "swe_django__django-16333",
+   "rank": 17
+  },
+  {
+   "needle": "swe_django__django-16429",
+   "rank": 84
+  },
+  {
+   "needle": "swe_django__django-16454",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-16485",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-16493",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-16502",
+   "rank": 19
+  },
+  {
+   "needle": "swe_django__django-16527",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-16560",
+   "rank": 1118
+  },
+  {
+   "needle": "swe_django__django-16569",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-16595",
+   "rank": 25
+  },
+  {
+   "needle": "swe_django__django-16612",
+   "rank": 7
+  },
+  {
+   "needle": "swe_django__django-16631",
+   "rank": 231
+  },
+  {
+   "needle": "swe_django__django-16642",
+   "rank": 24
+  },
+  {
+   "needle": "swe_django__django-16661",
+   "rank": 85
+  },
+  {
+   "needle": "swe_django__django-16662",
+   "rank": 151
+  },
+  {
+   "needle": "swe_django__django-16667",
+   "rank": 46
+  },
+  {
+   "needle": "swe_django__django-16801",
+   "rank": 2
+  },
+  {
+   "needle": "swe_django__django-16819",
+   "rank": 16
+  },
+  {
+   "needle": "swe_django__django-16877",
+   "rank": 6
+  },
+  {
+   "needle": "swe_django__django-16899",
+   "rank": 3
+  },
+  {
+   "needle": "swe_django__django-16901",
+   "rank": 909
+  },
+  {
+   "needle": "swe_django__django-16938",
+   "rank": 16
+  },
+  {
+   "needle": "swe_django__django-16950",
+   "rank": 115
+  },
+  {
+   "needle": "swe_django__django-17029",
+   "rank": 1
+  },
+  {
+   "needle": "swe_django__django-17084",
+   "rank": 46
+  },
+  {
+   "needle": "swe_django__django-17087",
+   "rank": 286
+  },
+  {
+   "needle": "swe_django__django-7530",
+   "rank": 29
+  },
+  {
+   "needle": "swe_django__django-9296",
+   "rank": 4
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-13989",
+   "rank": null,
+   "gold_absent": true
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-14623",
+   "rank": 20
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-20488",
+   "rank": 2
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-20676",
+   "rank": 87
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-20826",
+   "rank": 65
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-20859",
+   "rank": 21
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-21568",
+   "rank": 24
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-22719",
+   "rank": 2
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-22865",
+   "rank": 2
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-22871",
+   "rank": 6
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-23299",
+   "rank": 4
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-23314",
+   "rank": 490
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-23412",
+   "rank": 60
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-23476",
+   "rank": 46
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-24026",
+   "rank": 126
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-24149",
+   "rank": null,
+   "gold_absent": true
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-24177",
+   "rank": 58
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-24570",
+   "rank": 6
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-24627",
+   "rank": 3
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-24637",
+   "rank": 5
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-24870",
+   "rank": 1
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-24970",
+   "rank": 2
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-25122",
+   "rank": 2
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-25287",
+   "rank": 1
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-25311",
+   "rank": 511
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-25479",
+   "rank": 6
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-25775",
+   "rank": 57
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-25960",
+   "rank": 7
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-26113",
+   "rank": null,
+   "gold_absent": true
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-26208",
+   "rank": 10
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-26291",
+   "rank": 8
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-26342",
+   "rank": 3
+  },
+  {
+   "needle": "swe_matplotlib__matplotlib-26466",
+   "rank": 7
+  },
+  {
+   "needle": "swe_mwaskom__seaborn-3069",
+   "rank": 1
+  },
+  {
+   "needle": "swe_mwaskom__seaborn-3187",
+   "rank": 1
+  },
+  {
+   "needle": "swe_pallets__flask-5014",
+   "rank": 12
+  },
+  {
+   "needle": "swe_psf__requests-1142",
+   "rank": 11
+  },
+  {
+   "needle": "swe_psf__requests-1724",
+   "rank": 2
+  },
+  {
+   "needle": "swe_psf__requests-1766",
+   "rank": 64
+  },
+  {
+   "needle": "swe_psf__requests-1921",
+   "rank": 9
+  },
+  {
+   "needle": "swe_psf__requests-2317",
+   "rank": 271
+  },
+  {
+   "needle": "swe_psf__requests-2931",
+   "rank": 2
+  },
+  {
+   "needle": "swe_psf__requests-5414",
+   "rank": 7
+  },
+  {
+   "needle": "swe_psf__requests-6028",
+   "rank": 27
+  },
+  {
+   "needle": "swe_pydata__xarray-2905",
+   "rank": 13
+  },
+  {
+   "needle": "swe_pydata__xarray-3095",
+   "rank": 17
+  },
+  {
+   "needle": "swe_pydata__xarray-3151",
+   "rank": 1
+  },
+  {
+   "needle": "swe_pydata__xarray-3305",
+   "rank": 17
+  },
+  {
+   "needle": "swe_pydata__xarray-3677",
+   "rank": null,
+   "gold_absent": true
+  },
+  {
+   "needle": "swe_pydata__xarray-3993",
+   "rank": 1
+  },
+  {
+   "needle": "swe_pydata__xarray-4075",
+   "rank": 8
+  },
+  {
+   "needle": "swe_pydata__xarray-4094",
+   "rank": 13
+  },
+  {
+   "needle": "swe_pydata__xarray-4356",
+   "rank": 18
+  },
+  {
+   "needle": "swe_pydata__xarray-4629",
+   "rank": 8
+  },
+  {
+   "needle": "swe_pydata__xarray-4687",
+   "rank": 5
+  },
+  {
+   "needle": "swe_pydata__xarray-4695",
+   "rank": 10
+  },
+  {
+   "needle": "swe_pydata__xarray-4966",
+   "rank": 2
+  },
+  {
+   "needle": "swe_pydata__xarray-6461",
+   "rank": 1
+  },
+  {
+   "needle": "swe_pydata__xarray-6599",
+   "rank": 4
+  },
+  {
+   "needle": "swe_pydata__xarray-6721",
+   "rank": 8
+  },
+  {
+   "needle": "swe_pydata__xarray-6744",
+   "rank": 4
+  },
+  {
+   "needle": "swe_pydata__xarray-6938",
+   "rank": 11
+  },
+  {
+   "needle": "swe_pydata__xarray-6992",
+   "rank": 367
+  },
+  {
+   "needle": "swe_pydata__xarray-7229",
+   "rank": 6
+  },
+  {
+   "needle": "swe_pydata__xarray-7233",
+   "rank": 8
+  },
+  {
+   "needle": "swe_pydata__xarray-7393",
+   "rank": 39
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-4551",
+   "rank": 240
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-4604",
+   "rank": 8
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-4661",
+   "rank": 2603
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-4970",
+   "rank": 4
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-6386",
+   "rank": 6
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-6528",
+   "rank": 60
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-6903",
+   "rank": 1
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-7080",
+   "rank": 1683
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-7277",
+   "rank": 17
+  },
+  {
+   "needle": "swe_pylint-dev__pylint-8898",
+   "rank": 36
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-10051",
+   "rank": 1
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-10081",
+   "rank": 21
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-10356",
+   "rank": 52
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-5262",
+   "rank": 3
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-5631",
+   "rank": 3
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-5787",
+   "rank": 54
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-5809",
+   "rank": 2
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-5840",
+   "rank": 7
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-6197",
+   "rank": 30
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-6202",
+   "rank": 6
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-7205",
+   "rank": 798
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-7236",
+   "rank": 5
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-7324",
+   "rank": 523
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-7432",
+   "rank": 1
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-7490",
+   "rank": 93
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-7521",
+   "rank": 7
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-7571",
+   "rank": 1
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-7982",
+   "rank": 76
+  },
+  {
+   "needle": "swe_pytest-dev__pytest-8399",
+   "rank": 14
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-10297",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-10844",
+   "rank": 12
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-10908",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-11310",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-11578",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-12585",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-12682",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-12973",
+   "rank": 6
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-13124",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-13135",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-13142",
+   "rank": 6
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-13328",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-13439",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-13496",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-13779",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-14053",
+   "rank": 19
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-14087",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-14141",
+   "rank": 5
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-14496",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-14629",
+   "rank": 5
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-14710",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-14894",
+   "rank": 1
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-14983",
+   "rank": 4
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-15100",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-25102",
+   "rank": 202
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-25232",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-26323",
+   "rank": 2
+  },
+  {
+   "needle": "swe_scikit-learn__scikit-learn-9288",
+   "rank": 4
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-10323",
+   "rank": 5
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-10435",
+   "rank": 77
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-10449",
+   "rank": 1863
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-10466",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-10614",
+   "rank": 114
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-10673",
+   "rank": 12
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-11445",
+   "rank": 297
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-11510",
+   "rank": 184
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7440",
+   "rank": 180
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7454",
+   "rank": 107
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7462",
+   "rank": 24
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7590",
+   "rank": 3
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7748",
+   "rank": 49
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7757",
+   "rank": 593
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7889",
+   "rank": 259
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7910",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-7985",
+   "rank": 136
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8035",
+   "rank": 62
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8056",
+   "rank": 140
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8120",
+   "rank": 14
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8265",
+   "rank": 1248
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8269",
+   "rank": 5
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8459",
+   "rank": 3
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8475",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8548",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8551",
+   "rank": 10
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8593",
+   "rank": 24
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8595",
+   "rank": 24
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8621",
+   "rank": 144
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8638",
+   "rank": 931
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-8721",
+   "rank": 5
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9229",
+   "rank": 84
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9230",
+   "rank": 446
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9258",
+   "rank": 187
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9281",
+   "rank": 172
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9320",
+   "rank": 2
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9367",
+   "rank": 693
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9461",
+   "rank": 8
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9591",
+   "rank": 208
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9602",
+   "rank": 146
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9658",
+   "rank": 2540
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9673",
+   "rank": 146
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9698",
+   "rank": 346
+  },
+  {
+   "needle": "swe_sphinx-doc__sphinx-9711",
+   "rank": 86
+  },
+  {
+   "needle": "swe_sympy__sympy-11618",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-12096",
+   "rank": 4
+  },
+  {
+   "needle": "swe_sympy__sympy-12419",
+   "rank": 9
+  },
+  {
+   "needle": "swe_sympy__sympy-12481",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-12489",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-13031",
+   "rank": 20
+  },
+  {
+   "needle": "swe_sympy__sympy-13091",
+   "rank": 26
+  },
+  {
+   "needle": "swe_sympy__sympy-13372",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-13480",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-13551",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-13615",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-13647",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-13757",
+   "rank": 3
+  },
+  {
+   "needle": "swe_sympy__sympy-13798",
+   "rank": 151
+  },
+  {
+   "needle": "swe_sympy__sympy-13852",
+   "rank": 6
+  },
+  {
+   "needle": "swe_sympy__sympy-13877",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-13878",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-13974",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-14248",
+   "rank": 38
+  },
+  {
+   "needle": "swe_sympy__sympy-14531",
+   "rank": 7
+  },
+  {
+   "needle": "swe_sympy__sympy-14711",
+   "rank": 2
+  },
+  {
+   "needle": "swe_sympy__sympy-14976",
+   "rank": 9
+  },
+  {
+   "needle": "swe_sympy__sympy-15017",
+   "rank": 124
+  },
+  {
+   "needle": "swe_sympy__sympy-15345",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-15349",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-15599",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-15809",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-15875",
+   "rank": 37
+  },
+  {
+   "needle": "swe_sympy__sympy-15976",
+   "rank": 31
+  },
+  {
+   "needle": "swe_sympy__sympy-16450",
+   "rank": 19
+  },
+  {
+   "needle": "swe_sympy__sympy-16597",
+   "rank": 3
+  },
+  {
+   "needle": "swe_sympy__sympy-16766",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-16792",
+   "rank": 6
+  },
+  {
+   "needle": "swe_sympy__sympy-16886",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-17139",
+   "rank": 2
+  },
+  {
+   "needle": "swe_sympy__sympy-17318",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-17630",
+   "rank": 5
+  },
+  {
+   "needle": "swe_sympy__sympy-17655",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-18189",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-18199",
+   "rank": 3
+  },
+  {
+   "needle": "swe_sympy__sympy-18211",
+   "rank": 20
+  },
+  {
+   "needle": "swe_sympy__sympy-18698",
+   "rank": 5
+  },
+  {
+   "needle": "swe_sympy__sympy-18763",
+   "rank": 6
+  },
+  {
+   "needle": "swe_sympy__sympy-19040",
+   "rank": 606
+  },
+  {
+   "needle": "swe_sympy__sympy-19346",
+   "rank": 1713
+  },
+  {
+   "needle": "swe_sympy__sympy-19495",
+   "rank": 5
+  },
+  {
+   "needle": "swe_sympy__sympy-19637",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-19783",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-19954",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-20154",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-20428",
+   "rank": 187
+  },
+  {
+   "needle": "swe_sympy__sympy-20438",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-20801",
+   "rank": 37
+  },
+  {
+   "needle": "swe_sympy__sympy-20916",
+   "rank": 50
+  },
+  {
+   "needle": "swe_sympy__sympy-21379",
+   "rank": 2038
+  },
+  {
+   "needle": "swe_sympy__sympy-21596",
+   "rank": 7
+  },
+  {
+   "needle": "swe_sympy__sympy-21612",
+   "rank": 208
+  },
+  {
+   "needle": "swe_sympy__sympy-21847",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-21930",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-22080",
+   "rank": 211
+  },
+  {
+   "needle": "swe_sympy__sympy-22456",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-22714",
+   "rank": 3
+  },
+  {
+   "needle": "swe_sympy__sympy-22914",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-23262",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-23534",
+   "rank": 2
+  },
+  {
+   "needle": "swe_sympy__sympy-23824",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-23950",
+   "rank": 413
+  },
+  {
+   "needle": "swe_sympy__sympy-24066",
+   "rank": 183
+  },
+  {
+   "needle": "swe_sympy__sympy-24213",
+   "rank": 429
+  },
+  {
+   "needle": "swe_sympy__sympy-24443",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-24539",
+   "rank": 1
+  },
+  {
+   "needle": "swe_sympy__sympy-24562",
+   "rank": 4
+  },
+  {
+   "needle": "swe_sympy__sympy-24661",
+   "rank": 4
+  }
+ ]
+}

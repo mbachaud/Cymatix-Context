@@ -1,0 +1,59 @@
+{
+  "config": "python_cfr",
+  "cymatix_config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\cymatix-tuning-progression-1d3a3c\\cymatix.toml",
+  "timestamp": "20260904T164321Z",
+  "arm": "cymatix_global",
+  "corpus_size": 3052,
+  "ingest_errors": 0,
+  "levels": {
+    "easy": {
+      "n": 200,
+      "corpus": 3052,
+      "cymatix_B_acc@1": 0.19,
+      "cymatix_B_acc@3": 0.49,
+      "cymatix_C_recall@1": 0.06,
+      "cymatix_C_recall@3": 0.1,
+      "cymatix_C_recall@5": 0.165,
+      "cymatix_C_recall@10": 0.315,
+      "bm25_B_acc@1": 0.2,
+      "bm25_B_acc@3": 0.56,
+      "bm25_C_recall@1": 0.14,
+      "bm25_C_recall@3": 0.315,
+      "bm25_C_recall@5": 0.43,
+      "bm25_C_recall@10": 0.53
+    },
+    "hard": {
+      "n": 200,
+      "corpus": 3052,
+      "cymatix_B_acc@1": 0.08,
+      "cymatix_B_acc@3": 0.26,
+      "cymatix_B_acc@5": 0.405,
+      "cymatix_C_recall@1": 0.035,
+      "cymatix_C_recall@3": 0.1,
+      "cymatix_C_recall@5": 0.125,
+      "cymatix_C_recall@10": 0.215,
+      "bm25_B_acc@1": 0.135,
+      "bm25_B_acc@3": 0.32,
+      "bm25_B_acc@5": 0.465,
+      "bm25_C_recall@1": 0.105,
+      "bm25_C_recall@3": 0.24,
+      "bm25_C_recall@5": 0.315,
+      "bm25_C_recall@10": 0.435
+    }
+  },
+  "sweep": {
+    "stamp": "2026-09-04",
+    "runner": "benchmarks/dogfood/sweeps/run_sweep_beta.py",
+    "lane": "code",
+    "beta_head": "21606a07b7d6604f5229bd8bf7def5d84c2d6540",
+    "cymatix_config_sha256": "dd4ca7440b646ad6a56c363b63645020ea2cac5cb74f0ac65ab9463b81f88db8",
+    "PYTHONHASHSEED": "0",
+    "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+    "sqlite": "3.50.4",
+    "genome_bytes": 34209792,
+    "wall_s": 299.0,
+    "dumps": "benchmarks/results/repobench_r_<config>_<level>_n200.json (2026-06-13 per-example dumps, copied from the main checkout)",
+    "reference": "benchmarks/results/repobench_r_<config>_global_20260613T17*.json (helix 0.6.3-era frozen run, main checkout, gitignored)",
+    "note": "fresh ingest of the deduped candidate union under the named config (shipped = beta cymatix.toml incl. entity_autolink_hub_cutoff 200 at ingest; legacy_probe = additive-fusion lexical probe template for June-2026 comparability). B = pool-rank acc@k vs the foils, C = global-rank recall@k. Matched floored-IDF BM25 foil inside."
+  }
+}

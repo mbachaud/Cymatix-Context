@@ -298,6 +298,7 @@ def main():
     # k values for global C-mode recall (fixed across levels).
     C_KS = (1, 3, 5, 10)
 
+    cym_errors = []
     summary = {
         "config": args.config,
         "cymatix_config": cymatix_config,
@@ -305,6 +306,7 @@ def main():
         "arm": "cymatix_global",
         "corpus_size": n_corpus,
         "ingest_errors": ing_err,
+        "cymatix_query_errors": cym_errors,
         "levels": {},
     }
 
@@ -327,14 +329,27 @@ def main():
             q = ex["query"]
 
             # -- Cymatix --
-            h = cymatix_sid_scores(cymatix, q, n_corpus)
-            h_score = lambda s: h.get(s, 0.0)
-            h_pool = rank_pool(h_score, cand_sids)
-            for k in B_KS:
-                agg["cymatix"]["B"][k] += 1.0 if gold_local in h_pool[:k] else 0.0
-            h_pos = global_rank_pos(h, gold_sid)
-            for k in C_KS:
-                agg["cymatix"]["C"][k] += 1.0 if h_pos < k else 0.0
+            # A query that raises inside the store is a datapoint (a miss on
+            # every k), not a reason to abort the level: 2026-09-04 the
+            # Tier-2 prefix UNION ALL overflowed SQLITE_LIMIT_COMPOUND_SELECT
+            # (500) on a 622-term cff query and took the whole run with it.
+            try:
+                h = cymatix_sid_scores(cymatix, q, n_corpus)
+            except Exception as exc:  # noqa: BLE001 - recorded, scored as a miss
+                cym_errors.append({"level": lv, "example": n,
+                                   "error": f"{type(exc).__name__}: {exc}"[:300]})
+                print(f"[{lv}] cymatix error on example {n}: "
+                      f"{type(exc).__name__}: {str(exc)[:120]} -> scored as miss",
+                      flush=True)
+                h = None
+            if h is not None:
+                h_score = lambda s: h.get(s, 0.0)
+                h_pool = rank_pool(h_score, cand_sids)
+                for k in B_KS:
+                    agg["cymatix"]["B"][k] += 1.0 if gold_local in h_pool[:k] else 0.0
+                h_pos = global_rank_pos(h, gold_sid)
+                for k in C_KS:
+                    agg["cymatix"]["C"][k] += 1.0 if h_pos < k else 0.0
 
             # -- BM25 --
             bs = bm.scores(tok(q))
@@ -349,7 +364,8 @@ def main():
 
             n += 1
 
-        lvl = {"n": n, "corpus": n_corpus}
+        lvl = {"n": n, "corpus": n_corpus,
+               "cymatix_errors": sum(1 for e in cym_errors if e["level"] == lv)}
         for arm in ("cymatix", "bm25"):
             for k in B_KS:
                 lvl[f"{arm}_B_acc@{k}"] = round(agg[arm]["B"][k] / n, 3) if n else 0.0

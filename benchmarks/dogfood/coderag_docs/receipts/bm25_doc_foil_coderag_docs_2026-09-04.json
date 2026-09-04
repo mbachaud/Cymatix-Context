@@ -1,0 +1,2913 @@
+{
+ "tool": "benchmarks/dogfood/code/bm25_doc_foil.py",
+ "tag": "coderag_docs",
+ "corpus_root": "F:\\Projects\\coderag\\corpus_docs",
+ "files_admitted": 30931,
+ "files_size_gated": 3032,
+ "documents_after_dedup": 26870,
+ "byte_duplicate_collisions": 4061,
+ "dedup": true,
+ "bm25": {
+  "k1": 1.5,
+  "b": 0.75,
+  "idf": "floored at 0",
+  "tokenizer": "[A-Za-z_][A-Za-z_0-9]*"
+ },
+ "query": "needles_<tag>.json query text verbatim",
+ "gold": "gold_paths_<tag>.json (document level, first gold)",
+ "build_s": 13.3,
+ "total": {
+  "n": 710,
+  "gold_absent": 4,
+  "ndcg@10": 0.1539,
+  "recall@1": 0.069,
+  "recall@5": 0.1958,
+  "recall@10": 0.2549,
+  "recall@12": 0.2648,
+  "mrr": 0.1335
+ },
+ "by_type": {
+  "coderag_ds1000": {
+   "n": 513,
+   "gold_absent": 0,
+   "ndcg@10": 0.1675,
+   "recall@1": 0.078,
+   "recall@5": 0.2125,
+   "recall@10": 0.2729,
+   "recall@12": 0.2807,
+   "mrr": 0.1459
+  },
+  "coderag_odex": {
+   "n": 197,
+   "gold_absent": 4,
+   "ndcg@10": 0.1182,
+   "recall@1": 0.0457,
+   "recall@5": 0.1523,
+   "recall@10": 0.2081,
+   "recall@12": 0.2234,
+   "mrr": 0.1011
+  }
+ },
+ "per_query": [
+  {
+   "needle": "coderag_ds1000_0002",
+   "rank": 22
+  },
+  {
+   "needle": "coderag_ds1000_0003",
+   "rank": 21
+  },
+  {
+   "needle": "coderag_ds1000_0004",
+   "rank": 59
+  },
+  {
+   "needle": "coderag_ds1000_0010",
+   "rank": 119
+  },
+  {
+   "needle": "coderag_ds1000_0013",
+   "rank": 606
+  },
+  {
+   "needle": "coderag_ds1000_0014",
+   "rank": 484
+  },
+  {
+   "needle": "coderag_ds1000_0015",
+   "rank": 88
+  },
+  {
+   "needle": "coderag_ds1000_0020",
+   "rank": 266
+  },
+  {
+   "needle": "coderag_ds1000_0021",
+   "rank": 256
+  },
+  {
+   "needle": "coderag_ds1000_0030",
+   "rank": 700
+  },
+  {
+   "needle": "coderag_ds1000_0031",
+   "rank": 459
+  },
+  {
+   "needle": "coderag_ds1000_0032",
+   "rank": 9
+  },
+  {
+   "needle": "coderag_ds1000_0038",
+   "rank": 114
+  },
+  {
+   "needle": "coderag_ds1000_0050",
+   "rank": 56
+  },
+  {
+   "needle": "coderag_ds1000_0051",
+   "rank": 77
+  },
+  {
+   "needle": "coderag_ds1000_0053",
+   "rank": 75
+  },
+  {
+   "needle": "coderag_ds1000_0056",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0058",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0059",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0060",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0071",
+   "rank": 778
+  },
+  {
+   "needle": "coderag_ds1000_0073",
+   "rank": 23
+  },
+  {
+   "needle": "coderag_ds1000_0074",
+   "rank": 22
+  },
+  {
+   "needle": "coderag_ds1000_0075",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_ds1000_0085",
+   "rank": 88
+  },
+  {
+   "needle": "coderag_ds1000_0086",
+   "rank": 88
+  },
+  {
+   "needle": "coderag_ds1000_0087",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0088",
+   "rank": 88
+  },
+  {
+   "needle": "coderag_ds1000_0091",
+   "rank": 12
+  },
+  {
+   "needle": "coderag_ds1000_0092",
+   "rank": 9
+  },
+  {
+   "needle": "coderag_ds1000_0093",
+   "rank": 9
+  },
+  {
+   "needle": "coderag_ds1000_0094",
+   "rank": 2111
+  },
+  {
+   "needle": "coderag_ds1000_0099",
+   "rank": 19
+  },
+  {
+   "needle": "coderag_ds1000_0100",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0101",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0102",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0103",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0104",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0105",
+   "rank": 395
+  },
+  {
+   "needle": "coderag_ds1000_0106",
+   "rank": 391
+  },
+  {
+   "needle": "coderag_ds1000_0107",
+   "rank": 400
+  },
+  {
+   "needle": "coderag_ds1000_0108",
+   "rank": 10
+  },
+  {
+   "needle": "coderag_ds1000_0109",
+   "rank": 10
+  },
+  {
+   "needle": "coderag_ds1000_0110",
+   "rank": 167
+  },
+  {
+   "needle": "coderag_ds1000_0115",
+   "rank": 207
+  },
+  {
+   "needle": "coderag_ds1000_0116",
+   "rank": 223
+  },
+  {
+   "needle": "coderag_ds1000_0119",
+   "rank": 54
+  },
+  {
+   "needle": "coderag_ds1000_0120",
+   "rank": 3071
+  },
+  {
+   "needle": "coderag_ds1000_0121",
+   "rank": 12213
+  },
+  {
+   "needle": "coderag_ds1000_0122",
+   "rank": 12185
+  },
+  {
+   "needle": "coderag_ds1000_0123",
+   "rank": 31
+  },
+  {
+   "needle": "coderag_ds1000_0124",
+   "rank": 31
+  },
+  {
+   "needle": "coderag_ds1000_0127",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0128",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0129",
+   "rank": 73
+  },
+  {
+   "needle": "coderag_ds1000_0130",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0131",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0132",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0133",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0134",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0139",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0140",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0141",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0142",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0156",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0162",
+   "rank": 45
+  },
+  {
+   "needle": "coderag_ds1000_0163",
+   "rank": 45
+  },
+  {
+   "needle": "coderag_ds1000_0164",
+   "rank": 45
+  },
+  {
+   "needle": "coderag_ds1000_0169",
+   "rank": 279
+  },
+  {
+   "needle": "coderag_ds1000_0170",
+   "rank": 306
+  },
+  {
+   "needle": "coderag_ds1000_0171",
+   "rank": 290
+  },
+  {
+   "needle": "coderag_ds1000_0172",
+   "rank": 298
+  },
+  {
+   "needle": "coderag_ds1000_0184",
+   "rank": 73
+  },
+  {
+   "needle": "coderag_ds1000_0185",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0186",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0187",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0190",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0191",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0192",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0193",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0197",
+   "rank": 42
+  },
+  {
+   "needle": "coderag_ds1000_0198",
+   "rank": 42
+  },
+  {
+   "needle": "coderag_ds1000_0209",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0210",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0211",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0215",
+   "rank": 250
+  },
+  {
+   "needle": "coderag_ds1000_0217",
+   "rank": 118
+  },
+  {
+   "needle": "coderag_ds1000_0218",
+   "rank": 94
+  },
+  {
+   "needle": "coderag_ds1000_0229",
+   "rank": 20
+  },
+  {
+   "needle": "coderag_ds1000_0230",
+   "rank": 7
+  },
+  {
+   "needle": "coderag_ds1000_0231",
+   "rank": 20
+  },
+  {
+   "needle": "coderag_ds1000_0235",
+   "rank": 320
+  },
+  {
+   "needle": "coderag_ds1000_0236",
+   "rank": 320
+  },
+  {
+   "needle": "coderag_ds1000_0238",
+   "rank": 75
+  },
+  {
+   "needle": "coderag_ds1000_0246",
+   "rank": 644
+  },
+  {
+   "needle": "coderag_ds1000_0252",
+   "rank": 2542
+  },
+  {
+   "needle": "coderag_ds1000_0253",
+   "rank": 2564
+  },
+  {
+   "needle": "coderag_ds1000_0254",
+   "rank": 3032
+  },
+  {
+   "needle": "coderag_ds1000_0255",
+   "rank": 2986
+  },
+  {
+   "needle": "coderag_ds1000_0256",
+   "rank": 2827
+  },
+  {
+   "needle": "coderag_ds1000_0257",
+   "rank": 147
+  },
+  {
+   "needle": "coderag_ds1000_0258",
+   "rank": 153
+  },
+  {
+   "needle": "coderag_ds1000_0259",
+   "rank": 23
+  },
+  {
+   "needle": "coderag_ds1000_0260",
+   "rank": 20
+  },
+  {
+   "needle": "coderag_ds1000_0261",
+   "rank": 63
+  },
+  {
+   "needle": "coderag_ds1000_0268",
+   "rank": 85
+  },
+  {
+   "needle": "coderag_ds1000_0269",
+   "rank": 39
+  },
+  {
+   "needle": "coderag_ds1000_0270",
+   "rank": 50
+  },
+  {
+   "needle": "coderag_ds1000_0276",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0277",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0279",
+   "rank": 1552
+  },
+  {
+   "needle": "coderag_ds1000_0280",
+   "rank": 27
+  },
+  {
+   "needle": "coderag_ds1000_0281",
+   "rank": 15
+  },
+  {
+   "needle": "coderag_ds1000_0282",
+   "rank": 17
+  },
+  {
+   "needle": "coderag_ds1000_0283",
+   "rank": 15
+  },
+  {
+   "needle": "coderag_ds1000_0284",
+   "rank": 67
+  },
+  {
+   "needle": "coderag_ds1000_0285",
+   "rank": 67
+  },
+  {
+   "needle": "coderag_ds1000_0286",
+   "rank": 80
+  },
+  {
+   "needle": "coderag_ds1000_0287",
+   "rank": 2133
+  },
+  {
+   "needle": "coderag_ds1000_0292",
+   "rank": 72
+  },
+  {
+   "needle": "coderag_ds1000_0293",
+   "rank": 36
+  },
+  {
+   "needle": "coderag_ds1000_0295",
+   "rank": 631
+  },
+  {
+   "needle": "coderag_ds1000_0296",
+   "rank": 643
+  },
+  {
+   "needle": "coderag_ds1000_0297",
+   "rank": 626
+  },
+  {
+   "needle": "coderag_ds1000_0298",
+   "rank": 1142
+  },
+  {
+   "needle": "coderag_ds1000_0299",
+   "rank": 135
+  },
+  {
+   "needle": "coderag_ds1000_0300",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0301",
+   "rank": 46
+  },
+  {
+   "needle": "coderag_ds1000_0302",
+   "rank": 41
+  },
+  {
+   "needle": "coderag_ds1000_0303",
+   "rank": 10
+  },
+  {
+   "needle": "coderag_ds1000_0304",
+   "rank": 10
+  },
+  {
+   "needle": "coderag_ds1000_0305",
+   "rank": 1227
+  },
+  {
+   "needle": "coderag_ds1000_0306",
+   "rank": 1054
+  },
+  {
+   "needle": "coderag_ds1000_0307",
+   "rank": 1547
+  },
+  {
+   "needle": "coderag_ds1000_0308",
+   "rank": 61
+  },
+  {
+   "needle": "coderag_ds1000_0309",
+   "rank": 73
+  },
+  {
+   "needle": "coderag_ds1000_0310",
+   "rank": 73
+  },
+  {
+   "needle": "coderag_ds1000_0311",
+   "rank": 17
+  },
+  {
+   "needle": "coderag_ds1000_0312",
+   "rank": 17
+  },
+  {
+   "needle": "coderag_ds1000_0313",
+   "rank": 140
+  },
+  {
+   "needle": "coderag_ds1000_0314",
+   "rank": 18
+  },
+  {
+   "needle": "coderag_ds1000_0315",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0316",
+   "rank": 100
+  },
+  {
+   "needle": "coderag_ds1000_0317",
+   "rank": 35
+  },
+  {
+   "needle": "coderag_ds1000_0318",
+   "rank": 255
+  },
+  {
+   "needle": "coderag_ds1000_0319",
+   "rank": 166
+  },
+  {
+   "needle": "coderag_ds1000_0320",
+   "rank": 89
+  },
+  {
+   "needle": "coderag_ds1000_0321",
+   "rank": 83
+  },
+  {
+   "needle": "coderag_ds1000_0322",
+   "rank": 1470
+  },
+  {
+   "needle": "coderag_ds1000_0323",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0324",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_ds1000_0325",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0326",
+   "rank": 13
+  },
+  {
+   "needle": "coderag_ds1000_0327",
+   "rank": 29
+  },
+  {
+   "needle": "coderag_ds1000_0328",
+   "rank": 29
+  },
+  {
+   "needle": "coderag_ds1000_0331",
+   "rank": 5406
+  },
+  {
+   "needle": "coderag_ds1000_0332",
+   "rank": 5799
+  },
+  {
+   "needle": "coderag_ds1000_0333",
+   "rank": 5656
+  },
+  {
+   "needle": "coderag_ds1000_0334",
+   "rank": 239
+  },
+  {
+   "needle": "coderag_ds1000_0335",
+   "rank": 6946
+  },
+  {
+   "needle": "coderag_ds1000_0336",
+   "rank": 75
+  },
+  {
+   "needle": "coderag_ds1000_0337",
+   "rank": 74
+  },
+  {
+   "needle": "coderag_ds1000_0338",
+   "rank": 1465
+  },
+  {
+   "needle": "coderag_ds1000_0339",
+   "rank": 1767
+  },
+  {
+   "needle": "coderag_ds1000_0344",
+   "rank": 403
+  },
+  {
+   "needle": "coderag_ds1000_0345",
+   "rank": 68
+  },
+  {
+   "needle": "coderag_ds1000_0346",
+   "rank": 57
+  },
+  {
+   "needle": "coderag_ds1000_0347",
+   "rank": 640
+  },
+  {
+   "needle": "coderag_ds1000_0348",
+   "rank": 121
+  },
+  {
+   "needle": "coderag_ds1000_0353",
+   "rank": 26
+  },
+  {
+   "needle": "coderag_ds1000_0354",
+   "rank": 24
+  },
+  {
+   "needle": "coderag_ds1000_0355",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0356",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0357",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0358",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0359",
+   "rank": 30
+  },
+  {
+   "needle": "coderag_ds1000_0360",
+   "rank": 31
+  },
+  {
+   "needle": "coderag_ds1000_0361",
+   "rank": 26
+  },
+  {
+   "needle": "coderag_ds1000_0362",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_ds1000_0363",
+   "rank": 20
+  },
+  {
+   "needle": "coderag_ds1000_0364",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0365",
+   "rank": 33
+  },
+  {
+   "needle": "coderag_ds1000_0366",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0371",
+   "rank": 345
+  },
+  {
+   "needle": "coderag_ds1000_0372",
+   "rank": 452
+  },
+  {
+   "needle": "coderag_ds1000_0373",
+   "rank": 715
+  },
+  {
+   "needle": "coderag_ds1000_0374",
+   "rank": 389
+  },
+  {
+   "needle": "coderag_ds1000_0375",
+   "rank": 617
+  },
+  {
+   "needle": "coderag_ds1000_0376",
+   "rank": 223
+  },
+  {
+   "needle": "coderag_ds1000_0381",
+   "rank": 129
+  },
+  {
+   "needle": "coderag_ds1000_0382",
+   "rank": 130
+  },
+  {
+   "needle": "coderag_ds1000_0383",
+   "rank": 87
+  },
+  {
+   "needle": "coderag_ds1000_0384",
+   "rank": 188
+  },
+  {
+   "needle": "coderag_ds1000_0398",
+   "rank": 2215
+  },
+  {
+   "needle": "coderag_ds1000_0399",
+   "rank": 2364
+  },
+  {
+   "needle": "coderag_ds1000_0400",
+   "rank": 44
+  },
+  {
+   "needle": "coderag_ds1000_0401",
+   "rank": 44
+  },
+  {
+   "needle": "coderag_ds1000_0402",
+   "rank": 69
+  },
+  {
+   "needle": "coderag_ds1000_0403",
+   "rank": 17
+  },
+  {
+   "needle": "coderag_ds1000_0404",
+   "rank": 437
+  },
+  {
+   "needle": "coderag_ds1000_0405",
+   "rank": 358
+  },
+  {
+   "needle": "coderag_ds1000_0406",
+   "rank": 597
+  },
+  {
+   "needle": "coderag_ds1000_0407",
+   "rank": 246
+  },
+  {
+   "needle": "coderag_ds1000_0408",
+   "rank": 266
+  },
+  {
+   "needle": "coderag_ds1000_0409",
+   "rank": 376
+  },
+  {
+   "needle": "coderag_ds1000_0410",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0411",
+   "rank": 1092
+  },
+  {
+   "needle": "coderag_ds1000_0420",
+   "rank": 24
+  },
+  {
+   "needle": "coderag_ds1000_0421",
+   "rank": 3853
+  },
+  {
+   "needle": "coderag_ds1000_0422",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0427",
+   "rank": 308
+  },
+  {
+   "needle": "coderag_ds1000_0428",
+   "rank": 4058
+  },
+  {
+   "needle": "coderag_ds1000_0429",
+   "rank": 4062
+  },
+  {
+   "needle": "coderag_ds1000_0430",
+   "rank": 3638
+  },
+  {
+   "needle": "coderag_ds1000_0431",
+   "rank": 3833
+  },
+  {
+   "needle": "coderag_ds1000_0432",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0436",
+   "rank": 359
+  },
+  {
+   "needle": "coderag_ds1000_0437",
+   "rank": 808
+  },
+  {
+   "needle": "coderag_ds1000_0438",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0440",
+   "rank": 323
+  },
+  {
+   "needle": "coderag_ds1000_0442",
+   "rank": 2932
+  },
+  {
+   "needle": "coderag_ds1000_0443",
+   "rank": 2072
+  },
+  {
+   "needle": "coderag_ds1000_0444",
+   "rank": 1400
+  },
+  {
+   "needle": "coderag_ds1000_0445",
+   "rank": 32
+  },
+  {
+   "needle": "coderag_ds1000_0446",
+   "rank": 32
+  },
+  {
+   "needle": "coderag_ds1000_0447",
+   "rank": 83
+  },
+  {
+   "needle": "coderag_ds1000_0448",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0449",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0451",
+   "rank": 78
+  },
+  {
+   "needle": "coderag_ds1000_0452",
+   "rank": 2896
+  },
+  {
+   "needle": "coderag_ds1000_0453",
+   "rank": 1194
+  },
+  {
+   "needle": "coderag_ds1000_0454",
+   "rank": 4822
+  },
+  {
+   "needle": "coderag_ds1000_0455",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0456",
+   "rank": 784
+  },
+  {
+   "needle": "coderag_ds1000_0457",
+   "rank": 907
+  },
+  {
+   "needle": "coderag_ds1000_0458",
+   "rank": 3212
+  },
+  {
+   "needle": "coderag_ds1000_0459",
+   "rank": 15
+  },
+  {
+   "needle": "coderag_ds1000_0460",
+   "rank": 20
+  },
+  {
+   "needle": "coderag_ds1000_0461",
+   "rank": 16
+  },
+  {
+   "needle": "coderag_ds1000_0462",
+   "rank": 425
+  },
+  {
+   "needle": "coderag_ds1000_0463",
+   "rank": 230
+  },
+  {
+   "needle": "coderag_ds1000_0469",
+   "rank": 93
+  },
+  {
+   "needle": "coderag_ds1000_0470",
+   "rank": 128
+  },
+  {
+   "needle": "coderag_ds1000_0474",
+   "rank": 131
+  },
+  {
+   "needle": "coderag_ds1000_0475",
+   "rank": 10
+  },
+  {
+   "needle": "coderag_ds1000_0477",
+   "rank": 662
+  },
+  {
+   "needle": "coderag_ds1000_0478",
+   "rank": 86
+  },
+  {
+   "needle": "coderag_ds1000_0481",
+   "rank": 9197
+  },
+  {
+   "needle": "coderag_ds1000_0482",
+   "rank": 9
+  },
+  {
+   "needle": "coderag_ds1000_0483",
+   "rank": 7
+  },
+  {
+   "needle": "coderag_ds1000_0485",
+   "rank": 2110
+  },
+  {
+   "needle": "coderag_ds1000_0486",
+   "rank": 6241
+  },
+  {
+   "needle": "coderag_ds1000_0488",
+   "rank": 1388
+  },
+  {
+   "needle": "coderag_ds1000_0489",
+   "rank": 889
+  },
+  {
+   "needle": "coderag_ds1000_0490",
+   "rank": 1095
+  },
+  {
+   "needle": "coderag_ds1000_0495",
+   "rank": 334
+  },
+  {
+   "needle": "coderag_ds1000_0496",
+   "rank": 334
+  },
+  {
+   "needle": "coderag_ds1000_0497",
+   "rank": 292
+  },
+  {
+   "needle": "coderag_ds1000_0498",
+   "rank": 249
+  },
+  {
+   "needle": "coderag_ds1000_0499",
+   "rank": 939
+  },
+  {
+   "needle": "coderag_ds1000_0500",
+   "rank": 1233
+  },
+  {
+   "needle": "coderag_ds1000_0501",
+   "rank": 46
+  },
+  {
+   "needle": "coderag_ds1000_0502",
+   "rank": 46
+  },
+  {
+   "needle": "coderag_ds1000_0503",
+   "rank": 51
+  },
+  {
+   "needle": "coderag_ds1000_0504",
+   "rank": 45
+  },
+  {
+   "needle": "coderag_ds1000_0505",
+   "rank": 27
+  },
+  {
+   "needle": "coderag_ds1000_0506",
+   "rank": 1969
+  },
+  {
+   "needle": "coderag_ds1000_0507",
+   "rank": 4125
+  },
+  {
+   "needle": "coderag_ds1000_0508",
+   "rank": 17620
+  },
+  {
+   "needle": "coderag_ds1000_0509",
+   "rank": 18231
+  },
+  {
+   "needle": "coderag_ds1000_0510",
+   "rank": 18157
+  },
+  {
+   "needle": "coderag_ds1000_0511",
+   "rank": 50
+  },
+  {
+   "needle": "coderag_ds1000_0512",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0513",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0514",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0515",
+   "rank": 19
+  },
+  {
+   "needle": "coderag_ds1000_0516",
+   "rank": 19
+  },
+  {
+   "needle": "coderag_ds1000_0517",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0518",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0519",
+   "rank": 146
+  },
+  {
+   "needle": "coderag_ds1000_0520",
+   "rank": 830
+  },
+  {
+   "needle": "coderag_ds1000_0521",
+   "rank": 230
+  },
+  {
+   "needle": "coderag_ds1000_0522",
+   "rank": 191
+  },
+  {
+   "needle": "coderag_ds1000_0526",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0527",
+   "rank": 33
+  },
+  {
+   "needle": "coderag_ds1000_0528",
+   "rank": 41
+  },
+  {
+   "needle": "coderag_ds1000_0529",
+   "rank": 1950
+  },
+  {
+   "needle": "coderag_ds1000_0530",
+   "rank": 23496
+  },
+  {
+   "needle": "coderag_ds1000_0531",
+   "rank": 6405
+  },
+  {
+   "needle": "coderag_ds1000_0532",
+   "rank": 119
+  },
+  {
+   "needle": "coderag_ds1000_0533",
+   "rank": 122
+  },
+  {
+   "needle": "coderag_ds1000_0534",
+   "rank": 174
+  },
+  {
+   "needle": "coderag_ds1000_0535",
+   "rank": 455
+  },
+  {
+   "needle": "coderag_ds1000_0536",
+   "rank": 1834
+  },
+  {
+   "needle": "coderag_ds1000_0537",
+   "rank": 2135
+  },
+  {
+   "needle": "coderag_ds1000_0538",
+   "rank": 332
+  },
+  {
+   "needle": "coderag_ds1000_0539",
+   "rank": 1001
+  },
+  {
+   "needle": "coderag_ds1000_0540",
+   "rank": 173
+  },
+  {
+   "needle": "coderag_ds1000_0541",
+   "rank": 1383
+  },
+  {
+   "needle": "coderag_ds1000_0542",
+   "rank": 748
+  },
+  {
+   "needle": "coderag_ds1000_0543",
+   "rank": 663
+  },
+  {
+   "needle": "coderag_ds1000_0544",
+   "rank": 111
+  },
+  {
+   "needle": "coderag_ds1000_0545",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0546",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0547",
+   "rank": 9
+  },
+  {
+   "needle": "coderag_ds1000_0549",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_ds1000_0550",
+   "rank": 14
+  },
+  {
+   "needle": "coderag_ds1000_0551",
+   "rank": 888
+  },
+  {
+   "needle": "coderag_ds1000_0552",
+   "rank": 1308
+  },
+  {
+   "needle": "coderag_ds1000_0553",
+   "rank": 351
+  },
+  {
+   "needle": "coderag_ds1000_0554",
+   "rank": 505
+  },
+  {
+   "needle": "coderag_ds1000_0555",
+   "rank": 270
+  },
+  {
+   "needle": "coderag_ds1000_0556",
+   "rank": 1469
+  },
+  {
+   "needle": "coderag_ds1000_0557",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_ds1000_0558",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0559",
+   "rank": 76
+  },
+  {
+   "needle": "coderag_ds1000_0560",
+   "rank": 237
+  },
+  {
+   "needle": "coderag_ds1000_0561",
+   "rank": 115
+  },
+  {
+   "needle": "coderag_ds1000_0562",
+   "rank": 136
+  },
+  {
+   "needle": "coderag_ds1000_0563",
+   "rank": 205
+  },
+  {
+   "needle": "coderag_ds1000_0564",
+   "rank": 41
+  },
+  {
+   "needle": "coderag_ds1000_0570",
+   "rank": 9
+  },
+  {
+   "needle": "coderag_ds1000_0571",
+   "rank": 235
+  },
+  {
+   "needle": "coderag_ds1000_0572",
+   "rank": 14
+  },
+  {
+   "needle": "coderag_ds1000_0573",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0574",
+   "rank": 49
+  },
+  {
+   "needle": "coderag_ds1000_0575",
+   "rank": 19
+  },
+  {
+   "needle": "coderag_ds1000_0576",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0578",
+   "rank": 7
+  },
+  {
+   "needle": "coderag_ds1000_0579",
+   "rank": 33
+  },
+  {
+   "needle": "coderag_ds1000_0580",
+   "rank": 24
+  },
+  {
+   "needle": "coderag_ds1000_0581",
+   "rank": 27
+  },
+  {
+   "needle": "coderag_ds1000_0582",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0583",
+   "rank": 65
+  },
+  {
+   "needle": "coderag_ds1000_0584",
+   "rank": 69
+  },
+  {
+   "needle": "coderag_ds1000_0585",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0586",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0587",
+   "rank": 51
+  },
+  {
+   "needle": "coderag_ds1000_0588",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0589",
+   "rank": 60
+  },
+  {
+   "needle": "coderag_ds1000_0590",
+   "rank": 77
+  },
+  {
+   "needle": "coderag_ds1000_0591",
+   "rank": 102
+  },
+  {
+   "needle": "coderag_ds1000_0592",
+   "rank": 29
+  },
+  {
+   "needle": "coderag_ds1000_0593",
+   "rank": 44
+  },
+  {
+   "needle": "coderag_ds1000_0594",
+   "rank": 194
+  },
+  {
+   "needle": "coderag_ds1000_0595",
+   "rank": 78
+  },
+  {
+   "needle": "coderag_ds1000_0596",
+   "rank": 5950
+  },
+  {
+   "needle": "coderag_ds1000_0597",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0598",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_ds1000_0599",
+   "rank": 373
+  },
+  {
+   "needle": "coderag_ds1000_0600",
+   "rank": 86
+  },
+  {
+   "needle": "coderag_ds1000_0601",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0602",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0603",
+   "rank": 79
+  },
+  {
+   "needle": "coderag_ds1000_0604",
+   "rank": 13
+  },
+  {
+   "needle": "coderag_ds1000_0605",
+   "rank": 35
+  },
+  {
+   "needle": "coderag_ds1000_0606",
+   "rank": 36
+  },
+  {
+   "needle": "coderag_ds1000_0607",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0608",
+   "rank": 667
+  },
+  {
+   "needle": "coderag_ds1000_0609",
+   "rank": 10
+  },
+  {
+   "needle": "coderag_ds1000_0610",
+   "rank": 7
+  },
+  {
+   "needle": "coderag_ds1000_0611",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_ds1000_0612",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_ds1000_0613",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0614",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0615",
+   "rank": 20
+  },
+  {
+   "needle": "coderag_ds1000_0616",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_ds1000_0617",
+   "rank": 19
+  },
+  {
+   "needle": "coderag_ds1000_0618",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0619",
+   "rank": 56
+  },
+  {
+   "needle": "coderag_ds1000_0620",
+   "rank": 15
+  },
+  {
+   "needle": "coderag_ds1000_0621",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0622",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0623",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0624",
+   "rank": 41
+  },
+  {
+   "needle": "coderag_ds1000_0625",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0626",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0627",
+   "rank": 12
+  },
+  {
+   "needle": "coderag_ds1000_0628",
+   "rank": 46
+  },
+  {
+   "needle": "coderag_ds1000_0630",
+   "rank": 5718
+  },
+  {
+   "needle": "coderag_ds1000_0631",
+   "rank": 86
+  },
+  {
+   "needle": "coderag_ds1000_0632",
+   "rank": 23
+  },
+  {
+   "needle": "coderag_ds1000_0633",
+   "rank": 93
+  },
+  {
+   "needle": "coderag_ds1000_0634",
+   "rank": 57
+  },
+  {
+   "needle": "coderag_ds1000_0635",
+   "rank": 13
+  },
+  {
+   "needle": "coderag_ds1000_0636",
+   "rank": 130
+  },
+  {
+   "needle": "coderag_ds1000_0637",
+   "rank": 62
+  },
+  {
+   "needle": "coderag_ds1000_0640",
+   "rank": 61
+  },
+  {
+   "needle": "coderag_ds1000_0641",
+   "rank": 26
+  },
+  {
+   "needle": "coderag_ds1000_0642",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0643",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0644",
+   "rank": 268
+  },
+  {
+   "needle": "coderag_ds1000_0645",
+   "rank": 54
+  },
+  {
+   "needle": "coderag_ds1000_0646",
+   "rank": 33
+  },
+  {
+   "needle": "coderag_ds1000_0647",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0648",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0649",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_ds1000_0650",
+   "rank": 175
+  },
+  {
+   "needle": "coderag_ds1000_0651",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0652",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0653",
+   "rank": 7
+  },
+  {
+   "needle": "coderag_ds1000_0654",
+   "rank": 4300
+  },
+  {
+   "needle": "coderag_ds1000_0655",
+   "rank": 4185
+  },
+  {
+   "needle": "coderag_ds1000_0656",
+   "rank": 5217
+  },
+  {
+   "needle": "coderag_ds1000_0657",
+   "rank": 53
+  },
+  {
+   "needle": "coderag_ds1000_0658",
+   "rank": 130
+  },
+  {
+   "needle": "coderag_ds1000_0659",
+   "rank": 72
+  },
+  {
+   "needle": "coderag_ds1000_0660",
+   "rank": 366
+  },
+  {
+   "needle": "coderag_ds1000_0662",
+   "rank": 3684
+  },
+  {
+   "needle": "coderag_ds1000_0663",
+   "rank": 57
+  },
+  {
+   "needle": "coderag_ds1000_0664",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0665",
+   "rank": 7
+  },
+  {
+   "needle": "coderag_ds1000_0666",
+   "rank": 974
+  },
+  {
+   "needle": "coderag_ds1000_0667",
+   "rank": 974
+  },
+  {
+   "needle": "coderag_ds1000_0668",
+   "rank": 761
+  },
+  {
+   "needle": "coderag_ds1000_0669",
+   "rank": 761
+  },
+  {
+   "needle": "coderag_ds1000_0670",
+   "rank": 599
+  },
+  {
+   "needle": "coderag_ds1000_0671",
+   "rank": 1043
+  },
+  {
+   "needle": "coderag_ds1000_0672",
+   "rank": 599
+  },
+  {
+   "needle": "coderag_ds1000_0673",
+   "rank": 23
+  },
+  {
+   "needle": "coderag_ds1000_0674",
+   "rank": 24
+  },
+  {
+   "needle": "coderag_ds1000_0675",
+   "rank": 1351
+  },
+  {
+   "needle": "coderag_ds1000_0676",
+   "rank": 1343
+  },
+  {
+   "needle": "coderag_ds1000_0677",
+   "rank": 1351
+  },
+  {
+   "needle": "coderag_ds1000_0678",
+   "rank": 1466
+  },
+  {
+   "needle": "coderag_ds1000_0679",
+   "rank": 1129
+  },
+  {
+   "needle": "coderag_ds1000_0680",
+   "rank": 797
+  },
+  {
+   "needle": "coderag_ds1000_0681",
+   "rank": 1222
+  },
+  {
+   "needle": "coderag_ds1000_0682",
+   "rank": 764
+  },
+  {
+   "needle": "coderag_ds1000_0683",
+   "rank": 104
+  },
+  {
+   "needle": "coderag_ds1000_0684",
+   "rank": 155
+  },
+  {
+   "needle": "coderag_ds1000_0685",
+   "rank": 46
+  },
+  {
+   "needle": "coderag_ds1000_0686",
+   "rank": 537
+  },
+  {
+   "needle": "coderag_ds1000_0687",
+   "rank": 25
+  },
+  {
+   "needle": "coderag_ds1000_0688",
+   "rank": 40
+  },
+  {
+   "needle": "coderag_ds1000_0689",
+   "rank": 57
+  },
+  {
+   "needle": "coderag_ds1000_0690",
+   "rank": 54
+  },
+  {
+   "needle": "coderag_ds1000_0691",
+   "rank": 6230
+  },
+  {
+   "needle": "coderag_ds1000_0692",
+   "rank": 6019
+  },
+  {
+   "needle": "coderag_ds1000_0693",
+   "rank": 7146
+  },
+  {
+   "needle": "coderag_ds1000_0694",
+   "rank": 200
+  },
+  {
+   "needle": "coderag_ds1000_0695",
+   "rank": 200
+  },
+  {
+   "needle": "coderag_ds1000_0696",
+   "rank": 5880
+  },
+  {
+   "needle": "coderag_ds1000_0697",
+   "rank": 6276
+  },
+  {
+   "needle": "coderag_ds1000_0698",
+   "rank": 557
+  },
+  {
+   "needle": "coderag_ds1000_0699",
+   "rank": 346
+  },
+  {
+   "needle": "coderag_ds1000_0700",
+   "rank": 724
+  },
+  {
+   "needle": "coderag_ds1000_0701",
+   "rank": 24
+  },
+  {
+   "needle": "coderag_ds1000_0702",
+   "rank": 3429
+  },
+  {
+   "needle": "coderag_ds1000_0703",
+   "rank": 3518
+  },
+  {
+   "needle": "coderag_ds1000_0704",
+   "rank": 3288
+  },
+  {
+   "needle": "coderag_ds1000_0705",
+   "rank": 797
+  },
+  {
+   "needle": "coderag_ds1000_0706",
+   "rank": 21
+  },
+  {
+   "needle": "coderag_ds1000_0707",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0708",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0709",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_ds1000_0840",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0841",
+   "rank": 7755
+  },
+  {
+   "needle": "coderag_ds1000_0842",
+   "rank": 9536
+  },
+  {
+   "needle": "coderag_ds1000_0849",
+   "rank": 68
+  },
+  {
+   "needle": "coderag_ds1000_0850",
+   "rank": 14
+  },
+  {
+   "needle": "coderag_ds1000_0851",
+   "rank": 14
+  },
+  {
+   "needle": "coderag_ds1000_0852",
+   "rank": 13
+  },
+  {
+   "needle": "coderag_ds1000_0853",
+   "rank": 26
+  },
+  {
+   "needle": "coderag_ds1000_0859",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0860",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0861",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0868",
+   "rank": 76
+  },
+  {
+   "needle": "coderag_ds1000_0869",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0870",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_ds1000_0871",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0872",
+   "rank": 1151
+  },
+  {
+   "needle": "coderag_ds1000_0873",
+   "rank": 1232
+  },
+  {
+   "needle": "coderag_ds1000_0874",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_ds1000_0875",
+   "rank": 10881
+  },
+  {
+   "needle": "coderag_ds1000_0876",
+   "rank": 6872
+  },
+  {
+   "needle": "coderag_ds1000_0877",
+   "rank": 10881
+  },
+  {
+   "needle": "coderag_ds1000_0878",
+   "rank": 11492
+  },
+  {
+   "needle": "coderag_ds1000_0879",
+   "rank": 6872
+  },
+  {
+   "needle": "coderag_ds1000_0886",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_ds1000_0887",
+   "rank": 114
+  },
+  {
+   "needle": "coderag_ds1000_0888",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0889",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0890",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0891",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0892",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_ds1000_0893",
+   "rank": 42
+  },
+  {
+   "needle": "coderag_ds1000_0894",
+   "rank": 32
+  },
+  {
+   "needle": "coderag_ds1000_0895",
+   "rank": 42
+  },
+  {
+   "needle": "coderag_ds1000_0896",
+   "rank": 39
+  },
+  {
+   "needle": "coderag_ds1000_0897",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0898",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0899",
+   "rank": 38
+  },
+  {
+   "needle": "coderag_ds1000_0900",
+   "rank": 35
+  },
+  {
+   "needle": "coderag_ds1000_0901",
+   "rank": 36
+  },
+  {
+   "needle": "coderag_ds1000_0902",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0903",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0904",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0905",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0909",
+   "rank": 7
+  },
+  {
+   "needle": "coderag_ds1000_0910",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_ds1000_0911",
+   "rank": 21
+  },
+  {
+   "needle": "coderag_ds1000_0912",
+   "rank": 12
+  },
+  {
+   "needle": "coderag_ds1000_0913",
+   "rank": 12
+  },
+  {
+   "needle": "coderag_ds1000_0914",
+   "rank": 25
+  },
+  {
+   "needle": "coderag_ds1000_0916",
+   "rank": 282
+  },
+  {
+   "needle": "coderag_ds1000_0917",
+   "rank": 68
+  },
+  {
+   "needle": "coderag_ds1000_0918",
+   "rank": 281
+  },
+  {
+   "needle": "coderag_ds1000_0919",
+   "rank": 205
+  },
+  {
+   "needle": "coderag_ds1000_0920",
+   "rank": 230
+  },
+  {
+   "needle": "coderag_ds1000_0926",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0927",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_ds1000_0931",
+   "rank": 367
+  },
+  {
+   "needle": "coderag_odex_0006",
+   "rank": 143
+  },
+  {
+   "needle": "coderag_odex_0008",
+   "rank": 105
+  },
+  {
+   "needle": "coderag_odex_0009",
+   "rank": 6534
+  },
+  {
+   "needle": "coderag_odex_0010",
+   "rank": 310
+  },
+  {
+   "needle": "coderag_odex_0014",
+   "rank": 38
+  },
+  {
+   "needle": "coderag_odex_0015",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0017",
+   "rank": 64
+  },
+  {
+   "needle": "coderag_odex_0020",
+   "rank": 210
+  },
+  {
+   "needle": "coderag_odex_0021",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0023",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_odex_0024",
+   "rank": 94
+  },
+  {
+   "needle": "coderag_odex_0027",
+   "rank": 43
+  },
+  {
+   "needle": "coderag_odex_0029",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_odex_0031",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_odex_0032",
+   "rank": 308
+  },
+  {
+   "needle": "coderag_odex_0034",
+   "rank": 1638
+  },
+  {
+   "needle": "coderag_odex_0036",
+   "rank": 2314
+  },
+  {
+   "needle": "coderag_odex_0038",
+   "rank": 4328
+  },
+  {
+   "needle": "coderag_odex_0040",
+   "rank": null
+  },
+  {
+   "needle": "coderag_odex_0046",
+   "rank": 574
+  },
+  {
+   "needle": "coderag_odex_0047",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_odex_0048",
+   "rank": 56
+  },
+  {
+   "needle": "coderag_odex_0051",
+   "rank": 202
+  },
+  {
+   "needle": "coderag_odex_0055",
+   "rank": 3048
+  },
+  {
+   "needle": "coderag_odex_0056",
+   "rank": 14997
+  },
+  {
+   "needle": "coderag_odex_0061",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_odex_0062",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0064",
+   "rank": null,
+   "gold_absent": true
+  },
+  {
+   "needle": "coderag_odex_0065",
+   "rank": 103
+  },
+  {
+   "needle": "coderag_odex_0066",
+   "rank": 15
+  },
+  {
+   "needle": "coderag_odex_0068",
+   "rank": 55
+  },
+  {
+   "needle": "coderag_odex_0074",
+   "rank": 3103
+  },
+  {
+   "needle": "coderag_odex_0075",
+   "rank": 94
+  },
+  {
+   "needle": "coderag_odex_0076",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_odex_0078",
+   "rank": 26
+  },
+  {
+   "needle": "coderag_odex_0080",
+   "rank": 206
+  },
+  {
+   "needle": "coderag_odex_0082",
+   "rank": 712
+  },
+  {
+   "needle": "coderag_odex_0083",
+   "rank": 473
+  },
+  {
+   "needle": "coderag_odex_0084",
+   "rank": 17
+  },
+  {
+   "needle": "coderag_odex_0085",
+   "rank": 17
+  },
+  {
+   "needle": "coderag_odex_0088",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_odex_0091",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_odex_0092",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_odex_0093",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_odex_0094",
+   "rank": 484
+  },
+  {
+   "needle": "coderag_odex_0095",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_odex_0098",
+   "rank": 3125
+  },
+  {
+   "needle": "coderag_odex_0099",
+   "rank": 2710
+  },
+  {
+   "needle": "coderag_odex_0100",
+   "rank": 158
+  },
+  {
+   "needle": "coderag_odex_0102",
+   "rank": 68
+  },
+  {
+   "needle": "coderag_odex_0103",
+   "rank": 326
+  },
+  {
+   "needle": "coderag_odex_0106",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0109",
+   "rank": 806
+  },
+  {
+   "needle": "coderag_odex_0113",
+   "rank": 678
+  },
+  {
+   "needle": "coderag_odex_0117",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_odex_0118",
+   "rank": 31
+  },
+  {
+   "needle": "coderag_odex_0119",
+   "rank": 127
+  },
+  {
+   "needle": "coderag_odex_0120",
+   "rank": 3064
+  },
+  {
+   "needle": "coderag_odex_0121",
+   "rank": 2975
+  },
+  {
+   "needle": "coderag_odex_0122",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_odex_0123",
+   "rank": 12336
+  },
+  {
+   "needle": "coderag_odex_0127",
+   "rank": 2867
+  },
+  {
+   "needle": "coderag_odex_0128",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_odex_0129",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_odex_0131",
+   "rank": 11380
+  },
+  {
+   "needle": "coderag_odex_0132",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_odex_0133",
+   "rank": null
+  },
+  {
+   "needle": "coderag_odex_0134",
+   "rank": 30
+  },
+  {
+   "needle": "coderag_odex_0136",
+   "rank": 913
+  },
+  {
+   "needle": "coderag_odex_0137",
+   "rank": 14237
+  },
+  {
+   "needle": "coderag_odex_0143",
+   "rank": 17880
+  },
+  {
+   "needle": "coderag_odex_0146",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_odex_0147",
+   "rank": 20
+  },
+  {
+   "needle": "coderag_odex_0150",
+   "rank": 1316
+  },
+  {
+   "needle": "coderag_odex_0151",
+   "rank": 207
+  },
+  {
+   "needle": "coderag_odex_0152",
+   "rank": 1998
+  },
+  {
+   "needle": "coderag_odex_0153",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_odex_0157",
+   "rank": null
+  },
+  {
+   "needle": "coderag_odex_0160",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_odex_0164",
+   "rank": 945
+  },
+  {
+   "needle": "coderag_odex_0165",
+   "rank": 19
+  },
+  {
+   "needle": "coderag_odex_0172",
+   "rank": 36
+  },
+  {
+   "needle": "coderag_odex_0175",
+   "rank": 4806
+  },
+  {
+   "needle": "coderag_odex_0176",
+   "rank": 231
+  },
+  {
+   "needle": "coderag_odex_0179",
+   "rank": 5803
+  },
+  {
+   "needle": "coderag_odex_0180",
+   "rank": 109
+  },
+  {
+   "needle": "coderag_odex_0181",
+   "rank": 516
+  },
+  {
+   "needle": "coderag_odex_0185",
+   "rank": 43
+  },
+  {
+   "needle": "coderag_odex_0192",
+   "rank": 21
+  },
+  {
+   "needle": "coderag_odex_0193",
+   "rank": 15
+  },
+  {
+   "needle": "coderag_odex_0195",
+   "rank": 361
+  },
+  {
+   "needle": "coderag_odex_0197",
+   "rank": 29
+  },
+  {
+   "needle": "coderag_odex_0201",
+   "rank": 2376
+  },
+  {
+   "needle": "coderag_odex_0203",
+   "rank": 1514
+  },
+  {
+   "needle": "coderag_odex_0204",
+   "rank": 224
+  },
+  {
+   "needle": "coderag_odex_0205",
+   "rank": 62
+  },
+  {
+   "needle": "coderag_odex_0206",
+   "rank": 5310
+  },
+  {
+   "needle": "coderag_odex_0207",
+   "rank": 526
+  },
+  {
+   "needle": "coderag_odex_0208",
+   "rank": 34
+  },
+  {
+   "needle": "coderag_odex_0209",
+   "rank": 11
+  },
+  {
+   "needle": "coderag_odex_0210",
+   "rank": 2302
+  },
+  {
+   "needle": "coderag_odex_0211",
+   "rank": 23
+  },
+  {
+   "needle": "coderag_odex_0216",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_odex_0217",
+   "rank": 48
+  },
+  {
+   "needle": "coderag_odex_0224",
+   "rank": 2430
+  },
+  {
+   "needle": "coderag_odex_0229",
+   "rank": 51
+  },
+  {
+   "needle": "coderag_odex_0231",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0232",
+   "rank": 288
+  },
+  {
+   "needle": "coderag_odex_0239",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_odex_0240",
+   "rank": 3484
+  },
+  {
+   "needle": "coderag_odex_0242",
+   "rank": null,
+   "gold_absent": true
+  },
+  {
+   "needle": "coderag_odex_0243",
+   "rank": 968
+  },
+  {
+   "needle": "coderag_odex_0248",
+   "rank": 5952
+  },
+  {
+   "needle": "coderag_odex_0250",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_odex_0255",
+   "rank": 11254
+  },
+  {
+   "needle": "coderag_odex_0256",
+   "rank": 18
+  },
+  {
+   "needle": "coderag_odex_0263",
+   "rank": 4929
+  },
+  {
+   "needle": "coderag_odex_0264",
+   "rank": 37
+  },
+  {
+   "needle": "coderag_odex_0267",
+   "rank": 74
+  },
+  {
+   "needle": "coderag_odex_0268",
+   "rank": 898
+  },
+  {
+   "needle": "coderag_odex_0269",
+   "rank": 1301
+  },
+  {
+   "needle": "coderag_odex_0270",
+   "rank": 6
+  },
+  {
+   "needle": "coderag_odex_0273",
+   "rank": null,
+   "gold_absent": true
+  },
+  {
+   "needle": "coderag_odex_0274",
+   "rank": 2124
+  },
+  {
+   "needle": "coderag_odex_0275",
+   "rank": 3086
+  },
+  {
+   "needle": "coderag_odex_0276",
+   "rank": 554
+  },
+  {
+   "needle": "coderag_odex_0277",
+   "rank": 166
+  },
+  {
+   "needle": "coderag_odex_0278",
+   "rank": 183
+  },
+  {
+   "needle": "coderag_odex_0280",
+   "rank": 88
+  },
+  {
+   "needle": "coderag_odex_0283",
+   "rank": 404
+  },
+  {
+   "needle": "coderag_odex_0285",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_odex_0286",
+   "rank": 25
+  },
+  {
+   "needle": "coderag_odex_0298",
+   "rank": 256
+  },
+  {
+   "needle": "coderag_odex_0299",
+   "rank": 42
+  },
+  {
+   "needle": "coderag_odex_0301",
+   "rank": 307
+  },
+  {
+   "needle": "coderag_odex_0302",
+   "rank": 360
+  },
+  {
+   "needle": "coderag_odex_0303",
+   "rank": 102
+  },
+  {
+   "needle": "coderag_odex_0304",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_odex_0305",
+   "rank": 40
+  },
+  {
+   "needle": "coderag_odex_0309",
+   "rank": 12
+  },
+  {
+   "needle": "coderag_odex_0311",
+   "rank": 6777
+  },
+  {
+   "needle": "coderag_odex_0312",
+   "rank": 419
+  },
+  {
+   "needle": "coderag_odex_0313",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_odex_0316",
+   "rank": 14
+  },
+  {
+   "needle": "coderag_odex_0317",
+   "rank": 47
+  },
+  {
+   "needle": "coderag_odex_0318",
+   "rank": 4566
+  },
+  {
+   "needle": "coderag_odex_0320",
+   "rank": 28
+  },
+  {
+   "needle": "coderag_odex_0321",
+   "rank": 251
+  },
+  {
+   "needle": "coderag_odex_0322",
+   "rank": 413
+  },
+  {
+   "needle": "coderag_odex_0323",
+   "rank": 16
+  },
+  {
+   "needle": "coderag_odex_0331",
+   "rank": 18
+  },
+  {
+   "needle": "coderag_odex_0332",
+   "rank": 951
+  },
+  {
+   "needle": "coderag_odex_0335",
+   "rank": 30
+  },
+  {
+   "needle": "coderag_odex_0336",
+   "rank": 9
+  },
+  {
+   "needle": "coderag_odex_0337",
+   "rank": 10
+  },
+  {
+   "needle": "coderag_odex_0338",
+   "rank": 11
+  },
+  {
+   "needle": "coderag_odex_0339",
+   "rank": 1578
+  },
+  {
+   "needle": "coderag_odex_0340",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_odex_0341",
+   "rank": 229
+  },
+  {
+   "needle": "coderag_odex_0342",
+   "rank": null,
+   "gold_absent": true
+  },
+  {
+   "needle": "coderag_odex_0343",
+   "rank": 16
+  },
+  {
+   "needle": "coderag_odex_0347",
+   "rank": 32
+  },
+  {
+   "needle": "coderag_odex_0348",
+   "rank": 132
+  },
+  {
+   "needle": "coderag_odex_0349",
+   "rank": 24
+  },
+  {
+   "needle": "coderag_odex_0355",
+   "rank": 552
+  },
+  {
+   "needle": "coderag_odex_0356",
+   "rank": 87
+  },
+  {
+   "needle": "coderag_odex_0357",
+   "rank": 1429
+  },
+  {
+   "needle": "coderag_odex_0362",
+   "rank": 18623
+  },
+  {
+   "needle": "coderag_odex_0368",
+   "rank": 41
+  },
+  {
+   "needle": "coderag_odex_0370",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0373",
+   "rank": 1314
+  },
+  {
+   "needle": "coderag_odex_0375",
+   "rank": 165
+  },
+  {
+   "needle": "coderag_odex_0376",
+   "rank": 177
+  },
+  {
+   "needle": "coderag_odex_0377",
+   "rank": 22
+  },
+  {
+   "needle": "coderag_odex_0378",
+   "rank": 59
+  },
+  {
+   "needle": "coderag_odex_0387",
+   "rank": 250
+  },
+  {
+   "needle": "coderag_odex_0388",
+   "rank": 645
+  },
+  {
+   "needle": "coderag_odex_0390",
+   "rank": 59
+  },
+  {
+   "needle": "coderag_odex_0391",
+   "rank": 1615
+  },
+  {
+   "needle": "coderag_odex_0392",
+   "rank": 1017
+  },
+  {
+   "needle": "coderag_odex_0394",
+   "rank": 316
+  },
+  {
+   "needle": "coderag_odex_0395",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_odex_0399",
+   "rank": 429
+  },
+  {
+   "needle": "coderag_odex_0404",
+   "rank": 452
+  },
+  {
+   "needle": "coderag_odex_0405",
+   "rank": 1087
+  },
+  {
+   "needle": "coderag_odex_0406",
+   "rank": 1471
+  },
+  {
+   "needle": "coderag_odex_0407",
+   "rank": 5
+  },
+  {
+   "needle": "coderag_odex_0412",
+   "rank": 305
+  },
+  {
+   "needle": "coderag_odex_0413",
+   "rank": 1789
+  },
+  {
+   "needle": "coderag_odex_0414",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0415",
+   "rank": null
+  },
+  {
+   "needle": "coderag_odex_0417",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0418",
+   "rank": 133
+  },
+  {
+   "needle": "coderag_odex_0420",
+   "rank": 10723
+  },
+  {
+   "needle": "coderag_odex_0421",
+   "rank": 87
+  },
+  {
+   "needle": "coderag_odex_0427",
+   "rank": 1646
+  },
+  {
+   "needle": "coderag_odex_0428",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_odex_0430",
+   "rank": 10
+  },
+  {
+   "needle": "coderag_odex_0433",
+   "rank": 3159
+  },
+  {
+   "needle": "coderag_odex_0434",
+   "rank": 6656
+  },
+  {
+   "needle": "coderag_odex_0438",
+   "rank": 3884
+  }
+ ]
+}

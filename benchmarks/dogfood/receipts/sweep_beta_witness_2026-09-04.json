@@ -1,0 +1,1897 @@
+{
+  "stamp": "2026-09-04",
+  "runner": "benchmarks/dogfood/sweeps/run_sweep_beta.py",
+  "preflight": {
+    "beta_head": "21606a07b7d6604f5229bd8bf7def5d84c2d6540",
+    "shipped_config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\cymatix-tuning-progression-1d3a3c\\cymatix.toml",
+    "shipped_config_sha256": "dd4ca7440b646ad6a56c363b63645020ea2cac5cb74f0ac65ab9463b81f88db8",
+    "w24_reference_config_sha256": "7129e83ca727bf1e93af83aeb3b5fa481c7552bd37740d90b40a53be03589170",
+    "legacy_probe_config_sha256": "2c06d5b1c0fcdbd0f2d71a70cd6c9fe2a996ea5d865656bd186cf571ef3508c4",
+    "resolved_fields": {
+      "rrf_k": 20,
+      "fusion_mode": "rrf",
+      "map": {
+        "arithmetic": "eps_band",
+        "factual": "eps_band",
+        "procedural": "eps_band",
+        "multi_hop": "eps_band",
+        "default": "eps_band"
+      },
+      "floor": 12,
+      "dense": false,
+      "pki": false,
+      "cover_walk": false,
+      "fts5_candidate_depth": 0,
+      "expression_tokens": 7000,
+      "ribosome_backend": "none",
+      "splade": false,
+      "hub_cutoff": 200
+    },
+    "fields_identical_to_w24_reference": true,
+    "dirty_tracked_files": [
+      "M CHANGELOG.md",
+      " M benchmarks/repobench_r_cymatix_global.py",
+      " M docs/benchmarks/BASELINES.md",
+      " M scripts/build_fixture_matrix.py"
+    ]
+  },
+  "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+  "sqlite": "3.50.4",
+  "pairs": [
+    {
+      "label": "muloc: beta seed0 vs frozen reference",
+      "new": "benchmarks/dogfood/muloc/receipts/ladder_muloc_beta_seed0_2026-09-04.json",
+      "ref": "benchmarks/dogfood/muloc/receipts/ladder_muloc_baseline_cold_2026-08-31.json",
+      "n": 680,
+      "summary": {
+        "recall_at_k": {
+          "new": 0.4838,
+          "ref": 0.4824,
+          "delta": 0.0014
+        },
+        "final_recall_at_k": {
+          "new": 0.4882,
+          "ref": 0.4868,
+          "delta": 0.0014
+        },
+        "delivered_gold_rate": {
+          "new": 0.4426470588235294,
+          "ref": 0.4485294117647059,
+          "delta": -0.005882
+        },
+        "mean_rank_of_gold": {
+          "new": 9.49,
+          "ref": 9.44,
+          "delta": 0.05
+        },
+        "median_rank_of_gold": {
+          "new": 5.0,
+          "ref": 4.0,
+          "delta": 1.0
+        },
+        "gold_found_queries": {
+          "new": 441,
+          "ref": 441,
+          "delta": 0
+        },
+        "delivered_gold_queries": {
+          "new": 301,
+          "ref": 305,
+          "delta": -4
+        },
+        "pool_delivery_gap": {
+          "new": 0.0412,
+          "ref": 0.0339,
+          "delta": 0.0073
+        },
+        "n_queries": {
+          "new": 680,
+          "ref": 680,
+          "delta": 0
+        }
+      },
+      "per_needle_field_diffs": {
+        "delivered_gold": 8,
+        "recall_hit": 5,
+        "final_recall_hit": 7,
+        "rank_of_first_gold": 68,
+        "final_rank_of_first_gold": 59,
+        "delivered_gold_rank": 42,
+        "delivered_count": 21,
+        "gold_ranks": 141,
+        "floor_appended": 0,
+        "gate_kept": 0,
+        "splice_n_candidates": 21,
+        "cover_walk": 0
+      },
+      "needles_with_any_rank_axis_diff": 68,
+      "delivered_gained": [
+        "muloc_0548",
+        "muloc_0646"
+      ],
+      "delivered_lost": [
+        "muloc_0035",
+        "muloc_0067",
+        "muloc_0200",
+        "muloc_0209",
+        "muloc_0547",
+        "muloc_0836"
+      ],
+      "paired_delivered": "+2/-6",
+      "rank_moves_first_gold": [
+        {
+          "needle": "muloc_0007",
+          "ref": 42,
+          "new": 43
+        },
+        {
+          "needle": "muloc_0020",
+          "ref": 3,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0022",
+          "ref": 4,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0035",
+          "ref": 6,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0036",
+          "ref": 1,
+          "new": 2
+        },
+        {
+          "needle": "muloc_0053",
+          "ref": 9,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0067",
+          "ref": 12,
+          "new": 14
+        },
+        {
+          "needle": "muloc_0072",
+          "ref": 3,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0107",
+          "ref": 5,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0126",
+          "ref": 1,
+          "new": 2
+        },
+        {
+          "needle": "muloc_0136",
+          "ref": 3,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0142",
+          "ref": 28,
+          "new": 27
+        },
+        {
+          "needle": "muloc_0149",
+          "ref": 4,
+          "new": 2
+        },
+        {
+          "needle": "muloc_0164",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0182",
+          "ref": 7,
+          "new": 9
+        },
+        {
+          "needle": "muloc_0191",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0200",
+          "ref": 1,
+          "new": 23
+        },
+        {
+          "needle": "muloc_0202",
+          "ref": 3,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0209",
+          "ref": 2,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0223",
+          "ref": 17,
+          "new": 18
+        },
+        {
+          "needle": "muloc_0241",
+          "ref": 18,
+          "new": 16
+        },
+        {
+          "needle": "muloc_0260",
+          "ref": 4,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0271",
+          "ref": 16,
+          "new": 17
+        },
+        {
+          "needle": "muloc_0273",
+          "ref": 8,
+          "new": 9
+        },
+        {
+          "needle": "muloc_0277",
+          "ref": 1,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0278",
+          "ref": 4,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0286",
+          "ref": 8,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0296",
+          "ref": 5,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0309",
+          "ref": 17,
+          "new": 18
+        },
+        {
+          "needle": "muloc_0317",
+          "ref": 29,
+          "new": 23
+        },
+        {
+          "needle": "muloc_0322",
+          "ref": 5,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0326",
+          "ref": 38,
+          "new": 34
+        },
+        {
+          "needle": "muloc_0328",
+          "ref": 17,
+          "new": 13
+        },
+        {
+          "needle": "muloc_0330",
+          "ref": 5,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0344",
+          "ref": 2,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0350",
+          "ref": 5,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0357",
+          "ref": 29,
+          "new": 32
+        },
+        {
+          "needle": "muloc_0359",
+          "ref": 29,
+          "new": 28
+        },
+        {
+          "needle": "muloc_0407",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0429",
+          "ref": 21,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0440",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0466",
+          "ref": 1,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0478",
+          "ref": 27,
+          "new": 19
+        },
+        {
+          "needle": "muloc_0482",
+          "ref": 3,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0489",
+          "ref": 8,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0501",
+          "ref": 37,
+          "new": 38
+        },
+        {
+          "needle": "muloc_0530",
+          "ref": 5,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0531",
+          "ref": 3,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0547",
+          "ref": 6,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0589",
+          "ref": 47,
+          "new": 46
+        },
+        {
+          "needle": "muloc_0603",
+          "ref": 11,
+          "new": 10
+        },
+        {
+          "needle": "muloc_0605",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0625",
+          "ref": 19,
+          "new": 17
+        },
+        {
+          "needle": "muloc_0643",
+          "ref": 5,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0646",
+          "ref": 20,
+          "new": 10
+        },
+        {
+          "needle": "muloc_0650",
+          "ref": 9,
+          "new": 10
+        },
+        {
+          "needle": "muloc_0670",
+          "ref": 29,
+          "new": 28
+        },
+        {
+          "needle": "muloc_0680",
+          "ref": 7,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0699",
+          "ref": 24,
+          "new": 39
+        },
+        {
+          "needle": "muloc_0708",
+          "ref": 35,
+          "new": 47
+        },
+        {
+          "needle": "muloc_0709",
+          "ref": 21,
+          "new": 19
+        },
+        {
+          "needle": "muloc_0718",
+          "ref": 6,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0772",
+          "ref": 13,
+          "new": 11
+        },
+        {
+          "needle": "muloc_0787",
+          "ref": 7,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0812",
+          "ref": 14,
+          "new": 13
+        },
+        {
+          "needle": "muloc_0814",
+          "ref": 2,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0830",
+          "ref": 1,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0836",
+          "ref": 9,
+          "new": 7
+        }
+      ],
+      "latency_ms": {
+        "new_p50": 2736.8,
+        "ref_p50": 3759.1,
+        "citable": false,
+        "why": "environment-loaded wall ms; rank axes are the citable part"
+      },
+      "verdict": "RANK_AXES_MOVED (see field diffs; seed-dependent lanes expected to jitter where queries exceed 64 distinct terms)"
+    },
+    {
+      "label": "muloc: beta seed1 vs beta seed0 (hash-order sensitivity)",
+      "new": "benchmarks/dogfood/muloc/receipts/ladder_muloc_beta_seed1_2026-09-04.json",
+      "ref": "benchmarks/dogfood/muloc/receipts/ladder_muloc_beta_seed0_2026-09-04.json",
+      "n": 680,
+      "summary": {
+        "recall_at_k": {
+          "new": 0.4897,
+          "ref": 0.4838,
+          "delta": 0.0059
+        },
+        "final_recall_at_k": {
+          "new": 0.4912,
+          "ref": 0.4882,
+          "delta": 0.003
+        },
+        "delivered_gold_rate": {
+          "new": 0.4485294117647059,
+          "ref": 0.4426470588235294,
+          "delta": 0.005882
+        },
+        "mean_rank_of_gold": {
+          "new": 9.36,
+          "ref": 9.49,
+          "delta": -0.13
+        },
+        "median_rank_of_gold": {
+          "new": 4.0,
+          "ref": 5.0,
+          "delta": -1.0
+        },
+        "gold_found_queries": {
+          "new": 441,
+          "ref": 441,
+          "delta": 0
+        },
+        "delivered_gold_queries": {
+          "new": 305,
+          "ref": 301,
+          "delta": 4
+        },
+        "pool_delivery_gap": {
+          "new": 0.0412,
+          "ref": 0.0412,
+          "delta": 0.0
+        },
+        "n_queries": {
+          "new": 680,
+          "ref": 680,
+          "delta": 0
+        }
+      },
+      "per_needle_field_diffs": {
+        "delivered_gold": 10,
+        "recall_hit": 8,
+        "final_recall_hit": 8,
+        "rank_of_first_gold": 77,
+        "final_rank_of_first_gold": 69,
+        "delivered_gold_rank": 44,
+        "delivered_count": 28,
+        "gold_ranks": 147,
+        "floor_appended": 0,
+        "gate_kept": 0,
+        "splice_n_candidates": 28,
+        "cover_walk": 0
+      },
+      "needles_with_any_rank_axis_diff": 77,
+      "delivered_gained": [
+        "muloc_0035",
+        "muloc_0123",
+        "muloc_0200",
+        "muloc_0251",
+        "muloc_0501",
+        "muloc_0771",
+        "muloc_0836"
+      ],
+      "delivered_lost": [
+        "muloc_0161",
+        "muloc_0238",
+        "muloc_0721"
+      ],
+      "paired_delivered": "+7/-3",
+      "rank_moves_first_gold": [
+        {
+          "needle": "muloc_0020",
+          "ref": 4,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0022",
+          "ref": 3,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0035",
+          "ref": 7,
+          "new": 6
+        },
+        {
+          "needle": "muloc_0036",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0052",
+          "ref": 1,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0081",
+          "ref": 29,
+          "new": 23
+        },
+        {
+          "needle": "muloc_0097",
+          "ref": 24,
+          "new": 26
+        },
+        {
+          "needle": "muloc_0101",
+          "ref": 1,
+          "new": 2
+        },
+        {
+          "needle": "muloc_0106",
+          "ref": 10,
+          "new": 11
+        },
+        {
+          "needle": "muloc_0107",
+          "ref": 4,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0123",
+          "ref": 13,
+          "new": 12
+        },
+        {
+          "needle": "muloc_0126",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0136",
+          "ref": 4,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0148",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0164",
+          "ref": 1,
+          "new": 2
+        },
+        {
+          "needle": "muloc_0169",
+          "ref": 14,
+          "new": 15
+        },
+        {
+          "needle": "muloc_0200",
+          "ref": 23,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0202",
+          "ref": 4,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0223",
+          "ref": 18,
+          "new": 17
+        },
+        {
+          "needle": "muloc_0238",
+          "ref": 8,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0241",
+          "ref": 16,
+          "new": 19
+        },
+        {
+          "needle": "muloc_0243",
+          "ref": 4,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0251",
+          "ref": 15,
+          "new": 11
+        },
+        {
+          "needle": "muloc_0260",
+          "ref": 3,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0267",
+          "ref": 8,
+          "new": 10
+        },
+        {
+          "needle": "muloc_0271",
+          "ref": 17,
+          "new": 16
+        },
+        {
+          "needle": "muloc_0278",
+          "ref": 5,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0296",
+          "ref": 4,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0307",
+          "ref": 5,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0309",
+          "ref": 18,
+          "new": 16
+        },
+        {
+          "needle": "muloc_0317",
+          "ref": 23,
+          "new": 29
+        },
+        {
+          "needle": "muloc_0326",
+          "ref": 34,
+          "new": 39
+        },
+        {
+          "needle": "muloc_0328",
+          "ref": 13,
+          "new": 11
+        },
+        {
+          "needle": "muloc_0344",
+          "ref": 5,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0345",
+          "ref": 3,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0355",
+          "ref": 27,
+          "new": 25
+        },
+        {
+          "needle": "muloc_0357",
+          "ref": 32,
+          "new": 29
+        },
+        {
+          "needle": "muloc_0359",
+          "ref": 28,
+          "new": 29
+        },
+        {
+          "needle": "muloc_0407",
+          "ref": 1,
+          "new": 2
+        },
+        {
+          "needle": "muloc_0429",
+          "ref": 7,
+          "new": 22
+        },
+        {
+          "needle": "muloc_0445",
+          "ref": 1,
+          "new": 2
+        },
+        {
+          "needle": "muloc_0447",
+          "ref": 2,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0477",
+          "ref": 4,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0482",
+          "ref": 6,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0488",
+          "ref": 6,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0489",
+          "ref": 7,
+          "new": 8
+        },
+        {
+          "needle": "muloc_0496",
+          "ref": 6,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0498",
+          "ref": 50,
+          "new": 48
+        },
+        {
+          "needle": "muloc_0501",
+          "ref": 38,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0506",
+          "ref": 24,
+          "new": 20
+        },
+        {
+          "needle": "muloc_0530",
+          "ref": 6,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0531",
+          "ref": 4,
+          "new": 3
+        },
+        {
+          "needle": "muloc_0541",
+          "ref": 6,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0551",
+          "ref": 2,
+          "new": 1
+        },
+        {
+          "needle": "muloc_0559",
+          "ref": 3,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0562",
+          "ref": 42,
+          "new": 34
+        },
+        {
+          "needle": "muloc_0564",
+          "ref": 17,
+          "new": 18
+        },
+        {
+          "needle": "muloc_0577",
+          "ref": 15,
+          "new": 17
+        },
+        {
+          "needle": "muloc_0592",
+          "ref": 2,
+          "new": 4
+        },
+        {
+          "needle": "muloc_0603",
+          "ref": 10,
+          "new": 12
+        },
+        {
+          "needle": "muloc_0605",
+          "ref": 1,
+          "new": 2
+        },
+        {
+          "needle": "muloc_0625",
+          "ref": 17,
+          "new": 19
+        },
+        {
+          "needle": "muloc_0643",
+          "ref": 4,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0646",
+          "ref": 10,
+          "new": 11
+        },
+        {
+          "needle": "muloc_0650",
+          "ref": 10,
+          "new": 9
+        },
+        {
+          "needle": "muloc_0670",
+          "ref": 28,
+          "new": 32
+        },
+        {
+          "needle": "muloc_0680",
+          "ref": 6,
+          "new": 7
+        },
+        {
+          "needle": "muloc_0699",
+          "ref": 39,
+          "new": 30
+        },
+        {
+          "needle": "muloc_0708",
+          "ref": 47,
+          "new": 29
+        },
+        {
+          "needle": "muloc_0709",
+          "ref": 19,
+          "new": 21
+        },
+        {
+          "needle": "muloc_0718",
+          "ref": 7,
+          "new": 9
+        },
+        {
+          "needle": "muloc_0721",
+          "ref": 10,
+          "new": 24
+        },
+        {
+          "needle": "muloc_0759",
+          "ref": 4,
+          "new": 5
+        },
+        {
+          "needle": "muloc_0771",
+          "ref": 14,
+          "new": 10
+        },
+        {
+          "needle": "muloc_0772",
+          "ref": 11,
+          "new": 12
+        },
+        {
+          "needle": "muloc_0805",
+          "ref": 37,
+          "new": 38
+        },
+        {
+          "needle": "muloc_0836",
+          "ref": 7,
+          "new": 9
+        }
+      ],
+      "latency_ms": {
+        "new_p50": 4523.4,
+        "ref_p50": 2736.8,
+        "citable": false,
+        "why": "environment-loaded wall ms; rank axes are the citable part"
+      },
+      "verdict": "RANK_AXES_MOVED (see field diffs; seed-dependent lanes expected to jitter where queries exceed 64 distinct terms)"
+    },
+    {
+      "label": "locomo: beta seed0 vs frozen reference",
+      "new": "benchmarks/dogfood/locomo/receipts/ladder_locomo_beta_seed0_2026-09-04.json",
+      "ref": "benchmarks/dogfood/locomo/receipts/ladder_locomo_baseline_2026-08-31.json",
+      "n": 2378,
+      "summary": {
+        "recall_at_k": {
+          "new": 0.4857,
+          "ref": 0.4857,
+          "delta": 0.0
+        },
+        "final_recall_at_k": {
+          "new": 0.4865,
+          "ref": 0.4865,
+          "delta": 0.0
+        },
+        "delivered_gold_rate": {
+          "new": 0.4348191757779647,
+          "ref": 0.4348191757779647,
+          "delta": 0.0
+        },
+        "mean_rank_of_gold": {
+          "new": 9.16,
+          "ref": 9.16,
+          "delta": 0.0
+        },
+        "median_rank_of_gold": {
+          "new": 6.0,
+          "ref": 6.0,
+          "delta": 0.0
+        },
+        "gold_found_queries": {
+          "new": 1466,
+          "ref": 1466,
+          "delta": 0
+        },
+        "delivered_gold_queries": {
+          "new": 1034,
+          "ref": 1034,
+          "delta": 0
+        },
+        "pool_delivery_gap": {
+          "new": 0.0509,
+          "ref": 0.0509,
+          "delta": 0.0
+        },
+        "n_queries": {
+          "new": 2378,
+          "ref": 2378,
+          "delta": 0
+        }
+      },
+      "per_needle_field_diffs": {
+        "delivered_gold": 0,
+        "recall_hit": 0,
+        "final_recall_hit": 0,
+        "rank_of_first_gold": 0,
+        "final_rank_of_first_gold": 0,
+        "delivered_gold_rank": 0,
+        "delivered_count": 0,
+        "gold_ranks": 0,
+        "floor_appended": 0,
+        "gate_kept": 0,
+        "splice_n_candidates": 0,
+        "cover_walk": 0
+      },
+      "needles_with_any_rank_axis_diff": 0,
+      "delivered_gained": [],
+      "delivered_lost": [],
+      "paired_delivered": "+0/-0",
+      "rank_moves_first_gold": [],
+      "latency_ms": {
+        "new_p50": 15.8,
+        "ref_p50": 22.7,
+        "citable": false,
+        "why": "environment-loaded wall ms; rank axes are the citable part"
+      },
+      "verdict": "EXACT_REPRODUCE"
+    },
+    {
+      "label": "locomo: beta seed1 vs beta seed0 (hash-order sensitivity)",
+      "new": "benchmarks/dogfood/locomo/receipts/ladder_locomo_beta_seed1_2026-09-04.json",
+      "ref": "benchmarks/dogfood/locomo/receipts/ladder_locomo_beta_seed0_2026-09-04.json",
+      "n": 2378,
+      "summary": {
+        "recall_at_k": {
+          "new": 0.4857,
+          "ref": 0.4857,
+          "delta": 0.0
+        },
+        "final_recall_at_k": {
+          "new": 0.4865,
+          "ref": 0.4865,
+          "delta": 0.0
+        },
+        "delivered_gold_rate": {
+          "new": 0.4348191757779647,
+          "ref": 0.4348191757779647,
+          "delta": 0.0
+        },
+        "mean_rank_of_gold": {
+          "new": 9.16,
+          "ref": 9.16,
+          "delta": 0.0
+        },
+        "median_rank_of_gold": {
+          "new": 6.0,
+          "ref": 6.0,
+          "delta": 0.0
+        },
+        "gold_found_queries": {
+          "new": 1466,
+          "ref": 1466,
+          "delta": 0
+        },
+        "delivered_gold_queries": {
+          "new": 1034,
+          "ref": 1034,
+          "delta": 0
+        },
+        "pool_delivery_gap": {
+          "new": 0.0509,
+          "ref": 0.0509,
+          "delta": 0.0
+        },
+        "n_queries": {
+          "new": 2378,
+          "ref": 2378,
+          "delta": 0
+        }
+      },
+      "per_needle_field_diffs": {
+        "delivered_gold": 0,
+        "recall_hit": 0,
+        "final_recall_hit": 0,
+        "rank_of_first_gold": 0,
+        "final_rank_of_first_gold": 0,
+        "delivered_gold_rank": 0,
+        "delivered_count": 0,
+        "gold_ranks": 0,
+        "floor_appended": 0,
+        "gate_kept": 0,
+        "splice_n_candidates": 0,
+        "cover_walk": 0
+      },
+      "needles_with_any_rank_axis_diff": 0,
+      "delivered_gained": [],
+      "delivered_lost": [],
+      "paired_delivered": "+0/-0",
+      "rank_moves_first_gold": [],
+      "latency_ms": {
+        "new_p50": 23.8,
+        "ref_p50": 15.8,
+        "citable": false,
+        "why": "environment-loaded wall ms; rank axes are the citable part"
+      },
+      "verdict": "EXACT_REPRODUCE"
+    },
+    {
+      "label": "financebench: beta seed0 vs frozen reference",
+      "new": "benchmarks/dogfood/financebench/receipts/ladder_financebench_beta_seed0_2026-09-04.json",
+      "ref": "benchmarks/dogfood/financebench/receipts/ladder_financebench_baseline_2026-08-31.json",
+      "n": 150,
+      "summary": {
+        "recall_at_k": {
+          "new": 0.1533,
+          "ref": 0.1533,
+          "delta": 0.0
+        },
+        "final_recall_at_k": {
+          "new": 0.1533,
+          "ref": 0.1533,
+          "delta": 0.0
+        },
+        "delivered_gold_rate": {
+          "new": 0.15333333333333332,
+          "ref": 0.15333333333333332,
+          "delta": 0.0
+        },
+        "mean_rank_of_gold": {
+          "new": 12.44,
+          "ref": 12.44,
+          "delta": 0.0
+        },
+        "median_rank_of_gold": {
+          "new": 6.0,
+          "ref": 6.0,
+          "delta": 0.0
+        },
+        "gold_found_queries": {
+          "new": 32,
+          "ref": 32,
+          "delta": 0
+        },
+        "delivered_gold_queries": {
+          "new": 23,
+          "ref": 23,
+          "delta": 0
+        },
+        "pool_delivery_gap": {
+          "new": -0.0,
+          "ref": -0.0,
+          "delta": 0.0
+        },
+        "n_queries": {
+          "new": 150,
+          "ref": 150,
+          "delta": 0
+        }
+      },
+      "per_needle_field_diffs": {
+        "delivered_gold": 0,
+        "recall_hit": 0,
+        "final_recall_hit": 0,
+        "rank_of_first_gold": 0,
+        "final_rank_of_first_gold": 0,
+        "delivered_gold_rank": 0,
+        "delivered_count": 0,
+        "gold_ranks": 0,
+        "floor_appended": 0,
+        "gate_kept": 0,
+        "splice_n_candidates": 0,
+        "cover_walk": 0
+      },
+      "needles_with_any_rank_axis_diff": 0,
+      "delivered_gained": [],
+      "delivered_lost": [],
+      "paired_delivered": "+0/-0",
+      "rank_moves_first_gold": [],
+      "latency_ms": {
+        "new_p50": 573.1,
+        "ref_p50": 828.2,
+        "citable": false,
+        "why": "environment-loaded wall ms; rank axes are the citable part"
+      },
+      "verdict": "EXACT_REPRODUCE"
+    },
+    {
+      "label": "financebench: beta seed1 vs beta seed0 (hash-order sensitivity)",
+      "new": "benchmarks/dogfood/financebench/receipts/ladder_financebench_beta_seed1_2026-09-04.json",
+      "ref": "benchmarks/dogfood/financebench/receipts/ladder_financebench_beta_seed0_2026-09-04.json",
+      "n": 150,
+      "summary": {
+        "recall_at_k": {
+          "new": 0.1533,
+          "ref": 0.1533,
+          "delta": 0.0
+        },
+        "final_recall_at_k": {
+          "new": 0.1533,
+          "ref": 0.1533,
+          "delta": 0.0
+        },
+        "delivered_gold_rate": {
+          "new": 0.15333333333333332,
+          "ref": 0.15333333333333332,
+          "delta": 0.0
+        },
+        "mean_rank_of_gold": {
+          "new": 12.44,
+          "ref": 12.44,
+          "delta": 0.0
+        },
+        "median_rank_of_gold": {
+          "new": 6.0,
+          "ref": 6.0,
+          "delta": 0.0
+        },
+        "gold_found_queries": {
+          "new": 32,
+          "ref": 32,
+          "delta": 0
+        },
+        "delivered_gold_queries": {
+          "new": 23,
+          "ref": 23,
+          "delta": 0
+        },
+        "pool_delivery_gap": {
+          "new": -0.0,
+          "ref": -0.0,
+          "delta": 0.0
+        },
+        "n_queries": {
+          "new": 150,
+          "ref": 150,
+          "delta": 0
+        }
+      },
+      "per_needle_field_diffs": {
+        "delivered_gold": 0,
+        "recall_hit": 0,
+        "final_recall_hit": 0,
+        "rank_of_first_gold": 0,
+        "final_rank_of_first_gold": 0,
+        "delivered_gold_rank": 0,
+        "delivered_count": 0,
+        "gold_ranks": 0,
+        "floor_appended": 0,
+        "gate_kept": 0,
+        "splice_n_candidates": 0,
+        "cover_walk": 0
+      },
+      "needles_with_any_rank_axis_diff": 0,
+      "delivered_gained": [],
+      "delivered_lost": [],
+      "paired_delivered": "+0/-0",
+      "rank_moves_first_gold": [],
+      "latency_ms": {
+        "new_p50": 847.2,
+        "ref_p50": 573.1,
+        "citable": false,
+        "why": "environment-loaded wall ms; rank axes are the citable part"
+      },
+      "verdict": "EXACT_REPRODUCE"
+    },
+    {
+      "label": "enronqa_v2: beta seed0 vs frozen reference",
+      "new": "benchmarks/dogfood/enronqa/receipts/ladder_enronqa_v2_beta_seed0_2026-09-04.json",
+      "ref": "benchmarks/dogfood/enronqa/receipts/ladder_enronqa_v2_v091_floor_2026-08-30.json",
+      "n": 500,
+      "summary": {
+        "recall_at_k": {
+          "new": 0.876,
+          "ref": 0.876,
+          "delta": 0.0
+        },
+        "final_recall_at_k": {
+          "new": 0.872,
+          "ref": 0.872,
+          "delta": 0.0
+        },
+        "delivered_gold_rate": {
+          "new": 0.856,
+          "ref": 0.856,
+          "delta": 0.0
+        },
+        "mean_rank_of_gold": {
+          "new": 5.12,
+          "ref": 5.12,
+          "delta": 0.0
+        },
+        "median_rank_of_gold": {
+          "new": 3.0,
+          "ref": 3.0,
+          "delta": 0.0
+        },
+        "gold_found_queries": {
+          "new": 478,
+          "ref": 478,
+          "delta": 0
+        },
+        "delivered_gold_queries": {
+          "new": 428,
+          "ref": 428,
+          "delta": 0
+        },
+        "pool_delivery_gap": {
+          "new": 0.02,
+          "ref": 0.02,
+          "delta": 0.0
+        },
+        "n_queries": {
+          "new": 500,
+          "ref": 500,
+          "delta": 0
+        }
+      },
+      "per_needle_field_diffs": {
+        "delivered_gold": 0,
+        "recall_hit": 0,
+        "final_recall_hit": 0,
+        "rank_of_first_gold": 0,
+        "final_rank_of_first_gold": 0,
+        "delivered_gold_rank": 0,
+        "delivered_count": 0,
+        "gold_ranks": 0,
+        "floor_appended": 0,
+        "gate_kept": 0,
+        "splice_n_candidates": 0,
+        "cover_walk": 0
+      },
+      "needles_with_any_rank_axis_diff": 0,
+      "delivered_gained": [],
+      "delivered_lost": [],
+      "paired_delivered": "+0/-0",
+      "rank_moves_first_gold": [],
+      "latency_ms": {
+        "new_p50": 333.7,
+        "ref_p50": 471.1,
+        "citable": false,
+        "why": "environment-loaded wall ms; rank axes are the citable part"
+      },
+      "verdict": "EXACT_REPRODUCE"
+    },
+    {
+      "label": "enronqa_padded: beta seed0 vs frozen reference",
+      "new": "benchmarks/dogfood/enronqa_padded/receipts/ladder_enronqa_padded_beta_seed0_2026-09-04.json",
+      "ref": "benchmarks/dogfood/enronqa_padded/receipts/ladder_enronqa_padded_v091_floor_2026-08-30.json",
+      "n": 500,
+      "summary": {
+        "recall_at_k": {
+          "new": 0.808,
+          "ref": 0.808,
+          "delta": 0.0
+        },
+        "final_recall_at_k": {
+          "new": 0.816,
+          "ref": 0.816,
+          "delta": 0.0
+        },
+        "delivered_gold_rate": {
+          "new": 0.792,
+          "ref": 0.792,
+          "delta": 0.0
+        },
+        "mean_rank_of_gold": {
+          "new": 5.52,
+          "ref": 5.52,
+          "delta": 0.0
+        },
+        "median_rank_of_gold": {
+          "new": 3.0,
+          "ref": 3.0,
+          "delta": 0.0
+        },
+        "gold_found_queries": {
+          "new": 451,
+          "ref": 451,
+          "delta": 0
+        },
+        "delivered_gold_queries": {
+          "new": 396,
+          "ref": 396,
+          "delta": 0
+        },
+        "pool_delivery_gap": {
+          "new": 0.016,
+          "ref": 0.016,
+          "delta": 0.0
+        },
+        "n_queries": {
+          "new": 500,
+          "ref": 500,
+          "delta": 0
+        }
+      },
+      "per_needle_field_diffs": {
+        "delivered_gold": 0,
+        "recall_hit": 0,
+        "final_recall_hit": 0,
+        "rank_of_first_gold": 0,
+        "final_rank_of_first_gold": 0,
+        "delivered_gold_rank": 0,
+        "delivered_count": 0,
+        "gold_ranks": 0,
+        "floor_appended": 0,
+        "gate_kept": 0,
+        "splice_n_candidates": 0,
+        "cover_walk": 0
+      },
+      "needles_with_any_rank_axis_diff": 0,
+      "delivered_gained": [],
+      "delivered_lost": [],
+      "paired_delivered": "+0/-0",
+      "rank_moves_first_gold": [],
+      "latency_ms": {
+        "new_p50": 2682.7,
+        "ref_p50": 2279.4,
+        "citable": false,
+        "why": "environment-loaded wall ms; rank axes are the citable part"
+      },
+      "verdict": "EXACT_REPRODUCE"
+    }
+  ],
+  "beds": {
+    "muloc": {
+      "recall_at_k": 0.4838,
+      "final_recall_at_k": 0.4882,
+      "delivered_gold_rate": 0.4426470588235294,
+      "mean_rank_of_gold": 9.49,
+      "median_rank_of_gold": 5.0,
+      "gold_found_queries": 441,
+      "delivered_gold_queries": 301,
+      "pool_delivery_gap": 0.0412,
+      "n_queries": 680,
+      "latency_ms": {
+        "p50": 2733.593,
+        "p95": 6989.167
+      },
+      "receipt": "benchmarks/dogfood/muloc/receipts/ladder_muloc_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": true
+    },
+    "locomo": {
+      "recall_at_k": 0.4857,
+      "final_recall_at_k": 0.4865,
+      "delivered_gold_rate": 0.4348191757779647,
+      "mean_rank_of_gold": 9.16,
+      "median_rank_of_gold": 6.0,
+      "gold_found_queries": 1466,
+      "delivered_gold_queries": 1034,
+      "pool_delivery_gap": 0.0509,
+      "n_queries": 2378,
+      "latency_ms": {
+        "p50": 15.771,
+        "p95": 31.039
+      },
+      "receipt": "benchmarks/dogfood/locomo/receipts/ladder_locomo_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": true
+    },
+    "financebench": {
+      "recall_at_k": 0.1533,
+      "final_recall_at_k": 0.1533,
+      "delivered_gold_rate": 0.15333333333333332,
+      "mean_rank_of_gold": 12.44,
+      "median_rank_of_gold": 6.0,
+      "gold_found_queries": 32,
+      "delivered_gold_queries": 23,
+      "pool_delivery_gap": -0.0,
+      "n_queries": 150,
+      "latency_ms": {
+        "p50": 575.192,
+        "p95": 1096.929
+      },
+      "receipt": "benchmarks/dogfood/financebench/receipts/ladder_financebench_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": true
+    },
+    "enronqa_v2": {
+      "recall_at_k": 0.876,
+      "final_recall_at_k": 0.872,
+      "delivered_gold_rate": 0.856,
+      "mean_rank_of_gold": 5.12,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 478,
+      "delivered_gold_queries": 428,
+      "pool_delivery_gap": 0.02,
+      "n_queries": 500,
+      "latency_ms": {
+        "p50": 333.634,
+        "p95": 1325.126
+      },
+      "receipt": "benchmarks/dogfood/enronqa/receipts/ladder_enronqa_v2_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": true
+    },
+    "enronqa_padded": {
+      "recall_at_k": 0.808,
+      "final_recall_at_k": 0.816,
+      "delivered_gold_rate": 0.792,
+      "mean_rank_of_gold": 5.52,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 451,
+      "delivered_gold_queries": 396,
+      "pool_delivery_gap": 0.016,
+      "n_queries": 500,
+      "latency_ms": {
+        "p50": 2679.716,
+        "p95": 15743.437
+      },
+      "receipt": "benchmarks/dogfood/enronqa_padded/receipts/ladder_enronqa_padded_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": true
+    },
+    "coderag_solutions": {
+      "recall_at_k": 0.9819,
+      "final_recall_at_k": 0.9819,
+      "delivered_gold_rate": 0.971342383107089,
+      "mean_rank_of_gold": 3.41,
+      "median_rank_of_gold": 2.0,
+      "gold_found_queries": 663,
+      "delivered_gold_queries": 644,
+      "pool_delivery_gap": 0.0106,
+      "n_queries": 663,
+      "latency_ms": {
+        "p50": 19.737,
+        "p95": 34.748
+      },
+      "receipt": "benchmarks/dogfood/coderag_solutions/receipts/ladder_coderag_solutions_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": false
+    },
+    "coderag_docs": {
+      "recall_at_k": 0.2271,
+      "final_recall_at_k": 0.2271,
+      "delivered_gold_rate": 0.21156558533145275,
+      "mean_rank_of_gold": 14.34,
+      "median_rank_of_gold": 10.0,
+      "gold_found_queries": 288,
+      "delivered_gold_queries": 150,
+      "pool_delivery_gap": 0.0155,
+      "n_queries": 709,
+      "latency_ms": {
+        "p50": 683.516,
+        "p95": 1367.198
+      },
+      "receipt": "benchmarks/dogfood/coderag_docs/receipts/ladder_coderag_docs_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": false
+    },
+    "cosqa": {
+      "recall_at_k": 0.362,
+      "final_recall_at_k": 0.358,
+      "delivered_gold_rate": 0.286,
+      "mean_rank_of_gold": 15.43,
+      "median_rank_of_gold": 11.0,
+      "gold_found_queries": 337,
+      "delivered_gold_queries": 143,
+      "pool_delivery_gap": 0.076,
+      "n_queries": 500,
+      "latency_ms": {
+        "p50": 32.284,
+        "p95": 45.308
+      },
+      "receipt": "benchmarks/dogfood/cosqa/receipts/ladder_cosqa_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": false
+    },
+    "swebench": {
+      "recall_at_k": 0.638,
+      "final_recall_at_k": 0.6401,
+      "delivered_gold_rate": 0.5991820040899796,
+      "mean_rank_of_gold": 8.36,
+      "median_rank_of_gold": 4.0,
+      "gold_found_queries": 405,
+      "delivered_gold_queries": 293,
+      "pool_delivery_gap": 0.0388,
+      "n_queries": 489,
+      "latency_ms": {
+        "p50": 1617.04,
+        "p95": 3245.532
+      },
+      "receipt": "benchmarks/dogfood/swebench/receipts/ladder_swebench_beta_seed0_2026-09-04.json",
+      "has_frozen_reference": false
+    }
+  },
+  "code_receipts": {
+    "dogfood_baseline_beta_2026-09-04.json": {
+      "needles": 18,
+      "errors": 0,
+      "k": 12,
+      "recall@12": 0.8889,
+      "recall@1": 0.5556,
+      "recall@3": 0.7222,
+      "recall@5": 0.8889,
+      "recall@10": 0.8889,
+      "mrr": 0.6713,
+      "median_rank_when_delivered": 1.0,
+      "median_latency_ms": 49.5,
+      "seconds_total": 1.4
+    },
+    "repobench_r_java_cff_global_legacy_probe_beta_2026-09-04.json": {
+      "easy": {
+        "n": 200,
+        "corpus": 3832,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.2,
+        "cymatix_B_acc@3": 0.47,
+        "cymatix_C_recall@1": 0.095,
+        "cymatix_C_recall@3": 0.175,
+        "cymatix_C_recall@5": 0.23,
+        "cymatix_C_recall@10": 0.32,
+        "bm25_B_acc@1": 0.16,
+        "bm25_B_acc@3": 0.455,
+        "bm25_C_recall@1": 0.105,
+        "bm25_C_recall@3": 0.25,
+        "bm25_C_recall@5": 0.29,
+        "bm25_C_recall@10": 0.38
+      },
+      "hard": {
+        "n": 200,
+        "corpus": 3832,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.075,
+        "cymatix_B_acc@3": 0.175,
+        "cymatix_B_acc@5": 0.33,
+        "cymatix_C_recall@1": 0.045,
+        "cymatix_C_recall@3": 0.105,
+        "cymatix_C_recall@5": 0.175,
+        "cymatix_C_recall@10": 0.33,
+        "bm25_B_acc@1": 0.065,
+        "bm25_B_acc@3": 0.19,
+        "bm25_B_acc@5": 0.355,
+        "bm25_C_recall@1": 0.045,
+        "bm25_C_recall@3": 0.13,
+        "bm25_C_recall@5": 0.225,
+        "bm25_C_recall@10": 0.355
+      }
+    },
+    "repobench_r_java_cff_global_shipped_beta_2026-09-04.json": {
+      "easy": {
+        "n": 200,
+        "corpus": 3832,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.195,
+        "cymatix_B_acc@3": 0.475,
+        "cymatix_C_recall@1": 0.055,
+        "cymatix_C_recall@3": 0.11,
+        "cymatix_C_recall@5": 0.125,
+        "cymatix_C_recall@10": 0.215,
+        "bm25_B_acc@1": 0.16,
+        "bm25_B_acc@3": 0.455,
+        "bm25_C_recall@1": 0.105,
+        "bm25_C_recall@3": 0.25,
+        "bm25_C_recall@5": 0.29,
+        "bm25_C_recall@10": 0.38
+      },
+      "hard": {
+        "n": 200,
+        "corpus": 3832,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.075,
+        "cymatix_B_acc@3": 0.185,
+        "cymatix_B_acc@5": 0.34,
+        "cymatix_C_recall@1": 0.03,
+        "cymatix_C_recall@3": 0.06,
+        "cymatix_C_recall@5": 0.085,
+        "cymatix_C_recall@10": 0.175,
+        "bm25_B_acc@1": 0.065,
+        "bm25_B_acc@3": 0.19,
+        "bm25_B_acc@5": 0.355,
+        "bm25_C_recall@1": 0.045,
+        "bm25_C_recall@3": 0.13,
+        "bm25_C_recall@5": 0.225,
+        "bm25_C_recall@10": 0.355
+      }
+    },
+    "repobench_r_java_cfr_global_legacy_probe_beta_2026-09-04.json": {
+      "easy": {
+        "n": 200,
+        "corpus": 3808,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.185,
+        "cymatix_B_acc@3": 0.465,
+        "cymatix_C_recall@1": 0.065,
+        "cymatix_C_recall@3": 0.215,
+        "cymatix_C_recall@5": 0.27,
+        "cymatix_C_recall@10": 0.375,
+        "bm25_B_acc@1": 0.165,
+        "bm25_B_acc@3": 0.52,
+        "bm25_C_recall@1": 0.085,
+        "bm25_C_recall@3": 0.275,
+        "bm25_C_recall@5": 0.345,
+        "bm25_C_recall@10": 0.45
+      },
+      "hard": {
+        "n": 200,
+        "corpus": 3808,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.09,
+        "cymatix_B_acc@3": 0.235,
+        "cymatix_B_acc@5": 0.365,
+        "cymatix_C_recall@1": 0.045,
+        "cymatix_C_recall@3": 0.14,
+        "cymatix_C_recall@5": 0.225,
+        "cymatix_C_recall@10": 0.33,
+        "bm25_B_acc@1": 0.135,
+        "bm25_B_acc@3": 0.28,
+        "bm25_B_acc@5": 0.405,
+        "bm25_C_recall@1": 0.105,
+        "bm25_C_recall@3": 0.205,
+        "bm25_C_recall@5": 0.275,
+        "bm25_C_recall@10": 0.385
+      }
+    },
+    "repobench_r_java_cfr_global_shipped_beta_2026-09-04.json": {
+      "easy": {
+        "n": 200,
+        "corpus": 3808,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.155,
+        "cymatix_B_acc@3": 0.445,
+        "cymatix_C_recall@1": 0.05,
+        "cymatix_C_recall@3": 0.125,
+        "cymatix_C_recall@5": 0.15,
+        "cymatix_C_recall@10": 0.245,
+        "bm25_B_acc@1": 0.165,
+        "bm25_B_acc@3": 0.52,
+        "bm25_C_recall@1": 0.085,
+        "bm25_C_recall@3": 0.275,
+        "bm25_C_recall@5": 0.345,
+        "bm25_C_recall@10": 0.45
+      },
+      "hard": {
+        "n": 200,
+        "corpus": 3808,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.11,
+        "cymatix_B_acc@3": 0.235,
+        "cymatix_B_acc@5": 0.355,
+        "cymatix_C_recall@1": 0.06,
+        "cymatix_C_recall@3": 0.09,
+        "cymatix_C_recall@5": 0.16,
+        "cymatix_C_recall@10": 0.26,
+        "bm25_B_acc@1": 0.135,
+        "bm25_B_acc@3": 0.28,
+        "bm25_B_acc@5": 0.405,
+        "bm25_C_recall@1": 0.105,
+        "bm25_C_recall@3": 0.205,
+        "bm25_C_recall@5": 0.275,
+        "bm25_C_recall@10": 0.385
+      }
+    },
+    "repobench_r_python_cff_global_legacy_probe_beta_2026-09-04.json": {
+      "easy": {
+        "n": 200,
+        "corpus": 3310,
+        "cymatix_errors": 1,
+        "cymatix_B_acc@1": 0.16,
+        "cymatix_B_acc@3": 0.43,
+        "cymatix_C_recall@1": 0.03,
+        "cymatix_C_recall@3": 0.085,
+        "cymatix_C_recall@5": 0.155,
+        "cymatix_C_recall@10": 0.275,
+        "bm25_B_acc@1": 0.14,
+        "bm25_B_acc@3": 0.49,
+        "bm25_C_recall@1": 0.1,
+        "bm25_C_recall@3": 0.305,
+        "bm25_C_recall@5": 0.415,
+        "bm25_C_recall@10": 0.525
+      },
+      "hard": {
+        "n": 200,
+        "corpus": 3310,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.065,
+        "cymatix_B_acc@3": 0.18,
+        "cymatix_B_acc@5": 0.345,
+        "cymatix_C_recall@1": 0.03,
+        "cymatix_C_recall@3": 0.08,
+        "cymatix_C_recall@5": 0.115,
+        "cymatix_C_recall@10": 0.205,
+        "bm25_B_acc@1": 0.1,
+        "bm25_B_acc@3": 0.255,
+        "bm25_B_acc@5": 0.39,
+        "bm25_C_recall@1": 0.075,
+        "bm25_C_recall@3": 0.19,
+        "bm25_C_recall@5": 0.28,
+        "bm25_C_recall@10": 0.4
+      }
+    },
+    "repobench_r_python_cff_global_shipped_beta_2026-09-04.json": {
+      "easy": {
+        "n": 200,
+        "corpus": 3310,
+        "cymatix_errors": 1,
+        "cymatix_B_acc@1": 0.14,
+        "cymatix_B_acc@3": 0.445,
+        "cymatix_C_recall@1": 0.04,
+        "cymatix_C_recall@3": 0.095,
+        "cymatix_C_recall@5": 0.135,
+        "cymatix_C_recall@10": 0.29,
+        "bm25_B_acc@1": 0.14,
+        "bm25_B_acc@3": 0.49,
+        "bm25_C_recall@1": 0.1,
+        "bm25_C_recall@3": 0.305,
+        "bm25_C_recall@5": 0.415,
+        "bm25_C_recall@10": 0.525
+      },
+      "hard": {
+        "n": 200,
+        "corpus": 3310,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.06,
+        "cymatix_B_acc@3": 0.195,
+        "cymatix_B_acc@5": 0.33,
+        "cymatix_C_recall@1": 0.015,
+        "cymatix_C_recall@3": 0.07,
+        "cymatix_C_recall@5": 0.115,
+        "cymatix_C_recall@10": 0.195,
+        "bm25_B_acc@1": 0.1,
+        "bm25_B_acc@3": 0.255,
+        "bm25_B_acc@5": 0.39,
+        "bm25_C_recall@1": 0.075,
+        "bm25_C_recall@3": 0.19,
+        "bm25_C_recall@5": 0.28,
+        "bm25_C_recall@10": 0.4
+      }
+    },
+    "repobench_r_python_cfr_global_legacy_probe_beta_2026-09-04.json": {
+      "easy": {
+        "n": 200,
+        "corpus": 3052,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.2,
+        "cymatix_B_acc@3": 0.525,
+        "cymatix_C_recall@1": 0.065,
+        "cymatix_C_recall@3": 0.12,
+        "cymatix_C_recall@5": 0.195,
+        "cymatix_C_recall@10": 0.285,
+        "bm25_B_acc@1": 0.2,
+        "bm25_B_acc@3": 0.56,
+        "bm25_C_recall@1": 0.14,
+        "bm25_C_recall@3": 0.315,
+        "bm25_C_recall@5": 0.43,
+        "bm25_C_recall@10": 0.53
+      },
+      "hard": {
+        "n": 200,
+        "corpus": 3052,
+        "cymatix_errors": 0,
+        "cymatix_B_acc@1": 0.08,
+        "cymatix_B_acc@3": 0.27,
+        "cymatix_B_acc@5": 0.425,
+        "cymatix_C_recall@1": 0.04,
+        "cymatix_C_recall@3": 0.12,
+        "cymatix_C_recall@5": 0.165,
+        "cymatix_C_recall@10": 0.23,
+        "bm25_B_acc@1": 0.135,
+        "bm25_B_acc@3": 0.32,
+        "bm25_B_acc@5": 0.465,
+        "bm25_C_recall@1": 0.105,
+        "bm25_C_recall@3": 0.24,
+        "bm25_C_recall@5": 0.315,
+        "bm25_C_recall@10": 0.435
+      }
+    },
+    "repobench_r_python_cfr_global_shipped_beta_2026-09-04.json": {
+      "easy": {
+        "n": 200,
+        "corpus": 3052,
+        "cymatix_B_acc@1": 0.19,
+        "cymatix_B_acc@3": 0.49,
+        "cymatix_C_recall@1": 0.06,
+        "cymatix_C_recall@3": 0.1,
+        "cymatix_C_recall@5": 0.165,
+        "cymatix_C_recall@10": 0.315,
+        "bm25_B_acc@1": 0.2,
+        "bm25_B_acc@3": 0.56,
+        "bm25_C_recall@1": 0.14,
+        "bm25_C_recall@3": 0.315,
+        "bm25_C_recall@5": 0.43,
+        "bm25_C_recall@10": 0.53
+      },
+      "hard": {
+        "n": 200,
+        "corpus": 3052,
+        "cymatix_B_acc@1": 0.08,
+        "cymatix_B_acc@3": 0.26,
+        "cymatix_B_acc@5": 0.405,
+        "cymatix_C_recall@1": 0.035,
+        "cymatix_C_recall@3": 0.1,
+        "cymatix_C_recall@5": 0.125,
+        "cymatix_C_recall@10": 0.215,
+        "bm25_B_acc@1": 0.135,
+        "bm25_B_acc@3": 0.32,
+        "bm25_B_acc@5": 0.465,
+        "bm25_C_recall@1": 0.105,
+        "bm25_C_recall@3": 0.24,
+        "bm25_C_recall@5": 0.315,
+        "bm25_C_recall@10": 0.435
+      }
+    }
+  },
+  "manifest": "F:\\tmp\\sweep_beta_2026-09-04\\sweep_manifest.json"
+}
