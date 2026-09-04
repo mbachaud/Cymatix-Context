@@ -835,6 +835,45 @@ PROFILES: dict[str, dict] = {
         "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
+    # ── Second-wave code benches (user-approved 2026-09-04) ──────────────
+    # Emitted as one file per document by scripts/build_coderag_corpus.py,
+    # scripts/build_cosqa_corpus.py and scripts/build_swebench_corpus.py;
+    # needle sets under benchmarks/dogfood/<profile>; gold resolved after
+    # ingest by scripts/resolve_bench_needles.py. Emitted roots carry no
+    # internal artifacts, so the common skip list is replaced (same ruling
+    # as the enronqa/muloc profiles).
+    "coderag_solutions": {
+        "label": "CodeRAG-Bench programming-solutions corpus (1,128 canonical solutions; humaneval + mbpp queries)",
+        "active_roots": 1,
+        "roots": [r"F:\Projects\coderag\corpus_solutions"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "coderag_docs": {
+        "label": "CodeRAG-Bench library-documentation corpus (34,003 pages; ds1000 + odex queries)",
+        "active_roots": 1,
+        "roots": [r"F:\Projects\coderag\corpus_docs"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "cosqa": {
+        "label": "CoIR CosQA corpus (20,604 Python snippets; 500 web-query test needles)",
+        "active_roots": 1,
+        "roots": [r"F:\Projects\cosqa\corpus"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "swebench": {
+        "label": "SWE-bench Verified 12-repo Python snapshot corpus (issue -> file localization)",
+        "active_roots": 1,
+        "roots": [r"F:\Projects\swebench\corpus"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
         "active_roots": 13,

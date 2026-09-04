@@ -1,0 +1,15 @@
+{
+ "source": "hf:code-rag-bench/programming-solutions + humaneval + mbpp (CC-BY-SA-4.0)",
+ "corpus_root": "F:\\Projects\\coderag\\corpus_solutions",
+ "docs": 1128,
+ "docs_size_gated_by_builder": 0,
+ "n_needles": 664,
+ "by_type": {
+  "coderag_humaneval": 164,
+  "coderag_mbpp": 500
+ },
+ "query": "humaneval = prompt verbatim; mbpp = text verbatim",
+ "drops": {
+  "gold_doc_absent": []
+ }
+}

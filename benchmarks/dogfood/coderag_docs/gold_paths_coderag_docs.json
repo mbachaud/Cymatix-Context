@@ -1,0 +1,2402 @@
+{
+ "coderag_ds1000_0002": [
+  "pandas/pandas.reference.api.pandas.dataframe.where.txt"
+ ],
+ "coderag_ds1000_0003": [
+  "pandas/pandas.reference.api.pandas.dataframe.where.txt"
+ ],
+ "coderag_ds1000_0004": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_ds1000_0010": [
+  "pandas/pandas.reference.api.pandas.dataframe.groupby.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.squeeze.txt"
+ ],
+ "coderag_ds1000_0013": [
+  "pandas/pandas.reference.api.pandas.dataframe.sort_values.txt"
+ ],
+ "coderag_ds1000_0014": [
+  "pandas/pandas.reference.api.pandas.dataframe.sort_values.txt"
+ ],
+ "coderag_ds1000_0015": [
+  "pandas/pandas.reference.api.pandas.concat.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_ds1000_0020": [
+  "pandas/pandas.reference.api.pandas.dataframe.idxmax.txt"
+ ],
+ "coderag_ds1000_0021": [
+  "pandas/pandas.reference.api.pandas.dataframe.idxmin.txt"
+ ],
+ "coderag_ds1000_0030": [
+  "pandas/pandas.reference.api.pandas.dataframe.add_suffix.txt"
+ ],
+ "coderag_ds1000_0031": [
+  "pandas/pandas.reference.api.pandas.dataframe.add_prefix.txt"
+ ],
+ "coderag_ds1000_0032": [
+  "pandas/pandas.reference.api.pandas.dataframe.add_prefix.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.rename.txt"
+ ],
+ "coderag_ds1000_0038": [
+  "pandas/pandas.reference.api.pandas.dataframe.drop.txt"
+ ],
+ "coderag_ds1000_0050": [
+  "pandas/pandas.reference.api.pandas.dataframe.join.txt"
+ ],
+ "coderag_ds1000_0051": [
+  "pandas/pandas.reference.api.pandas.dataframe.join.txt"
+ ],
+ "coderag_ds1000_0053": [
+  "pandas/pandas.reference.api.pandas.dataframe.join.txt"
+ ],
+ "coderag_ds1000_0056": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0058": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0059": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0060": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0071": [
+  "pandas/pandas.reference.api.pandas.dataframe.sum.txt"
+ ],
+ "coderag_ds1000_0073": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0074": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0075": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0085": [
+  "pandas/pandas.reference.api.pandas.series.str.extract.txt"
+ ],
+ "coderag_ds1000_0086": [
+  "pandas/pandas.reference.api.pandas.series.str.extract.txt"
+ ],
+ "coderag_ds1000_0087": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt",
+  "pandas/pandas.reference.api.pandas.series.str.extract.txt"
+ ],
+ "coderag_ds1000_0088": [
+  "pandas/pandas.reference.api.pandas.series.str.extract.txt"
+ ],
+ "coderag_ds1000_0091": [
+  "pandas/pandas.reference.api.pandas.multiindex.set_levels.txt"
+ ],
+ "coderag_ds1000_0092": [
+  "pandas/pandas.reference.api.pandas.multiindex.set_levels.txt"
+ ],
+ "coderag_ds1000_0093": [
+  "pandas/pandas.reference.api.pandas.dataframe.to_numpy.txt",
+  "pandas/pandas.reference.api.pandas.multiindex.set_levels.txt"
+ ],
+ "coderag_ds1000_0094": [
+  "pandas/pandas.reference.api.pandas.multiindex.from_tuples.txt"
+ ],
+ "coderag_ds1000_0099": [
+  "pandas/pandas.reference.api.pandas.dataframe.rename.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_ds1000_0100": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_ds1000_0101": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_ds1000_0102": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_ds1000_0103": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_ds1000_0104": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_ds1000_0105": [
+  "pandas/pandas.reference.api.pandas.dataframe.rename.txt"
+ ],
+ "coderag_ds1000_0106": [
+  "pandas/pandas.reference.api.pandas.dataframe.rename.txt"
+ ],
+ "coderag_ds1000_0107": [
+  "pandas/pandas.reference.api.pandas.dataframe.rename.txt"
+ ],
+ "coderag_ds1000_0108": [
+  "pandas/pandas.reference.api.pandas.merge_asof.txt"
+ ],
+ "coderag_ds1000_0109": [
+  "pandas/pandas.reference.api.pandas.merge_asof.txt"
+ ],
+ "coderag_ds1000_0110": [
+  "pandas/pandas.reference.api.pandas.dataframe.where.txt"
+ ],
+ "coderag_ds1000_0115": [
+  "pandas/pandas.reference.api.pandas.dataframe.div.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.reset_index.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.set_index.txt"
+ ],
+ "coderag_ds1000_0116": [
+  "pandas/pandas.reference.api.pandas.dataframe.div.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.reset_index.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.set_index.txt"
+ ],
+ "coderag_ds1000_0119": [
+  "pandas/pandas.reference.api.pandas.dataframe.drop.txt"
+ ],
+ "coderag_ds1000_0120": [
+  "pandas/pandas.reference.api.pandas.index.isin.txt"
+ ],
+ "coderag_ds1000_0121": [
+  "pandas/pandas.reference.api.pandas.index.tolist.txt"
+ ],
+ "coderag_ds1000_0122": [
+  "pandas/pandas.reference.api.pandas.index.tolist.txt"
+ ],
+ "coderag_ds1000_0123": [
+  "pandas/pandas.reference.api.pandas.dataframe.apply.txt"
+ ],
+ "coderag_ds1000_0124": [
+  "pandas/pandas.reference.api.pandas.dataframe.apply.txt"
+ ],
+ "coderag_ds1000_0127": [
+  "pandas/pandas.reference.api.pandas.dataframe.sample.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.update.txt"
+ ],
+ "coderag_ds1000_0128": [
+  "pandas/pandas.reference.api.pandas.dataframe.sample.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.update.txt"
+ ],
+ "coderag_ds1000_0129": [
+  "pandas/pandas.reference.api.pandas.dataframe.update.txt"
+ ],
+ "coderag_ds1000_0130": [
+  "pandas/pandas.reference.api.pandas.dataframe.duplicated.txt"
+ ],
+ "coderag_ds1000_0131": [
+  "pandas/pandas.reference.api.pandas.dataframe.duplicated.txt"
+ ],
+ "coderag_ds1000_0132": [
+  "pandas/pandas.reference.api.pandas.dataframe.duplicated.txt"
+ ],
+ "coderag_ds1000_0133": [
+  "pandas/pandas.reference.api.pandas.dataframe.duplicated.txt"
+ ],
+ "coderag_ds1000_0134": [
+  "pandas/pandas.reference.api.pandas.dataframe.duplicated.txt"
+ ],
+ "coderag_ds1000_0139": [
+  "pandas/pandas.reference.api.pandas.dataframe.query.txt"
+ ],
+ "coderag_ds1000_0140": [
+  "pandas/pandas.reference.api.pandas.dataframe.query.txt"
+ ],
+ "coderag_ds1000_0141": [
+  "pandas/pandas.reference.api.pandas.melt.txt"
+ ],
+ "coderag_ds1000_0142": [
+  "pandas/pandas.reference.api.pandas.melt.txt"
+ ],
+ "coderag_ds1000_0156": [
+  "pandas/pandas.reference.api.pandas.to_numeric.txt"
+ ],
+ "coderag_ds1000_0162": [
+  "pandas/pandas.reference.api.pandas.multiindex.from_tuples.txt"
+ ],
+ "coderag_ds1000_0163": [
+  "pandas/pandas.reference.api.pandas.multiindex.from_tuples.txt"
+ ],
+ "coderag_ds1000_0164": [
+  "pandas/pandas.reference.api.pandas.multiindex.from_tuples.txt"
+ ],
+ "coderag_ds1000_0169": [
+  "pandas/pandas.reference.api.pandas.dataframe.sum.txt"
+ ],
+ "coderag_ds1000_0170": [
+  "pandas/pandas.reference.api.pandas.dataframe.sum.txt"
+ ],
+ "coderag_ds1000_0171": [
+  "pandas/pandas.reference.api.pandas.dataframe.max.txt"
+ ],
+ "coderag_ds1000_0172": [
+  "pandas/pandas.reference.api.pandas.dataframe.max.txt"
+ ],
+ "coderag_ds1000_0184": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0185": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0186": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0187": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0190": [
+  "pandas/pandas.reference.api.pandas.pivot_table.txt"
+ ],
+ "coderag_ds1000_0191": [
+  "pandas/pandas.reference.api.pandas.pivot_table.txt"
+ ],
+ "coderag_ds1000_0192": [
+  "pandas/pandas.reference.api.pandas.pivot_table.txt"
+ ],
+ "coderag_ds1000_0193": [
+  "pandas/pandas.reference.api.pandas.pivot_table.txt"
+ ],
+ "coderag_ds1000_0197": [
+  "pandas/pandas.reference.api.pandas.dataframe.apply.txt"
+ ],
+ "coderag_ds1000_0198": [
+  "pandas/pandas.reference.api.pandas.dataframe.apply.txt"
+ ],
+ "coderag_ds1000_0209": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0210": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0211": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0215": [
+  "pandas/pandas.reference.api.pandas.index.max.txt",
+  "pandas/pandas.reference.api.pandas.index.min.txt"
+ ],
+ "coderag_ds1000_0217": [
+  "pandas/pandas.reference.api.pandas.dataframe.query.txt"
+ ],
+ "coderag_ds1000_0218": [
+  "pandas/pandas.reference.api.pandas.dataframe.query.txt"
+ ],
+ "coderag_ds1000_0229": [
+  "pandas/pandas.reference.api.pandas.dataframe.groupby.txt"
+ ],
+ "coderag_ds1000_0230": [
+  "pandas/pandas.reference.api.pandas.dataframe.groupby.txt"
+ ],
+ "coderag_ds1000_0231": [
+  "pandas/pandas.reference.api.pandas.dataframe.groupby.txt"
+ ],
+ "coderag_ds1000_0235": [
+  "pandas/pandas.reference.api.pandas.series.txt"
+ ],
+ "coderag_ds1000_0236": [
+  "pandas/pandas.reference.api.pandas.series.txt"
+ ],
+ "coderag_ds1000_0238": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0246": [
+  "pandas/pandas.reference.api.pandas.dataframe.from_records.txt"
+ ],
+ "coderag_ds1000_0252": [
+  "pandas/pandas.reference.api.pandas.dataframe.add_prefix.txt"
+ ],
+ "coderag_ds1000_0253": [
+  "pandas/pandas.reference.api.pandas.dataframe.add_prefix.txt"
+ ],
+ "coderag_ds1000_0254": [
+  "pandas/pandas.reference.api.pandas.dataframe.sum.txt"
+ ],
+ "coderag_ds1000_0255": [
+  "pandas/pandas.reference.api.pandas.dataframe.sum.txt"
+ ],
+ "coderag_ds1000_0256": [
+  "pandas/pandas.reference.api.pandas.dataframe.sum.txt"
+ ],
+ "coderag_ds1000_0257": [
+  "pandas/pandas.reference.api.pandas.dataframe.dropna.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.set_index.txt"
+ ],
+ "coderag_ds1000_0258": [
+  "pandas/pandas.reference.api.pandas.dataframe.dropna.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.set_index.txt"
+ ],
+ "coderag_ds1000_0259": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0260": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0261": [
+  "pandas/pandas.reference.api.pandas.to_datetime.txt"
+ ],
+ "coderag_ds1000_0268": [
+  "pandas/pandas.reference.api.pandas.series.txt"
+ ],
+ "coderag_ds1000_0269": [
+  "pandas/pandas.reference.api.pandas.dataframe.stack.txt",
+  "pandas/pandas.reference.api.pandas.index.to_frame.txt"
+ ],
+ "coderag_ds1000_0270": [
+  "pandas/pandas.reference.api.pandas.dataframe.stack.txt",
+  "pandas/pandas.reference.api.pandas.index.map.txt",
+  "pandas/pandas.reference.api.pandas.index.to_frame.txt"
+ ],
+ "coderag_ds1000_0276": [
+  "pandas/pandas.reference.api.pandas.dataframe.sort_index.txt"
+ ],
+ "coderag_ds1000_0277": [
+  "pandas/pandas.reference.api.pandas.dataframe.sort_values.txt"
+ ],
+ "coderag_ds1000_0279": [
+  "pandas/pandas.reference.api.pandas.datetimeindex.strftime.txt"
+ ],
+ "coderag_ds1000_0280": [
+  "pandas/pandas.reference.api.pandas.dataframe.stack.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.where.txt"
+ ],
+ "coderag_ds1000_0281": [
+  "pandas/pandas.reference.api.pandas.dataframe.stack.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.where.txt"
+ ],
+ "coderag_ds1000_0282": [
+  "pandas/pandas.reference.api.pandas.dataframe.set_axis.txt"
+ ],
+ "coderag_ds1000_0283": [
+  "pandas/pandas.reference.api.pandas.dataframe.set_axis.txt"
+ ],
+ "coderag_ds1000_0284": [
+  "pandas/pandas.reference.api.pandas.dataframe.mode.txt"
+ ],
+ "coderag_ds1000_0285": [
+  "pandas/pandas.reference.api.pandas.dataframe.mode.txt"
+ ],
+ "coderag_ds1000_0286": [
+  "pandas/pandas.reference.api.pandas.dataframe.mode.txt",
+  "pandas/pandas.reference.api.pandas.isna.txt"
+ ],
+ "coderag_ds1000_0287": [
+  "pandas/pandas.reference.api.pandas.to_numeric.txt"
+ ],
+ "coderag_ds1000_0292": [
+  "numpy/numpy.reference.generated.numpy.isnan.txt"
+ ],
+ "coderag_ds1000_0293": [
+  "numpy/numpy.reference.constants#numpy.inf.txt",
+  "numpy/numpy.reference.generated.numpy.isnan.txt"
+ ],
+ "coderag_ds1000_0295": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0296": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0297": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0298": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0299": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0300": [
+  "numpy/numpy.reference.generated.numpy.percentile.txt"
+ ],
+ "coderag_ds1000_0301": [
+  "numpy/numpy.reference.generated.numpy.reshape.txt"
+ ],
+ "coderag_ds1000_0302": [
+  "numpy/numpy.reference.generated.numpy.reshape.txt"
+ ],
+ "coderag_ds1000_0303": [
+  "numpy/numpy.reference.generated.numpy.reshape.txt"
+ ],
+ "coderag_ds1000_0304": [
+  "numpy/numpy.reference.generated.numpy.reshape.txt"
+ ],
+ "coderag_ds1000_0305": [
+  "numpy/numpy.reference.constants#numpy.nan.txt",
+  "numpy/numpy.reference.generated.numpy.empty_like.txt"
+ ],
+ "coderag_ds1000_0306": [
+  "numpy/numpy.reference.constants#numpy.nan.txt",
+  "numpy/numpy.reference.generated.numpy.empty_like.txt"
+ ],
+ "coderag_ds1000_0307": [
+  "numpy/numpy.reference.constants#numpy.nan.txt",
+  "numpy/numpy.reference.generated.numpy.empty_like.txt"
+ ],
+ "coderag_ds1000_0308": [
+  "numpy/numpy.reference.random.generated.numpy.random.randint.txt",
+  "numpy/numpy.reference.random.generated.numpy.random.seed.txt"
+ ],
+ "coderag_ds1000_0309": [
+  "numpy/numpy.reference.generated.numpy.argmax.txt"
+ ],
+ "coderag_ds1000_0310": [
+  "numpy/numpy.reference.generated.numpy.argmin.txt"
+ ],
+ "coderag_ds1000_0311": [
+  "numpy/numpy.reference.generated.numpy.unravel_index.txt"
+ ],
+ "coderag_ds1000_0312": [
+  "numpy/numpy.reference.generated.numpy.unravel_index.txt"
+ ],
+ "coderag_ds1000_0313": [
+  "numpy/numpy.reference.generated.numpy.argmax.txt"
+ ],
+ "coderag_ds1000_0314": [
+  "numpy/numpy.reference.generated.numpy.ndarray.min.txt",
+  "numpy/numpy.reference.generated.numpy.unravel_index.txt"
+ ],
+ "coderag_ds1000_0315": [
+  "numpy/numpy.reference.generated.numpy.any.txt"
+ ],
+ "coderag_ds1000_0316": [
+  "numpy/numpy.reference.generated.numpy.any.txt"
+ ],
+ "coderag_ds1000_0317": [
+  "numpy/numpy.reference.generated.numpy.array.txt"
+ ],
+ "coderag_ds1000_0318": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.empty_like.txt"
+ ],
+ "coderag_ds1000_0319": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.empty_like.txt"
+ ],
+ "coderag_ds1000_0320": [
+  "numpy/numpy.reference.generated.numpy.unravel_index.txt"
+ ],
+ "coderag_ds1000_0321": [
+  "numpy/numpy.reference.generated.numpy.unravel_index.txt"
+ ],
+ "coderag_ds1000_0322": [
+  "numpy/numpy.reference.generated.numpy.argwhere.txt"
+ ],
+ "coderag_ds1000_0323": [
+  "numpy/numpy.reference.generated.numpy.sin.txt"
+ ],
+ "coderag_ds1000_0324": [
+  "numpy/numpy.reference.generated.numpy.cos.txt"
+ ],
+ "coderag_ds1000_0325": [
+  "numpy/numpy.reference.generated.numpy.sin.txt"
+ ],
+ "coderag_ds1000_0326": [
+  "numpy/numpy.reference.generated.numpy.degrees.txt"
+ ],
+ "coderag_ds1000_0327": [
+  "numpy/numpy.reference.generated.numpy.pad.txt"
+ ],
+ "coderag_ds1000_0328": [
+  "numpy/numpy.reference.generated.numpy.copy.txt",
+  "numpy/numpy.reference.generated.numpy.pad.txt"
+ ],
+ "coderag_ds1000_0331": [
+  "numpy/numpy.reference.generated.numpy.gcd.txt"
+ ],
+ "coderag_ds1000_0332": [
+  "numpy/numpy.reference.generated.numpy.gcd.txt"
+ ],
+ "coderag_ds1000_0333": [
+  "numpy/numpy.reference.constants#numpy.nan.txt",
+  "numpy/numpy.reference.generated.numpy.gcd.txt"
+ ],
+ "coderag_ds1000_0334": [
+  "numpy/numpy.reference.generated.numpy.mean.txt"
+ ],
+ "coderag_ds1000_0335": [
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt"
+ ],
+ "coderag_ds1000_0336": [
+  "numpy/numpy.reference.generated.numpy.diag.txt"
+ ],
+ "coderag_ds1000_0337": [
+  "numpy/numpy.reference.generated.numpy.diag.txt"
+ ],
+ "coderag_ds1000_0338": [
+  "numpy/numpy.reference.generated.numpy.vstack.txt"
+ ],
+ "coderag_ds1000_0339": [
+  "numpy/numpy.reference.generated.numpy.vstack.txt"
+ ],
+ "coderag_ds1000_0344": [
+  "numpy/numpy.reference.generated.numpy.array.txt"
+ ],
+ "coderag_ds1000_0345": [
+  "numpy/numpy.reference.generated.numpy.cumsum.txt"
+ ],
+ "coderag_ds1000_0346": [
+  "numpy/numpy.reference.generated.numpy.cumsum.txt"
+ ],
+ "coderag_ds1000_0347": [
+  "numpy/numpy.reference.generated.numpy.ufunc.reduce.txt"
+ ],
+ "coderag_ds1000_0348": [
+  "numpy/numpy.reference.generated.numpy.linalg.matrix_rank.txt"
+ ],
+ "coderag_ds1000_0353": [
+  "numpy/numpy.reference.generated.numpy.in1d.txt",
+  "numpy/numpy.reference.generated.numpy.maximum.txt"
+ ],
+ "coderag_ds1000_0354": [
+  "numpy/numpy.reference.generated.numpy.in1d.txt",
+  "numpy/numpy.reference.generated.numpy.maximum.txt"
+ ],
+ "coderag_ds1000_0355": [
+  "numpy/numpy.reference.generated.numpy.argsort.txt"
+ ],
+ "coderag_ds1000_0356": [
+  "numpy/numpy.reference.generated.numpy.argsort.txt"
+ ],
+ "coderag_ds1000_0357": [
+  "numpy/numpy.reference.generated.numpy.argsort.txt",
+  "numpy/numpy.reference.generated.numpy.indices.txt"
+ ],
+ "coderag_ds1000_0358": [
+  "numpy/numpy.reference.generated.numpy.argsort.txt"
+ ],
+ "coderag_ds1000_0359": [
+  "numpy/numpy.reference.generated.numpy.delete.txt"
+ ],
+ "coderag_ds1000_0360": [
+  "numpy/numpy.reference.generated.numpy.delete.txt"
+ ],
+ "coderag_ds1000_0361": [
+  "numpy/numpy.reference.generated.numpy.delete.txt"
+ ],
+ "coderag_ds1000_0362": [
+  "numpy/numpy.reference.generated.numpy.delete.txt"
+ ],
+ "coderag_ds1000_0363": [
+  "numpy/numpy.reference.generated.numpy.insert.txt"
+ ],
+ "coderag_ds1000_0364": [
+  "numpy/numpy.reference.generated.numpy.insert.txt"
+ ],
+ "coderag_ds1000_0365": [
+  "numpy/numpy.reference.generated.numpy.insert.txt"
+ ],
+ "coderag_ds1000_0366": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.insert.txt"
+ ],
+ "coderag_ds1000_0371": [
+  "numpy/numpy.reference.generated.numpy.cos.txt",
+  "numpy/numpy.reference.generated.numpy.sin.txt"
+ ],
+ "coderag_ds1000_0372": [
+  "numpy/numpy.reference.generated.numpy.cos.txt",
+  "numpy/numpy.reference.generated.numpy.sin.txt"
+ ],
+ "coderag_ds1000_0373": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.sort.txt"
+ ],
+ "coderag_ds1000_0374": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.sort.txt"
+ ],
+ "coderag_ds1000_0375": [
+  "numpy/numpy.reference.generated.numpy.arange.txt",
+  "numpy/numpy.reference.generated.numpy.sort.txt"
+ ],
+ "coderag_ds1000_0376": [
+  "numpy/numpy.reference.generated.numpy.ones.txt",
+  "numpy/numpy.reference.random.generated.numpy.random.shuffle.txt"
+ ],
+ "coderag_ds1000_0381": [
+  "numpy/numpy.reference.generated.numpy.argsort.txt"
+ ],
+ "coderag_ds1000_0382": [
+  "numpy/numpy.reference.generated.numpy.argsort.txt"
+ ],
+ "coderag_ds1000_0383": [
+  "numpy/numpy.reference.generated.numpy.argsort.txt"
+ ],
+ "coderag_ds1000_0384": [
+  "numpy/numpy.reference.generated.numpy.linalg.matrix_power.txt"
+ ],
+ "coderag_ds1000_0398": [
+  "numpy/numpy.reference.generated.numpy.empty.txt"
+ ],
+ "coderag_ds1000_0399": [
+  "numpy/numpy.reference.generated.numpy.empty.txt"
+ ],
+ "coderag_ds1000_0400": [
+  "numpy/numpy.reference.generated.numpy.array.txt"
+ ],
+ "coderag_ds1000_0401": [
+  "numpy/numpy.reference.generated.numpy.array.txt"
+ ],
+ "coderag_ds1000_0402": [
+  "numpy/numpy.reference.generated.numpy.ravel_multi_index.txt"
+ ],
+ "coderag_ds1000_0403": [
+  "numpy/numpy.reference.generated.numpy.ravel_multi_index.txt"
+ ],
+ "coderag_ds1000_0404": [
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0405": [
+  "numpy/numpy.reference.generated.numpy.bincount.txt"
+ ],
+ "coderag_ds1000_0406": [
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt",
+  "numpy/numpy.reference.generated.numpy.unique.txt",
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0407": [
+  "numpy/numpy.reference.generated.numpy.bincount.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt"
+ ],
+ "coderag_ds1000_0408": [
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.min.txt",
+  "numpy/numpy.reference.generated.numpy.unique.txt",
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0409": [
+  "numpy/numpy.reference.generated.numpy.array.txt"
+ ],
+ "coderag_ds1000_0410": [
+  "numpy/numpy.reference.random.generated.numpy.random.choice.txt"
+ ],
+ "coderag_ds1000_0411": [
+  "numpy/numpy.reference.generated.numpy.clip.txt"
+ ],
+ "coderag_ds1000_0420": [
+  "numpy/numpy.reference.generated.numpy.where.txt"
+ ],
+ "coderag_ds1000_0421": [
+  "numpy/numpy.reference.generated.numpy.clip.txt"
+ ],
+ "coderag_ds1000_0422": [
+  "numpy/numpy.reference.generated.numpy.correlate.txt"
+ ],
+ "coderag_ds1000_0427": [
+  "numpy/numpy.reference.generated.numpy.array.txt"
+ ],
+ "coderag_ds1000_0428": [
+  "numpy/numpy.reference.generated.numpy.ndarray.mean.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.std.txt"
+ ],
+ "coderag_ds1000_0429": [
+  "numpy/numpy.reference.generated.numpy.ndarray.mean.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.std.txt"
+ ],
+ "coderag_ds1000_0430": [
+  "numpy/numpy.reference.generated.numpy.ndarray.mean.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.std.txt"
+ ],
+ "coderag_ds1000_0431": [
+  "numpy/numpy.reference.generated.numpy.ndarray.mean.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.std.txt"
+ ],
+ "coderag_ds1000_0432": [
+  "numpy/numpy.reference.generated.numpy.ma.filled.txt",
+  "numpy/numpy.reference.generated.numpy.ma.masked_where.txt",
+  "numpy/numpy.reference.generated.numpy.nanpercentile.txt"
+ ],
+ "coderag_ds1000_0436": [
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt"
+ ],
+ "coderag_ds1000_0437": [
+  "numpy/numpy.reference.generated.numpy.ndarray.min.txt"
+ ],
+ "coderag_ds1000_0438": [
+  "numpy/numpy.reference.generated.numpy.corrcoef.txt"
+ ],
+ "coderag_ds1000_0440": [
+  "numpy/numpy.reference.generated.numpy.sqrt.txt",
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0442": [
+  "numpy/numpy.reference.generated.numpy.in1d.txt"
+ ],
+ "coderag_ds1000_0443": [
+  "numpy/numpy.reference.generated.numpy.in1d.txt"
+ ],
+ "coderag_ds1000_0444": [
+  "numpy/numpy.reference.generated.numpy.logical_and.txt"
+ ],
+ "coderag_ds1000_0445": [
+  "numpy/numpy.reference.generated.numpy.ndarray.astype.txt"
+ ],
+ "coderag_ds1000_0446": [
+  "numpy/numpy.reference.generated.numpy.ndarray.astype.txt"
+ ],
+ "coderag_ds1000_0447": [
+  "numpy/numpy.reference.generated.numpy.ndarray.astype.txt"
+ ],
+ "coderag_ds1000_0448": [
+  "numpy/numpy.reference.generated.numpy.vstack.txt"
+ ],
+ "coderag_ds1000_0449": [
+  "numpy/numpy.reference.generated.numpy.vstack.txt"
+ ],
+ "coderag_ds1000_0451": [
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_ds1000_0452": [
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt"
+ ],
+ "coderag_ds1000_0453": [
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt",
+  "numpy/numpy.reference.generated.numpy.sqrt.txt"
+ ],
+ "coderag_ds1000_0454": [
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt"
+ ],
+ "coderag_ds1000_0455": [
+  "numpy/numpy.reference.generated.numpy.select.txt"
+ ],
+ "coderag_ds1000_0456": [
+  "numpy/numpy.reference.generated.numpy.linalg.norm.txt"
+ ],
+ "coderag_ds1000_0457": [
+  "numpy/numpy.reference.generated.numpy.linalg.norm.txt"
+ ],
+ "coderag_ds1000_0458": [
+  "numpy/numpy.reference.generated.numpy.triu.txt"
+ ],
+ "coderag_ds1000_0459": [
+  "numpy/numpy.reference.generated.numpy.mean.txt"
+ ],
+ "coderag_ds1000_0460": [
+  "numpy/numpy.reference.generated.numpy.mean.txt"
+ ],
+ "coderag_ds1000_0461": [
+  "numpy/numpy.reference.generated.numpy.mean.txt"
+ ],
+ "coderag_ds1000_0462": [
+  "numpy/numpy.reference.generated.numpy.ones.txt"
+ ],
+ "coderag_ds1000_0463": [
+  "numpy/numpy.reference.generated.numpy.ones.txt"
+ ],
+ "coderag_ds1000_0469": [
+  "numpy/numpy.reference.generated.numpy.imag.txt",
+  "numpy/numpy.reference.generated.numpy.real.txt",
+  "numpy/numpy.reference.generated.numpy.sum.txt"
+ ],
+ "coderag_ds1000_0470": [
+  "numpy/numpy.reference.generated.numpy.imag.txt",
+  "numpy/numpy.reference.generated.numpy.real.txt",
+  "numpy/numpy.reference.generated.numpy.sum.txt"
+ ],
+ "coderag_ds1000_0474": [
+  "numpy/numpy.reference.generated.numpy.array_equal.txt",
+  "numpy/numpy.reference.generated.numpy.isnan.txt"
+ ],
+ "coderag_ds1000_0475": [
+  "numpy/numpy.reference.arrays.scalars#numpy.intp.txt",
+  "numpy/numpy.reference.generated.numpy.arange.txt"
+ ],
+ "coderag_ds1000_0477": [
+  "numpy/numpy.reference.generated.numpy.diag.txt"
+ ],
+ "coderag_ds1000_0478": [
+  "numpy/numpy.reference.generated.numpy.einsum.txt"
+ ],
+ "coderag_ds1000_0481": [
+  "numpy/numpy.reference.generated.numpy.ndarray.nonzero.txt"
+ ],
+ "coderag_ds1000_0482": [
+  "numpy/numpy.reference.generated.numpy.polyfit.txt"
+ ],
+ "coderag_ds1000_0483": [
+  "numpy/numpy.reference.generated.numpy.polyfit.txt"
+ ],
+ "coderag_ds1000_0485": [
+  "numpy/numpy.reference.generated.numpy.tensordot.txt"
+ ],
+ "coderag_ds1000_0486": [
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt"
+ ],
+ "coderag_ds1000_0488": [
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt",
+  "numpy/numpy.reference.generated.numpy.zeros_like.txt"
+ ],
+ "coderag_ds1000_0489": [
+  "numpy/numpy.reference.generated.numpy.logical_and.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.copy.txt",
+  "numpy/numpy.reference.generated.numpy.where.txt"
+ ],
+ "coderag_ds1000_0490": [
+  "numpy/numpy.reference.generated.numpy.logical_and.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.copy.txt",
+  "numpy/numpy.reference.generated.numpy.where.txt"
+ ],
+ "coderag_ds1000_0495": [
+  "numpy/numpy.reference.generated.numpy.pad.txt"
+ ],
+ "coderag_ds1000_0496": [
+  "numpy/numpy.reference.generated.numpy.pad.txt"
+ ],
+ "coderag_ds1000_0497": [
+  "numpy/numpy.reference.generated.numpy.pad.txt"
+ ],
+ "coderag_ds1000_0498": [
+  "numpy/numpy.reference.generated.numpy.pad.txt"
+ ],
+ "coderag_ds1000_0499": [
+  "numpy/numpy.reference.generated.numpy.pad.txt"
+ ],
+ "coderag_ds1000_0500": [
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt"
+ ],
+ "coderag_ds1000_0501": [
+  "numpy/numpy.reference.generated.numpy.take_along_axis.txt"
+ ],
+ "coderag_ds1000_0502": [
+  "numpy/numpy.reference.generated.numpy.take_along_axis.txt"
+ ],
+ "coderag_ds1000_0503": [
+  "numpy/numpy.reference.generated.numpy.take_along_axis.txt"
+ ],
+ "coderag_ds1000_0504": [
+  "numpy/numpy.reference.generated.numpy.sum.txt",
+  "numpy/numpy.reference.generated.numpy.take_along_axis.txt"
+ ],
+ "coderag_ds1000_0505": [
+  "numpy/numpy.reference.generated.numpy.sum.txt",
+  "numpy/numpy.reference.generated.numpy.take_along_axis.txt"
+ ],
+ "coderag_ds1000_0506": [
+  "numpy/numpy.reference.generated.numpy.ma.where.txt"
+ ],
+ "coderag_ds1000_0507": [
+  "numpy/numpy.reference.generated.numpy.flatnonzero.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.min.txt"
+ ],
+ "coderag_ds1000_0508": [
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.min.txt"
+ ],
+ "coderag_ds1000_0509": [
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.min.txt"
+ ],
+ "coderag_ds1000_0510": [
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.min.txt"
+ ],
+ "coderag_ds1000_0511": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0512": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.tick_params.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.minorticks_on.txt"
+ ],
+ "coderag_ds1000_0513": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.minorticks_on.txt"
+ ],
+ "coderag_ds1000_0514": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.tick_params.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.minorticks_on.txt"
+ ],
+ "coderag_ds1000_0515": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0516": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0517": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0518": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0519": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.ylim.txt"
+ ],
+ "coderag_ds1000_0520": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.axvspan.txt"
+ ],
+ "coderag_ds1000_0521": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.axline.txt"
+ ],
+ "coderag_ds1000_0522": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0526": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0527": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt"
+ ],
+ "coderag_ds1000_0528": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0529": [
+  "matplotlib/matplotlib._as_gen.matplotlib.lines.line2d#matplotlib.lines.Line2D.set_markerfacecolor.txt"
+ ],
+ "coderag_ds1000_0530": [
+  "matplotlib/matplotlib._as_gen.matplotlib.lines.line2d#matplotlib.lines.Line2D.set_markeredgecolor.txt"
+ ],
+ "coderag_ds1000_0531": [
+  "matplotlib/matplotlib._as_gen.matplotlib.lines.line2d#matplotlib.lines.Line2D.set_color.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.lines.line2d#matplotlib.lines.Line2D.set_markeredgecolor.txt"
+ ],
+ "coderag_ds1000_0532": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0533": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0534": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0535": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt"
+ ],
+ "coderag_ds1000_0536": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.imshow.txt"
+ ],
+ "coderag_ds1000_0537": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.imshow.txt"
+ ],
+ "coderag_ds1000_0538": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xlabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.axis.set_label_coords.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0539": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xticklabels.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0540": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_title.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0541": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.invert_yaxis.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0542": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xticks.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0543": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_yticks.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0544": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0545": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt"
+ ],
+ "coderag_ds1000_0546": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.bar.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.yticks.txt"
+ ],
+ "coderag_ds1000_0547": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.ticklabel_format.txt"
+ ],
+ "coderag_ds1000_0549": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.grid.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots_adjust.txt"
+ ],
+ "coderag_ds1000_0550": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.grid.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots_adjust.txt"
+ ],
+ "coderag_ds1000_0551": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0552": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0553": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.axis.grid.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0554": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.grid.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.axis.set_ticks.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0555": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.axis.grid.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.axis.set_ticks.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0556": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.grid.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt"
+ ],
+ "coderag_ds1000_0557": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt"
+ ],
+ "coderag_ds1000_0558": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_ylabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0559": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0560": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.xaxis.tick_top.txt"
+ ],
+ "coderag_ds1000_0561": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.tight_layout.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xlabel.txt"
+ ],
+ "coderag_ds1000_0562": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.tick_params.txt"
+ ],
+ "coderag_ds1000_0563": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.yaxis.tick_right.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.figure.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.add_subplot.txt"
+ ],
+ "coderag_ds1000_0564": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.yaxis.set_label_position.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.ylabel.txt"
+ ],
+ "coderag_ds1000_0570": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.tick_params.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.figure.txt",
+  "matplotlib/matplotlib._as_gen.mpl_toolkits.axisartist.axis_artist.ticks#mpl_toolkits.axisartist.axis_artist.Ticks.set_color.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.add_subplot.txt"
+ ],
+ "coderag_ds1000_0571": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xlabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.figure.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.add_subplot.txt"
+ ],
+ "coderag_ds1000_0572": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0573": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.axvline.txt"
+ ],
+ "coderag_ds1000_0574": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.invert_yaxis.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.xaxis.tick_top.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.pcolor.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0575": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xlabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_ylabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_ylim.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.twinx.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.add_subplot.txt"
+ ],
+ "coderag_ds1000_0576": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_title.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0578": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.annotate.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0579": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0580": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0581": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.hist.txt"
+ ],
+ "coderag_ds1000_0582": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0583": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.hist.txt"
+ ],
+ "coderag_ds1000_0584": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.hist.txt"
+ ],
+ "coderag_ds1000_0585": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.axline.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xlim.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.ylim.txt"
+ ],
+ "coderag_ds1000_0586": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots_adjust.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.add_axes.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.FigureBase.colorbar.txt"
+ ],
+ "coderag_ds1000_0587": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0588": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.suptitle.txt"
+ ],
+ "coderag_ds1000_0589": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.yscale.txt"
+ ],
+ "coderag_ds1000_0590": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.title.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xlabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.ylabel.txt"
+ ],
+ "coderag_ds1000_0591": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xticks.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0592": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0593": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.axis.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.loglog.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.axis.set_major_formatter.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.subplots.txt"
+ ],
+ "coderag_ds1000_0594": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0595": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axis.axis.set_major_formatter.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.gca.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.hist.txt"
+ ],
+ "coderag_ds1000_0596": [
+  "matplotlib/matplotlib._as_gen.matplotlib.lines.line2d#matplotlib.lines.Line2D.set_color.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.lines.line2d#matplotlib.lines.Line2D.set_markerfacecolor.txt"
+ ],
+ "coderag_ds1000_0597": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.figlegend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0598": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0599": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xticklabels.txt"
+ ],
+ "coderag_ds1000_0600": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0601": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0602": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0603": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.yticks.txt"
+ ],
+ "coderag_ds1000_0604": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.yticks.txt"
+ ],
+ "coderag_ds1000_0605": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.margins.txt"
+ ],
+ "coderag_ds1000_0606": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.margins.txt"
+ ],
+ "coderag_ds1000_0607": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.suptitle.txt"
+ ],
+ "coderag_ds1000_0608": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xlabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.ylabel.txt"
+ ],
+ "coderag_ds1000_0609": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt"
+ ],
+ "coderag_ds1000_0610": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt"
+ ],
+ "coderag_ds1000_0611": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt"
+ ],
+ "coderag_ds1000_0612": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt"
+ ],
+ "coderag_ds1000_0613": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.imshow.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xlim.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.ylim.txt"
+ ],
+ "coderag_ds1000_0614": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.stem.txt"
+ ],
+ "coderag_ds1000_0615": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.bar.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0616": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.axvline.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt"
+ ],
+ "coderag_ds1000_0617": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.bar.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.subplots.txt"
+ ],
+ "coderag_ds1000_0618": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.pie.txt"
+ ],
+ "coderag_ds1000_0619": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.grid.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0620": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.grid.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.minorticks_on.txt"
+ ],
+ "coderag_ds1000_0621": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.pie.txt"
+ ],
+ "coderag_ds1000_0622": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.pie.txt"
+ ],
+ "coderag_ds1000_0623": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0624": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.axvline.txt"
+ ],
+ "coderag_ds1000_0625": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.bar.txt"
+ ],
+ "coderag_ds1000_0626": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0627": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt"
+ ],
+ "coderag_ds1000_0628": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.xticks.txt"
+ ],
+ "coderag_ds1000_0630": [
+  "matplotlib/matplotlib._as_gen.matplotlib.patches.boxstyle#matplotlib.patches.BoxStyle.Circle.txt"
+ ],
+ "coderag_ds1000_0631": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.title.txt"
+ ],
+ "coderag_ds1000_0632": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0633": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0634": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt"
+ ],
+ "coderag_ds1000_0635": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt"
+ ],
+ "coderag_ds1000_0636": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.colorbar.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.imshow.txt"
+ ],
+ "coderag_ds1000_0637": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.title.txt"
+ ],
+ "coderag_ds1000_0640": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt"
+ ],
+ "coderag_ds1000_0641": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt"
+ ],
+ "coderag_ds1000_0642": [
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.subplots.txt"
+ ],
+ "coderag_ds1000_0643": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.hist.txt"
+ ],
+ "coderag_ds1000_0644": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.fill_between.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0645": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.axhline.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.axvline.txt"
+ ],
+ "coderag_ds1000_0646": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.errorbar.txt"
+ ],
+ "coderag_ds1000_0647": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_title.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0648": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.tight_layout.txt",
+  "matplotlib/matplotlib.cbook_api#matplotlib.cbook.flatten.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.subplots.txt"
+ ],
+ "coderag_ds1000_0649": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.figure.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.matshow.txt"
+ ],
+ "coderag_ds1000_0650": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.table.txt"
+ ],
+ "coderag_ds1000_0651": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.tick_params.txt"
+ ],
+ "coderag_ds1000_0652": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.tick_params.txt"
+ ],
+ "coderag_ds1000_0653": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.tick_params.txt"
+ ],
+ "coderag_ds1000_0654": [
+  "matplotlib/matplotlib.cbook_api#matplotlib.cbook.flatten.txt"
+ ],
+ "coderag_ds1000_0655": [
+  "matplotlib/matplotlib.cbook_api#matplotlib.cbook.flatten.txt"
+ ],
+ "coderag_ds1000_0656": [
+  "matplotlib/matplotlib.cbook_api#matplotlib.cbook.flatten.txt"
+ ],
+ "coderag_ds1000_0657": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0658": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.figure.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0659": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.legend.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0660": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_ds1000_0662": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xticklabels.txt"
+ ],
+ "coderag_ds1000_0663": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.scatter.txt",
+  "matplotlib/matplotlib.figure_api#matplotlib.figure.Figure.add_subplot.txt"
+ ],
+ "coderag_ds1000_0664": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xlabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xticklabels.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_ylabel.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_yticklabels.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplots.txt"
+ ],
+ "coderag_ds1000_0665": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xticklabels.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_yticklabels.txt",
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.subplot.txt"
+ ],
+ "coderag_ds1000_0666": [
+  "tensorflow/tensorflow.compat.v1.assign.txt"
+ ],
+ "coderag_ds1000_0667": [
+  "tensorflow/tensorflow.compat.v1.assign.txt"
+ ],
+ "coderag_ds1000_0668": [
+  "tensorflow/tensorflow.one_hot.txt"
+ ],
+ "coderag_ds1000_0669": [
+  "tensorflow/tensorflow.one_hot.txt"
+ ],
+ "coderag_ds1000_0670": [
+  "tensorflow/tensorflow.constant.txt",
+  "tensorflow/tensorflow.experimental.numpy.txt",
+  "tensorflow/tensorflow.one_hot.txt"
+ ],
+ "coderag_ds1000_0671": [
+  "tensorflow/tensorflow.one_hot.txt"
+ ],
+ "coderag_ds1000_0672": [
+  "tensorflow/tensorflow.constant.txt",
+  "tensorflow/tensorflow.experimental.numpy.txt",
+  "tensorflow/tensorflow.one_hot.txt"
+ ],
+ "coderag_ds1000_0673": [
+  "tensorflow/tensorflow.compat.v1.session.txt"
+ ],
+ "coderag_ds1000_0674": [
+  "tensorflow/tensorflow.compat.v1.session.txt"
+ ],
+ "coderag_ds1000_0675": [
+  "tensorflow/tensorflow.compat.v1.expand_dims.txt",
+  "tensorflow/tensorflow.math.less.txt",
+  "tensorflow/tensorflow.range.txt",
+  "tensorflow/tensorflow.where.txt"
+ ],
+ "coderag_ds1000_0676": [
+  "tensorflow/tensorflow.compat.v1.expand_dims.txt",
+  "tensorflow/tensorflow.math.less.txt",
+  "tensorflow/tensorflow.range.txt",
+  "tensorflow/tensorflow.where.txt"
+ ],
+ "coderag_ds1000_0677": [
+  "tensorflow/tensorflow.compat.v1.expand_dims.txt",
+  "tensorflow/tensorflow.math.less.txt",
+  "tensorflow/tensorflow.range.txt",
+  "tensorflow/tensorflow.where.txt"
+ ],
+ "coderag_ds1000_0678": [
+  "tensorflow/tensorflow.expand_dims.txt",
+  "tensorflow/tensorflow.math.less.txt",
+  "tensorflow/tensorflow.range.txt",
+  "tensorflow/tensorflow.where.txt"
+ ],
+ "coderag_ds1000_0679": [
+  "tensorflow/tensorflow.expand_dims.txt",
+  "tensorflow/tensorflow.math.less.txt",
+  "tensorflow/tensorflow.range.txt",
+  "tensorflow/tensorflow.where.txt"
+ ],
+ "coderag_ds1000_0680": [
+  "tensorflow/tensorflow.concat.txt",
+  "tensorflow/tensorflow.expand_dims.txt",
+  "tensorflow/tensorflow.tile.txt"
+ ],
+ "coderag_ds1000_0681": [
+  "tensorflow/tensorflow.concat.txt",
+  "tensorflow/tensorflow.expand_dims.txt",
+  "tensorflow/tensorflow.tile.txt"
+ ],
+ "coderag_ds1000_0682": [
+  "tensorflow/tensorflow.squeeze.txt"
+ ],
+ "coderag_ds1000_0683": [
+  "tensorflow/tensorflow.expand_dims.txt"
+ ],
+ "coderag_ds1000_0684": [
+  "tensorflow/tensorflow.expand_dims.txt"
+ ],
+ "coderag_ds1000_0685": [
+  "tensorflow/tensorflow.compat.v1.reduce_sum.txt"
+ ],
+ "coderag_ds1000_0686": [
+  "tensorflow/tensorflow.compat.v1.reduce_prod.txt"
+ ],
+ "coderag_ds1000_0687": [
+  "tensorflow/tensorflow.math.reciprocal.txt"
+ ],
+ "coderag_ds1000_0688": [
+  "tensorflow/tensorflow.compat.v1.reduce_sum.txt"
+ ],
+ "coderag_ds1000_0689": [
+  "tensorflow/tensorflow.compat.v1.reduce_sum.txt"
+ ],
+ "coderag_ds1000_0690": [
+  "tensorflow/tensorflow.compat.v1.reduce_sum.txt"
+ ],
+ "coderag_ds1000_0691": [
+  "tensorflow/tensorflow.gather_nd.txt"
+ ],
+ "coderag_ds1000_0692": [
+  "tensorflow/tensorflow.gather_nd.txt"
+ ],
+ "coderag_ds1000_0693": [
+  "tensorflow/tensorflow.gather_nd.txt"
+ ],
+ "coderag_ds1000_0694": [
+  "tensorflow/tensorflow.constant.txt"
+ ],
+ "coderag_ds1000_0695": [
+  "tensorflow/tensorflow.constant.txt"
+ ],
+ "coderag_ds1000_0696": [
+  "tensorflow/tensorflow.compat.as_str_any.txt"
+ ],
+ "coderag_ds1000_0697": [
+  "tensorflow/tensorflow.compat.as_str_any.txt"
+ ],
+ "coderag_ds1000_0698": [
+  "tensorflow/tensorflow.cast.txt",
+  "tensorflow/tensorflow.compat.v1.reduce_sum.txt"
+ ],
+ "coderag_ds1000_0699": [
+  "tensorflow/tensorflow.cast.txt",
+  "tensorflow/tensorflow.compat.v1.reduce_sum.txt"
+ ],
+ "coderag_ds1000_0700": [
+  "tensorflow/tensorflow.cast.txt",
+  "tensorflow/tensorflow.compat.v1.reduce_sum.txt"
+ ],
+ "coderag_ds1000_0701": [
+  "tensorflow/tensorflow.compat.v1.reduce_sum.txt",
+  "tensorflow/tensorflow.random.normal.txt",
+  "tensorflow/tensorflow.random.set_seed.txt"
+ ],
+ "coderag_ds1000_0702": [
+  "tensorflow/tensorflow.compat.v1.argmax.txt"
+ ],
+ "coderag_ds1000_0703": [
+  "tensorflow/tensorflow.compat.v1.argmax.txt"
+ ],
+ "coderag_ds1000_0704": [
+  "tensorflow/tensorflow.compat.v1.argmax.txt"
+ ],
+ "coderag_ds1000_0705": [
+  "tensorflow/tensorflow.compat.v1.argmin.txt"
+ ],
+ "coderag_ds1000_0706": [
+  "tensorflow/tensorflow.saved_model.save.txt"
+ ],
+ "coderag_ds1000_0707": [
+  "tensorflow/tensorflow.random.set_seed.txt",
+  "tensorflow/tensorflow.random.uniform.txt"
+ ],
+ "coderag_ds1000_0708": [
+  "tensorflow/tensorflow.random.set_seed.txt",
+  "tensorflow/tensorflow.random.uniform.txt"
+ ],
+ "coderag_ds1000_0709": [
+  "tensorflow/tensorflow.random.set_seed.txt",
+  "tensorflow/tensorflow.random.uniform.txt"
+ ],
+ "coderag_ds1000_0840": [
+  "sklearn/sklearn.modules.generated.sklearn.model_selection.cross_val_predict.txt"
+ ],
+ "coderag_ds1000_0841": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.standardscaler#sklearn.preprocessing.StandardScaler.inverse_transform.txt"
+ ],
+ "coderag_ds1000_0842": [
+  "sklearn/sklearn.modules.generated.sklearn.pipeline.pipeline#sklearn.pipeline.Pipeline.inverse_transform.txt"
+ ],
+ "coderag_ds1000_0849": [
+  "sklearn/sklearn.modules.generated.sklearn.model_selection.gridsearchcv#sklearn.model_selection.GridSearchCV.txt"
+ ],
+ "coderag_ds1000_0850": [
+  "sklearn/sklearn.modules.generated.sklearn.ensemble.randomforestregressor#sklearn.ensemble.RandomForestRegressor.txt"
+ ],
+ "coderag_ds1000_0851": [
+  "sklearn/sklearn.modules.generated.sklearn.ensemble.randomforestregressor#sklearn.ensemble.RandomForestRegressor.txt"
+ ],
+ "coderag_ds1000_0852": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.tfidfvectorizer#sklearn.feature_extraction.text.TfidfVectorizer.txt"
+ ],
+ "coderag_ds1000_0853": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.tfidfvectorizer#sklearn.feature_extraction.text.TfidfVectorizer.txt"
+ ],
+ "coderag_ds1000_0859": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_selection.genericunivariateselect#sklearn.feature_selection.GenericUnivariateSelect.get_support.txt",
+  "sklearn/sklearn.modules.generated.sklearn.feature_selection.selectfrommodel#sklearn.feature_selection.SelectFromModel.txt"
+ ],
+ "coderag_ds1000_0860": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_selection.genericunivariateselect#sklearn.feature_selection.GenericUnivariateSelect.get_support.txt",
+  "sklearn/sklearn.modules.generated.sklearn.feature_selection.selectfrommodel#sklearn.feature_selection.SelectFromModel.txt"
+ ],
+ "coderag_ds1000_0861": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_selection.selectfrommodel#sklearn.feature_selection.SelectFromModel.txt"
+ ],
+ "coderag_ds1000_0868": [
+  "sklearn/sklearn.modules.generated.sklearn.svm.svr#sklearn.svm.SVR.fit.txt"
+ ],
+ "coderag_ds1000_0869": [
+  "sklearn/sklearn.modules.generated.sklearn.svm.svr#sklearn.svm.SVR.txt"
+ ],
+ "coderag_ds1000_0870": [
+  "sklearn/sklearn.modules.generated.sklearn.svm.svr#sklearn.svm.SVR.txt"
+ ],
+ "coderag_ds1000_0871": [
+  "sklearn/sklearn.modules.generated.sklearn.svm.svr#sklearn.svm.SVR.txt"
+ ],
+ "coderag_ds1000_0872": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.tfidfvectorizer#sklearn.feature_extraction.text.TfidfVectorizer.transform.txt"
+ ],
+ "coderag_ds1000_0873": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.tfidfvectorizer#sklearn.feature_extraction.text.TfidfVectorizer.transform.txt"
+ ],
+ "coderag_ds1000_0874": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.tfidfvectorizer#sklearn.feature_extraction.text.TfidfVectorizer.txt"
+ ],
+ "coderag_ds1000_0875": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.multilabelbinarizer#sklearn.preprocessing.MultiLabelBinarizer.fit_transform.txt"
+ ],
+ "coderag_ds1000_0876": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.multilabelbinarizer#sklearn.preprocessing.MultiLabelBinarizer.fit_transform.txt"
+ ],
+ "coderag_ds1000_0877": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.multilabelbinarizer#sklearn.preprocessing.MultiLabelBinarizer.fit_transform.txt"
+ ],
+ "coderag_ds1000_0878": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.multilabelbinarizer#sklearn.preprocessing.MultiLabelBinarizer.fit_transform.txt"
+ ],
+ "coderag_ds1000_0879": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.multilabelbinarizer#sklearn.preprocessing.MultiLabelBinarizer.fit_transform.txt"
+ ],
+ "coderag_ds1000_0886": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.scale#sklearn.preprocessing.scale.txt"
+ ],
+ "coderag_ds1000_0887": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.scale#sklearn.preprocessing.scale.txt"
+ ],
+ "coderag_ds1000_0888": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.powertransformer#sklearn.preprocessing.PowerTransformer.txt"
+ ],
+ "coderag_ds1000_0889": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.powertransformer#sklearn.preprocessing.PowerTransformer.txt"
+ ],
+ "coderag_ds1000_0890": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.powertransformer#sklearn.preprocessing.PowerTransformer.txt"
+ ],
+ "coderag_ds1000_0891": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.powertransformer#sklearn.preprocessing.PowerTransformer.txt"
+ ],
+ "coderag_ds1000_0892": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.countvectorizer#sklearn.feature_extraction.text.CountVectorizer.txt"
+ ],
+ "coderag_ds1000_0893": [
+  "sklearn/sklearn.modules.generated.sklearn.model_selection.train_test_split#sklearn.model_selection.train_test_split.txt"
+ ],
+ "coderag_ds1000_0894": [
+  "sklearn/sklearn.modules.generated.sklearn.model_selection.train_test_split#sklearn.model_selection.train_test_split.txt"
+ ],
+ "coderag_ds1000_0895": [
+  "sklearn/sklearn.modules.generated.sklearn.model_selection.train_test_split#sklearn.model_selection.train_test_split.txt"
+ ],
+ "coderag_ds1000_0896": [
+  "sklearn/sklearn.modules.generated.sklearn.model_selection.train_test_split#sklearn.model_selection.train_test_split.txt"
+ ],
+ "coderag_ds1000_0897": [
+  "sklearn/sklearn.modules.generated.sklearn.cluster.kmeans#sklearn.cluster.KMeans.txt"
+ ],
+ "coderag_ds1000_0898": [
+  "sklearn/sklearn.modules.generated.sklearn.cluster.kmeans#sklearn.cluster.KMeans.txt"
+ ],
+ "coderag_ds1000_0899": [
+  "sklearn/sklearn.modules.generated.sklearn.svm.linearsvc#sklearn.svm.LinearSVC.txt"
+ ],
+ "coderag_ds1000_0900": [
+  "sklearn/sklearn.modules.generated.sklearn.svm.linearsvc#sklearn.svm.LinearSVC.txt"
+ ],
+ "coderag_ds1000_0901": [
+  "sklearn/sklearn.modules.generated.sklearn.svm.linearsvc#sklearn.svm.LinearSVC.txt"
+ ],
+ "coderag_ds1000_0902": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.countvectorizer#sklearn.feature_extraction.text.CountVectorizer.txt"
+ ],
+ "coderag_ds1000_0903": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.countvectorizer#sklearn.feature_extraction.text.CountVectorizer.txt"
+ ],
+ "coderag_ds1000_0904": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.countvectorizer#sklearn.feature_extraction.text.CountVectorizer.txt"
+ ],
+ "coderag_ds1000_0905": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.countvectorizer#sklearn.feature_extraction.text.CountVectorizer.txt"
+ ],
+ "coderag_ds1000_0909": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.labelencoder#sklearn.preprocessing.LabelEncoder.txt"
+ ],
+ "coderag_ds1000_0910": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.labelencoder#sklearn.preprocessing.LabelEncoder.txt"
+ ],
+ "coderag_ds1000_0911": [
+  "sklearn/sklearn.modules.generated.sklearn.linear_model.elasticnet#sklearn.linear_model.ElasticNet.txt"
+ ],
+ "coderag_ds1000_0912": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.minmaxscaler#sklearn.preprocessing.MinMaxScaler.txt"
+ ],
+ "coderag_ds1000_0913": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.minmaxscaler#sklearn.preprocessing.MinMaxScaler.txt"
+ ],
+ "coderag_ds1000_0914": [
+  "sklearn/sklearn.modules.generated.sklearn.preprocessing.minmaxscaler#sklearn.preprocessing.MinMaxScaler.txt"
+ ],
+ "coderag_ds1000_0916": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.dictvectorizer#sklearn.feature_extraction.DictVectorizer.txt"
+ ],
+ "coderag_ds1000_0917": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.dictvectorizer#sklearn.feature_extraction.DictVectorizer.txt"
+ ],
+ "coderag_ds1000_0918": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.dictvectorizer#sklearn.feature_extraction.DictVectorizer.txt"
+ ],
+ "coderag_ds1000_0919": [
+  "sklearn/sklearn.modules.generated.sklearn.linear_model.logisticregression#sklearn.linear_model.LogisticRegression.txt"
+ ],
+ "coderag_ds1000_0920": [
+  "sklearn/sklearn.modules.generated.sklearn.linear_model.logisticregression#sklearn.linear_model.LogisticRegression.txt"
+ ],
+ "coderag_ds1000_0926": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.countvectorizer#sklearn.feature_extraction.text.CountVectorizer.txt"
+ ],
+ "coderag_ds1000_0927": [
+  "sklearn/sklearn.modules.generated.sklearn.feature_extraction.text.countvectorizer#sklearn.feature_extraction.text.CountVectorizer.txt"
+ ],
+ "coderag_ds1000_0931": [
+  "sklearn/sklearn.modules.generated.sklearn.metrics.pairwise.cosine_similarity#sklearn.metrics.pairwise.cosine_similarity.txt"
+ ],
+ "coderag_odex_0006": [
+  "python/python.library.subprocess#subprocess.check_output.txt"
+ ],
+ "coderag_odex_0008": [
+  "pandas/pandas.reference.series.txt"
+ ],
+ "coderag_odex_0009": [
+  "python/python.library.socket#socket.socket.send.txt"
+ ],
+ "coderag_odex_0010": [
+  "python/python.library.datetime#datetime.datetime.strptime.txt"
+ ],
+ "coderag_odex_0014": [
+  "numpy/numpy.reference.generated.numpy.sum.txt"
+ ],
+ "coderag_odex_0015": [
+  "python/python.library.warnings#warnings.simplefilter.txt"
+ ],
+ "coderag_odex_0017": [
+  "python/python.library.time#time.strptime.txt"
+ ],
+ "coderag_odex_0020": [
+  "python/python.library.sys.txt"
+ ],
+ "coderag_odex_0021": [
+  "python/python.library.re#re.split.txt"
+ ],
+ "coderag_odex_0023": [
+  "python/python.library.urllib.request#urllib.request.urlretrieve.txt"
+ ],
+ "coderag_odex_0024": [
+  "python/python.library.urllib.request#urllib.request.urlopen.txt"
+ ],
+ "coderag_odex_0027": [
+  "python/python.library.argparse#argparse.ArgumentParser.add_argument.txt"
+ ],
+ "coderag_odex_0029": [
+  "pandas/pandas.reference.api.pandas.merge.txt"
+ ],
+ "coderag_odex_0031": [
+  "flask/flask.api.index#flask.Flask.run.txt"
+ ],
+ "coderag_odex_0032": [
+  "python/python.library.pickle#pickle.dump.txt"
+ ],
+ "coderag_odex_0034": [
+  "numpy/numpy.reference.generated.numpy.zeros.txt"
+ ],
+ "coderag_odex_0036": [
+  "numpy/numpy.reference.generated.numpy.asarray.txt",
+  "numpy/numpy.reference.generated.numpy.reshape.txt"
+ ],
+ "coderag_odex_0038": [
+  "python/python.library.struct#struct.unpack.txt"
+ ],
+ "coderag_odex_0040": [
+  "python/python.library.subprocess#subprocess.call.txt"
+ ],
+ "coderag_odex_0046": [
+  "python/python.library.datetime#datetime.datetime.fromtimestamp.txt",
+  "python/python.library.datetime#datetime.datetime.strftime.txt"
+ ],
+ "coderag_odex_0047": [
+  "python/python.library.time#time.strftime.txt"
+ ],
+ "coderag_odex_0048": [
+  "python/python.library.datetime#datetime.datetime.now.txt",
+  "python/python.library.datetime#datetime.timedelta.txt"
+ ],
+ "coderag_odex_0051": [
+  "python/python.library.base64#base64.b64encode.txt"
+ ],
+ "coderag_odex_0055": [
+  "python/python.library.collections#collections.Counter.txt"
+ ],
+ "coderag_odex_0056": [
+  "python/python.library.sqlite3#sqlite3.Connection.execute.txt"
+ ],
+ "coderag_odex_0061": [
+  "python/python.library.ftplib#ftplib.FTP.storlines.txt"
+ ],
+ "coderag_odex_0062": [
+  "numpy/numpy.reference.generated.numpy.maximum.txt"
+ ],
+ "coderag_odex_0064": [
+  "python/python.library.random#random.random.txt"
+ ],
+ "coderag_odex_0065": [
+  "python/python.library.datetime#datetime.datetime.now.txt",
+  "python/python.library.datetime#datetime.datetime.strftime.txt"
+ ],
+ "coderag_odex_0066": [
+  "pandas/pandas.reference.api.pandas.series.str.contains.txt"
+ ],
+ "coderag_odex_0068": [
+  "pandas/pandas.reference.api.pandas.dataframe.drop.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.reset_index.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.set_index.txt"
+ ],
+ "coderag_odex_0074": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0075": [
+  "pandas/pandas.reference.api.pandas.dataframe.astype.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.sum.txt"
+ ],
+ "coderag_odex_0076": [
+  "python/python.library.re#re.search.txt"
+ ],
+ "coderag_odex_0078": [
+  "python/python.library.re#re.search.txt"
+ ],
+ "coderag_odex_0080": [
+  "python/python.library.datetime#datetime.datetime.strptime.txt"
+ ],
+ "coderag_odex_0082": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0083": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0084": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_odex_0085": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt"
+ ],
+ "coderag_odex_0088": [
+  "pandas/pandas.reference.api.pandas.dataframe.merge.txt"
+ ],
+ "coderag_odex_0091": [
+  "python/python.library.os#os.makedirs.txt",
+  "python/python.library.os.path#os.path.exists.txt"
+ ],
+ "coderag_odex_0092": [
+  "python/python.library.os#os.makedirs.txt",
+  "python/python.library.os.path#os.path.isdir.txt"
+ ],
+ "coderag_odex_0093": [
+  "python/python.library.os#os.makedirs.txt"
+ ],
+ "coderag_odex_0094": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0095": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0098": [
+  "numpy/numpy.reference.generated.numpy.concatenate.txt"
+ ],
+ "coderag_odex_0099": [
+  "numpy/numpy.reference.generated.numpy.vstack.txt"
+ ],
+ "coderag_odex_0100": [
+  "python/python.library.os#os.stat.txt"
+ ],
+ "coderag_odex_0102": [
+  "python/python.library.collections#collections.Counter.txt"
+ ],
+ "coderag_odex_0103": [
+  "python/python.library.collections#collections.deque.count.txt"
+ ],
+ "coderag_odex_0106": [
+  "python/python.library.shutil#shutil.copy.txt"
+ ],
+ "coderag_odex_0109": [
+  "numpy/numpy.reference.generated.numpy.where.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.isnull.txt"
+ ],
+ "coderag_odex_0113": [
+  "pandas/pandas.reference.api.pandas.dataframe.index.txt"
+ ],
+ "coderag_odex_0117": [
+  "python/python.library.pprint#pprint.pprint.txt"
+ ],
+ "coderag_odex_0118": [
+  "pandas/pandas.reference.api.pandas.dataframe.loc.txt"
+ ],
+ "coderag_odex_0119": [
+  "numpy/numpy.reference.generated.numpy.flatnonzero.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.iloc.txt"
+ ],
+ "coderag_odex_0120": [
+  "pandas/pandas.reference.api.pandas.dataframe.index.txt",
+  "pandas/pandas.reference.api.pandas.index.tolist.txt"
+ ],
+ "coderag_odex_0121": [
+  "pandas/pandas.reference.api.pandas.dataframe.index.txt",
+  "pandas/pandas.reference.api.pandas.index.tolist.txt"
+ ],
+ "coderag_odex_0122": [
+  "python/python.library.os#os.chdir.txt"
+ ],
+ "coderag_odex_0123": [
+  "python/python.library.sqlite3#sqlite3.Cursor.execute.txt"
+ ],
+ "coderag_odex_0127": [
+  "python/python.library.re#re.finditer.txt"
+ ],
+ "coderag_odex_0128": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.scatter.txt",
+  "numpy/numpy.reference.random.generated.numpy.random.randn.txt"
+ ],
+ "coderag_odex_0129": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.plot.txt",
+  "numpy/numpy.reference.random.generated.numpy.random.randn.txt"
+ ],
+ "coderag_odex_0131": [
+  "pandas/pandas.reference.api.pandas.series.str.contains.txt"
+ ],
+ "coderag_odex_0132": [
+  "pandas/pandas.reference.api.pandas.dataframe.reset_index.txt"
+ ],
+ "coderag_odex_0133": [
+  "pandas/pandas.reference.api.pandas.dataframe.index.txt"
+ ],
+ "coderag_odex_0134": [
+  "pandas/pandas.reference.api.pandas.dataframe.reset_index.txt"
+ ],
+ "coderag_odex_0136": [
+  "numpy/numpy.reference.generated.numpy.array.txt"
+ ],
+ "coderag_odex_0137": [
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt"
+ ],
+ "coderag_odex_0143": [
+  "python/python.library.os.path#os.path.splitext.txt"
+ ],
+ "coderag_odex_0146": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_odex_0147": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_odex_0150": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0151": [
+  "python/python.library.re#re.Match.group.txt",
+  "python/python.library.re#re.search.txt"
+ ],
+ "coderag_odex_0152": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0153": [
+  "pandas/pandas.reference.api.pandas.date_range.txt"
+ ],
+ "coderag_odex_0157": [
+  "python/python.library.os.path#os.path.splitext.txt"
+ ],
+ "coderag_odex_0160": [
+  "numpy/numpy.reference.random.generated.numpy.random.shuffle.txt"
+ ],
+ "coderag_odex_0164": [
+  "python/python.library.os#os.statvfs.txt"
+ ],
+ "coderag_odex_0165": [
+  "python/python.library.sqlite3#sqlite3.Cursor.fetchone.txt"
+ ],
+ "coderag_odex_0172": [
+  "pandas/pandas.reference.api.pandas.dataframe.sort_values.txt"
+ ],
+ "coderag_odex_0175": [
+  "python/python.library.re#re.Pattern.findall.txt"
+ ],
+ "coderag_odex_0176": [
+  "python/python.library.re#re.search.txt"
+ ],
+ "coderag_odex_0179": [
+  "python/python.library.collections#collections.OrderedDict.txt"
+ ],
+ "coderag_odex_0180": [
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.tolist.txt"
+ ],
+ "coderag_odex_0181": [
+  "numpy/numpy.reference.generated.numpy.ndarray.tolist.txt"
+ ],
+ "coderag_odex_0185": [
+  "python/python.library.re#re.search.txt"
+ ],
+ "coderag_odex_0192": [
+  "python/python.library.subprocess#subprocess.call.txt"
+ ],
+ "coderag_odex_0193": [
+  "python/python.library.subprocess#subprocess.call.txt"
+ ],
+ "coderag_odex_0195": [
+  "python/python.library.base64#base64.b64encode.txt"
+ ],
+ "coderag_odex_0197": [
+  "python/python.library.csv#csv.reader.txt"
+ ],
+ "coderag_odex_0201": [
+  "python/python.library.ast#ast.literal_eval.txt"
+ ],
+ "coderag_odex_0203": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0204": [
+  "numpy/numpy.reference.generated.numpy.in1d.txt",
+  "numpy/numpy.reference.generated.numpy.where.txt"
+ ],
+ "coderag_odex_0205": [
+  "numpy/numpy.reference.generated.numpy.mean.txt"
+ ],
+ "coderag_odex_0206": [
+  "python/python.library.subprocess#subprocess.call.txt"
+ ],
+ "coderag_odex_0207": [
+  "python/python.library.subprocess#subprocess.call.txt"
+ ],
+ "coderag_odex_0208": [
+  "pandas/pandas.reference.api.pandas.dataframe.fillna.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.mean.txt"
+ ],
+ "coderag_odex_0209": [
+  "python/python.library.time#time.strftime.txt"
+ ],
+ "coderag_odex_0210": [
+  "numpy/numpy.reference.generated.numpy.where.txt"
+ ],
+ "coderag_odex_0211": [
+  "python/python.library.re#re.split.txt"
+ ],
+ "coderag_odex_0216": [
+  "python/python.library.os#os.open.txt"
+ ],
+ "coderag_odex_0217": [
+  "pandas/pandas.reference.api.pandas.core.groupby.dataframegroupby.nunique.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.groupby.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.reset_index.txt"
+ ],
+ "coderag_odex_0224": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0229": [
+  "python/python.library.heapq#heapq.nlargest.txt"
+ ],
+ "coderag_odex_0231": [
+  "pandas/pandas.reference.api.pandas.dataframe.to_sql.txt"
+ ],
+ "coderag_odex_0232": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0239": [
+  "python/python.library.operator#operator.itemgetter.txt"
+ ],
+ "coderag_odex_0240": [
+  "python/python.library.time#time.sleep.txt"
+ ],
+ "coderag_odex_0242": [
+  "django/django.ref.models.fields#django.db.models.CharField.txt"
+ ],
+ "coderag_odex_0243": [
+  "python/python.library.math#math.degrees.txt"
+ ],
+ "coderag_odex_0248": [
+  "python/python.library.functools#functools.reduce.txt"
+ ],
+ "coderag_odex_0250": [
+  "pandas/pandas.reference.api.pandas.dataframe.replace.txt"
+ ],
+ "coderag_odex_0255": [
+  "python/python.library.itertools#itertools.zip_longest.txt"
+ ],
+ "coderag_odex_0256": [
+  "python/python.library.json#json.dumps.txt"
+ ],
+ "coderag_odex_0263": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0264": [
+  "pandas/pandas.reference.api.pandas.core.groupby.dataframegroupby.filter.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.groupby.txt"
+ ],
+ "coderag_odex_0267": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.colorbar.txt"
+ ],
+ "coderag_odex_0268": [
+  "python/python.library.collections#collections.Counter.most_common.txt"
+ ],
+ "coderag_odex_0269": [
+  "python/python.library.itertools#itertools.combinations.txt"
+ ],
+ "coderag_odex_0270": [
+  "python/python.library.datetime#datetime.datetime.now.txt"
+ ],
+ "coderag_odex_0273": [
+  "django/django.ref.request-response#django.http.HttpResponse.txt"
+ ],
+ "coderag_odex_0274": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0275": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0276": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0277": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0278": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0280": [
+  "python/python.library.subprocess#subprocess.Popen.txt"
+ ],
+ "coderag_odex_0283": [
+  "numpy/numpy.reference.generated.numpy.ndarray.mean.txt",
+  "numpy/numpy.reference.generated.numpy.ndarray.reshape.txt"
+ ],
+ "coderag_odex_0285": [
+  "python/python.library.re#re.split.txt"
+ ],
+ "coderag_odex_0286": [
+  "pandas/pandas.reference.api.pandas.dataframe.plot.txt"
+ ],
+ "coderag_odex_0298": [
+  "flask/flask.api.index#flask.Flask.config.txt"
+ ],
+ "coderag_odex_0299": [
+  "pandas/pandas.reference.api.pandas.dataframe.txt"
+ ],
+ "coderag_odex_0301": [
+  "matplotlib/matplotlib._as_gen.matplotlib.axes.axes.set_xticklabels.txt"
+ ],
+ "coderag_odex_0302": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0303": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0304": [
+  "python/python.library.re#re.split.txt"
+ ],
+ "coderag_odex_0305": [
+  "python/python.library.re#re.split.txt"
+ ],
+ "coderag_odex_0309": [
+  "pandas/pandas.reference.api.pandas.dataframe.duplicated.txt"
+ ],
+ "coderag_odex_0311": [
+  "python/python.library.datetime#datetime.datetime.strptime.txt"
+ ],
+ "coderag_odex_0312": [
+  "matplotlib/matplotlib.projections_api#matplotlib.projections.polar.PolarAxes.set_rlabel_position.txt"
+ ],
+ "coderag_odex_0313": [
+  "python/python.library.os.path#os.path.isabs.txt"
+ ],
+ "coderag_odex_0316": [
+  "pandas/pandas.reference.api.pandas.dataframe.groupby.txt"
+ ],
+ "coderag_odex_0317": [
+  "pandas/pandas.reference.api.pandas.concat.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.apply.txt"
+ ],
+ "coderag_odex_0318": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0320": [
+  "python/python.library.subprocess#subprocess.Popen.txt"
+ ],
+ "coderag_odex_0321": [
+  "python/python.library.queue#queue.Queue.put.txt"
+ ],
+ "coderag_odex_0322": [
+  "pandas/pandas.reference.api.pandas.series.plot.txt"
+ ],
+ "coderag_odex_0323": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0331": [
+  "python/python.library.shutil#shutil.rmtree.txt"
+ ],
+ "coderag_odex_0332": [
+  "pandas/pandas.reference.api.pandas.dataframe.apply.txt"
+ ],
+ "coderag_odex_0335": [
+  "numpy/numpy.reference.generated.numpy.vstack.txt"
+ ],
+ "coderag_odex_0336": [
+  "numpy/numpy.reference.generated.numpy.concatenate.txt"
+ ],
+ "coderag_odex_0337": [
+  "numpy/numpy.reference.generated.numpy.concatenate.txt"
+ ],
+ "coderag_odex_0338": [
+  "numpy/numpy.reference.generated.numpy.r_.txt"
+ ],
+ "coderag_odex_0339": [
+  "numpy/numpy.reference.generated.numpy.array.txt"
+ ],
+ "coderag_odex_0340": [
+  "python/python.library.socket#socket.getaddrinfo.txt"
+ ],
+ "coderag_odex_0341": [
+  "pandas/pandas.reference.api.pandas.dataframe.xs.txt"
+ ],
+ "coderag_odex_0342": [
+  "django/django.ref.request-response#django.http.HttpResponse.txt"
+ ],
+ "coderag_odex_0343": [
+  "flask/flask.api.index#flask.Flask.txt"
+ ],
+ "coderag_odex_0347": [
+  "matplotlib/matplotlib._as_gen.matplotlib.pyplot.rc.txt"
+ ],
+ "coderag_odex_0348": [
+  "pandas/pandas.reference.api.pandas.dataframe.apply.txt"
+ ],
+ "coderag_odex_0349": [
+  "pandas/pandas.reference.api.pandas.index.get_loc.txt"
+ ],
+ "coderag_odex_0355": [
+  "pandas/pandas.reference.api.pandas.dataframe.columns.txt"
+ ],
+ "coderag_odex_0356": [
+  "pandas/pandas.reference.api.pandas.dataframe.loc.txt"
+ ],
+ "coderag_odex_0357": [
+  "numpy/numpy.reference.generated.numpy.column_stack.txt"
+ ],
+ "coderag_odex_0362": [
+  "python/python.library.itertools#itertools.islice.txt"
+ ],
+ "coderag_odex_0368": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0370": [
+  "pandas/pandas.reference.api.pandas.dataframe.dropna.txt"
+ ],
+ "coderag_odex_0373": [
+  "python/python.library.sys#sys.stdout.txt",
+  "python/python.library.sys.txt"
+ ],
+ "coderag_odex_0375": [
+  "python/python.library.glob#glob.glob.txt",
+  "python/python.library.os#os.chdir.txt"
+ ],
+ "coderag_odex_0376": [
+  "python/python.library.os#os.listdir.txt"
+ ],
+ "coderag_odex_0377": [
+  "python/python.library.os#os.walk.txt"
+ ],
+ "coderag_odex_0378": [
+  "pandas/pandas.reference.api.pandas.dataframe.plot.txt"
+ ],
+ "coderag_odex_0387": [
+  "numpy/numpy.reference.generated.numpy.fromiter.txt",
+  "python/python.library.codecs#codecs.open.txt"
+ ],
+ "coderag_odex_0388": [
+  "python/python.library.operator#operator.itemgetter.txt"
+ ],
+ "coderag_odex_0390": [
+  "pandas/pandas.reference.api.pandas.dataframe.loc.txt",
+  "pandas/pandas.reference.api.pandas.series.str.contains.txt"
+ ],
+ "coderag_odex_0391": [
+  "python/python.library.re#re.Match.group.txt",
+  "python/python.library.re#re.search.txt"
+ ],
+ "coderag_odex_0392": [
+  "pandas/pandas.reference.api.pandas.date_range.txt",
+  "pandas/pandas.reference.api.pandas.timestamp.strftime.txt"
+ ],
+ "coderag_odex_0394": [
+  "python/python.library.json#json.loads.txt"
+ ],
+ "coderag_odex_0395": [
+  "python/python.library.urllib.request#urllib.request.urlretrieve.txt"
+ ],
+ "coderag_odex_0399": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0404": [
+  "python/python.library.operator#operator.itemgetter.txt"
+ ],
+ "coderag_odex_0405": [
+  "python/python.library.operator#operator.itemgetter.txt"
+ ],
+ "coderag_odex_0406": [
+  "python/python.library.operator#operator.itemgetter.txt"
+ ],
+ "coderag_odex_0407": [
+  "pandas/pandas.reference.api.pandas.dataframe.groupby.txt",
+  "pandas/pandas.reference.api.pandas.dataframe.sort_values.txt"
+ ],
+ "coderag_odex_0412": [
+  "python/python.library.datetime#datetime.datetime.txt"
+ ],
+ "coderag_odex_0413": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0414": [
+  "python/python.library.importlib#importlib.reload.txt"
+ ],
+ "coderag_odex_0415": [
+  "python/python.library.struct#struct.unpack.txt"
+ ],
+ "coderag_odex_0417": [
+  "pandas/pandas.reference.api.pandas.dataframe.to_csv.txt"
+ ],
+ "coderag_odex_0418": [
+  "python/python.library.json#json.loads.txt"
+ ],
+ "coderag_odex_0420": [
+  "python/python.library.struct#struct.pack.txt"
+ ],
+ "coderag_odex_0421": [
+  "python/python.library.re#re.sub.txt"
+ ],
+ "coderag_odex_0427": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0428": [
+  "python/python.library.os#os.system.txt"
+ ],
+ "coderag_odex_0430": [
+  "python/python.library.datetime#datetime.datetime.now.txt"
+ ],
+ "coderag_odex_0433": [
+  "numpy/numpy.reference.generated.numpy.ndarray.max.txt"
+ ],
+ "coderag_odex_0434": [
+  "python/python.library.re#re.findall.txt"
+ ],
+ "coderag_odex_0438": [
+  "numpy/numpy.reference.constants#numpy.newaxis.txt"
+ ]
+}

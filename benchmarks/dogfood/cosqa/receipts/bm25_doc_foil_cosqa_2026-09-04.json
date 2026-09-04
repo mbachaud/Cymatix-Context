@@ -1,0 +1,2043 @@
+{
+ "tool": "benchmarks/dogfood/code/bm25_doc_foil.py",
+ "tag": "cosqa",
+ "corpus_root": "F:\\Projects\\cosqa\\corpus",
+ "files_admitted": 20604,
+ "files_size_gated": 0,
+ "documents_after_dedup": 6267,
+ "byte_duplicate_collisions": 14337,
+ "dedup": true,
+ "bm25": {
+  "k1": 1.5,
+  "b": 0.75,
+  "idf": "floored at 0",
+  "tokenizer": "[A-Za-z_][A-Za-z_0-9]*"
+ },
+ "query": "needles_<tag>.json query text verbatim",
+ "gold": "gold_paths_<tag>.json (document level, first gold)",
+ "build_s": 6.5,
+ "total": {
+  "n": 500,
+  "gold_absent": 0,
+  "ndcg@10": 0.2488,
+  "recall@1": 0.134,
+  "recall@5": 0.3,
+  "recall@10": 0.39,
+  "recall@12": 0.41,
+  "mrr": 0.2173
+ },
+ "by_type": {
+  "cosqa_web_query": {
+   "n": 500,
+   "gold_absent": 0,
+   "ndcg@10": 0.2488,
+   "recall@1": 0.134,
+   "recall@5": 0.3,
+   "recall@10": 0.39,
+   "recall@12": 0.41,
+   "mrr": 0.2173
+  }
+ },
+ "per_query": [
+  {
+   "needle": "cosqa_q20105",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20106",
+   "rank": 25
+  },
+  {
+   "needle": "cosqa_q20107",
+   "rank": 17
+  },
+  {
+   "needle": "cosqa_q20108",
+   "rank": 54
+  },
+  {
+   "needle": "cosqa_q20109",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20110",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20111",
+   "rank": 49
+  },
+  {
+   "needle": "cosqa_q20112",
+   "rank": 174
+  },
+  {
+   "needle": "cosqa_q20113",
+   "rank": 18
+  },
+  {
+   "needle": "cosqa_q20114",
+   "rank": 687
+  },
+  {
+   "needle": "cosqa_q20115",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20116",
+   "rank": 2420
+  },
+  {
+   "needle": "cosqa_q20117",
+   "rank": 3916
+  },
+  {
+   "needle": "cosqa_q20118",
+   "rank": 55
+  },
+  {
+   "needle": "cosqa_q20119",
+   "rank": 51
+  },
+  {
+   "needle": "cosqa_q20120",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20121",
+   "rank": 154
+  },
+  {
+   "needle": "cosqa_q20122",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20123",
+   "rank": 129
+  },
+  {
+   "needle": "cosqa_q20124",
+   "rank": 65
+  },
+  {
+   "needle": "cosqa_q20125",
+   "rank": 772
+  },
+  {
+   "needle": "cosqa_q20126",
+   "rank": 173
+  },
+  {
+   "needle": "cosqa_q20127",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20128",
+   "rank": 24
+  },
+  {
+   "needle": "cosqa_q20129",
+   "rank": 15
+  },
+  {
+   "needle": "cosqa_q20130",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20131",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20132",
+   "rank": 286
+  },
+  {
+   "needle": "cosqa_q20133",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20134",
+   "rank": 38
+  },
+  {
+   "needle": "cosqa_q20135",
+   "rank": 7
+  },
+  {
+   "needle": "cosqa_q20136",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20137",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20138",
+   "rank": 37
+  },
+  {
+   "needle": "cosqa_q20139",
+   "rank": 7
+  },
+  {
+   "needle": "cosqa_q20140",
+   "rank": 1641
+  },
+  {
+   "needle": "cosqa_q20141",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20142",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20143",
+   "rank": 2008
+  },
+  {
+   "needle": "cosqa_q20144",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20145",
+   "rank": 57
+  },
+  {
+   "needle": "cosqa_q20146",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20147",
+   "rank": 2912
+  },
+  {
+   "needle": "cosqa_q20148",
+   "rank": 2031
+  },
+  {
+   "needle": "cosqa_q20149",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20150",
+   "rank": 3903
+  },
+  {
+   "needle": "cosqa_q20151",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20152",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20153",
+   "rank": 178
+  },
+  {
+   "needle": "cosqa_q20154",
+   "rank": 890
+  },
+  {
+   "needle": "cosqa_q20155",
+   "rank": 18
+  },
+  {
+   "needle": "cosqa_q20156",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20157",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20158",
+   "rank": 55
+  },
+  {
+   "needle": "cosqa_q20159",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20160",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20161",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20162",
+   "rank": 32
+  },
+  {
+   "needle": "cosqa_q20163",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20164",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20165",
+   "rank": 231
+  },
+  {
+   "needle": "cosqa_q20166",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20167",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20168",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20169",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20170",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20171",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20172",
+   "rank": 21
+  },
+  {
+   "needle": "cosqa_q20173",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20174",
+   "rank": 69
+  },
+  {
+   "needle": "cosqa_q20175",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20176",
+   "rank": 34
+  },
+  {
+   "needle": "cosqa_q20177",
+   "rank": 120
+  },
+  {
+   "needle": "cosqa_q20178",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20179",
+   "rank": 66
+  },
+  {
+   "needle": "cosqa_q20180",
+   "rank": 13
+  },
+  {
+   "needle": "cosqa_q20181",
+   "rank": 77
+  },
+  {
+   "needle": "cosqa_q20182",
+   "rank": 7
+  },
+  {
+   "needle": "cosqa_q20183",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20184",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20185",
+   "rank": 245
+  },
+  {
+   "needle": "cosqa_q20186",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20187",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20188",
+   "rank": 26
+  },
+  {
+   "needle": "cosqa_q20189",
+   "rank": 176
+  },
+  {
+   "needle": "cosqa_q20190",
+   "rank": 25
+  },
+  {
+   "needle": "cosqa_q20191",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20192",
+   "rank": 11
+  },
+  {
+   "needle": "cosqa_q20193",
+   "rank": 36
+  },
+  {
+   "needle": "cosqa_q20194",
+   "rank": 42
+  },
+  {
+   "needle": "cosqa_q20195",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20196",
+   "rank": 765
+  },
+  {
+   "needle": "cosqa_q20197",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20198",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20199",
+   "rank": 883
+  },
+  {
+   "needle": "cosqa_q20200",
+   "rank": 30
+  },
+  {
+   "needle": "cosqa_q20201",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20202",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20203",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20204",
+   "rank": 1138
+  },
+  {
+   "needle": "cosqa_q20205",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20206",
+   "rank": 84
+  },
+  {
+   "needle": "cosqa_q20207",
+   "rank": 98
+  },
+  {
+   "needle": "cosqa_q20208",
+   "rank": 39
+  },
+  {
+   "needle": "cosqa_q20209",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20210",
+   "rank": 2494
+  },
+  {
+   "needle": "cosqa_q20211",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20212",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20213",
+   "rank": 268
+  },
+  {
+   "needle": "cosqa_q20214",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20215",
+   "rank": 24
+  },
+  {
+   "needle": "cosqa_q20216",
+   "rank": 13
+  },
+  {
+   "needle": "cosqa_q20217",
+   "rank": 16
+  },
+  {
+   "needle": "cosqa_q20218",
+   "rank": 92
+  },
+  {
+   "needle": "cosqa_q20219",
+   "rank": 13
+  },
+  {
+   "needle": "cosqa_q20220",
+   "rank": 130
+  },
+  {
+   "needle": "cosqa_q20221",
+   "rank": 1003
+  },
+  {
+   "needle": "cosqa_q20222",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20223",
+   "rank": 261
+  },
+  {
+   "needle": "cosqa_q20224",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20225",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20226",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20227",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20228",
+   "rank": 1040
+  },
+  {
+   "needle": "cosqa_q20229",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20230",
+   "rank": 432
+  },
+  {
+   "needle": "cosqa_q20231",
+   "rank": 17
+  },
+  {
+   "needle": "cosqa_q20232",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20233",
+   "rank": 130
+  },
+  {
+   "needle": "cosqa_q20234",
+   "rank": 60
+  },
+  {
+   "needle": "cosqa_q20235",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20236",
+   "rank": 360
+  },
+  {
+   "needle": "cosqa_q20237",
+   "rank": 359
+  },
+  {
+   "needle": "cosqa_q20238",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20239",
+   "rank": 3846
+  },
+  {
+   "needle": "cosqa_q20240",
+   "rank": 28
+  },
+  {
+   "needle": "cosqa_q20241",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20242",
+   "rank": 13
+  },
+  {
+   "needle": "cosqa_q20243",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20244",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20245",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20246",
+   "rank": 14
+  },
+  {
+   "needle": "cosqa_q20247",
+   "rank": 125
+  },
+  {
+   "needle": "cosqa_q20248",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20249",
+   "rank": 859
+  },
+  {
+   "needle": "cosqa_q20250",
+   "rank": 10
+  },
+  {
+   "needle": "cosqa_q20251",
+   "rank": 96
+  },
+  {
+   "needle": "cosqa_q20252",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20253",
+   "rank": 366
+  },
+  {
+   "needle": "cosqa_q20254",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20255",
+   "rank": 50
+  },
+  {
+   "needle": "cosqa_q20256",
+   "rank": 51
+  },
+  {
+   "needle": "cosqa_q20257",
+   "rank": 53
+  },
+  {
+   "needle": "cosqa_q20258",
+   "rank": 1861
+  },
+  {
+   "needle": "cosqa_q20259",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20260",
+   "rank": 22
+  },
+  {
+   "needle": "cosqa_q20261",
+   "rank": 23
+  },
+  {
+   "needle": "cosqa_q20262",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20263",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20264",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20265",
+   "rank": 106
+  },
+  {
+   "needle": "cosqa_q20266",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20267",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20268",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20269",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20270",
+   "rank": 32
+  },
+  {
+   "needle": "cosqa_q20271",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20272",
+   "rank": 11
+  },
+  {
+   "needle": "cosqa_q20273",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20274",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20275",
+   "rank": 21
+  },
+  {
+   "needle": "cosqa_q20276",
+   "rank": 25
+  },
+  {
+   "needle": "cosqa_q20277",
+   "rank": 50
+  },
+  {
+   "needle": "cosqa_q20278",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20279",
+   "rank": 50
+  },
+  {
+   "needle": "cosqa_q20280",
+   "rank": 500
+  },
+  {
+   "needle": "cosqa_q20281",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20282",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20283",
+   "rank": 456
+  },
+  {
+   "needle": "cosqa_q20284",
+   "rank": 78
+  },
+  {
+   "needle": "cosqa_q20285",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20286",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20287",
+   "rank": 25
+  },
+  {
+   "needle": "cosqa_q20288",
+   "rank": 46
+  },
+  {
+   "needle": "cosqa_q20289",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20290",
+   "rank": 31
+  },
+  {
+   "needle": "cosqa_q20291",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20292",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20293",
+   "rank": 10
+  },
+  {
+   "needle": "cosqa_q20294",
+   "rank": 261
+  },
+  {
+   "needle": "cosqa_q20295",
+   "rank": 38
+  },
+  {
+   "needle": "cosqa_q20296",
+   "rank": 19
+  },
+  {
+   "needle": "cosqa_q20297",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20298",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20299",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20300",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20301",
+   "rank": 419
+  },
+  {
+   "needle": "cosqa_q20302",
+   "rank": 141
+  },
+  {
+   "needle": "cosqa_q20303",
+   "rank": 59
+  },
+  {
+   "needle": "cosqa_q20304",
+   "rank": 15
+  },
+  {
+   "needle": "cosqa_q20305",
+   "rank": 106
+  },
+  {
+   "needle": "cosqa_q20306",
+   "rank": 234
+  },
+  {
+   "needle": "cosqa_q20307",
+   "rank": 345
+  },
+  {
+   "needle": "cosqa_q20308",
+   "rank": 16
+  },
+  {
+   "needle": "cosqa_q20309",
+   "rank": 51
+  },
+  {
+   "needle": "cosqa_q20310",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20311",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20312",
+   "rank": 146
+  },
+  {
+   "needle": "cosqa_q20313",
+   "rank": 152
+  },
+  {
+   "needle": "cosqa_q20314",
+   "rank": 162
+  },
+  {
+   "needle": "cosqa_q20315",
+   "rank": 171
+  },
+  {
+   "needle": "cosqa_q20316",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20317",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20318",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20319",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20320",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20321",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20322",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20323",
+   "rank": 176
+  },
+  {
+   "needle": "cosqa_q20324",
+   "rank": 556
+  },
+  {
+   "needle": "cosqa_q20325",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20326",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20327",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20328",
+   "rank": 312
+  },
+  {
+   "needle": "cosqa_q20329",
+   "rank": 180
+  },
+  {
+   "needle": "cosqa_q20330",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20331",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20332",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20333",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20334",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20335",
+   "rank": 214
+  },
+  {
+   "needle": "cosqa_q20336",
+   "rank": 191
+  },
+  {
+   "needle": "cosqa_q20337",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20338",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20339",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20340",
+   "rank": 13
+  },
+  {
+   "needle": "cosqa_q20341",
+   "rank": 301
+  },
+  {
+   "needle": "cosqa_q20342",
+   "rank": 30
+  },
+  {
+   "needle": "cosqa_q20343",
+   "rank": 63
+  },
+  {
+   "needle": "cosqa_q20344",
+   "rank": 1947
+  },
+  {
+   "needle": "cosqa_q20345",
+   "rank": 38
+  },
+  {
+   "needle": "cosqa_q20346",
+   "rank": 14
+  },
+  {
+   "needle": "cosqa_q20347",
+   "rank": 845
+  },
+  {
+   "needle": "cosqa_q20348",
+   "rank": 18
+  },
+  {
+   "needle": "cosqa_q20349",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20350",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20351",
+   "rank": 455
+  },
+  {
+   "needle": "cosqa_q20352",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20353",
+   "rank": 19
+  },
+  {
+   "needle": "cosqa_q20354",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20355",
+   "rank": 160
+  },
+  {
+   "needle": "cosqa_q20356",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20357",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20358",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20359",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20360",
+   "rank": 238
+  },
+  {
+   "needle": "cosqa_q20361",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20362",
+   "rank": 13
+  },
+  {
+   "needle": "cosqa_q20363",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20364",
+   "rank": 723
+  },
+  {
+   "needle": "cosqa_q20365",
+   "rank": 50
+  },
+  {
+   "needle": "cosqa_q20366",
+   "rank": 473
+  },
+  {
+   "needle": "cosqa_q20367",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20368",
+   "rank": 4443
+  },
+  {
+   "needle": "cosqa_q20369",
+   "rank": 39
+  },
+  {
+   "needle": "cosqa_q20370",
+   "rank": 10
+  },
+  {
+   "needle": "cosqa_q20371",
+   "rank": 22
+  },
+  {
+   "needle": "cosqa_q20372",
+   "rank": 28
+  },
+  {
+   "needle": "cosqa_q20373",
+   "rank": 53
+  },
+  {
+   "needle": "cosqa_q20374",
+   "rank": 16
+  },
+  {
+   "needle": "cosqa_q20375",
+   "rank": 276
+  },
+  {
+   "needle": "cosqa_q20376",
+   "rank": 18
+  },
+  {
+   "needle": "cosqa_q20377",
+   "rank": 15
+  },
+  {
+   "needle": "cosqa_q20378",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20379",
+   "rank": 33
+  },
+  {
+   "needle": "cosqa_q20380",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20381",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20382",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20383",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20384",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20385",
+   "rank": 36
+  },
+  {
+   "needle": "cosqa_q20386",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20387",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20388",
+   "rank": 297
+  },
+  {
+   "needle": "cosqa_q20389",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20390",
+   "rank": 39
+  },
+  {
+   "needle": "cosqa_q20391",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20392",
+   "rank": 7
+  },
+  {
+   "needle": "cosqa_q20393",
+   "rank": 1924
+  },
+  {
+   "needle": "cosqa_q20394",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20395",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20396",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20397",
+   "rank": 22
+  },
+  {
+   "needle": "cosqa_q20398",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20399",
+   "rank": 605
+  },
+  {
+   "needle": "cosqa_q20400",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20401",
+   "rank": 1068
+  },
+  {
+   "needle": "cosqa_q20402",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20403",
+   "rank": 180
+  },
+  {
+   "needle": "cosqa_q20404",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20405",
+   "rank": 170
+  },
+  {
+   "needle": "cosqa_q20406",
+   "rank": 40
+  },
+  {
+   "needle": "cosqa_q20407",
+   "rank": 892
+  },
+  {
+   "needle": "cosqa_q20408",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20409",
+   "rank": 27
+  },
+  {
+   "needle": "cosqa_q20410",
+   "rank": 241
+  },
+  {
+   "needle": "cosqa_q20411",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20412",
+   "rank": 135
+  },
+  {
+   "needle": "cosqa_q20413",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20414",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20415",
+   "rank": 33
+  },
+  {
+   "needle": "cosqa_q20416",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20417",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20418",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20419",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20420",
+   "rank": 301
+  },
+  {
+   "needle": "cosqa_q20421",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20422",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20423",
+   "rank": 132
+  },
+  {
+   "needle": "cosqa_q20424",
+   "rank": 24
+  },
+  {
+   "needle": "cosqa_q20425",
+   "rank": 460
+  },
+  {
+   "needle": "cosqa_q20426",
+   "rank": 12
+  },
+  {
+   "needle": "cosqa_q20427",
+   "rank": 16
+  },
+  {
+   "needle": "cosqa_q20428",
+   "rank": 367
+  },
+  {
+   "needle": "cosqa_q20429",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20430",
+   "rank": 2453
+  },
+  {
+   "needle": "cosqa_q20431",
+   "rank": 514
+  },
+  {
+   "needle": "cosqa_q20432",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20433",
+   "rank": 25
+  },
+  {
+   "needle": "cosqa_q20434",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20435",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20436",
+   "rank": 17
+  },
+  {
+   "needle": "cosqa_q20437",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20438",
+   "rank": 41
+  },
+  {
+   "needle": "cosqa_q20439",
+   "rank": 46
+  },
+  {
+   "needle": "cosqa_q20440",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20441",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20442",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20443",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20444",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20445",
+   "rank": 14
+  },
+  {
+   "needle": "cosqa_q20446",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20447",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20448",
+   "rank": 264
+  },
+  {
+   "needle": "cosqa_q20449",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20450",
+   "rank": 87
+  },
+  {
+   "needle": "cosqa_q20451",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20452",
+   "rank": 22
+  },
+  {
+   "needle": "cosqa_q20453",
+   "rank": 7
+  },
+  {
+   "needle": "cosqa_q20454",
+   "rank": 234
+  },
+  {
+   "needle": "cosqa_q20455",
+   "rank": 199
+  },
+  {
+   "needle": "cosqa_q20456",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20457",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20458",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20459",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20460",
+   "rank": 38
+  },
+  {
+   "needle": "cosqa_q20461",
+   "rank": 16
+  },
+  {
+   "needle": "cosqa_q20462",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20463",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20464",
+   "rank": 53
+  },
+  {
+   "needle": "cosqa_q20465",
+   "rank": 161
+  },
+  {
+   "needle": "cosqa_q20466",
+   "rank": 279
+  },
+  {
+   "needle": "cosqa_q20467",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20468",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20469",
+   "rank": 36
+  },
+  {
+   "needle": "cosqa_q20470",
+   "rank": 267
+  },
+  {
+   "needle": "cosqa_q20471",
+   "rank": 53
+  },
+  {
+   "needle": "cosqa_q20472",
+   "rank": 270
+  },
+  {
+   "needle": "cosqa_q20473",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20474",
+   "rank": 608
+  },
+  {
+   "needle": "cosqa_q20475",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20476",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20477",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20478",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20479",
+   "rank": 1396
+  },
+  {
+   "needle": "cosqa_q20480",
+   "rank": 9
+  },
+  {
+   "needle": "cosqa_q20481",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20482",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20483",
+   "rank": 40
+  },
+  {
+   "needle": "cosqa_q20484",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20485",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20486",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20487",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20488",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20489",
+   "rank": 1670
+  },
+  {
+   "needle": "cosqa_q20490",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20491",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20492",
+   "rank": 2618
+  },
+  {
+   "needle": "cosqa_q20493",
+   "rank": 86
+  },
+  {
+   "needle": "cosqa_q20494",
+   "rank": 52
+  },
+  {
+   "needle": "cosqa_q20495",
+   "rank": 944
+  },
+  {
+   "needle": "cosqa_q20496",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20497",
+   "rank": 3824
+  },
+  {
+   "needle": "cosqa_q20498",
+   "rank": 10
+  },
+  {
+   "needle": "cosqa_q20499",
+   "rank": 19
+  },
+  {
+   "needle": "cosqa_q20500",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20501",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20502",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20503",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20504",
+   "rank": 234
+  },
+  {
+   "needle": "cosqa_q20505",
+   "rank": 472
+  },
+  {
+   "needle": "cosqa_q20506",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20507",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20508",
+   "rank": 217
+  },
+  {
+   "needle": "cosqa_q20509",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20510",
+   "rank": 14
+  },
+  {
+   "needle": "cosqa_q20511",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20512",
+   "rank": 54
+  },
+  {
+   "needle": "cosqa_q20513",
+   "rank": 37
+  },
+  {
+   "needle": "cosqa_q20514",
+   "rank": 42
+  },
+  {
+   "needle": "cosqa_q20515",
+   "rank": 93
+  },
+  {
+   "needle": "cosqa_q20516",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20517",
+   "rank": 274
+  },
+  {
+   "needle": "cosqa_q20518",
+   "rank": 12
+  },
+  {
+   "needle": "cosqa_q20519",
+   "rank": 353
+  },
+  {
+   "needle": "cosqa_q20520",
+   "rank": 40
+  },
+  {
+   "needle": "cosqa_q20521",
+   "rank": 96
+  },
+  {
+   "needle": "cosqa_q20522",
+   "rank": 247
+  },
+  {
+   "needle": "cosqa_q20523",
+   "rank": 33
+  },
+  {
+   "needle": "cosqa_q20524",
+   "rank": 327
+  },
+  {
+   "needle": "cosqa_q20525",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20526",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20527",
+   "rank": 11
+  },
+  {
+   "needle": "cosqa_q20528",
+   "rank": 23
+  },
+  {
+   "needle": "cosqa_q20529",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20530",
+   "rank": 26
+  },
+  {
+   "needle": "cosqa_q20531",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20532",
+   "rank": 12
+  },
+  {
+   "needle": "cosqa_q20533",
+   "rank": 5
+  },
+  {
+   "needle": "cosqa_q20534",
+   "rank": 203
+  },
+  {
+   "needle": "cosqa_q20535",
+   "rank": 14
+  },
+  {
+   "needle": "cosqa_q20536",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20537",
+   "rank": 27
+  },
+  {
+   "needle": "cosqa_q20538",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20539",
+   "rank": 414
+  },
+  {
+   "needle": "cosqa_q20540",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20541",
+   "rank": 148
+  },
+  {
+   "needle": "cosqa_q20542",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20543",
+   "rank": 2988
+  },
+  {
+   "needle": "cosqa_q20544",
+   "rank": 38
+  },
+  {
+   "needle": "cosqa_q20545",
+   "rank": 7
+  },
+  {
+   "needle": "cosqa_q20546",
+   "rank": 16
+  },
+  {
+   "needle": "cosqa_q20547",
+   "rank": 25
+  },
+  {
+   "needle": "cosqa_q20548",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20549",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20550",
+   "rank": 816
+  },
+  {
+   "needle": "cosqa_q20551",
+   "rank": 8
+  },
+  {
+   "needle": "cosqa_q20552",
+   "rank": 20
+  },
+  {
+   "needle": "cosqa_q20553",
+   "rank": 970
+  },
+  {
+   "needle": "cosqa_q20554",
+   "rank": 15
+  },
+  {
+   "needle": "cosqa_q20555",
+   "rank": 18
+  },
+  {
+   "needle": "cosqa_q20556",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20557",
+   "rank": 44
+  },
+  {
+   "needle": "cosqa_q20558",
+   "rank": 1169
+  },
+  {
+   "needle": "cosqa_q20559",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20560",
+   "rank": 12
+  },
+  {
+   "needle": "cosqa_q20561",
+   "rank": 16
+  },
+  {
+   "needle": "cosqa_q20562",
+   "rank": 3878
+  },
+  {
+   "needle": "cosqa_q20563",
+   "rank": 12
+  },
+  {
+   "needle": "cosqa_q20564",
+   "rank": 22
+  },
+  {
+   "needle": "cosqa_q20565",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20566",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20567",
+   "rank": 138
+  },
+  {
+   "needle": "cosqa_q20568",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20569",
+   "rank": 32
+  },
+  {
+   "needle": "cosqa_q20570",
+   "rank": 48
+  },
+  {
+   "needle": "cosqa_q20571",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20572",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20573",
+   "rank": 2
+  },
+  {
+   "needle": "cosqa_q20574",
+   "rank": 37
+  },
+  {
+   "needle": "cosqa_q20575",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20576",
+   "rank": 31
+  },
+  {
+   "needle": "cosqa_q20577",
+   "rank": 3
+  },
+  {
+   "needle": "cosqa_q20578",
+   "rank": 923
+  },
+  {
+   "needle": "cosqa_q20579",
+   "rank": 385
+  },
+  {
+   "needle": "cosqa_q20580",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20581",
+   "rank": 313
+  },
+  {
+   "needle": "cosqa_q20582",
+   "rank": 69
+  },
+  {
+   "needle": "cosqa_q20583",
+   "rank": 2504
+  },
+  {
+   "needle": "cosqa_q20584",
+   "rank": 11
+  },
+  {
+   "needle": "cosqa_q20585",
+   "rank": 10
+  },
+  {
+   "needle": "cosqa_q20586",
+   "rank": 34
+  },
+  {
+   "needle": "cosqa_q20587",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20588",
+   "rank": 12
+  },
+  {
+   "needle": "cosqa_q20589",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20590",
+   "rank": 6
+  },
+  {
+   "needle": "cosqa_q20591",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20592",
+   "rank": 67
+  },
+  {
+   "needle": "cosqa_q20593",
+   "rank": null
+  },
+  {
+   "needle": "cosqa_q20594",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20595",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20596",
+   "rank": 23
+  },
+  {
+   "needle": "cosqa_q20597",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20598",
+   "rank": 4
+  },
+  {
+   "needle": "cosqa_q20599",
+   "rank": 47
+  },
+  {
+   "needle": "cosqa_q20600",
+   "rank": 141
+  },
+  {
+   "needle": "cosqa_q20601",
+   "rank": 882
+  },
+  {
+   "needle": "cosqa_q20602",
+   "rank": 1
+  },
+  {
+   "needle": "cosqa_q20603",
+   "rank": 307
+  },
+  {
+   "needle": "cosqa_q20604",
+   "rank": 4
+  }
+ ]
+}

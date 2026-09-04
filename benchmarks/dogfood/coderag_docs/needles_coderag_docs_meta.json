@@ -1,0 +1,16 @@
+{
+ "source": "hf:code-rag-bench/library-documentation + ds1000 + odex (CC-BY-SA-4.0)",
+ "corpus_root": "F:\\Projects\\coderag\\corpus_docs",
+ "docs": 34003,
+ "docs_size_gated_by_builder": 3043,
+ "n_needles": 714,
+ "by_type": {
+  "coderag_ds1000": 513,
+  "coderag_odex": 201
+ },
+ "query": "ds1000 = prompt verbatim; odex = intent (NL) verbatim; only rows with canonical docs",
+ "drops": {
+  "no_canonical_docs": 725,
+  "gold_doc_absent": []
+ }
+}

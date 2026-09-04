@@ -1,0 +1,62 @@
+{
+  "config": "java_cff",
+  "cymatix_config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\cymatix-tuning-progression-1d3a3c\\docs\\benchmarks\\cymatix_probe_lexical.toml",
+  "timestamp": "20260904T182821Z",
+  "arm": "cymatix_global",
+  "corpus_size": 3832,
+  "ingest_errors": 0,
+  "cymatix_query_errors": [],
+  "levels": {
+    "easy": {
+      "n": 200,
+      "corpus": 3832,
+      "cymatix_errors": 0,
+      "cymatix_B_acc@1": 0.2,
+      "cymatix_B_acc@3": 0.47,
+      "cymatix_C_recall@1": 0.095,
+      "cymatix_C_recall@3": 0.175,
+      "cymatix_C_recall@5": 0.23,
+      "cymatix_C_recall@10": 0.32,
+      "bm25_B_acc@1": 0.16,
+      "bm25_B_acc@3": 0.455,
+      "bm25_C_recall@1": 0.105,
+      "bm25_C_recall@3": 0.25,
+      "bm25_C_recall@5": 0.29,
+      "bm25_C_recall@10": 0.38
+    },
+    "hard": {
+      "n": 200,
+      "corpus": 3832,
+      "cymatix_errors": 0,
+      "cymatix_B_acc@1": 0.075,
+      "cymatix_B_acc@3": 0.175,
+      "cymatix_B_acc@5": 0.33,
+      "cymatix_C_recall@1": 0.045,
+      "cymatix_C_recall@3": 0.105,
+      "cymatix_C_recall@5": 0.175,
+      "cymatix_C_recall@10": 0.33,
+      "bm25_B_acc@1": 0.065,
+      "bm25_B_acc@3": 0.19,
+      "bm25_B_acc@5": 0.355,
+      "bm25_C_recall@1": 0.045,
+      "bm25_C_recall@3": 0.13,
+      "bm25_C_recall@5": 0.225,
+      "bm25_C_recall@10": 0.355
+    }
+  },
+  "sweep": {
+    "stamp": "2026-09-04",
+    "runner": "benchmarks/dogfood/sweeps/run_sweep_beta.py",
+    "lane": "code",
+    "beta_head": "21606a07b7d6604f5229bd8bf7def5d84c2d6540",
+    "cymatix_config_sha256": "2c06d5b1c0fcdbd0f2d71a70cd6c9fe2a996ea5d865656bd186cf571ef3508c4",
+    "PYTHONHASHSEED": "0",
+    "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+    "sqlite": "3.50.4",
+    "genome_bytes": 68792320,
+    "wall_s": 1134.2,
+    "dumps": "benchmarks/results/repobench_r_<config>_<level>_n200.json (2026-06-13 per-example dumps, copied from the main checkout)",
+    "reference": "benchmarks/results/repobench_r_<config>_global_20260613T17*.json (helix 0.6.3-era frozen run, main checkout, gitignored)",
+    "note": "fresh ingest of the deduped candidate union under the named config (shipped = beta cymatix.toml incl. entity_autolink_hub_cutoff 200 at ingest; legacy_probe = additive-fusion lexical probe template for June-2026 comparability). B = pool-rank acc@k vs the foils, C = global-rank recall@k. Matched floored-IDF BM25 foil inside."
+  }
+}

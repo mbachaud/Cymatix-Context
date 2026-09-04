@@ -1,0 +1,4866 @@
+{
+ "date": "2026-09-04T17:52:51.423755+00:00",
+ "db": "F:/tmp/cosqa_bed/cosqa.db",
+ "corpus_root": "F:\\Projects\\cosqa\\corpus",
+ "needles_total": 500,
+ "needles_resolvable": 500,
+ "dropped": [],
+ "gold_files_wanted": 500,
+ "gold_files_size_gated": 0,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 426,
+ "per_needle": {
+  "cosqa_q20105": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20106": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20044.py"
+   ]
+  },
+  "cosqa_q20107": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20108": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19605.py"
+   ]
+  },
+  "cosqa_q20109": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20110": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d16089.py"
+   ]
+  },
+  "cosqa_q20111": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20112": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9559.py"
+   ]
+  },
+  "cosqa_q20113": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19460.py"
+   ]
+  },
+  "cosqa_q20114": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8325.py"
+   ]
+  },
+  "cosqa_q20115": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9681.py"
+   ]
+  },
+  "cosqa_q20116": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2813.py"
+   ]
+  },
+  "cosqa_q20117": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d10544.py"
+   ]
+  },
+  "cosqa_q20118": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18271.py"
+   ]
+  },
+  "cosqa_q20119": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20120": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d702.py"
+   ]
+  },
+  "cosqa_q20121": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9697.py"
+   ]
+  },
+  "cosqa_q20122": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9111.py"
+   ]
+  },
+  "cosqa_q20123": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8569.py"
+   ]
+  },
+  "cosqa_q20124": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4287.py"
+   ]
+  },
+  "cosqa_q20125": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9112.py"
+   ]
+  },
+  "cosqa_q20126": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19870.py"
+   ]
+  },
+  "cosqa_q20127": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19868.py"
+   ]
+  },
+  "cosqa_q20128": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d15889.py"
+   ]
+  },
+  "cosqa_q20129": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8020.py"
+   ]
+  },
+  "cosqa_q20130": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20131": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9397.py"
+   ]
+  },
+  "cosqa_q20132": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19605.py"
+   ]
+  },
+  "cosqa_q20133": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8489.py"
+   ]
+  },
+  "cosqa_q20134": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9007.py"
+   ]
+  },
+  "cosqa_q20135": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20136": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d87.py"
+   ]
+  },
+  "cosqa_q20137": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20138": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20139": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6075.py"
+   ]
+  },
+  "cosqa_q20140": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19800.py"
+   ]
+  },
+  "cosqa_q20141": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20142": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20143": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2791.py"
+   ]
+  },
+  "cosqa_q20144": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7477.py"
+   ]
+  },
+  "cosqa_q20145": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6931.py"
+   ]
+  },
+  "cosqa_q20146": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d715.py"
+   ]
+  },
+  "cosqa_q20147": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20148": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9253.py"
+   ]
+  },
+  "cosqa_q20149": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5205.py"
+   ]
+  },
+  "cosqa_q20150": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7623.py"
+   ]
+  },
+  "cosqa_q20151": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19501.py"
+   ]
+  },
+  "cosqa_q20152": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9885.py"
+   ]
+  },
+  "cosqa_q20153": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20154": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9004.py"
+   ]
+  },
+  "cosqa_q20155": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19870.py"
+   ]
+  },
+  "cosqa_q20156": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9275.py"
+   ]
+  },
+  "cosqa_q20157": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6354.py"
+   ]
+  },
+  "cosqa_q20158": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19872.py"
+   ]
+  },
+  "cosqa_q20159": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19461.py"
+   ]
+  },
+  "cosqa_q20160": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9230.py"
+   ]
+  },
+  "cosqa_q20161": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20162": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19348.py"
+   ]
+  },
+  "cosqa_q20163": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20033.py"
+   ]
+  },
+  "cosqa_q20164": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19798.py"
+   ]
+  },
+  "cosqa_q20165": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19572.py"
+   ]
+  },
+  "cosqa_q20166": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8617.py"
+   ]
+  },
+  "cosqa_q20167": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20168": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20169": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6352.py"
+   ]
+  },
+  "cosqa_q20170": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20171": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20172": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19931.py"
+   ]
+  },
+  "cosqa_q20173": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20174": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9730.py"
+   ]
+  },
+  "cosqa_q20175": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9235.py"
+   ]
+  },
+  "cosqa_q20176": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5180.py"
+   ]
+  },
+  "cosqa_q20177": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19690.py"
+   ]
+  },
+  "cosqa_q20178": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8839.py"
+   ]
+  },
+  "cosqa_q20179": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20180": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19873.py"
+   ]
+  },
+  "cosqa_q20181": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20096.py"
+   ]
+  },
+  "cosqa_q20182": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8576.py"
+   ]
+  },
+  "cosqa_q20183": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19837.py"
+   ]
+  },
+  "cosqa_q20184": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7729.py"
+   ]
+  },
+  "cosqa_q20185": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19572.py"
+   ]
+  },
+  "cosqa_q20186": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d11311.py"
+   ]
+  },
+  "cosqa_q20187": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19713.py"
+   ]
+  },
+  "cosqa_q20188": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d982.py"
+   ]
+  },
+  "cosqa_q20189": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8636.py"
+   ]
+  },
+  "cosqa_q20190": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8934.py"
+   ]
+  },
+  "cosqa_q20191": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8743.py"
+   ]
+  },
+  "cosqa_q20192": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d11864.py"
+   ]
+  },
+  "cosqa_q20193": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2813.py"
+   ]
+  },
+  "cosqa_q20194": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6591.py"
+   ]
+  },
+  "cosqa_q20195": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8742.py"
+   ]
+  },
+  "cosqa_q20196": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2941.py"
+   ]
+  },
+  "cosqa_q20197": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d12922.py"
+   ]
+  },
+  "cosqa_q20198": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d911.py"
+   ]
+  },
+  "cosqa_q20199": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d10362.py"
+   ]
+  },
+  "cosqa_q20200": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3999.py"
+   ]
+  },
+  "cosqa_q20201": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d913.py"
+   ]
+  },
+  "cosqa_q20202": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9768.py"
+   ]
+  },
+  "cosqa_q20203": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20204": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20205": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2714.py"
+   ]
+  },
+  "cosqa_q20206": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6799.py"
+   ]
+  },
+  "cosqa_q20207": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19550.py"
+   ]
+  },
+  "cosqa_q20208": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20209": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19954.py"
+   ]
+  },
+  "cosqa_q20210": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20211": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d15686.py"
+   ]
+  },
+  "cosqa_q20212": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d11007.py"
+   ]
+  },
+  "cosqa_q20213": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d591.py"
+   ]
+  },
+  "cosqa_q20214": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9039.py"
+   ]
+  },
+  "cosqa_q20215": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9839.py"
+   ]
+  },
+  "cosqa_q20216": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20037.py"
+   ]
+  },
+  "cosqa_q20217": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20218": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20219": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d845.py"
+   ]
+  },
+  "cosqa_q20220": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19992.py"
+   ]
+  },
+  "cosqa_q20221": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5731.py"
+   ]
+  },
+  "cosqa_q20222": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9874.py"
+   ]
+  },
+  "cosqa_q20223": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19993.py"
+   ]
+  },
+  "cosqa_q20224": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20225": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20226": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4248.py"
+   ]
+  },
+  "cosqa_q20227": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3618.py"
+   ]
+  },
+  "cosqa_q20228": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19899.py"
+   ]
+  },
+  "cosqa_q20229": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9012.py"
+   ]
+  },
+  "cosqa_q20230": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6752.py"
+   ]
+  },
+  "cosqa_q20231": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19573.py"
+   ]
+  },
+  "cosqa_q20232": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20233": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8774.py"
+   ]
+  },
+  "cosqa_q20234": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8713.py"
+   ]
+  },
+  "cosqa_q20235": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6843.py"
+   ]
+  },
+  "cosqa_q20236": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9934.py"
+   ]
+  },
+  "cosqa_q20237": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19563.py"
+   ]
+  },
+  "cosqa_q20238": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8111.py"
+   ]
+  },
+  "cosqa_q20239": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19622.py"
+   ]
+  },
+  "cosqa_q20240": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19413.py"
+   ]
+  },
+  "cosqa_q20241": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7396.py"
+   ]
+  },
+  "cosqa_q20242": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6684.py"
+   ]
+  },
+  "cosqa_q20243": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20244": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7617.py"
+   ]
+  },
+  "cosqa_q20245": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4738.py"
+   ]
+  },
+  "cosqa_q20246": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7686.py"
+   ]
+  },
+  "cosqa_q20247": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9463.py"
+   ]
+  },
+  "cosqa_q20248": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3934.py"
+   ]
+  },
+  "cosqa_q20249": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2941.py"
+   ]
+  },
+  "cosqa_q20250": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9137.py"
+   ]
+  },
+  "cosqa_q20251": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19821.py"
+   ]
+  },
+  "cosqa_q20252": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19731.py"
+   ]
+  },
+  "cosqa_q20253": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8883.py"
+   ]
+  },
+  "cosqa_q20254": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20255": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9162.py"
+   ]
+  },
+  "cosqa_q20256": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2647.py"
+   ]
+  },
+  "cosqa_q20257": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3911.py"
+   ]
+  },
+  "cosqa_q20258": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20259": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19289.py"
+   ]
+  },
+  "cosqa_q20260": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19773.py"
+   ]
+  },
+  "cosqa_q20261": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20024.py"
+   ]
+  },
+  "cosqa_q20262": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9397.py"
+   ]
+  },
+  "cosqa_q20263": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9524.py"
+   ]
+  },
+  "cosqa_q20264": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18780.py"
+   ]
+  },
+  "cosqa_q20265": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d94.py"
+   ]
+  },
+  "cosqa_q20266": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20267": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19628.py"
+   ]
+  },
+  "cosqa_q20268": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d17848.py"
+   ]
+  },
+  "cosqa_q20269": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19277.py"
+   ]
+  },
+  "cosqa_q20270": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19945.py"
+   ]
+  },
+  "cosqa_q20271": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19521.py"
+   ]
+  },
+  "cosqa_q20272": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8584.py"
+   ]
+  },
+  "cosqa_q20273": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8266.py"
+   ]
+  },
+  "cosqa_q20274": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19240.py"
+   ]
+  },
+  "cosqa_q20275": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8527.py"
+   ]
+  },
+  "cosqa_q20276": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5744.py"
+   ]
+  },
+  "cosqa_q20277": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7070.py"
+   ]
+  },
+  "cosqa_q20278": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8007.py"
+   ]
+  },
+  "cosqa_q20279": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8770.py"
+   ]
+  },
+  "cosqa_q20280": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d99.py"
+   ]
+  },
+  "cosqa_q20281": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9695.py"
+   ]
+  },
+  "cosqa_q20282": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20283": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20284": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8783.py"
+   ]
+  },
+  "cosqa_q20285": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19407.py"
+   ]
+  },
+  "cosqa_q20286": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20287": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18293.py"
+   ]
+  },
+  "cosqa_q20288": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d13558.py"
+   ]
+  },
+  "cosqa_q20289": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20290": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4859.py"
+   ]
+  },
+  "cosqa_q20291": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5389.py"
+   ]
+  },
+  "cosqa_q20292": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d11580.py"
+   ]
+  },
+  "cosqa_q20293": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9603.py"
+   ]
+  },
+  "cosqa_q20294": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8224.py"
+   ]
+  },
+  "cosqa_q20295": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19863.py"
+   ]
+  },
+  "cosqa_q20296": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8655.py"
+   ]
+  },
+  "cosqa_q20297": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d818.py"
+   ]
+  },
+  "cosqa_q20298": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8163.py"
+   ]
+  },
+  "cosqa_q20299": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8984.py"
+   ]
+  },
+  "cosqa_q20300": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18750.py"
+   ]
+  },
+  "cosqa_q20301": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7182.py"
+   ]
+  },
+  "cosqa_q20302": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20086.py"
+   ]
+  },
+  "cosqa_q20303": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7586.py"
+   ]
+  },
+  "cosqa_q20304": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20075.py"
+   ]
+  },
+  "cosqa_q20305": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20306": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7589.py"
+   ]
+  },
+  "cosqa_q20307": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19553.py"
+   ]
+  },
+  "cosqa_q20308": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6327.py"
+   ]
+  },
+  "cosqa_q20309": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19457.py"
+   ]
+  },
+  "cosqa_q20310": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20311": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8521.py"
+   ]
+  },
+  "cosqa_q20312": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9801.py"
+   ]
+  },
+  "cosqa_q20313": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19515.py"
+   ]
+  },
+  "cosqa_q20314": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8144.py"
+   ]
+  },
+  "cosqa_q20315": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8144.py"
+   ]
+  },
+  "cosqa_q20316": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8252.py"
+   ]
+  },
+  "cosqa_q20317": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9994.py"
+   ]
+  },
+  "cosqa_q20318": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18015.py"
+   ]
+  },
+  "cosqa_q20319": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6703.py"
+   ]
+  },
+  "cosqa_q20320": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6398.py"
+   ]
+  },
+  "cosqa_q20321": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9720.py"
+   ]
+  },
+  "cosqa_q20322": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5642.py"
+   ]
+  },
+  "cosqa_q20323": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8698.py"
+   ]
+  },
+  "cosqa_q20324": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20325": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20326": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20327": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19832.py"
+   ]
+  },
+  "cosqa_q20328": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d739.py"
+   ]
+  },
+  "cosqa_q20329": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19254.py"
+   ]
+  },
+  "cosqa_q20330": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19238.py"
+   ]
+  },
+  "cosqa_q20331": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d16089.py"
+   ]
+  },
+  "cosqa_q20332": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5099.py"
+   ]
+  },
+  "cosqa_q20333": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18879.py"
+   ]
+  },
+  "cosqa_q20334": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d958.py"
+   ]
+  },
+  "cosqa_q20335": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19994.py"
+   ]
+  },
+  "cosqa_q20336": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6056.py"
+   ]
+  },
+  "cosqa_q20337": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20338": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19632.py"
+   ]
+  },
+  "cosqa_q20339": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5422.py"
+   ]
+  },
+  "cosqa_q20340": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9954.py"
+   ]
+  },
+  "cosqa_q20341": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18379.py"
+   ]
+  },
+  "cosqa_q20342": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19995.py"
+   ]
+  },
+  "cosqa_q20343": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3984.py"
+   ]
+  },
+  "cosqa_q20344": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3100.py"
+   ]
+  },
+  "cosqa_q20345": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19390.py"
+   ]
+  },
+  "cosqa_q20346": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20347": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8863.py"
+   ]
+  },
+  "cosqa_q20348": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19650.py"
+   ]
+  },
+  "cosqa_q20349": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5682.py"
+   ]
+  },
+  "cosqa_q20350": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20023.py"
+   ]
+  },
+  "cosqa_q20351": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20352": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20353": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19590.py"
+   ]
+  },
+  "cosqa_q20354": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19992.py"
+   ]
+  },
+  "cosqa_q20355": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d453.py"
+   ]
+  },
+  "cosqa_q20356": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7809.py"
+   ]
+  },
+  "cosqa_q20357": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9899.py"
+   ]
+  },
+  "cosqa_q20358": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20359": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9484.py"
+   ]
+  },
+  "cosqa_q20360": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9844.py"
+   ]
+  },
+  "cosqa_q20361": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19285.py"
+   ]
+  },
+  "cosqa_q20362": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20363": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20364": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d16527.py"
+   ]
+  },
+  "cosqa_q20365": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d15347.py"
+   ]
+  },
+  "cosqa_q20366": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19622.py"
+   ]
+  },
+  "cosqa_q20367": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2392.py"
+   ]
+  },
+  "cosqa_q20368": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6039.py"
+   ]
+  },
+  "cosqa_q20369": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20074.py"
+   ]
+  },
+  "cosqa_q20370": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19570.py"
+   ]
+  },
+  "cosqa_q20371": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d982.py"
+   ]
+  },
+  "cosqa_q20372": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19551.py"
+   ]
+  },
+  "cosqa_q20373": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19900.py"
+   ]
+  },
+  "cosqa_q20374": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20375": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8635.py"
+   ]
+  },
+  "cosqa_q20376": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19820.py"
+   ]
+  },
+  "cosqa_q20377": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7465.py"
+   ]
+  },
+  "cosqa_q20378": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20379": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7487.py"
+   ]
+  },
+  "cosqa_q20380": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18911.py"
+   ]
+  },
+  "cosqa_q20381": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3827.py"
+   ]
+  },
+  "cosqa_q20382": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20383": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19468.py"
+   ]
+  },
+  "cosqa_q20384": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18896.py"
+   ]
+  },
+  "cosqa_q20385": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d701.py"
+   ]
+  },
+  "cosqa_q20386": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19276.py"
+   ]
+  },
+  "cosqa_q20387": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6843.py"
+   ]
+  },
+  "cosqa_q20388": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7709.py"
+   ]
+  },
+  "cosqa_q20389": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20390": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19825.py"
+   ]
+  },
+  "cosqa_q20391": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3784.py"
+   ]
+  },
+  "cosqa_q20392": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4775.py"
+   ]
+  },
+  "cosqa_q20393": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8200.py"
+   ]
+  },
+  "cosqa_q20394": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19501.py"
+   ]
+  },
+  "cosqa_q20395": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20396": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19712.py"
+   ]
+  },
+  "cosqa_q20397": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6102.py"
+   ]
+  },
+  "cosqa_q20398": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d750.py"
+   ]
+  },
+  "cosqa_q20399": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9888.py"
+   ]
+  },
+  "cosqa_q20400": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19575.py"
+   ]
+  },
+  "cosqa_q20401": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9241.py"
+   ]
+  },
+  "cosqa_q20402": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8457.py"
+   ]
+  },
+  "cosqa_q20403": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d641.py"
+   ]
+  },
+  "cosqa_q20404": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d13428.py"
+   ]
+  },
+  "cosqa_q20405": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7468.py"
+   ]
+  },
+  "cosqa_q20406": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19839.py"
+   ]
+  },
+  "cosqa_q20407": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20005.py"
+   ]
+  },
+  "cosqa_q20408": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d1601.py"
+   ]
+  },
+  "cosqa_q20409": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19872.py"
+   ]
+  },
+  "cosqa_q20410": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d959.py"
+   ]
+  },
+  "cosqa_q20411": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4731.py"
+   ]
+  },
+  "cosqa_q20412": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20015.py"
+   ]
+  },
+  "cosqa_q20413": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3807.py"
+   ]
+  },
+  "cosqa_q20414": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19970.py"
+   ]
+  },
+  "cosqa_q20415": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d783.py"
+   ]
+  },
+  "cosqa_q20416": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6570.py"
+   ]
+  },
+  "cosqa_q20417": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20418": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6865.py"
+   ]
+  },
+  "cosqa_q20419": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d564.py"
+   ]
+  },
+  "cosqa_q20420": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19689.py"
+   ]
+  },
+  "cosqa_q20421": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20422": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d807.py"
+   ]
+  },
+  "cosqa_q20423": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19777.py"
+   ]
+  },
+  "cosqa_q20424": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9993.py"
+   ]
+  },
+  "cosqa_q20425": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7720.py"
+   ]
+  },
+  "cosqa_q20426": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19801.py"
+   ]
+  },
+  "cosqa_q20427": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7981.py"
+   ]
+  },
+  "cosqa_q20428": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8644.py"
+   ]
+  },
+  "cosqa_q20429": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6565.py"
+   ]
+  },
+  "cosqa_q20430": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5967.py"
+   ]
+  },
+  "cosqa_q20431": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9182.py"
+   ]
+  },
+  "cosqa_q20432": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6883.py"
+   ]
+  },
+  "cosqa_q20433": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20041.py"
+   ]
+  },
+  "cosqa_q20434": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7910.py"
+   ]
+  },
+  "cosqa_q20435": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20436": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19688.py"
+   ]
+  },
+  "cosqa_q20437": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d611.py"
+   ]
+  },
+  "cosqa_q20438": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6113.py"
+   ]
+  },
+  "cosqa_q20439": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6591.py"
+   ]
+  },
+  "cosqa_q20440": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6588.py"
+   ]
+  },
+  "cosqa_q20441": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5825.py"
+   ]
+  },
+  "cosqa_q20442": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8616.py"
+   ]
+  },
+  "cosqa_q20443": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d584.py"
+   ]
+  },
+  "cosqa_q20444": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20445": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8077.py"
+   ]
+  },
+  "cosqa_q20446": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8904.py"
+   ]
+  },
+  "cosqa_q20447": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9947.py"
+   ]
+  },
+  "cosqa_q20448": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6227.py"
+   ]
+  },
+  "cosqa_q20449": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19967.py"
+   ]
+  },
+  "cosqa_q20450": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9881.py"
+   ]
+  },
+  "cosqa_q20451": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9290.py"
+   ]
+  },
+  "cosqa_q20452": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9052.py"
+   ]
+  },
+  "cosqa_q20453": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20454": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5033.py"
+   ]
+  },
+  "cosqa_q20455": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20034.py"
+   ]
+  },
+  "cosqa_q20456": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8516.py"
+   ]
+  },
+  "cosqa_q20457": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19517.py"
+   ]
+  },
+  "cosqa_q20458": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8723.py"
+   ]
+  },
+  "cosqa_q20459": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9778.py"
+   ]
+  },
+  "cosqa_q20460": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19675.py"
+   ]
+  },
+  "cosqa_q20461": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20462": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20463": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d2387.py"
+   ]
+  },
+  "cosqa_q20464": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5703.py"
+   ]
+  },
+  "cosqa_q20465": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9315.py"
+   ]
+  },
+  "cosqa_q20466": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8029.py"
+   ]
+  },
+  "cosqa_q20467": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5212.py"
+   ]
+  },
+  "cosqa_q20468": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3951.py"
+   ]
+  },
+  "cosqa_q20469": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19566.py"
+   ]
+  },
+  "cosqa_q20470": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d14657.py"
+   ]
+  },
+  "cosqa_q20471": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9022.py"
+   ]
+  },
+  "cosqa_q20472": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19087.py"
+   ]
+  },
+  "cosqa_q20473": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19536.py"
+   ]
+  },
+  "cosqa_q20474": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19874.py"
+   ]
+  },
+  "cosqa_q20475": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19564.py"
+   ]
+  },
+  "cosqa_q20476": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20477": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19633.py"
+   ]
+  },
+  "cosqa_q20478": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20479": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7121.py"
+   ]
+  },
+  "cosqa_q20480": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20481": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d15865.py"
+   ]
+  },
+  "cosqa_q20482": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8418.py"
+   ]
+  },
+  "cosqa_q20483": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9286.py"
+   ]
+  },
+  "cosqa_q20484": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6650.py"
+   ]
+  },
+  "cosqa_q20485": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9878.py"
+   ]
+  },
+  "cosqa_q20486": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7989.py"
+   ]
+  },
+  "cosqa_q20487": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8766.py"
+   ]
+  },
+  "cosqa_q20488": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d959.py"
+   ]
+  },
+  "cosqa_q20489": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d274.py"
+   ]
+  },
+  "cosqa_q20490": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20491": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d584.py"
+   ]
+  },
+  "cosqa_q20492": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7765.py"
+   ]
+  },
+  "cosqa_q20493": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19831.py"
+   ]
+  },
+  "cosqa_q20494": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19595.py"
+   ]
+  },
+  "cosqa_q20495": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19565.py"
+   ]
+  },
+  "cosqa_q20496": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7115.py"
+   ]
+  },
+  "cosqa_q20497": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19846.py"
+   ]
+  },
+  "cosqa_q20498": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7104.py"
+   ]
+  },
+  "cosqa_q20499": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19420.py"
+   ]
+  },
+  "cosqa_q20500": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6833.py"
+   ]
+  },
+  "cosqa_q20501": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6529.py"
+   ]
+  },
+  "cosqa_q20502": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6099.py"
+   ]
+  },
+  "cosqa_q20503": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7496.py"
+   ]
+  },
+  "cosqa_q20504": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d1288.py"
+   ]
+  },
+  "cosqa_q20505": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19763.py"
+   ]
+  },
+  "cosqa_q20506": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20507": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19983.py"
+   ]
+  },
+  "cosqa_q20508": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19786.py"
+   ]
+  },
+  "cosqa_q20509": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d14096.py"
+   ]
+  },
+  "cosqa_q20510": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19391.py"
+   ]
+  },
+  "cosqa_q20511": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6962.py"
+   ]
+  },
+  "cosqa_q20512": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18446.py"
+   ]
+  },
+  "cosqa_q20513": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9077.py"
+   ]
+  },
+  "cosqa_q20514": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19096.py"
+   ]
+  },
+  "cosqa_q20515": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9166.py"
+   ]
+  },
+  "cosqa_q20516": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20517": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9192.py"
+   ]
+  },
+  "cosqa_q20518": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7270.py"
+   ]
+  },
+  "cosqa_q20519": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20520": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19913.py"
+   ]
+  },
+  "cosqa_q20521": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19986.py"
+   ]
+  },
+  "cosqa_q20522": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20523": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8135.py"
+   ]
+  },
+  "cosqa_q20524": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7642.py"
+   ]
+  },
+  "cosqa_q20525": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7687.py"
+   ]
+  },
+  "cosqa_q20526": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7176.py"
+   ]
+  },
+  "cosqa_q20527": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3845.py"
+   ]
+  },
+  "cosqa_q20528": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20529": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6660.py"
+   ]
+  },
+  "cosqa_q20530": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9955.py"
+   ]
+  },
+  "cosqa_q20531": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19666.py"
+   ]
+  },
+  "cosqa_q20532": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9911.py"
+   ]
+  },
+  "cosqa_q20533": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7614.py"
+   ]
+  },
+  "cosqa_q20534": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8901.py"
+   ]
+  },
+  "cosqa_q20535": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19931.py"
+   ]
+  },
+  "cosqa_q20536": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3740.py"
+   ]
+  },
+  "cosqa_q20537": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19570.py"
+   ]
+  },
+  "cosqa_q20538": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19631.py"
+   ]
+  },
+  "cosqa_q20539": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d402.py"
+   ]
+  },
+  "cosqa_q20540": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19723.py"
+   ]
+  },
+  "cosqa_q20541": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8137.py"
+   ]
+  },
+  "cosqa_q20542": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9559.py"
+   ]
+  },
+  "cosqa_q20543": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20544": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9251.py"
+   ]
+  },
+  "cosqa_q20545": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9431.py"
+   ]
+  },
+  "cosqa_q20546": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3174.py"
+   ]
+  },
+  "cosqa_q20547": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4422.py"
+   ]
+  },
+  "cosqa_q20548": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20549": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7219.py"
+   ]
+  },
+  "cosqa_q20550": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9924.py"
+   ]
+  },
+  "cosqa_q20551": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19461.py"
+   ]
+  },
+  "cosqa_q20552": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20028.py"
+   ]
+  },
+  "cosqa_q20553": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8356.py"
+   ]
+  },
+  "cosqa_q20554": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7910.py"
+   ]
+  },
+  "cosqa_q20555": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6700.py"
+   ]
+  },
+  "cosqa_q20556": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7550.py"
+   ]
+  },
+  "cosqa_q20557": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5300.py"
+   ]
+  },
+  "cosqa_q20558": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19517.py"
+   ]
+  },
+  "cosqa_q20559": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19706.py"
+   ]
+  },
+  "cosqa_q20560": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8471.py"
+   ]
+  },
+  "cosqa_q20561": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8211.py"
+   ]
+  },
+  "cosqa_q20562": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d15232.py"
+   ]
+  },
+  "cosqa_q20563": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8843.py"
+   ]
+  },
+  "cosqa_q20564": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d1192.py"
+   ]
+  },
+  "cosqa_q20565": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6717.py"
+   ]
+  },
+  "cosqa_q20566": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8504.py"
+   ]
+  },
+  "cosqa_q20567": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d20061.py"
+   ]
+  },
+  "cosqa_q20568": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7571.py"
+   ]
+  },
+  "cosqa_q20569": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20570": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19603.py"
+   ]
+  },
+  "cosqa_q20571": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8584.py"
+   ]
+  },
+  "cosqa_q20572": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9222.py"
+   ]
+  },
+  "cosqa_q20573": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4997.py"
+   ]
+  },
+  "cosqa_q20574": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9355.py"
+   ]
+  },
+  "cosqa_q20575": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19123.py"
+   ]
+  },
+  "cosqa_q20576": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8320.py"
+   ]
+  },
+  "cosqa_q20577": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d795.py"
+   ]
+  },
+  "cosqa_q20578": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d418.py"
+   ]
+  },
+  "cosqa_q20579": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19954.py"
+   ]
+  },
+  "cosqa_q20580": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19696.py"
+   ]
+  },
+  "cosqa_q20581": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8709.py"
+   ]
+  },
+  "cosqa_q20582": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d4419.py"
+   ]
+  },
+  "cosqa_q20583": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d12044.py"
+   ]
+  },
+  "cosqa_q20584": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19789.py"
+   ]
+  },
+  "cosqa_q20585": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3989.py"
+   ]
+  },
+  "cosqa_q20586": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d14364.py"
+   ]
+  },
+  "cosqa_q20587": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d7231.py"
+   ]
+  },
+  "cosqa_q20588": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d3893.py"
+   ]
+  },
+  "cosqa_q20589": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5588.py"
+   ]
+  },
+  "cosqa_q20590": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19128.py"
+   ]
+  },
+  "cosqa_q20591": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d18138.py"
+   ]
+  },
+  "cosqa_q20592": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19995.py"
+   ]
+  },
+  "cosqa_q20593": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9929.py"
+   ]
+  },
+  "cosqa_q20594": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d6083.py"
+   ]
+  },
+  "cosqa_q20595": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19201.py"
+   ]
+  },
+  "cosqa_q20596": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "cosqa_q20597": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8724.py"
+   ]
+  },
+  "cosqa_q20598": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9088.py"
+   ]
+  },
+  "cosqa_q20599": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d8863.py"
+   ]
+  },
+  "cosqa_q20600": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\valid\\d19655.py"
+   ]
+  },
+  "cosqa_q20601": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19345.py"
+   ]
+  },
+  "cosqa_q20602": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d19592.py"
+   ]
+  },
+  "cosqa_q20603": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d9222.py"
+   ]
+  },
+  "cosqa_q20604": {
+   "question_type": "cosqa_web_query",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\cosqa\\corpus\\train\\d5836.py"
+   ]
+  }
+ }
+}

@@ -371,6 +371,26 @@ gate and tracked as issue #417.
   `.github/PULL_REQUEST_TEMPLATE.md`; `CONTRIBUTING.md` "Branches and
   releases".
 
+- **bench: beta witness sweep + four new code corpora (2026-09-04).**
+  `benchmarks/dogfood/sweeps/run_sweep_beta.py` re-ran every frozen v0.9.1
+  receipt on the beta head `21606a0`: bit-exact on LoCoMo, FinanceBench,
+  EnronQA v2 and EnronQA padded (with the 947k check: five corpora, 3,998
+  paired needles, zero field diffs). MULoc's residual movement is the
+  `PYTHONHASHSEED` hazard in `filename_anchor.py:164` (`list({...})[:64]`):
+  139/141 movers are >64-term queries and seed 1 vs 0 alone moves 165, so the
+  runner now pins and records the seed. RepoBench-R python reproduces the
+  June arm; Java is measured for the first time. Four new code beds land with
+  builders (`scripts/build_{coderag,cosqa,swebench}_corpus.py`), a generic
+  gold resolver (`scripts/resolve_bench_needles.py`), fixture profiles, a
+  document-level BM25 foil (`benchmarks/dogfood/code/bm25_doc_foil.py`) and
+  their own BASELINES rows: CodeRAG-Bench solutions + docs, CoIR CosQA,
+  SWE-bench Verified. Two defects surfaced and are tracked separately, no
+  default moves: queries with >500 Stage-1 terms raise through
+  `build_context` (Tier-2 UNION ALL vs `SQLITE_LIMIT_COMPOUND_SELECT`), and
+  the Tier-1/2 tag lanes cost 12–25 NDCG@10 points on small-file code corpora
+  under RRF (diagnostic arms). Write-up
+  `docs/benchmarks/2026-09-04-beta-witness-sweep.md`.
+
 ## 0.9.1 (2026-08-30)
 
 The retrieval-quality release: wave-1 ranking graduation (rrf_k 60→20 +

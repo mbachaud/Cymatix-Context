@@ -1,0 +1,12 @@
+{
+ "source": "hf:CoIR-Retrieval/cosqa (corpus all partitions; test qrels)",
+ "corpus_root": "F:\\Projects\\cosqa\\corpus",
+ "docs": 20604,
+ "docs_size_gated_by_builder": 0,
+ "n_needles": 500,
+ "gold_per_needle_max": 1,
+ "drops": {
+  "gold_absent": [],
+  "no_positive_qrel": 0
+ }
+}
