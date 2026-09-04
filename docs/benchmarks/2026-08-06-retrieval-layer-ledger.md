@@ -266,16 +266,20 @@ the same 100k-neutral → blob-confirm path splade walked before its REMOVE.
 > edits; everything else is the 2026-08-09 text verbatim.
 
 Wave 3 of the A/B data campaign
-(plan: `docs/superpowers/plans/2026-08-09-ab-data-campaign.md` on the
-campaign branch — not ported). This addendum
+(plan: `docs/superpowers/plans/2026-08-09-ab-data-campaign.md` *[port note:
+ported to beta 2026-09-01 together with
+`docs/benchmarks/2026-08-09-candidate-cascade-map.md`]*). This addendum
 closes ledger actions **6** (gates + arms for pki and tags — the two largest
 unmeasured layers, 11.1GB combined) and **7** (delivered-gold as a first-class
 receipt metric), and re-runs **#354** with the treatment proven applied.
 
 Receipts, all committed *[port note: on the campaign branch. Master carries
 only `wave3d_cymatics_354_100k_carve.json`, ported verbatim with this
-addendum; the two ladder-pass receipts (~140k lines) remain on
-`claude/ab-data-cymatics-pki-dff9c6`. The frozen SHAs below are
+addendum; the two ladder-pass receipts (~140k lines) are archived in the
+`cymatix-receipts` repository under
+`mirror-branches/claude__ab-data-cymatics-pki-dff9c6/benchmarks/dogfood/erb/receipts/`
+(exported 2026-09-01 from the campaign-branch head `daaa6af`, alongside the
+`wave0a_*` and `delivered_gold_ab_erb10k*` receipts). The frozen SHAs below are
 campaign-branch commits]*, all carrying `git_sha` + per-needle records:
 
 | receipt | bed | needles | frozen SHA |
