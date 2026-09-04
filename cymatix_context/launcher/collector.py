@@ -606,7 +606,12 @@ class StateCollector:
 
         try:
             entries = discover_genomes()
-            active = str(active_genome_path()).lower()
+            # Published as resolved, NOT case-folded: this string is opened
+            # with sqlite downstream, and on a case-sensitive filesystem a
+            # lowercased path names a file that does not exist. `is_active`
+            # below still compares case-insensitively, which is what the
+            # Windows "F:/Genomes" vs "f:/genomes" case needs.
+            active = str(active_genome_path())
         except Exception as exc:
             log.warning("Database panel: discovery failed (%s)", exc, exc_info=True)
             return {"error": str(exc), "entries": []}

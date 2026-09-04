@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **fix(launcher): the collector publishes the real active genome path.**
+  `_database_panel` lowercased `active_genome_path()` before publishing it as
+  `state["database"]["active_path"]`. On a case-sensitive filesystem the result
+  names a file that does not exist, so anything opening that string fails; the
+  graph summary hands it straight to sqlite, which is how it surfaced. The
+  registry's own `is_active` still compares case-insensitively, so a Windows
+  genome selected as `F:/Genomes/...` and discovered as `f:/genomes/...` is
+  unaffected.
+
 ## 0.9.2 (2026-09-05)
 
 **Ingest at scale and the #411 default flip (PRs #424, #425), a
