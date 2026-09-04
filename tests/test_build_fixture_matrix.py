@@ -152,7 +152,7 @@ def _make_files(root: Path, count: int, body_size: int, ext: str = ".py") -> Non
 # -- TestResume helper (from test_build_fixture_matrix_resume.py) --
 
 
-def _make_shard_db(path: Path, source_ids: list[str]) -> None:
+def _make_shard_db(path: Path, source_ids: list[str], *, completed=True) -> None:
     """Create a minimal per-shard ``.db`` with just enough schema for
     ``_filter_to_unseen`` to query."""
     conn = sqlite3.connect(str(path))
@@ -163,6 +163,10 @@ def _make_shard_db(path: Path, source_ids: list[str]) -> None:
         "INSERT INTO genes (gene_id, source_id) VALUES (?, ?)",
         [(f"g{i}", sid) for i, sid in enumerate(source_ids)],
     )
+    if completed:
+        conn.execute("CREATE TABLE bfm_completed_files (source_id TEXT PRIMARY KEY)")
+        conn.executemany("INSERT INTO bfm_completed_files VALUES (?)",
+                         [(sid,) for sid in set(source_ids)])
     conn.commit()
     conn.close()
 
@@ -1000,7 +1004,7 @@ class TestResume:
         assert bfm._filter_to_unseen(files, str(db)) == files
 
     def test_filter_to_unseen_drops_seen_keeps_unseen(self, tmp_path):
-        """Files whose source_id is in the shard DB are dropped; others stay."""
+        """Only files recorded as complete are dropped; others stay."""
         a, b, c = (
             str(tmp_path / "a.py"),
             str(tmp_path / "b.py"),
@@ -1011,6 +1015,14 @@ class TestResume:
         files = [(a, ".py"), (b, ".py"), (c, ".py")]
         out = bfm._filter_to_unseen(files, str(db))
         assert out == [(b, ".py")]
+
+    def test_filter_to_unseen_retries_legacy_unmarked_files(self, tmp_path):
+        """Legacy genes cannot distinguish a complete file from a partial one."""
+        db = tmp_path / "legacy.db"
+        source = str(tmp_path / "partial.py")
+        _make_shard_db(db, source_ids=[source], completed=False)
+        files = [(source, ".py")]
+        assert bfm._filter_to_unseen(files, str(db)) == files
 
     def test_filter_to_unseen_no_genes_table(self, tmp_path):
         """Shard DB exists but lacks a ``genes`` table -> return all."""
@@ -1506,7 +1518,7 @@ class TestBlobResume:
         assert seen["kwargs"]["rebuild"] is False
 
     def test_resume_filters_already_ingested_files(self, tmp_path, monkeypatch):
-        """The parallel branch drops files whose source_id is already present."""
+        """The parallel branch drops files recorded as fully ingested."""
         import sqlite3
 
         root = tmp_path / "src"
@@ -1522,6 +1534,8 @@ class TestBlobResume:
         conn = sqlite3.connect(str(db))
         conn.execute("CREATE TABLE genes (gene_id TEXT, source_id TEXT)")
         conn.execute("INSERT INTO genes VALUES ('g1', ?)", (str(done),))
+        conn.execute("CREATE TABLE bfm_completed_files (source_id TEXT PRIMARY KEY)")
+        conn.execute("INSERT INTO bfm_completed_files VALUES (?)", (str(done),))
         conn.commit()
         conn.close()
 
@@ -1694,3 +1708,144 @@ class TestCommitBatcher:
         )
         assert genome.events.count("commit") == 3
         assert stats["valve_trips"] >= 3
+
+
+class TestInterruptedFileResume:
+    @pytest.mark.parametrize("commit_batch", [0, 1, 10])
+    @pytest.mark.parametrize("interruption", ["pause", "crash"])
+    def test_resume_retries_partial_file(self, tmp_path, monkeypatch,
+                                         commit_batch, interruption):
+        """A durable first chunk is not proof that its file finished."""
+        import time
+        import types
+        from contextlib import contextmanager
+
+        class StubGene:
+            def __init__(self, **kw):
+                self.__dict__.update(kw)
+
+        monkeypatch.setitem(sys.modules, "cymatix_context.schemas",
+                            types.SimpleNamespace(Gene=StubGene))
+        monkeypatch.setitem(sys.modules, "cymatix_context.backends",
+                            types.SimpleNamespace(splade_backend=None))
+        monkeypatch.setenv("CYMATIX_BFM_SPLADE", "0")
+        monkeypatch.setenv("CYMATIX_BFM_RAM_FLOOR_MB", "0")
+        monkeypatch.setattr(bfm, "cuda_vram_fraction", lambda: None)
+        monkeypatch.setattr(bfm, "_PAUSE_REQUESTED", False)
+
+        db = tmp_path / "resume.db"
+
+        class SqliteGenome:
+            def __init__(self):
+                self.path = str(db)
+                self.conn = sqlite3.connect(self.path)
+                self.conn.execute("CREATE TABLE genes "
+                                  "(gene_id TEXT PRIMARY KEY, source_id TEXT)")
+                self.deferred = False
+
+            @contextmanager
+            def deferred_commits(self):
+                self.deferred = True
+                try:
+                    with self.conn:
+                        yield self
+                finally:
+                    self.deferred = False
+
+            def upsert_doc(self, gene, **kw):
+                self.conn.execute("INSERT OR REPLACE INTO genes VALUES (?, ?)",
+                                  (gene.gene_id, gene.source_id))
+                if not self.deferred:
+                    self.conn.commit()
+
+        source = str(tmp_path / "two-chunks.py")
+        genes = [{"gene_id": str(i), "source_id": source, "content": str(i)}
+                 for i in range(2)]
+        files = [(source, ".py")]
+
+        class InterruptAfterFlush:
+            def feed(self, *args):
+                if interruption == "crash":
+                    raise RuntimeError("producer crashed")
+                monkeypatch.setattr(bfm, "_PAUSE_REQUESTED", True)
+
+        genome = SqliteGenome()
+        try:
+            expected = bfm._PauseRequested if interruption == "pause" else RuntimeError
+            with pytest.raises(expected):
+                bfm._drain_with_batched_splade(
+                    iter([genes]), genome,
+                    {"files": 0, "genes": 0, "errors": 0, "t0": time.perf_counter()},
+                    batch_size=1, commit_batch=commit_batch,
+                    crawl_detector=InterruptAfterFlush(),
+                )
+            assert bfm._filter_to_unseen(files, str(db)) == files
+
+            monkeypatch.setattr(bfm, "_PAUSE_REQUESTED", False)
+            bfm._drain_with_batched_splade(
+                iter([genes]), genome,
+                {"files": 0, "genes": 0, "errors": 0, "t0": time.perf_counter()},
+                batch_size=1, commit_batch=commit_batch,
+                crawl_detector=types.SimpleNamespace(feed=lambda *a: None),
+            )
+            assert genome.conn.execute("SELECT COUNT(*) FROM genes").fetchone()[0] == 2
+            assert bfm._filter_to_unseen(files, str(db)) == []
+        finally:
+            genome.conn.close()
+
+    @pytest.mark.parametrize("commit_batch", [0, 10])
+    @pytest.mark.parametrize("abort", [False, True])
+    def test_real_genome_cross_file_batch_completion(self, tmp_path, monkeypatch,
+                                                    commit_batch, abort):
+        """Completion markers commit or roll back with real Genome writes."""
+        import types
+        from tests.conftest import make_gene
+
+        monkeypatch.setenv("CYMATIX_BFM_SPLADE", "0")
+        monkeypatch.setenv("CYMATIX_BFM_RAM_FLOOR_MB", "0")
+        monkeypatch.setattr(bfm, "_PAUSE_REQUESTED", False)
+        monkeypatch.setattr(bfm, "cuda_vram_fraction", lambda: None)
+        files = [(str(tmp_path / name), ".py") for name in ("one.py", "two.py")]
+        gene_lists = []
+        for i, (source, _) in enumerate(files):
+            rows = []
+            for j in range(i + 1):
+                gene = make_gene(f"distinct fixture content {i} {j}")
+                gene.source_id = source
+                rows.append(gene.model_dump())
+            gene_lists.append(rows)
+
+        def stream():
+            yield from gene_lists
+            if abort:
+                raise RuntimeError("producer crashed")
+
+        def drain(genome, rows):
+            bfm._drain_with_batched_splade(
+                rows, genome, {"files": 0, "genes": 0, "errors": 0, "t0": 0.0},
+                batch_size=2, commit_batch=commit_batch,
+                crawl_detector=types.SimpleNamespace(feed=lambda *a: None),
+            )
+
+        db = str(tmp_path / "real.db")
+        genome = bfm.Genome(path=db, synonym_map={})
+        try:
+            if abort:
+                with pytest.raises(RuntimeError, match="producer crashed"):
+                    drain(genome, stream())
+            else:
+                drain(genome, stream())
+        finally:
+            genome.close()
+
+        remaining = bfm._filter_to_unseen(files, db)
+        expected = (files if commit_batch else files[1:]) if abort else []
+        assert remaining == expected
+        genome = bfm.Genome(path=db, synonym_map={})
+        try:
+            drain(genome, iter(rows for file, rows in zip(files, gene_lists)
+                               if file in remaining))
+            assert genome.conn.execute("SELECT COUNT(*) FROM genes").fetchone()[0] == 3
+            assert bfm._filter_to_unseen(files, db) == []
+        finally:
+            genome.close()

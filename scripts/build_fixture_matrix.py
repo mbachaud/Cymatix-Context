@@ -432,17 +432,19 @@ def _iter_ingestable_files(
 def _filter_to_unseen(
     files: list[tuple[str, str]], shard_db_path: str,
 ) -> list[tuple[str, str]]:
-    """Drop files whose ``source_id`` is already in the per-shard ``.db``.
+    """Drop files with a durable completion marker in the existing ``.db``.
 
     Used by ``_build_one_shard`` to make restart-after-kill cheap: re-
     walking + chunking + tagging the files an earlier partial run
-    already ingested is pure waste, since ``Genome.upsert_doc`` is
-    content-hash idempotent anyway. ``source_id`` is the absolute file
-    path the tagger stores on each gene; we collect the distinct set
-    from the existing shard and drop matches from the walk.
+    already ingested is pure waste. A gene's ``source_id`` alone is not
+    enough: a pause or kill can leave only the first chunks of a file
+    durable. The drain records ``bfm_completed_files`` only after every
+    gene in that file succeeds, in the transaction containing its final
+    chunk. Unmarked files (including legacy beds) are replayed safely via
+    content-hash-idempotent upserts.
 
     Falls back to returning ``files`` unchanged if the shard ``.db``
-    doesn't exist yet (fresh build), has no ``genes`` table, or the
+    doesn't exist yet (fresh build), has no completion table, or the
     query fails for any other reason — file-level skip is a best-
     effort optimisation, not a correctness gate. (Issue #150.)
     """
@@ -461,12 +463,12 @@ def _filter_to_unseen(
                 "SELECT name FROM sqlite_master WHERE type='table'"
             ).fetchall()
         }
-        if "genes" not in tables:
+        if "bfm_completed_files" not in tables:
             return files
         try:
             seen = {
                 r[0] for r in conn.execute(
-                    "SELECT DISTINCT source_id FROM genes"
+                    "SELECT source_id FROM bfm_completed_files"
                 ).fetchall()
                 if r[0] is not None
             }
@@ -694,7 +696,16 @@ def _drain_with_batched_splade(
             batcher.batch, batcher.wal_valve_mb, batcher.ram_floor_mb,
         )
 
-    buf: list = []  # Gene instances buffered before batch flush
+    # A source becomes resumable only after all its genes have been written.
+    # Keep its state alongside each buffered gene because an encode/commit
+    # batch may end halfway through a file or contain several files.
+    completion_conn = getattr(genome, "conn", None)
+    if completion_conn is not None:
+        completion_conn.execute(
+            "CREATE TABLE IF NOT EXISTS bfm_completed_files "
+            "(source_id TEXT PRIMARY KEY)"
+        )
+    buf: list = []  # (Gene, per-file completion state)
     last_feed_t = time.perf_counter()
     logged_drain_errors: set[str] = set()
 
@@ -714,7 +725,7 @@ def _drain_with_batched_splade(
             return
         if splade_on:
             sparses = splade_backend.encode_batch(
-                [g.content[:1000] for g in batch]
+                [g.content[:1000] for g, _ in batch]
             )
         else:
             # SPLADE disabled: skip the batched sparse encode (do NOT touch
@@ -723,13 +734,26 @@ def _drain_with_batched_splade(
             # builds a complete, splade-dark corpus. ``splade_sparse=None``
             # is exactly a gene with no sparse expansion.
             sparses = [None] * len(batch)
-        for g, sp in zip(batch, sparses):
+        for (g, file_state), sp in zip(batch, sparses):
             try:
                 genome.upsert_doc(g, apply_gate=True, splade_sparse=sp)
                 stats["genes"] += 1
             except Exception as exc:
+                file_state["failed"] = True
                 stats["errors"] += 1
                 _log_once("upsert_doc", exc)
+            file_state["remaining"] -= 1
+            if (completion_conn is not None and not file_state["remaining"]
+                    and not file_state["failed"] and file_state["source_id"]):
+                completion_conn.execute(
+                    "INSERT OR IGNORE INTO bfm_completed_files VALUES (?)",
+                    (file_state["source_id"],),
+                )
+                if not batcher.enabled:
+                    # Per-gene upserts have already committed; persist the
+                    # marker now too. Batched markers commit/roll back with
+                    # their final gene through the enclosing batch scope.
+                    completion_conn.commit()
         if stats["genes"] % 500 < batch_size and stats["genes"] > 0:
             elapsed = time.perf_counter() - stats["t0"]
             log.info(
@@ -743,10 +767,17 @@ def _drain_with_batched_splade(
             if not gene_dicts:
                 stats["errors"] += 1
                 continue
+            sources = {gd.get("source_id") for gd in gene_dicts}
+            file_state = {
+                "source_id": next(iter(sources)) if len(sources) == 1 else None,
+                "remaining": len(gene_dicts),
+                "failed": False,
+            }
             for gd in gene_dicts:
                 try:
-                    buf.append(Gene(**gd))
+                    buf.append((Gene(**gd), file_state))
                 except Exception as exc:
+                    file_state["failed"] = True
                     stats["errors"] += 1
                     _log_once("Gene", exc)
             stats["files"] += 1
@@ -1243,8 +1274,8 @@ def build_profile(
     :func:`ingest_tree` behaviour byte-for-byte.
 
     ``rebuild=True`` (the default, and the historical behaviour) deletes any
-    existing ``.db`` first.  ``rebuild=False`` keeps it and drops files whose
-    ``source_id`` is already present via :func:`_filter_to_unseen`, i.e. the
+    existing ``.db`` first. ``rebuild=False`` keeps it and drops files with
+    durable completion markers via :func:`_filter_to_unseen`, i.e. the
     file-level resume the sharded path has had since issue #150.  A 500k-file
     blob build runs for many hours, so losing all of it to a kill -- or to a
     mid-flight retune -- was pure waste.

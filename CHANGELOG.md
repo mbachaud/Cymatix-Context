@@ -103,9 +103,13 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   `CYMATIX_BFM_MAX_FILES` (deterministic prefix cap for scale curves),
   **blob-mode `--rebuild` now honoured under `--parallel`** — a killed
   parallel blob build resumes into the existing `.db` (`_filter_to_unseen`
-  drops already-ingested `source_id`s, the sharded path's #150 behaviour)
+  drops only files with durable `bfm_completed_files` markers)
   instead of losing every gene; before, blob mode always rebuilt and silently
-  ignored the flag. The **sequential** blob path is unchanged: it walks roots
+  ignored the flag. Completion markers commit with the file's final successful
+  gene, so both blob and sharded resume retry files interrupted mid-chunk-batch
+  by a pause or crash. Legacy beds without markers replay through idempotent
+  upserts once instead of assuming any `source_id` proves the file complete.
+  The **sequential** blob path is unchanged: it walks roots
   through `ingest_tree` and never materialises a file list, so there is
   nothing for `_filter_to_unseen` to filter and `build_profile` keeps the
   historical delete-and-rebuild there (with a warning naming `--parallel`)
@@ -120,7 +124,7 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   (deferred-index arm: negative, 0.05×), `ingest_scale_100k_curve.csv` /
   `_250k_curve.csv` receipts. Shipped server and CLI defaults unchanged.
   Tests: `tests/test_bed_provenance.py` (17), `tests/test_mem_budget.py`
-  (+2), `tests/test_build_fixture_matrix.py` (+14).
+  (+2), `tests/test_build_fixture_matrix.py` (+25).
 
 - **feat(retrieval): `eps_band_coverage` combinator — opt-in, default-inert
   (#428; W2.2-narrow, KILLED by its own receipt, kept as an arm).** Identical
