@@ -1,0 +1,2709 @@
+{
+ "tool": "benchmarks/dogfood/code/bm25_doc_foil.py",
+ "tag": "coderag_solutions",
+ "corpus_root": "F:\\Projects\\coderag\\corpus_solutions",
+ "files_admitted": 1128,
+ "files_size_gated": 0,
+ "documents_after_dedup": 1128,
+ "byte_duplicate_collisions": 0,
+ "dedup": true,
+ "bm25": {
+  "k1": 1.5,
+  "b": 0.75,
+  "idf": "floored at 0",
+  "tokenizer": "[A-Za-z_][A-Za-z_0-9]*"
+ },
+ "query": "needles_<tag>.json query text verbatim",
+ "gold": "gold_paths_<tag>.json (document level, first gold)",
+ "build_s": 0.3,
+ "total": {
+  "n": 664,
+  "gold_absent": 0,
+  "ndcg@10": 0.9861,
+  "recall@1": 0.9669,
+  "recall@5": 0.9985,
+  "recall@10": 1.0,
+  "recall@12": 1.0,
+  "mrr": 0.9814
+ },
+ "by_type": {
+  "coderag_humaneval": {
+   "n": 164,
+   "gold_absent": 0,
+   "ndcg@10": 0.9977,
+   "recall@1": 0.9939,
+   "recall@5": 1.0,
+   "recall@10": 1.0,
+   "recall@12": 1.0,
+   "mrr": 0.997
+  },
+  "coderag_mbpp": {
+   "n": 500,
+   "gold_absent": 0,
+   "ndcg@10": 0.9823,
+   "recall@1": 0.958,
+   "recall@5": 0.998,
+   "recall@10": 1.0,
+   "recall@12": 1.0,
+   "mrr": 0.9762
+  }
+ },
+ "per_query": [
+  {
+   "needle": "coderag_he_0",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_1",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_2",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_3",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_4",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_5",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_6",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_7",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_8",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_9",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_10",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_11",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_12",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_13",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_14",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_15",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_16",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_17",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_18",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_19",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_20",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_21",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_22",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_23",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_24",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_25",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_26",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_27",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_28",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_29",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_30",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_31",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_32",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_33",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_34",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_35",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_36",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_37",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_38",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_39",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_40",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_41",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_42",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_43",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_44",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_45",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_46",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_47",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_48",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_49",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_50",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_51",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_52",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_53",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_54",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_55",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_56",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_57",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_58",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_59",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_60",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_61",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_he_62",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_63",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_64",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_65",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_66",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_67",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_68",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_69",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_70",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_71",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_72",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_73",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_74",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_75",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_76",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_77",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_78",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_79",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_80",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_81",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_82",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_83",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_84",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_85",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_86",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_87",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_88",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_89",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_90",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_91",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_92",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_93",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_94",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_95",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_96",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_97",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_98",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_99",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_100",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_101",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_102",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_103",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_104",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_105",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_106",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_107",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_108",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_109",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_110",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_111",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_112",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_113",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_114",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_115",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_116",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_117",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_118",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_119",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_120",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_121",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_122",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_123",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_124",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_125",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_126",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_127",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_128",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_129",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_130",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_131",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_132",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_133",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_134",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_135",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_136",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_137",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_138",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_139",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_140",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_141",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_142",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_143",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_144",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_145",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_146",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_147",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_148",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_149",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_150",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_151",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_152",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_153",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_154",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_155",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_156",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_157",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_158",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_159",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_160",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_161",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_162",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_he_163",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_11",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_12",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_13",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_14",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_15",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_16",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_17",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_18",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_19",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_20",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_21",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_22",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_23",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_24",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_25",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_26",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_27",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_28",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_29",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_30",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_31",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_32",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_33",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_34",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_35",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_36",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_37",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_38",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_39",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_40",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_41",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_42",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_43",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_44",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_45",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_46",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_47",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_48",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_49",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_50",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_51",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_52",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_53",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_54",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_55",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_56",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_57",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_58",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_59",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_60",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_61",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_62",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_63",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_64",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_65",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_66",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_67",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_68",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_69",
+   "rank": 8
+  },
+  {
+   "needle": "coderag_mbpp_70",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_71",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_72",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_73",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_74",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_75",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_76",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_77",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_78",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_79",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_80",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_81",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_mbpp_82",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_83",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_84",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_85",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_86",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_87",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_88",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_89",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_90",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_91",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_92",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_93",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_94",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_95",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_96",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_97",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_mbpp_98",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_99",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_100",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_101",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_102",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_103",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_104",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_105",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_106",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_107",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_108",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_109",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_110",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_111",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_112",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_113",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_114",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_115",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_116",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_117",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_118",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_119",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_120",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_121",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_122",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_123",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_124",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_125",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_126",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_127",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_128",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_129",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_130",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_131",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_132",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_133",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_134",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_135",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_136",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_137",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_138",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_139",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_140",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_141",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_142",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_143",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_144",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_145",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_146",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_147",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_148",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_149",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_150",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_151",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_152",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_153",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_154",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_155",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_156",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_157",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_158",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_159",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_160",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_161",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_162",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_163",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_164",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_165",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_166",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_167",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_168",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_169",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_170",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_171",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_172",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_173",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_174",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_175",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_176",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_177",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_178",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_179",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_180",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_181",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_182",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_183",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_184",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_185",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_186",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_187",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_188",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_189",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_190",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_191",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_192",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_193",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_194",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_195",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_196",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_197",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_198",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_199",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_200",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_201",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_202",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_203",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_204",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_205",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_206",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_207",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_208",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_209",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_210",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_211",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_212",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_213",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_214",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_215",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_216",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_217",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_218",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_219",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_220",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_221",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_222",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_223",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_224",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_225",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_226",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_227",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_228",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_229",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_230",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_231",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_232",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_233",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_234",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_235",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_236",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_237",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_238",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_239",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_240",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_241",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_242",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_243",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_244",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_245",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_246",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_247",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_248",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_249",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_250",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_251",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_252",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_253",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_254",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_255",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_256",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_257",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_258",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_259",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_260",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_261",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_262",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_263",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_264",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_265",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_266",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_267",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_268",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_269",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_270",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_271",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_272",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_273",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_274",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_275",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_276",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_277",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_278",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_279",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_280",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_281",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_282",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_283",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_284",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_285",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_286",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_287",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_288",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_289",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_290",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_291",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_292",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_293",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_294",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_295",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_296",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_297",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_298",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_299",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_300",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_301",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_302",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_303",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_304",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_305",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_306",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_307",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_308",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_309",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_310",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_mbpp_311",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_312",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_313",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_314",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_315",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_316",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_317",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_318",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_319",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_320",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_321",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_322",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_323",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_324",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_325",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_326",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_327",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_328",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_329",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_330",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_331",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_332",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_333",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_334",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_335",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_336",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_337",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_338",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_339",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_340",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_341",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_342",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_343",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_344",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_345",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_346",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_347",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_348",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_349",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_350",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_351",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_352",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_353",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_354",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_355",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_356",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_357",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_358",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_359",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_360",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_361",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_362",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_363",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_364",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_365",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_366",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_367",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_368",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_369",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_370",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_371",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_372",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_373",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_374",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_375",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_376",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_377",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_378",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_379",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_380",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_381",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_382",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_383",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_384",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_385",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_386",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_387",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_388",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_389",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_390",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_391",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_392",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_393",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_394",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_395",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_396",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_397",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_398",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_399",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_400",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_401",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_402",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_403",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_404",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_405",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_406",
+   "rank": 3
+  },
+  {
+   "needle": "coderag_mbpp_407",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_408",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_409",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_410",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_411",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_412",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_413",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_414",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_415",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_416",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_417",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_418",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_419",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_420",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_421",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_422",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_423",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_424",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_425",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_426",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_427",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_428",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_429",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_430",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_431",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_432",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_433",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_434",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_435",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_436",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_437",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_438",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_439",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_440",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_441",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_442",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_443",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_444",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_445",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_446",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_447",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_448",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_449",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_450",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_451",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_452",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_453",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_454",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_455",
+   "rank": 4
+  },
+  {
+   "needle": "coderag_mbpp_456",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_457",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_458",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_459",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_460",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_461",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_462",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_463",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_464",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_465",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_466",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_467",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_468",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_469",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_470",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_471",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_472",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_473",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_474",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_475",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_476",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_477",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_478",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_479",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_480",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_481",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_482",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_483",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_484",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_485",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_486",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_487",
+   "rank": 2
+  },
+  {
+   "needle": "coderag_mbpp_488",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_489",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_490",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_491",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_492",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_493",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_494",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_495",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_496",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_497",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_498",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_499",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_500",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_501",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_502",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_503",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_504",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_505",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_506",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_507",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_508",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_509",
+   "rank": 1
+  },
+  {
+   "needle": "coderag_mbpp_510",
+   "rank": 1
+  }
+ ]
+}

@@ -1,0 +1,1193 @@
+{
+ "stamp": "2026-08-31",
+ "workflow": "interloper-taxonomy-wave1 (wf_a5fb0590-9c6)",
+ "agents": [
+  {
+   "bed": "EnronQA 85k-email native bed, tagger v2 (easy bed, .856 delivered; 250 original + 250 rephrased; 72 residual misses; k=12)",
+   "headline": "On this near-solved bed the residual losers fall to people-and-copies, not to boilerplate: 35% lose to other mail from the same correspondent/person named in the query, 29% are outgunned on generic keyword coverage after paraphrase stripped the gold anchors (13 of those 21 golds vanish from the pool entirely), 22% lose to literal near-duplicates of gold (other-mailbox copies of the same broadcast, RE/FW siblings, quoting emails), and 14% ranked 7-12 in the score map but were cut by a 6-seat delivery cap.",
+   "categories": [
+    {
+     "name": "correspondent / query-person hub",
+     "n_misses": 25,
+     "share_pct": 34.7,
+     "mechanism": "The query names a person (surname appears in 48/72 queries); that name is both a tag and a high-df FTS term, so the person's OTHER mail floods the name lists and RRF fuses those high per-list ranks above gold's content rank. 19 misses have an interloper sharing gold's exact sender or mailbox; 6 more (the former 'other' bucket) are the same mechanism where gold is a REPLY from a different address \u2014 e.g. query says 'Tim Heizenrader', gold is brian.harrington@ferc.fed.us replying to him, winners are Heizenrader's own unrelated mail; or alias drift (gold john.forney@enron vs winners m..forney@enron, same human). Rank-1 winner mentions the query surname in 10/19 hub + 5/6 person-hub cases, and in the person-hub 6 the winners LOSE the coverage duel to gold (0 win, 1 tie, 5 lose) \u2014 the name-list rank alone carries them past a higher-coverage gold.",
+     "evidence": "19 same-sender/mbox + 6 query-person; rank1 kw_cov < gold_kw_cov in 39/72 misses overall yet rank1 score/gold score median 2.33x; bucket split: near13-100 20, pool_absent 5 (of the 19-subset); 35/48 named-query misses have >=50% of interlopers mentioning the surname"
+    },
+    {
+     "name": "generic-coverage outgun (paraphrase anchor loss)",
+     "n_misses": 21,
+     "share_pct": 29.2,
+     "mechanism": "Winners beat gold on raw extracted-keyword coverage of generic vocabulary: max interloper kw_cov > gold_kw_cov in 21/21 (0 ties, 0 losses). The rephrased form dropped gold's distinctive lexical anchors ('social security numbers... new system' -> gold 'Badge Nos.' covers only 5/14 keywords while 'Time Card Module Access' covers 5-6 on system/access/information terms and scores 0.325 vs gold 0.05). 13/21 golds are pool-absent (score 0.0, not in the map at all) \u2014 pool-absent golds cover a median 4 of ~19 keywords. Skews rephrased 15:6; person names rarely help here (rank-1 mentions query surname only 2/21). 2 golds are headerless later chunks of long emails, so the Subject/Sender anchors live in a sibling gene.",
+     "evidence": "coverage duel 21W/0T/0L; 13/21 pool_absent; class split 15 rephrased / 6 original; pool_absent gold_kw_cov values 1-5 (median 4) vs n_kw median ~19"
+    },
+    {
+     "name": "near-duplicate thread/quote (same subject, copy, or quoting email)",
+     "n_misses": 16,
+     "share_pct": 22.2,
+     "mechanism": "The winner is essentially gold's own text under a different gene_id. Three sub-kinds: (a) 9 misses where an interloper has the SAME subject AND sender as gold \u2014 another mailbox's copy of the same broadcast (Williams Energy News Live newscast: gold in crandell-s is pool-absent while identical copies in zipper-a/mckay-b/carson-m take ranks 1-3 with kw_cov 8-9; also 'ETS and Corporate Change Control', 'Access to UBSWenergy', 'Power Indices'); (b) 3 RE/FW thread siblings (same normalized subject, different sender); (c) 4 quoting emails sharing a >=40-char verbatim substring with gold's visible body (median visible body window is only 36 chars, so lcs>=40 means the whole window is shared text). The copies split gold's term mass across duplicate genes and the graded gene_id loses the tie to a sibling \u2014 the answer text is often actually delivered, just under the wrong id.",
+     "evidence": "9 dup-copy + 3 RE/FW-sibling + 4 quote-lcs40 = 16; any-interloper same-subject 14/72, lcs>=40 7/72, lcs>=30 12/72; coverage duel 13W/3T/0L; 36% of all 891 interlopers have RE:/FW: subjects"
+    },
+    {
+     "name": "six-seat cap trim (delivery-width loss)",
+     "n_misses": 10,
+     "share_pct": 13.9,
+     "mechanism": "Gold sat at live map rank 7-12 (ranks: 7,7,7,7,8,8,8,9,11,12) but only 6 documents were delivered \u2014 delivered slice == map_top[:6] in 9/10 (near-identical in the 10th), map ranks 7-12 skipped wholesale. This is the classifier per-class assembly cap, not a ranking defeat: at the nominal k=12 every one of these would have been a hit. The 6 winners above gold are ordinary hub/thread material (e.g. Columbia Gas 'TCO capacity' gold at rank 8 loses its seats to FW'd capacity-auction mail from the same germany-c mailbox, one sharing a 29-char quoted substring). Coverage duel is nearly even here (5W/2T/3L) \u2014 confirming gold was competitive and only width killed it. Directly relevant to the in-flight 947k floor 12-vs-6 A/B.",
+     "evidence": "10/10 have n_delivered=6; live ranks all <=12; skipped_map_ranks = [7..12] in all 10; class split 6 original / 4 rephrased; rank-1 score/gold ratio in-bucket consistent with overall median 2.33x"
+    }
+   ],
+   "quantitative": {
+    "n_misses": 72,
+    "class_split": {
+     "enron_original": 30,
+     "enron_rephrased": 42,
+     "miss_rate_original": 0.12,
+     "miss_rate_rephrased": 0.168
+    },
+    "live_rank_buckets": {
+     "pool_absent": 22,
+     "delivery_le12": 10,
+     "near_13_100": 40,
+     "gt_100": 0,
+     "pool_absent_by_class": {
+      "rephrased": 15,
+      "original": 7
+     }
+    },
+    "category_partition": {
+     "correspondent_person_hub": 25,
+     "generic_coverage_outgun": 21,
+     "near_duplicate_thread_quote": 16,
+     "cap_trim_6seat": 10,
+     "sum": 72
+    },
+    "coverage_duels": {
+     "max_interloper_vs_gold": {
+      "win": 52,
+      "tie": 11,
+      "lose": 9
+     },
+     "rank1_interloper_vs_gold": {
+      "win": 22,
+      "tie": 11,
+      "lose": 39
+     },
+     "per_category_max_duel": {
+      "thread_quote": "13W/3T/0L",
+      "hub": "13W/5T/1L",
+      "outgun": "21W/0T/0L",
+      "cap_trim": "5W/2T/3L",
+      "person_hub_other6": "0W/1T/5L"
+     }
+    },
+    "score_margins_gold_in_map": {
+     "rank1_score_over_gold_score": {
+      "median": 2.33,
+      "mean": 2.77,
+      "min": 1.52,
+      "max": 7.35,
+      "n": 50
+     }
+    },
+    "identity_flags_any_interloper": {
+     "same_sender": 31,
+     "same_mailbox": 24,
+     "same_norm_subject": 14,
+     "body_lcs_ge30": 12,
+     "body_lcs_ge40": 7,
+     "body_lcs_ge60": 6,
+     "gold_visible_body_window_median_chars": 36
+    },
+    "dup_taxonomy_within_thread_quote": {
+     "exact_broadcast_copy_same_subj_and_sender": 9,
+     "re_fw_thread_sibling": 3,
+     "quoting_lcs40": 4
+    },
+    "person_names": {
+     "queries_with_person_name": 48,
+     "misses_where_ge50pct_interlopers_mention_surname": 35,
+     "rank1_mentions_surname_by_cat": {
+      "hub19": "10/19",
+      "person_hub6": "5/6",
+      "thread_quote": "9/16",
+      "cap_trim": "6/10",
+      "outgun": "2/21"
+     }
+    },
+    "cap_trim_forensics": {
+     "n": 10,
+     "all_n_delivered": 6,
+     "delivered_equals_map_head6": "9/10 exact, 1 near",
+     "gold_live_ranks": [
+      7,
+      7,
+      7,
+      7,
+      8,
+      8,
+      8,
+      9,
+      11,
+      12
+     ],
+     "skipped_map_ranks": "7-12 in all 10"
+    },
+    "winner_motifs": {
+     "total_interlopers": 891,
+     "subject_RE_or_FW": 323,
+     "head_contains_original_message_marker": 44,
+     "headerless_chunk_interlopers": 154
+    },
+    "gold_motifs": {
+     "gold_headerless_later_chunk": 8,
+     "gold_RE_FW": 15,
+     "gold_subject_nan": 3
+    },
+    "anchor_stats_per_class": {
+     "original": {
+      "median_n_kw": 20,
+      "median_gold_kw_cov": 6.5,
+      "median_gold_cov_frac": 0.32
+     },
+     "rephrased": {
+      "median_n_kw": 18.5,
+      "median_gold_kw_cov": 5,
+      "median_gold_cov_frac": 0.286
+     }
+    },
+    "paired_analysis": {
+     "needles_missed_in_both_forms": 18,
+     "paired_miss_count": 36,
+     "rephrased_only_misses": 24,
+     "original_only_misses": 12,
+     "rephrased_only_cats": {
+      "coverage_outgun": 9,
+      "hub": 6,
+      "cap_trim": 4,
+      "thread_quote": 3,
+      "person_hub": 2
+     },
+     "original_only_cats": {
+      "hub": 4,
+      "cap_trim": 4,
+      "coverage_outgun": 2,
+      "thread_quote": 1,
+      "person_hub": 1
+     },
+     "paired_cats": {
+      "thread_quote": 12,
+      "coverage_outgun": 10,
+      "hub": 9,
+      "person_hub": 3,
+      "cap_trim": 2
+     },
+     "same_rank1_winner_across_pair": "10/18"
+    },
+    "lengths": {
+     "interloper_median_n_chars": 1899,
+     "gold_median_n_chars": 1634,
+     "interloper_mean": 2133,
+     "gold_mean": 1927
+    }
+   },
+   "exemplars": [
+    {
+     "needle": "enron_017_o",
+     "query": "What specific topics will be covered by the Houston bureau and the Washington bureau, respectively, according to the Williams Energy News Live email?",
+     "gold_head": "Subject: Williams Energy News Live -- today's video newscast Sender: ecenter@williams.com ... File: crandell-s/deleted_items/86",
+     "winner_head": "Subject: Williams Energy News Live -- today's video newscast Sender: ecenter@williams.com ... File: zipper-a/... (ranks 1-3 all identical copies in zipper-a, mckay-b, carson-m)",
+     "note": "Exact broadcast-copy crowd-out: identical newsletter ingested into 4+ mailboxes; the graded crandell-s copy is pool-absent (score 0.0) while its clones take ranks 1-3 with kw_cov 8-9. The answer text IS delivered \u2014 under sibling gene_ids."
+    },
+    {
+     "needle": "enron_043_o",
+     "query": "Who is the recipient of the email from Tim Heizenrader regarding public hydro data sources?",
+     "gold_head": "Subject: Re: Public Hydro Data Sources Sender: brian.harrington@ferc.fed.us Recipients: ['mary.hain@enron.com', 'Tim Belden/HOU/ECT@ECT'] File: hain-m/all_documents/1280",
+     "winner_head": "r2: Subject: FW: Today's Weather Update Sender: tim.heizenrader@enron.com ...; r3: Subject: RE: Estate Fundamentals Sender: tim.heizenrader@enron.com ...",
+     "note": "Query-person hub where gold is authored by someone ELSE (a FERC reply in the thread): Heizenrader's own unrelated mail wins on the name lists despite LOWER kw_cov than gold (winners cov 3-4 vs gold 7, gold live_rank 15). Both _o and _r forms miss identically."
+    },
+    {
+     "needle": "enron_016_r",
+     "query": "According to the email from Morris Brassfield, what website should employees use to submit their expense reports if they have incurred expenses during their business travel?",
+     "gold_head": "Please address all questions concerning the travel and entertainment program to Bruce Martin 713-345-1833 ... (headerless later chunk, no Subject/Sender block)",
+     "winner_head": "Subject: FW: United Way 2001 Campaign Sender: morris.brassfield@enron.com ... File: hayslett-r/projects/8 (score 0.333 vs gold 0.109)",
+     "note": "Coverage outgun compounded by chunking: gold is a mid-document chunk whose Subject/Sender anchors live in a sibling gene, so 'Morris Brassfield' matches his OTHER mail (United Way campaign FW) at 3x gold's score; gold covers 3/26 keywords."
+    },
+    {
+     "needle": "enron_036_o",
+     "query": "What is the deadline for bids on the Columbia Gas capacity, according to Scott Goodell's email?",
+     "gold_head": "Subject: Re: TCO capacity available Sender: joann.collins@enron.com ... File: germany-c/all_documents/1987 (live map rank 8, score 0.166)",
+     "winner_head": "Subject: FW: CGT - FTS-2 Capacity Auction Sender: chris.germany@enron.com ... (rank 1, score 0.436, 29-char quoted substring shared with gold)",
+     "note": "Six-seat cap trim: gold ranked 8 in the live map but only 6 docs were delivered (delivered == map_top[:6]); at nominal k=12 this is a hit. Winners are same-mailbox capacity-auction FWs \u2014 competitive but the width, not the ranking, killed it."
+    },
+    {
+     "needle": "enron_000_r",
+     "query": "What specific kitchen features is Phillip Allen looking to modify or enhance with the recipient's design help?",
+     "gold_head": "Subject: nan Sender: phillip.allen@enron.com Recipients: ['scfatkfa@caprock.net'] File: allen-p/_sent_mail/416 ... 'Cary, Here is the picture of the house I have in mind...'",
+     "winner_head": "r1: Subject: FW: 11:30 Regulatory Update-3268 Sender: m..tholt@enron.com (cov 4); r2: Subject: RE: California Update 5/22/01 Sender: k..allen@enron.com File: allen-p/sent_items/89",
+     "note": "Rephrased anchor loss + hub: paraphrase kept only 'Phillip Allen' + generic modify/enhance/design terms (gold covers 7/22 kw), so allen-p mailbox mail and generic 'Update' emails outrank a subject-less personal email; gold falls to rank 13, one below the cut."
+    },
+    {
+     "needle": "enron_054_r",
+     "query": "Instead of social security numbers, what information is the new system requiring?",
+     "gold_head": "Subject: Badge Nos. Sender: taffy.milligan@enron.com ... File: jones-t/all_documents/9570 (score 0.050, live rank 48)",
+     "winner_head": "Subject: Time Card Module Access Sender: pat_hudson@eott.com ... 'THE TIME CA...' (score 0.325, cov 5); r2: Subject: RE: Safeguarding Social Security Sender: michelle.cash@enron.com (cov 6)",
+     "note": "Pure generic-coverage outgun on a person-less rephrase: no name anchor at all, gold's distinctive 'Badge Nos.' vocabulary absent from the query; system/access/information emails cover 5-6 of 14 keywords vs gold 5 and outscore it 6.5x."
+    }
+   ],
+   "class_notes": "Original misses (30, 12% miss rate) and rephrased misses (42, 16.8%) differ in kind, and the paired analysis sharpens it: 18 needles missed in BOTH forms (36 misses) are content-hard \u2014 dominated by near-duplicate/thread confusion (12/36) and hubs (9/36), with the same rank-1 winner across the pair in 10/18. The 24 rephrased-ONLY misses are the incremental anchor-loss crater: they skew to generic-coverage outgun (9/24, vs 2/12 of original-only) and to pool-absence (rephrased golds are pool-absent 15/42 vs 7/30 original; rephrased gold covers a median 5.0 of 18.5 keywords vs 6.5 of 20 for original). So yes \u2014 rephrased winners differ in kind: original-question residual losses go to copies, correspondent hubs, and the 6-seat cap (cap trim is 4/12 of original-only misses), while paraphrase losses go to whichever email best covers the generic reworded vocabulary, with person-name hubs mattering far less (rank-1 winner mentions the query surname in only 2/21 outgun cases vs 15/25 hub cases). The cap-trim category is class-neutral (6 original / 4 rephrased), consistent with it being a width artifact rather than a query-formulation artifact.",
+   "surprises": "(1) The single biggest actionable surprise is not a ranking failure at all: 10/72 misses (14%) had gold at live map rank 7-12 with delivered == map_top[:6] \u2014 a 6-seat classifier assembly cap silently halves k on these queries; all 10 become hits at the nominal k=12. This is direct receipt fuel for the in-flight floor 12-vs-6 A/B. (2) The rank-1 interloper LOSES the keyword-coverage duel to gold in 39/72 misses while outscoring it a median 2.33x \u2014 on this bed RRF's per-list rank fusion (tag/name lists especially), not raw coverage, is what dethrones gold; coverage-based diagnoses would mislead. (3) Generic boilerplate (disclaimers/headers) essentially never wins \u2014 the feared spam category is absent; instead the 'wrong winner' is usually the right person or literally the same text under another gene_id (9 exact broadcast copies; the Williams newscast case delivers the answer content while grading counts a miss \u2014 a gene-identity/dedup artifact, arguably a scoring false negative). (4) Alias drift (john.forney vs m..forney) and headerless mid-document chunks (8/72 golds) both decouple the person anchor from the gold gene, feeding the hub category."
+  },
+  {
+   "bed": "FinanceBench (SEC filing pages, 368 filings, delivered .153; dump = 127 misses: metrics-generated 50, domain-relevant 44, novel-generated 33)",
+   "headline": "When gold loses on FinanceBench it is a candidate-pool blackout, not a ranking loss \u2014 118/127 golds never enter the score map \u2014 and what wins is verbose prose from the wrong filing (wrong company 68/127, right-company-wrong-year 41/127), because gold is a number-dense financial-statement page covering only ~19% of the extracted query keywords while boilerplate prose (comp plans, MD&A, notes) covers 27%+ and floods the shallow FTS candidate window.",
+   "categories": [
+    {
+     "name": "wrong_company (delivered majority from a different company)",
+     "n_misses": 68,
+     "share_pct": 53.5,
+     "mechanism": "The company anchor fails or is out-voted. Three sub-mechanisms: (a) 13/68 the query names the company only by an alias the tag can never match (JPM, AMEX, MGM, J&J, 'Ulta'); (b) 15/68 the name is multiword/punctuated (Best Buy, Coca-Cola, Lockheed Martin, Activision Blizzard) so the concatenated identity tag token ('bestbuy','cocacola') equals no query token; (c) 40/68 the company IS a clean single query token (3M x8, AMD x7, PepsiCo x5, Boeing/Nike x3) but it is one keyword among 15-42, and generic finance vocabulary decides: winner1 kw_cov beats gold 74% overall (mean 6.56 vs 4.63), and in 35/68 of these misses ZERO of 12 delivered docs are from the gold company (3M: 0/12 in every probe; '3M' likely dies in keyword extraction as a 2-char digit token). Winners concentrate in big-corpus distractor companies \u2014 Walmart 57 winner slots, JPMorgan 49, Intel 45, General Mills 42, AES 40 \u2014 mostly compensation-plan/proxy/MD&A prose whose words ('performance','calculation','average','returns','bonus') mimic metric-formula language: WALMART_2016_10K p60 comp-plan prose hits kw_cov 15 vs gold 7 on the Activision fixed-asset-turnover query.",
+     "evidence": "68/127 majority; per-winner wrong_company 782/1440 delivered slots; zero-gold-company-delivered in 35/68; company-name-form split abbrev 13 / multiword 15 / single-token 40; class split metrics 30, domain 24, novel 14; top interloper hubs repeat up to 7x each"
+    },
+    {
+     "name": "right company, WRONG YEAR filing",
+     "n_misses": 41,
+     "share_pct": 32.3,
+     "mechanism": "The company anchor held (winners are the right company) but the year does not constrain: 36/41 queries state the FY year explicitly, yet same-company-same-doctype winners skew OLDER 254:65 (deltas -1..-8, mode -2), because every filing's prose mentions many calendar years, gold years cluster at the top of each company's filing range (FY2022 alone is 53/127 golds, 2021-2023 = 87/127), and the corpus holds 5-8 older filings per company each contributing ~100+ candidate pages. The gold statement page again under-covers: e.g. Corning FY2022 working-capital query \u2014 gold CORNING_2022_10K p59 Consolidated Balance Sheets kw_cov 2/28, winner CORNING_2019_10K p43 pension prose kw_cov 6, score 0.355.",
+     "evidence": "41/127 majority (metrics 20, domain 14, novel 7); per-winner wrong_year 386/1440; year-in-query 36/41; older:newer 254:65; gold-year histogram 2022=53, 2023=21, 2021=13"
+    },
+    {
+     "name": "right company + right filing, wrong page (same_filing)",
+     "n_misses": 9,
+     "share_pct": 7.1,
+     "mechanism": "Retrieval reached the correct filing but prose pages inside it out-cover the gold statement/table page. Gold kw_cov here is extreme-low (1-5 of 12-28 keywords): AMEX 2022 10K gold p95 CONSOLIDATED STATEMENTS OF INCOME kw 1/22 loses to four deferral-plan/legal pages (p235 'SCHEDULE A DEFERRAL ACCOUNT', p224, p223, p209) each kw 2 but scoring 0.15-0.27; PayPal gold p60 balance sheet kw 1/28 loses to same-filing notes (kw 7) and critical-accounting-policies prose (kw 5). Winners in this category are prose in 40/48 same-filing winner slots examined; the balance-sheet page's content is numbers, not the query's analytic words ('positive','useful','relevant','metric','margin','profile').",
+     "evidence": "9/127 majority (domain 5, novel 4); per-winner same_filing 139/1440; gold kw_cov in these 9 rows: 1,5,1,2,3,3,5,5,5 vs winner pages kw 2-9"
+    },
+    {
+     "name": "right company, wrong doctype (10Q/EARNINGS gold vs 10K winners, and inverses)",
+     "n_misses": 9,
+     "share_pct": 7.1,
+     "mechanism": "Quarterly-scoped questions whose gold is a 10Q, earnings deck, or 8-K lose to the same company's annual 10-Ks, which have ~10x the pages and richer prose on the same topic: MGM FY2022 EBITDAR-by-region gold (2022Q4 EARNINGS supplemental-data table, kw 3/13) loses to MGM 10K pages DEFINING 'Adjusted EBITDAR' (11 of 12 winners are 10Ks, top score 0.335); BestBuy 2024Q2 10Q segment tables lose to 12/12 BestBuy 10K pages. 23/127 golds overall are quarterly docs; their majorities scatter (wrong_company 13, wrong_doctype 7) \u2014 quarterly docs are the thinnest-represented doc type so their identity tags ('2024q2','earnings') rarely match query phrasing ('Q2 of FY2024').",
+     "evidence": "9/127 majority (novel 8, domain 1); per-winner wrong_doctype 129/1440; MGM row: 11x 10K + 1x 10Q winners; BestBuy rows: 12x and 11x 10K winners; quarterly golds n=23"
+    }
+   ],
+   "quantitative": {
+    "partition_check": {
+     "wrong_company": 68,
+     "wrong_year": 41,
+     "same_filing_wrong_page": 9,
+     "wrong_doctype": 9,
+     "sum": 127,
+     "n_misses": 127
+    },
+    "live_rank_buckets": {
+     "pool_absent": 118,
+     "near_band_13_100": 9,
+     "delivered_side_loss_le12": 0,
+     "near_band_values": [
+      15,
+      18,
+      23,
+      34,
+      36,
+      37,
+      43,
+      44,
+      49
+     ],
+     "gold_first_score_zero": "121/127",
+     "rank_match": "127/127, replay_errors 0"
+    },
+    "per_winner_relations_1440_slots": {
+     "wrong_company": 782,
+     "wrong_year": 386,
+     "same_filing": 139,
+     "wrong_doctype": 129,
+     "unparsed": 4
+    },
+    "class_x_majority": {
+     "metrics-generated (n=50)": {
+      "wrong_company": 30,
+      "wrong_year": 20,
+      "same_filing": 0,
+      "wrong_doctype": 0
+     },
+     "domain-relevant (n=44)": {
+      "wrong_company": 24,
+      "wrong_year": 14,
+      "same_filing": 5,
+      "wrong_doctype": 1
+     },
+     "novel-generated (n=33)": {
+      "wrong_company": 14,
+      "wrong_year": 7,
+      "same_filing": 4,
+      "wrong_doctype": 8
+     }
+    },
+    "class_x_bucket": {
+     "metrics": {
+      "pool_absent": 47,
+      "near_band": 3
+     },
+     "domain": {
+      "pool_absent": 42,
+      "near_band": 2
+     },
+     "novel": {
+      "pool_absent": 29,
+      "near_band": 4
+     }
+    },
+    "coverage_duel_rank1": {
+     "winner_gt_gold": "94/127 (74%)",
+     "tie": 14,
+     "gold_gt": 19,
+     "mean_gold_union_kw_cov": 4.63,
+     "mean_winner1_kw_cov": 6.56,
+     "gold_cov_frac_of_n_kw": 0.186,
+     "winner1_cov_frac": 0.268,
+     "best_delivered_beats_gold_union": "117/127 (92%)"
+    },
+    "coverage_duel_by_class": {
+     "domain": "winner>gold 86%, gold 2.80/20.0 kw (frac .164), 4 golds kw_cov=0, 22/44 kw_cov<=2",
+     "novel": "winner>gold 64%, gold 3.61/15.0 (frac .241)",
+     "metrics": "winner>gold 70%, gold 6.92/41.8 (frac .169)"
+    },
+    "length_and_density": {
+     "mean_n_chars_gold": 2144,
+     "mean_n_chars_winner1": 3436,
+     "metrics_gold_chars": 1893,
+     "metrics_winner1_chars": 3630,
+     "digit_frac_gold_head": 0.104,
+     "digit_frac_winner1_head": 0.043,
+     "mean_tags_gold": 7.98,
+     "mean_tags_winner": 7.99
+    },
+    "page_types": {
+     "gold_127": {
+      "fin-statement": 72,
+      "prose": 46,
+      "table-ish": 5,
+      "cover": 2,
+      "notes": 1,
+      "toc": 1
+     },
+     "all_1440_winners": {
+      "prose": 1292,
+      "mdna": 43,
+      "table-ish": 39,
+      "notes": 32,
+      "fin-statement": 20,
+      "cover": 14
+     },
+     "rank1_winners_127": {
+      "prose": 111,
+      "table-ish": 5,
+      "notes": 4,
+      "cover": 3,
+      "fin-statement": 3,
+      "mdna": 1
+     },
+     "metrics_gold": {
+      "fin-statement": 45,
+      "other": 5
+     }
+    },
+    "company_anchor": {
+     "name_form_all_misses": {
+      "single_token_match": 74,
+      "multiword_or_punct_tag_unmatchable": 37,
+      "abbrev_or_absent": 16
+     },
+     "abbrev_companies": {
+      "JPMORGAN": 4,
+      "MGMRESORTS": 4,
+      "JOHNSON_JOHNSON": 5,
+      "BESTBUY": 1,
+      "ULTABEAUTY": 1,
+      "AMERICANEXPRESS": 1
+     },
+     "any_delivered_from_gold_company": {
+      "domain": "30/44",
+      "novel": "26/32 parsed",
+      "metrics": "35/50"
+     },
+     "zero_gold_company_delivered_total": 35,
+     "single_token_named_but_wrong_company_majority": 40,
+     "top_gold_losers": {
+      "3M": 8,
+      "AMD": 7,
+      "MGMRESORTS": 5,
+      "JOHNSON_JOHNSON": 5,
+      "PEPSICO": 5
+     },
+     "top_interloper_companies_winner_slots": {
+      "WALMART": 57,
+      "JPMORGAN": 49,
+      "INTEL": 45,
+      "GENERALMILLS": 42,
+      "AES": 40,
+      "PFIZER": 36,
+      "FEDEX": 35
+     }
+    },
+    "wrong_year_detail": {
+     "gold_year_in_query": "36/41",
+     "same_company_winner_year_deltas": {
+      "-8..-5": 72,
+      "-4": 42,
+      "-3": 38,
+      "-2": 56,
+      "-1": 46,
+      "+1": 24,
+      "+2..+7": 41
+     },
+     "older_vs_newer": "254:65",
+     "gold_years_all_misses": {
+      "2021": 13,
+      "2022": 53,
+      "2023": 21,
+      "2024": 3,
+      "2015-2020": 37
+     }
+    },
+    "metrics_zero_of_50": {
+     "mean_query_chars": 264,
+     "mean_n_kw": 41.76,
+     "vs_domain_n_kw": 20,
+     "vs_novel_n_kw": 15,
+     "boilerplate_phrase_freq": {
+      "round": 28,
+      "decimal": 28,
+      "balance sheet": 18,
+      "answer in": 18,
+      "average": 17,
+      "defined as": 14,
+      "cash flow statement": 13,
+      "income statement": 11
+     },
+     "gold_is_fin_statement_page": "45/50",
+     "pool_absent": "47/50",
+     "gold_kw_frac": 0.169,
+     "winner1_kw_mean": 9.04
+    },
+    "hubs_and_misc": {
+     "distinct_winner_gene_ids": "1078 of 1440 slots",
+     "max_repeat_winner": "7x (WALMART_2016_10K p60 comp-plan; JPMORGAN_2022_10K p364 'Calculation of Performance Ranking'; BOEING_2017_10K p80)",
+     "delivered_count_6_not_12": "14 misses (receipt_delivered_count=6)",
+     "winner1_score_mean": 0.207,
+     "map_top15_score_mean": 0.101,
+     "gold_doctypes": {
+      "10K": 103,
+      "10Q": 13,
+      "EARNINGS": 10,
+      "8K": 1
+     }
+    }
+   },
+   "exemplars": [
+    {
+     "needle": "financebench_id_02987",
+     "query": "What is the FY2019 fixed asset turnover ratio for Activision Blizzard? Fixed asset turnover ratio is defined as: FY2019 revenue / (average PP&E between FY2018 and FY2019). Round your answer to two decimal places...",
+     "gold_head": "[ACTIVISIONBLIZZARD_2019_10K | page 69] Table of Contents ACTIVISION BLIZZARD, INC. AND SUBSIDIARIES CONSOLIDATED STATEMENTS OF OPERATIONS (kw 7/48, pool-absent)",
+     "winner_head": "[WALMART_2016_10K | page 60] 'unaffiliated with a corporate or divisional operating strategy; bonus expense...' (comp-plan prose, kw 15, s0.151); r3 = JPMORGAN_2022_10K p364 'Calculation of Performance Ranking'",
+     "note": "metrics wrong_company archetype: 'Activision Blizzard' tag token 'activisionblizzard' matches no query token, and formula boilerplate ('defined','average','round','ratio') lights up compensation-plan prose in giant distractor filings \u2014 winner covers 15 of 48 keywords, gold table covers 7."
+    },
+    {
+     "needle": "financebench_id_03029",
+     "query": "What is the FY2018 capital expenditure amount (in USD millions) for 3M? Give a response... relying on the details shown in the cash flow statement.",
+     "gold_head": "[3M_2018_10K | page 59] 3M Company and Subsidiaries Consolidated Statement of Cash Flows (kw 6/29, pool-absent)",
+     "winner_head": "[COSTCO_2019_10K | page 25] Cash Flows from Operating Activities... (kw 9, s0.177); zero of 12 delivered are 3M docs",
+     "note": "single-token company that still anchors nothing: '3M' (2 chars, digit+letter) appears to die in keyword extraction \u2014 all 8 3M misses delivered 0/12 3M docs; 'cash flow statement' phrasing matches every company's MD&A cash-flow prose."
+    },
+    {
+     "needle": "financebench_id_02981",
+     "query": "Taking into account the information outlined in the income statement, what is the FY2019 - FY2021 3 year average unadjusted operating income % margin for Corning?...",
+     "gold_head": "[CORNING_2021_10K | page 64] Consolidated Statements of Income, Corning Incorporated (kw 7/40, pool-absent)",
+     "winner_head": "[CORNING_2019_10K | page 133] 'Force as indicated in Section 4(b), Employee must also sign a Memorandum of Understanding' (HR/legal prose, kw 5, s0.156); r3 = CORNING_2015_10K p248 termination-schedule boilerplate",
+     "note": "metrics wrong_year: company anchor held ('corning' single token) but the FY2021 filing loses to 2019/2015 filings' legal boilerplate \u2014 the year token constrains nothing and older filings supply more candidate pages."
+    },
+    {
+     "needle": "financebench_id_00005",
+     "query": "Does Corning have positive working capital based on FY2022 data? If working capital is not a useful or relevant metric for this company, then please state that and explain why.",
+     "gold_head": "[CORNING_2022_10K | page 59] Consolidated Balance Sheets, Corning Incorporated (kw 2/28, pool-absent, score 0.0)",
+     "winner_head": "[CORNING_2019_10K | page 43] pension-contribution prose (kw 6, s0.355); r2 CORNING_2020_10K p42 cash-flow summary (kw 5)",
+     "note": "domain-relevant wrong_year: analytic vocabulary ('positive','useful','relevant','metric','working capital') simply is not on a balance sheet \u2014 gold covers 2 of 28 keywords; 3-year-older prose covers 6 and wins by 0.355 to 0."
+    },
+    {
+     "needle": "financebench_id_00080",
+     "query": "Does Paypal have positive working capital based on FY2022 data? If working capital is not a useful or relevant metric...",
+     "gold_head": "[PAYPAL_2022_10K | page 60] PayPal Holdings, Inc. CONSOLIDATED BALANCE SHEETS As of December 31, 2022 (kw 1/28, pool-absent)",
+     "winner_head": "[PAYPAL_2023Q2_10Q | page 39] NOTES TO CONDENSED CONSOLIDATED FINANCIAL STATEMENTS (kw 5, s0.340); r2/r3 same 2022 10K but notes p69 (kw 7) and critical-accounting-policies p50 (kw 5)",
+     "note": "same-filing-wrong-page archetype: retrieval is inside the right filing, but the balance-sheet page itself covers 1/28 keywords \u2014 the pipeline delivers the filing's prose neighbors instead of the statement page holding the numbers."
+    },
+    {
+     "needle": "financebench_id_00382",
+     "query": "Which region had the Highest EBITDAR Contribution for MGM during FY2022?",
+     "gold_head": "[MGMRESORTS_2022Q4_EARNINGS | page 12] MGM RESORTS INTERNATIONAL AND SUBSIDIARIES SUPPLEMENTAL DATA - NET REVENUES (kw 3/13, live_rank 37)",
+     "winner_head": "[MGMRESORTS_2019_10K | page 41] 'Non-GAAP Measures: Adjusted EBITDAR is earnings before interest...' (kw 2, s0.335) \u2014 11 of 12 winners are MGM 10-Ks",
+     "note": "wrong_doctype: 'MGM' alias fails the 'mgmresorts' tag but content matches rescue the company; then pages DEFINING EBITDAR in annual reports out-score the quarterly earnings deck that CONTAINS the answer table \u2014 definitional prose beats supplemental data."
+    }
+   ],
+   "class_notes": "metrics-generated (0/50 delivered, all 50 in dump): the worst-shaped queries meet the worst-shaped golds. Queries average 264 chars / 41.8 keywords because FinanceBench appends formula boilerplate ('Round your answer to two decimal places' \u2014 round 28/50, decimal 28/50; 'defined as' 14/50; statement-name phrases 30+/50); gold is a consolidated-statement table page in 45/50 (mean 1893 chars, digit-dense) covering only 16.9% of keywords, so 47/50 are pool-absent and the boilerplate distributes coverage across generic prose corpus-wide (wrong_company 30, wrong_year 20, ZERO same-filing majorities \u2014 retrieval essentially never even lands in the right filing). domain-relevant (.12): analytic yes/no questions ('Does X have positive working capital...') whose keywords are meta-vocabulary absent from statements \u2014 lowest gold coverage fraction (2.80/20.0 = .164, 4 golds at kw_cov=0, 22/44 at <=2); splits wrong_company 24 / wrong_year 14 and owns 5 of the 9 same-filing misses. novel-generated (.34, the least-bad): shortest queries (n_kw 15), prose golds dominate (24/33) so the doc-shape penalty is smaller; its misses concentrate in identity failures \u2014 11/33 abbrev-named companies (MGM, JPM, Ulta, J&J) and all 8 quarterly-vs-annual doctype confusions; also holds 4 of the 9 near-band cases, i.e. its golds at least reach the pool.",
+   "surprises": "Four things the aggregates would not predict: (1) wrong-year winners skew OLDER, 254:65 per-winner \u2014 the freshness gate does nothing here because gold is pool-absent before assembly; older filings win on sheer candidate-page volume. (2) The delivery trim is never the culprit: 0/127 misses are delivered-side (live_rank<=12), rank_match 127/127 \u2014 this bed's .153 is entirely candidate-generation and pool-ranking, so seat-floor/eviction work cannot move it. (3) The recurring interlopers are compensation-plan and proxy boilerplate ('Calculation of Performance Ranking', 'bonus expense... investment returns'), which is a near-perfect lexical mimic of metric-formula queries \u2014 legal/comp pages beat MD&A as the top hub type. (4) Identity tags exist and are correct on every gold (mean 8 tags, company/year/doctype all present) yet buy nothing: multiword companies' concatenated tag tokens ('bestbuy','cocacola','lockheedmartin') are unmatchable by any natural query token, and even matchable single tokens ('3m') appear to be dropped by keyword extraction \u2014 35/68 wrong-company misses shipped zero pages from the gold company."
+  },
+  {
+   "bed": "LoCoMo conversational-memory (F:/tmp/locomo_bed/locomo.db, k=12, tag=locomo, 1,344 misses mined 2026-08-31, replay rank_match 1344/1344)",
+   "headline": "When gold loses on LoCoMo, what wins is a short turn from the RIGHT conversation but the wrong session \u2014 usually a phatic addressee-name turn (\"Wow, Caroline!\") or the question-echo turn that shares the query's wording \u2014 because the queried person's name is tagged on turns ADDRESSED TO them but not on their own answer turn, and the answer turn phrases its content differently than the question; for the cognitive family the winners are pure generic-phrase noise with less resemblance to the gold cue than two random cues have to each other.",
+   "categories": [
+    {
+     "name": "Weak-anchor pool exclusion (gold_kw_cov>0 but pool-absent)",
+     "n_misses": 542,
+     "share_pct": 40.3,
+     "mechanism": "Gold contains only ~15% of the query's keywords (mean gold_kw_cov 1.48 of n_kw 11.9) \u2014 the answer turn states the fact in different words than the question \u2014 so it never makes the FTS candidate pool. Winners out-cover gold (w1_kw_cov > gold in 368/542) and are shorter (w1 median 183 vs gold 224 chars). 88% of rank-1 winners come from gold's own conversation sample (426/483 conv-gold), but only 19% from the same session (|session delta| mean 8.3). Two winner archetypes: (a) question-echo turns \u2014 a question-mark turn with kw_cov >= gold sits in the top-6 for 68% of these misses (369/542), because LoCoMo queries reuse the conversation's own question wording (exemplar q096/q085: 'summer plans' matches Melanie's 'summer break... camping' turn, not Caroline's 'Researching adoption agencies' answer); (b) addressee-name-tagged turns \u2014 w1 carries the queried person's name as a tag while gold does not in 279 of these misses (vs 157 where both do).",
+     "evidence": "gold covers 15% of query kws (1.48/11.9); w1_cov>gold_cov 368/542; question-echo in top-6 68%; w1 same-sample 426/483 (88%), same-session 19%; class mix: singlehop 192, adversarial 97, multihop 84, temporal 64, cognitive 59, commonsense 46"
+    },
+    {
+     "name": "Zero-lexical-anchor paraphrase blackout (gold_kw_cov == 0)",
+     "n_misses": 370,
+     "share_pct": 27.5,
+     "mechanism": "Gold shares ZERO extracted keywords with the query \u2014 335/370 are cognitive-family cue docs whose query is a full paraphrase of the cue (query 'ended up volunteering... totally overwhelmed' vs gold cue 'learning to say no... less stressed'). Gold is pool-absent by construction (score 0.0), so ANYTHING wins: docs echoing the query's generic surface phrases. Measured: winner heads' Jaccard to the QUERY is 0.068 but to the GOLD cue only 0.010 \u2014 BELOW the 0.015 baseline of two random cues \u2014 i.e., retrieval is anti-correlated with gold because it locks onto exactly the surface words the paraphrase rewrote away. Delivered slice for cognitive = 69% conv turns / 31% other cues (cues over-win because they are short, dense, generic-vocabulary two-liners). Exemplar cog_001: query '...catch myself holding my breath...' delivers three 'Catch ya later!' sign-off turns from three different conversations, boosted by literal 'Catch ya later' ingest tags (w1 score 0.39).",
+     "evidence": "cov0 by class: cognitive 335, adversarial 28, singlehop 5, other 2; jaccard(winner,gold_cue)=0.010 < random-cue baseline 0.015; jaccard(winner,query)=0.068; only 31/398 cognitive misses have ANY delivered doc sharing >=3 content words with the gold cue; cognitive miss rate 398/401 (99%)"
+    },
+    {
+     "name": "Near-band ranking loss: tag-lane + length asymmetry (live_rank 13-100)",
+     "n_misses": 311,
+     "share_pct": 23.1,
+     "mechanism": "Gold IS in the pool with equal-or-better keyword coverage than the winner (tie 139 + gold-covers-more 120 = 259/311), yet ranks 13-100 (median 24). Two measured rank inverters: (1) tag lane \u2014 w1 has a mean 0.89 tags matching query words vs gold's 0.17, and gold is NEVER ahead on tags (w1>gold in 207/311, gold>w1 in 0/311): the queried person's name is an ingest tag on turns addressed to them ('Wow, Caroline!') but the gold answer turn spoken BY that person carries no self-name tag, so winners collect an extra RRF lane gold cannot enter; (2) length/density \u2014 winners are shorter and denser (w1 median 177 vs gold 244 chars; w1 kw-density 1.20 vs 0.97 per 100 chars, denser in 209/311), favoring bm25-normalized short phatic turns. Net score gap: gold/w1 score ratio mean 0.32. Exemplar q017: gold with kw_cov=4 ('transgender conference' turn, score 0.143) loses to kw_cov=1 'Wow, Caroline! This painting is awesome' (score 0.334, tags [Melanie, Caroline]).",
+     "evidence": "gold cov >= w1 cov in 259/311; tag hits w1 0.89 vs gold 0.17 (gold ahead 0/311); w1 denser 209/311; gold longer in ties 95/139 and losses 94/120; gold/w1 score = 0.32; w1 same-sample 279/307 (91%), same-session only 12%; hub effect: 20 docs take rank-1 on 18% of all misses (top hub 24 wins)"
+    },
+    {
+     "name": "Seat-cap delivery loss (live_rank 7-12, only 6 seats shipped)",
+     "n_misses": 121,
+     "share_pct": 9,
+     "mechanism": "Pure capacity loss, not reordering: delivery equals map_top[:6] as a set in 120/121 (exact order 116/121), and gold sat at live_rank 7-12 (42 at rank 7, 23 at 8) \u2014 every one of these becomes a hit at 12 delivered seats. The 6 seats go to the same winner types as category 3: same-sample turns (w1 same-sample 115/121, 95%) with the name-tag advantage (w1 tagged with the queried name while gold is not in 95/121) and shorter bodies (delivered mean 209 chars vs gold 273; gold is longer than EVERY delivered doc in 39/121). Gold/w1 score ratio 0.37. Exemplar q096: gold (476-char counseling answer, kw_cov=4, rank 12) is displaced while seat 6 area includes the verbatim question turn 'What kind of counseling and mental health services do you want to persue?' (kw_cov=5).",
+     "evidence": "delivered == map_top[:6] set 120/121; live_rank dist {7:42, 8:23, 9:16, 10:8, 11:18, 12:14}; receipt_delivered_count=6 for all 121; gold len mean 273 vs delivered mean 209; class mix: singlehop 47, adversarial 30, multihop 23, temporal 17, commonsense 4, cognitive 0; directly quantifies the 12-vs-6 floor A/B: +121 needles (~9% of all misses) recoverable"
+    }
+   ],
+   "quantitative": {
+    "totals": {
+     "n_misses": 1344,
+     "category_sum": 1344,
+     "k": 12
+    },
+    "live_rank_buckets": {
+     "pool_absent": 912,
+     "rank_13_100": 311,
+     "rank_le12": 121,
+     "rank_gt100": 0
+    },
+    "miss_rate_by_class": {
+     "cognitive": "398/401 (99%)",
+     "commonsense": "62/89 (70%)",
+     "multihop": "161/281 (57%)",
+     "adversarial": "225/446 (50%)",
+     "temporal": "146/320 (46%)",
+     "singlehop": "352/841 (42%)"
+    },
+    "category_x_class": {
+     "1_zero_anchor": {
+      "cognitive": 335,
+      "adversarial": 28,
+      "singlehop": 5,
+      "multihop": 1,
+      "commonsense": 1,
+      "temporal": 0
+     },
+     "2_weak_anchor_pool": {
+      "singlehop": 192,
+      "adversarial": 97,
+      "multihop": 84,
+      "temporal": 64,
+      "cognitive": 59,
+      "commonsense": 46
+     },
+     "3_nearband_rank": {
+      "singlehop": 108,
+      "adversarial": 70,
+      "temporal": 65,
+      "multihop": 53,
+      "commonsense": 11,
+      "cognitive": 4
+     },
+     "4_seatcap_delivery": {
+      "singlehop": 47,
+      "adversarial": 30,
+      "multihop": 23,
+      "temporal": 17,
+      "commonsense": 4,
+      "cognitive": 0
+     }
+    },
+    "coverage_duels_w1_vs_gold": {
+     "pool_absent": {
+      "n": 912,
+      "w1_cov_mean": 2.36,
+      "gold_cov_mean": 0.88,
+      "n_kw_mean": 16.2,
+      "w1_wins": 736,
+      "ties": 162,
+      "gold_wins": 14
+     },
+     "rank_13_100": {
+      "n": 311,
+      "w1_cov_mean": 2.22,
+      "gold_cov_mean": 2.54,
+      "n_kw_mean": 9.9,
+      "w1_wins": 52,
+      "ties": 139,
+      "gold_wins": 120
+     },
+     "rank_le12": {
+      "n": 121,
+      "w1_cov_mean": 2.29,
+      "gold_cov_mean": 3.12,
+      "n_kw_mean": 10.4,
+      "w1_wins": 10,
+      "ties": 42,
+      "gold_wins": 69
+     }
+    },
+    "sample_locality_conv_gold": {
+     "w1_same_sample_pct": {
+      "1_zero_anchor": "30/35 (86%)",
+      "2_weak_anchor_pool": "426/483 (88%)",
+      "3_nearband_rank": "279/307 (91%)",
+      "4_seatcap_delivery": "115/121 (95%)"
+     },
+     "any_delivered_same_sample": {
+      "adversarial": "223/225 (99%)",
+      "commonsense": "61/62 (98%)",
+      "multihop": "155/161 (96%)",
+      "singlehop": "351/352 (100%)",
+      "temporal": "144/146 (99%)"
+     },
+     "same_SESSION_given_same_sample_pct": {
+      "1": 23,
+      "2": 19,
+      "3": 12,
+      "4": 18
+     },
+     "abs_session_delta_mean": {
+      "1": 6.4,
+      "2": 8.3,
+      "3": 8.5,
+      "4": 7.2
+     }
+    },
+    "name_tag_asymmetry": {
+     "conv_gold_misses_with_person_name_in_query": 901,
+     "w1_tagged_with_name_gold_NOT": 631,
+     "both_tagged": 233,
+     "neither": 28,
+     "gold_only": 9,
+     "gold_turn_spoken_BY_queried_person": "719/901 (80%)",
+     "nearband_tag_hits_mean": {
+      "w1": 0.89,
+      "gold": 0.17,
+      "w1_ahead": 207,
+      "gold_ahead": 0
+     }
+    },
+    "winner_hub_concentration": {
+     "distinct_rank1_winners": 677,
+     "top20_hub_docs_take_rank1_on": "242/1344 (18%)",
+     "top_hub_wins": 24,
+     "top_hub_head": "[conv-48 session_20] Deborah: Wow, Jolene! ..."
+    },
+    "question_echo_top6_kwcov_ge_gold": {
+     "by_cat": {
+      "1": "152/370 (41%)",
+      "2": "369/542 (68%)",
+      "3": "175/311 (56%)",
+      "4": "48/121 (40%)"
+     },
+     "by_class": {
+      "adversarial": "164/225 (73%)",
+      "singlehop": "235/352 (67%)",
+      "multihop": "93/161 (58%)",
+      "temporal": "81/146 (55%)",
+      "commonsense": "33/62 (53%)",
+      "cognitive": "138/398 (35%)"
+     }
+    },
+    "length_medians_w1_vs_gold": {
+     "1": [
+      174,
+      157
+     ],
+     "2": [
+      183,
+      224
+     ],
+     "3": [
+      177,
+      244
+     ],
+     "4": [
+      192,
+      271
+     ]
+    },
+    "score_ratio_gold_over_w1": {
+     "3_nearband": 0.32,
+     "4_seatcap": 0.37
+    },
+    "cognitive_family_resemblance": {
+     "delivered_top3_types": {
+      "conv": 719,
+      "cue": 475
+     },
+     "jaccard_winner_vs_gold_cue": 0.01,
+     "jaccard_winner_vs_query": 0.068,
+     "random_cue_pair_baseline": 0.015,
+     "misses_with_any_delivered_sharing_ge3_words_with_cue": "31/398",
+     "cue_fraction_of_delivered_slice": "27-31%"
+    },
+    "gold_doc_type": {
+     "cognitive": "398/398 cue",
+     "all_other_classes": "conv turns"
+    },
+    "seatcap_verification": {
+     "delivered_eq_maptop6_set": "120/121",
+     "exact_order": "116/121",
+     "delivered_eq_maptop_head_all_misses": "1337/1344"
+    },
+    "delivered_seats_dist_all_misses": {
+     "3": 3,
+     "6": 431,
+     "12": 910
+    },
+    "gold_n_dist_head": {
+     "1": 1107,
+     "2": 137,
+     "3": 45,
+     "4plus": 55
+    }
+   },
+   "exemplars": [
+    {
+     "needle": "cog_001",
+     "query": "A: I still catch myself holding my breath whenever they run through the hallway, even though nothing's actually happening.",
+     "gold_head": "A: The time our toddler slipped on the kitchen floor made us put those non-slip mats everywhere. B: That scare really changed how you set up the house.",
+     "winner_head": "[conv-43 session_4] John: Have fun with your writing! Catch you later! (score 0.39, tag 'Catch'); r2-r3 are 'Catch ya later!' sign-offs from conv-49 and conv-50",
+     "note": "Zero-anchor cognitive: the paraphrase shares no keywords with the cue; the single surviving word 'catch' fires FTS + a literal 'Catch ya later' ingest tag, so three farewell turns from three different conversations win. Generic-term noise, zero family resemblance."
+    },
+    {
+     "needle": "cog_000",
+     "query": "A: I ended up volunteering for that project, and now I'm totally overwhelmed.",
+     "gold_head": "A: After learning to say 'no', I've felt a lot less stressed overall. B: That's a great skill to develop; protecting your time is important.",
+     "winner_head": "[conv-43 session_16] Tim: I just love watching LeBron... an epic block that totally changed the game and ended up winning it (kw_cov 2); r2 is another cue: '...That fine ended up nudging you into a better setup.'",
+     "note": "Zero-anchor cognitive: winners match only 'ended up' + 'totally'. Other cues take ~31% of the delivered slice because they are short generic two-liners \u2014 but they are the WRONG cues (winner-to-gold Jaccard 0.010 < 0.015 random-cue baseline)."
+    },
+    {
+     "needle": "conv-26_q003",
+     "query": "What did Caroline research?",
+     "gold_head": "[conv-26 session_2] Caroline: Researching adoption agencies \u2014 it's been a dream to have a family... (tags: d2_8, conv-26, conv \u2014 NO 'Caroline' tag)",
+     "winner_head": "[conv-26 session_16] Melanie: Wow, Caroline! This painting is awesome... (score 0.36, tags include 'Melanie','Caroline'); r2 near-identical painting-praise turn from session_9",
+     "note": "Weak-anchor pool exclusion, multihop: gold is spoken BY Caroline but carries no 'Caroline' tag and never says her name; turns ADDRESSED to her are name-tagged and win. Right conversation (conv-26), wrong turns \u2014 the addressee-tag inversion in its purest form."
+    },
+    {
+     "needle": "conv-26_q017",
+     "query": "When is Caroline going to the transgender conference?",
+     "gold_head": "[conv-26 session_5] Caroline: ...I'm going to a transgender conference this month... (kw_cov 4, score 0.143, live_rank 16)",
+     "winner_head": "[conv-26 session_16] Melanie: Wow, Caroline! This painting is awesome. Love the red and blue. (kw_cov 1, score 0.334, tags 'Melanie','Caroline')",
+     "note": "Near-band temporal: gold covers 4 query keywords vs the winner's 1, yet loses 0.14-to-0.33 \u2014 the winner's name-tag lane plus short length (150 vs 222 chars) outranks pure content coverage under RRF. Gold never wins the tag duel (0/311 in this bucket)."
+    },
+    {
+     "needle": "conv-26_q096",
+     "query": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+     "gold_head": "[conv-26 session_4] Caroline: I'm still figuring out the details, but I'm thinking of working with trans people... (476 chars, kw_cov 4, live_rank 12)",
+     "winner_head": "[conv-26 session_4] Melanie: Sounds great! What kind of counseling and mental health services do you want to persue? (kw_cov 5, 144 chars) \u2014 plus 5 other short same-conv turns fill the 6 seats",
+     "note": "Seat-cap loss, singlehop: the benchmark question copies Melanie's in-conversation question verbatim, so the QUESTION turn (kw_cov 5) outranks the 476-char ANSWER; gold at rank 12 with only 6 seats delivered. At 12 seats this is a hit \u2014 all 121 category-4 misses are."
+    },
+    {
+     "needle": "conv-26_q176",
+     "query": "How did Caroline feel while watching the meteor shower?",
+     "gold_head": "[conv-26 session_10] Melanie: It was one of those moments where I felt tiny and in awe of the universe... (kw_cov 0, pool-absent)",
+     "winner_head": "[conv-26 session_11] Melanie: Wow, Caroline! That sounds awesome. This pic's from last night - looks like everyone was having a blast! (kw_cov 2, score 0.33)",
+     "note": "Adversarial trap: MELANIE watched the meteor shower, so the gold evidence turn contains neither 'Caroline' nor 'meteor shower' \u2014 zero anchor. Winners are same-conv turns tagged 'Caroline' with feel-adjacent filler; the trap's premise-words select exactly the wrong-person turns."
+    }
+   ],
+   "class_notes": "cognitive (99% miss, 398): gold is ALWAYS a cue file; 335/398 zero-anchor (query is a full paraphrase of the cue), 59 weak-anchor with 1 shared common word, only 4 near-band. Winners are generic-phrase noise: 69% conv turns / 31% other cues in the top-3, resembling the query (J=0.068) but not the gold cue (J=0.010, below the 0.015 random-cue baseline). No lexical fix reaches these; they need paraphrase-robust matching. adversarial (50% miss, 225): spread across all four categories; highest question-echo rate (73% have a question turn in top-6 covering >= gold) because trap questions recycle conversation wording + person names; 28 are zero-anchor traps where the premise names the wrong person (q176); 90% of winners are same-sample wrong turns \u2014 the pipeline confidently delivers plausible-looking neighbors, the worst mode for trap grading. temporal (46% miss, 146): zero cov0 (dates/events give anchors) but near-band heavy (65) and pool-absent (64) \u2014 'When did X...' queries are name + 1-2 content words, so the name-tag lane dominates; 95% of w1 same-sample, highest of any class. multihop (57% miss, 161): pool-absent heavy (85/161) \u2014 multi-fact queries dilute per-doc coverage (each gold holds one hop), plus 23 seat-cap. singlehop (42% miss but largest absolute, 352): the canonical answer-turn-vs-question-turn split \u2014 192 weak-anchor (answer phrased differently), 108 near-band, 47 seat-cap (most of any class). commonsense (70% miss, 62): mostly weak-anchor pool exclusion (46/62); inference queries share few literal words with the evidence turn.",
+   "surprises": "1) The speaker-identity inversion: gold is spoken BY the queried person in 80% of name-bearing conv misses, yet the ingest tagger tags ADDRESSEE mentions, not speakers \u2014 so 'Caroline'-queries retrieve Melanie's 'Wow, Caroline!' turns while Caroline's own answers (which never say her name and carry no self-name tag) are invisible to the tag lane (w1 ahead on tag hits 207/311, gold ahead 0/311 in near-band). A speaker-name tag at ingest (or fielded speaker column) attacks ~70% of conv-gold misses at the mechanism level. 2) Retrieval is ANTI-correlated with gold on the cognitive family: winners resemble the gold cue LESS than two random cues resemble each other (0.010 vs 0.015), because FTS locks onto exactly the surface words the paraphrase rewrote away. 3) 121 misses (9%) are pure 6-seat cap losses with gold at rank 7-12 and delivery == map_top[:6] in 120/121 \u2014 a direct, already-measured payoff for the in-flight 12-vs-6 floor A/B (biggest beneficiaries: singlehop 47, adversarial 30). 4) Cross-conversation contamination is nearly nonexistent (96-100% of misses have same-sample docs delivered; 86-95% of rank-1 winners are same-sample) \u2014 the failure is intra-conversation turn selection, not corpus confusion \u2014 EXCEPT zero-anchor cognitive, where farewell turns from three different conversations win on 'catch'. 5) Winner-hub behavior: just 20 phatic addressee-praise docs take rank-1 on 18% of all 1,344 misses (top: 'Wow, Jolene!' x24) \u2014 the entity-hub cutoff story (#412) reappearing at the turn level."
+  },
+  {
+   "bed": "locomo_obs (LoCoMo turns + 2,541 LLM observation docs, union gold, k=12) \u2014 interloper_mine_locomo_obs_2026-08-31.json, n=1,144 misses",
+   "headline": "When gold loses on the obs bed, the winner is almost always an observation doc about the RIGHT conversation but the wrong episode \u2014 obs take 78.5% of delivered seats and 94.4% of rank-1 wins on non-cognitive misses (92% same-conversation as gold) because they are half the length, 2x the keyword density, and written in third-person query vocabulary with pronouns resolved; they displace raw turns at all three stages (candidate fetch, RRF rank, and a 6-seat delivery cap), while the cognitive class fails upstream with zero lexical anchors and is untouched by obs entirely.",
+   "categories": [
+    {
+     "name": "Cue-corpus paraphrase orphans (cognitive class)",
+     "n_misses": 399,
+     "share_pct": 34.9,
+     "mechanism": "Gold is a 'cue' doc (A:/B: template dialogue, median 157 chars) whose only tags are cue_NNN/cues \u2014 zero content/entity tags, so no tag-tier recall. The query is a first-person paraphrase continuation of the cue: gold_kw_cov=0 in 335/399 despite median n_kw=25 extracted keywords, so FTS has literally nothing to match; 397/399 are pool-absent. Winners are weak lexical hitchhikers (rank-1 median RRF score 0.149 vs 0.340 on other classes): 183 rank-1 winners are OTHER cues sharing template phrasing ('I'm spending my weekends...', 'ended up', 'small changes'), 154 are turns, 62 obs \u2014 all sharing only generic verbs. The obs corpus is irrelevant here: obs hold just 20.4% of cognitive seats and 0% of delivered obs are 'same-conv' (cues have no conv). This is anchor loss at Stage-1 extraction, not displacement \u2014 which is exactly why obs enrichment moved cognitive .01->.01.",
+     "evidence": "gold_kw_cov==0: 335/399; pool_absent: 397/399 (2 at ranks 16 and 48); gold cue tags mean 4.1, all identity tags; rank-1 winner types {cue:183, turn:154, obs:62}; rank-1 winner kw_cov mode=2; rank-1 score median 0.149 (vs 0.340 noncog); obs seat share 20.4%, obs same-conv 0/951"
+    },
+    {
+     "name": "Candidate-pool crowd-out \u2014 gold absent from the score map (non-cognitive)",
+     "n_misses": 357,
+     "share_pct": 31.2,
+     "mechanism": "Gold HAS lexical hooks (gold_first kw_cov>=1 in 325/357; union gold cov=0 in only 23/357) yet never enters the live score map: the depth-capped candidate fetch (fts5_candidate_depth = max_genes*4) fills with obs docs that outrank gold on bm25 before gold is reached \u2014 obs are shorter (median 134 chars vs gold turn median 178-232) and keyword-denser. Anchor poverty amplifies it: gold_first cov<=1 in 252/357 (70.6%) because raw turns speak in pronouns and deixis ('I found it last week', 'They were scared') while the co-ingested observation restates the same scene in the benchmark question's own third-person vocabulary ('Dave shared a story on his blog about how he made a car...'). Rank-1 winners: same-conversation obs 298/357 (83.5%), of which 42 are from gold's very session (the obs shadows its own turn and eats the seat); 168/357 misses have >=1 delivered obs from gold's own conv+session.",
+     "evidence": "gold_first kw_cov dist {1:220, 2:76, 0:32, 3:24, 4:5}; union cov==0 only 23/357; rank-1 relation {obs_sameconv_othersess:256, obs_sameconv_samesess:42, turn:30, obs_otherconv:27, cue:2}; seat composition obs .706 / turn .269 / cue .024; delivered obs same-conv 2201/2590 (85.0%); rank1-vs-gold_first cov duel w>g 285 / w=g 67 / w<g 5"
+    },
+    {
+     "name": "Near-band RRF outranking by same-conversation observations (gold in pool, rank 13-100)",
+     "n_misses": 309,
+     "share_pct": 27,
+     "mechanism": "Gold is scored and close (median live_rank 21, mean 24.4; median RRF margin to the rank-12 seat only 0.091) but the 12 seats are 86.1% obs (median 11 of 12). Coverage is NOT the driver: rank-1 winner vs gold_first kw_cov duel is even (w>g 107 / w=g 119 / w<g 83) and vs the union-gold coverage the duel actually favors gold (w<g 145 vs w>g 47). Obs win on fused rank across tiers: median 134 chars vs turn 232 (bm25 length normalization), keyword density 1.63 vs 0.82 kw/100ch (2.0x), mean 6.9 tags vs 4.6 (more tag-tier lottery tickets for query proper nouns). Rank-1 winners are same-conv obs 287/309 (92.9%) \u2014 right person, wrong episode: 'John is hooked on FIFA 23' outranks the chess gold turn; 47 are same-session (shadowing); the 12 other-conv obs winners are mostly same-first-name speaker collisions.",
+     "evidence": "gold live_rank median 21; margin(rank12-gold) median 0.0908 mean 0.0972; obs seats median 11/12, share .861; obs same-conv 2738/2872 (95.3%); rank-1 relation {obs_sameconv_othersess:240, obs_sameconv_samesess:47, obs_otherconv:12, turn:9, cue:1}; union-cov duel w<g 145 / w=g 119 / w>g 47; 172/309 misses have a delivered obs from gold's own session"
+    },
+    {
+     "name": "Seat-cap truncation \u2014 gold ranked 7-12 but delivery shipped only 6 docs",
+     "n_misses": 79,
+     "share_pct": 6.9,
+     "mechanism": "Pure delivery-side loss: gold sits at live_rank 7-12 in the score map, inside k=12, but ALL 79 rows delivered exactly 6 documents (classifier cap / seat-floor trim), and the 6 shipped seats are 85.9% obs \u2014 every rank-1 winner in this bucket is an obs (63 same-conv other-session, 10 same-session, 6 other-conv). Gold would have been delivered at a 12-seat floor; the tiny dense obs monopolize ranks 1-6 (e.g. an 86-char obs 'Maria volunteers at a homeless shelter' with kw_cov=4 above a 239-char gold turn with the same cov=4). This bucket is the direct casualty count for the 12-vs-6 floor A/B: recovering it is worth up to 79/1144 = 6.9% of all misses (~4.1pp of the .519 delivered rate).",
+     "evidence": "delivered_count==6 for 79/79; live_rank dist 7:30, 8:19, 9:8, 10:4, 11:10, 12:8; seat composition obs .859 / turn .135; rank-1 relation all obs {sameconv_othersess:63, sameconv_samesess:10, otherconv:6}; gold_first kw_cov<=1 only 12/79 (gold here is lexically fine \u2014 it lost seats, not score)"
+    }
+   ],
+   "quantitative": {
+    "partition": {
+     "cue_orphan": 399,
+     "crowdout_pool_absent": 357,
+     "near_band_13_100": 309,
+     "cap_trunc_lte12": 79,
+     "sum": 1144
+    },
+    "live_rank_buckets": {
+     "pool_absent": 754,
+     "r13_100": 311,
+     "lte12": 79
+    },
+    "doc_type_id_method": {
+     "how": "tags, zero fallback needed on 30,448 classified doc rows: obs = sN_speaker_idx tag (s14_sam_000), turn = dN_M tag (d16_9), cue = cue_NNN. Head shape corroborates: obs DO carry the [conv-NN session_M | date] bracket header (prompt guessed they would not) \u2014 the discriminator is third-person summary with no 'Speaker:' colon after the header, vs turns' 'Speaker: quoted speech'. Cues have no bracket header (A:/B: template).",
+     "rows_classified": {
+      "cue": 3483,
+      "turn": 10872,
+      "obs": 16093
+     }
+    },
+    "winner_fractions_q_a": {
+     "all_delivered_seats_12144": {
+      "obs": [
+       6820,
+       0.562
+      ],
+      "turn": [
+       3961,
+       0.326
+      ],
+      "cue": [
+       1363,
+       0.112
+      ]
+     },
+     "noncog_seats_7476": {
+      "obs": [
+       5869,
+       0.785
+      ],
+      "turn": [
+       1493,
+       0.2
+      ],
+      "cue": [
+       114,
+       0.015
+      ]
+     },
+     "rank1_all": {
+      "obs": 765,
+      "turn": 193,
+      "cue": 186
+     },
+     "rank1_noncog_745": {
+      "obs": [
+       703,
+       0.944
+      ],
+      "turn": [
+       39,
+       0.052
+      ],
+      "cue": [
+       3,
+       0.004
+      ]
+     }
+    },
+    "conv_match_q_b": {
+     "delivered_obs_seats_same_conv": [
+      5318,
+      5869,
+      0.906
+     ],
+     "same_conv_obs_also_same_session": [
+      565,
+      5318,
+      0.106
+     ],
+     "rank1_obs_same_conv": [
+      649,
+      703,
+      0.923
+     ],
+     "rank1_obs_same_conv_same_session": 99,
+     "misses_with_delivered_obs_from_golds_own_session": [
+      374,
+      745,
+      0.502
+     ],
+     "rank1_obs_other_conv": 45,
+     "other_conv_rank1_sharing_gold_speaker_first_name": [
+      33,
+      45,
+      0.733
+     ],
+     "other_conv_seats_mentioning_gold_speaker_name": [
+      288,
+      1116
+     ]
+    },
+    "size_density": {
+     "median_n_chars": {
+      "obs": 134,
+      "turn": 213,
+      "cue": 159,
+      "gold_turn": 232.5,
+      "gold_obs": 143
+     },
+     "mean_n_tags": {
+      "obs": 6.9,
+      "turn": 4.6,
+      "cue": 4.1
+     },
+     "kw_per_100ch_rank1_winner_vs_gold": [
+      1.626,
+      0.82
+     ],
+     "noncog_rank1_winner_shorter_than_gold": [
+      554,
+      745
+     ]
+    },
+    "coverage_duels_rank1_vs_gold_union": {
+     "pool_absent": {
+      "w>g": 638,
+      "w=g": 100,
+      "w<g": 16
+     },
+     "r13_100": {
+      "w<g": 145,
+      "w=g": 119,
+      "w>g": 47
+     },
+     "lte12": {
+      "w<g": 47,
+      "w=g": 25,
+      "w>g": 7
+     }
+    },
+    "coverage_duels_rank1_vs_gold_first_noncog": {
+     "pool_absent": {
+      "w>g": 285,
+      "w=g": 67,
+      "w<g": 5
+     },
+     "r13_100": {
+      "w>g": 107,
+      "w=g": 119,
+      "w<g": 83
+     },
+     "lte12": {
+      "w<g": 29,
+      "w=g": 28,
+      "w>g": 22
+     }
+    },
+    "gold_types_by_class": {
+     "cognitive": {
+      "cue": 399
+     },
+     "singlehop": {
+      "turn": 212,
+      "obs": 54
+     },
+     "adversarial": {
+      "turn": 135,
+      "obs": 63
+     },
+     "multihop": {
+      "turn": 81,
+      "obs": 44
+     },
+     "temporal": {
+      "turn": 76,
+      "obs": 28
+     },
+     "commonsense": {
+      "turn": 34,
+      "obs": 18
+     }
+    },
+    "gold_type_to_rank1_winner_noncog": {
+     "gold_turn": {
+      "obs": 514,
+      "turn": 23,
+      "cue": 1
+     },
+     "gold_obs": {
+      "obs": 189,
+      "turn": 16,
+      "cue": 2
+     }
+    },
+    "near_band_margins": {
+     "gold_live_rank_median": 21,
+     "gold_live_rank_mean": 24.41,
+     "rrf_margin_rank12_minus_gold": {
+      "median": 0.0908,
+      "mean": 0.0972,
+      "max": 0.2869
+     },
+     "obs_seats_of_12": {
+      "median": 11,
+      "mean": 9.25
+     }
+    },
+    "cognitive_detail": {
+     "gold_kw_cov_0": [
+      335,
+      399
+     ],
+     "pool_absent": 397,
+     "median_n_kw": 25,
+     "rank1_types": {
+      "cue": 183,
+      "turn": 154,
+      "obs": 62
+     },
+     "rank1_score_median_vs_noncog": [
+      0.149,
+      0.34
+     ],
+     "obs_seat_share": 0.204,
+     "cue_tags_are_identity_only": true
+    },
+    "cap_trunc_detail": {
+     "delivered_count_all_79": 6,
+     "live_rank_dist": {
+      "7": 30,
+      "8": 19,
+      "9": 8,
+      "10": 4,
+      "11": 10,
+      "12": 8
+     },
+     "recoverable_share_of_all_misses": 0.069
+    },
+    "per_class_rank1_obs": {
+     "singlehop": [
+      257,
+      266,
+      "same_conv 240"
+     ],
+     "temporal": [
+      104,
+      104,
+      "same_conv 98"
+     ],
+     "multihop": [
+      119,
+      125,
+      "same_conv 110"
+     ],
+     "adversarial": [
+      176,
+      198,
+      "same_conv 166"
+     ],
+     "commonsense": [
+      47,
+      52,
+      "same_conv 44"
+     ]
+    },
+    "per_class_category_split": {
+     "singlehop": {
+      "crowdout": 120,
+      "near_band": 114,
+      "cap_trunc": 32
+     },
+     "temporal": {
+      "near_band": 58,
+      "crowdout": 37,
+      "cap_trunc": 9
+     },
+     "multihop": {
+      "crowdout": 65,
+      "near_band": 53,
+      "cap_trunc": 7
+     },
+     "adversarial": {
+      "crowdout": 93,
+      "near_band": 78,
+      "cap_trunc": 27
+     },
+     "commonsense": {
+      "crowdout": 42,
+      "near_band": 6,
+      "cap_trunc": 4
+     },
+     "cognitive": {
+      "cue_orphan": 399
+     }
+    }
+   },
+   "exemplars": [
+    {
+     "needle": "conv-44_q049",
+     "query": "What does Audrey view her pets as?",
+     "gold_head": "[conv-44 session_23] Audrey: I think i've said this so many times, but I really can't imagine my life without them - my little family...",
+     "winner_head": "W1 [conv-44 session_6 obs] Audrey believes in using positive reinforcement rather than punishment to train pets. / W2 [conv-44 session_15 obs] Audrey considers her pets to be family and believes they bring joy...",
+     "note": "Near-band (live_rank 21). W2 is a non-gold observation that LITERALLY answers the question ('considers her pets to be family') \u2014 the gold turn says only 'them - my little family' with pronouns. Same-conv obs from other sessions sweep the seats; arguably a union-gold labeling gap, not just a retrieval failure."
+    },
+    {
+     "needle": "conv-47_q106",
+     "query": "What online game did John start playing recently for improving strategy?",
+     "gold_head": "[conv-47 session_17] John: Hi James! I just started playing chess to get better at strategy...",
+     "winner_head": "W1 [conv-43 s23 obs] John used to practice basketball outside for hours... / W2 [conv-47 s8 obs] John has been playing the game AC Valhalla. (91 chars) / W3 [conv-47 s30 obs] John is currently hooked on playing FIFA 23...",
+     "note": "Near-band (live_rank 26): right-person wrong-episode obs displacement plus a cross-conv name collision at W1 (conv-43's John). The 91-char obs at cov=3 shows the compactness edge; gold turn had cov=3 too and still lost the fusion rank."
+    },
+    {
+     "needle": "conv-50_q068",
+     "query": "When did Dave find the car he repaired and started sharing in his blog?",
+     "gold_head": "[conv-50 session_28] Dave: I found it last week, and it was in bad shape, but I saw the potential... (kw_cov=1)",
+     "winner_head": "W1 [conv-50 session_28 obs, SAME session] Dave shared a story on his blog about how he made a car look like a beast... (kw_cov=3)",
+     "note": "Crowd-out (pool-absent, temporal class): the gold turn speaks in pronouns/deixis ('I found it last week' \u2014 one keyword hook), while the same-scene observation restates it in the question's own vocabulary (car, blog, shared) and shadows it out of the candidate pool entirely. The archetype of displacement-not-bridging."
+    },
+    {
+     "needle": "conv-26_q146",
+     "query": "How did Melanie's children handle the accident?",
+     "gold_head": "[conv-26 session_18] Melanie: Thanks! They were scared but we reassured them and explained their brother would be OK... (kw_cov=1)",
+     "winner_head": "W1 [conv-26 session_18 obs] Melanie went on a road trip with her family which started off with an accident involving her son. / W2 [same session obs] Melanie's son got into an accident during the road trip. (107 chars)",
+     "note": "Crowd-out: gold turn never says 'accident' or 'children' ('They'); two same-session observations that DO carry those words take the head seats and gold never enters the score map."
+    },
+    {
+     "needle": "conv-41_q069",
+     "query": "What did Maria donate to a homeless shelter in December 2023?",
+     "gold_head": "[conv-41 session_2] Maria: ...I donated my old car to a homeless shelter I volunteer at yesterday... (kw_cov=4, live_rank 10)",
+     "winner_head": "W1 [conv-41 s7 obs] Maria has been volunteering at a homeless shelter, finding it rewarding. (123ch, cov=4) / W3 [conv-41 s8 obs] Maria volunteers at a homeless shelter. (86ch, cov=4)",
+     "note": "Cap-truncation: gold ranked 10 with FULL cov=4 \u2014 inside k=12 \u2014 but delivery shipped only 6 seats and tiny keyword-saturated obs (an 86-char doc at cov=4) hold ranks 1-6. Would be a hit at the 12-seat floor."
+    },
+    {
+     "needle": "cog_188",
+     "query": "A: I've been spending my weekends visiting local historical sites, and it's surprisingly rich without needing a passport.",
+     "gold_head": "A: I'm saving all my vacation days for one big trip because I want to spend a month exploring Japan's countryside. B: ... (cue, kw_cov=0)",
+     "winner_head": "W1 [conv-43 obs] John is interested in historical architecture... (sc 0.149) / W2 [cue] A: I'm spending my weekends researching sustainable farming practices...",
+     "note": "Cue orphan: query paraphrase shares ZERO extracted keywords with the gold cue (n_kw=22, cov=0) and cue docs carry no content tags, so gold is unreachable; winners are template-mates ('I'm spending my weekends') and generic-word hitchhikers at near-noise scores. Obs corpus is a bystander."
+    }
+   ],
+   "surprises": "Four things cut against the intuitive 'abstractions are bigger/richer so they win' story. (1) Obs win by being SHORTER, not longer: median 134 chars vs 213 for turns, with 2.0x the query-keyword density (1.63 vs 0.82 kw/100ch) \u2014 winner is shorter than gold in 554/745 non-cognitive misses; this is a bm25-length-normalization + tag-count (6.9 vs 4.6) effect. (2) In the near-band bucket, the union-gold coverage duel goes AGAINST the winners (gold covers more keywords in 145/309 vs winner more in only 47) \u2014 displacement is a multi-tier RRF-rank phenomenon, not lexical coverage; the median margin to the last delivered seat is only 0.091 RRF. (3) The entire delivery-side bucket (79/79) shipped exactly 6 documents against gold ranks 7-12 \u2014 the lte12 bucket IS the 6-seat floor arm's casualty list, worth ~6.9% of all misses if the 12-seat floor graduates. (4) Some 'displacing' observations are actually the correct answer text but non-gold (conv-44_q049: 'Audrey considers her pets to be family'), and rank-1 obs winners from the wrong conversation are 73% (33/45) same-first-name speaker collisions \u2014 LoCoMo reuses John/etc. across conversations, and observations amplify name-anchored retrieval. Also notable: 32/357 crowd-out golds and 23 union-gold rows have zero keyword coverage even outside the cognitive class \u2014 a small paraphrase tail exists in the turn classes too.",
+   "class_notes": "Cognitive (399 misses, 34.9%) is a different failure universe: gold is the cue corpus (templated A:/B: dialogues) with identity-only tags, queries are paraphrase continuations with gold_kw_cov=0 in 84% \u2014 pool-absent 397/399, winners are near-noise hitchhikers (median rank-1 score 0.149 vs 0.340). Obs enrichment cannot touch it (.01->.01): obs hold 20.4% of its seats with zero conversational relevance. Fixing it requires paraphrase-robust anchoring (extraction/expansion), not ranking. \u2014 Singlehop (266) and temporal (104) were HELPED overall (+.10, +.14) for the same reason they now miss: observations restate events in third-person, question-shaped vocabulary with pronouns and relative dates resolved, so the union-gold obs is often an easier target than the turn; on remaining misses that same property makes obs the displacer (rank-1 obs 97% and 100%, same-conv 90%+). Temporal misses skew near-band (58/104) \u2014 gold turns express time deictically ('last week') so the obs outranks them. \u2014 Singlehop splits evenly crowdout/near-band (120/114) and owns most cap-truncation losses (32/79). \u2014 Multihop (125): highest obs seat share (82.8%); union gold is large (median gold_n 4) so SOME gold usually has hooks, but seats fill with same-conv obs (rank-1 same-conv obs 110/125); crowd-out slightly leads (65 vs 53). \u2014 Adversarial (198): most lte12 losses in absolute terms tied with singlehop region (27), 89% rank-1 obs; unanswerable-style queries anchor on speaker names, and obs are name-densest. \u2014 Commonsense (52): small; overwhelmingly crowd-out (42/52), same obs signature (90% rank-1 obs). Every non-cognitive class shows the same winner: a same-conversation observation about the right people from a different session."
+  }
+ ]
+}

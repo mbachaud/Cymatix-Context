@@ -1,0 +1,217 @@
+{"__segment__": true, "started": 1788300934.4603863}
+{"needle": "erb_001", "map_size": 48, "rank_of_first_gold": 20, "gold_ranks": [20], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 16525.2, "query_terms": null}
+{"needle": "erb_003", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19152.0, "query_terms": null}
+{"needle": "erb_006", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 28420.1, "query_terms": null}
+{"needle": "erb_021", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 11225.8, "query_terms": null}
+{"needle": "erb_025", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 22010.4, "query_terms": null}
+{"needle": "erb_027", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 10472.5, "query_terms": null}
+{"needle": "erb_030", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 11502.2, "query_terms": null}
+{"needle": "erb_031", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 30685.7, "query_terms": null}
+{"needle": "erb_036", "map_size": 49, "rank_of_first_gold": 14, "gold_ranks": [14], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 22544.3, "query_terms": null}
+{"needle": "erb_042", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 18732.2, "query_terms": null}
+{"needle": "erb_045", "map_size": 50, "rank_of_first_gold": 7, "gold_ranks": [7, 11], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 27365.4, "query_terms": null}
+{"needle": "erb_046", "map_size": 50, "rank_of_first_gold": 11, "gold_ranks": [11], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 7405.2, "query_terms": null}
+{"needle": "erb_049", "map_size": 49, "rank_of_first_gold": 7, "gold_ranks": [7], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 7641.6, "query_terms": null}
+{"needle": "erb_050", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 17591.6, "query_terms": null}
+{"needle": "erb_053", "map_size": 50, "rank_of_first_gold": 11, "gold_ranks": [11], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 13319.0, "query_terms": null}
+{"needle": "erb_054", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 47395.2, "query_terms": null}
+{"needle": "erb_057", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 27221.7, "query_terms": null}
+{"needle": "erb_061", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 28109.3, "query_terms": null}
+{"needle": "erb_063", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 17336.2, "query_terms": null}
+{"needle": "erb_064", "map_size": 49, "rank_of_first_gold": 19, "gold_ranks": [19], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 22702.4, "query_terms": null}
+{"needle": "erb_068", "map_size": 50, "rank_of_first_gold": 22, "gold_ranks": [22], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 33158.4, "query_terms": null}
+{"needle": "erb_071", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 23500.2, "query_terms": null}
+{"needle": "erb_073", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 10682.3, "query_terms": null}
+{"needle": "erb_074", "map_size": 50, "rank_of_first_gold": 13, "gold_ranks": [13, 35], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 9681.5, "query_terms": null}
+{"needle": "erb_076", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 9298.4, "query_terms": null}
+{"needle": "erb_081", "map_size": 50, "rank_of_first_gold": 35, "gold_ranks": [35], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19796.1, "query_terms": null}
+{"needle": "erb_086", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 12745.9, "query_terms": null}
+{"needle": "erb_089", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 11080.6, "query_terms": null}
+{"needle": "erb_091", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 15263.6, "query_terms": null}
+{"needle": "erb_092", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 11172.7, "query_terms": null}
+{"needle": "erb_099", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 23794.5, "query_terms": null}
+{"needle": "erb_107", "map_size": 50, "rank_of_first_gold": 22, "gold_ranks": [22], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 25206.9, "query_terms": null}
+{"needle": "erb_108", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 9483.9, "query_terms": null}
+{"needle": "erb_109", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 32282.7, "query_terms": null}
+{"needle": "erb_111", "map_size": 50, "rank_of_first_gold": 42, "gold_ranks": [42], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 12281.5, "query_terms": null}
+{"needle": "erb_115", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 10549.6, "query_terms": null}
+{"needle": "erb_120", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 14979.1, "query_terms": null}
+{"needle": "erb_121", "map_size": 50, "rank_of_first_gold": 13, "gold_ranks": [13], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 16605.0, "query_terms": null}
+{"needle": "erb_124", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 10904.6, "query_terms": null}
+{"needle": "erb_127", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 7226.6, "query_terms": null}
+{"needle": "erb_130", "map_size": 49, "rank_of_first_gold": 19, "gold_ranks": [19, 42], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 16255.8, "query_terms": null}
+{"needle": "erb_133", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 18127.2, "query_terms": null}
+{"needle": "erb_136", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 18096.4, "query_terms": null}
+{"needle": "erb_137", "map_size": 50, "rank_of_first_gold": 42, "gold_ranks": [42], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 29663.0, "query_terms": null}
+{"needle": "erb_138", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 6223.6, "query_terms": null}
+{"needle": "erb_139", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 29607.5, "query_terms": null}
+{"needle": "erb_141", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 20464.2, "query_terms": null}
+{"needle": "erb_143", "map_size": 50, "rank_of_first_gold": 29, "gold_ranks": [29], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 15475.8, "query_terms": null}
+{"needle": "erb_144", "map_size": 50, "rank_of_first_gold": 9, "gold_ranks": [9], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 13083.9, "query_terms": null}
+{"needle": "erb_145", "map_size": 50, "rank_of_first_gold": 20, "gold_ranks": [20], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 20837.3, "query_terms": null}
+{"needle": "erb_146", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 7107.4, "query_terms": null}
+{"needle": "erb_149", "map_size": 50, "rank_of_first_gold": 33, "gold_ranks": [33], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 26963.2, "query_terms": null}
+{"needle": "erb_152", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 19077.7, "query_terms": null}
+{"needle": "erb_157", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 11548.1, "query_terms": null}
+{"needle": "erb_158", "map_size": 50, "rank_of_first_gold": 22, "gold_ranks": [22], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19033.8, "query_terms": null}
+{"needle": "erb_162", "map_size": 49, "rank_of_first_gold": 26, "gold_ranks": [26], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 20322.2, "query_terms": null}
+{"needle": "erb_165", "map_size": 49, "rank_of_first_gold": 19, "gold_ranks": [19, 24], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19226.3, "query_terms": null}
+{"needle": "erb_167", "map_size": 50, "rank_of_first_gold": 37, "gold_ranks": [37, 41], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 22090.3, "query_terms": null}
+{"needle": "erb_169", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19768.2, "query_terms": null}
+{"needle": "erb_172", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19618.5, "query_terms": null}
+{"needle": "erb_177", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 12979.0, "query_terms": null}
+{"needle": "erb_179", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 20364.0, "query_terms": null}
+{"needle": "erb_180", "map_size": 50, "rank_of_first_gold": 36, "gold_ranks": [36], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 23593.1, "query_terms": null}
+{"needle": "erb_182", "map_size": 50, "rank_of_first_gold": 26, "gold_ranks": [26], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 26511.4, "query_terms": null}
+{"needle": "erb_183", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 15270.7, "query_terms": null}
+{"needle": "erb_184", "map_size": 49, "rank_of_first_gold": 32, "gold_ranks": [32], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 10811.1, "query_terms": null}
+{"needle": "erb_185", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 14349.4, "query_terms": null}
+{"needle": "erb_186", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 25488.5, "query_terms": null}
+{"needle": "erb_187", "map_size": 50, "rank_of_first_gold": 9, "gold_ranks": [9, 22], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 12499.0, "query_terms": null}
+{"needle": "erb_188", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 13392.2, "query_terms": null}
+{"needle": "erb_189", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 28342.2, "query_terms": null}
+{"needle": "erb_190", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 21105.9, "query_terms": null}
+{"needle": "erb_192", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 15738.9, "query_terms": null}
+{"needle": "erb_195", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 14338.2, "query_terms": null}
+{"needle": "erb_196", "map_size": 49, "rank_of_first_gold": 24, "gold_ranks": [24], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 10724.4, "query_terms": null}
+{"needle": "erb_197", "map_size": 49, "rank_of_first_gold": 14, "gold_ranks": [14], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 17119.7, "query_terms": null}
+{"needle": "erb_199", "map_size": 49, "rank_of_first_gold": 45, "gold_ranks": [45], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 23116.3, "query_terms": null}
+{"needle": "erb_200", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 42533.2, "query_terms": null}
+{"needle": "erb_202", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 21702.2, "query_terms": null}
+{"needle": "erb_203", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 17513.8, "query_terms": null}
+{"needle": "erb_206", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 11749.4, "query_terms": null}
+{"needle": "erb_208", "map_size": 49, "rank_of_first_gold": 25, "gold_ranks": [25], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 22083.4, "query_terms": null}
+{"needle": "erb_209", "map_size": 48, "rank_of_first_gold": 41, "gold_ranks": [41], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 28642.6, "query_terms": null}
+{"needle": "erb_211", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 31718.8, "query_terms": null}
+{"needle": "erb_212", "map_size": 48, "rank_of_first_gold": 23, "gold_ranks": [23], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 14142.4, "query_terms": null}
+{"needle": "erb_213", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 33297.5, "query_terms": null}
+{"needle": "erb_215", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 14544.6, "query_terms": null}
+{"needle": "erb_217", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 27953.8, "query_terms": null}
+{"needle": "erb_218", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 12128.8, "query_terms": null}
+{"needle": "erb_219", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 35613.2, "query_terms": null}
+{"needle": "erb_220", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 28119.2, "query_terms": null}
+{"needle": "erb_221", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 22465.6, "query_terms": null}
+{"needle": "erb_223", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 6372.3, "query_terms": null}
+{"needle": "erb_225", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 17960.6, "query_terms": null}
+{"needle": "erb_228", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 31697.6, "query_terms": null}
+{"needle": "erb_229", "map_size": 50, "rank_of_first_gold": 15, "gold_ranks": [15], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 11694.7, "query_terms": null}
+{"needle": "erb_230", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 25425.6, "query_terms": null}
+{"needle": "erb_231", "map_size": 50, "rank_of_first_gold": 25, "gold_ranks": [25], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 20666.8, "query_terms": null}
+{"needle": "erb_233", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 15544.8, "query_terms": null}
+{"needle": "erb_234", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 14009.1, "query_terms": null}
+{"needle": "erb_235", "map_size": 50, "rank_of_first_gold": 15, "gold_ranks": [15], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 28207.8, "query_terms": null}
+{"needle": "erb_238", "map_size": 49, "rank_of_first_gold": 32, "gold_ranks": [32], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 13469.0, "query_terms": null}
+{"needle": "erb_239", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 21682.5, "query_terms": null}
+{"needle": "erb_241", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 23031.7, "query_terms": null}
+{"needle": "erb_242", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 29607.4, "query_terms": null}
+{"needle": "erb_243", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 14419.0, "query_terms": null}
+{"needle": "erb_245", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 7557.5, "query_terms": null}
+{"needle": "erb_246", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 15721.5, "query_terms": null}
+{"needle": "erb_247", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 4624.9, "query_terms": null}
+{"needle": "erb_248", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 16941.2, "query_terms": null}
+{"needle": "erb_249", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 25133.0, "query_terms": null}
+{"needle": "erb_250", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19617.3, "query_terms": null}
+{"needle": "erb_254", "map_size": 49, "rank_of_first_gold": 21, "gold_ranks": [21], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 17573.5, "query_terms": null}
+{"needle": "erb_255", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 43199.6, "query_terms": null}
+{"needle": "erb_256", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 17928.9, "query_terms": null}
+{"needle": "erb_259", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19084.7, "query_terms": null}
+{"needle": "erb_260", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 31554.4, "query_terms": null}
+{"needle": "erb_261", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 33954.1, "query_terms": null}
+{"needle": "erb_262", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 32664.1, "query_terms": null}
+{"needle": "erb_264", "map_size": 50, "rank_of_first_gold": 27, "gold_ranks": [27], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 10859.2, "query_terms": null}
+{"needle": "erb_265", "map_size": 50, "rank_of_first_gold": 19, "gold_ranks": [19], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 16652.3, "query_terms": null}
+{"needle": "erb_266", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 30225.4, "query_terms": null}
+{"needle": "erb_267", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 35073.6, "query_terms": null}
+{"needle": "erb_269", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 9445.3, "query_terms": null}
+{"needle": "erb_271", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 16658.2, "query_terms": null}
+{"needle": "erb_273", "map_size": 48, "rank_of_first_gold": 13, "gold_ranks": [13], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 27162.0, "query_terms": null}
+{"needle": "erb_274", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 29146.7, "query_terms": null}
+{"needle": "erb_275", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 27212.2, "query_terms": null}
+{"needle": "erb_276", "map_size": 50, "rank_of_first_gold": 23, "gold_ranks": [23], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 26426.7, "query_terms": null}
+{"needle": "erb_277", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19445.5, "query_terms": null}
+{"needle": "erb_278", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 23765.9, "query_terms": null}
+{"needle": "erb_280", "map_size": 50, "rank_of_first_gold": 23, "gold_ranks": [23], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 36008.0, "query_terms": null}
+{"needle": "erb_281", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 21854.3, "query_terms": null}
+{"needle": "erb_284", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 18677.7, "query_terms": null}
+{"needle": "erb_288", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 22471.9, "query_terms": null}
+{"needle": "erb_292", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 8909.6, "query_terms": null}
+{"needle": "erb_294", "map_size": 49, "rank_of_first_gold": 35, "gold_ranks": [35], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 25842.9, "query_terms": null}
+{"needle": "erb_295", "map_size": 48, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 9151.3, "query_terms": null}
+{"needle": "erb_296", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 24962.8, "query_terms": null}
+{"needle": "erb_297", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 18672.4, "query_terms": null}
+{"needle": "erb_298", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 10212.4, "query_terms": null}
+{"needle": "erb_299", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 31965.2, "query_terms": null}
+{"needle": "erb_302", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 14872.8, "query_terms": null}
+{"needle": "erb_311", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 7644.1, "query_terms": null}
+{"needle": "erb_323", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 19154.0, "query_terms": null}
+{"needle": "erb_324", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 3617.5, "query_terms": null}
+{"needle": "erb_328", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 24969.3, "query_terms": null}
+{"needle": "erb_339", "map_size": 50, "rank_of_first_gold": 15, "gold_ranks": [15], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 21329.8, "query_terms": null}
+{"needle": "erb_409", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 44530.3, "query_terms": null}
+{"needle": "erb_416", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 6, "wall_ms": 22756.2, "query_terms": null}
+{"needle": "erb_427", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 14013.4, "query_terms": null}
+{"needle": "erb_436", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 27715.8, "query_terms": null}
+{"needle": "erb_438", "map_size": 49, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 34631.4, "query_terms": null}
+{"needle": "erb_447", "map_size": 50, "rank_of_first_gold": null, "gold_ranks": [], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 33385.4, "query_terms": null}
+{"needle": "erb_450", "map_size": 48, "rank_of_first_gold": 41, "gold_ranks": [41], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 4151.2, "query_terms": null}
+{"needle": "erb_451", "map_size": 50, "rank_of_first_gold": 13, "gold_ranks": [13], "delivered_gold": 0, "delivered_gold_rank": null, "delivered_count": 12, "wall_ms": 10468.6, "query_terms": null}
+{"needle": "erb_004", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 3, 5], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 7444.1, "query_terms": null}
+{"needle": "erb_015", "map_size": 49, "rank_of_first_gold": 11, "gold_ranks": [11], "delivered_gold": 1, "delivered_gold_rank": 10, "delivered_count": 12, "wall_ms": 12127.2, "query_terms": null}
+{"needle": "erb_028", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 12579.5, "query_terms": null}
+{"needle": "erb_041", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 5247.7, "query_terms": null}
+{"needle": "erb_047", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 7921.5, "query_terms": null}
+{"needle": "erb_051", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 14525.7, "query_terms": null}
+{"needle": "erb_055", "map_size": 50, "rank_of_first_gold": 12, "gold_ranks": [12], "delivered_gold": 1, "delivered_gold_rank": 9, "delivered_count": 12, "wall_ms": 19209.6, "query_terms": null}
+{"needle": "erb_056", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 3], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 15878.3, "query_terms": null}
+{"needle": "erb_059", "map_size": 49, "rank_of_first_gold": 2, "gold_ranks": [2, 5], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 12, "wall_ms": 6460.0, "query_terms": null}
+{"needle": "erb_060", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2, 21], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 12, "wall_ms": 5711.9, "query_terms": null}
+{"needle": "erb_067", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 12, "wall_ms": 13865.8, "query_terms": null}
+{"needle": "erb_072", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2, 5], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 12, "wall_ms": 8516.7, "query_terms": null}
+{"needle": "erb_084", "map_size": 49, "rank_of_first_gold": 2, "gold_ranks": [2, 10], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 12, "wall_ms": 13962.9, "query_terms": null}
+{"needle": "erb_094", "map_size": 50, "rank_of_first_gold": 4, "gold_ranks": [4], "delivered_gold": 1, "delivered_gold_rank": 4, "delivered_count": 12, "wall_ms": 10333.1, "query_terms": null}
+{"needle": "erb_098", "map_size": 48, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 6265.4, "query_terms": null}
+{"needle": "erb_105", "map_size": 50, "rank_of_first_gold": 3, "gold_ranks": [3], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 12, "wall_ms": 22235.8, "query_terms": null}
+{"needle": "erb_110", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 15059.4, "query_terms": null}
+{"needle": "erb_125", "map_size": 49, "rank_of_first_gold": 1, "gold_ranks": [1, 3, 29], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 27970.6, "query_terms": null}
+{"needle": "erb_134", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 32461.6, "query_terms": null}
+{"needle": "erb_153", "map_size": 49, "rank_of_first_gold": 2, "gold_ranks": [2], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 11334.7, "query_terms": null}
+{"needle": "erb_155", "map_size": 49, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 15133.0, "query_terms": null}
+{"needle": "erb_161", "map_size": 49, "rank_of_first_gold": 4, "gold_ranks": [4], "delivered_gold": 1, "delivered_gold_rank": 4, "delivered_count": 12, "wall_ms": 10611.4, "query_terms": null}
+{"needle": "erb_176", "map_size": 49, "rank_of_first_gold": 9, "gold_ranks": [9], "delivered_gold": 1, "delivered_gold_rank": 9, "delivered_count": 12, "wall_ms": 12137.8, "query_terms": null}
+{"needle": "erb_193", "map_size": 50, "rank_of_first_gold": 4, "gold_ranks": [4], "delivered_gold": 1, "delivered_gold_rank": 4, "delivered_count": 12, "wall_ms": 23178.5, "query_terms": null}
+{"needle": "erb_194", "map_size": 49, "rank_of_first_gold": 2, "gold_ranks": [2], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 22686.6, "query_terms": null}
+{"needle": "erb_201", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 14665.5, "query_terms": null}
+{"needle": "erb_227", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 14607.7, "query_terms": null}
+{"needle": "erb_252", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 6, "wall_ms": 23414.1, "query_terms": null}
+{"needle": "erb_253", "map_size": 50, "rank_of_first_gold": 8, "gold_ranks": [8], "delivered_gold": 1, "delivered_gold_rank": 8, "delivered_count": 12, "wall_ms": 14816.6, "query_terms": null}
+{"needle": "erb_263", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 37053.2, "query_terms": null}
+{"needle": "erb_300", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2, 10], "delivered_gold": 1, "delivered_gold_rank": 9, "delivered_count": 12, "wall_ms": 17466.3, "query_terms": null}
+{"needle": "erb_305", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 176332.8, "query_terms": null}
+{"needle": "erb_316", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 3], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 6, "wall_ms": 19062.9, "query_terms": null}
+{"needle": "erb_326", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 11722.4, "query_terms": null}
+{"needle": "erb_329", "map_size": 49, "rank_of_first_gold": 6, "gold_ranks": [6], "delivered_gold": 1, "delivered_gold_rank": 6, "delivered_count": 12, "wall_ms": 8461.0, "query_terms": null}
+{"needle": "erb_332", "map_size": 49, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3, 4, 5, 6], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 20410.5, "query_terms": null}
+{"needle": "erb_337", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 15829.9, "query_terms": null}
+{"needle": "erb_347", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 4, 12, 13, 15, 41], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 24147.6, "query_terms": null}
+{"needle": "erb_353", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 23, 24, 37, 50], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 20996.7, "query_terms": null}
+{"needle": "erb_356", "map_size": 50, "rank_of_first_gold": 5, "gold_ranks": [5, 8, 27, 31, 36, 41, 45, 46], "delivered_gold": 1, "delivered_gold_rank": 3, "delivered_count": 12, "wall_ms": 20374.7, "query_terms": null}
+{"needle": "erb_357", "map_size": 50, "rank_of_first_gold": 5, "gold_ranks": [5, 9, 13, 26, 27, 28, 29, 50], "delivered_gold": 1, "delivered_gold_rank": 11, "delivered_count": 12, "wall_ms": 15087.1, "query_terms": null}
+{"needle": "erb_358", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3, 4, 5, 6, 18, 23, 41], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 18529.1, "query_terms": null}
+{"needle": "erb_362", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 15, 17, 37], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 27403.9, "query_terms": null}
+{"needle": "erb_366", "map_size": 50, "rank_of_first_gold": 7, "gold_ranks": [7, 13, 20, 21, 23, 27], "delivered_gold": 1, "delivered_gold_rank": 11, "delivered_count": 12, "wall_ms": 23688.2, "query_terms": null}
+{"needle": "erb_368", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2, 6, 12, 17, 27, 29, 31, 32, 45], "delivered_gold": 1, "delivered_gold_rank": 4, "delivered_count": 12, "wall_ms": 33550.8, "query_terms": null}
+{"needle": "erb_380", "map_size": 50, "rank_of_first_gold": 4, "gold_ranks": [4, 10, 11, 17, 23, 26], "delivered_gold": 1, "delivered_gold_rank": 2, "delivered_count": 12, "wall_ms": 31306.2, "query_terms": null}
+{"needle": "erb_382", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 24878.7, "query_terms": null}
+{"needle": "erb_393", "map_size": 50, "rank_of_first_gold": 2, "gold_ranks": [2, 9, 10, 18, 22, 26, 27, 37], "delivered_gold": 1, "delivered_gold_rank": 5, "delivered_count": 12, "wall_ms": 26370.8, "query_terms": null}
+{"needle": "erb_397", "map_size": 50, "rank_of_first_gold": 3, "gold_ranks": [3, 4], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 34413.0, "query_terms": null}
+{"needle": "erb_402", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3, 10], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 45987.8, "query_terms": null}
+{"needle": "erb_404", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 51592.1, "query_terms": null}
+{"needle": "erb_413", "map_size": 49, "rank_of_first_gold": 2, "gold_ranks": [2, 3, 25, 42], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 15885.9, "query_terms": null}
+{"needle": "erb_417", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3, 4], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 15647.5, "query_terms": null}
+{"needle": "erb_426", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3, 4], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 12472.4, "query_terms": null}
+{"needle": "erb_437", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 15], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 32596.2, "query_terms": null}
+{"needle": "erb_443", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 26], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 36343.7, "query_terms": null}
+{"needle": "erb_445", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1, 2, 3, 4], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 6, "wall_ms": 17979.7, "query_terms": null}
+{"needle": "erb_454", "map_size": 49, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 6793.6, "query_terms": null}
+{"needle": "erb_464", "map_size": 49, "rank_of_first_gold": 3, "gold_ranks": [3], "delivered_gold": 1, "delivered_gold_rank": 3, "delivered_count": 6, "wall_ms": 4208.7, "query_terms": null}
+{"needle": "erb_469", "map_size": 50, "rank_of_first_gold": 1, "gold_ranks": [1], "delivered_gold": 1, "delivered_gold_rank": 1, "delivered_count": 12, "wall_ms": 19275.4, "query_terms": null}

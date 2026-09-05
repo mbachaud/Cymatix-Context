@@ -47,6 +47,11 @@ Parallel modes (issue #92)
                             is enabled: pre-scan eligible bytes per shard
                             so the long pole dispatches first (issue #97).
     --batch-size N          SPLADE batch size in the writer (default 64).
+    --rebuild               Delete the existing output before building.
+                            Sharded mode and ``--parallel`` blob mode
+                            otherwise resume into it (issue #150); the
+                            sequential blob path has no resume and always
+                            deletes and rebuilds, with or without the flag.
 
 Examples:
     python scripts/build_fixture_matrix.py --profile medium --parallel
@@ -427,17 +432,19 @@ def _iter_ingestable_files(
 def _filter_to_unseen(
     files: list[tuple[str, str]], shard_db_path: str,
 ) -> list[tuple[str, str]]:
-    """Drop files whose ``source_id`` is already in the per-shard ``.db``.
+    """Drop files with a durable completion marker in the existing ``.db``.
 
     Used by ``_build_one_shard`` to make restart-after-kill cheap: re-
     walking + chunking + tagging the files an earlier partial run
-    already ingested is pure waste, since ``Genome.upsert_doc`` is
-    content-hash idempotent anyway. ``source_id`` is the absolute file
-    path the tagger stores on each gene; we collect the distinct set
-    from the existing shard and drop matches from the walk.
+    already ingested is pure waste. A gene's ``source_id`` alone is not
+    enough: a pause or kill can leave only the first chunks of a file
+    durable. The drain records ``bfm_completed_files`` only after every
+    gene in that file succeeds, in the transaction containing its final
+    chunk. Unmarked files (including legacy beds) are replayed safely via
+    content-hash-idempotent upserts.
 
     Falls back to returning ``files`` unchanged if the shard ``.db``
-    doesn't exist yet (fresh build), has no ``genes`` table, or the
+    doesn't exist yet (fresh build), has no completion table, or the
     query fails for any other reason — file-level skip is a best-
     effort optimisation, not a correctness gate. (Issue #150.)
     """
@@ -456,12 +463,12 @@ def _filter_to_unseen(
                 "SELECT name FROM sqlite_master WHERE type='table'"
             ).fetchall()
         }
-        if "genes" not in tables:
+        if "bfm_completed_files" not in tables:
             return files
         try:
             seen = {
                 r[0] for r in conn.execute(
-                    "SELECT DISTINCT source_id FROM genes"
+                    "SELECT source_id FROM bfm_completed_files"
                 ).fetchall()
                 if r[0] is not None
             }
@@ -481,6 +488,141 @@ def _filter_to_unseen(
     return filtered
 
 
+# ── Commit batching (2026-08-26 write-amplification fix) ─────────────────
+
+
+def _available_ram_mb():
+    """Available physical RAM in MiB, or ``None`` when unknowable.
+
+    psutil first; on Windows fall back to ``GlobalMemoryStatusEx``. A
+    ``None`` return leaves the RAM valve inert rather than guessing.
+    """
+    try:
+        import psutil
+
+        return psutil.virtual_memory().available / (1024 ** 2)
+    except Exception:
+        pass
+    if sys.platform == "win32":
+        try:
+            import ctypes
+
+            class _MEMORYSTATUSEX(ctypes.Structure):
+                _fields_ = [
+                    ("dwLength", ctypes.c_ulong),
+                    ("dwMemoryLoad", ctypes.c_ulong),
+                    ("ullTotalPhys", ctypes.c_ulonglong),
+                    ("ullAvailPhys", ctypes.c_ulonglong),
+                    ("ullTotalPageFile", ctypes.c_ulonglong),
+                    ("ullAvailPageFile", ctypes.c_ulonglong),
+                    ("ullTotalVirtual", ctypes.c_ulonglong),
+                    ("ullAvailVirtual", ctypes.c_ulonglong),
+                    ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
+                ]
+
+            st = _MEMORYSTATUSEX()
+            st.dwLength = ctypes.sizeof(st)
+            if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(st)):
+                return st.ullAvailPhys / (1024 ** 2)
+        except Exception:
+            pass
+    return None
+
+
+class _CommitBatcher:
+    """Groups drained genes into ``genome.deferred_commits()`` scopes.
+
+    ``batch <= 0`` (the default) is fully inert — every ``upsert_doc``
+    keeps its historical commit-per-call behaviour via ``_write_unit``.
+    With ``batch = K``, one durable commit covers up to K genes, so the
+    dirty B-tree pages shared by consecutive inserts are written to the
+    WAL once per scope instead of once per gene (measured 2026-08-24:
+    806 write-ops / 2.06 MB per gene at commit-per-gene).
+
+    Two valves close a scope early, making the flush pressure-driven
+    rather than cadence-driven:
+
+    * WAL size above ``wal_valve_mb`` (disk-backed, portable), and
+    * available RAM below ``ram_floor_mb`` (psutil / win32; inert when
+      neither probe works).
+
+    Crash semantics: a scope that aborts rolls back whole — at most one
+    batch of files is redone by file-level resume, which is why
+    ``commit_now()`` must run before any deliberate pause raise
+    (``_PauseRequested`` assumes all flushed genes are committed).
+    """
+
+    def __init__(self, genome, batch, wal_valve_mb=2048, ram_floor_mb=3072):
+        self.genome = genome
+        self.batch = int(batch or 0)
+        self.enabled = self.batch > 0 and hasattr(genome, "deferred_commits")
+        self.wal_valve_mb = wal_valve_mb
+        self.ram_floor_mb = ram_floor_mb
+        self.commits = 0
+        self.valve_trips = 0
+        self._cm = None
+        self._since = 0
+        path = getattr(genome, "path", None)
+        self._wal = f"{path}-wal" if path and path != ":memory:" else None
+
+    def before_flush(self):
+        if self.enabled and self._cm is None:
+            self._cm = self.genome.deferred_commits()
+            self._cm.__enter__()
+
+    def after_flush(self, n_genes):
+        if not self.enabled or self._cm is None:
+            return
+        self._since += int(n_genes)
+        if self._since >= self.batch or self._valve_tripped():
+            self.commit_now()
+
+    def commit_now(self):
+        """Durably commit the open scope (no-op when none is open)."""
+        if self._cm is None:
+            return
+        cm, self._cm = self._cm, None
+        self._since = 0
+        cm.__exit__(None, None, None)
+        self.commits += 1
+
+    def abort(self):
+        """Roll back the open scope after a drain failure."""
+        if self._cm is None:
+            return
+        cm, self._cm = self._cm, None
+        self._since = 0
+        exc = RuntimeError("commit batch aborted")
+        try:
+            cm.__exit__(RuntimeError, exc, None)
+        except Exception:
+            pass  # deferred_commits re-raises our sentinel; rollback already ran
+
+    def _valve_tripped(self):
+        if self._wal and self.wal_valve_mb:
+            try:
+                if os.path.getsize(self._wal) > self.wal_valve_mb * 1024 ** 2:
+                    self.valve_trips += 1
+                    log.info(
+                        "commit batch: WAL valve tripped (> %d MiB) — committing "
+                        "%d genes early", self.wal_valve_mb, self._since,
+                    )
+                    return True
+            except OSError:
+                pass
+        if self.ram_floor_mb:
+            avail = _available_ram_mb()
+            if avail is not None and avail < self.ram_floor_mb:
+                self.valve_trips += 1
+                log.warning(
+                    "commit batch: RAM valve tripped (%.0f MiB available < "
+                    "%d floor) — committing %d genes early",
+                    avail, self.ram_floor_mb, self._since,
+                )
+                return True
+        return False
+
+
 # ── Batched-SPLADE writer (drains gene dicts -> genome) ──────────────────
 
 
@@ -490,6 +632,7 @@ def _drain_with_batched_splade(
     stats: dict,
     batch_size: int = 64,
     crawl_detector=None,
+    commit_batch: int | None = None,
 ) -> None:
     """Drain ``gene_dict_iter`` (yielding lists of gene dicts per file)
     into ``genome``. SPLADE encoding is batched across ``batch_size`` genes
@@ -535,7 +678,34 @@ def _drain_with_batched_splade(
     if crawl_detector is None:
         crawl_detector = CrawlDetector.from_env(log_fn=log.warning, name="ingest")
 
-    buf: list = []  # Gene instances buffered before batch flush
+    # Commit batching (default 0 = inert legacy commit-per-gene). One
+    # deferred_commits() scope per ``commit_batch`` genes, with WAL-size
+    # and free-RAM valves — see _CommitBatcher.
+    if commit_batch is None:
+        commit_batch = int(os.environ.get("CYMATIX_BFM_COMMIT_BATCH", "0") or 0)
+    batcher = _CommitBatcher(
+        genome,
+        commit_batch,
+        wal_valve_mb=int(os.environ.get("CYMATIX_BFM_WAL_VALVE_MB", "2048") or 0),
+        ram_floor_mb=int(os.environ.get("CYMATIX_BFM_RAM_FLOOR_MB", "3072") or 0),
+    )
+    stats["commit_batch"] = batcher.batch if batcher.enabled else 0
+    if batcher.enabled:
+        log.info(
+            "commit batching ON: %d genes/commit (wal valve %s MiB, ram floor %s MiB)",
+            batcher.batch, batcher.wal_valve_mb, batcher.ram_floor_mb,
+        )
+
+    # A source becomes resumable only after all its genes have been written.
+    # Keep its state alongside each buffered gene because an encode/commit
+    # batch may end halfway through a file or contain several files.
+    completion_conn = getattr(genome, "conn", None)
+    if completion_conn is not None:
+        completion_conn.execute(
+            "CREATE TABLE IF NOT EXISTS bfm_completed_files "
+            "(source_id TEXT PRIMARY KEY)"
+        )
+    buf: list = []  # (Gene, per-file completion state)
     last_feed_t = time.perf_counter()
     logged_drain_errors: set[str] = set()
 
@@ -555,7 +725,7 @@ def _drain_with_batched_splade(
             return
         if splade_on:
             sparses = splade_backend.encode_batch(
-                [g.content[:1000] for g in batch]
+                [g.content[:1000] for g, _ in batch]
             )
         else:
             # SPLADE disabled: skip the batched sparse encode (do NOT touch
@@ -564,13 +734,26 @@ def _drain_with_batched_splade(
             # builds a complete, splade-dark corpus. ``splade_sparse=None``
             # is exactly a gene with no sparse expansion.
             sparses = [None] * len(batch)
-        for g, sp in zip(batch, sparses):
+        for (g, file_state), sp in zip(batch, sparses):
             try:
                 genome.upsert_doc(g, apply_gate=True, splade_sparse=sp)
                 stats["genes"] += 1
             except Exception as exc:
+                file_state["failed"] = True
                 stats["errors"] += 1
                 _log_once("upsert_doc", exc)
+            file_state["remaining"] -= 1
+            if (completion_conn is not None and not file_state["remaining"]
+                    and not file_state["failed"] and file_state["source_id"]):
+                completion_conn.execute(
+                    "INSERT OR IGNORE INTO bfm_completed_files VALUES (?)",
+                    (file_state["source_id"],),
+                )
+                if not batcher.enabled:
+                    # Per-gene upserts have already committed; persist the
+                    # marker now too. Batched markers commit/roll back with
+                    # their final gene through the enclosing batch scope.
+                    completion_conn.commit()
         if stats["genes"] % 500 < batch_size and stats["genes"] > 0:
             elapsed = time.perf_counter() - stats["t0"]
             log.info(
@@ -579,58 +762,80 @@ def _drain_with_batched_splade(
                 stats["genes"] / max(elapsed, 0.001),
             )
 
-    for gene_dicts in gene_dict_iter:
-        if not gene_dicts:
-            stats["errors"] += 1
-            continue
-        for gd in gene_dicts:
-            try:
-                buf.append(Gene(**gd))
-            except Exception as exc:
+    try:
+        for gene_dicts in gene_dict_iter:
+            if not gene_dicts:
                 stats["errors"] += 1
-                _log_once("Gene", exc)
-        stats["files"] += 1
-        while len(buf) >= batch_size:
-            _flush(buf[:batch_size])
-            del buf[:batch_size]
-            # Crawl watchdog (issue #212): one observation per flushed
-            # batch. dt spans producer + encode + upsert time since the
-            # previous flush, i.e. true end-to-end genes/s -- the metric
-            # the 2026-06-10/11 incidents were measured in.
-            now = time.perf_counter()
-            crawl_action = crawl_detector.feed(
-                batch_size, now - last_feed_t, cuda_vram_fraction(),
-            )
-            last_feed_t = now
-            if crawl_action == ACTION_EMPTY_CACHE:
-                released = release_cuda_cache()
-                log.warning(
-                    "%s rung 1 applied: gc.collect + torch.cuda.empty_cache "
-                    "(released=%s)", CRAWL_LOG_PREFIX, released,
+                continue
+            sources = {gd.get("source_id") for gd in gene_dicts}
+            file_state = {
+                "source_id": next(iter(sources)) if len(sources) == 1 else None,
+                "remaining": len(gene_dicts),
+                "failed": False,
+            }
+            for gd in gene_dicts:
+                try:
+                    buf.append((Gene(**gd), file_state))
+                except Exception as exc:
+                    file_state["failed"] = True
+                    stats["errors"] += 1
+                    _log_once("Gene", exc)
+            stats["files"] += 1
+            while len(buf) >= batch_size:
+                batcher.before_flush()
+                _flush(buf[:batch_size])
+                batcher.after_flush(batch_size)
+                del buf[:batch_size]
+                # Crawl watchdog (issue #212): one observation per flushed
+                # batch. dt spans producer + encode + upsert time since the
+                # previous flush, i.e. true end-to-end genes/s -- the metric
+                # the 2026-06-10/11 incidents were measured in.
+                now = time.perf_counter()
+                crawl_action = crawl_detector.feed(
+                    batch_size, now - last_feed_t, cuda_vram_fraction(),
                 )
-            elif crawl_action == ACTION_DEMOTE:
-                # Terminal rung for the ingest path: process recycle via
-                # the existing #183 pause machinery. The batch above is
-                # already committed, so this boundary is a safe
-                # checkpoint; ``_build_one_shard`` writes the marker and
-                # the salvage + file-level-resume path picks the shard
-                # back up with a fresh CUDA context on the next run.
-                log.warning(
-                    "%s recycle requested -- raising _PauseRequested at the "
-                    "batch boundary (shard pauses cleanly; restart the same "
-                    "command to resume with a fresh CUDA context)",
-                    CRAWL_LOG_PREFIX,
-                )
-                raise _PauseRequested()
-            # SIGINT batch boundary (issue #151): the previous _flush call
-            # already committed the batch's genes to the shard DB, so this
-            # is a safe checkpoint. Raise so ``_build_one_shard`` can
-            # write the pause marker and the caller can exit cleanly.
-            if _PAUSE_REQUESTED:
-                raise _PauseRequested()
+                last_feed_t = now
+                if crawl_action == ACTION_EMPTY_CACHE:
+                    released = release_cuda_cache()
+                    log.warning(
+                        "%s rung 1 applied: gc.collect + torch.cuda.empty_cache "
+                        "(released=%s)", CRAWL_LOG_PREFIX, released,
+                    )
+                elif crawl_action == ACTION_DEMOTE:
+                    # Terminal rung for the ingest path: process recycle via
+                    # the existing #183 pause machinery. commit_now() first —
+                    # the pause contract is that every flushed gene is
+                    # committed at this boundary; ``_build_one_shard`` writes
+                    # the marker and the salvage + file-level-resume path
+                    # picks the shard back up with a fresh CUDA context.
+                    batcher.commit_now()
+                    log.warning(
+                        "%s recycle requested -- raising _PauseRequested at the "
+                        "batch boundary (shard pauses cleanly; restart the same "
+                        "command to resume with a fresh CUDA context)",
+                        CRAWL_LOG_PREFIX,
+                    )
+                    raise _PauseRequested()
+                # SIGINT batch boundary (issue #151): commit the open batch
+                # scope, then raise -- the pause contract says every flushed
+                # gene is committed so ``_build_one_shard`` can write the
+                # pause marker and the caller can exit cleanly.
+                if _PAUSE_REQUESTED:
+                    batcher.commit_now()
+                    raise _PauseRequested()
 
-    if buf:
-        _flush(buf)
+        if buf:
+            batcher.before_flush()
+            _flush(buf)
+            batcher.after_flush(len(buf))
+    except BaseException:
+        # Roll back any open batch scope: a partially-drained batch must
+        # not commit (file-level resume redoes those files instead).
+        batcher.abort()
+        raise
+    batcher.commit_now()
+    stats["batched_commits"] = batcher.commits
+    stats["valve_trips"] = batcher.valve_trips
 
 
 # ── Parallel mode: file-level mp.Pool + main-process writer ──────────────
@@ -643,19 +848,33 @@ def _parallel_ingest_to_genome(
     n_workers: int,
     batch_size: int = 64,
     chunksize: int = 4,
+    ordered: bool = True,
 ) -> None:
     """Chunk+tag files in parallel via ``mp.Pool``; drain into ``genome``
     via the batched-SPLADE writer in the main process.
 
     Caller is responsible for opening / closing ``genome``.
+
+    ``ordered`` (default True) drains via ``imap`` rather than
+    ``imap_unordered`` so insertion order matches the sequential path.
+    Chunking and tagging are pure and deterministic at v0.9.x defaults
+    (``backend = "cpu"``), so the *only* thing worker parallelism changed was
+    drain order — and ``gene_relations`` is order-sensitive.  Measured on a
+    2,000-file ERB sample (2026-08-24): documents and content were
+    byte-identical under ``imap_unordered``, but ``gene_relations`` came out
+    28,767 rows vs 28,765 sequential.  Those edges are retrieval-live (co-
+    activation neighbours, tie-breaking), so a bench builder must not vary
+    them run to run.  Set ``ordered=False`` to restore the pre-2026-08-24
+    behaviour if raw throughput ever outweighs reproducibility.
     """
     log.info(
-        "parallel ingest: %d files, %d workers, batch_size=%d",
-        len(files), n_workers, batch_size,
+        "parallel ingest: %d files, %d workers, batch_size=%d, ordered=%s",
+        len(files), n_workers, batch_size, ordered,
     )
 
     with mp.Pool(n_workers, initializer=_init_worker) as pool:
-        gene_dict_iter = pool.imap_unordered(
+        _map = pool.imap if ordered else pool.imap_unordered
+        gene_dict_iter = _map(
             _chunk_and_tag_file, files, chunksize=chunksize,
         )
         _drain_with_batched_splade(
@@ -667,6 +886,7 @@ def _iter_chunked_file_gene_dicts(
     files: list[tuple[str, str]],
     file_workers: int,
     chunksize: int = 4,
+    ordered: bool = True,
 ) -> Iterable[list[dict]]:
     """Yield per-file gene dict lists, optionally using shard-local CPU workers."""
     file_workers = max(1, int(file_workers or 1))
@@ -681,7 +901,11 @@ def _iter_chunked_file_gene_dicts(
         len(files), file_workers, chunksize,
     )
     with mp.Pool(file_workers, initializer=_init_worker) as pool:
-        yield from pool.imap_unordered(
+        # Ordered by default for the same reason as the blob path: drain
+        # order is the one thing parallelism changes, and gene_relations
+        # is order-sensitive. See _parallel_ingest_to_genome.
+        _map = pool.imap if ordered else pool.imap_unordered
+        yield from _map(
             _chunk_and_tag_file, files, chunksize=chunksize,
         )
 
@@ -762,6 +986,59 @@ PROFILES: dict[str, dict] = {
         "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
+    "locomo": {
+        "label": "LoCoMo + LoCoMo-Plus (per-turn conversation memory + 401 cognitive cues)",
+        # Semantic-portfolio lane (user-approved 2026-08-30, Sol's benchmark
+        # reference doc). Files emitted from the LoCoMo-Plus repo data by
+        # scripts/build_locomo_corpus.py; needle sets (1,986 LoCoMo QA +
+        # 401 cognitive triggers) under benchmarks/dogfood/locomo.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\locomo-plus\corpus"],
+        "extra_skip_dirs": set(),
+        # Emitted corpus root holds only dataset turns/cues — nothing
+        # internal to protect (same ruling as the enronqa profiles).
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "muloc": {
+        "label": "MULocBench 45-repo Python snapshot corpus (issue -> file localization)",
+        # Semantic-portfolio lane (user-approved 2026-08-30). Snapshots
+        # fetched + extracted by scripts/build_mulocbench_corpus.py (one
+        # pinned base_commit per repo; allowlisted text/code files only);
+        # needle set (842 issues, file-level gold) under
+        # benchmarks/dogfood/muloc.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\mulocbench\corpus"],
+        "extra_skip_dirs": set(),
+        # Extracted snapshots are the bench data; 'test(s)'/'training'
+        # directories inside them are real gold surface (same ruling as
+        # the enronqa profiles).
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "locomo_obs": {
+        "label": "LoCoMo observation-enrichment variant (turns + cues + observation bridge docs)",
+        # Write-time abstraction A/B vs the base "locomo" bed — emitted by
+        # scripts/build_locomo_obs_variant.py; needle sets under
+        # benchmarks/dogfood/locomo_obs.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\locomo-plus\corpus_obs"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "financebench": {
+        "label": "FinanceBench SEC-filing page corpus (368 PDFs, 150 QA, page-level gold)",
+        # Semantic-portfolio lane, queued third by user ordering
+        # (2026-08-31). Page texts extracted by
+        # scripts/build_financebench_corpus.py; needle sets under
+        # benchmarks/dogfood/financebench.
+        "active_roots": 1,
+        "roots": [r"F:\Projects\financebench\corpus"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
     "enronqa_padded": {
         "label": "EnronQA + raw-Enron distractor padding (~500k emails)",
         # Padded variant of "enronqa": same QA corpus (gold untouched) plus
@@ -779,6 +1056,45 @@ PROFILES: dict[str, dict] = {
         "extra_skip_dirs": set(),
         # Same ruling as "enronqa": emitted roots carry no internal
         # artifacts; 'training'-named Enron mail folders are real data.
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    # ── Second-wave code benches (user-approved 2026-09-04) ──────────────
+    # Emitted as one file per document by scripts/build_coderag_corpus.py,
+    # scripts/build_cosqa_corpus.py and scripts/build_swebench_corpus.py;
+    # needle sets under benchmarks/dogfood/<profile>; gold resolved after
+    # ingest by scripts/resolve_bench_needles.py. Emitted roots carry no
+    # internal artifacts, so the common skip list is replaced (same ruling
+    # as the enronqa/muloc profiles).
+    "coderag_solutions": {
+        "label": "CodeRAG-Bench programming-solutions corpus (1,128 canonical solutions; humaneval + mbpp queries)",
+        "active_roots": 1,
+        "roots": [r"F:\Projects\coderag\corpus_solutions"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "coderag_docs": {
+        "label": "CodeRAG-Bench library-documentation corpus (34,003 pages; ds1000 + odex queries)",
+        "active_roots": 1,
+        "roots": [r"F:\Projects\coderag\corpus_docs"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "cosqa": {
+        "label": "CoIR CosQA corpus (20,604 Python snippets; 500 web-query test needles)",
+        "active_roots": 1,
+        "roots": [r"F:\Projects\cosqa\corpus"],
+        "extra_skip_dirs": set(),
+        "skip_dirs_override": set(),
+        "extra_filename_filters": [],
+    },
+    "swebench": {
+        "label": "SWE-bench Verified 12-repo Python snapshot corpus (issue -> file localization)",
+        "active_roots": 1,
+        "roots": [r"F:\Projects\swebench\corpus"],
+        "extra_skip_dirs": set(),
         "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
@@ -988,32 +1304,69 @@ def build_profile(
     n_workers: int = 0,
     batch_size: int = 64,
     chunksize: int = 4,
+    rebuild: bool = True,
 ) -> dict:
-    """Build the profile named ``name`` into a fresh ``.db`` at ``db_path``.
+    """Build the profile named ``name`` into a ``.db`` at ``db_path``.
 
     When ``parallel=True`` use the mp.Pool + batched-SPLADE path (issue
     #92). When False (default) preserve the original sequential
     :func:`ingest_tree` behaviour byte-for-byte.
+
+    ``rebuild=True`` (the default, and the historical behaviour) deletes any
+    existing ``.db`` first. ``rebuild=False`` keeps it and drops files with
+    durable completion markers via :func:`_filter_to_unseen`, i.e. the
+    file-level resume the sharded path has had since issue #150.  A 500k-file
+    blob build runs for many hours, so losing all of it to a kill -- or to a
+    mid-flight retune -- was pure waste.
+
+    Resume applies to the **parallel** branch only.  The sequential branch
+    walks roots through :func:`ingest_tree` and never materialises a file
+    list, so :func:`_filter_to_unseen` has nothing to filter: honouring
+    ``rebuild=False`` there would keep the old ``.db`` and re-ingest every
+    root into it -- a double-ingested bed, not a resume.  So
+    ``rebuild=False`` on the sequential path falls back to the historical
+    delete-and-rebuild (with a warning), which is what blob mode did for
+    every invocation before 2026-08-24.
     """
     profile = PROFILES[name]
 
     out_dir = os.path.dirname(os.path.abspath(db_path))
     os.makedirs(out_dir, exist_ok=True)
 
-    if os.path.exists(db_path):
+    # ``rebuild=False`` is only meaningful where a resume exists (parallel).
+    if not rebuild and not parallel:
+        if os.path.exists(db_path):
+            log.warning(
+                "sequential blob mode has no file-level resume "
+                "(ingest_tree walks roots, there is no file list for "
+                "_filter_to_unseen); rebuilding %s from scratch as before. "
+                "Pass --parallel to resume into an existing .db, or "
+                "--rebuild to make the delete explicit.",
+                db_path,
+            )
+        rebuild = True
+
+    if rebuild and os.path.exists(db_path):
         log.info("removing existing %s", db_path)
         os.remove(db_path)
         for suffix in ("-wal", "-shm"):
             sidecar = db_path + suffix
             if os.path.exists(sidecar):
                 os.remove(sidecar)
+    elif not rebuild and os.path.exists(db_path):
+        log.info("resume: keeping existing %s", db_path)
 
-    log.info("opening fresh genome at %s", db_path)
+    log.info("opening genome at %s", db_path)
     genome = Genome(
         path=db_path,
         synonym_map={},
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"),
         entity_graph=True,
+        # 2026-08-30 ingest-decay receipt: off skips per-insert COVER-edge
+        # formation (89.5% of writer wall time at 289k genes on
+        # enronqa_padded); entity_graph rows and all documents+content
+        # digests are unchanged. Default on = byte-identical to prior builds.
+        entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
     )
     log.info("entity_autolink_hub_cutoff=%d (CYMATIX_BFM_HUB_CUTOFF)",
@@ -1036,6 +1389,7 @@ def build_profile(
         "missing_roots": [],
         "t0": time.perf_counter(),
         "mode": "parallel" if parallel else "sequential",
+        "entity_autolink": _env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
     }
 
     if parallel:
@@ -1046,6 +1400,18 @@ def build_profile(
             profile["roots"], skip_dirs, extra_filename_filters, stats,
         )
         stats["discovered_files"] = len(files)
+        # Scale-test cap (2026-08-27): keep only the first N files of the
+        # deterministic discovery order, so a capped build is byte-wise a
+        # PREFIX of the full build (same roots, same sort). 0 = no cap.
+        max_files = int(os.environ.get("CYMATIX_BFM_MAX_FILES", "0") or 0)
+        if max_files > 0:
+            files = files[:max_files]
+            stats["max_files_cap"] = max_files
+            log.info("max-files cap: building first %d of %d discovered",
+                     len(files), stats["discovered_files"])
+        if not rebuild:
+            files = _filter_to_unseen(files, db_path)
+            stats["resumed_files_remaining"] = len(files)
         _parallel_ingest_to_genome(
             files=files,
             genome=genome,
@@ -1489,6 +1855,7 @@ def _build_one_shard(
     shard = Genome(
         path=str(p), synonym_map={},
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"), entity_graph=True,
+        entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
     )
     s_stats = {
@@ -2244,14 +2611,29 @@ def main() -> int:
              "original declared order).",
     )
     parser.add_argument(
+        "--no-entity-autolink", action="store_true",
+        help="Skip per-insert entity COVER-edge formation "
+             "(auto_link_by_entity) during the build. entity_graph rows "
+             "and all documents+content digests are unchanged; only "
+             "gene_relations relation=5 edges (default-inert at query "
+             "time, order-nondeterministic under --parallel) are absent. "
+             "Fixes the O(N^2) ingest decay on hub-entity corpora "
+             "(2026-08-30 enronqa_padded receipt: 89.5%% of writer wall "
+             "time). Equivalent to CYMATIX_BFM_ENTITY_AUTOLINK=0.",
+    )
+    parser.add_argument(
         "--rebuild", action="store_true",
-        help="Unconditionally unlink existing per-shard ``.db`` files and "
-             "the routing ``main.genome.db`` before building. Default: "
+        help="Unconditionally unlink the existing ``.db`` before building "
+             "(per-shard files plus the routing ``main.genome.db`` in "
+             "sharded mode; the profile ``.db`` in blob mode). Default: "
              "file-level resume — complete shards are skipped via "
-             "``_try_salvage_complete_shard`` and partial shards' "
-             "already-ingested files are dropped via ``_filter_to_unseen`` "
-             "(issue #150). Use --rebuild for the 'nuke and start fresh' "
-             "case (e.g., schema migration, corrupt shard recovery).",
+             "``_try_salvage_complete_shard`` and already-ingested files are "
+             "dropped via ``_filter_to_unseen`` (issue #150). Blob mode "
+             "honours this as of 2026-08-24, but only under --parallel: "
+             "there is no resume for the sequential blob path, so "
+             "``--mode blob`` without --parallel always deletes and rebuilds "
+             "(unchanged historical behaviour). Use --rebuild for the "
+             "'nuke and start fresh' case (schema migration, corrupt bed).",
     )
     parser.add_argument(
         "--auto-subshard-threshold-bytes",
@@ -2285,6 +2667,11 @@ def main() -> int:
     # inherit Python's default SIGINT and are reaped by the executor.
     _install_sigint_handler()
 
+    if args.no_entity_autolink:
+        # Env (not module attribute) so mp spawn children inherit it —
+        # same idiom as CYMATIX_BFM_SPLADE.
+        os.environ["CYMATIX_BFM_ENTITY_AUTOLINK"] = "0"
+
     profiles = parse_profile_arg(args.profile)
 
     if args.mode == "blob":
@@ -2305,6 +2692,7 @@ def main() -> int:
                 n_workers=args.workers,
                 batch_size=args.batch_size,
                 chunksize=args.chunksize,
+                rebuild=args.rebuild,
             )
             update_manifest(out_dir, stats, mode="blob")
             results[name] = stats

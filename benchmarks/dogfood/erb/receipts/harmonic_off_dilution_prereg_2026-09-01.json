@@ -1,0 +1,30 @@
+{
+  "stamp": "2026-09-01",
+  "kind": "PRE-REGISTRATION (written before the arm was run against the bed)",
+  "probe": "FOLLOW-UP 2 to ARM 1 -- head-dilution attribution, harmonic tier off",
+  "tool": "benchmarks/dogfood/erb/probe_harmonic_off_dilution.py",
+  "tool_sha256_at_preregistration": "bdf822947d80fdbeb200ea9fc51eae44cc1f0f464a65404cab93c06dbb5ece02",
+  "git_sha": "0c17c5f9ef8b8ca9bf568715ceae9c828f77148d",
+  "written_at_epoch": 1788310932.6631389,
+  "written_at_local": "2026-09-01 18:02:12",
+  "finding_under_test": "verify_a1_recompute_2026-09-01.json section 6b: over the 107 needles where gold is found in BOTH ARM-1 arms, moving admission from 48/50 to 1000/1000 gives better=0 / same=38 / worse=69. Suspect: the Tier-5 harmonic boost (knowledge_store.py:3624-3663) scores the PRE-shortlist pool with a quantized constant bonus and the RRF fuser breaks the resulting ties by gene_id, so gold's harmonic rank becomes a lottery whose size grows with the pool (50 -> 1000).",
+  "decision_rule": "KILL the harmonic-tie hypothesis if, with the harmonic tier removed and the deep knobs unchanged (fts5_candidate_depth=1000, bm25_shortlist_size=1000), gold's new-arm-vs-shipped fused rank shift over the 107 both-found needles still has worse >= 50 (i.e. at least half the dilution survives). PASS (dilution is a harmonic/tie artefact) if worse <= 20 and better+same >= 87. Anything else is INCONCLUSIVE. Needles where the new arm fails to find gold at all count as WORSE.",
+  "switch_substitution": "The handoff pre-registered [cymatics] harmonic_links = false. VERIFIED NOT LIVE on this path: its only consumer is context_manager.py:2469, inside the 'if not read_only:' tail-write block (it gates WRITING harmonic edges after a turn), and every ERB query runs read_only=True -- so flipping it would have been a no-op arm. Tier 5's retrieval-side gate is the use_harmonic kwarg (knowledge_store.py:3629), which build_context/_retrieve never passes (hardwired True); the HTTP /context route exposes it as profile == 'quality' (routes_context.py:804). The config-file off switch is [retrieval] harmonic_weight (config.py:861 -> sharding.build_genome_kwargs:681 -> KnowledgeStore._harmonic_weight), which at 0.0 zeroes the additive bonus AND short-circuits fuser.add_tier (fusion.py:146-150). THIS ARM USES harmonic_weight = 0.0. The decision rule above is unchanged from the handoff.",
+  "known_before_the_run": [
+    "SELECT COUNT(*) FROM harmonic_links on F:/tmp/erb_blob_v09x.db = 0 (read-only SQL). The table exists, so the _has_harmonic guard passes, but it holds no edges.",
+    "SQLITE_LIMIT_VARIABLE_NUMBER = 32766 (sqlite 3.50.4). The Tier-5 query binds the pre-shortlist candidate id list TWICE (gene_id_a IN (...) AND gene_id_b IN (...)), and a 2-needle smoke measured the pre-shortlist pool (KnowledgeStore.last_tier_contributions, assigned at knowledge_store.py:3806 BEFORE the shortlist filter rebinds the local) at ~2.2e5 documents -- about 4.4e5 bound parameters, which raises OperationalError (too many SQL variables) and is swallowed at :3662-3663. This is independent of BOTH admission knobs (the tag lanes carry no LIMIT), so it holds identically for the shipped arm.",
+    "Therefore the arm is EXPECTED to reproduce deep1000 and the pre-registered rule is EXPECTED to return KILL. It is run as written anyway, both to honour the pre-registration and because it doubles as a run-to-run reproducibility measurement of the deep arm -- verify_a1_recompute found the delivered SET reproducible but the slate ORDER not, and never tested rank_of_first_gold reproducibility."
+  ],
+  "arm": {
+    "name": "deep1000_harmonic_off",
+    "knobs": {
+      "retrieval.fts5_candidate_depth": 1000,
+      "retrieval.bm25_shortlist_size": 1000,
+      "retrieval.harmonic_weight": 0.0
+    },
+    "config": "benchmarks/dogfood/erb/configs/w24_min_delivered_12.toml",
+    "call": "build_context(query, read_only=True, ignore_delivered=True, max_genes=12); untimed warmup; per-needle jsonl checkpoint for crash resume"
+  },
+  "population": "the 107 pool_depth_forensics rows with cohort in {miss, hit_control} and BOTH shipped_rank and deep_rank non-null",
+  "note": "No result of the 107-needle arm had been observed when this file was written. The only bed access so far was the two read-only COUNT(*) queries and the 2-needle smoke recorded above."
+}

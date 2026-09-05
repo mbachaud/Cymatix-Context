@@ -15,7 +15,7 @@ the bound are dropped from the probe set before the GROUP BY
 cutoff is hard-skipped"). The count probe itself is LIMIT-bounded, so
 per-insert cost is O(n_entities * cutoff), never O(hub-posting-list).
 
-Default 0 = disabled = current behavior, byte-identical.
+Bare kwarg default 0 = legacy unbounded linking; the [ingestion] config default is 200 since 2026-08-31 (#411 flip, PR #425), opt-out = 0.
 """
 
 import pytest
@@ -178,19 +178,36 @@ def test_store_cutoff_drops_hub_dependent_edges(tmp_path):
 
 # ── config level ─────────────────────────────────────────────────────
 
-def test_ingestion_config_default_is_disabled():
+def test_ingestion_config_default_is_200():
+    # #411 flip (2026-08-31): shipped default = 200 (PKI precedent).
+    # Legacy behavior is the explicit opt-out `entity_autolink_hub_cutoff
+    # = 0`; the bare KnowledgeStore kwarg stays 0 (non-config constructors
+    # keep byte-identical legacy linking).
     from cymatix_context.config import CymatixConfig
 
-    assert CymatixConfig().ingestion.entity_autolink_hub_cutoff == 0
+    assert CymatixConfig().ingestion.entity_autolink_hub_cutoff == 200
 
 
 def test_ingestion_config_parses_hub_cutoff(tmp_path):
+    # A NON-default value, so the assertion proves load_config parsed the key
+    # rather than echoing the dataclass default (200 since the #411 flip).
     from cymatix_context.config import load_config
 
     toml = tmp_path / "cymatix.toml"
-    toml.write_text("[ingestion]\nentity_autolink_hub_cutoff = 200\n")
+    toml.write_text("[ingestion]\nentity_autolink_hub_cutoff = 7\n")
     cfg = load_config(str(toml))
-    assert cfg.ingestion.entity_autolink_hub_cutoff == 200
+    assert cfg.ingestion.entity_autolink_hub_cutoff == 7
+
+
+def test_ingestion_config_parses_hub_cutoff_opt_out(tmp_path):
+    # The documented opt-out (0 = legacy unbounded linking) must survive
+    # parsing and not be folded back to the 200 default.
+    from cymatix_context.config import load_config
+
+    toml = tmp_path / "cymatix.toml"
+    toml.write_text("[ingestion]\nentity_autolink_hub_cutoff = 0\n")
+    cfg = load_config(str(toml))
+    assert cfg.ingestion.entity_autolink_hub_cutoff == 0
 
 
 def test_build_genome_kwargs_carries_hub_cutoff():

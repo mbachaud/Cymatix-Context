@@ -25,7 +25,14 @@ import sqlite3
 import threading
 import time
 from contextlib import contextmanager
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
+
+if TYPE_CHECKING:
+    # Annotation-only imports: numpy and the BGE-M3 codec are heavy,
+    # optional deps loaded lazily at their call sites.
+    import numpy as np
+
+    from .backends.bgem3_codec import BGEM3Codec
 
 from .accel import (
     json_loads,
@@ -41,6 +48,17 @@ from .schemas import ChromatinState, EpigeneticMarkers, Gene, PromoterTags
 from .backends.sema_codec import decode_embedding, sema_vec_to_blob
 
 log = logging.getLogger(__name__)
+
+# W2.2-narrow (eps_band_coverage): how deep into the fused head the
+# distinct-term coverage map is computed. The bands that can move delivery
+# live in the head; 60 covers the receipted 13-45 target range with margin
+# at ~60 point content fetches per query (evidence:
+# benchmarks/dogfood/erb/receipts/semantic_above_gold_947k_2026-08-31.json).
+COVERAGE_TIEBREAK_DEPTH = 60
+
+# Tokenizer for the coverage tie-break — the same token family as
+# accel.extract_query_signals so query terms and content tokens agree.
+_COVERAGE_TOKEN_RE = re.compile(r"[a-z0-9_/\-]+")
 
 
 # ── Struggle 1 fix: source-path deny list ───────────────────────────────
@@ -389,6 +407,35 @@ def _iter_in_batches(items, batch_size: int = _IN_BATCH_SIZE):
         yield ",".join("?" * len(batch)), batch
 
 
+# Fallback when the connection cannot report its bind-parameter cap
+# (Python < 3.11 lacks ``Connection.getlimit``). 999 is SQLite's historical
+# compile default and the most conservative value any supported build uses.
+_SQLITE_VARIABLE_LIMIT_FALLBACK = 999
+
+
+def _sqlite_variable_limit(conn) -> int:
+    """Return SQLITE_LIMIT_VARIABLE_NUMBER for ``conn`` (fallback 999).
+
+    Probed rather than assumed because the cap varies by build (999 on the
+    historical default, 32,766 on the CPython 3.14 Windows wheel — #431).
+    Callers that would bind more placeholders than this in a single
+    statement must batch or skip; otherwise SQLite raises
+    ``OperationalError: too many SQL variables``.
+    """
+    getlimit = getattr(conn, "getlimit", None)
+    if getlimit is None:
+        return _SQLITE_VARIABLE_LIMIT_FALLBACK
+    try:
+        limit = int(getlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER))
+    except Exception:
+        log.warning(
+            "SQLITE_LIMIT_VARIABLE_NUMBER probe failed; assuming %d",
+            _SQLITE_VARIABLE_LIMIT_FALLBACK, exc_info=True,
+        )
+        return _SQLITE_VARIABLE_LIMIT_FALLBACK
+    return limit if limit > 0 else _SQLITE_VARIABLE_LIMIT_FALLBACK
+
+
 def _dense_matrix_dtype():
     """Resident dtype for the per-shard dense matrix (A2 RAM lever).
 
@@ -546,11 +593,21 @@ class KnowledgeStore:
         deny_list_extra: Optional[List[str]] = None,
         locale_demotion_enabled: bool = True,
         entity_graph: bool = False,
+        # Scheduling knob for bulk builders (2026-08-30 enronqa_padded
+        # ingest-decay receipt): False skips per-insert COVER-edge
+        # formation (auto_link_by_entity — 89.5% of writer wall time at
+        # 289k genes, O(hub-posting) per insert) while still writing
+        # entity_graph rows. gene_relations relation=5 edges are the only
+        # content affected; they are default-inert at query time (W2.1
+        # cover-walk kill) and already order-nondeterministic under
+        # parallel ingest (ingest_equivalence_enronqa.json).
+        entity_autolink: bool = True,
         # Posting-count hub cutoff for ingest-time entity auto-linking
         # ([ingestion] entity_autolink_hub_cutoff). > 0 drops entities with
         # more postings than this from the COVER-edge probe set — bounds the
         # O(hub-posting-list) per-insert sweep (enronqa_padded 2026-08-30:
-        # 89.5% of writer wall time). 0 = legacy behavior.
+        # 89.5% of writer wall time). 0 = legacy behavior. Composition with
+        # entity_autolink: off > cutoff > legacy.
         entity_autolink_hub_cutoff: int = 0,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
@@ -768,6 +825,7 @@ class KnowledgeStore:
         # opted in; avoids hammering COUNT(*) when the toggle is off.
         self._splade_auto_cached_count: int = 0
         self._entity_graph_enabled = entity_graph
+        self._entity_autolink_enabled = bool(entity_autolink)
         self._entity_autolink_hub_cutoff = int(entity_autolink_hub_cutoff)
         # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
         # Separate from _entity_graph_enabled (write-side) — this controls
@@ -873,13 +931,15 @@ class KnowledgeStore:
         self.last_cover_walk_diag: Dict[str, Any] = {}
         # Issue #255 (PR-2): validate the rerank combinator now so a typo in
         # cymatix.toml fails fast at construction, mirroring the fusion_mode
-        # guard above. The four names are the only valid operators (see
-        # retrieval/rerank_combinators.py).
-        if rerank_combinator not in ("additive", "fused_tier", "eps_band", "off"):
+        # guard above. Single source of truth: VALID_COMBINATORS
+        # (retrieval/rerank_combinators.py) — was a duplicated literal tuple
+        # until the W2.2 eps_band_coverage addition exposed the drift.
+        from .retrieval.rerank_combinators import VALID_COMBINATORS as _VALID_COMB
+        if rerank_combinator not in _VALID_COMB:
             raise ValueError(
                 "rerank_combinator must be one of "
-                "'additive'|'fused_tier'|'eps_band'|'off', "
-                f"got {rerank_combinator!r}"
+                + "|".join(repr(c) for c in _VALID_COMB)
+                + f", got {rerank_combinator!r}"
             )
         self._rerank_combinator: str = rerank_combinator
         self._rerank_band_delta: float = float(rerank_band_delta)
@@ -895,6 +955,9 @@ class KnowledgeStore:
         self._sema_cold_weight: float = float(sema_cold_weight)
         self._lex_anchor_weight: float = float(lex_anchor_weight)
         self._harmonic_weight: float = float(harmonic_weight)
+        # #431: once-per-store guard for the Tier 5 bind-limit warning so a
+        # large bed logs the skipped harmonic query once, not per retrieval.
+        self._harmonic_limit_warned: bool = False
         self._entity_graph_weight: float = float(entity_graph_weight)
         self._dense_weight: float = float(dense_weight)
         # Tier-0 PR-3: additive-mode dense merge weight (see ctor param).
@@ -1070,6 +1133,12 @@ class KnowledgeStore:
         self._sema_vectorless: bool = False
         self._cold_sema_vectorless: bool = False
         self._sema_idle_logged: bool = False  # one log.info per store lifetime
+        # Memo for _probe_sema_vectorless(). The cache build above only ever
+        # runs on the undersized-pool cycle, so on a vectorless bed whose
+        # queries always fill the candidate pool the gate would never arm.
+        # The probe is the evidence path that covers that case; this flag
+        # keeps it one-shot. Cleared by invalidate_sema_cache().
+        self._sema_probe_done: bool = False
         # Memoized corpus size for IDF weighting (refreshed every
         # _CORPUS_SIZE_TTL seconds). Prevents the IDF denominator from
         # collapsing to the scored-candidate count on every query.
@@ -1259,6 +1328,47 @@ class KnowledgeStore:
         else:
             self._sema_cache = None
 
+    def _probe_sema_vectorless(self) -> None:
+        """One-shot cheap evidence probe for the sema vectorless auto-gate.
+
+        ``_build_sema_cache()`` arms ``_sema_vectorless``, but it only ever
+        runs on the undersized-pool cycle (``len(gene_scores) < limit // 2``).
+        On a vectorless bed whose queries always fill the candidate pool —
+        the common case at 100k/829k, where the lexical tiers alone return
+        far more than ``limit // 2`` candidates — the gate therefore never
+        armed, and every query kept paying the Tier 4 ``codec.encode()`` RTT
+        for a tier that provably cannot produce a candidate. This closes
+        that hole with the cheapest available evidence query.
+
+        ``LIMIT 1`` and no materialization makes this strictly cheaper than
+        the cache build's ``SELECT gene_id, embedding ... WHERE embedding IS
+        NOT NULL`` full fetch, and on a bed that HAS vectors it returns on
+        the first matching row. It runs at most once per store lifetime per
+        invalidation: ``_sema_probe_done`` memoizes the verdict either way,
+        and ``invalidate_sema_cache()`` clears it so a bed that later gains
+        vectors (upsert, backfill script) re-checks.
+
+        Fail-safe: any probe error leaves ``_sema_vectorless`` false, i.e.
+        the pre-gate behaviour where encode() fires.
+        """
+        if self._sema_probe_done or self._sema_vectorless:
+            return
+        # Marked done before the query so a persistently failing probe
+        # degrades to "gate never arms" rather than "rescan every query".
+        self._sema_probe_done = True
+        try:
+            row = self.read_conn.execute(
+                "SELECT 1 FROM genes WHERE embedding IS NOT NULL LIMIT 1"
+            ).fetchone()
+        except Exception:
+            log.debug("sema vectorless probe failed", exc_info=True)
+            return
+        if row is None:
+            self._sema_vectorless = True
+            if not self._sema_idle_logged:
+                log.info("sema tier idle: no stored vectors")
+                self._sema_idle_logged = True
+
     def invalidate_sema_cache(self) -> None:
         """Mark hot-tier cache stale — rebuilt on next Mode B query."""
         self._sema_cache = None
@@ -1266,6 +1376,9 @@ class KnowledgeStore:
         # re-check on the next build instead of staying permanently
         # gated off by a stale vectorless verdict.
         self._sema_vectorless = False
+        # ... and must re-run the one-shot probe, which is the arming path
+        # for beds whose queries never hit the undersized-pool cycle.
+        self._sema_probe_done = False
 
     # ── Cold-tier ΣĒMA retrieval (C.2, 2026-04-10) ─────────────────────
     #
@@ -2021,6 +2134,7 @@ class KnowledgeStore:
                 )
                 sync_entity_graph(
                     cur, gene_id, gene, self._entity_graph_enabled,
+                    autolink_enabled=self._entity_autolink_enabled,
                     hub_cutoff=self._entity_autolink_hub_cutoff,
                 )
                 sync_path_key_index(cur, gene_id, gene)
@@ -2134,6 +2248,29 @@ class KnowledgeStore:
         return sorted(expanded)
 
     # ── Authority boosts: distinguish "about X" from "mentions X" ──
+
+
+    def _coverage_for(
+        self, gene_ids: List[str], terms: List[str]
+    ) -> Dict[str, float]:
+        """Distinct-query-term coverage per candidate (W2.2 eps_band_coverage).
+
+        Counts how many DISTINCT ``terms`` occur in each candidate's content
+        (token-level, same token family as the query extractor). One SELECT
+        for the whole id set; absent ids simply score 0.0.
+        """
+        term_set = {t.lower() for t in terms if len(t) > 2}
+        if not gene_ids or not term_set:
+            return {}
+        out: Dict[str, float] = {}
+        marks = ",".join("?" for _ in gene_ids)
+        for gid, content in self.conn.execute(
+            f"SELECT gene_id, content FROM genes WHERE gene_id IN ({marks})",
+            list(gene_ids),
+        ):
+            tokens = set(_COVERAGE_TOKEN_RE.findall((content or "").lower()))
+            out[gid] = float(sum(1 for t in term_set if t in tokens))
+        return out
 
     def _apply_authority_boosts(
         self,
@@ -3346,6 +3483,14 @@ class KnowledgeStore:
                     and not self._sema_vectorless
                 ):
                     self._build_sema_cache()
+                elif self._sema_cache is None:
+                    # Full-pool cycle: the cache build above never runs, so
+                    # it can never arm the gate here. Fall back to the
+                    # one-shot LIMIT 1 probe — otherwise a vectorless bed
+                    # whose queries always fill the pool pays the encode()
+                    # RTT forever. No-op once memoized, and a no-op on beds
+                    # with a materialized cache (those provably have vectors).
+                    self._probe_sema_vectorless()
 
                 if not self._sema_vectorless:
                     # Issue #341 fix: same shadowing hazard as the SPLADE tier
@@ -3637,31 +3782,60 @@ class KnowledgeStore:
             if _has_harmonic:
                 try:
                     candidate_ids = list(gene_scores.keys())
-                    cid_ph = ",".join("?" * len(candidate_ids))
-                    harmonic_rows = cur.execute(
-                        f"SELECT gene_id_a, gene_id_b, weight "
-                        f"FROM harmonic_links "
-                        f"WHERE gene_id_a IN ({cid_ph}) "
-                        f"  AND gene_id_b IN ({cid_ph})",
-                        (*candidate_ids, *candidate_ids),
-                    ).fetchall()
-                    harmonic_bonus: Dict[str, float] = {}
-                    for hr in harmonic_rows:
-                        for gid in (hr["gene_id_a"], hr["gene_id_b"]):
-                            harmonic_bonus[gid] = min(
-                                harmonic_bonus.get(gid, 0) + self._harmonic_weight,
-                                3.0 * self._harmonic_weight,
-                            )
-                    _harmonic_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
-                    for gid, bonus in harmonic_bonus.items():
-                        gene_scores[gid] = gene_scores.get(gid, 0) + bonus
-                        tier_contrib.setdefault(gid, {})["harmonic"] = bonus
-                        _harmonic_ranked.append((gid, bonus))
-                    fuser.add_tier(
-                        "harmonic", _harmonic_ranked, weight=self._harmonic_weight,
+                    # #431: the candidate list is bound TWICE below (one IN
+                    # per side of the edge). On bulk beds the pre-shortlist
+                    # pool is far larger than SQLITE_LIMIT_VARIABLE_NUMBER
+                    # (ERB 947k: median ~172k candidates vs a 32,766 cap),
+                    # so the statement would raise "too many SQL variables".
+                    # Logging-only tier of the fix: probe the cap, skip the
+                    # query with a once-per-store warning when it would be
+                    # exceeded. Below the cap the tier runs exactly as before
+                    # (ranking byte-identical). Batching / post-shortlist
+                    # bounding is the receipt-gated behavior change.
+                    _n_bound = 2 * len(candidate_ids)
+                    _bind_limit = _sqlite_variable_limit(
+                        getattr(cur, "connection", None)
                     )
+                    if _n_bound > _bind_limit:
+                        if not self._harmonic_limit_warned:
+                            self._harmonic_limit_warned = True
+                            log.warning(
+                                "Harmonic tier skipped: %d candidates would "
+                                "bind %d parameters, over "
+                                "SQLITE_LIMIT_VARIABLE_NUMBER=%d (#431); "
+                                "further skips on this store are silent",
+                                len(candidate_ids), _n_bound, _bind_limit,
+                            )
+                    else:
+                        cid_ph = ",".join("?" * len(candidate_ids))
+                        harmonic_rows = cur.execute(
+                            f"SELECT gene_id_a, gene_id_b, weight "
+                            f"FROM harmonic_links "
+                            f"WHERE gene_id_a IN ({cid_ph}) "
+                            f"  AND gene_id_b IN ({cid_ph})",
+                            (*candidate_ids, *candidate_ids),
+                        ).fetchall()
+                        harmonic_bonus: Dict[str, float] = {}
+                        for hr in harmonic_rows:
+                            for gid in (hr["gene_id_a"], hr["gene_id_b"]):
+                                harmonic_bonus[gid] = min(
+                                    harmonic_bonus.get(gid, 0)
+                                    + self._harmonic_weight,
+                                    3.0 * self._harmonic_weight,
+                                )
+                        _harmonic_ranked: List[Tuple[str, float]] = []  # RRF
+                        for gid, bonus in harmonic_bonus.items():
+                            gene_scores[gid] = gene_scores.get(gid, 0) + bonus
+                            tier_contrib.setdefault(gid, {})["harmonic"] = bonus
+                            _harmonic_ranked.append((gid, bonus))
+                        fuser.add_tier(
+                            "harmonic", _harmonic_ranked,
+                            weight=self._harmonic_weight,
+                        )
                 except Exception:
-                    log.debug("Harmonic boost failed", exc_info=True)
+                    # #431: was log.debug — a swallowed OperationalError hid
+                    # the tier's absence on every large bed.
+                    log.warning("Harmonic boost failed", exc_info=True)
 
         # ── Tier 5.5: Successor Representation boost ──────────────
         # Discounted future-occupancy over the co-activation graph.
@@ -3967,6 +4141,31 @@ class KnowledgeStore:
                     )
                     _cover_mass, _cover_diag = {}, {}
                 _sig("cover_walk", _cw_t0)
+            # ── W2.2-narrow: distinct-term coverage for the band tie-break ──
+            # Computed ONLY when this query's combinator is eps_band_coverage
+            # (default map ships eps_band, so this block is inert at shipped
+            # defaults). Coverage = number of DISTINCT expanded query terms
+            # present in the candidate's content, over the top-D fused head —
+            # the bands that can affect delivery live there. Evidence:
+            # semantic_above_gold_947k_2026-08-31.json (gold out-covers the
+            # interloper majority on 16/21 rank-reachable semantic misses).
+            _coverage_map: Optional[Dict[str, float]] = None
+            if _effective_combinator == "eps_band_coverage":
+                _cov_t0 = time.monotonic()
+                try:
+                    _cov_head = [
+                        gid for gid, _cv_s in sorted(
+                            fused.items(), key=lambda x: (-x[1], x[0])
+                        )[:COVERAGE_TIEBREAK_DEPTH]
+                    ]
+                    _coverage_map = self._coverage_for(_cov_head, query_terms)
+                except Exception:
+                    log.warning(
+                        "coverage tie-break failed; falling back to eps_band "
+                        "order", exc_info=True,
+                    )
+                    _coverage_map = None
+                _sig("coverage_tiebreak", _cov_t0)
             from .retrieval.rerank_combinators import combine_rerank
             final_scores, ranked_ids = combine_rerank(
                 _effective_combinator,
@@ -3977,6 +4176,7 @@ class KnowledgeStore:
                 self._rerank_tier_weight,
                 self._rerank_band_delta,
                 _fuse_limit,
+                coverage=_coverage_map,
             )
             # last_query_scores semantics under RRF: the combined final
             # score, NOT the raw additive accumulator. This is what

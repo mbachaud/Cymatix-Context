@@ -1,0 +1,524 @@
+{
+ "financebench_id_00005": [
+  "4064c253ac62c072"
+ ],
+ "financebench_id_00070": [
+  "4e513d90290e7f65",
+  "822b65f85498c647"
+ ],
+ "financebench_id_00080": [
+  "3c46c91081be7e9f"
+ ],
+ "financebench_id_00206": [
+  "54fc0feda49953e4",
+  "fb9fb4548a7eb662"
+ ],
+ "financebench_id_00215": [
+  "7f4114cbfa8fe134",
+  "900fe93f7063b8df",
+  "ae9a4a39ff8386e8"
+ ],
+ "financebench_id_00216": [
+  "7f4114cbfa8fe134"
+ ],
+ "financebench_id_00222": [
+  "d7e02515c87fc0f6"
+ ],
+ "financebench_id_00283": [
+  "946e53f3e586c101",
+  "de02d5a25761e24a"
+ ],
+ "financebench_id_00288": [
+  "35ef93dcdb4472de",
+  "88a00123fbda9d0a"
+ ],
+ "financebench_id_00299": [
+  "28b16c69c348ce16"
+ ],
+ "financebench_id_00302": [
+  "2b4f3e65fa027138"
+ ],
+ "financebench_id_00382": [
+  "358ba8acec083439"
+ ],
+ "financebench_id_00394": [
+  "d31f1778ce90853f"
+ ],
+ "financebench_id_00407": [
+  "03a00296b49430b4"
+ ],
+ "financebench_id_00438": [
+  "b27286d97691dc72"
+ ],
+ "financebench_id_00460": [
+  "3e349c0f6e12f0b7"
+ ],
+ "financebench_id_00464": [
+  "6efc18bd3cb8c7b7",
+  "d71b7399d21b0358"
+ ],
+ "financebench_id_00476": [
+  "6284674677050613",
+  "9824088c0bd437b7"
+ ],
+ "financebench_id_00494": [
+  "69b2879dcb1cce70",
+  "85222dd5d6ef3442"
+ ],
+ "financebench_id_00499": [
+  "1c95d003a9dae958",
+  "2283b6081d4b078f",
+  "b844387270f95a73"
+ ],
+ "financebench_id_00517": [
+  "5f6e618984703bac"
+ ],
+ "financebench_id_00521": [
+  "c3f52e911faf4736"
+ ],
+ "financebench_id_00540": [
+  "f3eff50e685d7a43",
+  "fe3fd84b341eda0c"
+ ],
+ "financebench_id_00552": [
+  "0df5ecde86c21f47"
+ ],
+ "financebench_id_00563": [
+  "67a412211aaeb2b6"
+ ],
+ "financebench_id_00566": [
+  "f5cff408c3551e2a"
+ ],
+ "financebench_id_00585": [
+  "f0a706333b2a6933"
+ ],
+ "financebench_id_00591": [
+  "e741829ec4fddd56"
+ ],
+ "financebench_id_00601": [
+  "2b3070d72cbdc16f"
+ ],
+ "financebench_id_00603": [
+  "2fa00963819ec66b"
+ ],
+ "financebench_id_00605": [
+  "2fa00963819ec66b"
+ ],
+ "financebench_id_00606": [
+  "2b3070d72cbdc16f"
+ ],
+ "financebench_id_00651": [
+  "58e0e41c59d8f924"
+ ],
+ "financebench_id_00669": [
+  "4227d6d4e25380b5"
+ ],
+ "financebench_id_00678": [
+  "f0a706333b2a6933"
+ ],
+ "financebench_id_00684": [
+  "7db9d6551872bbbd"
+ ],
+ "financebench_id_00685": [
+  "c1c998c0447a7235"
+ ],
+ "financebench_id_00702": [
+  "6672a85491372f4e"
+ ],
+ "financebench_id_00705": [
+  "72abeb79280f072b",
+  "a45a67e2df584df6"
+ ],
+ "financebench_id_00711": [
+  "4320970bd254a6b5",
+  "74add473e2b43d0d"
+ ],
+ "financebench_id_00720": [
+  "6bf5b5433b26cd54"
+ ],
+ "financebench_id_00723": [
+  "6bf5b5433b26cd54"
+ ],
+ "financebench_id_00724": [
+  "b9af7e78e49a430a",
+  "bef78288bac10429"
+ ],
+ "financebench_id_00735": [
+  "76282edd3b8b220d"
+ ],
+ "financebench_id_00746": [
+  "b3ad25c8354fea2c"
+ ],
+ "financebench_id_00757": [
+  "61aa85154707c9cf"
+ ],
+ "financebench_id_00790": [
+  "ae4165ec57b3a871",
+  "f74cd7056ddd924b"
+ ],
+ "financebench_id_00799": [
+  "992bee5522bb8cb5"
+ ],
+ "financebench_id_00807": [
+  "bc24350b58d284ba"
+ ],
+ "financebench_id_00822": [
+  "c7c8bdc2057271dc"
+ ],
+ "financebench_id_00839": [
+  "917a8b3f96b60a52",
+  "9f4b995ee4f014ea"
+ ],
+ "financebench_id_00859": [
+  "b5a1d8e9314ef4eb"
+ ],
+ "financebench_id_00882": [
+  "72abeb79280f072b",
+  "a45a67e2df584df6"
+ ],
+ "financebench_id_00917": [
+  "9eaf901958abf585",
+  "b85975fbd7b21fdb"
+ ],
+ "financebench_id_00941": [
+  "539bac786bf8580d"
+ ],
+ "financebench_id_00956": [
+  "5a73a0ba70dbe4eb"
+ ],
+ "financebench_id_00995": [
+  "b39fcd898a162375"
+ ],
+ "financebench_id_01009": [
+  "7e936c45f2cf24c5",
+  "83f66ca3e4a89cad"
+ ],
+ "financebench_id_01028": [
+  "baf08de46af6e478"
+ ],
+ "financebench_id_01077": [
+  "7ba83796167f55f4",
+  "ab9e2549c6842edb"
+ ],
+ "financebench_id_01079": [
+  "3f83b8cffe582c88",
+  "d16a99b983bc76c7"
+ ],
+ "financebench_id_01091": [
+  "0a9bf60d0b76a802",
+  "9b8c9cddf4a0ec9f"
+ ],
+ "financebench_id_01107": [
+  "719707b664a20c7e",
+  "a7f90cf8734c2dd0",
+  "d0b8d58acbde58f6",
+  "d68178f3470f787a"
+ ],
+ "financebench_id_01148": [
+  "ea6eb13f4364f218"
+ ],
+ "financebench_id_01163": [
+  "e399ab077651e64f"
+ ],
+ "financebench_id_01198": [
+  "9eaf901958abf585",
+  "b85975fbd7b21fdb"
+ ],
+ "financebench_id_01226": [
+  "be813bbeae3cb5b2"
+ ],
+ "financebench_id_01244": [
+  "21b9d9478f0b0400"
+ ],
+ "financebench_id_01254": [
+  "62f0b37073cca091"
+ ],
+ "financebench_id_01275": [
+  "dd9bd93795d449b3"
+ ],
+ "financebench_id_01279": [
+  "765d890968ea11e4"
+ ],
+ "financebench_id_01290": [
+  "2ddef27c1c0740d1",
+  "346ec8d5b80bd5ce",
+  "3d34c8c65e094327",
+  "6efc18bd3cb8c7b7",
+  "baa7a993da8c19b5",
+  "d71b7399d21b0358"
+ ],
+ "financebench_id_01319": [
+  "fe3fd84b341eda0c"
+ ],
+ "financebench_id_01328": [
+  "ef486e4e81948867"
+ ],
+ "financebench_id_01346": [
+  "a34d7379441721a6"
+ ],
+ "financebench_id_01351": [
+  "be24c863bbd4f220"
+ ],
+ "financebench_id_01474": [
+  "1cdd330477946858"
+ ],
+ "financebench_id_01476": [
+  "1cdd330477946858"
+ ],
+ "financebench_id_01482": [
+  "fa757ae586c990cd"
+ ],
+ "financebench_id_01484": [
+  "ca9274dac54b7134"
+ ],
+ "financebench_id_01487": [
+  "2c29b4076d40ee87"
+ ],
+ "financebench_id_01488": [
+  "598154fb37f71894"
+ ],
+ "financebench_id_01490": [
+  "598154fb37f71894"
+ ],
+ "financebench_id_01491": [
+  "598154fb37f71894"
+ ],
+ "financebench_id_01858": [
+  "593e3fb8d4661cbb",
+  "a4b2bbd3a1c1f424"
+ ],
+ "financebench_id_01865": [
+  "0a8a71b3766f31d1"
+ ],
+ "financebench_id_01902": [
+  "cacf7fadb83b021e",
+  "f48e86b100b1cd29"
+ ],
+ "financebench_id_01911": [
+  "07a7f22a809dd7e3"
+ ],
+ "financebench_id_01912": [
+  "176c7c1b41ccdc39",
+  "cd12e8e7ffdcb661"
+ ],
+ "financebench_id_01928": [
+  "c7f230862dd571ff"
+ ],
+ "financebench_id_01930": [
+  "65646342eec3f694"
+ ],
+ "financebench_id_01935": [
+  "0543ce2d122a57b5",
+  "9afa6e2371d8b080"
+ ],
+ "financebench_id_01936": [
+  "8514604f595de40a"
+ ],
+ "financebench_id_01964": [
+  "4e6315509374fb1d"
+ ],
+ "financebench_id_01981": [
+  "ae9319c06671a5e9",
+  "cba0b992b44d6faa"
+ ],
+ "financebench_id_02024": [
+  "03f205cb782779ef",
+  "0b45bb68509b174e",
+  "1b60c9c82af65541",
+  "e52e13d3ef5ef3de"
+ ],
+ "financebench_id_02049": [
+  "4cbddbec0f4dcd1e"
+ ],
+ "financebench_id_02119": [
+  "106abf484d0fcbdd"
+ ],
+ "financebench_id_02416": [
+  "3440f214a854ee90",
+  "3da493410ab5943e",
+  "72977bfd7e9f8e86",
+  "8021f2b2731b7c0a"
+ ],
+ "financebench_id_02419": [
+  "946e53f3e586c101",
+  "de02d5a25761e24a"
+ ],
+ "financebench_id_02608": [
+  "008ccb4c18f6305b"
+ ],
+ "financebench_id_02981": [
+  "525aea3b8b409d96"
+ ],
+ "financebench_id_02987": [
+  "3bfe312dadcc2bc7",
+  "839e4431da059557"
+ ],
+ "financebench_id_03029": [
+  "7c007d58a0d3f96c"
+ ],
+ "financebench_id_03031": [
+  "d1f69004a2331a36"
+ ],
+ "financebench_id_03069": [
+  "789cd12b0cb64def",
+  "eb4959d99d488c68"
+ ],
+ "financebench_id_03282": [
+  "bba87d893ba9bc2f"
+ ],
+ "financebench_id_03471": [
+  "9183272ce2f12e9a"
+ ],
+ "financebench_id_03473": [
+  "0810d3c9b71f09b7",
+  "0a890f85ff6eb864"
+ ],
+ "financebench_id_03531": [
+  "57bdbf5e522d80eb"
+ ],
+ "financebench_id_03620": [
+  "795a93d2c77dafea",
+  "e738e40690bc7076"
+ ],
+ "financebench_id_03718": [
+  "48d15d64ee11f814"
+ ],
+ "financebench_id_03838": [
+  "f5c73175f809a173"
+ ],
+ "financebench_id_03849": [
+  "cc372b9ad28174d7",
+  "d61bcc96de2453a6",
+  "ea3f5a1d2d6d9345"
+ ],
+ "financebench_id_03856": [
+  "3e925aa4b9969b86",
+  "79238351353fdcdc"
+ ],
+ "financebench_id_03882": [
+  "908b6f85f1178a54"
+ ],
+ "financebench_id_04080": [
+  "677cb1c1e6638cbd",
+  "f91c112039043290"
+ ],
+ "financebench_id_04103": [
+  "28bef3367195221e",
+  "80b8919c387732fb"
+ ],
+ "financebench_id_04171": [
+  "74d9d2590e469172"
+ ],
+ "financebench_id_04209": [
+  "2585d4c7d09cd5ea"
+ ],
+ "financebench_id_04254": [
+  "237e870b261fac69",
+  "519e6c83689c444f"
+ ],
+ "financebench_id_04302": [
+  "c2ac8261877c39f7"
+ ],
+ "financebench_id_04412": [
+  "121dc0bfe2120ed3",
+  "6850fcffa7255f41"
+ ],
+ "financebench_id_04417": [
+  "9a65e438fa5a8868"
+ ],
+ "financebench_id_04458": [
+  "d2a2501ace596c03",
+  "fe0d989573dd118e"
+ ],
+ "financebench_id_04481": [
+  "795a93d2c77dafea",
+  "e738e40690bc7076"
+ ],
+ "financebench_id_04660": [
+  "868139a21f546c89"
+ ],
+ "financebench_id_04672": [
+  "2f499f6d64f27cf7"
+ ],
+ "financebench_id_04700": [
+  "b8e3d5cd0c5b12d6"
+ ],
+ "financebench_id_04735": [
+  "112e4696f10f170f",
+  "13ff636d3235111f",
+  "3519561b3d979f77",
+  "6bc43b1215454f9b",
+  "889674d199ebfbea",
+  "d320575037d8f300"
+ ],
+ "financebench_id_04784": [
+  "7bb94fef6f2f6df7"
+ ],
+ "financebench_id_04854": [
+  "c240d52a382f4269"
+ ],
+ "financebench_id_04980": [
+  "7e64298b3c9e08d2"
+ ],
+ "financebench_id_05718": [
+  "950b327a928c700a"
+ ],
+ "financebench_id_05915": [
+  "1835705d44c35cbe",
+  "d42f069bd932d2ae"
+ ],
+ "financebench_id_06247": [
+  "2886107f7df1df41",
+  "6c129908294b67a6"
+ ],
+ "financebench_id_06272": [
+  "428b50a1440b4a87",
+  "4b2a320a31da5455"
+ ],
+ "financebench_id_06655": [
+  "0b08855d752e5df5",
+  "7946490e870b3f32"
+ ],
+ "financebench_id_06741": [
+  "a734f111591ed9a9",
+  "e4bc957b53764146"
+ ],
+ "financebench_id_07507": [
+  "ed5a2ffbf6618f98"
+ ],
+ "financebench_id_07661": [
+  "68ac30d1e010c4db"
+ ],
+ "financebench_id_07966": [
+  "3bfe312dadcc2bc7",
+  "e63d452f71aab2eb"
+ ],
+ "financebench_id_08135": [
+  "7946490e870b3f32"
+ ],
+ "financebench_id_08286": [
+  "c2b446d6d1edb2a7"
+ ],
+ "financebench_id_09724": [
+  "69c40de4106c44ef"
+ ],
+ "financebench_id_10130": [
+  "2c8a606c575d4d37",
+  "8021386af9af9173"
+ ],
+ "financebench_id_10136": [
+  "1b46f0d1c49648a2",
+  "ce7015eb1b5ab00c"
+ ],
+ "financebench_id_10285": [
+  "f1efcabe641cd56f"
+ ],
+ "financebench_id_10420": [
+  "f3eff50e685d7a43",
+  "fe3fd84b341eda0c"
+ ],
+ "financebench_id_10499": [
+  "14d24bd3962cc9e1",
+  "f87f7f6407b9cb43"
+ ]
+}

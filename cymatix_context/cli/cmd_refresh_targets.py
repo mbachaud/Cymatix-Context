@@ -38,8 +38,11 @@ def _build_parser() -> argparse.ArgumentParser:
         default="edit",
         help="Risk profile (default: edit — the usual caller).",
     )
+    # both spellings share one dest; if both are passed, argparse last-wins
+    # applies (CLI is exempt from the config-surface legacy-wins collision
+    # rule — controller ruling, PR A)
     parser.add_argument(
-        "--max-genes", type=int, default=8,
+        "--max-genes", "--max-docs", dest="max_genes", type=int, default=8,
         help="Retrieval top-K cap (default: 8).",
     )
     parser.add_argument(

@@ -1,0 +1,2522 @@
+{
+ "stamp": "2026-08-31",
+ "bed": "F:/tmp/erb_carve/erb_829k_nosplade.db",
+ "encoder": {
+  "model": "BAAI/bge-m3",
+  "dim": 1024,
+  "device": "cuda",
+  "task": "query"
+ },
+ "basis_receipt": "postflip_default_confirm_829k.json (no_pki arm = shipped default post-#370; PRE-wave-1 defaults, disclosed)",
+ "design": "dense-ONLY exhaustive cosine over all 829k vectors; rank of first gold; no shortlist, no fusion",
+ "miss_summary": {
+  "n": 200,
+  "le12": 53,
+  "le50": 74,
+  "median": 348,
+  "by_class": {
+   "basic": {
+    "n": 70,
+    "le12": 23,
+    "le50": 34,
+    "median": 91
+   },
+   "completeness": {
+    "n": 7,
+    "le12": 2,
+    "le50": 3,
+    "median": 141
+   },
+   "conflicting_info": {
+    "n": 6,
+    "le12": 4,
+    "le50": 4,
+    "median": 3
+   },
+   "constrained": {
+    "n": 16,
+    "le12": 11,
+    "le50": 15,
+    "median": 2
+   },
+   "intra_document_reasoning": {
+    "n": 9,
+    "le12": 4,
+    "le50": 4,
+    "median": 120
+   },
+   "miscellaneous": {
+    "n": 2,
+    "le12": 1,
+    "le50": 2,
+    "median": 8
+   },
+   "project_related": {
+    "n": 4,
+    "le12": 4,
+    "le50": 4,
+    "median": 1
+   },
+   "semantic": {
+    "n": 86,
+    "le12": 4,
+    "le50": 8,
+    "median": 3020
+   }
+  }
+ },
+ "hit_control_summary": {
+  "n": 99,
+  "le12": 57,
+  "le50": 70,
+  "median": 6,
+  "by_class": {
+   "basic": {
+    "n": 99,
+    "le12": 57,
+    "le50": 70,
+    "median": 6
+   }
+  }
+ },
+ "per_query": [
+  {
+   "needle": "erb_000",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 2,
+   "dense_score": 0.6599
+  },
+  {
+   "needle": "erb_001",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 18,
+   "dense_rank": 16213,
+   "dense_score": 0.5292
+  },
+  {
+   "needle": "erb_003",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 27,
+   "dense_rank": 87,
+   "dense_score": 0.6135
+  },
+  {
+   "needle": "erb_006",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 747,
+   "dense_score": 0.5399
+  },
+  {
+   "needle": "erb_012",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 10,
+   "dense_rank": 1,
+   "dense_score": 0.6498
+  },
+  {
+   "needle": "erb_015",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 14,
+   "dense_rank": 209,
+   "dense_score": 0.5419
+  },
+  {
+   "needle": "erb_021",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 41,
+   "dense_score": 0.5927
+  },
+  {
+   "needle": "erb_026",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 1,
+   "dense_score": 0.6968
+  },
+  {
+   "needle": "erb_029",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 16,
+   "dense_rank": 6,
+   "dense_score": 0.6071
+  },
+  {
+   "needle": "erb_030",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 34,
+   "dense_score": 0.6335
+  },
+  {
+   "needle": "erb_035",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 14,
+   "dense_rank": 2,
+   "dense_score": 0.652
+  },
+  {
+   "needle": "erb_037",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 18,
+   "dense_rank": 783,
+   "dense_score": 0.5177
+  },
+  {
+   "needle": "erb_039",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 11915,
+   "dense_score": 0.5391
+  },
+  {
+   "needle": "erb_041",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 210,
+   "dense_score": 0.6261
+  },
+  {
+   "needle": "erb_048",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 37,
+   "dense_rank": 96,
+   "dense_score": 0.5997
+  },
+  {
+   "needle": "erb_049",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 26,
+   "dense_score": 0.5889
+  },
+  {
+   "needle": "erb_052",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 11,
+   "dense_rank": 1221,
+   "dense_score": 0.5169
+  },
+  {
+   "needle": "erb_053",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 32,
+   "dense_score": 0.646
+  },
+  {
+   "needle": "erb_054",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 16,
+   "dense_rank": 1,
+   "dense_score": 0.6849
+  },
+  {
+   "needle": "erb_056",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 5343,
+   "dense_score": 0.5655
+  },
+  {
+   "needle": "erb_060",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 34,
+   "dense_score": 0.6098
+  },
+  {
+   "needle": "erb_062",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 4381,
+   "dense_score": 0.5138
+  },
+  {
+   "needle": "erb_063",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 22,
+   "dense_rank": 3,
+   "dense_score": 0.6538
+  },
+  {
+   "needle": "erb_067",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 20,
+   "dense_rank": 1,
+   "dense_score": 0.6641
+  },
+  {
+   "needle": "erb_070",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 104,
+   "dense_score": 0.5902
+  },
+  {
+   "needle": "erb_071",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 10,
+   "dense_rank": 15,
+   "dense_score": 0.6793
+  },
+  {
+   "needle": "erb_072",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 459,
+   "dense_score": 0.5815
+  },
+  {
+   "needle": "erb_073",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 17,
+   "dense_rank": 17,
+   "dense_score": 0.6016
+  },
+  {
+   "needle": "erb_075",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 8,
+   "dense_score": 0.6393
+  },
+  {
+   "needle": "erb_080",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 36,
+   "dense_rank": 206181,
+   "dense_score": 0.4478
+  },
+  {
+   "needle": "erb_084",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 14,
+   "dense_rank": 1,
+   "dense_score": 0.7026
+  },
+  {
+   "needle": "erb_085",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 12,
+   "dense_score": 0.5488
+  },
+  {
+   "needle": "erb_088",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 156635,
+   "dense_score": 0.4677
+  },
+  {
+   "needle": "erb_090",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 2299,
+   "dense_score": 0.5789
+  },
+  {
+   "needle": "erb_091",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 524,
+   "dense_score": 0.5174
+  },
+  {
+   "needle": "erb_098",
+   "split": "miss",
+   "error": "no gold vectors in bed"
+  },
+  {
+   "needle": "erb_106",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 24,
+   "dense_rank": 6743,
+   "dense_score": 0.5351
+  },
+  {
+   "needle": "erb_107",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 1285,
+   "dense_score": 0.5069
+  },
+  {
+   "needle": "erb_108",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 25,
+   "dense_score": 0.6401
+  },
+  {
+   "needle": "erb_110",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 1162,
+   "dense_score": 0.5392
+  },
+  {
+   "needle": "erb_114",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 12099,
+   "dense_score": 0.5145
+  },
+  {
+   "needle": "erb_116",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.6509
+  },
+  {
+   "needle": "erb_119",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 12972,
+   "dense_score": 0.5192
+  },
+  {
+   "needle": "erb_120",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 10,
+   "dense_rank": 1086,
+   "dense_score": 0.5685
+  },
+  {
+   "needle": "erb_123",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 447,
+   "dense_score": 0.5199
+  },
+  {
+   "needle": "erb_126",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 1,
+   "dense_score": 0.6147
+  },
+  {
+   "needle": "erb_129",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 18,
+   "dense_rank": 9,
+   "dense_score": 0.5724
+  },
+  {
+   "needle": "erb_130",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 22,
+   "dense_rank": 9,
+   "dense_score": 0.6385
+  },
+  {
+   "needle": "erb_132",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 523,
+   "dense_score": 0.6134
+  },
+  {
+   "needle": "erb_134",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 15,
+   "dense_rank": 182,
+   "dense_score": 0.6056
+  },
+  {
+   "needle": "erb_135",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 31,
+   "dense_score": 0.5974
+  },
+  {
+   "needle": "erb_136",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 46,
+   "dense_rank": 327,
+   "dense_score": 0.5784
+  },
+  {
+   "needle": "erb_137",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 71583,
+   "dense_score": 0.4404
+  },
+  {
+   "needle": "erb_138",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 37730,
+   "dense_score": 0.5114
+  },
+  {
+   "needle": "erb_140",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 1,
+   "dense_score": 0.6677
+  },
+  {
+   "needle": "erb_141",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 10,
+   "dense_rank": 1184,
+   "dense_score": 0.5386
+  },
+  {
+   "needle": "erb_142",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 35,
+   "dense_rank": 48260,
+   "dense_score": 0.4786
+  },
+  {
+   "needle": "erb_143",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 9,
+   "dense_rank": 674,
+   "dense_score": 0.5032
+  },
+  {
+   "needle": "erb_144",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 20,
+   "dense_rank": 2,
+   "dense_score": 0.6214
+  },
+  {
+   "needle": "erb_145",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 35,
+   "dense_score": 0.5445
+  },
+  {
+   "needle": "erb_147",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 13,
+   "dense_rank": 48,
+   "dense_score": 0.5902
+  },
+  {
+   "needle": "erb_148",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 28,
+   "dense_rank": 11224,
+   "dense_score": 0.5274
+  },
+  {
+   "needle": "erb_150",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 13,
+   "dense_rank": 1,
+   "dense_score": 0.6706
+  },
+  {
+   "needle": "erb_151",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 9,
+   "dense_score": 0.5942
+  },
+  {
+   "needle": "erb_156",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 333,
+   "dense_score": 0.542
+  },
+  {
+   "needle": "erb_157",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 23,
+   "dense_rank": 1,
+   "dense_score": 0.6565
+  },
+  {
+   "needle": "erb_161",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 27,
+   "dense_rank": 1,
+   "dense_score": 0.615
+  },
+  {
+   "needle": "erb_164",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 21,
+   "dense_rank": 2,
+   "dense_score": 0.6061
+  },
+  {
+   "needle": "erb_166",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": 42,
+   "dense_rank": 4,
+   "dense_score": 0.6145
+  },
+  {
+   "needle": "erb_168",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 66664,
+   "dense_score": 0.4883
+  },
+  {
+   "needle": "erb_171",
+   "split": "miss",
+   "class": "basic",
+   "lexical_rank": null,
+   "dense_rank": 5304,
+   "dense_score": 0.5444
+  },
+  {
+   "needle": "erb_176",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 20685,
+   "dense_score": 0.4976
+  },
+  {
+   "needle": "erb_178",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 3832,
+   "dense_score": 0.5207
+  },
+  {
+   "needle": "erb_179",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 37,
+   "dense_rank": 1880,
+   "dense_score": 0.592
+  },
+  {
+   "needle": "erb_180",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 9,
+   "dense_rank": 50283,
+   "dense_score": 0.5059
+  },
+  {
+   "needle": "erb_181",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 2901,
+   "dense_score": 0.56
+  },
+  {
+   "needle": "erb_182",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 33672,
+   "dense_score": 0.5117
+  },
+  {
+   "needle": "erb_183",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 35,
+   "dense_rank": 95,
+   "dense_score": 0.5489
+  },
+  {
+   "needle": "erb_184",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 9,
+   "dense_score": 0.607
+  },
+  {
+   "needle": "erb_185",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 136466,
+   "dense_score": 0.5254
+  },
+  {
+   "needle": "erb_186",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 15,
+   "dense_rank": 41,
+   "dense_score": 0.6071
+  },
+  {
+   "needle": "erb_187",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 54,
+   "dense_score": 0.5755
+  },
+  {
+   "needle": "erb_188",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 217819,
+   "dense_score": 0.4474
+  },
+  {
+   "needle": "erb_189",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 339,
+   "dense_score": 0.5513
+  },
+  {
+   "needle": "erb_191",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 2885,
+   "dense_score": 0.516
+  },
+  {
+   "needle": "erb_194",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 887,
+   "dense_score": 0.5609
+  },
+  {
+   "needle": "erb_195",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 25,
+   "dense_rank": 4499,
+   "dense_score": 0.5233
+  },
+  {
+   "needle": "erb_196",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 17,
+   "dense_rank": 117,
+   "dense_score": 0.6017
+  },
+  {
+   "needle": "erb_197",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 9,
+   "dense_rank": 16305,
+   "dense_score": 0.5195
+  },
+  {
+   "needle": "erb_198",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 46,
+   "dense_rank": 6933,
+   "dense_score": 0.5314
+  },
+  {
+   "needle": "erb_199",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 299,
+   "dense_score": 0.608
+  },
+  {
+   "needle": "erb_201",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 675,
+   "dense_score": 0.6012
+  },
+  {
+   "needle": "erb_202",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 6800,
+   "dense_score": 0.564
+  },
+  {
+   "needle": "erb_204",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 9,
+   "dense_rank": 1655,
+   "dense_score": 0.5946
+  },
+  {
+   "needle": "erb_205",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 62543,
+   "dense_score": 0.4982
+  },
+  {
+   "needle": "erb_207",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 28,
+   "dense_rank": 275864,
+   "dense_score": 0.5094
+  },
+  {
+   "needle": "erb_208",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 31,
+   "dense_rank": 12966,
+   "dense_score": 0.4986
+  },
+  {
+   "needle": "erb_210",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 53340,
+   "dense_score": 0.5678
+  },
+  {
+   "needle": "erb_211",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 35,
+   "dense_rank": 14212,
+   "dense_score": 0.5077
+  },
+  {
+   "needle": "erb_212",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 1986,
+   "dense_score": 0.5515
+  },
+  {
+   "needle": "erb_214",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 32094,
+   "dense_score": 0.5538
+  },
+  {
+   "needle": "erb_216",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 110,
+   "dense_score": 0.6033
+  },
+  {
+   "needle": "erb_217",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 373,
+   "dense_score": 0.5572
+  },
+  {
+   "needle": "erb_218",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 30485,
+   "dense_score": 0.5194
+  },
+  {
+   "needle": "erb_219",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 11111,
+   "dense_score": 0.5428
+  },
+  {
+   "needle": "erb_220",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 38,
+   "dense_rank": 91,
+   "dense_score": 0.5964
+  },
+  {
+   "needle": "erb_222",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 88,
+   "dense_score": 0.5275
+  },
+  {
+   "needle": "erb_224",
+   "split": "miss",
+   "error": "no gold vectors in bed"
+  },
+  {
+   "needle": "erb_227",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 241,
+   "dense_score": 0.6028
+  },
+  {
+   "needle": "erb_228",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 38,
+   "dense_rank": 81,
+   "dense_score": 0.618
+  },
+  {
+   "needle": "erb_229",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 823,
+   "dense_score": 0.5687
+  },
+  {
+   "needle": "erb_230",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 24,
+   "dense_rank": 29,
+   "dense_score": 0.6114
+  },
+  {
+   "needle": "erb_232",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 63935,
+   "dense_score": 0.5291
+  },
+  {
+   "needle": "erb_233",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 2250,
+   "dense_score": 0.5421
+  },
+  {
+   "needle": "erb_234",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 22,
+   "dense_rank": 358,
+   "dense_score": 0.5394
+  },
+  {
+   "needle": "erb_236",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 25,
+   "dense_rank": 140,
+   "dense_score": 0.6262
+  },
+  {
+   "needle": "erb_237",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 35,
+   "dense_rank": 3564,
+   "dense_score": 0.5502
+  },
+  {
+   "needle": "erb_238",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 13103,
+   "dense_score": 0.5326
+  },
+  {
+   "needle": "erb_240",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 58177,
+   "dense_score": 0.477
+  },
+  {
+   "needle": "erb_241",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 47566,
+   "dense_score": 0.5299
+  },
+  {
+   "needle": "erb_242",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 1,
+   "dense_score": 0.6242
+  },
+  {
+   "needle": "erb_244",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 81572,
+   "dense_score": 0.4699
+  },
+  {
+   "needle": "erb_245",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 47857,
+   "dense_score": 0.487
+  },
+  {
+   "needle": "erb_246",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 3622,
+   "dense_score": 0.5134
+  },
+  {
+   "needle": "erb_247",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 140,
+   "dense_score": 0.5766
+  },
+  {
+   "needle": "erb_248",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 5065,
+   "dense_score": 0.5708
+  },
+  {
+   "needle": "erb_249",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 181386,
+   "dense_score": 0.5115
+  },
+  {
+   "needle": "erb_253",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 14,
+   "dense_rank": 7370,
+   "dense_score": 0.5201
+  },
+  {
+   "needle": "erb_254",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 7019,
+   "dense_score": 0.5696
+  },
+  {
+   "needle": "erb_255",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 258,
+   "dense_score": 0.5713
+  },
+  {
+   "needle": "erb_258",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 14327,
+   "dense_score": 0.5101
+  },
+  {
+   "needle": "erb_259",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 23447,
+   "dense_score": 0.5476
+  },
+  {
+   "needle": "erb_260",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 2063,
+   "dense_score": 0.5675
+  },
+  {
+   "needle": "erb_261",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 10801,
+   "dense_score": 0.5746
+  },
+  {
+   "needle": "erb_263",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 26,
+   "dense_rank": 1,
+   "dense_score": 0.6215
+  },
+  {
+   "needle": "erb_264",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 11,
+   "dense_rank": 389,
+   "dense_score": 0.6375
+  },
+  {
+   "needle": "erb_265",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 16576,
+   "dense_score": 0.5323
+  },
+  {
+   "needle": "erb_266",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 24,
+   "dense_score": 0.6553
+  },
+  {
+   "needle": "erb_268",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 154,
+   "dense_score": 0.5154
+  },
+  {
+   "needle": "erb_270",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 2426,
+   "dense_score": 0.5437
+  },
+  {
+   "needle": "erb_271",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 11,
+   "dense_rank": 2066,
+   "dense_score": 0.5102
+  },
+  {
+   "needle": "erb_272",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 13,
+   "dense_rank": 302,
+   "dense_score": 0.5611
+  },
+  {
+   "needle": "erb_273",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 1919,
+   "dense_score": 0.5901
+  },
+  {
+   "needle": "erb_274",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 22860,
+   "dense_score": 0.5495
+  },
+  {
+   "needle": "erb_275",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 25,
+   "dense_rank": 1,
+   "dense_score": 0.6436
+  },
+  {
+   "needle": "erb_276",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 1446,
+   "dense_score": 0.5894
+  },
+  {
+   "needle": "erb_277",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 791,
+   "dense_score": 0.5559
+  },
+  {
+   "needle": "erb_279",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 3732,
+   "dense_score": 0.5536
+  },
+  {
+   "needle": "erb_280",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 3111,
+   "dense_score": 0.5451
+  },
+  {
+   "needle": "erb_283",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 2929,
+   "dense_score": 0.5525
+  },
+  {
+   "needle": "erb_287",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 96,
+   "dense_score": 0.6017
+  },
+  {
+   "needle": "erb_291",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 121347,
+   "dense_score": 0.4474
+  },
+  {
+   "needle": "erb_293",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": 30,
+   "dense_rank": 31,
+   "dense_score": 0.6341
+  },
+  {
+   "needle": "erb_294",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 40903,
+   "dense_score": 0.4757
+  },
+  {
+   "needle": "erb_295",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 6635,
+   "dense_score": 0.5398
+  },
+  {
+   "needle": "erb_296",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 94636,
+   "dense_score": 0.5059
+  },
+  {
+   "needle": "erb_297",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 3338,
+   "dense_score": 0.5415
+  },
+  {
+   "needle": "erb_298",
+   "split": "miss",
+   "class": "semantic",
+   "lexical_rank": null,
+   "dense_rank": 8250,
+   "dense_score": 0.5497
+  },
+  {
+   "needle": "erb_301",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": null,
+   "dense_rank": 610,
+   "dense_score": 0.4971
+  },
+  {
+   "needle": "erb_307",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": 18,
+   "dense_rank": 1,
+   "dense_score": 0.7107
+  },
+  {
+   "needle": "erb_309",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": 9,
+   "dense_rank": 412,
+   "dense_score": 0.6157
+  },
+  {
+   "needle": "erb_310",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": null,
+   "dense_rank": 9040,
+   "dense_score": 0.5383
+  },
+  {
+   "needle": "erb_312",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": 4,
+   "dense_rank": 120,
+   "dense_score": 0.5607
+  },
+  {
+   "needle": "erb_322",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": null,
+   "dense_rank": 9,
+   "dense_score": 0.6118
+  },
+  {
+   "needle": "erb_323",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": null,
+   "dense_rank": 1,
+   "dense_score": 0.6126
+  },
+  {
+   "needle": "erb_327",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": null,
+   "dense_rank": 17837,
+   "dense_score": 0.5486
+  },
+  {
+   "needle": "erb_330",
+   "split": "miss",
+   "class": "intra_document_reasoning",
+   "lexical_rank": 9,
+   "dense_rank": 1,
+   "dense_score": 0.6983
+  },
+  {
+   "needle": "erb_338",
+   "split": "miss",
+   "error": "no gold vectors in bed"
+  },
+  {
+   "needle": "erb_343",
+   "split": "miss",
+   "class": "project_related",
+   "lexical_rank": 4,
+   "dense_rank": 6,
+   "dense_score": 0.6034
+  },
+  {
+   "needle": "erb_347",
+   "split": "miss",
+   "class": "project_related",
+   "lexical_rank": 12,
+   "dense_rank": 1,
+   "dense_score": 0.6257
+  },
+  {
+   "needle": "erb_352",
+   "split": "miss",
+   "class": "project_related",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.7339
+  },
+  {
+   "needle": "erb_376",
+   "split": "miss",
+   "class": "project_related",
+   "lexical_rank": 10,
+   "dense_rank": 1,
+   "dense_score": 0.6486
+  },
+  {
+   "needle": "erb_380",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 12,
+   "dense_rank": 2,
+   "dense_score": 0.642
+  },
+  {
+   "needle": "erb_385",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 7,
+   "dense_rank": 13,
+   "dense_score": 0.6481
+  },
+  {
+   "needle": "erb_386",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 12,
+   "dense_rank": 18,
+   "dense_score": 0.6777
+  },
+  {
+   "needle": "erb_389",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 16,
+   "dense_rank": 2,
+   "dense_score": 0.7137
+  },
+  {
+   "needle": "erb_390",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 5,
+   "dense_rank": 1,
+   "dense_score": 0.7319
+  },
+  {
+   "needle": "erb_391",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 21,
+   "dense_rank": 1,
+   "dense_score": 0.745
+  },
+  {
+   "needle": "erb_393",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 9,
+   "dense_rank": 28,
+   "dense_score": 0.6213
+  },
+  {
+   "needle": "erb_394",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 10,
+   "dense_rank": 1,
+   "dense_score": 0.6847
+  },
+  {
+   "needle": "erb_395",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.7157
+  },
+  {
+   "needle": "erb_396",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 11,
+   "dense_rank": 1,
+   "dense_score": 0.6746
+  },
+  {
+   "needle": "erb_397",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 11,
+   "dense_rank": 4,
+   "dense_score": 0.7105
+  },
+  {
+   "needle": "erb_400",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.72
+  },
+  {
+   "needle": "erb_401",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 2,
+   "dense_rank": 2,
+   "dense_score": 0.7026
+  },
+  {
+   "needle": "erb_402",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 1,
+   "dense_rank": 2477,
+   "dense_score": 0.6229
+  },
+  {
+   "needle": "erb_407",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 3,
+   "dense_rank": 7,
+   "dense_score": 0.72
+  },
+  {
+   "needle": "erb_408",
+   "split": "miss",
+   "error": "no gold vectors in bed"
+  },
+  {
+   "needle": "erb_409",
+   "split": "miss",
+   "class": "constrained",
+   "lexical_rank": 9,
+   "dense_rank": 44,
+   "dense_score": 0.5751
+  },
+  {
+   "needle": "erb_410",
+   "split": "miss",
+   "class": "conflicting_info",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.5909
+  },
+  {
+   "needle": "erb_412",
+   "split": "miss",
+   "class": "conflicting_info",
+   "lexical_rank": 2,
+   "dense_rank": 1689,
+   "dense_score": 0.5458
+  },
+  {
+   "needle": "erb_413",
+   "split": "miss",
+   "class": "conflicting_info",
+   "lexical_rank": 6,
+   "dense_rank": 1,
+   "dense_score": 0.611
+  },
+  {
+   "needle": "erb_415",
+   "split": "miss",
+   "class": "conflicting_info",
+   "lexical_rank": 11,
+   "dense_rank": 3,
+   "dense_score": 0.6367
+  },
+  {
+   "needle": "erb_417",
+   "split": "miss",
+   "class": "conflicting_info",
+   "lexical_rank": 1,
+   "dense_rank": 3,
+   "dense_score": 0.6244
+  },
+  {
+   "needle": "erb_426",
+   "split": "miss",
+   "class": "conflicting_info",
+   "lexical_rank": null,
+   "dense_rank": 4868,
+   "dense_score": 0.5093
+  },
+  {
+   "needle": "erb_435",
+   "split": "miss",
+   "class": "completeness",
+   "lexical_rank": null,
+   "dense_rank": 113173,
+   "dense_score": 0.4099
+  },
+  {
+   "needle": "erb_437",
+   "split": "miss",
+   "class": "completeness",
+   "lexical_rank": null,
+   "dense_rank": 507,
+   "dense_score": 0.6019
+  },
+  {
+   "needle": "erb_440",
+   "split": "miss",
+   "class": "completeness",
+   "lexical_rank": 2,
+   "dense_rank": 5,
+   "dense_score": 0.7055
+  },
+  {
+   "needle": "erb_443",
+   "split": "miss",
+   "class": "completeness",
+   "lexical_rank": 7,
+   "dense_rank": 141,
+   "dense_score": 0.6241
+  },
+  {
+   "needle": "erb_445",
+   "split": "miss",
+   "class": "completeness",
+   "lexical_rank": 8,
+   "dense_rank": 2,
+   "dense_score": 0.6614
+  },
+  {
+   "needle": "erb_446",
+   "split": "miss",
+   "class": "completeness",
+   "lexical_rank": null,
+   "dense_rank": 2623,
+   "dense_score": 0.5599
+  },
+  {
+   "needle": "erb_449",
+   "split": "miss",
+   "class": "completeness",
+   "lexical_rank": 38,
+   "dense_rank": 45,
+   "dense_score": 0.5664
+  },
+  {
+   "needle": "erb_458",
+   "split": "miss",
+   "class": "miscellaneous",
+   "lexical_rank": 8,
+   "dense_rank": 13,
+   "dense_score": 0.5831
+  },
+  {
+   "needle": "erb_459",
+   "split": "miss",
+   "class": "miscellaneous",
+   "lexical_rank": 7,
+   "dense_rank": 3,
+   "dense_score": 0.5857
+  },
+  {
+   "needle": "erb_463",
+   "split": "miss",
+   "error": "no gold vectors in bed"
+  },
+  {
+   "needle": "erb_002",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6645
+  },
+  {
+   "needle": "erb_004",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 33,
+   "dense_score": 0.5686
+  },
+  {
+   "needle": "erb_005",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.71
+  },
+  {
+   "needle": "erb_007",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 431,
+   "dense_score": 0.5693
+  },
+  {
+   "needle": "erb_008",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 190,
+   "dense_score": 0.5943
+  },
+  {
+   "needle": "erb_009",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 224,
+   "dense_score": 0.5492
+  },
+  {
+   "needle": "erb_010",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.6594
+  },
+  {
+   "needle": "erb_011",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.6619
+  },
+  {
+   "needle": "erb_013",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 3,
+   "dense_score": 0.6291
+  },
+  {
+   "needle": "erb_014",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1702,
+   "dense_score": 0.5411
+  },
+  {
+   "needle": "erb_016",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 3507,
+   "dense_score": 0.5521
+  },
+  {
+   "needle": "erb_017",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 8,
+   "dense_rank": 1,
+   "dense_score": 0.6595
+  },
+  {
+   "needle": "erb_018",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.7667
+  },
+  {
+   "needle": "erb_019",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 7,
+   "dense_score": 0.6211
+  },
+  {
+   "needle": "erb_020",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 3927,
+   "dense_score": 0.5731
+  },
+  {
+   "needle": "erb_022",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6655
+  },
+  {
+   "needle": "erb_023",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.673
+  },
+  {
+   "needle": "erb_024",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 2,
+   "dense_score": 0.6463
+  },
+  {
+   "needle": "erb_025",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.7089
+  },
+  {
+   "needle": "erb_027",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.7009
+  },
+  {
+   "needle": "erb_028",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 6,
+   "dense_rank": 927,
+   "dense_score": 0.5452
+  },
+  {
+   "needle": "erb_031",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 61,
+   "dense_score": 0.622
+  },
+  {
+   "needle": "erb_032",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6988
+  },
+  {
+   "needle": "erb_033",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 2,
+   "dense_score": 0.6149
+  },
+  {
+   "needle": "erb_034",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 453,
+   "dense_score": 0.6
+  },
+  {
+   "needle": "erb_036",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 16073,
+   "dense_score": 0.5498
+  },
+  {
+   "needle": "erb_038",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 39,
+   "dense_score": 0.5795
+  },
+  {
+   "needle": "erb_040",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 4125,
+   "dense_score": 0.4818
+  },
+  {
+   "needle": "erb_042",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 2,
+   "dense_score": 0.6446
+  },
+  {
+   "needle": "erb_043",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 3,
+   "dense_score": 0.5995
+  },
+  {
+   "needle": "erb_044",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 8,
+   "dense_rank": 25029,
+   "dense_score": 0.5694
+  },
+  {
+   "needle": "erb_045",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 10,
+   "dense_rank": 40,
+   "dense_score": 0.5871
+  },
+  {
+   "needle": "erb_046",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 918,
+   "dense_score": 0.491
+  },
+  {
+   "needle": "erb_047",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 4,
+   "dense_rank": 8,
+   "dense_score": 0.6449
+  },
+  {
+   "needle": "erb_050",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 42,
+   "dense_score": 0.5791
+  },
+  {
+   "needle": "erb_051",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 13,
+   "dense_score": 0.5445
+  },
+  {
+   "needle": "erb_055",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6805
+  },
+  {
+   "needle": "erb_057",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 11,
+   "dense_score": 0.6089
+  },
+  {
+   "needle": "erb_058",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 5,
+   "dense_rank": 6,
+   "dense_score": 0.5705
+  },
+  {
+   "needle": "erb_059",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 2,
+   "dense_score": 0.6007
+  },
+  {
+   "needle": "erb_061",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 4,
+   "dense_rank": 11382,
+   "dense_score": 0.5337
+  },
+  {
+   "needle": "erb_064",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 4418,
+   "dense_score": 0.5468
+  },
+  {
+   "needle": "erb_065",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 36,
+   "dense_score": 0.5231
+  },
+  {
+   "needle": "erb_066",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 447,
+   "dense_score": 0.5598
+  },
+  {
+   "needle": "erb_068",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 3,
+   "dense_score": 0.6096
+  },
+  {
+   "needle": "erb_069",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6574
+  },
+  {
+   "needle": "erb_074",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 5,
+   "dense_rank": 1,
+   "dense_score": 0.7642
+  },
+  {
+   "needle": "erb_076",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 7,
+   "dense_rank": 8,
+   "dense_score": 0.5991
+  },
+  {
+   "needle": "erb_077",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 29,
+   "dense_score": 0.5886
+  },
+  {
+   "needle": "erb_078",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 2,
+   "dense_score": 0.6656
+  },
+  {
+   "needle": "erb_079",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.6697
+  },
+  {
+   "needle": "erb_081",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 2,
+   "dense_score": 0.6524
+  },
+  {
+   "needle": "erb_082",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6952
+  },
+  {
+   "needle": "erb_083",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 3,
+   "dense_score": 0.5936
+  },
+  {
+   "needle": "erb_086",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 8,
+   "dense_rank": 6,
+   "dense_score": 0.5615
+  },
+  {
+   "needle": "erb_087",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 7,
+   "dense_rank": 413,
+   "dense_score": 0.5249
+  },
+  {
+   "needle": "erb_089",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 181,
+   "dense_score": 0.5721
+  },
+  {
+   "needle": "erb_092",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 5,
+   "dense_rank": 3844,
+   "dense_score": 0.5527
+  },
+  {
+   "needle": "erb_093",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 4,
+   "dense_rank": 351,
+   "dense_score": 0.5319
+  },
+  {
+   "needle": "erb_094",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.6559
+  },
+  {
+   "needle": "erb_095",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.6186
+  },
+  {
+   "needle": "erb_096",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 4,
+   "dense_rank": 2,
+   "dense_score": 0.6841
+  },
+  {
+   "needle": "erb_097",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 13,
+   "dense_score": 0.5766
+  },
+  {
+   "needle": "erb_099",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 87,
+   "dense_score": 0.5622
+  },
+  {
+   "needle": "erb_100",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6065
+  },
+  {
+   "needle": "erb_101",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 4,
+   "dense_rank": 12,
+   "dense_score": 0.6049
+  },
+  {
+   "needle": "erb_102",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 49,
+   "dense_score": 0.5436
+  },
+  {
+   "needle": "erb_103",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 68,
+   "dense_score": 0.5769
+  },
+  {
+   "needle": "erb_104",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 29,
+   "dense_score": 0.5603
+  },
+  {
+   "needle": "erb_105",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.5696
+  },
+  {
+   "needle": "erb_109",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 1162,
+   "dense_score": 0.5835
+  },
+  {
+   "needle": "erb_111",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.7007
+  },
+  {
+   "needle": "erb_112",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 128,
+   "dense_score": 0.5947
+  },
+  {
+   "needle": "erb_113",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 8,
+   "dense_rank": 12,
+   "dense_score": 0.6643
+  },
+  {
+   "needle": "erb_115",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 3,
+   "dense_score": 0.623
+  },
+  {
+   "needle": "erb_117",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 3,
+   "dense_score": 0.6103
+  },
+  {
+   "needle": "erb_118",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 1,
+   "dense_score": 0.5513
+  },
+  {
+   "needle": "erb_121",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 4,
+   "dense_rank": 25,
+   "dense_score": 0.5837
+  },
+  {
+   "needle": "erb_122",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 10160,
+   "dense_score": 0.5114
+  },
+  {
+   "needle": "erb_124",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.681
+  },
+  {
+   "needle": "erb_125",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6463
+  },
+  {
+   "needle": "erb_127",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.627
+  },
+  {
+   "needle": "erb_128",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.6403
+  },
+  {
+   "needle": "erb_131",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 5,
+   "dense_score": 0.5898
+  },
+  {
+   "needle": "erb_133",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.7218
+  },
+  {
+   "needle": "erb_139",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.641
+  },
+  {
+   "needle": "erb_146",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 20,
+   "dense_score": 0.6424
+  },
+  {
+   "needle": "erb_149",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 11,
+   "dense_rank": 1,
+   "dense_score": 0.6733
+  },
+  {
+   "needle": "erb_152",
+   "split": "hit_control",
+   "error": "no gold vectors in bed"
+  },
+  {
+   "needle": "erb_153",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 4,
+   "dense_rank": 3033,
+   "dense_score": 0.4979
+  },
+  {
+   "needle": "erb_154",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 7806,
+   "dense_score": 0.4751
+  },
+  {
+   "needle": "erb_155",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 1,
+   "dense_score": 0.665
+  },
+  {
+   "needle": "erb_158",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 1,
+   "dense_score": 0.7289
+  },
+  {
+   "needle": "erb_159",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 6,
+   "dense_rank": 4,
+   "dense_score": 0.6591
+  },
+  {
+   "needle": "erb_160",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 4,
+   "dense_rank": 58,
+   "dense_score": 0.59
+  },
+  {
+   "needle": "erb_162",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 5,
+   "dense_rank": 2,
+   "dense_score": 0.6782
+  },
+  {
+   "needle": "erb_163",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 3,
+   "dense_rank": 16,
+   "dense_score": 0.5947
+  },
+  {
+   "needle": "erb_165",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 3,
+   "dense_score": 0.587
+  },
+  {
+   "needle": "erb_167",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 2,
+   "dense_rank": 2197,
+   "dense_score": 0.529
+  },
+  {
+   "needle": "erb_169",
+   "split": "hit_control",
+   "class": "basic",
+   "lexical_rank": 1,
+   "dense_rank": 7,
+   "dense_score": 0.6311
+  }
+ ],
+ "wall_s": 89.5,
+ "rescue_by_lexical_bucket": {
+  "lex_le12": {
+   "n": 44,
+   "dense_le12": 24
+  },
+  "near_band": {
+   "n": 51,
+   "dense_le12": 19
+  },
+  "pool_absent": {
+   "n": 105,
+   "dense_le12": 10
+  }
+ },
+ "class_join_note": "class labels joined by needle name from needles_resolved_v09x_full.json \u2014 same 500-question bank, names stable across resolutions; blob-era query wording (what the probe encoded) differs from v09x wording on most needles"
+}

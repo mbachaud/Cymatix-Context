@@ -18,6 +18,7 @@ import time
 from typing import Optional
 
 from ..schemas import ChromatinState
+from . import provenance
 
 log = logging.getLogger(__name__)
 
@@ -40,6 +41,7 @@ def init_db(conn: sqlite3.Connection) -> bool:
     _create_path_key_index(cur)
     _create_filename_index(cur)
     _create_okf_links(cur)
+    provenance.create_table(cur)
     _auto_repair(cur, conn)
     fts_available = _create_fts5(cur, conn)
 

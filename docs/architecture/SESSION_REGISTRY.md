@@ -447,9 +447,9 @@ Behavior:
   preserves the "registry is additive" invariant — ingest never fails
   because of registry state.
 - Tagged ingests write one `gene_attribution` row per resulting document, with
-  `authored_at = time.time()` at ingest time (not the epigenetic
-  `created_at`, though in practice they are within milliseconds of each other
-  for new documents).
+  `authored_at = time.time()` at ingest time (not the document-signals
+  (legacy: epigenetics) `created_at`, though in practice they are within
+  milliseconds of each other for new documents).
 - Tagged ingests also update `last_heartbeat` on the participant row
   (implicit heartbeat on activity — saves a round trip).
 

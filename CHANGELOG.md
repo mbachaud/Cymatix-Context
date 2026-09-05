@@ -1,5 +1,547 @@
 # Changelog
 
+## Unreleased
+
+## 0.9.2 (2026-09-05)
+
+**Ingest at scale and the #411 default flip (PRs #424, #425), a
+default-inert W2.2 combinator with its kill receipt (#428), a never-swallow
+fix on the harmonic tier (#432), and the 0.9.2 bench ledger (#426, #427,
+#429). One default moves — `[ingestion] entity_autolink_hub_cutoff` — and it
+supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
+
+- **docs: hosted-session security, RBAC, and encryption review** lands as
+  `docs/reviews/2026-09-01-hosted-session-security-review.md` — read-only
+  source review of the auth/identity/retrieval-scope/encryption surface for a
+  hosted multi-VM deployment, with a P0/P1/P2 roadmap; pointers re-verified
+  against `beta` (drift noted in-doc) and the top finding filed as #434
+  (`deploy/otel` compose publishes all ports with Grafana `admin/admin` +
+  anonymous Viewer). No code or default changes.
+- **DEFAULT FLIP: `[ingestion] entity_autolink_hub_cutoff` `0` → `200`
+  (#425, closes #411).** The 0.9.1 entry below ("default `0` = off = legacy,
+  byte-identical; flip proposal tracked in #411") is superseded — a fresh
+  install now drops entities with more than 200 `entity_graph` postings from
+  the auto-link probe set. Both #411 flip conditions are receipted:
+  (1) **retrieval null** —
+  `benchmarks/dogfood/receipts/entity_hub_cutoff_retrieval_ab_enronqa_2026-08-30.json`,
+  the `enronqa_bed_v2` / `v2c` cutoff twins (0 vs 200, gene-id-set digests
+  identical `158fa8a3…` = content-equality proof, n=500): delivered / r@12 /
+  fr@12 / median rank identical to full precision, **0/500 per-needle
+  delivered flips in both the 0.9.0 and 0.9.1 configs**; (2) **post-tagger-v2
+  re-measure** —
+  `benchmarks/dogfood/receipts/entity_hub_cutoff_reprobe_85k_taggerv1_2026-08-30.json`
+  and `…_reprobe_85k_taggerv2_2026-08-31.json`, paired 500-document read-only
+  replays on content-identical 84,677-gene beds (v2 = tagger v1, v3 = tagger
+  v2): tagger v2 removes 15.2% of distinct entities (239,302 → 202,844) but the
+  natural hub population persists and grows slightly (`enron` 15,397 → 16,048
+  postings — junk removal frees slots in the 15-entity cap); at cutoff 200,
+  **0.22% of entities (441) still hold 30.1% of postings**, and the mean
+  per-link call falls **4.15 → 0.42 ms** at 85k (~340× in the #412 padded-bed
+  receipt). What changes on disk: which relation=5
+  COVER edges form (v3 replay sample: 4,548 → 2,984 edges, 2,746 lost / 1,182
+  gained) — query-inert at shipped defaults (W2.1 cover-walk kill receipt,
+  #408), and the padded 597k bed built at cutoff 200 is the same bed the 0.9.1
+  gate sweep certified. [BASELINES](docs/benchmarks/BASELINES.md) rows:
+  `2026-08-30-entity-hub-cutoff-retrieval-ab` and
+  `2026-08-31-entity-hub-cutoff-reprobe-85k`. Scope: `IngestionConfig`, shipped
+  `cymatix.toml`, and `docs/config-reference.md` move to `200`; the bare
+  `KnowledgeStore` kwarg
+  default stays `0` (non-config constructors keep byte-identical legacy
+  linking — the `rrf_k` flip pattern); the bench builder is unchanged and reads
+  the cutoff only from `CYMATIX_BFM_HUB_CUTOFF`. **Opt back in to legacy
+  linking: `entity_autolink_hub_cutoff = 0`.** Tests:
+  `tests/test_entity_autolink_hub_cutoff.py` (default assertion flipped),
+  `tests/test_config_default_honesty.py` ratchet.
+
+- **perf(storage): `idx_filename_gene` index on `filename_index(gene_id)` +
+  `KnowledgeStore(entity_autolink=False)` scheduling knob (#424) — the
+  residual >150k-document ingest decay is closed.** The per-upsert
+  `DELETE FROM filename_index WHERE gene_id = ?`
+  (`storage/indexes.py::sync_filename_index`) was a full-table scan (`EXPLAIN`
+  = `SCAN filename_index`; 571,999 rows on the finished bed), i.e. O(N) per
+  insert: **42.7 ms warm scan at 572k rows vs 0.002 ms indexed (~20,000×)**.
+  Receipt
+  `benchmarks/dogfood/receipts/ingest_residual_decay_enronqa_2026-08-30.json`
+  (the cutoff-200 full rebuild, 596,707 documents in 4h58m against a ~26h
+  uncapped trajectory): the O(N²) signature is gone, worker tagging throughput
+  is flat ~50 docs/s to 580k, and the writer's residual decay is linear in N
+  (38.4 → 32.7 docs/s over 479k → 656k processed) — it reconciles exactly with
+  the unindexed DELETE; FTS5 stays refuted (0.07% of writer wall). The index
+  is content-neutral (no document, tag, or edge changes); **existing stores
+  gain it on their next writable open** (the DDL pass calls
+  `filename_anchor.ensure_schema`). With it, bulk builds become tagging-bound
+  (~3.3 h projected for the 517k-file bed). The scheduling knob —
+  `KnowledgeStore(entity_autolink=False)`, and `--no-entity-autolink` /
+  `CYMATIX_BFM_ENTITY_AUTOLINK=0` on `scripts/build_fixture_matrix.py` — skips
+  COVER-edge formation while still writing `entity_graph` rows (equivalence
+  receipt: only default-inert relation=5 edges differ); `sync_entity_graph`
+  threads it with the hub cutoff as **off > cutoff > legacy**. Default
+  unchanged (auto-link on). Narrative:
+  `docs/benchmarks/2026-08-30-enronqa-ingest-decay.md`. Tests:
+  `tests/test_entity_autolink_schedule.py`.
+
+- **perf(ingest): `bed_provenance` table + `cymatix diag bed`, the
+  `bulk_load` SQLite memory profile, and the bench-builder commit batcher —
+  port of the never-committed 2026-08-24..27 perf/ingest lane (#438;
+  worktree `claude/v0-9-0-planning-dc7564`, base `5f5c677`).** Every
+  writable open
+  now creates the append-only `bed_provenance` table (`CREATE TABLE IF NOT
+  EXISTS`; content-neutral — no document, tag, or edge changes) so a bed
+  carries its own history: `scripts/stamp_bed_provenance.py` and
+  `scripts/build_erb_blob_v09x.py` append build / ingest / stamp rows
+  (cymatix version, git sha + dirty flag, `ingest_c`, the ingest-affecting
+  config subset, gene/FTS counts, optional gene-id digest), and
+  `cymatix diag bed [--db PATH] [--identity] [--json]` reads them back over a
+  `mode=ro` connection with config drift between rows — the bed-identity /
+  `ingest_c` house rule in `docs/benchmarks/BASELINES.md` now has code behind
+  it. The snapshotted knob set includes `[ingestion]
+  entity_autolink_hub_cutoff` (#411/#425, added to `beta` after this lane's
+  base), since it decides which `gene_relations` relation=5 COVER edges a bed
+  carries. `CYMATIX_MEM_PROFILE=bulk_load` (single-writer ingest only; NOT for the
+  server) gives the writer a page cache up to 4 GiB: 64 MiB vs 4 GiB measured
+  **6.47 vs 16.16 genes/s** on the 22.7 GiB ERB bed with identical write
+  volume, i.e. the whole 2.5× is upsert-path lookups
+  (`benchmarks/dogfood/receipts/ingest_commit_batch_ab.json`,
+  `…_cache64.json`). This closes two latent breaks in beta's already-shipped
+  `scripts/build_erb_blob_v09x.py`, which imports
+  `cymatix_context.storage.provenance` unconditionally (ImportError after the
+  multi-hour build) and defaults `--mem-profile bulk_load` (silently fell
+  back to the 64 MiB `auto` cache via `_MEM_PROFILES.get(profile, auto)`).
+  Bench builder `scripts/build_fixture_matrix.py` (env knobs, no
+  `cymatix.toml` surface): `CYMATIX_BFM_COMMIT_BATCH` (default `0` = inert
+  commit-per-gene; `K` = one durable commit per K genes with
+  `CYMATIX_BFM_WAL_VALVE_MB` / `CYMATIX_BFM_RAM_FLOOR_MB` early-flush valves;
+  1.234 → 0.929 write MB/gene at 5000, content-equivalent across arms),
+  `CYMATIX_BFM_MAX_FILES` (deterministic prefix cap for scale curves),
+  **blob-mode `--rebuild` now honoured under `--parallel`** — a killed
+  parallel blob build resumes into the existing `.db` (`_filter_to_unseen`
+  drops only files with durable `bfm_completed_files` markers)
+  instead of losing every gene; before, blob mode always rebuilt and silently
+  ignored the flag. Completion markers commit with the file's final successful
+  gene, so both blob and sharded resume retry files interrupted mid-chunk-batch
+  by a pause or crash. Legacy beds without markers replay through idempotent
+  upserts once instead of assuming any `source_id` proves the file complete.
+  The **sequential** blob path is unchanged: it walks roots
+  through `ingest_tree` and never materialises a file list, so there is
+  nothing for `_filter_to_unseen` to filter and `build_profile` keeps the
+  historical delete-and-rebuild there (with a warning naming `--parallel`)
+  rather than re-ingesting every root into a bed that already holds them.
+  So `--mode blob` with no flags behaves exactly as it did before this
+  entry. Parallel drains are
+  **ordered** by default (`imap` rather than `imap_unordered`) so
+  `gene_relations` matches the sequential path (28,767 vs 28,765 rows
+  observed; `ingest_equivalence_erb.json`: content_equal=true, 4.85× at
+  workers=6). Also ships `scripts/ingest_commit_batch_ab.py`,
+  `scripts/sqlite_cache_ab.py`, and the `ingest_write_path_ab.json`
+  (deferred-index arm: negative, 0.05×), `ingest_scale_100k_curve.csv` /
+  `_250k_curve.csv` receipts. Shipped server and CLI defaults unchanged.
+  Tests: `tests/test_bed_provenance.py` (17), `tests/test_mem_budget.py`
+  (+2), `tests/test_build_fixture_matrix.py` (+25).
+
+- **feat(retrieval): `eps_band_coverage` combinator — opt-in, default-inert
+  (#428; W2.2-narrow, KILLED by its own receipt, kept as an arm).** Identical
+  ε-band walk to `eps_band`; inside a band, distinct-query-term coverage breaks
+  the tie first (then rerank, then fused, then id). Coverage is computed only
+  when a query's effective combinator selects it (top-60 fused head, one
+  SELECT, `coverage_tiebreak` signal), so the shipped map (all five classes →
+  `eps_band`) pays nothing. `retrieval/rerank_combinators.py::VALID_COMBINATORS`
+  is now the single source of truth for the combinator names (validated at
+  config load and in `KnowledgeStore.__init__`, replacing a drifted literal
+  tuple). The evidence for it —
+  `benchmarks/dogfood/erb/receipts/semantic_above_gold_947k_2026-08-31.json`,
+  gold out-covers the interloper majority on 16/21 rank-reachable ERB semantic
+  misses — and the kill —
+  `benchmarks/dogfood/erb/receipts/w22_coverage_kill_2026-08-31.json`, full
+  470-needle arm on the 947k bed vs the floor-12 reference: **delivered 0.6681
+  → 0.6681, +0/−0 paired in every class**, 0/21 audit targets converted, fr@12
+  +1 needle, 67/470 final-rank moves (the mechanism ran as designed). Cause of
+  death is band geometry, not signal validity: at `rrf_k = 20` the fused head
+  decays ~36% relative by rank 13, so rank-13+ gold never shares an ε band with
+  the top-12, and widening δ reintroduces the unbanded-additive failure wave-1
+  measured (semantic r@12 0.32 → 0.16). Opt in per class with
+  `rerank_combinator_by_class = { <class> = "eps_band_coverage" }`. Tests: 8
+  new in the combinator suite; `tests/test_sharded_adapter_parity.py`
+  whitelists `_coverage_for` (per-shard `query_docs` helper, same convention
+  as `_rerank_effective` / `_score_rerank`).
+
+- **fix(retrieval): the harmonic tier warns and skips over
+  `SQLITE_LIMIT_VARIABLE_NUMBER` instead of silently failing (#432, closes
+  #431 tier 1).** Tier 5 binds the whole pre-shortlist candidate pool twice
+  (`gene_id_a IN (...) AND gene_id_b IN (...)`). On bulk beds that pool comes
+  off the unbounded tag lanes — receipt
+  `benchmarks/dogfood/erb/receipts/harmonic_off_dilution_2026-09-01.json`
+  (`harmonic_tier_liveness`, PR #429): ERB 947k median 171,745 candidates, max
+  550,202, i.e. ~343k bound parameters against `SQLITE_LIMIT_VARIABLE_NUMBER`
+  = 32,766 — so SQLite raised `OperationalError: too many SQL variables` and
+  the bare `except Exception:` swallowed it at DEBUG; the tier never fired on
+  any large bed and nobody was told (a never-swallow-rule violation).
+  `query_docs` now probes `connection.getlimit(SQLITE_LIMIT_VARIABLE_NUMBER)`
+  (new `_sqlite_variable_limit` helper, fallback 999 where `getlimit` is
+  unavailable), skips the harmonic query with **one `log.warning` per store
+  instance** when `2 × len(candidate_ids)` exceeds it, and the bare except now
+  logs at WARNING with `exc_info`. **Ranking is byte-identical below the
+  limit** — same SQL, same bonus arithmetic, same `fuser.add_tier` call, pinned
+  by `tests/test_harmonic_tier_limit.py` (dict-equal `last_query_scores` /
+  `last_tier_contributions` against a never-skip run). `harmonic_links` holds 0
+  rows on every current bench bed, so shipped ranking is unaffected either way;
+  the behavior-changing variant (bound or batch the list so Tier 5 can fire on
+  large populated beds) stays open on #431.
+
+- **fix(retrieval): the ΣĒMA vectorless auto-gate now arms by a one-shot
+  probe on full-pool queries, not only on the undersized-pool cycle (port of
+  campaign-branch `2259cbf`; default-inert).** The gate (`_sema_vectorless`)
+  was armed exclusively from `_build_sema_cache()`, which runs only when the
+  lexical tiers leave the candidate pool undersized (`len(gene_scores) <
+  limit // 2`) — so on a vectorless bed whose queries always fill the pool
+  (100k / 829k) it never armed and every query paid the Tier-4
+  `codec.encode()` RTT for a tier that cannot produce a candidate.
+  `KnowledgeStore._probe_sema_vectorless()` closes that with a single
+  `SELECT 1 FROM genes WHERE embedding IS NOT NULL LIMIT 1`, memoized per
+  store lifetime by `_sema_probe_done` and re-armed by
+  `invalidate_sema_cache()`; a failing probe degrades to the pre-gate
+  behaviour. Beds with vectors are byte-identical (the probe finds a row and
+  arms nothing). **At shipped defaults this is unreachable**: `[ingestion]
+  sema_embed_on_ingest = false` (#371) leaves `_sema_codec` `None`, so only
+  opt-in ΣĒMA beds are affected. `ShardedGenomeAdapter` gets the matching
+  no-op shim. Tests: `tests/test_sema_vectorless_gate.py` (4 new; 3 were
+  red on beta before the port), plus two entity-graph delivered-set
+  blast-radius regression tests in `tests/test_d8_entity_graph.py` (port of
+  `cf101bc`; already green on beta, pure coverage).
+
+- **docs: the 2026-08-09 A/B data campaign's analysis and plan are ported
+  from `claude/ab-data-cymatics-pki-dff9c6`** —
+  `docs/benchmarks/2026-08-09-candidate-cascade-map.md` (`daaa6af`, "PKI
+  admits zero gold") and `docs/superpowers/plans/2026-08-09-ab-data-campaign.md`
+  (`fe2ef73`/`b164be4`), each with a port-provenance block; their ~5.4 MB of
+  wave0a/wave3b/wave3d ladder receipts are archived in the `cymatix-receipts`
+  repository (`mirror-branches/claude__ab-data-cymatics-pki-dff9c6/`), not
+  ported, and ledger Addendum 7's receipt pointer now cites that mirror.
+
+- **bench (no default moves):**
+  - **#427 — 947k `min_delivered_docs` width curve, 12 confirmed:** delivered
+    **0.6298 → 0.6447 → 0.6681** at floor 0 / 6 / 12, delivered sets strictly
+    nested (+7/−0, then +11/−0), map + final ranks byte-identical across all
+    three arms; floor 6 forfeits 11 needles because the classifier's 8-cap
+    class is never lifted (BASELINES row `2026-08-31-floor-width-curve-947k`,
+    receipt `benchmarks/dogfood/erb/receipts/floor_width_curve_947k_2026-08-31.json`).
+    The EnronQA paraphrase crater is closed as a lane — lexical anchor loss on
+    25/31 orig-hit/rephrase-miss pairs, coverage discrimination killed for
+    that corpus (`docs/benchmarks/2026-08-30-enronqa-paraphrase-crater.md`);
+    the ERB semantic-cap decomposition (`semantic_vocab_gap_947k` /
+    `semantic_above_gold_947k` receipts) is what revived W2.2 for #428.
+  - **#426 — semantic-portfolio lane: LoCoMo(+Plus), MULocBench, and
+    FinanceBench adapters + baselines** (emitter → profile → resolver → ladder,
+    the EnronQA pattern; all beds tagger-v2). Baselines on shipped v0.9.1
+    defaults: LoCoMo delivered 0.4348 / r@12 0.4857 (n=2,378; the cognitive
+    split is a 3/401 blackout that the paper's own dense baselines fail
+    identically), MULocBench delivered 0.4485 / r@12 0.4824 cold-gated (the 0.444 / 0.481 warm run is marked deprecated in `muloc_budget_ab_2026-08-31.json`; n=680; exact-commit
+    subset n=70: 0.500 / 0.571), FinanceBench delivered 0.153 (n=150;
+    metrics-generated 0/50 — a doc-routing blackout). **New-corpus rows, NOT
+    comparable to any ERB or EnronQA row.** Receipts under
+    `benchmarks/dogfood/{locomo,muloc,financebench}/receipts/`; campaign doc
+    `docs/research/2026-08-31-semantic-portfolio-lane.md`; the
+    `expression_tokens` 7000 → 14000 cell is NULL on both corpus families.
+  - **#429 — ERB 947k Phase-1/2 admission campaign, verdict doc
+    `docs/research/2026-09-01-erb-phase2-admission-verdict.md`:** the
+    admission thesis LIVES with corrections — 66 of the 109 pool-absent misses
+    have gold at candidate depth 1000 (pre-registered kill under 30), but depth
+    never improves gold's fused rank (0 better / 38 same / 69 worse of 107) and
+    a bare depth-1000 flip projects **0.634 [0.572, 0.661] vs 0.668 shipped**;
+    no default moves. Receipts
+    `benchmarks/dogfood/erb/receipts/pool_depth_forensics_2026-09-01.json`,
+    `pool_depth_addendum_2026-09-01.json` (+ `.NOTE.md`), and the four
+    `verify_a1_*_2026-09-01.json` lenses.
+
+- **Known (0.9.2):** `[budget] min_delivered_docs` does not floor the
+  TIGHT/FOCUSED budget-tier cuts (`pipeline/tier_logic.py` `candidates[:3]` /
+  `candidates[:6]`, applied before the floored classifier cap): **152 of 470
+  ERB 947k needles deliver 6 seats at floor 12**, including 119 of the 314
+  hits, and the seat count flips 6 ↔ 12 on 33/216 needles when only admission
+  knobs move — every delivery-based A/B on that bed is confounded until the
+  floor reaches the tier cut. Receipt
+  `benchmarks/dogfood/erb/receipts/verify_a1_completeness_2026-09-01.json`.
+  The fix (extend the same knob to the tier cuts) changes shipped seat counts
+  on ~32% of ERB needles, so it is receipt-gated and tracked in #430, not
+  patched here.
+
+**ROSETTA Tier 2 — software-lexicon aliases (spec:
+`docs/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`).**
+Additive-only canonical-name aliases across the config, CLI, HTTP, and MCP
+surfaces — every legacy bio-named surface keeps working unchanged. On the
+config/env surfaces, collision (both names present) resolves legacy-wins
+with a warning naming both, so no default or shipped behavior changes; the
+CLI is deliberately exempt from that rule (see the `feat(cli)` entry
+below — explicit dual-flag CLI input gets argparse's native last-wins
+instead). Tier 3 — the wire-surface rename (`<GENE>` assembly blocks,
+decoder prompts, response field names, `/stats` keys) — is out of scope
+here because it alters delivered bytes; deferred to its own byte-level A/B
+gate and tracked as issue #417.
+
+- **feat(config): `[compressor]`/`[knowledge_store]` section aliases,
+  `[budget]` key aliases, `CYMATIX_STORE_PATH` env alias, unknown-section
+  warning (Task A1).** `cymatix_context/config.py` gains
+  `_SECTION_ALIASES` (`compressor` → `ribosome`, `knowledge_store` →
+  `genome`) and `_KEY_ALIASES` (`[budget] retrieval_tokens` →
+  `expression_tokens`, `max_docs_per_turn` → `max_genes_per_turn`);
+  `CYMATIX_STORE_PATH` aliases legacy `CYMATIX_GENOME_PATH`. Any
+  top-level `cymatix.toml` section this loader doesn't recognize now
+  warns via `_warn_unknown_sections` instead of vanishing silently —
+  closes the sharpest pre-existing gap (an unrecognized `[compressor]`
+  used to produce no signal at all). Collision rule: legacy name wins, a
+  warning names both, so no default or shipped behavior changes. Review
+  round 1 fixed two follow-on bugs: a `[budget]` alias/legacy collision
+  was leaking a spurious "Unknown keys in [budget]" warning alongside the
+  intended collision warning (the alias key is now always popped once
+  handled, not only on the non-collision path), and a non-table alias
+  value (e.g. `compressor = "notadict"`) was crashing `load_config` with
+  `AttributeError` inside `RibosomeConfig` construction because the
+  section-alias loop lacked the `isinstance` guard the key-alias loop
+  already had — it now warns and leaves the section alone. That guard
+  only covers the alias names; the same crash reproduces today for
+  *legacy* section values (`ribosome = "notadict"`) on unmodified master
+  with no Tier-2 code involved — filed separately as issue #418. Tests:
+  `tests/test_lexicon_aliases_config.py`.
+
+- **fix(api): `StatsResult` tier counts read the keys `stats()` actually
+  emits (Task A2).** `CymatixSession`'s `StatsResult` construction read
+  `chromatin_open`/`chromatin_euchromatin`/`chromatin_heterochromatin`,
+  but `knowledge_store.stats()` emits `open`/`euchromatin`/
+  `heterochromatin` — every tier count in `cymatix diag corpus` printed 0
+  regardless of corpus state. Now reads the new keys with the old ones as
+  fallback. Tests: `tests/test_stats_result_tiers.py`.
+
+- **feat(cli): `cymatix document get|preview` alias, `--max-docs` flag
+  alias (Task A3).** `document` is a first-class top-level subcommand in
+  `dispatcher.py`, resolved to the same `cmd_gene.run` function object as
+  legacy `gene` (identity-asserted in tests, not just behaviorally
+  equivalent). `--max-docs` shares the `max_genes` argparse dest on
+  `packet` and `refresh-targets`. CLI flags are deliberately exempt from
+  the config/env legacy-wins collision rule: passing both `--max-genes`
+  and `--max-docs` in one invocation is explicit user input, so
+  argparse's native last-flag-wins applies as-is — pinned by
+  `test_flag_alias_collision_last_wins_is_intentional_cli_exemption` plus
+  a comment at each shared-dest `add_argument()` call, so the exemption
+  is deliberate rather than an oversight. Tests:
+  `tests/test_cli_document_alias.py`.
+
+- **feat(server): `GET /documents/{id}` alias of `/genes/{id}` (Task
+  A4).** Registered via `add_api_route` against the same handler with a
+  distinct operation id, so there's no OpenAPI collision; JSON responses
+  are byte-identical to `/genes/{gene_id}` for both the 200 and 404
+  cases. `/genes/{gene_id}` itself is untouched. Tests:
+  `tests/test_http_documents_alias.py`.
+
+- **feat(mcp): `cymatix_document_*` tools join the lean core set, new
+  `cymatix_document_neighbors`, R4 deprecation nudges (#87, Task A5).**
+  `_MCP_CORE_TOOLS` grows to 11 — the five `cymatix_document_*`
+  tools (`get`, `query`, `preview`, `fingerprint`, and the new
+  `neighbors`) now ship in the default MCP surface alongside the
+  original agent-loop five and `cymatix_announce` (added to the core set
+  by the 0.9.1 model-contract work); the legacy bio-named tools stay registered
+  only under `CYMATIX_MCP_FULL=1`. `cymatix_document_neighbors` is a
+  pass-through-equivalent alias of `cymatix_neighbors` (same `query`/`k`
+  params, same `/debug/neighbors` call). `cymatix_document_preview`'s own
+  parameter is renamed `max_genes` → `max_docs` (still forwarded as
+  `max_genes` on the wire) — safe since it has no prior callers pinning
+  the old name; `cymatix_splice_preview` keeps `max_genes` untouched. R4
+  (#87) soft-deprecation nudges added to the first docstring line of
+  `cymatix_gene_get`, `cymatix_splice_preview`, and `cymatix_neighbors`,
+  each naming its `cymatix_document_*` replacement — no removals. Tests:
+  `tests/test_mcp_document_aliases.py`;
+  `tests/test_mcp_tool_names.py`/`tests/test_mcp_server.py` updated for
+  the 11-tool core. `cymatix_document_query` tracks its canonical
+  original's 0.9.1 signature (`model` / `caller_model_class`, replacing
+  `downstream_model`) so the alias stays signature-identical to
+  `cymatix_context`.
+
+- **docs: `mcp-tools.md` rewrite (document_* primary), alias-aware
+  config-reference headings (Task A6).** `docs/api/mcp-tools.md` replaces
+  a stale 1.8KB stub with the full 11-tool core (canonical names
+  primary), a legacy-name back-compat table noting the R4 nudge policy,
+  the 15 full-surface-only tools grouped by category, env vars (flagging
+  that `CYMATIX_MCP_COMPAT` is documented but dead code), and a note that
+  Tier 3 wire fields stay legacy-named for now (issue #417).
+  `scripts/gen_config_reference.py` learns a canonical-heading map for
+  sections with a Tier 2 alias — importing
+  `cymatix_context.config._SECTION_ALIASES` off the loaded module rather
+  than duplicating it — emitting `[compressor] (legacy alias:
+  [ribosome])` and `[knowledge_store] (legacy alias: [genome])` headings;
+  `docs/config-reference.md` regenerated, plus hand-authored prose for
+  the `[budget]` key aliases (not separate dataclass fields, so the
+  generated table can't express them).
+
+- **docs(wiki): `wiki/` becomes the source of truth for both the GitHub
+  wiki and cymatixcontext.com/wiki.** 15 pages (`Home`, `Getting-Started`,
+  `Architecture-Map`, `Pipeline`, `Retrieval-Dimensions`, `Configuration`,
+  `HTTP-API`, `CLI`, `MCP-and-IDE-Integration`, `Agent-Contract`,
+  `Observability`, `Benchmarks-and-Receipts`, `Roadmap-and-Releases`,
+  `Troubleshooting`, `Lexicon`) plus `_Sidebar`/`_Footer` and 4 shared SVG
+  diagrams (pipeline flow, surfaces, token economics, defaults
+  switchboard), all in engineering vocabulary with legacy biology terms
+  called out inline. Two consumers render from the same Markdown:
+  `scripts/sync_github_wiki.py` mirrors it verbatim into the
+  `*.wiki` GitHub wiki repo (`--dry-run` supported), and
+  `scripts/build_wiki_site.py` renders it into chrome-wrapped static HTML
+  for `cymatixcontext.com/wiki/` (tag-scoped href/img-src rewrites so
+  wiki-relative links and the shared SVGs resolve under the site's own
+  path prefix). 14 new tests in `tests/test_build_wiki_site.py` cover the
+  site-render path, including the Home-link and asset-src rewrites.
+  The site render also builds a navigation sidebar from `wiki/_Sidebar.md`
+  (the same file GitHub uses): a sticky desktop rail with the current page
+  highlighted, collapsing to a `<details>` "Pages" block on mobile — JS-free.
+- **readme: README.md rewritten 503 → 124 lines as a minimal landing
+  page.** Install/quickstart/pipeline-summary/links only; the
+  configuration tables, endpoint catalogue, gotchas, and lexicon detail
+  that used to live in the README now live on the wiki (`Configuration`,
+  `HTTP-API`, `CLI`, `Lexicon`, ...) instead of being duplicated — one
+  place to keep current instead of two drifting copies.
+- **docs: ROSETTA Tier-1 sweep — software-term prose pass across current
+  (non-dated) docs.** Seven commits swapping biology-metaphor prose
+  (gene/genome/ribosome/chromatin/splice, ...) for the canonical
+  software vocabulary in `CLAUDE.md`, `docs/SETUP.md`,
+  `docs/TROUBLESHOOTING.md`, `docs/api/context-endpoint.md`,
+  `docs/api/endpoints.md`, `docs/architecture/{DIMENSIONS,
+  KNOWLEDGE_GRAPH,OBSERVABILITY,PIPELINE_LANES,SESSION_REGISTRY}.md`,
+  `docs/benchmarks/BASELINES.md`, `docs/clients/cli.md`,
+  `docs/config-reference.md`, `docs/operations/DENSE_VRAM.md`,
+  `docs/operator-runbooks.md`, the launcher
+  dashboard/database-panel templates, and `cymatix_context/mcp/server.py`'s
+  tool-description strings. Dated docs (benchmarks, council verdicts,
+  dated plans, `docs/archive/`) are deliberately left in their
+  point-in-time vocabulary. Notable fixes carried in the same sweep
+  (found while touching the surrounding prose, not a separate audit):
+  - `CLAUDE.md`: `pki_enabled` default-flip date corrected
+    2026-08-19 → 2026-08-17 (matches issue #370).
+  - `docs/TROUBLESHOOTING.md`: issues URL corrected to
+    `github.com/mbachaud/Cymatix-Context/issues` (was pointing at a
+    stale fork).
+  - `docs/api/endpoints.md`: `/context/packet` response shape corrected
+    to the actual `ContextPacket` (`verified`/`stale_risk` buckets, not
+    a per-item `verdict` field), `GET /fingerprint` corrected to
+    `POST`, the non-existent `/replicate` and top-level `/compact`
+    routes corrected to `/consolidate` and `/admin/compact`, `/stats`
+    tier keys corrected from `chromatin_*`-prefixed to bare
+    (`open`/`euchromatin`/`heterochromatin`), and the
+    `ANTHROPIC_BASE_URL` example removed (cymatix registers no
+    `/v1/messages` route — OpenAI-chat-completions-shaped only).
+  - `docs/architecture/OBSERVABILITY.md`: dashboard count corrected
+    6 → 7 (stale since a dashboard was added).
+  - `docs/api/context-endpoint.md`: `know_decision.py` /
+    `know_calibration.py` source links repointed to their current
+    `cymatix_context/scoring/` location (post-restructure dead links).
+  - `docs/benchmarks/BASELINES.md`: de-duplicated a repeated
+    `sema-readgate-decider` row.
+  - `docs/architecture/KNOWLEDGE_GRAPH.md`: ASCII diagrams translated
+    to engineering vocabulary (padding/headings preserved).
+  - `docs/operator-runbooks.md`: a chromatin SQL literal (an actual
+    column value, not prose) restored after an earlier pass
+    over-translated it.
+- **docs: `docs/ROSETTA.md` retires to a stub.** The full
+  biology-to-software lexicon table moves to the wiki's `Lexicon` page
+  (mirrored to both `github.com/mbachaud/Cymatix-Context/wiki/Lexicon`
+  and `cymatixcontext.com/wiki/lexicon/`); the stub links there, links
+  the Agentome paper (<https://mbachaud.substack.com/p/agentome>) for
+  the "why biology in the first place" backstory, and tracks the
+  remaining un-renamed wire/SQL surface (`gene_id`, the `genes` table,
+  `/stats` keys, the legacy `<GENE .../>` inline tag — intentionally
+  not renamed to avoid an on-the-wire break) on issue #417. `CLAUDE.md`
+  pointers updated to match.
+- **docs:** the wiki pages treat PR #419's canonical spellings as primary;
+  that branch is merged into this one, so the two land in either order.
+- **process: beta-branch release flow.** `beta` is the standing integration
+  branch and, since 2026-09-01, the repository's **default branch** — new pull
+  requests and fresh clones land on it. `master` holds released code and tags
+  only; releases are `release/vX.Y.Z` cuts from `beta` merged to `master` by
+  PR, hotfixes are `hotfix/*` from `master` back-merged into `beta`. CI runs on
+  pushes to `beta` and `release/**` and on PRs targeting `beta` (master
+  unchanged); `cla.yml` was already unfiltered. A sixth CI job,
+  `release-source`, fails a pull request to `master` whose head is not
+  `release/**` or `hotfix/**`, and is scoped by a job-level `if` to PRs against
+  `master` so `beta` pushes and `beta` PRs skip it. **Branch protection is
+  applied** on both branches (classic, `enforce_admins` false, no force-push,
+  no deletion): `beta` requires `contributor-signup` plus the five test jobs;
+  `master` requires those six plus `release-source` and a pull request with 0
+  approvals. Pre-releases (`vX.Y.ZbN` on `beta`, GitHub pre-release,
+  `publish.yml` to PyPI, `pip install --pre cymatix-context`) are the new way
+  to ship an integration snapshot. Runbook: `docs/RELEASING.md` (branch model,
+  receipt gate, exact commands, and the applied protection JSON as the reapply
+  record); helper: `scripts/release.py` (`check` / `pre --n N` /
+  `final --version X.Y.Z` / `tag-message [--body-only]`, dry-run by default,
+  never runs git itself; `tests/test_release_script.py`); PR template
+  `.github/PULL_REQUEST_TEMPLATE.md`; `CONTRIBUTING.md` "Branches and
+  releases".
+- **ci: ruff error-gate + `[nli]` extra in the full-suite job.** New fast
+  `lint` job runs `ruff check --select E9,F63,F7,F82 .` (syntax errors,
+  invalid comparisons, logic errors, undefined names — deliberately not a
+  style linter; the selection is pinned in `[tool.ruff.lint]` so local
+  `ruff check .` and CI agree). `test-full-suite` now installs
+  `.[dev,ast,mcp,nli]` so the fully-mocked transformers-gated tests (incl.
+  the #341 rerank device-routing test) stop silently skipping — torch is
+  already the CPU wheel, so no CUDA wheel is pulled in. The gate's only
+  hits on `beta` were 4 annotation-only forward references
+  (`knowledge_store.py` `BGEM3Codec`/`np`, `tagger.py` `IntentClass`,
+  `tests/conftest.py` `TestClient`), fixed with `TYPE_CHECKING` imports —
+  no runtime import changes. Ported from the 2026-08-08 audit branch
+  (`claude/codebase-audit-weaknesses-96a7da`, c193c20 + the f2b8a06
+  `knowledge_store.py` rider).
+- **bench: `benchmarks/bench_cymatix_rag_composition.py` imports repaired.**
+  The script still imported `cymatix_context.lexical_rescue` /
+  `chunk_fetch` / `relevance_window`, which moved under `retrieval/` and
+  `encoding/` in the #90 restructure — it has been import-broken since.
+  Repointed at the current module locations. `bench_needle.py` and
+  `bench_claude_matrix.py`: `helix-context/helix.toml` restored as the gold
+  label for the 11 toml needles — the frozen bench beds predate the 0.8.5
+  rename, so the codemodded `helix-context/cymatix.toml` label matched no
+  bed (`docs/benchmarks/MULTI_VALID_GOLD.md`); `cymatix.toml` stays as an
+  ANY-match sibling for post-rename beds. Ported from audit commit 5c12c16
+  minus its `ablate_cymatics.py` "peak_width is inert" annotation (false
+  since #357 wired the knob; beta already carries the #354/#357 label fix).
+- **chore: dead code removed.** `scripts/codemod_cymatix_rename.py`
+  (self-neutralized since the 0.8.5 clean break — `OLD_PKG == NEW_PKG`;
+  working version recoverable at 2e3f90e), `scripts/_write_tcm.py` (4-line
+  dead scaffold), and `filename_anchor.remove_gene` (zero callers).
+  Document deletes already sweep `filename_index` via
+  `KnowledgeStore.delete_gene`'s `optional_tables` loop; the new
+  `tests/test_filename_index_delete.py` pins that so it cannot regress
+  silently. Ported from audit commit 363f700. Not ported from that branch:
+  **f2b8a06 (concurrency) — deferred, not superseded**: only its
+  `knowledge_store.py` `TYPE_CHECKING` rider is here (see the ci entry
+  above), and three fixes it carries are still absent on `beta` — the SPLADE
+  `_ensure_loaded` first-load lock (`splade_backend.py:112-142`, N-thread
+  cold start constructs the model N times), the bounded freshness mtime
+  cache with its `/admin/refresh` clear (`freshness.py:133,145` grow for the
+  process lifetime; `routes_admin.py:653-658` never clears the cache that
+  `context_manager.py:1211` documents it as clearing), and `blend.py`'s
+  copy-under-lock score-map publication (`blend.py:204-207,235,283` still
+  alias the #350 request-local dict into the shared
+  `genome.last_query_scores`, plus the unlocked cold-tier write at
+  `knowledge_store.py:1571-1574`). They need a hand re-apply against #350
+  rather than a cherry-pick — **tracked in #439**. 44d0327 (docs) is
+  genuinely superseded — stale claims retired by #354/#388, #357, #396 and
+  865d34d — as is the README "Security" section, where the wiki
+  `Configuration` and `HTTP-API` pages already carry a fuller, current
+  equivalent.
+
+- **bench: beta witness sweep + four new code corpora (2026-09-04).**
+  `benchmarks/dogfood/sweeps/run_sweep_beta.py` re-ran every frozen v0.9.1
+  receipt on the beta head `21606a0`: bit-exact on LoCoMo, FinanceBench,
+  EnronQA v2 and EnronQA padded (with the 947k check: five corpora, 3,998
+  paired needles, zero field diffs). MULoc's residual movement is the
+  `PYTHONHASHSEED` hazard in `filename_anchor.py:164` (`list({...})[:64]`):
+  139/141 movers are >64-term queries and seed 1 vs 0 alone moves 165, so the
+  runner now pins and records the seed. RepoBench-R python reproduces the
+  June arm; Java is measured for the first time. Four new code beds land with
+  builders (`scripts/build_{coderag,cosqa,swebench}_corpus.py`), a generic
+  gold resolver (`scripts/resolve_bench_needles.py`), fixture profiles, a
+  document-level BM25 foil (`benchmarks/dogfood/code/bm25_doc_foil.py`) and
+  their own BASELINES rows: CodeRAG-Bench solutions + docs, CoIR CosQA,
+  SWE-bench Verified. Two defects surfaced and are tracked separately, no
+  default moves: queries with >500 Stage-1 terms raise through
+  `build_context` (Tier-2 UNION ALL vs `SQLITE_LIMIT_COMPOUND_SELECT`), and
+  the Tier-1/2 tag lanes cost 12–25 NDCG@10 points on small-file code corpora
+  under RRF (diagnostic arms). Write-up
+  `docs/benchmarks/2026-09-04-beta-witness-sweep.md`.
+
 ## 0.9.1 (2026-08-30)
 
 The retrieval-quality release: wave-1 ranking graduation (rrf_k 60→20 +

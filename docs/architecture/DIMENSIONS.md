@@ -99,7 +99,7 @@ Related live adjuncts, not counted as separate dimensions:
 - `path_key_index` Tier 0 compound retrieval (`path_token` + `kv_key`)
 - optional `filename_anchor` lexical boost (dark-shipped by default)
 
-### D2 — Tagging (promoter index)
+### D2 — Tagging (tag index; legacy: promoter index)
 
 Keyword + entity tag matching at retrieval time. Documents tagged at ingest via `promoter_index`.
 Query terms expanded through `cymatix.toml [synonyms]`.
@@ -113,11 +113,11 @@ Source authority bonus applies per-source scoring weight during retrieval fusion
 
 Windowed access-rate ring buffer replaces monotonic `access_count`.
 
-- `EpigeneticMarkers.recent_accesses` — last 100 access timestamps
+- `DocumentSignals.recent_accesses` (legacy: `EpigeneticMarkers`) — last 100 access timestamps
 - `access_rate(gene, window_seconds)` — sliding-window rate computation
 - Wired into density gate access-override path
 
-### D5 — Chromatin Tier
+### D5 — Lifecycle Tier (legacy: Chromatin)
 
 Three-tier accessibility model with cold-tier reactivation:
 

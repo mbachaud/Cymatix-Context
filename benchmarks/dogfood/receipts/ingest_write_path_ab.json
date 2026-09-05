@@ -1,0 +1,91 @@
+{
+  "arms": {
+    "cache_8gb": {
+      "avg_write_op_kb": 2.61,
+      "errors": 0,
+      "files": 400,
+      "genes_added": 1042,
+      "genes_per_s": 4.97,
+      "index_drop_s": 0.0,
+      "index_rebuild_s": 0.0,
+      "indexes_deferred": 0,
+      "ingest_s": 209.81,
+      "pragmas": {
+        "cache_size": -8388608,
+        "mmap_size": 2147418112,
+        "page_size": 4096,
+        "synchronous": 1
+      },
+      "read_bytes": 2181095248,
+      "read_mb_per_gene": 1.996,
+      "read_ops": 524873,
+      "wall_s": 209.81,
+      "write_bytes": 2247144783,
+      "write_mb_per_gene": 2.057,
+      "write_ops": 840961
+    },
+    "deferred_indexes": {
+      "avg_write_op_kb": 3.01,
+      "errors": 0,
+      "files": 400,
+      "genes_added": 1042,
+      "genes_per_s": 0.23,
+      "index_drop_s": 2.71,
+      "index_rebuild_s": 73.58,
+      "indexes_deferred": 15,
+      "ingest_s": 4387.3,
+      "pragmas": {
+        "cache_size": -65536,
+        "mmap_size": 2147418112,
+        "page_size": 4096,
+        "synchronous": 1
+      },
+      "read_bytes": 1417871079807,
+      "read_mb_per_gene": 1297.684,
+      "read_ops": 346152355,
+      "wall_s": 4463.59,
+      "write_bytes": 8246560134,
+      "write_mb_per_gene": 7.548,
+      "write_ops": 2678207
+    },
+    "profile_default": {
+      "avg_write_op_kb": 2.61,
+      "errors": 0,
+      "files": 400,
+      "genes_added": 1042,
+      "genes_per_s": 4.92,
+      "index_drop_s": 0.0,
+      "index_rebuild_s": 0.0,
+      "indexes_deferred": 0,
+      "ingest_s": 211.59,
+      "pragmas": {
+        "cache_size": -65536,
+        "mmap_size": 2147418112,
+        "page_size": 4096,
+        "synchronous": 1
+      },
+      "read_bytes": 3540569936,
+      "read_mb_per_gene": 3.24,
+      "read_ops": 856772,
+      "wall_s": 211.59,
+      "write_bytes": 2248100927,
+      "write_mb_per_gene": 2.058,
+      "write_ops": 841268
+    }
+  },
+  "bed": "F:\\tmp\\enterprise_rag_500k.db",
+  "bed_bytes": 6886907904,
+  "bed_genes_at_start": null,
+  "deferred_index_summary": {
+    "index_rebuild_s": 73.58,
+    "indexes_deferred": 15,
+    "speedup_vs_default": 0.05,
+    "write_mb_per_gene": 7.548,
+    "write_reduction": 0.27
+  },
+  "speedup": 1.01,
+  "stamp": "2026-08-25T06:28:03Z",
+  "tool": "sqlite_cache_ab",
+  "workload_files": 400,
+  "write_amplification_ratio": 1.0
+}

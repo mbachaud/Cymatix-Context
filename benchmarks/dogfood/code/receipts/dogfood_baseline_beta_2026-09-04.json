@@ -1,0 +1,228 @@
+{
+  "measured_at": "2026-09-04T09:02:37-0700",
+  "genome": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db",
+  "scoring": "gene_id set membership (no path matching)",
+  "note": "retrieval only \u2014 no decoder, no consumer ladder, no judge",
+  "rollup": {
+    "needles": 18,
+    "errors": 0,
+    "k": 12,
+    "recall@12": 0.8889,
+    "recall@1": 0.5556,
+    "recall@3": 0.7222,
+    "recall@5": 0.8889,
+    "recall@10": 0.8889,
+    "mrr": 0.6713,
+    "median_rank_when_delivered": 1.0,
+    "median_latency_ms": 49.5,
+    "seconds_total": 1.4
+  },
+  "per_needle": [
+    {
+      "name": "cymatix_proxy_port",
+      "query": "What port does the Cymatix proxy server listen on?",
+      "expected": "11437",
+      "gold_genes": 65,
+      "returned": 12,
+      "delivered": false,
+      "rank": null,
+      "latency_ms": 149.5
+    },
+    {
+      "name": "cymatix_expression_tokens",
+      "query": "What is the default expression_tokens budget in Cymatix?",
+      "expected": "7000",
+      "gold_genes": 49,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 141.9
+    },
+    {
+      "name": "cymatix_cymatics_bins",
+      "query": "How many bins does the Cymatix cymatics spectrum use?",
+      "expected": "256",
+      "gold_genes": 63,
+      "returned": 12,
+      "delivered": true,
+      "rank": 4,
+      "latency_ms": 131.1
+    },
+    {
+      "name": "cymatix_fusion_default",
+      "query": "What is the default retrieval fusion_mode in Cymatix?",
+      "expected": "rrf",
+      "gold_genes": 118,
+      "returned": 12,
+      "delivered": false,
+      "rank": null,
+      "latency_ms": 134.0
+    },
+    {
+      "name": "cymatix_know_emit_floor",
+      "query": "What is the emit_floor for the Cymatix know confidence gate?",
+      "expected": "0.45",
+      "gold_genes": 12,
+      "returned": 12,
+      "delivered": true,
+      "rank": 3,
+      "latency_ms": 133.9
+    },
+    {
+      "name": "cymatix_max_genes",
+      "query": "How many genes per turn does Cymatix deliver by default?",
+      "expected": "12",
+      "gold_genes": 67,
+      "returned": 12,
+      "delivered": true,
+      "rank": 2,
+      "latency_ms": 138.4
+    },
+    {
+      "name": "cymatix_genome_path",
+      "query": "What is the default Cymatix knowledge store path?",
+      "expected": "genomes/main/genome.db",
+      "gold_genes": 57,
+      "returned": 12,
+      "delivered": true,
+      "rank": 4,
+      "latency_ms": 130.1
+    },
+    {
+      "name": "cymatix_splice_aggressiveness",
+      "query": "What is the default splice_aggressiveness in Cymatix?",
+      "expected": "0.3",
+      "gold_genes": 43,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 121.4
+    },
+    {
+      "name": "scorerift_divergence_threshold",
+      "query": "What is the divergence threshold that triggers alerts in ScoreRift?",
+      "expected": "0.15",
+      "gold_genes": 19,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 30.9
+    },
+    {
+      "name": "scorerift_confidence_gate",
+      "query": "What auto-confidence level must a ScoreRift dimension exceed before divergence can fire?",
+      "expected": "50%",
+      "gold_genes": 22,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 42.8
+    },
+    {
+      "name": "scorerift_import_hygiene_confidence",
+      "query": "What confidence does ScoreRift assign the import_hygiene dimension?",
+      "expected": "85%",
+      "gold_genes": 19,
+      "returned": 12,
+      "delivered": true,
+      "rank": 4,
+      "latency_ms": 41.5
+    },
+    {
+      "name": "driftwatch_version",
+      "query": "What version is DriftWatch currently at?",
+      "expected": "v0.2.0",
+      "gold_genes": 9,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 17.1
+    },
+    {
+      "name": "driftwatch_default_ollama_model",
+      "query": "What is the default Ollama model tag in DriftWatch?",
+      "expected": "qwen3:8b",
+      "gold_genes": 44,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 56.1
+    },
+    {
+      "name": "driftwatch_default_inference_server",
+      "query": "Which inference server is the recommended default for DriftWatch nodes?",
+      "expected": "vLLM",
+      "gold_genes": 45,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 35.2
+    },
+    {
+      "name": "driftwatch_default_secret",
+      "query": "What password does the DriftWatch docker-compose fall back to if DB_PASSWORD is unset?",
+      "expected": "changeme",
+      "gold_genes": 6,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 26.7
+    },
+    {
+      "name": "mek_guardrails",
+      "query": "What are the three guardrails MaxExpressKit ships for Claude Code?",
+      "expected": "compliance, drift, ledger",
+      "gold_genes": 32,
+      "returned": 12,
+      "delivered": true,
+      "rank": 2,
+      "latency_ms": 27.3
+    },
+    {
+      "name": "mek_source_apps",
+      "query": "Which three applications was MaxExpressKit distilled from?",
+      "expected": "CosmicTasha, ScoreRift, BookKeeper",
+      "gold_genes": 42,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 11.8
+    },
+    {
+      "name": "mek_marketplace_name",
+      "query": "What marketplace name does the MaxExpressKit plugin install under?",
+      "expected": "mek-marketplace",
+      "gold_genes": 2,
+      "returned": 12,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 19.0
+    }
+  ],
+  "sweep": {
+    "stamp": "2026-09-04",
+    "runner": "benchmarks/dogfood/sweeps/run_sweep_beta.py",
+    "lane": "code",
+    "beta_head": "21606a07b7d6604f5229bd8bf7def5d84c2d6540",
+    "config": "auto-discovered worktree cymatix.toml (run_baseline.py load_config())",
+    "config_sha256": "dd4ca7440b646ad6a56c363b63645020ea2cac5cb74f0ac65ab9463b81f88db8",
+    "PYTHONHASHSEED": "0",
+    "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+    "sqlite": "3.50.4",
+    "bed": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db",
+    "bed_bytes": 272609280,
+    "bed_mtimes_before": {
+      "db": 1788537548.5051801,
+      "-wal": null,
+      "-shm": null
+    },
+    "bed_mtimes_after": {
+      "db": 1788537757.6000888,
+      "-wal": null,
+      "-shm": null
+    },
+    "gold": "F:\\Projects\\cymatix-context\\benchmarks\\dogfood\\gene_ids\\gold_by_needle.json",
+    "wall_s": 2.0,
+    "note": "four-repo dogfood code bed (cymatix-context, driftwatch, scorerift, MaxExpressKit), 18 value-pinning needles, gene_id set membership scoring; NOT paired against the July receipts (pre-wave-1 defaults, k=50 run) \u2014 standalone beta receipt"
+  }
+}

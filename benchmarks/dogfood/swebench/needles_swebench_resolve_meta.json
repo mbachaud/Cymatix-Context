@@ -1,0 +1,3941 @@
+{
+ "date": "2026-09-04T18:34:55.186134+00:00",
+ "db": "F:/tmp/swebench_bed/swebench.db",
+ "corpus_root": "F:\\Projects\\swebench\\corpus",
+ "needles_total": 493,
+ "needles_resolvable": 489,
+ "dropped": [
+  "swe_matplotlib__matplotlib-13989",
+  "swe_matplotlib__matplotlib-24149",
+  "swe_matplotlib__matplotlib-26113",
+  "swe_pydata__xarray-3677"
+ ],
+ "gold_files_wanted": 363,
+ "gold_files_size_gated": 3,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 0,
+ "per_needle": {
+  "swe_astropy__astropy-12907": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-13033": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-13236": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 39,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-13398": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-13453": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-13579": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-13977": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14096": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14182": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14309": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14365": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14369": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14508": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14539": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14598": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-14995": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-7166": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-7336": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-7606": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-7671": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-8707": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 37,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_astropy__astropy-8872": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-10097": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-10554": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 51,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-10880": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-10914": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-10973": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-10999": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11066": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11087": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11095": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11099": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11119": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11133": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11138": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11141": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11149": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11163": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11179": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11206": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11211": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11239": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11265": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11276": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11292": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11299": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11333": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11400": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 40,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11433": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11451": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11477": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11490": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11532": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11551": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11555": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11603": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11728": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11734": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 61,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11740": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11749": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11790": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11815": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11820": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11848": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11880": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11885": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11951": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11964": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-11999": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12039": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12050": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12125": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12143": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12155": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12193": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12209": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12262": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12273": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12276": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12304": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12308": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12325": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12406": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12419": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12663": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12708": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12713": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12741": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12754": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12774": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12858": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-12965": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13012": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13023": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13028": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13033": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13089": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13109": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13112": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13121": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13128": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13158": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13195": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13212": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13279": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13297": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13315": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13343": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13344": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13346": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13363": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13401": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13406": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13410": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13417": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13449": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13512": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13513": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13516": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13551": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13568": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13569": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13590": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13658": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13670": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13741": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13786": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13794": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13807": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13809": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13810": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13820": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13821": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13837": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13925": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13933": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-13964": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14007": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14011": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14017": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14034": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14053": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14089": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14122": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14140": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14155": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14170": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14238": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14311": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14315": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14349": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14351": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14373": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14376": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14404": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14434": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14493": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14500": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14534": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14539": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14559": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14580": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14608": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14631": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14672": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14725": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14752": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14765": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14771": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14787": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14792": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14855": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14915": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-14999": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15022": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15037": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15098": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15103": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15104": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15127": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15128": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15161": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15252": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15268": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15277": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15278": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15280": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15315": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15368": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15375": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15380": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15382": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15467": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15499": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15503": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15525": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15554": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15561": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 45,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15563": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15569": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15572": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15629": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 47,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15695": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15731": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15732": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15741": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15814": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15851": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15863": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15916": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15930": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15957": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15973": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-15987": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16032": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16082": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16100": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16116": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16136": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16139": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16145": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16255": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16256": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16263": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 55,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16315": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16333": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16429": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16454": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16485": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16493": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16502": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16527": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16560": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16569": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16595": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16612": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16631": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16642": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16661": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16662": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16667": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16801": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16819": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16877": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16899": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16901": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16938": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-16950": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-17029": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-17084": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-17087": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-7530": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_django__django-9296": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-14623": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 113,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-20488": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-20676": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 44,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-20826": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-20859": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-21568": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-22719": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-22865": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-22871": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-23299": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-23314": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-23412": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 49,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-23476": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-24026": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-24177": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-24570": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-24627": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-24637": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-24870": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-24970": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-25122": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-25287": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-25311": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-25479": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-25775": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-25960": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-26208": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-26291": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-26342": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_matplotlib__matplotlib-26466": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_mwaskom__seaborn-3069": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_mwaskom__seaborn-3187": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pallets__flask-5014": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_psf__requests-1142": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_psf__requests-1724": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_psf__requests-1766": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_psf__requests-1921": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_psf__requests-2317": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_psf__requests-2931": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_psf__requests-5414": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_psf__requests-6028": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-2905": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-3095": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 43,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-3151": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-3305": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 27,
+   "gold_size_gated": [
+    "dataset.py:255002"
+   ],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-3993": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 41,
+   "gold_size_gated": [
+    "dataset.py:255002"
+   ],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-4075": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-4094": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 41,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-4356": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-4629": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-4687": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-4695": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 41,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-4966": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-6461": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-6599": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-6721": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-6744": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-6938": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 27,
+   "gold_size_gated": [
+    "dataset.py:255002"
+   ],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-6992": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [
+    "dataset.py:255002"
+   ],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-7229": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-7233": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pydata__xarray-7393": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-4551": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-4604": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-4661": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-4970": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-6386": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-6528": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-6903": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-7080": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-7277": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pylint-dev__pylint-8898": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-10051": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-10081": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-10356": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-5262": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-5631": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-5787": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-5809": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-5840": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-6197": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-6202": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-7205": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-7236": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-7324": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-7432": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-7490": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-7521": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-7571": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-7982": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_pytest-dev__pytest-8399": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-10297": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-10844": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-10908": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-11310": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-11578": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-12585": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-12682": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-12973": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-13124": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-13135": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-13142": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-13328": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-13439": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-13496": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-13779": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-14053": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-14087": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-14141": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-14496": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-14629": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-14710": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-14894": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-14983": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-15100": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-25102": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-25232": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-26323": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_scikit-learn__scikit-learn-9288": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-10323": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-10435": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-10449": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-10466": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-10614": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-10673": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-11445": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-11510": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7440": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7454": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7462": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7590": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 46,
+   "gold_size_gated": [
+    "cpp.py:302681"
+   ],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7748": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7757": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7889": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7910": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-7985": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8035": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8056": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8120": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8265": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8269": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8459": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8475": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8548": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8551": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8593": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8595": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8621": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8638": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-8721": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9229": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9230": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9258": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9281": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9320": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9367": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9461": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 61,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9591": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9602": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9658": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9673": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9698": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sphinx-doc__sphinx-9711": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-11618": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-12096": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-12419": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-12481": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-12489": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13031": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13091": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 260,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13372": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13480": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13551": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13615": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13647": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13757": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 50,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13798": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13852": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13877": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 54,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13878": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-13974": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-14248": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 61,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-14531": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-14711": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-14976": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-15017": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-15345": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-15349": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-15599": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-15809": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-15875": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-15976": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-16450": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-16597": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 47,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-16766": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-16792": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-16886": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-17139": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-17318": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-17630": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-17655": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-18189": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-18199": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-18211": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-18698": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 50,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-18763": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-19040": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-19346": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-19495": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-19637": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-19783": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-19954": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 43,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-20154": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-20428": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-20438": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-20801": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 37,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-20916": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-21379": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-21596": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-21612": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-21847": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-21930": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-22080": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-22456": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-22714": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-22914": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-23262": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-23534": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-23824": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-23950": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-24066": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-24213": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-24443": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-24539": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-24562": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 37,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "swe_sympy__sympy-24661": {
+   "question_type": "swebench_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  }
+ }
+}

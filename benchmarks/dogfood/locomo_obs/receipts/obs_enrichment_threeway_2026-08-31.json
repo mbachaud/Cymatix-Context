@@ -1,0 +1,65 @@
+{
+ "stamp": "2026-08-31",
+ "campaign": "LoCoMo observation-enrichment three-way (write-time abstraction A/B + displacement control)",
+ "beds": {
+  "base": "F:/tmp/locomo_bed/locomo.db (6,276 genes: turns+cues)",
+  "obs": "F:/tmp/locomo_obs_bed/locomo_obs.db (8,817 genes: turns+cues+2,541 observation docs)"
+ },
+ "arms": {
+  "base_turnGold": {
+   "receipt": "locomo/receipts/ladder_locomo_baseline_2026-08-31.json",
+   "delivered": 0.4348
+  },
+  "ctl_obsBed_turnGold": {
+   "receipt": "locomo_obs_ctl/receipts/ladder_locomo_obs_turnonly_2026-08-31.json",
+   "delivered": 0.2645
+  },
+  "obs_obsBed_unionGold": {
+   "receipt": "locomo_obs/receipts/ladder_locomo_obs_2026-08-31.json",
+   "delivered": 0.5189
+  }
+ },
+ "per_class_delivered": {
+  "singlehop": {
+   "base": "489/841",
+   "ctl": "290/841",
+   "obs": "575/841"
+  },
+  "temporal": {
+   "base": "174/320",
+   "ctl": "101/320",
+   "obs": "216/320"
+  },
+  "multihop": {
+   "base": "120/281",
+   "ctl": "52/281",
+   "obs": "156/281"
+  },
+  "adversarial": {
+   "base": "221/446",
+   "ctl": "166/446",
+   "obs": "248/446"
+  },
+  "commonsense": {
+   "base": "27/89",
+   "ctl": "18/89",
+   "obs": "37/89"
+  },
+  "cognitive": {
+   "base": "3/401",
+   "ctl": "2/401",
+   "obs": "2/401"
+  }
+ },
+ "findings": [
+  "DISPLACEMENT, not bridging: with turn-only gold, adding the 2,541 observation docs COLLAPSES turn delivery .4348 -> .2645 (multihop 120 -> 52) \u2014 the abstractions out-compete raw dialogue for seats because they are written in the question register",
+  "counting abstractions as answer-carrying gold (they are LLM-derived factual statements of exactly what the questions ask), net delivered rises .4348 -> .5189 (+8.4pp; every QA class gains, multihop +12.8pp, temporal +13.1pp)",
+  "cognitive unchanged (3 -> 2 of 401): no observation layer exists for the synthetic cues \u2014 enriching THOSE requires generating abstractions (the LLM-ribosome ingest lane)",
+  "design consequence for the enrichment lane: naive co-ingestion of abstractions cannibalizes source evidence; production needs abstraction->source linkage (support_span / provenance / delivery-time source-set dedup) so a delivered abstraction carries or pulls its source"
+ ],
+ "caveats": [
+  "obs arm's gold-set is larger by construction (union basis) \u2014 the ctl arm exists precisely to separate the mechanical-gold effect from ranking movement; report all three cells together",
+  "beds differ in corpus (2,541 added docs), so this is a bed+gold A/B, not a same-bed ablation; needle set identical (2,378), resolver 2378/2378 on both beds",
+  "ran alongside the muloc c=6 bed build \u2014 latency axes environment-loaded; rank/delivered axes deterministic"
+ ]
+}

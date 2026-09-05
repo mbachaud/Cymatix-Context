@@ -1,0 +1,58 @@
+{
+ "stamp": "2026-08-31",
+ "campaign": "min_delivered_docs width curve on the 947k blob bed (floor 0 vs 6 vs 12)",
+ "bed": "F:/tmp/erb_blob_v09x.db (947,531 genes, identity 11a05b91, wave-1 row bed)",
+ "n": 470,
+ "k": 12,
+ "arms": {
+  "floor0": {
+   "receipt": "ladder_v09x_int_v091_2026-08-30.json (v091 gate arm, integration e6dba22)",
+   "delivered": 0.6298,
+   "delivered_n": 296
+  },
+  "floor6": {
+   "receipt": "ladder_v09x_floor6_2026-08-30.json (this session, master 2644c3e = shipped v0.9.1; config w24_min_delivered_6.toml \u2014 copy of shipped toml, only the floor differs)",
+   "delivered": 0.6447,
+   "delivered_n": 303
+  },
+  "floor12": {
+   "receipt": "ladder_v09x_w24_min_delivered_2026-08-28.json (W2.4 arm; = shipped v0.9.1 default)",
+   "delivered": 0.6681,
+   "delivered_n": 314
+  }
+ },
+ "paired": {
+  "floor6_vs_floor0": {
+   "gained": 7,
+   "lost": 0
+  },
+  "floor12_vs_floor6": {
+   "gained": 11,
+   "lost": 0,
+   "gained_by_class": {
+    "basic": 4,
+    "semantic": 4,
+    "intra_document_reasoning": 1,
+    "constrained": 2
+   },
+   "needles": [
+    "erb_052",
+    "erb_055",
+    "erb_114",
+    "erb_131",
+    "erb_176",
+    "erb_181",
+    "erb_237",
+    "erb_272",
+    "erb_308",
+    "erb_387",
+    "erb_390"
+   ]
+  },
+  "nesting": "delivered sets strictly nested floor0 \u2282 floor6 \u2282 floor12 \u2014 zero losses anywhere on the curve"
+ },
+ "rank_bases": "map + final ranks byte-identical across all three arms (0/470 diffs floor6-vs-floor12; floor0 arm reproduced wave-1 exactly on 2026-08-30) \u2014 the floor is delivery-only, and today's master run is another exact-reproduce witness of the merged stack",
+ "mechanism": "classifier per-class assembly caps are 2/5/6/8; floor 6 lifts only the low caps (delivered_count histogram at floor6: {6:185, 8:198, 12:87}) so gold at rank 7-12 in 6/8-cap classes stays undelivered; floor 12 buys those 11 needles (4 basic, 4 semantic, 1 intra_document_reasoning, 2 constrained)",
+ "verdict": "12 confirmed as the right shipped floor: 6 recovers only 7/18 of the floor benefit and forfeits 11 needles for zero delivered gain; the only cost axis of 12 is delivered-seat tokens",
+ "environment": "floor6 arm ran 2026-08-30 22:39-01:52 local alongside the enronqa v3 sequential bed build (first ~2.8h) \u2014 latency axes environment-loaded (p50 20.4s vs floor12's 19.0s on 08-28); rank/delivered axes unaffected (deterministic, 0 rank diffs)"
+}

@@ -161,3 +161,27 @@ def test_aggressive_grants_at_least_auto(monkeypatch):
     monkeypatch.setenv("CYMATIX_MEM_PROFILE", "aggressive")
     aggr = sqlite_memory_budget(100, available_bytes=110 * GiB)
     assert aggr.mmap_size >= auto.mmap_size
+
+
+# ── bulk_load profile (2026-08-26 read-side cache receipts) ──────────────
+
+
+def test_bulk_load_gives_cache_the_budget(monkeypatch):
+    monkeypatch.delenv("CYMATIX_SQLITE_CACHE_SIZE", raising=False)
+    monkeypatch.delenv("CYMATIX_SQLITE_MMAP_SIZE", raising=False)
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "bulk_load")
+    plan = sqlite_memory_budget(1, available_bytes=32 * GiB)
+    # 32 GiB avail - 8 GiB reserve = 24 GiB budget; cache caps at 4 GiB —
+    # the receipt-tested value (16.16 vs 6.47 genes/s against 64 MiB).
+    assert plan.writer_cache_size == -(4 * 1024 * 1024)
+    assert plan.mmap_size == 2 * GiB
+
+
+def test_bulk_load_degrades_on_small_hosts(monkeypatch):
+    monkeypatch.delenv("CYMATIX_SQLITE_CACHE_SIZE", raising=False)
+    monkeypatch.delenv("CYMATIX_SQLITE_MMAP_SIZE", raising=False)
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "bulk_load")
+    plan = sqlite_memory_budget(1, available_bytes=6 * GiB)
+    # 6 - max(4, 1.5) = 2 GiB budget: cache (1-mmap_frac) share = 1 GiB.
+    assert plan.writer_cache_size == -(1 * 1024 * 1024)
+    assert 0 < plan.mmap_size <= 2 * GiB

@@ -1,0 +1,41 @@
+{
+ "stamp": "2026-08-30",
+ "campaign": "enronqa ingest decay \u2014 residual >150k-gene closure",
+ "bed": "F:/tmp/enronqa_padded_bed/enronqa_padded.db \u2014 rebuild_cutoff200_v2: 596,707 genes / 517,353 files, entity_autolink_hub_cutoff=200, tagger v1, parallel c=6, 2026-08-30 06:24\u201311:22 local (elapsed 17,868 s)",
+ "question": "with the hub cutoff bounding auto_link_by_entity (was 89.5% of writer wall, O(N^2) per build), does the >150k-gene rate decay persist, and what drives the residual?",
+ "method": [
+  "rate-vs-N from genes.observed_at (stamped worker-side at tag time \u2014 measures tagging throughput)",
+  "writer instantaneous rate from the 1,352 cumulative progress lines in rebuild_cutoff200_v2.err.log (measures the single-writer drain \u2014 the decaying component)",
+  "per-statement timings on the finished bed (read-only) and on a scratch copy of filename_index with idx_filename_gene applied"
+ ],
+ "findings": {
+  "o_n2_refuted": "the rate ~ C/N signature of the uncapped build (61 \u2192 4.9 g/s) is GONE at cutoff=200; worker tagging throughput is flat ~50 g/s from N=20k to 580k; the writer declines mildly and ~linearly in N",
+  "writer_rate_curve_inst_g_per_s": {
+   "note": "N = genes processed (incl. dedup overwrites); local wall times; v2c sequential bed build shared the machine until 09:27; tagging workers drained ~09:40 \u2014 the 29\u219238 jump at 09:40 is worker-CPU contention ending, not N-dependence",
+   "contended_06:24-09:38": [[25536, 49.6], [101056, 58.2], [202048, 44.0], [303040, 35.7], [404032, 30.5], [454528, 29.2]],
+   "writer_alone_09:49-11:22": [[479552, 38.4], [505024, 38.5], [555520, 37.2], [606016, 34.2], [656512, 32.7]]
+  },
+  "clean_tail": "writer alone, 479k\u2192656k processed: 38.4 \u2192 32.7 g/s = 26.0 \u2192 30.6 ms/gene; +4.6 ms per 177k genes \u2014 linear per-insert cost growth",
+  "residual_root_cause": "per-upsert `DELETE FROM filename_index WHERE gene_id = ?` (storage/indexes.py sync_filename_index) is a full-table SCAN \u2014 the table has only the (filename_stem, gene_id) PK and idx_filename_stem, no gene_id index \u2014 so the delete is O(N) rows per insert",
+  "evidence": {
+   "explain_plan": "SCAN filename_index (571,999 rows on the finished bed)",
+   "warm_full_scan_ms_per_probe": 42.7,
+   "indexed_delete_ms_per_probe": 0.002,
+   "speedup": "~20,000x",
+   "reconciliation": [
+    "old uncapped build, py-spy at 289k genes: filename DELETE = 6.6% of writer wall; terminal 204 ms/gene \u00d7 6.6% \u2248 13.5 ms \u2248 a warm scan of the then-~280k-row table",
+    "clean-tail slope +4.6 ms per 177k genes \u2248 the incremental scan cost of 177k added rows",
+    "at 572k rows the scan is essentially the whole non-base writer budget (30.6 ms/gene total)"
+   ]
+  },
+  "fix": "idx_filename_gene ON filename_index(gene_id) \u2014 commit a39532f on this branch (filename_anchor.ensure_schema); content-neutral; existing beds pick it up on next open",
+  "projection": "with the index, the writer's N-dependent term drops to O(log N); bulk builds become tagging-bound at the flat ~50 g/s worker ceiling (~3.3 h for this 517k-file bed vs 5.0 h measured)"
+ },
+ "fts5": "remains refuted \u2014 0.07% of writer wall in the 2026-08-30 py-spy receipt; no superlinear signature in the post-cutoff curves",
+ "session_note": "measured while an unrelated ERB ladder arm + a sequential enronqa v3 bed build ran on the same machine (rank/plan/timing probes are per-statement and unaffected in shape; absolute ms noted as environment-loaded)",
+ "related": [
+  "benchmarks/dogfood/receipts/ingest_decay_enronqa_2026-08-30.json",
+  "benchmarks/dogfood/receipts/entity_hub_cutoff_ab_enronqa_2026-08-30.json",
+  "docs/benchmarks/2026-08-30-enronqa-ingest-decay.md"
+ ]
+}

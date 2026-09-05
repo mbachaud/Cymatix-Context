@@ -297,8 +297,30 @@ def build_table(
     return "\n".join(lines)
 
 
+def build_alias_heading(legacy_section: str, canonical_section: str) -> str:
+    """Render a canonical-primary section heading, e.g.
+
+    ``## `[compressor]` (legacy alias: `[ribosome]`)``
+
+    ``canonical_section`` is primary (ROSETTA Tier 2 software-term name);
+    ``legacy_section`` is the name ``cymatix_context/config.py`` still
+    dispatches on internally (the key in ``SECTION_TO_CLASS``).
+    """
+    return f"## `[{canonical_section}]` (legacy alias: `[{legacy_section}]`)"
+
+
 def generate_all_tables(module: ModuleType, source: str) -> Dict[str, str]:
-    """Return ``{marker_name: generated_table_markdown}`` for every marker."""
+    """Return ``{marker_name: generated_table_markdown}`` for every marker.
+
+    Also emits a ``{legacy_section}.heading`` entry for every section that
+    has a ROSETTA Tier 2 canonical-name alias (per
+    ``cymatix_context.config._SECTION_ALIASES`` — imported off the loaded
+    module rather than duplicated here, so a new alias added to config.py
+    automatically requires — and, once regenerated, produces — a matching
+    heading marker in docs/config-reference.md; the sync test catches a
+    doc that hasn't been regenerated). Sections with no canonical alias
+    keep their fully hand-authored heading (untouched by this generator).
+    """
     descriptions = harvest_descriptions(source)
     tables: Dict[str, str] = {}
     for section, class_name in SECTION_TO_CLASS.items():
@@ -307,6 +329,12 @@ def generate_all_tables(module: ModuleType, source: str) -> Dict[str, str]:
         tables[section] = build_table(module, class_name, descriptions)
     for marker_name, class_name in SUBTABLE_MARKERS.items():
         tables[marker_name] = build_table(module, class_name, descriptions)
+
+    section_aliases: Dict[str, str] = getattr(module, "_SECTION_ALIASES", {})
+    for canonical_section, legacy_section in section_aliases.items():
+        tables[f"{legacy_section}.heading"] = build_alias_heading(
+            legacy_section, canonical_section
+        )
     return tables
 
 

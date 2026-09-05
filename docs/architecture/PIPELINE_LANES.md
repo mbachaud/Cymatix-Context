@@ -426,7 +426,7 @@ for the authoritative design.
 | `cymatics spectrum` | term-hashed Gaussian | ingest | resonance + flux + harmonic bins |
 | `embedding (SEMA)` | sentence-transformer | ingest | Tier 4 cold-tier |
 | `SPLADE terms` | ModernBERT sparse | ingest | Tier 3.5 (default off since 2026-08-16) |
-| `chromatin tier` | density_gate at ingest | ingest | hot/warm/cold partitioning |
+| `lifecycle tier` (legacy: chromatin tier) | density_gate at ingest | ingest | hot/warm/cold partitioning |
 | `source_kind` (new) | `provenance.infer_source_kind` | ingest | packet specificity + volatility |
 | `volatility_class` (new) | `provenance.infer_volatility` | ingest | packet freshness half-life |
 | `observed_at / last_verified_at` (new) | `time.time()` at ingest | ingest | packet freshness_score decay |

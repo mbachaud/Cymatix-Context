@@ -1,9 +1,10 @@
 # Cymatix CLI — operator reference
 
 `cymatix` is the cold-start command-line surface for the Cymatix Context
-genome. Every invocation is a fresh Python process: it opens the
-SQLite genome (read-only by default), runs the requested operation,
-and exits. No daemon, no long-lived state. Daemon mode is parked until walk-bench
+knowledge store. Every invocation is a fresh Python process: it opens the
+SQLite knowledge store (read-only by default; legacy file name `genome.db`),
+runs the requested operation, and exits. No daemon, no long-lived state.
+Daemon mode is parked until walk-bench
 numbers come in (no design doc yet); the long-lived HTTP surface is
 `cymatix-server`.
 
@@ -53,21 +54,22 @@ agent or operator is debugging a broken install.
 | Agent: "what does X mean in this codebase?" | `cymatix query` |
 | Agent about to edit a file: "is what I know fresh?" | `cymatix packet --task-type edit` |
 | Agent before a destructive op: "what should I reread first?" | `cymatix refresh-targets` |
-| Agent: "show me document gene-abc123" | `cymatix gene get` / `cymatix gene preview` |
+| Agent: "show me document gene-abc123" | `cymatix document get` / `cymatix document preview` |
 | Agent: "what else is semantically near my query?" | `cymatix neighbors` |
-| Operator: "is the genome healthy?" | `cymatix status`, `cymatix diag corpus` |
+| Operator: "is the knowledge store healthy?" | `cymatix status`, `cymatix diag corpus` |
 | Operator: "what config is actually loaded?" | `cymatix config show` |
-| Operator: "add a file to the genome" | `cymatix ingest` |
+| Operator: "add a file to the knowledge store" | `cymatix ingest` |
 | Operator (legacy): "run the FastAPI proxy" | `cymatix-server` (separate entry point) |
 
 ## Agent-driven walk surface (v1.x)
 
 The four commands below are the **agent-facing** retrieval surface —
 the same operations the MCP tools `cymatix_context`, `cymatix_context_packet`,
-`cymatix_refresh_targets`, `cymatix_gene_get`, and `cymatix_neighbors` expose,
+`cymatix_refresh_targets`, `cymatix_document_get` (legacy: `cymatix_gene_get`),
+and `cymatix_document_neighbors` (legacy: `cymatix_neighbors`) expose,
 but reachable from the CLI without an MCP host or a running HTTP server.
 An agent can drive a full retrieval-and-walk loop (query → packet → drill
-into specific genes → fetch neighbors → refresh-targets before acting)
+into specific documents → fetch neighbors → refresh-targets before acting)
 entirely through subprocess calls. All four default to JSON when `--json`
 is passed; the shape is identical to the matching MCP / HTTP surfaces so
 callers can swap freely.
@@ -87,12 +89,13 @@ Run the retrieval pipeline once and print the result.
   The full bench-spec vocabulary (`broad` / `focused` / `tight`) lands
   in v1.1 alongside the corresponding decoder modes; until then, passing
   any value other than `focused` is rejected by argparse with exit 2.
-- `--learn` — replicate the query back into the genome (default off,
-  so repeated CLI calls never silently mutate state).
+- `--learn` — persist the query back into the knowledge store (legacy:
+  replicate; default off, so repeated CLI calls never silently mutate
+  state).
 
 Exit codes: `0` success, `1` pipeline error.
 
-### `cymatix packet "<text>" [--task-type T] [--max-genes N] [--include-raw] [--json]`
+### `cymatix packet "<text>" [--task-type T] [--max-docs N] [--include-raw] [--json]`
 
 Build a freshness-labeled agent-safe evidence bundle. Use this instead
 of `cymatix query` when an agent is about to take a high-risk action (edit,
@@ -103,7 +106,7 @@ may be stale.
 - `--task-type` ∈ `{plan, explain, review, edit, debug, ops, quote}`.
   Default `explain`. Higher-risk types apply stricter freshness +
   coordinate-confidence gates.
-- `--max-genes N` — retrieval top-K (default 8).
+- `--max-docs N` (alias: `--max-genes`) — retrieval top-K (default 8).
 - `--include-raw` — emit full `gene.content` per item (48k cap) instead
   of the compressor-compressed summary. Use when the packet is the only
   context source and the downstream model needs real bytes.
@@ -114,36 +117,36 @@ may be stale.
 
 Exit codes: `0` success, `1` builder error.
 
-### `cymatix refresh-targets "<text>" [--task-type T] [--max-genes N] [--json]`
+### `cymatix refresh-targets "<text>" [--task-type T] [--max-docs N] [--json]`
 
 Return only the reread plan (no evidence items). Cheaper than a full
 packet when the caller already has content cached and just wants to know
 which sources are stale enough to require a reread before acting.
 
 - `--task-type` — defaults to `edit` (the usual caller).
-- `--max-genes N` — retrieval top-K (default 8).
+- `--max-docs N` (alias: `--max-genes`) — retrieval top-K (default 8).
 - `--json` — `{ refresh_targets: [...], count: int }`. Identical shape
   to the `POST /context/refresh-plan` endpoint.
 
 Exit codes: `0` success, `1` builder error.
 
-### `cymatix gene get <id> [--json]` / `cymatix gene preview <id> [--chars N] [--json]`
+### `cymatix document get <id> [--json]` / `cymatix document preview <id> [--chars N] [--json]`
 
-Inspect a single document by ID. `get` returns the full `Gene` model
-(content, tags, signals, fragments, lifecycle tier, embedding). `preview`
-returns a content-only char-capped snippet (default 240 chars) for cheap
-relevance checks.
+Inspect a single document by ID. `get` returns the full `Document` model
+(legacy: `Gene`; content, tags, signals, fragments, lifecycle tier,
+embedding). `preview` returns a content-only char-capped snippet
+(default 240 chars) for cheap relevance checks.
 
-- `get --json` — full `Gene.model_dump()`.
+- `get --json` — full `Document.model_dump()`.
 - `preview --chars N` — preview character budget.
 - `preview --json` — `{ gene_id, preview, truncated, total_chars, path }`.
 
 Exit codes: `0` success, `1` unknown gene_id or read failure.
 
-The subcommand name `gene` matches the legacy MCP tool (`cymatix_gene_get`).
-The canonical engineering alias is `cymatix_document_get` per
-[`docs/ROSETTA.md`](../ROSETTA.md); both names will continue to resolve
-to the same document model.
+`document` is the canonical subcommand name; `gene` is a fully
+supported legacy alias (`cymatix gene get` / `cymatix gene preview`
+still work, matching the legacy MCP tool `cymatix_gene_get`). Both
+resolve to the same document model — see [`docs/ROSETTA.md`](../ROSETTA.md).
 
 ### `cymatix neighbors "<text>" [--k N] [--json]`
 
@@ -167,7 +170,7 @@ Exit codes: `0` success, `1` codec / read error.
 
 ### `cymatix ingest <path> [--recursive] [--ext .EXT] [--json]`
 
-Add a file or directory to the genome. Top-level only by default; pass
+Add a file or directory to the knowledge store. Top-level only by default; pass
 `--recursive` to walk subdirectories. The default extension filter is:
 `.txt .md .rst .py .ts .js .json .toml .yml .yaml`. Repeat `--ext`
 to add more. Single-file inputs are also filtered by extension —
@@ -177,19 +180,33 @@ Exit codes: `0` success, `1` file error or write failure.
 
 ### `cymatix status [--json] [--no-network] [--config PATH]`
 
-Three checks: (1) genome reachable and gene_count >= 0, (2) config
+Three checks: (1) knowledge store reachable and gene_count >= 0, (2) config
 valid, (3) optional HTTP server / launcher probe (skipped if
 `--no-network`).
 
-Exit codes: `0` healthy, `3` genome or config check failed.
+Exit codes: `0` healthy, `3` knowledge store or config check failed.
 
 ### `cymatix diag corpus [--json]`
 
 Reports corpus shape: total_genes, total_codons, tier_distribution
 (open / euchromatin / heterochromatin), compression_ratio, and
-best-effort staleness from the genome health summary.
+best-effort staleness from the knowledge store's health summary.
 
 Exit codes: `0` success, `1` stats call failed.
+
+### `cymatix diag bed [--db PATH] [--identity] [--json]`
+
+Reads the append-only `bed_provenance` log inside any bed file on disk
+(default: the configured genome path) over a read-only connection —
+no retrieval stack, no config load beyond resolving the path. Reports
+file size, live gene / FTS counts, every recorded build / ingest /
+stamp event (cymatix version, git sha + dirty flag, `ingest_c`,
+gene count, notes) and the config drift between consecutive events.
+`--identity` also computes the live gene-id digest (full scan; slow on
+large beds). A bed that predates stamping reports `events: (none ...)`;
+retro-stamp it with `scripts/stamp_bed_provenance.py --db PATH`.
+
+Exit codes: `0` success, `1` bed missing or unreadable.
 
 ### `cymatix config show [--text] [--config PATH]`
 

@@ -2,6 +2,11 @@ name: Contributor sign-up
 # Gates pull requests on the one-time contributor sign-up described at
 # https://cymatixcontext.com/contributing (CLA Assistant Lite). Issues are open
 # to everyone; only PRs are gated. Maintainers are allowlisted below.
+#
+# Triggers carry no `branches:` filter on purpose: pull_request_target fires
+# for a PR against ANY base branch, so PRs targeting beta, release/** and
+# master (docs/RELEASING.md) are all gated by the same contributor-signup job,
+# and that job name is what branch protection on beta and master requires.
 on:
   issue_comment:
     types: [created]

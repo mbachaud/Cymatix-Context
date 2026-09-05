@@ -165,6 +165,18 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             )
         return gene.model_dump()
 
+    # Rosetta Tier 2 (docs/ROSETTA.md): software-lexicon alias of the
+    # route above. Registered via add_api_route (rather than stacking a
+    # second @app.get on gene_get_endpoint) so it gets its own operation
+    # id and doesn't collide with /genes/{gene_id}'s in the OpenAPI
+    # schema. Same handler, same behavior -- additive only.
+    app.add_api_route(
+        "/documents/{gene_id}",
+        gene_get_endpoint,
+        methods=["GET"],
+        name="document_get_endpoint",
+    )
+
     # -- Debug: lightweight SEMA neighbors ---
 
     @app.get("/debug/neighbors")

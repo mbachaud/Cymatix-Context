@@ -51,14 +51,21 @@ CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 # DO NOT add `helix-context/docs/benchmarks/BENCHMARKS.md` (the bench
 # answer-key) to any needle's gold_source -- it would inflate the metric
 # circularly.
+#
+# Frozen-bed labels (2026-08-08): the bench beds predate the 0.8.5
+# helix->cymatix rename, so `helix-context/helix.toml` is the honest
+# gold label for the toml needles (whitelisted residual -- do not
+# codemod away). `helix-context/cymatix.toml` stays as an additional
+# ANY-match entry for future post-rename beds.
 NEEDLES = [
     {
         "name": "cymatix_port",
         "query": "What port does the Cymatix proxy server listen on?",
         "expected": "11437",
         "accept": ["11437"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/README.md",
             "helix-context/CLAUDE.md",
@@ -161,6 +168,7 @@ NEEDLES = [
         "accept": ["3000", "3k", "3,000"],
         "source": "helix-context design spec",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/README.md",
             "helix-context/docs/config-reference.md",
@@ -541,8 +549,9 @@ NEEDLES = [
         "query": "What is the expression_tokens budget set in cymatix.toml?",
         "expected": "7000",
         "accept": ["7000", "7K", "7,000", "~7K"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/overnight_logs/broad_tighten_2026-05-12_1422_report.md",
         ],
@@ -552,8 +561,9 @@ NEEDLES = [
         "query": "What is the max_genes_per_turn cap in cymatix.toml?",
         "expected": "12",
         "accept": ["12"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
         ],
@@ -563,8 +573,9 @@ NEEDLES = [
         "query": "What is the RRF k constant used by Cymatix Reciprocal Rank Fusion?",
         "expected": "60",
         "accept": ["60", "k=60", "k = 60"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
             "helix-context/docs/specs/2026-05-08-stage-3-rrf-fusion.md",
@@ -575,8 +586,9 @@ NEEDLES = [
         "query": "What is the cold_start_threshold gene count in the Cymatix knowledge store?",
         "expected": "10",
         "accept": ["10", "10 genes"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
             "helix-context/CLAUDE.md",
@@ -587,8 +599,9 @@ NEEDLES = [
         "query": "What is the synthetic_session_window_s in seconds for grouping same-IP requests?",
         "expected": "300",
         "accept": ["300", "5 min", "5 minutes", "five minutes"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
             "helix-context/CLAUDE.md",
@@ -599,8 +612,9 @@ NEEDLES = [
         "query": "What is the default port for the Headroom proxy that Cymatix can route through?",
         "expected": "8787",
         "accept": ["8787", "port 8787"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
         ],
@@ -610,8 +624,9 @@ NEEDLES = [
         "query": "After how many days does Cymatix flag the know-confidence calibration as stale?",
         "expected": "30",
         "accept": ["30", "30 days"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/docs/specs/2026-05-08-stage-6-know-miss-blocks.md",
         ],
@@ -625,6 +640,7 @@ NEEDLES = [
         "gold_source": [
             "helix-context/CLAUDE.md",
             "helix-context/README.md",
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
         ],
     },
@@ -633,8 +649,9 @@ NEEDLES = [
         "query": "What is the filename_anchor_weight per-match boost in cymatix.toml?",
         "expected": "4.0",
         "accept": ["4.0", "4"],
-        "source": "helix-context/cymatix.toml",
+        "source": "helix-context/helix.toml",
         "gold_source": [
+            "helix-context/helix.toml",
             "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
         ],

@@ -42,9 +42,22 @@ the markers (this intro, each section's **Purpose**, **Example**,
 `tests/test_config_reference_sync.py` fails if a generated region ever
 drifts from a fresh run of the script (issue #219 slice 4).
 
+Two section headings are also generator-managed
+(`<name>.heading` marker regions): `[ribosome]` and `[genome]` carry a
+ROSETTA Tier 2 (`docs/ROSETTA.md`) canonical software-term alias —
+`[compressor]` and `[knowledge_store]` respectively — sourced from
+`cymatix_context.config._SECTION_ALIASES` and rendered canonical-name
+primary, legacy name in parentheses:
+`## [compressor] (legacy alias: [ribosome])`. Both TOML spellings work
+in `cymatix.toml`; on a collision the legacy `[ribosome]` /
+`[genome]` table wins and the loader logs a `WARNING` naming both. Every
+other section heading below has no alias and stays fully hand-authored.
+
 ---
 
-## `[ribosome]`
+<!-- BEGIN GENERATED: config-tables:ribosome.heading -->
+## `[compressor]` (legacy alias: `[ribosome]`)
+<!-- END GENERATED -->
 
 **Purpose.** The compressor is the optional enrichment layer that runs an
 LLM (Ollama / DeBERTa / LiteLLM / Claude) for ingest-time document packing,
@@ -180,7 +193,15 @@ character cap inside the foveated splice schedule. Stage-4
 calibration adds a per-classifier override path for `foveated_alpha`
 (see `[abstain]`).
 
-**Keys.**
+**Keys.** `retrieval_tokens` and `max_docs_per_turn` are ROSETTA Tier 2
+(`docs/ROSETTA.md`) canonical-name aliases for the legacy
+`expression_tokens` / `max_genes_per_turn` keys below — see
+`cymatix_context.config._KEY_ALIASES`. Either spelling works in
+`[budget]`; on a collision the legacy key wins and the loader logs a
+`WARNING` naming both. The alias spellings are not separate
+`BudgetConfig` dataclass fields, so the generated table (field-derived,
+see the intro above) lists only the legacy names actually stored on
+the dataclass.
 
 <!-- BEGIN GENERATED: config-tables:budget -->
 | Key | Type | Default | Description |
@@ -310,7 +331,9 @@ synthetic_session_enabled = true
 
 ---
 
-## `[genome]`
+<!-- BEGIN GENERATED: config-tables:genome.heading -->
+## `[knowledge_store]` (legacy alias: `[genome]`)
+<!-- END GENERATED -->
 
 **Purpose.** SQLite knowledge store path, compaction cadence, persistence
 shape. The 2026-04-16 fresh-rebuild swapped to `genomes/main/` as the
@@ -334,8 +357,10 @@ shard router.
 `path`'s generated default (`genome.db`, the bare code-default) differs
 from the **shipped** `cymatix.toml` value (`genomes/main/genome.db`,
 CLAUDE.md's documented default) — see the Migration notes below.
-Override via the `CYMATIX_GENOME_PATH` env var, honored even when the
-`[genome]` section is absent from `cymatix.toml`.
+Override via the `CYMATIX_STORE_PATH` env var (canonical alias for legacy
+`CYMATIX_GENOME_PATH`), honored even when the `[genome]` section is absent
+from `cymatix.toml`. If both are set, `CYMATIX_GENOME_PATH` wins with a
+warning.
 
 **Example.**
 
@@ -351,9 +376,10 @@ replica_sync_interval = 100
 **Migration notes.** No time-based decay. Documents never expire.
 2026-04-16 rebuild migrated from `F:/Projects/cymatix-context/genome.db`
 (old master) and `C:/cymatix-cache/genome.db` (old replica with
-backfill) to the new `genomes/` folder. `CYMATIX_GENOME_PATH` env var
-overrides this path so sharded vs monolithic servers can coexist on
-different ports without duplicating `cymatix.toml`.
+backfill) to the new `genomes/` folder. `CYMATIX_STORE_PATH` (canonical alias
+for legacy `CYMATIX_GENOME_PATH`) overrides this path so sharded vs monolithic
+servers can coexist on different ports without duplicating `cymatix.toml`. If
+both are set, `CYMATIX_GENOME_PATH` wins with a warning.
 
 **Cross-refs.** `cymatix_context/config.py:165-171` (`GenomeConfig`),
 `docs/archive/FUTURE/GENOME_SHARDING.md` (phase-2 sharding plan).
@@ -384,9 +410,9 @@ OpenAI-compatible upstream) at `127.0.0.1:11437` by default.
 
 `bench_enabled` / `bench_port` / `bench_genome_path` are the v0.7.0
 dev/configuration mode: a second cymatix instance on a side port bound to
-a bench genome, so a primary chat session stays attached to the main
-genome while a subagent drives the bench harness against the bench
-port. Default off; flip via `cymatix.toml`, `--bench`, or
+a bench knowledge store, so a primary chat session stays attached to the
+main knowledge store while a subagent drives the bench harness against
+the bench port. Default off; flip via `cymatix.toml`, `--bench`, or
 `CYMATIX_BENCH_ENABLED=1`.
 
 **Security (opt-in, 2026-08-08 audit).** The default loopback bind is
@@ -552,7 +578,7 @@ is governed by per-feature flags in this section.
 | `splade_enabled` | `bool` | `false` | Phase 2: SPLADE sparse expansion at index time |
 | `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `entity_graph` | `bool` | `true` | Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
-| `entity_autolink_hub_cutoff` | `int` | `0` | Posting-count hub cutoff for ingest-time entity auto-linking (the relation=5 COVER edges). > 0 drops entities with more than this many entity_graph postings from the probe set before the per-insert GROUP BY — bounds the O(hub-posting-list) sweep that made ingest O(N^2) on the enronqa_padded bed (89.5% of writer wall time, 148.9 ms/insert vs 7.4 ms without the two MIME hubs; benchmarks/dogfood/receipts/ ingest_decay_enronqa_2026-08-30.json). PKI_NOISE_CUTOFF=200 is the precedent value for the default-flip proposal tracked in #411. 0 = disabled = legacy behavior, byte-identical. |
+| `entity_autolink_hub_cutoff` | `int` | `200` | Posting-count hub cutoff for ingest-time entity auto-linking (the relation=5 COVER edges). > 0 drops entities with more than this many entity_graph postings from the probe set before the per-insert GROUP BY — bounds the O(hub-posting-list) sweep that made ingest O(N^2) on the enronqa_padded bed (89.5% of writer wall time, 148.9 ms/insert vs 7.4 ms without the two MIME hubs; benchmarks/dogfood/receipts/ ingest_decay_enronqa_2026-08-30.json). Default 200 since 2026-08-31 (#411 flip, PKI_NOISE_CUTOFF precedent) — both flip conditions receipted: retrieval null on the v2/v2c cutoff twins (gene-id sets identical, 0/500 delivered flips both arms) and the post-tagger-v2 re-probe (entity_hub_cutoff_reprobe_85k_taggerv2_2026-08-31.json: natural hubs persist — enron 16,048 postings — 0.22% of entities hold 30.1% of postings at 200; link call 4.15 -> 0.42 ms at 85k). 0 = disabled = legacy unbounded probe set. |
 | `dense_embed_on_ingest` | `bool` | `false` | Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest. This is purely the WRITE path — retrieval gates on [retrieval] dense_embedding_enabled (default false since 2026-08-15). 2026-08-19 default flip -> False (#371): at shipped retrieval defaults nothing reads embedding_dense_v2 (the sharded read path hard-wires dense off, sharding.py), so the inline ~2 GB BGE-M3 load was a dead write — structurally retrieval-neutral to drop. PR #379's harness smoke (run_ingest_throughput.py, 12 files, CPU encode): defaults 126.8 s wall / 4084 ms steady per-file / 3.47 GB peak RSS vs no_dense_ingest 20.9 s / 494 ms / 0.82 GB. Opt back in with [ingestion] dense_embed_on_ingest = true; re-enabling dense RETRIEVAL on a bed ingested while this was off additionally needs scripts/backfill_bgem3_v2.py to fill the missing vectors. |
 | `sema_embed_on_ingest` | `bool` | `false` | Issue #227 knob: compute the 20D ΣĒMA embedding at ingest (writes gene.embedding; False = the MiniLM model is never materialized and the Tier-4 sema_boost block is gated off — TCM falls back to its tag-hash/ text path by design, #227). 2026-08-19 default flip -> False (#371): the consumer audit (PR #399) found the ONLY live retrieval-path consumer of gene.embedding at shipped defaults is the Tier-4 sema_boost re-rank (cymatics reads tags, cold tier is opt-in, freshness gate / packet know/PLR read no embeddings), and the deciding read-gate cell on the 829k bed at n=469, delivered basis (PR #400, benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json) measured the flip as a wash: delivered 264/469 -> 265/469 (+1 needle), r@12 / fr@12 / median+mean rank byte-identical, 0 recall flips, 0 final-rank moves, abstain set byte-identical (16/469, all pre-existing). Riders: ~9.7 s cold start removed (the SEMA/MiniLM load was 97.7% of first-request latency, cold_start_postflip.json), ingest wall 835.9 s -> 761.5 s on the 1,181-file dogfood corpus, -0.48% bed bytes. Opt back in with [ingestion] sema_embed_on_ingest = true — new ingests then embed; docs ingested while the knob was off have NULL gene.embedding until scripts/backfill_sema.py (or re-ingest/ consolidate). |
 | `symbol_graph` | `bool` | `false` | WS2 (symbol graph): at ingest, index symbol definitions and emit referencing-chunk -> defining-chunk SYMBOL_REF edges (code only). Resolution is intra-file (high precision). Off = WS1-only chunking, at zero extraction cost (the flag gates the symbol parse itself, not just emission — WS2 review FIX-3). Default False — INTENTIONAL DARK-SHIP (2026-07-20). The ContextBench held-out re-run cleared the merge gate (packet +2.8pp line / +3.8pp sym; docs/benchmarks/2026-07-20-armc-contextbench-heldout.md), so this deviates deliberately from decision rule 2's "merge default-on": SIKE 2026-07-19 showed a prose-bed regression with the current code-query gating, so default-on waits on the symbol_expansion_cap sweep {4,16} + code-gating validation. Flipping the default is #231's follow-up, not this PR's. |
@@ -591,7 +617,7 @@ rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false
 # colbert_enabled REMOVED (#219 slice 5): parsed but zero readers ever shipped
 entity_graph = true
-entity_autolink_hub_cutoff = 0
+entity_autolink_hub_cutoff = 200
 sema_embed_on_ingest = false
 dense_embed_on_ingest = false
 splade_model = "naver/splade-cocondenser-ensembledistil"
@@ -609,10 +635,10 @@ dense_passage_char_cap = 2000
 
 **Purpose.** Retrieval-time behavior for `context_manager`. The
 cold-tier knobs were added 2026-04-10 (C.2 of the B->C migration).
-Cold-tier is the opt-in retrieval path that consults heterochromatin
-documents via SEMA cosine similarity, returning their preserved content
-(only possible after C.1 made `compress_to_heterochromatin`
-non-destructive).
+Cold-tier is the opt-in retrieval path that consults cold-tier
+(legacy: heterochromatin) documents via SEMA cosine similarity,
+returning their preserved content (only possible after C.1 made
+`compress_to_heterochromatin` non-destructive).
 
 **Keys.**
 
@@ -776,7 +802,7 @@ which stay additive) lives in
 | `cover_walk_append_slots` | `int` | `3` |  |
 | `cover_walk_append_min_mass` | `float` | `0.0` |  |
 | `cover_walk_band_weight` | `float` | `1.0` |  |
-| `rerank_combinator` | `str` | `"additive"` | additive \| fused_tier \| eps_band \| off |
+| `rerank_combinator` | `str` | `"additive"` | one of VALID_COMBINATORS: additive \| fused_tier \| eps_band \| eps_band_coverage \| off |
 | `rerank_band_delta` | `float` | `0.05` | eps_band relative tie-band width δ (ratio of the leader's fused score). |
 | `rerank_tier_weight` | `float` | `1.0` | fused_tier uniform per-class rank post-multiplier (single weight — a per-class weight would re-introduce hand-picked exchange rates). |
 | `rerank_combinator_by_class` | `Dict[str, str]` | `{arithmetic = "eps_band", factual = "eps_band", procedural = "eps_band", multi_hop = "eps_band", default = "eps_band"}` | Issue #255 (classifier-gated combinator, 2026-07-12): per-query-class rerank combinator override map {classifier_class: combinator_name}. The stage-0 rule-based query classifier assigns each query a class (arithmetic / factual / procedural / multi_hop / default); a populated entry makes THAT class use its mapped combinator instead of the global rerank_combinator above. An empty map => every query uses the global combinator (byte-identical fallback). The design is per-class (not a global flip) because the winning combinator is CORPUS-DEPENDENT: the desk test found rerank additives are load-bearing on literal beds while eps_band/off win the semantic 10k ERB bed (docs/research/2026-07-10- rerank-combinator-desktest.md + the 2026-07-11 semantic-arm re-run). GRADUATED 2026-07-16 on the knob-graduation receipt (PR #293, docs/research/2026-07-16-knob-graduation-receipts.md / issues/255#issuecomment-5005983077): {multi_hop: eps_band, default: eps_band} vs the empty-map control replicated flat delivery (gold_delivered byte-identical) with the median gold rank halved on both semantic beds (10k 10→5, 50k 12→6); lift was confined to the mapped classes and unmapped rows (xl literal, 37/50 needles) came back byte-identical, so this is now the shipped default. Keys are validated against the classifier class set and values against VALID_COMBINATORS at load (RetrievalConfig.__post_init__); an unknown key or value is a hard config error (fail loud at load, not silently at query time). Classifier disabled => map ignored, global combinator used. Pass an explicit empty dict ({}) in TOML to restore the pre-graduation byte-identical global-combinator behavior. RE-GRADUATED 2026-08-28 to ALL FIVE classes (wave-1 ranking-under- width, docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md): extending eps_band to arithmetic/factual/procedural was +3/−1 r@12 / +7/−2 delivered on the 829k v09x bed and stacks with rrf_k=20 (combo receipts ladder_v09x_w1c_*_2026-08-28.json). The band also PROTECTS paraphrastic gold: unbanded additives (w1_map_empty arm) dropped semantic r@12 0.32 → 0.16. Classifier_off still bypasses the map entirely (#255 coupling — attributed 235/235 by that same arm). |
@@ -818,9 +844,12 @@ the issue #255 post-fusion rerank combinator (PR-2, 2026-07-10): under
 / party_attr / access_rate) combine with the fused RRF score via this
 operator. Default `"additive"` is byte-identical to the shipped
 fused+rerank_additive block so this knob ships inert; the alternatives
-(`"fused_tier"`, `"eps_band"`, `"off"`) are bench-gated on the
-50-needle beds — see
-`docs/research/2026-07-09-scoring-combinator-exploration.md`.
+(`"fused_tier"`, `"eps_band"`, `"eps_band_coverage"`, `"off"`) are
+bench-gated on the 50-needle beds — see
+`docs/research/2026-07-09-scoring-combinator-exploration.md`. The valid
+set is `retrieval/rerank_combinators.py::VALID_COMBINATORS` (single
+source of truth; `rerank_combinator_by_class` values are validated at config
+load, the global `rerank_combinator` in `KnowledgeStore.__init__`).
 `semantic_dense_additive_weight` / `semantic_broaden_routing` are the
 2026-06-02 semantic-wiring arm (env-gated, `CYMATIX_SEMANTIC_ARM=1`) —
 see `docs/prds/2026-06-02-semantic-wiring-arm.md`.
@@ -1088,7 +1117,7 @@ manually append the Stage-7 default coefficient (`+1.5`) to the array.
 The shipped `cymatix.toml` has carried a real 6-element calibration fit
 since the 2026-07-06 rrf-default sweep.
 
-**Cross-refs.** `cymatix_context/know_calibration.py` (pure-function
+**Cross-refs.** `cymatix_context/scoring/know_calibration.py` (pure-function
 loader; soft-fails to defaults), `cymatix_context/context_packet.py`
 (`KnowBlock` / `MissBlock` emit path),
 `docs/specs/2026-05-08-stage-6-know-miss-blocks.md` §3, §11,
@@ -1389,8 +1418,10 @@ priority order (highest priority wins):
    - `CYMATIX_CONFIG` — path to the TOML file (defaults to
      `cymatix.toml`). Read in
      `cymatix_context/config.py:520-521`.
-   - `CYMATIX_GENOME_PATH` — overrides `[genome] path` after the TOML
-     load. Read in `cymatix_context/config.py:611-612`.
+   - `CYMATIX_STORE_PATH` — canonical alias; overrides `[genome] path` after
+     the TOML load. Legacy `CYMATIX_GENOME_PATH` also works; if both are set,
+     `CYMATIX_GENOME_PATH` wins with a warning. Read in
+     `cymatix_context/config.py:611-612`.
    - `CYMATIX_SERVER_UPSTREAM` — overrides `[server] upstream`. Read in
      `cymatix_context/config.py:616-617`.
    - `CYMATIX_SERVER_UPSTREAM_TIMEOUT` — overrides `[server]
@@ -1461,7 +1492,7 @@ invalidation surface:
   Stage-4 spec §8).
 
 **`[know]` hot-reload.** The `[know]` block is **hot-reloaded** via
-the pure-function loader in `cymatix_context/know_calibration.py`. The
+the pure-function loader in `cymatix_context/scoring/know_calibration.py`. The
 calibration table is read on first `/context` after process start and
 cached thereafter; subsequent edits to `[know]` require a
 `/admin/refresh` (or process restart) to invalidate the cache. The
@@ -1655,7 +1686,7 @@ splade_enabled = true                   # Phase 2: SPLADE sparse expansion at in
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false                  # Phase 3: enable pretrained cross-encoder reranking
 entity_graph = true                     # Phase 5: entity-based co-activation links
-entity_autolink_hub_cutoff = 0          # posting-count hub cutoff for auto-linking; 0 = off = legacy
+entity_autolink_hub_cutoff = 200        # posting-count hub cutoff for auto-linking (#411 flip); 0 = off = legacy
 dense_passage_char_cap = 2000           # #207 dense fast-follow (2026-07-10): BGE-M3 passage char cap; must match [retrieval] dense_model's codec on all 3 encode paths
 
 [context]

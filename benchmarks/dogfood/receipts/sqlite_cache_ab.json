@@ -1,0 +1,52 @@
+{
+  "arms": {
+    "cache_8gb": {
+      "avg_write_op_kb": 2.61,
+      "errors": 0,
+      "files": 400,
+      "genes_added": 1042,
+      "genes_per_s": 4.95,
+      "pragmas": {
+        "cache_size": -8388608,
+        "mmap_size": 2147418112,
+        "page_size": 4096,
+        "synchronous": 1
+      },
+      "read_bytes": 2179830207,
+      "read_mb_per_gene": 1.995,
+      "read_ops": 524561,
+      "wall_s": 210.57,
+      "write_bytes": 2245347655,
+      "write_mb_per_gene": 2.055,
+      "write_ops": 840395
+    },
+    "profile_default": {
+      "avg_write_op_kb": 2.61,
+      "errors": 0,
+      "files": 400,
+      "genes_added": 1042,
+      "genes_per_s": 4.67,
+      "pragmas": {
+        "cache_size": -65536,
+        "mmap_size": 2147418112,
+        "page_size": 4096,
+        "synchronous": 1
+      },
+      "read_bytes": 3539521983,
+      "read_mb_per_gene": 3.239,
+      "read_ops": 856518,
+      "wall_s": 223.09,
+      "write_bytes": 2246683967,
+      "write_mb_per_gene": 2.056,
+      "write_ops": 840763
+    }
+  },
+  "bed": "F:\\tmp\\enterprise_rag_500k.db",
+  "bed_bytes": 6886907904,
+  "bed_genes_at_start": null,
+  "speedup": 1.06,
+  "stamp": "2026-08-25T05:02:13Z",
+  "tool": "sqlite_cache_ab",
+  "workload_files": 400,
+  "write_amplification_ratio": 1.0
+}

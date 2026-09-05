@@ -451,6 +451,15 @@ _CONSERVATIVE_READER_CACHE = -4096   # 4 MB reader page cache
 _MEM_PROFILES: Dict[str, tuple] = {
     "auto":       (0.25, 0.80, 2.0,  64),
     "aggressive": (0.15, 0.80, 4.0, 128),
+    # Single-writer bulk ingest (fixture builds, backfills). The binding
+    # resource at multi-GB bed depth is the page cache serving upsert-path
+    # indexed LOOKUPS, not writes: 64 MiB vs 4 GiB cache measured 6.47 vs
+    # 16.16 genes/s on a 22.7 GiB bed with identical write volume, so the
+    # whole 2.5x is the read side (2026-08-26 receipts
+    # ingest_commit_batch_ab.json / _cache64.json). Cache gets the budget;
+    # mmap stays modest. NOT for the server: a 4 GiB per-connection cache
+    # across many readers would not fit.
+    "bulk_load":  (0.25, 0.50, 2.0, 4096),
 }
 _CACHE_MIN_MIB = 2  # never drop a page cache below the v0.6.1 writer floor
 
@@ -510,6 +519,9 @@ def sqlite_memory_budget(n_shards: int, *,
     Profile via ``CYMATIX_MEM_PROFILE`` (default ``auto``):
       auto         dynamic budget = (available - 25% reserve) / n_shards
       aggressive   same split, leaner 15% reserve + higher caps
+      bulk_load    single-writer ingest: cache-heavy (up to 4 GiB) so
+                   upsert-path lookups stay in RAM at multi-GB bed depth
+                   (2.5x measured, 2026-08-26); not for the server
       conservative byte-identical to v0.6.1 (mmap off, 2/4 MB caches)
       <N>gb        pin the TOTAL SQLite budget to N GiB, host-independent
 

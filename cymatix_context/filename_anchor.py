@@ -97,6 +97,13 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
         "CREATE INDEX IF NOT EXISTS idx_filename_stem "
         "ON filename_index(filename_stem)"
     )
+    # Serves the per-upsert DELETE in storage.indexes.sync_filename_index —
+    # without it that delete is a full-table SCAN, measured at 6.6% of
+    # writer wall time on a 279k-row bed (2026-08-30 enronqa_padded py-spy).
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_filename_gene "
+        "ON filename_index(gene_id)"
+    )
 
 
 def index_gene(conn: sqlite3.Connection, gene_id: str, source_id: Optional[str]) -> None:
@@ -117,16 +124,6 @@ def index_gene(conn: sqlite3.Connection, gene_id: str, source_id: Optional[str])
         )
     except Exception:
         log.warning("filename_anchor index failed for gene=%s", gene_id, exc_info=True)
-
-
-def remove_gene(conn: sqlite3.Connection, gene_id: str) -> None:
-    """Remove a document from filename_index. Called when a document is deleted."""
-    try:
-        conn.execute(
-            "DELETE FROM filename_index WHERE gene_id = ?", (gene_id,)
-        )
-    except Exception:
-        log.warning("filename_anchor remove failed for gene=%s", gene_id, exc_info=True)
 
 
 def is_enabled() -> bool:

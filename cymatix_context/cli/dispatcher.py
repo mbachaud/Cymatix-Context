@@ -62,8 +62,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Reread plan only — refresh_targets without evidence items.",
     )
     sub.add_parser(
+        "document",
+        help="Inspect a single document (`cymatix document get|preview <id>`).",
+    )
+    sub.add_parser(
         "gene",
-        help="Inspect a single document (`cymatix gene get|preview <id>`).",
+        help="Legacy alias of `document` (still fully supported).",
     )
     sub.add_parser(
         "neighbors",
@@ -104,7 +108,7 @@ def _resolve(name: str) -> Optional[Callable[[list[str]], int]]:
     if name == "refresh-targets":
         from . import cmd_refresh_targets
         return cmd_refresh_targets.run
-    if name == "gene":
+    if name in ("document", "gene"):
         from . import cmd_gene
         return cmd_gene.run
     if name == "neighbors":
