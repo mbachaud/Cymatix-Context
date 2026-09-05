@@ -77,9 +77,9 @@ different points:
    taken against different bases. The 0.9.1 gate receipt is
    `benchmarks/dogfood/receipts/sweep_v091_gate_2026-08-30.json` (three-arm
    sweep, ALL PASS, ledger row `2026-08-30-v091-gate-sweep`). The 0.9.2
-   witness lands at
-   `benchmarks/dogfood/receipts/sweep_v092_witness_947k_2026-09-01.json`
-   and gets its own BASELINES row when it does. The witness receipt is
+   witness is recorded at
+   `benchmarks/dogfood/receipts/sweep_v092_witness_947k_2026-09-04.json`
+   (BASELINES row `2026-09-04-v092-merged-stack-witness`). The witness receipt is
    committed to `beta` before the release branch is cut, so the release cut
    carries it.
 

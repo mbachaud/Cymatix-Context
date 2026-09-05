@@ -39,8 +39,11 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   COVER edges form (v3 replay sample: 4,548 → 2,984 edges, 2,746 lost / 1,182
   gained) — query-inert at shipped defaults (W2.1 cover-walk kill receipt,
   #408), and the padded 597k bed built at cutoff 200 is the same bed the 0.9.1
-  gate sweep certified. Scope: `IngestionConfig`, shipped `cymatix.toml`, and
-  `docs/config-reference.md` move to `200`; the bare `KnowledgeStore` kwarg
+  gate sweep certified. [BASELINES](docs/benchmarks/BASELINES.md) rows:
+  `2026-08-30-entity-hub-cutoff-retrieval-ab` and
+  `2026-08-31-entity-hub-cutoff-reprobe-85k`. Scope: `IngestionConfig`, shipped
+  `cymatix.toml`, and `docs/config-reference.md` move to `200`; the bare
+  `KnowledgeStore` kwarg
   default stays `0` (non-config constructors keep byte-identical legacy
   linking — the `rrf_k` flip pattern); the bench builder is unchanged and reads
   the cutoff only from `CYMATIX_BFM_HUB_CUTOFF`. **Opt back in to legacy
