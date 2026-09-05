@@ -16,7 +16,7 @@ exclude = [
 
 [project]
 name = "cymatix-context"
-version = "0.9.1"
+version = "0.9.2"
 description = "Coordinate index layer for LLM context — Cymatix weighs, doesn't retrieve"
 readme = "README.md"
 requires-python = ">=3.11"

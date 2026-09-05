@@ -69,7 +69,7 @@ different points:
    its default flip are separate PRs: the knob lands default-inert with a test
    pinning byte-identical legacy behaviour, and the flip PR carries the
    receipt path in its CHANGELOG entry (see the
-   `entity_autolink_hub_cutoff` flip in the 0.9.2 Unreleased section for the
+   `entity_autolink_hub_cutoff` flip in the 0.9.2 CHANGELOG section for the
    shape). No receipt, no flip.
 2. **A release needs a merged-stack witness ladder on the 947k bed.** After
    the last PR lands on `beta` and before `release/vX.Y.Z` is cut, the

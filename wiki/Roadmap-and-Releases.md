@@ -14,16 +14,16 @@
 - **Install from PyPI:** `pip install cymatix-context`. Released versions are
   git-tagged (`v0.9.1`, `v0.9.0`, …) on the repository; pre-releases
   (`vX.Y.ZbN`, cut from `beta`) install with `pip install --pre cymatix-context`.
-- This wiki documents **0.9.1**, released 2026-08-30. Each item below carries
-  its PR or issue number. The first section lists what has landed on `beta`,
-  the integration branch, since the tag and is headed for **0.9.2**.
+- This wiki documents **0.9.2 branch code**. Each item below carries
+  its PR or issue number. The first section highlights changes since the
+  published v0.9.1 release (2026-08-30).
 
-## Unreleased / 0.9.2 — what follows the 0.9.1 tag
+## 0.9.2 — branch contents
 
-Nine threads follow the 0.9.1 tag. One moves a default —
-`[ingestion] entity_autolink_hub_cutoff` 0 → 200 — and the rest are additive,
-default-inert, a logging fix, or bench-only. Every number here is copied from
-the receipt named in the matching `CHANGELOG.md` Unreleased entry.
+The highlights below follow the 0.9.1 tag. One configuration default changes —
+`[ingestion] entity_autolink_hub_cutoff` 0 → 200 — alongside additive features,
+fixes, and bench work. Every number here is copied from the receipt named in
+the matching `CHANGELOG.md` 0.9.2 entry.
 
 | Thread | What it is | Default impact |
 |---|---|---|
