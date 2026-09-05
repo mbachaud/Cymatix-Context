@@ -18,7 +18,7 @@
   [Lexicon](Lexicon). The aliases come from the Tier-2 lexicon pass
   ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)), which follows the 0.9.1 tag — on a 0.9.1 wheel only the legacy
   spellings resolve.
-- This page documents **v0.9.1** (released 2026-08-30). The wave-1 ranking
+- This page documents **v0.9.2 branch code**. The wave-1 ranking
   defaults ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)),
   the delivered-seat floor and its graduation to 12
   ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)), the entity
@@ -26,7 +26,7 @@
   ([#412](https://github.com/mbachaud/Cymatix-Context/pull/412)), and the
   tagger v2 behavior change
   ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) all shipped
-  in it and are cited where they appear.
+  in v0.9.1 (released 2026-08-30) and are cited where they appear.
 
 ## Where a value comes from
 

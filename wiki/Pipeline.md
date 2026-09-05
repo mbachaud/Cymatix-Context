@@ -9,11 +9,11 @@
   whatever agent called `/context` in the first place.
 - Every turn ends at the same fork: `know { found, confidence, gene_id_match }`
   or `miss { reason, escalate_to }`. See [Agent Contract](Agent-Contract).
-- This page documents **v0.9.1**. The wave-1 ranking flip
+- This page documents **v0.9.2 branch code**. The wave-1 ranking flip
   ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)) and the
   `min_delivered_docs` seat floor
   ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) shipped in
-  that release (2026-08-30) and are marked where they appear.
+  v0.9.1 (2026-08-30) and are marked where they appear.
 
 ![The seven-stage pipeline](assets/pipeline-flow.svg)
 

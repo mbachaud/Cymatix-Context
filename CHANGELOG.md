@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.9.2 (2026-09-05)
+
 **Ingest at scale and the #411 default flip (PRs #424, #425), a
 default-inert W2.2 combinator with its kill receipt (#428), a never-swallow
 fix on the harmonic tier (#432), and the 0.9.2 bench ledger (#426, #427,
