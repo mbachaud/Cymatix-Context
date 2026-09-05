@@ -75,6 +75,64 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   `docs/benchmarks/2026-08-30-enronqa-ingest-decay.md`. Tests:
   `tests/test_entity_autolink_schedule.py`.
 
+- **perf(ingest): `bed_provenance` table + `cymatix diag bed`, the
+  `bulk_load` SQLite memory profile, and the bench-builder commit batcher —
+  port of the never-committed 2026-08-24..27 perf/ingest lane (#438;
+  worktree `claude/v0-9-0-planning-dc7564`, base `5f5c677`).** Every
+  writable open
+  now creates the append-only `bed_provenance` table (`CREATE TABLE IF NOT
+  EXISTS`; content-neutral — no document, tag, or edge changes) so a bed
+  carries its own history: `scripts/stamp_bed_provenance.py` and
+  `scripts/build_erb_blob_v09x.py` append build / ingest / stamp rows
+  (cymatix version, git sha + dirty flag, `ingest_c`, the ingest-affecting
+  config subset, gene/FTS counts, optional gene-id digest), and
+  `cymatix diag bed [--db PATH] [--identity] [--json]` reads them back over a
+  `mode=ro` connection with config drift between rows — the bed-identity /
+  `ingest_c` house rule in `docs/benchmarks/BASELINES.md` now has code behind
+  it. The snapshotted knob set includes `[ingestion]
+  entity_autolink_hub_cutoff` (#411/#425, added to `beta` after this lane's
+  base), since it decides which `gene_relations` relation=5 COVER edges a bed
+  carries. `CYMATIX_MEM_PROFILE=bulk_load` (single-writer ingest only; NOT for the
+  server) gives the writer a page cache up to 4 GiB: 64 MiB vs 4 GiB measured
+  **6.47 vs 16.16 genes/s** on the 22.7 GiB ERB bed with identical write
+  volume, i.e. the whole 2.5× is upsert-path lookups
+  (`benchmarks/dogfood/receipts/ingest_commit_batch_ab.json`,
+  `…_cache64.json`). This closes two latent breaks in beta's already-shipped
+  `scripts/build_erb_blob_v09x.py`, which imports
+  `cymatix_context.storage.provenance` unconditionally (ImportError after the
+  multi-hour build) and defaults `--mem-profile bulk_load` (silently fell
+  back to the 64 MiB `auto` cache via `_MEM_PROFILES.get(profile, auto)`).
+  Bench builder `scripts/build_fixture_matrix.py` (env knobs, no
+  `cymatix.toml` surface): `CYMATIX_BFM_COMMIT_BATCH` (default `0` = inert
+  commit-per-gene; `K` = one durable commit per K genes with
+  `CYMATIX_BFM_WAL_VALVE_MB` / `CYMATIX_BFM_RAM_FLOOR_MB` early-flush valves;
+  1.234 → 0.929 write MB/gene at 5000, content-equivalent across arms),
+  `CYMATIX_BFM_MAX_FILES` (deterministic prefix cap for scale curves),
+  **blob-mode `--rebuild` now honoured under `--parallel`** — a killed
+  parallel blob build resumes into the existing `.db` (`_filter_to_unseen`
+  drops only files with durable `bfm_completed_files` markers)
+  instead of losing every gene; before, blob mode always rebuilt and silently
+  ignored the flag. Completion markers commit with the file's final successful
+  gene, so both blob and sharded resume retry files interrupted mid-chunk-batch
+  by a pause or crash. Legacy beds without markers replay through idempotent
+  upserts once instead of assuming any `source_id` proves the file complete.
+  The **sequential** blob path is unchanged: it walks roots
+  through `ingest_tree` and never materialises a file list, so there is
+  nothing for `_filter_to_unseen` to filter and `build_profile` keeps the
+  historical delete-and-rebuild there (with a warning naming `--parallel`)
+  rather than re-ingesting every root into a bed that already holds them.
+  So `--mode blob` with no flags behaves exactly as it did before this
+  entry. Parallel drains are
+  **ordered** by default (`imap` rather than `imap_unordered`) so
+  `gene_relations` matches the sequential path (28,767 vs 28,765 rows
+  observed; `ingest_equivalence_erb.json`: content_equal=true, 4.85× at
+  workers=6). Also ships `scripts/ingest_commit_batch_ab.py`,
+  `scripts/sqlite_cache_ab.py`, and the `ingest_write_path_ab.json`
+  (deferred-index arm: negative, 0.05×), `ingest_scale_100k_curve.csv` /
+  `_250k_curve.csv` receipts. Shipped server and CLI defaults unchanged.
+  Tests: `tests/test_bed_provenance.py` (17), `tests/test_mem_budget.py`
+  (+2), `tests/test_build_fixture_matrix.py` (+25).
+
 - **feat(retrieval): `eps_band_coverage` combinator — opt-in, default-inert
   (#428; W2.2-narrow, KILLED by its own receipt, kept as an arm).** Identical
   ε-band walk to `eps_band`; inside a band, distinct-query-term coverage breaks

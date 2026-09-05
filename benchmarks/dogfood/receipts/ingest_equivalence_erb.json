@@ -1,0 +1,50 @@
+{
+  "arms": {
+    "parallel": {
+      "content_sha256": "44c0170c3b18154021ae4b14a0fa105544ce2fd9cff00625db7f8109186ae4cf",
+      "errors": 0,
+      "files": 2000,
+      "files_per_s": 22.466,
+      "gene_id_sha256": "b5b60b156fee206b32ce85a9381f0368c72b5af124d2a11389fa37d32eff2668",
+      "genes": 3829,
+      "genes_per_s": 43.012,
+      "ingest_c": 6,
+      "structure": {
+        "entity_graph": 43832,
+        "filename_index": 3828,
+        "gene_relations": 28765,
+        "harmonic_links": 0
+      },
+      "wall_s": 89.02
+    },
+    "sequential": {
+      "content_sha256": "44c0170c3b18154021ae4b14a0fa105544ce2fd9cff00625db7f8109186ae4cf",
+      "errors": 0,
+      "files": 2000,
+      "files_per_s": 4.63,
+      "gene_id_sha256": "b5b60b156fee206b32ce85a9381f0368c72b5af124d2a11389fa37d32eff2668",
+      "genes": 3829,
+      "genes_per_s": 8.864,
+      "ingest_c": 1,
+      "structure": {
+        "entity_graph": 43832,
+        "filename_index": 3828,
+        "gene_relations": 28765,
+        "harmonic_links": 0
+      },
+      "wall_s": 431.98
+    }
+  },
+  "content_equal": true,
+  "corpus_root": "F:\\tmp\\enterprise_rag_500k\\sources",
+  "detail": {},
+  "documents_equal": true,
+  "equivalent": true,
+  "sample_files": 2000,
+  "seed": 20260824,
+  "speedup": 4.85,
+  "stamp": "2026-08-25T00:06:39Z",
+  "structure_equal": true,
+  "tool": "ingest_equivalence_gate",
+  "workers": 6
+}
