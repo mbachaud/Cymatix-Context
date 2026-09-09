@@ -125,6 +125,25 @@ def compare(off, on, gate):
         if (field not in off.get("pins", {}) or field not in on.get("pins", {})
                 or off["pins"][field] != on["pins"][field]):
             failures.append(f"pin mismatch/missing: {field}")
+    # Optional for historic stamped-bed receipts, mandatory and internally
+    # consistent when an arm relies on external provenance evidence.
+    evidence_digests = []
+    for receipt in (off, on):
+        pins = receipt.get("pins", {})
+        evidence_sha = pins.get("bed_provenance_sha256")
+        evidence = receipt.get("bed_provenance_evidence")
+        evidence_digests.append(evidence_sha)
+        if evidence_sha is not None or evidence is not None:
+            if (not isinstance(evidence_sha, str)
+                    or re.fullmatch(r"[0-9a-f]{64}", evidence_sha) is None
+                    or not isinstance(evidence, dict)
+                    or evidence.get("sha256") != evidence_sha
+                    or not isinstance(evidence.get("path"), str) or not evidence["path"].strip()):
+                failures.append("external bed provenance evidence/pin inconsistent")
+        elif pins.get("ingest_c") == "unknown":
+            failures.append("unknown ingest concurrency lacks external provenance evidence")
+    if evidence_digests[0] != evidence_digests[1]:
+        failures.append("external bed provenance digest mismatch")
     if off.get("errors") or on.get("errors"):
         failures.append("arm reported errors")
     left_rows, right_rows = off.get("per_query", []), on.get("per_query", [])

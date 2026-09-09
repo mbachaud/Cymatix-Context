@@ -18,7 +18,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from .gates import ARMS, digest, file_digest, normalized_context
-from .prepare import ROOT, code_sha, validate_bank
+from .prepare import ROOT, code_sha, validate_bank, validate_bed_evidence
 
 
 def data_state(path):
@@ -31,12 +31,75 @@ def data_state(path):
     return states
 
 
-def snapshot(source, destination):
+def load_bed_evidence(plan):
+    """Check cited evidence and live source state before creating a snapshot."""
+    reference = plan.get("bed_provenance_evidence")
+    if not reference:
+        if plan["pins"]["ingest_c"] == "unknown":
+            raise ValueError("unknown ingest concurrency requires external bed provenance")
+        return None
+    if file_digest(reference["path"]) != reference["sha256"]:
+        raise ValueError("External bed provenance digest changed since preparation")
+    pinned_digest = plan["pins"].get("bed_provenance_sha256")
+    if pinned_digest != reference["sha256"]:
+        raise ValueError("External bed provenance digest differs from campaign pin")
+    evidence = validate_bed_evidence(
+        json.loads(Path(reference["path"]).read_text(encoding="utf-8")),
+        plan["source_bed"], plan["pins"],
+    )
+    if data_state(plan["source_bed"]) != evidence["source_state"]:
+        raise ValueError("External provenance source state differs from current DB/WAL")
+    return evidence
+
+
+def verify_snapshot_provenance(conn, plan, evidence):
+    """Verify snapshot identity and provenance, without creating or editing stamps."""
+    has_provenance = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='bed_provenance'"
+    ).fetchone()
+    provenance = conn.execute(
+        "SELECT identity_sha256, ingest_c, config_json, at_utc FROM bed_provenance "
+        "WHERE event='build' ORDER BY id DESC LIMIT 1"
+    ).fetchone() if has_provenance else None
+    if provenance is not None:
+        if tuple(provenance[:2]) != (plan["pins"]["bed_identity"], plan["pins"]["ingest_c"]):
+            raise ValueError("Bed build identity/ingest concurrency does not match plan")
+    elif evidence is None:
+        raise ValueError("Missing bed build stamp requires explicit external provenance")
+    if evidence is not None:
+        validate_bed_evidence(evidence, plan["source_bed"], plan["pins"])
+
+    # This is the live ordered NUL-ID digest, not the possibly stale stamp.
+    identity = hashlib.sha256()
+    for (document_id,) in conn.execute("SELECT gene_id FROM genes ORDER BY gene_id"):
+        identity.update(str(document_id).encode("utf-8") + b"\x00")
+    if identity.hexdigest() != plan["pins"]["bed_identity"]:
+        raise ValueError("Current document identity differs from the campaign pin")
+
+    ingest_config = json.loads(provenance[2] or "{}") if provenance else {}
+    tagger_version = ingest_config.get("tagger_version", ingest_config.get("ingestion.tagger_version"))
+    if tagger_version is None and provenance and provenance[3] < "2026-08-30":
+        tagger_version = 1  # BASELINES.md's explicit pre-v2 provenance rule.
+    if tagger_version is None and plan.get("fixture_evidence"):
+        fixture = plan["fixture_evidence"]
+        if file_digest(fixture["path"]) != fixture["sha256"]:
+            raise ValueError("Fixture manifest changed since preparation")
+        entry = json.loads(Path(fixture["path"]).read_text(encoding="utf-8"))["targets"][fixture["target"]]
+        tagger_version = entry.get("tagger_version")
+    if tagger_version is None and evidence is not None:
+        tagger_version = evidence["tagger_version"]
+    if tagger_version != plan["pins"]["tagger_version"]:
+        raise ValueError("Tagger provenance missing or does not match plan")
+
+
+def snapshot(source, destination, *, expected_state=None):
     """Use SQLite backup, including WAL state, with an exclusive new target."""
     source, destination = Path(source).resolve(), Path(destination).resolve()
     if not source.is_file() or source == destination or destination.exists():
         raise ValueError("Snapshot requires an existing source and a distinct new destination")
     before = data_state(source)
+    if expected_state is not None and before != expected_state:
+        raise ValueError("External provenance source state changed before backup")
     destination.parent.mkdir(parents=True, exist_ok=True)
     with contextlib.closing(sqlite3.connect(source.as_uri() + "?mode=ro", uri=True, timeout=30)) as src:
         src.execute("PRAGMA query_only=ON")
@@ -179,38 +242,19 @@ def main(argv=None):
     for key in plan["unset_environment"]:
         os.environ.pop(key, None)
     os.environ.update(plan["environment"])
+    bed_evidence = load_bed_evidence(plan)
     scratch = plan_path.parent / args.arm
     if scratch.exists() or (plan_path.parent / f"{args.arm}.json").exists():
         parser.error("arm scratch/receipt already exists; use a new preparation directory")
     scratch.mkdir()
     source = Path(plan["source_bed"])
     snapshot_path = scratch / "genome.db"
-    source_state = snapshot(source, snapshot_path)
+    source_state = snapshot(
+        source, snapshot_path,
+        expected_state=bed_evidence["source_state"] if bed_evidence is not None else None,
+    )
     with contextlib.closing(sqlite3.connect(snapshot_path, timeout=30)) as conn:
-        provenance = conn.execute(
-            "SELECT identity_sha256, ingest_c, config_json, at_utc FROM bed_provenance WHERE event='build' ORDER BY id DESC LIMIT 1"
-        ).fetchone()
-        if not provenance or tuple(provenance[:2]) != (plan["pins"]["bed_identity"], plan["pins"]["ingest_c"]):
-            raise ValueError("Bed build identity/ingest concurrency does not match plan")
-        # Same streaming identity algorithm as storage.provenance: ordered
-        # UTF-8 document IDs separated by NUL, without loading the full pool.
-        identity = hashlib.sha256()
-        for (document_id,) in conn.execute("SELECT gene_id FROM genes ORDER BY gene_id"):
-            identity.update(str(document_id).encode("utf-8") + b"\x00")
-        if identity.hexdigest() != plan["pins"]["bed_identity"]:
-            raise ValueError("Current document identity differs from the bed build stamp")
-        ingest_config = json.loads(provenance[2] or "{}")
-        tagger_version = ingest_config.get("tagger_version", ingest_config.get("ingestion.tagger_version"))
-        if tagger_version is None and provenance[3] < "2026-08-30":
-            tagger_version = 1  # BASELINES.md's explicit pre-v2 provenance rule.
-        if tagger_version is None and plan.get("fixture_evidence"):
-            evidence = plan["fixture_evidence"]
-            if file_digest(evidence["path"]) != evidence["sha256"]:
-                raise ValueError("Fixture manifest changed since preparation")
-            entry = json.loads(Path(evidence["path"]).read_text(encoding="utf-8"))["targets"][evidence["target"]]
-            tagger_version = entry.get("tagger_version")
-        if tagger_version != plan["pins"]["tagger_version"]:
-            raise ValueError("Tagger provenance missing or does not match plan")
+        verify_snapshot_provenance(conn, plan, bed_evidence)
         last_access = conn.execute("SELECT MAX(json_extract(epigenetics, '$.last_accessed')) FROM genes").fetchone()[0] or 0
         if time.time() - float(last_access) < 3600:
             raise ValueError("Source logical access state is newer than the one-hour cold gate")
@@ -256,6 +300,7 @@ def main(argv=None):
     if file_digest(inputs["toin"]) != toin_hash or _file_tree_hash(inputs["config"]) != config_hash:
         errors.append("source Headroom inputs changed during arm")
     result.update(arm=args.arm, errors=errors, harmonic_rows=harmonic_rows,
+                  bed_provenance_evidence=plan.get("bed_provenance_evidence"),
                   pins={**plan["pins"], "source_state": source_state, "ccr_state": ccr_state,
                         "toin_sha256": toin_hash, "headroom_config_sha256": config_hash,
                         "common_config_sha256": digest(common_config), "runtime_environment": runtime_environment,

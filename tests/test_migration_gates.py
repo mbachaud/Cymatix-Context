@@ -241,3 +241,224 @@ def test_preparation_creates_full_arms_without_opening_missing_bed(tmp_path, mon
     unsafe_args[unsafe_args.index("--out-dir") + 1] = str(tmp_path / "input-config" / "nested")
     with pytest.raises(SystemExit):
         prepare.main(unsafe_args)
+
+
+def _legacy_bed_evidence(tmp_path, ingest_c="unknown"):
+    import hashlib
+    import sqlite3
+    from benchmarks.dogfood.migrations.capture import data_state
+
+    source = tmp_path / "legacy.db"
+    conn = sqlite3.connect(source)
+    try:
+        conn.execute("CREATE TABLE genes (gene_id TEXT PRIMARY KEY)")
+        conn.execute("INSERT INTO genes VALUES ('document-a')")
+        conn.commit()
+    finally:
+        conn.close()
+    evidence = {
+        "source_bed": str(source.resolve()),
+        "bed_identity": hashlib.sha256(b"document-a\x00").hexdigest(),
+        "ingest_c": ingest_c, "tagger_version": 1,
+        "source_state": data_state(source),
+        "provenance_sources": ["docs/benchmarks/BASELINES.md — legacy within-bed comparison; original ingest concurrency unknown."],
+    }
+    path = tmp_path / "bed-provenance.json"
+    path.write_text(json.dumps(evidence), encoding="utf-8")
+    plan = {
+        "source_bed": str(source.resolve()),
+        "pins": {key: evidence[key] for key in ("bed_identity", "ingest_c", "tagger_version")},
+        "bed_provenance_evidence": {"path": str(path), "sha256": _gates().file_digest(path)},
+    }
+    plan["pins"]["bed_provenance_sha256"] = plan["bed_provenance_evidence"]["sha256"]
+    return source, evidence, plan
+
+
+def _legacy_prepare_args(tmp_path, plan):
+    resolved, gold = tmp_path / "needles.json", tmp_path / "gold.json"
+    resolved.write_text(json.dumps({"needles": [{"name": "n", "query": "question"}]}), encoding="utf-8")
+    gold.write_text(json.dumps({"n": ["document-a"]}), encoding="utf-8")
+    return [
+        "--code-ref", "frozen-test", "--source-bed", plan["source_bed"],
+        "--bed-identity", plan["pins"]["bed_identity"],
+        "--ingest-c", str(plan["pins"]["ingest_c"]), "--tagger-version", "1",
+        "--resolved", str(resolved), "--gold", str(gold),
+        "--headroom-toin", str(tmp_path / "toin.json"),
+        "--headroom-ccr", str(tmp_path / "ccr.db"),
+        "--headroom-config", str(tmp_path / "input-config"),
+        "--out-dir", str(tmp_path / "prepared"),
+    ]
+
+
+def test_prepare_pins_external_unknown_provenance_without_opening_bed(tmp_path, monkeypatch):
+    from benchmarks.dogfood.migrations import prepare
+
+    source, evidence, plan = _legacy_bed_evidence(tmp_path)
+    # Preparation validates supplied evidence, not the bed itself.
+    source.unlink()
+    monkeypatch.setattr(prepare, "code_sha", lambda ref: "a" * 40)
+    args = _legacy_prepare_args(tmp_path, plan) + ["--bed-provenance", plan["bed_provenance_evidence"]["path"]]
+    assert prepare.main(args) == 0
+    prepared = json.loads((tmp_path / "prepared" / "plan.json").read_text(encoding="utf-8"))
+    assert prepared["pins"]["ingest_c"] == "unknown"
+    assert prepared["bed_provenance_evidence"] == plan["bed_provenance_evidence"]
+    assert not list((tmp_path / "prepared").rglob("*.db"))
+
+
+def test_prepare_rejects_unknown_concurrency_without_external_evidence(tmp_path, capsys):
+    from benchmarks.dogfood.migrations import prepare
+
+    _, _, plan = _legacy_bed_evidence(tmp_path)
+    with pytest.raises(SystemExit):
+        prepare.main(_legacy_prepare_args(tmp_path, plan))
+    assert "--bed-provenance" in capsys.readouterr().err
+    assert not (tmp_path / "prepared").exists()
+
+
+@pytest.mark.parametrize("field,value", [
+    ("source_bed", "other.db"), ("bed_identity", "f" * 64),
+    ("ingest_c", 6), ("tagger_version", 2),
+    ("provenance_sources", []), ("source_state", {"db": None, "-wal": None}),
+])
+def test_prepare_rejects_unbound_or_incomplete_external_evidence(tmp_path, monkeypatch, field, value):
+    from benchmarks.dogfood.migrations import prepare
+
+    _, evidence, plan = _legacy_bed_evidence(tmp_path)
+    evidence[field] = value
+    path = plan["bed_provenance_evidence"]["path"]
+    from pathlib import Path
+    Path(path).write_text(json.dumps(evidence), encoding="utf-8")
+    monkeypatch.setattr(prepare, "code_sha", lambda ref: "a" * 40)
+    with pytest.raises(SystemExit):
+        prepare.main(_legacy_prepare_args(tmp_path, plan) + ["--bed-provenance", path])
+    assert not (tmp_path / "prepared").exists()
+
+
+def test_capture_verifies_evidence_digest_and_source_state_before_snapshot(tmp_path):
+    from pathlib import Path
+    from benchmarks.dogfood.migrations.capture import load_bed_evidence
+
+    source, evidence, plan = _legacy_bed_evidence(tmp_path)
+    assert load_bed_evidence(plan) == evidence
+    path = Path(plan["bed_provenance_evidence"]["path"])
+    path.write_text(json.dumps({**evidence, "provenance_sources": ["changed citation"]}), encoding="utf-8")
+    with pytest.raises(ValueError, match="digest"):
+        load_bed_evidence(plan)
+    path.write_text(json.dumps(evidence), encoding="utf-8")
+    with source.open("ab") as handle:
+        handle.write(b"changed source state")
+    with pytest.raises(ValueError, match="source state"):
+        load_bed_evidence(plan)
+    assert not (tmp_path / "snapshot.db").exists()
+
+
+def test_snapshot_rechecks_external_state_before_opening_destination(tmp_path):
+    from benchmarks.dogfood.migrations.capture import load_bed_evidence, snapshot
+
+    source, _, plan = _legacy_bed_evidence(tmp_path)
+    evidence = load_bed_evidence(plan)
+    with source.open("ab") as handle:
+        handle.write(b"source changed after evidence check")
+    target = tmp_path / "snapshot.db"
+    with pytest.raises(ValueError, match="source state"):
+        snapshot(source, target, expected_state=evidence["source_state"])
+    assert not target.exists()
+
+
+def test_external_evidence_allows_missing_build_stamp_without_writing_one(tmp_path):
+    import sqlite3
+    from benchmarks.dogfood.migrations.capture import load_bed_evidence, snapshot, verify_snapshot_provenance
+
+    source, _, plan = _legacy_bed_evidence(tmp_path)
+    evidence = load_bed_evidence(plan)
+    target = tmp_path / "snapshot.db"
+    snapshot(source, target)
+    conn = sqlite3.connect(target)
+    try:
+        verify_snapshot_provenance(conn, plan, evidence)
+        assert conn.execute("SELECT name FROM sqlite_master WHERE name='bed_provenance'").fetchone() is None
+        conn.execute("INSERT INTO genes VALUES ('unexpected-document')")
+        with pytest.raises(ValueError, match="identity"):
+            verify_snapshot_provenance(conn, plan, evidence)
+    finally:
+        conn.close()
+
+
+def test_missing_build_stamp_still_requires_external_evidence(tmp_path):
+    import sqlite3
+    from benchmarks.dogfood.migrations.capture import load_bed_evidence, verify_snapshot_provenance
+
+    source, _, plan = _legacy_bed_evidence(tmp_path)
+    del plan["bed_provenance_evidence"]
+    with pytest.raises(ValueError, match="unknown.*external"):
+        load_bed_evidence(plan)
+    plan["pins"]["ingest_c"] = 6
+    conn = sqlite3.connect(source)
+    try:
+        with pytest.raises(ValueError, match="build.*external"):
+            verify_snapshot_provenance(conn, plan, None)
+    finally:
+        conn.close()
+
+
+@pytest.mark.parametrize("stamp_identity,stamp_concurrency,stamp_tagger", [
+    ("f" * 64, 6, 1), (None, 2, 1), (None, 6, 2),
+])
+def test_external_evidence_cannot_override_conflicting_build_stamp(tmp_path, stamp_identity, stamp_concurrency, stamp_tagger):
+    import sqlite3
+    from cymatix_context.storage.provenance import create_table
+    from benchmarks.dogfood.migrations.capture import verify_snapshot_provenance
+
+    source, evidence, plan = _legacy_bed_evidence(tmp_path, ingest_c=6)
+    conn = sqlite3.connect(source)
+    try:
+        create_table(conn.cursor())
+        conn.execute(
+            "INSERT INTO bed_provenance (at_utc,event,provenance_version,cymatix_version,"
+            "identity_sha256,ingest_c,config_json) VALUES ('2026-09-09','build',1,'test',?,?,?)",
+            (stamp_identity or evidence["bed_identity"], stamp_concurrency, json.dumps({"tagger_version": stamp_tagger})),
+        )
+        with pytest.raises(ValueError, match="does not match"):
+            verify_snapshot_provenance(conn, plan, evidence)
+    finally:
+        conn.close()
+
+
+def test_external_evidence_fills_only_missing_tagger_on_valid_build(tmp_path):
+    import sqlite3
+    from cymatix_context.storage.provenance import create_table
+    from benchmarks.dogfood.migrations.capture import verify_snapshot_provenance
+
+    source, evidence, plan = _legacy_bed_evidence(tmp_path, ingest_c=6)
+    conn = sqlite3.connect(source)
+    try:
+        create_table(conn.cursor())
+        conn.execute(
+            "INSERT INTO bed_provenance (at_utc,event,provenance_version,cymatix_version,"
+            "identity_sha256,ingest_c,config_json) VALUES ('2026-09-09','build',1,'test',?,?,NULL)",
+            (evidence["bed_identity"], 6),
+        )
+        verify_snapshot_provenance(conn, plan, evidence)
+        assert conn.execute("SELECT COUNT(*) FROM bed_provenance").fetchone()[0] == 1
+    finally:
+        conn.close()
+
+
+def test_pair_gate_requires_matching_external_evidence_and_receipt_pins():
+    off, on = _receipt(), _receipt("tier")
+    for receipt in (off, on):
+        receipt["pins"]["bed_provenance_sha256"] = "a" * 64
+        receipt["bed_provenance_evidence"] = {"path": "external-evidence.json", "sha256": "a" * 64}
+    assert _gates().compare(off, on, "tier")["passed"]
+    on["pins"]["bed_provenance_sha256"] = "b" * 64
+    on["bed_provenance_evidence"]["sha256"] = "b" * 64
+    assert not _gates().compare(off, on, "tier")["passed"]
+    on["pins"]["bed_provenance_sha256"] = "a" * 64
+    assert not _gates().compare(off, on, "tier")["passed"]
+
+
+def test_pair_gate_rejects_unknown_concurrency_without_external_evidence():
+    off, on = _receipt(), _receipt("tier")
+    for receipt in (off, on):
+        receipt["pins"]["ingest_c"] = "unknown"
+    assert not _gates().compare(off, on, "tier")["passed"]

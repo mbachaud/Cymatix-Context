@@ -76,7 +76,29 @@ copies those inputs separately for every arm and leaves Headroom enabled.
 Modern beds whose build provenance lacks the tagger version also require
 `--fixture-manifest <path> --fixture-target <target-key>` from the fixture
 builder's manifest. Pre-2026-08-30 beds are v1 under the ledger's explicit
-historical rule. Unknown provenance fails visibly.
+historical rule. Legacy beds without a build stamp require explicit external
+evidence through `--bed-provenance <path>`. Only with that evidence may
+`--ingest-c unknown` preserve the ledger's unknown-concurrency designation;
+it does not certify comparability across different beds.
+
+The evidence is a JSON object containing these measured or cited fields:
+
+- `source_bed`: resolved absolute source SQLite path.
+- `bed_identity`: lowercase SHA256 of the ordered UTF-8 document IDs, each
+  followed by a NUL byte, matching the `--bed-identity` pin.
+- `ingest_c`: a positive integer or the literal string `"unknown"`, matching
+  `--ingest-c`; `tagger_version`: a positive integer matching its pin.
+- `source_state`: exactly `db` and `-wal` entries. Each existing file has
+  integer `bytes` and `mtime_ns` fields; an absent WAL is `null`.
+- `provenance_sources`: a nonempty list of human-readable citations explaining
+  the known build history, tagger version, and any unknown concurrency.
+
+Preparation digest-pins this evidence without opening the bed. Capture checks
+the evidence digest, campaign pins, and DB/WAL state before creating a backup,
+then recomputes the current ID digest from the snapshot. Existing build
+identity/concurrency or tagger mismatches still fail; external evidence may
+fill a missing build record or missing tagger version, never override a
+conflicting value. No provenance table or stamp is fabricated or written.
 
 ```powershell
 $python = 'F:/Projects/cymatix-context/.venv/Scripts/python.exe'

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -10,6 +11,52 @@ from pathlib import Path
 from .gates import ARMS, PAIRS, arm_config, digest, file_digest
 
 ROOT = Path(__file__).resolve().parents[3]
+
+
+def ingest_concurrency(value):
+    if value == "unknown":
+        return value
+    try:
+        number = int(value)
+    except (TypeError, ValueError) as exc:
+        raise argparse.ArgumentTypeError("ingest-c must be a positive integer or literal 'unknown'") from exc
+    if number < 1:
+        raise argparse.ArgumentTypeError("ingest-c must be a positive integer or literal 'unknown'")
+    return number
+
+
+def validate_bed_evidence(evidence, source_bed, pins):
+    """Validate explicit external provenance without opening the source bed."""
+    if not isinstance(evidence, dict):
+        raise ValueError("external bed provenance must be a JSON object")
+    source = evidence.get("source_bed")
+    if not isinstance(source, str) or not Path(source).is_absolute() or Path(source).resolve() != Path(source_bed).resolve():
+        raise ValueError("external source_bed does not match the resolved source path")
+    identity = evidence.get("bed_identity")
+    if not isinstance(identity, str) or re.fullmatch(r"[0-9a-f]{64}", identity) is None:
+        raise ValueError("external bed_identity must be a lowercase SHA256 digest")
+    concurrency = evidence.get("ingest_c")
+    if concurrency != "unknown" and (type(concurrency) is not int or concurrency < 1):
+        raise ValueError("external ingest_c must be a positive integer or literal 'unknown'")
+    version = evidence.get("tagger_version")
+    if type(version) is not int or version < 1:
+        raise ValueError("external tagger_version must be a positive integer")
+    for field in ("bed_identity", "ingest_c", "tagger_version"):
+        if evidence[field] != pins[field]:
+            raise ValueError(f"external {field} does not match the campaign pin")
+    state = evidence.get("source_state")
+    if not isinstance(state, dict) or set(state) != {"db", "-wal"}:
+        raise ValueError("external source_state must contain db and -wal entries")
+    for name, value in state.items():
+        if name == "-wal" and value is None:
+            continue
+        if (not isinstance(value, dict) or set(value) != {"bytes", "mtime_ns"}
+                or any(type(value[k]) is not int or value[k] < 0 for k in ("bytes", "mtime_ns"))):
+            raise ValueError(f"external source_state {name} requires nonnegative bytes and mtime_ns")
+    citations = evidence.get("provenance_sources")
+    if not isinstance(citations, list) or not citations or any(not isinstance(item, str) or not item.strip() for item in citations):
+        raise ValueError("external provenance_sources must cite at least one human-readable source")
+    return evidence
 
 
 def validate_bank(needles, gold_map):
@@ -41,8 +88,9 @@ def main(argv=None):
     parser.add_argument("--code-ref", required=True, help="frozen tag or immutable commit")
     parser.add_argument("--source-bed", required=True)
     parser.add_argument("--bed-identity", required=True)
-    parser.add_argument("--ingest-c", type=int, required=True)
+    parser.add_argument("--ingest-c", type=ingest_concurrency, required=True)
     parser.add_argument("--tagger-version", type=int, required=True)
+    parser.add_argument("--bed-provenance", help="external cited evidence JSON for legacy beds without a build stamp")
     parser.add_argument("--fixture-manifest", help="required evidence for modern beds without tagger version in build provenance")
     parser.add_argument("--fixture-target", help="target key in the fixture manifest")
     parser.add_argument("--resolved", required=True)
@@ -53,8 +101,10 @@ def main(argv=None):
     parser.add_argument("--config", default=str(ROOT / "cymatix.toml"))
     parser.add_argument("--out-dir", required=True)
     args = parser.parse_args(argv)
-    if args.ingest_c < 1 or args.tagger_version < 1:
-        parser.error("ingest-c and tagger-version must be positive known values")
+    if args.tagger_version < 1:
+        parser.error("tagger-version must be a positive known value")
+    if args.ingest_c == "unknown" and not args.bed_provenance:
+        parser.error("--ingest-c unknown requires explicit --bed-provenance evidence")
     if bool(args.fixture_manifest) != bool(args.fixture_target):
         parser.error("fixture-manifest and fixture-target must be provided together")
     output = Path(args.out_dir).resolve()
@@ -62,6 +112,18 @@ def main(argv=None):
         parser.error("out-dir cannot be inside the source Headroom config tree")
     if output.exists():
         parser.error("out-dir must be new; preparation never overwrites a prior campaign")
+    bed_evidence = None
+    if args.bed_provenance:
+        evidence_path = Path(args.bed_provenance).resolve()
+        try:
+            validate_bed_evidence(
+                json.loads(evidence_path.read_text(encoding="utf-8")), args.source_bed,
+                {"bed_identity": args.bed_identity, "ingest_c": args.ingest_c,
+                 "tagger_version": args.tagger_version},
+            )
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
+        bed_evidence = {"path": str(evidence_path), "sha256": file_digest(evidence_path)}
     source = Path(args.config).read_text(encoding="utf-8")
     configs = {name: arm_config(source, flags) for name, flags in ARMS.items()}
     resolved = Path(args.resolved).resolve()
@@ -79,10 +141,12 @@ def main(argv=None):
                  "tagger_version": args.tagger_version, "k": 12,
                  "base_config_sha256": file_digest(args.config),
                  "resolved_sha256": file_digest(resolved), "gold_sha256": file_digest(gold),
+                 "bed_provenance_sha256": bed_evidence["sha256"] if bed_evidence else None,
                  "needle_count": len(names), "needle_order_sha256": digest(names)},
         "source_bed": str(Path(args.source_bed).resolve()),
         "resolved": str(resolved), "gold": str(gold), "needle_count": len(names),
         "base_config": str(Path(args.config).resolve()),
+        "bed_provenance_evidence": bed_evidence,
         "headroom_inputs": {"toin": str(Path(args.headroom_toin).resolve()),
                             "ccr": str(Path(args.headroom_ccr).resolve()),
                             "config": str(Path(args.headroom_config).resolve())},
