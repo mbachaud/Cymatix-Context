@@ -110,6 +110,7 @@ class QueryResult:
     # (FastAPI passthrough, debug CLI). Excluded from default JSON
     # serialization — see ``to_agent_json``.
     raw: Optional[ContextWindow] = None
+    wire_format: str = "legacy"
 
     @property
     def verdict(self) -> str:
@@ -137,7 +138,8 @@ class QueryResult:
             out["know"] = self.know.model_dump()
         if self.miss is not None:
             out["miss"] = self.miss.model_dump()
-        return out
+        from .wire import to_wire
+        return to_wire(out, self.wire_format)
 
 
 @dataclass
@@ -284,6 +286,7 @@ class CymatixSession:
             decision_reason=decision_reason,
             next_action=next_action,
             raw=cw,
+            wire_format=self.wire_format,
         )
         if self.adaptive_caps:
             self._record_call_for_adaptation(text, result)
@@ -331,6 +334,12 @@ class CymatixSession:
             chunks=len(gene_ids),
             bytes_written=len(content.encode("utf-8")),
         )
+
+    @property
+    def wire_format(self) -> str:
+        """Configured output vocabulary; storage and model fields are unchanged."""
+        config = getattr(self._manager, "config", None)
+        return getattr(getattr(config, "budget", None), "wire_format", "legacy")
 
     def stats(self) -> StatsResult:
         """Lightweight stats. Full surface lives at ``/stats`` HTTP."""

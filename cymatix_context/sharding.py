@@ -682,6 +682,7 @@ def build_genome_kwargs(config, sema_codec=None) -> dict:
         sema_cold_weight=retrieval.sema_cold_weight,
         lex_anchor_weight=retrieval.lex_anchor_weight,
         harmonic_weight=retrieval.harmonic_weight,
+        harmonic_batching_enabled=retrieval.harmonic_batching_enabled,
         entity_graph_weight=retrieval.entity_graph_weight,
         dense_weight=retrieval.dense_weight,
         # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight + floor.

@@ -24,9 +24,36 @@ council verdicts, dated plans, `docs/archive/`) are point-in-time
 records and are intentionally left unmodified — they read in whatever
 vocabulary was current when they were written.
 
-**What's still legacy-named, and why.** The wire/SQL surface (JSON
-field names like `gene_id`, the `genes` SQL table, `/stats` keys, the
-legacy `<GENE .../>` inline tag) is deliberately not renamed — doing
-so would change bytes on the wire for existing callers. That remaining
-Tier-3 surface is tracked at
-<https://github.com/mbachaud/Cymatix-Context/issues/417>.
+**Wire vocabulary.** The default `[budget] wire_format = "legacy"`
+preserves existing responses. The opt-in `"canonical"` format uses
+`<DOCUMENT>` blocks, `[document=...]` headers, software terminology in
+decoder prompts, and canonical response keys across HTTP, CLI and MCP.
+For example, `gene_id` becomes `document_id`, `gene_id_match` becomes
+`document_id_match`, and `do_not_answer_from_genome` becomes
+`do_not_answer_from_knowledge_store`. Stats retain `open` and use `warm`
+and `cold`. See the complete explicit mapping in
+[`cymatix_context/wire.py`](../cymatix_context/wire.py).
+Packet evidence items distinguish the local `document_id` (legacy
+`gene_id`) from `source_document_id` (the existing portable, source-derived
+`document_id`). Both identities are preserved; item kind `gene` becomes
+`document`.
+
+This remains an experimental measurement arm for
+[#417](https://github.com/mbachaud/Cymatix-Context/issues/417).
+Default promotion requires paired full-scale wire and delivery receipts.
+Client applications select the server's format through its configuration;
+MCP forwards that server's format. Both route and command aliases remain
+available. Configuration inspection retains its existing config vocabulary.
+Restart the server after changing `[budget] wire_format` or
+`[retrieval] harmonic_batching_enabled`. `/admin/reload` retains the active
+values for these startup settings and lists pending changes in
+`restart_required`; other configuration settings continue to reload.
+Opaque user metadata, document text, identifiers, and upstream OpenAI
+responses are not rewritten by the response serializer. Canonical assembly
+escapes reserved control syntax in document text before adding its own tags.
+
+**Storage is frozen.** SQL names such as the `genes` table and the Python
+model fields used to persist records remain unchanged in both formats.
+`Document.model_dump()` and store `stats()` keep their internal contracts;
+the wire projection applies only at delivery boundaries. No data migration
+is needed to enable or disable the experimental format.

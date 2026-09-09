@@ -146,6 +146,9 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # 2026-08-03 ERB fix: Tier-2 SQL builder, internal to query_docs —
     # each shard store builds its own; the adapter never calls it.
     "_tag_prefix_sql",
+    # #431: connection-local TEMP staging is owned by each shard's store;
+    # the adapter has no harmonic table or shared candidate SQL connection.
+    "_harmonic_candidate_rows",
 
     # Internal builders / loaders that only make sense on a single .db.
     "make_gene_id", "_load_genes_by_ids", "_score_query",

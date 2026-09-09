@@ -210,7 +210,7 @@ def run(argv: list[str]) -> int:
         rc = output.EXIT_OK
 
     if args.json:
-        output.print_json(report)
+        output.print_json(report, wire_format="legacy" if config_load_failed else cfg.budget.wire_format)
     else:
         output.print_lines(_render_text(report))
     return rc

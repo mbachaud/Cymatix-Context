@@ -344,7 +344,7 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         return normalized
 
     if payload.get("status") == "ok":
-        genes = int(payload.get("genes", 0) or 0)
+        genes = int(payload.get("documents", payload.get("genes", 0)) or 0)
         next_action = "Use `cymatix_context` for repo questions."
         if genes == 0:
             next_action = (

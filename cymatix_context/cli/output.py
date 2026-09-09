@@ -17,12 +17,13 @@ EXIT_STATUS_FAIL = 3       # `cymatix status` only
 EXIT_DEFERRED = 4          # `cymatix serve` and any other "not yet" subcommand
 
 
-def print_json(obj: Any) -> None:
+def print_json(obj: Any, *, wire_format: str = "legacy") -> None:
     """Stable, machine-readable JSON output to stdout.
 
     sort_keys=True so the bench walker can hash deterministic output.
     """
-    sys.stdout.write(json.dumps(obj, indent=2, sort_keys=True, default=str))
+    from ..wire import to_wire
+    sys.stdout.write(json.dumps(to_wire(obj, wire_format), indent=2, sort_keys=True, default=str))
     sys.stdout.write("\n")
 
 

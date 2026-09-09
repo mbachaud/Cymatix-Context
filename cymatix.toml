@@ -83,6 +83,9 @@ lazy_encoders = true
 ribosome_tokens = 3000                  # fixed decoder prompt
 expression_tokens = 7000                # ~7K expressions cap (BROAD tighten 2026-05-12, bench-gated #73). Code default matches since the 2026-06-12 default-honesty pass.
 min_delivered_docs = 12                 # W2.4 delivered-seat floor — GRADUATED 2026-08-30 ([w24-floor-flip]): +18/−0, +18/−0, +8/−0 paired delivered on ERB 829k / EnronQA v2 / EnronQA padded; 0 = legacy eviction-only trim
+# Measurement arms (#417/#430); defaults stay legacy until paired gates pass.
+wire_format = "legacy"                  # "canonical" enables software vocabulary on the wire
+tier_seat_floor_enabled = false          # Floor TIGHT/FOCUSED tier cuts at min_delivered_docs
 max_genes_per_turn = 12
 max_fingerprints_per_turn = 40          # navigation-first fingerprint payload cap (final returned count, not frontier width)
 splice_aggressiveness = 0.3             # 0=keep all, 1=ruthless trim (lower preserves more literal detail)
@@ -526,6 +529,7 @@ sema_boost_weight = 2.0                 # ΣĒMA warm boost (Tier 4 Mode A) — 
 sema_cold_weight = 3.0                  # ΣĒMA cold-start sim multiplier
 lex_anchor_weight = 1.5                 # IDF anchor coeff; cap = 2.0 × this (3.0)
 harmonic_weight = 1.0                   # Tier 5 per-link weight; cap = 3.0 × this (3.0)
+harmonic_batching_enabled = false        # #431: execute oversized pools; requires populated-link gate
 entity_graph_weight = 0.5               # Tier 5b per-row bonus; cap = 4.0 × this (2.0)
 dense_weight = 1.0                      # Stage 2 dense recall, RRF participant
 # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under

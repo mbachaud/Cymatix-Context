@@ -265,10 +265,10 @@ def _handle_cymatix_stats(args: dict) -> str:
             stats = resp.json()
             lines = [
                 "Cymatix Knowledge Store Stats",
-                f"  Documents: {stats.get('total_genes', 0)}",
+                f"  Documents: {stats.get('total_documents', stats.get('total_genes', 0))}",
                 f"  Compression: {stats.get('compression_ratio', 0):.1f}x",
-                f"  Open: {stats.get('open', 0)}, Warm: {stats.get('euchromatin', 0)}, "
-                f"Cold: {stats.get('heterochromatin', 0)}",
+                f"  Open: {stats.get('open', 0)}, Warm: {stats.get('warm', stats.get('euchromatin', 0))}, "
+                f"Cold: {stats.get('cold', stats.get('heterochromatin', 0))}",
                 f"  Raw chars: {stats.get('total_chars_raw', 0):,}",
                 f"  Compressed: {stats.get('total_chars_compressed', 0):,}",
             ]
@@ -289,9 +289,11 @@ def _handle_cymatix_stats(args: dict) -> str:
                         lines.append(f"\n  Recent Queries:")
                         for h in history[:10]:
                             q = h.get("query", "")[:40]
+                            expressed = h.get("documents_expressed", h.get("genes_expressed", 0))
+                            available = h.get("documents_available", h.get("genes_available", 0))
                             lines.append(
                                 f"    {h['status']:12s} e={h['ellipticity']:.2f} "
-                                f"g={h['genes_expressed']}/{h['genes_available']} | {q}"
+                                f"g={expressed}/{available} | {q}"
                             )
 
             return "\n".join(lines)

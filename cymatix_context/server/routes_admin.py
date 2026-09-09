@@ -1146,6 +1146,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
     async def admin_reload():
         """Hot-reload server runtime state without killing the process."""
         changes = {}
+        restart_required = []
 
         # 1. Reload config from cymatix.toml
         try:
@@ -1153,6 +1154,18 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             new_config = load_config()
             old_budget = cymatix.config.budget.max_genes_per_turn
             new_budget = new_config.budget.max_genes_per_turn
+            # HTTP response projection, decoder templates and store query
+            # flags are installed at startup. Keep their effective config
+            # aligned until a restart applies the newly requested values.
+            for section, field in (
+                ("budget", "wire_format"),
+                ("retrieval", "harmonic_batching_enabled"),
+            ):
+                active = getattr(getattr(cymatix.config, section), field)
+                requested_section = getattr(new_config, section)
+                if getattr(requested_section, field) != active:
+                    restart_required.append(f"{section}.{field}")
+                    setattr(requested_section, field, active)
             cymatix.config = new_config
             if old_budget != new_budget:
                 changes["max_genes_per_turn"] = {"old": old_budget, "new": new_budget}
@@ -1187,7 +1200,10 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         cymatix.genome.last_query_scores = {}
 
         log.info("Admin reload complete: %s", changes)
-        return {"reloaded": True, "changes": changes}
+        response = {"reloaded": True, "changes": changes}
+        if restart_required:
+            response["restart_required"] = restart_required
+        return response
 
     # ---- Admin: hot-swap knowledge store .db file ----
 

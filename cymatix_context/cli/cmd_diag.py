@@ -7,6 +7,7 @@ argparse subparser.
 from __future__ import annotations
 
 import argparse
+import logging
 from pathlib import Path
 
 from .dispatcher import invoked_prog
@@ -153,10 +154,25 @@ def run(argv: list[str]) -> int:
     if args.target == "bed":
         try:
             db_path = args.db
-            if db_path is None:
+            wire_format = "legacy"
+            if args.json or db_path is None:
                 from cymatix_context.config import load_config
 
-                db_path = load_config().genome.path
+                try:
+                    cfg = load_config()
+                except Exception:
+                    if db_path is None:
+                        raise
+                    # An explicit bed remains inspectable when diagnosing a
+                    # broken config. Its output then keeps the legacy format.
+                    logging.getLogger(__name__).warning(
+                        "Config unavailable for bed output format; using legacy",
+                        exc_info=True,
+                    )
+                else:
+                    wire_format = cfg.budget.wire_format
+                    if db_path is None:
+                        db_path = cfg.genome.path
             if not Path(db_path).exists():
                 raise FileNotFoundError(db_path)
             payload = _bed_payload(db_path, args.identity)
@@ -168,7 +184,7 @@ def run(argv: list[str]) -> int:
                 output.eprint(err["error"])
             return output.EXIT_ERROR
         if args.json:
-            output.print_json(payload)
+            output.print_json(payload, wire_format=wire_format)
         else:
             output.print_lines(_render_bed(payload))
         return output.EXIT_OK
@@ -186,7 +202,7 @@ def run(argv: list[str]) -> int:
 
     payload = _corpus_payload(stats)
     if args.json:
-        output.print_json(payload)
+        output.print_json(payload, wire_format=getattr(sess, "wire_format", "legacy"))
     else:
         output.print_lines(_render_text(payload))
     return output.EXIT_OK

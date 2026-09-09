@@ -132,6 +132,9 @@ class BudgetConfig:
     max_fingerprints_per_turn: int = 40
     splice_aggressiveness: float = 0.3  # default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     decoder_mode: str = "condensed"  # "full"|"condensed"|"minimal"|"none". Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
+    # #417: opt-in canonical assembly tags, decoder text and response keys.
+    # Legacy preserves released bytes; promotion requires paired wire gates.
+    wire_format: str = "legacy"  # "legacy" | "canonical"
     # Issue #207 item 6: operator override for the compressor/ribosome-model
     # capability classification (context_manager.resolve_model_capability_class)
     # -- NOT the same table as decoder_mode above. Maps a model-name substring
@@ -200,7 +203,12 @@ class BudgetConfig:
     # in every cell. Rows: BASELINES 2026-08-30-v091-gate-sweep +
     # 2026-08-27-ranking-under-width-wave1; revert = git revert of the
     # [w24-floor-flip] commit.
+    # When tier_seat_floor_enabled is true, this also floors TIGHT/FOCUSED
+    # tier cuts, subject to available eligible candidates and token limits.
     min_delivered_docs: int = 12
+    # #430: extend min_delivered_docs to TIGHT/FOCUSED tier cuts while
+    # preserving tier labels. Off until the paired delivery gates pass.
+    tier_seat_floor_enabled: bool = False
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
@@ -243,6 +251,8 @@ class BudgetConfig:
     tier_lagrange_frac: float = 0.7  # Issue #207 item 4: Lagrange pull-back threshold — a shadow-pool doc needs standalone score >= this fraction of the winners' floor (plus <20% co-activation overlap) to be pulled back. Prior literal 0.7 in pipeline/tier_logic.py.
 
     def __post_init__(self) -> None:
+        if self.wire_format not in ("legacy", "canonical"):
+            raise ValueError("[budget] wire_format must be 'legacy' or 'canonical'")
         # W2.4: fail loud at load, not silently at assembly time.
         if self.min_delivered_docs < 0:
             raise ValueError(
@@ -872,6 +882,9 @@ class RetrievalConfig:
     sema_cold_weight: float = 3.0           # current sim·3.0 multiplier
     lex_anchor_weight: float = 1.5          # idf coeff; cap = 2.0 × this (3.0)
     harmonic_weight: float = 1.0            # per-link weight; cap = 3.0 × this (3.0)
+    # #431: execute oversized harmonic pools using temporary candidate
+    # storage. Off until paired measurements on a populated link bed pass.
+    harmonic_batching_enabled: bool = False
     entity_graph_weight: float = 0.5        # per-row bonus; cap = 4.0 × this (2.0)
     dense_weight: float = 1.0               # Stage 2 dense recall, RRF participant
     # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under
@@ -1673,6 +1686,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             max_fingerprints_per_turn=b.get("max_fingerprints_per_turn", cfg.budget.max_fingerprints_per_turn),
             splice_aggressiveness=float(b.get("splice_aggressiveness", cfg.budget.splice_aggressiveness)),
             decoder_mode=b.get("decoder_mode", cfg.budget.decoder_mode),
+            wire_format=b.get("wire_format", cfg.budget.wire_format),
             decoder_mode_overrides=dict(b.get(
                 "decoder_mode_overrides", cfg.budget.decoder_mode_overrides)),
             legibility_enabled=bool(b.get("legibility_enabled", cfg.budget.legibility_enabled)),
@@ -1680,6 +1694,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             neutralize_control_tags=bool(b.get("neutralize_control_tags", cfg.budget.neutralize_control_tags)),
             # W2.4: delivered-seat floor. Default-inert (0).
             min_delivered_docs=int(b.get("min_delivered_docs", cfg.budget.min_delivered_docs)),
+            tier_seat_floor_enabled=bool(b.get("tier_seat_floor_enabled", cfg.budget.tier_seat_floor_enabled)),
             abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
             foveated_enabled=bool(b.get("foveated_enabled", cfg.budget.foveated_enabled)),
             foveated_alpha=float(b.get("foveated_alpha", cfg.budget.foveated_alpha)),
@@ -1934,6 +1949,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             sema_cold_weight=float(r.get("sema_cold_weight", cfg.retrieval.sema_cold_weight)),
             lex_anchor_weight=float(r.get("lex_anchor_weight", cfg.retrieval.lex_anchor_weight)),
             harmonic_weight=float(r.get("harmonic_weight", cfg.retrieval.harmonic_weight)),
+            harmonic_batching_enabled=bool(r.get("harmonic_batching_enabled", cfg.retrieval.harmonic_batching_enabled)),
             entity_graph_weight=float(r.get("entity_graph_weight", cfg.retrieval.entity_graph_weight)),
             dense_weight=float(r.get("dense_weight", cfg.retrieval.dense_weight)),
             # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.

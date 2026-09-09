@@ -12,6 +12,14 @@ prompt. The same text is exported from
 `cymatix_context.agent_prompt.CYMATIX_NO_MATCH_FRAGMENT` for programmatic
 inclusion.
 
+For a server configured with `[budget] wire_format = "canonical"`, use
+`cymatix_context.agent_prompt.full_fragment(wire_format="canonical")`.
+It names `document_id_match` and
+`do_not_answer_from_knowledge_store` to match canonical JSON responses.
+The legacy constants and `full_fragment()` retain the text below. The
+`<cymatix:no_match .../>` control tag and its escalation semantics are
+unchanged in both formats.
+
 ---
 
 ```
