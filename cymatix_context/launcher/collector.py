@@ -15,11 +15,21 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any, Dict, List, Optional
+from collections.abc import Mapping
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional
 
 import httpx
 
+from ..cli.cymatix_status import (
+    ProbeResult,
+    collect_status,
+    guided_ready,
+    map_launcher_state,
+)
+from ..integrations.host_profiles import HOST_PROFILES
 from .graph_summary import GraphSummaryCache
+from .status_cache import GENERIC_NEXT_ACTION, StatusCache, unavailable_snapshot
 from .supervisor import CymatixSupervisor
 from .host_labels import compose_label, host_pretty, vendor_pretty
 from .model_labels import model_pretty
@@ -93,6 +103,277 @@ def _build_tooltip(participant: Dict[str, Any]) -> Dict[str, str]:
     }
 
 
+# --- host status projection ------------------------------------------
+#
+# `cymatix-status` already answers "is this machine's host wired up to
+# cymatix", and answers it carefully: separate transport and health, a
+# tristate readiness, an explicit `ambiguous` selection. The launcher
+# panel shows that answer and nothing else.
+#
+# Nothing here reads the report loosely. The report is a Python dict from
+# the CLI collector, so a future field, a native config string or an
+# error message could otherwise walk straight into the page. Everything
+# below is an allowlist: a field that is not named, an enum value that is
+# not approved, a guidance string that is not in the approved vocabulary
+# never reaches the browser, the JSON route, the cache or the log.
+
+HOST_STATUS_SCHEMA_VERSION = "host-status-1"
+
+NEXT_ACTION_MAX_CHARS = 500
+
+_HOST_SELECTIONS = frozenset(profile.id for profile in HOST_PROFILES) | {
+    "unknown",
+    "ambiguous",
+}
+_HOST_PROFILE_LABELS = frozenset(profile.display_name for profile in HOST_PROFILES)
+_SERVER_TRANSPORTS = frozenset({"reachable", "unreachable"})
+_SERVER_HEALTHS = frozenset({"healthy", "unhealthy", "unknown"})
+_SERVER_SOURCES = frozenset({"configured", "default", "explicit"})
+_MCP_CONFIGURATIONS = frozenset({"canonical", "noncanonical", "missing", "invalid"})
+_MCP_LIVE_STATES = frozenset({"connected", "disconnected", "unknown"})
+_ACTIVATIONS = frozenset({"enabled", "disabled", "unknown"})
+_INSTALLATIONS = frozenset({"present", "missing"})
+
+# Every string `cymatix_status._next_action` can produce for this
+# invocation (auto discovery, no explicit server URL, no launcher URL).
+# Guidance outside this set is replaced, not escaped: escaping a string
+# that should never have been rendered still renders it.
+# `test_launcher_status_panel.py` drives `_next_action` over its whole
+# input matrix and fails if upstream wording drifts out of this set.
+APPROVED_NEXT_ACTIONS = frozenset({
+    "Pass --host or add one canonical cymatix-context MCP entry.",
+    "Multiple host configs contain cymatix-context; pass --host explicitly.",
+    "Update the selected host MCP URL to the diagnostic endpoint, or rerun "
+    "--server-url with the matching configured URL; a different endpoint "
+    "cannot prove host readiness.",
+    "Add or repair the canonical cymatix-context MCP entry for this host.",
+    "Pass a valid absolute HTTP(S) --server-url without credentials, query, or fragment.",
+    "Configured MCP server URL is not loopback; pass --server-url explicitly "
+    "to opt in to remote status probing.",
+    "Automatic server URL is not loopback; pass --server-url explicitly "
+    "to opt in to remote status probing.",
+    "Enable the cymatix-context MCP entry in the selected host config.",
+    "Confirm the selected host has enabled the cymatix-context MCP entry.",
+    "Start or repair the Cymatix server configured for this MCP entry.",
+    "Install or restore the shared cymatix-context skill.",
+    "Enable the installed cymatix-context skill.",
+    "Confirm the selected host has enabled the cymatix-context skill.",
+    "Restart or refresh the host MCP session to establish a live connection.",
+    "Configure an unambiguous MCP handle and host, then verify the active session registry.",
+    "Use cymatix_context for repo questions.",
+})
+
+# Returned by the validators when a value fails the schema. `None` is a
+# real approved value for the readiness fields, so it cannot double as
+# the rejection signal.
+_INVALID = object()
+
+
+def _enum_value(value: Any, allowed: frozenset) -> Any:
+    return value if isinstance(value, str) and value in allowed else _INVALID
+
+
+def _tristate(value: Any) -> Any:
+    """Accept exactly True, False or None. 1 and 0 are not booleans."""
+
+    if value is None or isinstance(value, bool):
+        return value
+    return _INVALID
+
+
+def _group(report: Any, key: str) -> Any:
+    group = report.get(key)
+    return group if isinstance(group, Mapping) else None
+
+
+def approved_next_action(value: Any) -> str:
+    """Approved guidance, or the fixed generic instruction."""
+
+    if (
+        isinstance(value, str)
+        and len(value) <= NEXT_ACTION_MAX_CHARS
+        and value in APPROVED_NEXT_ACTIONS
+    ):
+        return value
+    return GENERIC_NEXT_ACTION
+
+
+def _projected_host(group: Any) -> Any:
+    if group is None:
+        return _INVALID
+    selection = _enum_value(group.get("selection"), _HOST_SELECTIONS)
+    profile = group.get("profile")
+    if profile is not None and (
+        not isinstance(profile, str) or profile not in _HOST_PROFILE_LABELS
+    ):
+        return _INVALID
+    if selection is _INVALID:
+        return _INVALID
+    return {"selection": selection, "profile": profile}
+
+
+def _projected_server(group: Any) -> Any:
+    if group is None:
+        return _INVALID
+    transport = _enum_value(group.get("transport"), _SERVER_TRANSPORTS)
+    health = _enum_value(group.get("health"), _SERVER_HEALTHS)
+    source = _enum_value(group.get("source"), _SERVER_SOURCES)
+    match = _tristate(group.get("configured_url_match"))
+    if _INVALID in (transport, health, source, match):
+        return _INVALID
+    return {
+        "transport": transport,
+        "health": health,
+        "source": source,
+        "configured_url_match": match,
+    }
+
+
+def _projected_mcp(group: Any) -> Any:
+    if group is None:
+        return _INVALID
+    configuration = _enum_value(group.get("configuration"), _MCP_CONFIGURATIONS)
+    activation = _enum_value(group.get("activation"), _ACTIVATIONS)
+    live = _enum_value(group.get("live"), _MCP_LIVE_STATES)
+    if _INVALID in (configuration, activation, live):
+        return _INVALID
+    return {"configuration": configuration, "activation": activation, "live": live}
+
+
+def _projected_skill(group: Any) -> Any:
+    if group is None:
+        return _INVALID
+    installation = _enum_value(group.get("installation"), _INSTALLATIONS)
+    activation = _enum_value(group.get("activation"), _ACTIVATIONS)
+    if _INVALID in (installation, activation):
+        return _INVALID
+    return {"installation": installation, "activation": activation}
+
+
+def project_host_status(report: Any) -> Optional[Dict[str, Any]]:
+    """Project one `collect_status` report onto the approved fields.
+
+    Returns None for any report that does not satisfy the schema. An
+    invalid report becomes a failed refresh, never invented evidence.
+
+    Dropped, not rendered: inspected paths, the MCP and skill config
+    paths, every `detail`, the server URL, its raw payload, its parse
+    error and its error text. None of them is approved for the browser,
+    and truncating or escaping an arbitrary string is not redaction.
+    """
+
+    if not isinstance(report, Mapping):
+        return None
+    host = _projected_host(_group(report, "host"))
+    server = _projected_server(_group(report, "server"))
+    mcp = _projected_mcp(_group(report, "mcp"))
+    skill = _projected_skill(_group(report, "skill"))
+    configured = _tristate(report.get("configured_ready"))
+    guided = _tristate(report.get("guided_ready"))
+    if _INVALID in (host, server, mcp, skill, configured, guided):
+        return None
+
+    # Compose, do not re invent: the same helper the CLI uses, over the
+    # collected configured value and unchanged skill evidence. A report
+    # whose own guided value disagrees is not a report we can present.
+    derived = guided_ready(configured, skill["installation"], skill["activation"])
+    if derived is not guided:
+        log.warning("Host status report failed its guided readiness check")
+        return None
+
+    return {
+        "host": host,
+        "server": server,
+        "mcp": mcp,
+        "skill": skill,
+        "configured_ready": configured,
+        "guided_ready": guided,
+        "next_action": approved_next_action(report.get("next_action")),
+    }
+
+
+def supervisor_launcher_evidence(running: Any, observed_at: Optional[str]) -> Dict[str, Any]:
+    """Launcher state from the supervised child, stamped when sampled.
+
+    This is the self poll prevention half of the panel: the host
+    observation runs with `launcher_url=None`, so nothing calls back into
+    the endpoint that is collecting it, and the launcher dimension comes
+    from the supervisor snapshot this collection already took.
+
+    It is supervised child liveness, not page reachability and not host
+    readiness. Unusable evidence reads `unreachable`, never `stopped`.
+    """
+
+    liveness = running if isinstance(running, bool) else None
+    probe = ProbeResult("reachable", {"cymatix": {"running": liveness}}, None, None)
+    return {
+        "state": map_launcher_state(probe),
+        "source": "supervisor",
+        "observed_at": observed_at,
+    }
+
+
+def default_status_context(*, workspace: Path, home: Path) -> str:
+    """Private identity of the execution context an observation belongs to.
+
+    Hashed by the cache and never serialised. Keyed by the fixed
+    execution workspace and home, the auto selection policy, the
+    implicit loopback target policy and the schema version; not by
+    genome path, selected host alone or anything from the browser.
+    """
+
+    return "|".join((
+        "workspace", str(workspace),
+        "home", str(home),
+        "selection", "auto",
+        "target", "implicit-loopback-default",
+        "schema", HOST_STATUS_SCHEMA_VERSION,
+    ))
+
+
+def default_status_reader(*, workspace: Path, home: Path) -> Callable[[], Dict[str, Any]]:
+    """A reader that collects host status for one fixed local context.
+
+    `launcher_url=None` disables the launcher state probe, and no
+    explicit server URL is ever passed: a discovered remote URL must
+    never be promoted into an explicit opt in.
+    """
+
+    def read() -> Dict[str, Any]:
+        return collect_status(
+            host="auto",
+            server_url=None,
+            launcher_url=None,
+            mcp_config=None,
+            skill_dir=None,
+            start_dir=workspace,
+            home_dir=home,
+        )
+
+    return read
+
+
+def build_status_cache(
+    *, workspace: Optional[Path] = None, home: Optional[Path] = None,
+) -> StatusCache:
+    """The cache the launcher uses when the caller injects none."""
+
+    try:
+        resolved_workspace = Path(workspace) if workspace is not None else Path.cwd()
+    except OSError:
+        resolved_workspace = Path(".")
+    try:
+        resolved_home = Path(home) if home is not None else Path.home()
+    except (OSError, RuntimeError):
+        resolved_home = Path(".")
+    context = default_status_context(workspace=resolved_workspace, home=resolved_home)
+    return StatusCache(
+        reader=default_status_reader(workspace=resolved_workspace, home=resolved_home),
+        projector=project_host_status,
+        context_factory=lambda: context,
+    )
+
+
 class StateCollector:
     """Builds the launcher-side state snapshot by polling cymatix + ollama."""
 
@@ -103,16 +384,23 @@ class StateCollector:
         http_timeout: float = 4.0,
         update_checker: Optional[Any] = None,
         graph_summary_cache: Optional[GraphSummaryCache] = None,
+        status_cache: Optional[StatusCache] = None,
     ) -> None:
         self.supervisor = supervisor
         self.ollama_base_url = ollama_base_url.rstrip("/")
         self.http_timeout = http_timeout
         self.update_checker = update_checker
         self.graph_summary_cache = graph_summary_cache or GraphSummaryCache()
+        # Inject this in a test: the default reader discovers native host
+        # configuration and probes the local server.
+        self.status_cache = status_cache or build_status_cache()
 
     def collect(self) -> Dict[str, Any]:
         """Return the full launcher state dict. Never raises."""
         cymatix_state = self._collect_cymatix_process()
+        # Stamp the supervised child sample where it was sampled, not
+        # where it is serialised, and never reuse an older stamp.
+        supervisor_observed_at = self.status_cache.wall_now()
         state: Dict[str, Any] = {"cymatix": cymatix_state}
         if self.update_checker is not None:
             state["update"] = self.update_checker.check().as_dict()
@@ -129,6 +417,13 @@ class StateCollector:
         summary = self._graph_summary_panel(state["database"])
         if summary is not None:
             state["graph_summary"] = summary
+
+        # Host readiness describes this machine's MCP wiring, so it is
+        # exactly as meaningful with the child stopped. It goes above the
+        # early return, and it is additive: no existing key changes.
+        state["host_status"] = self._host_status_panel(
+            cymatix_state, supervisor_observed_at,
+        )
 
         if not cymatix_state["running"]:
             return state
@@ -234,6 +529,29 @@ class StateCollector:
             state["models"] = models
 
         return state
+
+    # -- host status ----------------------------------------------------
+
+    def _host_status_panel(
+        self, cymatix_state: Dict[str, Any], observed_at: Optional[str],
+    ) -> Dict[str, Any]:
+        """The approved host status snapshot plus the supervisor overlay.
+
+        The cache decides whether this poll pays for a refresh and how
+        long this caller may wait for one; a snapshot always comes back,
+        marked `fresh`, `stale` or `unavailable`. The overlay replaces
+        only the launcher dimension, so a freshly observed stopped child
+        can sit next to stale host evidence without either lying.
+        """
+        try:
+            snapshot = self.status_cache.get()
+        except Exception:
+            log.warning("Host status snapshot unavailable", exc_info=True)
+            snapshot = unavailable_snapshot()
+        snapshot["launcher"] = supervisor_launcher_evidence(
+            cymatix_state.get("running"), observed_at,
+        )
+        return snapshot
 
     def _copy_cymatix_version(self, cymatix: Dict[str, Any], payload: Dict[str, Any]) -> None:
         version = payload.get("version") or payload.get("cymatix_version")
