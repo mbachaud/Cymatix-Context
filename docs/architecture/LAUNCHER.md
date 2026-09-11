@@ -47,6 +47,13 @@ The launcher solves all four with one small supervisor process.
 - Not a multi-cymatix manager. The launcher manages exactly one cymatix
   child process. Federation / multi-instance management is out of scope.
 
+Two clarifications, added with the host status panel: "not an observability
+dashboard" still rules out charts, time series and historical drill down, but
+read only diagnosis of current host, server, MCP and skill evidence is in
+scope; and everything here describes a local, unauthenticated operator tool,
+while a separately secured hosted console is a later scope whose controls do
+not exist today.
+
 ## Architecture
 
 Two processes, two ports:
@@ -55,7 +62,7 @@ Two processes, two ports:
 ┌─────────────────────────────────────┐
 │  cymatix-launcher      :11438       │  ← supervisor + UI (long-lived)
 │  - FastAPI + Jinja templates        │
-│  - HTMX polling                     │
+│  - plain JS fetch polling           │
 │  - subprocess.Popen for cymatix     │
 │  - psutil for liveness / cleanup    │
 └────────────┬────────────────────────┘
@@ -87,7 +94,7 @@ optional extras group.
 |---|---|---|---|
 | Backend | FastAPI | already a core dep | Match the existing project stack |
 | Templates | Jinja2 | **new** (~350KB) | Declarative HTML, no layout math in Python |
-| Reactivity | HTMX (served locally) | **new** (~14KB single JS file, vendored) | Polls endpoints, no build step |
+| Reactivity | plain JS `fetch` in `static/launcher.js` | none | Polls a server rendered HTML partial plus the JSON state, no build step |
 | Styling | CSS custom properties | none | All visual tokens in `:root {}` |
 | Process control | `subprocess` + `psutil` | `psutil` **new** (~1MB) | Cross-platform liveness, kill trees |
 | Window (optional) | `pywebview` | **new, optional** | Native window wrapper — opt-in only |
@@ -195,19 +202,36 @@ cymatix-launcher --port 11438
 
 ## Launcher REST API (on :11438)
 
-All endpoints are localhost-only. No authentication (the launcher binds
-to 127.0.0.1 exclusively).
+The launcher binds `127.0.0.1` by default, so in the default configuration
+every endpoint is reachable only from this machine. That default is not
+authorization, and the bind is not exclusive: `_parse_args` accepts a
+`--host` override (`cymatix_context/launcher/app.py:470`) and `_run_uvicorn`
+passes whatever it receives straight to uvicorn
+(`cymatix_context/launcher/app.py:1494-1496`), so an operator can bind a
+routable interface.
+
+There is no authentication and no authorization anywhere in the launcher. The
+state routes perform no caller policy check of any kind
+(`cymatix_context/launcher/app.py:201-224`), and neither do the control
+routes. The current trust boundary is therefore the network reachability of
+the bind address: whoever can reach it is a full operator. Do not expose the
+launcher port beyond the local machine. Hosted exposure needs the separate
+authenticated console scope, not a flag change here.
 
 ### `GET /`
 
-Renders the dashboard HTML. This is the only HTML endpoint — all other
-data flows as JSON through the endpoints below, pulled by HTMX.
+Renders the full dashboard HTML. One of two HTML endpoints; the other is
+`GET /api/state/panels` below. Everything else answers JSON.
 
 ### `GET /api/state`
 
-The single source of truth for the HTMX poll. Returns the full
-launcher-view-of-the-world as one JSON document. HTMX polls this every
-2 seconds and replaces dashboard panels with server-rendered partials.
+The JSON view of the same collector snapshot the dashboard renders. The
+browser fetches it once per poll from `refreshControls`
+(`static/launcher.js:155-187`) to drive the status dot, the status label and
+the enabled state of the Start / Restart / Stop buttons. It is also the
+endpoint programmatic consumers and debugging should use. The dashboard
+panels themselves are HTML and come from `GET /api/state/panels`, not from
+this document.
 
 Response:
 
@@ -258,6 +282,15 @@ Response:
 Panels whose underlying data is empty (e.g., `tools` empty, `models`
 empty, `parties.count == 0`) are simply absent from the response. The
 dashboard then conditionally renders them.
+
+### `GET /api/state/panels`
+
+The server rendered HTML partial for the panel area, produced from the same
+`collector.collect()` snapshot as `GET /` and `GET /api/state`. The browser
+fetches it once per poll from `fetchPanels`
+(`static/launcher.js:136-153`) and swaps it into `#panels`. A request whose
+`sec-fetch-mode` header is `navigate` is redirected to `/` with a 303, so the
+partial is never a landing page.
 
 ### `POST /api/control/start`
 
@@ -386,28 +419,93 @@ Panels hide themselves conditionally:
 This matches the user's explicit rule: "any data not active/online
 doesn't need to be displayed."
 
-## HTMX polling model
+## Polling model
 
-The dashboard uses HTMX's `hx-get` with a 2-second trigger to re-fetch
-the JSON state and replace the panels. A simplified example:
+The shipped dashboard uses plain JavaScript, not HTMX. HTMX is not vendored,
+not served and not a dependency; `static/launcher.js` is the only script the
+page loads.
+
+`dashboard.html` declares the poll target and cadence as data attributes on
+the panel container:
 
 ```html
-<div id="dashboard-panels"
-     hx-get="/api/state/panels"
-     hx-trigger="load, every 2s"
-     hx-swap="innerHTML">
-  <!-- Jinja-rendered panel HTML goes here -->
-</div>
+<section id="panels" class="panels"
+         data-active-tab="overview"
+         data-poll-url="/api/state/panels"
+         data-poll-interval-ms="2000">
+  {% include "components/panels.html" %}
+</section>
 ```
 
-`/api/state/panels` is a server-rendered HTML partial (not the JSON
-endpoint) that runs the same state gathering logic and produces the
-`{% if %}`-gated panels as a single HTML blob. The JSON endpoint at
-`/api/state` remains for programmatic consumers and debugging.
+`startPolling` (`static/launcher.js:189-197`) reads those attributes, runs one
+immediate pass and then a `setInterval` at the declared interval. Each pass
+issues two requests:
 
-Poll interval is configurable via a CSS-free `--launcher-poll-interval`
-(default `2s`). Users can set `cymatix-launcher --poll-interval 5` to
-reduce chatter.
+| Request | Function | What it updates |
+|---|---|---|
+| `GET /api/state/panels` (HTML) | `fetchPanels` (`:136-153`) | The whole panel area, swapped into `#panels` |
+| `GET /api/state` (JSON) | `refreshControls` (`:155-187`) | Status dot, status label, control button enablement |
+
+Only the HTML request has an in flight guard: `fetchPanels` returns early
+while a previous fetch is outstanding, so slow collections cannot stack up.
+`refreshControls` has no such guard. Neither request carries an explicit
+timeout, so a hung connection stays outstanding until the browser gives up.
+A failed or non `ok` HTML fetch sets `data-stale="true"` on the panel
+container, which CSS fades (`static/launcher.css:383-385`); a later
+successful fetch removes the attribute.
+
+The poll interval is not a CLI flag. There is no `--poll-interval` option and
+no `--launcher-poll-interval` CSS variable. The 2000 ms value is the
+`data-poll-interval-ms` attribute in `dashboard.html`; change it there.
+
+## Host status panel: observation semantics
+
+The host status panel is a read only diagnostic view of the same evidence the
+`cymatix-status` CLI reports: which MCP host profile was discovered, whether
+its configuration is canonical, whether the server endpoint is reachable and
+healthy, whether the MCP registry shows a live entry, whether the portable
+skill is installed and enabled, and the two readiness values derived from
+those. It adds one additive key to the collector snapshot and no new route.
+
+What the panel is, stated precisely:
+
+- **Observation, not truth.** Every field is evidence from one completed
+  observation of this machine at a stated time, shown with that time, so a
+  value that was true a minute ago is never presented as a current fact.
+  Three stamps are kept apart: last attempt (a refresh was admitted), last
+  success (the most recent schema valid observation completed) and the
+  observation time of the evidence on screen. A cache hit advances none.
+- **Fresh, stale, unavailable.** Fresh means the shown observation is inside
+  its lifetime. Stale means the latest refresh failed, timed out or was
+  invalid and the previous approved evidence remains on screen with its
+  original times. Unavailable means there is no approved observation yet.
+  Stale and unavailable render neutral even when a retained value is true.
+- **A clean negative is a success.** Unreachable, unknown or unhealthy
+  evidence that was collected without error is a successful observation. The
+  panel never turns green merely because a refresh completed.
+- **Dimensions stay independent.** Healthy HTTP does not prove an
+  authenticated MCP connection, registry evidence is labelled registry only,
+  skill presence does not prove activation, a stopped child does not gate
+  direct MCP readiness, and unknown is never coerced to false.
+- **Supervised child liveness is separate.** The launcher field reports the
+  child as the supervisor sees it, stamped at its own sampling time, not a
+  page reachability check. The panel never requests the launcher's own state
+  endpoint, so it cannot poll itself.
+- **Shared collection.** `GET /`, `GET /api/state/panels` and `GET /api/state`
+  share one bounded single flight collection with a completion time lifetime.
+  Callers wait a finite budget, then take retained evidence or unavailable.
+
+Diagnostics scope, as a boundary: the panel reads and nothing else. It
+installs, enables, repairs, ingests and controls nothing, so it has no
+mutation surface. Only an approved typed projection reaches the browser;
+native configuration contents, environment mappings, credentials, inspected
+paths, raw payloads and raw error text are dropped before rendering, before
+the JSON response and before anything is cached, with escaping applied on top
+of that allowlist rather than instead of it. Guidance is a fixed approved
+vocabulary rendered as escaped text, never marked safe, linked or executable.
+The panel inherits the trust boundary above: local operator diagnosis on an
+unauthenticated local port, not an access controlled status feed and not the
+hosted console.
 
 ## Orphan adoption
 

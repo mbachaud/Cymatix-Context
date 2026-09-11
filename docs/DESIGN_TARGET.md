@@ -64,6 +64,30 @@ are how consumers actually consume cymatix. Therefore:
   any dashboard panel, because LLMs often know *what* they need, not a fuzzy
   query for it.
 
+**What the operator UI is for (added 2026-09-11).** The ranking above is
+unchanged: the API is the product and agents are the primary consumers. Human
+UI exists to support three jobs, in this order.
+
+1. **Operation.** Start, stop and restart the local server, and see whether
+   the child process is alive. That is the shipped launcher's original job.
+2. **Diagnosis.** Answer "why is this machine not ready" from read only
+   evidence: which MCP host was discovered, whether its configuration is
+   canonical, whether the endpoint is reachable and healthy, whether the
+   registry shows a live entry, whether the portable skill is installed and
+   enabled, and what the two readiness values are. This is local, it reads
+   only, and it mutates nothing. It is a diagnostic surface, not a control
+   plane and not a second API.
+3. **Access management.** Later, and only in a separately secured hosted
+   operator console: identity, deployment registry, route policy coverage,
+   membership and delegation, scoped access and audit.
+
+Job 3 is a future scope with unmet prerequisites. None of its controls ship
+today, and no document should read as though they do. The shipped launcher is
+local and unauthenticated; see `docs/architecture/LAUNCHER.md` for its actual
+trust boundary. When operator UI and API clarity conflict, the API still wins;
+a diagnostic view earns its place by making a failing machine explainable
+without reading source, not by becoming the way anyone queries cymatix.
+
 ### 3. Introspection is a feature, not a debug aid
 
 A human reading a compressed summary can often eyeball "is this the right
