@@ -5,7 +5,11 @@ supervisor + collector. No real cymatix process is spawned.
 
 from __future__ import annotations
 
+import json
 import os
+import shutil
+import subprocess
+from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
@@ -1055,7 +1059,7 @@ class TestHostStatusEscapingAndGuidance:
 class TestHostStatusBrowserContract:
     """What the served static files are allowed to do for this panel.
 
-    There is no JS runtime in this suite, so these pin the contract for
+    These read the served text, so they pin the contract for
     launcher.js: bound the fetches that already exist,
     show staleness in words, age the observation, and add no second
     loop and no second endpoint.
@@ -1095,3 +1099,275 @@ class TestHostStatusBrowserContract:
         css = self._asset("launcher.css")
         assert '.panel--host-status[data-observation="expired"] .host-status-aged' in css
         assert '.panel--host-status[data-freshness="stale"] .host-status-value' in css
+
+
+# -- the browser freshness path, actually executed ---------------------
+#
+# The class above reads the served text. This one runs it. A Node
+# runtime evaluates the real `launcher.js` against a stub DOM and a fake
+# clock, so the deadline, the two overlap guards and the observation
+# aging are exercised rather than asserted about. The suite skips where
+# no Node runtime is installed; nothing else in the launcher tests
+# depends on one.
+
+_BROWSER_HARNESS = r"""
+"use strict";
+const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync(process.argv[2], "utf8");
+const CARD = '<section data-host-status data-fresh-for-s="3"></section>';
+
+function drain() { return new Promise((resolve) => setImmediate(resolve)); }
+
+class El {
+  constructor(tag) {
+    this.tagName = (tag || "div").toUpperCase();
+    this.dataset = {}; this.attrs = {}; this.children = [];
+    this.classList = { toggle() {}, add() {}, remove() {}, contains() { return false; } };
+    this.style = {}; this.hidden = false; this.disabled = false;
+    this.open = true; this.textContent = "";
+  }
+  get childNodes() { return this.children; }
+  appendChild(child) { this.children.push(child); return child; }
+  replaceChildren(...nodes) { this.children = nodes; }
+  addEventListener() {}
+  setAttribute(name, value) { this.attrs[name] = value; }
+  getAttribute(name) { return this.attrs[name]; }
+  closest() { return null; }
+  matches(selector) {
+    const m = /^\[([a-zA-Z-]+)\]$/.exec(selector);
+    if (!m) return false;
+    const name = m[1];
+    if (name in this.attrs) return true;
+    if (!name.startsWith("data-")) return false;
+    const key = name.slice(5).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    return key in this.dataset;
+  }
+  querySelectorAll(selector) {
+    const found = [];
+    const walk = (el) => {
+      for (const child of el.children) {
+        if (child.matches(selector)) found.push(child);
+        walk(child);
+      }
+    };
+    walk(this);
+    return found;
+  }
+  querySelector(selector) {
+    const all = this.querySelectorAll(selector);
+    return all.length ? all[0] : null;
+  }
+}
+
+function makeWorld(plan) {
+  const facts = { fetches: [], aborted: 0, intervals: 0, errors: [] };
+  let now = 0, seq = 0;
+  const timers = new Map();
+  const panels = new El("section");
+  panels.dataset.pollUrl = "/api/state/panels";
+  panels.dataset.pollIntervalMs = "2000";
+  panels.dataset.activeTab = "overview";
+
+  class DOMParser {
+    parseFromString(html) {
+      const body = new El("body");
+      if (/data-host-status/.test(html)) {
+        const card = new El("section");
+        card.dataset.hostStatus = "";
+        const fresh = /data-fresh-for-s="([^"]*)"/.exec(html);
+        if (fresh) card.dataset.freshForS = fresh[1];
+        body.appendChild(card);
+      }
+      return { body };
+    }
+  }
+  class AbortControllerStub {
+    constructor() {
+      const listeners = [];
+      this.signal = {
+        aborted: false,
+        addEventListener(_type, fn) { listeners.push(fn); },
+        _fire() { listeners.forEach((fn) => fn()); },
+      };
+    }
+    abort() {
+      if (this.signal.aborted) return;
+      this.signal.aborted = true;
+      facts.aborted += 1;
+      this.signal._fire();
+    }
+  }
+  const sandbox = {
+    document: {
+      getElementById: (id) => (id === "panels" ? panels : null),
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      createElement: (tag) => new El(tag),
+      addEventListener: () => {},
+      hidden: false,
+      body: new El("body"),
+    },
+    window: {
+      localStorage: { getItem: () => null, setItem: () => {}, removeItem: () => {} },
+      confirm: () => false,
+    },
+    DOMParser: DOMParser,
+    AbortController: AbortControllerStub,
+    performance: { now: () => now },
+    fetch: (url, options) => {
+      const call = { url: url, bounded: Boolean(options && options.signal) };
+      facts.fetches.push(call);
+      return plan(call, options, facts.fetches.length);
+    },
+    console: console,
+    setTimeout: (fn, ms) => {
+      const id = ++seq;
+      timers.set(id, { fn: fn, at: now + (ms || 0), repeat: null });
+      return id;
+    },
+    setInterval: (fn, ms) => {
+      const id = ++seq;
+      facts.intervals += 1;
+      timers.set(id, { fn: fn, at: now + (ms || 0), repeat: ms || 1 });
+      return id;
+    },
+    clearTimeout: (id) => timers.delete(id),
+    clearInterval: (id) => timers.delete(id),
+  };
+  sandbox.globalThis = sandbox;
+
+  async function advance(ms) {
+    const target = now + ms;
+    for (;;) {
+      let chosen = null;
+      for (const [id, timer] of timers) {
+        if (timer.at <= target && (chosen === null || timer.at < chosen[1].at)) {
+          chosen = [id, timer];
+        }
+      }
+      if (chosen === null) break;
+      const [id, timer] = chosen;
+      now = timer.at;
+      if (timer.repeat === null) timers.delete(id); else timer.at = now + timer.repeat;
+      try { timer.fn(); } catch (err) { facts.errors.push(String(err)); }
+      await drain(); await drain();
+    }
+    now = target;
+    await drain(); await drain();
+  }
+  return { facts: facts, panels: panels, sandbox: sandbox, advance: advance };
+}
+
+async function scenarioHang() {
+  const world = makeWorld((_call, options) => new Promise((_resolve, reject) => {
+    if (options && options.signal) {
+      options.signal.addEventListener("abort", () => reject(new Error("AbortError")));
+    }
+  }));
+  vm.runInNewContext(source, world.sandbox);
+  await drain();
+  const firstPass = world.facts.fetches.length;
+  await world.advance(7999);
+  const beforeDeadline = world.facts.fetches.length;
+  await world.advance(2);
+  return {
+    first_pass_fetches: firstPass,
+    fetches_all_bounded: world.facts.fetches.every((f) => f.bounded),
+    fetches_before_deadline: beforeDeadline,
+    urls: Array.from(new Set(world.facts.fetches.map((f) => f.url))).sort(),
+    aborted: world.facts.aborted,
+    stale_attribute: world.panels.dataset.stale || null,
+    poll_intervals: world.facts.intervals,
+    errors: world.facts.errors,
+  };
+}
+
+async function scenarioAging() {
+  let calls = 0;
+  const world = makeWorld((call) => {
+    calls += 1;
+    if (calls > 2) {
+      return Promise.resolve({ ok: false, text: () => Promise.resolve(""),
+                               json: () => Promise.resolve({}) });
+    }
+    return call.url.indexOf("panels") >= 0
+      ? Promise.resolve({ ok: true, text: () => Promise.resolve(CARD) })
+      : Promise.resolve({ ok: true, json: () => Promise.resolve({ cymatix: { running: true } }) });
+  });
+  vm.runInNewContext(source, world.sandbox);
+  await drain(); await drain();
+  const card = () => world.panels.querySelector("[data-host-status]");
+  const swapped = Boolean(card());
+  const atSwap = swapped ? card().dataset.observation || null : "no-card";
+  await world.advance(2000);
+  const atTwo = card() ? card().dataset.observation || null : "no-card";
+  await world.advance(2000);
+  const atFour = card() ? card().dataset.observation || null : "no-card";
+  return {
+    swapped: swapped,
+    observation_at_swap: atSwap,
+    observation_at_2s: atTwo,
+    observation_at_4s: atFour,
+    stale_attribute: world.panels.dataset.stale || null,
+    errors: world.facts.errors,
+  };
+}
+
+(async () => {
+  process.stdout.write(JSON.stringify({
+    hang: await scenarioHang(), aging: await scenarioAging(),
+  }));
+})();
+"""
+
+
+@pytest.fixture(scope="module")
+def browser_run(tmp_path_factory):
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("no Node runtime is installed; the browser path is not executed")
+    workdir = tmp_path_factory.mktemp("launcher-js")
+    harness = workdir / "harness.js"
+    harness.write_text(_BROWSER_HARNESS, encoding="utf-8")
+    script = (
+        Path(__file__).resolve().parents[1]
+        / "cymatix_context" / "launcher" / "static" / "launcher.js"
+    )
+    completed = subprocess.run(
+        [node, str(harness), str(script)],
+        capture_output=True, text=True, timeout=60, cwd=str(workdir),
+    )
+    assert completed.returncode == 0, completed.stderr
+    return json.loads(completed.stdout)
+
+
+class TestHostStatusBrowserBehaviour:
+    """The freshness path executed, not read."""
+
+    def test_one_poll_pass_issues_exactly_the_two_known_bounded_requests(self, browser_run):
+        hang = browser_run["hang"]
+        assert hang["errors"] == []
+        assert hang["first_pass_fetches"] == 2
+        assert hang["fetches_all_bounded"] is True
+        assert hang["urls"] == ["/api/state", "/api/state/panels"]
+        assert hang["poll_intervals"] == 1
+
+    def test_neither_request_stacks_up_while_the_previous_one_hangs(self, browser_run):
+        # Three interval ticks pass inside the deadline. Without the two
+        # guards this would be eight outstanding requests.
+        assert browser_run["hang"]["fetches_before_deadline"] == 2
+
+    def test_a_hung_fetch_aborts_at_the_deadline_and_the_page_says_so(self, browser_run):
+        hang = browser_run["hang"]
+        assert hang["aborted"] == 2
+        assert hang["stale_attribute"] == "true"
+
+    def test_the_rendered_observation_expires_on_its_own_serialised_lifetime(self, browser_run):
+        aging = browser_run["aging"]
+        assert aging["errors"] == []
+        assert aging["swapped"] is True
+        assert aging["observation_at_swap"] is None
+        assert aging["observation_at_2s"] is None, "inside the serialised lifetime"
+        assert aging["observation_at_4s"] == "expired"
+        assert aging["stale_attribute"] == "true"

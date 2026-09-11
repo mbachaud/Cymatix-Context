@@ -43,6 +43,7 @@ import time
 from concurrent.futures import Future
 from datetime import datetime, timezone
 from functools import partial
+from collections.abc import Mapping
 from typing import Any, Callable, Dict, Optional
 
 log = logging.getLogger("cymatix.launcher.status_cache")
@@ -106,8 +107,33 @@ def _nonnegative(value: float) -> float:
     return round(max(0.0, value), 3)
 
 
+def _error_label(exc: BaseException) -> str:
+    """The exception type name and nothing else.
+
+    A refresh failure is diagnosed from a native host configuration file
+    and a loopback probe, so its message and its traceback can carry a
+    path, a URL or a token. The panel already drops all three; the log
+    line has to drop them too, or the projection is the only clean copy.
+    """
+
+    return type(exc).__name__
+
+
 def _spawn_thread(work: Callable[[], None]) -> None:
     threading.Thread(target=work, name="cymatix-launcher-status", daemon=True).start()
+
+
+def _approved_only(snapshot: Mapping) -> Dict[str, Any]:
+    """Copy across the approved keys and drop everything else.
+
+    The field allowlist lives in the projector, which is injected. This
+    is the second lock on the same door: whatever a projector returns,
+    the cache publishes `SNAPSHOT_KEYS` and no other key.
+    """
+
+    return {
+        key: copy.deepcopy(snapshot[key]) for key in SNAPSHOT_KEYS if key in snapshot
+    }
 
 
 def unavailable_snapshot() -> Dict[str, Any]:
@@ -180,7 +206,9 @@ class StatusCache:
         self._refresh_state: str = "idle"
         self._cooldown_until: Optional[float] = None
         self._inflight: Optional[Future] = None
-        self._inflight_started: Optional[float] = None
+        # Set when a worker is admitted and cleared only when it
+        # settles, so a retired worker still reports as running.
+        self._worker_started: Optional[float] = None
         self._worker_busy = False
 
     # -- public surface ------------------------------------------------
@@ -211,7 +239,7 @@ class StatusCache:
             if self._is_fresh_locked(now):
                 return self._render_locked(now)
             if self._inflight is not None:
-                started = self._inflight_started
+                started = self._worker_started
                 if started is None or now - started <= self.deadline_s:
                     waiter = self._inflight
             elif self._worker_busy:
@@ -225,22 +253,22 @@ class StatusCache:
                 waiter = Future()
                 generation = self._generation
                 self._inflight = waiter
-                self._inflight_started = now
+                self._worker_started = now
                 self._worker_busy = True
                 self._last_attempt_at = utc_iso(self._wall_clock())
                 self._refresh_state = "refreshing"
-                work = partial(self._run_refresh, waiter, generation)
+                work = partial(self._run_refresh, waiter, generation, now)
 
         # Spawning and waiting happen outside the bookkeeping lock, so a
         # slow observation never blocks a poll for a different route.
         if work is not None:
             try:
                 self._spawn(work)
-            except BaseException:
+            except BaseException as exc:
                 # A worker that could not start still holds the only
                 # slot. Release it here or the panel never refreshes
                 # again.
-                log.warning("Host status refresh could not start", exc_info=True)
+                log.warning("Host status refresh could not start: %s", _error_label(exc))
                 self._settle(waiter, generation, "failed", None)
                 raise
         if waiter is not None:
@@ -260,13 +288,17 @@ class StatusCache:
 
     # -- refresh -------------------------------------------------------
 
-    def _run_refresh(self, future: Future, generation: int) -> None:
-        started = self._clock()
+    def _run_refresh(self, future: Future, generation: int, started: float) -> None:
+        # `started` is the admission instant, the same one the caller
+        # facing deadline runs from. Measuring the fence from the
+        # worker's own first instruction instead would put thread start
+        # latency inside the fence and outside the display, so a refresh
+        # the panel had already reported as timed out could still land.
         try:
             try:
                 projected = self._projector(self._reader())
-            except Exception:
-                log.warning("Host status refresh failed", exc_info=True)
+            except Exception as exc:
+                log.warning("Host status refresh failed: %s", _error_label(exc))
                 outcome, payload = "failed", None
             else:
                 if isinstance(projected, dict):
@@ -296,9 +328,9 @@ class StatusCache:
         rendered: Optional[Dict[str, Any]] = None
         with self._lock:
             self._worker_busy = False
+            self._worker_started = None
             if self._inflight is future:
                 self._inflight = None
-                self._inflight_started = None
             if generation == self._generation:
                 now = self._clock()
                 if outcome == "ok" and payload is not None:
@@ -336,8 +368,9 @@ class StatusCache:
         self._last_attempt_at = None
         self._refresh_state = "idle"
         self._cooldown_until = None
+        # The worker itself is not retired here: it keeps the only slot
+        # until it exits, and `_display_state_locked` keeps saying so.
         self._inflight = None
-        self._inflight_started = None
 
     def _is_fresh_locked(self, now: float) -> bool:
         if self._snapshot is None or self._observed_monotonic is None:
@@ -349,7 +382,7 @@ class StatusCache:
         if self._snapshot is not None and self._observed_monotonic is not None:
             age = now - self._observed_monotonic
             fresh = age < self.ttl_s
-            snapshot.update(copy.deepcopy(self._snapshot))
+            snapshot.update(_approved_only(self._snapshot))
             snapshot["freshness"] = "fresh" if fresh else "stale"
             snapshot["age_s"] = _nonnegative(age)
             # A clock that jumped backwards must not invent extra
@@ -359,6 +392,9 @@ class StatusCache:
                 if fresh
                 else 0.0
             )
+        # Fixed text, always. A projector cannot turn the scope line
+        # into a path by returning one.
+        snapshot["observation_scope"] = OBSERVATION_SCOPE
         snapshot["observed_at"] = self._observed_at
         snapshot["last_success_at"] = self._last_success_at
         snapshot["last_attempt_at"] = self._last_attempt_at
@@ -366,8 +402,12 @@ class StatusCache:
         return snapshot
 
     def _display_state_locked(self, now: float) -> str:
-        if self._inflight is not None:
-            started = self._inflight_started
+        # An admitted worker is reported whether or not its future is
+        # still current. A `clear` or a context change retires the
+        # evidence, not the worker, and the panel must not read `idle`
+        # while the only refresh slot is occupied.
+        if self._worker_busy:
+            started = self._worker_started
             if started is not None and now - started > self.deadline_s:
                 return "timed_out"
             return "refreshing"

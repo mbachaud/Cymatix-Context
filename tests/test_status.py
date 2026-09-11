@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import email
+import http.client
 import json
 import io
 import socket
 import urllib.error
+import urllib.request
+import urllib.response
 
 import pytest
 
@@ -669,3 +673,208 @@ def test_http_error_status_probe_reads_no_more_than_the_response_limit(monkeypat
     assert read_sizes == [status_mod.MAX_STATUS_RESPONSE_BYTES + 1]
     assert probe.error == "HTTP 503"
     assert "exceeds" in probe.parse_error.lower()
+
+
+# -- probe safety: redirect confinement and the timeout budget ---------
+#
+# Two gaps were statically visible and untested:
+# the loopback rule is enforced once, before the first request, and the
+# probe timeout was parsed as a float without any finite positive check.
+# Both are fixed in `cymatix_status`; these are the negatives.
+
+
+class _FakeResponse(urllib.response.addinfourl):
+    def __init__(self, url, code, header_text, body=b"{}"):
+        headers = email.message_from_string(header_text, _class=http.client.HTTPMessage)
+        super().__init__(io.BytesIO(body), headers, url, code)
+        self.msg = "fake"
+
+
+class _RecordingTransport(urllib.request.HTTPHandler):
+    """The real opener chain over a socket layer that answers a redirect."""
+
+    def __init__(self, location):
+        self.location = location
+        self.requested = []
+
+    def http_open(self, req):
+        self.requested.append(req.full_url)
+        if len(self.requested) == 1:
+            return _FakeResponse(req.full_url, 302, f"Location: {self.location}\n")
+        return _FakeResponse(
+            req.full_url,
+            200,
+            "Content-Type: application/json\n",
+            b'{"status": "ok"}',
+        )
+
+
+@pytest.mark.parametrize(
+    "location",
+    [
+        "http://169.254.169.254/health",
+        "http://example.invalid/health",
+        "https://127.0.0.1:9/health",
+        "/elsewhere",
+    ],
+)
+def test_a_status_probe_never_requests_a_redirect_destination(monkeypatch, location):
+    transport = _RecordingTransport(location)
+    monkeypatch.setattr(
+        urllib.request, "_opener", urllib.request.build_opener(transport)
+    )
+
+    probe = status_mod._probe_json("http://127.0.0.1:11437/health")
+
+    assert transport.requested == ["http://127.0.0.1:11437/health"]
+    assert probe.transport == "unreachable"
+    assert probe.payload is None
+    assert probe.error == status_mod.REDIRECT_REFUSED_REASON
+
+
+def test_a_status_probe_still_reads_a_direct_answer(monkeypatch):
+    class _Direct(urllib.request.HTTPHandler):
+        def __init__(self):
+            self.requested = []
+
+        def http_open(self, req):
+            self.requested.append(req.full_url)
+            return _FakeResponse(
+                req.full_url,
+                200,
+                "Content-Type: application/json\n",
+                b'{"status": "ok"}',
+            )
+
+    direct = _Direct()
+    monkeypatch.setattr(urllib.request, "_opener", urllib.request.build_opener(direct))
+
+    probe = status_mod._probe_json("http://127.0.0.1:11437/health")
+
+    assert direct.requested == ["http://127.0.0.1:11437/health"]
+    assert probe.transport == "reachable"
+    assert probe.payload == {"status": "ok"}
+
+
+def test_a_report_never_carries_evidence_collected_off_the_requested_origin(monkeypatch):
+    """The second lock: an answer from another origin is discarded."""
+
+    class _Elsewhere(urllib.request.HTTPHandler):
+        def http_open(self, req):
+            return _FakeResponse(
+                "http://169.254.169.254/health",
+                200,
+                "Content-Type: application/json\n",
+                b'{"status": "ok"}',
+            )
+
+    monkeypatch.setattr(
+        urllib.request, "_opener", urllib.request.build_opener(_Elsewhere())
+    )
+
+    probe = status_mod._probe_json("http://127.0.0.1:11437/health")
+
+    assert probe.transport == "unreachable"
+    assert probe.payload is None
+
+
+@pytest.mark.parametrize(
+    "value",
+    [0, 0.0, -1.0, -0.001, float("nan"), float("inf"), float("-inf"), "10", None, True],
+)
+def test_an_unusable_probe_timeout_falls_back_to_the_documented_budget(value):
+    assert status_mod.finite_positive_timeout(value) == status_mod._DEFAULT_STATUS_TIMEOUT_S
+
+
+@pytest.mark.parametrize("value", [0.001, 1, 2.5, 59.999, 60.0])
+def test_a_usable_probe_timeout_is_kept(value):
+    assert status_mod.finite_positive_timeout(value) == float(value)
+
+
+@pytest.mark.parametrize("value", [60.001, 600.0, 10**9])
+def test_an_excessive_probe_timeout_is_clamped_to_the_ceiling(value):
+    assert status_mod.finite_positive_timeout(value) == status_mod.MAX_STATUS_TIMEOUT_S
+
+
+def test_the_probe_clamps_its_timeout_without_mutating_any_global(monkeypatch):
+    before = status_mod.DEFAULT_STATUS_TIMEOUT_S
+    seen = []
+
+    class Response(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_exc):
+            return False
+
+    def capture(_request, timeout=None):
+        seen.append(timeout)
+        return Response(b'{"status": "ok"}')
+
+    monkeypatch.setattr(status_mod.urllib.request, "urlopen", capture)
+
+    for supplied in (0.0, -5.0, float("inf"), 10**6):
+        status_mod._probe_json("http://127.0.0.1:11437/health", supplied)
+
+    assert seen == [
+        status_mod._DEFAULT_STATUS_TIMEOUT_S,
+        status_mod._DEFAULT_STATUS_TIMEOUT_S,
+        status_mod._DEFAULT_STATUS_TIMEOUT_S,
+        status_mod.MAX_STATUS_TIMEOUT_S,
+    ]
+    assert status_mod.DEFAULT_STATUS_TIMEOUT_S == before
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected", "warns"),
+    [
+        ("0", 10.0, True),
+        ("-3", 10.0, True),
+        ("nan", 10.0, True),
+        ("inf", 10.0, True),
+        ("not-a-float", 10.0, True),
+        ("900", 60.0, True),
+        ("2.5", 2.5, False),
+        (None, 10.0, False),
+    ],
+)
+def test_the_environment_timeout_is_validated_not_merely_parsed(
+    monkeypatch, capsys, raw, expected, warns
+):
+    if raw is None:
+        monkeypatch.delenv("CYMATIX_STATUS_TIMEOUT_S", raising=False)
+    else:
+        monkeypatch.setenv("CYMATIX_STATUS_TIMEOUT_S", raw)
+
+    assert status_mod._timeout_from_environment() == expected
+
+    warned = capsys.readouterr().err
+    assert ("CYMATIX_STATUS_TIMEOUT_S" in warned) is warns
+
+
+def test_an_implicit_target_that_is_the_callers_own_address_is_never_requested(monkeypatch):
+    probed = []
+    monkeypatch.setattr(
+        status_mod,
+        "_probe_json",
+        lambda url, timeout_s=None: probed.append(url) or ProbeResult(
+            "unreachable", None, None, "offline"
+        ),
+    )
+
+    for configured in ("http://127.0.0.1:11438", "http://localhost:11438"):
+        target = status_mod._select_server_target(
+            explicit_url=None,
+            configured_url=configured,
+            denied_origin="http://127.0.0.1:11438",
+        )
+        assert target.request_url is None
+        assert target.action == status_mod.SELF_TARGET_ACTION
+
+    kept = status_mod._select_server_target(
+        explicit_url=None,
+        configured_url="http://127.0.0.1:11437",
+        denied_origin="http://127.0.0.1:11438",
+    )
+    assert kept.request_url == "http://127.0.0.1:11437"
+    assert probed == []

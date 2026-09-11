@@ -227,7 +227,7 @@ Renders the full dashboard HTML. One of two HTML endpoints; the other is
 
 The JSON view of the same collector snapshot the dashboard renders. The
 browser fetches it once per poll from `refreshControls`
-(`static/launcher.js:155-187`) to drive the status dot, the status label and
+(`static/launcher.js:216-253`) to drive the status dot, the status label and
 the enabled state of the Start / Restart / Stop buttons. It is also the
 endpoint programmatic consumers and debugging should use. The dashboard
 panels themselves are HTML and come from `GET /api/state/panels`, not from
@@ -288,7 +288,7 @@ dashboard then conditionally renders them.
 The server rendered HTML partial for the panel area, produced from the same
 `collector.collect()` snapshot as `GET /` and `GET /api/state`. The browser
 fetches it once per poll from `fetchPanels`
-(`static/launcher.js:136-153`) and swaps it into `#panels`. A request whose
+(`static/launcher.js:192-214`) and swaps it into `#panels`. A request whose
 `sec-fetch-mode` header is `navigate` is redirected to `/` with a 303, so the
 partial is never a landing page.
 
@@ -437,22 +437,43 @@ the panel container:
 </section>
 ```
 
-`startPolling` (`static/launcher.js:189-197`) reads those attributes, runs one
-immediate pass and then a `setInterval` at the declared interval. Each pass
-issues two requests:
+`startPolling` (`static/launcher.js:255-267`) reads those attributes, runs one
+immediate pass and then a `setInterval` at the declared interval. That is the
+only interval that drives the panels: there is no second loop and no status
+specific endpoint. Each pass ages the rendered observation and then issues
+two requests:
 
 | Request | Function | What it updates |
 |---|---|---|
-| `GET /api/state/panels` (HTML) | `fetchPanels` (`:136-153`) | The whole panel area, swapped into `#panels` |
-| `GET /api/state` (JSON) | `refreshControls` (`:155-187`) | Status dot, status label, control button enablement |
+| `GET /api/state/panels` (HTML) | `fetchPanels` (`:192-214`) | The whole panel area, swapped into `#panels` |
+| `GET /api/state` (JSON) | `refreshControls` (`:216-253`) | Status dot, status label, control button enablement |
 
-Only the HTML request has an in flight guard: `fetchPanels` returns early
-while a previous fetch is outstanding, so slow collections cannot stack up.
-`refreshControls` has no such guard. Neither request carries an explicit
-timeout, so a hung connection stays outstanding until the browser gives up.
-A failed or non `ok` HTML fetch sets `data-stale="true"` on the panel
-container, which CSS fades (`static/launcher.css:383-385`); a later
-successful fetch removes the attribute.
+Both requests have an in flight guard and both run under a deadline.
+`fetchPanels` returns early while `inFlight` is set and `refreshControls`
+returns early while `controlsInFlight` is set (`:28`, `:193-194`,
+`:217-218`, `:250-251`), so neither slow collections nor slow control reads
+can stack up. Both go through `fetchBounded` (`:62-77`), which starts an
+`AbortController` timer at `fetchDeadlineMs` (`:24`, four poll intervals
+with a 5000 ms floor), covers the body read as well as the response, and
+clears the timer in `finally`. A hung connection is aborted by the page
+rather than left outstanding until the browser gives up.
+
+A failed, aborted or non `ok` HTML fetch sets `data-stale="true"` on the
+panel container. That attribute does two things: it fades the container
+(`static/launcher.css:383-385`) and it prints a visible notice above the
+grid, "Live updates are not arriving. The panels below are the last answer
+the server gave." (`static/launcher.css:391-400`). A later successful fetch
+removes the attribute and both effects go with it.
+
+Independently of the fetch state, the host status card ages itself.
+`markObservationAge` (`:43-57`) compares local monotonic elapsed time since
+the last panel swap against the `data-fresh-for-s` the server serialised,
+and sets `data-observation="expired"` on the card once the observation the
+page is showing has outlived its freshness. It runs on every swap, in the
+`finally` of every HTML fetch and on every interval tick, so an observation
+still expires visibly while the fetches are failing. It reads two numbers
+and sets one attribute: no readiness is decided in the browser, and nothing
+is fetched.
 
 The poll interval is not a CLI flag. There is no `--poll-interval` option and
 no `--launcher-poll-interval` CSS variable. The 2000 ms value is the
@@ -494,6 +515,36 @@ What the panel is, stated precisely:
 - **Shared collection.** `GET /`, `GET /api/state/panels` and `GET /api/state`
   share one bounded single flight collection with a completion time lifetime.
   Callers wait a finite budget, then take retained evidence or unavailable.
+
+Probe safety, as the panel actually enforces it:
+
+- **Self poll prevention is two rules.** The refresh runs with
+  `launcher_url=None`, so the launcher state endpoint is never requested,
+  and it passes the launcher's own bind address as a denied origin, so a
+  discovered or default server URL that resolves to that address is refused
+  before any request. Loopback is not the test on its own: the launcher is
+  loopback too.
+- **Redirect confinement, not just URL validation.** The loopback rule is
+  applied once, before the first request. A probe therefore refuses to
+  follow a redirect rather than letting a local endpoint hand it a remote
+  address, and an answer that arrives from a different origin than the one
+  requested is discarded instead of shown as local evidence.
+- **A finite positive timeout budget.** Probe timeouts are validated, not
+  merely parsed: zero, negative, NaN and infinity fall back to the 10 second
+  default and anything above the 60 second ceiling is clamped to it, per
+  request and without mutating any global.
+- **Response bytes stay capped.** A response body is read to the 64 KiB cap
+  plus one byte, for success and HTTP error alike, and a non object or
+  malformed body leaves the endpoint reachable with unknown health rather
+  than claiming a transport failure.
+- **Diagnostic logging carries no values.** The refresh, the projection, the
+  native config reads and the probe log an exception type name and nothing
+  else. A path, a URL, a token or a traceback in a log line would defeat the
+  allowlist the panel applies to the page.
+- **What is not claimed.** The refresh deadline fences publication and marks
+  the observation timed out; it does not cancel a blocked file or socket
+  read, and the worker keeps the only refresh slot until it returns. There
+  is no total read byte guarantee for native configuration files.
 
 Diagnostics scope, as a boundary: the panel reads and nothing else. It
 installs, enables, repairs, ingests and controls nothing, so it has no

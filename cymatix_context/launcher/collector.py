@@ -21,7 +21,9 @@ from typing import Any, Callable, Dict, List, Optional
 
 import httpx
 
+from ..cli import cymatix_status as status_module
 from ..cli.cymatix_status import (
+    SELF_TARGET_ACTION,
     ProbeResult,
     collect_status,
     guided_ready,
@@ -161,6 +163,7 @@ APPROVED_NEXT_ACTIONS = frozenset({
     "Restart or refresh the host MCP session to establish a live connection.",
     "Configure an unambiguous MCP handle and host, then verify the active session registry.",
     "Use cymatix_context for repo questions.",
+    SELF_TARGET_ACTION,
 })
 
 # Returned by the validators when a value fails the schema. `None` is a
@@ -331,13 +334,31 @@ def default_status_context(*, workspace: Path, home: Path) -> str:
     ))
 
 
-def default_status_reader(*, workspace: Path, home: Path) -> Callable[[], Dict[str, Any]]:
+def launcher_origin() -> str:
+    """The address this launcher answers on, for the self poll refusal.
+
+    Read at call time rather than captured at import, so a launcher
+    started on another address refuses that address.
+    """
+
+    return status_module.DEFAULT_LAUNCHER_URL
+
+
+def default_status_reader(
+    *, workspace: Path, home: Path, origin: Optional[str] = None,
+) -> Callable[[], Dict[str, Any]]:
     """A reader that collects host status for one fixed local context.
 
-    `launcher_url=None` disables the launcher state probe, and no
-    explicit server URL is ever passed: a discovered remote URL must
-    never be promoted into an explicit opt in.
+    Self poll prevention is two rules, not one. `launcher_url=None`
+    disables the launcher state probe, and `denied_origin` refuses any
+    discovered or default server target that resolves to the address
+    this launcher is answering on: loopback is not the test, because
+    the launcher is loopback too. No explicit server URL is ever
+    passed, so a discovered remote URL cannot be promoted into an
+    explicit opt in.
     """
+
+    denied = origin if origin is not None else launcher_origin()
 
     def read() -> Dict[str, Any]:
         return collect_status(
@@ -348,6 +369,7 @@ def default_status_reader(*, workspace: Path, home: Path) -> Callable[[], Dict[s
             skill_dir=None,
             start_dir=workspace,
             home_dir=home,
+            denied_origin=denied,
         )
 
     return read
@@ -399,8 +421,14 @@ class StateCollector:
         """Return the full launcher state dict. Never raises."""
         cymatix_state = self._collect_cymatix_process()
         # Stamp the supervised child sample where it was sampled, not
-        # where it is serialised, and never reuse an older stamp.
-        supervisor_observed_at = self.status_cache.wall_now()
+        # where it is serialised, and never reuse an older stamp. This
+        # sits inside the guard for the same reason the snapshot read
+        # does: `collect` never raises, and the cache is injectable.
+        try:
+            supervisor_observed_at = self.status_cache.wall_now()
+        except Exception as exc:
+            log.warning("Host status clock unavailable: %s", type(exc).__name__)
+            supervisor_observed_at = None
         state: Dict[str, Any] = {"cymatix": cymatix_state}
         if self.update_checker is not None:
             state["update"] = self.update_checker.check().as_dict()
@@ -545,8 +573,10 @@ class StateCollector:
         """
         try:
             snapshot = self.status_cache.get()
-        except Exception:
-            log.warning("Host status snapshot unavailable", exc_info=True)
+        except Exception as exc:
+            # The type name only. The exception can carry a config path
+            # or a probe URL, and the panel drops both by design.
+            log.warning("Host status snapshot unavailable: %s", type(exc).__name__)
             snapshot = unavailable_snapshot()
         snapshot["launcher"] = supervisor_launcher_evidence(
             cymatix_state.get("running"), observed_at,

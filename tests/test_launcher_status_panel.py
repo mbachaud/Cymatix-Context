@@ -35,6 +35,7 @@ import pytest
 
 from cymatix_context.cli import cymatix_status
 from cymatix_context.cli.cymatix_status import (
+    SELF_TARGET_ACTION,
     McpLiveReport,
     ProbeResult,
     SkillReport,
@@ -50,6 +51,7 @@ from cymatix_context.launcher.collector import (
     approved_next_action,
     default_status_context,
     default_status_reader,
+    launcher_origin,
     project_host_status,
     supervisor_launcher_evidence,
 )
@@ -329,6 +331,13 @@ class TestApprovedGuidance:
             "http://[::1]:11437",
         ):
             targets.add(_select_server_target(explicit_url=None, configured_url=configured).action)
+            targets.add(
+                _select_server_target(
+                    explicit_url=None,
+                    configured_url=configured,
+                    denied_origin="http://127.0.0.1:11437",
+                ).action
+            )
         diagnostics = {_diagnostic_target_action(value) for value in (True, False, None)}
         skills = [
             SkillReport(installation="present", activation="enabled", path=Path()),
@@ -449,7 +458,31 @@ class TestRealReportPath:
             "skill_dir": None,
             "start_dir": workspace,
             "home_dir": tmp_path / "home",
+            # The second half of self poll prevention: the address this
+            # launcher answers on is refused as a probe target, so a
+            # discovered or default URL that resolves to it is never
+            # requested from inside the request it would be serving.
+            "denied_origin": launcher_origin(),
         }
+
+    def test_the_reader_refuses_the_launcher_own_address_as_a_target(
+        self, tmp_path, sandbox_env, recorded_probes,
+    ):
+        workspace = tmp_path / "ws"
+        workspace.mkdir()
+        (workspace / ".mcp.json").write_text(
+            _canonical_config("http://localhost:11438"), encoding="utf-8",
+        )
+
+        raw = default_status_reader(
+            workspace=workspace,
+            home=tmp_path / "home",
+            origin="http://127.0.0.1:11438",
+        )()
+
+        assert recorded_probes == [], recorded_probes
+        assert raw["server"]["transport"] == "unreachable"
+        assert project_host_status(raw)["next_action"] == SELF_TARGET_ACTION
 
     def test_a_status_read_changes_nothing_on_disk(self, workspace, tmp_path, offline):
         before = {
