@@ -560,3 +560,538 @@ def test_observability_skipped_when_install_incomplete(monkeypatch):
     sup, install_pending = _maybe_build_observability()
     assert sup is None
     assert install_pending is True
+
+
+# ---------------------------------------------------------------------
+# Host status panel: the three existing routes, one shared projection.
+#
+# These drive a real StateCollector and a real StatusCache over a fake
+# reader, so the projection under test is the shipped allowlist and the
+# HTML under test is the shipped template. The fake report carries a
+# secret sentinel in every field the allowlist is supposed to drop:
+# native config paths, the server URL, its payload, its parse error, its
+# error text, the inspected path list and an environment map. If any of
+# them reaches the page or the JSON, these fail.
+# ---------------------------------------------------------------------
+
+import re
+
+from cymatix_context.launcher.collector import StateCollector, project_host_status
+from cymatix_context.launcher.status_cache import (
+    GENERIC_NEXT_ACTION,
+    OBSERVATION_SCOPE,
+    SNAPSHOT_KEYS,
+    StatusCache,
+)
+
+SENTINEL = "s3cr3t-do-not-render-3f9a"
+
+APPROVED_HOST_STATUS_KEYS = set(SNAPSHOT_KEYS) | {"launcher"}
+APPROVED_GROUP_KEYS = {
+    "host": {"selection", "profile"},
+    "server": {"transport", "health", "source", "configured_url_match"},
+    "mcp": {"configuration", "activation", "live"},
+    "skill": {"installation", "activation"},
+    "launcher": {"state", "source", "observed_at"},
+}
+
+# Every route this app is allowed to serve. The host status panel is
+# delivered through the three that already existed, so this list must
+# not grow; it is the no-new-route check.
+EXPECTED_ROUTES = {
+    "/",
+    "/api/control/bench/start",
+    "/api/control/bench/stop",
+    "/api/control/restart",
+    "/api/control/start",
+    "/api/control/stop",
+    "/api/genome/create",
+    "/api/genome/select",
+    "/api/genomes",
+    "/api/state",
+    "/api/state/panels",
+    "/docs",
+    "/docs/oauth2-redirect",
+    "/openapi.json",
+    "/redoc",
+    "/static",
+}
+
+_DIMENSION = re.compile(
+    r"<dt>(?P<label>[^<]+)</dt>\s*"
+    r'<dd class="host-status-value[^"]*">(?P<value>[^<]*)</dd>'
+)
+
+
+def _dimensions(html: str) -> dict:
+    """Label to rendered value for every host status row in the page."""
+
+    return {
+        m.group("label").strip(): m.group("value").strip()
+        for m in _DIMENSION.finditer(html)
+    }
+
+
+def _sentinel_report(**overrides):
+    """A schema valid report whose every unapproved field is a secret."""
+
+    report = {
+        "host": {
+            "selection": "claude-code",
+            "profile": "Claude Code",
+            "detail": SENTINEL,
+            "config_path": "/home/" + SENTINEL + "/.claude.json",
+        },
+        "server": {
+            "transport": "reachable",
+            "health": "healthy",
+            "source": "configured",
+            "configured_url_match": True,
+            "url": "http://127.0.0.1:11437/?token=" + SENTINEL,
+            "payload": {"api_key": SENTINEL},
+            "parse_error": "cannot parse " + SENTINEL,
+            "error": "connection refused for " + SENTINEL,
+        },
+        "mcp": {
+            "configuration": "canonical",
+            "activation": "enabled",
+            "live": "connected",
+            "path": "/home/" + SENTINEL + "/.mcp.json",
+            "detail": SENTINEL,
+        },
+        "skill": {
+            "installation": "present",
+            "activation": "enabled",
+            "path": "/home/" + SENTINEL + "/skills",
+        },
+        "configured_ready": True,
+        "guided_ready": True,
+        "next_action": "Use cymatix_context for repo questions.",
+        "inspected_paths": ["/home/" + SENTINEL + "/.codex/config.toml"],
+        "launcher": {"url": "http://127.0.0.1:11438/" + SENTINEL, "state": "running"},
+        "env": {"CYMATIX_API_KEY": SENTINEL},
+    }
+    report.update(overrides)
+    return report
+
+
+def _status_cache(reader, calls=None):
+    """A real cache whose refresh runs inline, so the test is ordered."""
+
+    def counted():
+        if calls is not None:
+            calls.append(1)
+        return reader()
+
+    return StatusCache(
+        reader=counted,
+        projector=project_host_status,
+        context_factory=lambda: "route-test-context",
+        spawn=lambda work: work(),
+    )
+
+
+@pytest.fixture
+def status_calls():
+    return []
+
+
+@pytest.fixture
+def host_status_client(fake_store, fake_supervisor, status_calls, monkeypatch, tmp_path):
+    """create_app over a real collector with a fake host status reader."""
+
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.chdir(tmp_path)
+
+    def build(reader, *, running=False):
+        fake_supervisor.is_running.return_value = running
+        collector = StateCollector(
+            supervisor=fake_supervisor,
+            status_cache=_status_cache(reader, status_calls),
+        )
+        app = create_app(
+            store=fake_store, supervisor=fake_supervisor, collector=collector
+        )
+        return app, TestClient(app)
+
+    return build
+
+
+class TestHostStatusProjectionOnTheExistingRoutes:
+    def test_json_carries_only_the_approved_projection(self, host_status_client):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert set(payload) == APPROVED_HOST_STATUS_KEYS
+        for group, keys in APPROVED_GROUP_KEYS.items():
+            assert set(payload[group]) == keys, group
+        assert payload["observation_scope"] == OBSERVATION_SCOPE
+        assert payload["configured_ready"] is True
+        assert payload["guided_ready"] is True
+        assert payload["launcher"]["source"] == "supervisor"
+
+    def test_no_sentinel_reaches_any_of_the_three_responses(self, host_status_client):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            bodies = [
+                c.get("/").text,
+                c.get("/api/state/panels").text,
+                c.get("/api/state").text,
+            ]
+
+        for body in bodies:
+            assert SENTINEL not in body
+            assert ".mcp.json" not in body
+            assert "api_key" not in body
+            assert "connection refused" not in body
+            assert "inspected_paths" not in body
+            # The cymatix port is elsewhere on the page from the old
+            # aggregate, so scope the URL check to the new panel.
+            panel = body.split("data-host-status", 1)[-1]
+            assert "http://" not in panel
+
+    def test_upstream_error_text_never_reaches_a_response(self, host_status_client):
+        """An unreachable server is a successful observation, not a leak."""
+
+        report = _sentinel_report(
+            server={
+                "transport": "unreachable",
+                "health": "unknown",
+                "source": "default",
+                "configured_url_match": None,
+                "error": "HTTPConnectionPool refused: " + SENTINEL,
+                "parse_error": SENTINEL,
+                "payload": {"stack": SENTINEL},
+            },
+            configured_ready=False,
+            guided_ready=False,
+            next_action="Start or repair the Cymatix server configured for this MCP entry.",
+        )
+        _, client = host_status_client(lambda: report)
+        with client as c:
+            html = c.get("/api/state/panels").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert SENTINEL not in html
+        assert "HTTPConnectionPool" not in html
+        assert payload["server"] == {
+            "transport": "unreachable",
+            "health": "unknown",
+            "source": "default",
+            "configured_url_match": None,
+        }
+        rows = _dimensions(html)
+        assert rows["Server transport"] == "Unreachable"
+        assert rows["Server health"] == "Unknown"
+        assert rows["Configured URL match"] == "Unknown"
+
+    def test_all_three_routes_share_one_refresh(self, host_status_client, status_calls):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            c.get("/")
+            c.get("/api/state/panels")
+            c.get("/api/state")
+
+        assert len(status_calls) == 1
+
+    def test_no_new_route_is_registered(self, host_status_client):
+        app, _ = host_status_client(_sentinel_report)
+        assert {route.path for route in app.routes} == EXPECTED_ROUTES
+
+
+class TestHostStatusRendering:
+    def test_every_dimension_renders_independently(self, host_status_client):
+        report = _sentinel_report(
+            server={
+                "transport": "reachable",
+                "health": "unknown",
+                "source": "default",
+                "configured_url_match": False,
+            },
+            mcp={"configuration": "noncanonical", "activation": "unknown", "live": "unknown"},
+            skill={"installation": "present", "activation": "disabled"},
+            configured_ready=False,
+            guided_ready=False,
+            next_action="Add or repair the canonical cymatix-context MCP entry for this host.",
+        )
+        _, client = host_status_client(lambda: report)
+        with client as c:
+            rows = _dimensions(c.get("/").text)
+
+        # Reachable is not healthy, configured is not activated,
+        # installed is not enabled, and none of them is readiness.
+        assert rows["Server transport"] == "Reachable"
+        assert rows["Server health"] == "Unknown"
+        assert rows["Server URL source"] == "Default"
+        assert rows["Configured URL match"] == "Differs"
+        assert rows["MCP entry"] == "Noncanonical"
+        assert rows["MCP activation"] == "Unknown"
+        assert rows["MCP live session"] == "Unknown"
+        assert rows["Skill installation"] == "Present"
+        assert rows["Skill activation"] == "Disabled"
+        assert rows["Configured readiness"] == "Not ready"
+        assert rows["Guided readiness"] == "Not ready"
+
+    def test_mcp_live_is_labelled_registry_evidence(self, host_status_client):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            html = c.get("/").text
+
+        live = html.split("MCP live session", 1)[1].split("</div>", 1)[0]
+        assert "Registry evidence only" in live
+        assert "authenticated" not in live.lower()
+
+    def test_ambiguous_and_unknown_host_selection_stay_distinct(self, host_status_client):
+        ambiguous = _sentinel_report(
+            host={"selection": "ambiguous", "profile": None},
+            configured_ready=None,
+            guided_ready=None,
+            next_action=(
+                "Multiple host configs contain cymatix-context; pass --host explicitly."
+            ),
+        )
+        unknown = _sentinel_report(
+            host={"selection": "unknown", "profile": None},
+            configured_ready=False,
+            guided_ready=False,
+            next_action="Pass --host or add one canonical cymatix-context MCP entry.",
+        )
+        _, client = host_status_client(lambda: ambiguous)
+        with client as c:
+            assert _dimensions(c.get("/").text)["Host"] == "Ambiguous"
+        _, client = host_status_client(lambda: unknown)
+        with client as c:
+            assert _dimensions(c.get("/").text)["Host"] == "Unknown"
+
+    def test_null_readiness_renders_unknown_never_false(self, host_status_client):
+        report = _sentinel_report(
+            server={
+                "transport": "reachable",
+                "health": "unknown",
+                "source": "configured",
+                "configured_url_match": True,
+            },
+            configured_ready=None,
+            guided_ready=None,
+            next_action="Start or repair the Cymatix server configured for this MCP entry.",
+        )
+        _, client = host_status_client(lambda: report)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        rows = _dimensions(html)
+        assert rows["Configured readiness"] == "Unknown"
+        assert rows["Guided readiness"] == "Unknown"
+        assert "Unknown is never false" in html
+        assert payload["configured_ready"] is None
+        assert payload["guided_ready"] is None
+
+    def test_supervisor_launcher_state_is_its_own_dimension(self, host_status_client):
+        _, client = host_status_client(_sentinel_report, running=True)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        rows = _dimensions(html)
+        assert rows["Supervised child"] == "Running"
+        assert rows["Child evidence from"] == "supervisor"
+        assert payload["launcher"]["state"] == "running"
+        assert payload["launcher"]["observed_at"] is not None
+
+    def test_component_is_present_when_the_child_is_stopped(self, host_status_client):
+        _, client = host_status_client(_sentinel_report, running=False)
+        with client as c:
+            root = c.get("/").text
+            partial = c.get("/api/state/panels").text
+
+        for body in (root, partial):
+            assert "data-host-status" in body
+            assert "Host status" in body
+            assert _dimensions(body)["Supervised child"] == "Stopped"
+            assert _dimensions(body)["Configured readiness"] == "Ready"
+        # The stopped-child empty state still renders alongside it.
+        assert "Cymatix is stopped" in root
+
+    def test_unavailable_observation_is_distinct_from_not_ready(self, host_status_client):
+        def explode():
+            raise RuntimeError("native config read failed for " + SENTINEL)
+
+        _, client = host_status_client(explode)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert SENTINEL not in html
+        assert 'data-freshness="unavailable"' in html
+        assert "No observation available yet" in html
+        rows = _dimensions(html)
+        assert rows["Configured readiness"] == "Unknown"
+        assert rows["Server health"] == "Unknown"
+        assert rows["MCP entry"] == "Unknown"
+        # The supervised child is sampled separately, so it is still real.
+        assert rows["Supervised child"] == "Stopped"
+        assert payload["freshness"] == "unavailable"
+        assert payload["host"] is None
+        assert payload["next_action"] == GENERIC_NEXT_ACTION
+
+    def test_freshness_attributes_are_serialised_for_presentation_aging(
+        self, host_status_client
+    ):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert 'data-freshness="fresh"' in html
+        assert "data-fresh-for-s=" in html
+        assert "data-age-s=" in html
+        assert payload["fresh_for_s"] is not None
+        assert payload["age_s"] is not None
+        assert "aged past its" in html
+
+
+class TestHostStatusEscapingAndGuidance:
+    def test_unapproved_guidance_is_replaced_not_escaped(self, host_status_client):
+        report = _sentinel_report(
+            next_action="<b>paste this key: " + SENTINEL + "</b>",
+        )
+        _, client = host_status_client(lambda: report)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert SENTINEL not in html
+        assert "&lt;b&gt;" not in html
+        assert payload["next_action"] == GENERIC_NEXT_ACTION
+        assert GENERIC_NEXT_ACTION in html
+
+    def test_markup_metacharacters_in_text_are_escaped_never_executed(
+        self, fake_store, fake_supervisor
+    ):
+        """The template escapes even text the allowlist let through.
+
+        The approved vocabulary has no markup in it today, which is
+        exactly why this drives a crafted projection straight into the
+        template: the render must not depend on that staying true.
+        """
+        marked = '<img src=x onerror="alert(1)">&'
+        collector = MagicMock()
+        collector.collect.return_value = {
+            "cymatix": {"running": False, "port": 11437},
+            "host_status": {
+                "observation_scope": marked,
+                "freshness": "fresh",
+                "refresh_state": "idle",
+                "observed_at": "2026-09-11T06:12:44Z",
+                "last_success_at": "2026-09-11T06:12:44Z",
+                "last_attempt_at": "2026-09-11T06:12:44Z",
+                "age_s": 0.4,
+                "fresh_for_s": 4.6,
+                "host": {"selection": "claude-code", "profile": marked},
+                "server": {
+                    "transport": "reachable",
+                    "health": "healthy",
+                    "source": marked,
+                    "configured_url_match": True,
+                },
+                "mcp": {
+                    "configuration": "canonical",
+                    "activation": "enabled",
+                    "live": "connected",
+                },
+                "skill": {"installation": "present", "activation": "enabled"},
+                "launcher": {"state": "running", "source": marked, "observed_at": None},
+                "configured_ready": True,
+                "guided_ready": True,
+                "next_action": marked,
+            },
+        }
+        app = create_app(
+            store=fake_store, supervisor=fake_supervisor, collector=collector
+        )
+        with TestClient(app) as client:
+            html = client.get("/").text
+
+        assert "<img src=x" not in html
+        assert 'onerror="' not in html
+        assert "&lt;img src=x onerror=&#34;alert(1)&#34;&gt;&amp;" in html
+
+    def test_next_action_render_is_bounded(self, fake_store, fake_supervisor):
+        long_text = "A" * 4000
+        collector = MagicMock()
+        collector.collect.return_value = {
+            "cymatix": {"running": False, "port": 11437},
+            "host_status": {
+                "observation_scope": OBSERVATION_SCOPE,
+                "freshness": "fresh",
+                "refresh_state": "idle",
+                "observed_at": None,
+                "last_success_at": None,
+                "last_attempt_at": None,
+                "age_s": None,
+                "fresh_for_s": None,
+                "host": None,
+                "server": None,
+                "mcp": None,
+                "skill": None,
+                "launcher": {"state": "stopped", "source": "supervisor", "observed_at": None},
+                "configured_ready": None,
+                "guided_ready": None,
+                "next_action": long_text,
+            },
+        }
+        app = create_app(
+            store=fake_store, supervisor=fake_supervisor, collector=collector
+        )
+        with TestClient(app) as client:
+            html = client.get("/").text
+
+        assert "A" * 500 in html
+        assert "A" * 501 not in html
+
+
+class TestHostStatusBrowserContract:
+    """What the served static files are allowed to do for this panel.
+
+    There is no JS runtime in this suite, so these pin the contract for
+    launcher.js: bound the fetches that already exist,
+    show staleness in words, age the observation, and add no second
+    loop and no second endpoint.
+    """
+
+    def _asset(self, name: str) -> str:
+        from cymatix_context.launcher.app import STATIC_DIR
+
+        return (STATIC_DIR / name).read_text(encoding="utf-8")
+
+    def test_panel_fetches_are_finite_and_always_cleaned_up(self):
+        js = self._asset("launcher.js")
+        assert "AbortController" in js
+        assert "controller.abort()" in js
+        assert js.count("clearTimeout(timer)") == 1
+        assert "finally {" in js
+
+    def test_no_second_poll_loop_and_no_new_endpoint(self):
+        js = self._asset("launcher.js")
+        # Two intervals, both of which predate this panel: the dashboard
+        # poll and the first-boot database modal poll. The host status
+        # panel rides the first one and adds neither a third timer nor
+        # an endpoint of its own.
+        assert js.count("setInterval(") == 2
+        assert "setInterval(pollDbModal" in js
+        assert "host-status" not in js.replace("data-host-status", "")
+        assert "/api/status" not in js
+        polled = set(re.findall(r"await fetchBounded\(\s*\n?\s*([^,]+),", js))
+        assert polled == {"pollUrl", '"/api/state"'}
+
+    def test_stale_state_is_visible_in_words(self):
+        css = self._asset("launcher.css")
+        assert '.panels[data-stale="true"]::before' in css
+        assert "Live updates are not arriving" in css
+
+    def test_expired_observation_has_its_own_neutral_presentation(self):
+        css = self._asset("launcher.css")
+        assert '.panel--host-status[data-observation="expired"] .host-status-aged' in css
+        assert '.panel--host-status[data-freshness="stale"] .host-status-value' in css
