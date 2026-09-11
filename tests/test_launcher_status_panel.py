@@ -981,3 +981,385 @@ class TestCollectorComposition:
         StateCollector(supervisor=supervisor, status_cache=FakeCache()).collect()
         for forbidden in ("start", "stop", "restart", "install", "repair", "ingest"):
             assert not getattr(supervisor, forbidden).called, forbidden
+
+
+# =====================================================================
+# Attack tests
+# =====================================================================
+#
+# Each test below was written as a failing test against a hole found in
+# the first build of the status cache and projection, and cites the
+# source line that let it through. These tests change no production
+# code: a test here that passes is the evidence that its hole is closed.
+#
+# Only attacks that landed are recorded here: a passing test for an
+# attack that never landed would only pad the suite.
+#
+# Line references are `cymatix_context/...` as first built on this
+# branch for the new files (status_cache.py, collector.py) and at
+# upstream c05849b for files this branch had not yet changed
+# (cli/cymatix_status.py, integrations/host_profiles.py).
+
+import email
+import http.client
+import io
+import urllib.request
+import urllib.response
+
+
+@pytest.fixture
+def sandbox_env(tmp_path, monkeypatch):
+    """Point every config discovery environment variable at scratch.
+
+    Nothing in the status path is supposed to read the real user
+    profile. This fixture makes a mistake in that direction fail into an
+    empty temporary directory instead of into the operator's home.
+    """
+
+    sandbox = tmp_path / "sandbox-env"
+    for name in ("home", "tmp", "config", "data", "state", "cache"):
+        (sandbox / name).mkdir(parents=True, exist_ok=True)
+    monkeypatch.setenv("HOME", str(sandbox / "home"))
+    monkeypatch.setenv("USERPROFILE", str(sandbox / "home"))
+    monkeypatch.setenv("TMPDIR", str(sandbox / "tmp"))
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(sandbox / "config"))
+    monkeypatch.setenv("XDG_DATA_HOME", str(sandbox / "data"))
+    monkeypatch.setenv("XDG_STATE_HOME", str(sandbox / "state"))
+    monkeypatch.setenv("XDG_CACHE_HOME", str(sandbox / "cache"))
+    monkeypatch.delenv("CYMATIX_STATUS_URL", raising=False)
+    monkeypatch.delenv("CYMATIX_LAUNCHER_URL", raising=False)
+    return sandbox
+
+
+@pytest.fixture
+def recorded_probes(monkeypatch):
+    """Record every probe URL and open no socket."""
+
+    urls = []
+
+    def refuse(url, timeout_s=None):
+        urls.append(url)
+        return ProbeResult("unreachable", None, None, "offline test")
+
+    monkeypatch.setattr(cymatix_status, "_probe_json", refuse)
+    return urls
+
+
+def _canonical_config(url):
+    return json.dumps({
+        "mcpServers": {
+            "cymatix-context": {
+                "command": "python",
+                "args": ["-m", "cymatix_context.mcp_server"],
+                "env": {"CYMATIX_MCP_URL": url, "CYMATIX_MCP_HOST": "claude-code"},
+            }
+        }
+    })
+
+
+class TestCacheHoles:
+    """Attacks on the timing and publication fences in status_cache.py."""
+
+    def test_hole_a_worker_started_late_publishes_after_the_panel_said_timed_out(self, clock):
+        """The deadline is measured twice, from two different instants.
+
+        The caller facing deadline runs from admission (`_inflight_started`
+        is stamped in `get`, status_cache.py:228, and read by
+        `_display_state_locked`, :371). The publication fence runs from
+        the worker's own start (`started = self._clock()`, :264, compared
+        at :277). Anything between admission and the worker's first
+        instruction, thread start latency included, is inside the fence
+        and outside the display. A refresh the panel has already reported
+        as `timed_out` therefore publishes as a fresh observation.
+        """
+
+        pending = []
+        cache = build_cache(lambda: report(), clock, caller_wait_s=0.0, spawn=pending.append)
+
+        assert cache.get()["refresh_state"] == "refreshing"
+        clock.advance(26.0)
+        assert cache.get()["refresh_state"] == "timed_out", "the panel published timed_out"
+
+        pending[0]()  # the worker finally starts, and its read returns at once
+        published = cache.get()
+        assert published["freshness"] != "fresh", "a fenced refresh must not publish"
+        assert published["last_success_at"] is None, "and must not record a success"
+
+    def test_hole_the_cache_publishes_every_key_the_projector_returns(self, clock):
+        """`SNAPSHOT_KEYS` is documentation, not a boundary check.
+
+        status_cache.py:69 calls `SNAPSHOT_KEYS` "every key the cache
+        publishes" and the module docstring promises "approved snapshots
+        only". `_render_locked` then does an unchecked
+        `snapshot.update(copy.deepcopy(self._snapshot))` (:352), so the
+        published mapping is whatever the projector handed over. The
+        allowlist exists once, in the projector; the publication boundary
+        re-checks nothing, so a projector that grows a field, or is
+        replaced, carries it into the snapshot, the JSON route and the
+        template in one step.
+        """
+
+        def leaky(raw):
+            projected = project_host_status(raw)
+            projected["inspected_paths"] = [f"/home/{SENTINEL}/.mcp.json"]
+            projected["observation_scope"] = f"/home/{SENTINEL}/workspace"
+            return projected
+
+        cache = StatusCache(
+            reader=lambda: report(),
+            projector=leaky,
+            clock=lambda: clock.monotonic,
+            wall_clock=lambda: clock.wall,
+            spawn=inline_spawn,
+        )
+        snapshot = cache.get()
+        assert set(snapshot) == set(SNAPSHOT_KEYS), "unapproved keys were published"
+        assert SENTINEL not in " ".join(strings_in(snapshot))
+
+    def test_hole_clear_during_a_refresh_reports_idle_while_a_worker_runs(self, clock):
+        """`clear` hides the running refresh instead of reporting it.
+
+        `_retire_locked` drops the in flight future and resets
+        `_refresh_state` to "idle" (status_cache.py:329 to 340) but
+        leaves `_worker_busy` set, which is correct for the worker bound
+        and wrong for the display: `_display_state_locked` (:368) only
+        looks at `_inflight`, so the panel reads `idle` while a refresh is
+        running and while no other refresh can be admitted. The operator
+        is shown a cache at rest and an empty card, and nothing on the
+        page says a collection is still out.
+        """
+
+        pending = []
+        cache = build_cache(lambda: report(), clock, caller_wait_s=0.0, spawn=pending.append)
+        cache.get()
+        cache.clear()
+
+        snapshot = cache.get()
+        assert len(pending) == 1, "the worker bound itself holds"
+        assert snapshot["refresh_state"] == "refreshing", "a running refresh must be visible"
+
+    def test_hole_a_context_change_reports_idle_while_the_retired_worker_holds_the_slot(
+        self, clock,
+    ):
+        """The same blind spot on the context retirement path.
+
+        A changed execution context retires through the same
+        `_retire_locked` (status_cache.py:208 to 209), so the new context
+        is served `unavailable` plus `idle` even though the only refresh
+        slot is still occupied by the retired observation and no refresh
+        for the new context can start until it exits.
+        """
+
+        context = {"value": "workspace-a"}
+        pending = []
+        cache = build_cache(
+            lambda: report(),
+            clock,
+            caller_wait_s=0.0,
+            context_factory=lambda: context["value"],
+            spawn=pending.append,
+        )
+        cache.get()
+        context["value"] = "workspace-b"
+
+        snapshot = cache.get()
+        assert len(pending) == 1
+        assert snapshot["freshness"] == "unavailable"
+        assert snapshot["refresh_state"] == "refreshing", "a running refresh must be visible"
+
+
+class TestLogHoles:
+    """Sentinels that reach a log line rather than the page."""
+
+    def test_hole_the_reader_exception_text_reaches_a_log_line(self, clock, caplog):
+        """status_cache.py:269 logs the reader failure with `exc_info`.
+
+        The projection never renders an error string, and that is the
+        half of the promise this path keeps. The other half, "do not log
+        raw values", is not kept: the whole traceback of whatever the
+        reader raised goes to the launcher log at WARNING, and the reader
+        is the real `cymatix-status` collector reading native host
+        configuration files.
+        """
+
+        def read():
+            raise RuntimeError(f"could not read native config token {SENTINEL}")
+
+        cache = build_cache(read, clock)
+        with caplog.at_level(logging.DEBUG):
+            snapshot = cache.get()
+
+        assert snapshot["freshness"] == "unavailable", "the page itself stays clean"
+        assert SENTINEL not in caplog.text, "the log line is not clean"
+
+    def test_hole_the_collector_logs_the_cache_exception_text(self, supervisor, caplog):
+        """The same leak one layer up.
+
+        `StateCollector._host_status_panel` logs its fallback with
+        `exc_info=True` (collector.py, `log.warning("Host status snapshot
+        unavailable", exc_info=True)`), so an exception that carries a
+        secret is written out in full while the panel it protects shows
+        nothing. `test_a_failing_cache_never_breaks_the_state_payload`
+        already raises `RuntimeError(SENTINEL)` here and checks only the
+        payload, which is why this went unnoticed.
+        """
+
+        cache = FakeCache(raises=RuntimeError(f"token {SENTINEL}"))
+        with caplog.at_level(logging.WARNING):
+            state = StateCollector(supervisor=supervisor, status_cache=cache).collect()
+
+        assert state["host_status"]["freshness"] == "unavailable"
+        assert SENTINEL not in caplog.text
+
+    def test_hole_a_malformed_native_config_logs_its_path(
+        self, tmp_path, sandbox_env, recorded_probes, caplog,
+    ):
+        """A real read failure logs the config path at WARNING.
+
+        `host_profiles._read_native_config` logs `path` and the exception
+        with `exc_info=True` (host_profiles.py:214 at c05849b). The
+        projection drops `inspected_paths` precisely because a path is
+        not approved for output; the log keeps it anyway, and the status
+        refresh is what triggers the read. The sentinel is in the
+        directory name here for the same reason the existing fixture puts
+        it there: the path is the leak vector this report really has.
+        """
+
+        workspace = tmp_path / f"ws-{SENTINEL}"
+        workspace.mkdir()
+        (workspace / ".mcp.json").write_text("{ not json at all", encoding="utf-8")
+
+        read = default_status_reader(workspace=workspace, home=tmp_path / "home")
+        with caplog.at_level(logging.WARNING):
+            projected = project_host_status(read())
+
+        assert SENTINEL not in " ".join(strings_in(projected or {})), "the page stays clean"
+        assert SENTINEL not in caplog.text
+
+    def test_hole_an_upstream_probe_error_logs_the_url_and_the_error_text(
+        self, tmp_path, sandbox_env, monkeypatch, caplog,
+    ):
+        """cymatix_status.py:352 logs the probe URL and the exception.
+
+        Two approved-for-nothing values reach the log in one line: the
+        configured endpoint URL, which the projection drops by design,
+        and the text of whatever the transport raised, which the
+        projection also drops by design. The URL comes out of the native
+        host config, so it is attacker shaped in exactly the way the
+        sentinel tests assume. `_read_bounded_status_body` does the same
+        at :321.
+        """
+
+        workspace = tmp_path / "ws"
+        workspace.mkdir()
+        (workspace / ".mcp.json").write_text(
+            _canonical_config(f"http://127.0.0.1:11437/{SENTINEL}"), encoding="utf-8",
+        )
+
+        def explode(url, timeout=None):
+            raise ValueError(f"transport refused the {SENTINEL} handshake")
+
+        monkeypatch.setattr(urllib.request, "urlopen", explode)
+
+        read = default_status_reader(workspace=workspace, home=tmp_path / "home")
+        with caplog.at_level(logging.WARNING):
+            projected = project_host_status(read())
+
+        assert SENTINEL not in " ".join(strings_in(projected or {})), "the page stays clean"
+        assert SENTINEL not in caplog.text
+
+
+class TestProbeHoles:
+    """Where the bounded local probe stops being bounded or local."""
+
+    def test_hole_the_refresh_probes_the_launcher_own_origin_from_the_environment(
+        self, tmp_path, sandbox_env, recorded_probes, monkeypatch,
+    ):
+        """Self poll prevention covers one keyword, not the target.
+
+        `default_status_reader` passes `launcher_url=None`, which stops
+        the `/api/state` probe. Nothing stops the server probe from
+        resolving to the launcher's own origin: with no host config the
+        implicit target is `DEFAULT_SERVER_URL`
+        (cymatix_status.py:222), and that is read from
+        `CYMATIX_STATUS_URL` at import (:36). A launcher started with
+        that variable pointed at itself, or at any other port it also
+        serves, probes itself from inside the request it is serving, and
+        `_is_loopback_hostname` approves it because it is loopback.
+        """
+
+        monkeypatch.setattr(cymatix_status, "DEFAULT_SERVER_URL", "http://127.0.0.1:11438")
+        workspace = tmp_path / "ws"
+        workspace.mkdir()
+
+        default_status_reader(workspace=workspace, home=tmp_path / "home")()
+
+        assert not [url for url in recorded_probes if ":11438" in url], recorded_probes
+
+    def test_hole_the_refresh_probes_the_launcher_own_origin_from_a_host_config(
+        self, tmp_path, sandbox_env, recorded_probes,
+    ):
+        """The same hole through the other input.
+
+        A native host config that names the launcher's own origin as the
+        cymatix-context MCP URL is a configuration mistake, not an
+        attack, and it turns every dashboard poll into a request the
+        launcher sends to itself while it is answering one.
+        """
+
+        workspace = tmp_path / "ws"
+        workspace.mkdir()
+        (workspace / ".mcp.json").write_text(
+            _canonical_config("http://127.0.0.1:11438"), encoding="utf-8",
+        )
+
+        default_status_reader(workspace=workspace, home=tmp_path / "home")()
+
+        assert not [url for url in recorded_probes if ":11438" in url], recorded_probes
+
+    def test_hole_a_probe_follows_a_redirect_to_a_non_loopback_host(self, monkeypatch):
+        """The loopback rule is enforced once, before the first request.
+
+        `_select_server_target` refuses an implicit non loopback target,
+        and then `_probe_json` hands the validated URL to
+        `urllib.request.urlopen` with the ordinary opener
+        (cymatix_status.py:335 at c05849b), whose handler chain includes
+        `HTTPRedirectHandler`. A loopback endpoint that answers 302
+        therefore sends the probe anywhere it likes, and the health
+        evidence the panel shows is then collected from that other host.
+
+        Only the socket layer is faked here. The opener, the redirect
+        handler and the error processor are the real ones `urlopen`
+        builds, so the redirect decision under test is production's.
+        """
+
+        remote = "http://169.254.169.254/health"
+
+        class _Response(urllib.response.addinfourl):
+            def __init__(self, url, code, header_text, body=b"{}"):
+                headers = email.message_from_string(
+                    header_text, _class=http.client.HTTPMessage,
+                )
+                super().__init__(io.BytesIO(body), headers, url, code)
+                self.msg = "fake"
+
+        class _Transport(urllib.request.HTTPHandler):
+            def __init__(self):
+                self.requested = []
+
+            def http_open(self, req):
+                self.requested.append(req.full_url)
+                if len(self.requested) == 1:
+                    return _Response(req.full_url, 302, f"Location: {remote}\n")
+                return _Response(req.full_url, 200, "Content-Type: application/json\n",
+                                 b'{"status": "healthy"}')
+
+        transport = _Transport()
+        monkeypatch.setattr(
+            urllib.request, "_opener", urllib.request.build_opener(transport),
+        )
+
+        result = cymatix_status._probe_json("http://127.0.0.1:11437/health")
+
+        assert transport.requested == ["http://127.0.0.1:11437/health"], transport.requested
+        assert result.payload != {"status": "healthy"}, "remote evidence reached the report"
