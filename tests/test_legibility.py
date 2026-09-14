@@ -289,6 +289,7 @@ def _make_manager(legibility_enabled: bool) -> CymatixContextManager:
         budget=BudgetConfig(
             max_genes_per_turn=4,
             splice_aggressiveness=0.5,
+            full_text_delivery=False,  # Test headers around explicitly supplied compressed text.
             legibility_enabled=legibility_enabled,
         ),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),

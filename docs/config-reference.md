@@ -207,7 +207,10 @@ the dataclass.
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `ribosome_tokens` | `int` | `3000` |  |
-| `expression_tokens` | `int` | `7000` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
+| `expression_tokens` | `int` | `7000` | Default promotion is separate from companion implementation. |
+| `full_text_delivery` | `bool` | `false` | Opt in to complete stored bodies and same-source companions. |
+| `companion_chunks` | `int` | `4` | Additional same-source chunks; 0 disables supplements. |
+| `context_max_chars` | `int` | `100000` | Serialized evidence ceiling, including wrappers. |
 | `max_genes_per_turn` | `int` | `12` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `max_fingerprints_per_turn` | `int` | `40` |  |
 | `splice_aggressiveness` | `float` | `0.3` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |

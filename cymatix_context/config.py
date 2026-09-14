@@ -127,7 +127,10 @@ class RibosomeConfig:
 @dataclass
 class BudgetConfig:
     ribosome_tokens: int = 3000
-    expression_tokens: int = 7000  # default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
+    expression_tokens: int = 7000  # Default promotion is separate from companion implementation.
+    full_text_delivery: bool = False  # Opt in to complete stored bodies and same-source companions.
+    companion_chunks: int = 4  # Additional same-source chunks; 0 disables supplements.
+    context_max_chars: int = 100000  # Serialized evidence ceiling, including wrappers.
     max_genes_per_turn: int = 12  # default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     max_fingerprints_per_turn: int = 40
     splice_aggressiveness: float = 0.3  # default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
@@ -251,6 +254,10 @@ class BudgetConfig:
     tier_lagrange_frac: float = 0.7  # Issue #207 item 4: Lagrange pull-back threshold — a shadow-pool doc needs standalone score >= this fraction of the winners' floor (plus <20% co-activation overlap) to be pulled back. Prior literal 0.7 in pipeline/tier_logic.py.
 
     def __post_init__(self) -> None:
+        if self.companion_chunks < 0 or self.companion_chunks > 32:
+            raise ValueError("[budget] companion_chunks must be between 0 and 32")
+        if self.context_max_chars < 1:
+            raise ValueError("[budget] context_max_chars must be positive")
         if self.wire_format not in ("legacy", "canonical"):
             raise ValueError("[budget] wire_format must be 'legacy' or 'canonical'")
         # W2.4: fail loud at load, not silently at assembly time.
@@ -1682,6 +1689,9 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
         cfg.budget = BudgetConfig(
             ribosome_tokens=b.get("ribosome_tokens", cfg.budget.ribosome_tokens),
             expression_tokens=b.get("expression_tokens", cfg.budget.expression_tokens),
+            full_text_delivery=bool(b.get("full_text_delivery", cfg.budget.full_text_delivery)),
+            companion_chunks=int(b.get("companion_chunks", cfg.budget.companion_chunks)),
+            context_max_chars=int(b.get("context_max_chars", cfg.budget.context_max_chars)),
             max_genes_per_turn=b.get("max_genes_per_turn", cfg.budget.max_genes_per_turn),
             max_fingerprints_per_turn=b.get("max_fingerprints_per_turn", cfg.budget.max_fingerprints_per_turn),
             splice_aggressiveness=float(b.get("splice_aggressiveness", cfg.budget.splice_aggressiveness)),

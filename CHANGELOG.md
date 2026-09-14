@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- Add opt-in complete stored body delivery and up to four question-ranked
+  chunks from already selected sources. Primary retrieval scores and ordering
+  remain separate from supplement selection. No new LLM dependency is required.
+- The full-text profile uses 25,000 estimated expression tokens and caps
+  serialized evidence at 100,000 characters. Shipped defaults remain compressed
+  with 7,000 expression tokens until the paired default-promotion gate passes.
+  Oversized documents yield as whole
+  items; full-text mode does not silently truncate stored bodies. This can use
+  more downstream tokens. Set `full_text_delivery=false`, `companion_chunks=0`,
+  and `expression_tokens=7000` to restore compressed delivery.
+- Structured packets expose freshness-labeled supplements in `companions`.
+  Source lookup uses a new SQLite source index and shard ownership routing,
+  respects party attribution, and excludes archived chunks.
+- Include the prepared #417/#430/#431 migration tools with canonical wire,
+  tier-seat-floor, and harmonic-batching features still opt-in. Their benchmark
+  gates remain open; #453 is not resolved in this release.
+- The historical Sol paired gain motivated the generalized rule; it is not a
+  measured score for this production implementation. Stored sequence positions,
+  eligibility filters, and current retrieval settings can change selections.
+  See [settings and evidence](docs/research/2026-09-14-companion-release-settings.md).
+
 - **Experimental wire vocabulary (#417).** `[budget] wire_format = "canonical"`
   selects document tags/headers, canonical decoder text and JSON response
   fields across HTTP, CLI and MCP. Legacy wire bytes remain the default;

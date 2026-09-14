@@ -5629,6 +5629,25 @@ class KnowledgeStore:
         ).fetchone()
         return self._row_to_gene(row) if row else None
 
+    def get_source_documents(self, source_ids: List[str], *, party_id: Optional[str] = None) -> List[Gene]:
+        """Read complete documents from selected sources using the source index."""
+        sources = sorted({source for source in source_ids if source})
+        documents = []
+        party_filter = ""
+        party_params = []
+        if party_id is not None:
+            party_filter = (" AND (gene_id IN (SELECT gene_id FROM gene_attribution WHERE party_id = ?)"
+                            " OR gene_id NOT IN (SELECT gene_id FROM gene_attribution))")
+            party_params = [party_id]
+        for start in range(0, len(sources), 400):
+            batch = sources[start:start + 400]
+            rows = self.read_conn.execute(
+                "SELECT * FROM genes WHERE chromatin < 2 AND source_id IN (" + ",".join("?" for _ in batch) + ")" + party_filter,
+                batch + party_params,
+            ).fetchall()
+            documents.extend(self._row_to_gene(row) for row in rows)
+        return sorted(documents, key=lambda d: (d.source_id, d.promoter.sequence_index or 0, d.gene_id))
+
     # ── Citation lookup (polymorphic with ShardedGenomeAdapter) ─────────
 
     def get_citation_rows(self, gene_ids: List[str]) -> Dict[str, Dict]:

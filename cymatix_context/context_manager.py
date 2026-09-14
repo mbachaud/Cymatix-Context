@@ -2396,7 +2396,7 @@ class CymatixContextManager:
                     target = max(1, int(foveated_caps[idx] * foveated_base))
                 else:
                     target = _splice_target
-                content = compress_text(
+                content = g.content if self.config.budget.full_text_delivery else compress_text(
                     g.content,
                     target_chars=target,
                     content_type=g.promoter.domains,
@@ -2425,6 +2425,7 @@ class CymatixContextManager:
                 caller_model_class=caller_model_class,
                 query_scores=query_scores,
                 tier_contributions=tier_contribs,
+                party_id=party_id,
             )
 
         # Annotate window with dynamic budget tier (for telemetry/benchmarks)
@@ -3339,6 +3340,7 @@ class CymatixContextManager:
         caller_model_class: str = "generic",
         query_scores: Optional[Dict[str, float]] = None,
         tier_contributions: Optional[Dict[str, Dict[str, float]]] = None,
+        party_id: Optional[str] = None,
     ) -> ContextWindow:
         """
         Sort spliced parts, join with dividers, wrap in expressed_context tags.
@@ -3493,16 +3495,31 @@ class CymatixContextManager:
         # is emitted on the parts-empty branch below — never through
         # this loop — so it stays unescaped.
         neutralize_on = self.config.budget.neutralize_control_tags
+        full_text = self.config.budget.full_text_delivery
+
+        def render_complete(doc):
+            body = doc.content
+            if neutralize_on:
+                body = _neutralize_document_markup(body) if canonical_wire else body.replace("<cymatix:", "&lt;cymatix:")
+            source = _shorten_source_path(doc.source_id or "", self.config.ingestion.citation_path_anchors)
+            tag = "DOCUMENT" if canonical_wire else "GENE"
+            facts = html.escape(" ".join(doc.key_values[:5]), quote=True)
+            attrs = f' src="{html.escape(source, quote=True)}"' if source else ""
+            if facts:
+                attrs += f' facts="{facts}"'
+            return f'<{tag}{attrs}>\n{body}\n</{tag}>'
 
         for g in sorted_genes:
             # Prefer compressor-spliced text; fall back to complement summary;
             # last resort is Headroom semantic compression (was content[:500]).
-            spliced_text = spliced_map.get(g.gene_id) or g.complement or compress_text(
+            spliced_text = g.content if full_text else spliced_map.get(g.gene_id) or g.complement or compress_text(
                 g.content,
                 target_chars=500,
                 content_type=g.promoter.domains,
             )
-            if canonical_wire:
+            if full_text:
+                spliced_text = render_complete(g)
+            elif canonical_wire:
                 if neutralize_on:
                     spliced_text = _neutralize_document_markup(spliced_text)
                 short_source = _shorten_source_path(
@@ -3581,6 +3598,49 @@ class CymatixContextManager:
                     )
             total_raw += len(g.content)
 
+        companion_ids = []
+        primary_budget_evicted = 0
+        if full_text:
+            from .companions import rank_companions
+
+            # Complete bodies yield whole trailing documents at a hard limit;
+            # they are never silently shortened. Leave room for the decoder.
+            char_cap = self.config.budget.context_max_chars
+
+            def serialized_size(blocks):
+                return len("<expressed_context>\n") + len("\n---\n".join(blocks)) + len("\n</expressed_context>")
+
+            while parts and serialized_size(parts) > char_cap:
+                parts.pop()
+                sorted_genes.pop()
+                primary_budget_evicted += 1
+
+            lookup = getattr(self.genome, "get_source_documents", None)
+            if sorted_genes and self.config.budget.companion_chunks and callable(lookup):
+                source_docs = lookup([g.source_id for g in sorted_genes if g.source_id], party_id=party_id)
+
+                def accept_companion(doc):
+                    block = render_complete(doc)
+                    if serialized_size(parts + [block]) > char_cap:
+                        return False
+                    prospective = "<expressed_context>\n" + "\n---\n".join(parts + [block]) + "\n</expressed_context>"
+                    decoder_estimate = estimate_tokens(decoder_prompt_override or self._decoder_prompt)
+                    if estimate_tokens(prospective) + decoder_estimate > self.config.budget.ribosome_tokens + self.config.budget.expression_tokens:
+                        return False
+                    if session_on and _session_delivery.already_delivered(
+                        self.genome.read_conn, session_id=session_id, gene_id=doc.gene_id,
+                    ) is not None:
+                        return False
+                    parts.append(block)
+                    _delivery_log_map[doc.gene_id] = ("full", _session_delivery.content_hash(block))
+                    return True
+
+                additions = rank_companions(query, sorted_genes, source_docs,
+                    accept=accept_companion, max_added=self.config.budget.companion_chunks)
+                companion_ids = [doc.gene_id for doc in additions]
+                sorted_genes.extend(additions)
+                total_raw = sum(len(doc.content) for doc in sorted_genes)
+
         # Stage 6 (§6): if assembly produced no parts despite having
         # candidates, ship the structured no-match tag rather than the
         # legacy prose so the agent can branch on a tag.
@@ -3646,8 +3706,17 @@ class CymatixContextManager:
         # window.metadata["budget_evicted"] for the delivery block.
         # W2.4: _budget_truncated counts seat-preserving part truncations
         # (min_delivered_docs floor) — a separate fact from evictions.
-        _budget_evicted = 0
+        _budget_evicted = primary_budget_evicted
         _budget_truncated = 0
+        if full_text:
+            while est_tokens > budget and parts:
+                parts.pop()
+                sorted_genes.pop()
+                _budget_evicted += 1
+                expressed = "\n---\n".join(parts) if parts else _no_match_token("no_promoter_match")
+                expressed_wrapped = f"<expressed_context>\n{expressed}\n</expressed_context>"
+                est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)
+            companion_ids = [gid for gid in companion_ids if gid in {g.gene_id for g in sorted_genes}]
         if est_tokens > budget and len(parts) > 1:
             # Default path: drop the lowest-SCORED document regardless of
             # its position in the assembled prompt. Position-based pop()
@@ -3830,6 +3899,8 @@ class CymatixContextManager:
                 # W2.4: seat-preserving part truncations performed by the
                 # min_delivered_docs floor (0 = floor off or never bound).
                 "budget_truncated": _budget_truncated,
+                "companion_ids": companion_ids,
+                "full_text_delivery": full_text,
             },
         )
 

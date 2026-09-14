@@ -52,7 +52,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # rule — controller ruling, PR A)
     parser.add_argument(
         "--max-genes", "--max-docs", dest="max_genes", type=int, default=8,
-        help="Retrieval top-K cap (default: 8).",
+        help="Primary retrieval top-K cap (default: 8; companion profile: 12).",
     )
     parser.add_argument(
         "--include-raw", action="store_true",
@@ -87,6 +87,7 @@ def _render_text(payload: Dict[str, Any]) -> list[str]:
         f"file_coverage: {payload.get('file_coverage', 0.0):.2f}",
         f"verified: {len(verified)}",
         f"stale_risk: {len(stale)}",
+        f"companions: {len(payload.get('companions', []) or [])}",
         f"refresh_targets: {len(refresh)}",
     ]
     know = payload.get("know")

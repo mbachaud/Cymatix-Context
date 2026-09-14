@@ -143,6 +143,7 @@ def _migrate_genes_columns(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> Non
 
 
 def _create_genes_indexes(cur: sqlite3.Cursor) -> None:
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_genes_source ON genes(source_id)")
     # Stage 2: partial index over hot-tier rows with v2 vectors.
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot "

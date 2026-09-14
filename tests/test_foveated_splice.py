@@ -30,7 +30,7 @@ def cymatix_manager_with_three_genes(tmp_path):
 
     cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=12, min_delivered_docs=0),  # pre-floor classifier-cap interaction ([w24-floor-flip])
+        budget=BudgetConfig(max_genes_per_turn=12, min_delivered_docs=0, full_text_delivery=False),  # compressed foveation contract
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )
@@ -198,7 +198,7 @@ def _make_manager_with_n_genes(n, scores_fn):
 
     cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=n + 2, abstain_enabled=True),
+        budget=BudgetConfig(max_genes_per_turn=n + 2, abstain_enabled=True, full_text_delivery=False),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )

@@ -42,6 +42,7 @@ def manager_factory():
 
     def make(wire_format=None, **budget_kwargs):
         budget_kwargs.setdefault("legibility_enabled", False)
+        budget_kwargs.setdefault("full_text_delivery", False)
         if wire_format is not None:
             budget_kwargs["wire_format"] = wire_format
         budget = BudgetConfig(**budget_kwargs)

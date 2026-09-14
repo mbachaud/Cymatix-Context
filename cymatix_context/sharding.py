@@ -433,6 +433,26 @@ class ShardedGenomeAdapter:
     # Back-compat alias for callers still using the pre-R3 name.
     get_gene = get_doc
 
+    def get_source_documents(self, source_ids: List[str], *, party_id: Optional[str] = None) -> list:
+        """Resolve selected sources through the fingerprint index, then read owners."""
+        sources = sorted({source for source in source_ids if source})
+        owners = {}
+        for start in range(0, len(sources), 400):
+            batch = sources[start:start + 400]
+            rows = self._router.main_conn.execute(
+                "SELECT DISTINCT shard_name, source_id FROM fingerprint_index WHERE source_id IN ("
+                + ",".join("?" for _ in batch) + ")", batch,
+            ).fetchall()
+            for row in rows:
+                owners.setdefault(row["shard_name"], set()).add(row["source_id"])
+        documents = {}
+        for name, scoped in sorted(owners.items()):
+            shard = self._router._open_shard(name)
+            for doc in shard.get_source_documents(sorted(scoped), party_id=party_id):
+                if doc.source_id in scoped:
+                    documents.setdefault(doc.gene_id, doc)
+        return sorted(documents.values(), key=lambda d: (d.source_id, d.promoter.sequence_index or 0, d.gene_id))
+
     def get_citation_rows(self, gene_ids: List[str]) -> dict:
         """Resolve source_id + promoter tags for a batch of gene_ids.
 
