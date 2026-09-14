@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- **Experimental wire vocabulary (#417).** `[budget] wire_format = "canonical"`
+  selects document tags/headers, canonical decoder text and JSON response
+  fields across HTTP, CLI and MCP. Legacy wire bytes remain the default;
+  SQL and Python persistence fields are unchanged. Packet source and local
+  identities remain separate. See `docs/ROSETTA.md`.
+- **Experimental tier seat floor (#430).** With
+  `[budget] tier_seat_floor_enabled = true`, TIGHT and FOCUSED cuts honor
+  `min_delivered_docs` when eligible candidates are available. Tier labels,
+  legacy sparse fallback and the final token-budget constraint are preserved.
+- **Experimental harmonic batching (#431).** With
+  `[retrieval] harmonic_batching_enabled = true`, oversized pools use
+  connection-local temporary candidate storage and stream eligible links
+  without exceeding SQLite's bind limit. Disabled by default pending paired
+  measurements on a populated harmonic-link bed.
+- **Benchmark preparation.** `benchmarks/dogfood/migrations/` prepares
+  explicit paired arms and captures per-query identities and wire hashes.
+  These changes do not claim full-scale gate receipts or promote defaults.
+
 ## 0.9.2 (2026-09-08)
 
 **Ingest at scale and the #411 default flip (PRs #424, #425), a

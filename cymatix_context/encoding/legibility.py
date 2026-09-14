@@ -129,6 +129,7 @@ def format_gene_header(
     *,
     id_width: int = 12,
     max_tiers: int = 3,
+    wire_format: str = "legacy",
 ) -> str:
     """Render one per-document metadata header line.
 
@@ -141,6 +142,7 @@ def format_gene_header(
         score_stats: (mean, std) over all retrieved documents in THIS response
         id_width: How many leading chars of gene_id to show (default 12)
         max_tiers: Cap on tiers listed in `fired=` (default top 3)
+        wire_format: ``canonical`` emits ``document=``; default preserves ``gene=``.
 
     Returns:
         Single-line bracketed header, no trailing newline.
@@ -154,4 +156,5 @@ def format_gene_header(
         size_str = f"{compressed_chars}c"
     else:
         size_str = f"{raw_chars}→{compressed_chars}c"
-    return f"[gene={short_id} {symbol} fired={fired} {size_str}]"
+    label = "document" if wire_format == "canonical" else "gene"
+    return f"[{label}={short_id} {symbol} fired={fired} {size_str}]"

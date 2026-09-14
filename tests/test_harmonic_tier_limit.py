@@ -18,13 +18,15 @@ Logging-only fix (this file's contract):
 3. Any other failure in the tier now logs at WARNING with the traceback,
    not DEBUG (``test_other_failure_*``).
 
-The behavior-changing variant (batching / post-shortlist bounding so the
-tier can fire on large populated beds) is receipt-gated and out of scope.
+The opt-in batching path stages the entire pool and preserves cross-batch
+links. Shipped defaults retain the warning until benchmark gates pass.
 """
 from __future__ import annotations
 
 import logging
 import sqlite3
+import threading
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
@@ -51,14 +53,14 @@ def _gene(gid: str, content: str, domains) -> Gene:
     )
 
 
-def make_store() -> Genome:
+def make_store(**kwargs) -> Genome:
     """Three tag-matched candidates, one harmonic edge (gA <-> gB).
 
     Only the exact-tag tier and Tier 5 fire — no SPLADE / SEMA / dense — so
     the per-tier contributions are exact small floats with no
     reduction-order ambiguity.
     """
-    g = Genome(path=":memory:")
+    g = Genome(path=kwargs.pop("path", ":memory:"), **kwargs)
     for gid, text in (
         ("gA", "alpha configures the parser pipeline and retry policy."),
         ("gB", "alpha owns the splice budget for the merge stage."),
@@ -74,14 +76,228 @@ def make_store() -> Genome:
     return g
 
 
-def run_query(g: Genome):
+def run_query(g: Genome, domains=QUERY_DOMAINS):
     genes = g.query_genes(
-        domains=list(QUERY_DOMAINS), entities=[], max_genes=8, read_only=True,
+        domains=list(domains), entities=[], max_genes=8, read_only=True,
     )
     ranked = [x.gene_id for x in genes]
     scores = dict(g.last_query_scores)
     contrib = {gid: dict(t) for gid, t in g.last_tier_contributions.items()}
     return ranked, scores, contrib
+
+
+def _add_batching_edges(g):
+    """Five candidates plus outsiders at either endpoint of an edge."""
+    for gid, domains in (("gD", ["alpha"]), ("gE", ["alpha"]), ("outside", ["elsewhere"])):
+        g.upsert_gene(_gene(gid, f"Distinct document {gid}.", domains), apply_gate=False)
+    g.conn.executemany(
+        "INSERT INTO harmonic_links "
+        "(gene_id_a, gene_id_b, weight, updated_at, source) "
+        "VALUES (?, ?, 17.0, 0.0, 'co_retrieved')",
+        [("gA", "gE"), ("outside", "gB"), ("gC", "outside")],
+    )
+    g.conn.commit()
+
+
+@pytest.mark.parametrize("fusion_mode", ["additive", "rrf"])
+@pytest.mark.parametrize("weight", [0.0, 0.1, 1.0])
+def test_batching_above_real_limit_preserves_full_pool_scores(fusion_mode, weight, caplog):
+    """Splitting both IN lists independently loses gA--gE; OR admits outsiders."""
+    g = make_store(fusion_mode=fusion_mode, harmonic_weight=weight)
+    try:
+        _add_batching_edges(g)
+        expected = run_query(g)
+        g._harmonic_batching_enabled = True
+        g.read_conn.setlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER, 8)
+        got = run_query(g)
+        assert got == expected
+        assert got[2]["gA"]["harmonic"] == weight * 2
+        assert got[2]["gB"]["harmonic"] == weight
+        assert got[2]["gE"]["harmonic"] == weight
+        assert "harmonic" not in got[2]["gC"]
+        assert "outside" not in got[1]
+        assert not _warnings(caplog, "Harmonic")
+    finally:
+        g.close()
+
+
+def test_batching_below_limit_is_identical():
+    g = make_store()
+    try:
+        expected = run_query(g)
+        g._harmonic_batching_enabled = True
+        assert run_query(g) == expected
+    finally:
+        g.close()
+
+
+def test_batching_repeated_queries_discard_old_candidate_ids():
+    g = make_store()
+    try:
+        _add_batching_edges(g)
+        for gid in ("gC", "gF", "gG", "gH", "gI"):
+            domains = ["alpha", "beta"] if gid == "gC" else ["beta"]
+            g.upsert_gene(_gene(gid, f"Distinct document {gid}.", domains), apply_gate=False)
+        g.conn.executemany(
+            "INSERT INTO harmonic_links "
+            "(gene_id_a, gene_id_b, weight, updated_at, source) "
+            "VALUES (?, ?, 1.0, 0.0, 'co_retrieved')",
+            [("gC", "gA"), ("gC", "gI")],
+        )
+        g.conn.commit()
+        expected = run_query(g, ["beta"])
+        g._harmonic_batching_enabled = True
+        g.read_conn.setlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER, 8)
+        run_query(g)
+        got = run_query(g, ["beta"])
+        assert got == expected
+        assert got[2]["gC"]["harmonic"] == 1.0
+        assert got[2]["gI"]["harmonic"] == 1.0
+        assert not g.read_conn.in_transaction
+        assert g.read_conn.execute("SELECT name FROM sqlite_temp_master").fetchall() == []
+    finally:
+        g.close()
+
+
+def test_batching_uses_readonly_reader_without_main_database_writes(tmp_path):
+    g = make_store(path=str(tmp_path / "harmonic.db"))
+    try:
+        _add_batching_edges(g)
+        expected = run_query(g)
+        reader = g.read_conn
+        assert reader is not g.conn
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            reader.execute("CREATE TABLE forbidden (id TEXT)")
+        g._harmonic_batching_enabled = True
+        reader.setlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER, 8)
+        assert run_query(g) == expected
+        assert not reader.in_transaction
+        assert reader.execute("SELECT name FROM sqlite_temp_master").fetchall() == []
+    finally:
+        g.close()
+
+
+def test_batching_failure_cleans_temp_state_and_next_query_recovers(caplog):
+    g = make_store()
+    try:
+        _add_batching_edges(g)
+        expected = run_query(g)
+        g._harmonic_batching_enabled = True
+        g.read_conn.setlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER, 8)
+
+        def deny_harmonic_read(action, table, column, database, trigger):
+            if action == sqlite3.SQLITE_READ and table == "harmonic_links":
+                return sqlite3.SQLITE_DENY
+            return sqlite3.SQLITE_OK
+
+        g.read_conn.set_authorizer(deny_harmonic_read)
+        failed = run_query(g)
+        g.read_conn.set_authorizer(None)
+        assert set(failed[0]) == {"gA", "gB", "gC", "gD", "gE"}
+        assert not any("harmonic" in c for c in failed[2].values())
+        assert len(_warnings(caplog, "Harmonic boost failed")) == 1
+        assert not g.read_conn.in_transaction
+        assert g.read_conn.execute("SELECT name FROM sqlite_temp_master").fetchall() == []
+        assert run_query(g) == expected
+    finally:
+        g.conn.set_authorizer(None)
+        g.close()
+
+
+def test_batching_preserves_callers_pending_transaction():
+    g = make_store()
+    try:
+        _add_batching_edges(g)
+        g.conn.execute("CREATE TABLE pending_work (id INTEGER)")
+        g.conn.execute("INSERT INTO pending_work VALUES (1)")
+        g.conn.setlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER, 1)
+        # Exercise staging directly: other pre-existing retrieval tiers can
+        # commit the writer, independently of this helper's transaction scope.
+        with g._harmonic_candidate_rows(
+            g.conn.cursor(), ["gA", "gB", "gC", "gD", "gE"], batched=True,
+        ) as rows:
+            assert {(row[0], row[1]) for row in rows} == {("gA", "gB"), ("gA", "gE")}
+        assert g.conn.in_transaction
+        g.conn.rollback()
+        assert g.conn.execute("SELECT * FROM pending_work").fetchall() == []
+    finally:
+        g.close()
+
+
+def test_batching_many_insertions_and_interrupted_iteration_are_clean():
+    g = make_store(harmonic_batching_enabled=True)
+    try:
+        # More than the project's usual IN batch size; endpoints are placed
+        # at opposite ends so batching candidate pairs separately fails.
+        candidates = ["gA", *(f"candidate-{i}" for i in range(1200)), "gB"]
+        g.conn.setlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER, 1)
+        with pytest.raises(RuntimeError, match="interrupted"):
+            with g._harmonic_candidate_rows(g.conn.cursor(), candidates, batched=True) as rows:
+                assert tuple(next(rows)) == ("gA", "gB", 1.0)
+                raise RuntimeError("interrupted consumer")
+        assert not g.conn.in_transaction
+        assert g.conn.execute("SELECT name FROM sqlite_temp_master").fetchall() == []
+        with g._harmonic_candidate_rows(g.conn.cursor(), candidates, batched=True) as rows:
+            assert [tuple(row) for row in rows] == [("gA", "gB", 1.0)]
+    finally:
+        g.close()
+
+
+@pytest.mark.parametrize("shared_reader", [False, True])
+def test_batching_shared_connections_isolate_concurrent_pools(tmp_path, shared_reader):
+    from cymatix_context.persistence import ReplicationManager
+
+    path = str(tmp_path / "shared.db") if shared_reader else ":memory:"
+    g = make_store(path=path, harmonic_batching_enabled=True)
+    manager = None
+    try:
+        _add_batching_edges(g)
+        if shared_reader:
+            manager = ReplicationManager(master=path)
+            g.set_replication_manager(manager)
+        conn = g.read_conn
+        conn.setlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER, 1)
+        barrier = threading.Barrier(2)
+
+        def query_pool(ids, expected):
+            barrier.wait(timeout=5)
+            for _ in range(20):
+                with g._harmonic_candidate_rows(conn.cursor(), ids, batched=True) as rows:
+                    assert {(row[0], row[1]) for row in rows} == expected
+
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = [
+                executor.submit(query_pool, ["gA", "gB"], {("gA", "gB")}),
+                executor.submit(query_pool, ["gC", "outside"], {("gC", "outside")}),
+            ]
+            for future in futures:
+                future.result(timeout=10)
+        assert not conn.in_transaction
+        assert conn.execute("SELECT name FROM sqlite_temp_master").fetchall() == []
+    finally:
+        if manager is not None:
+            manager.close()
+        g.close()
+
+
+def test_batching_keeps_three_link_cap():
+    g = make_store(harmonic_batching_enabled=True, harmonic_weight=0.1)
+    try:
+        _add_batching_edges(g)
+        g.conn.executemany(
+            "INSERT INTO harmonic_links "
+            "(gene_id_a, gene_id_b, weight, updated_at, source) "
+            "VALUES (?, ?, 1.0, 0.0, 'co_retrieved')",
+            [("gA", "gC"), ("gA", "gD")],
+        )
+        g.conn.commit()
+        expected = run_query(g)
+        g.read_conn.setlimit(sqlite3.SQLITE_LIMIT_VARIABLE_NUMBER, 8)
+        got = run_query(g)
+        assert got == expected
+        assert got[2]["gA"]["harmonic"] == 0.30000000000000004
+    finally:
+        g.close()
 
 
 def _warnings(caplog, needle: str):

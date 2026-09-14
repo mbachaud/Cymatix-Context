@@ -209,6 +209,8 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
 
     from .. import __version__ as _pkg_version
     app = FastAPI(title="Cymatix Context Proxy", version=_pkg_version, lifespan=lifespan)
+    from ..wire import wire_route_class
+    app.router.route_class = wire_route_class(config.budget.wire_format)
     app.state.cymatix = cymatix  # Expose for testing
     app.state.bridge = bridge  # Expose for testing
     app.state.registry = registry  # Expose for testing

@@ -101,7 +101,7 @@ def run(argv: list[str]) -> int:
 
     payload = result.to_agent_json()
     if args.json:
-        output.print_json(payload)
+        output.print_json(payload, wire_format=getattr(sess, "wire_format", "legacy"))
     else:
         output.print_lines(_render_text(payload))
     return output.EXIT_OK
