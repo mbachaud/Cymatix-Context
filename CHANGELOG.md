@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+_Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymatix-context==0.10.0b1`)._
+
 - Add opt-in complete stored body delivery and up to four question-ranked
   chunks from already selected sources. Primary retrieval scores and ordering
   remain separate from supplement selection. No new LLM dependency is required.
