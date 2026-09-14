@@ -412,6 +412,7 @@ class CymatixSession:
             max_genes=max_genes,
             read_only=True,
             include_raw=include_raw,
+            budget_config=self._manager.config.budget,
         )
 
     def refresh_targets(

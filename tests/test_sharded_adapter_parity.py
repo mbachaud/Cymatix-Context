@@ -65,6 +65,7 @@ REQUIRED_CALLER_SURFACE = frozenset({
     "query_docs_ann",
     "query_cold_tier",
     "get_doc",
+    "get_source_documents",
     "get_gene",  # back-compat alias for get_doc; helpers.py reads via this name
     "get_citation_rows",  # /context citation lookup polymorphism — issue #104
 

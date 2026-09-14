@@ -499,8 +499,14 @@ def build_context_packet(
     read_only: bool = False,
     include_raw: bool = False,
     max_item_chars: int | None = None,
+    budget_config=None,
 ) -> ContextPacket:
     """Return a freshness-labeled packet for the given query.
+
+    A supplied budget_config enables the configured full-text/companion policy.
+    Companion items remain separate from the primary freshness groups and carry
+    their own freshness labels; they do not acquire primary retrieval scores.
+    Without a budget_config this low-level helper retains legacy item rendering.
 
     ``include_raw=True`` switches each item's content from the compressor-
     compressed summary to the full ``gene.content``, and bumps the per-item
@@ -510,6 +516,10 @@ def build_context_packet(
     only context source and the downstream LLM needs real bytes, not
     thumbnails.
     """
+    policy_enabled = budget_config is not None and budget_config.full_text_delivery
+    full_text = policy_enabled and max_item_chars is None
+    if full_text:
+        include_raw = True
     effective_max_chars = (
         max_item_chars
         if max_item_chars is not None
@@ -591,9 +601,11 @@ def build_context_packet(
             now_ts=now_ts,
             coordinate_confidence=coordinate_confidence,
             file_coverage=file_cov,
-            max_item_chars=effective_max_chars,
+            max_item_chars=max(1, len(doc.content)) if full_text else effective_max_chars,
             prefer_raw=include_raw,
         )
+        if full_text:
+            item.content = doc.content
         if status == "verified":
             packet.verified.append(item)
         elif status == "stale_risk":
@@ -614,6 +626,34 @@ def build_context_packet(
         reverse=True,
     )
     packet.refresh_targets.sort(key=lambda target: target.priority, reverse=True)
+
+    if full_text and budget_config.companion_chunks:
+        from .companions import rank_companions
+        lookup = getattr(genome if genome is not None else router, "get_source_documents", None)
+        if callable(lookup):
+            def accept_companion(doc):
+                item, _ = _build_item(doc, relevance_score=0.0,
+                    meta=_effective_meta(doc, _lookup_source_row(effective_main_conn, doc.gene_id)),
+                    task_type=task_type, now_ts=now_ts,
+                    coordinate_confidence=coordinate_confidence, file_coverage=file_cov,
+                    max_item_chars=max(1, len(doc.content)), prefer_raw=True)
+                item.content = doc.content
+                packet.companions.append(item)
+                target = _refresh_target(item, task_type)
+                if target is not None:
+                    packet.refresh_targets.append(target)
+                from .accel import estimate_tokens
+                if (len(packet.model_dump_json()) > budget_config.context_max_chars
+                    or estimate_tokens(packet.model_dump_json()) > budget_config.ribosome_tokens + budget_config.expression_tokens):
+                    packet.companions.pop()
+                    if target is not None:
+                        packet.refresh_targets.pop()
+                    return False
+                return True
+
+            rank_companions(query, genes, lookup([d.source_id for d in genes if d.source_id]),
+                accept=accept_companion, max_added=budget_config.companion_chunks)
+            packet.refresh_targets.sort(key=lambda target: target.priority, reverse=True)
 
     # ── Stage 6: machine-tagged know/miss block on the packet ─────
     # The /context/packet route lifts this to the top of the response.
@@ -652,7 +692,7 @@ def build_context_packet(
     try:
         delivered_ids = [
             item.gene_id
-            for item in (*packet.verified, *packet.stale_risk)
+            for item in (*packet.verified, *packet.stale_risk, *packet.companions)
             if item.gene_id
         ]
         pool_size = max(len(score_map), len(genes))
@@ -672,6 +712,25 @@ def build_context_packet(
             "delivery block attach failed", exc_info=True
         )
 
+    if policy_enabled:
+        from .accel import estimate_tokens
+        # Include all serialized metadata in the hard packet cap. Remove whole
+        # supplements first, then trailing primary items; never clip a body.
+        token_cap = budget_config.ribosome_tokens + budget_config.expression_tokens
+        while (len(packet.model_dump_json()) > budget_config.context_max_chars
+               or estimate_tokens(packet.model_dump_json()) > token_cap):
+            items = packet.companions or packet.stale_risk or packet.verified
+            if not items:
+                raise ValueError("context_max_chars is too small for packet metadata")
+            removed = items.pop()
+            packet.know = None
+            packet.miss = None
+            surviving_sources = {i.source_id for i in (*packet.verified, *packet.stale_risk, *packet.companions)}
+            packet.refresh_targets = [t for t in packet.refresh_targets if t.source_id in surviving_sources]
+            if packet.delivery is not None:
+                packet.delivery.delivered_gene_ids = [i.gene_id for i in (*packet.verified, *packet.stale_risk, *packet.companions)]
+                packet.delivery.delivered_count = len(packet.delivery.delivered_gene_ids)
+                packet.delivery.cap_binding = "token_budget"
     return packet
 
 

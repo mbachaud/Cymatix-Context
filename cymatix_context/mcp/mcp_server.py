@@ -497,7 +497,7 @@ def cymatix_context_packet(
         | "quote". Higher-risk types are stricter on freshness and
         coordinate confidence — "edit" and "ops" will flag marginal
         evidence that "explain" would accept.
-    max_genes: retrieval top-K (1-32). Default 8.
+    max_genes: primary retrieval top-K (1-32). Default 8; use 12 for the companion profile.
 
     Composition: freshness_score × authority × specificity gives
     live_truth; coordinate_confidence gates for "did we resolve to the

@@ -284,6 +284,7 @@ class ContextPacket(BaseModel):
     query: str
     verified: List[ContextItem] = Field(default_factory=list)
     stale_risk: List[ContextItem] = Field(default_factory=list)
+    companions: List[ContextItem] = Field(default_factory=list)
     contradictions: List[ContextItem] = Field(default_factory=list)
     refresh_targets: List[RefreshTarget] = Field(default_factory=list)
     working_set_id: Optional[str] = None

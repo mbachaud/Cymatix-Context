@@ -16,6 +16,23 @@ One SQLite knowledge store, a seven-stage pipeline, and an explicit `know` / `mi
 
 ## Proof (30 seconds)
 
+**Experimental full-text companion profile:** preserve complete stored chunks
+and append up to four question-ranked chunks from the same selected sources.
+Enable it explicitly in `cymatix.toml`:
+
+```toml
+[budget]
+full_text_delivery = true
+expression_tokens = 25000
+companion_chunks = 4
+context_max_chars = 100000
+```
+
+For packet API/CLI/MCP calls, request `max_genes=12` (CLI: `--max-docs 12`).
+Structured packets expose supplements in `companions`, with their own freshness
+labels. This profile uses more context; the existing compressed defaults remain
+unchanged. [Settings, experimental evidence, and limitations](docs/research/2026-09-14-companion-release-settings.md).
+
 **Token economics** — compressor disabled (the default LLM-free config), N=15 query shapes, May 2026:
 
 | Query shape | Tokens per turn | vs standard RAG |
