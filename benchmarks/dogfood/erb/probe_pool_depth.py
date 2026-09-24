@@ -536,30 +536,57 @@ def stage_presence(record, stage_name):
         return "failed"
     if len(retrievals) != 1 or retrievals[0].get("status") != "complete":
         return "not_captured"
-    stage = retrievals[0].get("stages", {}).get(stage_name, {})
+    stages = retrievals[0].get("stages", {})
+    if stage_name != "fts_raw":
+        # A lexical admission needs the lexical lane to have run: tag lanes
+        # alone still populate the shortlist boundaries (#453).
+        fts_status = stages.get("fts_raw", {}).get("status")
+        if fts_status in ("failed", "not_executed"):
+            return fts_status
+        if fts_status != "captured":
+            return "not_captured"
+    stage = stages.get(stage_name, {})
     status = stage.get("status")
     if status in ("failed", "not_executed"):
         return status
     if (status != "captured" or not isinstance(stage.get("gold_ids"), list)
             or not isinstance(stage.get("count"), int)):
         return "not_captured"
+    if stage_name == "post_shortlist" and stage.get("filter_status") != "applied":
+        # Unfiltered (not_applied / empty_fallback) is the pre-shortlist pool.
+        return "not_captured"
     return "present" if stage["gold_ids"] else "absent"
 
 
-def admission_summary(records, *, expected_n=109, threshold=30):
-    """Apply the registered threshold only to a complete measured cohort."""
+ADMISSION_EXPECTED_N = 109
+ADMISSION_THRESHOLD = 30
+
+
+def admission_summary(records, *, expected_n=ADMISSION_EXPECTED_N,
+                      threshold=ADMISSION_THRESHOLD, partial_run=False):
+    """Apply the registered threshold only to a complete measured cohort.
+
+    A truncated target list can still hold every cohort query, so a partial
+    run is refused explicitly rather than by the cohort count (#453).
+    """
     counts = dict.fromkeys(("present", "absent", "failed", "not_captured",
                            "not_executed"), 0)
     for rec in records:
         counts[stage_presence(rec, "post_shortlist")] += 1
     measured = counts["present"] + counts["absent"]
     complete = len(records) == expected_n and measured == expected_n
+    reason = None
+    if partial_run:
+        reason = "partial run: --limit truncated the declared target list"
+    elif not complete:
+        reason = "measured cohort incomplete"
     return {
         "basis": "post_shortlist", "expected_n": expected_n,
         "n": len(records), "measured_n": measured, **counts,
-        "threshold": threshold,
+        "threshold": threshold, "partial_run": bool(partial_run),
+        "inconclusive_reason": reason,
         "verdict": (("PASS" if counts["present"] >= threshold else "KILL")
-                    if complete else "INCONCLUSIVE"),
+                    if complete and not partial_run else "INCONCLUSIVE"),
     }
 
 
@@ -640,8 +667,10 @@ def main(argv=None) -> int:
     needles, gold, bucket, miss_names = load_inputs()
     controls = pick_controls(needles, miss_names, CONTROL_N)
     targets = list(miss_names) + controls
+    declared_n = len(targets)
     if args.limit:
         targets = targets[:args.limit]
+    partial_run = len(targets) < declared_n
     print("targets: " + str(len(miss_names)) + " misses + "
           + str(len(controls)) + " hit controls = " + str(len(targets)),
           flush=True)
@@ -752,7 +781,10 @@ def main(argv=None) -> int:
 
     pa_found = sum(1 for r in pool_absent
                    if r["deep_status"] == "complete" and r["deep_rank"] is not None)
-    admission = admission_summary([deep_by[r["needle"]] for r in pool_absent])
+    admission = admission_summary([deep_by[r["needle"]] for r in pool_absent],
+                                  expected_n=ADMISSION_EXPECTED_N,
+                                  threshold=ADMISSION_THRESHOLD,
+                                  partial_run=partial_run)
     verdict = admission["verdict"]
 
     by_bucket = {}
@@ -982,7 +1014,8 @@ def main(argv=None) -> int:
     capture_con.close()
     print("\nVERDICT " + verdict + ": measured post_shortlist gold presence = "
           + str(admission["present"]) + "/" + str(admission["measured_n"])
-          + " (requires 109 measured queries; threshold 30)")
+          + " (requires " + str(admission["expected_n"]) + " measured queries"
+          + " from a full run; threshold " + str(admission["threshold"]) + ")")
     print(json.dumps(receipt["headline"], indent=2))
     print(json.dumps(receipt["latency"], indent=2))
     print("receipt -> " + str(out))
