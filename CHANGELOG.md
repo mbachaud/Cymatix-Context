@@ -19,7 +19,7 @@ _Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymat
   respects party attribution, and excludes archived chunks.
 - Include the prepared #417/#430/#431 migration tools with canonical wire,
   tier-seat-floor, and harmonic-batching features still opt-in. Their benchmark
-  gates remain open; #453 is not resolved in this release.
+  gates remain open; #453 was not resolved in `v0.10.0b1` (fixed below).
 - The historical Sol paired gain motivated the generalized rule; it is not a
   measured score for this production implementation. Stored sequence positions,
   eligibility filters, and current retrieval settings can change selections.
@@ -39,6 +39,18 @@ _Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymat
   connection-local temporary candidate storage and stream eligible links
   without exceeding SQLite's bind limit. Disabled by default pending paired
   measurements on a populated harmonic-link bed.
+- **fix(bench): pool-depth admission gate matches its contract (#453).**
+  `probe_pool_depth.py` now refuses a verdict on any `--limit` below the
+  declared target count (the receipt records `partial_run` and
+  `inconclusive_reason`), counts `post_shortlist` membership only when the
+  shortlist `filter_status` is `applied`, and requires a captured `fts_raw`
+  before a query counts as a measured lexical admission. All three gaps
+  inflated `present`, the direction that turns a KILL into a PASS. The
+  stage capture adds `filter_reason` to an unapplied shortlist
+  (`disabled`, `prefilter_owns`, `fts_unavailable`, `no_candidates`,
+  `no_usable_terms`) so a closed configuration gate and a query with no usable
+  terms are no longer one label. Measurement-only: retrieval and ranking are
+  unchanged. No committed receipt is re-graded here.
 - **Benchmark preparation.** `benchmarks/dogfood/migrations/` prepares
   explicit paired arms and captures per-query identities and wire hashes.
   These changes do not claim full-scale gate receipts or promote defaults.
