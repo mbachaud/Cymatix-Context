@@ -5,7 +5,11 @@ supervisor + collector. No real cymatix process is spawned.
 
 from __future__ import annotations
 
+import json
 import os
+import shutil
+import subprocess
+from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
@@ -560,3 +564,810 @@ def test_observability_skipped_when_install_incomplete(monkeypatch):
     sup, install_pending = _maybe_build_observability()
     assert sup is None
     assert install_pending is True
+
+
+# ---------------------------------------------------------------------
+# Host status panel: the three existing routes, one shared projection.
+#
+# These drive a real StateCollector and a real StatusCache over a fake
+# reader, so the projection under test is the shipped allowlist and the
+# HTML under test is the shipped template. The fake report carries a
+# secret sentinel in every field the allowlist is supposed to drop:
+# native config paths, the server URL, its payload, its parse error, its
+# error text, the inspected path list and an environment map. If any of
+# them reaches the page or the JSON, these fail.
+# ---------------------------------------------------------------------
+
+import re
+
+from cymatix_context.launcher.collector import StateCollector, project_host_status
+from cymatix_context.launcher.status_cache import (
+    GENERIC_NEXT_ACTION,
+    OBSERVATION_SCOPE,
+    SNAPSHOT_KEYS,
+    StatusCache,
+)
+
+SENTINEL = "s3cr3t-do-not-render-3f9a"
+
+APPROVED_HOST_STATUS_KEYS = set(SNAPSHOT_KEYS) | {"launcher"}
+APPROVED_GROUP_KEYS = {
+    "host": {"selection", "profile"},
+    "server": {"transport", "health", "source", "configured_url_match"},
+    "mcp": {"configuration", "activation", "live"},
+    "skill": {"installation", "activation"},
+    "launcher": {"state", "source", "observed_at"},
+}
+
+# Every route this app is allowed to serve. The host status panel is
+# delivered through the three that already existed, so this list must
+# not grow; it is the no-new-route check.
+EXPECTED_ROUTES = {
+    "/",
+    "/api/control/bench/start",
+    "/api/control/bench/stop",
+    "/api/control/restart",
+    "/api/control/start",
+    "/api/control/stop",
+    "/api/genome/create",
+    "/api/genome/select",
+    "/api/genomes",
+    "/api/state",
+    "/api/state/panels",
+    "/docs",
+    "/docs/oauth2-redirect",
+    "/openapi.json",
+    "/redoc",
+    "/static",
+}
+
+_DIMENSION = re.compile(
+    r"<dt>(?P<label>[^<]+)</dt>\s*"
+    r'<dd class="host-status-value[^"]*">(?P<value>[^<]*)</dd>'
+)
+
+
+def _dimensions(html: str) -> dict:
+    """Label to rendered value for every host status row in the page."""
+
+    return {
+        m.group("label").strip(): m.group("value").strip()
+        for m in _DIMENSION.finditer(html)
+    }
+
+
+def _sentinel_report(**overrides):
+    """A schema valid report whose every unapproved field is a secret."""
+
+    report = {
+        "host": {
+            "selection": "claude-code",
+            "profile": "Claude Code",
+            "detail": SENTINEL,
+            "config_path": "/home/" + SENTINEL + "/.claude.json",
+        },
+        "server": {
+            "transport": "reachable",
+            "health": "healthy",
+            "source": "configured",
+            "configured_url_match": True,
+            "url": "http://127.0.0.1:11437/?token=" + SENTINEL,
+            "payload": {"api_key": SENTINEL},
+            "parse_error": "cannot parse " + SENTINEL,
+            "error": "connection refused for " + SENTINEL,
+        },
+        "mcp": {
+            "configuration": "canonical",
+            "activation": "enabled",
+            "live": "connected",
+            "path": "/home/" + SENTINEL + "/.mcp.json",
+            "detail": SENTINEL,
+        },
+        "skill": {
+            "installation": "present",
+            "activation": "enabled",
+            "path": "/home/" + SENTINEL + "/skills",
+        },
+        "configured_ready": True,
+        "guided_ready": True,
+        "next_action": "Use cymatix_context for repo questions.",
+        "inspected_paths": ["/home/" + SENTINEL + "/.codex/config.toml"],
+        "launcher": {"url": "http://127.0.0.1:11438/" + SENTINEL, "state": "running"},
+        "env": {"CYMATIX_API_KEY": SENTINEL},
+    }
+    report.update(overrides)
+    return report
+
+
+def _status_cache(reader, calls=None):
+    """A real cache whose refresh runs inline, so the test is ordered."""
+
+    def counted():
+        if calls is not None:
+            calls.append(1)
+        return reader()
+
+    return StatusCache(
+        reader=counted,
+        projector=project_host_status,
+        context_factory=lambda: "route-test-context",
+        spawn=lambda work: work(),
+    )
+
+
+@pytest.fixture
+def status_calls():
+    return []
+
+
+@pytest.fixture
+def host_status_client(fake_store, fake_supervisor, status_calls, monkeypatch, tmp_path):
+    """create_app over a real collector with a fake host status reader."""
+
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.chdir(tmp_path)
+
+    def build(reader, *, running=False):
+        fake_supervisor.is_running.return_value = running
+        collector = StateCollector(
+            supervisor=fake_supervisor,
+            status_cache=_status_cache(reader, status_calls),
+        )
+        app = create_app(
+            store=fake_store, supervisor=fake_supervisor, collector=collector
+        )
+        return app, TestClient(app)
+
+    return build
+
+
+class TestHostStatusProjectionOnTheExistingRoutes:
+    def test_json_carries_only_the_approved_projection(self, host_status_client):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert set(payload) == APPROVED_HOST_STATUS_KEYS
+        for group, keys in APPROVED_GROUP_KEYS.items():
+            assert set(payload[group]) == keys, group
+        assert payload["observation_scope"] == OBSERVATION_SCOPE
+        assert payload["configured_ready"] is True
+        assert payload["guided_ready"] is True
+        assert payload["launcher"]["source"] == "supervisor"
+
+    def test_no_sentinel_reaches_any_of_the_three_responses(self, host_status_client):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            bodies = [
+                c.get("/").text,
+                c.get("/api/state/panels").text,
+                c.get("/api/state").text,
+            ]
+
+        for body in bodies:
+            assert SENTINEL not in body
+            assert ".mcp.json" not in body
+            assert "api_key" not in body
+            assert "connection refused" not in body
+            assert "inspected_paths" not in body
+            # The cymatix port is elsewhere on the page from the old
+            # aggregate, so scope the URL check to the new panel.
+            panel = body.split("data-host-status", 1)[-1]
+            assert "http://" not in panel
+
+    def test_upstream_error_text_never_reaches_a_response(self, host_status_client):
+        """An unreachable server is a successful observation, not a leak."""
+
+        report = _sentinel_report(
+            server={
+                "transport": "unreachable",
+                "health": "unknown",
+                "source": "default",
+                "configured_url_match": None,
+                "error": "HTTPConnectionPool refused: " + SENTINEL,
+                "parse_error": SENTINEL,
+                "payload": {"stack": SENTINEL},
+            },
+            configured_ready=False,
+            guided_ready=False,
+            next_action="Start or repair the Cymatix server configured for this MCP entry.",
+        )
+        _, client = host_status_client(lambda: report)
+        with client as c:
+            html = c.get("/api/state/panels").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert SENTINEL not in html
+        assert "HTTPConnectionPool" not in html
+        assert payload["server"] == {
+            "transport": "unreachable",
+            "health": "unknown",
+            "source": "default",
+            "configured_url_match": None,
+        }
+        rows = _dimensions(html)
+        assert rows["Server transport"] == "Unreachable"
+        assert rows["Server health"] == "Unknown"
+        assert rows["Configured URL match"] == "Unknown"
+
+    def test_all_three_routes_share_one_refresh(self, host_status_client, status_calls):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            c.get("/")
+            c.get("/api/state/panels")
+            c.get("/api/state")
+
+        assert len(status_calls) == 1
+
+    def test_no_new_route_is_registered(self, host_status_client):
+        app, _ = host_status_client(_sentinel_report)
+        assert {route.path for route in app.routes} == EXPECTED_ROUTES
+
+
+class TestHostStatusRendering:
+    def test_every_dimension_renders_independently(self, host_status_client):
+        report = _sentinel_report(
+            server={
+                "transport": "reachable",
+                "health": "unknown",
+                "source": "default",
+                "configured_url_match": False,
+            },
+            mcp={"configuration": "noncanonical", "activation": "unknown", "live": "unknown"},
+            skill={"installation": "present", "activation": "disabled"},
+            configured_ready=False,
+            guided_ready=False,
+            next_action="Add or repair the canonical cymatix-context MCP entry for this host.",
+        )
+        _, client = host_status_client(lambda: report)
+        with client as c:
+            rows = _dimensions(c.get("/").text)
+
+        # Reachable is not healthy, configured is not activated,
+        # installed is not enabled, and none of them is readiness.
+        assert rows["Server transport"] == "Reachable"
+        assert rows["Server health"] == "Unknown"
+        assert rows["Server URL source"] == "Default"
+        assert rows["Configured URL match"] == "Differs"
+        assert rows["MCP entry"] == "Noncanonical"
+        assert rows["MCP activation"] == "Unknown"
+        assert rows["MCP live session"] == "Unknown"
+        assert rows["Skill installation"] == "Present"
+        assert rows["Skill activation"] == "Disabled"
+        assert rows["Configured readiness"] == "Not ready"
+        assert rows["Guided readiness"] == "Not ready"
+
+    def test_mcp_live_is_labelled_registry_evidence(self, host_status_client):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            html = c.get("/").text
+
+        live = html.split("MCP live session", 1)[1].split("</div>", 1)[0]
+        assert "Registry evidence only" in live
+        assert "authenticated" not in live.lower()
+
+    def test_ambiguous_and_unknown_host_selection_stay_distinct(self, host_status_client):
+        ambiguous = _sentinel_report(
+            host={"selection": "ambiguous", "profile": None},
+            configured_ready=None,
+            guided_ready=None,
+            next_action=(
+                "Multiple host configs contain cymatix-context; pass --host explicitly."
+            ),
+        )
+        unknown = _sentinel_report(
+            host={"selection": "unknown", "profile": None},
+            configured_ready=False,
+            guided_ready=False,
+            next_action="Pass --host or add one canonical cymatix-context MCP entry.",
+        )
+        _, client = host_status_client(lambda: ambiguous)
+        with client as c:
+            assert _dimensions(c.get("/").text)["Host"] == "Ambiguous"
+        _, client = host_status_client(lambda: unknown)
+        with client as c:
+            assert _dimensions(c.get("/").text)["Host"] == "Unknown"
+
+    def test_null_readiness_renders_unknown_never_false(self, host_status_client):
+        report = _sentinel_report(
+            server={
+                "transport": "reachable",
+                "health": "unknown",
+                "source": "configured",
+                "configured_url_match": True,
+            },
+            configured_ready=None,
+            guided_ready=None,
+            next_action="Start or repair the Cymatix server configured for this MCP entry.",
+        )
+        _, client = host_status_client(lambda: report)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        rows = _dimensions(html)
+        assert rows["Configured readiness"] == "Unknown"
+        assert rows["Guided readiness"] == "Unknown"
+        assert "Unknown is never false" in html
+        assert payload["configured_ready"] is None
+        assert payload["guided_ready"] is None
+
+    def test_supervisor_launcher_state_is_its_own_dimension(self, host_status_client):
+        _, client = host_status_client(_sentinel_report, running=True)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        rows = _dimensions(html)
+        assert rows["Supervised child"] == "Running"
+        assert rows["Child evidence from"] == "supervisor"
+        assert payload["launcher"]["state"] == "running"
+        assert payload["launcher"]["observed_at"] is not None
+
+    def test_component_is_present_when_the_child_is_stopped(self, host_status_client):
+        _, client = host_status_client(_sentinel_report, running=False)
+        with client as c:
+            root = c.get("/").text
+            partial = c.get("/api/state/panels").text
+
+        for body in (root, partial):
+            assert "data-host-status" in body
+            assert "Host status" in body
+            assert _dimensions(body)["Supervised child"] == "Stopped"
+            assert _dimensions(body)["Configured readiness"] == "Ready"
+        # The stopped-child empty state still renders alongside it.
+        assert "Cymatix is stopped" in root
+
+    def test_unavailable_observation_is_distinct_from_not_ready(self, host_status_client):
+        def explode():
+            raise RuntimeError("native config read failed for " + SENTINEL)
+
+        _, client = host_status_client(explode)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert SENTINEL not in html
+        assert 'data-freshness="unavailable"' in html
+        assert "No observation available yet" in html
+        rows = _dimensions(html)
+        assert rows["Configured readiness"] == "Unknown"
+        assert rows["Server health"] == "Unknown"
+        assert rows["MCP entry"] == "Unknown"
+        # The supervised child is sampled separately, so it is still real.
+        assert rows["Supervised child"] == "Stopped"
+        assert payload["freshness"] == "unavailable"
+        assert payload["host"] is None
+        assert payload["next_action"] == GENERIC_NEXT_ACTION
+
+    def test_freshness_attributes_are_serialised_for_presentation_aging(
+        self, host_status_client
+    ):
+        _, client = host_status_client(_sentinel_report)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert 'data-freshness="fresh"' in html
+        assert "data-fresh-for-s=" in html
+        assert "data-age-s=" in html
+        assert payload["fresh_for_s"] is not None
+        assert payload["age_s"] is not None
+        assert "aged past its" in html
+
+
+class TestHostStatusEscapingAndGuidance:
+    def test_unapproved_guidance_is_replaced_not_escaped(self, host_status_client):
+        report = _sentinel_report(
+            next_action="<b>paste this key: " + SENTINEL + "</b>",
+        )
+        _, client = host_status_client(lambda: report)
+        with client as c:
+            html = c.get("/").text
+            payload = c.get("/api/state").json()["host_status"]
+
+        assert SENTINEL not in html
+        assert "&lt;b&gt;" not in html
+        assert payload["next_action"] == GENERIC_NEXT_ACTION
+        assert GENERIC_NEXT_ACTION in html
+
+    def test_markup_metacharacters_in_text_are_escaped_never_executed(
+        self, fake_store, fake_supervisor
+    ):
+        """The template escapes even text the allowlist let through.
+
+        The approved vocabulary has no markup in it today, which is
+        exactly why this drives a crafted projection straight into the
+        template: the render must not depend on that staying true.
+        """
+        marked = '<img src=x onerror="alert(1)">&'
+        collector = MagicMock()
+        collector.collect.return_value = {
+            "cymatix": {"running": False, "port": 11437},
+            "host_status": {
+                "observation_scope": marked,
+                "freshness": "fresh",
+                "refresh_state": "idle",
+                "observed_at": "2026-09-11T06:12:44Z",
+                "last_success_at": "2026-09-11T06:12:44Z",
+                "last_attempt_at": "2026-09-11T06:12:44Z",
+                "age_s": 0.4,
+                "fresh_for_s": 4.6,
+                "host": {"selection": "claude-code", "profile": marked},
+                "server": {
+                    "transport": "reachable",
+                    "health": "healthy",
+                    "source": marked,
+                    "configured_url_match": True,
+                },
+                "mcp": {
+                    "configuration": "canonical",
+                    "activation": "enabled",
+                    "live": "connected",
+                },
+                "skill": {"installation": "present", "activation": "enabled"},
+                "launcher": {"state": "running", "source": marked, "observed_at": None},
+                "configured_ready": True,
+                "guided_ready": True,
+                "next_action": marked,
+            },
+        }
+        app = create_app(
+            store=fake_store, supervisor=fake_supervisor, collector=collector
+        )
+        with TestClient(app) as client:
+            html = client.get("/").text
+
+        assert "<img src=x" not in html
+        assert 'onerror="' not in html
+        assert "&lt;img src=x onerror=&#34;alert(1)&#34;&gt;&amp;" in html
+
+    def test_next_action_render_is_bounded(self, fake_store, fake_supervisor):
+        long_text = "A" * 4000
+        collector = MagicMock()
+        collector.collect.return_value = {
+            "cymatix": {"running": False, "port": 11437},
+            "host_status": {
+                "observation_scope": OBSERVATION_SCOPE,
+                "freshness": "fresh",
+                "refresh_state": "idle",
+                "observed_at": None,
+                "last_success_at": None,
+                "last_attempt_at": None,
+                "age_s": None,
+                "fresh_for_s": None,
+                "host": None,
+                "server": None,
+                "mcp": None,
+                "skill": None,
+                "launcher": {"state": "stopped", "source": "supervisor", "observed_at": None},
+                "configured_ready": None,
+                "guided_ready": None,
+                "next_action": long_text,
+            },
+        }
+        app = create_app(
+            store=fake_store, supervisor=fake_supervisor, collector=collector
+        )
+        with TestClient(app) as client:
+            html = client.get("/").text
+
+        assert "A" * 500 in html
+        assert "A" * 501 not in html
+
+
+class TestHostStatusBrowserContract:
+    """What the served static files are allowed to do for this panel.
+
+    These read the served text, so they pin the contract for
+    launcher.js: bound the fetches that already exist,
+    show staleness in words, age the observation, and add no second
+    loop and no second endpoint.
+    """
+
+    def _asset(self, name: str) -> str:
+        from cymatix_context.launcher.app import STATIC_DIR
+
+        return (STATIC_DIR / name).read_text(encoding="utf-8")
+
+    def test_panel_fetches_are_finite_and_always_cleaned_up(self):
+        js = self._asset("launcher.js")
+        assert "AbortController" in js
+        assert "controller.abort()" in js
+        assert js.count("clearTimeout(timer)") == 1
+        assert "finally {" in js
+
+    def test_no_second_poll_loop_and_no_new_endpoint(self):
+        js = self._asset("launcher.js")
+        # Two intervals, both of which predate this panel: the dashboard
+        # poll and the first-boot database modal poll. The host status
+        # panel rides the first one and adds neither a third timer nor
+        # an endpoint of its own.
+        assert js.count("setInterval(") == 2
+        assert "setInterval(pollDbModal" in js
+        assert "host-status" not in js.replace("data-host-status", "")
+        assert "/api/status" not in js
+        polled = set(re.findall(r"await fetchBounded\(\s*\n?\s*([^,]+),", js))
+        assert polled == {"pollUrl", '"/api/state"'}
+
+    def test_stale_state_is_visible_in_words(self):
+        css = self._asset("launcher.css")
+        assert '.panels[data-stale="true"]::before' in css
+        assert "Live updates are not arriving" in css
+
+    def test_expired_observation_has_its_own_neutral_presentation(self):
+        css = self._asset("launcher.css")
+        assert '.panel--host-status[data-observation="expired"] .host-status-aged' in css
+        assert '.panel--host-status[data-freshness="stale"] .host-status-value' in css
+
+
+# -- the browser freshness path, actually executed ---------------------
+#
+# The class above reads the served text. This one runs it. A Node
+# runtime evaluates the real `launcher.js` against a stub DOM and a fake
+# clock, so the deadline, the two overlap guards and the observation
+# aging are exercised rather than asserted about. The suite skips where
+# no Node runtime is installed; nothing else in the launcher tests
+# depends on one.
+
+_BROWSER_HARNESS = r"""
+"use strict";
+const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync(process.argv[2], "utf8");
+const CARD = '<section data-host-status data-fresh-for-s="3"></section>';
+
+function drain() { return new Promise((resolve) => setImmediate(resolve)); }
+
+class El {
+  constructor(tag) {
+    this.tagName = (tag || "div").toUpperCase();
+    this.dataset = {}; this.attrs = {}; this.children = [];
+    this.classList = { toggle() {}, add() {}, remove() {}, contains() { return false; } };
+    this.style = {}; this.hidden = false; this.disabled = false;
+    this.open = true; this.textContent = "";
+  }
+  get childNodes() { return this.children; }
+  appendChild(child) { this.children.push(child); return child; }
+  replaceChildren(...nodes) { this.children = nodes; }
+  addEventListener() {}
+  setAttribute(name, value) { this.attrs[name] = value; }
+  getAttribute(name) { return this.attrs[name]; }
+  closest() { return null; }
+  matches(selector) {
+    const m = /^\[([a-zA-Z-]+)\]$/.exec(selector);
+    if (!m) return false;
+    const name = m[1];
+    if (name in this.attrs) return true;
+    if (!name.startsWith("data-")) return false;
+    const key = name.slice(5).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    return key in this.dataset;
+  }
+  querySelectorAll(selector) {
+    const found = [];
+    const walk = (el) => {
+      for (const child of el.children) {
+        if (child.matches(selector)) found.push(child);
+        walk(child);
+      }
+    };
+    walk(this);
+    return found;
+  }
+  querySelector(selector) {
+    const all = this.querySelectorAll(selector);
+    return all.length ? all[0] : null;
+  }
+}
+
+function makeWorld(plan) {
+  const facts = { fetches: [], aborted: 0, intervals: 0, errors: [] };
+  let now = 0, seq = 0;
+  const timers = new Map();
+  const panels = new El("section");
+  panels.dataset.pollUrl = "/api/state/panels";
+  panels.dataset.pollIntervalMs = "2000";
+  panels.dataset.activeTab = "overview";
+
+  class DOMParser {
+    parseFromString(html) {
+      const body = new El("body");
+      if (/data-host-status/.test(html)) {
+        const card = new El("section");
+        card.dataset.hostStatus = "";
+        const fresh = /data-fresh-for-s="([^"]*)"/.exec(html);
+        if (fresh) card.dataset.freshForS = fresh[1];
+        body.appendChild(card);
+      }
+      return { body };
+    }
+  }
+  class AbortControllerStub {
+    constructor() {
+      const listeners = [];
+      this.signal = {
+        aborted: false,
+        addEventListener(_type, fn) { listeners.push(fn); },
+        _fire() { listeners.forEach((fn) => fn()); },
+      };
+    }
+    abort() {
+      if (this.signal.aborted) return;
+      this.signal.aborted = true;
+      facts.aborted += 1;
+      this.signal._fire();
+    }
+  }
+  const sandbox = {
+    document: {
+      getElementById: (id) => (id === "panels" ? panels : null),
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      createElement: (tag) => new El(tag),
+      addEventListener: () => {},
+      hidden: false,
+      body: new El("body"),
+    },
+    window: {
+      localStorage: { getItem: () => null, setItem: () => {}, removeItem: () => {} },
+      confirm: () => false,
+    },
+    DOMParser: DOMParser,
+    AbortController: AbortControllerStub,
+    performance: { now: () => now },
+    fetch: (url, options) => {
+      const call = { url: url, bounded: Boolean(options && options.signal) };
+      facts.fetches.push(call);
+      return plan(call, options, facts.fetches.length);
+    },
+    console: console,
+    setTimeout: (fn, ms) => {
+      const id = ++seq;
+      timers.set(id, { fn: fn, at: now + (ms || 0), repeat: null });
+      return id;
+    },
+    setInterval: (fn, ms) => {
+      const id = ++seq;
+      facts.intervals += 1;
+      timers.set(id, { fn: fn, at: now + (ms || 0), repeat: ms || 1 });
+      return id;
+    },
+    clearTimeout: (id) => timers.delete(id),
+    clearInterval: (id) => timers.delete(id),
+  };
+  sandbox.globalThis = sandbox;
+
+  async function advance(ms) {
+    const target = now + ms;
+    for (;;) {
+      let chosen = null;
+      for (const [id, timer] of timers) {
+        if (timer.at <= target && (chosen === null || timer.at < chosen[1].at)) {
+          chosen = [id, timer];
+        }
+      }
+      if (chosen === null) break;
+      const [id, timer] = chosen;
+      now = timer.at;
+      if (timer.repeat === null) timers.delete(id); else timer.at = now + timer.repeat;
+      try { timer.fn(); } catch (err) { facts.errors.push(String(err)); }
+      await drain(); await drain();
+    }
+    now = target;
+    await drain(); await drain();
+  }
+  return { facts: facts, panels: panels, sandbox: sandbox, advance: advance };
+}
+
+async function scenarioHang() {
+  const world = makeWorld((_call, options) => new Promise((_resolve, reject) => {
+    if (options && options.signal) {
+      options.signal.addEventListener("abort", () => reject(new Error("AbortError")));
+    }
+  }));
+  vm.runInNewContext(source, world.sandbox);
+  await drain();
+  const firstPass = world.facts.fetches.length;
+  await world.advance(7999);
+  const beforeDeadline = world.facts.fetches.length;
+  await world.advance(2);
+  return {
+    first_pass_fetches: firstPass,
+    fetches_all_bounded: world.facts.fetches.every((f) => f.bounded),
+    fetches_before_deadline: beforeDeadline,
+    urls: Array.from(new Set(world.facts.fetches.map((f) => f.url))).sort(),
+    aborted: world.facts.aborted,
+    stale_attribute: world.panels.dataset.stale || null,
+    poll_intervals: world.facts.intervals,
+    errors: world.facts.errors,
+  };
+}
+
+async function scenarioAging() {
+  let calls = 0;
+  const world = makeWorld((call) => {
+    calls += 1;
+    if (calls > 2) {
+      return Promise.resolve({ ok: false, text: () => Promise.resolve(""),
+                               json: () => Promise.resolve({}) });
+    }
+    return call.url.indexOf("panels") >= 0
+      ? Promise.resolve({ ok: true, text: () => Promise.resolve(CARD) })
+      : Promise.resolve({ ok: true, json: () => Promise.resolve({ cymatix: { running: true } }) });
+  });
+  vm.runInNewContext(source, world.sandbox);
+  await drain(); await drain();
+  const card = () => world.panels.querySelector("[data-host-status]");
+  const swapped = Boolean(card());
+  const atSwap = swapped ? card().dataset.observation || null : "no-card";
+  await world.advance(2000);
+  const atTwo = card() ? card().dataset.observation || null : "no-card";
+  await world.advance(2000);
+  const atFour = card() ? card().dataset.observation || null : "no-card";
+  return {
+    swapped: swapped,
+    observation_at_swap: atSwap,
+    observation_at_2s: atTwo,
+    observation_at_4s: atFour,
+    stale_attribute: world.panels.dataset.stale || null,
+    errors: world.facts.errors,
+  };
+}
+
+(async () => {
+  process.stdout.write(JSON.stringify({
+    hang: await scenarioHang(), aging: await scenarioAging(),
+  }));
+})();
+"""
+
+
+@pytest.fixture(scope="module")
+def browser_run(tmp_path_factory):
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("no Node runtime is installed; the browser path is not executed")
+    workdir = tmp_path_factory.mktemp("launcher-js")
+    harness = workdir / "harness.js"
+    harness.write_text(_BROWSER_HARNESS, encoding="utf-8")
+    script = (
+        Path(__file__).resolve().parents[1]
+        / "cymatix_context" / "launcher" / "static" / "launcher.js"
+    )
+    completed = subprocess.run(
+        [node, str(harness), str(script)],
+        capture_output=True, text=True, timeout=60, cwd=str(workdir),
+    )
+    assert completed.returncode == 0, completed.stderr
+    return json.loads(completed.stdout)
+
+
+class TestHostStatusBrowserBehaviour:
+    """The freshness path executed, not read."""
+
+    def test_one_poll_pass_issues_exactly_the_two_known_bounded_requests(self, browser_run):
+        hang = browser_run["hang"]
+        assert hang["errors"] == []
+        assert hang["first_pass_fetches"] == 2
+        assert hang["fetches_all_bounded"] is True
+        assert hang["urls"] == ["/api/state", "/api/state/panels"]
+        assert hang["poll_intervals"] == 1
+
+    def test_neither_request_stacks_up_while_the_previous_one_hangs(self, browser_run):
+        # Three interval ticks pass inside the deadline. Without the two
+        # guards this would be eight outstanding requests.
+        assert browser_run["hang"]["fetches_before_deadline"] == 2
+
+    def test_a_hung_fetch_aborts_at_the_deadline_and_the_page_says_so(self, browser_run):
+        hang = browser_run["hang"]
+        assert hang["aborted"] == 2
+        assert hang["stale_attribute"] == "true"
+
+    def test_the_rendered_observation_expires_on_its_own_serialised_lifetime(self, browser_run):
+        aging = browser_run["aging"]
+        assert aging["errors"] == []
+        assert aging["swapped"] is True
+        assert aging["observation_at_swap"] is None
+        assert aging["observation_at_2s"] is None, "inside the serialised lifetime"
+        assert aging["observation_at_4s"] == "expired"
+        assert aging["stale_attribute"] == "true"

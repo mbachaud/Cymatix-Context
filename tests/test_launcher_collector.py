@@ -11,11 +11,16 @@ entry shape the Jinja templates consume.
 
 from __future__ import annotations
 
+import contextlib
+import importlib
+import inspect
 import time
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
+from cymatix_context.cli import cymatix_status
 from cymatix_context.launcher.collector import StateCollector
 
 
@@ -527,3 +532,258 @@ class TestTooltipWiring:
         tooltip = panel["entries"][0]["tooltip"]
         assert tooltip["model_label"] == "GPT-5"
         assert tooltip["ide_label"] == "VS Code"
+
+
+# --- Slice A: the additive `host_status` key -------------------------------
+#
+# Covers three collector contracts: auto discovery with a fixed
+# workspace/home and a null launcher URL (so no recursive state request),
+# supervisor evidence that moves only the launcher field, and the key existing
+# before the stopped-child return with the old aggregate untouched. The first
+# two cases run against the shipped CLI alone; the cases marked
+# requires_host_status need the collector's host status wiring and skip
+# while it is absent.
+
+HOST_STATUS_KEY = "host_status"
+
+# The keywords StateCollector may take for the injected status reader or
+# cache. The host status cases run when the collector takes one of them.
+_READER_KWARGS = ("host_status_reader", "host_status_cache", "status_cache", "status_reader")
+
+# Patching `collect_status` on each namespace that holds it covers both
+# `import module` and `from module import collect_status`.
+_STATUS_MODULES = (
+    "cymatix_context.cli.cymatix_status",
+    "cymatix_context.launcher.status_cache",
+    "cymatix_context.launcher.collector",
+)
+
+# Projection keys allowed to move between two reads of one cached observation:
+# they are computed at serialization time, not at observation time.
+_VOLATILE = frozenset({"age_s", "fresh_for_s", "last_attempt_at", "refresh_state"})
+
+_OLD_STOPPED_KEYS = frozenset({"cymatix", "switchboard", "database", "graph_summary", "update"})
+
+_FAKE_REPORT = {
+    "host": {"selection": "claude-code", "profile": "Claude Code", "inspected_paths": []},
+    "server": {"url": "http://127.0.0.1:11437", "source": "configured",
+               "configured_url_match": True, "transport": "reachable", "health": "healthy",
+               "payload": {"status": "ok"}, "parse_error": None, "error": None},
+    "launcher": {"url": None, "state": "not_configured"},
+    "mcp": {"configuration": "canonical", "activation": "enabled", "live": "connected",
+            "path": "/fixture/.mcp.json", "detail": ""},
+    "skill": {"installation": "present", "activation": "enabled",
+              "path": "/fixture/skill", "detail": ""},
+    "configured_ready": True,
+    "guided_ready": True,
+    "next_action": "Cymatix is configured for this host.",
+}
+
+
+def _reader_kwarg():
+    """The injection keyword the collector exposes, or None if unwired."""
+    params = inspect.signature(StateCollector.__init__).parameters
+    return next((name for name in _READER_KWARGS if name in params), None)
+
+
+requires_host_status = pytest.mark.skipif(
+    _reader_kwarg() is None,
+    reason="host status wiring absent; expected one of " + ", ".join(_READER_KWARGS),
+)
+
+
+@contextlib.contextmanager
+def _spy_collect_status(report=None):
+    """Replace `collect_status` everywhere it is bound and record the calls."""
+    calls = []
+
+    def spy(*args, **kwargs):
+        calls.append((args, kwargs))
+        return dict(report or _FAKE_REPORT)
+
+    spy.calls = calls
+    with contextlib.ExitStack() as stack:
+        patched = 0
+        for name in _STATUS_MODULES:
+            try:
+                module = importlib.import_module(name)
+            except ImportError:
+                continue
+            if hasattr(module, "collect_status"):
+                stack.enter_context(patch.object(module, "collect_status", spy))
+                patched += 1
+        assert patched, "no module exposed collect_status to patch"
+        yield spy
+
+
+def _observed(collector, deadline_s=5.0):
+    """Collect until the panel carries an observation, then return the state.
+
+    The refresh is single flight, so the first caller's finite wait can expire
+    before the leader publishes. This polls the public entry point rather than
+    reaching into the cache.
+    """
+    # The panel reports `freshness` as one of fresh, stale or unavailable.
+    deadline = time.monotonic() + deadline_s
+    state = collector.collect()
+    while time.monotonic() < deadline:
+        panel = state.get(HOST_STATUS_KEY)
+        if isinstance(panel, dict) and panel.get("freshness") != "unavailable":
+            break
+        time.sleep(0.05)
+        state = collector.collect()
+    return state
+
+
+def _probe_recorder(recorded):
+    def fake_probe(url, timeout_s=1.0):
+        recorded.append(url)
+        return cymatix_status.ProbeResult("unreachable", None, None, "fixture")
+    return fake_probe
+
+
+def _stopped(fake_supervisor):
+    fake_supervisor.is_running.return_value = False
+    fake_supervisor.find_orphan_cymatix.return_value = None
+    fake_supervisor.get_last_error.return_value = None
+    return fake_supervisor
+
+
+class TestSelfPollPrevention:
+    def test_null_launcher_url_requests_no_state_endpoint(self, tmp_path):
+        probed = []
+        with patch.object(cymatix_status, "_probe_json", _probe_recorder(probed)):
+            report = cymatix_status.collect_status(
+                host="auto", server_url=None, launcher_url=None,
+                start_dir=tmp_path, home_dir=tmp_path,
+            )
+        assert probed, "the health probe should still run"
+        assert not [url for url in probed if "/api/state" in url]
+        assert report["launcher"] == {"url": None, "state": "not_configured"}
+
+    def test_default_launcher_url_would_request_it(self, tmp_path):
+        """Tripwire: proves the case above is not vacuously green."""
+        probed = []
+        with patch.object(cymatix_status, "_probe_json", _probe_recorder(probed)):
+            cymatix_status.collect_status(
+                host="auto", server_url=None, launcher_url="http://127.0.0.1:11438",
+                start_dir=tmp_path, home_dir=tmp_path,
+            )
+        assert [url for url in probed if url.endswith("/api/state")]
+
+    def test_collector_never_requests_its_own_state_routes(self, collector):
+        responses = {"/stats": {"total_genes": 0, "total_chars_raw": 0,
+                                "total_chars_compressed": 0, "compression_ratio": 1.0},
+                     "/sessions": {"participants": []}}
+        client = _mock_client(responses)
+        with _spy_collect_status() as spy:
+            with patch("httpx.Client", return_value=client):
+                with patch.object(collector, "_collect_models", return_value=None):
+                    collector.collect()
+        requested = [call.args[0] for call in client.get.call_args_list]
+        assert "/api/state" not in requested and "/api/state/panels" not in requested
+        assert all(kwargs.get("launcher_url") is None for _a, kwargs in spy.calls)
+
+    @requires_host_status
+    def test_refresh_uses_auto_discovery_and_a_fixed_local_context(self, fake_supervisor):
+        collector = StateCollector(supervisor=_stopped(fake_supervisor))
+        with _spy_collect_status() as spy:
+            _observed(collector)
+        assert spy.calls, "the refresh never called collect_status"
+        for args, kwargs in spy.calls:
+            assert args == (), "collect_status is keyword only"
+            assert kwargs.get("host") == "auto"
+            assert kwargs.get("server_url") is None
+            assert kwargs.get("launcher_url") is None
+            assert Path(kwargs["start_dir"]).is_absolute()
+            assert Path(kwargs["home_dir"]).is_absolute()
+
+
+class TestHostStatusKeyIsAdditive:
+    def test_stopped_child_keeps_the_old_aggregate(self, collector, fake_supervisor):
+        _stopped(fake_supervisor)
+        with _spy_collect_status():
+            result = collector.collect()
+        assert set(result) - {HOST_STATUS_KEY} <= _OLD_STOPPED_KEYS
+        assert result["cymatix"]["running"] is False
+        assert result["cymatix"]["availability"] == "unavailable"
+        assert result["cymatix"]["next_action"] == "Click Start to launch Cymatix."
+        assert "state_file" in result["cymatix"]["paths"]
+        for absent in ("genes", "parties", "participants", "tools", "tokens", "models"):
+            assert absent not in result
+
+    def test_skip_gate_cannot_hide_a_built_panel(self, collector, fake_supervisor):
+        """Not gated: a renamed keyword must go red, not silently skip."""
+        _stopped(fake_supervisor)
+        with _spy_collect_status():
+            result = collector.collect()
+        if HOST_STATUS_KEY in result:
+            assert _reader_kwarg() is not None, (
+                "host_status ships but no keyword in %s; add the real one"
+                % (_READER_KWARGS,)
+            )
+
+    @requires_host_status
+    def test_key_present_before_the_stopped_child_return(self, collector, fake_supervisor):
+        _stopped(fake_supervisor)
+        with _spy_collect_status():
+            state = _observed(collector)
+        assert isinstance(state.get(HOST_STATUS_KEY), dict)
+        assert state[HOST_STATUS_KEY]["freshness"] in {"fresh", "stale", "unavailable"}
+
+
+class TestSupervisorOverlay:
+    @requires_host_status
+    def test_evidence_changes_only_the_launcher_field(self, collector, fake_supervisor):
+        """One collector, one cached observation, the child flipped underneath.
+
+        Reusing the same collector is deliberate: the host observation is
+        served from the same cache entry both times, so any difference outside
+        the launcher block is the overlay leaking into host evidence rather
+        than two independent collections drifting.
+        """
+        # The overlay sets host_status["launcher"]["state"] and the fixed
+        # host_status["launcher"]["source"] == "supervisor" label; everything
+        # else, minus _VOLATILE, must match between the two reads.
+        _stopped(fake_supervisor)
+        with _spy_collect_status() as spy:
+            stopped = _observed(collector)[HOST_STATUS_KEY]
+            fake_supervisor.is_running.return_value = True
+            running = collector.collect()[HOST_STATUS_KEY]
+
+        assert len(spy.calls) == 1, "the overlay must not force a host re-read"
+        assert stopped["launcher"]["state"] == "stopped"
+        assert running["launcher"]["state"] == "running"
+        assert running["launcher"]["source"] == "supervisor"
+        assert stopped["launcher"]["source"] == "supervisor"
+
+        def stable(panel):
+            return {k: v for k, v in panel.items()
+                    if k != "launcher" and k not in _VOLATILE}
+
+        assert stable(stopped) == stable(running)
+        assert stable(stopped), "the comparison must not be empty"
+
+    @requires_host_status
+    @pytest.mark.parametrize(
+        "installation, activation, expected",
+        [("present", "enabled", True), ("missing", "enabled", False),
+         ("present", "disabled", False), ("present", "unknown", None)],
+    )
+    def test_readiness_survives_the_overlay_across_skill_states(
+        self, fake_supervisor, installation, activation, expected
+    ):
+        # configured_ready / guided_ready keep the CLI's exact
+        # true / false / null values in the projection.
+        report = dict(_FAKE_REPORT)
+        report["skill"] = {"installation": installation, "activation": activation,
+                           "path": "/fixture/skill", "detail": ""}
+        report["guided_ready"] = cymatix_status.guided_ready(True, installation, activation)
+        assert report["guided_ready"] is expected
+
+        _stopped(fake_supervisor)
+        with _spy_collect_status(report):
+            panel = _observed(StateCollector(supervisor=fake_supervisor))[HOST_STATUS_KEY]
+        assert panel["configured_ready"] is True
+        assert panel["guided_ready"] is expected
+        assert panel["launcher"]["state"] == "stopped"

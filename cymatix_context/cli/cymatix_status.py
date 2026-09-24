@@ -8,6 +8,7 @@ from dataclasses import dataclass
 import ipaddress
 import json
 import logging
+import math
 import os
 from pathlib import Path
 from typing import Any, Literal
@@ -39,18 +40,56 @@ MAX_STATUS_RESPONSE_BYTES = 64 * 1024
 _MAX_STATUS_URL_LENGTH = 2048
 
 _DEFAULT_STATUS_TIMEOUT_S = 10.0
-try:
-    DEFAULT_STATUS_TIMEOUT_S = float(
-        os.environ.get("CYMATIX_STATUS_TIMEOUT_S", _DEFAULT_STATUS_TIMEOUT_S)
-    )
-except ValueError:
+# Documented finite positive probe budget. A status probe is a loopback
+# health read; anything past this is a hang, not a slow answer.
+MAX_STATUS_TIMEOUT_S = 60.0
+
+
+def finite_positive_timeout(value: object, default: float = _DEFAULT_STATUS_TIMEOUT_S) -> float:
+    """Clamp a probe timeout into the documented finite positive budget.
+
+    Parsing a float is not validation: zero, a negative number, a NaN
+    and an infinity all parse, and each one turns a bounded probe into
+    something else. Zero and negative become a nonblocking socket,
+    nonfinite becomes no deadline at all, and an excessive value holds
+    the single refresh worker for as long as the caller likes. Anything
+    outside the budget falls back to the default, and anything above the
+    ceiling is clamped down to it.
+    """
+
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return default
+    candidate = float(value)
+    if not math.isfinite(candidate) or candidate <= 0.0:
+        return default
+    return min(candidate, MAX_STATUS_TIMEOUT_S)
+
+
+def _timeout_from_environment() -> float:
+    raw = os.environ.get("CYMATIX_STATUS_TIMEOUT_S")
+    if raw is None:
+        return _DEFAULT_STATUS_TIMEOUT_S
+    try:
+        parsed = float(raw)
+    except ValueError:
+        _warn_timeout(raw, "is not a float")
+        return _DEFAULT_STATUS_TIMEOUT_S
+    accepted = finite_positive_timeout(parsed)
+    if accepted != parsed:
+        _warn_timeout(raw, f"is not a finite positive timeout within {MAX_STATUS_TIMEOUT_S}s")
+    return accepted
+
+
+def _warn_timeout(raw: str, problem: str) -> None:
     import sys
 
     sys.stderr.write(
-        f"CYMATIX_STATUS_TIMEOUT_S={os.environ.get('CYMATIX_STATUS_TIMEOUT_S')!r} "
-        f"is not a float; falling back to {_DEFAULT_STATUS_TIMEOUT_S}s\n"
+        f"CYMATIX_STATUS_TIMEOUT_S={raw!r} {problem}; "
+        f"falling back to {_DEFAULT_STATUS_TIMEOUT_S}s\n"
     )
-    DEFAULT_STATUS_TIMEOUT_S = _DEFAULT_STATUS_TIMEOUT_S
+
+
+DEFAULT_STATUS_TIMEOUT_S = _timeout_from_environment()
 
 
 @dataclass(frozen=True)
@@ -185,6 +224,39 @@ def _is_loopback_hostname(hostname: str) -> bool:
     return address.is_loopback or (mapped is not None and mapped.is_loopback)
 
 
+SELF_TARGET_ACTION = (
+    "Status target is the launcher's own address; point the cymatix-context "
+    "MCP URL at the Cymatix server, not at the launcher."
+)
+
+
+def _origin_of(value: object) -> tuple[str, str, int] | None:
+    """The (scheme, host, port) of a URL, or None when it is unusable."""
+
+    validated, _ = _validate_status_base_url(value)
+    if validated is None:
+        return None
+    scheme, host, port, _ = validated.canonical
+    return (scheme, host, port)
+
+
+def _is_same_local_origin(
+    candidate: tuple[str, str, int], denied: tuple[str, str, int]
+) -> bool:
+    """Same scheme and port, and the same host or two loopback names.
+
+    `localhost` and `127.0.0.1` are one address here. Comparing the
+    written host alone would let the launcher probe itself through the
+    other spelling of the denied address.
+    """
+
+    if candidate[0] != denied[0] or candidate[2] != denied[2]:
+        return False
+    if candidate[1] == denied[1]:
+        return True
+    return _is_loopback_hostname(candidate[1]) and _is_loopback_hostname(denied[1])
+
+
 def _refused_target(
     *,
     reported_url: str,
@@ -202,9 +274,21 @@ def _refused_target(
 
 
 def _select_server_target(
-    *, explicit_url: str | None, configured_url: str | None
+    *,
+    explicit_url: str | None,
+    configured_url: str | None,
+    denied_origin: str | None = None,
 ) -> ProbeTarget:
-    """Prefer a validated explicit target; implicit targets must be loopback."""
+    """Prefer a validated explicit target; implicit targets must be loopback.
+
+    `denied_origin` is an address this caller must never request, given
+    by the caller that owns it. The launcher passes its configured
+    address (`CYMATIX_LAUNCHER_URL`, else the default) so a discovered or
+    default target that resolves to it is refused
+    before the request, rather than the launcher polling itself from
+    inside the request it is answering. Loopback is not the test: the
+    launcher is loopback too.
+    """
 
     if explicit_url is not None:
         validated, error = _validate_status_base_url(explicit_url)
@@ -244,6 +328,15 @@ def _select_server_target(
                 f"{source} is not loopback; pass --server-url explicitly "
                 "to opt in to remote status probing."
             ),
+            source=target_source,
+        )
+    denied = _origin_of(denied_origin) if denied_origin is not None else None
+    candidate = _origin_of(validated.request_url)
+    if denied is not None and candidate is not None and _is_same_local_origin(candidate, denied):
+        return _refused_target(
+            reported_url=validated.reported_url,
+            reason=f"{source} is the caller's own address.",
+            action=SELF_TARGET_ACTION,
             source=target_source,
         )
     return ProbeTarget(
@@ -305,7 +398,7 @@ def _parse_json_mapping(body: bytes) -> tuple[Mapping[str, Any] | None, str | No
     try:
         parsed = json.loads(body.decode("utf-8"))
     except Exception as exc:
-        log.warning("Could not parse status response JSON: %s", exc)
+        log.warning("Could not parse a status response as JSON: %s", type(exc).__name__)
         return None, _bounded_text(exc)
     if not isinstance(parsed, Mapping):
         return None, "JSON response is not an object."
@@ -318,27 +411,78 @@ def _read_bounded_status_body(response: Any, *, url: str) -> tuple[bytes | None,
     try:
         body = response.read(MAX_STATUS_RESPONSE_BYTES + 1)
     except Exception as exc:
-        log.warning("Could not read status response body for %s: %s", url, exc, exc_info=True)
+        log.warning("Could not read a status response body: %s", type(exc).__name__)
         return None, _bounded_text(exc)
     if not isinstance(body, bytes):
         return None, "Status response body is not bytes."
     if len(body) > MAX_STATUS_RESPONSE_BYTES:
-        log.warning("Status response body exceeded %d bytes for %s", MAX_STATUS_RESPONSE_BYTES, url)
+        log.warning("A status response body exceeded %d bytes", MAX_STATUS_RESPONSE_BYTES)
         return None, f"Status response exceeds {MAX_STATUS_RESPONSE_BYTES} byte limit."
     return body, None
+
+
+REDIRECT_REFUSED_REASON = "Status probe refused an HTTP redirect."
+
+
+class _RedirectRefused(Exception):
+    """Raised in place of following a redirect on a status probe."""
+
+
+class _RefuseRedirects(dict):
+    """A pre-seeded redirect ledger that refuses the first hop.
+
+    Validating the first URL is not redirect confinement. The loopback
+    rule is applied once, before the first request; the ordinary opener
+    then follows a `302` wherever it points, so a loopback endpoint can
+    hand the probe a link local or remote address and the health
+    evidence comes back from there.
+
+    `urllib.request.HTTPRedirectHandler` consults the request's
+    `redirect_dict` for loop detection before it opens the next hop.
+    Seeding it with this mapping turns that consultation into a refusal,
+    so the second request is never made.
+    """
+
+    def get(self, key: Any, default: Any = 0) -> Any:
+        raise _RedirectRefused(REDIRECT_REFUSED_REASON)
+
+    def __len__(self) -> int:
+        raise _RedirectRefused(REDIRECT_REFUSED_REASON)
+
+
+def _landed_elsewhere(response: Any, url: str) -> bool:
+    """True when the answer came from a different origin than we asked.
+
+    Belt and braces behind `_RefuseRedirects`: if a future standard
+    library reaches the hop by another route, the evidence is still
+    discarded rather than presented as local.
+    """
+
+    final = getattr(response, "url", None)
+    if not isinstance(final, str) or final == url:
+        return False
+    asked, landed = _origin_of(url), _origin_of(final)
+    return asked is None or landed is None or asked != landed
 
 
 def _probe_json(url: str, timeout_s: float = DEFAULT_STATUS_TIMEOUT_S) -> ProbeResult:
     """Probe a JSON endpoint without treating HTTP status as transport failure."""
 
+    timeout_s = finite_positive_timeout(timeout_s)
     try:
-        with urllib.request.urlopen(url, timeout=timeout_s) as response:
+        request = urllib.request.Request(url, method="GET")
+        request.redirect_dict = _RefuseRedirects()
+        with urllib.request.urlopen(request, timeout=timeout_s) as response:
+            if _landed_elsewhere(response, url):
+                return ProbeResult("unreachable", None, None, REDIRECT_REFUSED_REASON)
             body, body_error = _read_bounded_status_body(response, url=url)
         if body_error is not None:
             return ProbeResult("reachable", None, body_error, None)
         assert body is not None
         payload, parse_error = _parse_json_mapping(body)
         return ProbeResult("reachable", payload, parse_error, None)
+    except _RedirectRefused:
+        return ProbeResult("unreachable", None, None, REDIRECT_REFUSED_REASON)
     except urllib.error.HTTPError as exc:
         body, body_error = _read_bounded_status_body(exc, url=url)
         if body_error is not None:
@@ -349,7 +493,7 @@ def _probe_json(url: str, timeout_s: float = DEFAULT_STATUS_TIMEOUT_S) -> ProbeR
     except urllib.error.URLError as exc:
         return ProbeResult("unreachable", None, None, _bounded_text(exc.reason))
     except Exception as exc:
-        log.warning("Status probe failed for %s: %s", url, exc, exc_info=True)
+        log.warning("A status probe failed: %s", type(exc).__name__)
         return ProbeResult(
             "unreachable",
             None,
@@ -602,8 +746,16 @@ def collect_status(
     skill_dir: Path | None = None,
     start_dir: Path | None = None,
     home_dir: Path | None = None,
+    denied_origin: str | None = None,
 ) -> dict[str, Any]:
-    """Collect independent host, server, launcher, MCP, and skill evidence."""
+    """Collect independent host, server, launcher, MCP, and skill evidence.
+
+    `denied_origin` is an address the caller must never request. It is
+    None for the command line, which is not a server; the launcher
+    passes its configured address so no discovered or default target on
+    that address can turn a status read into a request to the launcher
+    itself.
+    """
 
     workspace = Path(start_dir) if start_dir is not None else Path.cwd()
     home = Path(home_dir) if home_dir is not None else Path.home()
@@ -617,6 +769,7 @@ def collect_status(
     server_target = _select_server_target(
         explicit_url=server_url,
         configured_url=parsed.configured_url if parsed is not None else None,
+        denied_origin=denied_origin,
     )
     configured_url_match = _configured_url_match(
         server_target=server_target,
