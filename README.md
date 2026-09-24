@@ -47,6 +47,26 @@ That denominator is a *configurable modeled baseline*, not a measured competitor
 
 **Shipped defaults (v0.9.2, released 2026-09-08)** — one ingestion default changes: `[ingestion] entity_autolink_hub_cutoff = 200` excludes entities with more than 200 existing postings from auto-link probes during ingestion. Set it to `0` to restore legacy linking. The paired receipts and scope are documented in [Configuration](wiki/Configuration.md) and the [CHANGELOG](CHANGELOG.md).
 
+**Internal benchmark board (retrieval layer, shipped defaults).** Every row is one committed receipt; beds differ, so compare rows only down a column's meaning, never as one averaged score. *Delivered* = gold document inside the delivered window; *r@12* = gold in the top-12 score map; *final r@12* = gold in the top-12 final order.
+
+| Corpus | Lane | n | Delivered | r@12 | Final r@12 | Receipt |
+|---|---|---:|---:|---:|---:|---|
+| EnterpriseRAG-Bench, 947,531 chunks | enterprise docs | 470 | **0.668** | 0.681 | 0.683 | [v0.9.2 witness](benchmarks/dogfood/receipts/sweep_v092_witness_947k_2026-09-08.json) |
+| EnterpriseRAG-Bench, 100k carve | enterprise docs | 141 | **0.667** | 0.702 | 0.702 | [ladder](benchmarks/dogfood/erb/receipts/ladder_erb100k_beta_seed0_2026-09-04.json) |
+| EnronQA v2 | email | 500 | **0.856** | 0.876 | 0.872 | [ladder](benchmarks/dogfood/enronqa/receipts/ladder_enronqa_v2_beta_seed0_2026-09-04.json) |
+| EnronQA, padded | email | 500 | **0.792** | 0.808 | 0.816 | [ladder](benchmarks/dogfood/enronqa_padded/receipts/ladder_enronqa_padded_beta_seed0_2026-09-04.json) |
+| LoCoMo | conversation memory | 2,378 | **0.435** | 0.486 | 0.487 | [ladder](benchmarks/dogfood/locomo/receipts/ladder_locomo_beta_seed0_2026-09-04.json) |
+| MULoc | multi-doc localization | 680 | **0.443** | 0.484 | 0.488 | [ladder](benchmarks/dogfood/muloc/receipts/ladder_muloc_beta_seed0_2026-09-04.json) |
+| FinanceBench | financial filings | 150 | **0.153** | 0.153 | 0.153 | [ladder](benchmarks/dogfood/financebench/receipts/ladder_financebench_beta_seed0_2026-09-04.json) |
+| CodeRAG-Bench, solutions | code | 663 | **0.971** | 0.982 | 0.982 | [ladder](benchmarks/dogfood/coderag_solutions/receipts/ladder_coderag_solutions_beta_seed0_2026-09-04.json) |
+| SWE-bench | code localization | 489 | **0.599** | 0.638 | 0.640 | [ladder](benchmarks/dogfood/swebench/receipts/ladder_swebench_beta_seed0_2026-09-04.json) |
+| CosQA | code search | 500 | **0.286** | 0.362 | 0.358 | [ladder](benchmarks/dogfood/cosqa/receipts/ladder_cosqa_beta_seed0_2026-09-04.json) |
+| CodeRAG-Bench, library docs | code docs | 709 | **0.212** | 0.227 | 0.227 | [ladder](benchmarks/dogfood/coderag_docs/receipts/ladder_coderag_docs_beta_seed0_2026-09-04.json) |
+
+The 947k row is the v0.9.2 release witness (`8cab199e`, exact reproduce of the frozen floor-12 reference). The other rows are the beta witness sweep at `21606a0` (2026-09-04, shipped `cymatix.toml`, `PYTHONHASHSEED=0`, `CYMATIX_DISABLE_LEARN=1`); `v0.10.0b1` adds only opt-in delivery and migration features, and these rows have not been re-run on it. MULoc moves by a few needles between hash seeds (0.443–0.449 across receipts). The weak rows are real: FinanceBench, CosQA and library-docs retrieval are open problems, not tuned-away ones.
+
+**End-to-end answer accuracy (Claude runners).** No Haiku or Sonnet answer-accuracy run exists on current defaults yet. The only committed Claude-answered receipts are the July 2026 SIKE sweeps (pre-rename tree, n=50 needles per bed, Sonnet answering, deterministic accept-substring scoring, no LLM judge): **21/50, 23/50 and 18/50 correct** on the 42k, 16k and 80k beds, with 0.70 / 0.85 / 0.82 correct among answered questions and the rest abstained ([`docs/research/data/2026-07-11-sike_bedsweep_*.json`](docs/research/data/)). Treat these as historical context, not a v0.10 score.
+
 **0.9.0 shipped defaults, for reference** — 829k bed, n=469: **56.5% gold-document delivery** (265/469), recall@12 **0.659** (`benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json`). That is a different ledger row from the 0.9.1 lines above — a different bed build and ingest concurrency — so the two are not a before/after pair.
 
 Methodology, the ERB correctness/delivery pair-quote rule, the sharded gap ([#275](https://github.com/mbachaud/Cymatix-Context/issues/275)), and the dense-off latency disclosure (×2.5–2.6 at 100k, shrinking at the 829k operating point; receipts in the CHANGELOG, [#374](https://github.com/mbachaud/Cymatix-Context/issues/374)) all live on [Benchmarks and Receipts](https://github.com/mbachaud/Cymatix-Context/wiki/Benchmarks-and-Receipts).

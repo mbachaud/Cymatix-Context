@@ -4083,6 +4083,18 @@ class KnowledgeStore:
         if _measurement is not None:
             _measurement.record("pre_shortlist", gene_scores)
         _shortlist_status = "not_applied"
+        # Why the filter did not run: a configuration gate that never opened
+        # is a different fact from a query with no usable terms (#453).
+        if not getattr(self, "_bm25_shortlist_enabled", False):
+            _shortlist_reason = "disabled"
+        elif self._bm25_prefilter_enabled:
+            _shortlist_reason = "prefilter_owns"
+        elif not self._fts_available:
+            _shortlist_reason = "fts_unavailable"
+        elif not gene_scores:
+            _shortlist_reason = "no_candidates"
+        else:
+            _shortlist_reason = None
 
         # ── BM25 shortlist post-filter (research review 2026-04-22) ──
         # When enabled, restrict the final ranking to documents that cleared a
@@ -4125,6 +4137,8 @@ class KnowledgeStore:
                         )
                     else:
                         _shortlist_status = "empty_fallback"
+                else:
+                    _shortlist_reason = "no_usable_terms"
             except Exception:
                 _shortlist_status = "failed"
                 log.warning(
@@ -4135,6 +4149,8 @@ class KnowledgeStore:
         if _measurement is not None:
             _measurement.record(
                 "post_shortlist", gene_scores, filter_status=_shortlist_status,
+                **({"filter_reason": _shortlist_reason}
+                   if _shortlist_status == "not_applied" else {}),
             )
 
         # ── Stage 3: branch on fusion_mode for the final ranking ──

@@ -32,7 +32,7 @@ attribution or parallel latency evidence.
 | `fts_raw` | Bounded SQL rows after an optional tier-0 BM25 prefilter, before lifecycle and party filters; see `fetch_depth` and `prefilter_applied` |
 | `fts_eligible` | FTS membership after those filters |
 | `pre_shortlist` | Candidate membership immediately before the shortlist |
-| `post_shortlist` | Membership after the shortlist decision; inspect `filter_status` |
+| `post_shortlist` | Membership after the shortlist decision; inspect `filter_status` (`applied`, `not_applied`, `empty_fallback`, `failed`) and, when `not_applied`, `filter_reason` (`disabled`, `prefilter_owns`, `fts_unavailable`, `no_candidates`, `no_usable_terms`) |
 | `final_scoring` | IDs in the eligible scoring map before cross-encoder reranking and return expansion |
 | `retrieval_returned` | IDs actually returned by that retrieval call |
 | `post_blend_scores` | IDs in the manager's local score map after the configured blend branch, before budget, splice, and delivery; this need not equal the shared published score map |
@@ -61,11 +61,17 @@ reintroduction does not prove that gold survived the shortlist.
 
 The pool-depth probe applies its registered threshold only when all 109
 `pool_absent` cohort queries have usable `post_shortlist` evidence. It requires
-exactly one completed lexical retrieval with that captured boundary per query.
+exactly one completed lexical retrieval with that captured boundary per query:
+`fts_raw` must be `captured` (a query whose terms are all two characters or
+shorter never runs the lexical lane, and tag lanes alone still populate the
+shortlist boundaries), and `post_shortlist` counts only when its
+`filter_status` is `applied` (an unfiltered pool is the pre-shortlist pool).
 Multiple independent retrieval calls remain visible in the report, but cannot
 be collapsed into one admission pool for the verdict. Query
 failures, missing stages, unsupported paths, and partial `--limit` runs produce
-`INCONCLUSIVE`. `KILL` rejects the tested depth intervention; it does not prove
+`INCONCLUSIVE`; a `--limit` below the declared target count is refused even when
+the truncated list still holds every `pool_absent` query, and the receipt
+records `partial_run` and `inconclusive_reason`. `KILL` rejects the tested depth intervention; it does not prove
 that gold is absent from the corpus or that other interventions cannot help.
 
 The probe retains legacy final-map rank fields for inspection. Its histogram

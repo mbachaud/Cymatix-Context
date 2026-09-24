@@ -27,17 +27,24 @@ def probe(monkeypatch):
     return _load_probe()
 
 
-def _record(*gold_by_call, status="complete", stage_status="captured"):
+def _record(*gold_by_call, status="complete", stage_status="captured",
+            filter_status="applied", fts_status="captured"):
+    def fts_raw():
+        return {"status": fts_status,
+                "count": 1 if fts_status == "captured" else None,
+                "gold_ids": [] if fts_status == "captured" else None}
+
     return {
         "needle": "n0", "status": status, "rank_of_first_gold": None,
         "stage_provenance": {
             "version": 1, "status": status, "error": None,
             "retrievals": [{
                 "status": "complete", "error": None,
-                "stages": {"post_shortlist": {
+                "stages": {"fts_raw": fts_raw(), "post_shortlist": {
                     "status": stage_status,
                     "count": 1 if stage_status == "captured" else None,
                     "gold_ids": list(gold) if stage_status == "captured" else None,
+                    "filter_status": filter_status,
                 }},
             } for gold in gold_by_call],
             "stages": {},
@@ -83,6 +90,67 @@ def test_admission_verdict_requires_the_full_measured_cohort(probe):
     assert result["failed"] == 1
     assert probe.admission_summary([_record(["g"]), _record([])],
                                     expected_n=2, threshold=1)["verdict"] == "PASS"
+
+
+@pytest.mark.parametrize("filter_status", ["not_applied", "empty_fallback"])
+def test_unfiltered_shortlist_is_not_admission_evidence(probe, filter_status):
+    # #453 note 2: an unfiltered pool is the pre-shortlist pool under another
+    # name, so gold in it says nothing about the shortlist admitting gold.
+    rec = _record(["gold"], filter_status=filter_status)
+    assert probe.stage_presence(rec, "post_shortlist") == "not_captured"
+    rec = _record([], filter_status=filter_status)
+    assert probe.stage_presence(rec, "post_shortlist") == "not_captured"
+
+
+def test_lexical_admission_requires_a_captured_fts_lane(probe):
+    # #453 note 3: tag lanes alone can populate the shortlist stages.
+    rec = _record(["gold"], fts_status="not_executed")
+    assert probe.stage_presence(rec, "post_shortlist") == "not_executed"
+    rec = _record(["gold"], fts_status="failed")
+    assert probe.stage_presence(rec, "post_shortlist") == "failed"
+    summary = probe.admission_summary([rec], expected_n=1, threshold=1)
+    assert summary["measured_n"] == 0
+    assert summary["verdict"] == "INCONCLUSIVE"
+
+
+def test_partial_run_never_yields_a_verdict(probe):
+    # #453 note 1: a complete measured cohort is not a complete run.
+    result = probe.admission_summary([_record(["g"])], expected_n=1, threshold=1,
+                                     partial_run=True)
+    assert result["verdict"] == "INCONCLUSIVE"
+    assert result["partial_run"] is True
+    assert "limit" in result["inconclusive_reason"]
+
+
+def test_cli_limit_that_keeps_every_pool_absent_miss_is_still_inconclusive(
+        probe, monkeypatch, tmp_path):
+    _main_inputs(probe, monkeypatch, tmp_path)
+    monkeypatch.setattr(probe, "load_inputs", lambda: (
+        {"n0": {"query": "q0", "question_type": "semantic"},
+         "n1": {"query": "q1", "question_type": "semantic"}},
+        {"n0": ["gold"], "n1": ["gold"]},
+        {"n0": "pool_absent", "n1": "near_band"}, ["n0", "n1"],
+    ))
+    monkeypatch.setattr(probe, "ADMISSION_EXPECTED_N", 1)
+    monkeypatch.setattr(probe, "ADMISSION_THRESHOLD", 1)
+
+    def arm(arm_name, knobs, targets, needles, gold, capture, **kwargs):
+        assert targets == ["n0"]
+        rec = _record(["gold"])
+        rec.update(map_size=1, gold_ranks=[1], delivered_gold=1,
+                   delivered_gold_rank=1, delivered_count=1, wall_ms=1,
+                   query_terms=["q0"])
+        return {"arm": arm_name, "wall_ms_p50": 1, "wall_ms_p95": 1,
+                "map_size_median": 1, "per_query": [rec]}
+
+    monkeypatch.setattr(probe, "run_arm", arm)
+    out = tmp_path / "receipt.json"
+    assert probe.main(["--stage-provenance", "--limit", "1", "--out", str(out),
+                       "--capture", str(tmp_path / "capture.db")]) == 0
+    receipt = json.loads(out.read_text())
+    assert receipt["admission_measurement"]["present"] == 1
+    assert receipt["admission_measurement"]["partial_run"] is True
+    assert receipt["verdict"] == "INCONCLUSIVE"
 
 
 def test_legacy_checkpoint_cannot_satisfy_requested_measurement(probe, tmp_path):
