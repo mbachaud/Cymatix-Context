@@ -335,10 +335,11 @@ def default_status_context(*, workspace: Path, home: Path) -> str:
 
 
 def launcher_origin() -> str:
-    """The address this launcher answers on, for the self poll refusal.
+    """The launcher's configured address, for the self poll refusal.
 
-    Read at call time rather than captured at import, so a launcher
-    started on another address refuses that address.
+    This is `CYMATIX_LAUNCHER_URL` as it was when the status module was
+    imported, else the default. A launcher bound elsewhere without
+    that variable still denies the default address, not its real one.
     """
 
     return status_module.DEFAULT_LAUNCHER_URL
@@ -351,8 +352,8 @@ def default_status_reader(
 
     Self poll prevention is two rules, not one. `launcher_url=None`
     disables the launcher state probe, and `denied_origin` refuses any
-    discovered or default server target that resolves to the address
-    this launcher is answering on: loopback is not the test, because
+    discovered or default server target that resolves to this
+    launcher's configured address: loopback is not the test, because
     the launcher is loopback too. No explicit server URL is ever
     passed, so a discovered remote URL cannot be promoted into an
     explicit opt in.

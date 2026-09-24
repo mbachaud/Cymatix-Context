@@ -458,10 +458,11 @@ class TestRealReportPath:
             "skill_dir": None,
             "start_dir": workspace,
             "home_dir": tmp_path / "home",
-            # The second half of self poll prevention: the address this
-            # launcher answers on is refused as a probe target, so a
-            # discovered or default URL that resolves to it is never
-            # requested from inside the request it would be serving.
+            # The second half of self poll prevention: the launcher's
+            # configured address (CYMATIX_LAUNCHER_URL, else the default)
+            # is refused as a probe target, so a discovered or default URL
+            # that resolves to it is never requested from inside the
+            # request it would be serving.
             "denied_origin": launcher_origin(),
         }
 

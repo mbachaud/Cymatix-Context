@@ -247,7 +247,7 @@ def _is_same_local_origin(
 
     `localhost` and `127.0.0.1` are one address here. Comparing the
     written host alone would let the launcher probe itself through the
-    other spelling of its own bind address.
+    other spelling of the denied address.
     """
 
     if candidate[0] != denied[0] or candidate[2] != denied[2]:
@@ -282,8 +282,9 @@ def _select_server_target(
     """Prefer a validated explicit target; implicit targets must be loopback.
 
     `denied_origin` is an address this caller must never request, given
-    by the caller that owns it. The launcher passes its own bind address
-    so a discovered or default target that resolves to it is refused
+    by the caller that owns it. The launcher passes its configured
+    address (`CYMATIX_LAUNCHER_URL`, else the default) so a discovered or
+    default target that resolves to it is refused
     before the request, rather than the launcher polling itself from
     inside the request it is answering. Loopback is not the test: the
     launcher is loopback too.
@@ -751,8 +752,9 @@ def collect_status(
 
     `denied_origin` is an address the caller must never request. It is
     None for the command line, which is not a server; the launcher
-    passes its own bind address so no discovered or default target can
-    turn a status read into a request to the launcher itself.
+    passes its configured address so no discovered or default target on
+    that address can turn a status read into a request to the launcher
+    itself.
     """
 
     workspace = Path(start_dir) if start_dir is not None else Path.cwd()

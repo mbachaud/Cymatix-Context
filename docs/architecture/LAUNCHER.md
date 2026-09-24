@@ -142,7 +142,7 @@ cymatix_context/
     state.py            # ~/.cymatix/launcher/state.json read/write + adoption
     models.py           # Pydantic models for launcher state + API responses
     templates/
-      layout.html       # base template (head, htmx, css link, body shell)
+      layout.html       # base template (head, script and css links, body shell)
       dashboard.html    # extends layout.html — full dashboard
       components/
         controls.html   # start/restart/stop buttons
@@ -154,9 +154,10 @@ cymatix_context/
         genes_panel.html
         tokens_panel.html
         graph_summary_panel.html   # read-only graph layer counts
+        host_status_panel.html     # read-only host readiness
     static/
       launcher.css      # one :root{} block + component classes
-      htmx.min.js       # vendored, so no CDN fetch at runtime
+      launcher.js       # the dashboard poll loop, plain JS, no build step
 ```
 
 ## Entry point
@@ -511,7 +512,7 @@ What the panel is, stated precisely:
 - **Supervised child liveness is separate.** The launcher field reports the
   child as the supervisor sees it, stamped at its own sampling time, not a
   page reachability check. The panel never requests the launcher's own state
-  endpoint, so it cannot poll itself.
+  endpoint, so it cannot recurse through the route that serves it.
 - **Shared collection.** `GET /`, `GET /api/state/panels` and `GET /api/state`
   share one bounded single flight collection with a completion time lifetime.
   Callers wait a finite budget, then take retained evidence or unavailable.
@@ -520,10 +521,10 @@ Probe safety, as the panel actually enforces it:
 
 - **Self poll prevention is two rules.** The refresh runs with
   `launcher_url=None`, so the launcher state endpoint is never requested,
-  and it passes the launcher's own bind address as a denied origin, so a
-  discovered or default server URL that resolves to that address is refused
-  before any request. Loopback is not the test on its own: the launcher is
-  loopback too.
+  and it passes the launcher's configured address (`CYMATIX_LAUNCHER_URL`,
+  else the default) as a denied origin, so a discovered or default server
+  URL that resolves to that address is refused before any request. Loopback
+  is not the test on its own: the launcher is loopback too.
 - **Redirect confinement, not just URL validation.** The loopback rule is
   applied once, before the first request. A probe therefore refuses to
   follow a redirect rather than letting a local endpoint hand it a remote
@@ -544,7 +545,9 @@ Probe safety, as the panel actually enforces it:
 - **What is not claimed.** The refresh deadline fences publication and marks
   the observation timed out; it does not cancel a blocked file or socket
   read, and the worker keeps the only refresh slot until it returns. There
-  is no total read byte guarantee for native configuration files.
+  is no total read byte guarantee for native configuration files. A launcher
+  started on another bind without setting `CYMATIX_LAUNCHER_URL` still denies
+  the default address rather than its real one.
 
 Diagnostics scope, as a boundary: the panel reads and nothing else. It
 installs, enables, repairs, ingests and controls nothing, so it has no
@@ -916,9 +919,11 @@ Rough ordering for the first PR. Each is independently testable.
 4. **FastAPI app + CLI.** `app.py` with `main()`, argparse, browser
    launch, `/api/state` JSON endpoint, `/api/control/*` endpoints.
 5. **Templates.** `layout.html` + `dashboard.html` + all panel
-   components. One CSS file. HTMX vendored to `static/htmx.min.js`.
-6. **Dashboard HTMX wiring.** `/api/state/panels` server-rendered
-   partial endpoint, 2s polling, conditional panel rendering.
+   components. One CSS file. (The original plan vendored HTMX here; the
+   shipped dashboard uses plain JavaScript instead, see the polling section.)
+6. **Dashboard polling wiring.** `/api/state/panels` server-rendered
+   partial endpoint, 2s polling, conditional panel rendering (planned as
+   HTMX, shipped as plain JavaScript).
 7. **Cymatix data integration.** Launcher's state collector hits
    `GET /stats`, `GET /sessions`, `GET /health`, and Ollama
    `GET /api/ps`. All with timeouts.
