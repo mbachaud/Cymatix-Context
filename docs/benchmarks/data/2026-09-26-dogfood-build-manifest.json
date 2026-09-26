@@ -1,0 +1,105 @@
+{
+  "built_at": "2026-09-26T07:22:33+0000",
+  "target": "/home/user/mbachaud/cymatix-context/genomes/dogfood/genome.db",
+  "projects_root": "/home/user/mbachaud",
+  "genes": 7274,
+  "files_planned_total": 1285,
+  "seconds_total": 953.7,
+  "repos": [
+    {
+      "label": "cymatix-context",
+      "dir": "/home/user/mbachaud/cymatix-context",
+      "files_planned": 933,
+      "files_ingested": 933,
+      "files_failed": 0,
+      "seconds": 872.8
+    },
+    {
+      "label": "driftwatch",
+      "dir": "/home/user/mbachaud/driftwatch",
+      "files_planned": 214,
+      "files_ingested": 214,
+      "files_failed": 0,
+      "seconds": 54.9
+    },
+    {
+      "label": "scorerift",
+      "dir": "/home/user/mbachaud/scorerift",
+      "files_planned": 70,
+      "files_ingested": 70,
+      "files_failed": 0,
+      "seconds": 15.4
+    },
+    {
+      "label": "MaxExpressKit",
+      "dir": "/home/user/mbachaud/MaxExpressKit",
+      "files_planned": 68,
+      "files_ingested": 68,
+      "files_failed": 0,
+      "seconds": 10.5
+    }
+  ],
+  "curation": {
+    "extensions": [
+      ".js",
+      ".json",
+      ".jsx",
+      ".md",
+      ".ps1",
+      ".py",
+      ".rst",
+      ".sh",
+      ".toml",
+      ".ts",
+      ".tsx",
+      ".txt",
+      ".yaml",
+      ".yml"
+    ],
+    "exclude_dirs": [
+      ".cache",
+      ".clone",
+      ".git",
+      ".idea",
+      ".mypy_cache",
+      ".pytest_cache",
+      ".ruff_cache",
+      ".tox",
+      ".venv",
+      ".vscode",
+      ".worktrees",
+      "__pycache__",
+      "_worktrees",
+      "build",
+      "dist",
+      "egg-info",
+      "genomes",
+      "htmlcov",
+      "node_modules",
+      "site-packages",
+      "venv"
+    ],
+    "exclude_prefixes": [
+      "benchmarks/results",
+      "benchmarks/logs",
+      "docs/research/data",
+      "docs/benchmarks/data",
+      "docs/archive",
+      "overnight_logs",
+      "cwola_export",
+      "benchmarks/aider_polyglot",
+      "benchmarks/contextbench",
+      "tests/fixtures",
+      "benchmarks/dogfood",
+      "docs/benchmarks"
+    ],
+    "exclude_names": [
+      "package-lock.json",
+      "poetry.lock",
+      "uv.lock",
+      "yarn.lock"
+    ],
+    "max_bytes": 1000000
+  },
+  "genome_sha256": "ecd04e4883f22b2f203273626e6a3afca848b40391fe5729b02a265d1814075a"
+}

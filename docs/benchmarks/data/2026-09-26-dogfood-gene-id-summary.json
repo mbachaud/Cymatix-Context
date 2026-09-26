@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-09-26T07:22:45+0000",
+  "genome": "/home/user/mbachaud/cymatix-context/genomes/dogfood/genome.db",
+  "genes_total": 7274,
+  "identity_sha256": "02ee43f0e0f496021e30ebf71cc27684ae89cbd64cdfe1b01b6308c452558adc",
+  "by_repo": {
+    "cymatix-context": {
+      "genes": 6492,
+      "sha256": "f37e95707bbd58e02ed162bb2994c2ac23b3ce6bc037a1f2334a68a2d6bcad7e"
+    },
+    "driftwatch": {
+      "genes": 522,
+      "sha256": "1fe627bde46391985fe1e262492ea59f1edd5fb41a52152e239980cf7dc5ad3c"
+    },
+    "scorerift": {
+      "genes": 162,
+      "sha256": "6f04472f209fdb61ed30b4a31a2443d05ce3f591c8cec7fd71e6041c636af258"
+    },
+    "MaxExpressKit": {
+      "genes": 98,
+      "sha256": "e49843c19f50a20c2742e5b95ac1fb8c5b0b825f5b9102be60b0cc1a889e602c"
+    }
+  },
+  "unattributed": 0,
+  "gold_genes": 473,
+  "gold_sha256": "462308355297c1537ef466c59a0b9e97f93bad7b27fabf1f15231358443bfae8",
+  "needles_with_zero_gold_genes": []
+}
