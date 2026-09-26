@@ -16,6 +16,7 @@ from cymatix_context.cli.cymatix_status import (
     map_server_health,
 )
 from cymatix_context.integrations.host_profiles import HostDiscovery
+from tests.test_status import _JSON, _LoopbackServer
 
 
 @pytest.mark.parametrize(
@@ -239,21 +240,12 @@ def test_collect_status_handles_unselected_host(
     assert not any("/sessions" in url for url in seen_urls)
 
 
-def test_probe_retains_http_payload_and_bounded_parse_error(monkeypatch):
-    class Response:
-        def read(self, _size=-1):
-            return b'{"error": "maintenance"}'
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, *_args):
-            return False
-
-    monkeypatch.setattr(status_mod.urllib.request, "urlopen", lambda *_args, **_kwargs: Response())
-    assert status_mod._probe_json("http://127.0.0.1:11437/health").payload == {
-        "error": "maintenance"
-    }
+def test_probe_retains_http_payload_and_bounded_parse_error():
+    body = b'{"error": "maintenance"}'
+    with _LoopbackServer(lambda _path: (200, _JSON, body)) as server:
+        assert status_mod._probe_json(f"{server.url}/health", 5.0).payload == {
+            "error": "maintenance"
+        }
 
 
 @pytest.mark.parametrize(

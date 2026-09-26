@@ -95,7 +95,13 @@ def utc_iso(epoch: Any) -> Optional[str]:
         return None
     if not math.isfinite(float(epoch)):
         return None
-    stamp = datetime.fromtimestamp(float(epoch), tz=timezone.utc)
+    try:
+        stamp = datetime.fromtimestamp(float(epoch), tz=timezone.utc)
+    except (OverflowError, OSError, ValueError):
+        # Finite but outside what `datetime` or the platform time_t can
+        # represent (past year 9999, before year 1, or a negative value on
+        # platforms that reject one).
+        return None
     return stamp.isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
@@ -250,12 +256,17 @@ class StatusCache:
             elif self._cooldown_until is not None and now < self._cooldown_until:
                 pass
             else:
+                # Read the wall clock before claiming the slot. If the read
+                # raises, nothing has been claimed yet; afterwards, a raise
+                # would leave `_worker_busy` set with no worker to clear it,
+                # and no refresh would ever be admitted again.
+                attempt_at = utc_iso(self._wall_clock())
                 waiter = Future()
                 generation = self._generation
                 self._inflight = waiter
                 self._worker_started = now
                 self._worker_busy = True
-                self._last_attempt_at = utc_iso(self._wall_clock())
+                self._last_attempt_at = attempt_at
                 self._refresh_state = "refreshing"
                 work = partial(self._run_refresh, waiter, generation, now)
 

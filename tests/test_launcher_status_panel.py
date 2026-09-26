@@ -485,6 +485,22 @@ class TestRealReportPath:
         assert raw["server"]["transport"] == "unreachable"
         assert project_host_status(raw)["next_action"] == SELF_TARGET_ACTION
 
+    def test_a_launcher_address_set_without_a_scheme_is_still_refused(
+        self, tmp_path, sandbox_env, recorded_probes, monkeypatch,
+    ):
+        # `CYMATIX_LAUNCHER_URL=localhost:11438` is read verbatim at import.
+        monkeypatch.setattr(cymatix_status, "DEFAULT_LAUNCHER_URL", "localhost:11438")
+        workspace = tmp_path / "ws"
+        workspace.mkdir()
+        (workspace / ".mcp.json").write_text(
+            _canonical_config("http://127.0.0.1:11438"), encoding="utf-8",
+        )
+
+        raw = default_status_reader(workspace=workspace, home=tmp_path / "home")()
+
+        assert recorded_probes == [], recorded_probes
+        assert project_host_status(raw)["next_action"] == SELF_TARGET_ACTION
+
     def test_a_status_read_changes_nothing_on_disk(self, workspace, tmp_path, offline):
         before = {
             path: path.read_bytes()
@@ -899,6 +915,48 @@ class TestFencesAndCleanup:
         assert snapshot["observed_at"] is None
         assert cache._inflight is None
 
+    @pytest.mark.parametrize("fault", [OSError("clock read failed"), 1e12, 1e20, -1e12])
+    def test_a_wall_clock_fault_never_holds_the_only_refresh_slot(self, clock, fault):
+        """One bad wall clock reading must not stop every later refresh."""
+
+        faults = [fault]
+
+        def wall():
+            if faults:
+                value = faults.pop()
+                if isinstance(value, BaseException):
+                    raise value
+                return value
+            return clock.wall
+
+        calls = []
+
+        def reader():
+            calls.append(1)
+            return report()
+
+        cache = StatusCache(
+            reader=reader,
+            projector=project_host_status,
+            clock=lambda: clock.monotonic,
+            wall_clock=wall,
+            spawn=inline_spawn,
+        )
+        try:
+            cache.get()
+        except Exception:
+            pass  # the faulting read may surface to this caller; the slot must not stay held
+        clock.advance(1000.0)
+
+        snapshot = cache.get()
+
+        assert calls, f"the refresh slot was never released: {snapshot['refresh_state']}"
+        assert snapshot["freshness"] == "fresh"
+
+    @pytest.mark.parametrize("epoch", [1e12, 1e20, -1e12])
+    def test_an_out_of_range_timestamp_renders_as_none(self, epoch):
+        assert status_cache_module.utc_iso(epoch) is None
+
 
 # -- collector composition --------------------------------------------
 
@@ -1034,11 +1092,9 @@ class TestCollectorComposition:
 # upstream c05849b for files this branch had not yet changed
 # (cli/cymatix_status.py, integrations/host_profiles.py).
 
-import email
-import http.client
-import io
-import urllib.request
-import urllib.response
+import socket
+
+from tests.test_status import _LoopbackServer, _record_connections
 
 
 @pytest.fixture
@@ -1290,10 +1346,10 @@ class TestLogHoles:
             _canonical_config(f"http://127.0.0.1:11437/{SENTINEL}"), encoding="utf-8",
         )
 
-        def explode(url, timeout=None):
+        def explode(address, *_args, **_kwargs):
             raise ValueError(f"transport refused the {SENTINEL} handshake")
 
-        monkeypatch.setattr(urllib.request, "urlopen", explode)
+        monkeypatch.setattr(socket, "create_connection", explode)
 
         read = default_status_reader(workspace=workspace, home=tmp_path / "home")
         with caplog.at_level(logging.WARNING):
@@ -1355,45 +1411,23 @@ class TestProbeHoles:
         """The loopback rule is enforced once, before the first request.
 
         `_select_server_target` refuses an implicit non loopback target,
-        and then `_probe_json` hands the validated URL to
-        `urllib.request.urlopen` with the ordinary opener
-        (cymatix_status.py:335 at c05849b), whose handler chain includes
+        and then `_probe_json` hands the validated URL to an opener
+        (cymatix_status.py:335 at c05849b) whose handler chain includes
         `HTTPRedirectHandler`. A loopback endpoint that answers 302
         therefore sends the probe anywhere it likes, and the health
         evidence the panel shows is then collected from that other host.
 
-        Only the socket layer is faked here. The opener, the redirect
-        handler and the error processor are the real ones `urlopen`
-        builds, so the redirect decision under test is production's.
+        The loopback endpoint is a real server. Every other connection
+        is recorded and refused before name resolution, so a followed
+        redirect shows up here and never leaves the machine.
         """
 
         remote = "http://169.254.169.254/health"
+        attempts = _record_connections(monkeypatch, allow_loopback=True)
 
-        class _Response(urllib.response.addinfourl):
-            def __init__(self, url, code, header_text, body=b"{}"):
-                headers = email.message_from_string(
-                    header_text, _class=http.client.HTTPMessage,
-                )
-                super().__init__(io.BytesIO(body), headers, url, code)
-                self.msg = "fake"
+        with _LoopbackServer(lambda _path: (302, {"Location": remote}, b"")) as server:
+            result = cymatix_status._probe_json(f"{server.url}/health", 5.0)
 
-        class _Transport(urllib.request.HTTPHandler):
-            def __init__(self):
-                self.requested = []
-
-            def http_open(self, req):
-                self.requested.append(req.full_url)
-                if len(self.requested) == 1:
-                    return _Response(req.full_url, 302, f"Location: {remote}\n")
-                return _Response(req.full_url, 200, "Content-Type: application/json\n",
-                                 b'{"status": "healthy"}')
-
-        transport = _Transport()
-        monkeypatch.setattr(
-            urllib.request, "_opener", urllib.request.build_opener(transport),
-        )
-
-        result = cymatix_status._probe_json("http://127.0.0.1:11437/health")
-
-        assert transport.requested == ["http://127.0.0.1:11437/health"], transport.requested
-        assert result.payload != {"status": "healthy"}, "remote evidence reached the report"
+        assert server.requests == ["/health"], server.requests
+        assert attempts == [("127.0.0.1", server.port)], attempts
+        assert result.payload is None, "remote evidence reached the report"
