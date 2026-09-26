@@ -244,14 +244,18 @@ def _origin_of(value: object) -> tuple[str, str, int] | None:
 def _is_same_local_origin(
     candidate: tuple[str, str, int], denied: tuple[str, str, int]
 ) -> bool:
-    """Same scheme and port, and the same host or two loopback names.
+    """Same port, and the same host or two loopback names.
 
     `localhost` and `127.0.0.1` are one address here. Comparing the
     written host alone would let the launcher probe itself through the
     other spelling of the denied address.
+
+    The scheme is not compared. An https request to the denied host and
+    port still opens a connection to that socket, so refusing only the
+    http spelling would not keep the caller from probing itself.
     """
 
-    if candidate[0] != denied[0] or candidate[2] != denied[2]:
+    if candidate[2] != denied[2]:
         return False
     if candidate[1] == denied[1]:
         return True
