@@ -908,6 +908,34 @@ def test_a_loopback_status_probe_never_goes_through_a_proxy(monkeypatch):
     assert probe.payload is None
 
 
+def test_an_explicit_remote_status_target_still_goes_through_the_proxy(monkeypatch):
+    """Only a loopback probe skips the proxy.
+
+    A remote `--server-url` may only be reachable through the proxy the
+    environment names, so it keeps urllib's normal proxy handling. The
+    remote name is never resolved here: the one connection made is to the
+    proxy, which receives the request in absolute form.
+    """
+
+    attempts = _record_connections(monkeypatch, allow_loopback=True)
+    answer = (200, _JSON, b'{"status": "ok"}')
+    with _LoopbackServer(lambda _path: answer) as proxy:
+        monkeypatch.setenv("http_proxy", proxy.url)
+        for name in ("no_proxy", "NO_PROXY"):
+            monkeypatch.delenv(name, raising=False)
+        monkeypatch.setattr(urllib.request, "_opener", None)
+        target = status_mod._select_server_target(
+            explicit_url="http://status.example.invalid:11437", configured_url=None
+        )
+
+        probe = status_mod._probe_json(f"{target.request_url}/health", 5.0)
+
+    assert proxy.requests == ["http://status.example.invalid:11437/health"]
+    assert attempts == [("127.0.0.1", proxy.port)]
+    assert probe.transport == "reachable"
+    assert probe.payload == {"status": "ok"}
+
+
 def test_an_implicit_target_that_is_the_callers_own_address_is_never_requested(monkeypatch):
     probed = []
     monkeypatch.setattr(

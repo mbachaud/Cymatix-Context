@@ -465,6 +465,17 @@ def _landed_elsewhere(response: Any, url: str) -> bool:
     return asked is None or landed is None or asked != landed
 
 
+# A loopback probe never consults proxy environment variables. An implicit
+# target is loopback by rule, and with `http_proxy` set and no `no_proxy`
+# covering loopback the ordinary opener would hand the request to the
+# proxy, whose answer then stands in for the local server's: a server that
+# is not running could read healthy. An explicit remote target keeps
+# urllib's normal proxy handling, since it may only be reachable through
+# the proxy. The redirect refusal travels on each request
+# (`_RefuseRedirects`), so it applies through either opener unchanged.
+_PROBE_OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
+
 def _probe_json(url: str, timeout_s: float = DEFAULT_STATUS_TIMEOUT_S) -> ProbeResult:
     """Probe a JSON endpoint without treating HTTP status as transport failure."""
 
@@ -472,7 +483,12 @@ def _probe_json(url: str, timeout_s: float = DEFAULT_STATUS_TIMEOUT_S) -> ProbeR
     try:
         request = urllib.request.Request(url, method="GET")
         request.redirect_dict = _RefuseRedirects()
-        with urllib.request.urlopen(request, timeout=timeout_s) as response:
+        open_request = (
+            _PROBE_OPENER.open
+            if _is_loopback_hostname(urlsplit(url).hostname or "")
+            else urllib.request.urlopen
+        )
+        with open_request(request, timeout=timeout_s) as response:
             if _landed_elsewhere(response, url):
                 return ProbeResult("unreachable", None, None, REDIRECT_REFUSED_REASON)
             body, body_error = _read_bounded_status_body(response, url=url)
