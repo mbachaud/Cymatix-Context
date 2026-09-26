@@ -241,6 +241,20 @@ def _origin_of(value: object) -> tuple[str, str, int] | None:
     return (scheme, host, port)
 
 
+def _denied_origin_of(value: str) -> tuple[str, str, int] | None:
+    """The origin a caller asked to deny, reading a bare address as http.
+
+    `CYMATIX_LAUNCHER_URL=localhost:11438` is an easy way to write the
+    launcher's address. Parsed as a URL it has no usable origin, and a
+    denied origin that cannot be parsed would deny nothing, so a value
+    with no `://` is read as `http://` first.
+    """
+
+    if "://" not in value:
+        value = f"http://{value}"
+    return _origin_of(value)
+
+
 def _is_same_local_origin(
     candidate: tuple[str, str, int], denied: tuple[str, str, int]
 ) -> bool:
@@ -335,7 +349,7 @@ def _select_server_target(
             ),
             source=target_source,
         )
-    denied = _origin_of(denied_origin) if denied_origin is not None else None
+    denied = _denied_origin_of(denied_origin) if denied_origin is not None else None
     candidate = _origin_of(validated.request_url)
     if denied is not None and candidate is not None and _is_same_local_origin(candidate, denied):
         return _refused_target(
