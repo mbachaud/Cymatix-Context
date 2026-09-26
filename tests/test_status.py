@@ -864,6 +864,50 @@ def test_the_environment_timeout_is_validated_not_merely_parsed(
     assert ("CYMATIX_STATUS_TIMEOUT_S" in warned) is warns
 
 
+@pytest.mark.parametrize("raw", ["120", "1e9"])
+def test_the_environment_timeout_warning_names_the_value_actually_used(
+    monkeypatch, capsys, raw
+):
+    """A clamped value is announced as clamped, not as the default."""
+
+    monkeypatch.setenv("CYMATIX_STATUS_TIMEOUT_S", raw)
+
+    used = status_mod._timeout_from_environment()
+
+    warned = capsys.readouterr().err
+    assert used == status_mod.MAX_STATUS_TIMEOUT_S
+    assert f"using {used}s" in warned, warned
+    assert f"{status_mod._DEFAULT_STATUS_TIMEOUT_S}s" not in warned, warned
+
+
+def test_a_loopback_status_probe_never_goes_through_a_proxy(monkeypatch):
+    """Proxy variables must not carry a loopback probe anywhere else.
+
+    With `http_proxy` set and no `no_proxy` covering loopback, a probe
+    handed to the proxy gets whatever the proxy answers, and a server
+    that is not running can read healthy.
+    """
+
+    answer = (200, _JSON, b'{"status": "ok"}')
+    with _LoopbackServer(lambda _path: answer) as proxy:
+        for name in ("http_proxy", "HTTP_PROXY", "https_proxy", "HTTPS_PROXY"):
+            monkeypatch.setenv(name, proxy.url)
+        for name in ("no_proxy", "NO_PROXY"):
+            monkeypatch.delenv(name, raising=False)
+        # urllib reads proxy variables when it first builds its shared
+        # opener. A launcher started with them set builds it from them;
+        # drop any opener an earlier test built without them.
+        monkeypatch.setattr(urllib.request, "_opener", None)
+
+        probe = status_mod._probe_json(
+            f"http://127.0.0.1:{_unused_loopback_port()}/health", 5.0
+        )
+
+    assert proxy.requests == [], proxy.requests
+    assert probe.transport == "unreachable"
+    assert probe.payload is None
+
+
 def test_an_implicit_target_that_is_the_callers_own_address_is_never_requested(monkeypatch):
     probed = []
     monkeypatch.setattr(
@@ -890,3 +934,40 @@ def test_an_implicit_target_that_is_the_callers_own_address_is_never_requested(m
     )
     assert kept.request_url == "http://127.0.0.1:11437"
     assert probed == []
+
+
+@pytest.mark.parametrize(
+    ("configured", "denied"),
+    [
+        ("https://127.0.0.1:11438", "http://127.0.0.1:11438"),
+        ("https://localhost:11438", "http://127.0.0.1:11438"),
+        ("http://127.0.0.1:11438", "https://localhost:11438"),
+    ],
+)
+def test_the_callers_own_host_and_port_is_refused_whatever_the_scheme(configured, denied):
+    """The scheme does not change whose socket a request opens.
+
+    An https target on the caller's own host and port still connects to
+    the caller, so it is refused exactly like the http spelling.
+    """
+
+    target = status_mod._select_server_target(
+        explicit_url=None, configured_url=configured, denied_origin=denied
+    )
+
+    assert target.request_url is None
+    assert target.action == status_mod.SELF_TARGET_ACTION
+
+
+@pytest.mark.parametrize("denied", ["localhost:11438", "127.0.0.1:11438"])
+def test_a_denied_origin_written_without_a_scheme_is_read_as_http(denied):
+    """`CYMATIX_LAUNCHER_URL=localhost:11438` must not switch the refusal off."""
+
+    target = status_mod._select_server_target(
+        explicit_url=None,
+        configured_url="http://127.0.0.1:11438",
+        denied_origin=denied,
+    )
+
+    assert target.request_url is None
+    assert target.action == status_mod.SELF_TARGET_ACTION

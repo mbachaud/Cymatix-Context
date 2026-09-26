@@ -485,6 +485,22 @@ class TestRealReportPath:
         assert raw["server"]["transport"] == "unreachable"
         assert project_host_status(raw)["next_action"] == SELF_TARGET_ACTION
 
+    def test_a_launcher_address_set_without_a_scheme_is_still_refused(
+        self, tmp_path, sandbox_env, recorded_probes, monkeypatch,
+    ):
+        # `CYMATIX_LAUNCHER_URL=localhost:11438` is read verbatim at import.
+        monkeypatch.setattr(cymatix_status, "DEFAULT_LAUNCHER_URL", "localhost:11438")
+        workspace = tmp_path / "ws"
+        workspace.mkdir()
+        (workspace / ".mcp.json").write_text(
+            _canonical_config("http://127.0.0.1:11438"), encoding="utf-8",
+        )
+
+        raw = default_status_reader(workspace=workspace, home=tmp_path / "home")()
+
+        assert recorded_probes == [], recorded_probes
+        assert project_host_status(raw)["next_action"] == SELF_TARGET_ACTION
+
     def test_a_status_read_changes_nothing_on_disk(self, workspace, tmp_path, offline):
         before = {
             path: path.read_bytes()
@@ -898,6 +914,48 @@ class TestFencesAndCleanup:
         assert snapshot["freshness"] == "unavailable"
         assert snapshot["observed_at"] is None
         assert cache._inflight is None
+
+    @pytest.mark.parametrize("fault", [OSError("clock read failed"), 1e12, 1e20, -1e12])
+    def test_a_wall_clock_fault_never_holds_the_only_refresh_slot(self, clock, fault):
+        """One bad wall clock reading must not stop every later refresh."""
+
+        faults = [fault]
+
+        def wall():
+            if faults:
+                value = faults.pop()
+                if isinstance(value, BaseException):
+                    raise value
+                return value
+            return clock.wall
+
+        calls = []
+
+        def reader():
+            calls.append(1)
+            return report()
+
+        cache = StatusCache(
+            reader=reader,
+            projector=project_host_status,
+            clock=lambda: clock.monotonic,
+            wall_clock=wall,
+            spawn=inline_spawn,
+        )
+        try:
+            cache.get()
+        except Exception:
+            pass  # the faulting read may surface to this caller; the slot must not stay held
+        clock.advance(1000.0)
+
+        snapshot = cache.get()
+
+        assert calls, f"the refresh slot was never released: {snapshot['refresh_state']}"
+        assert snapshot["freshness"] == "fresh"
+
+    @pytest.mark.parametrize("epoch", [1e12, 1e20, -1e12])
+    def test_an_out_of_range_timestamp_renders_as_none(self, epoch):
+        assert status_cache_module.utc_iso(epoch) is None
 
 
 # -- collector composition --------------------------------------------
