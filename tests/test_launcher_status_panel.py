@@ -1034,11 +1034,9 @@ class TestCollectorComposition:
 # upstream c05849b for files this branch had not yet changed
 # (cli/cymatix_status.py, integrations/host_profiles.py).
 
-import email
-import http.client
-import io
-import urllib.request
-import urllib.response
+import socket
+
+from tests.test_status import _LoopbackServer, _record_connections
 
 
 @pytest.fixture
@@ -1290,10 +1288,10 @@ class TestLogHoles:
             _canonical_config(f"http://127.0.0.1:11437/{SENTINEL}"), encoding="utf-8",
         )
 
-        def explode(url, timeout=None):
+        def explode(address, *_args, **_kwargs):
             raise ValueError(f"transport refused the {SENTINEL} handshake")
 
-        monkeypatch.setattr(urllib.request, "urlopen", explode)
+        monkeypatch.setattr(socket, "create_connection", explode)
 
         read = default_status_reader(workspace=workspace, home=tmp_path / "home")
         with caplog.at_level(logging.WARNING):
@@ -1355,45 +1353,23 @@ class TestProbeHoles:
         """The loopback rule is enforced once, before the first request.
 
         `_select_server_target` refuses an implicit non loopback target,
-        and then `_probe_json` hands the validated URL to
-        `urllib.request.urlopen` with the ordinary opener
-        (cymatix_status.py:335 at c05849b), whose handler chain includes
+        and then `_probe_json` hands the validated URL to an opener
+        (cymatix_status.py:335 at c05849b) whose handler chain includes
         `HTTPRedirectHandler`. A loopback endpoint that answers 302
         therefore sends the probe anywhere it likes, and the health
         evidence the panel shows is then collected from that other host.
 
-        Only the socket layer is faked here. The opener, the redirect
-        handler and the error processor are the real ones `urlopen`
-        builds, so the redirect decision under test is production's.
+        The loopback endpoint is a real server. Every other connection
+        is recorded and refused before name resolution, so a followed
+        redirect shows up here and never leaves the machine.
         """
 
         remote = "http://169.254.169.254/health"
+        attempts = _record_connections(monkeypatch, allow_loopback=True)
 
-        class _Response(urllib.response.addinfourl):
-            def __init__(self, url, code, header_text, body=b"{}"):
-                headers = email.message_from_string(
-                    header_text, _class=http.client.HTTPMessage,
-                )
-                super().__init__(io.BytesIO(body), headers, url, code)
-                self.msg = "fake"
+        with _LoopbackServer(lambda _path: (302, {"Location": remote}, b"")) as server:
+            result = cymatix_status._probe_json(f"{server.url}/health", 5.0)
 
-        class _Transport(urllib.request.HTTPHandler):
-            def __init__(self):
-                self.requested = []
-
-            def http_open(self, req):
-                self.requested.append(req.full_url)
-                if len(self.requested) == 1:
-                    return _Response(req.full_url, 302, f"Location: {remote}\n")
-                return _Response(req.full_url, 200, "Content-Type: application/json\n",
-                                 b'{"status": "healthy"}')
-
-        transport = _Transport()
-        monkeypatch.setattr(
-            urllib.request, "_opener", urllib.request.build_opener(transport),
-        )
-
-        result = cymatix_status._probe_json("http://127.0.0.1:11437/health")
-
-        assert transport.requested == ["http://127.0.0.1:11437/health"], transport.requested
-        assert result.payload != {"status": "healthy"}, "remote evidence reached the report"
+        assert server.requests == ["/health"], server.requests
+        assert attempts == [("127.0.0.1", server.port)], attempts
+        assert result.payload is None, "remote evidence reached the report"
