@@ -72,21 +72,22 @@ def _timeout_from_environment() -> float:
     try:
         parsed = float(raw)
     except ValueError:
-        _warn_timeout(raw, "is not a float")
+        _warn_timeout(raw, "is not a float", _DEFAULT_STATUS_TIMEOUT_S)
         return _DEFAULT_STATUS_TIMEOUT_S
     accepted = finite_positive_timeout(parsed)
     if accepted != parsed:
-        _warn_timeout(raw, f"is not a finite positive timeout within {MAX_STATUS_TIMEOUT_S}s")
+        _warn_timeout(
+            raw, f"is not a finite positive timeout within {MAX_STATUS_TIMEOUT_S}s", accepted
+        )
     return accepted
 
 
-def _warn_timeout(raw: str, problem: str) -> None:
+def _warn_timeout(raw: str, problem: str, used: float) -> None:
+    """Name the value actually used: the default, or the clamped ceiling."""
+
     import sys
 
-    sys.stderr.write(
-        f"CYMATIX_STATUS_TIMEOUT_S={raw!r} {problem}; "
-        f"falling back to {_DEFAULT_STATUS_TIMEOUT_S}s\n"
-    )
+    sys.stderr.write(f"CYMATIX_STATUS_TIMEOUT_S={raw!r} {problem}; using {used}s\n")
 
 
 DEFAULT_STATUS_TIMEOUT_S = _timeout_from_environment()
