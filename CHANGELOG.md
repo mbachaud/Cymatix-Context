@@ -4,6 +4,22 @@
 
 _Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymatix-context==0.10.0b1`)._
 
+**Opt-in full-text companion delivery, three gated migrations (#417 canonical
+wire, #430 tier seat floor, #431 harmonic batching), the #453 measurement-gate
+fix, and launcher status hardening (#457, #460). No shipped retrieval or
+delivery default changes: every new behaviour is opt-in.**
+
+- **docs(bench): packet token cost on the 947k bed.** A tokenizer count
+  (tiktoken `o200k_base`) of the saved ERB packets gives these per-packet
+  means over 500 questions: compressed 12 seats at the shipped
+  `expression_tokens = 7000`, **8,345 tokens**; full text 12 seats, **12,650**;
+  the opt-in 12 + 4 companion profile, **15,917** (1.9x compressed). The
+  7,000 budget is a characters/4 estimate, so a full 12-seat packet runs about
+  19% over it. Companions attach only under `full_text_delivery = true`, so
+  shipped defaults add none. The shipped default cuts about a third of ERB
+  queries to 6 seats (#430), so its mean is at or below the 12-seat figure.
+  Receipt: `benchmarks/dogfood/erb/receipts/packet_token_cost_947k_2026-09-29.json`;
+  write-up: `docs/benchmarks/2026-09-29-packet-token-cost.md`.
 - Add opt-in complete stored body delivery and up to four question-ranked
   chunks from already selected sources. Primary retrieval scores and ordering
   remain separate from supplement selection. No new LLM dependency is required.
