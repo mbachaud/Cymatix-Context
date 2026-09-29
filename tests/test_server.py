@@ -1284,6 +1284,26 @@ class TestContextPacketEndpoint:
         assert data.get("query") == "how does /context/packet label freshness?"
         assert data.get("response_mode") == "packet"
 
+    @pytest.mark.parametrize(
+        "path, extra",
+        [
+            ("/context/packet", {}),
+            ("/context/refresh-plan", {}),
+            ("/context", {"response_mode": "packet"}),
+        ],
+    )
+    def test_packet_zero_match_query_returns_200(self, client, path, extra):
+        """Issue #462: a query that matches zero genes raised
+        PromoterMismatch out of the packet builder (HTTP 500)."""
+        self._seed_one_gene(client)
+        resp = client.post(path, json={"query": "gitleaks", **extra})
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["refresh_targets"] == []
+        if path != "/context/refresh-plan":
+            assert data["verified"] == []
+            assert data["miss"]["reason"] == "no_promoter_match"
+
     def test_packet_empty_query_returns_400(self, client):
         resp = client.post("/context/packet", json={"query": ""})
         assert resp.status_code == 400

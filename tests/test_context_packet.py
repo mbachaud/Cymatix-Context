@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import pytest
+
 from cymatix_context.context_packet import build_context_packet, get_refresh_targets
+from cymatix_context.exceptions import PromoterMismatch
 from cymatix_context.genome import Genome
 from cymatix_context.shard_schema import init_main_db, open_main_db, register_shard, upsert_source_index
 
@@ -364,5 +367,66 @@ def test_get_refresh_targets_returns_only_refreshable_sources():
 
         assert len(targets) == 1
         assert targets[0].source_id == "/repo/config/runtime.toml"
+    finally:
+        genome.close()
+
+
+# ── Issue #462: zero-match query must yield a miss, not raise ────────────
+
+
+def _seed_single_doc(genome, now_ts):
+    gene = make_gene("Cymatix design notes for the agent index", domains=["cymatix", "design"])
+    gene.source_id = "/repo/docs/design.md"
+    gene.source_kind = "doc"
+    gene.last_verified_at = now_ts - 120.0
+    genome.upsert_gene(gene, apply_gate=False)
+
+
+def test_zero_match_query_returns_no_promoter_match_miss():
+    now_ts = 50_000.0
+    genome = Genome(":memory:")
+    try:
+        _seed_single_doc(genome, now_ts)
+        # Precondition: the store itself raises for this query.
+        with pytest.raises(PromoterMismatch):
+            genome.query_docs(domains=["gitleaks"], entities=[], max_genes=8)
+
+        packet = build_context_packet("gitleaks", genome=genome, now_ts=now_ts)
+
+        assert packet.know is None
+        assert packet.miss is not None
+        assert packet.miss.reason == "no_promoter_match"
+        assert packet.verified == []
+        assert packet.stale_risk == []
+        assert packet.refresh_targets == []
+    finally:
+        genome.close()
+
+
+def test_zero_match_ignores_previous_query_scores():
+    """The handle's last-query maps still hold the prior query's scores
+    after a PromoterMismatch; the packet must not read them."""
+    now_ts = 60_000.0
+    genome = Genome(":memory:")
+    try:
+        _seed_single_doc(genome, now_ts)
+        hit = build_context_packet("cymatix design", genome=genome, now_ts=now_ts)
+        assert hit.verified  # populates genome.last_query_scores
+
+        packet = build_context_packet("gitleaks", genome=genome, now_ts=now_ts)
+
+        assert packet.miss is not None
+        assert packet.miss.reason == "no_promoter_match"
+        assert packet.miss.top_score == 0.0
+    finally:
+        genome.close()
+
+
+def test_get_refresh_targets_zero_match_returns_empty():
+    now_ts = 70_000.0
+    genome = Genome(":memory:")
+    try:
+        _seed_single_doc(genome, now_ts)
+        assert get_refresh_targets("gitleaks", genome=genome, now_ts=now_ts) == []
     finally:
         genome.close()
