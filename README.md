@@ -43,6 +43,16 @@ unchanged. [Settings, experimental evidence, and limitations](docs/research/2026
 
 That denominator is a *configurable modeled baseline*, not a measured competitor run: top-5 × 1,500 + 500 overhead = 8,000 tokens. Reproducer: `benchmarks/bench_rag_vs_sike_tokens.py`, against your own store. The multi-turn session-delivery figures (~40% savings, 37× on repeated retrievals) are **unverified design estimates** pending the `cymatix_session_tokens_saved_total` counter.
 
+**Packet cost at scale.** These are tokenizer-counted (tiktoken `o200k_base`) means over 500 EnterpriseRAG questions on the 947,531-chunk bed, using saved packets:
+
+| Packet | Tokens per packet (mean / p90) |
+|---|---|
+| Shipped default: compressed, 12 seats, `expression_tokens = 7000` | **8,345** / 9,197 |
+| Full text, 12 seats | 12,650 / 13,804 |
+| Opt-in 12 + 4 companion profile | 15,917 / 17,398 |
+
+The 7,000 budget is a characters-over-four estimate, so a full 12-seat packet runs about 19% over it. The shipped default cuts about a third of these queries to 6 seats (#430), so its real average is at or below the 12-seat row. See the [write-up](docs/benchmarks/2026-09-29-packet-token-cost.md) and its [receipt](benchmarks/dogfood/erb/receipts/packet_token_cost_947k_2026-09-29.json).
+
 **Historical v0.9.1 defaults (released 2026-08-30)** — 829K-fragment [EnterpriseRAG-Bench](https://github.com/onyx-dot-app/EnterpriseRAG-Bench) bed, n=470, delivered basis, on a fully algorithmic retrieval path (dense, SPLADE and PKI default-off since 2026-08-15 / -16 / -17, each flip receipt-gated). Two defaults graduated in v0.9.1, each measured as a paired row: the wave-1 ranking flip ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407), `rrf_k` 60 → 20 plus all-classes `eps_band` combinators) moved gold-document delivery **0.555 → 0.630** and recall@12 0.651 → 0.681 with zero question-type regressions; the delivered-seat floor ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409), `[budget] min_delivered_docs = 12`) then moved delivery **0.630 → 0.668** (+18/−0) with the ranking bases byte-identical, confirmed on two more corpora with zero paired losses. Release gate: `benchmarks/dogfood/receipts/sweep_v091_gate_2026-08-30.json` (ALL PASS). These are retrieval-layer measurements, *not* end-to-end grades — the ERB judge protocol has not been re-run on these defaults.
 
 **Shipped defaults (v0.9.2, released 2026-09-08)** — one ingestion default changes: `[ingestion] entity_autolink_hub_cutoff = 200` excludes entities with more than 200 existing postings from auto-link probes during ingestion. Set it to `0` to restore legacy linking. The paired receipts and scope are documented in [Configuration](wiki/Configuration.md) and the [CHANGELOG](CHANGELOG.md).
