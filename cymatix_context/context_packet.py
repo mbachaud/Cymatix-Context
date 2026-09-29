@@ -13,6 +13,7 @@ from pathlib import PurePath
 from typing import Optional
 
 from .accel import extract_query_signals
+from .exceptions import PromoterMismatch
 from .genome import file_tokens, path_tokens
 from .schemas import (
     ContextItem,
@@ -464,27 +465,26 @@ def _query_genes(
         if len(fallback) > 2:
             domains = [fallback]
 
-    if router is not None:
-        genes = router.query_docs(
+    handle = router if router is not None else genome
+    if handle is None:
+        raise ValueError("build_context_packet requires a genome or router")
+
+    try:
+        genes = handle.query_docs(
             domains=domains,
             entities=entities,
             max_genes=max_genes,
             read_only=read_only,
         )
-        score_map, tier_contributions = _snapshot_retrieval_state(router)
-        return genes, score_map, tier_contributions
-
-    if genome is not None:
-        genes = genome.query_docs(
-            domains=domains,
-            entities=entities,
-            max_genes=max_genes,
-            read_only=read_only,
-        )
-        score_map, tier_contributions = _snapshot_retrieval_state(genome)
-        return genes, score_map, tier_contributions
-
-    raise ValueError("build_context_packet requires a genome or router")
+    except PromoterMismatch:
+        # Issue #462: zero genes matched across all tiers. /context swallows
+        # this (context_manager); the packet must too, so the n_genes == 0
+        # branch emits MissBlock(reason="no_promoter_match") instead of a
+        # 500. Empty maps, not a snapshot: the handle's last-query maps
+        # still hold the PREVIOUS query's scores.
+        return [], {}, {}
+    score_map, tier_contributions = _snapshot_retrieval_state(handle)
+    return genes, score_map, tier_contributions
 
 
 def build_context_packet(

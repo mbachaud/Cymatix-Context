@@ -51,6 +51,12 @@ _Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymat
   `no_usable_terms`) so a closed configuration gate and a query with no usable
   terms are no longer one label. Measurement-only: retrieval and ranking are
   unchanged. No committed receipt is re-graded here.
+- **fix(packet): zero-match queries return a miss instead of HTTP 500 (#462).**
+  When a query matched no document on any tier, `PromoterMismatch` escaped the
+  packet builder, so `/context/packet`, `/context/refresh-plan`, `/context`
+  with `response_mode: "packet"`, `cymatix packet` and the MCP packet tools all
+  failed. They now return `miss { reason: "no_promoter_match" }` with empty
+  evidence, as `/context` already did. Retrieval and ranking are unchanged.
 - **Benchmark preparation.** `benchmarks/dogfood/migrations/` prepares
   explicit paired arms and captures per-query identities and wire hashes.
   These changes do not claim full-scale gate receipts or promote defaults.
