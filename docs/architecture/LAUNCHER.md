@@ -524,16 +524,26 @@ Probe safety, as the panel actually enforces it:
   and it passes the launcher's configured address (`CYMATIX_LAUNCHER_URL`,
   else the default) as a denied origin, so a discovered or default server
   URL that resolves to that address is refused before any request. Loopback
-  is not the test on its own: the launcher is loopback too.
+  is not the test on its own: the launcher is loopback too. The match is on
+  host and port, whatever the scheme, since an https request to that host
+  and port still reaches the launcher's socket, and a `CYMATIX_LAUNCHER_URL`
+  written as a bare host and port (`localhost:11438`) is read as
+  `http://`.
 - **Redirect confinement, not just URL validation.** The loopback rule is
   applied once, before the first request. A probe therefore refuses to
   follow a redirect rather than letting a local endpoint hand it a remote
   address, and an answer that arrives from a different origin than the one
   requested is discarded instead of shown as local evidence.
+- **No proxy for a loopback probe.** A loopback probe ignores
+  `http_proxy`, `https_proxy` and the related variables, so it is never
+  handed to a proxy whose answer would then stand in for the local
+  server's. An explicit remote `--server-url` keeps the normal proxy
+  handling.
 - **A finite positive timeout budget.** Probe timeouts are validated, not
   merely parsed: zero, negative, NaN and infinity fall back to the 10 second
   default and anything above the 60 second ceiling is clamped to it, per
-  request and without mutating any global.
+  request and without mutating any global. A `CYMATIX_STATUS_TIMEOUT_S`
+  outside the budget prints a warning naming the value actually used.
 - **Response bytes stay capped.** A response body is read to the 64 KiB cap
   plus one byte, for success and HTTP error alike, and a non object or
   malformed body leaves the endpoint reachable with unknown health rather

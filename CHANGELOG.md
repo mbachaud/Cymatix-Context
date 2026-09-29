@@ -51,6 +51,20 @@ _Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymat
   `no_usable_terms`) so a closed configuration gate and a query with no usable
   terms are no longer one label. Measurement-only: retrieval and ranking are
   unchanged. No committed receipt is re-graded here.
+- **fix(status): launcher host status probe follow-ups (#460).** A loopback status
+  probe (`cymatix-status` and the launcher's host status panel) no longer
+  reads proxy environment variables: with `http_proxy` set and no
+  `no_proxy` covering loopback, the loopback health probe went to the
+  proxy, and a stopped server could read healthy. An explicit remote
+  `--server-url` keeps the normal proxy handling.
+  `CYMATIX_STATUS_TIMEOUT_S` values above 60 s are clamped to 60 s (earlier
+  releases accepted parseable values above 60 s without a ceiling), and the
+  warning now names the value actually used rather than the 10 s default.
+  The self poll refusal now matches the launcher's host and port whatever
+  the scheme, and reads a `CYMATIX_LAUNCHER_URL` written as a bare host and
+  port (`localhost:11438`) as `http://` instead of denying nothing. One
+  faulting or out of range wall clock reading can no longer hold the panel's
+  only refresh slot for the life of the process.
 - **fix(packet): zero-match queries return a miss instead of HTTP 500 (#462).**
   When a query matched no document on any tier, `PromoterMismatch` escaped the
   packet builder, so `/context/packet`, `/context/refresh-plan`, `/context`

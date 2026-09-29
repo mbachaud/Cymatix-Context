@@ -72,21 +72,22 @@ def _timeout_from_environment() -> float:
     try:
         parsed = float(raw)
     except ValueError:
-        _warn_timeout(raw, "is not a float")
+        _warn_timeout(raw, "is not a float", _DEFAULT_STATUS_TIMEOUT_S)
         return _DEFAULT_STATUS_TIMEOUT_S
     accepted = finite_positive_timeout(parsed)
     if accepted != parsed:
-        _warn_timeout(raw, f"is not a finite positive timeout within {MAX_STATUS_TIMEOUT_S}s")
+        _warn_timeout(
+            raw, f"is not a finite positive timeout within {MAX_STATUS_TIMEOUT_S}s", accepted
+        )
     return accepted
 
 
-def _warn_timeout(raw: str, problem: str) -> None:
+def _warn_timeout(raw: str, problem: str, used: float) -> None:
+    """Name the value actually used: the default, or the clamped ceiling."""
+
     import sys
 
-    sys.stderr.write(
-        f"CYMATIX_STATUS_TIMEOUT_S={raw!r} {problem}; "
-        f"falling back to {_DEFAULT_STATUS_TIMEOUT_S}s\n"
-    )
+    sys.stderr.write(f"CYMATIX_STATUS_TIMEOUT_S={raw!r} {problem}; using {used}s\n")
 
 
 DEFAULT_STATUS_TIMEOUT_S = _timeout_from_environment()
@@ -240,17 +241,35 @@ def _origin_of(value: object) -> tuple[str, str, int] | None:
     return (scheme, host, port)
 
 
+def _denied_origin_of(value: str) -> tuple[str, str, int] | None:
+    """The origin a caller asked to deny, reading a bare address as http.
+
+    `CYMATIX_LAUNCHER_URL=localhost:11438` is an easy way to write the
+    launcher's address. Parsed as a URL it has no usable origin, and a
+    denied origin that cannot be parsed would deny nothing, so a value
+    with no `://` is read as `http://` first.
+    """
+
+    if "://" not in value:
+        value = f"http://{value}"
+    return _origin_of(value)
+
+
 def _is_same_local_origin(
     candidate: tuple[str, str, int], denied: tuple[str, str, int]
 ) -> bool:
-    """Same scheme and port, and the same host or two loopback names.
+    """Same port, and the same host or two loopback names.
 
     `localhost` and `127.0.0.1` are one address here. Comparing the
     written host alone would let the launcher probe itself through the
     other spelling of the denied address.
+
+    The scheme is not compared. An https request to the denied host and
+    port still opens a connection to that socket, so refusing only the
+    http spelling would not keep the caller from probing itself.
     """
 
-    if candidate[0] != denied[0] or candidate[2] != denied[2]:
+    if candidate[2] != denied[2]:
         return False
     if candidate[1] == denied[1]:
         return True
@@ -330,7 +349,7 @@ def _select_server_target(
             ),
             source=target_source,
         )
-    denied = _origin_of(denied_origin) if denied_origin is not None else None
+    denied = _denied_origin_of(denied_origin) if denied_origin is not None else None
     candidate = _origin_of(validated.request_url)
     if denied is not None and candidate is not None and _is_same_local_origin(candidate, denied):
         return _refused_target(
@@ -465,6 +484,17 @@ def _landed_elsewhere(response: Any, url: str) -> bool:
     return asked is None or landed is None or asked != landed
 
 
+# A loopback probe never consults proxy environment variables. An implicit
+# target is loopback by rule, and with `http_proxy` set and no `no_proxy`
+# covering loopback the ordinary opener would hand the request to the
+# proxy, whose answer then stands in for the local server's: a server that
+# is not running could read healthy. An explicit remote target keeps
+# urllib's normal proxy handling, since it may only be reachable through
+# the proxy. The redirect refusal travels on each request
+# (`_RefuseRedirects`), so it applies through either opener unchanged.
+_PROBE_OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
+
 def _probe_json(url: str, timeout_s: float = DEFAULT_STATUS_TIMEOUT_S) -> ProbeResult:
     """Probe a JSON endpoint without treating HTTP status as transport failure."""
 
@@ -472,7 +502,12 @@ def _probe_json(url: str, timeout_s: float = DEFAULT_STATUS_TIMEOUT_S) -> ProbeR
     try:
         request = urllib.request.Request(url, method="GET")
         request.redirect_dict = _RefuseRedirects()
-        with urllib.request.urlopen(request, timeout=timeout_s) as response:
+        open_request = (
+            _PROBE_OPENER.open
+            if _is_loopback_hostname(urlsplit(url).hostname or "")
+            else urllib.request.urlopen
+        )
+        with open_request(request, timeout=timeout_s) as response:
             if _landed_elsewhere(response, url):
                 return ProbeResult("unreachable", None, None, REDIRECT_REFUSED_REASON)
             body, body_error = _read_bounded_status_body(response, url=url)
