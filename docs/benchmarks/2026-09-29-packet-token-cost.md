@@ -30,7 +30,9 @@ answer model's question and wrapper prompt are not counted here.
 - **Seats under shipped defaults.** These captures were taken with the tier
   seat floor on, so every packet has 12 seats. Shipped defaults leave the floor
   off (#430). On this bed, the FOCUSED tier then cuts about 32% of queries to
-  6 seats (152 of 470 in the #430 receipt). The shipped-default mean is
+  6 seats. The v0.10.0 release witness at `a5a5dbef` records 152 of 470
+  needles at 6 seats and 318 at 12
+  (`benchmarks/dogfood/erb/receipts/ladder_v0100_merged_witness_947k_2026-09-29.json`). The shipped-default mean is
   therefore at or below the 12-seat figure. No receipt measures that mean
   directly: NO EVIDENCE for a single shipped-default average.
 - **The 12+4 full-text profile.** This profile is documented opt-in and is not

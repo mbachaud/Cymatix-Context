@@ -61,7 +61,7 @@ The 7,000 budget is a characters-over-four estimate, so a full 12-seat packet ru
 
 | Corpus | Lane | n | Delivered | r@12 | Final r@12 | Receipt |
 |---|---|---:|---:|---:|---:|---|
-| EnterpriseRAG-Bench, 947,531 chunks | enterprise docs | 470 | **0.668** | 0.681 | 0.683 | [v0.9.2 witness](benchmarks/dogfood/receipts/sweep_v092_witness_947k_2026-09-08.json) |
+| EnterpriseRAG-Bench, 947,531 chunks | enterprise docs | 470 | **0.668** | 0.681 | 0.683 | [v0.10.0 witness](benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29.json) |
 | EnterpriseRAG-Bench, 100k carve | enterprise docs | 141 | **0.667** | 0.702 | 0.702 | [ladder](benchmarks/dogfood/erb/receipts/ladder_erb100k_beta_seed0_2026-09-04.json) |
 | EnronQA v2 | email | 500 | **0.856** | 0.876 | 0.872 | [ladder](benchmarks/dogfood/enronqa/receipts/ladder_enronqa_v2_beta_seed0_2026-09-04.json) |
 | EnronQA, padded | email | 500 | **0.792** | 0.808 | 0.816 | [ladder](benchmarks/dogfood/enronqa_padded/receipts/ladder_enronqa_padded_beta_seed0_2026-09-04.json) |
@@ -73,7 +73,7 @@ The 7,000 budget is a characters-over-four estimate, so a full 12-seat packet ru
 | CosQA | code search | 500 | **0.286** | 0.362 | 0.358 | [ladder](benchmarks/dogfood/cosqa/receipts/ladder_cosqa_beta_seed0_2026-09-04.json) |
 | CodeRAG-Bench, library docs | code docs | 709 | **0.212** | 0.227 | 0.227 | [ladder](benchmarks/dogfood/coderag_docs/receipts/ladder_coderag_docs_beta_seed0_2026-09-04.json) |
 
-The 947k row is the v0.9.2 release witness (`8cab199e`, exact reproduce of the frozen floor-12 reference). The other rows are the beta witness sweep at `21606a0` (2026-09-04, shipped `cymatix.toml`, `PYTHONHASHSEED=0`, `CYMATIX_DISABLE_LEARN=1`); `v0.10.0b1` adds only opt-in delivery and migration features, and these rows have not been re-run on it. MULoc moves by a few needles between hash seeds (0.443–0.449 across receipts). The weak rows are real: FinanceBench, CosQA and library-docs retrieval are open problems, not tuned-away ones.
+The 947k row is the v0.10.0 release witness (`a5a5dbef`). It exactly reproduces the v0.9.2 witness, which in turn exactly reproduced the frozen floor-12 reference. The other rows are the beta witness sweep at `21606a0` (2026-09-04, shipped `cymatix.toml`, `PYTHONHASHSEED=0`, `CYMATIX_DISABLE_LEARN=1`). v0.10.0 adds only opt-in delivery and migration features, and these rows have not been re-run on it. MULoc moves by a few needles between hash seeds (0.443–0.449 across receipts). The weak rows are real: FinanceBench, CosQA and library-docs retrieval are open problems, not tuned-away ones.
 
 **End-to-end answer accuracy (Claude runners).** No Haiku or Sonnet answer-accuracy run exists on current defaults yet. The only committed Claude-answered receipts are the July 2026 SIKE sweeps (pre-rename tree, n=50 needles per bed, Sonnet answering, deterministic accept-substring scoring, no LLM judge): **21/50, 23/50 and 18/50 correct** on the 42k, 16k and 80k beds, with 0.70 / 0.85 / 0.82 correct among answered questions and the rest abstained ([`docs/research/data/2026-07-11-sike_bedsweep_*.json`](docs/research/data/)). Treat these as historical context, not a v0.10 score.
 
