@@ -9,6 +9,18 @@ wire, #430 tier seat floor, #431 harmonic batching), the #453 measurement-gate
 fix, and launcher status hardening (#457, #460). No shipped retrieval or
 delivery default changes: every new behaviour is opt-in.**
 
+- **release gate: merged-stack witness (2026-09-29).** The 947,531-document
+  ERB bed completed all 470 queries with zero errors at
+  `a5a5dbef7d30fb0dc160077288f0427c71b21137`: beta plus #460.
+  **EXACT_REPRODUCE:** all 11 compared per-needle rank, delivery and
+  diagnostic fields match the v0.9.2 release witness. The run delivered
+  **314/470 (0.668085)**, with r@12 0.6809 and final r@12 0.6830, +0/−0
+  delivered. Comparison:
+  `benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29.json`;
+  provenance: `benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29_manifest.json`;
+  BASELINES row `2026-09-29-v0100-merged-stack-witness`. This validates ranks
+  and delivery, not latency.
+
 - **docs(bench): packet token cost on the 947k bed.** A tokenizer count
   (tiktoken `o200k_base`) of the saved ERB packets gives these per-packet
   means over 500 questions: compressed 12 seats at the shipped

@@ -34,6 +34,7 @@ and each default flip still needs its own paired receipt. The pre-release
 | Zero-match packet miss ([#463](https://github.com/mbachaud/Cymatix-Context/pull/463), closes [#462](https://github.com/mbachaud/Cymatix-Context/issues/462)) | Queries matching nothing return `miss { reason: "no_promoter_match" }` instead of HTTP 500 on every packet surface | Bug fix |
 | Launcher host status panel ([#457](https://github.com/mbachaud/Cymatix-Context/pull/457), [#460](https://github.com/mbachaud/Cymatix-Context/pull/460)) | Bounded status cache and panel; loopback probes ignore env proxies; self-poll refusal by host and port; timeout clamp named correctly | Launcher only |
 | Packet token cost ([docs](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-09-29-packet-token-cost.md)) | Tokenizer-counted packets on the 947k bed: compressed 12 seats **8,345** tokens mean; full text 12 **12,650**; opt-in 12 + 4 **15,917** | Measurement only |
+| Release witness | September 29 at `a5a5dbe`: all 470 queries on the 947k bed, zero errors; all 11 compared fields exactly reproduce the v0.9.2 witness; 314/470 delivered, r@12 0.6809, final r@12 0.6830 | Release evidence; ranks and delivery only, no latency claim |
 
 - **Gates still open.** The three migrations ship opt-in. Their default flips
   are tracked in one follow-up issue, and each needs the paired receipt named
