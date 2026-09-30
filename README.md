@@ -9,39 +9,34 @@
 [![LLM-free pipeline](https://img.shields.io/badge/pipeline-LLM--free-brightgreen.svg)](docs/architecture/PIPELINE_LANES.md)
 
 > Coordinate-index engine for LLM agents. Retrieves, weighs, and compresses
-> your codebase into a context window — without a single LLM call on the
-> retrieval path.
+> your codebase and documents into a context window — without a single LLM
+> call on the retrieval path.
 
-One SQLite knowledge store, a seven-stage pipeline, and an explicit `know` / `miss` contract on every response. *The engine's namesake cymatics stage — an MD5-binned 256-dimensional term spectrum — is a candidate-reordering signal that has **not yet been isolated** against hashed bag-of-words or random-bin controls; treat it as an experimental cheap feature, not a proven one.*
+One SQLite knowledge store on your own machine, a seven-stage pipeline, and an explicit `know` / `miss` contract on every response, so an agent can tell grounded context from a miss instead of guessing. *The engine's namesake cymatics stage — an MD5-binned 256-dimensional term spectrum — is a candidate-reordering signal that has **not yet been isolated** against hashed bag-of-words or random-bin controls; treat it as an experimental cheap feature, not a proven one.*
 
-## Proof (30 seconds)
+## Get started
 
-**Experimental full-text companion profile:** preserve complete stored chunks
-and append up to four question-ranked chunks from the same selected sources.
-Enable it explicitly in `cymatix.toml`:
+Python 3.11+. The core install is dependency-light (FastAPI + SQLite, no torch); extras add what you turn on — `cpu` (spaCy ingest tagging), `mcp`, `embeddings` (opt-in dense recall, pulls torch), `ast`, `otel`, `launcher-tray`, `all`. Full extras matrix, GPU detection, and three worked workflows: [Getting Started](https://github.com/mbachaud/Cymatix-Context/wiki/Getting-Started) · [docs/SETUP.md](docs/SETUP.md).
 
-```toml
-[budget]
-full_text_delivery = true
-expression_tokens = 25000
-companion_chunks = 4
-context_max_chars = 100000
+```bash
+pip install "cymatix-context[cpu,mcp]"               # recommended working set, no torch
+python -m spacy download en_core_web_sm              # ingest tagger model
+
+cymatix ingest path/to/your/project/ --recursive     # 1. build the store
+cymatix query "how does the splice step work?"       # 2. ask it — no server
+cymatix packet "edit the splice step" --task-type edit --json   # 3. agent bundle
+cymatix-server                                       # 4. proxy on 127.0.0.1:11437
 ```
 
-For packet API/CLI/MCP calls, request `max_genes=12` (CLI: `--max-docs 12`).
-Structured packets expose supplements in `companions`, with their own freshness
-labels. This profile uses more context; the existing compressed defaults remain
-unchanged. [Settings, experimental evidence, and limitations](docs/research/2026-09-14-companion-release-settings.md).
+Dense recall is off by default since 2026-08-15 ([receipts](docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md)); add the `embeddings` extra only if you opt back in.
 
-**Token economics** — compressor disabled (the default LLM-free config), N=15 query shapes, May 2026:
+## Proof
 
-| Query shape | Tokens per turn | vs standard RAG |
-|---|---|---|
-| Best — focused query | 1,410 | **5.7×** fewer |
-| Median | **2,757** | **2.9×** fewer |
-| Worst — broad 12-document window | 3,755 | **2.1×** fewer |
+Three numbers, each with a receipt:
 
-That denominator is a *configurable modeled baseline*, not a measured competitor run: top-5 × 1,500 + 500 overhead = 8,000 tokens. Reproducer: `benchmarks/bench_rag_vs_sike_tokens.py`, against your own store. The multi-turn session-delivery figures (~40% savings, 37× on repeated retrievals) are **unverified design estimates** pending the `cymatix_session_tokens_saved_total` counter.
+- **Public leaderboard.** On [EnterpriseRAG-Bench](https://huggingface.co/spaces/onyx-dot-app/EnterpriseRAG-Bench-Leaderboard) (Onyx; every entry judged by GPT-5.4), Cymatix scores **Overall 33.93** — Correctness 42.2, Completeness 42.74, Document Recall 50.7 — rank 23 of 26 as of the 2026-09-18 update. That entry was measured on **v0.6.3/0.6.4** (v0.6.3 is the frozen external-validation snapshot) with zero LLM calls on the retrieval path. Later versions have not been resubmitted.
+- **Retrieval since then.** On the 947,531-chunk ERB bed, the shipped defaults now deliver the gold document in **66.8%** of 470 questions. That is our own retrieval-layer metric on our own bed build — related to, but not the same as, the leaderboard's Document Recall column — and not a judged end-to-end score, so it does not replace the leaderboard number. Receipt: [v0.10.0 witness](benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29.json).
+- **Token cost.** On that same bed, a shipped-default packet is **8,345 tokens** on average (tokenizer-counted, table below).
 
 **Packet cost at scale.** These are tokenizer-counted (tiktoken `o200k_base`) means over 500 EnterpriseRAG questions on the 947,531-chunk bed, using saved packets:
 
@@ -51,11 +46,7 @@ That denominator is a *configurable modeled baseline*, not a measured competitor
 | Full text, 12 seats | 12,650 / 13,804 |
 | Opt-in 12 + 4 companion profile | 15,917 / 17,398 |
 
-The 7,000 budget is a characters-over-four estimate, so a full 12-seat packet runs about 19% over it. The shipped default cuts about a third of these queries to 6 seats (#430), so its real average is at or below the 12-seat row. See the [write-up](docs/benchmarks/2026-09-29-packet-token-cost.md) and its [receipt](benchmarks/dogfood/erb/receipts/packet_token_cost_947k_2026-09-29.json).
-
-**Historical v0.9.1 defaults (released 2026-08-30)** — 829K-fragment [EnterpriseRAG-Bench](https://github.com/onyx-dot-app/EnterpriseRAG-Bench) bed, n=470, delivered basis, on a fully algorithmic retrieval path (dense, SPLADE and PKI default-off since 2026-08-15 / -16 / -17, each flip receipt-gated). Two defaults graduated in v0.9.1, each measured as a paired row: the wave-1 ranking flip ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407), `rrf_k` 60 → 20 plus all-classes `eps_band` combinators) moved gold-document delivery **0.555 → 0.630** and recall@12 0.651 → 0.681 with zero question-type regressions; the delivered-seat floor ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409), `[budget] min_delivered_docs = 12`) then moved delivery **0.630 → 0.668** (+18/−0) with the ranking bases byte-identical, confirmed on two more corpora with zero paired losses. Release gate: `benchmarks/dogfood/receipts/sweep_v091_gate_2026-08-30.json` (ALL PASS). These are retrieval-layer measurements, *not* end-to-end grades — the ERB judge protocol has not been re-run on these defaults.
-
-**Shipped defaults (v0.9.2, released 2026-09-08)** — one ingestion default changes: `[ingestion] entity_autolink_hub_cutoff = 200` excludes entities with more than 200 existing postings from auto-link probes during ingestion. Set it to `0` to restore legacy linking. The paired receipts and scope are documented in [Configuration](wiki/Configuration.md) and the [CHANGELOG](CHANGELOG.md).
+The 7,000 budget is a characters-over-four estimate, so a full 12-seat packet runs about 19% over it. The shipped default cuts about a third of these queries to 6 seats (#430), so its real average is at or below the 12-seat row. See the [write-up](docs/benchmarks/2026-09-29-packet-token-cost.md) and its [receipt](benchmarks/dogfood/erb/receipts/packet_token_cost_947k_2026-09-29.json). Multi-turn session delivery elides documents a session has already received; its savings are an **unverified design estimate** pending the `cymatix_session_tokens_saved_total` counter.
 
 **Internal benchmark board (retrieval layer, shipped defaults).** Every row is one committed receipt; beds differ, so compare rows only down a column's meaning, never as one averaged score. *Delivered* = gold document inside the delivered window; *r@12* = gold in the top-12 score map; *final r@12* = gold in the top-12 final order.
 
@@ -75,25 +66,21 @@ The 7,000 budget is a characters-over-four estimate, so a full 12-seat packet ru
 
 The 947k row is the v0.10.0 release witness (`a5a5dbef`). It exactly reproduces the v0.9.2 witness, which in turn exactly reproduced the frozen floor-12 reference. The other rows are the beta witness sweep at `21606a0` (2026-09-04, shipped `cymatix.toml`, `PYTHONHASHSEED=0`, `CYMATIX_DISABLE_LEARN=1`). v0.10.0 adds only opt-in delivery and migration features, and these rows have not been re-run on it. MULoc moves by a few needles between hash seeds (0.443–0.449 across receipts). The weak rows are real: FinanceBench, CosQA and library-docs retrieval are open problems, not tuned-away ones.
 
-**End-to-end answer accuracy (Claude runners).** No Haiku or Sonnet answer-accuracy run exists on current defaults yet. The only committed Claude-answered receipts are the July 2026 SIKE sweeps (pre-rename tree, n=50 needles per bed, Sonnet answering, deterministic accept-substring scoring, no LLM judge): **21/50, 23/50 and 18/50 correct** on the 42k, 16k and 80k beds, with 0.70 / 0.85 / 0.82 correct among answered questions and the rest abstained ([`docs/research/data/2026-07-11-sike_bedsweep_*.json`](docs/research/data/)). Treat these as historical context, not a v0.10 score.
+Release-by-release history (the 0.9.x default flips and their paired receipts), the modeled May 2026 token-economics table, older end-to-end runs, the sharded gap ([#275](https://github.com/mbachaud/Cymatix-Context/issues/275)), and the dense-off latency disclosure ([#374](https://github.com/mbachaud/Cymatix-Context/issues/374)) all live on [Benchmarks and Receipts](https://github.com/mbachaud/Cymatix-Context/wiki/Benchmarks-and-Receipts).
 
-**0.9.0 shipped defaults, for reference** — 829k bed, n=469: **56.5% gold-document delivery** (265/469), recall@12 **0.659** (`benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json`). That is a different ledger row from the 0.9.1 lines above — a different bed build and ingest concurrency — so the two are not a before/after pair.
+### Opt-in: full-text companion profile (v0.10.0+)
 
-Methodology, the ERB correctness/delivery pair-quote rule, the sharded gap ([#275](https://github.com/mbachaud/Cymatix-Context/issues/275)), and the dense-off latency disclosure (×2.5–2.6 at 100k, shrinking at the 829k operating point; receipts in the CHANGELOG, [#374](https://github.com/mbachaud/Cymatix-Context/issues/374)) all live on [Benchmarks and Receipts](https://github.com/mbachaud/Cymatix-Context/wiki/Benchmarks-and-Receipts).
+Experimental. It keeps complete stored chunks and appends up to four question-ranked chunks from the same selected sources. It needs **v0.10.0 or later**; earlier versions log an unknown-key warning and ignore these settings. Enable it explicitly in `cymatix.toml`:
 
-## Get started
-
-Python 3.11+. The core install is dependency-light (FastAPI + SQLite, no torch); extras add what you turn on — `cpu` (spaCy ingest tagging), `embeddings` (opt-in dense recall), `mcp`, `ast`, `otel`, `launcher-tray`, `all`. Full extras matrix, GPU detection, and three worked workflows: [Getting Started](https://github.com/mbachaud/Cymatix-Context/wiki/Getting-Started) · [docs/SETUP.md](docs/SETUP.md).
-
-```bash
-pip install "cymatix-context[embeddings,cpu,mcp]"    # recommended working set
-python -m spacy download en_core_web_sm              # ingest tagger model
-
-cymatix ingest path/to/your/project/ --recursive     # 1. build the store
-cymatix query "how does the splice step work?"       # 2. ask it — no server
-cymatix packet "edit the splice step" --task-type edit --json   # 3. agent bundle
-cymatix-server                                       # 4. proxy on 127.0.0.1:11437
+```toml
+[budget]
+full_text_delivery = true
+expression_tokens = 25000
+companion_chunks = 4
+context_max_chars = 100000
 ```
+
+For packet API/CLI/MCP calls, request `max_genes=12` (CLI: `--max-docs 12`). Structured packets expose supplements in `companions`, with their own freshness labels. It costs roughly twice the tokens of the default packet (see the table above); the compressed defaults are unchanged. [Settings, experimental evidence, and limitations](docs/research/2026-09-14-companion-release-settings.md).
 
 ## Pipeline
 
