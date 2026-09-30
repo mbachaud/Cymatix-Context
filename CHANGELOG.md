@@ -2,12 +2,14 @@
 
 ## Unreleased
 
+## 0.10.1 (2026-09-30)
+
 - **docs: Product Hunt launch positioning.** The package summary, README
   tagline and GitHub About now read "Same query, same answer: deterministic RAG
   for agents". The README states the EnterpriseRAG-Bench leaderboard entry in
   percent (Overall 33.93%). The wiki's 0.10.0 section is dated 2026-09-30 to
-  match the tag. No code or default changes. The PyPI summary updates with the
-  next published release.
+  match the tag. No code or default changes; this release exists to carry the
+  new summary and README to PyPI.
 
 ## 0.10.0 (2026-09-30)
 

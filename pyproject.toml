@@ -16,7 +16,7 @@ exclude = [
 
 [project]
 name = "cymatix-context"
-version = "0.10.0"
+version = "0.10.1"
 description = "Same query, same answer: deterministic RAG for agents"
 readme = "README.md"
 requires-python = ">=3.11"
