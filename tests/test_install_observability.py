@@ -312,7 +312,10 @@ def test_powershell_install_script_parses_cleanly():
         ],
         capture_output=True,
         text=True,
-        timeout=10,
+        # A cold powershell.exe start on a CI runner can take longer than
+        # 10 s before any parsing happens; the parse itself is fast, so this
+        # limit only guards against a hang.
+        timeout=60,
         creationflags=creationflags,
     )
     assert proc.returncode == 0, (

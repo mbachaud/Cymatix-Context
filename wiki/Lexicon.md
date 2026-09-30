@@ -11,11 +11,14 @@
   definitions since R3; the biology names are one-line aliases declared beside
   them. `Document is Gene` is `True` in both directions, with no subclassing
   and no runtime cost.
-- **The wire and the SQL schema are still legacy-named on purpose.** JSON keys
+- **The default wire and the SQL schema remain legacy-named.** JSON keys
   such as `gene_id`, the `<GENE src=…>` blocks inside an assembled window, and
   every SQL table name are contracts with existing consumers. Renaming them
   changes delivered bytes, so it is gated separately —
   [see below](#what-is-still-legacy-named-and-why).
+  The experimental `[budget] wire_format = "canonical"` arm projects
+  canonical response keys and assembly tags without changing SQL or Python
+  persistence fields. See [the migration contract](../docs/ROSETTA.md).
 - In-repo, [`docs/ROSETTA.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROSETTA.md)
   is now a stub that points here. This page is the living document; add a row
   when a new term surfaces.
@@ -168,7 +171,8 @@ outside the repository.
 
 **The wire surface** — tracked as
 [#417](https://github.com/mbachaud/Cymatix-Context/issues/417), not taken in
-0.9.1:
+0.9.1. These remain the defaults; the experimental canonical format changes
+them only when `[budget] wire_format = "canonical"` is selected:
 
 - The `<GENE src=…>` blocks that wrap each spliced fragment in an assembled
   context window.

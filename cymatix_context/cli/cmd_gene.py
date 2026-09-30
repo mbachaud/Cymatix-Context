@@ -125,7 +125,7 @@ def run(argv: list[str]) -> int:
     if args.action == "get":
         payload = _get_payload(gene)
         if args.json:
-            output.print_json(payload)
+            output.print_json(payload, wire_format=getattr(sess, "wire_format", "legacy"))
         else:
             output.print_lines(_render_get_text(payload))
         return output.EXIT_OK
@@ -133,7 +133,7 @@ def run(argv: list[str]) -> int:
     # preview
     payload = _preview_payload(gene, args.chars)
     if args.json:
-        output.print_json(payload)
+        output.print_json(payload, wire_format=getattr(sess, "wire_format", "legacy"))
     else:
         output.print_lines(_render_preview_text(payload))
     return output.EXIT_OK

@@ -227,6 +227,7 @@ def format_elision_stub(
     now: float,
     queries_ago: int,
     id_width: int = 12,
+    wire_format: str = "legacy",
 ) -> str:
     """One-line stub replacing a document's spliced text when the same document
     was already delivered earlier in this session.
@@ -235,6 +236,9 @@ def format_elision_stub(
     parsers can treat them uniformly:
 
         [document=abc12345 ↻ delivered 3 queries ago / 45s — see earlier response]
+
+    ``wire_format="canonical"`` selects ``document=``; the default retains
+    the legacy ``gene=`` header.
 
     The ↻ glyph is chosen to visually distinguish from ◆/◇/⬦ confidence
     markers — it's a "same thing, already shipped" signal, not a quality
@@ -249,4 +253,5 @@ def format_elision_stub(
     else:
         age_str = f"{age_s / 3600:.1f}h"
     qa = f"{queries_ago} queries ago" if queries_ago > 0 else "just now"
-    return f"[gene={short_id} ↻ delivered {qa} / {age_str} — see earlier response]"
+    label = "document" if wire_format == "canonical" else "gene"
+    return f"[{label}={short_id} ↻ delivered {qa} / {age_str} — see earlier response]"

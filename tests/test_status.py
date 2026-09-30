@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+import email
+import http.client
+import http.server
 import json
 import io
 import socket
-import urllib.error
+import threading
+import urllib.request
+import urllib.response
 
 import pytest
 
@@ -59,6 +64,101 @@ def _healthy_probes(monkeypatch, *, participants=None):
         raise AssertionError(url)
 
     monkeypatch.setattr(status_mod, "_probe_json", fake_probe)
+
+
+# The probe tests below observe what reaches a socket, not which urllib
+# entry point the probe happens to call, so they hold whatever opener
+# the probe is built on.
+
+_JSON = {"Content-Type": "application/json"}
+
+
+class _LoopbackServer:
+    """A real HTTP server on an ephemeral loopback port.
+
+    `answer(path)` returns `(status, headers, body)`. Every request line
+    target is recorded, so a test can see exactly what reached it.
+    """
+
+    def __init__(self, answer):
+        self.requests = []
+        requests = self.requests
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                requests.append(self.path)
+                status, headers, body = answer(self.path)
+                self.send_response(status)
+                for name, value in headers.items():
+                    self.send_header(name, value)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                try:
+                    self.wfile.write(body)
+                except OSError:
+                    pass
+
+            def log_message(self, *_args):
+                pass
+
+        self._server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        self.port = self._server.server_address[1]
+        self.url = f"http://127.0.0.1:{self.port}"
+        self._thread = threading.Thread(
+            target=self._server.serve_forever,
+            kwargs={"poll_interval": 0.05},
+            daemon=True,
+        )
+
+    def __enter__(self):
+        self._thread.start()
+        return self
+
+    def __exit__(self, *_exc):
+        self._server.shutdown()
+        self._server.server_close()
+        self._thread.join(timeout=5)
+        return False
+
+
+def _unused_loopback_port():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        probe.bind(("127.0.0.1", 0))
+        return probe.getsockname()[1]
+
+
+def _record_connections(monkeypatch, *, allow_loopback=False):
+    """Record every socket connection attempt, refusing all but loopback.
+
+    A refused attempt fails before any name resolution, so a probe that
+    tries to leave the machine is seen here and goes nowhere.
+    """
+
+    attempts = []
+    real_connect = socket.create_connection
+
+    def connect(address, *args, **kwargs):
+        attempts.append(address)
+        if allow_loopback and address[0] == "127.0.0.1":
+            return real_connect(address, *args, **kwargs)
+        raise OSError("connection refused by the test")
+
+    monkeypatch.setattr(socket, "create_connection", connect)
+    return attempts
+
+
+def _record_body_reads(monkeypatch):
+    """Record the size of every response body read the probe makes."""
+
+    sizes = []
+    real_read = http.client.HTTPResponse.read
+
+    def read(self, amt=None):
+        sizes.append(amt)
+        return real_read(self, amt)
+
+    monkeypatch.setattr(http.client.HTTPResponse, "read", read)
+    return sizes
 
 
 @pytest.mark.parametrize(
@@ -281,11 +381,7 @@ def test_report_refuses_credential_bearing_config_url_without_leaking_environmen
         "http://user:token@127.0.0.1:19199/health?debug=1#trace"
     )
     config.write_text(json.dumps(raw), encoding="utf-8")
-    monkeypatch.setattr(
-        status_mod.urllib.request,
-        "urlopen",
-        lambda *_args, **_kwargs: pytest.fail("credential-bearing URL must not be opened"),
-    )
+    attempts = _record_connections(monkeypatch)
     result = status_mod.collect_status(
         host="antigravity",
         start_dir=tmp_path,
@@ -293,6 +389,7 @@ def test_report_refuses_credential_bearing_config_url_without_leaking_environmen
         launcher_url=None,
     )
 
+    assert attempts == [], "credential-bearing URL must not be opened"
     serialized = json.dumps(result)
     assert "UNRELATED_SECRET" not in serialized
     assert "token" not in serialized
@@ -469,13 +566,7 @@ def test_implicit_unsafe_or_malformed_configured_url_is_never_probed(
     config = tmp_path / ".agents" / "mcp_config.json"
     config.parent.mkdir(parents=True)
     _json_config(config, server_url=configured_url)
-    calls = []
-
-    def fail_urlopen(*args, **kwargs):
-        calls.append((args, kwargs))
-        raise AssertionError("refused config URL must not reach urllib")
-
-    monkeypatch.setattr(status_mod.urllib.request, "urlopen", fail_urlopen)
+    attempts = _record_connections(monkeypatch)
     result = status_mod.collect_status(
         host="antigravity",
         start_dir=tmp_path,
@@ -483,7 +574,7 @@ def test_implicit_unsafe_or_malformed_configured_url_is_never_probed(
         launcher_url=None,
     )
 
-    assert calls == []
+    assert attempts == [], "refused config URL must not open a connection"
     assert result["server"]["health"] == "unknown"
     assert result["mcp"]["live"] == "unknown"
     assert "not probed" in result["server"]["error"].lower()
@@ -497,11 +588,7 @@ def test_non_loopback_config_explains_explicit_server_url_opt_in(monkeypatch, tm
     config = tmp_path / ".agents" / "mcp_config.json"
     config.parent.mkdir(parents=True)
     _json_config(config, server_url="https://status.example.test:19444")
-    monkeypatch.setattr(
-        status_mod.urllib.request,
-        "urlopen",
-        lambda *_args, **_kwargs: pytest.fail("non-loopback config was probed"),
-    )
+    attempts = _record_connections(monkeypatch)
 
     result = status_mod.collect_status(
         host="antigravity",
@@ -510,6 +597,7 @@ def test_non_loopback_config_explains_explicit_server_url_opt_in(monkeypatch, tm
         launcher_url=None,
     )
 
+    assert attempts == [], "non-loopback config was probed"
     assert "pass --server-url explicitly" in result["next_action"].lower()
 
 
@@ -527,13 +615,7 @@ def test_invalid_explicit_server_url_wins_but_is_not_probed(
     config = tmp_path / ".agents" / "mcp_config.json"
     config.parent.mkdir(parents=True)
     _json_config(config, server_url="http://127.0.0.1:19199")
-    calls = []
-
-    def fail_urlopen(*args, **kwargs):
-        calls.append((args, kwargs))
-        raise AssertionError("invalid explicit URL must not reach urllib")
-
-    monkeypatch.setattr(status_mod.urllib.request, "urlopen", fail_urlopen)
+    attempts = _record_connections(monkeypatch)
     result = status_mod.collect_status(
         host="antigravity",
         server_url=explicit_url,
@@ -542,7 +624,7 @@ def test_invalid_explicit_server_url_wins_but_is_not_probed(
         launcher_url=None,
     )
 
-    assert calls == []
+    assert attempts == [], "invalid explicit URL must not open a connection"
     assert result["server"]["health"] == "unknown"
     assert "valid absolute http" in result["next_action"].lower()
 
@@ -619,53 +701,301 @@ def test_launcher_url_is_redacted_and_invalid_launcher_target_is_not_probed(
 
 
 def test_successful_status_probe_reads_no_more_than_the_response_limit(monkeypatch):
-    read_sizes = []
+    read_sizes = _record_body_reads(monkeypatch)
 
-    class Response:
-        def read(self, size=-1):
-            read_sizes.append(size)
-            return b"x" * size
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, *_args):
-            return False
-
-    monkeypatch.setattr(
-        status_mod.urllib.request,
-        "urlopen",
-        lambda *_args, **_kwargs: Response(),
-    )
-    probe = status_mod._probe_json("http://127.0.0.1:11437/health")
+    with _LoopbackServer(lambda _path: (200, _JSON, b"x" * (1024 * 1024))) as server:
+        probe = status_mod._probe_json(f"{server.url}/health", 5.0)
 
     assert read_sizes == [status_mod.MAX_STATUS_RESPONSE_BYTES + 1]
+    assert probe.transport == "reachable"
     assert probe.payload is None
     assert "exceeds" in probe.parse_error.lower()
 
 
 def test_http_error_status_probe_reads_no_more_than_the_response_limit(monkeypatch):
-    read_sizes = []
+    read_sizes = _record_body_reads(monkeypatch)
 
-    class ErrorBody(io.BytesIO):
-        def read(self, size=-1):
-            read_sizes.append(size)
-            return super().read(size)
-
-    error = urllib.error.HTTPError(
-        "http://127.0.0.1:11437/health",
-        503,
-        "maintenance",
-        {},
-        ErrorBody(b"x" * (1024 * 1024)),
-    )
-    monkeypatch.setattr(
-        status_mod.urllib.request,
-        "urlopen",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(error),
-    )
-    probe = status_mod._probe_json("http://127.0.0.1:11437/health")
+    with _LoopbackServer(lambda _path: (503, _JSON, b"x" * (1024 * 1024))) as server:
+        probe = status_mod._probe_json(f"{server.url}/health", 5.0)
 
     assert read_sizes == [status_mod.MAX_STATUS_RESPONSE_BYTES + 1]
     assert probe.error == "HTTP 503"
     assert "exceeds" in probe.parse_error.lower()
+
+
+# -- probe safety: redirect confinement and the timeout budget ---------
+#
+# Two gaps were statically visible and untested:
+# the loopback rule is enforced once, before the first request, and the
+# probe timeout was parsed as a float without any finite positive check.
+# Both are fixed in `cymatix_status`; these are the negatives.
+
+
+class _FakeResponse(urllib.response.addinfourl):
+    def __init__(self, url, code, header_text, body=b"{}"):
+        headers = email.message_from_string(header_text, _class=http.client.HTTPMessage)
+        super().__init__(io.BytesIO(body), headers, url, code)
+        self.msg = "fake"
+
+
+@pytest.mark.parametrize(
+    "location",
+    [
+        "http://169.254.169.254/health",
+        "http://example.invalid/health",
+        "https://127.0.0.1:9/health",
+        "/elsewhere",
+    ],
+)
+def test_a_status_probe_never_requests_a_redirect_destination(monkeypatch, location):
+    attempts = _record_connections(monkeypatch, allow_loopback=True)
+
+    with _LoopbackServer(lambda _path: (302, {"Location": location}, b"")) as server:
+        probe = status_mod._probe_json(f"{server.url}/health", 5.0)
+
+    assert server.requests == ["/health"]
+    assert attempts == [("127.0.0.1", server.port)]
+    assert probe.transport == "unreachable"
+    assert probe.payload is None
+    assert probe.error == status_mod.REDIRECT_REFUSED_REASON
+
+
+def test_a_status_probe_still_reads_a_direct_answer(monkeypatch):
+    attempts = _record_connections(monkeypatch, allow_loopback=True)
+
+    with _LoopbackServer(lambda _path: (200, _JSON, b'{"status": "ok"}')) as server:
+        probe = status_mod._probe_json(f"{server.url}/health", 5.0)
+
+    assert server.requests == ["/health"]
+    assert attempts == [("127.0.0.1", server.port)]
+    assert probe.transport == "reachable"
+    assert probe.payload == {"status": "ok"}
+
+
+def test_a_report_never_carries_evidence_collected_off_the_requested_origin(monkeypatch):
+    """The second lock: an answer from another origin is discarded.
+
+    No real server can answer from an origin other than its own without
+    a redirect, so the HTTP handler class itself is replaced here. That
+    holds for any opener the probe builds, since each one uses it.
+    """
+
+    def answer_from_elsewhere(_handler, _req):
+        return _FakeResponse(
+            "http://169.254.169.254/health",
+            200,
+            "Content-Type: application/json\n",
+            b'{"status": "ok"}',
+        )
+
+    monkeypatch.setattr(urllib.request.HTTPHandler, "http_open", answer_from_elsewhere)
+
+    probe = status_mod._probe_json("http://127.0.0.1:11437/health")
+
+    assert probe.transport == "unreachable"
+    assert probe.payload is None
+
+
+@pytest.mark.parametrize(
+    "value",
+    [0, 0.0, -1.0, -0.001, float("nan"), float("inf"), float("-inf"), "10", None, True],
+)
+def test_an_unusable_probe_timeout_falls_back_to_the_documented_budget(value):
+    assert status_mod.finite_positive_timeout(value) == status_mod._DEFAULT_STATUS_TIMEOUT_S
+
+
+@pytest.mark.parametrize("value", [0.001, 1, 2.5, 59.999, 60.0])
+def test_a_usable_probe_timeout_is_kept(value):
+    assert status_mod.finite_positive_timeout(value) == float(value)
+
+
+@pytest.mark.parametrize("value", [60.001, 600.0, 10**9])
+def test_an_excessive_probe_timeout_is_clamped_to_the_ceiling(value):
+    assert status_mod.finite_positive_timeout(value) == status_mod.MAX_STATUS_TIMEOUT_S
+
+
+def test_the_probe_clamps_its_timeout_without_mutating_any_global(monkeypatch):
+    before = status_mod.DEFAULT_STATUS_TIMEOUT_S
+    seen = []
+
+    def capture(_address, timeout=None, *_args, **_kwargs):
+        # The timeout the socket itself is handed, whatever opener asked.
+        seen.append(timeout)
+        raise OSError("connection refused by the test")
+
+    monkeypatch.setattr(socket, "create_connection", capture)
+
+    for supplied in (0.0, -5.0, float("inf"), 10**6):
+        status_mod._probe_json("http://127.0.0.1:11437/health", supplied)
+
+    assert seen == [
+        status_mod._DEFAULT_STATUS_TIMEOUT_S,
+        status_mod._DEFAULT_STATUS_TIMEOUT_S,
+        status_mod._DEFAULT_STATUS_TIMEOUT_S,
+        status_mod.MAX_STATUS_TIMEOUT_S,
+    ]
+    assert status_mod.DEFAULT_STATUS_TIMEOUT_S == before
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected", "warns"),
+    [
+        ("0", 10.0, True),
+        ("-3", 10.0, True),
+        ("nan", 10.0, True),
+        ("inf", 10.0, True),
+        ("not-a-float", 10.0, True),
+        ("900", 60.0, True),
+        ("2.5", 2.5, False),
+        (None, 10.0, False),
+    ],
+)
+def test_the_environment_timeout_is_validated_not_merely_parsed(
+    monkeypatch, capsys, raw, expected, warns
+):
+    if raw is None:
+        monkeypatch.delenv("CYMATIX_STATUS_TIMEOUT_S", raising=False)
+    else:
+        monkeypatch.setenv("CYMATIX_STATUS_TIMEOUT_S", raw)
+
+    assert status_mod._timeout_from_environment() == expected
+
+    warned = capsys.readouterr().err
+    assert ("CYMATIX_STATUS_TIMEOUT_S" in warned) is warns
+
+
+@pytest.mark.parametrize("raw", ["120", "1e9"])
+def test_the_environment_timeout_warning_names_the_value_actually_used(
+    monkeypatch, capsys, raw
+):
+    """A clamped value is announced as clamped, not as the default."""
+
+    monkeypatch.setenv("CYMATIX_STATUS_TIMEOUT_S", raw)
+
+    used = status_mod._timeout_from_environment()
+
+    warned = capsys.readouterr().err
+    assert used == status_mod.MAX_STATUS_TIMEOUT_S
+    assert f"using {used}s" in warned, warned
+    assert f"{status_mod._DEFAULT_STATUS_TIMEOUT_S}s" not in warned, warned
+
+
+def test_a_loopback_status_probe_never_goes_through_a_proxy(monkeypatch):
+    """Proxy variables must not carry a loopback probe anywhere else.
+
+    With `http_proxy` set and no `no_proxy` covering loopback, a probe
+    handed to the proxy gets whatever the proxy answers, and a server
+    that is not running can read healthy.
+    """
+
+    answer = (200, _JSON, b'{"status": "ok"}')
+    with _LoopbackServer(lambda _path: answer) as proxy:
+        for name in ("http_proxy", "HTTP_PROXY", "https_proxy", "HTTPS_PROXY"):
+            monkeypatch.setenv(name, proxy.url)
+        for name in ("no_proxy", "NO_PROXY"):
+            monkeypatch.delenv(name, raising=False)
+        # urllib reads proxy variables when it first builds its shared
+        # opener. A launcher started with them set builds it from them;
+        # drop any opener an earlier test built without them.
+        monkeypatch.setattr(urllib.request, "_opener", None)
+
+        probe = status_mod._probe_json(
+            f"http://127.0.0.1:{_unused_loopback_port()}/health", 5.0
+        )
+
+    assert proxy.requests == [], proxy.requests
+    assert probe.transport == "unreachable"
+    assert probe.payload is None
+
+
+def test_an_explicit_remote_status_target_still_goes_through_the_proxy(monkeypatch):
+    """Only a loopback probe skips the proxy.
+
+    A remote `--server-url` may only be reachable through the proxy the
+    environment names, so it keeps urllib's normal proxy handling. The
+    remote name is never resolved here: the one connection made is to the
+    proxy, which receives the request in absolute form.
+    """
+
+    attempts = _record_connections(monkeypatch, allow_loopback=True)
+    answer = (200, _JSON, b'{"status": "ok"}')
+    with _LoopbackServer(lambda _path: answer) as proxy:
+        monkeypatch.setenv("http_proxy", proxy.url)
+        for name in ("no_proxy", "NO_PROXY"):
+            monkeypatch.delenv(name, raising=False)
+        monkeypatch.setattr(urllib.request, "_opener", None)
+        target = status_mod._select_server_target(
+            explicit_url="http://status.example.invalid:11437", configured_url=None
+        )
+
+        probe = status_mod._probe_json(f"{target.request_url}/health", 5.0)
+
+    assert proxy.requests == ["http://status.example.invalid:11437/health"]
+    assert attempts == [("127.0.0.1", proxy.port)]
+    assert probe.transport == "reachable"
+    assert probe.payload == {"status": "ok"}
+
+
+def test_an_implicit_target_that_is_the_callers_own_address_is_never_requested(monkeypatch):
+    probed = []
+    monkeypatch.setattr(
+        status_mod,
+        "_probe_json",
+        lambda url, timeout_s=None: probed.append(url) or ProbeResult(
+            "unreachable", None, None, "offline"
+        ),
+    )
+
+    for configured in ("http://127.0.0.1:11438", "http://localhost:11438"):
+        target = status_mod._select_server_target(
+            explicit_url=None,
+            configured_url=configured,
+            denied_origin="http://127.0.0.1:11438",
+        )
+        assert target.request_url is None
+        assert target.action == status_mod.SELF_TARGET_ACTION
+
+    kept = status_mod._select_server_target(
+        explicit_url=None,
+        configured_url="http://127.0.0.1:11437",
+        denied_origin="http://127.0.0.1:11438",
+    )
+    assert kept.request_url == "http://127.0.0.1:11437"
+    assert probed == []
+
+
+@pytest.mark.parametrize(
+    ("configured", "denied"),
+    [
+        ("https://127.0.0.1:11438", "http://127.0.0.1:11438"),
+        ("https://localhost:11438", "http://127.0.0.1:11438"),
+        ("http://127.0.0.1:11438", "https://localhost:11438"),
+    ],
+)
+def test_the_callers_own_host_and_port_is_refused_whatever_the_scheme(configured, denied):
+    """The scheme does not change whose socket a request opens.
+
+    An https target on the caller's own host and port still connects to
+    the caller, so it is refused exactly like the http spelling.
+    """
+
+    target = status_mod._select_server_target(
+        explicit_url=None, configured_url=configured, denied_origin=denied
+    )
+
+    assert target.request_url is None
+    assert target.action == status_mod.SELF_TARGET_ACTION
+
+
+@pytest.mark.parametrize("denied", ["localhost:11438", "127.0.0.1:11438"])
+def test_a_denied_origin_written_without_a_scheme_is_read_as_http(denied):
+    """`CYMATIX_LAUNCHER_URL=localhost:11438` must not switch the refusal off."""
+
+    target = status_mod._select_server_target(
+        explicit_url=None,
+        configured_url="http://127.0.0.1:11438",
+        denied_origin=denied,
+    )
+
+    assert target.request_url is None
+    assert target.action == status_mod.SELF_TARGET_ACTION

@@ -82,18 +82,37 @@ stale. You may answer from the genome AND should plan a refresh.
 """
 
 
-def full_fragment() -> str:
+# Translate only these fixed instruction templates, never retrieved content.
+CANONICAL_NO_MATCH_FRAGMENT: str = (
+    CYMATIX_NO_MATCH_FRAGMENT
+    .replace("gene_id_match", "document_id_match")
+    .replace("do_not_answer_from_genome", "do_not_answer_from_knowledge_store")
+    .replace("genome", "knowledge store")
+    .replace("any gene", "any document")
+    .replace("candidate genes", "candidate documents")
+)
+CANONICAL_REFRESH_FRAGMENT: str = CYMATIX_REFRESH_FRAGMENT.replace(
+    "genome", "knowledge store",
+)
+
+
+def full_fragment(wire_format: str = "legacy") -> str:
     """Concatenated Stage 6 + Stage 7 agent-prompt fragments.
 
+    Use ``wire_format="canonical"`` for canonical response field names.
     Convenience for callers that want the full instruction set in a
     single string (e.g., system-prompt prefix injectors). Identical
     to ``CYMATIX_NO_MATCH_FRAGMENT + "\\n\\n" + CYMATIX_REFRESH_FRAGMENT``.
     """
+    if wire_format == "canonical":
+        return CANONICAL_NO_MATCH_FRAGMENT + "\n\n" + CANONICAL_REFRESH_FRAGMENT
     return CYMATIX_NO_MATCH_FRAGMENT + "\n\n" + CYMATIX_REFRESH_FRAGMENT
 
 
 __all__ = [
     "CYMATIX_NO_MATCH_FRAGMENT",
     "CYMATIX_REFRESH_FRAGMENT",
+    "CANONICAL_NO_MATCH_FRAGMENT",
+    "CANONICAL_REFRESH_FRAGMENT",
     "full_fragment",
 ]

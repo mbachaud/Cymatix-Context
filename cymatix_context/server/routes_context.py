@@ -225,6 +225,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 max_genes=max_genes,
                 now_ts=t0,
                 read_only=read_only,
+                budget_config=config.budget,
             )
             payload = packet.model_dump()
             payload["response_mode"] = "packet"
@@ -644,6 +645,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             read_only=read_only,
             include_raw=include_raw,
             max_item_chars=max_item_chars,
+            budget_config=config.budget,
         )
         packet_dict = packet.model_dump()
 

@@ -227,11 +227,27 @@ artifacts. Fresh receipt on a 2,000-file deterministic EnronQA sample, seed
 
 ## The ERB pair-quote rule
 
-The externally-scored numbers below were measured under the **0.8.x
-all-encoders-on configuration — additive fusion + dense + SPLADE ON — which no
-longer ships by default.** Every layer remains available opt-in.
+**The public leaderboard entry is the external number of record.** On the
+[EnterpriseRAG-Bench leaderboard](https://huggingface.co/spaces/onyx-dot-app/EnterpriseRAG-Bench-Leaderboard)
+(every entry judged by GPT-5.4; Onyx excludes itself), Cymatix-Context scores:
 
-| ERB official metric (July 2026, 0.8.x config) | Score |
+| ERB leaderboard (v0.6.3/0.6.4; rank 23 of 26 as of the 2026-09-18 update) | Score |
+|---|---|
+| Overall | **33.93** |
+| Correctness | **42.2** |
+| Completeness | **42.74** |
+| Document Recall | **50.7** |
+
+v0.6.3 is the frozen external-validation snapshot (see the 0.6.4 entry in the
+[CHANGELOG](https://github.com/mbachaud/Cymatix-Context/blob/master/CHANGELOG.md)).
+No later version has been resubmitted.
+
+The internal run below was graded under ERB's official judge protocol but is
+**not** the leaderboard entry. It was measured under the **0.8.x all-encoders-on
+configuration — additive fusion + dense + SPLADE ON — which no longer ships by
+default.** Every layer remains available opt-in.
+
+| ERB official judge protocol, internal run (July 2026, 0.8.x config) | Score |
 |---|---|
 | Correctness | **41.6%** (208/500) |
 | Completeness | **42.8%** |
@@ -333,6 +349,15 @@ receipt.
   basis** — the retrieval-layer ledger classes it REMOVE-CANDIDATE and the arm sits
   in the [#377](https://github.com/mbachaud/Cymatix-Context/issues/377) 0.9.x
   backlog.
+- **End-to-end answer accuracy with Claude answering.** No Haiku or Sonnet
+  answer-accuracy run exists on current defaults. The only committed
+  Claude-answered receipts are the July 2026 SIKE sweeps (pre-rename tree, n=50
+  needles per bed, Sonnet answering, deterministic accept-substring scoring, no
+  LLM judge): **21/50, 23/50 and 18/50 correct** on the 42k, 16k and 80k beds,
+  with 0.70 / 0.85 / 0.82 correct among answered questions and the rest
+  abstained
+  ([`docs/research/data/2026-07-11-sike_bedsweep_*.json`](https://github.com/mbachaud/Cymatix-Context/tree/master/docs/research/data)).
+  Historical context, not a current score.
 
 ## Two reading rules the receipts forced
 

@@ -1,0 +1,179 @@
+{
+  "tool": "benchmarks/dogfood/erb/packet_token_cost.py",
+  "code_sha": "a5a5dbef7d30fb0dc160077288f0427c71b21137",
+  "python": "3.14.3",
+  "tiktoken": "0.13.0",
+  "encodings": [
+    "o200k_base",
+    "cl100k_base"
+  ],
+  "arms": {
+    "default_compressed_12": {
+      "dir": "H:\\archives\\space-pass-2026-09-24\\F\\Projects\\cymatix-context\\.worktrees\\erb-answers-20260910\\contexts",
+      "n": 500,
+      "files_sha256": "681cc831be141f31208fa1a7f11d23796e7e16bd20ff36b7d411db219d3a34f7",
+      "chars": {
+        "mean": 28759.3,
+        "median": 28985.5,
+        "p90": 30284,
+        "min": 22041,
+        "max": 32971,
+        "total": 14379631
+      },
+      "delivered_ids": {
+        "mean": 12.0,
+        "median": 12.0,
+        "p90": 12,
+        "min": 12,
+        "max": 12,
+        "total": 6000
+      },
+      "tokens_o200k_base": {
+        "mean": 8344.5,
+        "median": 8268.0,
+        "p90": 9197,
+        "min": 6655,
+        "max": 11361,
+        "total": 4172258
+      },
+      "decoder_tokens_o200k_base": {
+        "mean": 215.4,
+        "median": 325.0,
+        "p90": 325,
+        "min": 19,
+        "max": 325,
+        "total": 107699
+      },
+      "tokens_cl100k_base": {
+        "mean": 8366.5,
+        "median": 8282.5,
+        "p90": 9246,
+        "min": 6732,
+        "max": 11385,
+        "total": 4183248
+      },
+      "decoder_tokens_cl100k_base": {
+        "mean": 216.6,
+        "median": 327.0,
+        "p90": 327,
+        "min": 19,
+        "max": 327,
+        "total": 108277
+      }
+    },
+    "fulltext_12": {
+      "dir": "F:\\Projects\\cymatix-context\\benchmarks\\dogfood\\erb\\receipts\\packet-100k-sol-erb947k-20260912-01\\contexts",
+      "n": 500,
+      "files_sha256": "dc48f07fe87fc9fefb976ab447df2fd3d59d3c7c1e876eb4b058d16a1597282b",
+      "chars": {
+        "mean": 49286.4,
+        "median": 50501.5,
+        "p90": 52192,
+        "min": 26239,
+        "max": 53654,
+        "total": 24643213
+      },
+      "delivered_ids": {
+        "mean": 12.0,
+        "median": 12.0,
+        "p90": 12,
+        "min": 12,
+        "max": 12,
+        "total": 6000
+      },
+      "tokens_o200k_base": {
+        "mean": 12649.8,
+        "median": 12688.0,
+        "p90": 13804,
+        "min": 8111,
+        "max": 15719,
+        "total": 6324901
+      },
+      "decoder_tokens_o200k_base": {
+        "mean": 215.4,
+        "median": 325.0,
+        "p90": 325,
+        "min": 19,
+        "max": 325,
+        "total": 107699
+      },
+      "tokens_cl100k_base": {
+        "mean": 12697.5,
+        "median": 12726.5,
+        "p90": 13884,
+        "min": 8141,
+        "max": 15841,
+        "total": 6348740
+      },
+      "decoder_tokens_cl100k_base": {
+        "mean": 216.6,
+        "median": 327.0,
+        "p90": 327,
+        "min": 19,
+        "max": 327,
+        "total": 108277
+      }
+    },
+    "fulltext_12plus4_companions": {
+      "dir": "F:\\Projects\\cymatix-context\\benchmarks\\dogfood\\erb\\receipts\\paired-companion-sol-erb947k-20260913-01\\lexical16\\contexts",
+      "n": 500,
+      "files_sha256": "bc7eb7d65da18f6c0d5a24afa517dbd236f4efe341d59ea93e1b585f29720725",
+      "chars": {
+        "mean": 62291.8,
+        "median": 63705.0,
+        "p90": 67455,
+        "min": 26239,
+        "max": 69915,
+        "total": 31145900
+      },
+      "delivered_ids": {
+        "mean": 15.9,
+        "median": 16.0,
+        "p90": 16,
+        "min": 12,
+        "max": 16,
+        "total": 7958
+      },
+      "added_ids": {
+        "mean": 3.9,
+        "median": 4.0,
+        "p90": 4,
+        "min": 0,
+        "max": 4,
+        "total": 1958
+      },
+      "tokens_o200k_base": {
+        "mean": 15916.8,
+        "median": 16021.0,
+        "p90": 17398,
+        "min": 8111,
+        "max": 19484,
+        "total": 7958399
+      },
+      "decoder_tokens_o200k_base": {
+        "mean": 215.4,
+        "median": 325.0,
+        "p90": 325,
+        "min": 19,
+        "max": 325,
+        "total": 107699
+      },
+      "tokens_cl100k_base": {
+        "mean": 15977.2,
+        "median": 16056.0,
+        "p90": 17525,
+        "min": 8141,
+        "max": 19671,
+        "total": 7988593
+      },
+      "decoder_tokens_cl100k_base": {
+        "mean": 216.6,
+        "median": 327.0,
+        "p90": 327,
+        "min": 19,
+        "max": 327,
+        "total": 108277
+      }
+    }
+  }
+}

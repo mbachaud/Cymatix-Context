@@ -19,8 +19,62 @@
   const agentOpenStorageKey = "cymatix-dashboard-agent-open";
   const pipelineDevStorageKey = "cymatix-pipeline-dev-view";
 
+  // One poll drives everything. These bound that poll; they add no
+  // second loop, no second interval and no extra endpoint.
+  const fetchDeadlineMs = Math.max(5000, pollIntervalMs * 4);
+
   let pollTimer = null;
   let inFlight = false;
+  let controlsInFlight = false;
+  let panelsRenderedAt = monotonicMs();
+
+  function monotonicMs() {
+    return typeof performance !== "undefined" && typeof performance.now === "function"
+      ? performance.now()
+      : Date.now();
+  }
+
+  /* Host status observation aging.
+     The server serialises how long the observation it rendered stays
+     fresh (`data-fresh-for-s`). Once that much local time has passed the
+     card is marked expired so the styling stops implying "now". This
+     reads two numbers and sets one attribute: no readiness is decided
+     here, and nothing is fetched. */
+  function markObservationAge() {
+    const card = panels.querySelector("[data-host-status]");
+    if (!card) return;
+    const freshForS = parseFloat(card.dataset.freshForS);
+    if (!isFinite(freshForS)) {
+      delete card.dataset.observation;
+      return;
+    }
+    const elapsedS = (monotonicMs() - panelsRenderedAt) / 1000;
+    if (elapsedS >= freshForS) {
+      card.dataset.observation = "expired";
+    } else {
+      delete card.dataset.observation;
+    }
+  }
+
+  /* Every poll fetch runs under a deadline that covers the body read as
+     well as the response, and the timer is always cleared. A hung
+     response aborts instead of holding the last card current forever. */
+  async function fetchBounded(url, headers, readBody) {
+    const controller =
+      typeof AbortController === "function" ? new AbortController() : null;
+    const timer =
+      controller === null ? null : setTimeout(() => controller.abort(), fetchDeadlineMs);
+    try {
+      const options = controller === null
+        ? { headers: headers }
+        : { headers: headers, signal: controller.signal };
+      const resp = await fetch(url, options);
+      if (!resp.ok) return null;
+      return await readBody(resp);
+    } finally {
+      if (timer !== null) clearTimeout(timer);
+    }
+  }
 
   function setActiveTab(tab) {
     const nextTab = tab || "overview";
@@ -96,9 +150,11 @@
     const newNodes = Array.from(doc.body.childNodes);
     panels.replaceChildren(...newNodes);
     panels.dataset.activeTab = activeTab;
+    panelsRenderedAt = monotonicMs();
     restoreAgentOpenState();
     restoreAgentTab();
     restorePipelineDevView();
+    markObservationAge();
   }
 
   /* ── Pipeline panel: dev-view toggle (default ON) ──────────────── */
@@ -137,26 +193,34 @@
     if (inFlight) return;
     inFlight = true;
     try {
-      const resp = await fetch(pollUrl, { headers: { Accept: "text/html" } });
-      if (!resp.ok) {
+      const html = await fetchBounded(
+        pollUrl, { Accept: "text/html" }, (resp) => resp.text(),
+      );
+      if (html === null) {
         panels.dataset.stale = "true";
         return;
       }
-      const html = await resp.text();
       swapPanelsHtml(html);
       delete panels.dataset.stale;
     } catch (err) {
+      // Network failure, or this fetch hitting its deadline and
+      // aborting. Either way the page below is no longer live, and
+      // launcher.css says so in words.
       panels.dataset.stale = "true";
     } finally {
       inFlight = false;
+      markObservationAge();
     }
   }
 
   async function refreshControls() {
+    if (controlsInFlight) return;
+    controlsInFlight = true;
     try {
-      const resp = await fetch("/api/state", { headers: { Accept: "application/json" } });
-      if (!resp.ok) return;
-      const state = await resp.json();
+      const state = await fetchBounded(
+        "/api/state", { Accept: "application/json" }, (resp) => resp.json(),
+      );
+      if (state === null) return;
       const running = state?.cymatix?.running === true;
 
       const statusDot = document.querySelector(".status-dot");
@@ -183,14 +247,20 @@
       if (btnStop) btnStop.disabled = !running;
     } catch (err) {
       // The next poll will retry.
+    } finally {
+      controlsInFlight = false;
     }
   }
 
   function startPolling() {
     if (pollTimer !== null) return;
+    markObservationAge();
     fetchPanels();
     refreshControls();
     pollTimer = setInterval(() => {
+      // Age the card on every tick, so an observation still expires
+      // visibly while the fetches are failing.
+      markObservationAge();
       fetchPanels();
       refreshControls();
     }, pollIntervalMs);

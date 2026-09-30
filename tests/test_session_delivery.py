@@ -318,6 +318,7 @@ def _make_manager(session_delivery_enabled: bool = True) -> CymatixContextManage
         budget=BudgetConfig(
             max_genes_per_turn=4,
             splice_aggressiveness=0.5,
+            full_text_delivery=False,  # Keep the compressed delivery hash contract explicit.
             legibility_enabled=True,
             session_delivery_enabled=session_delivery_enabled,
         ),

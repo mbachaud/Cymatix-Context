@@ -2,6 +2,109 @@
 
 ## Unreleased
 
+## 0.10.0 (2026-09-30)
+
+_Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymatix-context==0.10.0b1`)._
+
+**Opt-in full-text companion delivery, three gated migrations (#417 canonical
+wire, #430 tier seat floor, #431 harmonic batching), the #453 measurement-gate
+fix, and launcher status hardening (#457, #460). No shipped retrieval or
+delivery default changes: every new behaviour is opt-in.**
+
+- **release gate: merged-stack witness (2026-09-29).** The 947,531-document
+  ERB bed completed all 470 queries with zero errors at
+  `a5a5dbef7d30fb0dc160077288f0427c71b21137`: beta plus #460.
+  **EXACT_REPRODUCE:** all 11 compared per-needle rank, delivery and
+  diagnostic fields match the v0.9.2 release witness. The run delivered
+  **314/470 (0.668085)**, with r@12 0.6809 and final r@12 0.6830, +0/−0
+  delivered. Comparison:
+  `benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29.json`;
+  provenance: `benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29_manifest.json`;
+  BASELINES row `2026-09-29-v0100-merged-stack-witness`. This validates ranks
+  and delivery, not latency.
+
+- **docs(bench): packet token cost on the 947k bed.** A tokenizer count
+  (tiktoken `o200k_base`) of the saved ERB packets gives these per-packet
+  means over 500 questions: compressed 12 seats at the shipped
+  `expression_tokens = 7000`, **8,345 tokens**; full text 12 seats, **12,650**;
+  the opt-in 12 + 4 companion profile, **15,917** (1.9x compressed). The
+  7,000 budget is a characters/4 estimate, so a full 12-seat packet runs about
+  19% over it. Companions attach only under `full_text_delivery = true`, so
+  shipped defaults add none. The shipped default cuts about a third of ERB
+  queries to 6 seats (#430), so its mean is at or below the 12-seat figure.
+  Receipt: `benchmarks/dogfood/erb/receipts/packet_token_cost_947k_2026-09-29.json`;
+  write-up: `docs/benchmarks/2026-09-29-packet-token-cost.md`.
+- Add opt-in complete stored body delivery and up to four question-ranked
+  chunks from already selected sources. Primary retrieval scores and ordering
+  remain separate from supplement selection. No new LLM dependency is required.
+- The full-text profile uses 25,000 estimated expression tokens and caps
+  serialized evidence at 100,000 characters. Shipped defaults remain compressed
+  with 7,000 expression tokens until the paired default-promotion gate passes.
+  Oversized documents yield as whole
+  items; full-text mode does not silently truncate stored bodies. This can use
+  more downstream tokens. Set `full_text_delivery=false`, `companion_chunks=0`,
+  and `expression_tokens=7000` to restore compressed delivery.
+- Structured packets expose freshness-labeled supplements in `companions`.
+  Source lookup uses a new SQLite source index and shard ownership routing,
+  respects party attribution, and excludes archived chunks.
+- Include the prepared #417/#430/#431 migration tools with canonical wire,
+  tier-seat-floor, and harmonic-batching features still opt-in. Their benchmark
+  gates remain open; #453 was not resolved in `v0.10.0b1` (fixed below).
+- The historical Sol paired gain motivated the generalized rule; it is not a
+  measured score for this production implementation. Stored sequence positions,
+  eligibility filters, and current retrieval settings can change selections.
+  See [settings and evidence](docs/research/2026-09-14-companion-release-settings.md).
+
+- **Experimental wire vocabulary (#417).** `[budget] wire_format = "canonical"`
+  selects document tags/headers, canonical decoder text and JSON response
+  fields across HTTP, CLI and MCP. Legacy wire bytes remain the default;
+  SQL and Python persistence fields are unchanged. Packet source and local
+  identities remain separate. See `docs/ROSETTA.md`.
+- **Experimental tier seat floor (#430).** With
+  `[budget] tier_seat_floor_enabled = true`, TIGHT and FOCUSED cuts honor
+  `min_delivered_docs` when eligible candidates are available. Tier labels,
+  legacy sparse fallback and the final token-budget constraint are preserved.
+- **Experimental harmonic batching (#431).** With
+  `[retrieval] harmonic_batching_enabled = true`, oversized pools use
+  connection-local temporary candidate storage and stream eligible links
+  without exceeding SQLite's bind limit. Disabled by default pending paired
+  measurements on a populated harmonic-link bed.
+- **fix(bench): pool-depth admission gate matches its contract (#453).**
+  `probe_pool_depth.py` now refuses a verdict on any `--limit` below the
+  declared target count (the receipt records `partial_run` and
+  `inconclusive_reason`), counts `post_shortlist` membership only when the
+  shortlist `filter_status` is `applied`, and requires a captured `fts_raw`
+  before a query counts as a measured lexical admission. All three gaps
+  inflated `present`, the direction that turns a KILL into a PASS. The
+  stage capture adds `filter_reason` to an unapplied shortlist
+  (`disabled`, `prefilter_owns`, `fts_unavailable`, `no_candidates`,
+  `no_usable_terms`) so a closed configuration gate and a query with no usable
+  terms are no longer one label. Measurement-only: retrieval and ranking are
+  unchanged. No committed receipt is re-graded here.
+- **fix(status): launcher host status probe follow-ups (#460).** A loopback status
+  probe (`cymatix-status` and the launcher's host status panel) no longer
+  reads proxy environment variables: with `http_proxy` set and no
+  `no_proxy` covering loopback, the loopback health probe went to the
+  proxy, and a stopped server could read healthy. An explicit remote
+  `--server-url` keeps the normal proxy handling.
+  `CYMATIX_STATUS_TIMEOUT_S` values above 60 s are clamped to 60 s (earlier
+  releases accepted parseable values above 60 s without a ceiling), and the
+  warning now names the value actually used rather than the 10 s default.
+  The self poll refusal now matches the launcher's host and port whatever
+  the scheme, and reads a `CYMATIX_LAUNCHER_URL` written as a bare host and
+  port (`localhost:11438`) as `http://` instead of denying nothing. One
+  faulting or out of range wall clock reading can no longer hold the panel's
+  only refresh slot for the life of the process.
+- **fix(packet): zero-match queries return a miss instead of HTTP 500 (#462).**
+  When a query matched no document on any tier, `PromoterMismatch` escaped the
+  packet builder, so `/context/packet`, `/context/refresh-plan`, `/context`
+  with `response_mode: "packet"`, `cymatix packet` and the MCP packet tools all
+  failed. They now return `miss { reason: "no_promoter_match" }` with empty
+  evidence, as `/context` already did. Retrieval and ranking are unchanged.
+- **Benchmark preparation.** `benchmarks/dogfood/migrations/` prepares
+  explicit paired arms and captures per-query identities and wire hashes.
+  These changes do not claim full-scale gate receipts or promote defaults.
+
 ## 0.9.2 (2026-09-08)
 
 **Ingest at scale and the #411 default flip (PRs #424, #425), a

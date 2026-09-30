@@ -207,6 +207,30 @@ def test_prefiltered_raw_fetch_states_its_scope(lexical_store):
     assert stages["fts_raw"]["count"] == 1
     assert stages["fts_raw"]["gold_ids"] == []
     assert stages["post_shortlist"]["filter_status"] == "not_applied"
+    assert stages["post_shortlist"]["filter_reason"] == "prefilter_owns"
+
+
+def test_unapplied_shortlist_names_config_gate_apart_from_short_query(lexical_store):
+    """#453: one `not_applied` label hid two different facts."""
+    from cymatix_context.retrieval.measurement import capture_stages
+
+    store = lexical_store
+    store.upsert_gene(Gene(
+        gene_id="short", content="qz " * 10, complement="", codons=[],
+        promoter=PromoterTags(domains=["qz"]),
+    ))
+    with capture_stages({"short"}) as capture:
+        store.query_docs(["qz"], [], max_genes=2, read_only=True)
+    stages = capture.report()["retrievals"][0]["stages"]
+    assert stages["fts_raw"]["status"] == "not_executed"
+    assert stages["post_shortlist"]["filter_status"] == "not_applied"
+    assert stages["post_shortlist"]["filter_reason"] == "no_usable_terms"
+
+    store._bm25_shortlist_enabled = False
+    with capture_stages({"gold"}) as capture:
+        _query(store)
+    stages = capture.report()["retrievals"][0]["stages"]
+    assert stages["post_shortlist"]["filter_reason"] == "disabled"
 
 
 @pytest.mark.parametrize("exclusion", ["lifecycle", "party"])

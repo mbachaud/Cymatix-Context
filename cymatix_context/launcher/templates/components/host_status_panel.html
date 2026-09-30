@@ -1,0 +1,204 @@
+{# Host status. A read-only view of one `cymatix-status` observation of
+   THIS machine: whether the coding host on it is wired to cymatix. The
+   collector builds `state.host_status` as a typed allowlist
+   (collector.project_host_status) behind a bounded single flight cache
+   (status_cache.StatusCache), so nothing here is a raw report: no path,
+   no URL, no native config value, no error text and no arbitrary
+   guidance string can reach this template.
+
+   Two rules shape the markup.
+
+   1. Every dimension renders on its own row, from its own vocabulary
+      table. Reachable is not healthy, configured is not activated,
+      installed is not enabled, and a registry record is not an
+      authenticated connection. There is no roll-up badge, because one
+      green light would claim exactly what this panel exists to keep
+      apart.
+   2. Freshness is not readiness. The freshness line and the
+      `data-freshness` attribute describe the observation; the rows
+      describe what that observation found. A stale or expired card
+      keeps its values and loses its emphasis (launcher.css); it never
+      rewrites a true into a false.
+
+   A null group or a null tristate renders Unknown, never false. Nothing
+   is safe-marked: the environment autoescapes .html
+   (`app.py:_get_templates`) and the approved strings pass through it
+   unchanged. The panel offers no control, no link and no repair action.
+#}
+
+{% set hs = state.host_status %}
+{% set NO_OBS = ["unknown", "Unknown", "No observation has completed yet."] %}
+
+{% macro row(label, table, group, field) %}
+  {% set value = group[field] if group is mapping else none %}
+  {% set cell = table.get(value) or NO_OBS %}
+  <div class="host-status-dim">
+    <dt>{{ label }}</dt>
+    <dd class="host-status-value host-status-value--{{ cell[0] }}">{{ cell[1] }}</dd>
+    <dd class="muted host-status-note">{{ cell[2] }}</dd>
+  </div>
+{% endmacro %}
+
+{% set HOST = {
+  "ambiguous": ["attention", "Ambiguous",
+    "More than one host config claims cymatix-context, so none is selected."],
+  "unknown": ["unknown", "Unknown",
+    "No host config on this machine claims cymatix-context."],
+} %}
+{% set TRANSPORT = {
+  "reachable": ["ok", "Reachable", "Something answered. Reachable is not healthy."],
+  "unreachable": ["attention", "Unreachable", "Nothing answered at the probed endpoint."],
+} %}
+{% set HEALTH = {
+  "healthy": ["ok", "Healthy",
+    "The endpoint reported healthy. HTTP health, not an authenticated MCP session."],
+  "unhealthy": ["attention", "Unhealthy", "The endpoint answered and reported a problem."],
+  "unknown": ["unknown", "Unknown", "No usable health answer. Unknown is not unhealthy."],
+} %}
+{% set SOURCE = {
+  "configured": ["neutral", "Configured", "Taken from the selected host config."],
+  "default": ["neutral", "Default", "The built in local endpoint. No config named one."],
+  "explicit": ["neutral", "Explicit", "Passed in by hand. This panel offers no opt in."],
+} %}
+{% set MATCH = {
+  true: ["ok", "Matches", "The probed endpoint is the one the host config names."],
+  false: ["attention", "Differs",
+    "Health at a different endpoint cannot prove this host is ready."],
+} %}
+{% set CHILD = {
+  "running": ["ok", "Running", "Supervised child liveness, not host readiness."],
+  "stopped": ["attention", "Stopped", "Supervised child liveness, not host readiness."],
+  "not_configured": ["unknown", "Not configured", "No supervised child is configured."],
+  "unreachable": ["unknown", "Unreachable", "The supervisor evidence was unusable. Unusable is not stopped."],
+} %}
+{% set MCP_ENTRY = {
+  "canonical": ["ok", "Canonical", "Registry evidence: the expected cymatix-context entry is present."],
+  "noncanonical": ["attention", "Noncanonical", "Registry evidence: an entry exists but is not the expected one."],
+  "invalid": ["attention", "Invalid", "Registry evidence: the host config did not parse as a valid entry."],
+  "missing": ["attention", "Missing", "Registry evidence: no cymatix-context entry."],
+} %}
+{% set MCP_ACTIVE = {
+  "enabled": ["ok", "Enabled", "Registry evidence. Configured is not activated."],
+  "disabled": ["attention", "Disabled", "Registry evidence. Configured is not activated."],
+  "unknown": ["unknown", "Unknown", "Registry evidence does not record activation for this host."],
+} %}
+{% set MCP_LIVE = {
+  "connected": ["ok", "Connected",
+    "Registry evidence only: a session record, not a verified connection and not an identity."],
+  "disconnected": ["attention", "Disconnected",
+    "Registry evidence only: the session registry was readable and holds no active handle."],
+  "unknown": ["unknown", "Unknown",
+    "Registry evidence only: the session registry gave no readable answer."],
+} %}
+{% set SKILL_INSTALL = {
+  "present": ["ok", "Present", "Installed. Present is not enabled."],
+  "missing": ["attention", "Missing", "The shared cymatix-context skill was not found."],
+} %}
+{% set SKILL_ACTIVE = {
+  "enabled": ["ok", "Enabled", "Enabled for this host."],
+  "disabled": ["attention", "Disabled", "Installed but switched off for this host."],
+  "unknown": ["unknown", "Unknown", "Activation is not recorded for this host."],
+} %}
+{% set CONFIGURED_READY = {
+  true: ["ok", "Ready", "Configuration, MCP activation and endpoint qualified health agree."],
+  false: ["attention", "Not ready",
+    "Configuration, MCP activation or endpoint qualified health says no."],
+} %}
+{% set GUIDED_READY = {
+  true: ["ok", "Ready", "Configured readiness plus an installed and enabled skill."],
+  false: ["attention", "Not ready",
+    "Configured readiness plus skill evidence does not add up to guided use."],
+} %}
+{% set UNKNOWN_READY = ["unknown", "Unknown",
+  "Not enough evidence to answer. Unknown is never false."] %}
+
+<section
+  class="panel panel--host-status"
+  data-host-status
+  data-freshness="{{ hs.freshness }}"
+  data-refresh-state="{{ hs.refresh_state }}"
+  {% if hs.fresh_for_s is not none %}data-fresh-for-s="{{ hs.fresh_for_s }}"{% endif %}
+  {% if hs.age_s is not none %}data-age-s="{{ hs.age_s }}"{% endif %}
+>
+  <h2 class="panel-title">
+    Host status
+    <span class="panel-count-muted">{{ hs.observation_scope }}</span>
+  </h2>
+
+  <p class="host-status-freshness">
+    {% if hs.freshness == "fresh" %}
+      <span class="host-status-freshness__label">Fresh observation.</span>
+    {% elif hs.freshness == "stale" %}
+      <span class="host-status-freshness__label">Stale observation. Shown from the
+        last complete collection, not from now.</span>
+    {% else %}
+      <span class="host-status-freshness__label">No observation available yet. The
+        rows below are unknown, not false.</span>
+    {% endif %}
+    <span class="host-status-aged">Displayed observation has aged past its
+      freshness lifetime.</span>
+  </p>
+
+  <dl class="panel-kv host-status-times">
+    <dt>Observed at</dt><dd>{{ hs.observed_at or "never" }}</dd>
+    <dt>Last complete observation</dt><dd>{{ hs.last_success_at or "never" }}</dd>
+    <dt>Last refresh attempt</dt><dd>{{ hs.last_attempt_at or "never" }}</dd>
+    <dt>Refresh</dt><dd>{{ hs.refresh_state }}</dd>
+  </dl>
+
+  <dl class="host-status-dims">
+    {% if hs.host is mapping and hs.host.selection not in HOST %}
+      <div class="host-status-dim">
+        <dt>Host</dt>
+        <dd class="host-status-value host-status-value--ok">{{ hs.host.profile or hs.host.selection }}</dd>
+        <dd class="muted host-status-note">Selected from the host registry.</dd>
+      </div>
+    {% else %}
+      {{ row("Host", HOST, hs.host, "selection") }}
+    {% endif %}
+
+    {{ row("Server transport", TRANSPORT, hs.server, "transport") }}
+    {{ row("Server health", HEALTH, hs.server, "health") }}
+    {{ row("Server URL source", SOURCE, hs.server, "source") }}
+    {{ row("Configured URL match", MATCH, hs.server, "configured_url_match") }}
+
+    {{ row("Supervised child", CHILD, hs.launcher, "state") }}
+    {% set child = hs.launcher if hs.launcher is mapping else {} %}
+    <div class="host-status-dim">
+      <dt>Child evidence from</dt>
+      <dd class="host-status-value host-status-value--neutral">{{ child.get("source") or "unknown" }}</dd>
+      <dd class="muted host-status-note">Sampled {{ child.get("observed_at") or "never" }} on
+        its own clock. It does not age with the host observation.</dd>
+    </div>
+
+    {{ row("MCP entry", MCP_ENTRY, hs.mcp, "configuration") }}
+    {{ row("MCP activation", MCP_ACTIVE, hs.mcp, "activation") }}
+    {{ row("MCP live session", MCP_LIVE, hs.mcp, "live") }}
+
+    {{ row("Skill installation", SKILL_INSTALL, hs.skill, "installation") }}
+    {{ row("Skill activation", SKILL_ACTIVE, hs.skill, "activation") }}
+
+    {% set configured = CONFIGURED_READY.get(hs.configured_ready) or UNKNOWN_READY %}
+    <div class="host-status-dim">
+      <dt>Configured readiness</dt>
+      <dd class="host-status-value host-status-value--{{ configured[0] }}">{{ configured[1] }}</dd>
+      <dd class="muted host-status-note">{{ configured[2] }}</dd>
+    </div>
+
+    {% set guided = GUIDED_READY.get(hs.guided_ready) or UNKNOWN_READY %}
+    <div class="host-status-dim">
+      <dt>Guided readiness</dt>
+      <dd class="host-status-value host-status-value--{{ guided[0] }}">{{ guided[1] }}</dd>
+      <dd class="muted host-status-note">{{ guided[2] }}</dd>
+    </div>
+  </dl>
+
+  <p class="host-status-action">
+    <strong>Next step</strong>
+    <span class="host-status-action__text">{{ hs.next_action | truncate(500, true, "", 0) }}</span>
+  </p>
+
+  <p class="muted host-status-footnote">Read only. This panel installs nothing,
+    enables nothing, repairs nothing and probes no remote address. It reports one
+    local observation and its age.</p>
+</section>

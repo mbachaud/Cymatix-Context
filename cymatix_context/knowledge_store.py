@@ -24,7 +24,8 @@ import re
 import sqlite3
 import threading
 import time
-from contextlib import contextmanager
+import uuid
+from contextlib import contextmanager, nullcontext
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
 
 if TYPE_CHECKING:
@@ -798,6 +799,8 @@ class KnowledgeStore:
         # RAM-aware SQLite pragmas (PRD 2026-05-30). None -> resolve a
         # single-DB budget here; ShardRouter passes a shard-count-aware plan.
         mem_plan: Optional[SqliteMemPlan] = None,
+        # #431: opt-in full-pool harmonic staging above SQLite's bind cap.
+        harmonic_batching_enabled: bool = False,
     ):
         self.path = path
         self.read_only = read_only
@@ -956,6 +959,7 @@ class KnowledgeStore:
         self._sema_cold_weight: float = float(sema_cold_weight)
         self._lex_anchor_weight: float = float(lex_anchor_weight)
         self._harmonic_weight: float = float(harmonic_weight)
+        self._harmonic_batching_enabled: bool = bool(harmonic_batching_enabled)
         # #431: once-per-store guard for the Tier 5 bind-limit warning so a
         # large bed logs the skipped harmonic query once, not per retrieval.
         self._harmonic_limit_warned: bool = False
@@ -1825,6 +1829,69 @@ class KnowledgeStore:
         conn.execute(f"PRAGMA cache_size={_plan.reader_cache_size}")
         conn.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
         return conn
+
+    @contextmanager
+    def _harmonic_candidate_rows(self, cur, candidate_ids, *, batched=False):
+        """Stream links whose two endpoints belong to the full candidate pool.
+
+        Below the bind cap, preserve the existing SQL. The opt-in large-pool
+        path inserts IDs one parameter at a time into a connection-local TEMP
+        table, then joins both endpoints against it. No edge list is copied
+        into Python, and links crossing insertion batches remain eligible.
+
+        A savepoint rolls back all staging on success or failure without
+        committing callers' pending work. TEMP writes work on mode=ro readers.
+        Normal readers are per-thread; shared writer/replica handles use their
+        existing locks so savepoint lifetimes cannot interleave.
+        """
+        if not batched:
+            cid_ph = ",".join("?" * len(candidate_ids))
+            yield cur.execute(
+                f"SELECT gene_id_a, gene_id_b, weight FROM harmonic_links "
+                f"WHERE gene_id_a IN ({cid_ph}) AND gene_id_b IN ({cid_ph})",
+                (*candidate_ids, *candidate_ids),
+            )
+            return
+
+        conn = cur.connection
+        if conn is self.conn:
+            lock = self._write_lock
+        elif self._replication_mgr is not None:
+            lock = self._replication_mgr._reader_lock
+        else:
+            lock = nullcontext()
+        # Internal UUID names cannot collide with caller TEMP tables and
+        # contain only identifier-safe characters, never candidate content.
+        name = "_harmonic_candidates_" + uuid.uuid4().hex
+        with lock:
+            staging = conn.cursor()
+            try:
+                staging.execute(f"SAVEPOINT {name}")
+                try:
+                    staging.execute(
+                        f"CREATE TEMP TABLE {name} "
+                        "(doc_id TEXT PRIMARY KEY) WITHOUT ROWID"
+                    )
+                    staging.executemany(
+                        f"INSERT INTO temp.{name} (doc_id) VALUES (?)",
+                        ((doc_id,) for doc_id in candidate_ids),
+                    )
+                    yield staging.execute(
+                        "SELECT h.gene_id_a, h.gene_id_b, h.weight "
+                        "FROM harmonic_links AS h "
+                        f"WHERE h.gene_id_a IN (SELECT doc_id FROM temp.{name}) "
+                        f"AND h.gene_id_b IN (SELECT doc_id FROM temp.{name})"
+                    )
+                finally:
+                    # Finalize a partially consumed SELECT before undoing its
+                    # TEMP schema. Rollback also removes partially inserted IDs.
+                    staging.close()
+                    try:
+                        conn.execute(f"ROLLBACK TO {name}")
+                    finally:
+                        conn.execute(f"RELEASE {name}")
+            finally:
+                staging.close()
 
     # ── Document ID (content-addressable) ───────────────────────────────
 
@@ -3805,21 +3872,15 @@ class KnowledgeStore:
             if _has_harmonic:
                 try:
                     candidate_ids = list(gene_scores.keys())
-                    # #431: the candidate list is bound TWICE below (one IN
-                    # per side of the edge). On bulk beds the pre-shortlist
-                    # pool is far larger than SQLITE_LIMIT_VARIABLE_NUMBER
-                    # (ERB 947k: median ~172k candidates vs a 32,766 cap),
-                    # so the statement would raise "too many SQL variables".
-                    # Logging-only tier of the fix: probe the cap, skip the
-                    # query with a once-per-store warning when it would be
-                    # exceeded. Below the cap the tier runs exactly as before
-                    # (ranking byte-identical). Batching / post-shortlist
-                    # bounding is the receipt-gated behavior change.
+                    # #431: both IN lists bind the full pool. Preserve the
+                    # shipped warning/skip default; staging above the cap is
+                    # opt-in pending populated-bed benchmark receipts.
                     _n_bound = 2 * len(candidate_ids)
                     _bind_limit = _sqlite_variable_limit(
                         getattr(cur, "connection", None)
                     )
-                    if _n_bound > _bind_limit:
+                    _over_limit = _n_bound > _bind_limit
+                    if _over_limit and not self._harmonic_batching_enabled:
                         if not self._harmonic_limit_warned:
                             self._harmonic_limit_warned = True
                             log.warning(
@@ -3830,22 +3891,17 @@ class KnowledgeStore:
                                 len(candidate_ids), _n_bound, _bind_limit,
                             )
                     else:
-                        cid_ph = ",".join("?" * len(candidate_ids))
-                        harmonic_rows = cur.execute(
-                            f"SELECT gene_id_a, gene_id_b, weight "
-                            f"FROM harmonic_links "
-                            f"WHERE gene_id_a IN ({cid_ph}) "
-                            f"  AND gene_id_b IN ({cid_ph})",
-                            (*candidate_ids, *candidate_ids),
-                        ).fetchall()
                         harmonic_bonus: Dict[str, float] = {}
-                        for hr in harmonic_rows:
-                            for gid in (hr["gene_id_a"], hr["gene_id_b"]):
-                                harmonic_bonus[gid] = min(
-                                    harmonic_bonus.get(gid, 0)
-                                    + self._harmonic_weight,
-                                    3.0 * self._harmonic_weight,
-                                )
+                        with self._harmonic_candidate_rows(
+                            cur, candidate_ids, batched=_over_limit,
+                        ) as harmonic_rows:
+                            for hr in harmonic_rows:
+                                for gid in (hr["gene_id_a"], hr["gene_id_b"]):
+                                    harmonic_bonus[gid] = min(
+                                        harmonic_bonus.get(gid, 0)
+                                        + self._harmonic_weight,
+                                        3.0 * self._harmonic_weight,
+                                    )
                         _harmonic_ranked: List[Tuple[str, float]] = []  # RRF
                         for gid, bonus in harmonic_bonus.items():
                             gene_scores[gid] = gene_scores.get(gid, 0) + bonus
@@ -4027,6 +4083,18 @@ class KnowledgeStore:
         if _measurement is not None:
             _measurement.record("pre_shortlist", gene_scores)
         _shortlist_status = "not_applied"
+        # Why the filter did not run: a configuration gate that never opened
+        # is a different fact from a query with no usable terms (#453).
+        if not getattr(self, "_bm25_shortlist_enabled", False):
+            _shortlist_reason = "disabled"
+        elif self._bm25_prefilter_enabled:
+            _shortlist_reason = "prefilter_owns"
+        elif not self._fts_available:
+            _shortlist_reason = "fts_unavailable"
+        elif not gene_scores:
+            _shortlist_reason = "no_candidates"
+        else:
+            _shortlist_reason = None
 
         # ── BM25 shortlist post-filter (research review 2026-04-22) ──
         # When enabled, restrict the final ranking to documents that cleared a
@@ -4069,6 +4137,8 @@ class KnowledgeStore:
                         )
                     else:
                         _shortlist_status = "empty_fallback"
+                else:
+                    _shortlist_reason = "no_usable_terms"
             except Exception:
                 _shortlist_status = "failed"
                 log.warning(
@@ -4079,6 +4149,8 @@ class KnowledgeStore:
         if _measurement is not None:
             _measurement.record(
                 "post_shortlist", gene_scores, filter_status=_shortlist_status,
+                **({"filter_reason": _shortlist_reason}
+                   if _shortlist_status == "not_applied" else {}),
             )
 
         # ── Stage 3: branch on fusion_mode for the final ranking ──
@@ -5572,6 +5644,25 @@ class KnowledgeStore:
             "SELECT * FROM genes WHERE gene_id = ?", (gene_id,)
         ).fetchone()
         return self._row_to_gene(row) if row else None
+
+    def get_source_documents(self, source_ids: List[str], *, party_id: Optional[str] = None) -> List[Gene]:
+        """Read complete documents from selected sources using the source index."""
+        sources = sorted({source for source in source_ids if source})
+        documents = []
+        party_filter = ""
+        party_params = []
+        if party_id is not None:
+            party_filter = (" AND (gene_id IN (SELECT gene_id FROM gene_attribution WHERE party_id = ?)"
+                            " OR gene_id NOT IN (SELECT gene_id FROM gene_attribution))")
+            party_params = [party_id]
+        for start in range(0, len(sources), 400):
+            batch = sources[start:start + 400]
+            rows = self.read_conn.execute(
+                "SELECT * FROM genes WHERE chromatin < 2 AND source_id IN (" + ",".join("?" for _ in batch) + ")" + party_filter,
+                batch + party_params,
+            ).fetchall()
+            documents.extend(self._row_to_gene(row) for row in rows)
+        return sorted(documents, key=lambda d: (d.source_id, d.promoter.sequence_index or 0, d.gene_id))
 
     # ── Citation lookup (polymorphic with ShardedGenomeAdapter) ─────────
 

@@ -384,6 +384,21 @@ p {
   opacity: 0.62;
 }
 
+/* The container attribute used to only fade the panels, which reads as
+   a rendering quirk rather than as "these numbers are not live". Say it
+   in words, at the top of the grid, whenever a poll fetch fails or hits
+   its deadline. */
+.panels[data-stale="true"]::before {
+  content: "Live updates are not arriving. The panels below are the last answer the server gave.";
+  grid-column: span 12;
+  padding: 8px 12px;
+  color: var(--color-warn);
+  background: var(--color-warn-soft);
+  border: 1px solid rgba(245, 185, 113, 0.32);
+  border-radius: var(--radius);
+  font-size: var(--fs-sm);
+}
+
 .panel {
   grid-column: span 6;
   display: grid;
@@ -415,6 +430,7 @@ p {
 .panel--switchboard,
 .panel--database,
 .panel--graph-summary,
+.panel--host-status,
 .panel--observability,
 .panel--bench,
 .panel--starting,
@@ -747,6 +763,7 @@ p {
 .panels[data-active-tab="monitoring"] .panel--bench,
 .panels[data-active-tab="genome"] .panel--observability,
 .panels[data-active-tab="monitoring"] .panel--observability,
+.panels[data-active-tab="monitoring"] .panel--host-status,
 .panels[data-active-tab="monitoring"] .panel--diagnostics,
 .panels[data-active-tab="monitoring"] .panel--health-warning,
 .panels[data-active-tab="monitoring"] .panel--empty,
@@ -1277,4 +1294,127 @@ p {
   gap: 0.55rem;
   padding: 0.3rem 0;
   font-size: 0.78rem;
+}
+
+/* Host status panel.
+
+   Freshness styling and readiness styling are deliberately separate.
+   The readiness words come from the server and never change here; what
+   changes is how loudly the card is allowed to speak. A stale, expired
+   or unavailable observation drops to neutral emphasis, because colour
+   on a two minute old "healthy" is a claim about now that nobody
+   measured. */
+
+.host-status-dims {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.host-status-dim {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.6fr) minmax(120px, 0.5fr) minmax(220px, 1.4fr);
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--color-elevated) 48%, transparent);
+}
+
+.host-status-dim + .host-status-dim {
+  border-top: 1px solid var(--color-border);
+}
+
+.host-status-dim dt {
+  color: var(--color-muted);
+  font-size: var(--fs-sm);
+}
+
+.host-status-dim dd {
+  margin: 0;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.host-status-value {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.host-status-value--ok { color: var(--color-success); }
+.host-status-value--attention { color: var(--color-warn); }
+.host-status-value--unknown { color: var(--color-dim); }
+.host-status-value--neutral { color: var(--color-muted); }
+
+.host-status-note {
+  font-size: var(--fs-sm);
+}
+
+.host-status-times {
+  font-size: var(--fs-sm);
+}
+
+.host-status-freshness {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-muted);
+}
+
+.host-status-freshness__label {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.host-status-action {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-elevated) 48%, transparent);
+  font-size: var(--fs-sm);
+}
+
+.host-status-action strong {
+  color: var(--color-muted);
+  margin-right: 8px;
+}
+
+.host-status-footnote {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+/* The aging notice ships in the markup on every render and stays hidden
+   until launcher.js marks the card expired, so no element is built in
+   the browser and the text is auditable in the server response. */
+.host-status-aged {
+  display: none;
+  color: var(--color-warn);
+}
+
+.panel--host-status[data-observation="expired"] .host-status-aged {
+  display: inline;
+}
+
+/* Neutral emphasis: the values stay, the colour goes. */
+.panel--host-status[data-freshness="stale"] .host-status-freshness__label,
+.panel--host-status[data-freshness="unavailable"] .host-status-freshness__label {
+  color: var(--color-warn);
+}
+
+.panel--host-status[data-freshness="stale"] .host-status-value,
+.panel--host-status[data-freshness="unavailable"] .host-status-value,
+.panel--host-status[data-observation="expired"] .host-status-value {
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+@media (max-width: 760px) {
+  .host-status-dim {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
 }

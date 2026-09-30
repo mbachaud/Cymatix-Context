@@ -44,7 +44,7 @@ def manager_five_genes():
     """
     cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=12),
+        budget=BudgetConfig(max_genes_per_turn=12, full_text_delivery=False),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )

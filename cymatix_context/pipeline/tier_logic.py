@@ -3,8 +3,8 @@ Dynamic budget tier logic: TIGHT / FOCUSED / BROAD tiering + score floor +
 shadow pool + Lagrange pull-back.
 
 Extracted from ``context_manager.py`` (Sprint refactor, 2026-05).
-Logic is byte-identical to the inline block it replaces; only the calling
-convention changed (explicit parameters instead of ``self``).
+Default parameters preserve the inline block's behavior; optional parameters
+allow the caller to tune the gates and preserve a minimum candidate window.
 """
 
 from __future__ import annotations
@@ -52,6 +52,7 @@ def apply_budget_tiers(
     lagrange_frac: float = 0.7,
     abstain_ratio_threshold: float = 1.8,
     abstain_ratio_threshold_rrf_norm: float = 1.5,
+    min_seats: int = 0,
 ) -> TierResult:
     """Apply TIGHT / FOCUSED / BROAD tiering + score floor + shadow pool.
 
@@ -69,6 +70,12 @@ def apply_budget_tiers(
       - BROAD   (ratio < 1.8):  top max_genes     -- ~15K total tokens
 
     Score-gate floor: always drop documents scoring < 15% of top score.
+
+    ``min_seats`` raises the TIGHT / FOCUSED cut to at least that many
+    eligible candidates, preserving order and confidence labels. Expansion
+    is limited to the score-gated pool; when fewer than three pass, the
+    inherited sparse fallback stays at its legacy cut. It does not change
+    BROAD or bypass ABSTAIN. The default 0 preserves the legacy tier cuts.
 
     Issue #207 item 4 (default-inert knobs): the tier constants above are
     keyword parameters whose defaults reproduce the prior hard-coded
@@ -253,9 +260,11 @@ def apply_budget_tiers(
         and (skip_absolute_floors or top_score >= TIGHT_SCORE_FLOOR)
         and len(candidates) >= 3
     ):
-        # High confidence -- top document dominates AND is strong, send 3
-        shadow_pool = shadow_pool + candidates[3:]
-        candidates = candidates[:3]
+        # High confidence -- top document dominates AND is strong.
+        # Preserve the delivery floor before downstream caps and trimming.
+        seat_limit = max(3, min(min_seats, len(gated)))
+        shadow_pool = shadow_pool + candidates[seat_limit:]
+        candidates = candidates[:seat_limit]
         budget_tier = "tight"
         budget_tokens_est = 6000
     elif (
@@ -263,9 +272,10 @@ def apply_budget_tiers(
         and (skip_absolute_floors or top_score >= FOCUSED_SCORE_FLOOR)
         and len(candidates) >= 6
     ):
-        # Moderate confidence -- narrow to 6
-        shadow_pool = shadow_pool + candidates[6:]
-        candidates = candidates[:6]
+        # Moderate confidence -- narrow while honoring the delivery floor.
+        seat_limit = max(6, min(min_seats, len(gated)))
+        shadow_pool = shadow_pool + candidates[seat_limit:]
+        candidates = candidates[:seat_limit]
         budget_tier = "focused"
         budget_tokens_est = 9000
     # else: broad -- keep current up-to-max_genes set

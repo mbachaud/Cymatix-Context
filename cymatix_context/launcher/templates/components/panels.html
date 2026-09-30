@@ -41,6 +41,13 @@
   {% include "components/graph_summary_panel.html" %}
 {% endif %}
 
+{# Host status describes how this machine's coding host is wired to
+   cymatix, so it is exactly as meaningful with the child stopped. It
+   stays outside the running-only block below for that reason. #}
+{% if state.host_status %}
+  {% include "components/host_status_panel.html" %}
+{% endif %}
+
 {% if state.cymatix.running %}
   {% if state.parties %}
     {% include "components/parties_panel.html" %}

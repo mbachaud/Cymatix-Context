@@ -95,7 +95,7 @@ def run(argv: list[str]) -> int:
 
     payload = _payload(targets)
     if args.json:
-        output.print_json(payload)
+        output.print_json(payload, wire_format=getattr(sess, "wire_format", "legacy"))
     else:
         output.print_lines(_render_text(payload))
     return output.EXIT_OK

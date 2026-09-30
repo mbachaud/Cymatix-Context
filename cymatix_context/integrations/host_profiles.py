@@ -206,12 +206,25 @@ def _detail(exc: Exception) -> str:
     return f"{type(exc).__name__}: {exc}"[:500]
 
 
+def _log_label(exc: Exception) -> str:
+    """The exception type name only, for a log line.
+
+    A config read failure carries the config path and, through the
+    decode error, a slice of the file. The structured `detail` keeps
+    them for the local caller that asked; the shared launcher log does
+    not, because the launcher panel drops paths by design and a log
+    line is the one copy that outlives the request.
+    """
+
+    return type(exc).__name__
+
+
 def _read_native_config(path: Path, config_format: ConfigFormat) -> tuple[object | None, str | None]:
     try:
         text = path.read_text(encoding="utf-8")
         return (tomllib.loads(text) if config_format == "toml" else json.loads(text)), None
     except Exception as exc:
-        log.warning("Could not read host config %s: %s", path, exc, exc_info=True)
+        log.warning("Could not read a host config: %s", _log_label(exc))
         return None, _detail(exc)
 
 
@@ -277,10 +290,7 @@ def _gemini_activation(activation_path: Path | None) -> tuple[ActivationState, s
         data = json.loads(activation_path.read_text(encoding="utf-8"))
     except Exception as exc:
         log.warning(
-            "Could not read Gemini activation record %s: %s",
-            activation_path,
-            exc,
-            exc_info=True,
+            "Could not read the Gemini activation record: %s", _log_label(exc)
         )
         return "unknown", _activation_error_detail(exc)
     if not isinstance(data, Mapping):
@@ -490,9 +500,7 @@ def _read_codex_skill_overrides(config_path: Path) -> tuple[object | None, str |
     try:
         return tomllib.loads(config_path.read_text(encoding="utf-8")), None
     except Exception as exc:
-        log.warning(
-            "Could not read Codex skill config %s: %s", config_path, exc, exc_info=True
-        )
+        log.warning("Could not read the Codex skill config: %s", _log_label(exc))
         return None, _detail(exc)
 
 
@@ -525,10 +533,7 @@ def _codex_skill_activation(skill_path: Path, config_path: Path | None) -> tuple
             matches = Path(override_path).resolve() == target
         except Exception as exc:
             log.warning(
-                "Could not resolve Codex skill override path %s: %s",
-                config_path,
-                exc,
-                exc_info=True,
+                "Could not resolve a Codex skill override path: %s", _log_label(exc)
             )
             return "unknown", _detail(exc)
         if not matches:

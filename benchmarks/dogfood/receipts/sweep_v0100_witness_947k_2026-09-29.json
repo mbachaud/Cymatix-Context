@@ -1,0 +1,77 @@
+{
+  "verdict": "EXACT_REPRODUCE",
+  "candidate": "F:\\tmp\\release-witness-v0100\\ladder_v0100_merged_witness_947k_2026-09-29.json",
+  "reference": "F:\\tmp\\release-witness-v0100\\reference_ladder_v092_merged_witness_947k_2026-09-08.json",
+  "candidate_sha256": "d958a21ae8c1d5723eb61b8098b8109fe127b367c822f62ba8d64e08dcb8d035",
+  "reference_sha256": "8bb5bf1ea47226079469121ff78c9d307be54539cb2ceb1adc5f073bfe75c042",
+  "candidate_git_sha": "a5a5dbef7d30fb0dc160077288f0427c71b21137",
+  "n": 470,
+  "k": 12,
+  "summary": {
+    "n_queries": {
+      "new": 470,
+      "reference": 470
+    },
+    "delivered_gold_queries": {
+      "new": 314,
+      "reference": 314
+    },
+    "delivered_gold_rate": {
+      "new": 0.6680851063829787,
+      "reference": 0.6680851063829787
+    },
+    "recall_at_k": {
+      "new": 0.6809,
+      "reference": 0.6809
+    },
+    "final_recall_at_k": {
+      "new": 0.683,
+      "reference": 0.683
+    },
+    "mean_rank_of_gold": {
+      "new": 5.25,
+      "reference": 5.25
+    },
+    "median_rank_of_gold": {
+      "new": 2.0,
+      "reference": 2.0
+    },
+    "gold_found_queries": {
+      "new": 361,
+      "reference": 361
+    },
+    "pool_delivery_gap": {
+      "new": 0.0128,
+      "reference": 0.0128
+    }
+  },
+  "per_needle_field_diff_counts": {
+    "delivered_gold": 0,
+    "recall_hit": 0,
+    "final_recall_hit": 0,
+    "rank_of_first_gold": 0,
+    "final_rank_of_first_gold": 0,
+    "delivered_gold_rank": 0,
+    "delivered_count": 0,
+    "gold_ranks": 0,
+    "floor_appended": 0,
+    "gate_kept": 0,
+    "splice_n_candidates": 0
+  },
+  "per_needle_differences": {
+    "delivered_gold": [],
+    "recall_hit": [],
+    "final_recall_hit": [],
+    "rank_of_first_gold": [],
+    "final_rank_of_first_gold": [],
+    "delivered_gold_rank": [],
+    "delivered_count": [],
+    "gold_ranks": [],
+    "floor_appended": [],
+    "gate_kept": [],
+    "splice_n_candidates": []
+  },
+  "delivered_gained": [],
+  "delivered_lost": [],
+  "note": "Ranks and delivery compared on the same ordered needle bank; latency excluded. Original benchmark database preserved through a consistent SQLite snapshot."
+}

@@ -210,7 +210,7 @@ def _run_okf(args) -> int:
         "skipped_files": result.skipped_files,
     }
     if args.json:
-        output.print_json(payload)
+        output.print_json(payload, wire_format=getattr(sess, "wire_format", "legacy"))
     else:
         lines = [
             f"ingested OKF bundle '{result.bundle_id}'"
@@ -328,7 +328,7 @@ def run(argv: list[str]) -> int:
         "errors": errors,
     }
     if args.json:
-        output.print_json(payload)
+        output.print_json(payload, wire_format=getattr(sess, "wire_format", "legacy"))
     else:
         lines = [
             f"ingested {files_processed} file(s)",

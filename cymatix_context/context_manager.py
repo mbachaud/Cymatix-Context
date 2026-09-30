@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import html
 import logging
 import os
 import re
@@ -488,6 +489,35 @@ DECODER_MODES = {
     "answer_slate_only": DECODER_ANSWER_SLATE_ONLY,
     "condensed_with_slate": DECODER_CONDENSED_WITH_SLATE,
 }
+
+# Only built-in templates are translated. Retrieved document text, custom
+# decoder overrides, and answer-slate values never pass through this mapping.
+CANONICAL_DECODER_MODES = {
+    mode: prompt.replace("<GENE>", "<DOCUMENT>")
+    .replace("knowledge unit", "document")
+    .replace("knowledge base", "knowledge store")
+    .replace(
+        "Mention codons, genes, splicing, or DNA unless the user asks about memory internals",
+        "Discuss context assembly internals (fragments, retrieval signals, or knowledge store implementation) unless the user asks",
+    )
+    for mode, prompt in DECODER_MODES.items()
+}
+
+# Canonical assembly escapes content-sourced delimiters before adding genuine
+# wrappers. Keep the legacy escape path unchanged for exact wire compatibility.
+_DOCUMENT_CONTROL_TAG = re.compile(
+    r"<(?=\s*/?\s*(?:(?:GENE|DOCUMENT|expressed_context)\b|cymatix:))",
+    re.IGNORECASE,
+)
+_DOCUMENT_CONTROL_HEADER = re.compile(r"\[(?=\s*(?:gene|document)\s*=)", re.IGNORECASE)
+
+
+def _neutralize_document_markup(text: str) -> str:
+    """Escape only control delimiters, preserving ordinary document prose."""
+    return _DOCUMENT_CONTROL_HEADER.sub(
+        "&#91;", _DOCUMENT_CONTROL_TAG.sub("&lt;", text),
+    )
+
 
 # Keep backward compatibility
 RIBOSOME_DECODER = DECODER_FULL
@@ -1141,7 +1171,14 @@ class CymatixContextManager:
 
         # Adaptive decoder prompt based on downstream model capability
         self._decoder_mode = config.budget.decoder_mode
-        self._decoder_prompt = DECODER_MODES.get(self._decoder_mode, DECODER_FULL)
+        self._decoder_prompts = (
+            CANONICAL_DECODER_MODES
+            if config.budget.wire_format == "canonical"
+            else DECODER_MODES
+        )
+        self._decoder_prompt = self._decoder_prompts.get(
+            self._decoder_mode, self._decoder_prompts["full"],
+        )
 
         # Answer-slate mode: front-loads KV facts for models that struggle
         # with long-range extraction. Applies to:
@@ -1853,7 +1890,7 @@ class CymatixContextManager:
         from .retrieval.query_classifier import resolve_decoder_mode as _resolve_decoder_mode
         effective_decoder_mode_name: Optional[str] = None
         if decoder_override and decoder_override in DECODER_MODES:
-            effective_decoder_prompt = DECODER_MODES[decoder_override]
+            effective_decoder_prompt = self._decoder_prompts[decoder_override]
             effective_decoder_mode_name = decoder_override
             override_applied = True
         elif classifier_result is not None:
@@ -1861,7 +1898,7 @@ class CymatixContextManager:
                 classifier_result.cls, caller_model_class,
             )
             if _resolved is not None and _resolved in DECODER_MODES:
-                effective_decoder_prompt = DECODER_MODES[_resolved]
+                effective_decoder_prompt = self._decoder_prompts[_resolved]
                 effective_decoder_mode_name = _resolved
             else:
                 effective_decoder_prompt = self._decoder_prompt
@@ -2130,6 +2167,10 @@ class CymatixContextManager:
             lagrange_frac=_budget_cfg.tier_lagrange_frac,
             abstain_ratio_threshold=_abstain_cfg.ratio_threshold,
             abstain_ratio_threshold_rrf_norm=_abstain_cfg.ratio_threshold_rrf_norm,
+            min_seats=(
+                _budget_cfg.min_delivered_docs
+                if _budget_cfg.tier_seat_floor_enabled else 0
+            ),
         )
         if _tier.abstain:
             _abstain_win = self._build_abstain_window(
@@ -2355,13 +2396,18 @@ class CymatixContextManager:
                     target = max(1, int(foveated_caps[idx] * foveated_base))
                 else:
                     target = _splice_target
-                content = compress_text(
+                content = g.content if self.config.budget.full_text_delivery else compress_text(
                     g.content,
                     target_chars=target,
                     content_type=g.promoter.domains,
                     query_terms=_splice_terms,
                 )
-                spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
+                if self.config.budget.wire_format == "canonical":
+                    # Canonical wrappers are added in assembly, after escaping
+                    # content-sourced delimiters (including forged wrappers).
+                    spliced_map[g.gene_id] = content
+                else:
+                    spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
 
         # Step 5: Assemble (MoE/small-model aware)
         # Stage 5 §4: caller_model_class refines slate emission (small_moe
@@ -2379,6 +2425,7 @@ class CymatixContextManager:
                 caller_model_class=caller_model_class,
                 query_scores=query_scores,
                 tier_contributions=tier_contribs,
+                party_id=party_id,
             )
 
         # Annotate window with dynamic budget tier (for telemetry/benchmarks)
@@ -3293,6 +3340,7 @@ class CymatixContextManager:
         caller_model_class: str = "generic",
         query_scores: Optional[Dict[str, float]] = None,
         tier_contributions: Optional[Dict[str, Dict[str, float]]] = None,
+        party_id: Optional[str] = None,
     ) -> ContextWindow:
         """
         Sort spliced parts, join with dividers, wrap in expressed_context tags.
@@ -3328,6 +3376,16 @@ class CymatixContextManager:
                         attention.
         """
         use_slate = answer_slate is not None
+        wire_format = self.config.budget.wire_format
+        canonical_wire = wire_format == "canonical"
+        moe_prompt = self._decoder_prompts["moe"]
+        if canonical_wire and decoder_prompt_override is not None:
+            # Direct _assemble callers may pass a built-in legacy template.
+            # Resolve it before inserting any content-sourced slate values.
+            for mode, legacy_prompt in DECODER_MODES.items():
+                if decoder_prompt_override == legacy_prompt:
+                    decoder_prompt_override = CANONICAL_DECODER_MODES[mode]
+                    break
         # Request-scoped score map with legacy fallback (see docstring).
         _req_scores = (
             query_scores
@@ -3437,16 +3495,46 @@ class CymatixContextManager:
         # is emitted on the parts-empty branch below — never through
         # this loop — so it stays unescaped.
         neutralize_on = self.config.budget.neutralize_control_tags
+        full_text = self.config.budget.full_text_delivery
+
+        def render_complete(doc):
+            body = doc.content
+            if neutralize_on:
+                body = _neutralize_document_markup(body) if canonical_wire else body.replace("<cymatix:", "&lt;cymatix:")
+            source = _shorten_source_path(doc.source_id or "", self.config.ingestion.citation_path_anchors)
+            tag = "DOCUMENT" if canonical_wire else "GENE"
+            facts = html.escape(" ".join(doc.key_values[:5]), quote=True)
+            attrs = f' src="{html.escape(source, quote=True)}"' if source else ""
+            if facts:
+                attrs += f' facts="{facts}"'
+            return f'<{tag}{attrs}>\n{body}\n</{tag}>'
 
         for g in sorted_genes:
             # Prefer compressor-spliced text; fall back to complement summary;
             # last resort is Headroom semantic compression (was content[:500]).
-            spliced_text = spliced_map.get(g.gene_id) or g.complement or compress_text(
+            spliced_text = g.content if full_text else spliced_map.get(g.gene_id) or g.complement or compress_text(
                 g.content,
                 target_chars=500,
                 content_type=g.promoter.domains,
             )
-            if neutralize_on:
+            if full_text:
+                spliced_text = render_complete(g)
+            elif canonical_wire:
+                if neutralize_on:
+                    spliced_text = _neutralize_document_markup(spliced_text)
+                short_source = _shorten_source_path(
+                    g.source_id or "", self.config.ingestion.citation_path_anchors,
+                )
+                src_attr = (
+                    f' src="{html.escape(short_source, quote=True)}"'
+                    if short_source else ""
+                )
+                kv_attrs = (
+                    f' facts="{html.escape(" ".join(g.key_values[:5]), quote=True)}"'
+                    if g.key_values else ""
+                )
+                spliced_text = f"<DOCUMENT{src_attr}{kv_attrs}>\n{spliced_text}\n</DOCUMENT>"
+            elif neutralize_on:
                 spliced_text = spliced_text.replace("<cymatix:", "&lt;cymatix:")
             prior = _prior_deliveries.get(g.gene_id) if session_on else None
             if prior is not None:
@@ -3465,6 +3553,7 @@ class CymatixContextManager:
                     delivered_at=prior_ts,
                     now=_now_ts,
                     queries_ago=queries_ago,
+                    wire_format=wire_format,
                 )
                 parts.append(stub)
                 _delivery_log_map[g.gene_id] = None  # no re-log on elision
@@ -3494,6 +3583,7 @@ class CymatixContextManager:
                     combined_score=_leg_scores.get(g.gene_id, 0.0),
                     tier_contrib=_leg_tiers.get(g.gene_id, {}),
                     score_stats=_score_stats,
+                    wire_format=wire_format,
                 )
                 parts.append(f"{header}\n{spliced_text}")
                 if session_on:
@@ -3507,6 +3597,49 @@ class CymatixContextManager:
                         "full", _session_delivery.content_hash(spliced_text),
                     )
             total_raw += len(g.content)
+
+        companion_ids = []
+        primary_budget_evicted = 0
+        if full_text:
+            from .companions import rank_companions
+
+            # Complete bodies yield whole trailing documents at a hard limit;
+            # they are never silently shortened. Leave room for the decoder.
+            char_cap = self.config.budget.context_max_chars
+
+            def serialized_size(blocks):
+                return len("<expressed_context>\n") + len("\n---\n".join(blocks)) + len("\n</expressed_context>")
+
+            while parts and serialized_size(parts) > char_cap:
+                parts.pop()
+                sorted_genes.pop()
+                primary_budget_evicted += 1
+
+            lookup = getattr(self.genome, "get_source_documents", None)
+            if sorted_genes and self.config.budget.companion_chunks and callable(lookup):
+                source_docs = lookup([g.source_id for g in sorted_genes if g.source_id], party_id=party_id)
+
+                def accept_companion(doc):
+                    block = render_complete(doc)
+                    if serialized_size(parts + [block]) > char_cap:
+                        return False
+                    prospective = "<expressed_context>\n" + "\n---\n".join(parts + [block]) + "\n</expressed_context>"
+                    decoder_estimate = estimate_tokens(decoder_prompt_override or self._decoder_prompt)
+                    if estimate_tokens(prospective) + decoder_estimate > self.config.budget.ribosome_tokens + self.config.budget.expression_tokens:
+                        return False
+                    if session_on and _session_delivery.already_delivered(
+                        self.genome.read_conn, session_id=session_id, gene_id=doc.gene_id,
+                    ) is not None:
+                        return False
+                    parts.append(block)
+                    _delivery_log_map[doc.gene_id] = ("full", _session_delivery.content_hash(block))
+                    return True
+
+                additions = rank_companions(query, sorted_genes, source_docs,
+                    accept=accept_companion, max_added=self.config.budget.companion_chunks)
+                companion_ids = [doc.gene_id for doc in additions]
+                sorted_genes.extend(additions)
+                total_raw = sum(len(doc.content) for doc in sorted_genes)
 
         # Stage 6 (§6): if assembly produced no parts despite having
         # candidates, ship the structured no-match tag rather than the
@@ -3535,7 +3668,10 @@ class CymatixContextManager:
             for kv in answer_slate:
                 if kv not in seen_kvs:
                     seen_kvs.add(kv)
-                    unique_slate.append(kv)
+                    unique_slate.append(
+                        _neutralize_document_markup(kv)
+                        if canonical_wire and neutralize_on else kv
+                    )
 
             if caller_model_class == "small_moe":
                 # Spec §5: char-bounded greedy fill, JSON shape, MoE-friendly.
@@ -3546,16 +3682,16 @@ class CymatixContextManager:
                 # Honor decoder_prompt_override if it has the slate placeholder
                 # (answer_slate_only / condensed_with_slate); else fall back
                 # to DECODER_MOE for compatibility.
-                _template = decoder_prompt_override or DECODER_MOE
+                _template = decoder_prompt_override or moe_prompt
                 if "{answer_slate}" in _template:
                     decoder_prompt = _template.replace("{answer_slate}", slate_text)
                 else:
-                    decoder_prompt = DECODER_MOE.replace("{answer_slate}", slate_text)
+                    decoder_prompt = moe_prompt.replace("{answer_slate}", slate_text)
             else:
                 # Generic branch — byte-identical to pre-Stage-5: newline-
                 # joined, 20-entry cap, DECODER_MOE template.
                 slate_text = "\n".join(unique_slate[:20])
-                decoder_prompt = DECODER_MOE.replace("{answer_slate}", slate_text)
+                decoder_prompt = moe_prompt.replace("{answer_slate}", slate_text)
         else:
             # Honor per-request override (threaded from build_context) to
             # avoid racing on self._decoder_prompt across concurrent calls.
@@ -3570,8 +3706,17 @@ class CymatixContextManager:
         # window.metadata["budget_evicted"] for the delivery block.
         # W2.4: _budget_truncated counts seat-preserving part truncations
         # (min_delivered_docs floor) — a separate fact from evictions.
-        _budget_evicted = 0
+        _budget_evicted = primary_budget_evicted
         _budget_truncated = 0
+        if full_text:
+            while est_tokens > budget and parts:
+                parts.pop()
+                sorted_genes.pop()
+                _budget_evicted += 1
+                expressed = "\n---\n".join(parts) if parts else _no_match_token("no_promoter_match")
+                expressed_wrapped = f"<expressed_context>\n{expressed}\n</expressed_context>"
+                est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)
+            companion_ids = [gid for gid in companion_ids if gid in {g.gene_id for g in sorted_genes}]
         if est_tokens > budget and len(parts) > 1:
             # Default path: drop the lowest-SCORED document regardless of
             # its position in the assembled prompt. Position-based pop()
@@ -3622,10 +3767,25 @@ class CymatixContextManager:
                         _new_len = max(
                             _TRUNC_MIN_CHARS, int(len(parts[_big]) * 0.75),
                         )
-                        parts[_big] = (
-                            parts[_big][: max(1, _new_len - len(_TRUNC_MARK))]
-                            .rstrip() + _TRUNC_MARK
+                        _suffix = (
+                            "\n</DOCUMENT>"
+                            if canonical_wire and parts[_big].endswith("\n</DOCUMENT>")
+                            else ""
                         )
+                        # Keep canonical wrapper attributes and closing tag
+                        # intact so a shortened body cannot absorb the next
+                        # document. Oversized metadata yields to eviction.
+                        _prefix_floor = parts[_big].index(">\n") + 2 if _suffix else 1
+                        _trimmed = (
+                            parts[_big][: max(
+                                _prefix_floor,
+                                _new_len - len(_TRUNC_MARK) - len(_suffix),
+                            )].rstrip() + _TRUNC_MARK + _suffix
+                        )
+                        if canonical_wire and len(_trimmed) >= len(parts[_big]):
+                            _seat_floor = 0
+                            continue
+                        parts[_big] = _trimmed
                         _budget_truncated += 1
                     else:
                         _seat_floor = 0  # floor exhausted — evict below it
@@ -3739,6 +3899,8 @@ class CymatixContextManager:
                 # W2.4: seat-preserving part truncations performed by the
                 # min_delivered_docs floor (0 = floor off or never bound).
                 "budget_truncated": _budget_truncated,
+                "companion_ids": companion_ids,
+                "full_text_delivery": full_text,
             },
         )
 

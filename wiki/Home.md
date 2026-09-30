@@ -4,9 +4,10 @@ Coordinate-index engine for LLM agents. It retrieves, weighs, and compresses
 a corpus into a context window — without a single LLM call on the retrieval
 path.
 
-- **Version:** this wiki documents **v0.9.2**, released 2026-09-08
-  (tag `v0.9.2`, PyPI `0.9.2`). The prior v0.9.1 release was published
-  2026-08-30. Changes are cited by PR number where they appear.
+- **Version:** this wiki documents **v0.10.0**, released 2026-09-29
+  (tag `v0.10.0`, PyPI `0.10.0`). The prior v0.9.2 release was published
+  2026-09-08. v0.10.0 changes no shipped retrieval or delivery default; its
+  new behaviour is opt-in. Changes are cited by PR number where they appear.
   The Tier-2 lexicon aliases the pages present as canonical
   ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) follow the 0.9.1 tag and are not in the 0.9.1 wheel — on that
   wheel the legacy spellings are the ones that resolve. See
