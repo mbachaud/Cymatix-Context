@@ -105,8 +105,12 @@ class CymatixSupervisor:
         python_executable: Optional[str] = None,
         cymatix_log_path: Optional[Path] = None,
         extra_env: Optional[dict] = None,
+        cwd: Optional[str] = None,
     ) -> None:
         self.store = store
+        # Lane engine tree (a worktree serving another engine build); None =
+        # the repo-root default in _cwd().
+        self._cwd_override = cwd
         self.cymatix_host = cymatix_host
         self.cymatix_port = cymatix_port
         # v0.7.0 dev-mode: per-instance environment overlay (e.g. the
@@ -527,7 +531,11 @@ class CymatixSupervisor:
 
     def _cwd(self) -> Optional[str]:
         """Where to run cymatix from — default is the cymatix-context repo root if
-        we're inside it, else None (use inherited cwd)."""
+        we're inside it, else None (use inherited cwd). A lane's engine tree
+        overrides both."""
+        override = getattr(self, "_cwd_override", None)
+        if override:
+            return override
         try:
             here = Path(__file__).resolve()
             # cymatix_context/launcher/supervisor.py → cymatix-context root
