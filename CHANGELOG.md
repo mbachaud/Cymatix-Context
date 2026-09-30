@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.10.0 (2026-09-30)
+
 _Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymatix-context==0.10.0b1`)._
 
 **Opt-in full-text companion delivery, three gated migrations (#417 canonical
