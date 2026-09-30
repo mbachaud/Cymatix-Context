@@ -159,6 +159,26 @@ def lane_cwd(lane: LaneConfig, base_dir: Optional[Path] = None) -> Optional[str]
     return None
 
 
+def current_lane() -> str:
+    """The lane this server process serves (``CYMATIX_LANE``, set by the
+    launcher); ``stable`` when run standalone."""
+    return os.environ.get("CYMATIX_LANE", "").strip() or PRIMARY_LANE
+
+
+def scope_default_path(configured: str, default: str, leaf: str) -> str:
+    """Give a non-primary lane its own copy of a per-user directory.
+
+    Returns *configured* unchanged for the primary lane, or when the operator
+    configured a path explicitly. Otherwise (a non-primary lane still on the
+    shipped *default*) returns ``~/.cymatix/lanes/<lane>/<leaf>`` so two
+    lanes never share it.
+    """
+    lane = current_lane()
+    if lane == PRIMARY_LANE or configured != default:
+        return configured
+    return f"~/.cymatix/lanes/{lane}/{leaf}"
+
+
 def _resolve(path: str, base_dir: Optional[Path]) -> Path:
     p = Path(path)
     if not p.is_absolute():

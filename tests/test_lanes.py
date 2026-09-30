@@ -211,6 +211,48 @@ def test_duplicate_declared_names_rejected():
         )))
 
 
+# ── per-lane isolation inside the server process ────────────────────────
+
+
+def test_current_lane_defaults_to_primary(monkeypatch):
+    from cymatix_context.lanes import current_lane
+    monkeypatch.delenv("CYMATIX_LANE", raising=False)
+    assert current_lane() == "stable"
+    monkeypatch.setenv("CYMATIX_LANE", "staging")
+    assert current_lane() == "staging"
+
+
+def test_scope_default_path(monkeypatch):
+    from cymatix_context.lanes import scope_default_path
+    monkeypatch.delenv("CYMATIX_LANE", raising=False)
+    assert scope_default_path("~/.cymatix/vault", "~/.cymatix/vault", "vault") == "~/.cymatix/vault"
+    monkeypatch.setenv("CYMATIX_LANE", "staging")
+    assert scope_default_path("~/.cymatix/vault", "~/.cymatix/vault", "vault") == (
+        "~/.cymatix/lanes/staging/vault"
+    )
+    # An explicitly configured path is the operator's choice: never moved.
+    assert scope_default_path("D:/my-vault", "~/.cymatix/vault", "vault") == "D:/my-vault"
+
+
+def test_bridge_shared_dir_is_lane_scoped(monkeypatch):
+    from cymatix_context.bridge import DEFAULT_SHARED_DIR, default_shared_dir
+    monkeypatch.delenv("CYMATIX_LANE", raising=False)
+    assert default_shared_dir() == DEFAULT_SHARED_DIR
+    monkeypatch.setenv("CYMATIX_LANE", "bench")
+    assert default_shared_dir() == os.path.expanduser("~/.cymatix/lanes/bench/shared")
+
+
+def test_otel_resource_is_tagged_with_lane(monkeypatch):
+    from cymatix_context.telemetry.otel import _resource_attributes
+    monkeypatch.setenv("CYMATIX_LANE", "staging")
+    attrs = _resource_attributes("cymatix-context", "0.10.0")
+    assert attrs["service.name"] == "cymatix-context"
+    assert attrs["service.instance.id"] == "staging"
+    assert attrs["cymatix.lane"] == "staging"
+    monkeypatch.delenv("CYMATIX_LANE")
+    assert _resource_attributes("cymatix-context", "0.10.0")["cymatix.lane"] == "stable"
+
+
 # ── child environment ───────────────────────────────────────────────────
 
 
