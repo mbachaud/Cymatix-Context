@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **docs: Product Hunt launch positioning.** The package summary, README
+  tagline and GitHub About now read "Same query, same answer: deterministic RAG
+  for agents". The README states the EnterpriseRAG-Bench leaderboard entry in
+  percent (Overall 33.93%). The wiki's 0.10.0 section is dated 2026-09-30 to
+  match the tag. No code or default changes. The PyPI summary updates with the
+  next published release.
+
 ## 0.10.0 (2026-09-30)
 
 _Pre-release `v0.10.0b1` tagged 2026-09-13 from `beta` (`pip install --pre cymatix-context==0.10.0b1`)._

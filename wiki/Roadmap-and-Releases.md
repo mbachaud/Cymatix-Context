@@ -18,7 +18,7 @@
   its PR or issue number. The first section highlights changes since the
   published v0.9.2 release (2026-09-08).
 
-## 0.10.0 (2026-09-29) — release contents
+## 0.10.0 (2026-09-30) — release contents
 
 No shipped retrieval or delivery default changes. Everything new is opt-in,
 and each default flip still needs its own paired receipt. The pre-release

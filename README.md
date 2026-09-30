@@ -8,9 +8,9 @@
 [![Tests: 4000+](https://img.shields.io/badge/tests-4000%2B-brightgreen.svg)](tests/)
 [![LLM-free pipeline](https://img.shields.io/badge/pipeline-LLM--free-brightgreen.svg)](docs/architecture/PIPELINE_LANES.md)
 
-> Coordinate-index engine for LLM agents. Retrieves, weighs, and compresses
-> your codebase and documents into a context window — without a single LLM
-> call on the retrieval path.
+> **Same query, same answer: deterministic RAG for agents.** Retrieves,
+> weighs, and compresses your codebase and documents into a context window —
+> without a single LLM call on the retrieval path.
 
 One SQLite knowledge store on your own machine, a seven-stage pipeline, and an explicit `know` / `miss` contract on every response, so an agent can tell grounded context from a miss instead of guessing. *The engine's namesake cymatics stage — an MD5-binned 256-dimensional term spectrum — is a candidate-reordering signal that has **not yet been isolated** against hashed bag-of-words or random-bin controls; treat it as an experimental cheap feature, not a proven one.*
 
@@ -34,7 +34,7 @@ Dense recall is off by default since 2026-08-15 ([receipts](docs/benchmarks/2026
 
 Three numbers, each with a receipt:
 
-- **Public leaderboard.** On [EnterpriseRAG-Bench](https://huggingface.co/spaces/onyx-dot-app/EnterpriseRAG-Bench-Leaderboard) (Onyx; every entry judged by GPT-5.4), Cymatix scores **Overall 33.93** — Correctness 42.2, Completeness 42.74, Document Recall 50.7 — rank 23 of 26 as of the 2026-09-18 update. That entry was measured on **v0.6.3/0.6.4** (v0.6.3 is the frozen external-validation snapshot) with zero LLM calls on the retrieval path. Later versions have not been resubmitted.
+- **Public leaderboard.** On [EnterpriseRAG-Bench](https://huggingface.co/spaces/onyx-dot-app/EnterpriseRAG-Bench-Leaderboard) (Onyx; every entry judged by GPT-5.4), Cymatix scores **Overall 33.93%** — Correctness 42.2%, Completeness 42.74%, Document Recall 50.7% — rank 23 of 26 as of the 2026-09-18 update. That entry was measured on **v0.6.3/0.6.4** (v0.6.3 is the frozen external-validation snapshot) with zero LLM calls on the retrieval path. Later versions have not been resubmitted.
 - **Retrieval since then.** On the 947,531-chunk ERB bed, the shipped defaults now deliver the gold document in **66.8%** of 470 questions. That is our own retrieval-layer metric on our own bed build — related to, but not the same as, the leaderboard's Document Recall column — and not a judged end-to-end score, so it does not replace the leaderboard number. Receipt: [v0.10.0 witness](benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29.json).
 - **Token cost.** On that same bed, a shipped-default packet is **8,345 tokens** on average (tokenizer-counted, table below).
 
