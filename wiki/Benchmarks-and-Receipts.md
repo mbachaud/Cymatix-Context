@@ -231,7 +231,7 @@ artifacts. Fresh receipt on a 2,000-file deterministic EnronQA sample, seed
 [EnterpriseRAG-Bench leaderboard](https://huggingface.co/spaces/onyx-dot-app/EnterpriseRAG-Bench-Leaderboard)
 (every entry judged by GPT-5.4; Onyx excludes itself), Cymatix-Context scores:
 
-| ERB leaderboard (v0.6.3/0.6.4; rank 18 of 21 as of the 2026-08-20 update) | Score |
+| ERB leaderboard (v0.6.3/0.6.4; rank 23 of 26 as of the 2026-09-18 update) | Score |
 |---|---|
 | Overall | **33.93** |
 | Correctness | **42.2** |
