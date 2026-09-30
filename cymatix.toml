@@ -218,6 +218,27 @@ bench_genome_path = "genomes/bench/bench.genome.db"
 # upstream_timeout = 180                # Per-request timeout for proxied calls to Ollama. Default in config.py is 180s. Raise to 240+ for very slow models or large prompts; lower if you want fail-fast.
 
 # ----------------------------------------------------------------------
+# [[lanes]] - EXTRA INSTANCES, ONE PER KNOWLEDGE STORE (launcher).
+#
+# One server process serves one store. The launcher always runs the
+# primary "stable" lane ([server] port + [genome] path) and the "bench"
+# lane when bench_enabled; each [[lanes]] entry adds another, on its own
+# port and in its own store directory. A chat picks a lane through its MCP
+# entry: `cymatix mcp install --host claude-code --lane staging`.
+#
+# A staging lane can serve a different engine build (e.g. a git worktree)
+# for 1:1 comparisons. Give it its own store; never point it at another
+# lane's live genome.db. Reference: docs/config-reference.md [[lanes]].
+# ----------------------------------------------------------------------
+# [[lanes]]
+# name = "staging"
+# role = "staging"
+# port = 11441
+# genome_path = "genomes/staging/genome.db"
+# engine_path = "F:/Projects/cymatix-context/.claude/worktrees/my-branch"
+# autostart = false
+
+# ----------------------------------------------------------------------
 # [telemetry] - OPENTELEMETRY EXPORT (backend).
 #
 # TOML defaults for the CYMATIX_OTEL_* env vars. Precedence, per knob:
