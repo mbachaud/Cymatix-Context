@@ -237,13 +237,23 @@ mcp = MCPServer("cymatix")
 # Keep it tiny: json-in / json-out, explicit timeout, structured errors
 # that the MCP host can render instead of a crashed tool call.
 
+def _request_headers(has_body: bool) -> Dict[str, str]:
+    headers = {"Content-Type": "application/json"} if has_body else {}
+    # The server's optional [server] admin_token guards /ingest,
+    # /consolidate and /admin/*; without it those tools 401.
+    token = os.environ.get("CYMATIX_ADMIN_TOKEN", "").strip()
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
 def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]:
     url = f"{CYMATIX_URL}{path}"
     data = json.dumps(body).encode("utf-8") if body is not None else None
     req = urllib.request.Request(
         url,
         data=data,
-        headers={"Content-Type": "application/json"} if data else {},
+        headers=_request_headers(data is not None),
         method=method,
     )
     try:

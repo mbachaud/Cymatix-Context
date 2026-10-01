@@ -57,11 +57,12 @@ def test_bench_state_and_controls():
         }
         html = c.get("/api/state/panels").text
         assert "panel--bench" in html and "11439" in html
-        assert "bench-start" in html
+        assert 'data-action="lane-start" data-lane="bench"' in html
         r = c.post("/api/control/bench/start")
         assert r.status_code == 200 and bench.starts == 1
         bench._running = True
-        assert "bench-stop" in c.get("/api/state/panels").text
+        html = c.get("/api/state/panels").text
+        assert 'data-action="lane-stop" data-lane="bench"' in html
         assert c.post("/api/control/bench/stop").status_code == 200
 
 

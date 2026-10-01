@@ -45,6 +45,16 @@ log = logging.getLogger("cymatix.bridge")
 DEFAULT_SHARED_DIR = os.path.expanduser("~/.cymatix/shared")
 
 
+def default_shared_dir() -> str:
+    """Shared directory for this server's lane. The primary lane keeps the
+    legacy path; other lanes get their own, so one lane's restart signal
+    never overwrites another's and each drains only its own inbox."""
+    from .lanes import scope_default_path
+    return os.path.expanduser(
+        scope_default_path("~/.cymatix/shared", "~/.cymatix/shared", "shared"),
+    )
+
+
 class AgentBridge:
     """File-based memory bridge between AI assistants."""
 
@@ -54,7 +64,7 @@ class AgentBridge:
         cymatix_base_url: str = "http://127.0.0.1:11437",
         http_timeout: float = 5.0,
     ):
-        self.shared_dir = Path(shared_dir or DEFAULT_SHARED_DIR)
+        self.shared_dir = Path(shared_dir or default_shared_dir())
         self.inbox = self.shared_dir / "inbox"
         self.outbox = self.shared_dir / "outbox"
         self.signals = self.shared_dir / "signals"

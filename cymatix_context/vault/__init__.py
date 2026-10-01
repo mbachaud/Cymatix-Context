@@ -48,7 +48,13 @@ class VaultManager:
             log.info("vault disabled (config.vault.enabled=false)")
             return
         try:
-            self.vault_root = Path(self.config.vault.path).expanduser()
+            from ..config import VaultConfig
+            from ..lanes import scope_default_path
+            # A non-primary lane on the default path gets its own vault
+            # (and vault.lock) instead of racing the primary lane's.
+            self.vault_root = Path(scope_default_path(
+                self.config.vault.path, VaultConfig().path, "vault",
+            )).expanduser()
             self.vault_root.mkdir(parents=True, exist_ok=True, mode=0o700)
             self._cleanup_stale_sentinel()
             self.state = VaultState(vault_root=self.vault_root)

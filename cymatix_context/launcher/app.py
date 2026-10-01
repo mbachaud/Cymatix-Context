@@ -17,14 +17,17 @@ import time
 import webbrowser
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
+from ..config import GenomeConfig, LaneConfig, ServerConfig
+from ..lanes import BENCH_LANE, PRIMARY_LANE, LaneConfigError
 from .collector import StateCollector
+from .lane_supervisors import LaneRuntime, build_lane_runtimes
 from .state import StateStore
 from .supervisor import (
     AlreadyRunning,
@@ -88,9 +91,60 @@ def create_app(
     bench_supervisor: Optional[CymatixSupervisor] = None,
     bench_genome_path: str = "",
     needs_db_selection: bool = False,
+    lanes: Optional[List[LaneRuntime]] = None,
+    primary_lane: Optional[LaneConfig] = None,
 ) -> FastAPI:
-    """Build the launcher FastAPI app."""
+    """Build the launcher FastAPI app.
+
+    ``supervisor`` runs the primary lane (``primary_lane``); ``lanes`` are
+    the other lanes (bench, staging, ...). ``bench_supervisor`` /
+    ``bench_genome_path`` are the pre-lanes spelling of a bench lane.
+    """
     templates = _get_templates()
+
+    lane_runtimes = list(lanes or [])
+    if bench_supervisor is not None and not any(
+        rt.config.name == BENCH_LANE for rt in lane_runtimes
+    ):
+        lane_runtimes.append(LaneRuntime(
+            config=LaneConfig(
+                name=BENCH_LANE, port=bench_supervisor.cymatix_port,
+                genome_path=bench_genome_path, role=BENCH_LANE,
+            ),
+            supervisor=bench_supervisor,
+        ))
+    lanes_by_name = {rt.config.name: rt for rt in lane_runtimes}
+    if primary_lane is None:
+        _port = getattr(supervisor, "cymatix_port", None)
+        primary_lane = LaneConfig(
+            name=PRIMARY_LANE,
+            port=_port if isinstance(_port, int) else ServerConfig().port,
+            genome_path=GenomeConfig().path,
+            role=PRIMARY_LANE,
+        )
+
+    def _lane_view(lane: LaneConfig, sup: CymatixSupervisor, primary: bool) -> dict:
+        try:
+            running = sup.is_running() is True
+        except Exception:
+            log.warning("Lane %s liveness check failed", lane.name, exc_info=True)
+            running = False
+        # No URLs here: this view is embedded in /api/state, which must stay
+        # URL-free (host-status leak ratchet). /api/lanes adds mcp_url.
+        return {
+            "name": lane.name,
+            "role": lane.role,
+            "port": lane.port,
+            "genome": lane.genome_path,
+            "running": running,
+            "primary": primary,
+            "autostart": lane.autostart,
+        }
+
+    def _lane_views() -> List[dict]:
+        return [_lane_view(primary_lane, supervisor, True)] + [
+            _lane_view(rt.config, rt.supervisor, False) for rt in lane_runtimes
+        ]
 
     # --grafana-url / --prometheus-url default to None outside tray mode;
     # normalize so the Monitoring links always have a destination.
@@ -182,14 +236,14 @@ def create_app(
         state["needs_db_selection"] = bool(
             needs_db_selection and not state.get("cymatix", {}).get("running"),
         )
-        if bench_supervisor is not None:
-            state["bench"] = {
-                "running": bench_supervisor.is_running(),
-                "port": bench_supervisor.cymatix_port,
-                "genome": bench_genome_path,
-            }
-        else:
-            state["bench"] = None
+        state["lanes"] = _lane_views()
+        bench_view = next(
+            (lane for lane in state["lanes"] if lane["name"] == BENCH_LANE), None,
+        )
+        state["bench"] = (
+            {k: bench_view[k] for k in ("running", "port", "genome")}
+            if bench_view is not None else None
+        )
         return state
 
     # Handlers below are sync `def` on purpose (issue #305): they call
@@ -221,38 +275,91 @@ def create_app(
     def api_state():
         return _enrich(collector.collect())
 
-    # ── bench instance controls (dev/configuration mode) ──────────
+    # ── lane controls (primary + bench + declared [[lanes]]) ──────
 
+    @app.get("/api/lanes")
+    def api_lanes():
+        views = _lane_views()
+        sups = [supervisor] + [rt.supervisor for rt in lane_runtimes]
+        for view, sup in zip(views, sups):
+            host = getattr(sup, "cymatix_host", None)
+            host = host if isinstance(host, str) else "127.0.0.1"
+            # What a chat's MCP host sets as CYMATIX_MCP_URL for this lane.
+            view["mcp_url"] = f"http://{host}:{view['port']}"
+        return {"lanes": views}
+
+    def _lane_start(sup: CymatixSupervisor):
+        try:
+            pid = sup.start()
+        except AlreadyRunning as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
+        except SupervisorError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return {"ok": True, "pid": pid,
+                "started_pending": getattr(sup, "last_start_pending", False) is True}
+
+    def _lane_stop(sup: CymatixSupervisor, name: str):
+        try:
+            sup.stop(reason=f"manual {name} lane stop from launcher UI")
+        except NotRunning as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
+        except (ShutdownTimeout, SupervisorError) as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return {"ok": True}
+
+    def _lane_restart(sup: CymatixSupervisor, name: str):
+        try:
+            pid = sup.restart(reason=f"manual {name} lane restart from launcher UI")
+        except (ShutdownTimeout, SupervisorError) as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return {"ok": True, "pid": pid,
+                "started_pending": getattr(sup, "last_start_pending", False) is True}
+
+    def _unknown_lane(name: str) -> JSONResponse:
+        return JSONResponse(
+            {"ok": False, "error": f"no lane named {name!r}",
+             "lanes": [primary_lane.name, *lanes_by_name]},
+            status_code=404,
+        )
+
+    @app.post("/api/control/lanes/{name}/{action}")
+    def api_lane_control(name: str, action: str):
+        if action not in ("start", "stop", "restart"):
+            return JSONResponse(
+                {"ok": False, "error": f"unknown action {action!r}"}, status_code=404,
+            )
+        if name == primary_lane.name:
+            # Same semantics (and 202 alive-but-not-ready) as /api/control/*.
+            return {"start": api_control_start, "stop": api_control_stop,
+                    "restart": api_control_restart}[action]()
+        rt = lanes_by_name.get(name)
+        if rt is None:
+            return _unknown_lane(name)
+        if action == "start":
+            return _lane_start(rt.supervisor)
+        if action == "stop":
+            return _lane_stop(rt.supervisor, name)
+        return _lane_restart(rt.supervisor, name)
+
+    # Pre-lanes spelling of the bench lane's controls (v0.7.0).
     @app.post("/api/control/bench/start")
     def api_bench_start():
-        if bench_supervisor is None:
+        if BENCH_LANE not in lanes_by_name:
             return JSONResponse(
                 {"ok": False, "error": "bench mode is disabled "
                  "([server] bench_enabled = false)"},
                 status_code=409,
             )
-        try:
-            pid = bench_supervisor.start()
-            return {"ok": True, "pid": pid}
-        except AlreadyRunning as exc:
-            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
-        except SupervisorError as exc:
-            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return _lane_start(lanes_by_name[BENCH_LANE].supervisor)
 
     @app.post("/api/control/bench/stop")
     def api_bench_stop():
-        if bench_supervisor is None:
+        if BENCH_LANE not in lanes_by_name:
             return JSONResponse(
                 {"ok": False, "error": "bench mode is disabled"},
                 status_code=409,
             )
-        try:
-            bench_supervisor.stop(reason="manual bench stop from launcher UI")
-            return {"ok": True}
-        except NotRunning as exc:
-            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
-        except SupervisorError as exc:
-            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return _lane_stop(lanes_by_name[BENCH_LANE].supervisor, BENCH_LANE)
 
     # ── genome management (v0.7.0: dashboard parity with the tray's
     #    "Manage Database" submenu — select or create from the web UI) ──
@@ -1003,43 +1110,35 @@ def main(argv: Optional[list] = None) -> int:
         cymatix_port=args.cymatix_port,
     )
 
-    # ── dev/configuration mode: optional second cymatix on the bench port ──
-    # Chat stays attached to the MAIN genome on the main port; a subagent
-    # can point the bench-harness at the bench port without the two
-    # instances sharing a knowledge store. Final deployments leave
-    # [server] bench_enabled = false (and pass no --bench) and get exactly
-    # one server.
-    bench_supervisor: Optional[CymatixSupervisor] = None
-    bench_genome_path = ""
+    # ── lanes: extra cymatix instances, one per knowledge store ──
+    # The primary chat stays on the primary lane; bench / staging / other
+    # [[lanes]] each get their own port, store and supervisor. A final
+    # deployment with no [[lanes]] and bench off gets exactly one server.
+    primary_lane = LaneConfig(
+        name=PRIMARY_LANE, port=args.cymatix_port,
+        genome_path=runtime_cfg.genome.path, role=PRIMARY_LANE,
+    )
     try:
-        from ..config import load_config as _load_config
-        _cfg = _load_config()
-        _bench_on = bool(args.bench or _cfg.server.bench_enabled)
-        if _bench_on:
-            bench_genome_path = _cfg.server.bench_genome_path
-            from .state import StateStore as _StateStore
-            _bench_store = _StateStore(
-                path=Path.home() / ".cymatix" / "launcher" / "bench-state.json",
-            )
-            bench_supervisor = CymatixSupervisor(
-                store=_bench_store,
-                cymatix_host=args.cymatix_host,
-                cymatix_port=_cfg.server.bench_port,
-                cymatix_log_path=(
-                    Path.home() / ".cymatix" / "launcher" / "cymatix-bench.log"
-                ),
-                extra_env={
-                    "CYMATIX_GENOME_PATH": bench_genome_path,
-                    "CYMATIX_SERVER_PORT": str(_cfg.server.bench_port),
-                },
-            )
-            log.info(
-                "Bench mode: second cymatix planned on :%d (genome=%s)",
-                _cfg.server.bench_port, bench_genome_path,
-            )
+        from . import genome_registry as _gr_lane
+        primary_lane.genome_path = str(_gr_lane.active_genome_path())
     except Exception:
-        log.warning("Bench-mode config probe failed; continuing without",
+        log.warning("Could not resolve the active genome for the primary lane",
                     exc_info=True)
+    lane_runtimes: List[LaneRuntime] = []
+    try:
+        lane_runtimes = build_lane_runtimes(
+            runtime_cfg, host=args.cymatix_host, bench=args.bench,
+            primary_port=args.cymatix_port,
+        )
+    except LaneConfigError as exc:
+        log.error("Lane config rejected; serving the primary lane only: %s", exc)
+    except Exception:
+        log.warning("Lane setup failed; serving the primary lane only",
+                    exc_info=True)
+    for rt in lane_runtimes:
+        log.info("Lane %s planned on :%d (genome=%s%s)",
+                 rt.config.name, rt.config.port, rt.config.genome_path,
+                 f", engine={rt.config.engine_path}" if rt.config.engine_path else "")
 
     # First-boot db-selection gate: if the active genome file does not
     # exist yet, do NOT silently autostart onto an empty store — let the
@@ -1117,14 +1216,17 @@ def main(argv: Optional[list] = None) -> int:
             log.error("Failed to start cymatix: %s", exc)
             log.info("Launcher will continue; use the Start button once the issue is fixed")
 
-    if bench_supervisor is not None and not args.no_autostart:
+    for rt in lane_runtimes:
+        if args.no_autostart:
+            break
         try:
-            if not bench_supervisor.adopt():
-                bench_supervisor.start()
+            # Always re-adopt a surviving child; only spawn when autostart.
+            if not rt.supervisor.adopt() and rt.config.autostart:
+                rt.supervisor.start()
         except AlreadyRunning:
             pass
         except Exception as exc:
-            log.error("Failed to start bench cymatix: %s", exc)
+            log.error("Failed to start lane %s: %s", rt.config.name, exc)
 
     app = create_app(
         store=store,
@@ -1134,9 +1236,9 @@ def main(argv: Optional[list] = None) -> int:
         observability_install_pending=observability_install_pending,
         grafana_url=args.grafana_url,
         prometheus_url=args.prometheus_url,
-        bench_supervisor=bench_supervisor,
-        bench_genome_path=bench_genome_path,
         needs_db_selection=needs_db_selection,
+        lanes=lane_runtimes,
+        primary_lane=primary_lane,
     )
 
     url = f"http://{args.host}:{args.port}/"
@@ -1184,6 +1286,7 @@ def main(argv: Optional[list] = None) -> int:
             observability_supervisor=observability_sup,
             install_pending=observability_install_pending,
             update_checker=update_checker,
+            lanes=lane_runtimes,
         )
 
         # Surface the install-needed balloon if the build helper flagged it.

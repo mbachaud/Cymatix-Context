@@ -89,6 +89,7 @@ All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8
 | `[session]` | synthetic_session_enabled, synthetic_session_window_s, default_party_id |
 | `[genome]` | path (`genomes/main/genome.db`), compact_interval, cold_start_threshold, replicas |
 | `[server]` | host, port, upstream |
+| `[lanes]` | name, port, genome_path, role, python_executable, engine_path, config_path, autostart. Written as the array of tables `[[lanes]]`: each entry is one extra launcher-supervised server on its own port and store directory. The primary lane ("stable") comes from `[server]` + `[genome]` and the bench lane from `[server] bench_*`. Chats pick a lane via `cymatix mcp install --lane NAME` |
 | `[telemetry]` | OTel export defaults: enabled (default false), endpoint (`"localhost:4317"`), insecure, sampler_ratio, redact_query, logs_enabled, logs_level. Precedence: `CYMATIX_OTEL_*` env > toml > default (env wins both directions); the tray launcher auto-exports `CYMATIX_OTEL_ENABLED=1` once the observability stack's collector port is up |
 | `[headroom]` | route_upstream toggle for Headroom proxy integration |
 | `[encoder_daemon]` | url (default `""` = off — every seam encodes in-process, byte-identical to today; set to route dense/SPLADE/SEMA encoding through a shared `cymatix_context.encoder_daemon` process instead, e.g. `"http://127.0.0.1:11440"`; `CYMATIX_ENCODER_URL` env wins over the TOML value; start the daemon with `python -m cymatix_context.encoder_daemon`, default port 11440 — distinct from `[server] bench_port` 11439, see #376) |

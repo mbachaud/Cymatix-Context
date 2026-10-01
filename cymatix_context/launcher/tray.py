@@ -240,8 +240,12 @@ class CymatixTrayIcon:
         observability_supervisor=None,
         install_pending: bool = False,
         update_checker=None,
+        lanes=None,
     ) -> None:
         self.supervisor = supervisor
+        # Non-primary lanes (launcher.lane_supervisors.LaneRuntime); drives
+        # the Lanes submenu. The primary lane keeps the top-level controls.
+        self.lanes = list(lanes or [])
         self.dashboard_url = dashboard_url
         self.name = name
         self.tooltip = tooltip
@@ -803,6 +807,61 @@ class CymatixTrayIcon:
         finally:
             self._refresh_menu()
 
+    def _lane_action(self, lane, verb: str):
+        """Menu callback running ``verb`` on one lane's supervisor."""
+        def _run(icon, item) -> None:  # noqa: ARG001
+            name = lane.config.name
+            log.info("Tray: %s lane %s", verb, name)
+            try:
+                if verb == "start":
+                    lane.supervisor.start()
+                elif verb == "stop":
+                    lane.supervisor.stop(reason=f"manual {name} lane stop from tray menu")
+                else:
+                    lane.supervisor.restart(
+                        reason=f"manual {name} lane restart from tray menu")
+            except (AlreadyRunning, NotRunning) as exc:
+                log.warning("Tray lane %s %s: %s", name, verb, exc)
+            except Exception as exc:
+                log.error("Tray lane %s %s failed: %s", name, verb, exc, exc_info=True)
+            finally:
+                self._refresh_menu()
+        return _run
+
+    def _build_lanes_submenu(self):
+        import pystray
+
+        def _label(lane):
+            def _text(item) -> str:  # noqa: ARG001
+                try:
+                    running = lane.supervisor.is_running() is True
+                except Exception:
+                    running = False
+                state = "running" if running else "stopped"
+                return f"{lane.config.name} :{lane.config.port} ({state})"
+            return _text
+
+        def _running(lane):
+            def _check(item) -> bool:  # noqa: ARG001
+                try:
+                    return lane.supervisor.is_running() is True
+                except Exception:
+                    return False
+            return _check
+
+        items = []
+        for lane in self.lanes:
+            is_running = _running(lane)
+            items.append(pystray.MenuItem(_label(lane), pystray.Menu(
+                pystray.MenuItem("Start", self._lane_action(lane, "start"),
+                                 enabled=lambda item, r=is_running: not r(item)),
+                pystray.MenuItem("Restart", self._lane_action(lane, "restart"),
+                                 enabled=is_running),
+                pystray.MenuItem("Stop", self._lane_action(lane, "stop"),
+                                 enabled=is_running),
+            )))
+        return pystray.Menu(*items)
+
     def _quit(self, icon, item) -> None:  # noqa: ARG002
         """Stop cymatix then tear down the tray icon.
 
@@ -999,6 +1058,10 @@ class CymatixTrayIcon:
                 "Manage Database",
                 self._build_manage_database_submenu(),
             ),
+        ])
+        if self.lanes:
+            items.append(pystray.MenuItem("Lanes", self._build_lanes_submenu()))
+        items.extend([
             pystray.Menu.SEPARATOR,
             pystray.MenuItem(
                 "Start cymatix",
