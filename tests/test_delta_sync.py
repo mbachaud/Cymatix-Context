@@ -13,14 +13,33 @@ from pathlib import Path
 
 import pytest
 
-from cymatix_context.config import SyncConfig, load_config
+from cymatix_context.config import IngestionConfig, SyncConfig, load_config
 from cymatix_context.sync.worker import SyncWorker
-from tests.conftest import make_client, make_cymatix_config
+from tests.conftest import make_client, make_cymatix_config as _base_config
+
+
+def make_cymatix_config(**overrides):
+    # Ingest through the mock compressor, not the CPU tagger: the worker's
+    # logic does not depend on tagging, and CI's full-suite job has no
+    # spaCy en_core_web_sm pipeline (#313).
+    overrides.setdefault("ingestion", IngestionConfig(backend="ollama"))
+    return _base_config(**overrides)
+
+
+@pytest.fixture(autouse=True)
+def _no_spacy(monkeypatch):
+    """Fail loudly if any test here reaches the spaCy-backed tagger."""
+    from cymatix_context.tagger import CpuTagger
+
+    def _boom(*_a, **_k):
+        raise AssertionError("delta-sync tests must not ingest through CpuTagger")
+
+    monkeypatch.setattr(CpuTagger, "pack", _boom)
 
 
 @pytest.fixture
 def client():
-    return make_client()
+    return make_client(make_cymatix_config())
 
 
 @pytest.fixture
