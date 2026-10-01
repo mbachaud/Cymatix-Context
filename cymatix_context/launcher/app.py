@@ -9,7 +9,10 @@ from __future__ import annotations
 import argparse
 
 from ..cli.dispatcher import invoked_prog
+import hmac
+import json
 import logging
+import socket
 import os
 import sys
 import threading
@@ -53,6 +56,11 @@ from .observability_paths import (
 
 log = logging.getLogger("cymatix.launcher.app")
 
+# Desktop sidecar handshake (see create_app / --headless).
+READY_PREFIX = "CYMATIX_LAUNCHER_READY"
+TOKEN_COOKIE = "cymatix_launcher_token"
+TOKEN_ENV = "CYMATIX_LAUNCHER_TOKEN"
+
 DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/cymatix-overview/cymatix-overview"
 DEFAULT_PROMETHEUS_URL = "http://127.0.0.1:9090/graph"
 
@@ -94,12 +102,20 @@ def create_app(
     needs_db_selection: bool = False,
     lanes: Optional[List[LaneRuntime]] = None,
     primary_lane: Optional[LaneConfig] = None,
+    token: Optional[str] = None,
+    ready_info: Optional[dict] = None,
 ) -> FastAPI:
     """Build the launcher FastAPI app.
 
     ``supervisor`` runs the primary lane (``primary_lane``); ``lanes`` are
     the other lanes (bench, staging, ...). ``bench_supervisor`` /
     ``bench_genome_path`` are the pre-lanes spelling of a bench lane.
+
+    Desktop sidecar mode: ``token`` makes every route demand
+    ``Authorization: Bearer <token>`` or the ``cymatix_launcher_token``
+    cookie; ``ready_info`` is printed once, when the app starts serving, as
+    the stdout line ``CYMATIX_LAUNCHER_READY {json}`` that the desktop app
+    waits for.
     """
     templates = _get_templates()
 
@@ -199,6 +215,11 @@ def create_app(
             supervisor.adopt()
         except Exception:
             log.warning("Adoption check failed", exc_info=True)
+        if ready_info is not None:
+            # The listening socket is already bound (see bind_listen_socket),
+            # so connections made as soon as this line is read just queue.
+            print(f"{READY_PREFIX} {json.dumps({**ready_info, 'pid': os.getpid()})}",
+                  flush=True)
         yield
         # On shutdown, stop only processes this launcher spawned itself.
         # Adopted Cymatix instances should keep running when the launcher exits.
@@ -215,6 +236,19 @@ def create_app(
     app.state.store = store
     app.state.supervisor = supervisor
     app.state.collector = collector
+    app.state.uvicorn_server = None  # set by the headless runner
+
+    if token:
+        expected = f"Bearer {token}"
+
+        @app.middleware("http")
+        async def _require_token(request: Request, call_next):
+            supplied = request.headers.get("authorization", "")
+            cookie = request.cookies.get(TOKEN_COOKIE, "")
+            if not (hmac.compare_digest(supplied, expected)
+                    or hmac.compare_digest(cookie, token)):
+                return JSONResponse({"error": "launcher token required"}, status_code=401)
+            return await call_next(request)
 
     if STATIC_DIR.exists():
         app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
@@ -258,7 +292,12 @@ def create_app(
     def dashboard_root(request: Request) -> HTMLResponse:
         state = _enrich(collector.collect())
         template = templates.get_template("dashboard.html")
-        html = template.render(state=state, launcher_port=_launcher_port(request))
+        html = template.render(
+            state=state,
+            launcher_port=_launcher_port(request),
+            # Desktop app window: compact chrome + the native-actions rail.
+            embedded=request.query_params.get("embedded") == "1",
+        )
         return HTMLResponse(html)
 
     @app.get("/api/state/panels", response_class=HTMLResponse)
@@ -581,7 +620,55 @@ def create_app(
             )
         return {"ok": True, "pid": pid, "started_pending": False}
 
+    # ── desktop sidecar shutdown ───────────────────────────────────
+
+    @app.post("/api/shutdown")
+    def api_shutdown():
+        """Stop every lane process this launcher spawned (adopted ones keep
+        running, same rule as the lifespan), then exit the launcher. The
+        desktop app calls this on quit."""
+        stopped, left_running = [], []
+        for name, sup in [(primary_lane.name, supervisor)] + [
+            (rt.config.name, rt.supervisor) for rt in lane_runtimes
+        ]:
+            try:
+                running = sup.is_running() is True
+                if running and sup.owns_process() is True:
+                    sup.stop(reason="desktop app quit")
+                    stopped.append(name)
+                elif running:
+                    left_running.append(name)
+            except Exception:
+                log.warning("shutdown: stopping lane %s failed", name, exc_info=True)
+                left_running.append(name)
+        server = getattr(app.state, "uvicorn_server", None)
+        if server is not None:
+            server.should_exit = True
+        return {"ok": True, "stopped": stopped, "left_running": left_running}
+
     return app
+
+
+def bind_listen_socket(host: str, port: int) -> socket.socket:
+    """Bind and listen before serving, so the port is known (``port=0`` lets
+    the OS pick a free one) and connections made the moment the READY line
+    is read queue instead of being refused."""
+    family = socket.AF_INET6 if ":" in host else socket.AF_INET
+    sock = socket.socket(family, socket.SOCK_STREAM)
+    if sys.platform != "win32":
+        # Windows SO_REUSEADDR allows port hijacking; uvicorn skips it too.
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind((host, port))
+    sock.listen(128)
+    sock.set_inheritable(True)
+    return sock
+
+
+def _run_headless(app: FastAPI, sock: socket.socket) -> None:
+    import uvicorn
+    server = uvicorn.Server(uvicorn.Config(app, log_level="info"))
+    app.state.uvicorn_server = server
+    server.run(sockets=[sock])
 
 
 def _launcher_port(request: Request) -> int:
@@ -610,7 +697,15 @@ def _parse_args(argv: Optional[list] = None) -> argparse.Namespace:
              "the current platform. 'uninstall-service' removes it.",
     )
     p.add_argument("--host", default="127.0.0.1", help="Launcher UI bind host (default: 127.0.0.1)")
-    p.add_argument("--port", type=int, default=11438, help="Launcher UI port (default: 11438)")
+    p.add_argument("--port", type=int, default=11438,
+                   help="Launcher UI port (default: 11438; 0 = any free port, with --headless)")
+    p.add_argument(
+        "--headless", action="store_true",
+        help="Desktop-app sidecar mode: no browser, tray or window. Serves on "
+             "--port (0 = free port), prints 'CYMATIX_LAUNCHER_READY {json}' "
+             "once serving, and requires the token in $CYMATIX_LAUNCHER_TOKEN "
+             "when set.",
+    )
     p.add_argument(
         "--bench", action="store_true",
         help="Dev mode: also supervise a second cymatix on the bench port "
@@ -1104,6 +1199,23 @@ def main(argv: Optional[list] = None) -> int:
             )
             return 2
 
+    # Desktop sidecar: bind first so the port is known before the app (and
+    # its READY line) is built. The token is taken out of the environment so
+    # the lane children this launcher spawns do not inherit it.
+    headless_sock = None
+    headless_token = None
+    if args.headless:
+        if args.tray or args.native:
+            log.error("--headless cannot be combined with --tray or --native")
+            return 2
+        args.no_browser = True
+        headless_token = os.environ.pop(TOKEN_ENV, "").strip() or None
+        try:
+            headless_sock = bind_listen_socket(args.host, args.port)
+        except OSError as exc:
+            log.error("Cannot bind %s:%d: %s", args.host, args.port, exc)
+            return 1
+
     # Fail fast if --native is requested but pywebview isn't installed.
     if args.native and not _check_native_available():
         log.error(
@@ -1275,7 +1387,18 @@ def main(argv: Optional[list] = None) -> int:
         needs_db_selection=needs_db_selection,
         lanes=lane_runtimes,
         primary_lane=primary_lane,
+        token=headless_token,
+        ready_info=(
+            {"host": args.host, "port": headless_sock.getsockname()[1]}
+            if headless_sock is not None else None
+        ),
     )
+
+    if headless_sock is not None:
+        log.info("Headless sidecar mode on %s:%d", args.host,
+                 headless_sock.getsockname()[1])
+        _run_headless(app, headless_sock)
+        return 0
 
     url = f"http://{args.host}:{args.port}/"
 
