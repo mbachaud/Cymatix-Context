@@ -490,3 +490,80 @@
   restorePipelineDevView();
   startPolling();
 })();
+
+/*
+ * Desktop app rail (?embedded=1). Native actions go through the desktop
+ * app's preload bridge (window.cymatix); without it (a plain browser on an
+ * embedded URL) the rail explains itself and does nothing.
+ */
+(function () {
+  "use strict";
+
+  const rail = document.querySelector("[data-desktop-rail]");
+  if (!rail) return;
+  const status = rail.querySelector("[data-desktop-status]");
+  const bridge = window.cymatix;
+  const RAIL_KEY = "cymatix.desktopRail.collapsed";
+
+  function say(msg) {
+    if (status) status.textContent = msg;
+  }
+
+  try {
+    if (window.localStorage.getItem(RAIL_KEY) === "1") {
+      document.body.classList.add("rail-collapsed");
+    }
+  } catch (_err) { /* storage unavailable: rail starts open */ }
+
+  if (!bridge) {
+    say("Open this page in the Cymatix desktop app to use these actions.");
+    rail.querySelectorAll("button[data-action^='desktop-']:not([data-action='desktop-rail-toggle']), input")
+      .forEach((el) => { el.disabled = true; });
+  } else {
+    bridge.getLaunchAtLogin().then((on) => {
+      const box = rail.querySelector("[data-action='desktop-login-toggle']");
+      if (box) box.checked = Boolean(on);
+    }).catch(() => {});
+  }
+
+  async function run(label, fn) {
+    say(label + "…");
+    try {
+      const result = await fn();
+      say(result && result.message ? result.message : label + ": done.");
+    } catch (err) {
+      say(label + " failed: " + (err && err.message ? err.message : String(err)));
+    }
+  }
+
+  rail.addEventListener("click", (event) => {
+    const target = event.target instanceof Element ? event.target.closest("[data-action]") : null;
+    if (!target) return;
+    const action = target.getAttribute("data-action");
+    if (action === "desktop-rail-toggle") {
+      const collapsed = document.body.classList.toggle("rail-collapsed");
+      try { window.localStorage.setItem(RAIL_KEY, collapsed ? "1" : "0"); } catch (_err) { /* ignore */ }
+      return;
+    }
+    if (!bridge) return;
+    if (action === "desktop-mcp-install") {
+      const host = rail.querySelector("[data-desktop-mcp-host]").value;
+      const lane = rail.querySelector("[data-desktop-mcp-lane]").value;
+      run("Writing " + host + " MCP config for lane " + lane,
+        () => bridge.installMcp(host, lane));
+    } else if (action === "desktop-copy-diagnostics") {
+      run("Copying diagnostics", () => bridge.copyDiagnostics());
+    } else if (action === "desktop-open-logs") {
+      run("Opening logs", () => bridge.openLogs());
+    }
+  });
+
+  rail.addEventListener("change", (event) => {
+    const box = event.target;
+    if (!bridge || !(box instanceof HTMLInputElement)) return;
+    if (box.getAttribute("data-action") === "desktop-login-toggle") {
+      run(box.checked ? "Enabling start at login" : "Disabling start at login",
+        () => bridge.setLaunchAtLogin(box.checked));
+    }
+  });
+})();

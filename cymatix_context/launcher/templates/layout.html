@@ -7,7 +7,42 @@
   <link rel="icon" href="/static/icons/favicon.ico" sizes="any">
   <link rel="stylesheet" href="/static/launcher.css?v=dashboard-ui-20260505">
 </head>
-<body>
+<body{% if embedded %} class="embedded"{% endif %}>
+  {% if embedded %}
+  {# Desktop app window only: native actions run through the app's preload
+     bridge (window.cymatix); launcher.js wires them and hides the rail if
+     the bridge is absent. #}
+  <aside class="desktop-rail" data-desktop-rail>
+    <button class="desktop-rail__toggle" data-action="desktop-rail-toggle"
+            aria-label="Toggle the actions rail" title="Toggle actions">&#9776;</button>
+    <div class="desktop-rail__body">
+      <h2 class="desktop-rail__title">Connect a chat</h2>
+      <label class="desktop-rail__label">Host
+        <select data-desktop-mcp-host>
+          <option value="claude-code">Claude Code</option>
+          <option value="claude-desktop">Claude Desktop</option>
+          <option value="cursor">Cursor</option>
+          <option value="gemini-cli">Gemini CLI</option>
+        </select>
+      </label>
+      <label class="desktop-rail__label">Lane
+        <select data-desktop-mcp-lane>
+          {% for lane in (state.lanes or []) %}
+            <option value="{{ lane.name }}">{{ lane.name }} :{{ lane.port }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button class="btn" data-action="desktop-mcp-install">Write MCP config</button>
+      <h2 class="desktop-rail__title">Support</h2>
+      <button class="btn" data-action="desktop-copy-diagnostics">Copy diagnostics</button>
+      <button class="btn" data-action="desktop-open-logs">Open logs folder</button>
+      <label class="desktop-rail__check">
+        <input type="checkbox" data-action="desktop-login-toggle"> Start at login
+      </label>
+      <p class="muted desktop-rail__status" data-desktop-status aria-live="polite"></p>
+    </div>
+  </aside>
+  {% endif %}
   <div class="shell">
     <header class="app-header">
       <div class="brand">

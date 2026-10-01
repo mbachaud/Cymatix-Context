@@ -1,0 +1,43 @@
+# Packaging for the Cymatix desktop app.
+# The Python engine is built separately (engine/build_engine.py → dist-engine/)
+# and shipped under resources/engine; brand icons under resources/brand.
+appId: com.cymatixcontext.desktop
+productName: Cymatix
+directories:
+  output: dist
+  buildResources: ../assets/brand/generated
+files:
+  - src/**/*
+  - package.json
+extraResources:
+  - from: dist-engine
+    to: engine
+  - from: ../assets/brand
+    to: brand
+    filter:
+      - cymatix-granulated.png
+      - generated/**/*
+win:
+  target: nsis
+  icon: ../assets/brand/generated/icon.ico
+  # Azure Trusted Signing: CI passes win.azureSignOptions when the AZURE_*
+  # secrets exist (see .github/workflows/desktop.yml); unsigned otherwise.
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+mac:
+  target: dmg
+  icon: ../assets/brand/generated/icon.icns
+  category: public.app-category.developer-tools
+  hardenedRuntime: true
+  # Notarization runs when APPLE_ID / APPLE_APP_SPECIFIC_PASSWORD / APPLE_TEAM_ID are set.
+linux:
+  target: AppImage
+  icon: ../assets/brand/generated/icon-512.png
+  category: Development
+publish:
+  provider: github
+  owner: mbachaud
+  repo: Cymatix-Context
+  releaseType: draft
