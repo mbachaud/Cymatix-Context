@@ -218,6 +218,30 @@ bench_genome_path = "genomes/bench/bench.genome.db"
 # upstream_timeout = 180                # Per-request timeout for proxied calls to Ollama. Default in config.py is 180s. Raise to 240+ for very slow models or large prompts; lower if you want fail-fast.
 
 # ----------------------------------------------------------------------
+# [[lanes]] - EXTRA INSTANCES, ONE PER KNOWLEDGE STORE (launcher).
+#
+# One server process serves one store. The launcher always runs the
+# primary "stable" lane ([server] port + [genome] path) and the "bench"
+# lane when bench_enabled; each [[lanes]] entry adds another, on its own
+# port and in its own store directory. A chat picks a lane through its MCP
+# entry: `cymatix mcp install --host claude-code --lane staging`.
+#
+# A staging lane can serve a different engine build (e.g. a git worktree)
+# for 1:1 comparisons. Never point it at another lane's live genome.db:
+# genome_source = "snapshot:stable" serves a consistent copy instead, and
+# `cymatix compare --lanes stable,staging --queries FILE` writes the diff
+# receipt. Reference: docs/config-reference.md [[lanes]].
+# ----------------------------------------------------------------------
+# [[lanes]]
+# name = "staging"
+# role = "staging"
+# port = 11441
+# genome_path = "genomes/staging/genome.db"
+# engine_path = "F:/Projects/cymatix-context/.claude/worktrees/my-branch"
+# genome_source = "snapshot:stable"
+# autostart = false
+
+# ----------------------------------------------------------------------
 # [telemetry] - OPENTELEMETRY EXPORT (backend).
 #
 # TOML defaults for the CYMATIX_OTEL_* env vars. Precedence, per knob:
@@ -634,6 +658,19 @@ g_ref           = 0.4386
 betas           = [-2.1222, -1.1442, 0.8794, 0.9407, 0.2999, 0.7979]
 calibrated_at   = "2026-07-07T01:39:23+00:00"
 calibrated_on_n = 1617
+
+[sync]
+# Delta sync of tracked folders, in-process: new files ingested, changed
+# files re-ingested with their stale chunks tombstoned, deleted files
+# tombstoned. Keeps docs/code fresh while you edit them. Guards: a missing
+# root is skipped; >max_delete_fraction vanishing at once touches nothing
+# (confirm with POST /sync/rescan {"allow_mass_delete": true}).
+# Reference: docs/config-reference.md [sync].
+enabled = false
+roots = []                              # e.g. ["F:/Projects/cymatix-context/docs"]
+interval_s = 30
+max_delete_fraction = 0.2
+max_files_per_pass = 200
 
 [mem_sync]
 # Auto-memory → cymatix sync. Every .md file in a watched dir becomes a

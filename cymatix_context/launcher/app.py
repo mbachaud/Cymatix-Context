@@ -9,7 +9,10 @@ from __future__ import annotations
 import argparse
 
 from ..cli.dispatcher import invoked_prog
+import hmac
+import json
 import logging
+import socket
 import os
 import sys
 import threading
@@ -17,14 +20,18 @@ import time
 import webbrowser
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
+from ..config import GenomeConfig, LaneConfig, ServerConfig
+from ..lanes import BENCH_LANE, PRIMARY_LANE, LaneConfigError
 from .collector import StateCollector
+from .lane_supervisors import LaneRuntime, build_lane_runtimes, ensure_snapshot
+from .snapshot import SnapshotError
 from .state import StateStore
 from .supervisor import (
     AlreadyRunning,
@@ -48,6 +55,11 @@ from .observability_paths import (
 )
 
 log = logging.getLogger("cymatix.launcher.app")
+
+# Desktop sidecar handshake (see create_app / --headless).
+READY_PREFIX = "CYMATIX_LAUNCHER_READY"
+TOKEN_COOKIE = "cymatix_launcher_token"
+TOKEN_ENV = "CYMATIX_LAUNCHER_TOKEN"
 
 DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/cymatix-overview/cymatix-overview"
 DEFAULT_PROMETHEUS_URL = "http://127.0.0.1:9090/graph"
@@ -88,9 +100,69 @@ def create_app(
     bench_supervisor: Optional[CymatixSupervisor] = None,
     bench_genome_path: str = "",
     needs_db_selection: bool = False,
+    lanes: Optional[List[LaneRuntime]] = None,
+    primary_lane: Optional[LaneConfig] = None,
+    token: Optional[str] = None,
+    ready_info: Optional[dict] = None,
 ) -> FastAPI:
-    """Build the launcher FastAPI app."""
+    """Build the launcher FastAPI app.
+
+    ``supervisor`` runs the primary lane (``primary_lane``); ``lanes`` are
+    the other lanes (bench, staging, ...). ``bench_supervisor`` /
+    ``bench_genome_path`` are the pre-lanes spelling of a bench lane.
+
+    Desktop sidecar mode: ``token`` makes every route demand
+    ``Authorization: Bearer <token>`` or the ``cymatix_launcher_token``
+    cookie; ``ready_info`` is printed once, when the app starts serving, as
+    the stdout line ``CYMATIX_LAUNCHER_READY {json}`` that the desktop app
+    waits for.
+    """
     templates = _get_templates()
+
+    lane_runtimes = list(lanes or [])
+    if bench_supervisor is not None and not any(
+        rt.config.name == BENCH_LANE for rt in lane_runtimes
+    ):
+        lane_runtimes.append(LaneRuntime(
+            config=LaneConfig(
+                name=BENCH_LANE, port=bench_supervisor.cymatix_port,
+                genome_path=bench_genome_path, role=BENCH_LANE,
+            ),
+            supervisor=bench_supervisor,
+        ))
+    lanes_by_name = {rt.config.name: rt for rt in lane_runtimes}
+    if primary_lane is None:
+        _port = getattr(supervisor, "cymatix_port", None)
+        primary_lane = LaneConfig(
+            name=PRIMARY_LANE,
+            port=_port if isinstance(_port, int) else ServerConfig().port,
+            genome_path=GenomeConfig().path,
+            role=PRIMARY_LANE,
+        )
+
+    def _lane_view(lane: LaneConfig, sup: CymatixSupervisor, primary: bool) -> dict:
+        try:
+            running = sup.is_running() is True
+        except Exception:
+            log.warning("Lane %s liveness check failed", lane.name, exc_info=True)
+            running = False
+        # No URLs here: this view is embedded in /api/state, which must stay
+        # URL-free (host-status leak ratchet). /api/lanes adds mcp_url.
+        return {
+            "name": lane.name,
+            "role": lane.role,
+            "port": lane.port,
+            "genome": lane.genome_path,
+            "running": running,
+            "primary": primary,
+            "autostart": lane.autostart,
+            "genome_source": lane.genome_source,
+        }
+
+    def _lane_views() -> List[dict]:
+        return [_lane_view(primary_lane, supervisor, True)] + [
+            _lane_view(rt.config, rt.supervisor, False) for rt in lane_runtimes
+        ]
 
     # --grafana-url / --prometheus-url default to None outside tray mode;
     # normalize so the Monitoring links always have a destination.
@@ -143,6 +215,11 @@ def create_app(
             supervisor.adopt()
         except Exception:
             log.warning("Adoption check failed", exc_info=True)
+        if ready_info is not None:
+            # The listening socket is already bound (see bind_listen_socket),
+            # so connections made as soon as this line is read just queue.
+            print(f"{READY_PREFIX} {json.dumps({**ready_info, 'pid': os.getpid()})}",
+                  flush=True)
         yield
         # On shutdown, stop only processes this launcher spawned itself.
         # Adopted Cymatix instances should keep running when the launcher exits.
@@ -159,6 +236,19 @@ def create_app(
     app.state.store = store
     app.state.supervisor = supervisor
     app.state.collector = collector
+    app.state.uvicorn_server = None  # set by the headless runner
+
+    if token:
+        expected = f"Bearer {token}"
+
+        @app.middleware("http")
+        async def _require_token(request: Request, call_next):
+            supplied = request.headers.get("authorization", "")
+            cookie = request.cookies.get(TOKEN_COOKIE, "")
+            if not (hmac.compare_digest(supplied, expected)
+                    or hmac.compare_digest(cookie, token)):
+                return JSONResponse({"error": "launcher token required"}, status_code=401)
+            return await call_next(request)
 
     if STATIC_DIR.exists():
         app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
@@ -182,14 +272,14 @@ def create_app(
         state["needs_db_selection"] = bool(
             needs_db_selection and not state.get("cymatix", {}).get("running"),
         )
-        if bench_supervisor is not None:
-            state["bench"] = {
-                "running": bench_supervisor.is_running(),
-                "port": bench_supervisor.cymatix_port,
-                "genome": bench_genome_path,
-            }
-        else:
-            state["bench"] = None
+        state["lanes"] = _lane_views()
+        bench_view = next(
+            (lane for lane in state["lanes"] if lane["name"] == BENCH_LANE), None,
+        )
+        state["bench"] = (
+            {k: bench_view[k] for k in ("running", "port", "genome")}
+            if bench_view is not None else None
+        )
         return state
 
     # Handlers below are sync `def` on purpose (issue #305): they call
@@ -202,7 +292,12 @@ def create_app(
     def dashboard_root(request: Request) -> HTMLResponse:
         state = _enrich(collector.collect())
         template = templates.get_template("dashboard.html")
-        html = template.render(state=state, launcher_port=_launcher_port(request))
+        html = template.render(
+            state=state,
+            launcher_port=_launcher_port(request),
+            # Desktop app window: compact chrome + the native-actions rail.
+            embedded=request.query_params.get("embedded") == "1",
+        )
         return HTMLResponse(html)
 
     @app.get("/api/state/panels", response_class=HTMLResponse)
@@ -221,38 +316,124 @@ def create_app(
     def api_state():
         return _enrich(collector.collect())
 
-    # ── bench instance controls (dev/configuration mode) ──────────
+    # ── lane controls (primary + bench + declared [[lanes]]) ──────
 
+    @app.get("/api/lanes")
+    def api_lanes():
+        views = _lane_views()
+        sups = [supervisor] + [rt.supervisor for rt in lane_runtimes]
+        for view, sup in zip(views, sups):
+            host = getattr(sup, "cymatix_host", None)
+            host = host if isinstance(host, str) else "127.0.0.1"
+            # What a chat's MCP host sets as CYMATIX_MCP_URL for this lane.
+            view["mcp_url"] = f"http://{host}:{view['port']}"
+        return {"lanes": views}
+
+    def _lane_start(sup: CymatixSupervisor):
+        try:
+            pid = sup.start()
+        except AlreadyRunning as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
+        except SupervisorError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return {"ok": True, "pid": pid,
+                "started_pending": getattr(sup, "last_start_pending", False) is True}
+
+    def _lane_stop(sup: CymatixSupervisor, name: str):
+        try:
+            sup.stop(reason=f"manual {name} lane stop from launcher UI")
+        except NotRunning as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
+        except (ShutdownTimeout, SupervisorError) as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return {"ok": True}
+
+    def _lane_restart(sup: CymatixSupervisor, name: str):
+        try:
+            pid = sup.restart(reason=f"manual {name} lane restart from launcher UI")
+        except (ShutdownTimeout, SupervisorError) as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return {"ok": True, "pid": pid,
+                "started_pending": getattr(sup, "last_start_pending", False) is True}
+
+    def _lane_snapshot(rt: LaneRuntime):
+        """Stop the lane (if running), re-copy its source store, start it."""
+        if rt.snapshot_from is None:
+            return JSONResponse(
+                {"ok": False, "error": f"lane {rt.config.name!r} has no "
+                 "genome_source = \"snapshot:<lane>\""},
+                status_code=409,
+            )
+        was_running = rt.supervisor.is_running() is True
+        if was_running:
+            stopped = _lane_stop(rt.supervisor, rt.config.name)
+            if isinstance(stopped, JSONResponse):
+                return stopped
+        try:
+            receipt = ensure_snapshot(rt, refresh=True)
+        except SnapshotError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        started = _lane_start(rt.supervisor) if was_running else None
+        if isinstance(started, JSONResponse):
+            return started
+        return {"ok": True, "snapshot": receipt, "restarted": was_running}
+
+    def _unknown_lane(name: str) -> JSONResponse:
+        return JSONResponse(
+            {"ok": False, "error": f"no lane named {name!r}",
+             "lanes": [primary_lane.name, *lanes_by_name]},
+            status_code=404,
+        )
+
+    @app.post("/api/control/lanes/{name}/{action}")
+    def api_lane_control(name: str, action: str):
+        if action not in ("start", "stop", "restart", "snapshot"):
+            return JSONResponse(
+                {"ok": False, "error": f"unknown action {action!r}"}, status_code=404,
+            )
+        if name == primary_lane.name:
+            if action == "snapshot":
+                return JSONResponse(
+                    {"ok": False, "error": "the primary lane has no snapshot source"},
+                    status_code=409,
+                )
+            # Same semantics (and 202 alive-but-not-ready) as /api/control/*.
+            return {"start": api_control_start, "stop": api_control_stop,
+                    "restart": api_control_restart}[action]()
+        rt = lanes_by_name.get(name)
+        if rt is None:
+            return _unknown_lane(name)
+        if action == "snapshot":
+            return _lane_snapshot(rt)
+        if action == "start":
+            try:
+                ensure_snapshot(rt)
+            except SnapshotError as exc:
+                return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+            return _lane_start(rt.supervisor)
+        if action == "stop":
+            return _lane_stop(rt.supervisor, name)
+        return _lane_restart(rt.supervisor, name)
+
+    # Pre-lanes spelling of the bench lane's controls (v0.7.0).
     @app.post("/api/control/bench/start")
     def api_bench_start():
-        if bench_supervisor is None:
+        if BENCH_LANE not in lanes_by_name:
             return JSONResponse(
                 {"ok": False, "error": "bench mode is disabled "
                  "([server] bench_enabled = false)"},
                 status_code=409,
             )
-        try:
-            pid = bench_supervisor.start()
-            return {"ok": True, "pid": pid}
-        except AlreadyRunning as exc:
-            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
-        except SupervisorError as exc:
-            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return _lane_start(lanes_by_name[BENCH_LANE].supervisor)
 
     @app.post("/api/control/bench/stop")
     def api_bench_stop():
-        if bench_supervisor is None:
+        if BENCH_LANE not in lanes_by_name:
             return JSONResponse(
                 {"ok": False, "error": "bench mode is disabled"},
                 status_code=409,
             )
-        try:
-            bench_supervisor.stop(reason="manual bench stop from launcher UI")
-            return {"ok": True}
-        except NotRunning as exc:
-            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
-        except SupervisorError as exc:
-            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        return _lane_stop(lanes_by_name[BENCH_LANE].supervisor, BENCH_LANE)
 
     # ── genome management (v0.7.0: dashboard parity with the tray's
     #    "Manage Database" submenu — select or create from the web UI) ──
@@ -439,7 +620,86 @@ def create_app(
             )
         return {"ok": True, "pid": pid, "started_pending": False}
 
+    # ── desktop sidecar shutdown ───────────────────────────────────
+
+    @app.post("/api/shutdown")
+    def api_shutdown():
+        """Stop every lane process this launcher spawned (adopted ones keep
+        running, same rule as the lifespan), then exit the launcher. The
+        desktop app calls this on quit."""
+        return _shutdown_all()
+
+    def _shutdown_all() -> dict:
+        stopped, left_running = [], []
+        for name, sup in [(primary_lane.name, supervisor)] + [
+            (rt.config.name, rt.supervisor) for rt in lane_runtimes
+        ]:
+            try:
+                running = sup.is_running() is True
+                if running and sup.owns_process() is True:
+                    sup.stop(reason="desktop app quit")
+                    stopped.append(name)
+                elif running:
+                    left_running.append(name)
+            except Exception:
+                log.warning("shutdown: stopping lane %s failed", name, exc_info=True)
+                left_running.append(name)
+        server = getattr(app.state, "uvicorn_server", None)
+        if server is not None:
+            server.should_exit = True
+        return {"ok": True, "stopped": stopped, "left_running": left_running}
+
+    app.state.shutdown_all = _shutdown_all  # also used by the parent watchdog
     return app
+
+
+PARENT_PID_ENV = "CYMATIX_DESKTOP_PARENT_PID"
+
+
+def _parent_pid_from_env(environ) -> Optional[int]:
+    try:
+        pid = int(environ.get(PARENT_PID_ENV, ""))
+    except ValueError:
+        return None
+    return pid if pid > 0 else None
+
+
+def _pid_alive(pid: int) -> bool:
+    import psutil
+    return psutil.pid_exists(pid)
+
+
+def watch_parent(pid: int, on_gone, is_alive=_pid_alive, interval_s: float = 2.0,
+                 sleep=time.sleep) -> None:
+    """Block until process *pid* is gone, then call *on_gone*. The desktop
+    app's graceful quit calls /api/shutdown; this covers the app being
+    killed, so its lanes are not orphaned."""
+    while is_alive(pid):
+        sleep(interval_s)
+    log.warning("Desktop app (pid %d) is gone; shutting the launcher down", pid)
+    on_gone()
+
+
+def bind_listen_socket(host: str, port: int) -> socket.socket:
+    """Bind and listen before serving, so the port is known (``port=0`` lets
+    the OS pick a free one) and connections made the moment the READY line
+    is read queue instead of being refused."""
+    family = socket.AF_INET6 if ":" in host else socket.AF_INET
+    sock = socket.socket(family, socket.SOCK_STREAM)
+    if sys.platform != "win32":
+        # Windows SO_REUSEADDR allows port hijacking; uvicorn skips it too.
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind((host, port))
+    sock.listen(128)
+    sock.set_inheritable(True)
+    return sock
+
+
+def _run_headless(app: FastAPI, sock: socket.socket) -> None:
+    import uvicorn
+    server = uvicorn.Server(uvicorn.Config(app, log_level="info"))
+    app.state.uvicorn_server = server
+    server.run(sockets=[sock])
 
 
 def _launcher_port(request: Request) -> int:
@@ -468,7 +728,15 @@ def _parse_args(argv: Optional[list] = None) -> argparse.Namespace:
              "the current platform. 'uninstall-service' removes it.",
     )
     p.add_argument("--host", default="127.0.0.1", help="Launcher UI bind host (default: 127.0.0.1)")
-    p.add_argument("--port", type=int, default=11438, help="Launcher UI port (default: 11438)")
+    p.add_argument("--port", type=int, default=11438,
+                   help="Launcher UI port (default: 11438; 0 = any free port, with --headless)")
+    p.add_argument(
+        "--headless", action="store_true",
+        help="Desktop-app sidecar mode: no browser, tray or window. Serves on "
+             "--port (0 = free port), prints 'CYMATIX_LAUNCHER_READY {json}' "
+             "once serving, and requires the token in $CYMATIX_LAUNCHER_TOKEN "
+             "when set.",
+    )
     p.add_argument(
         "--bench", action="store_true",
         help="Dev mode: also supervise a second cymatix on the bench port "
@@ -962,6 +1230,23 @@ def main(argv: Optional[list] = None) -> int:
             )
             return 2
 
+    # Desktop sidecar: bind first so the port is known before the app (and
+    # its READY line) is built. The token is taken out of the environment so
+    # the lane children this launcher spawns do not inherit it.
+    headless_sock = None
+    headless_token = None
+    if args.headless:
+        if args.tray or args.native:
+            log.error("--headless cannot be combined with --tray or --native")
+            return 2
+        args.no_browser = True
+        headless_token = os.environ.pop(TOKEN_ENV, "").strip() or None
+        try:
+            headless_sock = bind_listen_socket(args.host, args.port)
+        except OSError as exc:
+            log.error("Cannot bind %s:%d: %s", args.host, args.port, exc)
+            return 1
+
     # Fail fast if --native is requested but pywebview isn't installed.
     if args.native and not _check_native_available():
         log.error(
@@ -1003,43 +1288,35 @@ def main(argv: Optional[list] = None) -> int:
         cymatix_port=args.cymatix_port,
     )
 
-    # ── dev/configuration mode: optional second cymatix on the bench port ──
-    # Chat stays attached to the MAIN genome on the main port; a subagent
-    # can point the bench-harness at the bench port without the two
-    # instances sharing a knowledge store. Final deployments leave
-    # [server] bench_enabled = false (and pass no --bench) and get exactly
-    # one server.
-    bench_supervisor: Optional[CymatixSupervisor] = None
-    bench_genome_path = ""
+    # ── lanes: extra cymatix instances, one per knowledge store ──
+    # The primary chat stays on the primary lane; bench / staging / other
+    # [[lanes]] each get their own port, store and supervisor. A final
+    # deployment with no [[lanes]] and bench off gets exactly one server.
+    primary_lane = LaneConfig(
+        name=PRIMARY_LANE, port=args.cymatix_port,
+        genome_path=runtime_cfg.genome.path, role=PRIMARY_LANE,
+    )
     try:
-        from ..config import load_config as _load_config
-        _cfg = _load_config()
-        _bench_on = bool(args.bench or _cfg.server.bench_enabled)
-        if _bench_on:
-            bench_genome_path = _cfg.server.bench_genome_path
-            from .state import StateStore as _StateStore
-            _bench_store = _StateStore(
-                path=Path.home() / ".cymatix" / "launcher" / "bench-state.json",
-            )
-            bench_supervisor = CymatixSupervisor(
-                store=_bench_store,
-                cymatix_host=args.cymatix_host,
-                cymatix_port=_cfg.server.bench_port,
-                cymatix_log_path=(
-                    Path.home() / ".cymatix" / "launcher" / "cymatix-bench.log"
-                ),
-                extra_env={
-                    "CYMATIX_GENOME_PATH": bench_genome_path,
-                    "CYMATIX_SERVER_PORT": str(_cfg.server.bench_port),
-                },
-            )
-            log.info(
-                "Bench mode: second cymatix planned on :%d (genome=%s)",
-                _cfg.server.bench_port, bench_genome_path,
-            )
+        from . import genome_registry as _gr_lane
+        primary_lane.genome_path = str(_gr_lane.active_genome_path())
     except Exception:
-        log.warning("Bench-mode config probe failed; continuing without",
+        log.warning("Could not resolve the active genome for the primary lane",
                     exc_info=True)
+    lane_runtimes: List[LaneRuntime] = []
+    try:
+        lane_runtimes = build_lane_runtimes(
+            runtime_cfg, host=args.cymatix_host, bench=args.bench,
+            primary_port=args.cymatix_port,
+        )
+    except LaneConfigError as exc:
+        log.error("Lane config rejected; serving the primary lane only: %s", exc)
+    except Exception:
+        log.warning("Lane setup failed; serving the primary lane only",
+                    exc_info=True)
+    for rt in lane_runtimes:
+        log.info("Lane %s planned on :%d (genome=%s%s)",
+                 rt.config.name, rt.config.port, rt.config.genome_path,
+                 f", engine={rt.config.engine_path}" if rt.config.engine_path else "")
 
     # First-boot db-selection gate: if the active genome file does not
     # exist yet, do NOT silently autostart onto an empty store — let the
@@ -1117,14 +1394,18 @@ def main(argv: Optional[list] = None) -> int:
             log.error("Failed to start cymatix: %s", exc)
             log.info("Launcher will continue; use the Start button once the issue is fixed")
 
-    if bench_supervisor is not None and not args.no_autostart:
+    for rt in lane_runtimes:
+        if args.no_autostart:
+            break
         try:
-            if not bench_supervisor.adopt():
-                bench_supervisor.start()
+            # Always re-adopt a surviving child; only spawn when autostart.
+            if not rt.supervisor.adopt() and rt.config.autostart:
+                ensure_snapshot(rt)  # first start of a snapshot lane
+                rt.supervisor.start()
         except AlreadyRunning:
             pass
         except Exception as exc:
-            log.error("Failed to start bench cymatix: %s", exc)
+            log.error("Failed to start lane %s: %s", rt.config.name, exc)
 
     app = create_app(
         store=store,
@@ -1134,10 +1415,27 @@ def main(argv: Optional[list] = None) -> int:
         observability_install_pending=observability_install_pending,
         grafana_url=args.grafana_url,
         prometheus_url=args.prometheus_url,
-        bench_supervisor=bench_supervisor,
-        bench_genome_path=bench_genome_path,
         needs_db_selection=needs_db_selection,
+        lanes=lane_runtimes,
+        primary_lane=primary_lane,
+        token=headless_token,
+        ready_info=(
+            {"host": args.host, "port": headless_sock.getsockname()[1]}
+            if headless_sock is not None else None
+        ),
     )
+
+    if headless_sock is not None:
+        log.info("Headless sidecar mode on %s:%d", args.host,
+                 headless_sock.getsockname()[1])
+        parent_pid = _parent_pid_from_env(os.environ)
+        if parent_pid is not None:
+            threading.Thread(
+                target=watch_parent, args=(parent_pid, app.state.shutdown_all),
+                daemon=True, name="desktop-parent-watchdog",
+            ).start()
+        _run_headless(app, headless_sock)
+        return 0
 
     url = f"http://{args.host}:{args.port}/"
 
@@ -1184,6 +1482,7 @@ def main(argv: Optional[list] = None) -> int:
             observability_supervisor=observability_sup,
             install_pending=observability_install_pending,
             update_checker=update_checker,
+            lanes=lane_runtimes,
         )
 
         # Surface the install-needed balloon if the build helper flagged it.

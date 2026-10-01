@@ -1410,6 +1410,144 @@ url = "http://127.0.0.1:11440"
 
 ---
 
+## `[sync]`
+
+**Purpose.** Keep the knowledge store in step with folders you are editing,
+so docs and code don't go stale while you work. A background pass inside the
+server, every `interval_s`:
+
+- ingests new files;
+- re-ingests changed files and tombstones the chunks the change made stale;
+- tombstones the chunks of deleted files.
+
+Before this, every ingest path (`cymatix ingest`, `/ingest`, `mem_sync`)
+left the old version of a changed file live beside the new one.
+
+Tombstones are soft (`compress_to_heterochromatin`): hot-tier retrieval
+stops returning the chunk, but the row and everything that references it
+are kept. A file that is only touched (same sha256) is not re-ingested.
+Tracking state lives in the store's own `sync_tracked` table, so it moves
+with the database. A `sync_lock` lease lets only one process sync a given
+store.
+
+**Guards.**
+
+- A root that is missing at pass time is skipped, never read as "every
+  file deleted".
+- If more than `max_delete_fraction` of a root's tracked files (and at
+  least two) vanish in one pass, nothing in that root is touched and
+  `/sync/status` counts a guard trip. Confirm a real bulk delete with
+  `POST /sync/rescan` and body `{"allow_mass_delete": true}`.
+- `max_files_per_pass` caps ingest work per pass, so a cold start over a
+  large tree spreads across passes (`pending` in the report).
+
+**Surface.** `GET /sync/status` (roots, tracked count, missing roots, guard
+trips, last pass report); `POST /sync/rescan` runs a pass now (admin-token
+gated when `[server] admin_token` is set); counter
+`cymatix_sync_events_total{event=...}`.
+
+**Overlap with `[mem_sync]`.** `mem_sync` is the older, separate daemon for
+flat folders of `.md` memory files. `[sync]` supersedes it for repo
+folders; both can run, but don't point both at the same folder.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:sync -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | `bool` | `false` | Opt-in. Off = no worker, no tracking table writes; /sync/status reports {"enabled": false}. |
+| `roots` | `List[str]` | `[]` | Folders to track, walked recursively. Relative paths resolve against the server's working directory. A root that is missing at pass time is skipped (never read as "everything deleted"). |
+| `include` | `List[str]` | `[".txt", ".md", ".rst", ".py", ".ts", ".js", ".json", ".toml", ".yml", ".yaml"]` | File extensions to track (same default set as `cymatix ingest`). Code extensions are ingested with content_type="code". |
+| `exclude` | `List[str]` | `[".git", "node_modules", ".venv", "venv", "__pycache__", "genomes", ".claude", "dist", "build"]` | Directory names skipped anywhere under a root. |
+| `interval_s` | `float` | `30.0` | Seconds between passes. POST /sync/rescan runs one immediately. |
+| `max_delete_fraction` | `float` | `0.2` | Mass-delete guard: if more than this fraction of tracked files vanish in one pass, the pass tombstones nothing and records a guard trip (unmounted drive, typo'd root). |
+| `max_files_per_pass` | `int` | `200` | Ingest budget per pass (new + changed files); the rest wait for the next pass. Throttles cold starts. |
+| `max_file_bytes` | `int` | `2000000` | Files larger than this are skipped (counted in `skipped`). |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[sync]
+enabled = true
+roots = ["F:/Projects/cymatix-context/docs", "F:/Projects/cymatix-context/cymatix_context"]
+interval_s = 30
+```
+
+**Cross-refs.** `cymatix_context/sync/worker.py` (`SyncWorker`),
+`cymatix_context/sync/tracker.py`, `cymatix_context/server/routes_sync.py`,
+`KnowledgeStore.tombstone_genes`.
+
+---
+
+## `[[lanes]]`
+
+**Purpose.** Extra cymatix instances the launcher (`cymatix-launcher`)
+supervises, each on its own port against its own knowledge store. One
+server process serves exactly one store, so serving several stores at once
+means one lane per store. Chats pick a lane by pointing their MCP host's
+`CYMATIX_MCP_URL` at that lane's port.
+
+Two lanes are synthesized rather than declared:
+
+- `stable`: the primary lane, always present, from `[server] port` (or the
+  launcher's `--cymatix-port`) and `[genome] path`. The name is reserved.
+- `bench`: from `[server] bench_enabled` / `bench_port` /
+  `bench_genome_path` (or `--bench`). A declared lane named `bench`
+  replaces it.
+
+The launcher rejects the whole lane set at startup if two lanes share a
+name, a port, or a knowledge-store directory, or if a lane takes a reserved
+port (11438 launcher UI, 11440 encoder daemon, 8787 Headroom). Each child
+gets `CYMATIX_LANE`, `CYMATIX_SERVER_PORT` and an absolute
+`CYMATIX_GENOME_PATH`; `engine_path` adds `PYTHONPATH` and sets its working
+directory, and `config_path` adds `CYMATIX_CONFIG`.
+
+A staging lane that serves a different engine build (for example a git
+worktree) must not point at another lane's live store. Set
+`genome_source = "snapshot:<lane>"` instead: the launcher copies that lane's
+store into `genome_path` with SQLite's online backup API (consistent, safe
+while the source is running) the first time the lane starts, and again on
+the dashboard's "Refresh snapshot" button
+(`POST /api/control/lanes/<name>/snapshot`, which stops the lane, re-copies
+and restarts it). Then `cymatix compare --lanes stable,staging` diffs the
+two engines on the same data.
+
+**Keys** (per entry).
+
+<!-- BEGIN GENERATED: config-tables:lanes -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `name` | `str` | *(required)* | Lane id: lowercase letters, digits, "-" / "_". Names the child's log/state files and its CYMATIX_LANE env. "stable" is reserved for the primary lane; declaring "bench" replaces the lane synthesized from [server] bench_*. |
+| `port` | `int` | *(required)* | HTTP port for this lane's server. Must be unique across lanes and not 11438 (launcher UI), 11440 (encoder daemon, #376) or 8787 (Headroom). |
+| `genome_path` | `str` | *(required)* | Knowledge store for this lane. Must sit in its own directory (metrics.json is written next to the genome). Relative paths resolve against the launcher's working directory, then are passed to the child as an absolute CYMATIX_GENOME_PATH. |
+| `role` | `str` | `"custom"` | Informational: "stable" / "bench" / "staging" / "custom". Shown on the dashboard; no behavior is keyed on it. |
+| `python_executable` | `str` | `""` | Interpreter for this lane's child. "" = the launcher's own interpreter. Point at another venv to serve a different engine build. |
+| `engine_path` | `str` | `""` | Optional source tree (e.g. a git worktree) to serve instead of the installed package: prepended to the child's PYTHONPATH and used as its working directory. "" = installed package. |
+| `config_path` | `str` | `""` | Optional cymatix.toml for this lane (exported as CYMATIX_CONFIG). "" = the child reads cymatix.toml from its working directory. |
+| `autostart` | `bool` | `true` | Start this lane when the launcher starts (ignored under --no-autostart). |
+| `genome_source` | `str` | `""` | "snapshot:<lane>" = serve a consistent copy of that lane's store (SQLite backup API), taken when genome_path does not exist yet and on POST /api/control/lanes/<name>/snapshot. Use it for staging engines so a newer build never writes to another lane's live store. "" = genome_path is used as-is. |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[[lanes]]
+name = "staging"
+role = "staging"
+port = 11441
+genome_path = "genomes/staging/genome.db"
+engine_path = "F:/Projects/cymatix-context/.claude/worktrees/my-branch"
+genome_source = "snapshot:stable"
+autostart = false
+```
+
+**Cross-refs.** `cymatix_context/config.py` (`LaneConfig`),
+`cymatix_context/lanes.py` (`resolve_lanes`, `validate_lanes`, `lane_env`),
+`cymatix_context/launcher/app.py` (`main`).
+
+---
+
 # Configuration loading order
 
 `cymatix_context.config.load_config()` resolves configuration in this

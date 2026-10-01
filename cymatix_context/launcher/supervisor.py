@@ -105,8 +105,12 @@ class CymatixSupervisor:
         python_executable: Optional[str] = None,
         cymatix_log_path: Optional[Path] = None,
         extra_env: Optional[dict] = None,
+        cwd: Optional[str] = None,
     ) -> None:
         self.store = store
+        # Lane engine tree (a worktree serving another engine build); None =
+        # the repo-root default in _cwd().
+        self._cwd_override = cwd
         self.cymatix_host = cymatix_host
         self.cymatix_port = cymatix_port
         # v0.7.0 dev-mode: per-instance environment overlay (e.g. the
@@ -488,11 +492,17 @@ class CymatixSupervisor:
         """
         # Stage 1: stored PID
         if self.is_running():
+            # The stored PID may be the child this supervisor just spawned
+            # (main() starts cymatix, then the app lifespan re-adopts). That
+            # one stays ours, so launcher shutdown still stops it.
+            proc = getattr(self, "_proc", None)
+            own_child = proc is not None and proc.pid == self.store.state.cymatix_pid
             log.info(
-                "Adopted existing cymatix via state file (pid=%d, port=%d)",
+                "%s cymatix via state file (pid=%d, port=%d)",
+                "Kept own" if own_child else "Adopted existing",
                 self.store.state.cymatix_pid, self.store.state.cymatix_port,
             )
-            self._owns_cymatix_process = False
+            self._owns_cymatix_process = own_child
             return True
 
         # Stage 2: orphan scan
@@ -527,7 +537,11 @@ class CymatixSupervisor:
 
     def _cwd(self) -> Optional[str]:
         """Where to run cymatix from — default is the cymatix-context repo root if
-        we're inside it, else None (use inherited cwd)."""
+        we're inside it, else None (use inherited cwd). A lane's engine tree
+        overrides both."""
+        override = getattr(self, "_cwd_override", None)
+        if override:
+            return override
         try:
             here = Path(__file__).resolve()
             # cymatix_context/launcher/supervisor.py → cymatix-context root

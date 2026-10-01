@@ -47,7 +47,7 @@ import logging
 import os
 import sqlite3
 import socket
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 log = logging.getLogger("cymatix.telemetry")
 
@@ -308,6 +308,23 @@ def _attach_otlp_logging_handler(
         )
 
 
+def _resource_attributes(service_name: str, service_version: str) -> Dict[str, str]:
+    """OTel resource attributes for this process. Every lane reports the
+    same service.name, so the lane goes in service.instance.id (and
+    cymatix.lane) to keep lanes apart in Grafana."""
+    from ..lanes import current_lane
+    lane = current_lane()
+    return {
+        "service.name": service_name,
+        "service.version": service_version,
+        "service.instance.id": lane,
+        "cymatix.lane": lane,
+        # COMPUTERNAME is Windows-only; fall back to socket.gethostname()
+        # so POSIX deployments don't tag every span as "unknown".
+        "deployment.host": os.environ.get("COMPUTERNAME") or socket.gethostname(),
+    }
+
+
 def setup_telemetry(
     app: Any = None,
     service_name: str = "cymatix-context",
@@ -363,7 +380,7 @@ def setup_telemetry(
         )
         from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
         from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
-        from opentelemetry.sdk.resources import Resource, SERVICE_NAME, SERVICE_VERSION
+        from opentelemetry.sdk.resources import Resource
         from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
             OTLPSpanExporter,
         )
@@ -385,13 +402,7 @@ def setup_telemetry(
     insecure = settings["insecure"]
     ratio = settings["sampler_ratio"]
 
-    resource = Resource.create({
-        SERVICE_NAME: service_name,
-        SERVICE_VERSION: service_version,
-        # COMPUTERNAME is Windows-only; fall back to socket.gethostname()
-        # so POSIX deployments don't tag every span as "unknown".
-        "deployment.host": os.environ.get("COMPUTERNAME") or socket.gethostname(),
-    })
+    resource = Resource.create(_resource_attributes(service_name, service_version))
 
     sampler = ParentBased(ALWAYS_ON if ratio >= 1.0 else TraceIdRatioBased(ratio))
     tracer_provider = TracerProvider(resource=resource, sampler=sampler)
@@ -689,6 +700,17 @@ def vault_force_prune_counter():
             description="Pinned traces force-deleted per max_retention_hours_hard.",
         )
     return _instruments["vault_force_prune"]
+
+
+def sync_events_counter():
+    """Delta-sync pass outcomes, labelled by ``event`` (ingested, unchanged,
+    tombstoned, deleted, skipped, errors, guard_tripped)."""
+    if "sync_events" not in _instruments:
+        _instruments["sync_events"] = meter.create_counter(
+            "cymatix_sync_events_total",
+            description="Delta-sync file outcomes per pass, by event.",
+        )
+    return _instruments["sync_events"]
 
 
 def vault_file_count_gauge():

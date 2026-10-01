@@ -34,6 +34,7 @@ from ..vault import VaultManager
 from .helpers import (
     _background_checkpoint,
     _background_registry_sweep,
+    _background_sync,
     _background_wal_gauge,
     _register_vault_routes,
 )
@@ -128,13 +129,23 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         pass
 
     # Bridge instantiated up here so the lifespan closure can capture it.
-    bridge = AgentBridge()
+    bridge = AgentBridge(cymatix_base_url=f"http://127.0.0.1:{config.server.port}")
 
     # Session registry -- presence + attribution.
     registry = Registry(cymatix.genome)
 
     # Vault manager -- operator-facing markdown export.
     vault = VaultManager(config=config, genome=cymatix.genome)
+
+    # Delta sync of tracked folders -- opt-in ([sync] enabled).
+    sync_worker = None
+    if config.sync.enabled:
+        try:
+            from ..sync import SyncWorker
+            sync_worker = SyncWorker(cymatix, config.sync)
+        except Exception:
+            log.warning("sync worker setup failed; continuing without sync",
+                        exc_info=True)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -163,6 +174,10 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         task = asyncio.create_task(_background_checkpoint(cymatix))
         sweep_task = asyncio.create_task(_background_registry_sweep(registry))
         wal_gauge_task = asyncio.create_task(_background_wal_gauge(cymatix))
+        sync_task = (
+            asyncio.create_task(_background_sync(sync_worker))
+            if sync_worker is not None else None
+        )
 
         # Vault export -- opt-in, off if config.vault.enabled=false.
         try:
@@ -174,11 +189,17 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         task.cancel()
         sweep_task.cancel()
         wal_gauge_task.cancel()
-        for _t in (task, sweep_task, wal_gauge_task):
+        if sync_task is not None:
+            sync_task.cancel()
+        for _t in (task, sweep_task, wal_gauge_task, sync_task):
+            if _t is None:
+                continue
             try:
                 await _t
             except asyncio.CancelledError:
                 pass
+        if sync_worker is not None:
+            sync_worker.close()
         cymatix.genome.checkpoint("TRUNCATE")
 
         try:
@@ -232,6 +253,10 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
 
     # Register vault endpoints (export, status, trace, pin/unpin).
     _register_vault_routes(app)
+
+    from .routes_sync import setup_sync_routes
+    app.state.sync_worker = sync_worker
+    setup_sync_routes(app, config=config, worker=sync_worker)
 
     return app
 

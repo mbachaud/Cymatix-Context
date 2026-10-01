@@ -12,13 +12,30 @@
   [`docs/ROADMAP.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROADMAP.md)** —
   the sequencing layer that says which track a piece of work sits under.
 - **Install from PyPI:** `pip install cymatix-context`. Released versions are
-  git-tagged (`v0.10.0`, `v0.9.2`, `v0.9.1`, …) on the repository; pre-releases
+  git-tagged (`v0.11.0`, `v0.10.0`, `v0.9.2`, …) on the repository; pre-releases
   (`vX.Y.ZbN`, cut from `beta`) install with `pip install --pre cymatix-context`.
-- This wiki documents **v0.10.0**. Each item below carries
+- This wiki documents **v0.11.0**. Each item below carries
   its PR or issue number. The first section highlights changes since the
-  published v0.9.2 release (2026-09-08).
+  published v0.10.0 release (2026-09-30).
 
-## 0.10.0 (2026-09-29) — release contents
+## 0.11.0 (2026-10-01) — release contents
+
+Built so you can use Cymatix while building with it. No shipped retrieval or
+delivery default changes: every new behaviour is opt-in or launcher-side.
+This release ships **without** a 947k witness, by owner decision, because no
+retrieval path or default changed. The v0.10.0 witness remains the latest
+rank and delivery receipt.
+
+| Thread | What it is | Default impact |
+|---|---|---|
+| Multi-lane serving ([#472](https://github.com/mbachaud/Cymatix-Context/pull/472)) | `[[lanes]]`: extra launcher-supervised servers, each with its own port and store; per-lane shared dir, vault and OTel tag; `cymatix mcp install --lane` points a chat at a lane | **Inert** unless `[[lanes]]` is declared; `stable` and `bench` resolve as before |
+| Staging lanes + compare ([#474](https://github.com/mbachaud/Cymatix-Context/pull/474)) | `genome_source = "snapshot:<lane>"` serves a consistent copy of another lane's store; `/admin/config-dump`; `cymatix compare` writes a per-query diff receipt | Opt-in |
+| Delta sync ([#473](https://github.com/mbachaud/Cymatix-Context/pull/473)) | `[sync]` keeps tracked folders in step with the store: changed files re-ingested with stale chunks soft-tombstoned, deleted files tombstoned, with mass-delete and missing-root guards | **Off** |
+| Brand assets ([#475](https://github.com/mbachaud/Cymatix-Context/pull/475)) | One master mark renders every icon; the tray and favicon use it | Launcher visuals only |
+| Desktop app, experimental ([#476](https://github.com/mbachaud/Cymatix-Context/pull/476)) | Electron window and tray around the headless launcher; lane-health badge; native-actions rail; bundled engine entry | New `desktop/` app; packaged builds and signing pending [#477](https://github.com/mbachaud/Cymatix-Context/issues/477) |
+| Launcher ownership fix (#476) | A launcher now stops the cymatix it started (the re-adopt used to drop ownership) | Bug fix |
+
+## 0.10.0 (2026-09-30) — release contents
 
 No shipped retrieval or delivery default changes. Everything new is opt-in,
 and each default flip still needs its own paired receipt. The pre-release

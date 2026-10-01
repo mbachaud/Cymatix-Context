@@ -298,6 +298,46 @@ class ServerConfig:
 
 
 @dataclass
+class SyncConfig:
+    """[sync] — in-process delta sync of tracked source folders.
+
+    A background pass walks ``roots``, ingests new files, re-ingests changed
+    ones and tombstones (HETEROCHROMATIN, content kept) the chunks a change
+    or deletion made stale. Runs inside the server; see
+    ``cymatix_context/sync/``.
+    """
+    enabled: bool = False               # Opt-in. Off = no worker, no tracking table writes; /sync/status reports {"enabled": false}.
+    roots: List[str] = field(default_factory=list)  # Folders to track, walked recursively. Relative paths resolve against the server's working directory. A root that is missing at pass time is skipped (never read as "everything deleted").
+    include: List[str] = field(default_factory=lambda: [".txt", ".md", ".rst", ".py", ".ts", ".js", ".json", ".toml", ".yml", ".yaml"])  # File extensions to track (same default set as `cymatix ingest`). Code extensions are ingested with content_type="code".
+    exclude: List[str] = field(default_factory=lambda: [".git", "node_modules", ".venv", "venv", "__pycache__", "genomes", ".claude", "dist", "build"])  # Directory names skipped anywhere under a root.
+    interval_s: float = 30.0            # Seconds between passes. POST /sync/rescan runs one immediately.
+    max_delete_fraction: float = 0.2    # Mass-delete guard: if more than this fraction of tracked files vanish in one pass, the pass tombstones nothing and records a guard trip (unmounted drive, typo'd root).
+    max_files_per_pass: int = 200       # Ingest budget per pass (new + changed files); the rest wait for the next pass. Throttles cold starts.
+    max_file_bytes: int = 2_000_000     # Files larger than this are skipped (counted in `skipped`).
+
+
+@dataclass
+class LaneConfig:
+    """One ``[[lanes]]`` entry: an extra cymatix instance the launcher
+    supervises on its own port against its own knowledge store.
+
+    The primary ``stable`` lane is always synthesized from ``[server] port``
+    + ``[genome] path`` and ``bench`` from the legacy ``[server] bench_*``
+    knobs, so this array only lists additional lanes. Resolution and
+    validation live in ``cymatix_context/lanes.py``.
+    """
+    name: str                           # Lane id: lowercase letters, digits, "-" / "_". Names the child's log/state files and its CYMATIX_LANE env. "stable" is reserved for the primary lane; declaring "bench" replaces the lane synthesized from [server] bench_*.
+    port: int                           # HTTP port for this lane's server. Must be unique across lanes and not 11438 (launcher UI), 11440 (encoder daemon, #376) or 8787 (Headroom).
+    genome_path: str                    # Knowledge store for this lane. Must sit in its own directory (metrics.json is written next to the genome). Relative paths resolve against the launcher's working directory, then are passed to the child as an absolute CYMATIX_GENOME_PATH.
+    role: str = "custom"                # Informational: "stable" / "bench" / "staging" / "custom". Shown on the dashboard; no behavior is keyed on it.
+    python_executable: str = ""         # Interpreter for this lane's child. "" = the launcher's own interpreter. Point at another venv to serve a different engine build.
+    engine_path: str = ""               # Optional source tree (e.g. a git worktree) to serve instead of the installed package: prepended to the child's PYTHONPATH and used as its working directory. "" = installed package.
+    config_path: str = ""               # Optional cymatix.toml for this lane (exported as CYMATIX_CONFIG). "" = the child reads cymatix.toml from its working directory.
+    autostart: bool = True              # Start this lane when the launcher starts (ignored under --no-autostart).
+    genome_source: str = ""             # "snapshot:<lane>" = serve a consistent copy of that lane's store (SQLite backup API), taken when genome_path does not exist yet and on POST /api/control/lanes/<name>/snapshot. Use it for staging engines so a newer build never writes to another lane's live store. "" = genome_path is used as-is.
+
+
+@dataclass
 class TelemetryConfig:
     """[telemetry] — OpenTelemetry export defaults for the backend.
 
@@ -1413,6 +1453,10 @@ class CymatixConfig:
     # Fork 1 slice 1: optional shared encoder daemon (docs/design/2026-08-05-
     # fork1-slice1-contract.md). url="" = off = in-process (default).
     encoder_daemon: EncoderDaemonConfig = field(default_factory=EncoderDaemonConfig)
+    # Phase 3: in-process delta sync of tracked source folders.
+    sync: SyncConfig = field(default_factory=SyncConfig)
+    # Multi-lane serving: extra launcher-supervised instances ([[lanes]]).
+    lanes: List[LaneConfig] = field(default_factory=list)
 
 
 def _warn_unknown(section: str, raw_section: Dict[str, Any], dataclass_type: type) -> None:
@@ -1452,6 +1496,10 @@ _KEY_ALIASES = {"budget": {"retrieval_tokens": "expression_tokens",
 # The aliases must be included here because ``_apply_lexicon_aliases``
 # leaves an alias key un-consumed in ``raw`` on a collision (legacy
 # wins), and that must never be flagged as an unknown section.
+# Top-level keys that are TOML arrays of tables (``[[lanes]]``) — known, but
+# lists rather than tables, so the must-be-a-table check skips them.
+_ARRAY_SECTIONS = {"lanes"}
+
 _KNOWN_TOP_LEVEL_SECTIONS = {
     "ribosome", "budget", "genome", "server", "encoder_daemon", "telemetry",
     "ingestion", "context", "cymatics", "retrieval", "abstain", "session",
@@ -1463,6 +1511,8 @@ _KNOWN_TOP_LEVEL_SECTIONS = {
     # must still count as "known" or the shipped cymatix.toml trips a
     # spurious unknown-section warning on every load.
     "mem_sync",
+    "sync",
+    *_ARRAY_SECTIONS,
     *_SECTION_ALIASES.keys(),
 }
 
@@ -1566,6 +1616,41 @@ def _positive_float(
     return v
 
 
+def _parse_lanes(entries: List[Any]) -> List[LaneConfig]:
+    """Parse ``[[lanes]]`` entries; skip (with a warning) any entry that is
+    not a table or lacks a required key. Cross-lane rules (unique ports,
+    reserved names) are enforced by ``lanes.validate_lanes`` at launch."""
+    lanes: List[LaneConfig] = []
+    for i, entry in enumerate(entries):
+        if not isinstance(entry, dict):
+            log.warning("[[lanes]] entry %d is not a table; ignoring", i)
+            continue
+        _warn_unknown("lanes", entry, LaneConfig)
+        missing = [k for k in ("name", "port", "genome_path") if k not in entry]
+        if missing:
+            log.warning(
+                "[[lanes]] entry %d (%r) is missing %s; ignoring",
+                i, entry.get("name", "?"), ", ".join(missing),
+            )
+            continue
+        try:
+            lanes.append(LaneConfig(
+                name=str(entry["name"]),
+                port=int(entry["port"]),
+                genome_path=str(entry["genome_path"]),
+                role=str(entry.get("role", "custom")),
+                python_executable=str(entry.get("python_executable", "")),
+                engine_path=str(entry.get("engine_path", "")),
+                config_path=str(entry.get("config_path", "")),
+                autostart=bool(entry.get("autostart", True)),
+                genome_source=str(entry.get("genome_source", "")),
+            ))
+        except (TypeError, ValueError) as exc:
+            log.warning("[[lanes]] entry %d (%r) is invalid (%s); ignoring",
+                        i, entry.get("name", "?"), exc)
+    return lanes
+
+
 def _apply_env_overrides(cfg: CymatixConfig) -> CymatixConfig:
     """Apply CYMATIX_* env overrides to *cfg* in place and return it.
 
@@ -1599,6 +1684,16 @@ def _apply_env_overrides(cfg: CymatixConfig) -> CymatixConfig:
         cfg.server.bench_enabled = os.environ["CYMATIX_BENCH_ENABLED"].strip().lower() in (
             "1", "true", "yes", "on",
         )
+    # The launcher exports CYMATIX_SERVER_PORT to each lane child so the
+    # child's own config reports the port it is actually bound to.
+    if os.environ.get("CYMATIX_SERVER_PORT"):
+        try:
+            cfg.server.port = int(os.environ["CYMATIX_SERVER_PORT"])
+        except ValueError:
+            log.warning(
+                "CYMATIX_SERVER_PORT=%r is not an integer — ignoring override",
+                os.environ["CYMATIX_SERVER_PORT"],
+            )
     if os.environ.get("CYMATIX_SERVER_UPSTREAM"):
         cfg.server.upstream = os.environ["CYMATIX_SERVER_UPSTREAM"]
     if os.environ.get("CYMATIX_SERVER_UPSTREAM_TIMEOUT"):
@@ -1644,6 +1739,11 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
     # alias resolution so a scalar legacy section cannot hide a valid alias.
     # Field validation still runs normally for every table that survives.
     for section, value in list(raw.items()):
+        if section in _ARRAY_SECTIONS:
+            if not isinstance(value, list):
+                log.warning("[[%s]] is not an array of tables; ignoring", section)
+                del raw[section]
+            continue
         if section in _KNOWN_TOP_LEVEL_SECTIONS and not isinstance(value, dict):
             log.warning("[%s] is not a table; ignoring", section)
             del raw[section]
@@ -1762,6 +1862,24 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
         cfg.encoder_daemon = EncoderDaemonConfig(
             url=str(e.get("url", cfg.encoder_daemon.url)),
         )
+
+    if "sync" in raw:
+        sy = raw["sync"]
+        _warn_unknown("sync", sy, SyncConfig)
+        d = SyncConfig()
+        cfg.sync = SyncConfig(
+            enabled=bool(sy.get("enabled", d.enabled)),
+            roots=[str(r) for r in sy.get("roots", d.roots)],
+            include=[str(e) for e in sy.get("include", d.include)],
+            exclude=[str(e) for e in sy.get("exclude", d.exclude)],
+            interval_s=float(sy.get("interval_s", d.interval_s)),
+            max_delete_fraction=float(sy.get("max_delete_fraction", d.max_delete_fraction)),
+            max_files_per_pass=int(sy.get("max_files_per_pass", d.max_files_per_pass)),
+            max_file_bytes=int(sy.get("max_file_bytes", d.max_file_bytes)),
+        )
+
+    if "lanes" in raw:
+        cfg.lanes = _parse_lanes(raw["lanes"])
 
     # CYMATIX_GENOME_PATH / CYMATIX_SERVER_* overrides (env > toml > default).
     _apply_env_overrides(cfg)

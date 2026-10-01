@@ -182,6 +182,111 @@ p {
   text-align: center;
 }
 
+/* ── Desktop app window (?embedded=1) ─────────────────────────────── */
+
+body.embedded {
+  --rail-width: 232px;
+  display: grid;
+  grid-template-columns: var(--rail-width) 1fr;
+  transition: grid-template-columns var(--motion);
+}
+
+body.embedded.rail-collapsed {
+  --rail-width: 44px;
+}
+
+body.embedded .shell {
+  width: auto;
+  padding: 14px clamp(14px, 3vw, 28px);
+  min-width: 0;
+}
+
+body.embedded .app-header {
+  padding-bottom: 12px;
+}
+
+body.embedded .app-footer {
+  display: none;
+}
+
+.desktop-rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden auto;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-panel);
+}
+
+.desktop-rail__toggle {
+  margin: 10px;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.desktop-rail__body {
+  display: grid;
+  gap: 10px;
+  padding: 0 14px 18px;
+  transition: opacity var(--motion);
+}
+
+body.rail-collapsed .desktop-rail__body {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.desktop-rail__title {
+  margin-top: 6px;
+  color: var(--color-dim);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.desktop-rail__label {
+  display: grid;
+  gap: 4px;
+  font-size: var(--fs-sm);
+  color: var(--color-muted);
+}
+
+.desktop-rail__label select {
+  font: inherit;
+  padding: 4px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-elevated);
+  color: var(--color-text);
+}
+
+.desktop-rail__check {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: var(--fs-sm);
+}
+
+.desktop-rail__status {
+  min-height: 2.6em;
+  font-size: var(--fs-sm);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  body.embedded {
+    --rail-width: 44px;
+  }
+  body.embedded .desktop-rail__body {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1242,6 +1347,8 @@ p {
   font-size: 0.8rem;
 }
 
+.bench-row + .bench-row { margin-top: 0.35rem; }
+.bench-row__name { font-weight: 600; min-width: 4.5rem; }
 .bench-row__genome { flex: 1; overflow: hidden; text-overflow: ellipsis; }
 .bench-row__hint { font-size: 0.72rem; margin: 0.45rem 0 0; }
 

@@ -113,6 +113,11 @@ class TestApiState:
             },
             "observability": None,
             "needs_db_selection": False,
+            "lanes": [{
+                "name": "stable", "role": "stable", "port": 11437,
+                "genome": "genomes/main/genome.db", "running": False,
+                "primary": True, "autostart": True, "genome_source": "",
+            }],
             "bench": None,
         }
 
@@ -606,12 +611,15 @@ EXPECTED_ROUTES = {
     "/",
     "/api/control/bench/start",
     "/api/control/bench/stop",
+    "/api/control/lanes/{name}/{action}",
     "/api/control/restart",
     "/api/control/start",
     "/api/control/stop",
     "/api/genome/create",
     "/api/genome/select",
     "/api/genomes",
+    "/api/lanes",
+    "/api/shutdown",
     "/api/state",
     "/api/state/panels",
     "/docs",

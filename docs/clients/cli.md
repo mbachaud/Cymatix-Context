@@ -216,6 +216,45 @@ lines with json-encoded values.
 
 Exit codes: `0` success.
 
+### `cymatix mcp lanes` / `cymatix mcp install --host HOST [--lane NAME] [--scope workspace|user] [--dry-run]`
+
+`lanes` lists every lane the launcher would run (primary `stable`, `bench`
+when enabled, and each `[[lanes]]` entry) with its port, the MCP entry
+name, and its knowledge store.
+
+`install` points a chat host's MCP config at one lane. Hosts:
+`claude-code`, `claude-desktop`, `cursor`, `gemini-cli`. The primary lane
+is written as the canonical `cymatix-context` entry that `cymatix-status`
+validates; other lanes go beside it as `cymatix-context-<lane>`. An existing
+entry keeps its command, args and any env you added (identity fields such
+as `CYMATIX_USER`); only `CYMATIX_MCP_URL` and the host tags change. The
+file is backed up (`<file>.bak-<timestamp>`) and replaced atomically; a
+file that is not valid JSON is left untouched. Restart the host afterwards.
+
+Exit codes: `0` success, `1` target unreadable or unwritable, `2` unknown
+lane or unsupported scope.
+
+### `cymatix compare --lanes A,B --queries FILE [--max-docs N] [--out PATH] [--token T]`
+
+Runs every query against both lanes' `/context/packet` (with
+`ignore_delivered`) and writes a JSON receipt:
+
+- per query: each lane's delivered gene ids, whether they are identical, the
+  same set, or share top-1, their Jaccard overlap, the ids only one lane
+  returned, and each lane's know/miss;
+- per lane: `/admin/config-dump`, i.e. the config the server actually
+  loaded, its engine commit and its store identity;
+- a summary and the sha256 of the query list.
+
+Queries come from `.txt` (one per line, `#` comments), `.jsonl` or `.json`
+(strings or objects with `question` / `query`) and are matched across lanes
+by text. For an engine A/B, serve the candidate on a lane with
+`genome_source = "snapshot:stable"` so both read the same data, and start
+both lanes with the same `PYTHONHASHSEED`.
+
+Exit codes: `0` receipt written, `1` a lane did not answer, `2` bad
+arguments or unknown lane.
+
 ### `cymatix serve` (DEFERRED)
 
 Prints a pointer at `cymatix-server` and exits 4. Daemon mode is
@@ -226,6 +265,10 @@ deferred; no design doc exists yet.
 - `CYMATIX_CONFIG` — path to `cymatix.toml`. Default: `./cymatix.toml`.
 - `CYMATIX_GENOME_PATH` — overrides `[genome] path` (use `:memory:` for
   tests and ephemeral runs).
+- `CYMATIX_SERVER_PORT` — overrides `[server] port`. The launcher sets it
+  (with `CYMATIX_LANE`) for each lane it starts.
+- `CYMATIX_ADMIN_TOKEN` — read by the MCP server; sent as a bearer token
+  so ingest works against a server with `[server] admin_token` set.
 
 ## Exit code table
 

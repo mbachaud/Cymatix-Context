@@ -1,0 +1,26 @@
+{
+  "name": "cymatix-desktop",
+  "productName": "Cymatix",
+  "version": "0.1.0",
+  "description": "Cymatix Context desktop app: the launcher dashboard in a window, with the engine as a sidecar.",
+  "license": "Apache-2.0",
+  "author": "Cymatix Context contributors",
+  "homepage": "https://cymatixcontext.com",
+  "repository": "github:mbachaud/Cymatix-Context",
+  "main": "src/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test \"test/**/*.test.js\"",
+    "build:engine": "python engine/build_engine.py",
+    "dist": "electron-builder --config electron-builder.yml --publish never",
+    "release": "electron-builder --config electron-builder.yml --publish always"
+  },
+  "devDependencies": {
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  }
+}

@@ -90,6 +90,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Inspect effective configuration (`cymatix config show`).",
     )
     sub.add_parser(
+        "mcp",
+        help="List lanes / point a chat host's MCP config at one (`cymatix mcp install`).",
+    )
+    sub.add_parser(
+        "compare",
+        help="Run the same queries against two lanes and write a diff receipt.",
+    )
+    sub.add_parser(
         "serve",
         help="(DEFERRED in v1 — run the HTTP proxy via `cymatix-server`)",
     )
@@ -126,6 +134,12 @@ def _resolve(name: str) -> Optional[Callable[[list[str]], int]]:
     if name == "config":
         from . import cmd_config
         return cmd_config.run
+    if name == "mcp":
+        from . import cmd_mcp
+        return cmd_mcp.run
+    if name == "compare":
+        from . import cmd_compare
+        return cmd_compare.run
     if name == "serve":
         from . import cmd_serve
         return cmd_serve.run

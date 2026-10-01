@@ -16,8 +16,8 @@ exclude = [
 
 [project]
 name = "cymatix-context"
-version = "0.10.0"
-description = "Coordinate index layer for LLM context — Cymatix weighs, doesn't retrieve"
+version = "0.11.0"
+description = "Same query, same answer: deterministic RAG for agents"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"

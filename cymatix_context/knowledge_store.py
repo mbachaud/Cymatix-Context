@@ -26,7 +26,7 @@ import threading
 import time
 import uuid
 from contextlib import contextmanager, nullcontext
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 if TYPE_CHECKING:
     # Annotation-only imports: numpy and the BGE-M3 codec are heavy,
@@ -6195,6 +6195,29 @@ class KnowledgeStore:
         self._invalidate_dense_matrix()
         log.debug("Moved gene %s to HETEROCHROMATIN (non-destructive)", gene_id)
         return True
+
+    def live_gene_ids_for_source(self, source_id: str) -> List[str]:
+        """gene_ids of this source still in a hot tier (chromatin < 2)."""
+        with self._write_lock:
+            rows = self.conn.execute(
+                "SELECT gene_id FROM genes WHERE source_id = ? AND chromatin < 2",
+                (source_id,),
+            ).fetchall()
+        return [r[0] for r in rows]
+
+    def tombstone_genes(self, gene_ids: Iterable[str]) -> List[str]:
+        """Soft-tombstone each gene (``compress_to_heterochromatin``: tier
+        flag only, content kept). Returns the ids actually demoted; a gene
+        that fails is logged and skipped so one bad row cannot strand the
+        rest."""
+        done: List[str] = []
+        for gid in gene_ids:
+            try:
+                if self.compress_to_heterochromatin(gid):
+                    done.append(gid)
+            except Exception:
+                log.warning("Tombstone failed for gene %s", gid, exc_info=True)
+        return done
 
     def delete_gene(self, gene_id: str) -> bool:
         """Hard-delete a document and every row that references it.
