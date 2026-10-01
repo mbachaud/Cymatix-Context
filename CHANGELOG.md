@@ -2,6 +2,75 @@
 
 ## Unreleased
 
+**Use Cymatix while you build with it: several knowledge stores and engine
+builds served at once, tracked folders kept fresh, 1:1 engine comparisons,
+and an experimental desktop app. No shipped retrieval or delivery default
+changes; every new behaviour is opt-in or launcher-side.**
+
+- **release gate: no 947k witness for this release (owner decision,
+  2026-10-01).** `docs/RELEASING.md` §3 asks for a merged-stack witness on the
+  947k bed. This release ships without one because no retrieval or delivery
+  path or default changed. The knowledge-store edits only add helpers
+  (`live_gene_ids_for_source`, `tombstone_genes`), and `[sync]` is off by
+  default. Evidence instead: CI on every PR, plus the full non-live suite on
+  the merged `beta` head. The v0.10.0 witness remains the latest rank and
+  delivery receipt.
+- **Multi-lane serving ([#472](https://github.com/mbachaud/Cymatix-Context/pull/472)).**
+  `[[lanes]]` declares extra launcher-supervised servers, each on its own
+  port and store. The primary `stable` lane comes from `[server]` + `[genome]`
+  and `bench` from `[server] bench_*`, so existing configs resolve
+  unchanged.
+  - Validation rejects duplicate names or ports, reserved ports and shared
+    store directories.
+  - Each lane gets its own shared signals/inbox, vault and OTel instance tag.
+  - New: `/api/lanes`, `/api/control/lanes/{name}/{action}`, a dashboard
+    Lanes panel and a tray Lanes submenu.
+  - `cymatix mcp install --host … --lane …` points a chat at a lane, and
+    `cymatix mcp lanes` lists them.
+  - The MCP proxy now sends `$CYMATIX_ADMIN_TOKEN` (ingest through MCP used
+    to get a 401 when `admin_token` was set).
+  - `CYMATIX_SERVER_PORT` is now read.
+- **Staging lanes and `cymatix compare` ([#474](https://github.com/mbachaud/Cymatix-Context/pull/474)).**
+  `genome_source = "snapshot:<lane>"` serves a consistent SQLite-backup copy
+  of another lane's store, so a newer engine build never writes to the live
+  store. The copy can be refreshed from the dashboard.
+  - `GET /admin/config-dump` returns the loaded runtime config (secrets
+    redacted), the engine commit and the store identity.
+  - `cymatix compare --lanes A,B --queries FILE` writes a per-query diff
+    receipt that embeds both config dumps.
+  - Live control on one snapshot with the same engine: 4/4 queries
+    identical, mean Jaccard 1.000.
+- **Delta sync ([#473](https://github.com/mbachaud/Cymatix-Context/pull/473)).**
+  `[sync]` (default **off**) runs an in-process worker that keeps tracked
+  folders in step with the store.
+  - Changed files are re-ingested and their stale chunks soft-tombstoned;
+    deleted files are tombstoned. Before this, every ingest path left the
+    old version of a changed file live beside the new one.
+  - Guards: a missing root is skipped; a mass delete touches nothing until
+    `POST /sync/rescan {"allow_mass_delete": true}`; a per-pass ingest budget;
+    a single-writer lease.
+  - `GET /sync/status` and metric `cymatix_sync_events_total`.
+- **Brand assets ([#475](https://github.com/mbachaud/Cymatix-Context/pull/475)).**
+  `assets/brand/cymatix-mark.svg` is the single source for every icon,
+  rendered by `scripts/build_brand_icons.py`.
+  - The tray now shows the Cymatix mark (it used to be a drawn ring) and the
+    dashboard has a favicon.
+  - App icons for the desktop build are included.
+- **Desktop app, experimental ([#476](https://github.com/mbachaud/Cymatix-Context/pull/476)).**
+  `desktop/` is an Electron window and tray around the launcher, which runs
+  as a headless sidecar.
+  - Launcher side: `--headless --port 0`, a READY handshake, a per-launch
+    token, `/api/shutdown`, a parent watchdog and an embedded dashboard
+    layout.
+  - Tray and badge show lane health; there is a native-actions rail.
+  - `cymatix_context.desktop_entry` is a single bundled-engine entry. The
+    build and signing workflow runs only on `desktop-v*` tags.
+  - Packaged builds, signing and auto-update are not yet exercised
+    ([#477](https://github.com/mbachaud/Cymatix-Context/issues/477)).
+- **fix(launcher): a launcher now stops the cymatix it started.** The app
+  lifespan's re-adopt marked the launcher's own child as adopted, so launcher
+  shutdown left it running. Found live as an orphan on :11437 (#476).
+
 - **docs: Product Hunt launch positioning.** The package summary, README
   tagline and GitHub About now read "Same query, same answer: deterministic RAG
   for agents". The README states the EnterpriseRAG-Bench leaderboard entry in
