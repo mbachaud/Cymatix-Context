@@ -116,7 +116,7 @@ class TestApiState:
             "lanes": [{
                 "name": "stable", "role": "stable", "port": 11437,
                 "genome": "genomes/main/genome.db", "running": False,
-                "primary": True, "autostart": True,
+                "primary": True, "autostart": True, "genome_source": "",
             }],
             "bench": None,
         }

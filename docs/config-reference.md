@@ -1434,8 +1434,14 @@ gets `CYMATIX_LANE`, `CYMATIX_SERVER_PORT` and an absolute
 directory, and `config_path` adds `CYMATIX_CONFIG`.
 
 A staging lane that serves a different engine build (for example a git
-worktree) must not point at another lane's live store. Give it its own
-copy.
+worktree) must not point at another lane's live store. Set
+`genome_source = "snapshot:<lane>"` instead: the launcher copies that lane's
+store into `genome_path` with SQLite's online backup API (consistent, safe
+while the source is running) the first time the lane starts, and again on
+the dashboard's "Refresh snapshot" button
+(`POST /api/control/lanes/<name>/snapshot`, which stops the lane, re-copies
+and restarts it). Then `cymatix compare --lanes stable,staging` diffs the
+two engines on the same data.
 
 **Keys** (per entry).
 
@@ -1450,6 +1456,7 @@ copy.
 | `engine_path` | `str` | `""` | Optional source tree (e.g. a git worktree) to serve instead of the installed package: prepended to the child's PYTHONPATH and used as its working directory. "" = installed package. |
 | `config_path` | `str` | `""` | Optional cymatix.toml for this lane (exported as CYMATIX_CONFIG). "" = the child reads cymatix.toml from its working directory. |
 | `autostart` | `bool` | `true` | Start this lane when the launcher starts (ignored under --no-autostart). |
+| `genome_source` | `str` | `""` | "snapshot:<lane>" = serve a consistent copy of that lane's store (SQLite backup API), taken when genome_path does not exist yet and on POST /api/control/lanes/<name>/snapshot. Use it for staging engines so a newer build never writes to another lane's live store. "" = genome_path is used as-is. |
 <!-- END GENERATED -->
 
 **Example.**
@@ -1461,6 +1468,7 @@ role = "staging"
 port = 11441
 genome_path = "genomes/staging/genome.db"
 engine_path = "F:/Projects/cymatix-context/.claude/worktrees/my-branch"
+genome_source = "snapshot:stable"
 autostart = false
 ```
 

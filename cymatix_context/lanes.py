@@ -127,8 +127,37 @@ def validate_lanes(lanes: List[LaneConfig], base_dir: Optional[Path] = None) -> 
         else:
             seen_dirs[store_dir] = lane.name
 
+    for lane in lanes:
+        if not lane.genome_source:
+            continue
+        kind, _, source = lane.genome_source.partition(":")
+        if kind != "snapshot" or not source:
+            problems.append(
+                f"lane {lane.name!r}: genome_source {lane.genome_source!r} is not "
+                "'snapshot:<lane>'"
+            )
+        elif source == lane.name:
+            problems.append(f"lane {lane.name!r}: genome_source cannot snapshot itself")
+        elif source not in seen_names:
+            problems.append(
+                f"lane {lane.name!r}: genome_source names unknown lane {source!r}"
+            )
+
     if problems:
         raise LaneConfigError("; ".join(problems))
+
+
+def snapshot_source(lane: LaneConfig, lanes: List[LaneConfig]) -> Optional[LaneConfig]:
+    """The lane whose store *lane* serves a snapshot of, if any."""
+    kind, _, source = lane.genome_source.partition(":")
+    if kind != "snapshot":
+        return None
+    return next((other for other in lanes if other.name == source), None)
+
+
+def resolve_store_path(lane: LaneConfig, base_dir: Optional[Path] = None) -> Path:
+    """Absolute knowledge-store path for *lane* (what the child receives)."""
+    return _resolve(lane.genome_path, base_dir)
 
 
 def lane_env(lane: LaneConfig, base_dir: Optional[Path] = None) -> Dict[str, str]:

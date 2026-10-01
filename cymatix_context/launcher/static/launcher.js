@@ -319,9 +319,15 @@
       sendControl(action);
       return;
     }
-    if (action === "lane-start" || action === "lane-stop" || action === "lane-restart") {
+    if (action === "lane-start" || action === "lane-stop" || action === "lane-restart" ||
+        action === "lane-snapshot") {
       const lane = actionButton.dataset.lane;
       if (!lane) return;
+      if (action === "lane-snapshot" && !window.confirm(
+          "Replace lane '" + lane + "' with a fresh copy of its source store?\n\n" +
+          "Anything written to this lane since its last snapshot is discarded.")) {
+        return;
+      }
       const verb = action.slice("lane-".length);
       postGenome("/api/control/lanes/" + encodeURIComponent(lane) + "/" + verb,
         {}, actionButton);

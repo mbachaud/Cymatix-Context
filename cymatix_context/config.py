@@ -315,6 +315,7 @@ class LaneConfig:
     engine_path: str = ""               # Optional source tree (e.g. a git worktree) to serve instead of the installed package: prepended to the child's PYTHONPATH and used as its working directory. "" = installed package.
     config_path: str = ""               # Optional cymatix.toml for this lane (exported as CYMATIX_CONFIG). "" = the child reads cymatix.toml from its working directory.
     autostart: bool = True              # Start this lane when the launcher starts (ignored under --no-autostart).
+    genome_source: str = ""             # "snapshot:<lane>" = serve a consistent copy of that lane's store (SQLite backup API), taken when genome_path does not exist yet and on POST /api/control/lanes/<name>/snapshot. Use it for staging engines so a newer build never writes to another lane's live store. "" = genome_path is used as-is.
 
 
 @dataclass
@@ -1620,6 +1621,7 @@ def _parse_lanes(entries: List[Any]) -> List[LaneConfig]:
                 engine_path=str(entry.get("engine_path", "")),
                 config_path=str(entry.get("config_path", "")),
                 autostart=bool(entry.get("autostart", True)),
+                genome_source=str(entry.get("genome_source", "")),
             ))
         except (TypeError, ValueError) as exc:
             log.warning("[[lanes]] entry %d (%r) is invalid (%s); ignoring",
