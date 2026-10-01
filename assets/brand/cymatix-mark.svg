@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" role="img" aria-label="Cymatix">
+  <!-- Master mark. Same geometry as the website and launcher header
+       (cymatix-website public/index.html .brand-mark); accent #ff9f43.
+       Icons are rendered from this geometry by scripts/build_brand_icons.py. -->
+  <g fill="none" stroke="#ff9f43" stroke-width="3" stroke-linecap="round">
+    <path d="M24 12c24 8 24 52 0 60" />
+    <path d="M60 12c-24 8-24 52 0 60" />
+  </g>
+  <g fill="#ff9f43">
+    <circle cx="24" cy="12" r="4" />
+    <circle cx="60" cy="12" r="4" />
+    <circle cx="32" cy="30" r="4" />
+    <circle cx="52" cy="30" r="4" />
+    <circle cx="52" cy="54" r="4" />
+    <circle cx="32" cy="54" r="4" />
+    <circle cx="60" cy="72" r="4" />
+    <circle cx="24" cy="72" r="4" />
+  </g>
+</svg>

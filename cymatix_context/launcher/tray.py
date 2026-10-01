@@ -66,14 +66,28 @@ def is_tray_available() -> bool:
         return False
 
 
-def _build_icon_image(size: int = 64):
-    """Build a small square icon programmatically via PIL.
+_ICON_DIR = Path(__file__).resolve().parent / "static" / "icons"
 
-    Intentionally simple — a dark panel background with a blue accent
-    ring, matching the launcher CSS theme tokens. A designer-friendly
-    path can ship a real PNG in a follow-up.
-    """
+
+def _build_icon_image(size: int = 64):
+    """The tray icon: the Cymatix mark rendered by
+    scripts/build_brand_icons.py (static/icons/tray-<n>.png), using the
+    smallest packaged size >= *size*. Falls back to a programmatic ring if
+    the PNGs are missing (e.g. a stripped install)."""
     from PIL import Image, ImageDraw
+
+    available = sorted(
+        int(p.stem.split("-")[1]) for p in _ICON_DIR.glob("tray-*.png")
+        if p.stem.split("-")[1].isdigit()
+    )
+    if available:
+        pick = next((n for n in available if n >= size), available[-1])
+        try:
+            img = Image.open(_ICON_DIR / f"tray-{pick}.png").convert("RGBA")
+            return img if img.size == (size, size) else img.resize(
+                (size, size), Image.Resampling.LANCZOS)
+        except OSError:
+            log.warning("tray icon %s unreadable; using fallback", pick, exc_info=True)
 
     bg = (11, 14, 19)       # --color-bg
     accent = (124, 196, 255)  # --color-accent
