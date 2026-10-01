@@ -492,11 +492,17 @@ class CymatixSupervisor:
         """
         # Stage 1: stored PID
         if self.is_running():
+            # The stored PID may be the child this supervisor just spawned
+            # (main() starts cymatix, then the app lifespan re-adopts). That
+            # one stays ours, so launcher shutdown still stops it.
+            proc = getattr(self, "_proc", None)
+            own_child = proc is not None and proc.pid == self.store.state.cymatix_pid
             log.info(
-                "Adopted existing cymatix via state file (pid=%d, port=%d)",
+                "%s cymatix via state file (pid=%d, port=%d)",
+                "Kept own" if own_child else "Adopted existing",
                 self.store.state.cymatix_pid, self.store.state.cymatix_port,
             )
-            self._owns_cymatix_process = False
+            self._owns_cymatix_process = own_child
             return True
 
         # Stage 2: orphan scan

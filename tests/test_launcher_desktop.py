@@ -113,6 +113,36 @@ def test_shutdown_stops_only_owned_processes_and_exits():
     assert server.should_exit is True
 
 
+# ── ownership survives the lifespan re-adopt ────────────────────────────
+
+
+def test_adopt_keeps_ownership_of_our_own_child(tmp_path, monkeypatch):
+    """main() spawns the primary lane, then the app lifespan calls adopt().
+    That re-adopt used to mark our own child as adopted (not owned), so the
+    launcher never stopped the cymatix it started (seen live: an orphan on
+    :11437 after the desktop app quit)."""
+    from cymatix_context.launcher.state import StateStore
+    from cymatix_context.launcher.supervisor import CymatixSupervisor
+
+    sup = CymatixSupervisor(store=StateStore(path=tmp_path / "state.json"),
+                            cymatix_log_path=tmp_path / "c.log")
+    sup.store.set_cymatix(pid=4242, command=["python"], port=11437)
+    sup._proc = SimpleNamespace(pid=4242, poll=lambda: None)
+    sup._owns_cymatix_process = True
+    monkeypatch.setattr(sup, "is_running", lambda: True)
+    assert sup.adopt() is True
+    assert sup.owns_process() is True
+
+    # A process we did not spawn (stored PID from a previous launcher) is
+    # still adopted, not owned.
+    sup2 = CymatixSupervisor(store=StateStore(path=tmp_path / "state2.json"),
+                             cymatix_log_path=tmp_path / "c2.log")
+    sup2.store.set_cymatix(pid=5555, command=["python"], port=11437)
+    monkeypatch.setattr(sup2, "is_running", lambda: True)
+    assert sup2.adopt() is True
+    assert sup2.owns_process() is False
+
+
 # ── embedded layout ─────────────────────────────────────────────────────
 
 
