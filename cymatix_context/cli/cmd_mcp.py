@@ -97,6 +97,12 @@ def _build_parser() -> argparse.ArgumentParser:
     inst.add_argument("--workspace", default=None,
                       help="Project root for workspace scope (default: cwd).")
     inst.add_argument("--home", default=None, help=argparse.SUPPRESS)
+    inst.add_argument("--server-command", default=None,
+                      help="Command that starts the MCP server (default: python, "
+                           "the canonical entry). The desktop app passes its bundled "
+                           "engine here so chats work without a Python install.")
+    inst.add_argument("--server-arg", action="append", default=None,
+                      help="Argument for --server-command (repeatable).")
     inst.add_argument("--dry-run", action="store_true",
                       help="Print the entry and target file without writing.")
     return parser
@@ -110,10 +116,17 @@ def _cmd_lanes() -> int:
     return output.EXIT_OK
 
 
-def _updated_entry(existing: object, url: str, host: str) -> Dict[str, object]:
+def _updated_entry(existing: object, url: str, host: str,
+                   command: Optional[str] = None,
+                   command_args: Optional[list] = None) -> Dict[str, object]:
     entry: Dict[str, object] = dict(existing) if isinstance(existing, dict) else {}
-    entry.setdefault("command", _COMMAND)
-    entry.setdefault("args", list(_ARGS))
+    if command:
+        # Explicit server command (the desktop app's bundled engine) wins.
+        entry["command"] = command
+        entry["args"] = list(command_args or [])
+    else:
+        entry.setdefault("command", _COMMAND)
+        entry.setdefault("args", list(_ARGS))
     env = entry.get("env")
     env = dict(env) if isinstance(env, dict) else {}
     env["CYMATIX_MCP_URL"] = url
@@ -180,7 +193,8 @@ def _cmd_install(args: argparse.Namespace) -> int:
 
     name = entry_name(lane.name)
     url = f"http://127.0.0.1:{lane.port}"
-    servers[name] = _updated_entry(servers.get(name), url, args.host)
+    servers[name] = _updated_entry(servers.get(name), url, args.host,
+                                   args.server_command, args.server_arg)
     data["mcpServers"] = servers
 
     if args.dry_run:
