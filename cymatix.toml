@@ -227,8 +227,10 @@ bench_genome_path = "genomes/bench/bench.genome.db"
 # entry: `cymatix mcp install --host claude-code --lane staging`.
 #
 # A staging lane can serve a different engine build (e.g. a git worktree)
-# for 1:1 comparisons. Give it its own store; never point it at another
-# lane's live genome.db. Reference: docs/config-reference.md [[lanes]].
+# for 1:1 comparisons. Never point it at another lane's live genome.db:
+# genome_source = "snapshot:stable" serves a consistent copy instead, and
+# `cymatix compare --lanes stable,staging --queries FILE` writes the diff
+# receipt. Reference: docs/config-reference.md [[lanes]].
 # ----------------------------------------------------------------------
 # [[lanes]]
 # name = "staging"
@@ -236,6 +238,7 @@ bench_genome_path = "genomes/bench/bench.genome.db"
 # port = 11441
 # genome_path = "genomes/staging/genome.db"
 # engine_path = "F:/Projects/cymatix-context/.claude/worktrees/my-branch"
+# genome_source = "snapshot:stable"
 # autostart = false
 
 # ----------------------------------------------------------------------

@@ -24,6 +24,31 @@ from ..backends.sema_codec import decode_embedding
 log = logging.getLogger("cymatix.server")
 
 
+_ENGINE_COMMIT: Dict[str, Optional[str]] = {}
+
+
+def _engine_commit() -> Optional[str]:
+    """git HEAD of the source tree this engine runs from; None for an
+    installed (non-git) package. Cached for the process lifetime."""
+    if "sha" not in _ENGINE_COMMIT:
+        import subprocess
+        from pathlib import Path
+        root = Path(__file__).resolve().parents[2]
+        sha: Optional[str] = None
+        try:
+            out = subprocess.run(
+                ["git", "-C", str(root), "rev-parse", "HEAD"],
+                capture_output=True, text=True, timeout=5,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+            if out.returncode == 0:
+                sha = out.stdout.strip() or None
+        except (OSError, subprocess.SubprocessError):
+            log.debug("engine commit lookup failed", exc_info=True)
+        _ENGINE_COMMIT["sha"] = sha
+    return _ENGINE_COMMIT["sha"]
+
+
 def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -> None:
     """Register admin, health, stats, debug, bridge, and replication routes."""
     from ..accel import json_dumps, json_loads
@@ -683,6 +708,30 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "source_id": source_id,
             "tombstoned": len(tombstoned),
             "gene_ids": tombstoned,
+        }
+
+    @app.get("/admin/config-dump", dependencies=_admin_auth)
+    async def admin_config_dump():
+        """The configuration this process actually loaded (not the file on
+        disk), plus engine and store identity — what a benchmark or
+        `cymatix compare` receipt cites. Secrets are redacted."""
+        import dataclasses
+        from .. import __version__
+        from ..lanes import current_lane
+
+        dumped = dataclasses.asdict(config)
+        if dumped.get("server", {}).get("admin_token"):
+            dumped["server"]["admin_token"] = "<redacted>"
+        try:
+            total_genes = cymatix.genome.stats()["total_genes"]
+        except Exception:
+            log.warning("config-dump: genome stats failed", exc_info=True)
+            total_genes = None
+        return {
+            "lane": current_lane(),
+            "engine": {"version": __version__, "commit": _engine_commit()},
+            "genome": {"path": str(cymatix.genome.path), "total_genes": total_genes},
+            "config": dumped,
         }
 
     @app.post("/admin/vacuum", dependencies=_admin_auth)

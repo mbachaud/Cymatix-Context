@@ -27,7 +27,8 @@ from fastapi.staticfiles import StaticFiles
 from ..config import GenomeConfig, LaneConfig, ServerConfig
 from ..lanes import BENCH_LANE, PRIMARY_LANE, LaneConfigError
 from .collector import StateCollector
-from .lane_supervisors import LaneRuntime, build_lane_runtimes
+from .lane_supervisors import LaneRuntime, build_lane_runtimes, ensure_snapshot
+from .snapshot import SnapshotError
 from .state import StateStore
 from .supervisor import (
     AlreadyRunning,
@@ -139,6 +140,7 @@ def create_app(
             "running": running,
             "primary": primary,
             "autostart": lane.autostart,
+            "genome_source": lane.genome_source,
         }
 
     def _lane_views() -> List[dict]:
@@ -315,6 +317,28 @@ def create_app(
         return {"ok": True, "pid": pid,
                 "started_pending": getattr(sup, "last_start_pending", False) is True}
 
+    def _lane_snapshot(rt: LaneRuntime):
+        """Stop the lane (if running), re-copy its source store, start it."""
+        if rt.snapshot_from is None:
+            return JSONResponse(
+                {"ok": False, "error": f"lane {rt.config.name!r} has no "
+                 "genome_source = \"snapshot:<lane>\""},
+                status_code=409,
+            )
+        was_running = rt.supervisor.is_running() is True
+        if was_running:
+            stopped = _lane_stop(rt.supervisor, rt.config.name)
+            if isinstance(stopped, JSONResponse):
+                return stopped
+        try:
+            receipt = ensure_snapshot(rt, refresh=True)
+        except SnapshotError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        started = _lane_start(rt.supervisor) if was_running else None
+        if isinstance(started, JSONResponse):
+            return started
+        return {"ok": True, "snapshot": receipt, "restarted": was_running}
+
     def _unknown_lane(name: str) -> JSONResponse:
         return JSONResponse(
             {"ok": False, "error": f"no lane named {name!r}",
@@ -324,18 +348,29 @@ def create_app(
 
     @app.post("/api/control/lanes/{name}/{action}")
     def api_lane_control(name: str, action: str):
-        if action not in ("start", "stop", "restart"):
+        if action not in ("start", "stop", "restart", "snapshot"):
             return JSONResponse(
                 {"ok": False, "error": f"unknown action {action!r}"}, status_code=404,
             )
         if name == primary_lane.name:
+            if action == "snapshot":
+                return JSONResponse(
+                    {"ok": False, "error": "the primary lane has no snapshot source"},
+                    status_code=409,
+                )
             # Same semantics (and 202 alive-but-not-ready) as /api/control/*.
             return {"start": api_control_start, "stop": api_control_stop,
                     "restart": api_control_restart}[action]()
         rt = lanes_by_name.get(name)
         if rt is None:
             return _unknown_lane(name)
+        if action == "snapshot":
+            return _lane_snapshot(rt)
         if action == "start":
+            try:
+                ensure_snapshot(rt)
+            except SnapshotError as exc:
+                return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
             return _lane_start(rt.supervisor)
         if action == "stop":
             return _lane_stop(rt.supervisor, name)
@@ -1222,6 +1257,7 @@ def main(argv: Optional[list] = None) -> int:
         try:
             # Always re-adopt a surviving child; only spawn when autostart.
             if not rt.supervisor.adopt() and rt.config.autostart:
+                ensure_snapshot(rt)  # first start of a snapshot lane
                 rt.supervisor.start()
         except AlreadyRunning:
             pass

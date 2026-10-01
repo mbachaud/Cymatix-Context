@@ -14,7 +14,16 @@ from pathlib import Path
 from typing import List, Optional
 
 from ..config import CymatixConfig, LaneConfig
-from ..lanes import BENCH_LANE, PRIMARY_LANE, lane_cwd, lane_env, resolve_lanes, validate_lanes
+from ..lanes import (
+    BENCH_LANE,
+    PRIMARY_LANE,
+    lane_cwd,
+    lane_env,
+    resolve_lanes,
+    resolve_store_path,
+    snapshot_source,
+    validate_lanes,
+)
 from .state import DEFAULT_STATE_PATH, StateStore
 from .supervisor import CymatixSupervisor
 
@@ -23,6 +32,22 @@ from .supervisor import CymatixSupervisor
 class LaneRuntime:
     config: LaneConfig
     supervisor: CymatixSupervisor
+    # genome_source = "snapshot:<lane>": the source lane's absolute store
+    # path, and this lane's own (copy) path. None for a plain lane.
+    snapshot_from: Optional[Path] = None
+    store_path: Optional[Path] = None
+
+
+def ensure_snapshot(rt: LaneRuntime, refresh: bool = False) -> Optional[dict]:
+    """Take the lane's snapshot if it has none yet (or *refresh*). Returns
+    the snapshot receipt, or None when nothing was copied. The lane must be
+    stopped when refreshing."""
+    if rt.snapshot_from is None or rt.store_path is None:
+        return None
+    if rt.store_path.exists() and not refresh:
+        return None
+    from .snapshot import snapshot_store
+    return snapshot_store(rt.snapshot_from, rt.store_path)
 
 
 def lane_state_paths(name: str, state_dir: Path) -> "tuple[Path, Path]":
@@ -53,7 +78,12 @@ def build_lane_runtimes(
         if lane.name == PRIMARY_LANE:
             continue
         state_path, log_path = lane_state_paths(lane.name, state_dir)
+        source = snapshot_source(lane, lanes)
         runtimes.append(LaneRuntime(
+            snapshot_from=(
+                resolve_store_path(source, base_dir) if source is not None else None
+            ),
+            store_path=resolve_store_path(lane, base_dir),
             config=lane,
             supervisor=CymatixSupervisor(
                 store=StateStore(path=state_path),

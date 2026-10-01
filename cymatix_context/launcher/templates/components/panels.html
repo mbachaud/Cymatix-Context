@@ -100,6 +100,10 @@
         {% else %}
           <button class="btn btn--mini" data-action="lane-start" data-lane="{{ lane.name }}">Start</button>
         {% endif %}
+        {% if lane.genome_source %}
+          <button class="btn btn--mini" data-action="lane-snapshot" data-lane="{{ lane.name }}"
+                  title="Re-copy {{ lane.genome_source }} into this lane (restarts it if running)">Refresh snapshot</button>
+        {% endif %}
       </div>
     {% endfor %}
     <p class="muted bench-row__hint">Point a chat's MCP server at a lane with
