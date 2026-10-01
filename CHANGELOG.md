@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.11.0 (2026-10-01)
+
 **Use Cymatix while you build with it: several knowledge stores and engine
 builds served at once, tracked folders kept fresh, 1:1 engine comparisons,
 and an experimental desktop app. No shipped retrieval or delivery default
