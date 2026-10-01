@@ -1410,6 +1410,76 @@ url = "http://127.0.0.1:11440"
 
 ---
 
+## `[sync]`
+
+**Purpose.** Keep the knowledge store in step with folders you are editing,
+so docs and code don't go stale while you work. A background pass inside the
+server, every `interval_s`:
+
+- ingests new files;
+- re-ingests changed files and tombstones the chunks the change made stale;
+- tombstones the chunks of deleted files.
+
+Before this, every ingest path (`cymatix ingest`, `/ingest`, `mem_sync`)
+left the old version of a changed file live beside the new one.
+
+Tombstones are soft (`compress_to_heterochromatin`): hot-tier retrieval
+stops returning the chunk, but the row and everything that references it
+are kept. A file that is only touched (same sha256) is not re-ingested.
+Tracking state lives in the store's own `sync_tracked` table, so it moves
+with the database. A `sync_lock` lease lets only one process sync a given
+store.
+
+**Guards.**
+
+- A root that is missing at pass time is skipped, never read as "every
+  file deleted".
+- If more than `max_delete_fraction` of a root's tracked files (and at
+  least two) vanish in one pass, nothing in that root is touched and
+  `/sync/status` counts a guard trip. Confirm a real bulk delete with
+  `POST /sync/rescan` and body `{"allow_mass_delete": true}`.
+- `max_files_per_pass` caps ingest work per pass, so a cold start over a
+  large tree spreads across passes (`pending` in the report).
+
+**Surface.** `GET /sync/status` (roots, tracked count, missing roots, guard
+trips, last pass report); `POST /sync/rescan` runs a pass now (admin-token
+gated when `[server] admin_token` is set); counter
+`cymatix_sync_events_total{event=...}`.
+
+**Overlap with `[mem_sync]`.** `mem_sync` is the older, separate daemon for
+flat folders of `.md` memory files. `[sync]` supersedes it for repo
+folders; both can run, but don't point both at the same folder.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:sync -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | `bool` | `false` | Opt-in. Off = no worker, no tracking table writes; /sync/status reports {"enabled": false}. |
+| `roots` | `List[str]` | `[]` | Folders to track, walked recursively. Relative paths resolve against the server's working directory. A root that is missing at pass time is skipped (never read as "everything deleted"). |
+| `include` | `List[str]` | `[".txt", ".md", ".rst", ".py", ".ts", ".js", ".json", ".toml", ".yml", ".yaml"]` | File extensions to track (same default set as `cymatix ingest`). Code extensions are ingested with content_type="code". |
+| `exclude` | `List[str]` | `[".git", "node_modules", ".venv", "venv", "__pycache__", "genomes", ".claude", "dist", "build"]` | Directory names skipped anywhere under a root. |
+| `interval_s` | `float` | `30.0` | Seconds between passes. POST /sync/rescan runs one immediately. |
+| `max_delete_fraction` | `float` | `0.2` | Mass-delete guard: if more than this fraction of tracked files vanish in one pass, the pass tombstones nothing and records a guard trip (unmounted drive, typo'd root). |
+| `max_files_per_pass` | `int` | `200` | Ingest budget per pass (new + changed files); the rest wait for the next pass. Throttles cold starts. |
+| `max_file_bytes` | `int` | `2000000` | Files larger than this are skipped (counted in `skipped`). |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[sync]
+enabled = true
+roots = ["F:/Projects/cymatix-context/docs", "F:/Projects/cymatix-context/cymatix_context"]
+interval_s = 30
+```
+
+**Cross-refs.** `cymatix_context/sync/worker.py` (`SyncWorker`),
+`cymatix_context/sync/tracker.py`, `cymatix_context/server/routes_sync.py`,
+`KnowledgeStore.tombstone_genes`.
+
+---
+
 # Configuration loading order
 
 `cymatix_context.config.load_config()` resolves configuration in this

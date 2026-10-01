@@ -298,6 +298,25 @@ class ServerConfig:
 
 
 @dataclass
+class SyncConfig:
+    """[sync] — in-process delta sync of tracked source folders.
+
+    A background pass walks ``roots``, ingests new files, re-ingests changed
+    ones and tombstones (HETEROCHROMATIN, content kept) the chunks a change
+    or deletion made stale. Runs inside the server; see
+    ``cymatix_context/sync/``.
+    """
+    enabled: bool = False               # Opt-in. Off = no worker, no tracking table writes; /sync/status reports {"enabled": false}.
+    roots: List[str] = field(default_factory=list)  # Folders to track, walked recursively. Relative paths resolve against the server's working directory. A root that is missing at pass time is skipped (never read as "everything deleted").
+    include: List[str] = field(default_factory=lambda: [".txt", ".md", ".rst", ".py", ".ts", ".js", ".json", ".toml", ".yml", ".yaml"])  # File extensions to track (same default set as `cymatix ingest`). Code extensions are ingested with content_type="code".
+    exclude: List[str] = field(default_factory=lambda: [".git", "node_modules", ".venv", "venv", "__pycache__", "genomes", ".claude", "dist", "build"])  # Directory names skipped anywhere under a root.
+    interval_s: float = 30.0            # Seconds between passes. POST /sync/rescan runs one immediately.
+    max_delete_fraction: float = 0.2    # Mass-delete guard: if more than this fraction of tracked files vanish in one pass, the pass tombstones nothing and records a guard trip (unmounted drive, typo'd root).
+    max_files_per_pass: int = 200       # Ingest budget per pass (new + changed files); the rest wait for the next pass. Throttles cold starts.
+    max_file_bytes: int = 2_000_000     # Files larger than this are skipped (counted in `skipped`).
+
+
+@dataclass
 class TelemetryConfig:
     """[telemetry] — OpenTelemetry export defaults for the backend.
 
@@ -1413,6 +1432,8 @@ class CymatixConfig:
     # Fork 1 slice 1: optional shared encoder daemon (docs/design/2026-08-05-
     # fork1-slice1-contract.md). url="" = off = in-process (default).
     encoder_daemon: EncoderDaemonConfig = field(default_factory=EncoderDaemonConfig)
+    # Phase 3: in-process delta sync of tracked source folders.
+    sync: SyncConfig = field(default_factory=SyncConfig)
 
 
 def _warn_unknown(section: str, raw_section: Dict[str, Any], dataclass_type: type) -> None:
@@ -1463,6 +1484,7 @@ _KNOWN_TOP_LEVEL_SECTIONS = {
     # must still count as "known" or the shipped cymatix.toml trips a
     # spurious unknown-section warning on every load.
     "mem_sync",
+    "sync",
     *_SECTION_ALIASES.keys(),
 }
 
@@ -1761,6 +1783,21 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
         _warn_unknown("encoder_daemon", e, EncoderDaemonConfig)
         cfg.encoder_daemon = EncoderDaemonConfig(
             url=str(e.get("url", cfg.encoder_daemon.url)),
+        )
+
+    if "sync" in raw:
+        sy = raw["sync"]
+        _warn_unknown("sync", sy, SyncConfig)
+        d = SyncConfig()
+        cfg.sync = SyncConfig(
+            enabled=bool(sy.get("enabled", d.enabled)),
+            roots=[str(r) for r in sy.get("roots", d.roots)],
+            include=[str(e) for e in sy.get("include", d.include)],
+            exclude=[str(e) for e in sy.get("exclude", d.exclude)],
+            interval_s=float(sy.get("interval_s", d.interval_s)),
+            max_delete_fraction=float(sy.get("max_delete_fraction", d.max_delete_fraction)),
+            max_files_per_pass=int(sy.get("max_files_per_pass", d.max_files_per_pass)),
+            max_file_bytes=int(sy.get("max_file_bytes", d.max_file_bytes)),
         )
 
     # CYMATIX_GENOME_PATH / CYMATIX_SERVER_* overrides (env > toml > default).

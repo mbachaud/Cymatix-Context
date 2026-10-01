@@ -682,6 +682,27 @@ async def _background_wal_gauge(cymatix: CymatixContextManager) -> None:
             pass  # diagnostic path; never block the event loop
 
 
+# First delta-sync pass waits this long after startup so it does not
+# compete with server boot (module attribute so tests can shorten it).
+_SYNC_STARTUP_DELAY = 5.0
+
+
+async def _background_sync(worker) -> None:
+    """Run a delta-sync pass every ``[sync] interval_s`` seconds.
+
+    The pass itself is blocking file + SQLite work, so it runs in a thread.
+    A failed pass is logged and retried on the next tick; it never stops the
+    loop.
+    """
+    await asyncio.sleep(min(_SYNC_STARTUP_DELAY, worker.config.interval_s))
+    while True:
+        try:
+            await asyncio.to_thread(worker.run_pass)
+        except Exception:
+            log.warning("delta-sync pass failed; retrying next interval", exc_info=True)
+        await asyncio.sleep(worker.config.interval_s)
+
+
 async def _background_registry_sweep(registry_obj) -> None:
     """Periodically sweep session registry status.
 

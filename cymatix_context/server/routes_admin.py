@@ -676,19 +676,9 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 {"error": "source_id required"},
                 status_code=400,
             )
-        cur = cymatix.genome.conn.cursor()
-        rows = cur.execute(
-            "SELECT gene_id FROM genes WHERE source_id = ? AND chromatin < 2",
-            (source_id,),
-        ).fetchall()
-        tombstoned = []
-        for row in rows:
-            try:
-                if cymatix.genome.compress_to_heterochromatin(row["gene_id"]):
-                    tombstoned.append(row["gene_id"])
-            except Exception:
-                log.warning("Tombstone failed for gene %s",
-                            row["gene_id"], exc_info=True)
+        tombstoned = cymatix.genome.tombstone_genes(
+            cymatix.genome.live_gene_ids_for_source(source_id),
+        )
         return {
             "source_id": source_id,
             "tombstoned": len(tombstoned),
