@@ -559,6 +559,10 @@ class ShardedGenomeAdapter:
     def store_relations_batch(self, *_a, **_kw) -> None: pass
     def log_health(self, *_a, **_kw) -> None: pass
     def compress_to_heterochromatin(self, *_a, **_kw) -> None: pass
+    # Delta-sync / tombstone helpers: tiers are per-shard in V1, so like
+    # compress_to_heterochromatin these report nothing live and demote nothing.
+    def live_gene_ids_for_source(self, *_a, **_kw) -> list: return []
+    def tombstone_genes(self, *_a, **_kw) -> list: return []
     def compress_to_euchromatin(self, *_a, **_kw) -> None: pass
     def compact(self, *_a, **_kw) -> None: pass
     def refresh(self) -> None: pass
