@@ -319,10 +319,12 @@
       sendControl(action);
       return;
     }
-    if (action === "bench-start" || action === "bench-stop") {
-      const ep = action === "bench-start"
-        ? "/api/control/bench/start" : "/api/control/bench/stop";
-      postGenome(ep, {}, actionButton);
+    if (action === "lane-start" || action === "lane-stop" || action === "lane-restart") {
+      const lane = actionButton.dataset.lane;
+      if (!lane) return;
+      const verb = action.slice("lane-".length);
+      postGenome("/api/control/lanes/" + encodeURIComponent(lane) + "/" + verb,
+        {}, actionButton);
       return;
     }
     if (action === "genome-select") {

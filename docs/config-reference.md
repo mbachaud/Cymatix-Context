@@ -1410,6 +1410,66 @@ url = "http://127.0.0.1:11440"
 
 ---
 
+## `[[lanes]]`
+
+**Purpose.** Extra cymatix instances the launcher (`cymatix-launcher`)
+supervises, each on its own port against its own knowledge store. One
+server process serves exactly one store, so serving several stores at once
+means one lane per store. Chats pick a lane by pointing their MCP host's
+`CYMATIX_MCP_URL` at that lane's port.
+
+Two lanes are synthesized rather than declared:
+
+- `stable`: the primary lane, always present, from `[server] port` (or the
+  launcher's `--cymatix-port`) and `[genome] path`. The name is reserved.
+- `bench`: from `[server] bench_enabled` / `bench_port` /
+  `bench_genome_path` (or `--bench`). A declared lane named `bench`
+  replaces it.
+
+The launcher rejects the whole lane set at startup if two lanes share a
+name, a port, or a knowledge-store directory, or if a lane takes a reserved
+port (11438 launcher UI, 11440 encoder daemon, 8787 Headroom). Each child
+gets `CYMATIX_LANE`, `CYMATIX_SERVER_PORT` and an absolute
+`CYMATIX_GENOME_PATH`; `engine_path` adds `PYTHONPATH` and sets its working
+directory, and `config_path` adds `CYMATIX_CONFIG`.
+
+A staging lane that serves a different engine build (for example a git
+worktree) must not point at another lane's live store. Give it its own
+copy.
+
+**Keys** (per entry).
+
+<!-- BEGIN GENERATED: config-tables:lanes -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `name` | `str` | *(required)* | Lane id: lowercase letters, digits, "-" / "_". Names the child's log/state files and its CYMATIX_LANE env. "stable" is reserved for the primary lane; declaring "bench" replaces the lane synthesized from [server] bench_*. |
+| `port` | `int` | *(required)* | HTTP port for this lane's server. Must be unique across lanes and not 11438 (launcher UI), 11440 (encoder daemon, #376) or 8787 (Headroom). |
+| `genome_path` | `str` | *(required)* | Knowledge store for this lane. Must sit in its own directory (metrics.json is written next to the genome). Relative paths resolve against the launcher's working directory, then are passed to the child as an absolute CYMATIX_GENOME_PATH. |
+| `role` | `str` | `"custom"` | Informational: "stable" / "bench" / "staging" / "custom". Shown on the dashboard; no behavior is keyed on it. |
+| `python_executable` | `str` | `""` | Interpreter for this lane's child. "" = the launcher's own interpreter. Point at another venv to serve a different engine build. |
+| `engine_path` | `str` | `""` | Optional source tree (e.g. a git worktree) to serve instead of the installed package: prepended to the child's PYTHONPATH and used as its working directory. "" = installed package. |
+| `config_path` | `str` | `""` | Optional cymatix.toml for this lane (exported as CYMATIX_CONFIG). "" = the child reads cymatix.toml from its working directory. |
+| `autostart` | `bool` | `true` | Start this lane when the launcher starts (ignored under --no-autostart). |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[[lanes]]
+name = "staging"
+role = "staging"
+port = 11441
+genome_path = "genomes/staging/genome.db"
+engine_path = "F:/Projects/cymatix-context/.claude/worktrees/my-branch"
+autostart = false
+```
+
+**Cross-refs.** `cymatix_context/config.py` (`LaneConfig`),
+`cymatix_context/lanes.py` (`resolve_lanes`, `validate_lanes`, `lane_env`),
+`cymatix_context/launcher/app.py` (`main`).
+
+---
+
 # Configuration loading order
 
 `cymatix_context.config.load_config()` resolves configuration in this

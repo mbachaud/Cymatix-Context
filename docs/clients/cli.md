@@ -216,6 +216,24 @@ lines with json-encoded values.
 
 Exit codes: `0` success.
 
+### `cymatix mcp lanes` / `cymatix mcp install --host HOST [--lane NAME] [--scope workspace|user] [--dry-run]`
+
+`lanes` lists every lane the launcher would run (primary `stable`, `bench`
+when enabled, and each `[[lanes]]` entry) with its port, the MCP entry
+name, and its knowledge store.
+
+`install` points a chat host's MCP config at one lane. Hosts:
+`claude-code`, `claude-desktop`, `cursor`, `gemini-cli`. The primary lane
+is written as the canonical `cymatix-context` entry that `cymatix-status`
+validates; other lanes go beside it as `cymatix-context-<lane>`. An existing
+entry keeps its command, args and any env you added (identity fields such
+as `CYMATIX_USER`); only `CYMATIX_MCP_URL` and the host tags change. The
+file is backed up (`<file>.bak-<timestamp>`) and replaced atomically; a
+file that is not valid JSON is left untouched. Restart the host afterwards.
+
+Exit codes: `0` success, `1` target unreadable or unwritable, `2` unknown
+lane or unsupported scope.
+
 ### `cymatix serve` (DEFERRED)
 
 Prints a pointer at `cymatix-server` and exits 4. Daemon mode is
@@ -226,6 +244,10 @@ deferred; no design doc exists yet.
 - `CYMATIX_CONFIG` — path to `cymatix.toml`. Default: `./cymatix.toml`.
 - `CYMATIX_GENOME_PATH` — overrides `[genome] path` (use `:memory:` for
   tests and ephemeral runs).
+- `CYMATIX_SERVER_PORT` — overrides `[server] port`. The launcher sets it
+  (with `CYMATIX_LANE`) for each lane it starts.
+- `CYMATIX_ADMIN_TOKEN` — read by the MCP server; sent as a bearer token
+  so ingest works against a server with `[server] admin_token` set.
 
 ## Exit code table
 

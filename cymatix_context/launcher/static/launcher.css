@@ -1242,6 +1242,8 @@ p {
   font-size: 0.8rem;
 }
 
+.bench-row + .bench-row { margin-top: 0.35rem; }
+.bench-row__name { font-weight: 600; min-width: 4.5rem; }
 .bench-row__genome { flex: 1; overflow: hidden; text-overflow: ellipsis; }
 .bench-row__hint { font-size: 0.72rem; margin: 0.45rem 0 0; }
 

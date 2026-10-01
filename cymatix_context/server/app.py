@@ -128,7 +128,7 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         pass
 
     # Bridge instantiated up here so the lifespan closure can capture it.
-    bridge = AgentBridge()
+    bridge = AgentBridge(cymatix_base_url=f"http://127.0.0.1:{config.server.port}")
 
     # Session registry -- presence + attribution.
     registry = Registry(cymatix.genome)
