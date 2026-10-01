@@ -88,7 +88,14 @@ class LauncherSidecar extends EventEmitter {
     const child = this.spawnFn(this.command, this.args, {
       cwd: this.cwd,
       // The token travels by environment, never argv (visible in process lists).
-      env: { ...process.env, ...this.env, CYMATIX_LAUNCHER_TOKEN: this.token },
+      env: {
+        ...process.env,
+        ...this.env,
+        CYMATIX_LAUNCHER_TOKEN: this.token,
+        // The launcher exits (stopping its lanes) if this process dies
+        // without the graceful quit, e.g. when the app is killed.
+        CYMATIX_DESKTOP_PARENT_PID: String(process.pid),
+      },
       stdio: ['ignore', 'pipe', 'pipe'],
       windowsHide: true,
     });

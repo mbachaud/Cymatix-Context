@@ -88,6 +88,8 @@ test('start passes the token by env only and resolves on READY', async () => {
   const { args, opts, child } = spawned[0];
   assert.ok(!args.join(' ').includes('tok-123'), 'token must not be in argv');
   assert.equal(opts.env.CYMATIX_LAUNCHER_TOKEN, 'tok-123');
+  // The launcher watches this PID and shuts down if the app dies.
+  assert.equal(opts.env.CYMATIX_DESKTOP_PARENT_PID, String(process.pid));
   assert.equal(opts.env.A, '1');
   assert.equal(opts.windowsHide, true);
   child.stdout.write('INFO starting\nCYMATIX_LAUNCHER_READY {"port": 50123, "pid": 4242}\n');

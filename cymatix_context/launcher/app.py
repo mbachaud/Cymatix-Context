@@ -627,6 +627,9 @@ def create_app(
         """Stop every lane process this launcher spawned (adopted ones keep
         running, same rule as the lifespan), then exit the launcher. The
         desktop app calls this on quit."""
+        return _shutdown_all()
+
+    def _shutdown_all() -> dict:
         stopped, left_running = [], []
         for name, sup in [(primary_lane.name, supervisor)] + [
             (rt.config.name, rt.supervisor) for rt in lane_runtimes
@@ -646,7 +649,35 @@ def create_app(
             server.should_exit = True
         return {"ok": True, "stopped": stopped, "left_running": left_running}
 
+    app.state.shutdown_all = _shutdown_all  # also used by the parent watchdog
     return app
+
+
+PARENT_PID_ENV = "CYMATIX_DESKTOP_PARENT_PID"
+
+
+def _parent_pid_from_env(environ) -> Optional[int]:
+    try:
+        pid = int(environ.get(PARENT_PID_ENV, ""))
+    except ValueError:
+        return None
+    return pid if pid > 0 else None
+
+
+def _pid_alive(pid: int) -> bool:
+    import psutil
+    return psutil.pid_exists(pid)
+
+
+def watch_parent(pid: int, on_gone, is_alive=_pid_alive, interval_s: float = 2.0,
+                 sleep=time.sleep) -> None:
+    """Block until process *pid* is gone, then call *on_gone*. The desktop
+    app's graceful quit calls /api/shutdown; this covers the app being
+    killed, so its lanes are not orphaned."""
+    while is_alive(pid):
+        sleep(interval_s)
+    log.warning("Desktop app (pid %d) is gone; shutting the launcher down", pid)
+    on_gone()
 
 
 def bind_listen_socket(host: str, port: int) -> socket.socket:
@@ -1397,6 +1428,12 @@ def main(argv: Optional[list] = None) -> int:
     if headless_sock is not None:
         log.info("Headless sidecar mode on %s:%d", args.host,
                  headless_sock.getsockname()[1])
+        parent_pid = _parent_pid_from_env(os.environ)
+        if parent_pid is not None:
+            threading.Thread(
+                target=watch_parent, args=(parent_pid, app.state.shutdown_all),
+                daemon=True, name="desktop-parent-watchdog",
+            ).start()
         _run_headless(app, headless_sock)
         return 0
 

@@ -113,6 +113,28 @@ def test_shutdown_stops_only_owned_processes_and_exits():
     assert server.should_exit is True
 
 
+# ── parent watchdog ─────────────────────────────────────────────────────
+
+
+def test_parent_watchdog_shuts_down_when_the_app_dies():
+    """If the desktop app is killed (crash, Task Manager) its graceful quit
+    never runs; the launcher must notice and stop its lanes itself."""
+    from cymatix_context.launcher.app import watch_parent
+
+    alive = iter([True, True, False])
+    calls = []
+    watch_parent(4242, on_gone=lambda: calls.append("shutdown"),
+                 is_alive=lambda pid: next(alive), interval_s=0, sleep=lambda s: None)
+    assert calls == ["shutdown"]
+
+
+def test_parent_watchdog_env_parsing():
+    from cymatix_context.launcher.app import _parent_pid_from_env
+    assert _parent_pid_from_env({"CYMATIX_DESKTOP_PARENT_PID": "1234"}) == 1234
+    assert _parent_pid_from_env({"CYMATIX_DESKTOP_PARENT_PID": "x"}) is None
+    assert _parent_pid_from_env({}) is None
+
+
 # ── ownership survives the lifespan re-adopt ────────────────────────────
 
 

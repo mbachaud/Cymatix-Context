@@ -95,6 +95,8 @@ function createWindow() {
       sandbox: true,
     },
   });
+  // No File/Edit/View menu bar on Windows/Linux; macOS keeps its app menu.
+  if (process.platform !== 'darwin') win.removeMenu();
   win.once('ready-to-show', () => win.show());
   win.on('close', (event) => {
     if (!quitting) { // close to tray
