@@ -702,6 +702,17 @@ def vault_force_prune_counter():
     return _instruments["vault_force_prune"]
 
 
+def sync_events_counter():
+    """Delta-sync pass outcomes, labelled by ``event`` (ingested, unchanged,
+    tombstoned, deleted, skipped, errors, guard_tripped)."""
+    if "sync_events" not in _instruments:
+        _instruments["sync_events"] = meter.create_counter(
+            "cymatix_sync_events_total",
+            description="Delta-sync file outcomes per pass, by event.",
+        )
+    return _instruments["sync_events"]
+
+
 def vault_file_count_gauge():
     """Imperative gauge — VaultManager.status() updates it on each call."""
     if "vault_file_count" not in _instruments:

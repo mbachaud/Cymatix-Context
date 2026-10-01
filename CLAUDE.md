@@ -100,6 +100,7 @@ All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8
 | `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), rrf_k (**default 20 since 2026-08-28**, wave-1 ranking-under-width graduation — delivered 0.555→0.630 at 829k with the all-classes eps_band map; Cormack default was 60), rerank_combinator_by_class (**all five classes → eps_band since 2026-08-28**, same receipts; was `{multi_hop, default}` since 2026-07-16), dense_embedding_enabled (**default false since 2026-08-15**), pki_enabled (**default false since 2026-08-17**, #370 — −1 delivered needle at n=469; the flip does not reclaim an existing path_key_index table), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled, cover_walk_enabled (**default false** — W2.1 query-time walk over the ingest-built gene_relations COVER graph: eps-band-confined rerank class + append-below-head rescue lane; flip is receipt-gated on the w2_cover_walk arm), fts5_candidate_depth (#205: FTS content-tier fetch depth; 0 = auto = max_genes*4), blend_mode (`"scale_relative"` default / `"legacy"` DEPRECATED-FOR-REMOVAL, condition-gated — not calendar-based; target v(N+2) at earliest) |
 | `[plr]` | Piecewise linear reranker: enabled, model_path |
 | `[know]` | KnowBlock confidence logistic: emit_floor, betas, s_ref, g_ref, stale_after_days (+ calibrated_at / calibrated_on_n written by scripts/calibrate_know_confidence.py) |
+| `[sync]` | enabled (default false), roots, include, exclude, interval_s, max_delete_fraction, max_files_per_pass, max_file_bytes. In-process delta sync of tracked folders: changed files are re-ingested and their stale chunks tombstoned (soft) and so are the chunks of deleted files; a missing root or a mass delete touches nothing. Supersedes `[mem_sync]` for repo folders |
 | `[mem_sync]` | Auto-memory-to-cymatix sync: watch_dirs, sync_interval_s |
 | `[synonyms]` | Lightweight query expansion (e.g., "cache" -> ["redis", "ttl", "invalidation"]) |
 | `[abstain]` | Abstention thresholds for low-confidence responses |
@@ -125,6 +126,8 @@ POST /admin/vacuum         — reclaim SQLite pages
 POST /admin/compact        — run compaction pass
 POST /admin/checkpoint     — WAL checkpoint
 GET  /admin/config-dump    — loaded runtime config (secrets redacted) + lane + engine commit + store identity
+GET  /sync/status          — delta-sync state: roots, tracked files, guard trips, last pass
+POST /sync/rescan          — run a delta-sync pass now ({"allow_mass_delete": true} to confirm a bulk delete)
 ```
 
 **Identity + sessions:**

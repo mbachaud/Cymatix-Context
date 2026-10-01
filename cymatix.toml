@@ -659,6 +659,19 @@ betas           = [-2.1222, -1.1442, 0.8794, 0.9407, 0.2999, 0.7979]
 calibrated_at   = "2026-07-07T01:39:23+00:00"
 calibrated_on_n = 1617
 
+[sync]
+# Delta sync of tracked folders, in-process: new files ingested, changed
+# files re-ingested with their stale chunks tombstoned, deleted files
+# tombstoned. Keeps docs/code fresh while you edit them. Guards: a missing
+# root is skipped; >max_delete_fraction vanishing at once touches nothing
+# (confirm with POST /sync/rescan {"allow_mass_delete": true}).
+# Reference: docs/config-reference.md [sync].
+enabled = false
+roots = []                              # e.g. ["F:/Projects/cymatix-context/docs"]
+interval_s = 30
+max_delete_fraction = 0.2
+max_files_per_pass = 200
+
 [mem_sync]
 # Auto-memory → cymatix sync. Every .md file in a watched dir becomes a
 # gene; persona/agent attribution comes from CYMATIX_AGENT / CYMATIX_USER
