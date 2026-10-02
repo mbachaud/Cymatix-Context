@@ -48,7 +48,14 @@ Electron main ──spawn──▶ cymatix-engine launcher --headless --port 0
 
 ## Develop
 
-From a checkout with the launcher extra installed (`pip install -e ".[launcher]"`):
+Requirements:
+
+- **Node.js 22.12 or newer.** Electron 44 sets this as its minimum
+  (`engines` in `package.json`).
+- **Python 3.11 or newer** with the launcher extra installed:
+  `pip install -e ".[launcher]"` (jinja2, psutil, platformdirs, py-cpuinfo).
+  The desktop app runs the launcher headless, so it does not need the
+  `launcher-tray` or `launcher-native` extras.
 
 ```bash
 cd desktop
@@ -59,6 +66,13 @@ npm start
 
 `npm start` runs the repo's launcher through `python` (set `CYMATIX_PYTHON`
 to use another interpreter).
+
+`npm install` does not download the Electron binary. Since Electron 44 the
+`electron` package has no install script: the binary (about 100 MB) is
+fetched the first time `electron` runs, so the first `npm start` takes
+longer. A script that starts `node_modules/electron/dist/electron.exe`
+directly skips that step. Fetch the binary first with
+`npx install-electron --no`.
 
 ## Package
 
