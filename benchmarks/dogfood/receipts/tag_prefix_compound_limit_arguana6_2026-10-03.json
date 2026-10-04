@@ -1,0 +1,742 @@
+{
+  "tool": "benchmarks/dogfood/erb/ablation_ladder.py",
+  "stamp": "2026-10-03",
+  "bed": "C:\\Users\\max\\AppData\\Local\\Temp\\claude\\F--Projects-cymatix-context--claude-worktrees-unruffled-thompson-2ff689\\b3c120f1-5460-4e2d-9652-9369eb6b4f05\\scratchpad\\bed\\beir_arguana.db",
+  "bed_bytes": 234405888,
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\cymatix-tuning-progression-1d3a3c\\cymatix.toml",
+  "git_sha": "e3825e4b0463069e5d23f4d0a9f429f9ba7d651e",
+  "needles_file": "C:\\Users\\max\\AppData\\Local\\Temp\\claude\\F--Projects-cymatix-context--claude-worktrees-unruffled-thompson-2ff689\\b3c120f1-5460-4e2d-9652-9369eb6b4f05\\scratchpad\\arguana_6.json",
+  "gold_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\cymatix-tuning-progression-1d3a3c\\benchmarks\\dogfood\\beir_arguana\\gold_by_needle_beir_arguana.json",
+  "needle_count": 6,
+  "k": 12,
+  "env": {
+    "CYMATIX_ENCODER_URL": null,
+    "CYMATIX_ENCODER_URL_set": false,
+    "CYMATIX_DISABLE_HEADROOM": null,
+    "CYMATIX_DISABLE_LEARN": "1",
+    "CYMATIX_GENOME_PATH": "C:\\Users\\max\\AppData\\Local\\Temp\\claude\\F--Projects-cymatix-context--claude-worktrees-unruffled-thompson-2ff689\\b3c120f1-5460-4e2d-9652-9369eb6b4f05\\scratchpad\\bed\\beir_arguana.db"
+  },
+  "note": "Ranks read from genome.last_query_scores (post-blend; blend republishes the map at scoring/blend.py:233/:281), ties broken by gene_id ascending. THREE bases ship side by side and answer different questions: recall_at_k / *_rank_of_gold on the score map; final_recall_at_k + per-needle final_rank_of_first_gold on genome.last_ranked_ids, the FINAL order (post-rerank when it ran \u2014 a cross-encoder permutes ids without rewriting fused scores, so #341 arms are invisible in the score map); and delivered_gold_queries / delivered_gold_rate / delivered_gold_rank on window.expressed_gene_ids, the post-budget delivery slice (#335). pool_delivery_gap is recall_at_k minus delivered_gold_rate. Per-needle gate_kept / floor_appended come from genome.last_rerank_diag (published on both rerank arms). Each arm runs one untimed warmup query first so the lazy encoder load is not billed to p50. Latencies are wall ms on a shared box \u2014 within-run relatives only.",
+  "dropped_arms": [
+    {
+      "arm": "no_plr",
+      "knob": "[plr] enabled",
+      "reason": "Not on the build_context path. [plr] enabled is read only by server/routes_context.py:635 -> server/helpers.py:444 _compute_plr_confidence, which decorates the /context/packet response; retrieval/fusion_plr.py:31 states it 'leaves document ranking untouched'. An in-process arm would measure zero by construction, not by evidence."
+    },
+    {
+      "arm": "no_harmonic",
+      "knob": "use_harmonic / [cymatics] harmonic_links",
+      "reason": "No query-time off-switch. `use_harmonic` defaults True at context_manager.py:2895 and knowledge_store.py:2259 and is passed by NO call site (context_manager.py:1945, :1965), so Tier 5 (knowledge_store.py:3119) and _expand_coactivated (knowledge_store.py:3494) are unconditional. [cymatics] harmonic_links gates only the ingest/expression-time edge WRITE inside the `if not read_only` block at context_manager.py:2353."
+    },
+    {
+      "arm": "no_tag_prefix / tag discipline",
+      "knob": "[retrieval] tag_idf_enabled, tag_df_cap, tag_prefix_weight",
+      "reason": "Tier 1 (knowledge_store.py:2697) and Tier 2 (:2720) are unconditional. The #327 knobs default to OFF (config.py:660, :668), so flipping them is an intervention, not an ablation. The only mute is weight-zeroing (tag_prefix_weight=0.0), which silences the contribution while still paying the SQL cost \u2014 that would misreport the cost axis, so no arm is offered."
+    }
+  ],
+  "arms": [
+    {
+      "arm": "baseline",
+      "knobs_changed": {},
+      "gate": "\u2014  (shipped config, untouched)",
+      "arm_valid": true,
+      "validation": "control",
+      "validation_detail": "control arm \u2014 shipped config, no ablation to validate",
+      "recall_at_k": 1.0,
+      "final_recall_at_k": 1.0,
+      "mean_rank_of_gold": 7.67,
+      "median_rank_of_gold": 8.0,
+      "gold_found_queries": 6,
+      "gold_ranks_total": 6,
+      "delivered_gold_queries": 4,
+      "delivered_gold_rate": 0.6666666666666666,
+      "pool_delivery_gap": 0.3333,
+      "queries_with_scores": 6,
+      "latency_ms": {
+        "p50": 907.421,
+        "p95": 1019.334
+      },
+      "signal_ms_median": {
+        "body_fetch": 1.518,
+        "coact_expand": 0.098,
+        "fts5": 248.233,
+        "lex_anchor": 13.438,
+        "tag_exact": 13.822,
+        "tag_prefix": 22.3
+      },
+      "n_queries": 6,
+      "warmup_ran": true,
+      "encoder_url": "",
+      "dense_codec_class": null,
+      "remote_dense": false,
+      "observables": {
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "fts5",
+          "lex_anchor",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 6,
+        "synonym_expansions": 12,
+        "cymatics_calls": 6,
+        "cold_tier_queries": 0
+      },
+      "errors": [],
+      "per_query": [
+        {
+          "needle": "beir_arguana_test-culture-tlhrilsfhwr-pro02a",
+          "gold_ranks": [
+            9
+          ],
+          "rank_of_first_gold": 9,
+          "recall_hit": 1,
+          "recall_contribution": 0.16666666666666666,
+          "wall_ms": 876.631,
+          "signal_ms": {
+            "body_fetch": 1.291,
+            "coact_expand": 0.089,
+            "fts5": 219.225,
+            "lex_anchor": 14.527,
+            "tag_exact": 17.915,
+            "tag_prefix": 21.171
+          },
+          "delivered_gold": 0,
+          "delivered_count": 6,
+          "delivered_gold_rank": null,
+          "budget_tier": "focused",
+          "final_rank_of_first_gold": 10,
+          "final_recall_hit": 1,
+          "gate_kept": null,
+          "floor_appended": null,
+          "splice_n_candidates": 6,
+          "cover_walk": null,
+          "stage_provenance": {
+            "version": 1,
+            "status": "complete",
+            "error": null,
+            "retrievals": [
+              {
+                "path": "query_docs",
+                "status": "complete",
+                "error": null,
+                "stages": {
+                  "fts_raw": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ],
+                    "fetch_depth": 48,
+                    "prefilter_applied": false,
+                    "scope": "bounded_fts_sql_before_lifecycle_and_party_filters"
+                  },
+                  "fts_eligible": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ]
+                  },
+                  "pre_shortlist": {
+                    "status": "captured",
+                    "count": 5256,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ]
+                  },
+                  "post_shortlist": {
+                    "status": "captured",
+                    "count": 50,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ],
+                    "filter_status": "applied"
+                  },
+                  "final_scoring": {
+                    "status": "captured",
+                    "count": 50,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ],
+                    "fusion_mode": "rrf",
+                    "scope": "eligible_scoring_map_before_rerank_and_return_expansion"
+                  },
+                  "retrieval_returned": {
+                    "status": "captured",
+                    "count": 24,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ]
+                  }
+                }
+              }
+            ],
+            "stages": {
+              "post_blend_scores": {
+                "status": "captured",
+                "count": 50,
+                "gold_ids": [
+                  "68eb8011208295fe"
+                ]
+              },
+              "post_blend_candidates": {
+                "status": "captured",
+                "count": 12,
+                "gold_ids": [
+                  "68eb8011208295fe"
+                ]
+              }
+            },
+            "unsupported": []
+          }
+        },
+        {
+          "needle": "beir_arguana_test-culture-tlhrilsfhwr-pro03a",
+          "gold_ranks": [
+            5
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.16666666666666666,
+          "wall_ms": 907.421,
+          "signal_ms": {
+            "body_fetch": 1.647,
+            "coact_expand": 0.125,
+            "fts5": 226.502,
+            "lex_anchor": 12.61,
+            "tag_exact": 12.474,
+            "tag_prefix": 23.396
+          },
+          "delivered_gold": 1,
+          "delivered_count": 6,
+          "delivered_gold_rank": 3,
+          "budget_tier": "focused",
+          "final_rank_of_first_gold": 5,
+          "final_recall_hit": 1,
+          "gate_kept": null,
+          "floor_appended": null,
+          "splice_n_candidates": 6,
+          "cover_walk": null,
+          "stage_provenance": {
+            "version": 1,
+            "status": "complete",
+            "error": null,
+            "retrievals": [
+              {
+                "path": "query_docs",
+                "status": "complete",
+                "error": null,
+                "stages": {
+                  "fts_raw": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ],
+                    "fetch_depth": 48,
+                    "prefilter_applied": false,
+                    "scope": "bounded_fts_sql_before_lifecycle_and_party_filters"
+                  },
+                  "fts_eligible": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ]
+                  },
+                  "pre_shortlist": {
+                    "status": "captured",
+                    "count": 3519,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ]
+                  },
+                  "post_shortlist": {
+                    "status": "captured",
+                    "count": 49,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ],
+                    "filter_status": "applied"
+                  },
+                  "final_scoring": {
+                    "status": "captured",
+                    "count": 49,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ],
+                    "fusion_mode": "rrf",
+                    "scope": "eligible_scoring_map_before_rerank_and_return_expansion"
+                  },
+                  "retrieval_returned": {
+                    "status": "captured",
+                    "count": 24,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ]
+                  }
+                }
+              }
+            ],
+            "stages": {
+              "post_blend_scores": {
+                "status": "captured",
+                "count": 49,
+                "gold_ids": [
+                  "a03c919c52dba6fc"
+                ]
+              },
+              "post_blend_candidates": {
+                "status": "captured",
+                "count": 12,
+                "gold_ids": [
+                  "a03c919c52dba6fc"
+                ]
+              }
+            },
+            "unsupported": []
+          }
+        },
+        {
+          "needle": "beir_arguana_test-free-speech-debate-ldhwbmclg-con03a",
+          "gold_ranks": [
+            11
+          ],
+          "rank_of_first_gold": 11,
+          "recall_hit": 1,
+          "recall_contribution": 0.16666666666666666,
+          "wall_ms": 852.665,
+          "signal_ms": {
+            "body_fetch": 1.421,
+            "coact_expand": 0.101,
+            "fts5": 254.267,
+            "lex_anchor": 13.35,
+            "tag_exact": 9.382,
+            "tag_prefix": 21.204
+          },
+          "delivered_gold": 1,
+          "delivered_count": 12,
+          "delivered_gold_rank": 8,
+          "budget_tier": "broad",
+          "final_rank_of_first_gold": 10,
+          "final_recall_hit": 1,
+          "gate_kept": null,
+          "floor_appended": null,
+          "splice_n_candidates": 12,
+          "cover_walk": null,
+          "stage_provenance": {
+            "version": 1,
+            "status": "complete",
+            "error": null,
+            "retrievals": [
+              {
+                "path": "query_docs",
+                "status": "complete",
+                "error": null,
+                "stages": {
+                  "fts_raw": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "4af241c0fee3e3eb"
+                    ],
+                    "fetch_depth": 48,
+                    "prefilter_applied": false,
+                    "scope": "bounded_fts_sql_before_lifecycle_and_party_filters"
+                  },
+                  "fts_eligible": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "4af241c0fee3e3eb"
+                    ]
+                  },
+                  "pre_shortlist": {
+                    "status": "captured",
+                    "count": 2306,
+                    "gold_ids": [
+                      "4af241c0fee3e3eb"
+                    ]
+                  },
+                  "post_shortlist": {
+                    "status": "captured",
+                    "count": 49,
+                    "gold_ids": [
+                      "4af241c0fee3e3eb"
+                    ],
+                    "filter_status": "applied"
+                  },
+                  "final_scoring": {
+                    "status": "captured",
+                    "count": 49,
+                    "gold_ids": [
+                      "4af241c0fee3e3eb"
+                    ],
+                    "fusion_mode": "rrf",
+                    "scope": "eligible_scoring_map_before_rerank_and_return_expansion"
+                  },
+                  "retrieval_returned": {
+                    "status": "captured",
+                    "count": 24,
+                    "gold_ids": [
+                      "4af241c0fee3e3eb"
+                    ]
+                  }
+                }
+              }
+            ],
+            "stages": {
+              "post_blend_scores": {
+                "status": "captured",
+                "count": 49,
+                "gold_ids": [
+                  "4af241c0fee3e3eb"
+                ]
+              },
+              "post_blend_candidates": {
+                "status": "captured",
+                "count": 12,
+                "gold_ids": [
+                  "4af241c0fee3e3eb"
+                ]
+              }
+            },
+            "unsupported": []
+          }
+        },
+        {
+          "needle": "beir_arguana_test-free-speech-debate-ldhwbmclg-pro01a",
+          "gold_ranks": [
+            7
+          ],
+          "rank_of_first_gold": 7,
+          "recall_hit": 1,
+          "recall_contribution": 0.16666666666666666,
+          "wall_ms": 1015.685,
+          "signal_ms": {
+            "body_fetch": 1.878,
+            "coact_expand": 0.095,
+            "fts5": 313.477,
+            "lex_anchor": 11.54,
+            "tag_exact": 9.086,
+            "tag_prefix": 23.622
+          },
+          "delivered_gold": 1,
+          "delivered_count": 12,
+          "delivered_gold_rank": 4,
+          "budget_tier": "broad",
+          "final_rank_of_first_gold": 7,
+          "final_recall_hit": 1,
+          "gate_kept": null,
+          "floor_appended": null,
+          "splice_n_candidates": 12,
+          "cover_walk": null,
+          "stage_provenance": {
+            "version": 1,
+            "status": "complete",
+            "error": null,
+            "retrievals": [
+              {
+                "path": "query_docs",
+                "status": "complete",
+                "error": null,
+                "stages": {
+                  "fts_raw": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "f951bda13b3236b6"
+                    ],
+                    "fetch_depth": 48,
+                    "prefilter_applied": false,
+                    "scope": "bounded_fts_sql_before_lifecycle_and_party_filters"
+                  },
+                  "fts_eligible": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "f951bda13b3236b6"
+                    ]
+                  },
+                  "pre_shortlist": {
+                    "status": "captured",
+                    "count": 2817,
+                    "gold_ids": [
+                      "f951bda13b3236b6"
+                    ]
+                  },
+                  "post_shortlist": {
+                    "status": "captured",
+                    "count": 50,
+                    "gold_ids": [
+                      "f951bda13b3236b6"
+                    ],
+                    "filter_status": "applied"
+                  },
+                  "final_scoring": {
+                    "status": "captured",
+                    "count": 50,
+                    "gold_ids": [
+                      "f951bda13b3236b6"
+                    ],
+                    "fusion_mode": "rrf",
+                    "scope": "eligible_scoring_map_before_rerank_and_return_expansion"
+                  },
+                  "retrieval_returned": {
+                    "status": "captured",
+                    "count": 24,
+                    "gold_ids": [
+                      "f951bda13b3236b6"
+                    ]
+                  }
+                }
+              }
+            ],
+            "stages": {
+              "post_blend_scores": {
+                "status": "captured",
+                "count": 50,
+                "gold_ids": [
+                  "f951bda13b3236b6"
+                ]
+              },
+              "post_blend_candidates": {
+                "status": "captured",
+                "count": 12,
+                "gold_ids": [
+                  "f951bda13b3236b6"
+                ]
+              }
+            },
+            "unsupported": []
+          }
+        },
+        {
+          "needle": "beir_arguana_test-society-tlhrilsfhwr-pro02a",
+          "gold_ranks": [
+            9
+          ],
+          "rank_of_first_gold": 9,
+          "recall_hit": 1,
+          "recall_contribution": 0.16666666666666666,
+          "wall_ms": 1019.334,
+          "signal_ms": {
+            "body_fetch": 1.344,
+            "coact_expand": 0.084,
+            "fts5": 254.985,
+            "lex_anchor": 19.58,
+            "tag_exact": 22.525,
+            "tag_prefix": 26.176
+          },
+          "delivered_gold": 0,
+          "delivered_count": 6,
+          "delivered_gold_rank": null,
+          "budget_tier": "focused",
+          "final_rank_of_first_gold": 10,
+          "final_recall_hit": 1,
+          "gate_kept": null,
+          "floor_appended": null,
+          "splice_n_candidates": 6,
+          "cover_walk": null,
+          "stage_provenance": {
+            "version": 1,
+            "status": "complete",
+            "error": null,
+            "retrievals": [
+              {
+                "path": "query_docs",
+                "status": "complete",
+                "error": null,
+                "stages": {
+                  "fts_raw": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ],
+                    "fetch_depth": 48,
+                    "prefilter_applied": false,
+                    "scope": "bounded_fts_sql_before_lifecycle_and_party_filters"
+                  },
+                  "fts_eligible": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ]
+                  },
+                  "pre_shortlist": {
+                    "status": "captured",
+                    "count": 5256,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ]
+                  },
+                  "post_shortlist": {
+                    "status": "captured",
+                    "count": 50,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ],
+                    "filter_status": "applied"
+                  },
+                  "final_scoring": {
+                    "status": "captured",
+                    "count": 50,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ],
+                    "fusion_mode": "rrf",
+                    "scope": "eligible_scoring_map_before_rerank_and_return_expansion"
+                  },
+                  "retrieval_returned": {
+                    "status": "captured",
+                    "count": 24,
+                    "gold_ids": [
+                      "68eb8011208295fe"
+                    ]
+                  }
+                }
+              }
+            ],
+            "stages": {
+              "post_blend_scores": {
+                "status": "captured",
+                "count": 50,
+                "gold_ids": [
+                  "68eb8011208295fe"
+                ]
+              },
+              "post_blend_candidates": {
+                "status": "captured",
+                "count": 12,
+                "gold_ids": [
+                  "68eb8011208295fe"
+                ]
+              }
+            },
+            "unsupported": []
+          }
+        },
+        {
+          "needle": "beir_arguana_test-society-tlhrilsfhwr-pro03a",
+          "gold_ranks": [
+            5
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.16666666666666666,
+          "wall_ms": 851.514,
+          "signal_ms": {
+            "body_fetch": 1.614,
+            "coact_expand": 0.106,
+            "fts5": 242.198,
+            "lex_anchor": 13.527,
+            "tag_exact": 15.17,
+            "tag_prefix": 17.589
+          },
+          "delivered_gold": 1,
+          "delivered_count": 6,
+          "delivered_gold_rank": 3,
+          "budget_tier": "focused",
+          "final_rank_of_first_gold": 5,
+          "final_recall_hit": 1,
+          "gate_kept": null,
+          "floor_appended": null,
+          "splice_n_candidates": 6,
+          "cover_walk": null,
+          "stage_provenance": {
+            "version": 1,
+            "status": "complete",
+            "error": null,
+            "retrievals": [
+              {
+                "path": "query_docs",
+                "status": "complete",
+                "error": null,
+                "stages": {
+                  "fts_raw": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ],
+                    "fetch_depth": 48,
+                    "prefilter_applied": false,
+                    "scope": "bounded_fts_sql_before_lifecycle_and_party_filters"
+                  },
+                  "fts_eligible": {
+                    "status": "captured",
+                    "count": 48,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ]
+                  },
+                  "pre_shortlist": {
+                    "status": "captured",
+                    "count": 3519,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ]
+                  },
+                  "post_shortlist": {
+                    "status": "captured",
+                    "count": 49,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ],
+                    "filter_status": "applied"
+                  },
+                  "final_scoring": {
+                    "status": "captured",
+                    "count": 49,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ],
+                    "fusion_mode": "rrf",
+                    "scope": "eligible_scoring_map_before_rerank_and_return_expansion"
+                  },
+                  "retrieval_returned": {
+                    "status": "captured",
+                    "count": 24,
+                    "gold_ids": [
+                      "a03c919c52dba6fc"
+                    ]
+                  }
+                }
+              }
+            ],
+            "stages": {
+              "post_blend_scores": {
+                "status": "captured",
+                "count": 49,
+                "gold_ids": [
+                  "a03c919c52dba6fc"
+                ]
+              },
+              "post_blend_candidates": {
+                "status": "captured",
+                "count": 12,
+                "gold_ids": [
+                  "a03c919c52dba6fc"
+                ]
+              }
+            },
+            "unsupported": []
+          }
+        }
+      ]
+    }
+  ],
+  "per_query": true,
+  "per_query_note": "each arm carries a per_query list, one record per needle in the run order every arm shares, so arm-vs-arm comparisons can be run PAIRED from this receipt alone. recall_hit is the exact 0/1 vector a paired test consumes and sum(recall_hit)/n_queries reconstructs recall_at_k; recall_contribution is the pre-divided form and sums to recall_at_k up to that aggregate's 4-decimal rounding. Failed queries appear as miss records carrying 'error', so the vectors stay the same length across arms. Each record also carries delivered_gold / delivered_count / delivered_gold_rank (#335 delivery basis), final_rank_of_first_gold / final_recall_hit (#341 final-order basis, from genome.last_ranked_ids), gate_kept / floor_appended (#341, from genome.last_rerank_diag; None when the query never reached the ANN publication point) and splice_n_candidates (ring-correlated; None when this needle's own query never rang the splice stage). stage_provenance records candidate counts and watched gold IDs at each measured retrieval/blend boundary for this request only; failed, not_executed, and uncaptured stages are not empty pools. budget_tier is copied from the returned window metadata; null means the request failed or returned no observed tier."
+}

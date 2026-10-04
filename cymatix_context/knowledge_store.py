@@ -62,6 +62,10 @@ COVERAGE_TIEBREAK_DEPTH = 60
 # accel.extract_query_signals so query terms and content tokens agree.
 _COVERAGE_TOKEN_RE = re.compile(r"[a-z0-9_/\-]+")
 
+# SQLite's default SQLITE_LIMIT_COMPOUND_SELECT: max members of one
+# compound SELECT. _tag_prefix_sql nests its per-term UNION ALL to stay under it.
+_COMPOUND_SELECT_LIMIT = 500
+
 
 # ── Struggle 1 fix: source-path deny list ───────────────────────────────
 #
@@ -2828,11 +2832,25 @@ class KnowledgeStore:
         # ingest-normalized to lowercase (verified 0 mixed-case rows on
         # dogfood and every ERB bed), so lowercasing the query term
         # preserves LIKE's case-insensitive matching.
-        sub = " UNION ALL ".join(
+        branches = [
             "SELECT gene_id, tag_value FROM promoter_index "
             "WHERE tag_value >= ? AND tag_value < ?"
             for _ in query_terms
-        )
+        ]
+        # SQLITE_LIMIT_COMPOUND_SELECT (500) caps the members of ONE
+        # compound SELECT; past it the whole query raised OperationalError
+        # (BEIR ArguAna / RepoBench-R long queries). Over the limit, wrap
+        # each run of <=500 branches in a subquery and UNION ALL those —
+        # same rows, same multiplicity, same param order. At or under the
+        # limit the SQL stays byte-identical to the flat form.
+        while len(branches) > _COMPOUND_SELECT_LIMIT:
+            branches = [
+                "SELECT gene_id, tag_value FROM ("
+                + " UNION ALL ".join(branches[i:i + _COMPOUND_SELECT_LIMIT])
+                + ")"
+                for i in range(0, len(branches), _COMPOUND_SELECT_LIMIT)
+            ]
+        sub = " UNION ALL ".join(branches)
         # CROSS JOIN is SQLite's documented ordering hint: it pins the
         # aggregated tag matches as the outer loop so genes is one PK
         # lookup per MATCHED id. A plain JOIN let the planner flatten and
