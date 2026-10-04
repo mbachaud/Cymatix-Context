@@ -44,6 +44,12 @@ D = ROOT / "benchmarks" / "dogfood"
 LADDER = D / "erb" / "ablation_ladder.py"
 SCORER = D / "beir" / "beir_ndcg.py"
 SHIPPED = ROOT / "cymatix.toml"
+# Arm name -> (config, receipt infix). "baseline" keeps the original receipt
+# names; diagnostic arms add an infix, as the 2026-09-04 code-bed receipts do.
+ARMS = {
+    "baseline": (SHIPPED, ""),
+    "tag_lanes_muted": (D / "code" / "configs" / "tag_lanes_muted.toml", "_diag_tag_lanes_muted"),
+}
 
 RUN_DIR.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
@@ -53,17 +59,20 @@ logging.basicConfig(
 log = logging.getLogger("beir_round1")
 
 
-def paths(tag: str) -> dict:
+def paths(tag: str, arm: str = "baseline") -> dict:
     bench = D / tag
+    infix = ARMS[arm][1]
     return {
+        "config": ARMS[arm][0],
+        "infix": infix,
         "bench": bench,
         "corpus": Path(rf"F:\Projects\beir\{tag}\corpus"),
         "bed_dir": Path(rf"F:\tmp\{tag}_bed"),
         "db": Path(rf"F:\tmp\{tag}_bed\{tag}.db"),
         "resolved": bench / f"needles_resolved_{tag}_full.json",
         "gold": bench / f"gold_by_needle_{tag}.json",
-        "ladder": bench / "receipts" / f"ladder_{tag}_seed0_{STAMP}.json",
-        "ndcg": bench / "receipts" / f"beir_ndcg_{tag}_{STAMP}.json",
+        "ladder": bench / "receipts" / f"ladder_{tag}{infix}_seed0_{STAMP}.json",
+        "ndcg": bench / "receipts" / f"beir_ndcg_{tag}{infix}_{STAMP}.json",
     }
 
 
@@ -129,14 +138,14 @@ def grade(tag: str, p: dict) -> bool:
             time.sleep(wait)
         cmd = [sys.executable, "-P", str(LADDER), "--genome", str(p["db"]),
                "--resolved", str(p["resolved"]), "--gold", str(p["gold"]),
-               "--limit", "0", "--k", "12", "--arms", "baseline", "--config", str(SHIPPED),
+               "--limit", "0", "--k", "12", "--arms", "baseline", "--config", str(p["config"]),
                "--per-query", "--rank-dump", str(RANK_DUMP), "--stamp", STAMP, "--out", str(p["ladder"])]
-        if run(f"ladder_{tag}", cmd) != 0 or not p["ladder"].exists():
+        if run(f"ladder_{tag}{p['infix']}", cmd) != 0 or not p["ladder"].exists():
             return False
     if not p["ndcg"].exists():
         cmd = [sys.executable, "-P", str(SCORER), "--tag", tag, "--receipt", str(p["ladder"]),
                "--db", str(p["db"]), "--out", str(p["ndcg"])]
-        if run(f"ndcg_{tag}", cmd) != 0:
+        if run(f"ndcg_{tag}{p['infix']}", cmd) != 0:
             return False
     return True
 
@@ -144,17 +153,23 @@ def grade(tag: str, p: dict) -> bool:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--tags", default=",".join(TAGS))
+    ap.add_argument("--arm", choices=sorted(ARMS), default="baseline",
+                    help="config arm; non-baseline arms grade existing beds only")
     args = ap.parse_args(argv)
     tags = [t for t in args.tags.split(",") if t]
     if sys.platform == "win32":
         import ctypes
         ctypes.windll.kernel32.SetThreadExecutionState(0x80000000 | 0x00000001)
-    (RUN_DIR / "runner.pid").write_text(str(os.getpid()), encoding="utf-8")
+    (RUN_DIR / f"runner_{args.arm}.pid").write_text(str(os.getpid()), encoding="utf-8")
     failed = []
-    ok_built = [t for t in tags if build(t, paths(t)) or failed.append(f"build:{t}")]
-    # Grade oldest bed first so the cold gate costs the least wall time.
+    if args.arm == "baseline":
+        ok_built = [t for t in tags if build(t, paths(t)) or failed.append(f"build:{t}")]
+    else:
+        ok_built = [t for t in tags if built(paths(t)) or failed.append(f"no_bed:{t}")]
+    # Grade the least recently touched bed first so the cold gate costs the
+    # least wall time (a ladder read bumps the bed's mtime).
     for t in sorted(ok_built, key=lambda t: paths(t)["db"].stat().st_mtime):
-        if not grade(t, paths(t)):
+        if not grade(t, paths(t, args.arm)):
             failed.append(f"grade:{t}")
     log.info("DONE failed=%s", failed)
     progress("done", 1 if failed else 0, 0.0)
