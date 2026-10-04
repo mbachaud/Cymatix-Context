@@ -29,6 +29,17 @@ tagger_version=1; v1 beds stay internally valid, but new-bed baselines must
 be re-established at v2. Receipt for the v1→v2 delta:
 `benchmarks/dogfood/receipts/tagger_v2_entity_hygiene_2026-08-30.json`.
 
+**Where receipts live (2026-10-04):** the `benchmarks/dogfood/**/receipts*/`
+trees are no longer tracked in this repo (`.gitignore`). They are archived
+in the private repo `mbachaud/cymatix-receipts`: `mirror/` is a
+byte-identical export of every receipt tracked here up to `e3825e4b`
+(`scripts/mirror_from_main.py`, which refuses to shrink the mirror), and
+receipts written after that are copied to `untracked/` by
+`scripts/archive_working_receipts.py --source <checkout>`. Receipt paths
+cited in this ledger and in the docs are kept as-is on purpose: the same
+relative path resolves under `mirror/` or `untracked/` in the archive, and
+receipts up to `e3825e4b` remain in this repo's git history.
+
 ## Standard bench profile (decision 2026-08-11)
 
 Future testing runs the GPU encoder daemon ON with per-box worker counts.
