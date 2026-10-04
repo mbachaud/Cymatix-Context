@@ -301,6 +301,7 @@ def run_arm(
             confidence_raw = None
             lex_agree = None
             coord_conf = None
+            freshness_min = None
             try:
                 tier_contrib = getattr(window, "tier_contributions", None)
                 if tier_contrib is None:
@@ -368,6 +369,9 @@ def run_arm(
                 "soft_stale": soft_stale,
                 "lexical_dense_agree": lex_agree,
                 "coordinate_confidence": round(coord_conf, 6) if coord_conf is not None else None,
+                # #482: the fifth [know] feature, recorded so a refit sees the
+                # same input compute_confidence used (None = no contribution).
+                "freshness_min": round(float(freshness_min), 6) if freshness_min is not None else None,
                 "confidence_raw": round(confidence_raw, 6) if confidence_raw is not None else None,
                 "empty_window_gold_rank1": 1 if (dg["delivered_count"] == 0 and first == 1) else 0,
             })
