@@ -1,0 +1,19 @@
+{
+ "source": "BEIR fiqa (UKP mirror zip; corpus.jsonl, queries.jsonl, qrels/test.tsv)",
+ "corpus_root": "F:\\Projects\\beir\\beir_fiqa\\corpus",
+ "docs": 57638,
+ "docs_under_min_bytes": 158,
+ "docs_over_max_bytes": 0,
+ "path_collisions": 0,
+ "n_needles": 648,
+ "qrels_positive_total": 1706,
+ "gold_per_needle_max": 15,
+ "graded": false,
+ "queries_that_are_corpus_docs": 55,
+ "drops": {
+  "no_positive_qrel": 0,
+  "gold_absent_from_corpus": 0,
+  "query_text_missing": 0
+ },
+ "drop_names": {}
+}

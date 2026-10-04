@@ -1098,6 +1098,23 @@ PROFILES: dict[str, dict] = {
         "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
+    # ── BEIR round 1 (issue #482, user-approved 2026-10-03) ─────────────
+    # One .txt per document, emitted by scripts/build_beir_corpus.py into
+    # F:\Projects\beir\<tag>\corpus (sha1-prefix shard dirs); needles and
+    # graded gold under benchmarks/dogfood/<tag>. Same emitted-root ruling
+    # as the code benches: no internal artifacts, common skip list replaced.
+    **{
+        f"beir_{name}": {
+            "label": f"BEIR {name} corpus (issue #482 round 1)",
+            "active_roots": 1,
+            "roots": [rf"F:\Projects\beir\beir_{name}\corpus"],
+            "extra_skip_dirs": set(),
+            "skip_dirs_override": set(),
+            "extra_filename_filters": [],
+        }
+        for name in ("arguana", "nfcorpus", "scifact", "fiqa", "scidocs",
+                     "trec_covid", "webis_touche2020", "quora")
+    },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
         "active_roots": 13,
