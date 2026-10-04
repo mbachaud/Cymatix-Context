@@ -1,0 +1,6447 @@
+{
+ "date": "2026-10-04T09:01:17.411048+00:00",
+ "db": "F:\\tmp\\beir_cqadupstack_mathematica_bed\\beir_cqadupstack_mathematica.db",
+ "corpus_root": "F:\\Projects\\beir\\beir_cqadupstack_mathematica\\corpus",
+ "min_file_bytes": 1,
+ "needles_total": 804,
+ "needles_resolvable": 804,
+ "dropped": [],
+ "gold_files_wanted": 1358,
+ "gold_files_size_gated": 0,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 0,
+ "per_needle": {
+  "beir_cqadupstack_mathematica_1": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10086": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10391": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1041": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10432": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10501": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10619": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10669": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10838": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10934": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10956": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1096": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_10990": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11024": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11059": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11192": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11195": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11196": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11247": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11271": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11298": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1137": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11403": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11460": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11608": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11698": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11705": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1172": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11725": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11794": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_11950": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1283": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1300": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13054": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13055": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13090": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1315": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13179": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13197": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13210": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13406": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13420": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13426": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13440": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13513": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13520": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13538": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13652": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13657": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13754": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13757": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13961": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_13981": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1400": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14063": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14083": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14122": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14185": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14189": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14193": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14282": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14340": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14405": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14435": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1446": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_145": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14523": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14525": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14534": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14543": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14611": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14645": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14661": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_14987": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15021": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15023": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15153": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15176": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15184": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15311": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15351": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15381": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1542": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15516": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15634": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15649": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15655": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15679": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1571": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15718": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15734": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1584": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15858": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15885": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15929": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_15945": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1602": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16194": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16233": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16252": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16258": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16259": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16324": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16398": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16404": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16429": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_16562": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1679": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17093": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17154": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17196": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17250": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17324": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17342": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17357": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17370": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17381": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17617": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17622": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17633": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17736": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17811": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17826": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_17857": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18025": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18081": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18090": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18091": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18142": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18183": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18193": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18210": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18258": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18310": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1835": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18419": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18460": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18526": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18549": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18643": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18647": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18655": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18707": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_18889": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19027": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19035": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1911": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19127": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19165": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19174": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19201": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19253": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19264": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19392": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_1945": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19457": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_197": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19705": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19867": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_19902": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20023": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20051": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20074": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20079": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20105": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20228": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20243": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20272": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20277": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20334": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20355": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20468": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2047": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20470": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2051": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20718": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2073": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2076": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20766": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20823": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20841": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_20873": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21075": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21150": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21161": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21238": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21284": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21328": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21374": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21410": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21421": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21444": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21558": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2157": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21655": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21672": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21701": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21742": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21764": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21870": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21898": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_21993": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22019": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22032": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2214": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22193": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2230": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22349": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22419": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22611": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22651": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22705": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22828": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22876": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22917": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22948": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_22956": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23014": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23034": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23074": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23125": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23221": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23280": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23398": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23454": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23470": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23517": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23656": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23659": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23692": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23734": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23751": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_23880": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24036": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24156": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24167": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24291": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24373": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24556": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24581": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_246": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24623": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24807": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24882": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24892": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_24988": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25031": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25061": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25134": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25185": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25255": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25257": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25260": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25277": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25282": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25285": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25324": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25325": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25340": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25343": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2537": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25394": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25502": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25549": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25562": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25587": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25610": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25673": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25775": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25798": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_25885": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26282": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26355": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26370": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2639": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26425": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2651": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26519": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2652": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26527": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26644": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26776": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26837": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26857": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26879": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2688": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26917": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26939": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26983": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_26995": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27023": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27038": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27049": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27091": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2712": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2715": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27178": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27274": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2729": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2752": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27645": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2769": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27700": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27748": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27801": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27868": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27883": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2789": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_27921": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28014": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28028": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28056": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28103": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2821": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28258": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28283": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28300": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28541": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28553": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28611": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28805": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28829": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28925": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28946": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_28977": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29016": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29085": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29098": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29129": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29254": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29358": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29545": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29590": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_296": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29609": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29696": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29700": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29708": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29808": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_29822": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_2988": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30014": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30038": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30085": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30090": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30290": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30302": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30381": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30417": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30429": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30432": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30508": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30836": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_30984": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31063": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31244": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31299": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_313": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31302": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31402": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31501": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3152": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31566": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31636": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31829": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_31902": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32119": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32168": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32223": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32293": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32346": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32447": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32569": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32601": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32658": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32715": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32727": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32878": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32938": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_32983": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33039": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33051": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3306": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33067": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33176": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3319": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33293": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33314": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33373": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_334": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33405": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33513": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33561": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33574": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33690": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33721": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33724": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3394": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33966": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_33992": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34073": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3412": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34291": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34321": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34526": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34535": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34554": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34565": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34682": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34710": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34727": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_34916": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3510": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_35139": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3518": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_35294": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_353": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3541": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_35544": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_35553": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_35603": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3561": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_35683": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3646": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_36995": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37048": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37093": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3723": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37242": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37247": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37346": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37414": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37416": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3747": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37557": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37602": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37656": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37755": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37792": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3780": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37860": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_37894": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38012": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38126": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38152": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38166": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38196": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38242": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38265": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38388": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38498": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38604": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38622": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3871": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38792": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38819": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38846": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_38931": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3897": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39019": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39026": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39076": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39078": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39089": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39106": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3912": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39137": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39361": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3943": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39511": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39604": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39654": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39696": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39731": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39904": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_3991": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_39980": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4001": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4002": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40029": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40146": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4017": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4019": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40201": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40204": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40320": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40422": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40640": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40748": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40763": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4081": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40837": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4084": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_40919": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41077": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41141": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41170": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41215": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41291": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41350": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41517": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41521": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41523": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41569": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41774": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41813": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41872": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41920": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_41966": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42035": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42097": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42209": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42330": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42334": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42366": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42403": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42411": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4244": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42483": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42512": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42628": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42712": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42717": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42763": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42778": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42889": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42951": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_42964": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43204": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43350": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4338": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43415": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43449": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43485": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43619": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43638": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4368": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43683": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43813": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_43874": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4390": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4406": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44126": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4413": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44154": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44200": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44289": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44421": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 56,
+   "gold_files_resolved": 56,
+   "gold_genes": 56,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44428": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44439": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44507": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44533": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44709": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44744": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44751": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44756": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44812": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44955": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_44987": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45010": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45040": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_451": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45181": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4537": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45371": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45398": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45424": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45447": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45450": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45475": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45476": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45528": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45551": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45574": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45662": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45693": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45725": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45878": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_45994": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46053": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46064": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4608": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4612": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46136": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46284": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46315": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46336": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46350": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46459": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46581": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46595": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46662": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46702": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4679": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46866": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46893": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46920": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46927": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46945": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46950": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_46986": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47019": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47028": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47030": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47154": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47161": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47175": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4720": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47207": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4727": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4729": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47352": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4744": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47475": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_4764": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47656": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47749": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_47881": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48026": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48030": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48208": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48307": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48386": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48387": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48672": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48681": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48690": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48696": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48802": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_48941": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_49190": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_49230": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_49289": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_49311": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_50418": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_50507": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_50519": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_50548": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_50713": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_50738": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_50831": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51042": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51049": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51188": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51440": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51560": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51597": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51711": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51732": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51776": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51783": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51880": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_51885": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_52043": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_52207": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_52308": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5235": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_52358": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_52381": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_52414": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5242": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5314": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_533": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5375": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5409": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5434": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_54464": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_54486": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5454": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_54607": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_54645": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_54781": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_54899": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_54993": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55056": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55086": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_552": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55292": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55294": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55308": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55309": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55517": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55568": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55600": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55663": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55716": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5575": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5580": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_55972": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5619": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_56213": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_56296": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5644": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_56565": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_56785": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_56984": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57242": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57366": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5740": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57430": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57434": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57470": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57588": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57632": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5782": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57878": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5790": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_57975": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5799": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_58228": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_58229": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_58465": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_58475": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_58502": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_58690": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_58918": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_58992": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59013": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59043": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59113": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59140": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5919": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59206": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59253": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_5930": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59596": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59613": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_59646": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6043": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6055": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6081": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6102": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6164": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6210": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6236": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6338": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6350": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6397": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6472": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6497": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6562": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6796": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6862": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6923": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_6955": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_702": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7173": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7174": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7214": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7235": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7366": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7408": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_745": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7463": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7531": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_761": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7668": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7679": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7756": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7772": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7779": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7804": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7926": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_7941": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8215": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8295": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8310": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8353": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8390": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8438": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_850": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8544": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8576": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8619": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8646": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8661": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8695": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8748": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8829": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8841": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8865": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8922": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_8943": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9035": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9171": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9288": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9322": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_938": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9406": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9440": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9483": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9523": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9540": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9544": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9558": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_96": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9623": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9631": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9719": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9772": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9801": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9926": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_mathematica_9942": {
+   "question_type": "beir_cqadupstack_mathematica",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  }
+ }
+}

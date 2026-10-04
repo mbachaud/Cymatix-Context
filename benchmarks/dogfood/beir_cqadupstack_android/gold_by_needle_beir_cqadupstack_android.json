@@ -1,0 +1,3098 @@
+{
+ "beir_cqadupstack_android_10118": [
+  "a6de2604f5609050"
+ ],
+ "beir_cqadupstack_android_1033": [
+  "ab0ecfa0a37a9507"
+ ],
+ "beir_cqadupstack_android_10336": [
+  "02e231763740d9b7",
+  "d529372f0b427baf"
+ ],
+ "beir_cqadupstack_android_1035": [
+  "2c0411b9d856695b"
+ ],
+ "beir_cqadupstack_android_10351": [
+  "90db124f57445764"
+ ],
+ "beir_cqadupstack_android_10414": [
+  "8f33489afaa0f3e7"
+ ],
+ "beir_cqadupstack_android_10519": [
+  "de6a4eabb7c072cf"
+ ],
+ "beir_cqadupstack_android_10523": [
+  "36b22a3882d816c9"
+ ],
+ "beir_cqadupstack_android_10702": [
+  "3b856af1ca9a0082",
+  "65946576f980e0b0"
+ ],
+ "beir_cqadupstack_android_10811": [
+  "06aeecdbc0a7e98c",
+  "2ba08718e0826847",
+  "6f092d6413ced055",
+  "bb52c3fa43de09db",
+  "e26fc5bc85721fe2",
+  "ed64ef4ee27a0e15"
+ ],
+ "beir_cqadupstack_android_10996": [
+  "516fa0c4637570bd"
+ ],
+ "beir_cqadupstack_android_1102": [
+  "14f7d590c208fa22",
+  "2b1bc2382e74483e",
+  "414df9b86d62b72f"
+ ],
+ "beir_cqadupstack_android_11099": [
+  "4a6e2672ba2fb466"
+ ],
+ "beir_cqadupstack_android_11129": [
+  "e0271dc6918ca2f5"
+ ],
+ "beir_cqadupstack_android_11333": [
+  "5fa40928bd649ce6",
+  "a42fc21f116783ae",
+  "d62786615471e704"
+ ],
+ "beir_cqadupstack_android_11339": [
+  "eaf4bfc0ffa928ee"
+ ],
+ "beir_cqadupstack_android_11546": [
+  "d1dc6292d0aea052"
+ ],
+ "beir_cqadupstack_android_1156": [
+  "49547cc581e09bbc"
+ ],
+ "beir_cqadupstack_android_11872": [
+  "1af86bfa42044461",
+  "d839d5fdee43ee86"
+ ],
+ "beir_cqadupstack_android_11884": [
+  "17464b3cd5f1911e",
+  "7a07d9044d9ae4b2",
+  "80c87fc2ceb3dec7"
+ ],
+ "beir_cqadupstack_android_11885": [
+  "3404a6ecb9f8d160",
+  "5487fce60c4f2c4d"
+ ],
+ "beir_cqadupstack_android_1198": [
+  "6fe332c835fd7d1c"
+ ],
+ "beir_cqadupstack_android_12033": [
+  "f0599b33815a90a5"
+ ],
+ "beir_cqadupstack_android_12047": [
+  "5b6d6c72807aafe7"
+ ],
+ "beir_cqadupstack_android_12129": [
+  "3e84d2c7882ce37f"
+ ],
+ "beir_cqadupstack_android_1217": [
+  "2efe77c492fc7da7",
+  "80b00baf2d1db17c"
+ ],
+ "beir_cqadupstack_android_12233": [
+  "82b3137de1a2ea48"
+ ],
+ "beir_cqadupstack_android_12250": [
+  "1d0bfe4b271256b1"
+ ],
+ "beir_cqadupstack_android_12262": [
+  "062a68bf6158856c",
+  "91d85c24365e2cbf"
+ ],
+ "beir_cqadupstack_android_12265": [
+  "af2f1b16db827025"
+ ],
+ "beir_cqadupstack_android_12347": [
+  "1f815a37c270d04a"
+ ],
+ "beir_cqadupstack_android_12412": [
+  "63316eee64a6d38c"
+ ],
+ "beir_cqadupstack_android_12470": [
+  "58d6f7eb9e02a59a"
+ ],
+ "beir_cqadupstack_android_12587": [
+  "42f4ee23b1b6fa39"
+ ],
+ "beir_cqadupstack_android_12639": [
+  "63c1b7d2ec73c802"
+ ],
+ "beir_cqadupstack_android_12650": [
+  "3d20e2c355bd58aa"
+ ],
+ "beir_cqadupstack_android_12665": [
+  "808bf73230f1ca2f"
+ ],
+ "beir_cqadupstack_android_12723": [
+  "9ac006c213ed9250"
+ ],
+ "beir_cqadupstack_android_12729": [
+  "d890ca6a54c93fb1"
+ ],
+ "beir_cqadupstack_android_12802": [
+  "bd4e4c3283d086d1"
+ ],
+ "beir_cqadupstack_android_12831": [
+  "fa8e086c8526465e"
+ ],
+ "beir_cqadupstack_android_12834": [
+  "004fcaae0de73d34",
+  "0370d4f445861b6f",
+  "03992edc87e3d8a6",
+  "056744f2714cc969",
+  "0e938a3c97d60b55",
+  "206e2c33f66214f8",
+  "2d0de419bcfee28c",
+  "30958a15747672a9",
+  "32d0017255ab2959",
+  "38bc24eb7601c4c1",
+  "3a0be94278e31cef",
+  "45142f5c0ac7537b",
+  "4a167102fb4f85e8",
+  "4c526a26ac41fd84",
+  "4e831da410099d8f",
+  "4fc549eedbc3a310",
+  "5f32af003946e0a8",
+  "61cb4bf782bf64b8",
+  "75d571b1aeea1f19",
+  "7669fbe79c4fa697",
+  "7aa3267a26d8de26",
+  "84c5b843ee157a9b",
+  "85a658123fcaf800",
+  "86a5dead24e90001",
+  "88d9c3ae56e61ede",
+  "8a7c7f9b183dd699",
+  "8f349bbb3db35060",
+  "8f413ca06d405147",
+  "98d351402ef2d536",
+  "9d8dbce86751a6d6",
+  "9e28590071aef8ff",
+  "9e35542e73340905",
+  "a7e72580a3095651",
+  "b419d166bf5c2af0",
+  "b6d61abb5fc8a710",
+  "cb9b67b8cf4b7e03",
+  "cd8ebc3634cce2f5",
+  "d28e0e7a97908398",
+  "d9f299530f099d15",
+  "de0a4b19a2cb8f14",
+  "e71a307ed566c2e7",
+  "f0ba1d95017d6a33"
+ ],
+ "beir_cqadupstack_android_13069": [
+  "43982b98e03326ec",
+  "7798565737cf55a3"
+ ],
+ "beir_cqadupstack_android_13102": [
+  "3308733d96a181ae"
+ ],
+ "beir_cqadupstack_android_13185": [
+  "17d0a7dc08416fba"
+ ],
+ "beir_cqadupstack_android_13368": [
+  "24222396cc3e5df4"
+ ],
+ "beir_cqadupstack_android_13605": [
+  "16e838e65f504c41",
+  "98f56a954f7f5bb5"
+ ],
+ "beir_cqadupstack_android_13662": [
+  "0769224e0c97f552",
+  "98b183989f66a3f4",
+  "edc30bf04565d54c"
+ ],
+ "beir_cqadupstack_android_13683": [
+  "ddafd9dbc3a5f38a"
+ ],
+ "beir_cqadupstack_android_14046": [
+  "29918fc0b386e58f",
+  "6a72fb1313eec45f"
+ ],
+ "beir_cqadupstack_android_14162": [
+  "29e2221b1037ef06"
+ ],
+ "beir_cqadupstack_android_14164": [
+  "ec7210ad2e4a7405"
+ ],
+ "beir_cqadupstack_android_14168": [
+  "1fbebabd7bff4e67"
+ ],
+ "beir_cqadupstack_android_14256": [
+  "9caa4b9ca6ced93f"
+ ],
+ "beir_cqadupstack_android_1431": [
+  "103f58b9ace81c92",
+  "2f306a15d358d7e4"
+ ],
+ "beir_cqadupstack_android_14426": [
+  "0cbcd21e5cf97366",
+  "1b4c75691ea312c6",
+  "a1e019f2ae8ae89a",
+  "b3e85e57c8ffb242"
+ ],
+ "beir_cqadupstack_android_14490": [
+  "7cca14d8ce3e3fd8"
+ ],
+ "beir_cqadupstack_android_1452": [
+  "0941180a6cb13bca"
+ ],
+ "beir_cqadupstack_android_14628": [
+  "12f90ac22b053749"
+ ],
+ "beir_cqadupstack_android_14651": [
+  "9435d30a1bb87078"
+ ],
+ "beir_cqadupstack_android_14662": [
+  "13bf426e8691adf2",
+  "26e500a1bdeb0e11",
+  "71e00b2745c47a13",
+  "cedfccd73a78387a"
+ ],
+ "beir_cqadupstack_android_14677": [
+  "3ccbefb2d7df9c3f"
+ ],
+ "beir_cqadupstack_android_14718": [
+  "3b65d96ddf1b549a"
+ ],
+ "beir_cqadupstack_android_14764": [
+  "e77bc654b01e5b9e"
+ ],
+ "beir_cqadupstack_android_14795": [
+  "4cd579d577de0754"
+ ],
+ "beir_cqadupstack_android_14884": [
+  "628b72df7f2d4cdf"
+ ],
+ "beir_cqadupstack_android_15001": [
+  "97818efad2036ea9"
+ ],
+ "beir_cqadupstack_android_15009": [
+  "4f33116fe6524c41"
+ ],
+ "beir_cqadupstack_android_15066": [
+  "9485c1ad73dfe2b3"
+ ],
+ "beir_cqadupstack_android_15138": [
+  "3005d840fe0bb7e5",
+  "69c9a5332373b7a3",
+  "7d7c37b4ad272e48",
+  "adc9f3497e2afbe5"
+ ],
+ "beir_cqadupstack_android_152": [
+  "f1bb82c294f5288e"
+ ],
+ "beir_cqadupstack_android_15404": [
+  "7aacb50ddb690ffb"
+ ],
+ "beir_cqadupstack_android_15434": [
+  "aab10456b80a5441"
+ ],
+ "beir_cqadupstack_android_15581": [
+  "59bb107c35b298a6"
+ ],
+ "beir_cqadupstack_android_15615": [
+  "e7bd9ddb1a091112"
+ ],
+ "beir_cqadupstack_android_15640": [
+  "9b8ba49a07b82307"
+ ],
+ "beir_cqadupstack_android_15645": [
+  "68cec42ab0cc5e6c"
+ ],
+ "beir_cqadupstack_android_15688": [
+  "bf47a36439a8a186",
+  "fa0d3e4cc1941b87"
+ ],
+ "beir_cqadupstack_android_15701": [
+  "ed8197fc6afbb59a"
+ ],
+ "beir_cqadupstack_android_15828": [
+  "2c2c3a472af9c119"
+ ],
+ "beir_cqadupstack_android_15943": [
+  "e6c10a474398e817"
+ ],
+ "beir_cqadupstack_android_15947": [
+  "c459e74c121a4add"
+ ],
+ "beir_cqadupstack_android_15953": [
+  "4027440561dced6b"
+ ],
+ "beir_cqadupstack_android_1600": [
+  "f3df8f53b95d2489"
+ ],
+ "beir_cqadupstack_android_16078": [
+  "03af2b4768464652",
+  "86c18ec22d44cd48",
+  "bcd5fcc0f9697dd3",
+  "ce6e244cbdb8e8d0",
+  "d77b20eb02aa05e8"
+ ],
+ "beir_cqadupstack_android_16137": [
+  "45cdf4f489c8d81e",
+  "5d923e9dac61fd64"
+ ],
+ "beir_cqadupstack_android_16186": [
+  "4c45734e8b7f669f"
+ ],
+ "beir_cqadupstack_android_16220": [
+  "683b4d984556fc0c",
+  "e96051789733a152",
+  "f9c26093fe67d515"
+ ],
+ "beir_cqadupstack_android_16236": [
+  "d0d6c67352a87452"
+ ],
+ "beir_cqadupstack_android_16367": [
+  "be41409b1ee2c249"
+ ],
+ "beir_cqadupstack_android_16657": [
+  "29b7d78f6db6cdc4",
+  "5f9eae73011fa42c",
+  "bba35cec137ae834"
+ ],
+ "beir_cqadupstack_android_16725": [
+  "b774de59bb51bb19"
+ ],
+ "beir_cqadupstack_android_16836": [
+  "b8a417e6ae96e2ce"
+ ],
+ "beir_cqadupstack_android_16915": [
+  "4f34bb7cf78e747c"
+ ],
+ "beir_cqadupstack_android_16962": [
+  "6fb8902581dafc11"
+ ],
+ "beir_cqadupstack_android_17159": [
+  "575258b95bbc9ffe"
+ ],
+ "beir_cqadupstack_android_17210": [
+  "970fa34936b2c7d1"
+ ],
+ "beir_cqadupstack_android_17319": [
+  "5335f958872452ce"
+ ],
+ "beir_cqadupstack_android_17402": [
+  "2d89c2ea2d4f4500"
+ ],
+ "beir_cqadupstack_android_17433": [
+  "8bc63ed5adfc6a80",
+  "9859888820dc8f89",
+  "e2e9778cf46bc838"
+ ],
+ "beir_cqadupstack_android_17482": [
+  "4ba9d1c511aa9467"
+ ],
+ "beir_cqadupstack_android_17584": [
+  "83e9c72a5d6465b7"
+ ],
+ "beir_cqadupstack_android_17640": [
+  "e62944ab0b53e96c"
+ ],
+ "beir_cqadupstack_android_17642": [
+  "7dde0e2daea03a53"
+ ],
+ "beir_cqadupstack_android_17736": [
+  "1fe7bab130aabf30",
+  "61615c5f266651dc"
+ ],
+ "beir_cqadupstack_android_1799": [
+  "c993cbba68f45268"
+ ],
+ "beir_cqadupstack_android_1805": [
+  "3299b4d5586a2970",
+  "3a340844550e69cb"
+ ],
+ "beir_cqadupstack_android_18065": [
+  "d9b6e2fc58a4bfdd"
+ ],
+ "beir_cqadupstack_android_18121": [
+  "0615a39bcab3608b"
+ ],
+ "beir_cqadupstack_android_18342": [
+  "2597232b0beb5016",
+  "2eba3b6abc532618",
+  "53406bf6fad162d2",
+  "c57f5e7406d59a40"
+ ],
+ "beir_cqadupstack_android_18528": [
+  "2c7a99a24a4ed332"
+ ],
+ "beir_cqadupstack_android_18777": [
+  "c1853a07a3fe3dd3"
+ ],
+ "beir_cqadupstack_android_18823": [
+  "1cc0917cf8f20dc4"
+ ],
+ "beir_cqadupstack_android_18876": [
+  "3f8482e6c3cf7d4c"
+ ],
+ "beir_cqadupstack_android_18930": [
+  "b04b2de88409e3c7"
+ ],
+ "beir_cqadupstack_android_18935": [
+  "f34e45cc6d9e1418"
+ ],
+ "beir_cqadupstack_android_19094": [
+  "ae34f512cfef152a"
+ ],
+ "beir_cqadupstack_android_19184": [
+  "b48e0002fe3d8715"
+ ],
+ "beir_cqadupstack_android_19279": [
+  "b9d5ad48f69c365d"
+ ],
+ "beir_cqadupstack_android_1931": [
+  "0dd298bdfa14e74c",
+  "70fd0c3eb33a9009",
+  "8cbb551713a208d8"
+ ],
+ "beir_cqadupstack_android_19336": [
+  "3d78335d74248576"
+ ],
+ "beir_cqadupstack_android_19726": [
+  "dd8b95fe24f39034"
+ ],
+ "beir_cqadupstack_android_19844": [
+  "fa8d8e0c453806d1"
+ ],
+ "beir_cqadupstack_android_19971": [
+  "003fe1e90f2da485",
+  "03a22f679bac3d85",
+  "041048327d843a1b",
+  "04c9d27bee436fd6",
+  "05cf66ebdbeff854",
+  "0633de293b2b8f56",
+  "0663ef55bfc59898",
+  "0680a379d70325f0",
+  "06924d188ea0d9e0",
+  "0860b2c978b5b2ce",
+  "09016c980ec6ba36",
+  "0c8c6d1d119aa3ce",
+  "0d6f6980d3bf936d",
+  "0d871a75fa14622b",
+  "10f318c6c2fd3501",
+  "1442420b128ba9c4",
+  "16712115940e995d",
+  "188e1a6049ddf9b6",
+  "19842465e3275bec",
+  "1a001471a32b630b",
+  "1aeaea6c95bef31f",
+  "1b9099f53d8dcc8c",
+  "1ca4bcd126d1f431",
+  "1ceb0845d14b8809",
+  "1df380766ce57359",
+  "1dfe48019a7ba448",
+  "1e927c3bd47b2f12",
+  "214a623eb7e4028c",
+  "23309894338fc31e",
+  "2418ca984a399f47",
+  "25546054b67a71dd",
+  "26b09df3f8561623",
+  "294849a13e19c3ef",
+  "29f4b2b846974c28",
+  "2a0332847e291d3e",
+  "2a34b611aa285f95",
+  "2f6bcf2a90c8a2d9",
+  "3198f4ca66163a8d",
+  "329cc9e895493bea",
+  "3463c409dc6f1fd8",
+  "348edbe3dbaa78b3",
+  "350cdd429caa763e",
+  "3631102f41d093dc",
+  "3904d81551d5a5d8",
+  "39b460ca9acdcd83",
+  "3b972c7b754357f4",
+  "3c8532c363074445",
+  "3d21ac9cb284088d",
+  "3fd00c78afd5aeed",
+  "401bd1a6d276e77a",
+  "408794ad0e7c71f5",
+  "40e45c4f0f33ebc1",
+  "42507ee7d7ec5dd5",
+  "42a6ce283f88f589",
+  "4324aedc2de2a2c0",
+  "45401b894927c4e8",
+  "45f961c3d1a980d6",
+  "46258e92b4658da3",
+  "46d210d829b865a1",
+  "4759ac650a81561a",
+  "476047e8f49e5cf1",
+  "4867d1f62b5c971d",
+  "48af347df2821539",
+  "4a064d658fd3cb88",
+  "4a09c14596d1aff7",
+  "4a11e6d42e32bf00",
+  "4bab8c798f9a68bc",
+  "4c379d5e0cd2e4ce",
+  "4c7e4837f766758a",
+  "4e84c6c7fa301da6",
+  "5028179a7da9b99b",
+  "52c23c0a0e2adb2e",
+  "54a58f60e40b506b",
+  "558ac050c07d469f",
+  "55bdcc21b883f952",
+  "59705cfeaf938b3a",
+  "59e66734d6c76b21",
+  "59f2793042b20e02",
+  "5ad65b5f37791c48",
+  "5af169f73919a8f8",
+  "5d73152374439a9a",
+  "5dc38262d539d745",
+  "5e3a58c158d6b5f1",
+  "5f3c701f9260e224",
+  "5f746f113d8ac501",
+  "602ba76ae3383ddf",
+  "6061b90c16e9bc7e",
+  "60ef237ad5605d8b",
+  "61d27f7c7f71d9c8",
+  "61e7191060557df2",
+  "624230c4064611ac",
+  "63170c5a88539963",
+  "63e5cf7fab0400af",
+  "643a7bb87397263a",
+  "647e8288e16c6f1d",
+  "64d3e3f7a10407e3",
+  "64eccfe3f4aebc3c",
+  "66cb3bc7a15fdfbe",
+  "695c33a4d770cde7",
+  "695fb908045c9ad0",
+  "69836344f9ba7796",
+  "6addaa018e65baa2",
+  "6bc2b77afb4c99cf",
+  "6dfca07dabda28d8",
+  "6e72e3a5d9ed0986",
+  "6ee4b024973b8660",
+  "70dfcbfc56025b9c",
+  "73e5355c31338cb8",
+  "762395932be813d5",
+  "76ab9a4b4d6befbd",
+  "76b3738d3ef68834",
+  "76cb0702eaa43a26",
+  "76e661de4ea51ab9",
+  "76f8a2b037191b6e",
+  "778c25f0f9deb35f",
+  "77b946b8f1b29a3a",
+  "77be295b851642ec",
+  "786306757db1c2a2",
+  "7867b68b9b5bca7f",
+  "7a3af383793692f8",
+  "7b1f9ef79daf9328",
+  "7c2989c44a312b25",
+  "7ce4c69453460103",
+  "7da467d958645d37",
+  "7f4d51d9ec4bcf93",
+  "8039041d41684af4",
+  "82712a222841d82b",
+  "8275c2308fdc9804",
+  "83d8f4e73e29832b",
+  "8437014641030e01",
+  "84e9c76856e79cd6",
+  "851ca2b3e4905f7b",
+  "860386213ed93676",
+  "88e3a560af01f8d4",
+  "8b9f78c2941bfcc6",
+  "8c082a0858822b76",
+  "8c0bb855094b2686",
+  "8ccd1aec27d7d372",
+  "8d93fa6a08125a4c",
+  "8e2213d9748a6b51",
+  "8e5de83cda6793d4",
+  "8e61330c24d60c3c",
+  "9031398e3a589725",
+  "903649c1f9b7355c",
+  "90b23f3cf60c5108",
+  "90ecb633d9e37d9c",
+  "911546c7f0c9a958",
+  "914f64ceabdd558d",
+  "9224031081c08bf5",
+  "933a6bf1c0e69bcd",
+  "93ea521654afe17f",
+  "945372828b3da700",
+  "955ab517a995c164",
+  "955c218df35a4efa",
+  "96056519537a4baa",
+  "99167859871cf1d8",
+  "99334ce369855dc1",
+  "99f7b814db0ded0c",
+  "9afd02d0fe81f9ae",
+  "9b62bae8aeebf6b6",
+  "9bab24fdf4f4fce2",
+  "9bb40854fd86098a",
+  "9bfe709f42c72be5",
+  "9cebe6da547d898e",
+  "9d418a7c08e0b1f7",
+  "9dda4102a17aa1ea",
+  "9de9c21e946b4b98",
+  "9e1cbbdbbf9ec82a",
+  "9eb18468db39abea",
+  "a164df02bef5e1fc",
+  "a173aa4310bf675f",
+  "a28d899e985f81c0",
+  "a34ff13c435c8a73",
+  "a5723dfce1b3047c",
+  "a656812ce7c61a26",
+  "a6aaae78fb39fefe",
+  "ab22ef77ca2259dc",
+  "aba1b8e1da7c69c9",
+  "ad136f746b851dbe",
+  "ad9642d607d74bf7",
+  "ae0e781c04bcfe3b",
+  "ae4204c11ab4f4a4",
+  "af6ed601a865eee6",
+  "b0e5f7d356a0a202",
+  "b1084e738d668fd1",
+  "b138bc882b52aa8e",
+  "b2a942bd8fcf58c5",
+  "b2c50fecaf7535b2",
+  "b39b4de7ce7133c7",
+  "b3b2357ade21cfdc",
+  "b4cbc11119416212",
+  "b53529faa17b0bb7",
+  "b53d76006149bf22",
+  "b62db5d53a07ee50",
+  "b66387465423fc80",
+  "b66b5f057d5049c1",
+  "b75a1c72726a37a0",
+  "b902477735eb0ec4",
+  "b94072f945071a70",
+  "b9c9678ce20a612f",
+  "bcbade93b7e096b0",
+  "bcebf496df6c1897",
+  "bd305029cdf28772",
+  "bd552810a7d60750",
+  "bf2e5b0f4ed5ee65",
+  "bfcf8b148aa44590",
+  "c238c4adfc6e5793",
+  "c2c4c6548d03784c",
+  "c2ce5f8a6ed32483",
+  "c46aae2ab243932a",
+  "c5045aa7d0130a83",
+  "c799f72aab67c371",
+  "c93c5e0b73c67d2b",
+  "cb6db309b6cff3c4",
+  "cbe870da416d5701",
+  "cd38856cd19cedf8",
+  "cf8a9b460b0d4655",
+  "d12aaa532b797e52",
+  "d16c3fb2866704e0",
+  "d3075c5e5d73cd2f",
+  "d4a441b869aec098",
+  "d579176d6e4682d9",
+  "d5ce660af73d1038",
+  "d6b35922114ffa6e",
+  "db0eb241f78b5ac0",
+  "dda642774d5061ca",
+  "de360522c7ad7fd9",
+  "deab314df2c6d5b8",
+  "e0d901cffeb0a6a8",
+  "e1997323f721c38d",
+  "e1c0b389157247a3",
+  "e2f44dd591323ba3",
+  "e32343264d6c6fc9",
+  "e62fe5fd0ef22c58",
+  "e748ce144b5b3811",
+  "e79a1dd6168132df",
+  "e85219e586d1a81b",
+  "e9b66694e2760767",
+  "ea980767c45c8811",
+  "eaf56af1c116f2af",
+  "eb43ddc4fe7dc49c",
+  "ebb700aa432e596c",
+  "ec33f14f3d073b56",
+  "ec902765d8839b67",
+  "ee1f66dc1bb24978",
+  "eecf7c3b6261df19",
+  "f0d0926029fdc411",
+  "f2aa6e981b92cd74",
+  "f3c94b4e393f1d25",
+  "f3fb61a29d7c1870",
+  "f4ef04c4535f598e",
+  "f5b51008c15beb9d",
+  "f7273d01e62d09f5",
+  "f77b02d4aa817a5f",
+  "f804216b07940a00",
+  "f85f844d80b469f0",
+  "fd189296a3fe049e",
+  "fe019f33f2f9e009",
+  "fe64215a05c04f2f",
+  "ff97b75fc591d7ff",
+  "ffe49a5ff9cabfcd",
+  "fff97728942d3b0b"
+ ],
+ "beir_cqadupstack_android_19992": [
+  "26c8f5cd9d879ace"
+ ],
+ "beir_cqadupstack_android_20198": [
+  "b3f80a76fcdeb08c"
+ ],
+ "beir_cqadupstack_android_20256": [
+  "0e33f170b7bd1ae5"
+ ],
+ "beir_cqadupstack_android_20317": [
+  "f23866ddc49917fb"
+ ],
+ "beir_cqadupstack_android_20405": [
+  "d525cc048e3a860d"
+ ],
+ "beir_cqadupstack_android_20440": [
+  "1d04204d1f8edfde"
+ ],
+ "beir_cqadupstack_android_20513": [
+  "0f26f2c04cd7a158",
+  "2e614318e804c218",
+  "48d49f744544a468",
+  "856f289fbb67ac1a",
+  "890364037c8c71c9",
+  "d15f6d60669c7ebe"
+ ],
+ "beir_cqadupstack_android_20606": [
+  "76e5301c18902a1c"
+ ],
+ "beir_cqadupstack_android_20728": [
+  "348b08f9a00bcf74"
+ ],
+ "beir_cqadupstack_android_20746": [
+  "47feef38f14d36e2"
+ ],
+ "beir_cqadupstack_android_20751": [
+  "0d572fb1f26d59ca"
+ ],
+ "beir_cqadupstack_android_20855": [
+  "edf45a600fd66941"
+ ],
+ "beir_cqadupstack_android_20938": [
+  "d6f59f39dfa4b203"
+ ],
+ "beir_cqadupstack_android_20946": [
+  "ec9d5fff816bcacb"
+ ],
+ "beir_cqadupstack_android_21119": [
+  "1ecb639e53ee3489",
+  "264955052cb6655a",
+  "54cf29761b23dc8a",
+  "94d16f3f927adee0",
+  "b8c77da8ddc6fc97",
+  "e9b28c393429b69e",
+  "ff55b85047e1a0e8"
+ ],
+ "beir_cqadupstack_android_21151": [
+  "0039072450358445",
+  "02e4f34ad7b404ff",
+  "0adfcb490517f45e",
+  "197519681388bfe0",
+  "250b697b22cf5d1f",
+  "5ddf2840e0e92ea8",
+  "7f0232d1f5eac9f5",
+  "d6aeb50ed1550799",
+  "e3705b1ec4652004"
+ ],
+ "beir_cqadupstack_android_21240": [
+  "2b447e9e6e9d715a",
+  "8ae0d08e659bc043"
+ ],
+ "beir_cqadupstack_android_21280": [
+  "0175bba00ffba67c"
+ ],
+ "beir_cqadupstack_android_21296": [
+  "8ff04aea543e3654"
+ ],
+ "beir_cqadupstack_android_21512": [
+  "9518bda28971cc98",
+  "fee9f344f3a52699"
+ ],
+ "beir_cqadupstack_android_21515": [
+  "0b4a55f42f640ee7",
+  "1b3b01914185a535",
+  "218642eb74cd970e",
+  "226e9fa6f2a513f7",
+  "278d3c397160f01f",
+  "2c6befe2788c7949",
+  "4c2b09f7bdb8ab30",
+  "60dd91bf28b7805b",
+  "c12597a6c3cd79be",
+  "c19dcdc201f35310",
+  "d8534408f0032124",
+  "ea0d49c1b59e466c",
+  "fac19e805f6d300d"
+ ],
+ "beir_cqadupstack_android_21520": [
+  "dead2a59393584ac"
+ ],
+ "beir_cqadupstack_android_21556": [
+  "f749c5ee9738c57c"
+ ],
+ "beir_cqadupstack_android_21616": [
+  "1a46923be45b0951",
+  "3e6acd83cdf59be8",
+  "45f760401e84ceea",
+  "5f01547d3585a9cb",
+  "6107efa4998d7e97",
+  "61840eef93d5e335",
+  "731b2ce8cf366112",
+  "739a3298bd9f17a1",
+  "a607d93fb3c36bb7",
+  "b1fce8bea4d91f6c",
+  "b756262bc81891f6",
+  "e8888c8ae92bc8ed",
+  "f7d81af1faac53c9"
+ ],
+ "beir_cqadupstack_android_21654": [
+  "833cc7fc295c45b8"
+ ],
+ "beir_cqadupstack_android_2172": [
+  "a7b5918c729127eb"
+ ],
+ "beir_cqadupstack_android_21779": [
+  "238d129484099add"
+ ],
+ "beir_cqadupstack_android_21861": [
+  "c49e91e8f61bea57"
+ ],
+ "beir_cqadupstack_android_21991": [
+  "8a7f7e51b45e7a0a"
+ ],
+ "beir_cqadupstack_android_22003": [
+  "56b747a0c810176d"
+ ],
+ "beir_cqadupstack_android_22028": [
+  "ba010d92bde2813b"
+ ],
+ "beir_cqadupstack_android_2203": [
+  "28e4e0d3bdd9bc81",
+  "69fa9c54b34fd17e",
+  "6c643132f84abfff",
+  "ab35af80c97067ec",
+  "b2ce3b97ec7e716a",
+  "e1222aae770d4481"
+ ],
+ "beir_cqadupstack_android_22133": [
+  "943808a480bd7b1f"
+ ],
+ "beir_cqadupstack_android_22148": [
+  "acfefa6e03368625"
+ ],
+ "beir_cqadupstack_android_22357": [
+  "10da12e1de18a5ae"
+ ],
+ "beir_cqadupstack_android_2254": [
+  "cadfe3de3a6cc5ad"
+ ],
+ "beir_cqadupstack_android_22778": [
+  "491449cb5f0675bf"
+ ],
+ "beir_cqadupstack_android_22802": [
+  "aac06be5d4508a55"
+ ],
+ "beir_cqadupstack_android_22841": [
+  "69f85663c1eac15b"
+ ],
+ "beir_cqadupstack_android_22905": [
+  "5c4da05a192f5d8c"
+ ],
+ "beir_cqadupstack_android_22912": [
+  "102549bd16da647b"
+ ],
+ "beir_cqadupstack_android_23055": [
+  "437f533bc4548aaa"
+ ],
+ "beir_cqadupstack_android_2310": [
+  "618bb2f4c863401c"
+ ],
+ "beir_cqadupstack_android_23404": [
+  "7eb27c7dc1120522",
+  "cc61d3bc6f38ee4c"
+ ],
+ "beir_cqadupstack_android_23440": [
+  "fcca67e2fa4ef7f1"
+ ],
+ "beir_cqadupstack_android_23508": [
+  "5504c6867c3072d1"
+ ],
+ "beir_cqadupstack_android_23513": [
+  "5b39ea9612dd664c"
+ ],
+ "beir_cqadupstack_android_23537": [
+  "1f4b1cba7d254094",
+  "88f6e723e9abc343"
+ ],
+ "beir_cqadupstack_android_23620": [
+  "aa8f90881bbc20ed"
+ ],
+ "beir_cqadupstack_android_23622": [
+  "41a0a0a72c03b8f4"
+ ],
+ "beir_cqadupstack_android_23710": [
+  "e6885d2a3f04cfc7"
+ ],
+ "beir_cqadupstack_android_2405": [
+  "2dd37e273fe12b8f"
+ ],
+ "beir_cqadupstack_android_24079": [
+  "2ad33e725ba16c09"
+ ],
+ "beir_cqadupstack_android_24084": [
+  "91b04ba82b5ba57f"
+ ],
+ "beir_cqadupstack_android_24126": [
+  "bec1a13aa0422e35"
+ ],
+ "beir_cqadupstack_android_24293": [
+  "5f4a62fdbe13e519"
+ ],
+ "beir_cqadupstack_android_2432": [
+  "4f85a0d9b0d05342",
+  "4fd35b37f3fb4c5c",
+  "548c62a4244072f8",
+  "b2fe8ca907ebf268",
+  "c417ca8e352359f4",
+  "c89f1b0260b3e0f4"
+ ],
+ "beir_cqadupstack_android_2437": [
+  "a3e0e5bebba565ea"
+ ],
+ "beir_cqadupstack_android_24379": [
+  "8575957f6d8b01b7"
+ ],
+ "beir_cqadupstack_android_24427": [
+  "e91bd2187fdd9d20"
+ ],
+ "beir_cqadupstack_android_24570": [
+  "1793799648779f64",
+  "56d95dbcbeb2af91",
+  "624f081963815145",
+  "7c3b72666e023e0f",
+  "9434f0bedb415180",
+  "e6ea483aa6b5ce2b",
+  "f60eb5f253db83cd"
+ ],
+ "beir_cqadupstack_android_2461": [
+  "2bad31c60aa91576"
+ ],
+ "beir_cqadupstack_android_2462": [
+  "7bf4a8d513069d0c"
+ ],
+ "beir_cqadupstack_android_24646": [
+  "15a43d2475867ef9"
+ ],
+ "beir_cqadupstack_android_2466": [
+  "207963253d5dcfe3",
+  "537d0aeebb0d045c",
+  "a8d18691a8fc2ae7",
+  "c8abb55ad86556db",
+  "e808e89afeb1984c"
+ ],
+ "beir_cqadupstack_android_24825": [
+  "0351abcac3eba4b0"
+ ],
+ "beir_cqadupstack_android_24959": [
+  "818bfec6d0a34c83"
+ ],
+ "beir_cqadupstack_android_25149": [
+  "c27adb6d9fca19f3"
+ ],
+ "beir_cqadupstack_android_25178": [
+  "20a61e25ead2fd55"
+ ],
+ "beir_cqadupstack_android_25193": [
+  "71101fa9b49c3f67"
+ ],
+ "beir_cqadupstack_android_25278": [
+  "0ea870ce5309727f",
+  "9c6f9cd0d41d7f39"
+ ],
+ "beir_cqadupstack_android_25422": [
+  "a0c3e9a623fa8595"
+ ],
+ "beir_cqadupstack_android_25635": [
+  "2d69ce9b7063b213"
+ ],
+ "beir_cqadupstack_android_25693": [
+  "107aadfd430f5188",
+  "166131ffce034a0c",
+  "30778c722edf48d2",
+  "40cd55131279a2ed",
+  "abd7e666ac3d5217",
+  "fef05da3365c4779"
+ ],
+ "beir_cqadupstack_android_25707": [
+  "3a08e33f03a732e5"
+ ],
+ "beir_cqadupstack_android_25750": [
+  "ab06c439a5de2cc9"
+ ],
+ "beir_cqadupstack_android_2581": [
+  "53c2c1ffb9cf8c66"
+ ],
+ "beir_cqadupstack_android_25847": [
+  "494dfe06788325ac"
+ ],
+ "beir_cqadupstack_android_25905": [
+  "26c3d41c59be5050"
+ ],
+ "beir_cqadupstack_android_25948": [
+  "93177d7706afe987"
+ ],
+ "beir_cqadupstack_android_26001": [
+  "a87c4ee29c329ac8"
+ ],
+ "beir_cqadupstack_android_26142": [
+  "81983dd4f6cc1daa"
+ ],
+ "beir_cqadupstack_android_26157": [
+  "2a7cf4fd176964cf",
+  "f4d300202ca61342"
+ ],
+ "beir_cqadupstack_android_26170": [
+  "88b08d68d437109c",
+  "a05d2451652776bd",
+  "d8f48e640420f298"
+ ],
+ "beir_cqadupstack_android_26226": [
+  "44c4672592bf746e",
+  "7b7b657ef304e7f0"
+ ],
+ "beir_cqadupstack_android_26238": [
+  "3b4919939a5762cc",
+  "4101b9141b110c13",
+  "7c0a4ffff0f2331f",
+  "cafc15947d9b8ced"
+ ],
+ "beir_cqadupstack_android_26239": [
+  "f7d303efb5b1b729"
+ ],
+ "beir_cqadupstack_android_26372": [
+  "1140476617c21fbe"
+ ],
+ "beir_cqadupstack_android_26463": [
+  "507dcaa949c9e75d"
+ ],
+ "beir_cqadupstack_android_26745": [
+  "d064a357e5885ab8"
+ ],
+ "beir_cqadupstack_android_26826": [
+  "b51f38cc097cd541",
+  "f00faa94342dea7a",
+  "ff27c5d3bf8b9c39"
+ ],
+ "beir_cqadupstack_android_27007": [
+  "557c46db57de93aa"
+ ],
+ "beir_cqadupstack_android_27224": [
+  "3e49b18220fa18b3"
+ ],
+ "beir_cqadupstack_android_27321": [
+  "b0dd5b1d65c8fa7e"
+ ],
+ "beir_cqadupstack_android_27387": [
+  "69e2bb01533b3291"
+ ],
+ "beir_cqadupstack_android_27415": [
+  "e5a5399faab319c8"
+ ],
+ "beir_cqadupstack_android_27417": [
+  "0e58627920dccfe8"
+ ],
+ "beir_cqadupstack_android_27673": [
+  "99a7b6ac100f8fd6",
+  "ac0a3d0cb269c275"
+ ],
+ "beir_cqadupstack_android_27725": [
+  "76030490898c9ca4"
+ ],
+ "beir_cqadupstack_android_2773": [
+  "a5f270a4698dd95a"
+ ],
+ "beir_cqadupstack_android_27816": [
+  "4e01a76b596ab37e",
+  "6941f5195a7e1a13",
+  "936312e071987056",
+  "df31eb48cd4029cc"
+ ],
+ "beir_cqadupstack_android_27821": [
+  "f9276652c2daa93c"
+ ],
+ "beir_cqadupstack_android_27996": [
+  "383dcff81ccbc26f"
+ ],
+ "beir_cqadupstack_android_28551": [
+  "0df4ef0ed3b2d99f",
+  "3ecf363132ec83f7",
+  "69897dae7e40180b",
+  "c180d2b346542bc9",
+  "c54b3eb4df31f629"
+ ],
+ "beir_cqadupstack_android_28637": [
+  "75faf0c2ee24de46"
+ ],
+ "beir_cqadupstack_android_28652": [
+  "5cba4a6d12d318d0",
+  "81697d0173469ce3",
+  "8649948d3d3fbfa1"
+ ],
+ "beir_cqadupstack_android_28662": [
+  "c94883441770e0be"
+ ],
+ "beir_cqadupstack_android_28711": [
+  "23abf302da259b40",
+  "3b33722d65554d7b",
+  "73a37316dbd7045a",
+  "7b8cd615383039c2",
+  "7c212bb32c6f6b20",
+  "8ede58a5491d8076",
+  "9994e5d8fe9cd96d",
+  "9fdca4ca641c2f65",
+  "a4e6ca5cf832a090",
+  "af6016e2443b87a1",
+  "af60bec8ca55399f",
+  "dc854eb0214cf94f",
+  "ed9a6c6450b3d498",
+  "fa21c675d5dacb78"
+ ],
+ "beir_cqadupstack_android_28745": [
+  "dfc42e2426c2ca55"
+ ],
+ "beir_cqadupstack_android_28851": [
+  "ae4900a8187f9981"
+ ],
+ "beir_cqadupstack_android_28896": [
+  "3466a0b280abda1a"
+ ],
+ "beir_cqadupstack_android_28970": [
+  "dff23978bb96d010"
+ ],
+ "beir_cqadupstack_android_2906": [
+  "3cd11fc0ce2b8a2e"
+ ],
+ "beir_cqadupstack_android_29109": [
+  "2e71192c46abf883"
+ ],
+ "beir_cqadupstack_android_29152": [
+  "7d8d7b6034ba25ee"
+ ],
+ "beir_cqadupstack_android_2916": [
+  "524d667a6b5b3062",
+  "f08c505446d1d05d"
+ ],
+ "beir_cqadupstack_android_29208": [
+  "c48da40e90b3d873",
+  "dad4ca66ef607914"
+ ],
+ "beir_cqadupstack_android_29223": [
+  "4ecfceddc81fda49"
+ ],
+ "beir_cqadupstack_android_29452": [
+  "6490fae90b839530"
+ ],
+ "beir_cqadupstack_android_29502": [
+  "8cea6b0d74d5b7fd"
+ ],
+ "beir_cqadupstack_android_29538": [
+  "ca941578352576bc"
+ ],
+ "beir_cqadupstack_android_29631": [
+  "2e111be9d520e24f"
+ ],
+ "beir_cqadupstack_android_29769": [
+  "015f626e255bf6ce",
+  "4bb45d81212e31e0",
+  "ebd77075d60de407",
+  "fc8e715ec24f002e"
+ ],
+ "beir_cqadupstack_android_29845": [
+  "f96f04f7fab02a83"
+ ],
+ "beir_cqadupstack_android_29907": [
+  "56e3a213d9773d51"
+ ],
+ "beir_cqadupstack_android_30030": [
+  "ff7907540775bebb"
+ ],
+ "beir_cqadupstack_android_30095": [
+  "2782a71325a644fd"
+ ],
+ "beir_cqadupstack_android_30144": [
+  "ad8307fb25b618b7"
+ ],
+ "beir_cqadupstack_android_30216": [
+  "ad3b68853feda4b1"
+ ],
+ "beir_cqadupstack_android_30293": [
+  "607d36fcb8179bc4"
+ ],
+ "beir_cqadupstack_android_30332": [
+  "1568fd98babdb3da",
+  "2895a0523cf587fe",
+  "3014ab1b98c8d54b",
+  "30ba2aef1414a531",
+  "398d738a4c7f7793",
+  "3d6eb7dd01d2c30d",
+  "48f9c1ca0a631ecf",
+  "4fba821e664c8e8b",
+  "5c6ce7500860ed3c",
+  "5e61ef8054cecd73",
+  "6686d9de72be7faf",
+  "705bf76981263906",
+  "73c84f32f6a198b1",
+  "770542434b84255e",
+  "7c34270ba350e5d0",
+  "842fcac85b563e8c",
+  "8c1c4a3b23c81f2f",
+  "8c89a799e419516a",
+  "995c51c6cd8e3f77",
+  "9b2de821fe171a53",
+  "9e455fed581070ab",
+  "a3cf2783db31a141",
+  "b0bd7133a2a643fa",
+  "b64bd33afe05088e",
+  "b94a7fc541b57668",
+  "ca91c1b55ebf9397",
+  "cb8fc82848e808d0",
+  "ce6a568fc99fe2aa",
+  "d8f4c47efa8f64ba",
+  "e2f293a972633d5f",
+  "e5ede9344ef293de",
+  "f3aee4fc500f7a9a"
+ ],
+ "beir_cqadupstack_android_30448": [
+  "fe04e7c02b489537"
+ ],
+ "beir_cqadupstack_android_30487": [
+  "1cf51ad9c84d5472",
+  "1f6cf27002429a1d",
+  "6941533120325139",
+  "de3b36cdf4168caf"
+ ],
+ "beir_cqadupstack_android_30541": [
+  "23893d7a2e9eeb91"
+ ],
+ "beir_cqadupstack_android_30674": [
+  "e607abd09a4a08fd"
+ ],
+ "beir_cqadupstack_android_3072": [
+  "3c2394c3aa1e4559"
+ ],
+ "beir_cqadupstack_android_3079": [
+  "6fead31eb60d0cfb",
+  "83525c71eca821ab"
+ ],
+ "beir_cqadupstack_android_3106": [
+  "dab690c8584d1ffc"
+ ],
+ "beir_cqadupstack_android_31811": [
+  "63d3c9daca916524",
+  "73e1fc2b9de40f60"
+ ],
+ "beir_cqadupstack_android_31858": [
+  "342ee16b9b6c8eef"
+ ],
+ "beir_cqadupstack_android_32009": [
+  "72e65d71cb470dbf"
+ ],
+ "beir_cqadupstack_android_32106": [
+  "e5873b8b921a3421"
+ ],
+ "beir_cqadupstack_android_32115": [
+  "060d9c8a6f0280c2"
+ ],
+ "beir_cqadupstack_android_32298": [
+  "5ac830d75c0b8aec",
+  "d5d3b26c395930fd"
+ ],
+ "beir_cqadupstack_android_32312": [
+  "7459e20429c406dc",
+  "c0ad6dda6433d333",
+  "c1197be3b254f617"
+ ],
+ "beir_cqadupstack_android_32373": [
+  "8ca4f9cb04c83269",
+  "f3359e65b4d973de"
+ ],
+ "beir_cqadupstack_android_32405": [
+  "0d3f8893b1306898"
+ ],
+ "beir_cqadupstack_android_32598": [
+  "4b12d85ba6248622"
+ ],
+ "beir_cqadupstack_android_32759": [
+  "9a81f9d51b1f8164"
+ ],
+ "beir_cqadupstack_android_32789": [
+  "ba53679a80e8ba79"
+ ],
+ "beir_cqadupstack_android_32829": [
+  "7c3c400044a65bbc"
+ ],
+ "beir_cqadupstack_android_32878": [
+  "f780abe8323e803b",
+  "f8b7fb49ccf13656"
+ ],
+ "beir_cqadupstack_android_32914": [
+  "6daf2bb30513a295"
+ ],
+ "beir_cqadupstack_android_32974": [
+  "f0d51207e39c94a2"
+ ],
+ "beir_cqadupstack_android_32979": [
+  "2270565d3108b5d2"
+ ],
+ "beir_cqadupstack_android_33308": [
+  "d9b23d563a856aa7"
+ ],
+ "beir_cqadupstack_android_33329": [
+  "325efbd87857145d",
+  "5dfd4ed12b1adc26",
+  "5e1fb5cb1ea55c40",
+  "83d2a6cd64de22be",
+  "89c1110d7b881434",
+  "9c07c1a42c779783",
+  "ee2e622919a414e4"
+ ],
+ "beir_cqadupstack_android_33496": [
+  "2cdc2c537378a3a7",
+  "7ab3e94101b107cd",
+  "bd2a8e4d6930a0e9"
+ ],
+ "beir_cqadupstack_android_33512": [
+  "6e7f5e815b4776e0"
+ ],
+ "beir_cqadupstack_android_33515": [
+  "0ef0f3327eb4da6e",
+  "a8d53bbd0a216e7b"
+ ],
+ "beir_cqadupstack_android_33526": [
+  "f51b473a5d4c9a3e"
+ ],
+ "beir_cqadupstack_android_33702": [
+  "0f020cb50d6bcdfc"
+ ],
+ "beir_cqadupstack_android_33728": [
+  "6afc58f3364e0cd8"
+ ],
+ "beir_cqadupstack_android_33798": [
+  "1720608b0cb49c72"
+ ],
+ "beir_cqadupstack_android_338": [
+  "8c0df080b7904d60"
+ ],
+ "beir_cqadupstack_android_33894": [
+  "016c578d0c68f838",
+  "123e9215a2631e79",
+  "1242605b1f76b88c",
+  "135a5c148673ae10",
+  "3d568c06b70b6976",
+  "4a7c2bdbc841709d",
+  "574ba04b33e32729",
+  "584fa6202e9d3572",
+  "61083b2d287659ab",
+  "6349b1027f60ebce",
+  "6d3269e8021e8835",
+  "6f37708ae6b755e8",
+  "70c459c4b0248bb3",
+  "8441adecbcf77f57",
+  "8640a47ade78eda4",
+  "9867719b96b56a9d",
+  "a2abc0e356f1f876",
+  "a335dd7e7bc71f1e",
+  "a52c9576bcf45d3f",
+  "b4e33961684e91ff",
+  "ba087f2f71d89c49",
+  "be6c37a815249339",
+  "d8858d463a04be64",
+  "dc7c78b0f085b02a",
+  "de03a7de63d5e139",
+  "e31fbc5a67177f73",
+  "f7d9ea6143ba233f",
+  "f94369e37b1d189a",
+  "fe9cd962073ab1b7"
+ ],
+ "beir_cqadupstack_android_33941": [
+  "118524780d83693d",
+  "3559bc321ddb0908",
+  "49f25ce23f4a336f",
+  "ef98b8dcd954908d"
+ ],
+ "beir_cqadupstack_android_33964": [
+  "df342fbcb506a8b5"
+ ],
+ "beir_cqadupstack_android_33994": [
+  "dcdfb7c0d4f6e5b5"
+ ],
+ "beir_cqadupstack_android_34507": [
+  "39d8f13809dc2e34",
+  "451ad568521fb3f3",
+  "6fe776a6938be02b",
+  "ea3b2de3abfdfe31"
+ ],
+ "beir_cqadupstack_android_34618": [
+  "c9de50d7cc356a8c"
+ ],
+ "beir_cqadupstack_android_34625": [
+  "2818412bc2f4374f"
+ ],
+ "beir_cqadupstack_android_34704": [
+  "930d1926f8db404c"
+ ],
+ "beir_cqadupstack_android_34948": [
+  "23f1a3d67feba6af"
+ ],
+ "beir_cqadupstack_android_34984": [
+  "337be834e3600b28"
+ ],
+ "beir_cqadupstack_android_35189": [
+  "f87c70baff91972d"
+ ],
+ "beir_cqadupstack_android_3521": [
+  "55b4d4391022764e",
+  "aa495546c7492333"
+ ],
+ "beir_cqadupstack_android_35351": [
+  "a33fef9beff04666"
+ ],
+ "beir_cqadupstack_android_35541": [
+  "a5848f51a4c9a144"
+ ],
+ "beir_cqadupstack_android_35931": [
+  "92bd33b216bc1332"
+ ],
+ "beir_cqadupstack_android_35956": [
+  "252828d1b881dfc3"
+ ],
+ "beir_cqadupstack_android_36182": [
+  "2bc4591aee36a978"
+ ],
+ "beir_cqadupstack_android_36468": [
+  "61247eafa4e24436",
+  "94a5762f94b4690c"
+ ],
+ "beir_cqadupstack_android_36706": [
+  "470ad6baf0b9bbb5",
+  "51b525ee6c1f6816",
+  "f62ba94fb23a4fe9",
+  "fa49a33005e616e3"
+ ],
+ "beir_cqadupstack_android_36794": [
+  "06236bffba7983f1"
+ ],
+ "beir_cqadupstack_android_36822": [
+  "ccc440d3fd17dbdc"
+ ],
+ "beir_cqadupstack_android_36899": [
+  "a2ea76ef10988725",
+  "d360c3adc5f70e36"
+ ],
+ "beir_cqadupstack_android_37": [
+  "ec81c7b0f9ade8f0"
+ ],
+ "beir_cqadupstack_android_37020": [
+  "9f30c309113159d6",
+  "aa3fad2ee17e3df6",
+  "ab701f00fd021131",
+  "fbbdea48637d3ae9"
+ ],
+ "beir_cqadupstack_android_3717": [
+  "07001e924cd8db3e",
+  "0cbd33dfe16fab6b",
+  "5bb226a0500f32ce",
+  "9e3a22c5b5009087"
+ ],
+ "beir_cqadupstack_android_37230": [
+  "1e07d95eb36d7caf",
+  "22df1dbdc8bde2af"
+ ],
+ "beir_cqadupstack_android_37246": [
+  "941ce7c7c2f1ab5d",
+  "b83f70a72f55a41a"
+ ],
+ "beir_cqadupstack_android_37371": [
+  "deb49b30a67ebec7"
+ ],
+ "beir_cqadupstack_android_37397": [
+  "0785fc8949bb4a48"
+ ],
+ "beir_cqadupstack_android_37417": [
+  "a1e07ed0ec1ba8f2"
+ ],
+ "beir_cqadupstack_android_3742": [
+  "0ed00f79ca6e3028",
+  "19b85a4a39a607b5",
+  "28213c244d7c01a6",
+  "29f1538c04862bf7",
+  "3dc90316a0a4f7a5",
+  "424eecd108143d5c",
+  "4b756fcb8f561a79",
+  "6c1978796f782d84",
+  "6df6914e1d191086",
+  "7a8b3fb51a7984ec",
+  "7c0105412b6e2808",
+  "8bd88e7f8f347d8d",
+  "ad7f2685cb8280ef",
+  "b9b16e61bb833a0f",
+  "bef843404039e87d",
+  "dfc883732737ca1f",
+  "e89941cdc63e0780",
+  "e8e8e1fbbfd072da",
+  "ec568733fc28cf57",
+  "f061094ebdf1c253",
+  "f18ff5aa5d722701"
+ ],
+ "beir_cqadupstack_android_37590": [
+  "20d300f6b1bedf39",
+  "bc97908e60e4b1f8"
+ ],
+ "beir_cqadupstack_android_37599": [
+  "0a49e7dbf2cb00e7",
+  "4dd62c385123421f",
+  "a6ac4ec49a097b86"
+ ],
+ "beir_cqadupstack_android_37736": [
+  "2625b03b8cdcdcde",
+  "33bc7d06e73f0438",
+  "3604523b0de3bfd7",
+  "a466b28016a418fe",
+  "e1c1661a07659491"
+ ],
+ "beir_cqadupstack_android_37787": [
+  "c410134b6fbce3b8",
+  "f7b04dd25162dc9c",
+  "f9fa7585af57fdc5"
+ ],
+ "beir_cqadupstack_android_37855": [
+  "4200cf60a7e61a0d"
+ ],
+ "beir_cqadupstack_android_3799": [
+  "dd6145901f8b2e4f"
+ ],
+ "beir_cqadupstack_android_38002": [
+  "147a92c6a92acd57"
+ ],
+ "beir_cqadupstack_android_38010": [
+  "70a015c2cdaa61fb"
+ ],
+ "beir_cqadupstack_android_38123": [
+  "ff92ce24a68480d2"
+ ],
+ "beir_cqadupstack_android_38246": [
+  "cb3f8c2c8e7bbec0"
+ ],
+ "beir_cqadupstack_android_38351": [
+  "09ecf9cf3a36c6ee"
+ ],
+ "beir_cqadupstack_android_38409": [
+  "20826edfad3d4a94"
+ ],
+ "beir_cqadupstack_android_38486": [
+  "1cb942104eb4c1a3",
+  "35dda069b369f90d"
+ ],
+ "beir_cqadupstack_android_38510": [
+  "8e84d7340b42af82",
+  "c017094457ea9e7b"
+ ],
+ "beir_cqadupstack_android_38610": [
+  "d2196a38259ccdcc"
+ ],
+ "beir_cqadupstack_android_38806": [
+  "d739406bbc88b784"
+ ],
+ "beir_cqadupstack_android_390": [
+  "89c6a82bcf8e46eb",
+  "a7720fce2fb37cf0",
+  "b4b491c0c7a12011",
+  "d73c6aae1d9b1e63",
+  "dacf6587a1000dfd",
+  "eeedbd784da6ea32"
+ ],
+ "beir_cqadupstack_android_39128": [
+  "443e05eb3a1244e3"
+ ],
+ "beir_cqadupstack_android_39137": [
+  "07f0d424a782f116",
+  "0acec1b9454dc77d",
+  "15966fd325e597ca",
+  "15ebdb1f92ef6423",
+  "740dcbaf257f0517",
+  "75b051a83b584490",
+  "b6d3f1901eb2372e",
+  "b7b0054bda149a31",
+  "f848bf141908d5ea"
+ ],
+ "beir_cqadupstack_android_39160": [
+  "df8e703dbeb80beb"
+ ],
+ "beir_cqadupstack_android_39230": [
+  "89ee600ff287756c"
+ ],
+ "beir_cqadupstack_android_39344": [
+  "2d4a563705aeae5d",
+  "9529cd2fb9884763"
+ ],
+ "beir_cqadupstack_android_39382": [
+  "74c6750a584594b4"
+ ],
+ "beir_cqadupstack_android_39424": [
+  "4c91de6f1a30310a"
+ ],
+ "beir_cqadupstack_android_39435": [
+  "3b34a218cd915bd6",
+  "4fe2e768b36fe292"
+ ],
+ "beir_cqadupstack_android_39583": [
+  "57411a43a1ac499b"
+ ],
+ "beir_cqadupstack_android_39707": [
+  "42d905baa7ca08bd"
+ ],
+ "beir_cqadupstack_android_39805": [
+  "f7eb53397c41db42"
+ ],
+ "beir_cqadupstack_android_39809": [
+  "058eae14983394b8"
+ ],
+ "beir_cqadupstack_android_40028": [
+  "3fdcc7157f47ce6c"
+ ],
+ "beir_cqadupstack_android_40030": [
+  "503afd689f7ceda9"
+ ],
+ "beir_cqadupstack_android_40304": [
+  "ea178ccf7a921e12"
+ ],
+ "beir_cqadupstack_android_40383": [
+  "236ac4b14130d3eb"
+ ],
+ "beir_cqadupstack_android_40446": [
+  "e794ce34a3e6ab9b"
+ ],
+ "beir_cqadupstack_android_4062": [
+  "2618f28aac1c4478"
+ ],
+ "beir_cqadupstack_android_4064": [
+  "3a0799ebcf7eda5e"
+ ],
+ "beir_cqadupstack_android_40754": [
+  "d0d9c0d016d204c0"
+ ],
+ "beir_cqadupstack_android_40813": [
+  "26f1e82e77e8ce9f"
+ ],
+ "beir_cqadupstack_android_40897": [
+  "4826ebc7de1f4c31"
+ ],
+ "beir_cqadupstack_android_40917": [
+  "0a5531666cb9e4d2"
+ ],
+ "beir_cqadupstack_android_40924": [
+  "7e5b3feacb76d9b5",
+  "ecfd77afb840664a"
+ ],
+ "beir_cqadupstack_android_40934": [
+  "fbae2ea33dd6cae9"
+ ],
+ "beir_cqadupstack_android_40963": [
+  "ac176b5d13d71f5b",
+  "af4a377571648b25",
+  "b1ac8641128e0426",
+  "c3dafa6e3a01fee5",
+  "f92677ee644bb612"
+ ],
+ "beir_cqadupstack_android_41023": [
+  "17f663ad3b7345d7",
+  "6dfd32cb88bcb6d2",
+  "b0315b5fc0faa992"
+ ],
+ "beir_cqadupstack_android_41496": [
+  "95a1a10cdee12806"
+ ],
+ "beir_cqadupstack_android_41514": [
+  "8547e41633607a4e"
+ ],
+ "beir_cqadupstack_android_41548": [
+  "b1b6c773be5752a8",
+  "c7bcb45589b2dd78"
+ ],
+ "beir_cqadupstack_android_4158": [
+  "2b9aa43b804994be"
+ ],
+ "beir_cqadupstack_android_42097": [
+  "0857f77af32f10d8",
+  "1a3666fa0401736d",
+  "6d5cd6fe20c5a4e4"
+ ],
+ "beir_cqadupstack_android_42325": [
+  "052332af62106ebc",
+  "0c76469847f56473"
+ ],
+ "beir_cqadupstack_android_4251": [
+  "73561f5b305bbbb0"
+ ],
+ "beir_cqadupstack_android_4267": [
+  "3270f1331613abc8"
+ ],
+ "beir_cqadupstack_android_42681": [
+  "868f5038d0a1eb6e"
+ ],
+ "beir_cqadupstack_android_42761": [
+  "bb0745bdb3adbca4"
+ ],
+ "beir_cqadupstack_android_42771": [
+  "a7c5e9aaf1840ad8"
+ ],
+ "beir_cqadupstack_android_42820": [
+  "360eae3fbfa906fb"
+ ],
+ "beir_cqadupstack_android_42854": [
+  "74d8a5b68b2cfe98"
+ ],
+ "beir_cqadupstack_android_43176": [
+  "e7c48efd9b17914d"
+ ],
+ "beir_cqadupstack_android_4319": [
+  "01a3b5f8c2680c1f"
+ ],
+ "beir_cqadupstack_android_43482": [
+  "fc880e73d934b3ac"
+ ],
+ "beir_cqadupstack_android_43517": [
+  "b38d1ad87febbd95"
+ ],
+ "beir_cqadupstack_android_43718": [
+  "dfcaad2d0aa3639c"
+ ],
+ "beir_cqadupstack_android_43795": [
+  "10810a7d047c4e8a"
+ ],
+ "beir_cqadupstack_android_43876": [
+  "50f4bc017ca65fcf"
+ ],
+ "beir_cqadupstack_android_43998": [
+  "9199fb6fc88734c1"
+ ],
+ "beir_cqadupstack_android_44220": [
+  "08bbf2688fd9eb6a",
+  "0f1e8616d272ace6",
+  "1487cf79700a862b",
+  "1a465c13eccdf05c",
+  "1e415c780cb25468",
+  "237e33dbdb7a15ab",
+  "24459630290511e6",
+  "2498555ef1e4a66d",
+  "26a3dd6e6f12e972",
+  "29a07a9200ea0b1f",
+  "2aa6437eac029913",
+  "2b76402c53f7ce39",
+  "2d2e5588b35c5461",
+  "340e37a2f6b72481",
+  "36f89e773404b6c9",
+  "4264a9ffa6b612c9",
+  "45314446dee60db5",
+  "46ce7f36dfc84df7",
+  "4caca1ce7221d15a",
+  "5a432f0fb6338807",
+  "5bb69b17f5ad5290",
+  "5bcf63023b2939d6",
+  "68bbdbcdecada4f1",
+  "69b0973bed232cc2",
+  "6c14b30d63abdf90",
+  "70c2891db89131a1",
+  "7499e3607f238c2e",
+  "7873ada0d4540242",
+  "8a4bd9da945b4c66",
+  "8a7f85b262eaaf7f",
+  "8dc881f25e2645e0",
+  "910b4b3e3a3245ac",
+  "9775f4cf4e8cf0cd",
+  "978c4607517940de",
+  "9f0657e3314fe0cf",
+  "a343a7ce18f66c8f",
+  "b9492775bcd54215",
+  "bbb9e83826ee6d88",
+  "bc9587543a831585",
+  "bdfe1304985c1b99",
+  "c0ac825682605476",
+  "c0f2f1fd060ba71c",
+  "c58b8352cd28958a",
+  "c8336e342f3bcea3",
+  "d60b93a7192bd005",
+  "df471a87bccfc0ef",
+  "ebf9942bbc76c805",
+  "f1b994d3f5a298ce",
+  "f3f8fe17f447ec06",
+  "f43b28fec445c2d7",
+  "fb1e2dbf66cc978b",
+  "fe3141538b6f49d8",
+  "ff3de5df6368067b"
+ ],
+ "beir_cqadupstack_android_44270": [
+  "5b147d8ff1c10ad8"
+ ],
+ "beir_cqadupstack_android_4447": [
+  "14f3a59d27563766"
+ ],
+ "beir_cqadupstack_android_44608": [
+  "157e719879bd9a12",
+  "415699ef5f8f3915",
+  "9ee252ae581f5640",
+  "cbeedb5af9d68199",
+  "e4344d4c87a9c127",
+  "e710c39a423c0233",
+  "ff3690f6d668e995"
+ ],
+ "beir_cqadupstack_android_44620": [
+  "a6a2528db3b30956"
+ ],
+ "beir_cqadupstack_android_44860": [
+  "0a46d73c10db4105",
+  "7f3694452ab3dcea"
+ ],
+ "beir_cqadupstack_android_44861": [
+  "7bc5338b8875a4a5",
+  "bed493313430e532"
+ ],
+ "beir_cqadupstack_android_44918": [
+  "21ebc6f193a24a2c"
+ ],
+ "beir_cqadupstack_android_45": [
+  "accb04e433bf0e58"
+ ],
+ "beir_cqadupstack_android_45054": [
+  "70c978b4f2145163"
+ ],
+ "beir_cqadupstack_android_45069": [
+  "8ead1f59bd39844d"
+ ],
+ "beir_cqadupstack_android_45071": [
+  "6aabda30b74693d3"
+ ],
+ "beir_cqadupstack_android_45361": [
+  "0f0c7e2ef80e8f21"
+ ],
+ "beir_cqadupstack_android_45446": [
+  "1ecda2eb935cccc1",
+  "567c2ef989704634"
+ ],
+ "beir_cqadupstack_android_45631": [
+  "3dcf45c6b74d84f5"
+ ],
+ "beir_cqadupstack_android_45944": [
+  "ce24e71488a666a7"
+ ],
+ "beir_cqadupstack_android_46060": [
+  "967bfe03a63169f7"
+ ],
+ "beir_cqadupstack_android_46065": [
+  "f595ceb03d12dc7b"
+ ],
+ "beir_cqadupstack_android_46186": [
+  "43e296753e2298c8"
+ ],
+ "beir_cqadupstack_android_4623": [
+  "58f0d8bcfa9f1592"
+ ],
+ "beir_cqadupstack_android_46259": [
+  "96bd7e70fd8c6dba"
+ ],
+ "beir_cqadupstack_android_46296": [
+  "03e42f1e85155792",
+  "3ef3a3e4f796835f",
+  "49ee788a26b3a5a2"
+ ],
+ "beir_cqadupstack_android_46552": [
+  "18a4efcb008556a0",
+  "1aa9d40c5749fccf",
+  "522607f46a5f2314",
+  "6de021eb2d3c95b1",
+  "c260beb52dcd5d28",
+  "df1f020764a27bad"
+ ],
+ "beir_cqadupstack_android_4657": [
+  "21ee636791a62963"
+ ],
+ "beir_cqadupstack_android_46597": [
+  "cf2188ee68f369f3"
+ ],
+ "beir_cqadupstack_android_46806": [
+  "ea4deae4e2a62752"
+ ],
+ "beir_cqadupstack_android_4706": [
+  "3bd7670195426b39"
+ ],
+ "beir_cqadupstack_android_47202": [
+  "812e73f3bc06e66b",
+  "bc3c58aabe2ef1d7",
+  "d27b9a85b8e5ed7d",
+  "d66e3cb8d17499b7"
+ ],
+ "beir_cqadupstack_android_47213": [
+  "76675d680ea74b28"
+ ],
+ "beir_cqadupstack_android_47290": [
+  "279202495420954d",
+  "c47ab9e29da90c5c",
+  "f4475fc21140c237",
+  "fb37bcef30355977"
+ ],
+ "beir_cqadupstack_android_47577": [
+  "af00020ebe41240c"
+ ],
+ "beir_cqadupstack_android_47613": [
+  "4ff178a508d0b698",
+  "e913e8305a6e5164"
+ ],
+ "beir_cqadupstack_android_47650": [
+  "a5ae1e797d43bf67"
+ ],
+ "beir_cqadupstack_android_47651": [
+  "fdadd90d1630e817"
+ ],
+ "beir_cqadupstack_android_47822": [
+  "c95f497871868d67"
+ ],
+ "beir_cqadupstack_android_48012": [
+  "d229217aae244d22"
+ ],
+ "beir_cqadupstack_android_483": [
+  "a159b34a9b999e87"
+ ],
+ "beir_cqadupstack_android_48364": [
+  "a480235ca250165f"
+ ],
+ "beir_cqadupstack_android_48720": [
+  "9426d6102541ed8c"
+ ],
+ "beir_cqadupstack_android_48839": [
+  "19802aa796989ead",
+  "6366133b8e868d99",
+  "6e91489a521b99c8",
+  "c49e8c8a90a23ad8"
+ ],
+ "beir_cqadupstack_android_48931": [
+  "12b32aa81cec6603",
+  "ebbb7a2ba669b192"
+ ],
+ "beir_cqadupstack_android_49079": [
+  "28c5fc02438b57cf"
+ ],
+ "beir_cqadupstack_android_49271": [
+  "881fb8ff0f7e6c33"
+ ],
+ "beir_cqadupstack_android_50040": [
+  "3af2512c977f6b65",
+  "721c80e79324a91f",
+  "72b96fc9c15cc70e",
+  "7a9158b7b3180af0"
+ ],
+ "beir_cqadupstack_android_5005": [
+  "99d4d962baaa925e"
+ ],
+ "beir_cqadupstack_android_50448": [
+  "2c69242daaf514c1"
+ ],
+ "beir_cqadupstack_android_50611": [
+  "3806627a07c4943f"
+ ],
+ "beir_cqadupstack_android_50751": [
+  "48da19735b687f8a",
+  "8e5fb8ce0c0ce266",
+  "a44c8566d81a7a9b",
+  "a678ffb5646699b6"
+ ],
+ "beir_cqadupstack_android_5084": [
+  "2e6e5a7b130c3283",
+  "a68477840b28be31",
+  "dea06e25a162806b"
+ ],
+ "beir_cqadupstack_android_50901": [
+  "415dfb36805f61e3",
+  "8fc5ae6a11d0d6c5",
+  "ec8a707f4baa4d09",
+  "ed6120e987291107"
+ ],
+ "beir_cqadupstack_android_51153": [
+  "2e1436c85d6bda43",
+  "5c587e0e8899022a",
+  "d3ea58a0a5c58e6f",
+  "d61cd53847528548"
+ ],
+ "beir_cqadupstack_android_51252": [
+  "ac5df16b9410bd6c"
+ ],
+ "beir_cqadupstack_android_51601": [
+  "d38c79bdc0e64481"
+ ],
+ "beir_cqadupstack_android_51645": [
+  "8617528fb19f14f4",
+  "a21a1402ed3c65c4",
+  "de7d5d63ac679ab5"
+ ],
+ "beir_cqadupstack_android_52044": [
+  "f5a87a774f0f8d69"
+ ],
+ "beir_cqadupstack_android_52046": [
+  "b12a70fb341e083f"
+ ],
+ "beir_cqadupstack_android_5206": [
+  "6eb56a8fcd7ebabb",
+  "f67d40a2ee289229"
+ ],
+ "beir_cqadupstack_android_52140": [
+  "c1790030e237e35e"
+ ],
+ "beir_cqadupstack_android_52403": [
+  "5ee607232e2adab4"
+ ],
+ "beir_cqadupstack_android_52498": [
+  "4fa0e5303dfb4f09",
+  "6764c7ea5a4ba919",
+  "773b01cffd0b90a2",
+  "9321387583f6b659",
+  "bacd3618a984f7bc"
+ ],
+ "beir_cqadupstack_android_5251": [
+  "d4a1a7529c1d3e00"
+ ],
+ "beir_cqadupstack_android_52929": [
+  "ef9a3119a8beeea4"
+ ],
+ "beir_cqadupstack_android_53064": [
+  "64d77e3388fceea6",
+  "f43f24c7492b3bc9"
+ ],
+ "beir_cqadupstack_android_53256": [
+  "90c8212ab36f0d7a"
+ ],
+ "beir_cqadupstack_android_53467": [
+  "636670a0bd19eac1"
+ ],
+ "beir_cqadupstack_android_53497": [
+  "7cd7c6b43960010b"
+ ],
+ "beir_cqadupstack_android_53572": [
+  "2670a94d8ea87a2a",
+  "df2f610b838d1bbb"
+ ],
+ "beir_cqadupstack_android_53672": [
+  "bbb6ea15c9cd24e8"
+ ],
+ "beir_cqadupstack_android_53898": [
+  "35da68e25dba54f4"
+ ],
+ "beir_cqadupstack_android_54069": [
+  "4454e15b910236f8",
+  "45eebd1d9a3a7c67",
+  "5aee487d0fad13fd",
+  "8fafe9d73a1da5a2",
+  "a74a0491c39a36d3",
+  "f3d4c240a630ab5f",
+  "f6c1fc20ef6123c4",
+  "fd21dc910b34a6f7"
+ ],
+ "beir_cqadupstack_android_54144": [
+  "4e16bf54170de8f2",
+  "6cbdd2553a0822ed",
+  "e063dd348eae6bf1"
+ ],
+ "beir_cqadupstack_android_54175": [
+  "168c0993a6ad7e38",
+  "26f2078ec1c8fed4",
+  "2d5ca1cb67380ad5",
+  "7cffbe5724418681",
+  "8d47c854600b7b2b",
+  "8e6ce5c0d0dfe770",
+  "92c8d54529dbf14b",
+  "9c08dc1d692bb716",
+  "ad0923b2d0159ce1",
+  "b7119f6e7aaa786f",
+  "b845cd657b9c2e42",
+  "d48f8a22b391fd39",
+  "e5f031f1ee1cfac4",
+  "ecb0aa3441caf73c",
+  "f6dab404fc6c6e25",
+  "fbf1336f4479740e",
+  "fe430f4793ee9030"
+ ],
+ "beir_cqadupstack_android_54237": [
+  "0aabea3e03cfb7ad",
+  "236d84ae86988852",
+  "9166da6e7854ffd2",
+  "db9d75bbd5e3f1e9"
+ ],
+ "beir_cqadupstack_android_54337": [
+  "92316ebcee3793d9"
+ ],
+ "beir_cqadupstack_android_54590": [
+  "ecb9a7a2e5590bcf",
+  "f7784e23b92dd39a"
+ ],
+ "beir_cqadupstack_android_5471": [
+  "211c5df02964db7a"
+ ],
+ "beir_cqadupstack_android_54839": [
+  "3e9ecddd45b30bc8"
+ ],
+ "beir_cqadupstack_android_549": [
+  "51b4f37e77150425",
+  "5be1742df9c1900c"
+ ],
+ "beir_cqadupstack_android_54919": [
+  "adc5942bfee86a96"
+ ],
+ "beir_cqadupstack_android_55010": [
+  "2c981adc1cc54522",
+  "c6f8306262b3a62a"
+ ],
+ "beir_cqadupstack_android_55067": [
+  "eeff7cbf7faf8d7f"
+ ],
+ "beir_cqadupstack_android_55124": [
+  "494fc5ac80570823",
+  "5709b696f33da537"
+ ],
+ "beir_cqadupstack_android_55272": [
+  "d15ca65354f183f7"
+ ],
+ "beir_cqadupstack_android_55366": [
+  "193734eb6636b765"
+ ],
+ "beir_cqadupstack_android_55624": [
+  "835f458860a853f3"
+ ],
+ "beir_cqadupstack_android_55733": [
+  "cd04f717c2fae63e"
+ ],
+ "beir_cqadupstack_android_55866": [
+  "e7ef0ecd5bebe89c"
+ ],
+ "beir_cqadupstack_android_55887": [
+  "207dacf196f4b5b0"
+ ],
+ "beir_cqadupstack_android_55933": [
+  "323870d889290d3c"
+ ],
+ "beir_cqadupstack_android_55953": [
+  "bf7c58807b9247e5"
+ ],
+ "beir_cqadupstack_android_56119": [
+  "d5e80f961029bc59"
+ ],
+ "beir_cqadupstack_android_56252": [
+  "2909db7424f66c2f"
+ ],
+ "beir_cqadupstack_android_56258": [
+  "1a840de9188d8732",
+  "1a97d7887a0bdcb3",
+  "3ee9730ece955eba",
+  "71df3e31af11cb98",
+  "98863ad446dd26a0",
+  "995ef99dc32cacb9",
+  "aa9b7786307fe393",
+  "bdca56d04ec1069e",
+  "d009365893c70b65",
+  "dc6c50349dbdfcd6",
+  "e64e7407fed0a040"
+ ],
+ "beir_cqadupstack_android_56269": [
+  "d9069ac439e50749"
+ ],
+ "beir_cqadupstack_android_56477": [
+  "00e2095a6aff9098",
+  "131b4f7d5cf914e4",
+  "2ee4331c202ccc73",
+  "3fe267ab89c734b3",
+  "4ad03f2eb1188ec9",
+  "aa51b4354f87dbaa",
+  "cafd51960b18849d",
+  "cc69f9a4708e305b",
+  "e045436ebdd3048f",
+  "e7f3a51b1135ba25",
+  "efcb50d30701db93",
+  "f11944f772e15a34"
+ ],
+ "beir_cqadupstack_android_5667": [
+  "53329d0cfeabfa92",
+  "df20cabca18a50a2"
+ ],
+ "beir_cqadupstack_android_56784": [
+  "c51aedd64ea034ae"
+ ],
+ "beir_cqadupstack_android_57001": [
+  "53d791c86956bf28"
+ ],
+ "beir_cqadupstack_android_57211": [
+  "d95f0f772243993b"
+ ],
+ "beir_cqadupstack_android_57257": [
+  "18441df7e9484459"
+ ],
+ "beir_cqadupstack_android_57295": [
+  "77a7551caf494b73"
+ ],
+ "beir_cqadupstack_android_58056": [
+  "49af47442acfa368"
+ ],
+ "beir_cqadupstack_android_58221": [
+  "6539bc93b3bf2234",
+  "89c39de80f1b555a"
+ ],
+ "beir_cqadupstack_android_58318": [
+  "17de45ede7852e8b"
+ ],
+ "beir_cqadupstack_android_58322": [
+  "939e916948afc39b"
+ ],
+ "beir_cqadupstack_android_58346": [
+  "8d4ecb385fbb489b"
+ ],
+ "beir_cqadupstack_android_58459": [
+  "9865ed101e87a82b"
+ ],
+ "beir_cqadupstack_android_58499": [
+  "3129fe9035722664"
+ ],
+ "beir_cqadupstack_android_5855": [
+  "b89ee11081bf6058"
+ ],
+ "beir_cqadupstack_android_58623": [
+  "e7164b4341b6d029"
+ ],
+ "beir_cqadupstack_android_58665": [
+  "4b10c40aa5ed9fa7",
+  "6eefc66fce6bd267"
+ ],
+ "beir_cqadupstack_android_58770": [
+  "1ca768fca2dba130"
+ ],
+ "beir_cqadupstack_android_58793": [
+  "a0767b4de325dc13",
+  "d51ffb56a99ca886"
+ ],
+ "beir_cqadupstack_android_58843": [
+  "90b95fb1d32cce60"
+ ],
+ "beir_cqadupstack_android_58906": [
+  "9e540315b74c21a0"
+ ],
+ "beir_cqadupstack_android_59098": [
+  "d6e6a1b8a3c711c7"
+ ],
+ "beir_cqadupstack_android_59270": [
+  "d1e00035b5d01b2e"
+ ],
+ "beir_cqadupstack_android_59632": [
+  "5a76897d94c6c176",
+  "91b6efad2f21778b",
+  "a77285f79206f4b6",
+  "e94aa4f8e56d2658",
+  "ecc0ffc6ed66e498",
+  "f71caccbddb775ec"
+ ],
+ "beir_cqadupstack_android_59689": [
+  "cbc6403d9a73c803"
+ ],
+ "beir_cqadupstack_android_59726": [
+  "13107af4b4521abf"
+ ],
+ "beir_cqadupstack_android_59861": [
+  "430d977dab85f349"
+ ],
+ "beir_cqadupstack_android_60547": [
+  "834305e1d156e97b"
+ ],
+ "beir_cqadupstack_android_60838": [
+  "1f0b3d044d6c7ddf"
+ ],
+ "beir_cqadupstack_android_609": [
+  "f6d541703c819135"
+ ],
+ "beir_cqadupstack_android_60940": [
+  "f4f98be5c28bf3fc"
+ ],
+ "beir_cqadupstack_android_61184": [
+  "0ef5010ea647f1e6"
+ ],
+ "beir_cqadupstack_android_61198": [
+  "c9d9176cffc3cda5"
+ ],
+ "beir_cqadupstack_android_61210": [
+  "bb8587d80c13e474"
+ ],
+ "beir_cqadupstack_android_61246": [
+  "c1da84c6d58f21ab"
+ ],
+ "beir_cqadupstack_android_61297": [
+  "1e97df4f407d4193",
+  "84753665d1304950"
+ ],
+ "beir_cqadupstack_android_61311": [
+  "63fb039a40f404d9"
+ ],
+ "beir_cqadupstack_android_61323": [
+  "a750afa6386c0b7b"
+ ],
+ "beir_cqadupstack_android_61866": [
+  "e46dc091a2781656"
+ ],
+ "beir_cqadupstack_android_62120": [
+  "8e665a8ecb6843c9"
+ ],
+ "beir_cqadupstack_android_62217": [
+  "af3ce412e431e92e"
+ ],
+ "beir_cqadupstack_android_62349": [
+  "712547ea0cd60c88"
+ ],
+ "beir_cqadupstack_android_62373": [
+  "7060e29a0b4dabb4"
+ ],
+ "beir_cqadupstack_android_62376": [
+  "1e568646445a5277"
+ ],
+ "beir_cqadupstack_android_6240": [
+  "681a5961fcb778fd"
+ ],
+ "beir_cqadupstack_android_62552": [
+  "28e0a9b64ae793c0",
+  "d59517ba96ede98f"
+ ],
+ "beir_cqadupstack_android_62749": [
+  "b966ed1e8b72ad4d"
+ ],
+ "beir_cqadupstack_android_63014": [
+  "0ae853f22ba40252",
+  "8760c544b7e93ae7",
+  "c6980bd479d104c0",
+  "d58e5c094bedba74",
+  "f1bf11415104fe4f"
+ ],
+ "beir_cqadupstack_android_63025": [
+  "2ce827252e5df96c"
+ ],
+ "beir_cqadupstack_android_632": [
+  "63325555588b435c",
+  "79bee33237e49e81"
+ ],
+ "beir_cqadupstack_android_63322": [
+  "81955fb31e275dc5",
+  "8d42332725a14fbe",
+  "b27c8aaae0ccdab3",
+  "c599c8d733e30231"
+ ],
+ "beir_cqadupstack_android_63346": [
+  "4638d9c3169ea70f"
+ ],
+ "beir_cqadupstack_android_63386": [
+  "3cd1bb5e02842ccd"
+ ],
+ "beir_cqadupstack_android_63983": [
+  "c341fd761708b597"
+ ],
+ "beir_cqadupstack_android_64186": [
+  "043168d4a165b2c3",
+  "16e0c6fd794d6658",
+  "26388a3234488d52",
+  "3572abb8c1dcc65b",
+  "9488cab8511adf1b"
+ ],
+ "beir_cqadupstack_android_64266": [
+  "20259650a8762da2"
+ ],
+ "beir_cqadupstack_android_64381": [
+  "31cc405477ecebcc"
+ ],
+ "beir_cqadupstack_android_64520": [
+  "ac25e121ee1dad92"
+ ],
+ "beir_cqadupstack_android_64547": [
+  "3683b568cb2cd20c"
+ ],
+ "beir_cqadupstack_android_64569": [
+  "49ce09eacaa5ab9b"
+ ],
+ "beir_cqadupstack_android_64676": [
+  "63c1ec4f3dbd5fe7"
+ ],
+ "beir_cqadupstack_android_64848": [
+  "bfd6698681fde8ab"
+ ],
+ "beir_cqadupstack_android_6494": [
+  "8186a201d8315241"
+ ],
+ "beir_cqadupstack_android_64944": [
+  "b32fac4acf80326e",
+  "e629e178db5f5c86"
+ ],
+ "beir_cqadupstack_android_64974": [
+  "5692d6c6f3c07946"
+ ],
+ "beir_cqadupstack_android_65069": [
+  "8a0c09e38c0f396a"
+ ],
+ "beir_cqadupstack_android_65097": [
+  "0340ec389b4d9522",
+  "7eb1b9fadc999966",
+  "80f7032d193ae198",
+  "8fc4f2135bd1e362",
+  "9966494014c7ab82",
+  "a08ee53db2657d0e",
+  "c24691a144b093b4",
+  "efdc4b7cf827c3a8",
+  "f1528faf648a89a0"
+ ],
+ "beir_cqadupstack_android_65261": [
+  "2bfdc911988dcbd2",
+  "77fb39eae6a38cd5",
+  "844fa8beb6ca4551",
+  "a5ac3e92aab77670",
+  "e8f42267bf4320d2"
+ ],
+ "beir_cqadupstack_android_65288": [
+  "80b6aa8d5394f41b"
+ ],
+ "beir_cqadupstack_android_65366": [
+  "8f03f755f4b9aa99"
+ ],
+ "beir_cqadupstack_android_65394": [
+  "70fc734db0f5ab38"
+ ],
+ "beir_cqadupstack_android_65442": [
+  "561309ff0f9cfbe2"
+ ],
+ "beir_cqadupstack_android_6557": [
+  "f21240fae58fb417"
+ ],
+ "beir_cqadupstack_android_6567": [
+  "61cc5ec62050133d"
+ ],
+ "beir_cqadupstack_android_65744": [
+  "64d51da1a0e2f7de"
+ ],
+ "beir_cqadupstack_android_65762": [
+  "6e74e01752c04ae4"
+ ],
+ "beir_cqadupstack_android_65816": [
+  "b1966ab07f0333f4"
+ ],
+ "beir_cqadupstack_android_65860": [
+  "8f8d6bf543cd8670",
+  "cda1e4f7788d0326"
+ ],
+ "beir_cqadupstack_android_65878": [
+  "f2d85de18a9006e9"
+ ],
+ "beir_cqadupstack_android_6603": [
+  "2784272186245f0c"
+ ],
+ "beir_cqadupstack_android_66285": [
+  "55304b7bbcbeba85"
+ ],
+ "beir_cqadupstack_android_66538": [
+  "096836b78fe8282c"
+ ],
+ "beir_cqadupstack_android_66595": [
+  "0467bef95292c4a1",
+  "348c493895ead815",
+  "bb8c12c798187c9b"
+ ],
+ "beir_cqadupstack_android_6693": [
+  "520fb522cc5fcc75"
+ ],
+ "beir_cqadupstack_android_67068": [
+  "591dd2695693cc75"
+ ],
+ "beir_cqadupstack_android_67136": [
+  "896bd4c39ced29ed"
+ ],
+ "beir_cqadupstack_android_67157": [
+  "fd358c5b54399f9c"
+ ],
+ "beir_cqadupstack_android_67317": [
+  "5098dc1dc31e30a5"
+ ],
+ "beir_cqadupstack_android_67504": [
+  "1f2f11da68d35529"
+ ],
+ "beir_cqadupstack_android_67714": [
+  "1bc1e27e00c4469e"
+ ],
+ "beir_cqadupstack_android_67797": [
+  "a466f91362e0b7c1"
+ ],
+ "beir_cqadupstack_android_67878": [
+  "1e91b30a892b51ca",
+  "645b1edc7d7646bb",
+  "683d76837a06fe88",
+  "8b164e294fdf6283"
+ ],
+ "beir_cqadupstack_android_6815": [
+  "09400a59e353f40e",
+  "46b9f0b8cf97e123",
+  "4de3cef2ed297aac",
+  "6b8865a64cf4d526",
+  "6f0f6ec56f61627a",
+  "7fe8671968625dd6",
+  "8b8a07307ae2d102",
+  "909b79ba5e0f7075",
+  "946183bd73ea89c1",
+  "a716bc8c1d13c0f8",
+  "aa55f768e7b1de79",
+  "aaf8a80a9a0b048d",
+  "af79d20121fe7347",
+  "ca4ef2953b193cad",
+  "d2f3645b26c24ef6",
+  "efe49678207688f3",
+  "f94fc956e2e3d6a0"
+ ],
+ "beir_cqadupstack_android_68235": [
+  "0d5580429a2a0e20"
+ ],
+ "beir_cqadupstack_android_68447": [
+  "c0d7d9931e9f245b"
+ ],
+ "beir_cqadupstack_android_68459": [
+  "18acef0a4552f2c8",
+  "32326e07d6a44a67",
+  "41ae95fb6bc151d4",
+  "8e94c145161cce26",
+  "911aab0111fc309f",
+  "a494fafe3062d9bc",
+  "c86765206eaaff4e"
+ ],
+ "beir_cqadupstack_android_68680": [
+  "adab2933cbe961ce"
+ ],
+ "beir_cqadupstack_android_68687": [
+  "8a5a966dd8516c48"
+ ],
+ "beir_cqadupstack_android_68889": [
+  "b7abe335d5993b4c"
+ ],
+ "beir_cqadupstack_android_6908": [
+  "1a32ca746fd3c18d"
+ ],
+ "beir_cqadupstack_android_69304": [
+  "10793ebeddc94093"
+ ],
+ "beir_cqadupstack_android_69387": [
+  "5206f864e2c45117"
+ ],
+ "beir_cqadupstack_android_69480": [
+  "1da120599d33b9a1",
+  "7c920b016a27b5d5",
+  "86605a785c3d0caf",
+  "8d65518fc86b5ec5",
+  "9b04da4aa82851e3",
+  "a9a73fa90c24283c",
+  "c15613105c53e47e",
+  "c59e3ecb53372c86"
+ ],
+ "beir_cqadupstack_android_6949": [
+  "513802df031c0692",
+  "702f79529ece80ad"
+ ],
+ "beir_cqadupstack_android_697": [
+  "935df9b8e40af669"
+ ],
+ "beir_cqadupstack_android_69759": [
+  "5719238fdb79eaa8",
+  "81e0f6d01b776528",
+  "c564531880f9da9f"
+ ],
+ "beir_cqadupstack_android_69770": [
+  "3a8a3da10b79a3b7"
+ ],
+ "beir_cqadupstack_android_69779": [
+  "b8384c6cc2085220",
+  "f29e8a482bbcd200"
+ ],
+ "beir_cqadupstack_android_69837": [
+  "ff5b8ae75edcd59f"
+ ],
+ "beir_cqadupstack_android_7003": [
+  "a062aa9eb60c9435"
+ ],
+ "beir_cqadupstack_android_7064": [
+  "587300b11538b59e"
+ ],
+ "beir_cqadupstack_android_7081": [
+  "7fc738686c622cae"
+ ],
+ "beir_cqadupstack_android_7135": [
+  "53657479e92260d2"
+ ],
+ "beir_cqadupstack_android_71565": [
+  "ccf02ce616f0ec58"
+ ],
+ "beir_cqadupstack_android_71611": [
+  "65d896b01a6ee24c"
+ ],
+ "beir_cqadupstack_android_71613": [
+  "6e3ccec7e7d2ae4c"
+ ],
+ "beir_cqadupstack_android_71693": [
+  "e7434fc28bc188c1"
+ ],
+ "beir_cqadupstack_android_7237": [
+  "70b535acec19f2af"
+ ],
+ "beir_cqadupstack_android_72900": [
+  "06d2dc5b85c4d848",
+  "fff9d3acd689c8db"
+ ],
+ "beir_cqadupstack_android_72943": [
+  "04aec10d8b3ff9be",
+  "26dcf9df1b73a6d7",
+  "3b658168ffa9f5fc",
+  "fd65f9e55ab90590"
+ ],
+ "beir_cqadupstack_android_73045": [
+  "34b47359bb6f7948"
+ ],
+ "beir_cqadupstack_android_73075": [
+  "bddac1394cb11d31"
+ ],
+ "beir_cqadupstack_android_73089": [
+  "54a7ae2e97dc3db6",
+  "b02a1cf0fa476a33",
+  "fab9091843b151d4"
+ ],
+ "beir_cqadupstack_android_73197": [
+  "0aab7d8b78a5b88d",
+  "6cb638bc04591349",
+  "ff6ad7b39f3e5846"
+ ],
+ "beir_cqadupstack_android_73275": [
+  "4a84894e25edf0a7"
+ ],
+ "beir_cqadupstack_android_73392": [
+  "ba96349f2ddc9a1e"
+ ],
+ "beir_cqadupstack_android_73415": [
+  "d3d4ad2da349280e"
+ ],
+ "beir_cqadupstack_android_74612": [
+  "224d3d618ead5deb"
+ ],
+ "beir_cqadupstack_android_74672": [
+  "4bdb7963a53f4a52"
+ ],
+ "beir_cqadupstack_android_74798": [
+  "005438ce0b74eda1",
+  "03e6f1b8a351f2cd",
+  "04a6c84d39f9f223",
+  "2d4a5d372fdfbaa1",
+  "33112732fbc89863",
+  "4eee347886eb8d39",
+  "54fd7100515301d4",
+  "6397f979f478a1b4",
+  "680dc6aa66e5c666",
+  "7d81dfcfb7dbdd4b",
+  "d11010f05bb689c6",
+  "d263f7aa1a33f232",
+  "d4e613c596c99fab",
+  "f276b69c26306903",
+  "f9699099d50f064a"
+ ],
+ "beir_cqadupstack_android_748": [
+  "e301f78b7b16bda7"
+ ],
+ "beir_cqadupstack_android_74828": [
+  "47c242c985a24b95"
+ ],
+ "beir_cqadupstack_android_74933": [
+  "80848668b4235fdc"
+ ],
+ "beir_cqadupstack_android_75030": [
+  "3d0cc90d29bcf0c8"
+ ],
+ "beir_cqadupstack_android_75056": [
+  "3ff0c3be08becebc",
+  "5cc228404838f3f7",
+  "c8d40f3abeb166dc"
+ ],
+ "beir_cqadupstack_android_75260": [
+  "a45132aecb23e325"
+ ],
+ "beir_cqadupstack_android_75382": [
+  "215b9edf0578f225"
+ ],
+ "beir_cqadupstack_android_75520": [
+  "58918f11381a66bc"
+ ],
+ "beir_cqadupstack_android_75755": [
+  "2578f623ed10f9fa",
+  "285f6710d1b7ab58",
+  "2a775bc30350ec34",
+  "59e402d79ff0b451",
+  "6b2ba2e0c696bd72",
+  "76dbfd110cbe7193",
+  "bf63d4a3c75b2594"
+ ],
+ "beir_cqadupstack_android_75848": [
+  "9c47f966ecac4cc0"
+ ],
+ "beir_cqadupstack_android_75889": [
+  "e2fcdde1c75a416c"
+ ],
+ "beir_cqadupstack_android_75916": [
+  "0f302e6f63676868",
+  "6c857dda1515a585",
+  "c29b7c8e0e2fe733"
+ ],
+ "beir_cqadupstack_android_7680": [
+  "18ff32c0e9f84ecf",
+  "f2fe2e16e5968755"
+ ],
+ "beir_cqadupstack_android_76976": [
+  "cda6b4be4fc65bc2"
+ ],
+ "beir_cqadupstack_android_76996": [
+  "0353621ad4ce7235"
+ ],
+ "beir_cqadupstack_android_77102": [
+  "4be435cf55fdde83"
+ ],
+ "beir_cqadupstack_android_77104": [
+  "b10ceb82d8ecbba9"
+ ],
+ "beir_cqadupstack_android_77106": [
+  "49c73ed0fd943d51"
+ ],
+ "beir_cqadupstack_android_7731": [
+  "45a16bf78922123f"
+ ],
+ "beir_cqadupstack_android_77444": [
+  "087b11be009747da",
+  "7494ec058c1249c2",
+  "c621cee6470c685a",
+  "ecc8d6d6deac201b"
+ ],
+ "beir_cqadupstack_android_77542": [
+  "0882aed67e9d38f8"
+ ],
+ "beir_cqadupstack_android_77601": [
+  "5ff677f4564bd3af",
+  "6ed3b2ad5f7f1ee5",
+  "74ce75149cf949b8"
+ ],
+ "beir_cqadupstack_android_7763": [
+  "5b1d695bccdc4c75"
+ ],
+ "beir_cqadupstack_android_77670": [
+  "c039136f5910ea1c"
+ ],
+ "beir_cqadupstack_android_7772": [
+  "070adb3e1587129b",
+  "125230294a63591f",
+  "1a5e7b9ade750bd0",
+  "2be58b2d6ad9f9a5",
+  "2c0dc56c69aa26f3",
+  "4241a065c7294d8d",
+  "4b6fd880483f6892",
+  "4fa3dffa41add390",
+  "545d38c3222729e3",
+  "6fd61333ccc29381",
+  "784a2da70b3b727c",
+  "9e28b0ebc5fbdd73",
+  "a269543a5f819d6e",
+  "abf71cb14fe81ed3",
+  "c1dc9e0bda9f2739",
+  "c4d5e11781e250fe",
+  "c98e86194a53124d"
+ ],
+ "beir_cqadupstack_android_7774": [
+  "2957a6b2ea0d68ef",
+  "5edbef3df991bd23",
+  "b6fd36df85d37ebc",
+  "ed4e929a1fecc02d"
+ ],
+ "beir_cqadupstack_android_77838": [
+  "12e0b6dbc8711779",
+  "60b9df9bbda61437",
+  "fd9b4daff63203ac"
+ ],
+ "beir_cqadupstack_android_77858": [
+  "dba1f27ba31d0b8b"
+ ],
+ "beir_cqadupstack_android_77981": [
+  "6980cd60487e83e6"
+ ],
+ "beir_cqadupstack_android_78045": [
+  "e0a62d2c51f84c5f"
+ ],
+ "beir_cqadupstack_android_78113": [
+  "5238a341990f2a4c",
+  "5d288a770bd73e4c",
+  "f50d45558f36abc1"
+ ],
+ "beir_cqadupstack_android_78118": [
+  "5201a5876c886555",
+  "8b746dddcd41f4ad"
+ ],
+ "beir_cqadupstack_android_78373": [
+  "10ba5ae6938e3bcd"
+ ],
+ "beir_cqadupstack_android_78397": [
+  "c8fabb847ed13bf1"
+ ],
+ "beir_cqadupstack_android_78472": [
+  "375bb610e81d26d2",
+  "923f12fb4a18d4fd"
+ ],
+ "beir_cqadupstack_android_78576": [
+  "7ba5efa9fcd27ef1"
+ ],
+ "beir_cqadupstack_android_7866": [
+  "89ad0709767bd759",
+  "9499c2f2816993d9",
+  "b24e3e5f0e7be5d8"
+ ],
+ "beir_cqadupstack_android_78682": [
+  "8050f280f7344385",
+  "9844ec53db056bf7",
+  "9a10dcc3d4a44b3e",
+  "eb80e79c250e9a26",
+  "fc59dc473b33855c"
+ ],
+ "beir_cqadupstack_android_78711": [
+  "13b61a8b957c1998",
+  "2ff93d208d4dd70f",
+  "6686ff12b78ebe9f",
+  "986bc1dc237a1578",
+  "bfea95a2f5f4f462",
+  "f9fd6cfadca05a32"
+ ],
+ "beir_cqadupstack_android_78828": [
+  "58f39090e1c453fe"
+ ],
+ "beir_cqadupstack_android_78964": [
+  "2a42009943a25297",
+  "502d969880c7dfbe"
+ ],
+ "beir_cqadupstack_android_79004": [
+  "b440f67b501023cd",
+  "c52313225d9c9d0b"
+ ],
+ "beir_cqadupstack_android_79085": [
+  "1381f186e2660914",
+  "1d59aaa6710d36b0",
+  "20d7c02bdca0a00d",
+  "5a054a9f6cf887fa",
+  "7ca0228b65f68ca8",
+  "80d0ed4b17685947",
+  "86488a694e32e344",
+  "bd2f9ed3e6744d4b",
+  "bd31a8ab004de295",
+  "d4c1a43ede1c95b3",
+  "da227d50f70bfb4d",
+  "f88ef97f225cf76f",
+  "fec2cebf5d539dce"
+ ],
+ "beir_cqadupstack_android_79214": [
+  "cd0cb89b84bad30a"
+ ],
+ "beir_cqadupstack_android_7932": [
+  "1dffdedefb616027"
+ ],
+ "beir_cqadupstack_android_801": [
+  "608b01d1f0a6d633",
+  "695b0452ad31b68d",
+  "7233a206856d36c1",
+  "7e87aeab12a3141b",
+  "8b26b869af197197",
+  "e20f60d6808a19d8",
+  "e5bd0ef0f2ca5a7f"
+ ],
+ "beir_cqadupstack_android_8025": [
+  "ae9dd4afb0b89a3b"
+ ],
+ "beir_cqadupstack_android_80703": [
+  "710904ec93132e7a"
+ ],
+ "beir_cqadupstack_android_8072": [
+  "b1c908e7162d3327"
+ ],
+ "beir_cqadupstack_android_80723": [
+  "43ed41f08c82a1b5"
+ ],
+ "beir_cqadupstack_android_8082": [
+  "b62633e5050d055a",
+  "f460f29aabb07ab6"
+ ],
+ "beir_cqadupstack_android_80901": [
+  "7c94ba56688dca16"
+ ],
+ "beir_cqadupstack_android_80936": [
+  "355ad9ddc8ec0fd2"
+ ],
+ "beir_cqadupstack_android_80943": [
+  "b435ed197544bbbf"
+ ],
+ "beir_cqadupstack_android_81023": [
+  "6bea316791573f7f",
+  "fac08d43b9faca87"
+ ],
+ "beir_cqadupstack_android_81025": [
+  "1ebe268614061f25",
+  "4f1e38bb4c51ced3"
+ ],
+ "beir_cqadupstack_android_81055": [
+  "52ca75834c261bd0"
+ ],
+ "beir_cqadupstack_android_81145": [
+  "f72999347e96f7ea"
+ ],
+ "beir_cqadupstack_android_81210": [
+  "b9db4c7774e57bbd"
+ ],
+ "beir_cqadupstack_android_81540": [
+  "e58d8311cd5d1a4d"
+ ],
+ "beir_cqadupstack_android_81597": [
+  "f69c631dbd38bc62"
+ ],
+ "beir_cqadupstack_android_81812": [
+  "ada80ce633c93f93"
+ ],
+ "beir_cqadupstack_android_81832": [
+  "3ff1ceaa0fc6a5f7"
+ ],
+ "beir_cqadupstack_android_82179": [
+  "0342a09bd7c84f28",
+  "06a8571055e62329",
+  "0eba944567b018bb",
+  "4301cc40bafdb0c4",
+  "4854274a21264dbc",
+  "6c9676f4b63ece0b",
+  "ed4acce1db3a13bd",
+  "efaf9fd2bf93f79b"
+ ],
+ "beir_cqadupstack_android_82323": [
+  "04d00973fc309e29",
+  "19c7299150ae364c",
+  "819bd811d6d395e4",
+  "a3320095020106b9"
+ ],
+ "beir_cqadupstack_android_82440": [
+  "0db43571ecfdef32",
+  "13550b7866f38588",
+  "4457d0e5588def3c",
+  "7d69a40521e9d61a",
+  "a2249dc327f15498",
+  "c15e9f2a78bc8eed",
+  "cbb526fa89fefc2f",
+  "cec3927bfd9d65d8",
+  "ffca9124e946e236"
+ ],
+ "beir_cqadupstack_android_82474": [
+  "40d4f74b38eaae44"
+ ],
+ "beir_cqadupstack_android_8299": [
+  "c0a09849b9dd5426"
+ ],
+ "beir_cqadupstack_android_8321": [
+  "ca4ab517bb4a43e6"
+ ],
+ "beir_cqadupstack_android_834": [
+  "0dfd6db0746d827a",
+  "1988b407b8d46e1b",
+  "2069d7fec151709a",
+  "22a12d519faefc25",
+  "233c3a671dfdf25d",
+  "2b795f96e140feb3",
+  "38368ec8cd9c53b3",
+  "3a9da07ebdd2970e",
+  "47936622919edad7",
+  "639f436bd1021469",
+  "6fed1466a92738f1",
+  "7aff89060cc6e0db",
+  "7f04f0f8edc96801",
+  "8678fe7fcaebf78c",
+  "87daf369f780ae7b",
+  "90155dd145124753",
+  "92b5b0013899ed14",
+  "953539e4be45daf6",
+  "d9246a3a209dd5f3",
+  "dee36ca3fd5b4c8d",
+  "ea1e7eba126e6914",
+  "fc34d549b8e11326"
+ ],
+ "beir_cqadupstack_android_8436": [
+  "c089b996b270d54e"
+ ],
+ "beir_cqadupstack_android_8449": [
+  "1a2fdef01e5503de"
+ ],
+ "beir_cqadupstack_android_8536": [
+  "9b5f8aa76b115b6e"
+ ],
+ "beir_cqadupstack_android_8570": [
+  "7451ef8e859937d2",
+  "acf2925e37d03385"
+ ],
+ "beir_cqadupstack_android_8576": [
+  "69bc372d2749c220"
+ ],
+ "beir_cqadupstack_android_8674": [
+  "c3f6bf041efa271c"
+ ],
+ "beir_cqadupstack_android_8772": [
+  "c1557ea840386754"
+ ],
+ "beir_cqadupstack_android_9199": [
+  "72cff247a4557136",
+  "f5c16bfae053756c"
+ ],
+ "beir_cqadupstack_android_9237": [
+  "860c166d77816bfe"
+ ],
+ "beir_cqadupstack_android_9269": [
+  "863565e4e44d2414"
+ ],
+ "beir_cqadupstack_android_9289": [
+  "63a52ce8d79b9074"
+ ],
+ "beir_cqadupstack_android_9325": [
+  "09d043865e2d1300",
+  "ffb12c88f1f1c40b"
+ ],
+ "beir_cqadupstack_android_9327": [
+  "05ad5e9b9e3dffd1",
+  "36993e1f719a90a5",
+  "9aa4f649285bf5a9",
+  "f05efe107e3e422c"
+ ],
+ "beir_cqadupstack_android_9361": [
+  "6e7493af8f6ff4d7",
+  "d5365d4b4a29c9b6"
+ ],
+ "beir_cqadupstack_android_941": [
+  "1df9765f68fbeae7",
+  "2c7125377a64b2e7",
+  "3dfc9e5255857614",
+  "4279cdcaa777f6cf",
+  "bd71f110b89cbde5"
+ ],
+ "beir_cqadupstack_android_9422": [
+  "1f64e6d0f9927bb5",
+  "46cbe394f0e1e276"
+ ],
+ "beir_cqadupstack_android_9541": [
+  "3fc05ad8a4e9a2d1",
+  "40eee2d7d96d7499",
+  "941af9d0e35a72af",
+  "e17ad1c38a0e566b"
+ ],
+ "beir_cqadupstack_android_9545": [
+  "e29b49c4ab56af7a"
+ ],
+ "beir_cqadupstack_android_9767": [
+  "82e28a24a9ab81ed"
+ ],
+ "beir_cqadupstack_android_9826": [
+  "9976a28eb5fdd378"
+ ]
+}

@@ -1,0 +1,3499 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_android_10118",
+   "query": "Does anyone else have issues with Google Talk for Android always \"losing connection to server\"?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1033",
+   "query": "How can I prevent my HTC Desire from overheating?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_10336",
+   "query": "Amazon App Store - Location of the downloaded APK",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1035",
+   "query": "How to break in a new cell phone battery?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_10351",
+   "query": "How to give root access to apps that don't request it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_10414",
+   "query": "Preventing mobile data use for select apps on non-rooted phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_10519",
+   "query": "How do I set a custom SMS tone for a single contact?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_10523",
+   "query": "selectively make contact groups silent",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_10702",
+   "query": "Is there an app that will let me text from my pc with the same phone number?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_10811",
+   "query": "How to capture video stream from Android phone screen and show it on laptop?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_10996",
+   "query": "Block all sounds going out through speaker when headphone connected",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1102",
+   "query": "What's with the Donut/Froyo?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_11099",
+   "query": "How check what requests does my App (wireshark for Android)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_11129",
+   "query": "SMS messages just have \"null\"",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_11333",
+   "query": "Where is a downloaded .apk placed in Android phones?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_11339",
+   "query": "How do I make Adobe Flash work with Firefox?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_11546",
+   "query": "Android chroot ubuntu - is it possible to get ubuntu to recognise usb devices",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1156",
+   "query": "How can I customize the list of services that pops up when I choose to \"share\" something in an app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_11872",
+   "query": "Samsung Kies: 'This version of the device can not be updated'. Never?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_11884",
+   "query": "Would a Class 10 MicroSDHC card ever be worth it on a Smartphone (Samsung Galaxy S 2)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_11885",
+   "query": "Video streaming from PC to Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1198",
+   "query": "How to use an Android device as bluetooth USB dongle?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12033",
+   "query": "Email application with notifications only for specified contacts (standard SMTP/POP3/IMAP)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12047",
+   "query": "How do I import user data from a ROM Manager backup?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12129",
+   "query": "Is there any browser that allows to view the source?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1217",
+   "query": "Is there a way to customize vibrate patterns?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12233",
+   "query": "Wifi Error when turning on",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12250",
+   "query": "How can I disable cellular data on an Android device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12262",
+   "query": "Android Software or Device to present Application on Screen",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12265",
+   "query": "What is SNS App?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12347",
+   "query": "What can cause \"Android OS\" process to use high percentage of battery?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12412",
+   "query": "Android - Change Google account on Nexus S",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12470",
+   "query": "How can data on an unrooted phone be backed up?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12587",
+   "query": "Configuring Background Images",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12639",
+   "query": "What do I say to make a new line when using voice recognition?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12650",
+   "query": "What is Flash ClockworkMod Recovery?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12665",
+   "query": "How do I disable corporate exchange security policy on Samsung Galaxy S 2?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12723",
+   "query": "Move to SD Card doesn't move everything",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12729",
+   "query": "Looking for Call list Application",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12802",
+   "query": "Factory reset to restore performance? What are the disadvantages?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12831",
+   "query": "What do I need to improve performance of the Android emulator?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_12834",
+   "query": "Broken screen while debug mode was disabled. How can I re-enable adb?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_13069",
+   "query": "Can I use dual boot in my Android mobile phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_13102",
+   "query": "Is there a way to blacklist SSIDs?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_13185",
+   "query": "Can I charge Samsung Galaxy Tab 10.1 from USB?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_13368",
+   "query": "Always shows \"Local calendar cannot sync with Google calendar. You need a google account.\"",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_13605",
+   "query": "How do I fix \"Unknown reason -110\"?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_13662",
+   "query": "How to set MP3 ringtone in Android (Nexus S)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_13683",
+   "query": "Why does the 3G connection drop issue happen on all Verizon 4G LTE handsets?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14046",
+   "query": "Android USB reverse tethering: How to fool the apps",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14162",
+   "query": "How can I prevent my Wi-Fi connection from glitching?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14164",
+   "query": "How can I write in a PDF with a tablet and a pen (a.k.a  Is there a Xournal alternative for Android)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14168",
+   "query": "Can I train Google Voice Actions to better recognize my voice?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14256",
+   "query": "How do you set up internet pass-through (reverse-tether) on linux?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1431",
+   "query": "Is there any way to print directly from the phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14426",
+   "query": "Screen recording tool for the samsung galaxy tab",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14490",
+   "query": "How to rate in Market on Honeycomb tablet?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1452",
+   "query": "How can I sync the bookmarks in the web browser?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14628",
+   "query": "What's the difference between an AOSP ROM and a stock ROM?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14651",
+   "query": "Which one is more suitable Samsung Kies or PC Studio for Samsung GT-B7722?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14662",
+   "query": "minimal hardware requirements for Android",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14677",
+   "query": "Browser's default search engine",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14718",
+   "query": "\"keep screen on if USB debugging\" application?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14764",
+   "query": "Android Market gone after emulator reboot",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14795",
+   "query": "Any way to retrieve phone number dialed while in airplane mode?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_14884",
+   "query": "How can I get Google's two-step verification to work?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15001",
+   "query": "How can I avoid the battery charging when connected via USB?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15009",
+   "query": "How does Google Maps estimate my location without GPS?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15066",
+   "query": "How to monitor Wi-Fi usage?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15138",
+   "query": "How can I automatically reject some types of calls?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_152",
+   "query": "Is there an Android PMP equivalent of the iPod Touch?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15404",
+   "query": "Is it possible to connect a USB microphone to an Android phone or tablet?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15434",
+   "query": "What info does Google backup?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15581",
+   "query": "What does FTM mean on my phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15615",
+   "query": "Share WIFI to Computer?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15640",
+   "query": "VLC for Android tablets",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15645",
+   "query": "How to read out the data in HTC Desire SMS backup file?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15688",
+   "query": "List of devices with screen parameters",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15701",
+   "query": "What happens to a running program when \"home\" button is pressed in Android phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15828",
+   "query": "If I flash my ROM or wipe my device after buying an app, will I have to buy it again?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15943",
+   "query": "Can I install applications onto sd card with Android 2.1?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15947",
+   "query": "Always seeing \"No connection: Retry\" in Android Market",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_15953",
+   "query": "Has anyone determined why the Droid X with Gingerbread turns itself back on?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1600",
+   "query": "Is there a good app that lets me to the app updates in one go?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16078",
+   "query": "How to force Gmail/Android to request password every time for google account",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16137",
+   "query": "iOS on Android devices",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16186",
+   "query": "Good free pdf reader for android that opens the last read page",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16220",
+   "query": "Where does Google Music store offline songs?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16236",
+   "query": "How can I save a file rather than open it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16367",
+   "query": "How exactly does \"root\" user access/account works? Do all applications run as root on my phone after rooting?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16657",
+   "query": "Does any version of Android support ad-hoc connections?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16725",
+   "query": "Problems with downloading apps",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16836",
+   "query": "How do I remove a review I've written from the Android Market app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16915",
+   "query": "Where on the file system are SMS messages stored?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_16962",
+   "query": "How can I prevent long SMS messages from auto-converting to MMS?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17159",
+   "query": "Use existing contact for \"Me\" in Ice Cream Sandwich",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17210",
+   "query": "Wi-Fi icon next to apps in android market",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17319",
+   "query": "How can I make my Samsung Galaxy Nexus volume go louder than what stock allows?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17402",
+   "query": "How do I switch my Android device's SD card without causing problems?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17433",
+   "query": "Is there a web browser+Java plugin available for Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17482",
+   "query": "How can I install vanilla Android on the Kindle Fire?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17584",
+   "query": "How do I root my Kindle Fire?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17640",
+   "query": "Privacy level with an anonymous account?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17642",
+   "query": "How can I get the Android app store on the kindle fire?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_17736",
+   "query": "How can I switch launchers on the Samsung Galaxy SII Epic",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1799",
+   "query": "Is there a way to see the top apps across all categories?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1805",
+   "query": "My Samsung Galaxy S front-facing camera doesn't work in camera app, Gtalk or Skype -- How can I use it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18065",
+   "query": "How can I access my Google Reader entries offline?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18121",
+   "query": "How do I start/join a G+ Hangout?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18342",
+   "query": "Have I erased my songs? Samsung galaxy S2",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18528",
+   "query": "Moving applications to SD card leaves some data behind",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18777",
+   "query": "How to circumvent the market compatibility check?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18823",
+   "query": "How to remove Google Account that is set for Android Market in device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18876",
+   "query": "How can I root the GT 10.1 (running 3.2)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18930",
+   "query": "How to track device locations in an office",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_18935",
+   "query": "How can I disable or password protect my device's 'factory reset' function?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_19094",
+   "query": "How can I restore IMEI code after factory reset?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_19184",
+   "query": "Is it possible to permanently supress app updates?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_19279",
+   "query": "How can I root my Nexus One?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_1931",
+   "query": "I want to remotely control my Android device from my PC without rooting it. Is this possible?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_19336",
+   "query": "Is it possible to direct all audio output to a bluetooth headset?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_19726",
+   "query": "App to share a calendar",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_19844",
+   "query": "Facebook contact sync in Ice Cream Sandwich",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_19971",
+   "query": "List of ROMs for HTC Flyer",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_19992",
+   "query": "How to transfer files using WiFi Direct between 2 ICS devices?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20198",
+   "query": "Do I have to install a custom ROM if I root?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20256",
+   "query": "Does Android hide some amount of RAM from the User?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20317",
+   "query": "Can I change the dalvik cache location e.g. with a symbolic link?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20405",
+   "query": "Phone not updating Market to Google Play?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20440",
+   "query": "application to restore/download all market applications after new rom is installed",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20513",
+   "query": "What is the best pre-stealing practice?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20606",
+   "query": "How to take backup of all installed APKs from Phone to PC?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20728",
+   "query": "Why can't apps connect to the internet?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20746",
+   "query": "I've rooted my tablet, now how do I get rid of this bloatware?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20751",
+   "query": "Clear Application Cache on ICS",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20855",
+   "query": "Why does Google play show a \"no connection: retry\" error?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20938",
+   "query": "number in the top right corner of the camera app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_20946",
+   "query": "Questions regarding purchasing on google store",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21119",
+   "query": "Is it ok to charge my Nexus S with an iPhone power adaptor?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21151",
+   "query": "Red Star And Green Cross Icons?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21240",
+   "query": "Is there a way to temporarily disable hosts and flush the DNS?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21280",
+   "query": "Gift app on Google Play",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21296",
+   "query": "How can I find out the Wi-Fi password from android setting",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21512",
+   "query": "Transformer Prime, VPN and password protection",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21515",
+   "query": "Cannot install Draw Something on Galaxy Mini GT S5570",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21520",
+   "query": "Can't boot my Htc Wildfire S after deleting Sense",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21556",
+   "query": "Contacts with and without international extensions",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21616",
+   "query": "Can I install additional languages on Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21654",
+   "query": "Can someone explain how the android GPS Navigation works?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2172",
+   "query": "What's the most effortless way for \"cloud\" back up of photos taken with an Android phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21779",
+   "query": "Why does the STORE button on Amazon Kindle go to the website instead of the in app store?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21861",
+   "query": "Can I use my phone as an audio device via Wifi?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_21991",
+   "query": "could someone please post a screenshot of the default file structure of the sd card for Android 2.3.5? I",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22003",
+   "query": "install certificates",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22028",
+   "query": "mobile phone calls on Huawei MediaPad",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2203",
+   "query": "How can I turn off the shutter sound for the camera on droid x running 2.2 froyo?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22133",
+   "query": "How do I clear learned words?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22148",
+   "query": "If I use free WiFi in a hotspot, can data be easily sniffed?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22357",
+   "query": "Amazon Android App Store International",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2254",
+   "query": "Spell Check app or setting while using drop down keyboard",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22778",
+   "query": "See Youtube videos in Anaglyph mode",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22802",
+   "query": "WIFI share a reverse tethered connection",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22841",
+   "query": "How to enable multiple users on Google Talk for Android 2.3.4?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22905",
+   "query": "I can't update my Nexus S, shows error screen. What to do?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_22912",
+   "query": "Can deleting stock web browser cause problems?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23055",
+   "query": "What is error code 495 on Google Play and the YouTube app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2310",
+   "query": "How will a swap partition/file affect the system?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23404",
+   "query": "How to make run only a single application with all other application stopped?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23440",
+   "query": "How do I get Youtube Links to open in the YouTube app and not a browser?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23508",
+   "query": "Aoson M19 -- Device Drivers",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23513",
+   "query": "How often app is used?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23537",
+   "query": "Transferring Apps from sd card to another sd card(HTC Desire HD)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23620",
+   "query": "Updating GPlus Signature Error",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23622",
+   "query": "How do I keep my Android 4.0.3 phone awake when USB connected?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_23710",
+   "query": "Rooting my phone and installing CyanogenMod. Can I ever go back?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2405",
+   "query": "Can I manually rotate my phone while auto-rotation is disabled?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24079",
+   "query": "Can (ringer) volume only be locked by hacks/apps or is there a easy way?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24084",
+   "query": "List of open ports on Android",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24126",
+   "query": "How to root Coby Kyros - mid7016 tablet",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24293",
+   "query": "Upgrade Samsung Galaxy II  to Android 4.0?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2432",
+   "query": "How to backup Angry Birds saves/data?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2437",
+   "query": "Can I use multiple Android devices with a single Google account?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24379",
+   "query": "What is this VPN setting good for?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24427",
+   "query": "Can't mount sdcard from Recovery Mode/Clockworkmod",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24570",
+   "query": "Why do phones have default limited user rights (not rooted)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2461",
+   "query": "How to use an android phone as a wireless webcam?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2462",
+   "query": "Does Froyo fix Samsung Galaxy S I9000's GPS problem?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24646",
+   "query": "Is there any way to sync a subset of my Google Contacts to my Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2466",
+   "query": "How do I backup and restore SMS Messages?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24825",
+   "query": "How to pull the apks from my android phone",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_24959",
+   "query": "Cannot see my device in Dalvik Debug Monitor",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25149",
+   "query": "Child-proofing an Android phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25178",
+   "query": "Can an Android text message set off an alarm?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25193",
+   "query": "Where are clicked URLs stored? Is there a way to save them into a file?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25278",
+   "query": "Fix a damaged microsd card?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25422",
+   "query": "How can I automatically disable the onscreen keyboard when a Bluetooth keyboard is connected?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25635",
+   "query": "Turning on Wi-Fi on demand",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25693",
+   "query": "How to have a long Standby and Battery -life?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25707",
+   "query": "Why my phone is always out of space recently, but I didn't install any new software",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25750",
+   "query": "Unable to download from an authenticated webserver",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2581",
+   "query": "App that reads images of QR codes?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25847",
+   "query": "Will I lose any apps / data if I upgrade my phone's OS?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25905",
+   "query": "Accessing the Android Phones SMS and other feature via Data Cable",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_25948",
+   "query": "Recover deleted content from userdata partition?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26001",
+   "query": "Where is \"Stay Awake\" option in Ice Cream Sandwich on the Galaxy S3?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26142",
+   "query": "How can I execute a script on the SD card and be able to pass arguments to it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26157",
+   "query": "How to find out the variant of my Galaxy Nexus?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26170",
+   "query": "Package file is invalid",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26226",
+   "query": "Disable ads in applications?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26238",
+   "query": "SMS thread retrieval",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26239",
+   "query": "Can Android be installed on the new Win8-Intel Ultrabooks slated to come out late-12 early-13",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26372",
+   "query": "Find lost device without Gmail account configured and without SIM card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26463",
+   "query": "Android debugging-Boot Loops: Is there any way to get a log of information without ADB? Can the emulator even help?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26745",
+   "query": "Can Google Play be installed on Andoid Virtual Device, running API 10 (Android 2.3.3)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_26826",
+   "query": "Transfer all Contacts in Phone and Sim to Google Contacts",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27007",
+   "query": "Where does Google Play store its ebooks on an Android device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27224",
+   "query": "How to configure BlueStack AppPlayer to use Proxy settings when connecting to Network?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27321",
+   "query": "Why can't the su binary simply be copied (techical response please)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27387",
+   "query": "How can Iget different sounds for different notifications?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27415",
+   "query": "How to set up Google Apps Gmail on an Android -phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27417",
+   "query": "Galaxy phone turns on every minute for no reason",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27673",
+   "query": "Why GPS is never found?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27725",
+   "query": "Does Bluetooth drain power when it's not in use?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2773",
+   "query": "How can I disable the notification sounds while playing music?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27816",
+   "query": "Unable to move few Apps to SD Card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27821",
+   "query": "Android phone discharges when it has 20%",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_27996",
+   "query": "Failing to update android 4.1 - Galaxy Nexus",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28551",
+   "query": "Why can't android connect to an ad hoc hotspot?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28637",
+   "query": "How to toggle wi-fi, gps etc quickly in HTC Sense?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28652",
+   "query": "Unregister device in Google Play",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28662",
+   "query": "Rooting Stock Firmware - GSII with NFC",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28711",
+   "query": "Find lost acer android tablet without a tracker installed",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28745",
+   "query": "USB charging in host mode",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28851",
+   "query": "Increase vibrate strength",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28896",
+   "query": "Using Android only with Outlook and not Google Calendar",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_28970",
+   "query": "How to make point to point VOIP call between two Android devices?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2906",
+   "query": "Knowing which applications to stop",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29109",
+   "query": "How can I format a flash drive using terminal emulator?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29152",
+   "query": "Set two languages simultaneously for the stock keyboard?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_2916",
+   "query": "Is there any way to change the emoticons in the standard android sms app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29208",
+   "query": "Locating lost android device in home",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29223",
+   "query": "How can I find out the make and model of the chips in my device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29452",
+   "query": "Problem partitioning SD",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29502",
+   "query": "How can I make a route offline in Google Maps?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29538",
+   "query": "execute linux commands on android froyo",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29631",
+   "query": "is there a way to know what CPU, GPU, RAM my phone / tablet has?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29769",
+   "query": "How do I connect to a wifi ap and 3g network simultaneously?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29845",
+   "query": "Share App list with friends?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_29907",
+   "query": "Google Services hogging data - how to stop it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30030",
+   "query": "Record Speaker-Out Sound (not microphone)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30095",
+   "query": "How does the typical Android boot process work?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30144",
+   "query": "How can I track my app usage?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30216",
+   "query": "Google Chrome for Android: Chrome Web Store",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30293",
+   "query": "How can I change the user agent string sent by Chrome on my Nexus 7?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30332",
+   "query": "How can I stop applications and services from running?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30448",
+   "query": "How to move Applications from phone to SD Card?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30487",
+   "query": "Develop Java Swing Applications  on Android",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30541",
+   "query": "Find lost Samsung Galaxy Ace phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_30674",
+   "query": "How can I control both volume and track skip on my Android device from my headphones?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_3072",
+   "query": "In my Samsung Galaxy S under Settings - Status - Phone number is says 'unknown': Why?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_3079",
+   "query": "How to play a YouTube clip in background/minimised?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_3106",
+   "query": "Does ClockworkMod Recovery's \"Wipe Data\" command also wipe the SD card?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_31811",
+   "query": "Android full support offline map",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_31858",
+   "query": "Android Jelly Bean: fix search button",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32009",
+   "query": "Why my S3 device sounds when magnetic card is put on its back?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32106",
+   "query": "List all free application on google play",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32115",
+   "query": "More internal memory or less memory + SD card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32298",
+   "query": "How to tether WiFi-internetconnection with Nexus 7 on a PC without WLAN via USB?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32312",
+   "query": "Will flashing re-lock my unlocked phone",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32373",
+   "query": "35 mb in proc folder",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32405",
+   "query": "Differnce between abilities of System apps, Apps in phone memory and Apps in the SD card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32598",
+   "query": "How to root the new version of the ONE X",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32759",
+   "query": "Disable open Google Search by sliding up from the home button \"feature\"?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32789",
+   "query": "How can I assign a Windows drive letter to my \"portable drive\" (Samsung Tab 10.1)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32829",
+   "query": "How can I SSH into my Android without rooting it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32878",
+   "query": "Google Play app dissappeared",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32914",
+   "query": "HTC Desire - ran out of storage - can't interpret solutions offered - need help!",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32974",
+   "query": "Trying to factory reset, but it's not listed at all as an option",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_32979",
+   "query": "Internal hard disk partitions (sda2) not showing in android system",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33308",
+   "query": "Samsung Galaxy Tab, charging technique through USB Cable",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33329",
+   "query": "How to make cell phone using GPRS/3G a WiFi-Hotspot",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33496",
+   "query": "Where are the developer options in Android 4.2?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33512",
+   "query": "Does Google Audit all apps that enter the market place?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33515",
+   "query": "How can I find out what app is using my GPS from the background?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33526",
+   "query": "Turning off just email notification sound",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33702",
+   "query": "Google play fails to install application with RPC:S-5:AEC-0",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33728",
+   "query": "Where can I get the QR code for an app on the Play Store?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33798",
+   "query": "How to migrate applications to other user account without downloading the applications again?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_338",
+   "query": "Is there any app for Stack Exchange?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33894",
+   "query": "I have a Binatone Kidzstar and can't install android market or google play",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33941",
+   "query": "Is there a way to extend the MK802 III's memory?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33964",
+   "query": "How can I make an actual heart symbol in a text on my htc inspire?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_33994",
+   "query": "What is the length and breadth of ONLY the screen in the Nexus 7?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_34507",
+   "query": "Will my Android device change to Gingerbread when I factory reset it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_34618",
+   "query": "How can one move the position of the application inside the launcher?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_34625",
+   "query": "Where to find description of all \"/system/bin/service\" calls?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_34704",
+   "query": "Why does Spotify say that there is no Internet connection available when there is one (Samsung Galaxy S)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_34948",
+   "query": "What is the status icon that looks like a house?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_34984",
+   "query": "Samsung Galaxy Ace: will it charge me to connect to home wifi?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_35189",
+   "query": "How can I get my Galaxy S3 to behave at night? (turn off LED and notifications, etc.)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_3521",
+   "query": "Is it possible to install Android on a PC?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_35351",
+   "query": "LG Optimus Logic Transferring apps to Micro SD instead of internal memory",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_35541",
+   "query": "Why did /sdcard/ turn into /sdcard/0/ with 4.2?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_35931",
+   "query": "Why is there such a difference in thr amount RAM used?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_35956",
+   "query": "Is there any other way to get updates to frozen apps?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_36182",
+   "query": "Change stock Clock app timer noise?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_36468",
+   "query": "How to get rid of bogus \"Phone storage full\" message (cannot send SMSs)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_36706",
+   "query": "LG L3 : difference between system memory and internal memory",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_36794",
+   "query": "play & loop video on startup",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_36822",
+   "query": "Is it possible to filter Google Play search results by permission?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_36899",
+   "query": "What are \"Manual Updates\" in Google Play Store?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37",
+   "query": "How do I change the name of my Android device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37020",
+   "query": "What are Android's secret telephony codes?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_3717",
+   "query": "how to close an application in android",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37230",
+   "query": "Is it possible to install two instances of a same app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37246",
+   "query": "How to make 3G Video Calls?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37371",
+   "query": "Making multiple files or a folder available offline in Google Drive",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37397",
+   "query": "Where can I see if a developer responded to my comment on the Google Play?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37417",
+   "query": "How to change camera default save location?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_3742",
+   "query": "Is it possible to upgrade my HTC Legend to Froyo without waiting for over the air updates?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37590",
+   "query": "Android Automatically Adds Shortcuts To Home Screen",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37599",
+   "query": "Flash Player does not work on Android 4.0 and upwards",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37736",
+   "query": "Why do I have so little unused RAM?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37787",
+   "query": "LG Lucid doesn't recognize SD card as extra memory when dealing with photos",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_37855",
+   "query": "Android tablet won't reboot after rebooting using volume and power buttons",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_3799",
+   "query": "Is there a Word Lens alternative/port for Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38002",
+   "query": "USB storage blank or unsupported filesystem",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38010",
+   "query": "How to change lock screen on a phone like it is on a Kindle Fire?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38123",
+   "query": "Hide Developer Options in Android 4.2",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38246",
+   "query": "android 4.2.1 installation error on N7000 error",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38351",
+   "query": "How to install additional fonts?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38409",
+   "query": "Scripting Android",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38486",
+   "query": "How to tell if a phone is rooted?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38510",
+   "query": "LG Optimus Logic - Moving apps to SD",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38610",
+   "query": "resolve zeroconf-style \"hostname.local\" names",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_38806",
+   "query": "Does anyone know this icon?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_390",
+   "query": "How to backup an Android device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39128",
+   "query": "Is it possible to pre-download a YouTube video to view it later offline?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39137",
+   "query": "Does nexus 4 work with indian network",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39160",
+   "query": "Getting a list of applications with SMS permission",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39230",
+   "query": "How do I scroll to the top of a list?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39344",
+   "query": "apps wanting setting control",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39382",
+   "query": "rooting Samsung Galaxy Note 2",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39424",
+   "query": "Why does my phone have erroneous input when connected to a non-OEM power source?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39435",
+   "query": "Can I stop installed apps adding their icon to my homescreen?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39583",
+   "query": "How can I disable the volume warning if you raise the volume too much?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39707",
+   "query": "Is there a way to hide pictures from being shown in Gallery",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39805",
+   "query": "Removing second SIM signal sign from notification",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_39809",
+   "query": "Insufficient memory to download apps from playstore?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40028",
+   "query": "Can't take screenshots on Nexus 4",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40030",
+   "query": "Is it possible to install unmodified, unadulterated and pure Android on a Sony Xperia S?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40304",
+   "query": "Using a phone without data plan for multiplayer game dev",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40383",
+   "query": "Can apps know where you are even without GPS?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40446",
+   "query": "Why is \"Android OS\" uploading so much data?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4062",
+   "query": "How do I change the default phone number?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4064",
+   "query": "How to put a Call contact using Skype shortcut widget on the home screen?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40754",
+   "query": "How to replace Cyanogenmod dialer/contacts/messaging(texting) apps?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40813",
+   "query": "Add user (personal) dictionary to Android stock keyboard for unsupported languages",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40897",
+   "query": "How to stop this type of service in Sony Xperia MT27i?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40917",
+   "query": "wpa_cli not found on rooted device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40924",
+   "query": "Block apps from accessing the Internet on Android device",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40934",
+   "query": "Use an Android tablet as a Wacom drawing tablet for a PC?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_40963",
+   "query": "How do I remove previously download apps from my Google Play account?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_41023",
+   "query": "Pinning Web Sites to Android Homescreen",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_41496",
+   "query": "Import pdf files to google play book application",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_41514",
+   "query": "Getting rid of Status Bar on 4.1",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_41548",
+   "query": "How to unlock and root a Sony Ericsson Xperia Ray ST18i with 4.1.B.1.13",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4158",
+   "query": "HTC Desire Z Home Screen has Stopped Rotating, wat do?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_42097",
+   "query": "How can I root my galaxy S3 i9300 on android 4.2.2 Jelly Bean?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_42325",
+   "query": "Is it possible to change the system language to Japanese?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4251",
+   "query": "Remote login into the phone from a PC",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4267",
+   "query": "How can I configure my phone for MMS?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_42681",
+   "query": "\"google settings\" app",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_42761",
+   "query": "Connecting to Adhoc Wifi",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_42771",
+   "query": "\"Application has stopped unexpectedly\" error when starting Play Store or browser. How to fix?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_42820",
+   "query": "How to Install Android Apps to the SD Card by Default",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_42854",
+   "query": "Is it possible to use adb backup in order to make a clone of a tablet?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_43176",
+   "query": "Home button or back button to leave an app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4319",
+   "query": "How can I get Kies to detect my Galaxy S GT-i9000 on Windows 7?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_43482",
+   "query": "Double Security for Gmail",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_43517",
+   "query": "Installing to SDCard by default",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_43718",
+   "query": "How do I configure Dropbox in my Galaxy S III so that it does NOT automatically upload every photo/video I take?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_43795",
+   "query": "Can Android tablet read external hard drive and if so which formats?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_43876",
+   "query": "Decrypting TitaniumBackup files",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_43998",
+   "query": "Indic font(Kannada) is not rendering properly in Android ICS",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_44220",
+   "query": "Need to unlock Coby tablet; MicroSD card not formatted",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_44270",
+   "query": "How can I reduce screen brightness below the minimum without an app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4447",
+   "query": "What percentage of users use each of the Android versions?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_44608",
+   "query": "Google Maps Location History is showing an incorrect location",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_44620",
+   "query": "How do I make Android consider my WiFi Access Point as valid (blue?)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_44860",
+   "query": "Play store stuck in old country",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_44861",
+   "query": "How can I use 2G voice calls in Nexus 7",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_44918",
+   "query": "Can a 3rd party app *technically* take better pictures?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_45",
+   "query": "How to monitor the amount of data traffic?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_45054",
+   "query": "forgot my google account password",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_45069",
+   "query": "Show messages on lock screen",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_45071",
+   "query": "Multiple Gmail notifications",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_45361",
+   "query": "If I delete a game that I've downloaded from google play, can I still install it later?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_45446",
+   "query": "How do I root Android 2.3.3 on HTC Desire?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_45631",
+   "query": "My Camera on my android tablet isn't letting me take any pictures. help?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_45944",
+   "query": "Google “Play Music” app constantly running!",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_46060",
+   "query": "Double message notifications after upgrading Talk to Hangouts (CyanogenMod 7.2)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_46065",
+   "query": "How to fix a broken icon on an android phone",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_46186",
+   "query": "what is a bootloader unlocked phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4623",
+   "query": "I have sold my phone on eBay. What should I do before I send it off?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_46259",
+   "query": "Google+ Photo Backup Failed",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_46296",
+   "query": "Can I download a paid app on a second device from Google Play?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_46552",
+   "query": "Copy contacts from iCloud to Android phone",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4657",
+   "query": "jar file on samsung galaxy p1000",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_46597",
+   "query": "Mini Calendar Widget not updating to today",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_46806",
+   "query": "Why are Android apps getting rid of \"Quit\" functionality?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_4706",
+   "query": "How can I set a Screen Lock Timeout?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_47202",
+   "query": "How to remove this sliding app section?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_47213",
+   "query": "How can I turn off text message (SMS) sync to e-mail inbox on Samsung Galaxy S4?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_47290",
+   "query": "Symbolic link to Dropbox",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_47577",
+   "query": "Battery percentage going down while charging!",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_47613",
+   "query": "How to optimize my Rooted desire bravo for gaming?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_47650",
+   "query": "What is the difference between the Linux Kernel and the Android Kernel?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_47651",
+   "query": "search somebody from contacts with the numpads",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_47822",
+   "query": "Android File Transfer problem",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_48012",
+   "query": "Find my iPhone equivalent",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_483",
+   "query": "How can I get my Chrome-synced bookmarks in an Android device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_48364",
+   "query": "Are there earphones with support for buttons similar to the OEM earphones?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_48720",
+   "query": "I modified vold.fstab and lost access to my SD card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_48839",
+   "query": "SMS converts to MMS and only sends when data mobile is on",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_48931",
+   "query": "How to change System Language in Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_49079",
+   "query": "Will my phone will get locked after upgrading to Jelly Bean?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_49271",
+   "query": "samsung s4 has suddenly started calling through Skype instead of the local network",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_50040",
+   "query": "How to install games from APK Mania on MicroSD Card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_5005",
+   "query": "Android Market Stopped Working",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_50448",
+   "query": "Can tablets differentiate between regular wi-fi and mobile hot spot?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_50611",
+   "query": "Facebook version 3.5. - sort news feed",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_50751",
+   "query": "Can your android device get malware?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_5084",
+   "query": "How do I change the default Complete Action With?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_50901",
+   "query": "What's the native wallpaper resolution of HTC One?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_51153",
+   "query": "How to find the unboxing date of an Android device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_51252",
+   "query": "Remote factory reset and changing Google password",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_51601",
+   "query": "S-voice on Samsung Galaxy S4 \"No response from server...\"",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_51645",
+   "query": "Can `Phone Calls` application permission allow developer to read my contact book?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_52044",
+   "query": "How to copy my contacts with a broken touchscreen and buttons to the computer",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_52046",
+   "query": "Ways to remove android device encryption",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_5206",
+   "query": "Wifi goes off on screen lock?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_52140",
+   "query": "How to reach local computer via machine name instead of IP?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_52403",
+   "query": "How do I decrypt files on SD card that I encrypted on a different device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_52498",
+   "query": "Enable tamil font without rooting the phone",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_5251",
+   "query": "How to enable real text prediction for android / stock keyboard on LG optimus one?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_52929",
+   "query": "Built-in alarm, calendar suddenly talking to me. How can I shut them up?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_53064",
+   "query": "How can I ensure reliable updates for an Android phone/device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_53256",
+   "query": "Is it possible to mount .iso files (virtual optical drive) on Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_53467",
+   "query": "Do I have a virus on my phone? A message from an Android app says so",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_53497",
+   "query": "Android app for decorating destination numbers",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_53572",
+   "query": "Why does my phone need 20MB before it can recieve text messages and can I do anything about this?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_53672",
+   "query": "How do you close apps in Android so they aren't taking up resources?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_53898",
+   "query": "Pulling boot.img",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_54069",
+   "query": "Rooting - how to, and what are the consequences\\risks",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_54144",
+   "query": "How to NOT charge when USB debugging?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_54175",
+   "query": "How can I download apps from Google Play to my Tab using my PC's Internet connection?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_54237",
+   "query": "Galaxy Note is getting slower and less responsive",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_54337",
+   "query": "How can I make a message appears on my PC when my phone is ringing?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_54590",
+   "query": "LG L5ii move the apps from internal memory to SD card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_5471",
+   "query": "Problem with my thumbnails in gallery",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_54839",
+   "query": "How to lower down the volume more than by default?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_549",
+   "query": "Is Internet  tethering possible on Android phone via bluetooth or WiFi?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_54919",
+   "query": "rooting xperia tipo dual st21i2x",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55010",
+   "query": "google play authentiction required",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55067",
+   "query": "Getting rid of stale notification icons in the notification _bar_?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55124",
+   "query": "Turn On Both Wifi and Wifi Hotspot",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55272",
+   "query": "Can you disable need to okay the unlock passcode?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55366",
+   "query": "What is DiskCacheIndex.tmp",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55624",
+   "query": "Control volume of particular app",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55733",
+   "query": "How to check if application on Google Play would work on other (not own) phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55866",
+   "query": "Is it possible to kill your phone sofwarematicly?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55887",
+   "query": "Samsung Galaxy S4 SCH-I545 official updates via Kies fails with: \"Software update is temporarily unavailable. Try again later.\"",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55933",
+   "query": "Possible digitizer problem?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_55953",
+   "query": "What is this N-shaped icon on my HTC One?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_56119",
+   "query": "How do you add widgets to the lockscreen in KitKat?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_56252",
+   "query": "How do enable \"Haptic Feedback\" on on my Samsung Galaxy Young GT-S5360T",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_56258",
+   "query": "Application downloading error (919)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_56269",
+   "query": "What are the different signal indicators avalable on the notification bar?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_56477",
+   "query": "Can you screen save on a Nexus 4?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_5667",
+   "query": "How do I perform a full pre-rooting backup of an Android phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_56784",
+   "query": "Google Drive crashes on start",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_57001",
+   "query": "My new phone isn't listed as a device in the Android Device Manager, how can I register it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_57211",
+   "query": "Is it possible to send and receive faxes over an Android phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_57257",
+   "query": "Unknown error code during application install: \"920\" while installing Google Keyboard",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_57295",
+   "query": "Multiple Android Tablet remote update, pushing settings, device lock-down",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58056",
+   "query": "How to change the storage device mountpoints",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58221",
+   "query": "Upgrading to 4.4 on rooted Nexus 4, custom recovery, custom kernel without losing data",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58318",
+   "query": "How to revert to stock ROM Kitkat 4.4 from PACman?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58322",
+   "query": "Xperia J sound very low with earphones and headphones",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58346",
+   "query": "Disable PIN Unlock with Certificates and WPA2 Enterprise",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58459",
+   "query": "Downgrade Nexus 4 from 4.4 to 4.2",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58499",
+   "query": "How to sign into another account in the gmail app on phone",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_5855",
+   "query": "how to completely disable lockscreen?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58623",
+   "query": "Is it possible to turn off radio without turning of wifi on Lenovo k900?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58665",
+   "query": "Why my nexus 5 is not getting on air update for Android 4.4.2",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58770",
+   "query": "Is it safe to use phone while charging with portable powerbank?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58793",
+   "query": "What is LOST.DIR and what is its purpose?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58843",
+   "query": "Turn a Android Phone with broken screen into dedicated Web server",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_58906",
+   "query": "Xperia sola rooting help",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_59098",
+   "query": "Cant add exchange Account 4.1.2",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_59270",
+   "query": "App icons disappear from home screen on app update",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_59632",
+   "query": "Which Android handsets support in-line call recording?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_59689",
+   "query": "HTC wildfire S storage issue!",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_59726",
+   "query": "Can swapping a SIM while phone is on, damage the phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_59861",
+   "query": "Error when downloading application from the play store: RPC: S-3",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_60547",
+   "query": "How can I download apps to the SD card with space instead of my phone storage?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_60838",
+   "query": "How to access USB drive with android browser?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_609",
+   "query": "How to post a link to an android market app?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_60940",
+   "query": "Not able to send media file via WhatsApp",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_61184",
+   "query": "iRola DX752 will not charge",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_61198",
+   "query": "robot dies with red triangle when restarting from 4.2 install on stock Samsung Galaxy Nexus",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_61210",
+   "query": "Can you remotely download AndroidLost to your phone if your phone battery is dead?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_61246",
+   "query": "Can I use an external touchscreen with the Nexus 4?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_61297",
+   "query": "How to use PC internet on Android mobile via Bluetooth",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_61311",
+   "query": "Cant connect S3 with CM 10.2 to adb",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_61323",
+   "query": "i have lost my images by deleting them but now i want them back",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_61866",
+   "query": "I can't delete my messages",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_62120",
+   "query": "Can an app make phone calls in the background",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_62217",
+   "query": "Backup paid app from Google Play",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_62349",
+   "query": "How can I stop being redirected to the App Store/Google Store by dodgy ad-scripts?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_62373",
+   "query": "Google Play Store - No Connection (Galaxy Note 3)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_62376",
+   "query": "Set Default Keyboard without having to long hold text input?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6240",
+   "query": "2.1 as a secure access point?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_62552",
+   "query": "Undo functionality while editing text",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_62749",
+   "query": "How can I know which app is giving me notification sounds?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_63014",
+   "query": "Can't see profile pics of friends from an unknown number",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_63025",
+   "query": "How can I customize the time to update my android applications?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_632",
+   "query": "Alternatives to the Android Market",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_63322",
+   "query": "Disable screen lock on samsung galaxy pocket gt s5300",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_63346",
+   "query": "PHone rebooting when screen turns off",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_63386",
+   "query": "Android x86 Issues",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_63983",
+   "query": "Possible to set custom ringtones for Nexus 5 contact groups?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64186",
+   "query": "Wifi not working too well.. :c",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64266",
+   "query": "Galaxy s2 data retrieval",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64381",
+   "query": "Workaround for Android 4.4 not being able to write to SD cards?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64520",
+   "query": "How to stop Android assuming all wi-fi connections give internet access",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64547",
+   "query": "Is it possible to \"hard-wire\" an app so that it is the only thing accessible to users?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64569",
+   "query": "mm-qcamera-daemon causing massive battery drain",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64676",
+   "query": "What is the difference between AOSP and CM/AOKP?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64848",
+   "query": "How do I check if my nexus 7 is from 2012 or 2013?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6494",
+   "query": "Restrict market updates to WiFi network",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64944",
+   "query": "Are custom ROMs really required?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_64974",
+   "query": "Android 4.4 default button restoration?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65069",
+   "query": "I have the error that an application has been force stopped",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65097",
+   "query": "THE resource for rooting your phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65261",
+   "query": "1GB/8GB advertised versus 967.5 MB / 5564.6 MB actual .HELP",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65288",
+   "query": "How do I connect a PS3 Controller with Xperia P?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65366",
+   "query": "Installing TextSecure, but missing Google Play",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65394",
+   "query": "How can i transfer phone memory apps to external SD card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65442",
+   "query": "Howto encrypt my external SD card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6557",
+   "query": "Messages on computer?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6567",
+   "query": "Can gmail notifications be customized by label?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65744",
+   "query": "Show Android's screen full-screen on a laptop",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65762",
+   "query": "How do I remove gapps from CyanogenMod",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65816",
+   "query": "How to change IP pool for WiFi tethering on Nexus 5",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65860",
+   "query": "Inkpad Notepad failing to install",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_65878",
+   "query": "How to prevent android from auto-sync'ing gmail contacts and photos",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6603",
+   "query": "Do I need to reboot my HTC Desire periodically?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_66285",
+   "query": "What is the list of commands to dictate punctuation, capitalization and line breaks?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_66538",
+   "query": "Clear Google Play Failed Download Space",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_66595",
+   "query": "Android tablet pc will not connect to (router) wi fi",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6693",
+   "query": "Support for Multiple Users on same device",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_67068",
+   "query": "Whats app last seen status not visible",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_67136",
+   "query": "Download previously purchased",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_67157",
+   "query": "How does the Heartbleed security vulnerability affect my Android device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_67317",
+   "query": "Is it possible to stream from an Android Nexus tablet to an apple airport express?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_67504",
+   "query": "Streaming sound from laptop to android",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_67714",
+   "query": "why smartphones become laggey and slow with time?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_67797",
+   "query": "Android Version Distribution BY COUNTRY",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_67878",
+   "query": "Want to try reformatting Damaged SD Card",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6815",
+   "query": "Android tool to find what's taking space, and delete it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_68235",
+   "query": "Data sms need info",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_68447",
+   "query": "What is this fingerprint bar on my phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_68459",
+   "query": "-24 Google Play Error on installing eBay",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_68680",
+   "query": "Issue with CyanogenMod softbuttons after theming",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_68687",
+   "query": "How to unlock Google Device Manager remote lock?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_68889",
+   "query": "How to recover my files from memo and mobilse note after format factory?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6908",
+   "query": "Wi-Fi tethering with HTC Magic",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_69304",
+   "query": "Nexus 5 won't connect to my car radio via Bluetooth",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_69387",
+   "query": "Error retrieving information from server [RPC:S-7:AEC-0]",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_69480",
+   "query": "Why is an android ROM device specific?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_6949",
+   "query": "Can I use ADB without connecting over USB?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_697",
+   "query": "How to open Microsoft Excel files?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_69759",
+   "query": "Unassociate an app from a file extension?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_69770",
+   "query": "Is it always possible to reboot the phone without removing the battery?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_69779",
+   "query": "whats app deletion",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_69837",
+   "query": "Change default Hotspot IPAddress (192.168.43.1) or mac address",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7003",
+   "query": "Markdown note taking with Dropbox sync",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7064",
+   "query": "Is there a zoom and timer functionality on Nexus S camera?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7081",
+   "query": "Are there any \"iptables like\" firewall for Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7135",
+   "query": "Difference between Super LCD screen of Nexus S and Super AMOLED screen of Samsung Galaxy S -- Which is better?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_71565",
+   "query": "how to turn off voice command for blind and low vision",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_71611",
+   "query": "Recovery contact after factory reset",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_71613",
+   "query": "Make a calll to genymotion emulator",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_71693",
+   "query": "Should I charge new LG G2 for 6 before first use",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7237",
+   "query": "Is it possible to change how Froyo hyphenates phone numbers?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_72900",
+   "query": "Share USB reverse tethering connection via WiFi hotspot on Windows",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_72943",
+   "query": "Does an android phone unroot itself on factory reset?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_73045",
+   "query": "How can I access my intranet site in mobile",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_73075",
+   "query": "ADB shell: change IME method gives error \"Unknown ID: null\"",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_73089",
+   "query": "How to block texts from certain number",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_73197",
+   "query": "Deactivation of cell broadcast of HTC onemax dual sim (AT860)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_73275",
+   "query": "Is it possible to install applications on the SD card in KitKat 4.4?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_73392",
+   "query": "Android phone fell in salt water",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_73415",
+   "query": "Android hangs on boot image after changing boot image",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_74612",
+   "query": "Installation of apks in Bluestacks",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_74672",
+   "query": "Difference between /storage/emulated/0/ and /storage/emulated/legacy/?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_74798",
+   "query": "Apps which change region in google play store",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_748",
+   "query": "Can you connect USB devices to an Android phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_74828",
+   "query": "Reverse Tethering",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_74933",
+   "query": "Should I switch to ART?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75030",
+   "query": "File deleting problems after Android v4.4.2 upgrade?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75056",
+   "query": "Will Nexus 5 be allowed to update to Android L?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75260",
+   "query": "How can i transfer my whatsapp chat history to my new phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75382",
+   "query": "Odin vs Clockworkmod",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75520",
+   "query": "Can I change the way photos are numbered?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75755",
+   "query": "Android Play store",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75848",
+   "query": "how can i acces files on my pc remotely from my android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75889",
+   "query": "QR-code reader keyboard",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_75916",
+   "query": "Monitor outgong web requests as they’re happening",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7680",
+   "query": "When will my device get the Android 3.x update (Honeycomb)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_76976",
+   "query": "How to Install App as System App",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_76996",
+   "query": "confusion about external memory",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77102",
+   "query": "no matter what i do my tablet has 0mb space available",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77104",
+   "query": "How to encrypt android device without screen lock?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77106",
+   "query": "Application to block icon movements on home pages",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7731",
+   "query": "What is an \"Emergency Call,\" and can I  set number for it?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77444",
+   "query": "BLUETOOTH HEADSET USING ANDROID",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77542",
+   "query": "\"adb devices\" shows device as \"unauthorized\". How can I fix this?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77601",
+   "query": "how to freeze/hibernate system apps in non-root android mobilephones",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7763",
+   "query": "Application for automatic synchronization of remote folders?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77670",
+   "query": "Charging Nexus 5 to 100%",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7772",
+   "query": "How to access internet on my  HTC Desire from my pc with USB?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7774",
+   "query": "Suggestions for syncing data to someone besides Google? Funambol?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77838",
+   "query": "How to find release date for Google Play apps?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77858",
+   "query": "how to take a backup of my calender events in galaxy ace duos",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_77981",
+   "query": "Installing cyanogenmod 11",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78045",
+   "query": "OTG cable shaport",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78113",
+   "query": "Will my alarm still go off?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78118",
+   "query": "how to stop an app upgrading?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78373",
+   "query": "google play uses wrong account for in-app purchases",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78397",
+   "query": "Why are USB cables of two different OEM's different",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78472",
+   "query": "My phone is sending messages to international number",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78576",
+   "query": "Programmatically, how does \"rooting\" a device enable access?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7866",
+   "query": "Unwanted folders showing up in Gallery. Can they be removed?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78682",
+   "query": "Samsung Galaxy Grand 2 Showing less RAM",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78711",
+   "query": "Older version of Plenty of Fish or POF application",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78828",
+   "query": "Nexus 4 not connecting to google server(haven't cleared google service framework)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_78964",
+   "query": "How to have notifications show up on my app on desktop",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_79004",
+   "query": "I can't unlock bootloader on Nexus 7 (2013)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_79085",
+   "query": "HTC One Mini data recovery after root",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_79214",
+   "query": "Re-rooting Nexus 4 after KTU84P Update",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_7932",
+   "query": "How can I set the language in Opera Mini 6?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_801",
+   "query": "What is the difference between jailbreaking and unlocking an Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8025",
+   "query": "Can I use the Google Market without syncing other Google data?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_80703",
+   "query": "Why am I running out of space on my Galaxy S2?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8072",
+   "query": "gallery sort order",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_80723",
+   "query": "There is no os in my htc butterfly in recovery mode. Help!",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8082",
+   "query": "How can I check the OS version of an Android device?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_80901",
+   "query": "ROOTING THE ANDROID DEVICE",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_80936",
+   "query": "Cell standby use about 35-50% of total battery?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_80943",
+   "query": "User 0 on notification screen",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81023",
+   "query": "LG Nexus 4 E960 red light of death",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81025",
+   "query": "Installed Comodo SSL certificate not showing in User in Trusted credentials",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81055",
+   "query": "Captive portal on Android is this Feasible?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81145",
+   "query": "Necessary to manually update gapps?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81210",
+   "query": "How do i send a group messages to iphone users",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81540",
+   "query": "Does having CWM mean bootloader is unlocked?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81597",
+   "query": "Can't open menu in apps without a menu button or physical key",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81812",
+   "query": "Simultaneity connect 2 Bluetooth devices (keyboard and a mouse)",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_81832",
+   "query": "Xperia Go: Boot into Recovery Mode",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_82179",
+   "query": "Charging related question",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_82323",
+   "query": "“Incompatible with other applications(s) using the same shared user ID” when installing Google Play service?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_82440",
+   "query": "problem in installing apps in karbonn A5i",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_82474",
+   "query": "How to view android device screen on PC over adb",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8299",
+   "query": "How to check if GPS is working (Android 2.1, Samsung Galaxy-5)?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8321",
+   "query": "What Tasker Profiles do you use?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_834",
+   "query": "How do I remove HTC Desire pre-installed Android applications?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8436",
+   "query": "Dropbox for Android folder location",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8449",
+   "query": "How can I receive phone calls through Wi-Fi on an Android phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8536",
+   "query": "Restrict access to device settings",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8570",
+   "query": "How to fix \"Invalid IMEI \" after Factory reset?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8576",
+   "query": "Separate ringtone for calls from numbers not in the contact list?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8674",
+   "query": "Can I set the default browser differently for different websites?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_8772",
+   "query": "App for running a (simple) web server on Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9199",
+   "query": "Are there any apps for advanced Japanese learners?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9237",
+   "query": "Disable HTML Emails in composer",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9269",
+   "query": "MS Office Client for Android",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9289",
+   "query": "Why does taking a screen shot require root access?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9325",
+   "query": "icons for Android",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9327",
+   "query": "Auto login to wifi networks",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9361",
+   "query": "How to download unsupported files from the default browser?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_941",
+   "query": "Where are log files located on Android?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9422",
+   "query": "Reinstalling purchased apps on a new phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9541",
+   "query": "Why is \"insufficient storage\" wrongly reported when installing an .apk via adb?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9545",
+   "query": "What are the security disadvantages of rooting an Android phone?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9767",
+   "query": "Other than portability, are there any other advantages (or disadvantages) to storing apps on external storage?",
+   "question_type": "beir_cqadupstack_android"
+  },
+  {
+   "name": "beir_cqadupstack_android_9826",
+   "query": "How to lock screen besides pressing Nexus S right side power button",
+   "question_type": "beir_cqadupstack_android"
+  }
+ ]
+}

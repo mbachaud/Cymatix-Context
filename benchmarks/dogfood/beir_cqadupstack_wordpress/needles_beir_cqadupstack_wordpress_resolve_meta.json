@@ -1,0 +1,4343 @@
+{
+ "date": "2026-10-04T10:59:46.120577+00:00",
+ "db": "F:\\tmp\\beir_cqadupstack_wordpress_bed\\beir_cqadupstack_wordpress.db",
+ "corpus_root": "F:\\Projects\\beir\\beir_cqadupstack_wordpress\\corpus",
+ "min_file_bytes": 1,
+ "needles_total": 541,
+ "needles_resolvable": 541,
+ "dropped": [],
+ "gold_files_wanted": 744,
+ "gold_files_size_gated": 0,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 0,
+ "per_needle": {
+  "beir_cqadupstack_wordpress_100230": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_100547": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_100726": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_100833": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_100939": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_101042": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_101619": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_101834": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_102451": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_10310": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_103181": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_103227": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_104061": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_104307": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_104373": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_104722": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_105641": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_105772": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_10582": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_105940": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_106": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_106371": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_106451": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_106559": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_10706": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_107249": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_109333": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_109646": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_109793": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_109985": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_110349": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_110766": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_110768": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_11085": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_111254": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_112010": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_112043": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_112088": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_112685": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_112773": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_113196": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_113211": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_113235": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_113631": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_113901": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_114225": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_114271": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_114350": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_114581": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_114673": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_114734": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_114909": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_114914": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_115020": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_115021": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_115278": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_115676": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_115783": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_116260": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_116288": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_116514": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_116609": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_116880": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_116917": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_116953": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_11722": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_117349": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_117353": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_117385": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_117546": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_11798": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_11822": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_118731": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_118742": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_11920": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_119271": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_119560": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_119899": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_119988": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120122": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120126": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120193": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120216": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120247": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120339": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120377": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120675": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120710": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_120772": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_121058": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_121132": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_121143": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_121219": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_121406": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_121464": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_121540": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_121686": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_12201": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_123135": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_123182": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_123237": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_12360": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124300": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124341": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124344": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124354": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124358": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 62,
+   "gold_files_resolved": 62,
+   "gold_genes": 75,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124420": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124555": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124573": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124626": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_124848": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_125050": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_125066": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_125200": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_12531": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_125356": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_125634": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_125937": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_125980": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_126186": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_126266": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_126871": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_126942": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_127252": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_127277": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_127487": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_127653": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_128323": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_128535": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_128768": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_12889": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_128969": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_128979": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_129425": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_129497": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_129512": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_129620": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_129865": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_13": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_130158": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_130519": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_130675": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_130926": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_131190": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_131399": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_131405": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_131589": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_131758": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_131767": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_131890": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_131958": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_132179": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_132260": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_132282": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_133545": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_133665": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_133674": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_133953": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_133985": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_134026": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_134062": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_134069": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_134128": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_134249": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_134661": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_134839": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_135083": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_135315": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_135581": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_136322": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_13636": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_136756": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_137307": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_137409": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_137986": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_138051": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_138076": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_138329": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_138627": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_138977": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_139269": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_1395": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_139638": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_139850": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_140139": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_140141": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_140444": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_140966": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_141017": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_141110": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_141117": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_141132": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_141149": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_14169": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_142221": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_142792": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_14306": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_143301": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_143303": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_143540": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_143727": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_144627": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_145589": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_145692": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_145811": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_14677": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_147194": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_147385": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_14773": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_147797": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_147867": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_147885": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_149013": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_149263": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_149850": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_150122": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_1507": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_151384": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_152253": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_152334": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_152453": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_15251": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_15376": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_154271": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_154454": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_154470": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_154579": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_154873": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_156820": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_15699": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_15764": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_157779": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_157865": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_158089": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_158113": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_158194": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_158284": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_15840": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_158432": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_158469": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_158874": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_159089": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_159238": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_16004": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_160041": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_160568": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_160595": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_16414": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_16709": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_16727": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_175": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_17715": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_17947": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_19031": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_194": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_19446": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_19607": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_199": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_20194": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_20196": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_20923": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_2100": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_21152": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_21341": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_21367": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_21634": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_21742": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_21952": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_22134": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_222": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_22943": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_23089": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_23263": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_23710": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_24173": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_24443": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_24650": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_24652": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_24924": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_25099": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_25118": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_25344": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_25385": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_25461": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_26110": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_2623": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_26595": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_2680": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_27832": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_27840": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_27941": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_29338": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_29822": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_30139": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_3041": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_3068": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_31143": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_31512": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_31531": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_32004": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_32297": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_32584": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_33072": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_33193": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_33198": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_33913": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_3396": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_35139": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_35416": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_36017": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_36118": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_36149": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_36174": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_36493": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_36772": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_3725": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_37256": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_3727": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_37828": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_38361": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_39446": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_39665": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_40173": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_40353": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_40805": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_40994": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_41207": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_41634": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_41934": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_42120": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_42586": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_4259": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_42882": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_42891": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_42893": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_43004": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_4307": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_4336": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_43643": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_43657": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_44110": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_44516": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_4514": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_45437": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_458": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_46136": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_46398": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_46469": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_46547": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_47049": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_47346": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_4751": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_477": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_4789": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_48145": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_49020": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_49154": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_49339": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_4984": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_50033": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_50044": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_50092": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_50478": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_50530": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_50649": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_51005": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_51281": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_51444": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_52002": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_5220": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_52330": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_52400": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_52489": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_5331": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_53403": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_53486": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_53866": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_5422": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_55227": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_55522": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_55550": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56206": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56256": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56343": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56476": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56652": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56775": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56779": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56781": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_56966": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_5742": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_57446": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_5748": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_57512": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_57944": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_58391": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_58481": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_58903": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_59590": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_59753": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_59767": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_59891": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_60132": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_60383": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_60831": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_6106": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_61455": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_6163": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_61749": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_62036": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_62054": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_6247": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_62573": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_62820": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_62999": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_63041": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_63098": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_63277": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_63292": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_63418": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_63424": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_63840": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_63917": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_64001": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_64050": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_64389": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_64808": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_65446": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_66180": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_6645": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_66606": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_66943": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_66944": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_67065": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_67480": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_6774": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_67780": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_67790": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_68040": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_69386": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_69388": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_69460": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_69772": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_70203": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_70519": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_70979": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_71000": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_71005": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_71304": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_71381": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_71922": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_72116": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_73031": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_73367": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_73385": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_73782": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_74160": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_74517": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_74853": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_75565": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_75665": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_75723": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_76072": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_76125": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_76216": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_76334": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_76720": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_76943": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_77012": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_77227": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_77424": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_77597": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_77661": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_78062": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_78325": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_78357": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_78368": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_78544": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_78630": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_78792": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_78881": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_79894": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_79903": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_79914": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_80266": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_80454": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_8050": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_81591": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_82051": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_82343": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_82718": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_83102": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_83435": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_83650": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_84254": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_84314": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_84986": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_85416": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_859": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_87264": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_87478": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_87514": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_87746": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_87779": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_88062": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_88093": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_88549": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_89409": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_89886": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_90199": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_90241": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_90939": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_91166": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_9202": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_92103": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_9231": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_92551": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_9308": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_93830": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_94615": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_94682": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_94705": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_95576": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_95799": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_96199": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_96361": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_96563": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_96762": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_96945": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_97895": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_98226": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_98899": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_98913": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_98939": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_98995": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_99042": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_99138": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_99282": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_99338": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_wordpress_99386": {
+   "question_type": "beir_cqadupstack_wordpress",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  }
+ }
+}

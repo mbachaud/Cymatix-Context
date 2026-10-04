@@ -1,0 +1,3264 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_stats_101074",
+   "query": "Nonparametric test when variances are unequal",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_101102",
+   "query": "Can non-normal data be used for factor analysis?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_101455",
+   "query": "Find parameters $\\alpha$ and $\\beta$ of a beta distribution, if I have one quantile and the mean",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_10234",
+   "query": "Meaning of probability notations $P(z;d,w)$ and $P(z|d,w)$",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_102744",
+   "query": "Log and natural log",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_102791",
+   "query": "Convergence of a sequence of random variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_103164",
+   "query": "What are the mathematics I need to learn, before I start research in data mining",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_103345",
+   "query": "My distribution is normal; Kolmogorov-Smirnov test doesn't agree",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_103684",
+   "query": "How to analyze a variable measured on a Likert scale and its interaction with another variable?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_103801",
+   "query": "Is it meaningful to calculate Pearson or Spearman correlation between two Boolean vectors?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_103863",
+   "query": "Are there concerns with doing a generalized additive model with a smoothing term of multiple variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_104029",
+   "query": "Reproduce a confidence interval of linear regression in Excel",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_104110",
+   "query": "What is the difference between a parametric test and non-parametric tests?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_104117",
+   "query": "How to calculate Weighted mean using SPSS",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_104250",
+   "query": "How to determine whether a categorical variable is statistically significant?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_104444",
+   "query": "Econometrics: Panel data without unit identifier",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_104496",
+   "query": "Measures of association, Concordant and Discordant",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_104567",
+   "query": "Centering vs. Standarizing which one is better?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_104970",
+   "query": "Quantitative method to determine necessary and sufficient causes",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_105037",
+   "query": "Kruskal-Wallis test for factorial design",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_10510",
+   "query": "What are good references containing arguments against null hypothesis significance testing?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_10517",
+   "query": "Identify probability distributions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_105277",
+   "query": "How to create a z-score table",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_105309",
+   "query": "Logistic sample and case numbers",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_105382",
+   "query": "Criteria for deleting variables in factor analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_105488",
+   "query": "Structural break test on an arma model any statistical software packages",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_105489",
+   "query": "Representing a distance matrix in the plane",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_105545",
+   "query": "$\\chi^2$ goodness of fit - how to compute expected counts when $\\exists$ unknown parameters",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_105657",
+   "query": "Adding new item to recommender's options?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_106063",
+   "query": "R-squared for linear mixed effects model",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_10613",
+   "query": "Why are p-values uniformly distributed under the null hypothesis?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_106381",
+   "query": "How do I add a \"confidence rating\" to something?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_107898",
+   "query": "Multivariate Hypergeometric Distribution with \"or more\" Successes",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_108085",
+   "query": "Interpretation of Linear SVM Coefficients",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_108211",
+   "query": "Joint test for absolute value of a mean",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_108297",
+   "query": "dichotomizing a predictor variable",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_108697",
+   "query": "Difference between Time series and repeated measures analysis?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_108817",
+   "query": "Estimating the absolute decline of rates",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_109063",
+   "query": "Algorithm for rating books: Relative perception",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_109735",
+   "query": "Homoskedasticity Assumption: Var(y|x)=Var(u|x)=constant?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_110707",
+   "query": "Normal Quantile Quantile Plot Normalization",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_110997",
+   "query": "Finding distribution function",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_111002",
+   "query": "Find relations without confounding variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_11113",
+   "query": "Wrong results using ANOVA with repeated measures",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_111170",
+   "query": "How to interpret log of independent variable in Poisson regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_111419",
+   "query": "Change in regression coeficient using multiple regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_111440",
+   "query": "Normality test with p-value equal to zero",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_111526",
+   "query": "Does it make sense to only drop a specific level of a categorical variable?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_111835",
+   "query": "regression. sufficient dimension reduction",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_112055",
+   "query": "Proper back-transformation of lognormal standard deviation to find confidence intervals around a mean",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_112204",
+   "query": "estimator(preferably unbiased) of $\\ln E[X]$",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_112626",
+   "query": "Weka clustering",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_112779",
+   "query": "APA-style forest plot using metafor",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_112941",
+   "query": "How can I determine local minima from a Kernel Density Estimation?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_113023",
+   "query": "Should I use log transformation for my linear regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_113194",
+   "query": "Do Bayesians believe in Fixed Effect Models?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_113334",
+   "query": "Mann Whitney test with unequal variances",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_11337",
+   "query": "Probability of a certain sum of values from a set of dice rolls",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_113442",
+   "query": "wilcox.test usage in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_113680",
+   "query": "Find linear subsets in a 2D point (xy) data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_113781",
+   "query": "trouble using highfrequency package in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_113831",
+   "query": "Bias in lagged dependent variable",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_113877",
+   "query": "Central Limit Theorem, what does it really say?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_114043",
+   "query": "Clustering using different distance measures",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_114123",
+   "query": "Describing the association between dependent and independent variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_114149",
+   "query": "How to determine whether a set of data are qualitative or quantitative?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_114203",
+   "query": "What is the error on measuring the phase of a sine wave?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_114516",
+   "query": "First order statistics (min) of n non-identical but independent normal variates",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_114674",
+   "query": "lsmeans: how to have mean and SD from pairwise comparison?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_114926",
+   "query": "Generating even-sized clusters in scikit-learn",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_115192",
+   "query": "UnReSolved Mean Adjust DataSet to achieve .5 Mean",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_11546",
+   "query": "Tool to confirm Gaussian fit",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_11602",
+   "query": "Training with the full dataset after cross-validation?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_11691",
+   "query": "How to tell if data is \"clustered\" enough for clustering algorithms to produce meaningful results?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_12174",
+   "query": "Time taken to hit a pattern of heads and tails in a series of coin-tosses",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_12200",
+   "query": "\"Normalizing\" variables for SVD / PCA",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_12469",
+   "query": "Segmented nonlinear regression in R?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_125",
+   "query": "What is the best introductory Bayesian statistics textbook?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_1266",
+   "query": "A non-parametric repeated-measures multi-way Anova in R?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_12884",
+   "query": "Reporting the general perception of tested sample",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_13166",
+   "query": "R's lmer cheat-sheet",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_13314",
+   "query": "Is $R^2$ useful or dangerous?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_13399",
+   "query": "Calculating the 95th percentile: Comparing normal distribution, R Quantile, and Excel approaches",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_13475",
+   "query": "How to specify the random term in lme, lmer and aov?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_13550",
+   "query": "prcomp() vs lm() results in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_13676",
+   "query": "Why does t statistic increase with the sample size?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_13810",
+   "query": "Threshold for correlation coefficient to indicate statistical significance of a correlation in a correlation matrix",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_13875",
+   "query": "Boxplot for several distributions?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_14140",
+   "query": "How to best display graphically type II (beta) error, power and sample size?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_14168",
+   "query": "How to generate two correlated categorical variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_14226",
+   "query": "Given the power of computers these days, is there ever a reason to do a chi-squared test rather than Fisher's exact test?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_1444",
+   "query": "How should I transform non-negative data including zeros?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_14686",
+   "query": "R language-statistics-significance testing",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_14757",
+   "query": "Is an online chi square calculator available for larger tables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_14812",
+   "query": "Poisson regression instead of log transformation of a continuous outcome variable?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_15164",
+   "query": "Fisher's exact test on 2x4 table",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_15285",
+   "query": "Problem with calculating $R^2$",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_15323",
+   "query": "How to interpret the divergence of Fisher information expectation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_15427",
+   "query": "Kruskal-Wallis or Fligner test to check homogeneity of variances?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_15505",
+   "query": "Converting standard error to standard deviation?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_15606",
+   "query": "How to check variance with GARCH (1,1) model?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_15662",
+   "query": "Do I need to use t-test?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_15740",
+   "query": "What are some quick initial tests to check the quality of a new dataset?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_16008",
+   "query": "What does \"unbiasedness\" mean?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_16230",
+   "query": "Fourier data with non-integer periods, correcting for phase bias",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_16287",
+   "query": "Assessing error of a spatial interpolation algorithm",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_16552",
+   "query": "Probability of mean of random sample being in a certain range",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_16574",
+   "query": "Are confidence intervals always symmetrical around the point estimate?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_16613",
+   "query": "Interpreting the results of an analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_16658",
+   "query": "How to interpret a 95% confidence interval of a proportion?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_16907",
+   "query": "Summation representation for multivariate regressions (or other time-saving techniques)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_17076",
+   "query": "Math Statistics Bell Curve Computing % correct given 2 numbers (C#)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_17890",
+   "query": "What is the difference between N and N-1 in calculating population variance?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_18241",
+   "query": "Chi-squared goodness-of-fit statistic if expected frequency is zero",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_18391",
+   "query": "How to calculate the difference of two slopes?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_18434",
+   "query": "R-squared: X \"explains\" the percentage of variation of the Y values. Does axis order matter?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_1850",
+   "query": "Difference between Cohen's d and Hedges' g for effect size metrics",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_18738",
+   "query": "what mean a p-value above 0.05 doing an ANOVA?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_18750",
+   "query": "Hosmer-Lemeshow vs AIC for logistic regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_18844",
+   "query": "When (and why) to take the log of a distribution (of numbers)?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_18896",
+   "query": "Practical thoughts on explanatory vs predictive modeling",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_18905",
+   "query": "Where to find a large text corpus?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_19103",
+   "query": "How to statistically compare two time series?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_19120",
+   "query": "Sample size for a variable number of answers",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_19195",
+   "query": "Explaining two-tailed tests",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_192",
+   "query": "Cross tabulation of two categorical variables: recommended techniques",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_19583",
+   "query": "How to read quantiles from R2WinBUGS?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_1963",
+   "query": "Looking for good introductory treatment of meta-analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_19771",
+   "query": "What are the implications of a regression model failing the JB normality test?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_19874",
+   "query": "Does the sign of the principal component become meaningless with centered variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_19891",
+   "query": "Interpreting main effect and interaction",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_1995",
+   "query": "Under what conditions should one use multilevel/hierarchical analysis?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_19971",
+   "query": "Difference between two separate multiple regression analyses and one combined using dummy variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20010",
+   "query": "How can I help ensure testing data does not leak into training data?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20039",
+   "query": "Effect of moving average parameter on variability and variance of demand",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_203",
+   "query": "Group differences on a five point Likert item",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20425",
+   "query": "having trouble applying hidden markov models to my game",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20514",
+   "query": "Books for self-studying time series analysis?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20583",
+   "query": "Is the percent of total deviance explained a useful model summary?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20701",
+   "query": "Computing p-value using bootstrap with R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20720",
+   "query": "pLSA - Probabilistic Latent Semantic Analysis, how to choose topic number?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20725",
+   "query": "Rolling analysis with out-of sample",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20836",
+   "query": "Algorithms for automatic model selection",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20862",
+   "query": "Covariate present in a logistic regression model as a effect modifier, but not as main effect",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_20881",
+   "query": "Truncated normal distribution with WinBUGS",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_21151",
+   "query": "A reliable measure of series similarity - correlation just doesn't cut it for me",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_21463",
+   "query": "Voting in Multi-Class SVM",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_2151",
+   "query": "How to plot ROC curves in multiclass classification?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_21592",
+   "query": "Optimising for Precision-Recall curves under class imbalance",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_21822",
+   "query": "Understanding Naive Bayes",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_21939",
+   "query": "Relatively normalizing values for collaborative filtering",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_22009",
+   "query": "What is the real answer to the Birthday question?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_22036",
+   "query": "Interaction terms interpretation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_22346",
+   "query": "Standardized beta weights for a multilevel regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_22439",
+   "query": "Incremental or online or single pass or data stream clustering refers to the same thing?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_22774",
+   "query": "Dimensionality reduction using self-organizing map",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_2291",
+   "query": "Recommended books or articles as introduction to Cluster Analysis?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_23005",
+   "query": "Deriving ordered statistics minimum cdf",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_23060",
+   "query": "Confused by MATLAB's implementation of ridge",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_23068",
+   "query": "Steps to figure out a posterior distribution when it might be simple enough to have an analytic form?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_23417",
+   "query": "Dynamic recommender systems",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_23501",
+   "query": "Probabilistic (Bayesian) vs Optimisation (Frequentist) methods in Machine Learning",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_23938",
+   "query": "How to correlate ordinal and nominal variables in SPSS?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_24416",
+   "query": "How to do a pretty scatter plot in R?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_24676",
+   "query": "Difference between one-tailed and two-tailed testing?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_24878",
+   "query": "Computation of new standard deviation using old standard deviation after change in dataset",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_24911",
+   "query": "Significance tests",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_2493",
+   "query": "Managing error with GPS routes (theoretical framework?)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25094",
+   "query": "How to interpret regression coefficients for a variable with takes positive and negative values?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25181",
+   "query": "How to the predict the number of daily visitors in six months' time based on the past three?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25190",
+   "query": "Naive Bayes for two continuous features",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25211",
+   "query": "Simple combination/probability question based on string-length and possible-characters",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25235",
+   "query": "What test should I use with shannon diversity index values?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25389",
+   "query": "Obtaining predicted values (Y=1 or 0) from a logistic regression model fit",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25651",
+   "query": "Can two RM ANOVAs be run including one variable that is the same but this variable only be significant in one of the ANOVAs?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25708",
+   "query": "Tests significative with parametric calculations and non-significative with non-parametric ones!",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_25811",
+   "query": "Is the R language reliable for the field of economics?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26024",
+   "query": "Moving-average model error terms",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26060",
+   "query": "Derive househould weights from a uniformly distributed person sample",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26073",
+   "query": "Reference with distributions with various properties",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26218",
+   "query": "Are there any ways to update SVM model incrementally like Bayesian or k-NN classifiers?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26271",
+   "query": "Comparing two classifier accuracy results for statistical significance with t-test",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26352",
+   "query": "PCA analysis with centered variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26383",
+   "query": "Conditional Expectation for Probability Distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26454",
+   "query": "Proof that if higher moment exists then lower moment also exists",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26465",
+   "query": "Behavior of a sum of kernel functions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26650",
+   "query": "How do I reference a regression model's coefficient's standard errors?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26712",
+   "query": "regression with multiple response variable in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26719",
+   "query": "Finding the probability of getting a complete set from N classes of objects in M draws",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26828",
+   "query": "Interpreting AIC and BIC fit",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_26970",
+   "query": "Validation techniques for hierarchical model",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_27626",
+   "query": "Does the size of the reference sample matter in logistic regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_27786",
+   "query": "How to compare ratings of airlines on a Likert scale when different participants have rated different airlines?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_27916",
+   "query": "Standard errors for multiple regression coefficients?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_27951",
+   "query": "When are Log scales appropriate?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_28443",
+   "query": "PCA prcomp function of R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_28515",
+   "query": "No degrees of freedom in LR rest of multinomial logistic regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_28653",
+   "query": "What is the best way to convert learning to rank to pairwise preference learning?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_28745",
+   "query": "Advantages of ROC curves",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_28842",
+   "query": "Significant predictor loses significance when second non-significant predictor is entered (log regression)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_28873",
+   "query": "Goodness of fit test for a mixture in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_28934",
+   "query": "Confidence interval about the difference between false positive and false negative proportions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_28942",
+   "query": "Computing and plotting a correlogram",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_29126",
+   "query": "Confidence interval for the height of a histogram bar",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_2915",
+   "query": "What is a good internet based source of information on Hierarchical Modeling?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_29364",
+   "query": "Probability associated with experiencing all outcomes",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_29713",
+   "query": "What is covariance in plain language?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_29726",
+   "query": "How to determine significant subgroups of data inputs?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_29731",
+   "query": "Regression when the OLS residuals are not normally distributed",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_29815",
+   "query": "How to interpret the output for calculating concordance index (c-index)?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_29824",
+   "query": "Factor analysis and regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_29889",
+   "query": "Monte Carlo approach to compute prediction interval for GLM (Poisson & Neg Bin) with R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_30275",
+   "query": "What analysis (in SPSS) should I use for a repeated measures design with dichotomous outcome variable?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_30303",
+   "query": "How to simulate data that satisfy specific constraints such as having specific mean and standard deviation?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3038",
+   "query": "How to test hypothesis of no group differences?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_30402",
+   "query": "How to calculate mean and standard deviation in R given confidence interval and a normal or gamma distribution?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_30428",
+   "query": "What is a good book on experimental design and data analysis relevant to industrial bakery applications?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_30514",
+   "query": "Is Marliyn vos Savant correct about the 2/3 odds in her version of the Monty Hall problem?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_31150",
+   "query": "What is a lift chart?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_31326",
+   "query": "How should one interpret the comparison of means from different sample sizes?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_31327",
+   "query": "Power analysis of a secondary data set with a multi-level model",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3136",
+   "query": "How to perform a test using R to see if data follows normal distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_31450",
+   "query": "Confusion in linear regression confidence interval calculation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_31598",
+   "query": "Is Amazon's \"average rating\" misleading?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_31958",
+   "query": "How to perform linear regression with categorical factors?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32000",
+   "query": "Excluding the components and only including the interaction term in a logistic regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32094",
+   "query": "Linear model overfit due to too many covariates?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3215",
+   "query": "Trigonometric operations on standard deviations",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32169",
+   "query": "How can I generate data with a prespecified correlation matrix?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32248",
+   "query": "Effect Size/Mean Squared Error from Linear Mixed-Model in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32318",
+   "query": "Difference between standard error and standard deviation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32405",
+   "query": "How is Poisson distribution different to normal distribution?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32520",
+   "query": "Sequence mining in univariate discrete data using R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32600",
+   "query": "In what order should you do linear regression diagnostics?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32808",
+   "query": "Comparison between multi-level modelling and generalized estimating equation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_32864",
+   "query": "How to get SSE for predictions using SAS?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_33165",
+   "query": "Strange pattern of residuals",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_33240",
+   "query": "Interpretation of reference category in logistic regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_33315",
+   "query": "Optimal software package for bayesian analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_33354",
+   "query": "When are two normally distributed random variables jointly bivariate normal?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_33413",
+   "query": "Continuous dependent variable with ordinal independent variable",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_33519",
+   "query": "Distribution from which to sample integers evenly between 1 and 1000?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3369",
+   "query": "Difference between FA and PCA",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3402",
+   "query": "What's the accuracy of data obtained through a random sample?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_34325",
+   "query": "Regression modelling with unequal variance",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3438",
+   "query": "Calculating percentile of normal distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_34587",
+   "query": "Determining a correction factor and applying it to a second set of numbers",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_346",
+   "query": "What is a good algorithm for estimating the median of a huge read-once data set?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35185",
+   "query": "Dimensionality reduction (SVD or PCA) on a large, sparse matrix",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3549",
+   "query": "F and t statistics in a regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35510",
+   "query": "Why does including latitude and longitude in a GAM account for spatial autocorrelation?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35535",
+   "query": "A good Machine Learning Book",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35544",
+   "query": "Recommend an enjoyable / introductory book on Statistics",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35566",
+   "query": "How do I rank variables collected by a Likert scale questionnaire?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35608",
+   "query": "Detecting outstanding events",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35719",
+   "query": "Improvement of regression model",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35929",
+   "query": "Why we solve the dual problem in SVM?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_35982",
+   "query": "How to interpret regression coefficients when response was transformed by the 4th root?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_36",
+   "query": "Examples for teaching: Correlation does not mean causation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_36036",
+   "query": "How to deal with missing values for PCA?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_36054",
+   "query": "What is the difference between Variance and Standard Deviation (SD) intuitively?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3614",
+   "query": "How to easily determine the results distribution for multiple dice?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_36305",
+   "query": "Why do regression coefficients change when excluding variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_37399",
+   "query": "Weighted geometric mean vs weighted mean",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_37845",
+   "query": "Two negative beta's in a curvilinear regression when mean centered or using standardized values",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_37866",
+   "query": "Pearson r Interpretation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_38053",
+   "query": "Help with pretest-postest data analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_38290",
+   "query": "Why does standard error not involve population size?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_38446",
+   "query": "What do parallel lines in a fitted values vs. residual plot mean? How should I transform my data?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_38511",
+   "query": "If MGF exists, does it imply that all $E(X^n)$ exist?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_38856",
+   "query": "How to generate correlated random numbers (given means, variances and degree of correlation)?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_38870",
+   "query": "Confusion regarding a probability problem",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_39044",
+   "query": "how Neural Network works on image recognition",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3958",
+   "query": "What is your favorite, easy to use statistical analysis website or software package?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_3961",
+   "query": "Random permutation of a vector with a fixed expected sample correlation to the original?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4040",
+   "query": "R: compute correlation by group",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_40454",
+   "query": "Determine different clusters of 1d data from database",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4059",
+   "query": "Maximum Likelihood formula for Naive Bayes",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_40876",
+   "query": "Difference between 'link function' and 'canonical link function' for GLM",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_40976",
+   "query": "Can a dichotomous variable (yes/no) be merged with a Likert measure (1,2,3,4) using z scores?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_40977",
+   "query": "Is there a term for $P(A\\cap B)/[P(A)P(B)]$?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_41038",
+   "query": "Conditional Expectation / Estimator Confusion",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_41048",
+   "query": "Expected value (Chi-Squared)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_41247",
+   "query": "Risk of extinction of Schrödinger's cats",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_41379",
+   "query": "How do I interpret the results of a regression which involves interaction terms?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_41540",
+   "query": "How to get the prediction values for two response variables from random forest?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_41685",
+   "query": "Why does increasing the number of features reduce performance?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_41934",
+   "query": "Non-parametric alternative for 2-way ANOVA",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4298",
+   "query": "Use of kernel density estimate in Naive Bayes Classifier?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_43020",
+   "query": "Statistics and Probability interview questions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_43228",
+   "query": "Explain Kernel density chart",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_43339",
+   "query": "What's wrong with XKCD's Frequentists vs. Bayesians comic?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_43529",
+   "query": "Using PCA to reduce the number of variables split into groups",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4354",
+   "query": "Distributions other than the normal where mean and variance are independent",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_43698",
+   "query": "Central Limit Theorem",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_43748",
+   "query": "How to test for equality of means for proportions? And two-sided or one-sided?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_44139",
+   "query": "What is $P(X_1>X_2 , X_1>X_3,... , X_1>X_n)$?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_44201",
+   "query": "Link between moment-generating function and characteristic function",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4451",
+   "query": "Social network datasets",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_44838",
+   "query": "How are the standard errors of coefficients calculated in a regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_44888",
+   "query": "Deletion residuals",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_44928",
+   "query": "ANCOVA and its disturbing assumptions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_44992",
+   "query": "What are the values p, d, q, in ARIMA?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_45050",
+   "query": "Diagnostics for logistic regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_45124",
+   "query": "Central limit theorem for sample medians",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_45165",
+   "query": "MANOVA vs. Repeated Measure ANOVA",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_45660",
+   "query": "What is the probability of tossing k heads in n trials of a fair coin?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_45671",
+   "query": "Normality of residuals vs sample data; what about t-tests?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_45807",
+   "query": "What are the chances my wife has lupus?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_45825",
+   "query": "What hypothesis for A is better than B?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_45961",
+   "query": "Sanity check question about correlation between log-normal random variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46053",
+   "query": "Where to find a good beginner's R Primer?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4612",
+   "query": "Good econometrics textbooks?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46217",
+   "query": "Find the distribution of w",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46322",
+   "query": "Understanding signficant interaction with non-significant main effects",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46523",
+   "query": "How to simulate artificial data for logistic regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46558",
+   "query": "Multicollinearity in OLS",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46608",
+   "query": "Dependent Bernoulli trials",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46720",
+   "query": "Repeated measure problem",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46903",
+   "query": "Can we apply inferential statistics on the entire population?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_46908",
+   "query": "R vs Python for Data Analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4700",
+   "query": "What is the difference between fixed effect, random effect and mixed effect models?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_47074",
+   "query": "Does it make sense to cut a continuous variable to intervals?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_47279",
+   "query": "Is significance of the p-value reliable with extremely small sample sizes?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_47746",
+   "query": "Logit versus Probit",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_47769",
+   "query": "Kriging on log transformed rainfall data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_47951",
+   "query": "calculate partial autocorrelation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4810",
+   "query": "How to use CDF and PDF statistics for analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_48145",
+   "query": "Extremely unequal sample size in logistic regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_48199",
+   "query": "Are these values really different, given their confidence intervals?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_48261",
+   "query": "Bayesian and frequentist approaches: What are some success stories for the former?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_48302",
+   "query": "A constant as an admissible estimator",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_48396",
+   "query": "How often do you have to roll a 6-sided dice to obtain every number at least once?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_48582",
+   "query": "Generalized linear mixed model in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_48714",
+   "query": "Prerequisites for AIC model comparison",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_48781",
+   "query": "Transform higher order Markov Chain to first order",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_49421",
+   "query": "Why are the eigenvalues of a covariance matrix corresponding to the data's variance?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_49510",
+   "query": "k-means and different metrics",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_4964",
+   "query": "Is interaction possible between two continuous variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_49666",
+   "query": "Non-significant intercept in regression with a two level factor in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_49942",
+   "query": "Why is the Fisher Information matrix positive semidefinite?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_50095",
+   "query": "Approximation of explained variance",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_50267",
+   "query": "How to generate a non-normal correlated bivariate distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_51086",
+   "query": "p-values for all lags in a cross-correlation calculation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_51456",
+   "query": "Why does the correlation coefficient between X and X-Y random variables tend to be 0.7",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_51473",
+   "query": "\"matrix is not positive definite\" - even when highly correlated variables are removed",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_51699",
+   "query": "Moment generating function of the inner product of two gaussian random vectors",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_51718",
+   "query": "Assessing approximate distribution of data based on a histogram",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_51835",
+   "query": "Can one compute confidence intervals for a census with high nonresponse rates?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_51907",
+   "query": "What does it mean for two variables to be uncorrelated? How is it possible for two variables to be strongly related but still uncorrelated",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_51946",
+   "query": "How to calculate the signal-to-noise ratio (SNR) in an image?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_52063",
+   "query": "Why are the number of false positives independent of sample size, if we use p-values to compare two independent datasets?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_5235",
+   "query": "What is the expected correlation between residual and the dependent variable?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_52423",
+   "query": "How to perform step() when n < p in R?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_53000",
+   "query": "Fitting a logistic regression using lassoglm in matlab",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_53135",
+   "query": "Probablity of getting sequence of K equal results while tossing coin N times",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_5347",
+   "query": "How can I efficiently model the sum of Bernoulli random variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_54645",
+   "query": "Properties of moment-generating functions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_54728",
+   "query": "PCA eigenvectors with opposite values",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_54954",
+   "query": "Interpreting ANOVA results",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_5504",
+   "query": "Normal distribution probability",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_55131",
+   "query": "Solved Assumptions of Linear Regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_55316",
+   "query": "Is the Mundlak fixed effects procedure applicable for logistic regression with dummies?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_55446",
+   "query": "Multivariate regression with Stata; Joint Hypothesis Testing",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_55691",
+   "query": "Regarding p-values, why 1% and 5%? Why not 6% or 10%?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_56018",
+   "query": "Comparing two logit or probit curves using a single parameter",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_56124",
+   "query": "subtraction of two multivariate normal distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_56350",
+   "query": "How to compute probabilities of normally distributed variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_56461",
+   "query": "Book Recommendation for Mathematical Statistics",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_56515",
+   "query": "Estimate PDF from only positive data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_56852",
+   "query": "Overall rank from multiple ranked lists",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_57074",
+   "query": "Is there a simple rule for interpretation of Interactions (and their directions) in binary logistic regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_57083",
+   "query": "Interpreta​tion of main effect when interactio​n term is significan​t (ex. lme)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_57214",
+   "query": "How to analyze data with more than one associated categorical dependent variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_57240",
+   "query": "How do I interpret the 'correlations of fixed effects' in my glmer output?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_57259",
+   "query": "Highly unbalanced test data set and balanced training data in classification",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_5747",
+   "query": "If A and B are correlated with C, why are A and B not necessarily correlated?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_57662",
+   "query": "spss 20 for mac: how to get probabilities after running a binary logistic regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_577",
+   "query": "Is there any reason to prefer the AIC or BIC over the other?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_57705",
+   "query": "Identify seasonality in time series data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_57840",
+   "query": "How does dsgh work in R?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_58220",
+   "query": "What distribution does my data follow?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_58242",
+   "query": "Why are MA(q) time series models called \"moving averages\"?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_58486",
+   "query": "Is it required for panel data to use dummy variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_5853",
+   "query": "Forcing a set of numbers to a gaussian bell-curve",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_58564",
+   "query": "Help me understand Bayesian prior and posterior distributions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_59174",
+   "query": "Online logistic regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_59434",
+   "query": "How to compare 2 regression slopes with R?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_59526",
+   "query": "Correction term in variance of mixture",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_59851",
+   "query": "Meaning of significance test",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_59882",
+   "query": "How do I use a mean and 95% confidence intervals to draw from a distribution?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_59955",
+   "query": "Variance of superset from variance of subsets",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6",
+   "query": "The Two Cultures: statistics vs. machine learning?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_60076",
+   "query": "Why are 5+ expected frequencies needed in Pearson's chi-square",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_60256",
+   "query": "Standard deviation of binned observations",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_60257",
+   "query": "Markov chain getting stuck due to insufficient data samples",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_60383",
+   "query": "Bonferroni adjustment in SPSS - what does it do?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_60558",
+   "query": "OLS Regression for binary outcome",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_60670",
+   "query": "\"Accept null hypothesis\" or \"fail to reject the null hypothesis\"?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_60766",
+   "query": "How to test for significant difference between 2 binary variables in one sample",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_60785",
+   "query": "How to create a ratio from different measures?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6093",
+   "query": "Good book on statistics",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_61002",
+   "query": "Natural log of annual income",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_61080",
+   "query": "How can I calculate $\\int^{\\infty}_{-\\infty}\\Phi\\left(\\frac{w-a}{b}\\right)\\phi(w)\\,\\mathrm dw$",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_61179",
+   "query": "GLM Distribution of Residuals",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_61510",
+   "query": "How do I write a mathematical equation for ARIMA (0,2,1) x (0,0,1) period 12",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_61666",
+   "query": "T-test vs. one-way ANOVA",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_61798",
+   "query": "Example of distribution where large sample size is necessary for central limit theorem",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_61906",
+   "query": "Covariate vs. factors",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_61944",
+   "query": "Multivariate normal distribution?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_62092",
+   "query": "Bottom to top explanation of the Mahalanobis distance?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_62640",
+   "query": "Testing for difference between two percentages (using confidence intervals)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_62741",
+   "query": "Correlation between discrete and continuous variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_62880",
+   "query": "No linear effects but a quadratic effect",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_62916",
+   "query": "Confidence interval for the product of two parameters",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_63099",
+   "query": "Book recommendations for beginners about probability distributions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_63177",
+   "query": "In GLIM, Is the link function of mean linear in explanatory variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_63256",
+   "query": "What is the current 'standard' for modern statistical computing hardware?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_63260",
+   "query": "Finding an acceptable upper limit on a random generator with an unknown distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6350",
+   "query": "ANOVA assumption normality/normal distribution of residuals",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_64156",
+   "query": "Should I use variance or standard deviation as weights to combine independent measurements?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_64343",
+   "query": "How to Interpret a negative log linear regression coefficient?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_64370",
+   "query": "How to use SVD for dimensionality reduction",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_64652",
+   "query": "Calculating standard deviation associated with percentage change",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_64739",
+   "query": "In survival analysis, why do we use semi-parametric models (Cox proportional hazards) instead of fully parametric models?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_64831",
+   "query": "OLS in R with linear inequality constraints on coefficients",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_64924",
+   "query": "How to cluster a distance matrix?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6498",
+   "query": "Seeking certain type of ARIMA explanation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_65446",
+   "query": "Postive correlation but negative coefficient in regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6563",
+   "query": "80% of missing data in a single variable",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_65637",
+   "query": "Fisher-type unit-root test for panel data. Results interpretation in Stata",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_65779",
+   "query": "Why is coefficient of determination used to assess fit of a least squares line?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6581",
+   "query": "What is Deviance? (specifically in CART/rpart)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_65811",
+   "query": "How to calculate p-value for t-test if original data is not available?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_65866",
+   "query": "Good methods for density plots of non-negative variables in R?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_66094",
+   "query": "Meaning of Likelihood in layman's terms",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6619",
+   "query": "Probability of getting between",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_66215",
+   "query": "Calculation of AUC value from ROC Curve",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_66273",
+   "query": "Wilcoxon two-sample test approximated by z-statistic",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_66448",
+   "query": "Should covariates that are not statistically significant be 'kept in' when creating a model?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_665",
+   "query": "What's the difference between probability and statistics?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6652",
+   "query": "What, precisely, is a confidence interval?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_66670",
+   "query": "How to compare performance of probability estimating model",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_66709",
+   "query": "Confusion related to predictive distribution of gaussian processes",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_66868",
+   "query": "random number generation and probability problems",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_67243",
+   "query": "Determining an optimum and distribution range for a given species abundance vs an environmental gradient data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_67502",
+   "query": "Function of an efficient estimator?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_67533",
+   "query": "sum of noncentral Chi-square random variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_67571",
+   "query": "How can I group numerical data into naturally forming \"brackets\"? (e.g. income)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_67676",
+   "query": "Is a test with small effect size and high sensitivity meaningful or useful?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_67782",
+   "query": "How to compare two groups when one only has one data point?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_67800",
+   "query": "Creating a Quality Index",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_67958",
+   "query": "How to calculate a \"Predicted line\"?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_68069",
+   "query": "Boxplot interpretation: is it correct that a boxplot is missing a whisker?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_68243",
+   "query": "AR(1) coefficient is correlation?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_68261",
+   "query": "Performance evaluation of auto.arima in R and UCM on one dataset",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_68377",
+   "query": "Getting the inflection point(s) from a density plot",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_68421",
+   "query": "Mean centering and setting standard deviation to 1 in data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_68431",
+   "query": "Interpretting LASSO variable trace plots",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_68528",
+   "query": "Probability distribution and uniform distribution in a sphere",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_68834",
+   "query": "What is the benefit of breaking up a continuous predictor variable?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_69407",
+   "query": "How do I write a mathematical equation for ARIMA (2,1,0) x (0,2,2) period 12",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_6966",
+   "query": "Why continue to teach and use hypothesis testing?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_69939",
+   "query": "Creating a ‘bounding polygon’ for a set of points (preferably with GGplot2)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_7",
+   "query": "Locating freely available data samples",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_7004",
+   "query": "Calculating required sample size, precision of variance estimate?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_70133",
+   "query": "F test for regressions with a small N with robust standard errors",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_70307",
+   "query": "How do I analyse principal component scores?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_70605",
+   "query": "PMF of two Poisson RV subtracted from each other",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_70846",
+   "query": "Imputing values using additional data w/o knowing underlying structure",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_70899",
+   "query": "What correlation makes a matrix singular and what are implications of singularity or near-singularity?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_71064",
+   "query": "Test to see what population an observation came from",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_71260",
+   "query": "What is the intuition behind conditional Gaussian distributions?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_71269",
+   "query": "standard deviation in unbiased problem",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_71771",
+   "query": "purpose p value with CI in non-inferiority trials",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_71999",
+   "query": "Where can I find a citable reference for the formula for inverse distributions?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_7200",
+   "query": "Evaluate definite interval of normal distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_72212",
+   "query": "Updating variance of a dataset",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_72297",
+   "query": "Describing standard deviation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_72370",
+   "query": "How to perform unsupervised Random Forest classification using Breiman's code?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_72623",
+   "query": "cluster - class dependency bag of words",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_72646",
+   "query": "How to estimate the confidence interval using sample average and sample size ONLY?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_72648",
+   "query": "Interpretation of Kolmogorov-Smirnov Generated Distributions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_72940",
+   "query": "Covariance matrix of least squares estimator $\\hat{\\beta}$",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_73077",
+   "query": "Analyzing reflected and transformed variables II",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_7308",
+   "query": "Can the empirical Hessian of an M-estimator be indefinite?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_73412",
+   "query": "normalising constant on exponential of exponential",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_73416",
+   "query": "In R, how do I fit a student-t distribution to a set of empirical data?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_74174",
+   "query": "Significant ANOVA interaction but non-significant pairwise comparisons",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_74537",
+   "query": "Log or square-root transformation for ARIMA",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_74542",
+   "query": "Why does the Lasso provide Variable Selection?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_74622",
+   "query": "Converting standardized betas back to original variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_7535",
+   "query": "Strategy for deciding appropriate model for count data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_7542",
+   "query": "How to perform goodness of fit test and how  to assign probability with uniform distribution?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_76248",
+   "query": "Analysis to perform",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_76398",
+   "query": "Ordinal item on Likert scale as dependent variable in regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_76484",
+   "query": "How to scale a variable to a specific mean and standard deviation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_77038",
+   "query": "Covariance matrix proposal distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_77099",
+   "query": "Testing equality of variances without the data, just from the variances and the mean",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_77349",
+   "query": "Good books for Duration Analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_77542",
+   "query": "R gives weird dispersion value",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_78000",
+   "query": "Random Forests and Feature selection",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_78285",
+   "query": "Comparison of two error distributions to determine \"goodness of fit\"",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_78329",
+   "query": "\"optimum\" tree from random forests",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_78374",
+   "query": "binomial GLM output hugely affected by a factor level with all zeros",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_78795",
+   "query": "Interpreting a confidence interval",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_78928",
+   "query": "Repeated ANOVA unbalanced data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_79043",
+   "query": "Why PCA of data by means of SVD of the data?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_79289",
+   "query": "Why is \"statistically significant\" not enough?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_79292",
+   "query": "What are the methods for multivariate outlier detection?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_7948",
+   "query": "When is it ok to remove the intercept in lm()?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_79755",
+   "query": "How to check if data constitute a time series with simple moving average method?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_79843",
+   "query": "Is the W statistic outputted by wilcox.test() in R the same as the U statistic?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_79932",
+   "query": "Does MLE always mean we know the underlying PDF of our data, and does EM mean we don't?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_80157",
+   "query": "Relationship Between Correlation and Multicollinearity",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_8033",
+   "query": "How to find percentiles of a Normal distribution?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_80500",
+   "query": "Collectively evaluate a number of normal distributions",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_80555",
+   "query": "Statistical test for a random die roll?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_80791",
+   "query": "Consistency of OLS",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_80885",
+   "query": "Graphing data large and small",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_8107",
+   "query": "How do I interpret the results of a Breusch–Pagan test?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_81815",
+   "query": "Model estimation - 2sls",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_81880",
+   "query": "Logistic Regression - Model Selection Method",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_82142",
+   "query": "Calculating concordance using either Pearson or Spearman (rank) correlations",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_82624",
+   "query": "GLMM multilevel hierarchical model with R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_82682",
+   "query": "How do I interpret this fitted vs residuals plot",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_82947",
+   "query": "Intuitive examples of importance sampling",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_82992",
+   "query": "Using principal component analysis (PCA) for feature selection in regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_82996",
+   "query": "Calculate AUC of a logistic regression model",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83022",
+   "query": "How to fit data that looks like a gaussian?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_8318",
+   "query": "Interpretation of log transformed predictors in logistic regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83193",
+   "query": "Probability of two people meeting when the arrival intervals and wait times are different",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83296",
+   "query": "Which Distribution Does the Data Point Belong to?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83352",
+   "query": "Sum of independent non-normal random variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83538",
+   "query": "Distribution function, applied to itself?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83554",
+   "query": "Linear regression not fitting well",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83583",
+   "query": "Reading and interpreting the scatter matrix",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83865",
+   "query": "JAGS burn-in phase takes ZERO time?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_83900",
+   "query": "standard deviation help please!!!",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_84115",
+   "query": "Distribution of a vector divided by its sum",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_84116",
+   "query": "Estimates of variance from an iid sample",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_84175",
+   "query": "Confidence Interval for a Fraction?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_84197",
+   "query": "Probability of observing value EQUAL to +2 SD in a standard normal dist with parameters N(0,1)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_84334",
+   "query": "how to create predictive model in R when outcome variable has more than 10 classes",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_85363",
+   "query": "Simplest example of uncorrelated but not independent X and Y?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_85436",
+   "query": "What could it mean to \"Rotate\" a distribution?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_8557",
+   "query": "Testing the difference in AIC of two non-nested models",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_85702",
+   "query": "Weibull analysis",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_86040",
+   "query": "Rule of thumb for number of bootstrap samples",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_86149",
+   "query": "Is it possible to determine the set of variables contributing the most to first two principal components?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_86258",
+   "query": "Using regression equation to estimate values outside of the range of data?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_86353",
+   "query": "How to theoretically fit and test for t-distribution",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_86357",
+   "query": "Basics of forecasting",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_86546",
+   "query": "Text Books on Text Mining in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_86597",
+   "query": "We said the data is normally distributed, based on the raw data or residual?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_8661",
+   "query": "Logistic Regression in R (Odds Ratio)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_86881",
+   "query": "Correlated Regressors - Motorway Accidents",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87003",
+   "query": "create dataset for particular correlation for two variable",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87110",
+   "query": "Why is it that it is self-defeating to use the posterior mode as the bayes estimator in this case?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87168",
+   "query": "the relationship between hypothesis test and confidence interval?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87601",
+   "query": "What does this test mean?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87805",
+   "query": "Significant interaction with non significant main effect",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87866",
+   "query": "A simple optimization problem",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87908",
+   "query": "exact percentage change for the estimated COOP effect",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87909",
+   "query": "Interpretation interaction term with a dummy variable in it",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_87963",
+   "query": "Does the slope of a regression between observed and predicted values always equal the $R^2$ of the original model?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_88097",
+   "query": "rescale a vector x to lie between arguments LOWER and UPPER in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_88228",
+   "query": "How do you calculate the Ordinary Least Squares estimated coefficients in a Multiple Regression Model?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_88388",
+   "query": "Cross-validation for mixed-effect logistic regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_88461",
+   "query": "Derive Variance of regression coefficient in simple linear regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_88588",
+   "query": "Regression model for proportion or count when counts of outcome and total events are often zero",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_88711",
+   "query": "How does Support vector machine predict the classes for the test points?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_8881",
+   "query": "How to perform a regression model with a mix of binary, nominal, ordinal, and continuous predictors?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_88880",
+   "query": "Why do PCA scores differ in sign?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_88980",
+   "query": "Why on average does each bootstrap sample contain roughly two thirds of observations?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_89038",
+   "query": "Interpreting estimates from generalized models in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_89295",
+   "query": "Determining If Transformation of Variables X Are Needed",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_89472",
+   "query": "Why would adjusting in a model change the direction of an effect?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_89633",
+   "query": "Calculate Standard deviation from mean and confidence interval (95%) in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_899",
+   "query": "Separating two populations from the sample",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_89926",
+   "query": "What do you do when a centroid doesn't attract any points?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_89949",
+   "query": "Geometric mean of uniform variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90098",
+   "query": "How can I statistically compare two time-series?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90113",
+   "query": "When I add higher order terms in a regression, do I need to add the main effect?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90129",
+   "query": "What is the difference between \"data mining\" and \"data analytics\"?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90130",
+   "query": "How to test a Random Number generator in R?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90171",
+   "query": "Why is the p-value written with a supremum?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90243",
+   "query": "One-Tailed Fisher's Exact Test",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90380",
+   "query": "Interpreting negative coordinates and origin in 2D correspondence analysis plot",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90407",
+   "query": "Libsvm includes training data in testing file",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90499",
+   "query": "How to include number of not-yet-decayed radioactive atoms in MLE?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_90828",
+   "query": "Forecast Daily Data with Multiple Seasonality",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_91286",
+   "query": "reshape data from wide to long in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_91389",
+   "query": "How to use gain and splitinfo for continuous attributes?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_91467",
+   "query": "Understanding the effect of each parameter in a Monte Carlo Simulation",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_91493",
+   "query": "Normal curve probability mean",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_91510",
+   "query": "Correlation of categorical and interval variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_91744",
+   "query": "More examples of inconsistent, but unbiased data and vice versa?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_91981",
+   "query": "Converting a similarity to a dissimilarity",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_91982",
+   "query": "MANOVA, when independent variable is not multi-level and P value significance variance",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92052",
+   "query": "Kolmogorov-Smirnov test for large sample",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92210",
+   "query": "Negative AIC linear regression model",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92212",
+   "query": "In testing random numbers, what other tests should I use to complement the Kolmogorov-Smirnov?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92284",
+   "query": "What is the meaning of the beta-coefficient for an interaction term in a crossover study?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92661",
+   "query": "How to show that the $E[x_i] = \\bar{X}$",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92751",
+   "query": "What is the best way to analyze data from the Likert scale",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92788",
+   "query": "What is this kind of graph called? (2D grid with a color-coded scale for a 3rd variable)",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92794",
+   "query": "Intuition For Overlapping Confidence Intervals and Statistical Significance",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_92895",
+   "query": "Odds Ratio Coefficient",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_93042",
+   "query": "non significance with one-way ANOVA, but significance with multiple comparisons",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_93067",
+   "query": "clustering algorithm for real time event",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_93370",
+   "query": "In simple linear regression, why the covariance between y bar and beta1 hat is zero?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_93436",
+   "query": "Variable Selection",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_93768",
+   "query": "impact on hypothesis if t-stat is equal to t-critical value for one-tail two-sample t-test?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_9398",
+   "query": "Supervised learning with \"rare\" events, when rarity is due to the large number of counter-factual events",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94033",
+   "query": "Standard deviation of the mean?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94061",
+   "query": "Help interpreting R linear model fit",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94103",
+   "query": "PCA on non-centered data",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94201",
+   "query": "Are these events independent?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94208",
+   "query": "How to interpret results from a nonparametric Wilcoxon test",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_9427",
+   "query": "Interpreting Gaussian probabilities greater than 1",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94271",
+   "query": "How to properly handle Infs in a statistical function?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94272",
+   "query": "MC Integration Interval Probability",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94360",
+   "query": "Sum of squared errors",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94747",
+   "query": "How to digitize an image graph to excel data?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_94872",
+   "query": "Functions of Independent Random Variables",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_949",
+   "query": "When is logistic regression solved in closed form?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_9510",
+   "query": "Probability distribution for different probabilities",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_95235",
+   "query": "What kind of test should I use?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_95440",
+   "query": "Assessing test-retest reliability of a questionnaire",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_95667",
+   "query": "Intuitive explanation of differences between TOST and UMP tests for equivalence",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_9573",
+   "query": "T-test for non normal when N>50?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_95891",
+   "query": "If you know a factor is significant, what is a reason why R might think it's not?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_9590",
+   "query": "How to use principal components analysis to select variables for regression?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_96005",
+   "query": "Random Forest and Factor Predictors",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_96278",
+   "query": "How can I use logistic regression with categorical variables?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_96543",
+   "query": "multicollinearity in OLS regression",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_9664",
+   "query": "What are examples where a \"naive bootstrap\" fails?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_96722",
+   "query": "How can dummy variables are able to add in Stata?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_96751",
+   "query": "How to calculate a maximum standard deviation?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_96835",
+   "query": "chisq.test in R doesn't produce same answer as by-hand",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_97075",
+   "query": "Forecasting daily online visits in r",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_97257",
+   "query": "Stepwise regression in R – Critical p-value",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_9751",
+   "query": "Do we need a global test before post hoc tests?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_97515",
+   "query": "What does \"likelihood is only defined up to a multiplicative constant of proportionality\" mean in practice?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_97659",
+   "query": "Appropriate post-hoc test after a mixed design anova in R",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_97777",
+   "query": "Variablity in cv.glmnet results",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_97912",
+   "query": "Which equal correlations of three random variables are possible?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_99099",
+   "query": "Neyman-Pearson lemma: critical region and hypothesis testing",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_99192",
+   "query": "Why should the feature be standardized before feeding to the neural network algorithm",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_9926",
+   "query": "Is there any use for the quantity $\\int f(x)^2 dx$ in statistics or information theory?",
+   "question_type": "beir_cqadupstack_stats"
+  },
+  {
+   "name": "beir_cqadupstack_stats_99416",
+   "query": "test if two normally distributed random variables are equal",
+   "question_type": "beir_cqadupstack_stats"
+  }
+ ]
+}

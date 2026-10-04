@@ -1,0 +1,5463 @@
+{
+ "beir_cqadupstack_gaming_100002": [
+  "095b567f47360142",
+  "35acddc67242d03d",
+  "8f43daae18a1c580"
+ ],
+ "beir_cqadupstack_gaming_100005": [
+  "2dd51b878c2febcc",
+  "939d98f935772a48"
+ ],
+ "beir_cqadupstack_gaming_100092": [
+  "4c1042aaa5bb28ef"
+ ],
+ "beir_cqadupstack_gaming_100221": [
+  "fc20c00ab13158db"
+ ],
+ "beir_cqadupstack_gaming_100281": [
+  "2952e533f74f9dfa"
+ ],
+ "beir_cqadupstack_gaming_100377": [
+  "1988a6b39d1329e7"
+ ],
+ "beir_cqadupstack_gaming_100441": [
+  "4d9fa97f41bd7ef0"
+ ],
+ "beir_cqadupstack_gaming_10131": [
+  "90a3a3fb1acb2143"
+ ],
+ "beir_cqadupstack_gaming_101728": [
+  "6d39a221552c35e2"
+ ],
+ "beir_cqadupstack_gaming_101810": [
+  "dd3d9b823d07205b"
+ ],
+ "beir_cqadupstack_gaming_101893": [
+  "19d6805e4710a4f7"
+ ],
+ "beir_cqadupstack_gaming_101931": [
+  "9e9e70727eae3046"
+ ],
+ "beir_cqadupstack_gaming_101958": [
+  "36bd88afba11fc43"
+ ],
+ "beir_cqadupstack_gaming_102154": [
+  "695e23ca671d26ee",
+  "8c3f0afeb2767ef1",
+  "fa8667b7c5794ef4"
+ ],
+ "beir_cqadupstack_gaming_102177": [
+  "1c261b0438ca8efb"
+ ],
+ "beir_cqadupstack_gaming_102361": [
+  "0e2a7e3d2859d39d",
+  "1d342230cb31565f",
+  "2c45282939cef9a8",
+  "9f355c40c05e9b34"
+ ],
+ "beir_cqadupstack_gaming_102438": [
+  "2a5816fbb3281b0a"
+ ],
+ "beir_cqadupstack_gaming_102583": [
+  "e508c8f0615c5d14"
+ ],
+ "beir_cqadupstack_gaming_102625": [
+  "549137aea4a9816f"
+ ],
+ "beir_cqadupstack_gaming_102754": [
+  "a711b6931c84fa3f"
+ ],
+ "beir_cqadupstack_gaming_102946": [
+  "3df0d30a7a6039f2",
+  "ae605768556c1088",
+  "c9bec912198f7c50"
+ ],
+ "beir_cqadupstack_gaming_102996": [
+  "88e1a7b7a519c7fe"
+ ],
+ "beir_cqadupstack_gaming_103042": [
+  "7afa7cfa0d6a5c06"
+ ],
+ "beir_cqadupstack_gaming_103334": [
+  "57e9eb14ed2b2ffa"
+ ],
+ "beir_cqadupstack_gaming_103423": [
+  "9baf09d003194e84"
+ ],
+ "beir_cqadupstack_gaming_103488": [
+  "6b0c3d21d61cb240"
+ ],
+ "beir_cqadupstack_gaming_10353": [
+  "5b9efc89c1e2ecae"
+ ],
+ "beir_cqadupstack_gaming_103707": [
+  "8b81b90881802f59"
+ ],
+ "beir_cqadupstack_gaming_103806": [
+  "9b350d9d51a70ebb"
+ ],
+ "beir_cqadupstack_gaming_103919": [
+  "c901951ab8258fe6"
+ ],
+ "beir_cqadupstack_gaming_104019": [
+  "d0b241abe70f3b10"
+ ],
+ "beir_cqadupstack_gaming_104037": [
+  "69077b7630520abb",
+  "7d88ef46b92cdc95",
+  "959e4ed1b1783cdf",
+  "9f5f9f4d7e53de4a",
+  "f5999a8ce6784f5a"
+ ],
+ "beir_cqadupstack_gaming_104173": [
+  "b1d3b88e719b7bd2"
+ ],
+ "beir_cqadupstack_gaming_104244": [
+  "547eeb44fb0c6040"
+ ],
+ "beir_cqadupstack_gaming_104362": [
+  "15f2852582aae1ad",
+  "42dfed3c13713d89",
+  "52c8b7d9a591d009",
+  "70e84a7e9906a39a",
+  "a185c398d94e2018",
+  "cf7a07e75b741527",
+  "f3750d64d94665ba"
+ ],
+ "beir_cqadupstack_gaming_104453": [
+  "cb3cea6b8b093970"
+ ],
+ "beir_cqadupstack_gaming_104527": [
+  "99a84505a63a7a18"
+ ],
+ "beir_cqadupstack_gaming_104596": [
+  "18177df6f36971bc",
+  "30f906302d1349e3",
+  "4a20753d24bc9b1a"
+ ],
+ "beir_cqadupstack_gaming_106132": [
+  "357d3a16bf55563d"
+ ],
+ "beir_cqadupstack_gaming_106193": [
+  "342fdd7c58f24848"
+ ],
+ "beir_cqadupstack_gaming_106222": [
+  "2532fd02441f8f70"
+ ],
+ "beir_cqadupstack_gaming_106383": [
+  "a81f2bcd08455343"
+ ],
+ "beir_cqadupstack_gaming_106408": [
+  "d87187e3e3fcb253"
+ ],
+ "beir_cqadupstack_gaming_106449": [
+  "b468f602cc86b1bb"
+ ],
+ "beir_cqadupstack_gaming_106490": [
+  "8f06ea0d19091046"
+ ],
+ "beir_cqadupstack_gaming_106540": [
+  "798e902183db3f59"
+ ],
+ "beir_cqadupstack_gaming_106640": [
+  "47a1efd95b8b0ded"
+ ],
+ "beir_cqadupstack_gaming_106680": [
+  "2edfb1dd8e35a5a4"
+ ],
+ "beir_cqadupstack_gaming_107027": [
+  "684fa366396a840a"
+ ],
+ "beir_cqadupstack_gaming_107154": [
+  "50227d7abd8e297a",
+  "a64bb95802753e3d"
+ ],
+ "beir_cqadupstack_gaming_107305": [
+  "99068db92780619e"
+ ],
+ "beir_cqadupstack_gaming_107500": [
+  "27d33a346c473b4c"
+ ],
+ "beir_cqadupstack_gaming_107539": [
+  "ad5d99677f423aef"
+ ],
+ "beir_cqadupstack_gaming_10756": [
+  "baff33c5b2934393"
+ ],
+ "beir_cqadupstack_gaming_107645": [
+  "0f8608033095bbf0",
+  "8e3740274c9515a8"
+ ],
+ "beir_cqadupstack_gaming_107735": [
+  "0154961ce83bd6a7",
+  "9993980c1e61732f",
+  "ca8f306d1cb9a026"
+ ],
+ "beir_cqadupstack_gaming_107773": [
+  "f98b6a69c9948e20"
+ ],
+ "beir_cqadupstack_gaming_107955": [
+  "bfe99ecf19d2834c"
+ ],
+ "beir_cqadupstack_gaming_108049": [
+  "bb22892bc2e7aacb"
+ ],
+ "beir_cqadupstack_gaming_108110": [
+  "349661b16c8cbb4a"
+ ],
+ "beir_cqadupstack_gaming_108132": [
+  "4142002f48b1b32b"
+ ],
+ "beir_cqadupstack_gaming_108212": [
+  "3d42040dcac31d20"
+ ],
+ "beir_cqadupstack_gaming_108224": [
+  "c456bf592aa1443a"
+ ],
+ "beir_cqadupstack_gaming_108299": [
+  "5c9fe7435130918f",
+  "a667202454bb8e87"
+ ],
+ "beir_cqadupstack_gaming_108387": [
+  "1fa6d50f624a7cf1"
+ ],
+ "beir_cqadupstack_gaming_108396": [
+  "08a48c5d275b43c3",
+  "4168d980d663bca2",
+  "4eaee94c830f9d4b"
+ ],
+ "beir_cqadupstack_gaming_108399": [
+  "c63e2518a4bfd388"
+ ],
+ "beir_cqadupstack_gaming_108472": [
+  "00751eaa3e051804"
+ ],
+ "beir_cqadupstack_gaming_108481": [
+  "9b38bc49233cd0c5"
+ ],
+ "beir_cqadupstack_gaming_108504": [
+  "3119f66db4091417"
+ ],
+ "beir_cqadupstack_gaming_108611": [
+  "f4898cc413eb00dc"
+ ],
+ "beir_cqadupstack_gaming_108713": [
+  "cd7fed2ef49b98bc"
+ ],
+ "beir_cqadupstack_gaming_10890": [
+  "74f54a2a48659c09"
+ ],
+ "beir_cqadupstack_gaming_109012": [
+  "e2fd516d18303485"
+ ],
+ "beir_cqadupstack_gaming_109119": [
+  "e2039056ed194651"
+ ],
+ "beir_cqadupstack_gaming_109332": [
+  "75ef84155dbb8825"
+ ],
+ "beir_cqadupstack_gaming_109388": [
+  "e6b8437637ef4976"
+ ],
+ "beir_cqadupstack_gaming_109539": [
+  "807dcd8d3a757600"
+ ],
+ "beir_cqadupstack_gaming_109586": [
+  "a7ead516fa826eb5"
+ ],
+ "beir_cqadupstack_gaming_109664": [
+  "6529afe7d76f3607"
+ ],
+ "beir_cqadupstack_gaming_109905": [
+  "b3b6fdfc5680024d",
+  "dbc1217927d9b035"
+ ],
+ "beir_cqadupstack_gaming_109923": [
+  "f042d0f28bb3d9a3"
+ ],
+ "beir_cqadupstack_gaming_110083": [
+  "66ead6c602a86b45",
+  "a2966bbcda4f86aa"
+ ],
+ "beir_cqadupstack_gaming_110214": [
+  "e13f6fbd84d1ac2e"
+ ],
+ "beir_cqadupstack_gaming_110515": [
+  "39bc8c3e64c31cad",
+  "d965b562ab385521"
+ ],
+ "beir_cqadupstack_gaming_110615": [
+  "2c6d68e728374f19"
+ ],
+ "beir_cqadupstack_gaming_110650": [
+  "147f92045b4b3237"
+ ],
+ "beir_cqadupstack_gaming_111757": [
+  "258de41944c29608"
+ ],
+ "beir_cqadupstack_gaming_111815": [
+  "1483c6eeaa5790a2"
+ ],
+ "beir_cqadupstack_gaming_111860": [
+  "3e550de26a5cbeee"
+ ],
+ "beir_cqadupstack_gaming_111879": [
+  "7e0c7215f7b5685a",
+  "f6b7afca0e6bcf44"
+ ],
+ "beir_cqadupstack_gaming_111894": [
+  "b12e60dc9ca5ed0e"
+ ],
+ "beir_cqadupstack_gaming_111948": [
+  "57d0514b6770d061"
+ ],
+ "beir_cqadupstack_gaming_112158": [
+  "bcefeb8d64fe751b"
+ ],
+ "beir_cqadupstack_gaming_112337": [
+  "611a410318877909",
+  "eb859560b48b9359"
+ ],
+ "beir_cqadupstack_gaming_112796": [
+  "f2ae625a0251206a"
+ ],
+ "beir_cqadupstack_gaming_112810": [
+  "9020532c0b05a3b2"
+ ],
+ "beir_cqadupstack_gaming_112875": [
+  "7b5aee2bd9da8860",
+  "9470ed45e3ef24c8"
+ ],
+ "beir_cqadupstack_gaming_112877": [
+  "2f2763fd32c01ec6",
+  "42c65f5444df009b",
+  "a77e02dc3a61d4f6",
+  "ccf9f75657faf1c9"
+ ],
+ "beir_cqadupstack_gaming_112920": [
+  "22bb3936382955a5"
+ ],
+ "beir_cqadupstack_gaming_112987": [
+  "c9b8a779fd21f155"
+ ],
+ "beir_cqadupstack_gaming_113173": [
+  "567a15931b4d3984",
+  "658c2ef0b23f5911",
+  "c52e46df3bde2500"
+ ],
+ "beir_cqadupstack_gaming_113208": [
+  "ab8fe89c5c136d26"
+ ],
+ "beir_cqadupstack_gaming_113449": [
+  "d72cde3ad0082ba2"
+ ],
+ "beir_cqadupstack_gaming_113673": [
+  "37fb90de0c9f6840"
+ ],
+ "beir_cqadupstack_gaming_113687": [
+  "468513f878d9f614"
+ ],
+ "beir_cqadupstack_gaming_113692": [
+  "e34aaa9b7d2a6687"
+ ],
+ "beir_cqadupstack_gaming_113723": [
+  "7dc496c2f78ed303",
+  "8faea99e2874f6f3"
+ ],
+ "beir_cqadupstack_gaming_113913": [
+  "ddb5e0cc50044398"
+ ],
+ "beir_cqadupstack_gaming_113962": [
+  "5f8ebc06d4c46cab",
+  "6ef5fdab4ad4cd22"
+ ],
+ "beir_cqadupstack_gaming_114370": [
+  "9bd9bdc262de78ed"
+ ],
+ "beir_cqadupstack_gaming_114416": [
+  "28a495cfba6d9ea5"
+ ],
+ "beir_cqadupstack_gaming_114459": [
+  "980351500c9b688b"
+ ],
+ "beir_cqadupstack_gaming_114471": [
+  "b1e7ea4a83b8adf3",
+  "c266208b156617eb",
+  "fe6b8551dfb8c9f6"
+ ],
+ "beir_cqadupstack_gaming_114842": [
+  "4d7032fd0e221ee1"
+ ],
+ "beir_cqadupstack_gaming_114957": [
+  "6fe02caf494027e5"
+ ],
+ "beir_cqadupstack_gaming_115059": [
+  "803b481eec4fadac",
+  "db0d77c58aa51ede"
+ ],
+ "beir_cqadupstack_gaming_115147": [
+  "9c1c75caaede82ac"
+ ],
+ "beir_cqadupstack_gaming_115943": [
+  "00913304a9a3a5ab",
+  "6bf0e055fd0f5536",
+  "d95d83a2dddc91e9"
+ ],
+ "beir_cqadupstack_gaming_116151": [
+  "f8dd9a704a7c2e77"
+ ],
+ "beir_cqadupstack_gaming_116301": [
+  "c7084c326f68ae24"
+ ],
+ "beir_cqadupstack_gaming_116464": [
+  "86c7339147569c35"
+ ],
+ "beir_cqadupstack_gaming_116598": [
+  "3f021cc4adab0499",
+  "b69d8c246a5fd995"
+ ],
+ "beir_cqadupstack_gaming_11667": [
+  "9e14e5efe5fd2ac4"
+ ],
+ "beir_cqadupstack_gaming_116703": [
+  "730584010b3a2954",
+  "a4433ad5b6835c10"
+ ],
+ "beir_cqadupstack_gaming_116707": [
+  "7f61fbcc378584f1"
+ ],
+ "beir_cqadupstack_gaming_116772": [
+  "326f2e838a8df9c8"
+ ],
+ "beir_cqadupstack_gaming_116802": [
+  "1e0ebb0e8b766996"
+ ],
+ "beir_cqadupstack_gaming_116844": [
+  "6cb8a830ca6e7b24"
+ ],
+ "beir_cqadupstack_gaming_116950": [
+  "487f506211a2bd20"
+ ],
+ "beir_cqadupstack_gaming_117123": [
+  "5a3c77cab17e178e"
+ ],
+ "beir_cqadupstack_gaming_117133": [
+  "00a07d2fcbfc2e5c"
+ ],
+ "beir_cqadupstack_gaming_117302": [
+  "0911279600415232"
+ ],
+ "beir_cqadupstack_gaming_117319": [
+  "1ae231e3c68a1d6e"
+ ],
+ "beir_cqadupstack_gaming_117519": [
+  "46ec34acd28ac920"
+ ],
+ "beir_cqadupstack_gaming_118090": [
+  "757c04ed119d4a4d"
+ ],
+ "beir_cqadupstack_gaming_118107": [
+  "e0d2324a5063bb34",
+  "f867fe7da8038d3e"
+ ],
+ "beir_cqadupstack_gaming_118118": [
+  "9550fabd6b1e856b"
+ ],
+ "beir_cqadupstack_gaming_118247": [
+  "5d7fe9d34c1eb3a5",
+  "8b4479d84a44fa08"
+ ],
+ "beir_cqadupstack_gaming_118304": [
+  "002d9451fb6d16b9",
+  "05f81cfc5e488844",
+  "0a4c5c4fa86107a5",
+  "0f05627061cd5cef",
+  "218a4c67cdfcb64b",
+  "260bc7119f9ac225",
+  "33516ad65a16d000",
+  "3ef48e7ecd0d33ba",
+  "4fd7c8b18e2378ba",
+  "50f629b7f366a9e5",
+  "550641771d23672f",
+  "61a15e02dce01ef3",
+  "628d3e08718f06af",
+  "69ae3477c0082e9d",
+  "6a4283bf0833f390",
+  "7dc3a9b990ed1e65",
+  "a815deb46ee218b6",
+  "a88fc8f82e650149",
+  "db70a7b661c8ad70"
+ ],
+ "beir_cqadupstack_gaming_11849": [
+  "7e3e4ff29a4f1f29"
+ ],
+ "beir_cqadupstack_gaming_118655": [
+  "26d8fe4be56a71db"
+ ],
+ "beir_cqadupstack_gaming_118740": [
+  "d21039e2818627ee"
+ ],
+ "beir_cqadupstack_gaming_118962": [
+  "6506f7dfe1be7aa0",
+  "acf154857bb078ba"
+ ],
+ "beir_cqadupstack_gaming_11898": [
+  "fee172eede0213f5"
+ ],
+ "beir_cqadupstack_gaming_118999": [
+  "535882a2b49494b5"
+ ],
+ "beir_cqadupstack_gaming_119040": [
+  "405e39c2b3af5ca3"
+ ],
+ "beir_cqadupstack_gaming_119123": [
+  "3d730f67a6f4b4c8"
+ ],
+ "beir_cqadupstack_gaming_119187": [
+  "37a6bc05ef27b442"
+ ],
+ "beir_cqadupstack_gaming_119204": [
+  "c8516ba4ecc424a9"
+ ],
+ "beir_cqadupstack_gaming_119266": [
+  "90abca4f26d12af0"
+ ],
+ "beir_cqadupstack_gaming_11937": [
+  "dac76cb195af4aa1",
+  "ef7bd686ecaebb09"
+ ],
+ "beir_cqadupstack_gaming_119413": [
+  "88a4295a71c488ad"
+ ],
+ "beir_cqadupstack_gaming_119533": [
+  "19d94b7e1080cbf9"
+ ],
+ "beir_cqadupstack_gaming_119846": [
+  "6321a1649d620103"
+ ],
+ "beir_cqadupstack_gaming_119903": [
+  "c504d87a40717d67"
+ ],
+ "beir_cqadupstack_gaming_119966": [
+  "a196d37fe120fe79"
+ ],
+ "beir_cqadupstack_gaming_120032": [
+  "363af2d94cb4ac09",
+  "58be8fdf8c7f7095",
+  "6a74c2ae16e01440",
+  "e9b116be8f2f033c",
+  "ee68c5983a14988c"
+ ],
+ "beir_cqadupstack_gaming_120062": [
+  "0c85eee20107e563"
+ ],
+ "beir_cqadupstack_gaming_120073": [
+  "25a7b997f31a5704"
+ ],
+ "beir_cqadupstack_gaming_120087": [
+  "41e3de03fc659677",
+  "72d73f2be14bab68",
+  "916405703c1539bc",
+  "a63e1c70b6b20ecc",
+  "bee40e108c1688ef"
+ ],
+ "beir_cqadupstack_gaming_120163": [
+  "969739713cabd61e"
+ ],
+ "beir_cqadupstack_gaming_120190": [
+  "500875aeb6d5081a"
+ ],
+ "beir_cqadupstack_gaming_120198": [
+  "de9ca4a97ee14496"
+ ],
+ "beir_cqadupstack_gaming_120218": [
+  "4ed2b9f94c4ca3ff"
+ ],
+ "beir_cqadupstack_gaming_120346": [
+  "116b1c453326281d"
+ ],
+ "beir_cqadupstack_gaming_120372": [
+  "8b6ac1c705b1c1f5",
+  "905ae9dc67017594"
+ ],
+ "beir_cqadupstack_gaming_120444": [
+  "6b416b8139661a3f"
+ ],
+ "beir_cqadupstack_gaming_120447": [
+  "ce80129c2828a5cd"
+ ],
+ "beir_cqadupstack_gaming_120525": [
+  "97a254e858d076d2"
+ ],
+ "beir_cqadupstack_gaming_120607": [
+  "9937d25ef3285608"
+ ],
+ "beir_cqadupstack_gaming_120612": [
+  "412641a2b2c46a17"
+ ],
+ "beir_cqadupstack_gaming_120847": [
+  "eccecd02af34ab43"
+ ],
+ "beir_cqadupstack_gaming_120935": [
+  "a8ddc41f41a1d62b",
+  "f9df31385eed281e"
+ ],
+ "beir_cqadupstack_gaming_120960": [
+  "fa5671bda838bde7"
+ ],
+ "beir_cqadupstack_gaming_121071": [
+  "44bbc2901ba00d11"
+ ],
+ "beir_cqadupstack_gaming_121254": [
+  "d51d381c32eccc3c"
+ ],
+ "beir_cqadupstack_gaming_121319": [
+  "f9190aa5102f9191"
+ ],
+ "beir_cqadupstack_gaming_121389": [
+  "997fa8c32c2c1999"
+ ],
+ "beir_cqadupstack_gaming_121651": [
+  "89b96bd7058d0cab"
+ ],
+ "beir_cqadupstack_gaming_121816": [
+  "b74cc92da9573b20"
+ ],
+ "beir_cqadupstack_gaming_121828": [
+  "72d9a916ea96aaa8"
+ ],
+ "beir_cqadupstack_gaming_121858": [
+  "0503e0797c75d9d0"
+ ],
+ "beir_cqadupstack_gaming_121898": [
+  "5a505cc457ab81f5",
+  "d9d6c37087ab0549"
+ ],
+ "beir_cqadupstack_gaming_121960": [
+  "8bd5fcc85ffd9549"
+ ],
+ "beir_cqadupstack_gaming_121987": [
+  "bed69bf4b352709e"
+ ],
+ "beir_cqadupstack_gaming_121993": [
+  "981534db1e1947a0"
+ ],
+ "beir_cqadupstack_gaming_122175": [
+  "259ccf55ffcc7e56"
+ ],
+ "beir_cqadupstack_gaming_122201": [
+  "af6c036441e1135a"
+ ],
+ "beir_cqadupstack_gaming_122227": [
+  "743d028f6ba2e3a0"
+ ],
+ "beir_cqadupstack_gaming_122372": [
+  "75df1890eba0455a"
+ ],
+ "beir_cqadupstack_gaming_122433": [
+  "dedd2740119eeb17"
+ ],
+ "beir_cqadupstack_gaming_122438": [
+  "59c57985462cac46"
+ ],
+ "beir_cqadupstack_gaming_122494": [
+  "0fc38a4cf12e82fc"
+ ],
+ "beir_cqadupstack_gaming_122758": [
+  "c5230d5c35a471e6"
+ ],
+ "beir_cqadupstack_gaming_122774": [
+  "483805bf6ec3d1f2",
+  "527cf02bacb54998"
+ ],
+ "beir_cqadupstack_gaming_122925": [
+  "bbd2e04483ee29f2"
+ ],
+ "beir_cqadupstack_gaming_122975": [
+  "2e32b3d53602f5cf",
+  "d234256aaeb828cc",
+  "d5bebd72f4a71e0f"
+ ],
+ "beir_cqadupstack_gaming_123179": [
+  "fe9ba4caa08018fd"
+ ],
+ "beir_cqadupstack_gaming_123315": [
+  "208af04877f08e60",
+  "55d3e20e46428c96"
+ ],
+ "beir_cqadupstack_gaming_123382": [
+  "feb60b2c2d0dcf0e"
+ ],
+ "beir_cqadupstack_gaming_123491": [
+  "b32470cb4ce5651b"
+ ],
+ "beir_cqadupstack_gaming_123558": [
+  "c5cf6371fdb260e5"
+ ],
+ "beir_cqadupstack_gaming_123647": [
+  "bb90132788c91363"
+ ],
+ "beir_cqadupstack_gaming_123794": [
+  "d4083653df01ef38"
+ ],
+ "beir_cqadupstack_gaming_123970": [
+  "18382e4ba356b51b",
+  "22ba2bbce3102991"
+ ],
+ "beir_cqadupstack_gaming_123983": [
+  "a14d0bbfffbb7ddc"
+ ],
+ "beir_cqadupstack_gaming_124046": [
+  "adbc6449504c3f2c"
+ ],
+ "beir_cqadupstack_gaming_124093": [
+  "6e0a774a07f4c66b",
+  "94f33c9212a8b813"
+ ],
+ "beir_cqadupstack_gaming_124454": [
+  "14a80b5c09f9ac54",
+  "9faacef19cd9d359"
+ ],
+ "beir_cqadupstack_gaming_124669": [
+  "d4f5db2be11e2cee"
+ ],
+ "beir_cqadupstack_gaming_124823": [
+  "b2136ab84dff764c"
+ ],
+ "beir_cqadupstack_gaming_124854": [
+  "6cfd929c6d30bee2",
+  "c09765fc23162318"
+ ],
+ "beir_cqadupstack_gaming_124902": [
+  "aaca3b6d7fc3dee2"
+ ],
+ "beir_cqadupstack_gaming_124936": [
+  "715d7b5477a5bb67"
+ ],
+ "beir_cqadupstack_gaming_124945": [
+  "277a7852fa419d81"
+ ],
+ "beir_cqadupstack_gaming_125077": [
+  "c70470ad10ef109b"
+ ],
+ "beir_cqadupstack_gaming_125102": [
+  "562ba37309c3650e"
+ ],
+ "beir_cqadupstack_gaming_125129": [
+  "ba9e103f725f6470"
+ ],
+ "beir_cqadupstack_gaming_125209": [
+  "213c12afbfc89f74"
+ ],
+ "beir_cqadupstack_gaming_125260": [
+  "3d01f105252e3fe1",
+  "ef9079da31269705"
+ ],
+ "beir_cqadupstack_gaming_125577": [
+  "695680f4a230843c"
+ ],
+ "beir_cqadupstack_gaming_125736": [
+  "c47af8a5987f1daa"
+ ],
+ "beir_cqadupstack_gaming_125889": [
+  "369ff83055e7eb46",
+  "6561028706f7749f",
+  "68fd697bed3f2eab"
+ ],
+ "beir_cqadupstack_gaming_125925": [
+  "d3d1e872b1f5692d"
+ ],
+ "beir_cqadupstack_gaming_126067": [
+  "7d7cd3b632e1c530"
+ ],
+ "beir_cqadupstack_gaming_126174": [
+  "00446a33c0549f53"
+ ],
+ "beir_cqadupstack_gaming_126250": [
+  "44ca0203297fa0ec"
+ ],
+ "beir_cqadupstack_gaming_126315": [
+  "ce6a6d5e507b33a2"
+ ],
+ "beir_cqadupstack_gaming_126332": [
+  "ab023e0c2fc90eb8"
+ ],
+ "beir_cqadupstack_gaming_126479": [
+  "41ef77345ac9bdaa",
+  "5a9b9f378a0698a2"
+ ],
+ "beir_cqadupstack_gaming_126668": [
+  "0015334478b9e8cc"
+ ],
+ "beir_cqadupstack_gaming_126819": [
+  "1c8f5a5b899b6210"
+ ],
+ "beir_cqadupstack_gaming_127012": [
+  "a4311d0cf9a03d55"
+ ],
+ "beir_cqadupstack_gaming_127170": [
+  "4a00449af6d1503a"
+ ],
+ "beir_cqadupstack_gaming_127183": [
+  "a6ee09fe9b351bbb"
+ ],
+ "beir_cqadupstack_gaming_127353": [
+  "6244ad67a53ff833"
+ ],
+ "beir_cqadupstack_gaming_127591": [
+  "3ad391e1c8c9b735",
+  "f32f9e9d37d978ca"
+ ],
+ "beir_cqadupstack_gaming_128036": [
+  "e69e0eb5b4acc69a"
+ ],
+ "beir_cqadupstack_gaming_128142": [
+  "d7c36c47c5717e64"
+ ],
+ "beir_cqadupstack_gaming_128163": [
+  "d9e6cf542dee043f"
+ ],
+ "beir_cqadupstack_gaming_128204": [
+  "7cc428a3acc8e75f"
+ ],
+ "beir_cqadupstack_gaming_128255": [
+  "e0cbe8622965e0f7"
+ ],
+ "beir_cqadupstack_gaming_128428": [
+  "80e882c4ad01b8fa"
+ ],
+ "beir_cqadupstack_gaming_128460": [
+  "bfa20c2ccb237bfd"
+ ],
+ "beir_cqadupstack_gaming_128478": [
+  "8ae72173dba45f49"
+ ],
+ "beir_cqadupstack_gaming_128498": [
+  "83f156a932e3cd9c"
+ ],
+ "beir_cqadupstack_gaming_128530": [
+  "0d4703b3fa1baa31"
+ ],
+ "beir_cqadupstack_gaming_128543": [
+  "5fad7fa84b39124a"
+ ],
+ "beir_cqadupstack_gaming_12860": [
+  "82d510212605e3d3"
+ ],
+ "beir_cqadupstack_gaming_128779": [
+  "f925751cdae92a47"
+ ],
+ "beir_cqadupstack_gaming_129425": [
+  "9c2371e0977bb205"
+ ],
+ "beir_cqadupstack_gaming_129739": [
+  "a8c98605d8ec69bc"
+ ],
+ "beir_cqadupstack_gaming_12982": [
+  "fef6e217e1fc47a8"
+ ],
+ "beir_cqadupstack_gaming_129933": [
+  "cf991aa08df39da3"
+ ],
+ "beir_cqadupstack_gaming_12996": [
+  "301626d6a9e76696"
+ ],
+ "beir_cqadupstack_gaming_130001": [
+  "a9214bb37db105bf"
+ ],
+ "beir_cqadupstack_gaming_130173": [
+  "ae0c9fcc6d13443f"
+ ],
+ "beir_cqadupstack_gaming_130204": [
+  "99faa52d994e6b94"
+ ],
+ "beir_cqadupstack_gaming_130358": [
+  "3b58fdc340f3644a",
+  "4102b5055da567dc"
+ ],
+ "beir_cqadupstack_gaming_130580": [
+  "c0bcd9f76bddaccc"
+ ],
+ "beir_cqadupstack_gaming_130782": [
+  "185be68ad0d67467"
+ ],
+ "beir_cqadupstack_gaming_130872": [
+  "0928541f2a89b2cb"
+ ],
+ "beir_cqadupstack_gaming_130955": [
+  "889ef6cef099de6c",
+  "a141a6b3a24ace17"
+ ],
+ "beir_cqadupstack_gaming_130982": [
+  "e3ce16f55de64e9a"
+ ],
+ "beir_cqadupstack_gaming_131095": [
+  "fe327f5088cb62b2"
+ ],
+ "beir_cqadupstack_gaming_131426": [
+  "12007489c0500243"
+ ],
+ "beir_cqadupstack_gaming_131475": [
+  "87cf6fd3ad178acb"
+ ],
+ "beir_cqadupstack_gaming_131556": [
+  "1f0aafb3eb7bc326",
+  "349551325a66864f",
+  "96c84b9489b9c9a4"
+ ],
+ "beir_cqadupstack_gaming_131693": [
+  "41f3b74290b2304a"
+ ],
+ "beir_cqadupstack_gaming_131708": [
+  "5ab64175484af4ca"
+ ],
+ "beir_cqadupstack_gaming_131834": [
+  "39d27229396eadd4"
+ ],
+ "beir_cqadupstack_gaming_131837": [
+  "a7f78b560aa04e06"
+ ],
+ "beir_cqadupstack_gaming_132060": [
+  "e88a3abb713f242e"
+ ],
+ "beir_cqadupstack_gaming_132399": [
+  "bf4452b72bb8da95"
+ ],
+ "beir_cqadupstack_gaming_132412": [
+  "4722c63d50b94682"
+ ],
+ "beir_cqadupstack_gaming_132447": [
+  "694831a762b84d7c"
+ ],
+ "beir_cqadupstack_gaming_132461": [
+  "f7eec4e5e5c5404e"
+ ],
+ "beir_cqadupstack_gaming_132464": [
+  "157142d05063477e",
+  "3accd6cbc21c1493",
+  "488d7a12519ec146",
+  "5bfe8ccae719fc4a"
+ ],
+ "beir_cqadupstack_gaming_132579": [
+  "20c3a1cfe7d482ad"
+ ],
+ "beir_cqadupstack_gaming_132586": [
+  "9074bfd13957bde7"
+ ],
+ "beir_cqadupstack_gaming_132740": [
+  "2850f323c6080624"
+ ],
+ "beir_cqadupstack_gaming_132883": [
+  "0f2c3bb8159d15c1"
+ ],
+ "beir_cqadupstack_gaming_132930": [
+  "4323d0935b3b9707"
+ ],
+ "beir_cqadupstack_gaming_133075": [
+  "56382405311c490b",
+  "5a95e0d9d139b88e",
+  "5b8b3361834f67b9",
+  "62162daef4884153",
+  "6691c8b7046433be",
+  "67d2cc2653d3db99",
+  "73f2b3f335daebd1",
+  "9c5c5b69642a989f",
+  "aab14d006e372f54",
+  "dc7aaebc1bbf1263",
+  "e002581172d5aea0",
+  "e8eb90f47fb7afb6",
+  "eef32cb8dba6aec9",
+  "efd96586525513bd",
+  "f339a81e5a6014d6",
+  "f8735f0b5e11102b"
+ ],
+ "beir_cqadupstack_gaming_133219": [
+  "a8096297c49088de"
+ ],
+ "beir_cqadupstack_gaming_13330": [
+  "db1ea9c63b794ab1"
+ ],
+ "beir_cqadupstack_gaming_133475": [
+  "7bd26fd225bf7fea",
+  "95e91ff87654c168",
+  "a4cf5127c00126ca"
+ ],
+ "beir_cqadupstack_gaming_133500": [
+  "a41802e3e390508b"
+ ],
+ "beir_cqadupstack_gaming_133515": [
+  "89e841f650c86e2f"
+ ],
+ "beir_cqadupstack_gaming_133663": [
+  "c21205790bfae6cd"
+ ],
+ "beir_cqadupstack_gaming_133789": [
+  "72d9568bc18edd1f"
+ ],
+ "beir_cqadupstack_gaming_133802": [
+  "358c9ddb3b66d7f0",
+  "e366bbca4d3a2f8b"
+ ],
+ "beir_cqadupstack_gaming_133954": [
+  "fab9ea591ec7b7e5"
+ ],
+ "beir_cqadupstack_gaming_133980": [
+  "13b8f0ac77c1a610",
+  "4de4b9ccaa3c699b"
+ ],
+ "beir_cqadupstack_gaming_134095": [
+  "1abe879933b5f4fb"
+ ],
+ "beir_cqadupstack_gaming_134219": [
+  "110446dbb23527c6"
+ ],
+ "beir_cqadupstack_gaming_134311": [
+  "bde212bf3a97456f"
+ ],
+ "beir_cqadupstack_gaming_134340": [
+  "bfa2cae0b55473b8"
+ ],
+ "beir_cqadupstack_gaming_1345": [
+  "7e196309a3dcb5ba"
+ ],
+ "beir_cqadupstack_gaming_135380": [
+  "53a0af63409bcd92"
+ ],
+ "beir_cqadupstack_gaming_135463": [
+  "af7f59d8446921f6"
+ ],
+ "beir_cqadupstack_gaming_135615": [
+  "f7df7fd69da4e9ac"
+ ],
+ "beir_cqadupstack_gaming_135629": [
+  "166ab6e9b1110bc5"
+ ],
+ "beir_cqadupstack_gaming_135657": [
+  "2264fc8ba972a3c4"
+ ],
+ "beir_cqadupstack_gaming_135720": [
+  "a84a471a9ee25415"
+ ],
+ "beir_cqadupstack_gaming_135816": [
+  "513b6ce7555eafea",
+  "7d0a0cd1ca2edc4a",
+  "972470794e65d487",
+  "c320df5417dd89d7",
+  "e877604f67b2bdc8",
+  "ff324830801d1b62"
+ ],
+ "beir_cqadupstack_gaming_135913": [
+  "29baa654bba43366",
+  "a11b36d222ba9c9f"
+ ],
+ "beir_cqadupstack_gaming_135922": [
+  "3cc92b5494585aca"
+ ],
+ "beir_cqadupstack_gaming_136081": [
+  "9511eb46327b3f52"
+ ],
+ "beir_cqadupstack_gaming_136179": [
+  "ecd1c1f982b9c0d8"
+ ],
+ "beir_cqadupstack_gaming_136212": [
+  "bedc3e8f4394bc4c"
+ ],
+ "beir_cqadupstack_gaming_13624": [
+  "a549baf361fdd130"
+ ],
+ "beir_cqadupstack_gaming_136325": [
+  "c76165cfb97ab9a1",
+  "e00bb8e423935b8a"
+ ],
+ "beir_cqadupstack_gaming_136551": [
+  "129c38260cd36c51"
+ ],
+ "beir_cqadupstack_gaming_136583": [
+  "f402e148ba7ca5a0"
+ ],
+ "beir_cqadupstack_gaming_136700": [
+  "958e35a0a0b3544b"
+ ],
+ "beir_cqadupstack_gaming_136721": [
+  "2e2ece46295c785a"
+ ],
+ "beir_cqadupstack_gaming_136912": [
+  "24c3f63762cccec8"
+ ],
+ "beir_cqadupstack_gaming_136978": [
+  "5e463093cd0e1c67",
+  "bb2096a1085ced36"
+ ],
+ "beir_cqadupstack_gaming_136991": [
+  "f076be1f48f100de"
+ ],
+ "beir_cqadupstack_gaming_137006": [
+  "7a3fe28dab4d3255"
+ ],
+ "beir_cqadupstack_gaming_137024": [
+  "774cf9ac2d52cd50"
+ ],
+ "beir_cqadupstack_gaming_137067": [
+  "2ba76773c3e9dcb7"
+ ],
+ "beir_cqadupstack_gaming_137124": [
+  "1fd488a1b17d6703"
+ ],
+ "beir_cqadupstack_gaming_137159": [
+  "ae18a1f36f015786"
+ ],
+ "beir_cqadupstack_gaming_137170": [
+  "296c7db4fbf77915"
+ ],
+ "beir_cqadupstack_gaming_137211": [
+  "0a4b197692c0d3e0",
+  "5bdcc1f8337af3e0",
+  "bf9fe4be415327b7",
+  "d549bc74d5ef1865",
+  "f62019d4eed9fad1"
+ ],
+ "beir_cqadupstack_gaming_137220": [
+  "3f134f373d4035d5",
+  "5b8316e3e0d44762",
+  "bf7aa117930f9a56",
+  "c10e3f9903b8bd6d"
+ ],
+ "beir_cqadupstack_gaming_137242": [
+  "56484ef23b500433",
+  "c92f8489a9c92a36"
+ ],
+ "beir_cqadupstack_gaming_137254": [
+  "67d590199e7c5a8c",
+  "dca8e81e899f06f7",
+  "e684add1e3704172"
+ ],
+ "beir_cqadupstack_gaming_137304": [
+  "c68d30d2277d7ede"
+ ],
+ "beir_cqadupstack_gaming_13736": [
+  "9cdff7638b7580e4"
+ ],
+ "beir_cqadupstack_gaming_137370": [
+  "2d24f4b111c01d5f"
+ ],
+ "beir_cqadupstack_gaming_137385": [
+  "432426a2b98f3989"
+ ],
+ "beir_cqadupstack_gaming_137425": [
+  "643eb0b83b1e647e"
+ ],
+ "beir_cqadupstack_gaming_137473": [
+  "73a775cec6ebd23f",
+  "c4459f66feb54878"
+ ],
+ "beir_cqadupstack_gaming_137489": [
+  "19c4733eaa55ee8e",
+  "19e6de324e3c305d",
+  "27fb3269da9af13e",
+  "594c0ef29f130d0e",
+  "93b167c107da6352",
+  "95cfcf5f4e999b56"
+ ],
+ "beir_cqadupstack_gaming_137618": [
+  "2109f8088931eb73"
+ ],
+ "beir_cqadupstack_gaming_138052": [
+  "e4d67d2d20af26ac"
+ ],
+ "beir_cqadupstack_gaming_138132": [
+  "6c26d2a9d1ee8751"
+ ],
+ "beir_cqadupstack_gaming_138459": [
+  "9665011067667d34"
+ ],
+ "beir_cqadupstack_gaming_138481": [
+  "217e0b68718d1c20",
+  "39866de525cde563",
+  "c82835fab46921b4"
+ ],
+ "beir_cqadupstack_gaming_138500": [
+  "bf71dab95476c3e4",
+  "f7ad63b1ee94faec"
+ ],
+ "beir_cqadupstack_gaming_138501": [
+  "3b0c608e5be8684b"
+ ],
+ "beir_cqadupstack_gaming_138616": [
+  "9b95e64c792473b7"
+ ],
+ "beir_cqadupstack_gaming_138692": [
+  "46260552e7fa08fa",
+  "c0a753e1b96c255a"
+ ],
+ "beir_cqadupstack_gaming_138733": [
+  "991d87634b6b7685"
+ ],
+ "beir_cqadupstack_gaming_138792": [
+  "cebbaf63c9ee0daf"
+ ],
+ "beir_cqadupstack_gaming_138845": [
+  "b5a429906c1c9987",
+  "b7a25d6f970bd058",
+  "f12e9db677e486d5"
+ ],
+ "beir_cqadupstack_gaming_138891": [
+  "b118a63013dd4cde"
+ ],
+ "beir_cqadupstack_gaming_138917": [
+  "ee0758f9a927cd4a"
+ ],
+ "beir_cqadupstack_gaming_138944": [
+  "4032f31e7d03db87"
+ ],
+ "beir_cqadupstack_gaming_139098": [
+  "ba9642d5e4c3749d"
+ ],
+ "beir_cqadupstack_gaming_139168": [
+  "2bc5354ab6344683",
+  "4fd529a4cce1ee96",
+  "76118b1c119229bb"
+ ],
+ "beir_cqadupstack_gaming_139251": [
+  "e790616a583c64a1"
+ ],
+ "beir_cqadupstack_gaming_14142": [
+  "1eb85881d54ee80d"
+ ],
+ "beir_cqadupstack_gaming_141451": [
+  "717783bea75a186d"
+ ],
+ "beir_cqadupstack_gaming_141559": [
+  "66eaed39664b0d7c"
+ ],
+ "beir_cqadupstack_gaming_141668": [
+  "a6d6ac1ca7d7f4c6"
+ ],
+ "beir_cqadupstack_gaming_141707": [
+  "a8f7e223ee1f2183",
+  "dd28fa0073545882"
+ ],
+ "beir_cqadupstack_gaming_141723": [
+  "5f5927170631c6b4"
+ ],
+ "beir_cqadupstack_gaming_141771": [
+  "1ea643deb0a2f70f"
+ ],
+ "beir_cqadupstack_gaming_141990": [
+  "6eadaaf23ad29734"
+ ],
+ "beir_cqadupstack_gaming_14203": [
+  "21ee1e834f9feb2d",
+  "a30514983bcb44c7"
+ ],
+ "beir_cqadupstack_gaming_142088": [
+  "169205f4e65961e4"
+ ],
+ "beir_cqadupstack_gaming_142135": [
+  "773421735ac7b766"
+ ],
+ "beir_cqadupstack_gaming_142218": [
+  "db5b224016c621e7"
+ ],
+ "beir_cqadupstack_gaming_142359": [
+  "7345ea4f053de1a9"
+ ],
+ "beir_cqadupstack_gaming_142388": [
+  "c7b7516c58096143"
+ ],
+ "beir_cqadupstack_gaming_142520": [
+  "316b07dc1baaff9a",
+  "fe7bb4ea210aff21"
+ ],
+ "beir_cqadupstack_gaming_142610": [
+  "208444335319ccc4"
+ ],
+ "beir_cqadupstack_gaming_142791": [
+  "eb394d1ca780ab6c"
+ ],
+ "beir_cqadupstack_gaming_142845": [
+  "0e679c007731dc2b"
+ ],
+ "beir_cqadupstack_gaming_143058": [
+  "7a51a34d0bfc35fe"
+ ],
+ "beir_cqadupstack_gaming_143085": [
+  "4d2ea36d099d00c7"
+ ],
+ "beir_cqadupstack_gaming_143188": [
+  "f554404001ba4023"
+ ],
+ "beir_cqadupstack_gaming_143267": [
+  "ed7a438ccf62dd6d"
+ ],
+ "beir_cqadupstack_gaming_143383": [
+  "f7f67de19d9e8b8d"
+ ],
+ "beir_cqadupstack_gaming_143603": [
+  "a450179008e0e0f3"
+ ],
+ "beir_cqadupstack_gaming_143719": [
+  "fbabb8375fd93874"
+ ],
+ "beir_cqadupstack_gaming_143795": [
+  "40954a603c945563",
+  "5d5c6ddbc25757f5",
+  "a77e06a715dcdbbc"
+ ],
+ "beir_cqadupstack_gaming_143874": [
+  "621fb84fc5b33179"
+ ],
+ "beir_cqadupstack_gaming_143892": [
+  "f3cb9dd22fa5a20d"
+ ],
+ "beir_cqadupstack_gaming_143945": [
+  "9f6d2e379dead019"
+ ],
+ "beir_cqadupstack_gaming_144050": [
+  "3b44eea4e530c69c"
+ ],
+ "beir_cqadupstack_gaming_144203": [
+  "4d3a170b03bc8798"
+ ],
+ "beir_cqadupstack_gaming_144282": [
+  "03c3e4d4b2de835f",
+  "46e3ca84b630fac5",
+  "dc2e82ae6acc293a"
+ ],
+ "beir_cqadupstack_gaming_144372": [
+  "c58e3e3816023710"
+ ],
+ "beir_cqadupstack_gaming_144588": [
+  "05866e4546169732"
+ ],
+ "beir_cqadupstack_gaming_144623": [
+  "e28cfd3f2ce3555c",
+  "fa85f7f214d27791"
+ ],
+ "beir_cqadupstack_gaming_144718": [
+  "38da7f5414f92eea"
+ ],
+ "beir_cqadupstack_gaming_144824": [
+  "bad3915dbc4af23f"
+ ],
+ "beir_cqadupstack_gaming_14500": [
+  "1c965aee18585333"
+ ],
+ "beir_cqadupstack_gaming_145019": [
+  "a343b850117cc6c4"
+ ],
+ "beir_cqadupstack_gaming_145059": [
+  "025b77be9f478dbe"
+ ],
+ "beir_cqadupstack_gaming_145096": [
+  "160a5f3d817f4240"
+ ],
+ "beir_cqadupstack_gaming_145102": [
+  "156c739ad89b2be0",
+  "cad754b25b09415d",
+  "e6499227ca197736"
+ ],
+ "beir_cqadupstack_gaming_145236": [
+  "7e8cd0f0d99f1b4c"
+ ],
+ "beir_cqadupstack_gaming_145481": [
+  "0b52b8cee0f999a9"
+ ],
+ "beir_cqadupstack_gaming_145643": [
+  "462fb97042b85269",
+  "c396662aced6eb16"
+ ],
+ "beir_cqadupstack_gaming_14566": [
+  "8ea4044a23e6909a"
+ ],
+ "beir_cqadupstack_gaming_145732": [
+  "566946967192ca9c",
+  "6987c2609ddbf2c7"
+ ],
+ "beir_cqadupstack_gaming_145772": [
+  "ad27cc0b901968b2"
+ ],
+ "beir_cqadupstack_gaming_145776": [
+  "156f4624699a21f6"
+ ],
+ "beir_cqadupstack_gaming_145889": [
+  "4e7857e19933c1a1"
+ ],
+ "beir_cqadupstack_gaming_145950": [
+  "fd3c20a6c8b467eb"
+ ],
+ "beir_cqadupstack_gaming_146011": [
+  "4b63b1e66bff3f58"
+ ],
+ "beir_cqadupstack_gaming_146037": [
+  "4da3ebc796b0bd01",
+  "94e66c85778dfccc"
+ ],
+ "beir_cqadupstack_gaming_14604": [
+  "f14cabd529c5e962"
+ ],
+ "beir_cqadupstack_gaming_14605": [
+  "abdc550b6f261fc6"
+ ],
+ "beir_cqadupstack_gaming_146179": [
+  "c99fc91e09a3f976"
+ ],
+ "beir_cqadupstack_gaming_146254": [
+  "b044f82e171a3df7"
+ ],
+ "beir_cqadupstack_gaming_146315": [
+  "01d6f78406fef9a3"
+ ],
+ "beir_cqadupstack_gaming_146317": [
+  "077b7989c8e9ec55",
+  "ff6ba5c1e7a5fdd2"
+ ],
+ "beir_cqadupstack_gaming_146540": [
+  "38f95b36df406a3c",
+  "99d99b0915f7b9a4"
+ ],
+ "beir_cqadupstack_gaming_146551": [
+  "86eee8191fde40b7"
+ ],
+ "beir_cqadupstack_gaming_146554": [
+  "06543054532d6951",
+  "156de44bc59e6620"
+ ],
+ "beir_cqadupstack_gaming_146593": [
+  "2981bfe5631099a1"
+ ],
+ "beir_cqadupstack_gaming_146611": [
+  "740da39814096ea1",
+  "8a91a533b232861e",
+  "90d4fdadd710824a",
+  "c9bbdb62a2656fd5"
+ ],
+ "beir_cqadupstack_gaming_146626": [
+  "003883e1e4c28ef3",
+  "c562c96dee533eeb"
+ ],
+ "beir_cqadupstack_gaming_146639": [
+  "3b5c3f88efedfe0f"
+ ],
+ "beir_cqadupstack_gaming_14666": [
+  "651e35d61b318ea2",
+  "75859a8bd8ceecdc"
+ ],
+ "beir_cqadupstack_gaming_146722": [
+  "c5f69c5bb5c5901b"
+ ],
+ "beir_cqadupstack_gaming_14695": [
+  "20472d07d79f674f"
+ ],
+ "beir_cqadupstack_gaming_146973": [
+  "be0d0da939a7662d"
+ ],
+ "beir_cqadupstack_gaming_147003": [
+  "433d4029176c6f8d"
+ ],
+ "beir_cqadupstack_gaming_147048": [
+  "944914f4a1cb8ce5"
+ ],
+ "beir_cqadupstack_gaming_147159": [
+  "074fd4ab0044c923"
+ ],
+ "beir_cqadupstack_gaming_147658": [
+  "01c015f891cd2ef3",
+  "21594d2e328f9fc5",
+  "64b6857c04abcb9e",
+  "fe1607fdf30dc76d"
+ ],
+ "beir_cqadupstack_gaming_147878": [
+  "29b28b031db104c7",
+  "38560e791f45d825",
+  "44bb9e357ae9d973",
+  "5c2ef8a244498c54",
+  "6062439a6a9525ae",
+  "65bf4e33f72b35f0",
+  "8c03358fa0bf2b03",
+  "94c6eb4a5dfee485",
+  "a14b7fdd77f08b22",
+  "a7346668146b734a",
+  "ad9e6b358aa756cd",
+  "b69a1faa11788879",
+  "bc617c789431df7c",
+  "bf5622ca6ff5b2b2",
+  "c679a75e52cb9579",
+  "d5b5a2b4fcc49042",
+  "db1f07f1971d982a",
+  "e3a958a7346ce945",
+  "e8f1e8cca8ce91b4",
+  "f8597b22ccb291b7"
+ ],
+ "beir_cqadupstack_gaming_147891": [
+  "82a41db3c67bbedd"
+ ],
+ "beir_cqadupstack_gaming_147974": [
+  "393e3a383a5bf825",
+  "c7f5f6189a155afd"
+ ],
+ "beir_cqadupstack_gaming_148022": [
+  "6adc4c595c68e34c"
+ ],
+ "beir_cqadupstack_gaming_148073": [
+  "45692a6c58548d56",
+  "8c7e7f52a185eb9f"
+ ],
+ "beir_cqadupstack_gaming_14808": [
+  "7d18ac3e4ad18298"
+ ],
+ "beir_cqadupstack_gaming_148232": [
+  "88b0e02855f06e29"
+ ],
+ "beir_cqadupstack_gaming_148258": [
+  "6d1c7d3b91674785"
+ ],
+ "beir_cqadupstack_gaming_148268": [
+  "c7a1b56057d66d9d"
+ ],
+ "beir_cqadupstack_gaming_14828": [
+  "3b40fb4c4cf9f971"
+ ],
+ "beir_cqadupstack_gaming_14832": [
+  "fea6ade6803f3ce1"
+ ],
+ "beir_cqadupstack_gaming_148382": [
+  "2201f2cbee525f1f"
+ ],
+ "beir_cqadupstack_gaming_148426": [
+  "5f90f6b55c54643f"
+ ],
+ "beir_cqadupstack_gaming_148466": [
+  "2f425f44b10fe356",
+  "3cafd7ce65cbdf2b",
+  "48360db6b414e9fd",
+  "5d161dda3b1836c9"
+ ],
+ "beir_cqadupstack_gaming_148516": [
+  "c055cf1cc7b51931"
+ ],
+ "beir_cqadupstack_gaming_148519": [
+  "191b7b78b66f83fd"
+ ],
+ "beir_cqadupstack_gaming_148776": [
+  "9b28775ec4ac60d3",
+  "9bd11ed58283c66b",
+  "d13d04ffadf1c74b",
+  "d2d0ac909b95fba9",
+  "d5c581f0d2f38961",
+  "e52885876167214a",
+  "e9848f2463ba0069",
+  "e993e9491d5b02e5"
+ ],
+ "beir_cqadupstack_gaming_148876": [
+  "bff39b4bc2496fe7"
+ ],
+ "beir_cqadupstack_gaming_148895": [
+  "503121aeb86ea1a7",
+  "5930384ca6f9bc66",
+  "6f9c9513a80da556",
+  "961f26b48fd9ccf9"
+ ],
+ "beir_cqadupstack_gaming_149020": [
+  "0c87a2e980a1ba24"
+ ],
+ "beir_cqadupstack_gaming_149037": [
+  "4944b557225abd72",
+  "7e1740c697c36cdb",
+  "a911b07d5b37d42c"
+ ],
+ "beir_cqadupstack_gaming_149569": [
+  "d05041e8d9132996"
+ ],
+ "beir_cqadupstack_gaming_149620": [
+  "72df02f15566341e"
+ ],
+ "beir_cqadupstack_gaming_149849": [
+  "ccce1b9a333bec56"
+ ],
+ "beir_cqadupstack_gaming_149857": [
+  "01b6f837bbe5e8e6",
+  "4e0fdc06f45ece5b"
+ ],
+ "beir_cqadupstack_gaming_15000": [
+  "55f1eff7109d005f",
+  "fb1ea694fa3188e2"
+ ],
+ "beir_cqadupstack_gaming_150021": [
+  "180d614f85cfd44c"
+ ],
+ "beir_cqadupstack_gaming_150029": [
+  "b245c19802fd0af4"
+ ],
+ "beir_cqadupstack_gaming_150072": [
+  "152f8388a0dbb33f",
+  "163fa75d4d093779",
+  "189e1998c33f56d2",
+  "1ad944f7b9a98548",
+  "1d40ace66931ffe0",
+  "1de2803b0f01306b",
+  "239dce73f2416793",
+  "25e83d9979cba603",
+  "31ab914cfa65e840",
+  "35a8ff12d16a7675",
+  "40fb291a914b7fee",
+  "6876a7dc5e45f13b",
+  "6b0b4d698441aff7",
+  "6e55977d6ed27c2d",
+  "73eb3987dbd7bf45",
+  "7b912b02a483a5d9",
+  "7ce5f85522820a76",
+  "7cedaa146d3aebbd",
+  "7fc1d09ce1ebc2fe",
+  "812481c54de1d3db",
+  "88b39e2463b6987f",
+  "9f460db03c6ea8b4",
+  "b40aea1c47a6d2c1",
+  "b41ff9b0fed8d83e",
+  "b771b3594eb7410e",
+  "d37e59ed257e3de7",
+  "db32c390e7329ec1",
+  "e112190d1e40f0a4",
+  "e824006a15c86a88",
+  "fefef0c94b8f2648"
+ ],
+ "beir_cqadupstack_gaming_150276": [
+  "3e8ef6fd5099e10c"
+ ],
+ "beir_cqadupstack_gaming_150564": [
+  "a8ef010202fbc19a",
+  "b02ba288b73454d2",
+  "bd58076a39a924a0"
+ ],
+ "beir_cqadupstack_gaming_150668": [
+  "1b4a04fe1704e4a3",
+  "d48d999582ccd03b",
+  "f2158e2ea894cfb4"
+ ],
+ "beir_cqadupstack_gaming_150776": [
+  "afb7902329cf7a88"
+ ],
+ "beir_cqadupstack_gaming_150876": [
+  "08735e485cb4d741"
+ ],
+ "beir_cqadupstack_gaming_151193": [
+  "4baea8652553a00b"
+ ],
+ "beir_cqadupstack_gaming_151205": [
+  "6800c6bb19656ee9",
+  "e18fd6739653bffb"
+ ],
+ "beir_cqadupstack_gaming_151250": [
+  "2e4aa6b65cc3e67f",
+  "57c1d49de0cc34b1",
+  "af2ad18c134f25a8"
+ ],
+ "beir_cqadupstack_gaming_151303": [
+  "95c61f5a378ab3f2"
+ ],
+ "beir_cqadupstack_gaming_151317": [
+  "aa8df64f25cf9be2"
+ ],
+ "beir_cqadupstack_gaming_151335": [
+  "d17c868d1314e3a3"
+ ],
+ "beir_cqadupstack_gaming_151465": [
+  "cc0044c783c540c3"
+ ],
+ "beir_cqadupstack_gaming_15159": [
+  "4e028f03cab3ce03"
+ ],
+ "beir_cqadupstack_gaming_15177": [
+  "c71ba62a5ac6e72c"
+ ],
+ "beir_cqadupstack_gaming_151773": [
+  "eb97f22818ba55cd"
+ ],
+ "beir_cqadupstack_gaming_151905": [
+  "59cc56ffbd0b0868"
+ ],
+ "beir_cqadupstack_gaming_152047": [
+  "48380b78bf3e97ee"
+ ],
+ "beir_cqadupstack_gaming_152057": [
+  "4fe7aa2a64e1cbfc"
+ ],
+ "beir_cqadupstack_gaming_15207": [
+  "018bdcce9b019327"
+ ],
+ "beir_cqadupstack_gaming_152184": [
+  "4f3bd9b90f10a523",
+  "85402e43288f47ce",
+  "c821d6f59915489f"
+ ],
+ "beir_cqadupstack_gaming_152285": [
+  "682d66c94dca0e49"
+ ],
+ "beir_cqadupstack_gaming_152409": [
+  "bf9f1f660d74f10c"
+ ],
+ "beir_cqadupstack_gaming_152444": [
+  "64a93ade8145c69d"
+ ],
+ "beir_cqadupstack_gaming_152462": [
+  "b1a7b835a951d21a"
+ ],
+ "beir_cqadupstack_gaming_152672": [
+  "27bfb8fd076321db"
+ ],
+ "beir_cqadupstack_gaming_152683": [
+  "1cdc0955cbe3898b"
+ ],
+ "beir_cqadupstack_gaming_152954": [
+  "8dfb7dd58d5c51ee"
+ ],
+ "beir_cqadupstack_gaming_153102": [
+  "c92ba40d45e5df9a"
+ ],
+ "beir_cqadupstack_gaming_153109": [
+  "e8cae36284623b44"
+ ],
+ "beir_cqadupstack_gaming_153205": [
+  "3db4e615a5aceadd",
+  "f100d03d37435dab"
+ ],
+ "beir_cqadupstack_gaming_153234": [
+  "b2b6d08b8e22111b"
+ ],
+ "beir_cqadupstack_gaming_153332": [
+  "5fc66d88f428c8ca",
+  "7b533ddb7a134024",
+  "d5885fa53f47476d"
+ ],
+ "beir_cqadupstack_gaming_153571": [
+  "3202021c35692b91"
+ ],
+ "beir_cqadupstack_gaming_15402": [
+  "54d1d71ab800aeb9"
+ ],
+ "beir_cqadupstack_gaming_154718": [
+  "b3265e7c606ea79a"
+ ],
+ "beir_cqadupstack_gaming_154737": [
+  "2c0a6c8dc54bd758"
+ ],
+ "beir_cqadupstack_gaming_154772": [
+  "02e72ace2313704d",
+  "e82d6ffdeff79401"
+ ],
+ "beir_cqadupstack_gaming_154903": [
+  "3d7bb540ddf2f3fa"
+ ],
+ "beir_cqadupstack_gaming_155016": [
+  "b056f73c43057112"
+ ],
+ "beir_cqadupstack_gaming_155074": [
+  "be14f000ed7a5b1c"
+ ],
+ "beir_cqadupstack_gaming_155236": [
+  "db068b85af8370ff"
+ ],
+ "beir_cqadupstack_gaming_15537": [
+  "71ed401b64ed4457"
+ ],
+ "beir_cqadupstack_gaming_155428": [
+  "fe358c60f13f7911"
+ ],
+ "beir_cqadupstack_gaming_155463": [
+  "11310f5e6e417bb8",
+  "aee651c2e797dfdc"
+ ],
+ "beir_cqadupstack_gaming_155544": [
+  "476718bb397262e3"
+ ],
+ "beir_cqadupstack_gaming_155600": [
+  "86106834ea87dd91"
+ ],
+ "beir_cqadupstack_gaming_155609": [
+  "39a69d1359910372"
+ ],
+ "beir_cqadupstack_gaming_155779": [
+  "484690046449ca61"
+ ],
+ "beir_cqadupstack_gaming_155818": [
+  "1cad372e7b0a536a"
+ ],
+ "beir_cqadupstack_gaming_155925": [
+  "80ebd2e308ae9048"
+ ],
+ "beir_cqadupstack_gaming_156009": [
+  "a94fb0ad2bde643a",
+  "ad2abf7f2238f241"
+ ],
+ "beir_cqadupstack_gaming_156100": [
+  "8f67f7e1d373cb72"
+ ],
+ "beir_cqadupstack_gaming_156230": [
+  "233eaa8825f0e51e"
+ ],
+ "beir_cqadupstack_gaming_156705": [
+  "91b8e8f81915543e"
+ ],
+ "beir_cqadupstack_gaming_156728": [
+  "0a6396007a604d9b",
+  "32172f97d9fdc9f6",
+  "328f5e171eea565d",
+  "45c1653262de4c64",
+  "4b190ff197cd439b",
+  "c4f48d2933aa613e",
+  "eaaec05a2d38b303",
+  "fc10be348a31d9a9"
+ ],
+ "beir_cqadupstack_gaming_157028": [
+  "b8e59854997b66e3"
+ ],
+ "beir_cqadupstack_gaming_157048": [
+  "e3d51960622c8992"
+ ],
+ "beir_cqadupstack_gaming_157278": [
+  "10343e5c7f83e41f"
+ ],
+ "beir_cqadupstack_gaming_157396": [
+  "0350b456b807b11e",
+  "1e646127b5e6a8e6"
+ ],
+ "beir_cqadupstack_gaming_157597": [
+  "d2991fbd2a856af1"
+ ],
+ "beir_cqadupstack_gaming_158017": [
+  "616383db84364d80",
+  "b24b7fe375342a4c"
+ ],
+ "beir_cqadupstack_gaming_158220": [
+  "ca5fdfd1892c6197"
+ ],
+ "beir_cqadupstack_gaming_158329": [
+  "4af2d83d0e312c81"
+ ],
+ "beir_cqadupstack_gaming_158424": [
+  "d257c2cb432fc711"
+ ],
+ "beir_cqadupstack_gaming_158717": [
+  "4774d74f783fbe07"
+ ],
+ "beir_cqadupstack_gaming_159119": [
+  "3bfe4f49470439ec"
+ ],
+ "beir_cqadupstack_gaming_159231": [
+  "72340e3bac700740"
+ ],
+ "beir_cqadupstack_gaming_159293": [
+  "99f025145e71ec7d"
+ ],
+ "beir_cqadupstack_gaming_159431": [
+  "679036fc43056573"
+ ],
+ "beir_cqadupstack_gaming_159503": [
+  "c701ed82701b9a8a"
+ ],
+ "beir_cqadupstack_gaming_159576": [
+  "c77e93df6ef16977"
+ ],
+ "beir_cqadupstack_gaming_15959": [
+  "c6253a66b15588be"
+ ],
+ "beir_cqadupstack_gaming_159718": [
+  "1645f3470e1e1ab1"
+ ],
+ "beir_cqadupstack_gaming_159740": [
+  "78cf7b183f9094dd"
+ ],
+ "beir_cqadupstack_gaming_159752": [
+  "00fb1d349a07d0b2"
+ ],
+ "beir_cqadupstack_gaming_159789": [
+  "20f9e7b8009b82cc"
+ ],
+ "beir_cqadupstack_gaming_15981": [
+  "1f7f37a853855e1a",
+  "8ffad752d9a01e0b"
+ ],
+ "beir_cqadupstack_gaming_160096": [
+  "86704f80401b55b4"
+ ],
+ "beir_cqadupstack_gaming_160298": [
+  "49c995eb1aaae191"
+ ],
+ "beir_cqadupstack_gaming_160341": [
+  "0ffd3b39e411ef9b"
+ ],
+ "beir_cqadupstack_gaming_160463": [
+  "691dcb325e783466"
+ ],
+ "beir_cqadupstack_gaming_160488": [
+  "5524863a3b2441ae"
+ ],
+ "beir_cqadupstack_gaming_160518": [
+  "80a3711333e214d0"
+ ],
+ "beir_cqadupstack_gaming_160548": [
+  "53d40c8969f2ee5f",
+  "79b4df3d5d984c0e",
+  "7b0b4ed0d4e23349",
+  "9a6c3dc5690879c6"
+ ],
+ "beir_cqadupstack_gaming_160560": [
+  "cec4e98f8e1cbbfa"
+ ],
+ "beir_cqadupstack_gaming_160662": [
+  "3cbdc78d230e1d02"
+ ],
+ "beir_cqadupstack_gaming_160707": [
+  "2ce21cfa30beb864",
+  "6d8af8053c487f52",
+  "be39d492a8fe8f90"
+ ],
+ "beir_cqadupstack_gaming_160774": [
+  "fb098c923c71556e"
+ ],
+ "beir_cqadupstack_gaming_161000": [
+  "ca08b534b7ef0c0f"
+ ],
+ "beir_cqadupstack_gaming_161038": [
+  "be1445cce9425d57",
+  "f633a366c32dbe80"
+ ],
+ "beir_cqadupstack_gaming_161153": [
+  "1719ad932d130e69"
+ ],
+ "beir_cqadupstack_gaming_161496": [
+  "7a937294eec0fd95"
+ ],
+ "beir_cqadupstack_gaming_161568": [
+  "4e3e5644d1860629",
+  "622ac3079b48511d",
+  "8f5f6f4b06f71e09",
+  "c78d3d3393d15048"
+ ],
+ "beir_cqadupstack_gaming_161591": [
+  "29a79a18a1d9ed0e"
+ ],
+ "beir_cqadupstack_gaming_161784": [
+  "a648c17e708ee616"
+ ],
+ "beir_cqadupstack_gaming_161794": [
+  "9f5d0bd5d8601d04"
+ ],
+ "beir_cqadupstack_gaming_161809": [
+  "459c8bc0afa7ab90",
+  "876c71cae4d03451",
+  "e0d884146efd2e6f"
+ ],
+ "beir_cqadupstack_gaming_161861": [
+  "e374dbf6445f3f4f"
+ ],
+ "beir_cqadupstack_gaming_161888": [
+  "d243667bf5f06423"
+ ],
+ "beir_cqadupstack_gaming_161971": [
+  "efec62ce1f6ae7d4"
+ ],
+ "beir_cqadupstack_gaming_162043": [
+  "02e67186021b4a9d",
+  "2a19448671e64de8"
+ ],
+ "beir_cqadupstack_gaming_16208": [
+  "7197330a68769338"
+ ],
+ "beir_cqadupstack_gaming_162144": [
+  "6fb82987567af631"
+ ],
+ "beir_cqadupstack_gaming_16215": [
+  "ebbebb9e69a36fb6"
+ ],
+ "beir_cqadupstack_gaming_162158": [
+  "0616eefed2d6e8bc"
+ ],
+ "beir_cqadupstack_gaming_162209": [
+  "030c5b51a060099a"
+ ],
+ "beir_cqadupstack_gaming_162246": [
+  "7baffc9d9cc23518",
+  "fb54c708140dfbc2"
+ ],
+ "beir_cqadupstack_gaming_162283": [
+  "07fd25579aef6de8",
+  "b1af41125226b2e8"
+ ],
+ "beir_cqadupstack_gaming_162420": [
+  "bb9a49bb3657897f"
+ ],
+ "beir_cqadupstack_gaming_162509": [
+  "772d082a9304769a"
+ ],
+ "beir_cqadupstack_gaming_162535": [
+  "0f485a58f75bcb77",
+  "7b07a3e6bfddb594"
+ ],
+ "beir_cqadupstack_gaming_162619": [
+  "c1dd306fd2e46721"
+ ],
+ "beir_cqadupstack_gaming_162798": [
+  "9418c8fcbacb4f8e"
+ ],
+ "beir_cqadupstack_gaming_162838": [
+  "f8db9b370e925260"
+ ],
+ "beir_cqadupstack_gaming_162866": [
+  "d9b9cf8a663f9d66"
+ ],
+ "beir_cqadupstack_gaming_163137": [
+  "c655b02e3968fe2d"
+ ],
+ "beir_cqadupstack_gaming_16380": [
+  "015db761ecb3e8cf"
+ ],
+ "beir_cqadupstack_gaming_163803": [
+  "a5bbf8fa4018020a"
+ ],
+ "beir_cqadupstack_gaming_163818": [
+  "762e06fadcaa4e72"
+ ],
+ "beir_cqadupstack_gaming_163845": [
+  "32abab5278025db4"
+ ],
+ "beir_cqadupstack_gaming_163896": [
+  "4056b571bd3424e0",
+  "7b7b3d0ee24cc377",
+  "85ba30e194e9e819",
+  "d38e0de760b652b2"
+ ],
+ "beir_cqadupstack_gaming_164167": [
+  "94509f9f4ee28b5c",
+  "bb5af07f9e06d6bc",
+  "e19d9293adf94673"
+ ],
+ "beir_cqadupstack_gaming_164321": [
+  "d094dca6f9412fac"
+ ],
+ "beir_cqadupstack_gaming_164325": [
+  "4a7b2fb71a316926"
+ ],
+ "beir_cqadupstack_gaming_164455": [
+  "21c9768595bc4976"
+ ],
+ "beir_cqadupstack_gaming_164479": [
+  "527ba681e3d984f2"
+ ],
+ "beir_cqadupstack_gaming_164704": [
+  "0ae3933d6e10b950",
+  "14d6724dc85e7b69"
+ ],
+ "beir_cqadupstack_gaming_164998": [
+  "3f829d375f1baf34"
+ ],
+ "beir_cqadupstack_gaming_165392": [
+  "a92fb02eba273c8a"
+ ],
+ "beir_cqadupstack_gaming_165418": [
+  "fa2c06d66624ac0e"
+ ],
+ "beir_cqadupstack_gaming_165509": [
+  "4fcd5616b98d8167",
+  "c627e8c28d50fd75"
+ ],
+ "beir_cqadupstack_gaming_165593": [
+  "369f3c2575311a1a"
+ ],
+ "beir_cqadupstack_gaming_165832": [
+  "2c1214af897528dc",
+  "5ddf83de91c9059e",
+  "a2455023af4fc662",
+  "c223c609f0ff0388"
+ ],
+ "beir_cqadupstack_gaming_166126": [
+  "59bd3e8f792ec386"
+ ],
+ "beir_cqadupstack_gaming_16636": [
+  "2d5979cc68888a3d"
+ ],
+ "beir_cqadupstack_gaming_166382": [
+  "fd86b3f3cacb8041"
+ ],
+ "beir_cqadupstack_gaming_166407": [
+  "6ece4e1995c05f02"
+ ],
+ "beir_cqadupstack_gaming_166547": [
+  "cd8b5765cfe55adf"
+ ],
+ "beir_cqadupstack_gaming_166799": [
+  "9edc680f7582ded0"
+ ],
+ "beir_cqadupstack_gaming_166801": [
+  "58e1b85cce2b1a3c",
+  "622953081468aa68"
+ ],
+ "beir_cqadupstack_gaming_166806": [
+  "66373d1ddbc5f32d",
+  "b9b1309cdcbd9e59"
+ ],
+ "beir_cqadupstack_gaming_166821": [
+  "5464c05631b9ef8c"
+ ],
+ "beir_cqadupstack_gaming_166864": [
+  "44a1200b4daea725"
+ ],
+ "beir_cqadupstack_gaming_166894": [
+  "234933169702113d"
+ ],
+ "beir_cqadupstack_gaming_167119": [
+  "ad61baf7fb9776c6"
+ ],
+ "beir_cqadupstack_gaming_167163": [
+  "61f240a6ac13e910",
+  "b5d1ca5d637fe47a"
+ ],
+ "beir_cqadupstack_gaming_167339": [
+  "ed1de998a4ef3a4b"
+ ],
+ "beir_cqadupstack_gaming_16751": [
+  "ad2e9181918e15af"
+ ],
+ "beir_cqadupstack_gaming_167531": [
+  "01db9acb236fffff"
+ ],
+ "beir_cqadupstack_gaming_167615": [
+  "6885b8ec8125271f"
+ ],
+ "beir_cqadupstack_gaming_167653": [
+  "3eb8b0db53c35c75"
+ ],
+ "beir_cqadupstack_gaming_168192": [
+  "d70ad42523616430"
+ ],
+ "beir_cqadupstack_gaming_168212": [
+  "de00498a33fe6632"
+ ],
+ "beir_cqadupstack_gaming_168330": [
+  "4e512e8d52f25ea6"
+ ],
+ "beir_cqadupstack_gaming_168459": [
+  "fb52711019dc9808"
+ ],
+ "beir_cqadupstack_gaming_168695": [
+  "84a0d50b42e7c62d"
+ ],
+ "beir_cqadupstack_gaming_168768": [
+  "650f6bca7fed01ef"
+ ],
+ "beir_cqadupstack_gaming_168946": [
+  "807faeed584e8983",
+  "b15633780ab6754e"
+ ],
+ "beir_cqadupstack_gaming_168952": [
+  "545f6679065489dd",
+  "9fe1d6c93269d699",
+  "aca301b417bd236c"
+ ],
+ "beir_cqadupstack_gaming_168994": [
+  "bc0a34d5e63e8a14"
+ ],
+ "beir_cqadupstack_gaming_169171": [
+  "9b27458433463a16"
+ ],
+ "beir_cqadupstack_gaming_169522": [
+  "ee94e2b609cb9dee"
+ ],
+ "beir_cqadupstack_gaming_169592": [
+  "4566868b5014093a"
+ ],
+ "beir_cqadupstack_gaming_169611": [
+  "bf1382e21ddfafa5"
+ ],
+ "beir_cqadupstack_gaming_169750": [
+  "bdf2e1d9d2984bc0"
+ ],
+ "beir_cqadupstack_gaming_169827": [
+  "b3ccc38369033626"
+ ],
+ "beir_cqadupstack_gaming_169889": [
+  "d09101ae688d92bd",
+  "f2344d705cff1f4e"
+ ],
+ "beir_cqadupstack_gaming_170059": [
+  "094d06c2e1b81890"
+ ],
+ "beir_cqadupstack_gaming_170174": [
+  "a820a15b5444f75a"
+ ],
+ "beir_cqadupstack_gaming_170406": [
+  "3cf5014bf3471f42",
+  "474a4c4cc876987c"
+ ],
+ "beir_cqadupstack_gaming_170443": [
+  "f71c9aed59e4a8da"
+ ],
+ "beir_cqadupstack_gaming_170444": [
+  "b68ac1088ab05a92"
+ ],
+ "beir_cqadupstack_gaming_170756": [
+  "13592af4198fbe7b"
+ ],
+ "beir_cqadupstack_gaming_170866": [
+  "6cbe298c01138432"
+ ],
+ "beir_cqadupstack_gaming_170880": [
+  "e9b560a02933336a"
+ ],
+ "beir_cqadupstack_gaming_170910": [
+  "59fe40e0506e53e0"
+ ],
+ "beir_cqadupstack_gaming_170941": [
+  "77ab8afd3525341a",
+  "97eb0a0fd60c01d7",
+  "ba3d0e5ed75903db",
+  "cec766b2c6b400fa",
+  "eaefcdcece6f0ea7"
+ ],
+ "beir_cqadupstack_gaming_172050": [
+  "4c3f428ed4f61178",
+  "e4d5fb598bb710cb"
+ ],
+ "beir_cqadupstack_gaming_172349": [
+  "f20e0cc0f1e0cc24"
+ ],
+ "beir_cqadupstack_gaming_1724": [
+  "9f396e418812178a",
+  "b977242fa7b4f973"
+ ],
+ "beir_cqadupstack_gaming_172533": [
+  "c2a1ff9ce91d91fa"
+ ],
+ "beir_cqadupstack_gaming_172603": [
+  "0459c9cfb7159679"
+ ],
+ "beir_cqadupstack_gaming_172681": [
+  "587c6f0623dd4a05",
+  "61a961487d159144",
+  "7dd61c5558782516",
+  "b65d1dd387bd9dcc",
+  "e4423879672425a2",
+  "e618cbb8f6ab7547"
+ ],
+ "beir_cqadupstack_gaming_1727": [
+  "f41b7924cd70a970"
+ ],
+ "beir_cqadupstack_gaming_173093": [
+  "04a1fc9760f0bcfe",
+  "0977f613816f4d20",
+  "1b5b1d892a5de301",
+  "1dad1e9efd36cb62",
+  "247786bb71bb7b25",
+  "27ccbf141233d54e",
+  "2aff14927bd23197",
+  "412610657b3a9ea5",
+  "452b83b1327dabbc",
+  "46152ae3d4f6fc93",
+  "552534ad3e27670a",
+  "5f6848015e72eb95",
+  "6aeb29975a65fe6c",
+  "7512ef0891eabd20",
+  "7d559e98af8a2076",
+  "87474d2c7134f37a",
+  "8d09f947bda36774",
+  "9d319021a54d8994",
+  "e28d1e52f6b08b99",
+  "e8af0b575858a0f8",
+  "f8355143df6a7f27",
+  "ff41fa1c2db2e21f"
+ ],
+ "beir_cqadupstack_gaming_173395": [
+  "500822d26f07ba81",
+  "e367690b2213fe1b"
+ ],
+ "beir_cqadupstack_gaming_173480": [
+  "6b2e07ae655ba9cb"
+ ],
+ "beir_cqadupstack_gaming_17359": [
+  "0ad77a8abd9ed5ef"
+ ],
+ "beir_cqadupstack_gaming_173621": [
+  "c67c8ce0b0f80e7a"
+ ],
+ "beir_cqadupstack_gaming_174116": [
+  "dc13766382d2a785"
+ ],
+ "beir_cqadupstack_gaming_174263": [
+  "9c39e059910b9b5f"
+ ],
+ "beir_cqadupstack_gaming_174461": [
+  "6c241b9da67ae299"
+ ],
+ "beir_cqadupstack_gaming_174493": [
+  "556d8549d64cfdb7"
+ ],
+ "beir_cqadupstack_gaming_174881": [
+  "e78422e93ff11cdf"
+ ],
+ "beir_cqadupstack_gaming_175094": [
+  "2922daae59ddb9fe",
+  "3836ea2a5c285ebd"
+ ],
+ "beir_cqadupstack_gaming_175228": [
+  "3e195579516abbc7"
+ ],
+ "beir_cqadupstack_gaming_175255": [
+  "30eb1e2f8e0d7af2"
+ ],
+ "beir_cqadupstack_gaming_175339": [
+  "89ca2f977a4d5c3c"
+ ],
+ "beir_cqadupstack_gaming_176": [
+  "94eb2bd7ad4ffa6a",
+  "d81cc2a5cbd2c551"
+ ],
+ "beir_cqadupstack_gaming_176570": [
+  "4cac07444f6cb06e"
+ ],
+ "beir_cqadupstack_gaming_176652": [
+  "81dde8180371286a"
+ ],
+ "beir_cqadupstack_gaming_176686": [
+  "7441172a21dddaba"
+ ],
+ "beir_cqadupstack_gaming_176782": [
+  "162c24e0bf1aaa61"
+ ],
+ "beir_cqadupstack_gaming_176828": [
+  "16622dcb9e4d09d5"
+ ],
+ "beir_cqadupstack_gaming_176898": [
+  "f5d0b9a2e0dce232"
+ ],
+ "beir_cqadupstack_gaming_176911": [
+  "92580938918a0d2b",
+  "d1c9414247bdab24"
+ ],
+ "beir_cqadupstack_gaming_17701": [
+  "582deddf5f1f52d7"
+ ],
+ "beir_cqadupstack_gaming_177030": [
+  "731997f7b46d2da6"
+ ],
+ "beir_cqadupstack_gaming_177132": [
+  "bfd7b4dd94208821",
+  "d6c482a8853b1b0e",
+  "ea7ce986425a064c"
+ ],
+ "beir_cqadupstack_gaming_177486": [
+  "3a719d5deb7def3c",
+  "6e74007ecc2ddbef"
+ ],
+ "beir_cqadupstack_gaming_177595": [
+  "abedde720008b9e9",
+  "fb2c454299fdd6d3"
+ ],
+ "beir_cqadupstack_gaming_178061": [
+  "9053412df4f352ae"
+ ],
+ "beir_cqadupstack_gaming_178449": [
+  "ea1fa3c2e2ba7c6f"
+ ],
+ "beir_cqadupstack_gaming_178477": [
+  "1ac3ea41b51eab7e",
+  "e95380cb3d95d386"
+ ],
+ "beir_cqadupstack_gaming_178653": [
+  "c98936a46da5fbdf"
+ ],
+ "beir_cqadupstack_gaming_178779": [
+  "3e29bc7b5970daad",
+  "c7a0a793ba13f7c0"
+ ],
+ "beir_cqadupstack_gaming_178945": [
+  "431a6e2f38033919"
+ ],
+ "beir_cqadupstack_gaming_179106": [
+  "d525e7404cc81dbf"
+ ],
+ "beir_cqadupstack_gaming_17913": [
+  "a359bbac58f2082e"
+ ],
+ "beir_cqadupstack_gaming_1793": [
+  "b5d44fee78d779dd"
+ ],
+ "beir_cqadupstack_gaming_179314": [
+  "381d8597ef2be6f5"
+ ],
+ "beir_cqadupstack_gaming_179368": [
+  "2a45ed95178889b1",
+  "4ae9c836379f1911"
+ ],
+ "beir_cqadupstack_gaming_17946": [
+  "67ade8bd3c9d7b65"
+ ],
+ "beir_cqadupstack_gaming_179514": [
+  "3ccf92c7fa3e0db6",
+  "e23619dd5dcbae61"
+ ],
+ "beir_cqadupstack_gaming_180006": [
+  "4fad6c99acf45350",
+  "72d639ac9ab4f649"
+ ],
+ "beir_cqadupstack_gaming_180278": [
+  "b47d54dc5871a8c6"
+ ],
+ "beir_cqadupstack_gaming_181468": [
+  "09e8f23ffc3a5520",
+  "55c4499066e0d097"
+ ],
+ "beir_cqadupstack_gaming_181554": [
+  "b34194b56d58e283"
+ ],
+ "beir_cqadupstack_gaming_181994": [
+  "26194a30636cd367"
+ ],
+ "beir_cqadupstack_gaming_182381": [
+  "06494f0a94c87103"
+ ],
+ "beir_cqadupstack_gaming_182465": [
+  "04074cee4f7a218d"
+ ],
+ "beir_cqadupstack_gaming_182860": [
+  "8a0a3048313baa35"
+ ],
+ "beir_cqadupstack_gaming_18292": [
+  "19b6731833b3902b",
+  "94629b5630c6add2"
+ ],
+ "beir_cqadupstack_gaming_183158": [
+  "3e465b35c25c5d1b"
+ ],
+ "beir_cqadupstack_gaming_183174": [
+  "0fc2fcf4b3459a5d",
+  "3329a7c50a3882e7",
+  "7d6b91fc54a8a795",
+  "bd210f2c66b8c539",
+  "ed5bf2f654c896f6"
+ ],
+ "beir_cqadupstack_gaming_183210": [
+  "3bb57202b5628865"
+ ],
+ "beir_cqadupstack_gaming_183274": [
+  "865570475582dd91"
+ ],
+ "beir_cqadupstack_gaming_183356": [
+  "f9f7c01c9e78a105"
+ ],
+ "beir_cqadupstack_gaming_183552": [
+  "e4ef6131b4cb817d"
+ ],
+ "beir_cqadupstack_gaming_183644": [
+  "6ba78e4018cd9c9d"
+ ],
+ "beir_cqadupstack_gaming_183784": [
+  "a2b523804e145871"
+ ],
+ "beir_cqadupstack_gaming_183865": [
+  "fe275f95fdb59d4c"
+ ],
+ "beir_cqadupstack_gaming_18442": [
+  "18704a9a085c88f7"
+ ],
+ "beir_cqadupstack_gaming_18504": [
+  "197e6f4935948180",
+  "5451c2b2864fd868",
+  "8e6f7423cfc6c00a",
+  "d3f6b768813f97af"
+ ],
+ "beir_cqadupstack_gaming_18737": [
+  "c46974dff681e27e"
+ ],
+ "beir_cqadupstack_gaming_1878": [
+  "4f4810e26b90ad94"
+ ],
+ "beir_cqadupstack_gaming_18895": [
+  "54464ab125b226e0"
+ ],
+ "beir_cqadupstack_gaming_18903": [
+  "3bccdfb1a810a965"
+ ],
+ "beir_cqadupstack_gaming_18908": [
+  "3cef91849fa96f6b",
+  "777ab93e3f84bf2b"
+ ],
+ "beir_cqadupstack_gaming_19184": [
+  "32d8cf43a28deed2"
+ ],
+ "beir_cqadupstack_gaming_19234": [
+  "05282c9b31bd93be"
+ ],
+ "beir_cqadupstack_gaming_19342": [
+  "7145acb23567d75e",
+  "752821aceccdad72",
+  "ef20df1ce03f32e7"
+ ],
+ "beir_cqadupstack_gaming_19374": [
+  "6cff4457d08e9017"
+ ],
+ "beir_cqadupstack_gaming_19427": [
+  "480b50ebad91bf6a"
+ ],
+ "beir_cqadupstack_gaming_19546": [
+  "4081411c29f1c121"
+ ],
+ "beir_cqadupstack_gaming_19894": [
+  "a19f5b582eb13b2d"
+ ],
+ "beir_cqadupstack_gaming_19926": [
+  "33e8c6661150d6f2",
+  "a7db17045d42bb56",
+  "f708a55ad261f17e"
+ ],
+ "beir_cqadupstack_gaming_19975": [
+  "f5777abe8b8ea390"
+ ],
+ "beir_cqadupstack_gaming_19991": [
+  "5c2af37af3aa0dc6",
+  "b4c9f2c57a4c5474",
+  "d5b5df154c6045b0"
+ ],
+ "beir_cqadupstack_gaming_20397": [
+  "beae1f62b8c4482a"
+ ],
+ "beir_cqadupstack_gaming_20498": [
+  "27a1bf5747ab4967"
+ ],
+ "beir_cqadupstack_gaming_20519": [
+  "dd93ccfd91d6ad69"
+ ],
+ "beir_cqadupstack_gaming_20523": [
+  "c1e57445e2b2ebdf"
+ ],
+ "beir_cqadupstack_gaming_20746": [
+  "65a35acc96561bf0"
+ ],
+ "beir_cqadupstack_gaming_20821": [
+  "0bdba2285cd92ddf"
+ ],
+ "beir_cqadupstack_gaming_20826": [
+  "28e600395bcb2863"
+ ],
+ "beir_cqadupstack_gaming_20831": [
+  "4d33b8f9168abd3c"
+ ],
+ "beir_cqadupstack_gaming_21121": [
+  "aa43dfe86e9f540d"
+ ],
+ "beir_cqadupstack_gaming_21216": [
+  "50c3c230187d02d9"
+ ],
+ "beir_cqadupstack_gaming_21293": [
+  "ac5f530de34ebd0b"
+ ],
+ "beir_cqadupstack_gaming_21311": [
+  "2928fbe940fe68a1",
+  "6d1a948f8b292b29",
+  "a211e0e2a4a1adf2",
+  "c7e5a789e627eacd",
+  "ce0208691c40a0ce"
+ ],
+ "beir_cqadupstack_gaming_21469": [
+  "b785e6d817d96ab8"
+ ],
+ "beir_cqadupstack_gaming_2151": [
+  "7da56de6aecd570a"
+ ],
+ "beir_cqadupstack_gaming_21806": [
+  "a2194d5d4b2ef0a6"
+ ],
+ "beir_cqadupstack_gaming_22133": [
+  "f67292f309e46318"
+ ],
+ "beir_cqadupstack_gaming_22154": [
+  "88a1b680d18ee4e3"
+ ],
+ "beir_cqadupstack_gaming_22230": [
+  "a273810efda3c9c3"
+ ],
+ "beir_cqadupstack_gaming_22308": [
+  "9a34fb7990f8d609"
+ ],
+ "beir_cqadupstack_gaming_22396": [
+  "1b9ee3bc88319f26"
+ ],
+ "beir_cqadupstack_gaming_22661": [
+  "b145899a32cdcd5b"
+ ],
+ "beir_cqadupstack_gaming_22782": [
+  "8ac3b527424d9225"
+ ],
+ "beir_cqadupstack_gaming_22947": [
+  "603b7b1cbdf0617e"
+ ],
+ "beir_cqadupstack_gaming_23068": [
+  "82c836d457b04009",
+  "84ad6ac497bcd3dd"
+ ],
+ "beir_cqadupstack_gaming_23183": [
+  "7ddf9b045638219a"
+ ],
+ "beir_cqadupstack_gaming_23224": [
+  "18177f7e893912f3"
+ ],
+ "beir_cqadupstack_gaming_23248": [
+  "49c126f6355cf856"
+ ],
+ "beir_cqadupstack_gaming_23309": [
+  "139aa82383f15497"
+ ],
+ "beir_cqadupstack_gaming_23364": [
+  "a749f681f46c5dc5"
+ ],
+ "beir_cqadupstack_gaming_23549": [
+  "314e8bc44b0b8e9f",
+  "a7d85b3458304d77"
+ ],
+ "beir_cqadupstack_gaming_236": [
+  "8a5dc9d56875adcc"
+ ],
+ "beir_cqadupstack_gaming_23618": [
+  "426c0fa73dac831f"
+ ],
+ "beir_cqadupstack_gaming_23669": [
+  "e6b22a172921623f"
+ ],
+ "beir_cqadupstack_gaming_23866": [
+  "d9fb9afc6a0dd0b8"
+ ],
+ "beir_cqadupstack_gaming_23966": [
+  "09c2226fe7184f3d",
+  "2f0892ccea3ec73a",
+  "3515631416437436",
+  "3c84824c3a778dd1",
+  "4e40954989026d29",
+  "5afba754ebde0da9",
+  "9862a1695f23d9c2",
+  "a1a0e7659562be96",
+  "b28dd9ac87a0ae39",
+  "c66ad284b29fb98a",
+  "c8236fb946c2af11",
+  "ca3d986224a449d6",
+  "ce7c1283c0987e45",
+  "e09c6e60ede658d8",
+  "eb76399608c5c86c",
+  "fbe43878ee4a2e8a"
+ ],
+ "beir_cqadupstack_gaming_24080": [
+  "0935f7e9e99b7f35"
+ ],
+ "beir_cqadupstack_gaming_24103": [
+  "2369e70b62336536"
+ ],
+ "beir_cqadupstack_gaming_24148": [
+  "9714f8887b079174",
+  "bfd9eca303b0c5e4"
+ ],
+ "beir_cqadupstack_gaming_24252": [
+  "d4e1700141fb006b",
+  "e20dd3461c9b6779"
+ ],
+ "beir_cqadupstack_gaming_24376": [
+  "ec14a85b9197829e"
+ ],
+ "beir_cqadupstack_gaming_24493": [
+  "375b1c7aa551dfd6",
+  "43e60dd3c56bb813"
+ ],
+ "beir_cqadupstack_gaming_24543": [
+  "740ed1fb6b329435"
+ ],
+ "beir_cqadupstack_gaming_24575": [
+  "08173f863a519133",
+  "21296acbc8bbd4ba",
+  "2c52c33c9e6d4073",
+  "c3bc4f8db2f9cdb8",
+  "ffcc4d2bbc9314f9"
+ ],
+ "beir_cqadupstack_gaming_24610": [
+  "91d81d0e4ad244eb"
+ ],
+ "beir_cqadupstack_gaming_24880": [
+  "d927706a03376f16"
+ ],
+ "beir_cqadupstack_gaming_24996": [
+  "5342c5462b004531"
+ ],
+ "beir_cqadupstack_gaming_25015": [
+  "1bf3df519325bd85"
+ ],
+ "beir_cqadupstack_gaming_25173": [
+  "aea0f8093d0f7b49"
+ ],
+ "beir_cqadupstack_gaming_25337": [
+  "90779d6ce0c9877f"
+ ],
+ "beir_cqadupstack_gaming_25403": [
+  "1ae20079833ff643",
+  "28f86c7776f69ea2",
+  "91ebf58ec5e4e014"
+ ],
+ "beir_cqadupstack_gaming_25471": [
+  "b24566661df21a3e"
+ ],
+ "beir_cqadupstack_gaming_25670": [
+  "91d654abf947dad5"
+ ],
+ "beir_cqadupstack_gaming_25929": [
+  "4f2254f15171636e",
+  "6c0651ec890380b2",
+  "e3c82386b2a4c223"
+ ],
+ "beir_cqadupstack_gaming_26321": [
+  "3e4a500639215125"
+ ],
+ "beir_cqadupstack_gaming_26513": [
+  "56149ec61670e97e"
+ ],
+ "beir_cqadupstack_gaming_26531": [
+  "c9953ba6d2a456c5"
+ ],
+ "beir_cqadupstack_gaming_26961": [
+  "3b2bb1223f0d26ba"
+ ],
+ "beir_cqadupstack_gaming_26973": [
+  "df25d7ff1acaecea"
+ ],
+ "beir_cqadupstack_gaming_27015": [
+  "92b803373caaa070"
+ ],
+ "beir_cqadupstack_gaming_27073": [
+  "668078b9e72774f7"
+ ],
+ "beir_cqadupstack_gaming_27358": [
+  "e3927ebc81249b2b"
+ ],
+ "beir_cqadupstack_gaming_27557": [
+  "80ba858236a6dc8a"
+ ],
+ "beir_cqadupstack_gaming_27617": [
+  "2d1af453b6b1cda2"
+ ],
+ "beir_cqadupstack_gaming_27642": [
+  "46b86f90b6fba631"
+ ],
+ "beir_cqadupstack_gaming_28023": [
+  "d2d075a97f486a6a"
+ ],
+ "beir_cqadupstack_gaming_28195": [
+  "92bbe920b3bf88fb"
+ ],
+ "beir_cqadupstack_gaming_28714": [
+  "c3b081a52b38c370",
+  "de6d62818d304e92"
+ ],
+ "beir_cqadupstack_gaming_28717": [
+  "c2c68397833ec6c7"
+ ],
+ "beir_cqadupstack_gaming_28920": [
+  "45fae1d0161364dc"
+ ],
+ "beir_cqadupstack_gaming_28975": [
+  "05ff5830aae3e89f"
+ ],
+ "beir_cqadupstack_gaming_2900": [
+  "a4c6283b2c3437c2",
+  "fbcd65a5f0f54a7d"
+ ],
+ "beir_cqadupstack_gaming_2908": [
+  "b50dce8438b235f4"
+ ],
+ "beir_cqadupstack_gaming_29357": [
+  "d6161a1bb217348a"
+ ],
+ "beir_cqadupstack_gaming_29401": [
+  "80df394bb157a0cc"
+ ],
+ "beir_cqadupstack_gaming_29415": [
+  "ffadb345622377e9"
+ ],
+ "beir_cqadupstack_gaming_29850": [
+  "47e4e8f83ca0bed1"
+ ],
+ "beir_cqadupstack_gaming_29907": [
+  "9bb249529cc4687b"
+ ],
+ "beir_cqadupstack_gaming_30052": [
+  "d348148efdfb9e96"
+ ],
+ "beir_cqadupstack_gaming_30069": [
+  "d6abdf5cbc11d558"
+ ],
+ "beir_cqadupstack_gaming_30221": [
+  "60b1e9ec7c794369"
+ ],
+ "beir_cqadupstack_gaming_30322": [
+  "07b5bb291ce3c229"
+ ],
+ "beir_cqadupstack_gaming_3040": [
+  "219d282176bb6f6b",
+  "f74fe3c54bfc46d7"
+ ],
+ "beir_cqadupstack_gaming_30409": [
+  "17ddb5507a956659",
+  "516507646963855a",
+  "8142a18f6cda0161",
+  "dd833e82abbfcd02"
+ ],
+ "beir_cqadupstack_gaming_30550": [
+  "f249d107225706e8"
+ ],
+ "beir_cqadupstack_gaming_30903": [
+  "e2d3ff240586ec6e"
+ ],
+ "beir_cqadupstack_gaming_31076": [
+  "6c80d9016e147384"
+ ],
+ "beir_cqadupstack_gaming_31295": [
+  "3cfb529446647e11"
+ ],
+ "beir_cqadupstack_gaming_31324": [
+  "ba0a71ed786f8cec"
+ ],
+ "beir_cqadupstack_gaming_31431": [
+  "e7c4cb50eb03abdd"
+ ],
+ "beir_cqadupstack_gaming_31486": [
+  "6d2a882663916f55"
+ ],
+ "beir_cqadupstack_gaming_31760": [
+  "d11eb617aeaa5a07"
+ ],
+ "beir_cqadupstack_gaming_31984": [
+  "968603aff8e9cfed"
+ ],
+ "beir_cqadupstack_gaming_32139": [
+  "cd1ba3bc672fbc76"
+ ],
+ "beir_cqadupstack_gaming_32265": [
+  "dd007654a5cf4222"
+ ],
+ "beir_cqadupstack_gaming_32299": [
+  "1a5238ecaa652619",
+  "30d98b07340fa1e0",
+  "51f32ed7968d2f62",
+  "cb90b85e13e3fd56",
+  "eb81ca1eae48bbed",
+  "ee3f73a3b5aea834",
+  "f9f3c37d384842f1"
+ ],
+ "beir_cqadupstack_gaming_32529": [
+  "cd408dda8b24a111"
+ ],
+ "beir_cqadupstack_gaming_32668": [
+  "6eb01a71cf67fad2"
+ ],
+ "beir_cqadupstack_gaming_32709": [
+  "e4379752c96fa805"
+ ],
+ "beir_cqadupstack_gaming_32739": [
+  "78acfbb2283d5437"
+ ],
+ "beir_cqadupstack_gaming_32935": [
+  "0cd6a4469a03cf20"
+ ],
+ "beir_cqadupstack_gaming_32939": [
+  "4d364c240dd84f81"
+ ],
+ "beir_cqadupstack_gaming_32948": [
+  "ee92f7abd485b58c"
+ ],
+ "beir_cqadupstack_gaming_33044": [
+  "52d4de0fc36f5307"
+ ],
+ "beir_cqadupstack_gaming_33070": [
+  "3e83128c88468d21"
+ ],
+ "beir_cqadupstack_gaming_33096": [
+  "a004e350a374fef3",
+  "d42e102ae44888fd"
+ ],
+ "beir_cqadupstack_gaming_33098": [
+  "0cf1a1e210ae5bb7",
+  "392301dbb25374d9",
+  "7e8a2c2bc7dbcd46",
+  "f093fd950c2db5f4"
+ ],
+ "beir_cqadupstack_gaming_33204": [
+  "5878189100ef6f15"
+ ],
+ "beir_cqadupstack_gaming_33226": [
+  "942db333e7ab3103"
+ ],
+ "beir_cqadupstack_gaming_33289": [
+  "c713c643d5d80f27"
+ ],
+ "beir_cqadupstack_gaming_33334": [
+  "dd1c2bd3a74a866e"
+ ],
+ "beir_cqadupstack_gaming_33402": [
+  "f856fb2b86fc4bb6"
+ ],
+ "beir_cqadupstack_gaming_33406": [
+  "cdc2e7b6524d748a"
+ ],
+ "beir_cqadupstack_gaming_33449": [
+  "871b2cfb4d578fc2"
+ ],
+ "beir_cqadupstack_gaming_33676": [
+  "016b1382b79eedc8"
+ ],
+ "beir_cqadupstack_gaming_33968": [
+  "591054fa7c631319",
+  "bf1785475a79a7cf"
+ ],
+ "beir_cqadupstack_gaming_34047": [
+  "09b51d865af47b86",
+  "0c5c8aa10131a808",
+  "0cbe6102f59f44f5",
+  "2de790db6921d467",
+  "95b0f3f4d6e29b39"
+ ],
+ "beir_cqadupstack_gaming_34472": [
+  "2d5fb8f177bb99b5"
+ ],
+ "beir_cqadupstack_gaming_34502": [
+  "729dae69eb01af89"
+ ],
+ "beir_cqadupstack_gaming_34512": [
+  "b92d3863be48a438"
+ ],
+ "beir_cqadupstack_gaming_34615": [
+  "944f91d798cca435"
+ ],
+ "beir_cqadupstack_gaming_34848": [
+  "55112f8f653e8e80"
+ ],
+ "beir_cqadupstack_gaming_34894": [
+  "a1389d41b6e40988",
+  "d36388835ea16023"
+ ],
+ "beir_cqadupstack_gaming_3492": [
+  "0e8639d85e6375dc"
+ ],
+ "beir_cqadupstack_gaming_34981": [
+  "863ebd9390e7e1e6"
+ ],
+ "beir_cqadupstack_gaming_34982": [
+  "9792a2c454fa217f"
+ ],
+ "beir_cqadupstack_gaming_35024": [
+  "395b445efa5f18c9"
+ ],
+ "beir_cqadupstack_gaming_35029": [
+  "a587e3385918396c"
+ ],
+ "beir_cqadupstack_gaming_35042": [
+  "00293b625b34eb1d"
+ ],
+ "beir_cqadupstack_gaming_35086": [
+  "0beeaf8a28958732"
+ ],
+ "beir_cqadupstack_gaming_35112": [
+  "1b5f2f2528d8a6c8"
+ ],
+ "beir_cqadupstack_gaming_35155": [
+  "058a20edb0e9a7c1"
+ ],
+ "beir_cqadupstack_gaming_35211": [
+  "9a36b53aba98f760"
+ ],
+ "beir_cqadupstack_gaming_35217": [
+  "019e7aab471c4285",
+  "0807de1945d3ad5f",
+  "a17a3e3b4c6cbe14",
+  "e5e04d495b330ffd",
+  "fd6879bf958c6c64"
+ ],
+ "beir_cqadupstack_gaming_35219": [
+  "3bcc45d04e989ad5",
+  "ccbd71b665b234a8"
+ ],
+ "beir_cqadupstack_gaming_35221": [
+  "b110fe90c0403621"
+ ],
+ "beir_cqadupstack_gaming_35297": [
+  "4ef247b17c78c91a"
+ ],
+ "beir_cqadupstack_gaming_35317": [
+  "da42a2fcd154d669"
+ ],
+ "beir_cqadupstack_gaming_35348": [
+  "34f1b9eab92f6962"
+ ],
+ "beir_cqadupstack_gaming_35405": [
+  "83d2b3688ab89920"
+ ],
+ "beir_cqadupstack_gaming_35437": [
+  "bfa8ce7bd1f8b329"
+ ],
+ "beir_cqadupstack_gaming_35443": [
+  "22e00b914c0dadfa",
+  "f1cd2f72e47d4fc1"
+ ],
+ "beir_cqadupstack_gaming_35453": [
+  "6465cfb295a3255e"
+ ],
+ "beir_cqadupstack_gaming_35475": [
+  "ca72130d79977056"
+ ],
+ "beir_cqadupstack_gaming_35494": [
+  "4b397ebf84c7abf7"
+ ],
+ "beir_cqadupstack_gaming_35565": [
+  "c0a407ad72d88223"
+ ],
+ "beir_cqadupstack_gaming_35641": [
+  "0935ff15c4d7c27e",
+  "7d265463b6770e44"
+ ],
+ "beir_cqadupstack_gaming_35743": [
+  "db7080af8365ab44"
+ ],
+ "beir_cqadupstack_gaming_35752": [
+  "b816b49cf95bdebb"
+ ],
+ "beir_cqadupstack_gaming_35761": [
+  "dccf7b3355b68553"
+ ],
+ "beir_cqadupstack_gaming_35800": [
+  "117d0dabe52a8d8a",
+  "507396224e98d5f3",
+  "721cecc66e5b321a"
+ ],
+ "beir_cqadupstack_gaming_35893": [
+  "fac18960e6c861fc"
+ ],
+ "beir_cqadupstack_gaming_35921": [
+  "31740b5487da52a0"
+ ],
+ "beir_cqadupstack_gaming_3597": [
+  "540bb37121af9134",
+  "a62c248b4ef281d3"
+ ],
+ "beir_cqadupstack_gaming_36011": [
+  "664601845ca43fee",
+  "6672a0c87ef3bc6b",
+  "a684b880bd84c0cd"
+ ],
+ "beir_cqadupstack_gaming_36028": [
+  "77c5e4553c400dfc"
+ ],
+ "beir_cqadupstack_gaming_36036": [
+  "cb87d68df8f9727f",
+  "dcfcf505b46d73fb",
+  "f219b1d12d773428"
+ ],
+ "beir_cqadupstack_gaming_36037": [
+  "72d02f7f6d86b7f2",
+  "af92f88d388931b8"
+ ],
+ "beir_cqadupstack_gaming_36079": [
+  "946ae7332a9af247"
+ ],
+ "beir_cqadupstack_gaming_36146": [
+  "85ccc3f124520178"
+ ],
+ "beir_cqadupstack_gaming_36167": [
+  "12d8346391e44800",
+  "cf6a5fe45ef58898"
+ ],
+ "beir_cqadupstack_gaming_36198": [
+  "de5c08c87f04deea"
+ ],
+ "beir_cqadupstack_gaming_36202": [
+  "a2901cd6136c42d8"
+ ],
+ "beir_cqadupstack_gaming_36206": [
+  "0834f12267b59193"
+ ],
+ "beir_cqadupstack_gaming_36304": [
+  "e79f80996e03256f"
+ ],
+ "beir_cqadupstack_gaming_36374": [
+  "7e9178a556700049"
+ ],
+ "beir_cqadupstack_gaming_36384": [
+  "6bf1571c511e8816",
+  "e2f8ec9e89a88903"
+ ],
+ "beir_cqadupstack_gaming_36411": [
+  "7ab766b716312ed1"
+ ],
+ "beir_cqadupstack_gaming_36467": [
+  "38cdf9b288bcab5b",
+  "7f1e17a8f4b09ee4"
+ ],
+ "beir_cqadupstack_gaming_36511": [
+  "184bb1492637137e"
+ ],
+ "beir_cqadupstack_gaming_36515": [
+  "ee5ea4723cbf3808"
+ ],
+ "beir_cqadupstack_gaming_36593": [
+  "4e7573ae54ff1869"
+ ],
+ "beir_cqadupstack_gaming_36656": [
+  "ec8f43031882ab45"
+ ],
+ "beir_cqadupstack_gaming_36764": [
+  "db2fa98a125ace3f"
+ ],
+ "beir_cqadupstack_gaming_36778": [
+  "29caf04ee5ff6480"
+ ],
+ "beir_cqadupstack_gaming_36845": [
+  "0832f4180dd48828"
+ ],
+ "beir_cqadupstack_gaming_36994": [
+  "525dbc039a2773ed"
+ ],
+ "beir_cqadupstack_gaming_37063": [
+  "1332c433bbc1a73d",
+  "e6c19985aa742fa5"
+ ],
+ "beir_cqadupstack_gaming_37090": [
+  "5f0a55b5bf1667cc"
+ ],
+ "beir_cqadupstack_gaming_37138": [
+  "565d7b86ed73d03e"
+ ],
+ "beir_cqadupstack_gaming_37247": [
+  "6e305e4e0737cdc7",
+  "9b53733e167c37b5",
+  "eb435cb2798db693"
+ ],
+ "beir_cqadupstack_gaming_37252": [
+  "c53afe62d4bb9a68"
+ ],
+ "beir_cqadupstack_gaming_37473": [
+  "02f5f204c745950b"
+ ],
+ "beir_cqadupstack_gaming_37515": [
+  "771846b5f9a3a72d"
+ ],
+ "beir_cqadupstack_gaming_37590": [
+  "f8999b042de7ab80"
+ ],
+ "beir_cqadupstack_gaming_37648": [
+  "1e6da4fc9aefe8d7",
+  "65a9ba0214533ac8"
+ ],
+ "beir_cqadupstack_gaming_37660": [
+  "cd336421ed6db415"
+ ],
+ "beir_cqadupstack_gaming_37662": [
+  "1f1f5d7733aaa2f7",
+  "b71d49e10211f93d"
+ ],
+ "beir_cqadupstack_gaming_37679": [
+  "30ce9594efedc7a1"
+ ],
+ "beir_cqadupstack_gaming_37697": [
+  "14d15eec297cc1a1",
+  "85fbeb7cc4781683"
+ ],
+ "beir_cqadupstack_gaming_37772": [
+  "b76d9fe2b77d41e4"
+ ],
+ "beir_cqadupstack_gaming_37889": [
+  "07f91f6cd9929cd7"
+ ],
+ "beir_cqadupstack_gaming_38037": [
+  "36fdaa1b15dfe034",
+  "80bc7c525b053192"
+ ],
+ "beir_cqadupstack_gaming_38090": [
+  "b2efc9a533018014"
+ ],
+ "beir_cqadupstack_gaming_38141": [
+  "6ce3d774a8713287"
+ ],
+ "beir_cqadupstack_gaming_38240": [
+  "64d693a0a5c864a6",
+  "af15dd01d0edc151"
+ ],
+ "beir_cqadupstack_gaming_38299": [
+  "1fdff3283dc63a10"
+ ],
+ "beir_cqadupstack_gaming_38352": [
+  "b9bfa09ca15ae9e9"
+ ],
+ "beir_cqadupstack_gaming_38410": [
+  "5b63f2b41d4404bb",
+  "82bab4b5d4f12c24"
+ ],
+ "beir_cqadupstack_gaming_38496": [
+  "2416157853aada52"
+ ],
+ "beir_cqadupstack_gaming_38554": [
+  "a369d8323f026c09"
+ ],
+ "beir_cqadupstack_gaming_38565": [
+  "61e56f784add8f90"
+ ],
+ "beir_cqadupstack_gaming_38609": [
+  "52471f153ddb93f5"
+ ],
+ "beir_cqadupstack_gaming_38630": [
+  "271fb34b2368181e"
+ ],
+ "beir_cqadupstack_gaming_38783": [
+  "da142c3fc7279aed"
+ ],
+ "beir_cqadupstack_gaming_38818": [
+  "5456abd99104727c"
+ ],
+ "beir_cqadupstack_gaming_38899": [
+  "475ba4d90bcb268e"
+ ],
+ "beir_cqadupstack_gaming_38929": [
+  "a9dbb933ec1fe63a"
+ ],
+ "beir_cqadupstack_gaming_38964": [
+  "b21e28bb0ce77d04"
+ ],
+ "beir_cqadupstack_gaming_39011": [
+  "81a84dbb0883227a"
+ ],
+ "beir_cqadupstack_gaming_392": [
+  "4fc8be3cc53a9c1b",
+  "84b342757a55b78f",
+  "96e2e57dbad30ff0",
+  "bbafeaa8daaa4a82",
+  "bf08fcb33b86e8d7"
+ ],
+ "beir_cqadupstack_gaming_39257": [
+  "a74765067dc78dd6"
+ ],
+ "beir_cqadupstack_gaming_39285": [
+  "3bd6cadec04ec45f"
+ ],
+ "beir_cqadupstack_gaming_39288": [
+  "306d5cbe94101adb"
+ ],
+ "beir_cqadupstack_gaming_39468": [
+  "f63b1b99c4db462f"
+ ],
+ "beir_cqadupstack_gaming_39509": [
+  "cec84b565715234e"
+ ],
+ "beir_cqadupstack_gaming_39561": [
+  "86a8718bf9e5fb14"
+ ],
+ "beir_cqadupstack_gaming_39595": [
+  "f29f2989779fa42e"
+ ],
+ "beir_cqadupstack_gaming_39646": [
+  "801731fdb32138c7"
+ ],
+ "beir_cqadupstack_gaming_39758": [
+  "6cac60f084e7ba92"
+ ],
+ "beir_cqadupstack_gaming_39967": [
+  "1cd9c7349e6a6bad"
+ ],
+ "beir_cqadupstack_gaming_400": [
+  "747dd077d12b0139"
+ ],
+ "beir_cqadupstack_gaming_40172": [
+  "e8c3f81f089716f7"
+ ],
+ "beir_cqadupstack_gaming_40306": [
+  "8b6c05b9a1a9bea7",
+  "de70cbb1848a2387"
+ ],
+ "beir_cqadupstack_gaming_40493": [
+  "b3e9d4493c06541c"
+ ],
+ "beir_cqadupstack_gaming_40670": [
+  "65dfe17ee2ff88c1",
+  "698db09c7146e23b",
+  "8da808081505dbbe",
+  "cc4cddd3bd1d1c50"
+ ],
+ "beir_cqadupstack_gaming_40718": [
+  "a72aec3e320dd62a"
+ ],
+ "beir_cqadupstack_gaming_40865": [
+  "79fc18292b6cda78"
+ ],
+ "beir_cqadupstack_gaming_41031": [
+  "53eb0e749933b152"
+ ],
+ "beir_cqadupstack_gaming_41044": [
+  "2d5a452211af7e3d"
+ ],
+ "beir_cqadupstack_gaming_41100": [
+  "c22a0d5963bc1bb9"
+ ],
+ "beir_cqadupstack_gaming_4116": [
+  "8da4c8e24a4eaadd"
+ ],
+ "beir_cqadupstack_gaming_41301": [
+  "25f4ed3c7680b831",
+  "8649a881b3073e02"
+ ],
+ "beir_cqadupstack_gaming_41320": [
+  "15c41de9d9fb470f",
+  "f5e4fafa5684b966"
+ ],
+ "beir_cqadupstack_gaming_41373": [
+  "2d8249af6c55db03"
+ ],
+ "beir_cqadupstack_gaming_41636": [
+  "386cc0ff4b91b966"
+ ],
+ "beir_cqadupstack_gaming_41693": [
+  "a8f754feb6222b3e"
+ ],
+ "beir_cqadupstack_gaming_41807": [
+  "95ec37d4fd409e03",
+  "ecc451c46be85a07"
+ ],
+ "beir_cqadupstack_gaming_41828": [
+  "ed08ee3de29efb78"
+ ],
+ "beir_cqadupstack_gaming_41856": [
+  "fc90bed1bca50808"
+ ],
+ "beir_cqadupstack_gaming_42030": [
+  "3119a93ec4cdce01",
+  "3741ff8184b712dd",
+  "550bd98dd1a99083",
+  "699cb92a907cdd3b",
+  "850da1dcd1fccd51"
+ ],
+ "beir_cqadupstack_gaming_42044": [
+  "b137904b967cf321"
+ ],
+ "beir_cqadupstack_gaming_42137": [
+  "7bed6ddd2a768215"
+ ],
+ "beir_cqadupstack_gaming_42149": [
+  "7e8fb411db06b827"
+ ],
+ "beir_cqadupstack_gaming_42164": [
+  "7ae5ecb19934c0b2"
+ ],
+ "beir_cqadupstack_gaming_42307": [
+  "e4be42a79b0fecd1",
+  "edbbdf6c384ade8d"
+ ],
+ "beir_cqadupstack_gaming_4235": [
+  "6d1deda203162428"
+ ],
+ "beir_cqadupstack_gaming_42379": [
+  "fc8f91047ee3256f"
+ ],
+ "beir_cqadupstack_gaming_42436": [
+  "b0b5015e8b263fcb"
+ ],
+ "beir_cqadupstack_gaming_42465": [
+  "ed180d6c1dac5d78"
+ ],
+ "beir_cqadupstack_gaming_42577": [
+  "37b207b200908410"
+ ],
+ "beir_cqadupstack_gaming_42591": [
+  "9ceccb1bcf13590f"
+ ],
+ "beir_cqadupstack_gaming_42722": [
+  "2332299cf1ce04f2"
+ ],
+ "beir_cqadupstack_gaming_42736": [
+  "dd3450b28d6c15c6"
+ ],
+ "beir_cqadupstack_gaming_428": [
+  "acefd927e8a24249"
+ ],
+ "beir_cqadupstack_gaming_42889": [
+  "e39a2277623d6a9f"
+ ],
+ "beir_cqadupstack_gaming_42910": [
+  "1359de2646061e52",
+  "18293fb046f5831e",
+  "8994e32596793d84",
+  "f9db8feac15da334"
+ ],
+ "beir_cqadupstack_gaming_42993": [
+  "5eb13fc42355d892"
+ ],
+ "beir_cqadupstack_gaming_42994": [
+  "7b5321d6161b3e3c"
+ ],
+ "beir_cqadupstack_gaming_4300": [
+  "322db7129668126c"
+ ],
+ "beir_cqadupstack_gaming_43283": [
+  "f2a6ff048231e594"
+ ],
+ "beir_cqadupstack_gaming_43291": [
+  "8596ac0174e14e9a"
+ ],
+ "beir_cqadupstack_gaming_43517": [
+  "4652a20163a1481b"
+ ],
+ "beir_cqadupstack_gaming_43555": [
+  "27128efcc851c1d2"
+ ],
+ "beir_cqadupstack_gaming_43559": [
+  "a19eb9235ecc0abd"
+ ],
+ "beir_cqadupstack_gaming_43713": [
+  "8cd669c7a2706b16"
+ ],
+ "beir_cqadupstack_gaming_43717": [
+  "015094631a45dd59"
+ ],
+ "beir_cqadupstack_gaming_43878": [
+  "d3d3abff1c37119f"
+ ],
+ "beir_cqadupstack_gaming_43888": [
+  "0b46a85dbea05bd0"
+ ],
+ "beir_cqadupstack_gaming_43994": [
+  "b02f6f7c5508a8f5"
+ ],
+ "beir_cqadupstack_gaming_44068": [
+  "9c06ee6c5e006a03"
+ ],
+ "beir_cqadupstack_gaming_44130": [
+  "ea9a4a3eab10a371"
+ ],
+ "beir_cqadupstack_gaming_44225": [
+  "d6128ea31e7e1cdb"
+ ],
+ "beir_cqadupstack_gaming_44283": [
+  "ca4208f6be84ab64",
+  "cbd778fe6813e534"
+ ],
+ "beir_cqadupstack_gaming_44287": [
+  "bccc00c20c90b1b9"
+ ],
+ "beir_cqadupstack_gaming_44334": [
+  "fa6f89232599fc7a"
+ ],
+ "beir_cqadupstack_gaming_44418": [
+  "972cea02ab0f1eb3"
+ ],
+ "beir_cqadupstack_gaming_44422": [
+  "bd73777c505d0f54"
+ ],
+ "beir_cqadupstack_gaming_44535": [
+  "92ceabfcd14d389a"
+ ],
+ "beir_cqadupstack_gaming_44581": [
+  "e63793f29a5d65a2"
+ ],
+ "beir_cqadupstack_gaming_44713": [
+  "1b76bb6811f0f0ec"
+ ],
+ "beir_cqadupstack_gaming_44901": [
+  "87135b0c94d9b404"
+ ],
+ "beir_cqadupstack_gaming_4491": [
+  "34a69955e878432b"
+ ],
+ "beir_cqadupstack_gaming_44924": [
+  "5cbaa6e64bfa90ff",
+  "c36a0fe3f34b0166",
+  "cd7d6938b9987887"
+ ],
+ "beir_cqadupstack_gaming_44996": [
+  "d309e684e3fd424b"
+ ],
+ "beir_cqadupstack_gaming_45054": [
+  "c2f7cf0a32d847ca"
+ ],
+ "beir_cqadupstack_gaming_45065": [
+  "e9fe11a8b584bc7f"
+ ],
+ "beir_cqadupstack_gaming_45080": [
+  "08ab8cee498df868"
+ ],
+ "beir_cqadupstack_gaming_45263": [
+  "089df9ee46167be3",
+  "2223755293d7d942",
+  "757dff165a1a2947",
+  "8bdb45b981908142",
+  "9576733c0d3949db",
+  "a406e6bb9695aeea",
+  "c079e6262e094fcc"
+ ],
+ "beir_cqadupstack_gaming_45356": [
+  "167d40464a390af6"
+ ],
+ "beir_cqadupstack_gaming_45380": [
+  "0c5ec9cf2e64a80c"
+ ],
+ "beir_cqadupstack_gaming_45445": [
+  "6ff8a19d0a2e63ba"
+ ],
+ "beir_cqadupstack_gaming_4550": [
+  "9df3b9aca86d809b"
+ ],
+ "beir_cqadupstack_gaming_45563": [
+  "308d7ccf50f8ed10"
+ ],
+ "beir_cqadupstack_gaming_45567": [
+  "2a6a16cec5509053"
+ ],
+ "beir_cqadupstack_gaming_45630": [
+  "14ca6ed9a613e0e9",
+  "1ea9cb9d527d9a8f",
+  "c4207293207a3273"
+ ],
+ "beir_cqadupstack_gaming_45631": [
+  "0457a5e91f852f12"
+ ],
+ "beir_cqadupstack_gaming_45638": [
+  "7f47d59c9f7d1ae9"
+ ],
+ "beir_cqadupstack_gaming_45689": [
+  "9014b97ac1ea1992"
+ ],
+ "beir_cqadupstack_gaming_45711": [
+  "86a58dba4d8c99d2"
+ ],
+ "beir_cqadupstack_gaming_46087": [
+  "8e46b4ef2745c744"
+ ],
+ "beir_cqadupstack_gaming_46138": [
+  "0a14cbc761dbfeb3",
+  "24e8302b9e807660",
+  "3518a02a85acf3f7",
+  "3c1241dcc743af62",
+  "499bffe8f73900b0",
+  "5167bec53debf6ab",
+  "5e17967d544591ac",
+  "6e0309fa9955608d",
+  "81d17ee1b25af99d",
+  "8730377c825c93de",
+  "906488b0ca316cc8",
+  "96fbd20321fd5679",
+  "9f7ef0b4de178544",
+  "a232f1ea991167c5",
+  "ba9b191cae7b1fb1",
+  "c85ffd70a062d2cf",
+  "e5ed0c84a666cd4b",
+  "e66a056985ff44c3",
+  "eaecc8bc40fd242c",
+  "fdb3288b534a3766"
+ ],
+ "beir_cqadupstack_gaming_46519": [
+  "e06bcee971c2e08e"
+ ],
+ "beir_cqadupstack_gaming_46528": [
+  "47570d3851d49238"
+ ],
+ "beir_cqadupstack_gaming_46657": [
+  "13a5f64158ce4267",
+  "f5646f325ddfe4b9"
+ ],
+ "beir_cqadupstack_gaming_4666": [
+  "252b4f0bff931d29"
+ ],
+ "beir_cqadupstack_gaming_46668": [
+  "06d3873883df5c41"
+ ],
+ "beir_cqadupstack_gaming_46755": [
+  "585465b41f1bb93b",
+  "5f21840d6687af9b"
+ ],
+ "beir_cqadupstack_gaming_46792": [
+  "14554a0018df83cc"
+ ],
+ "beir_cqadupstack_gaming_46793": [
+  "bf8ef991028c29a8"
+ ],
+ "beir_cqadupstack_gaming_4685": [
+  "b623fa49b48a90f7"
+ ],
+ "beir_cqadupstack_gaming_46861": [
+  "5fcb68a9a31c2671",
+  "896a83112f3d8dbd",
+  "cb3e901208df76e8",
+  "cddb990daa463cb7"
+ ],
+ "beir_cqadupstack_gaming_46885": [
+  "07f3dda19e07cad6"
+ ],
+ "beir_cqadupstack_gaming_4695": [
+  "13019552c9289c31",
+  "8fdf9372f3d8918c"
+ ],
+ "beir_cqadupstack_gaming_47106": [
+  "bcc26897e8ce94b8"
+ ],
+ "beir_cqadupstack_gaming_47251": [
+  "b6b2fc8a25350fb1"
+ ],
+ "beir_cqadupstack_gaming_47441": [
+  "2545dff5d7c92db7"
+ ],
+ "beir_cqadupstack_gaming_4778": [
+  "4aa8e03c06fdeece"
+ ],
+ "beir_cqadupstack_gaming_48106": [
+  "43a3806c253c9b5d",
+  "4e363297f8d4de74",
+  "fc19654db0499bb9"
+ ],
+ "beir_cqadupstack_gaming_4825": [
+  "11dc05de628c8b2f"
+ ],
+ "beir_cqadupstack_gaming_48360": [
+  "ff5aff0836066854"
+ ],
+ "beir_cqadupstack_gaming_48779": [
+  "17b2f9751e5258b8",
+  "77e5ef2961348e0b"
+ ],
+ "beir_cqadupstack_gaming_4890": [
+  "e06787533ea24cd7"
+ ],
+ "beir_cqadupstack_gaming_48916": [
+  "a931ba9cc245d6fa"
+ ],
+ "beir_cqadupstack_gaming_48962": [
+  "bbd0ddf375b5195d"
+ ],
+ "beir_cqadupstack_gaming_49006": [
+  "e1cab6045fdf2455"
+ ],
+ "beir_cqadupstack_gaming_4909": [
+  "400c85469d884a5f"
+ ],
+ "beir_cqadupstack_gaming_4915": [
+  "45d73659a5f4daf4"
+ ],
+ "beir_cqadupstack_gaming_4919": [
+  "7889da853d495a0f"
+ ],
+ "beir_cqadupstack_gaming_49273": [
+  "baff5bbe208462a7"
+ ],
+ "beir_cqadupstack_gaming_49377": [
+  "11b364a2905f667f"
+ ],
+ "beir_cqadupstack_gaming_49417": [
+  "785e3a0aba9c962b"
+ ],
+ "beir_cqadupstack_gaming_49427": [
+  "2b3edeed8988e132"
+ ],
+ "beir_cqadupstack_gaming_49519": [
+  "b550fd8057284363"
+ ],
+ "beir_cqadupstack_gaming_49545": [
+  "29ec7cadd8761ec3",
+  "a753fa46c0da234f"
+ ],
+ "beir_cqadupstack_gaming_49592": [
+  "34d740dc2e8574dd"
+ ],
+ "beir_cqadupstack_gaming_49654": [
+  "006a33e45585fd4b",
+  "280d815d0aebe044",
+  "a78986e2e99de14e",
+  "e0749d0e27439678",
+  "f732a204dc0033d4"
+ ],
+ "beir_cqadupstack_gaming_49881": [
+  "df786eccc3879398"
+ ],
+ "beir_cqadupstack_gaming_50016": [
+  "9840aad3f6245904"
+ ],
+ "beir_cqadupstack_gaming_50206": [
+  "4845ebde980ff3c0"
+ ],
+ "beir_cqadupstack_gaming_50427": [
+  "cb8607e4ce200e00"
+ ],
+ "beir_cqadupstack_gaming_50630": [
+  "b14d90c792410a0e"
+ ],
+ "beir_cqadupstack_gaming_50648": [
+  "26b35167e9855153"
+ ],
+ "beir_cqadupstack_gaming_50682": [
+  "63e12fdc2950350a"
+ ],
+ "beir_cqadupstack_gaming_50820": [
+  "6c5cd02c1f6dc9ef",
+  "8d3ccee16697383d"
+ ],
+ "beir_cqadupstack_gaming_5087": [
+  "0fd61d18f129df71"
+ ],
+ "beir_cqadupstack_gaming_50873": [
+  "86538ebfef234417"
+ ],
+ "beir_cqadupstack_gaming_5097": [
+  "983638ebcbc88ab7"
+ ],
+ "beir_cqadupstack_gaming_51052": [
+  "476196d9c7abab9d"
+ ],
+ "beir_cqadupstack_gaming_51090": [
+  "c469075c244931bc"
+ ],
+ "beir_cqadupstack_gaming_51129": [
+  "86cafc8eb3e64b85"
+ ],
+ "beir_cqadupstack_gaming_51356": [
+  "e05e48f11fa77c57"
+ ],
+ "beir_cqadupstack_gaming_517": [
+  "46b7b22ffb3ffaf5",
+  "6bb04e4c77c2d5e7"
+ ],
+ "beir_cqadupstack_gaming_51760": [
+  "17c3fab75c013406"
+ ],
+ "beir_cqadupstack_gaming_51936": [
+  "9fa721c437a5fd29"
+ ],
+ "beir_cqadupstack_gaming_51966": [
+  "077174c580ded40b"
+ ],
+ "beir_cqadupstack_gaming_51971": [
+  "46d88a19d896c5a4",
+  "b19ac1c9003b5e64"
+ ],
+ "beir_cqadupstack_gaming_52007": [
+  "af1ade1a0f628c1d"
+ ],
+ "beir_cqadupstack_gaming_52055": [
+  "252ecafe5b0bc107"
+ ],
+ "beir_cqadupstack_gaming_52064": [
+  "f5ed94bcfcc862c2"
+ ],
+ "beir_cqadupstack_gaming_52148": [
+  "de1e997276221213"
+ ],
+ "beir_cqadupstack_gaming_52189": [
+  "3fa15f09529a2be5",
+  "8897585e64060cf5"
+ ],
+ "beir_cqadupstack_gaming_52223": [
+  "8a761dfb867512be"
+ ],
+ "beir_cqadupstack_gaming_52329": [
+  "36b6bc575857fe8f"
+ ],
+ "beir_cqadupstack_gaming_52393": [
+  "892a384152f71901"
+ ],
+ "beir_cqadupstack_gaming_52528": [
+  "1038e8d506924db2"
+ ],
+ "beir_cqadupstack_gaming_52531": [
+  "f30aa85424e745a5"
+ ],
+ "beir_cqadupstack_gaming_53162": [
+  "0dd455153ec8c757"
+ ],
+ "beir_cqadupstack_gaming_53273": [
+  "2e98f9c0117ee86d",
+  "59b98c7932bdb4f4",
+  "62da5d7470365a2a",
+  "7cfdaca7a80135a7",
+  "7f020422d157bf81",
+  "b7b617ad138c47aa",
+  "d0b9457850af499f",
+  "f751cb84c736a6e5"
+ ],
+ "beir_cqadupstack_gaming_5339": [
+  "025bd05e8175d4d1",
+  "071b93e74a0bf2ca"
+ ],
+ "beir_cqadupstack_gaming_53565": [
+  "6d35af87261a442b",
+  "bd2fa6e376645cd8",
+  "e9ceebe3436e0c59"
+ ],
+ "beir_cqadupstack_gaming_53568": [
+  "e72d1bbf6ecd6295"
+ ],
+ "beir_cqadupstack_gaming_53596": [
+  "18d67a8816892f52"
+ ],
+ "beir_cqadupstack_gaming_53642": [
+  "2a9fdf27773c50d7",
+  "aaef8debb0b8589a"
+ ],
+ "beir_cqadupstack_gaming_53688": [
+  "12b3c24691aff01d",
+  "c28944046d5016d7"
+ ],
+ "beir_cqadupstack_gaming_53690": [
+  "811d9385afbb85bd"
+ ],
+ "beir_cqadupstack_gaming_53762": [
+  "f62755ab6990094b"
+ ],
+ "beir_cqadupstack_gaming_53783": [
+  "147457058c3a53ee"
+ ],
+ "beir_cqadupstack_gaming_53849": [
+  "818f9b812c11a560"
+ ],
+ "beir_cqadupstack_gaming_53900": [
+  "3690571a54e0cccc",
+  "fb383ee76f82c9bb"
+ ],
+ "beir_cqadupstack_gaming_53904": [
+  "63e5b9b8d8737b00"
+ ],
+ "beir_cqadupstack_gaming_53966": [
+  "eb76efd7f6e8619a"
+ ],
+ "beir_cqadupstack_gaming_53997": [
+  "12be27186441a280"
+ ],
+ "beir_cqadupstack_gaming_54019": [
+  "159b49685ef7d2c4"
+ ],
+ "beir_cqadupstack_gaming_54059": [
+  "2f83209f0ed607e1"
+ ],
+ "beir_cqadupstack_gaming_54068": [
+  "062cb6ae40096704",
+  "4b32d1003272bd7b",
+  "969ccc32361e9dc6",
+  "fb73ff6e70dbef2f"
+ ],
+ "beir_cqadupstack_gaming_54112": [
+  "ec63f3c6270504c7"
+ ],
+ "beir_cqadupstack_gaming_5414": [
+  "4c4c0ac133af72c7"
+ ],
+ "beir_cqadupstack_gaming_54158": [
+  "0cfcf096b880a232"
+ ],
+ "beir_cqadupstack_gaming_5421": [
+  "a4d7e1f50f320f47"
+ ],
+ "beir_cqadupstack_gaming_54306": [
+  "f8f64a31a50fa268"
+ ],
+ "beir_cqadupstack_gaming_54373": [
+  "0e47119b29460ad8"
+ ],
+ "beir_cqadupstack_gaming_54386": [
+  "308e10ee76150ca0"
+ ],
+ "beir_cqadupstack_gaming_54482": [
+  "fe2c2a0c650631f8"
+ ],
+ "beir_cqadupstack_gaming_54499": [
+  "6cde7bf71062521d"
+ ],
+ "beir_cqadupstack_gaming_54510": [
+  "822119de138b6c62"
+ ],
+ "beir_cqadupstack_gaming_54608": [
+  "8390246cd03a13f4"
+ ],
+ "beir_cqadupstack_gaming_54630": [
+  "b5b5ace54beb86b1"
+ ],
+ "beir_cqadupstack_gaming_54635": [
+  "f967efdc622ed971"
+ ],
+ "beir_cqadupstack_gaming_54642": [
+  "25c24dcb5605fb96",
+  "86ca218e66b3a983"
+ ],
+ "beir_cqadupstack_gaming_54662": [
+  "7e9ad1967ad2342a"
+ ],
+ "beir_cqadupstack_gaming_54741": [
+  "75cc81ef91c30cff"
+ ],
+ "beir_cqadupstack_gaming_54867": [
+  "c35b3e4bc093af45"
+ ],
+ "beir_cqadupstack_gaming_54940": [
+  "43d44eb9e479cf78"
+ ],
+ "beir_cqadupstack_gaming_54992": [
+  "1e6d7b335eafcfea"
+ ],
+ "beir_cqadupstack_gaming_55027": [
+  "aa1e0ffab4360b3e"
+ ],
+ "beir_cqadupstack_gaming_55073": [
+  "a1c8f72711cfefc4"
+ ],
+ "beir_cqadupstack_gaming_55091": [
+  "8655efa68f38b288",
+  "ab028e3a757bfa1f",
+  "f9e71c4f353787d4"
+ ],
+ "beir_cqadupstack_gaming_55124": [
+  "0bfcac9a9ab86bf9"
+ ],
+ "beir_cqadupstack_gaming_55146": [
+  "7fc88618af8766a4",
+  "b7e474162cf43832"
+ ],
+ "beir_cqadupstack_gaming_55163": [
+  "91b7073a438a3e1c"
+ ],
+ "beir_cqadupstack_gaming_55337": [
+  "4ac8e4da921abf23"
+ ],
+ "beir_cqadupstack_gaming_55381": [
+  "5b8baa5bddfd4a61",
+  "d4ce7b6fbe9fd022"
+ ],
+ "beir_cqadupstack_gaming_55465": [
+  "df0b49f365d22852"
+ ],
+ "beir_cqadupstack_gaming_55544": [
+  "9ee486c8ba17ec1a"
+ ],
+ "beir_cqadupstack_gaming_55641": [
+  "c4145ef5e7f94de7"
+ ],
+ "beir_cqadupstack_gaming_55677": [
+  "09fd4d96bfb8c12d"
+ ],
+ "beir_cqadupstack_gaming_5573": [
+  "7c0382c741b9857f"
+ ],
+ "beir_cqadupstack_gaming_5580": [
+  "3bbe04bc5df560cb"
+ ],
+ "beir_cqadupstack_gaming_55938": [
+  "52ac19da79abdbb9"
+ ],
+ "beir_cqadupstack_gaming_55964": [
+  "ada8b3e4a8178f34"
+ ],
+ "beir_cqadupstack_gaming_56046": [
+  "ef69824597ced314"
+ ],
+ "beir_cqadupstack_gaming_56123": [
+  "f6dc204ec386c169"
+ ],
+ "beir_cqadupstack_gaming_56370": [
+  "1f17c8ef7e709ae4"
+ ],
+ "beir_cqadupstack_gaming_56446": [
+  "f832c73ce74d5f9b"
+ ],
+ "beir_cqadupstack_gaming_56491": [
+  "14b49a9991984bb0"
+ ],
+ "beir_cqadupstack_gaming_56515": [
+  "d9167243a60ee66a"
+ ],
+ "beir_cqadupstack_gaming_56548": [
+  "495d5a97d9eca17c"
+ ],
+ "beir_cqadupstack_gaming_56677": [
+  "0b1a7568b94c5433"
+ ],
+ "beir_cqadupstack_gaming_56840": [
+  "ba420d36881809a8"
+ ],
+ "beir_cqadupstack_gaming_56852": [
+  "20a095f88251dab8"
+ ],
+ "beir_cqadupstack_gaming_56872": [
+  "48672200df9b0f36"
+ ],
+ "beir_cqadupstack_gaming_5698": [
+  "6e22fe59ecbe0cb5"
+ ],
+ "beir_cqadupstack_gaming_56983": [
+  "f7edfd94d07a7e21"
+ ],
+ "beir_cqadupstack_gaming_57047": [
+  "c3f4aa5a154fbab3",
+  "cf82aa6ea7bb7a26"
+ ],
+ "beir_cqadupstack_gaming_57152": [
+  "eff04ac9e1d1810a"
+ ],
+ "beir_cqadupstack_gaming_57409": [
+  "4f98523362abcd7a",
+  "dfc3e8a21b624d7b"
+ ],
+ "beir_cqadupstack_gaming_57473": [
+  "c069c257bbaa4673"
+ ],
+ "beir_cqadupstack_gaming_57601": [
+  "9aafad7362f32d95"
+ ],
+ "beir_cqadupstack_gaming_5761": [
+  "87a8f92e571a0e8c"
+ ],
+ "beir_cqadupstack_gaming_57638": [
+  "0ecde4adf471a81d"
+ ],
+ "beir_cqadupstack_gaming_57857": [
+  "9f56970f2526c6f8"
+ ],
+ "beir_cqadupstack_gaming_57871": [
+  "7446e5d712121104",
+  "8904347daa870741",
+  "dc388b4ad17886d6"
+ ],
+ "beir_cqadupstack_gaming_57914": [
+  "5e54472a49294749",
+  "f62c0be1c2f89de6"
+ ],
+ "beir_cqadupstack_gaming_58039": [
+  "b4aa115be46eef51"
+ ],
+ "beir_cqadupstack_gaming_58188": [
+  "0427fb5595e0dc81"
+ ],
+ "beir_cqadupstack_gaming_58248": [
+  "a3d73d23fe23642c"
+ ],
+ "beir_cqadupstack_gaming_58310": [
+  "c13d6e4e43856480"
+ ],
+ "beir_cqadupstack_gaming_58319": [
+  "80fa840f405d62bd",
+  "820a170669e649a4"
+ ],
+ "beir_cqadupstack_gaming_58395": [
+  "672c292a304e7e50",
+  "fcbdfced94fd10bc"
+ ],
+ "beir_cqadupstack_gaming_58406": [
+  "8c51e09f112aa9d7",
+  "fdc4b3eb19ef0070"
+ ],
+ "beir_cqadupstack_gaming_58446": [
+  "a64f4bc0704b3e97"
+ ],
+ "beir_cqadupstack_gaming_58461": [
+  "c3f5b84a910c6e9b"
+ ],
+ "beir_cqadupstack_gaming_58466": [
+  "6db6c56b075ee4c4"
+ ],
+ "beir_cqadupstack_gaming_58521": [
+  "78b6ff4777e999a4",
+  "a31e8fdb0efa5808"
+ ],
+ "beir_cqadupstack_gaming_58522": [
+  "9420a5aa1f11a6ea"
+ ],
+ "beir_cqadupstack_gaming_58554": [
+  "d705c292266394a1"
+ ],
+ "beir_cqadupstack_gaming_5862": [
+  "1db20d8479ba5572",
+  "9f801015ce8b16bf"
+ ],
+ "beir_cqadupstack_gaming_58773": [
+  "06005b34b66e5628"
+ ],
+ "beir_cqadupstack_gaming_58831": [
+  "2d9e8812c284144a"
+ ],
+ "beir_cqadupstack_gaming_58921": [
+  "1e9762b53e63528e",
+  "2529912c2d0bb48b",
+  "8bce8953ea4dbe8d"
+ ],
+ "beir_cqadupstack_gaming_5898": [
+  "db142f45aad95899"
+ ],
+ "beir_cqadupstack_gaming_59442": [
+  "e5dd73ad5cd6b9b2"
+ ],
+ "beir_cqadupstack_gaming_60016": [
+  "670a7c5b9b1aa999"
+ ],
+ "beir_cqadupstack_gaming_60354": [
+  "2bd12cf516b8af58",
+  "c8ab649a531ee72c"
+ ],
+ "beir_cqadupstack_gaming_60619": [
+  "715a070cf541eb30"
+ ],
+ "beir_cqadupstack_gaming_61280": [
+  "fcca9891aee905f8"
+ ],
+ "beir_cqadupstack_gaming_61815": [
+  "e3c8db4fede1ac07"
+ ],
+ "beir_cqadupstack_gaming_61991": [
+  "990bd6b36f0c62a6"
+ ],
+ "beir_cqadupstack_gaming_62089": [
+  "3ce6fe51cf346c56",
+  "45eb86413faf27a0",
+  "6db704eff0cab50c"
+ ],
+ "beir_cqadupstack_gaming_62153": [
+  "86d3e2b8c9218f6d"
+ ],
+ "beir_cqadupstack_gaming_62248": [
+  "a0b45d4b00894eaf",
+  "a9d992f74bc8dc1f"
+ ],
+ "beir_cqadupstack_gaming_62471": [
+  "1e660f46fcd4112c"
+ ],
+ "beir_cqadupstack_gaming_62560": [
+  "bce2bbd65cff9224"
+ ],
+ "beir_cqadupstack_gaming_62644": [
+  "ef740e84c89d5945"
+ ],
+ "beir_cqadupstack_gaming_62674": [
+  "ce3db146cb798dc4"
+ ],
+ "beir_cqadupstack_gaming_62797": [
+  "98ea7f6fb467d421"
+ ],
+ "beir_cqadupstack_gaming_62865": [
+  "84ae1b2c06c1df86"
+ ],
+ "beir_cqadupstack_gaming_63118": [
+  "28934788599c12f0"
+ ],
+ "beir_cqadupstack_gaming_63265": [
+  "0eae8dd98200e318"
+ ],
+ "beir_cqadupstack_gaming_63323": [
+  "326978385a132fa2"
+ ],
+ "beir_cqadupstack_gaming_63413": [
+  "53b22f8969f362a1"
+ ],
+ "beir_cqadupstack_gaming_63492": [
+  "3990cb8d77dcc6db"
+ ],
+ "beir_cqadupstack_gaming_63502": [
+  "152a9f42f8543d61"
+ ],
+ "beir_cqadupstack_gaming_63546": [
+  "44704ae3c3872bb9"
+ ],
+ "beir_cqadupstack_gaming_63582": [
+  "cd9682034ed7715c"
+ ],
+ "beir_cqadupstack_gaming_63625": [
+  "2fdf386812b1d473"
+ ],
+ "beir_cqadupstack_gaming_63704": [
+  "104955c85aa78a61"
+ ],
+ "beir_cqadupstack_gaming_63712": [
+  "62e55f0ccd760981"
+ ],
+ "beir_cqadupstack_gaming_63817": [
+  "e66037e51b9b9384"
+ ],
+ "beir_cqadupstack_gaming_63828": [
+  "29d8997bc9f84ca7",
+  "5913eecdcaa8ce55",
+  "d74e8553731babd1"
+ ],
+ "beir_cqadupstack_gaming_6406": [
+  "f614043991c85bd7"
+ ],
+ "beir_cqadupstack_gaming_64065": [
+  "423d466e91b9b54f"
+ ],
+ "beir_cqadupstack_gaming_64219": [
+  "88d2f678622a656d"
+ ],
+ "beir_cqadupstack_gaming_64356": [
+  "4ff1ce8bfd6934f1",
+  "6bfd3ab9932e3437",
+  "6d05bc2b94cba7c2"
+ ],
+ "beir_cqadupstack_gaming_64451": [
+  "e32b71c23d8a1f3e"
+ ],
+ "beir_cqadupstack_gaming_64460": [
+  "6dffdd944e493f92"
+ ],
+ "beir_cqadupstack_gaming_64607": [
+  "3c00c8bf29ddebbb"
+ ],
+ "beir_cqadupstack_gaming_64616": [
+  "3181254777f3ab0a"
+ ],
+ "beir_cqadupstack_gaming_64630": [
+  "04fa02f14dfad39b"
+ ],
+ "beir_cqadupstack_gaming_64695": [
+  "c88f4d7d51f74589"
+ ],
+ "beir_cqadupstack_gaming_648": [
+  "e559b7b67af8b68b"
+ ],
+ "beir_cqadupstack_gaming_6481": [
+  "b7f5b0667f499456"
+ ],
+ "beir_cqadupstack_gaming_64827": [
+  "d7a9b63f5f879dfd"
+ ],
+ "beir_cqadupstack_gaming_65010": [
+  "9dbd546ead967d21"
+ ],
+ "beir_cqadupstack_gaming_65121": [
+  "e85b6c231826a4dc"
+ ],
+ "beir_cqadupstack_gaming_65266": [
+  "739b036dc3cb27fa"
+ ],
+ "beir_cqadupstack_gaming_65625": [
+  "033d536579e302dc",
+  "397cf9a8e8bdae27",
+  "8dc52c6ba0ef9edf",
+  "911b71a0e9a7130c",
+  "e8335f441ba6bc8d"
+ ],
+ "beir_cqadupstack_gaming_65731": [
+  "cd1ab020db9b067b"
+ ],
+ "beir_cqadupstack_gaming_65828": [
+  "5199ce450325028b"
+ ],
+ "beir_cqadupstack_gaming_66024": [
+  "efd9ab66de066e5c"
+ ],
+ "beir_cqadupstack_gaming_66078": [
+  "8516d7c41df05978"
+ ],
+ "beir_cqadupstack_gaming_66102": [
+  "e4688f543225f262"
+ ],
+ "beir_cqadupstack_gaming_66139": [
+  "9ae5d71d6ff08e80",
+  "c1fa0dc944de18a9"
+ ],
+ "beir_cqadupstack_gaming_66144": [
+  "1c9cb936fb8bb39c"
+ ],
+ "beir_cqadupstack_gaming_6615": [
+  "76bd969b0bf13b30"
+ ],
+ "beir_cqadupstack_gaming_66164": [
+  "3df810259fb69459"
+ ],
+ "beir_cqadupstack_gaming_66166": [
+  "ea0a6251f0e2e41b"
+ ],
+ "beir_cqadupstack_gaming_66173": [
+  "f8f072220674afc9"
+ ],
+ "beir_cqadupstack_gaming_66205": [
+  "035b57f5aaccc3f7"
+ ],
+ "beir_cqadupstack_gaming_66214": [
+  "4602d3fbe8a4b03f"
+ ],
+ "beir_cqadupstack_gaming_66216": [
+  "784947a63a06811c"
+ ],
+ "beir_cqadupstack_gaming_66267": [
+  "c3c51e3dd958c426"
+ ],
+ "beir_cqadupstack_gaming_66275": [
+  "f2766e39da05304a"
+ ],
+ "beir_cqadupstack_gaming_66315": [
+  "adc5115642c91f3a"
+ ],
+ "beir_cqadupstack_gaming_66332": [
+  "d1677923f7273623"
+ ],
+ "beir_cqadupstack_gaming_66349": [
+  "519be2c56b2594d5",
+  "a343bd44aadcb26e"
+ ],
+ "beir_cqadupstack_gaming_66418": [
+  "56ba62fec6d0f61d"
+ ],
+ "beir_cqadupstack_gaming_66475": [
+  "7a8562e413a98392"
+ ],
+ "beir_cqadupstack_gaming_66505": [
+  "92ab018d64bf7ec2"
+ ],
+ "beir_cqadupstack_gaming_66516": [
+  "224f9429ff8daa26",
+  "46249bfae6f702df"
+ ],
+ "beir_cqadupstack_gaming_6656": [
+  "6286b5ba3b3b4b94"
+ ],
+ "beir_cqadupstack_gaming_66602": [
+  "78a35d941659885b"
+ ],
+ "beir_cqadupstack_gaming_66621": [
+  "4355dc1ea161d834",
+  "6cc7591b951e17b0",
+  "a4c7a6501f779162"
+ ],
+ "beir_cqadupstack_gaming_66623": [
+  "511514ff23ac4164",
+  "618c4487643dbec9"
+ ],
+ "beir_cqadupstack_gaming_66627": [
+  "be4f7f412526a04b"
+ ],
+ "beir_cqadupstack_gaming_66648": [
+  "d3823dd02268bddc"
+ ],
+ "beir_cqadupstack_gaming_66652": [
+  "a3e91d4c1dd271ba"
+ ],
+ "beir_cqadupstack_gaming_66659": [
+  "971ca466e76956df"
+ ],
+ "beir_cqadupstack_gaming_66663": [
+  "25ac8d1f89a2b42a"
+ ],
+ "beir_cqadupstack_gaming_66673": [
+  "2d731b3513a1e021"
+ ],
+ "beir_cqadupstack_gaming_66707": [
+  "1c24ddc99878bdce"
+ ],
+ "beir_cqadupstack_gaming_66734": [
+  "b4e5d17888eb05e6",
+  "c4264a51de9cab9c",
+  "cf004f3d48233fa5"
+ ],
+ "beir_cqadupstack_gaming_66757": [
+  "61001f843e37e914"
+ ],
+ "beir_cqadupstack_gaming_66788": [
+  "8ea75faa4233f66e",
+  "ebc01e61e4c5ca2f"
+ ],
+ "beir_cqadupstack_gaming_66810": [
+  "1a593cbb50b4170c"
+ ],
+ "beir_cqadupstack_gaming_66811": [
+  "06b9dc6c01e426b1",
+  "0bbda42a8814b325",
+  "c81b2417f6cf3328"
+ ],
+ "beir_cqadupstack_gaming_66911": [
+  "d44be529bc7bb01d"
+ ],
+ "beir_cqadupstack_gaming_66936": [
+  "10e259ae3d3651af",
+  "31f214de085f53ef",
+  "338c1321158c1c2e"
+ ],
+ "beir_cqadupstack_gaming_66937": [
+  "a9f2c36b6f00706a"
+ ],
+ "beir_cqadupstack_gaming_66994": [
+  "cae3041c83951547",
+  "e01ab4f503454f1b"
+ ],
+ "beir_cqadupstack_gaming_67006": [
+  "67254731c2d5fa36"
+ ],
+ "beir_cqadupstack_gaming_67007": [
+  "96ef3348339b1e15",
+  "cbbccb13fd96b3f2",
+  "cee0ed60b6019b1e"
+ ],
+ "beir_cqadupstack_gaming_67056": [
+  "5e6b95dbe5cb35aa",
+  "f8dbe7e854e03e76"
+ ],
+ "beir_cqadupstack_gaming_67082": [
+  "15be679850c1a2ab"
+ ],
+ "beir_cqadupstack_gaming_67084": [
+  "53cd65325d3a49a5"
+ ],
+ "beir_cqadupstack_gaming_67141": [
+  "02a20070ae079aeb"
+ ],
+ "beir_cqadupstack_gaming_67154": [
+  "d3a67b58d622c25b"
+ ],
+ "beir_cqadupstack_gaming_67294": [
+  "84556673e47bace6",
+  "fda49e55e95f9bf1"
+ ],
+ "beir_cqadupstack_gaming_67317": [
+  "215fa9b9635e696a"
+ ],
+ "beir_cqadupstack_gaming_67344": [
+  "2894e6218d485981"
+ ],
+ "beir_cqadupstack_gaming_67367": [
+  "1a489f6316781ffd"
+ ],
+ "beir_cqadupstack_gaming_67423": [
+  "4f05354058acdfcc"
+ ],
+ "beir_cqadupstack_gaming_67564": [
+  "902d1858078eb718"
+ ],
+ "beir_cqadupstack_gaming_67695": [
+  "af64f8b55fa6d8da"
+ ],
+ "beir_cqadupstack_gaming_67719": [
+  "ce97864fd5283b7d",
+  "d2b678a41b700447",
+  "fd9ded729c6111d1"
+ ],
+ "beir_cqadupstack_gaming_67782": [
+  "c23722e06cbd504c"
+ ],
+ "beir_cqadupstack_gaming_67851": [
+  "1f6fb3cfaedd5a31",
+  "2535a130d028c4cb",
+  "3f5f6571144a9c29",
+  "dae5e644fa884cc3",
+  "f979768993000049"
+ ],
+ "beir_cqadupstack_gaming_67852": [
+  "0cf1609fb222badf"
+ ],
+ "beir_cqadupstack_gaming_6797": [
+  "dfdcf46a4bf63726"
+ ],
+ "beir_cqadupstack_gaming_68041": [
+  "a6dfef5816cf1358"
+ ],
+ "beir_cqadupstack_gaming_68106": [
+  "7d8c3932c3440627"
+ ],
+ "beir_cqadupstack_gaming_68111": [
+  "7f1f8faf941a039d"
+ ],
+ "beir_cqadupstack_gaming_68204": [
+  "4f27be50b6c4b512"
+ ],
+ "beir_cqadupstack_gaming_68220": [
+  "57f8fe6082784423"
+ ],
+ "beir_cqadupstack_gaming_68254": [
+  "209a572ad2c28076"
+ ],
+ "beir_cqadupstack_gaming_68286": [
+  "7535f8d56200a2fd"
+ ],
+ "beir_cqadupstack_gaming_68422": [
+  "38ddfa8759ab63ae"
+ ],
+ "beir_cqadupstack_gaming_68493": [
+  "d08f3a6862ba6fcb"
+ ],
+ "beir_cqadupstack_gaming_68529": [
+  "bd05b3d3e0b80528"
+ ],
+ "beir_cqadupstack_gaming_68593": [
+  "52d1b228964df15c",
+  "fad840f64d94ce5d"
+ ],
+ "beir_cqadupstack_gaming_68623": [
+  "4b1cf3d9e45b53d2",
+  "9b205ed8631a7a47",
+  "ac3e9dedc6a2ba63",
+  "c7684930002f2b07"
+ ],
+ "beir_cqadupstack_gaming_68633": [
+  "4a9b73fbe882a6b4"
+ ],
+ "beir_cqadupstack_gaming_68634": [
+  "b7c362ae5465eb49"
+ ],
+ "beir_cqadupstack_gaming_68638": [
+  "04b623fa5e8a30e7",
+  "d4f1aa1b6a9516c2"
+ ],
+ "beir_cqadupstack_gaming_68735": [
+  "09a87b86556dc9bc"
+ ],
+ "beir_cqadupstack_gaming_68743": [
+  "1bc5323b850c428c"
+ ],
+ "beir_cqadupstack_gaming_68805": [
+  "4ec4f61af1839e3e"
+ ],
+ "beir_cqadupstack_gaming_68828": [
+  "ab35e46a01800770",
+  "b2a2c4ef2492459d"
+ ],
+ "beir_cqadupstack_gaming_68895": [
+  "80972f546c80b1f9"
+ ],
+ "beir_cqadupstack_gaming_68901": [
+  "5d66d930b1e352de"
+ ],
+ "beir_cqadupstack_gaming_68919": [
+  "e8bbd2bb4ed931e6"
+ ],
+ "beir_cqadupstack_gaming_68991": [
+  "3187732fca11dd23",
+  "45578a115abf23fa"
+ ],
+ "beir_cqadupstack_gaming_69016": [
+  "4f131c282da4752a"
+ ],
+ "beir_cqadupstack_gaming_69033": [
+  "87af0eaf39f2e1f2",
+  "891e8c5a8fa3e8fc"
+ ],
+ "beir_cqadupstack_gaming_69047": [
+  "9d44923a2af6cd8b",
+  "b0cab9eb9f5787d5",
+  "fd177e2725d8546f"
+ ],
+ "beir_cqadupstack_gaming_69073": [
+  "22049bc5ed7f8cbb"
+ ],
+ "beir_cqadupstack_gaming_69132": [
+  "3eb48ac15718bb28"
+ ],
+ "beir_cqadupstack_gaming_69166": [
+  "ad36a6c34989a417"
+ ],
+ "beir_cqadupstack_gaming_69176": [
+  "cd67f1a0950e84e6"
+ ],
+ "beir_cqadupstack_gaming_69231": [
+  "61007c51d6fbda8f"
+ ],
+ "beir_cqadupstack_gaming_69241": [
+  "10721a14066b842e",
+  "eeba19f6ca44d8a4"
+ ],
+ "beir_cqadupstack_gaming_69244": [
+  "1c29e03423c9db74"
+ ],
+ "beir_cqadupstack_gaming_69253": [
+  "b2790bc67a5d60e2"
+ ],
+ "beir_cqadupstack_gaming_69286": [
+  "9deb3b31352b4a45"
+ ],
+ "beir_cqadupstack_gaming_69337": [
+  "b7f38bc3334a566a"
+ ],
+ "beir_cqadupstack_gaming_69430": [
+  "d83fe7269e22a5bb"
+ ],
+ "beir_cqadupstack_gaming_69521": [
+  "d2937dd9e423f14e"
+ ],
+ "beir_cqadupstack_gaming_69522": [
+  "1aca26825b890d10"
+ ],
+ "beir_cqadupstack_gaming_69523": [
+  "2c4eddbd2cb5a9c7",
+  "d1c1392a08923768"
+ ],
+ "beir_cqadupstack_gaming_69646": [
+  "05ba550937ce952b",
+  "2bc793028f888c15",
+  "e683f058635e070f"
+ ],
+ "beir_cqadupstack_gaming_69664": [
+  "290abe6464b5c150"
+ ],
+ "beir_cqadupstack_gaming_69919": [
+  "54a8d82aecec440c"
+ ],
+ "beir_cqadupstack_gaming_69956": [
+  "1836d6eccc3884a8",
+  "e2de8fc8ee4f940a",
+  "ee2fa2af0e788173"
+ ],
+ "beir_cqadupstack_gaming_70095": [
+  "7a65c3d91c24dd2d"
+ ],
+ "beir_cqadupstack_gaming_70139": [
+  "6a0c67a4e3692bd8",
+  "779e6ac1c556ccb8",
+  "7ec728991d1a419d",
+  "98582e700b02366f",
+  "e89d1d65f99a1e92"
+ ],
+ "beir_cqadupstack_gaming_70191": [
+  "fb3d47780d602f9d"
+ ],
+ "beir_cqadupstack_gaming_70253": [
+  "0ba322f88684021a"
+ ],
+ "beir_cqadupstack_gaming_70323": [
+  "ec66a247b65e1bf4"
+ ],
+ "beir_cqadupstack_gaming_70370": [
+  "ebbfbac1851e3ca9"
+ ],
+ "beir_cqadupstack_gaming_70374": [
+  "1f1498b2c41c9424",
+  "871efefdff0e3ec5",
+  "8ad4ae6f5eec4db1",
+  "b37c3ab8d897c6d6",
+  "c45f3a2773284c51",
+  "e61b16d9da55bd32"
+ ],
+ "beir_cqadupstack_gaming_70529": [
+  "0e1d5162ec779c3b",
+  "cc683001199dc072"
+ ],
+ "beir_cqadupstack_gaming_70594": [
+  "31f2b2e8b8e9477d",
+  "8bf91f2d7a87d7fa"
+ ],
+ "beir_cqadupstack_gaming_70755": [
+  "8830d50f3f6f5c81"
+ ],
+ "beir_cqadupstack_gaming_70921": [
+  "6274bf472b21693e"
+ ],
+ "beir_cqadupstack_gaming_71003": [
+  "aa08b20ab935cd91"
+ ],
+ "beir_cqadupstack_gaming_71059": [
+  "156fad0e847f5fa2"
+ ],
+ "beir_cqadupstack_gaming_71111": [
+  "da06080d0dd78939"
+ ],
+ "beir_cqadupstack_gaming_71115": [
+  "2aa7204960d833e1"
+ ],
+ "beir_cqadupstack_gaming_71183": [
+  "0a8271cf7cc0e7df"
+ ],
+ "beir_cqadupstack_gaming_71215": [
+  "5d8379cd0a7f079e"
+ ],
+ "beir_cqadupstack_gaming_71381": [
+  "f90601611b1a2ce8"
+ ],
+ "beir_cqadupstack_gaming_71400": [
+  "19eb02b00e93cbc5"
+ ],
+ "beir_cqadupstack_gaming_71406": [
+  "31872c613669c30b",
+  "3caad26a6d6dadcc"
+ ],
+ "beir_cqadupstack_gaming_71427": [
+  "21d7c87cf9dae3a1",
+  "68548169e1b5983f",
+  "69da5616eca486f7",
+  "8cdeb2763f2fa5ad"
+ ],
+ "beir_cqadupstack_gaming_71520": [
+  "c89f470b7e13b8e7"
+ ],
+ "beir_cqadupstack_gaming_71565": [
+  "0d5af3f69a5074cb",
+  "1c825d88c3b53e84"
+ ],
+ "beir_cqadupstack_gaming_71571": [
+  "0477655aa713575b",
+  "78e57fc69663dbdc"
+ ],
+ "beir_cqadupstack_gaming_71624": [
+  "30234de8b3c2e2ff",
+  "d2b925bb668912a5"
+ ],
+ "beir_cqadupstack_gaming_71718": [
+  "1a75ed5925c5095e"
+ ],
+ "beir_cqadupstack_gaming_71729": [
+  "56499d023a829ca3"
+ ],
+ "beir_cqadupstack_gaming_71821": [
+  "d070ec04d29e64d3"
+ ],
+ "beir_cqadupstack_gaming_71859": [
+  "dfd252e164ffdd6a"
+ ],
+ "beir_cqadupstack_gaming_72120": [
+  "6062a2f4a8dca52c"
+ ],
+ "beir_cqadupstack_gaming_72175": [
+  "f7af0c83b5fd5e2f"
+ ],
+ "beir_cqadupstack_gaming_72248": [
+  "32a4855e41c4815a",
+  "70c34387428b4a23"
+ ],
+ "beir_cqadupstack_gaming_72286": [
+  "317db06767d571f4"
+ ],
+ "beir_cqadupstack_gaming_72325": [
+  "84448e5cc37b0b8b"
+ ],
+ "beir_cqadupstack_gaming_72705": [
+  "b1d1474240c65e35",
+  "d8df577133d6e66f"
+ ],
+ "beir_cqadupstack_gaming_72763": [
+  "8cfb109fc1ffb78c"
+ ],
+ "beir_cqadupstack_gaming_72827": [
+  "75fbc09102fc58f5"
+ ],
+ "beir_cqadupstack_gaming_72909": [
+  "deee3c1000cd90d4"
+ ],
+ "beir_cqadupstack_gaming_73132": [
+  "e0b99c090f42e08d"
+ ],
+ "beir_cqadupstack_gaming_73373": [
+  "d596235d0bd93b7b"
+ ],
+ "beir_cqadupstack_gaming_73380": [
+  "e9cbe54583bfed7e"
+ ],
+ "beir_cqadupstack_gaming_73494": [
+  "27e50e0474c8f93d"
+ ],
+ "beir_cqadupstack_gaming_74002": [
+  "674164e053712da4",
+  "bbb35ced29ae6880"
+ ],
+ "beir_cqadupstack_gaming_74057": [
+  "4f4861470b93571e"
+ ],
+ "beir_cqadupstack_gaming_74137": [
+  "5e17d1764dbc0a20",
+  "b024b7ec69cbbaff"
+ ],
+ "beir_cqadupstack_gaming_74164": [
+  "5e9ddaa996d791e7"
+ ],
+ "beir_cqadupstack_gaming_74255": [
+  "1d90a9906bc13bd7"
+ ],
+ "beir_cqadupstack_gaming_74279": [
+  "547e19fdfd276dda"
+ ],
+ "beir_cqadupstack_gaming_74385": [
+  "866c2fcb6c7fa5a6"
+ ],
+ "beir_cqadupstack_gaming_74437": [
+  "1964e21ae899bd64"
+ ],
+ "beir_cqadupstack_gaming_74517": [
+  "b615eb9f4e25caee"
+ ],
+ "beir_cqadupstack_gaming_74547": [
+  "14915d1b708a3de2"
+ ],
+ "beir_cqadupstack_gaming_74553": [
+  "05007c50ac3db85e"
+ ],
+ "beir_cqadupstack_gaming_74554": [
+  "298ff311e2f9c954"
+ ],
+ "beir_cqadupstack_gaming_74761": [
+  "8200790fcf0330ee"
+ ],
+ "beir_cqadupstack_gaming_74764": [
+  "5ab14f53277db38c",
+  "954724751ec2e2c7"
+ ],
+ "beir_cqadupstack_gaming_74853": [
+  "d1ec554947ee3671",
+  "eac0b8c900eb86e0"
+ ],
+ "beir_cqadupstack_gaming_74963": [
+  "67afac39fca40f07",
+  "68254af6bf1511c5",
+  "87363e4dd4d73cda"
+ ],
+ "beir_cqadupstack_gaming_75055": [
+  "11751476f85ea185",
+  "56e3293874ded96a",
+  "bfe82c4f0491d8d6",
+  "f3bdcd679b17d7f1"
+ ],
+ "beir_cqadupstack_gaming_75065": [
+  "2bccdb28b1831499"
+ ],
+ "beir_cqadupstack_gaming_75369": [
+  "60d8df73ee69ee38"
+ ],
+ "beir_cqadupstack_gaming_75460": [
+  "d0ca39c6be228473"
+ ],
+ "beir_cqadupstack_gaming_75492": [
+  "86439620b5327f54",
+  "9f136a0fd0b317f3"
+ ],
+ "beir_cqadupstack_gaming_75659": [
+  "e09afd00fc0820fb"
+ ],
+ "beir_cqadupstack_gaming_75750": [
+  "0c3c6b98b7328137"
+ ],
+ "beir_cqadupstack_gaming_75778": [
+  "d17397da768ab192"
+ ],
+ "beir_cqadupstack_gaming_75817": [
+  "ffed14e8aa40f1f6"
+ ],
+ "beir_cqadupstack_gaming_75931": [
+  "0d552f34c398c9c0"
+ ],
+ "beir_cqadupstack_gaming_76069": [
+  "cfd0f48d59477d66"
+ ],
+ "beir_cqadupstack_gaming_76107": [
+  "b1efb331de49e58f"
+ ],
+ "beir_cqadupstack_gaming_76364": [
+  "2b4f2a0d6c66c0d9"
+ ],
+ "beir_cqadupstack_gaming_76389": [
+  "1f95e60bda5e6ff4"
+ ],
+ "beir_cqadupstack_gaming_76472": [
+  "d61c4692449d4ebd"
+ ],
+ "beir_cqadupstack_gaming_76474": [
+  "11c6227d026d2c55",
+  "ba95ee76466f813f"
+ ],
+ "beir_cqadupstack_gaming_76475": [
+  "9adbc54658eb4278"
+ ],
+ "beir_cqadupstack_gaming_76541": [
+  "c0a455f52d4756f6"
+ ],
+ "beir_cqadupstack_gaming_7668": [
+  "9f3a34d5a21899d0",
+  "eb4b9c6892a060c1"
+ ],
+ "beir_cqadupstack_gaming_76941": [
+  "06d7ff7d29d992f3",
+  "1cf92a10b8b9cf58"
+ ],
+ "beir_cqadupstack_gaming_77188": [
+  "d7740202037c6e55"
+ ],
+ "beir_cqadupstack_gaming_77471": [
+  "abf2df98bdb1db5e"
+ ],
+ "beir_cqadupstack_gaming_77757": [
+  "c5643c3d37ce7337"
+ ],
+ "beir_cqadupstack_gaming_77803": [
+  "7d7fae46ead6723c",
+  "e18053620c714711"
+ ],
+ "beir_cqadupstack_gaming_7786": [
+  "7dc5bfea871c44bd",
+  "b0dc32e7cd1970cf"
+ ],
+ "beir_cqadupstack_gaming_78003": [
+  "4bc8660610342fb3"
+ ],
+ "beir_cqadupstack_gaming_78115": [
+  "85ce8ce8010b443a"
+ ],
+ "beir_cqadupstack_gaming_78126": [
+  "f1be00fcf1a02c5c"
+ ],
+ "beir_cqadupstack_gaming_78170": [
+  "40e1ca262b5e3b7d"
+ ],
+ "beir_cqadupstack_gaming_78246": [
+  "a8d93586af46dcba"
+ ],
+ "beir_cqadupstack_gaming_78563": [
+  "51dc013b75c70bbb",
+  "5ff3c598e2d33e17"
+ ],
+ "beir_cqadupstack_gaming_78743": [
+  "f6eaba773dd61c8e"
+ ],
+ "beir_cqadupstack_gaming_79046": [
+  "05e65f03593749a4"
+ ],
+ "beir_cqadupstack_gaming_7928": [
+  "bb442b6fb8921baf"
+ ],
+ "beir_cqadupstack_gaming_79345": [
+  "94ce4af042b3e492"
+ ],
+ "beir_cqadupstack_gaming_7936": [
+  "6ef999f374102854"
+ ],
+ "beir_cqadupstack_gaming_79628": [
+  "ded61031aca24cb0"
+ ],
+ "beir_cqadupstack_gaming_79874": [
+  "e324bc8619abf3d6"
+ ],
+ "beir_cqadupstack_gaming_80030": [
+  "c45ac97180731d87"
+ ],
+ "beir_cqadupstack_gaming_80040": [
+  "e027f7ab4a3b71eb"
+ ],
+ "beir_cqadupstack_gaming_80057": [
+  "8880a224a651147f"
+ ],
+ "beir_cqadupstack_gaming_8008": [
+  "985b098095370b69",
+  "d5e56fbba6ccb1d2",
+  "dc8a98c2319a032d"
+ ],
+ "beir_cqadupstack_gaming_8016": [
+  "b7672de4e3f9f331"
+ ],
+ "beir_cqadupstack_gaming_80322": [
+  "6fc76fed1e8e2c28"
+ ],
+ "beir_cqadupstack_gaming_80543": [
+  "1890e8fb0e1e67e7",
+  "4b6ff6b4cbc03b98",
+  "62e1e06b22bf4ca2",
+  "aa1a251e163bef5d"
+ ],
+ "beir_cqadupstack_gaming_80554": [
+  "2de1375340f2b601"
+ ],
+ "beir_cqadupstack_gaming_81135": [
+  "9272dd9ee33e73b1",
+  "de033df730e80164"
+ ],
+ "beir_cqadupstack_gaming_81176": [
+  "1e2ce7b752db543c"
+ ],
+ "beir_cqadupstack_gaming_81386": [
+  "2dca6d6fa49ca84e"
+ ],
+ "beir_cqadupstack_gaming_81435": [
+  "26b58b18000980d5"
+ ],
+ "beir_cqadupstack_gaming_81519": [
+  "83fc5acb99c6cafe"
+ ],
+ "beir_cqadupstack_gaming_81523": [
+  "9947f2d3c9fe12f9"
+ ],
+ "beir_cqadupstack_gaming_8176": [
+  "d0dea283b4d9b12f"
+ ],
+ "beir_cqadupstack_gaming_8192": [
+  "54db7c1972a381fe"
+ ],
+ "beir_cqadupstack_gaming_81923": [
+  "fc6e698a4febd54e"
+ ],
+ "beir_cqadupstack_gaming_81929": [
+  "618ee96012034f9d"
+ ],
+ "beir_cqadupstack_gaming_81973": [
+  "4de36e01e93ed8b2"
+ ],
+ "beir_cqadupstack_gaming_82073": [
+  "181ccae02e75961d"
+ ],
+ "beir_cqadupstack_gaming_82114": [
+  "816d7f9003164238"
+ ],
+ "beir_cqadupstack_gaming_82146": [
+  "4a73bca8c352e4d4"
+ ],
+ "beir_cqadupstack_gaming_82352": [
+  "7862551eeddf9552"
+ ],
+ "beir_cqadupstack_gaming_8236": [
+  "c874d5603a86a694"
+ ],
+ "beir_cqadupstack_gaming_82402": [
+  "7117330cac8aa6e2"
+ ],
+ "beir_cqadupstack_gaming_82449": [
+  "c562cb1cfd118dab"
+ ],
+ "beir_cqadupstack_gaming_82536": [
+  "27694a0109cb57b7"
+ ],
+ "beir_cqadupstack_gaming_82541": [
+  "35f3beaaf6c0b0e8",
+  "86a024d3f742f712",
+  "cea4e5a88eaa3fe9"
+ ],
+ "beir_cqadupstack_gaming_82543": [
+  "6a4bd779b5924f85"
+ ],
+ "beir_cqadupstack_gaming_82545": [
+  "547059e0c02ef0b0",
+  "c001d688dc1e095f"
+ ],
+ "beir_cqadupstack_gaming_82589": [
+  "490cbcad63362055"
+ ],
+ "beir_cqadupstack_gaming_82596": [
+  "82acdf05fb3ae643"
+ ],
+ "beir_cqadupstack_gaming_82623": [
+  "2641460efc55b98d"
+ ],
+ "beir_cqadupstack_gaming_82634": [
+  "6463fa13f9fcd9d1"
+ ],
+ "beir_cqadupstack_gaming_82706": [
+  "a1626b0235730eea"
+ ],
+ "beir_cqadupstack_gaming_82758": [
+  "96827f15d646f1d8",
+  "afda4a22f3ef41f6"
+ ],
+ "beir_cqadupstack_gaming_82833": [
+  "ecc580b0787d1cba"
+ ],
+ "beir_cqadupstack_gaming_82865": [
+  "98a2ddf19e3928de"
+ ],
+ "beir_cqadupstack_gaming_83002": [
+  "b339e3a29994b95f"
+ ],
+ "beir_cqadupstack_gaming_83030": [
+  "438a53ce558ebff0"
+ ],
+ "beir_cqadupstack_gaming_8310": [
+  "362a7594d757358c",
+  "bfe2c4d98f18124d"
+ ],
+ "beir_cqadupstack_gaming_8313": [
+  "5457134b3e788534",
+  "ddc6489d32773ae0"
+ ],
+ "beir_cqadupstack_gaming_83359": [
+  "09b887d2c5c459ad",
+  "d6a31f5e08bffd23"
+ ],
+ "beir_cqadupstack_gaming_83387": [
+  "61ab8e7fd85e166e"
+ ],
+ "beir_cqadupstack_gaming_84470": [
+  "b895ffe0bc9ceab2"
+ ],
+ "beir_cqadupstack_gaming_84560": [
+  "9dd3301a5b376422"
+ ],
+ "beir_cqadupstack_gaming_84665": [
+  "262d07c33fc3da04",
+  "49333f960c258787",
+  "cef19d1ce1f28e30"
+ ],
+ "beir_cqadupstack_gaming_84799": [
+  "3fdb3a9ab4b8b4f2",
+  "5ea2fa6cfc0fc792"
+ ],
+ "beir_cqadupstack_gaming_84813": [
+  "d37c61da7dbacf06"
+ ],
+ "beir_cqadupstack_gaming_84838": [
+  "f5e0533d46751aac"
+ ],
+ "beir_cqadupstack_gaming_84851": [
+  "0ac0e919eeb4b1db"
+ ],
+ "beir_cqadupstack_gaming_85106": [
+  "19894c7fd25d7998"
+ ],
+ "beir_cqadupstack_gaming_85149": [
+  "273c8efc6d27066f",
+  "55b7b9d556e53c94",
+  "c74ea879246b312a"
+ ],
+ "beir_cqadupstack_gaming_85244": [
+  "362cae8cdd8accbf",
+  "aa957f920caa3ed0"
+ ],
+ "beir_cqadupstack_gaming_85257": [
+  "71f47645b3ece64e"
+ ],
+ "beir_cqadupstack_gaming_85308": [
+  "f5d87b72820d928c"
+ ],
+ "beir_cqadupstack_gaming_85381": [
+  "c6e4cbe57e2f53f2"
+ ],
+ "beir_cqadupstack_gaming_8540": [
+  "003b7d0efd19624e"
+ ],
+ "beir_cqadupstack_gaming_85570": [
+  "7b49fc44db6fd29c"
+ ],
+ "beir_cqadupstack_gaming_85577": [
+  "84eaf784a5d1dd8b"
+ ],
+ "beir_cqadupstack_gaming_85680": [
+  "b8be6029dfa5729f"
+ ],
+ "beir_cqadupstack_gaming_85786": [
+  "c9964b8b150328c2"
+ ],
+ "beir_cqadupstack_gaming_85938": [
+  "caef0ae1469f64cd"
+ ],
+ "beir_cqadupstack_gaming_85944": [
+  "f16a2b71f991f971"
+ ],
+ "beir_cqadupstack_gaming_8616": [
+  "32363c2b4f649e6c"
+ ],
+ "beir_cqadupstack_gaming_86295": [
+  "7212c715b039d821"
+ ],
+ "beir_cqadupstack_gaming_86322": [
+  "e39641509da94e7d"
+ ],
+ "beir_cqadupstack_gaming_86343": [
+  "f7444ebdc296af2b"
+ ],
+ "beir_cqadupstack_gaming_86401": [
+  "89f687e164f02af2"
+ ],
+ "beir_cqadupstack_gaming_86647": [
+  "ab2bc5b67da4b76c"
+ ],
+ "beir_cqadupstack_gaming_86704": [
+  "b6567ff775b09247"
+ ],
+ "beir_cqadupstack_gaming_86811": [
+  "c7f44cc5a28bbfa4"
+ ],
+ "beir_cqadupstack_gaming_86874": [
+  "dc25837aa5869891",
+  "fa29e5f8fc4bf85c"
+ ],
+ "beir_cqadupstack_gaming_87002": [
+  "7c9309074b1ca856"
+ ],
+ "beir_cqadupstack_gaming_87004": [
+  "4522ff4e770baedc",
+  "4eae5c23eb250ab9",
+  "96df43c8ebbc679b",
+  "d9bce3c0071d275f",
+  "f2f13b8c6690b7fd"
+ ],
+ "beir_cqadupstack_gaming_87041": [
+  "2d0b60698b215b2d"
+ ],
+ "beir_cqadupstack_gaming_87124": [
+  "488701ed095dbbac"
+ ],
+ "beir_cqadupstack_gaming_87293": [
+  "ea87284875eb92b2"
+ ],
+ "beir_cqadupstack_gaming_87428": [
+  "3e590be3ae05ef43"
+ ],
+ "beir_cqadupstack_gaming_87482": [
+  "42945cdc96022762",
+  "4af99df0a817f31b"
+ ],
+ "beir_cqadupstack_gaming_87519": [
+  "af1182ea3ab8e94b"
+ ],
+ "beir_cqadupstack_gaming_87524": [
+  "564524d40f1103e6",
+  "714c2b52eab70dbb"
+ ],
+ "beir_cqadupstack_gaming_87590": [
+  "59a6798de91d5c0b",
+  "bffaca99f97f14e6"
+ ],
+ "beir_cqadupstack_gaming_87695": [
+  "28fc796df009fd4e"
+ ],
+ "beir_cqadupstack_gaming_87725": [
+  "92a1db2507a445e5"
+ ],
+ "beir_cqadupstack_gaming_87741": [
+  "17457602b8a8b33e",
+  "2c3a8c265c84c8b7"
+ ],
+ "beir_cqadupstack_gaming_88962": [
+  "e833e287934cbd55"
+ ],
+ "beir_cqadupstack_gaming_8900": [
+  "b4c0fdb0e244f89c"
+ ],
+ "beir_cqadupstack_gaming_89187": [
+  "d05ddfc254a68622"
+ ],
+ "beir_cqadupstack_gaming_89213": [
+  "9419149c2001754c",
+  "d4df662122d7c75b"
+ ],
+ "beir_cqadupstack_gaming_89237": [
+  "0a856b271a7c568b",
+  "2e233a754ea233aa"
+ ],
+ "beir_cqadupstack_gaming_89243": [
+  "f534cb0770f21a34"
+ ],
+ "beir_cqadupstack_gaming_89315": [
+  "488395a57e394f22",
+  "4f5e56ce0f83b698"
+ ],
+ "beir_cqadupstack_gaming_89316": [
+  "ade1435846ed2949"
+ ],
+ "beir_cqadupstack_gaming_89432": [
+  "a5d32cad6bbfa78c"
+ ],
+ "beir_cqadupstack_gaming_89433": [
+  "4adc9f62e12e2ea5",
+  "b845c2352b509ada"
+ ],
+ "beir_cqadupstack_gaming_8949": [
+  "27b03a395f8df4bc"
+ ],
+ "beir_cqadupstack_gaming_89679": [
+  "f8bafa408d6992a5"
+ ],
+ "beir_cqadupstack_gaming_89843": [
+  "6ff946ad3e8b4d7a"
+ ],
+ "beir_cqadupstack_gaming_89873": [
+  "101616d1292bf9fc"
+ ],
+ "beir_cqadupstack_gaming_90037": [
+  "41e2552811c457b2"
+ ],
+ "beir_cqadupstack_gaming_90308": [
+  "d4422d044d175ab3"
+ ],
+ "beir_cqadupstack_gaming_90314": [
+  "3e84b033286a4fa9",
+  "4f7722a5e2aff9e6"
+ ],
+ "beir_cqadupstack_gaming_90387": [
+  "c999e7497415240d"
+ ],
+ "beir_cqadupstack_gaming_904": [
+  "76c32e44e7cc1673"
+ ],
+ "beir_cqadupstack_gaming_90407": [
+  "e3a2251d0802b1a2"
+ ],
+ "beir_cqadupstack_gaming_90528": [
+  "2d42cab6d2da473f"
+ ],
+ "beir_cqadupstack_gaming_91741": [
+  "77e73ea7fe3967c6",
+  "df538c9ff8206bc6"
+ ],
+ "beir_cqadupstack_gaming_91745": [
+  "2e30c01b3de49c81"
+ ],
+ "beir_cqadupstack_gaming_91886": [
+  "255ee19b1e013d5e"
+ ],
+ "beir_cqadupstack_gaming_92101": [
+  "ee3606b6072055b8"
+ ],
+ "beir_cqadupstack_gaming_92180": [
+  "5095fa54e9d21e6d"
+ ],
+ "beir_cqadupstack_gaming_92235": [
+  "85e7368fa0bec80d"
+ ],
+ "beir_cqadupstack_gaming_92282": [
+  "d5d23964379e5be2"
+ ],
+ "beir_cqadupstack_gaming_9234": [
+  "bf166c83b897883e"
+ ],
+ "beir_cqadupstack_gaming_92389": [
+  "6cd6f91ea343a649"
+ ],
+ "beir_cqadupstack_gaming_92566": [
+  "4c129cef6545c1be"
+ ],
+ "beir_cqadupstack_gaming_92601": [
+  "102d0d23def87945",
+  "1da3d6f9ff3306bc",
+  "6090cbe5df55635d"
+ ],
+ "beir_cqadupstack_gaming_93137": [
+  "3695746e129dd655"
+ ],
+ "beir_cqadupstack_gaming_93275": [
+  "f5066b37c35c6ded"
+ ],
+ "beir_cqadupstack_gaming_93441": [
+  "3137af792e584801"
+ ],
+ "beir_cqadupstack_gaming_93582": [
+  "154328ff10ec0410"
+ ],
+ "beir_cqadupstack_gaming_9373": [
+  "77e44bce667bcab4"
+ ],
+ "beir_cqadupstack_gaming_93742": [
+  "94387055302fcf97",
+  "bdbb855c22db1c80"
+ ],
+ "beir_cqadupstack_gaming_93822": [
+  "60d9aee14f45c8f5"
+ ],
+ "beir_cqadupstack_gaming_93924": [
+  "fddde8708cb2f8e2"
+ ],
+ "beir_cqadupstack_gaming_94144": [
+  "32218016cb42c2c5"
+ ],
+ "beir_cqadupstack_gaming_94179": [
+  "f667d2a7519fc44b"
+ ],
+ "beir_cqadupstack_gaming_94189": [
+  "ff923e08c166e3a3"
+ ],
+ "beir_cqadupstack_gaming_94211": [
+  "33b0d80aef92d7cf"
+ ],
+ "beir_cqadupstack_gaming_94284": [
+  "92eabb10ade24c36"
+ ],
+ "beir_cqadupstack_gaming_94285": [
+  "f12abb8a9359a348"
+ ],
+ "beir_cqadupstack_gaming_94511": [
+  "d105b388e3a6685c"
+ ],
+ "beir_cqadupstack_gaming_94597": [
+  "d4cc738593f2d7ec"
+ ],
+ "beir_cqadupstack_gaming_94706": [
+  "ce79de2c14677202",
+  "d7d413cd83267325"
+ ],
+ "beir_cqadupstack_gaming_94817": [
+  "095b5680e14ba914"
+ ],
+ "beir_cqadupstack_gaming_94878": [
+  "66ab65f51b846ce3"
+ ],
+ "beir_cqadupstack_gaming_94896": [
+  "86bd442f417de76f"
+ ],
+ "beir_cqadupstack_gaming_95073": [
+  "3c2b593424fae811"
+ ],
+ "beir_cqadupstack_gaming_95074": [
+  "6fecfb71c1ca84cf"
+ ],
+ "beir_cqadupstack_gaming_95410": [
+  "1b314572eb86a4f3",
+  "1d038c2deb2d6930"
+ ],
+ "beir_cqadupstack_gaming_95446": [
+  "04135b1ce09a415e"
+ ],
+ "beir_cqadupstack_gaming_95451": [
+  "6589e8127fdefdf5"
+ ],
+ "beir_cqadupstack_gaming_95558": [
+  "2acf698845933ef8"
+ ],
+ "beir_cqadupstack_gaming_95679": [
+  "e86abd1e0408274d"
+ ],
+ "beir_cqadupstack_gaming_95784": [
+  "f3b3111c15ee01af"
+ ],
+ "beir_cqadupstack_gaming_95788": [
+  "a63fbaab86e0215f"
+ ],
+ "beir_cqadupstack_gaming_96103": [
+  "237eba91fa4ffef4"
+ ],
+ "beir_cqadupstack_gaming_96330": [
+  "6e158893cc925457"
+ ],
+ "beir_cqadupstack_gaming_96385": [
+  "3c8900f18a97cbc8"
+ ],
+ "beir_cqadupstack_gaming_96407": [
+  "0ef8dad232770963"
+ ],
+ "beir_cqadupstack_gaming_96463": [
+  "8829795e3cbc4ec0"
+ ],
+ "beir_cqadupstack_gaming_96549": [
+  "1f5f7a5f07b3697a"
+ ],
+ "beir_cqadupstack_gaming_96661": [
+  "59a44244180c8173"
+ ],
+ "beir_cqadupstack_gaming_96668": [
+  "2abeb9d35893f386"
+ ],
+ "beir_cqadupstack_gaming_97057": [
+  "1e47889a873f2578"
+ ],
+ "beir_cqadupstack_gaming_97289": [
+  "3d574a0567f39c8c",
+  "806a69bb8afe89dc"
+ ],
+ "beir_cqadupstack_gaming_97334": [
+  "a92a355299acc220"
+ ],
+ "beir_cqadupstack_gaming_97343": [
+  "2d0bfb0214f3feb1"
+ ],
+ "beir_cqadupstack_gaming_9750": [
+  "f6cb2aefe1784769"
+ ],
+ "beir_cqadupstack_gaming_97565": [
+  "153f99c831281232",
+  "33340cb37f3aec80"
+ ],
+ "beir_cqadupstack_gaming_97597": [
+  "1cc0eef4bd680e57",
+  "c245e9bf9fc89160"
+ ],
+ "beir_cqadupstack_gaming_97748": [
+  "e3c082e6b96b4e2e"
+ ],
+ "beir_cqadupstack_gaming_97817": [
+  "15bcf54637fc8cea",
+  "6baea7b19c843bff"
+ ],
+ "beir_cqadupstack_gaming_9819": [
+  "65a228e51297ef81"
+ ],
+ "beir_cqadupstack_gaming_98303": [
+  "0f625caaed505887",
+  "dcc43699c580a77c"
+ ],
+ "beir_cqadupstack_gaming_98973": [
+  "3bc2f33adfceaa21"
+ ],
+ "beir_cqadupstack_gaming_98975": [
+  "78d3b30490211770"
+ ]
+}
