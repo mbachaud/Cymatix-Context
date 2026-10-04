@@ -1,0 +1,3839 @@
+{
+ "beir_cqadupstack_unix_10055": [
+  "be/71972.txt"
+ ],
+ "beir_cqadupstack_unix_100755": [
+  "3a/100787.txt"
+ ],
+ "beir_cqadupstack_unix_100874": [
+  "f8/100870.txt"
+ ],
+ "beir_cqadupstack_unix_101118": [
+  "d3/108629.txt"
+ ],
+ "beir_cqadupstack_unix_101158": [
+  "0b/104024.txt",
+  "d8/87432.txt"
+ ],
+ "beir_cqadupstack_unix_101285": [
+  "64/93345.txt"
+ ],
+ "beir_cqadupstack_unix_101321": [
+  "02/22812.txt",
+  "05/73138.txt",
+  "05/84815.txt",
+  "10/28701.txt",
+  "13/94309.txt",
+  "3b/39094.txt",
+  "56/21852.txt",
+  "67/152578.txt",
+  "6f/52167.txt",
+  "79/55969.txt",
+  "8a/116462.txt",
+  "96/11376.txt",
+  "9f/24275.txt",
+  "a9/52425.txt",
+  "af/59082.txt",
+  "b4/1519.txt",
+  "bd/80121.txt",
+  "da/87355.txt",
+  "dc/3877.txt",
+  "ef/59119.txt",
+  "f3/18634.txt"
+ ],
+ "beir_cqadupstack_unix_101326": [
+  "29/138191.txt"
+ ],
+ "beir_cqadupstack_unix_101330": [
+  "09/43642.txt"
+ ],
+ "beir_cqadupstack_unix_101392": [
+  "17/8690.txt"
+ ],
+ "beir_cqadupstack_unix_101527": [
+  "63/101462.txt"
+ ],
+ "beir_cqadupstack_unix_10158": [
+  "b4/32196.txt"
+ ],
+ "beir_cqadupstack_unix_101772": [
+  "fd/44694.txt"
+ ],
+ "beir_cqadupstack_unix_101797": [
+  "29/91995.txt",
+  "87/12059.txt"
+ ],
+ "beir_cqadupstack_unix_101847": [
+  "9d/102286.txt"
+ ],
+ "beir_cqadupstack_unix_102016": [
+  "91/101908.txt"
+ ],
+ "beir_cqadupstack_unix_102024": [
+  "86/31199.txt"
+ ],
+ "beir_cqadupstack_unix_10220": [
+  "d0/47472.txt"
+ ],
+ "beir_cqadupstack_unix_102312": [
+  "c7/138067.txt"
+ ],
+ "beir_cqadupstack_unix_102453": [
+  "b0/148677.txt"
+ ],
+ "beir_cqadupstack_unix_102492": [
+  "63/74924.txt"
+ ],
+ "beir_cqadupstack_unix_102504": [
+  "e5/20670.txt"
+ ],
+ "beir_cqadupstack_unix_102553": [
+  "59/119269.txt",
+  "b3/22615.txt"
+ ],
+ "beir_cqadupstack_unix_102624": [
+  "35/146255.txt"
+ ],
+ "beir_cqadupstack_unix_102732": [
+  "fb/102931.txt"
+ ],
+ "beir_cqadupstack_unix_102812": [
+  "88/28721.txt"
+ ],
+ "beir_cqadupstack_unix_103019": [
+  "28/41708.txt"
+ ],
+ "beir_cqadupstack_unix_103180": [
+  "55/122531.txt"
+ ],
+ "beir_cqadupstack_unix_103242": [
+  "72/33110.txt"
+ ],
+ "beir_cqadupstack_unix_103270": [
+  "bb/107608.txt"
+ ],
+ "beir_cqadupstack_unix_1033": [
+  "b2/86967.txt"
+ ],
+ "beir_cqadupstack_unix_103549": [
+  "00/104174.txt",
+  "06/144389.txt",
+  "06/2677.txt",
+  "0a/90186.txt",
+  "21/108860.txt",
+  "21/153087.txt",
+  "22/18685.txt",
+  "2a/80270.txt",
+  "2b/88608.txt",
+  "5c/90387.txt",
+  "71/63470.txt",
+  "89/14952.txt",
+  "9a/75088.txt",
+  "9c/114843.txt",
+  "a1/20639.txt",
+  "bb/154989.txt",
+  "db/48253.txt",
+  "e3/21196.txt",
+  "e5/98778.txt",
+  "eb/145152.txt",
+  "f3/101237.txt",
+  "f3/123255.txt"
+ ],
+ "beir_cqadupstack_unix_10355": [
+  "c4/10378.txt"
+ ],
+ "beir_cqadupstack_unix_103731": [
+  "23/145367.txt",
+  "81/103483.txt"
+ ],
+ "beir_cqadupstack_unix_103963": [
+  "0c/7011.txt",
+  "45/58040.txt"
+ ],
+ "beir_cqadupstack_unix_104018": [
+  "5f/9007.txt",
+  "c7/49086.txt"
+ ],
+ "beir_cqadupstack_unix_104125": [
+  "e8/145910.txt"
+ ],
+ "beir_cqadupstack_unix_10418": [
+  "9e/68531.txt"
+ ],
+ "beir_cqadupstack_unix_104429": [
+  "1c/134238.txt"
+ ],
+ "beir_cqadupstack_unix_104791": [
+  "87/59707.txt"
+ ],
+ "beir_cqadupstack_unix_104797": [
+  "08/104709.txt"
+ ],
+ "beir_cqadupstack_unix_105026": [
+  "65/32479.txt"
+ ],
+ "beir_cqadupstack_unix_105030": [
+  "cd/150411.txt"
+ ],
+ "beir_cqadupstack_unix_105220": [
+  "07/80191.txt"
+ ],
+ "beir_cqadupstack_unix_105278": [
+  "3c/148177.txt",
+  "89/17841.txt",
+  "a3/145490.txt"
+ ],
+ "beir_cqadupstack_unix_105365": [
+  "32/22001.txt"
+ ],
+ "beir_cqadupstack_unix_105402": [
+  "31/23199.txt"
+ ],
+ "beir_cqadupstack_unix_105417": [
+  "20/106652.txt"
+ ],
+ "beir_cqadupstack_unix_105717": [
+  "a9/104329.txt"
+ ],
+ "beir_cqadupstack_unix_10575": [
+  "3f/68669.txt"
+ ],
+ "beir_cqadupstack_unix_105840": [
+  "4e/105890.txt"
+ ],
+ "beir_cqadupstack_unix_105908": [
+  "bc/122475.txt"
+ ],
+ "beir_cqadupstack_unix_105940": [
+  "45/47645.txt"
+ ],
+ "beir_cqadupstack_unix_10597": [
+  "40/154782.txt",
+  "57/120444.txt"
+ ],
+ "beir_cqadupstack_unix_10617": [
+  "69/10785.txt"
+ ],
+ "beir_cqadupstack_unix_106377": [
+  "b5/21093.txt",
+  "e2/107980.txt"
+ ],
+ "beir_cqadupstack_unix_10646": [
+  "ac/102172.txt"
+ ],
+ "beir_cqadupstack_unix_106544": [
+  "c4/106539.txt"
+ ],
+ "beir_cqadupstack_unix_106680": [
+  "54/20565.txt"
+ ],
+ "beir_cqadupstack_unix_10692": [
+  "5e/10525.txt",
+  "a9/90134.txt"
+ ],
+ "beir_cqadupstack_unix_107111": [
+  "bd/85390.txt"
+ ],
+ "beir_cqadupstack_unix_107131": [
+  "48/29245.txt",
+  "cb/88525.txt"
+ ],
+ "beir_cqadupstack_unix_107138": [
+  "85/32435.txt"
+ ],
+ "beir_cqadupstack_unix_107168": [
+  "4b/147838.txt",
+  "4c/68043.txt",
+  "73/92627.txt",
+  "d3/104119.txt",
+  "d4/5778.txt"
+ ],
+ "beir_cqadupstack_unix_107290": [
+  "9a/107342.txt"
+ ],
+ "beir_cqadupstack_unix_10731": [
+  "18/13004.txt",
+  "9e/11187.txt"
+ ],
+ "beir_cqadupstack_unix_107541": [
+  "08/34486.txt"
+ ],
+ "beir_cqadupstack_unix_107823": [
+  "66/101824.txt"
+ ],
+ "beir_cqadupstack_unix_107917": [
+  "14/123059.txt",
+  "56/35777.txt"
+ ],
+ "beir_cqadupstack_unix_107967": [
+  "9b/8469.txt"
+ ],
+ "beir_cqadupstack_unix_108222": [
+  "6c/13953.txt",
+  "8b/18233.txt",
+  "8e/140982.txt",
+  "9e/56020.txt"
+ ],
+ "beir_cqadupstack_unix_10825": [
+  "07/140741.txt",
+  "74/68556.txt",
+  "db/74184.txt"
+ ],
+ "beir_cqadupstack_unix_108782": [
+  "7b/136505.txt"
+ ],
+ "beir_cqadupstack_unix_10893": [
+  "60/128708.txt"
+ ],
+ "beir_cqadupstack_unix_109536": [
+  "96/110911.txt"
+ ],
+ "beir_cqadupstack_unix_109862": [
+  "54/27054.txt"
+ ],
+ "beir_cqadupstack_unix_110269": [
+  "e3/108281.txt"
+ ],
+ "beir_cqadupstack_unix_110282": [
+  "78/118198.txt"
+ ],
+ "beir_cqadupstack_unix_110401": [
+  "d2/73268.txt"
+ ],
+ "beir_cqadupstack_unix_110540": [
+  "37/26047.txt",
+  "5f/115964.txt",
+  "a8/33740.txt",
+  "e7/138504.txt"
+ ],
+ "beir_cqadupstack_unix_110563": [
+  "3f/110490.txt"
+ ],
+ "beir_cqadupstack_unix_110595": [
+  "64/22121.txt",
+  "94/88094.txt",
+  "cc/78461.txt"
+ ],
+ "beir_cqadupstack_unix_110822": [
+  "35/67006.txt"
+ ],
+ "beir_cqadupstack_unix_111118": [
+  "29/98726.txt",
+  "47/133986.txt",
+  "5b/82299.txt",
+  "ba/115897.txt",
+  "be/46235.txt",
+  "e8/19620.txt"
+ ],
+ "beir_cqadupstack_unix_111197": [
+  "73/4242.txt"
+ ],
+ "beir_cqadupstack_unix_111331": [
+  "15/14867.txt",
+  "ad/56011.txt",
+  "d2/11983.txt"
+ ],
+ "beir_cqadupstack_unix_111355": [
+  "8b/33383.txt"
+ ],
+ "beir_cqadupstack_unix_111631": [
+  "61/111603.txt"
+ ],
+ "beir_cqadupstack_unix_111650": [
+  "eb/99507.txt"
+ ],
+ "beir_cqadupstack_unix_11172": [
+  "70/82008.txt"
+ ],
+ "beir_cqadupstack_unix_11182": [
+  "84/68499.txt"
+ ],
+ "beir_cqadupstack_unix_112326": [
+  "d4/15985.txt"
+ ],
+ "beir_cqadupstack_unix_11343": [
+  "8f/28865.txt"
+ ],
+ "beir_cqadupstack_unix_113589": [
+  "e7/137995.txt"
+ ],
+ "beir_cqadupstack_unix_113715": [
+  "ef/31863.txt"
+ ],
+ "beir_cqadupstack_unix_113774": [
+  "1f/125785.txt"
+ ],
+ "beir_cqadupstack_unix_114013": [
+  "7c/137045.txt",
+  "92/9099.txt"
+ ],
+ "beir_cqadupstack_unix_11406": [
+  "9c/7383.txt"
+ ],
+ "beir_cqadupstack_unix_114235": [
+  "b3/114227.txt"
+ ],
+ "beir_cqadupstack_unix_114274": [
+  "bd/71941.txt"
+ ],
+ "beir_cqadupstack_unix_114608": [
+  "14/44898.txt"
+ ],
+ "beir_cqadupstack_unix_114613": [
+  "01/110105.txt",
+  "b0/18209.txt",
+  "bb/121654.txt"
+ ],
+ "beir_cqadupstack_unix_11472": [
+  "04/12003.txt",
+  "69/111358.txt"
+ ],
+ "beir_cqadupstack_unix_114943": [
+  "86/132832.txt"
+ ],
+ "beir_cqadupstack_unix_115202": [
+  "c3/31991.txt"
+ ],
+ "beir_cqadupstack_unix_115686": [
+  "71/66686.txt"
+ ],
+ "beir_cqadupstack_unix_116070": [
+  "8c/117274.txt"
+ ],
+ "beir_cqadupstack_unix_116210": [
+  "a3/110208.txt"
+ ],
+ "beir_cqadupstack_unix_116389": [
+  "0a/23576.txt"
+ ],
+ "beir_cqadupstack_unix_116498": [
+  "50/19022.txt",
+  "d3/62629.txt"
+ ],
+ "beir_cqadupstack_unix_116640": [
+  "ec/152729.txt"
+ ],
+ "beir_cqadupstack_unix_116702": [
+  "c7/117037.txt"
+ ],
+ "beir_cqadupstack_unix_1168": [
+  "b8/108507.txt"
+ ],
+ "beir_cqadupstack_unix_116847": [
+  "ab/118116.txt"
+ ],
+ "beir_cqadupstack_unix_116849": [
+  "f3/130955.txt"
+ ],
+ "beir_cqadupstack_unix_116989": [
+  "33/117454.txt"
+ ],
+ "beir_cqadupstack_unix_117050": [
+  "34/77834.txt"
+ ],
+ "beir_cqadupstack_unix_117148": [
+  "d2/43135.txt"
+ ],
+ "beir_cqadupstack_unix_117184": [
+  "3a/37329.txt"
+ ],
+ "beir_cqadupstack_unix_117467": [
+  "67/119484.txt"
+ ],
+ "beir_cqadupstack_unix_117609": [
+  "94/117603.txt"
+ ],
+ "beir_cqadupstack_unix_117629": [
+  "63/108962.txt"
+ ],
+ "beir_cqadupstack_unix_117643": [
+  "73/119123.txt",
+  "db/120314.txt"
+ ],
+ "beir_cqadupstack_unix_117928": [
+  "38/55106.txt"
+ ],
+ "beir_cqadupstack_unix_117975": [
+  "8d/43365.txt"
+ ],
+ "beir_cqadupstack_unix_118219": [
+  "96/140911.txt"
+ ],
+ "beir_cqadupstack_unix_118558": [
+  "dc/118591.txt"
+ ],
+ "beir_cqadupstack_unix_118593": [
+  "67/115732.txt"
+ ],
+ "beir_cqadupstack_unix_118853": [
+  "7d/79395.txt"
+ ],
+ "beir_cqadupstack_unix_11889": [
+  "96/15850.txt"
+ ],
+ "beir_cqadupstack_unix_118950": [
+  "12/43046.txt",
+  "2f/54984.txt"
+ ],
+ "beir_cqadupstack_unix_118964": [
+  "64/116019.txt"
+ ],
+ "beir_cqadupstack_unix_119298": [
+  "2f/11835.txt"
+ ],
+ "beir_cqadupstack_unix_119463": [
+  "aa/123177.txt"
+ ],
+ "beir_cqadupstack_unix_119583": [
+  "a2/82687.txt",
+  "bc/120737.txt"
+ ],
+ "beir_cqadupstack_unix_119662": [
+  "41/69299.txt"
+ ],
+ "beir_cqadupstack_unix_119698": [
+  "3e/91197.txt"
+ ],
+ "beir_cqadupstack_unix_119733": [
+  "8b/117150.txt"
+ ],
+ "beir_cqadupstack_unix_119772": [
+  "10/120311.txt",
+  "11/139185.txt",
+  "11/140473.txt",
+  "28/17510.txt",
+  "3d/13828.txt",
+  "4e/65461.txt",
+  "51/122884.txt",
+  "6a/112144.txt",
+  "b8/9612.txt",
+  "cb/144700.txt",
+  "ef/152092.txt",
+  "f7/45771.txt"
+ ],
+ "beir_cqadupstack_unix_119779": [
+  "71/10438.txt",
+  "c6/57459.txt",
+  "eb/118531.txt"
+ ],
+ "beir_cqadupstack_unix_119812": [
+  "21/60688.txt"
+ ],
+ "beir_cqadupstack_unix_119996": [
+  "5c/17164.txt"
+ ],
+ "beir_cqadupstack_unix_119999": [
+  "8e/109464.txt",
+  "a0/114745.txt",
+  "d8/121303.txt"
+ ],
+ "beir_cqadupstack_unix_120045": [
+  "65/66878.txt"
+ ],
+ "beir_cqadupstack_unix_120067": [
+  "21/71880.txt"
+ ],
+ "beir_cqadupstack_unix_120114": [
+  "af/116623.txt"
+ ],
+ "beir_cqadupstack_unix_120134": [
+  "d9/49559.txt"
+ ],
+ "beir_cqadupstack_unix_120327": [
+  "d9/8584.txt"
+ ],
+ "beir_cqadupstack_unix_120432": [
+  "40/109038.txt"
+ ],
+ "beir_cqadupstack_unix_12046": [
+  "77/17458.txt"
+ ],
+ "beir_cqadupstack_unix_120615": [
+  "38/84929.txt"
+ ],
+ "beir_cqadupstack_unix_120796": [
+  "26/137601.txt",
+  "62/71092.txt",
+  "8f/75395.txt",
+  "b4/48579.txt"
+ ],
+ "beir_cqadupstack_unix_120800": [
+  "15/115895.txt"
+ ],
+ "beir_cqadupstack_unix_121130": [
+  "87/101160.txt"
+ ],
+ "beir_cqadupstack_unix_121144": [
+  "98/37539.txt"
+ ],
+ "beir_cqadupstack_unix_121222": [
+  "05/125155.txt"
+ ],
+ "beir_cqadupstack_unix_121415": [
+  "bb/29608.txt"
+ ],
+ "beir_cqadupstack_unix_121716": [
+  "4d/111831.txt"
+ ],
+ "beir_cqadupstack_unix_121761": [
+  "f3/1321.txt",
+  "f4/93349.txt",
+  "f5/118314.txt"
+ ],
+ "beir_cqadupstack_unix_12186": [
+  "5f/123532.txt"
+ ],
+ "beir_cqadupstack_unix_122014": [
+  "23/4569.txt",
+  "4e/70406.txt",
+  "7a/82511.txt",
+  "a4/25970.txt",
+  "b7/111535.txt",
+  "c8/16024.txt"
+ ],
+ "beir_cqadupstack_unix_12203": [
+  "08/71851.txt",
+  "56/10044.txt"
+ ],
+ "beir_cqadupstack_unix_122289": [
+  "80/77053.txt"
+ ],
+ "beir_cqadupstack_unix_12236": [
+  "33/117793.txt"
+ ],
+ "beir_cqadupstack_unix_122399": [
+  "71/12072.txt"
+ ],
+ "beir_cqadupstack_unix_122824": [
+  "39/122823.txt"
+ ],
+ "beir_cqadupstack_unix_12283": [
+  "89/24112.txt",
+  "d3/22265.txt"
+ ],
+ "beir_cqadupstack_unix_122889": [
+  "e3/123143.txt"
+ ],
+ "beir_cqadupstack_unix_122944": [
+  "0b/124573.txt"
+ ],
+ "beir_cqadupstack_unix_122971": [
+  "06/29117.txt"
+ ],
+ "beir_cqadupstack_unix_12332": [
+  "57/3196.txt"
+ ],
+ "beir_cqadupstack_unix_123364": [
+  "66/117981.txt"
+ ],
+ "beir_cqadupstack_unix_123590": [
+  "e7/80740.txt"
+ ],
+ "beir_cqadupstack_unix_123650": [
+  "cd/27428.txt"
+ ],
+ "beir_cqadupstack_unix_123652": [
+  "0d/124142.txt",
+  "9f/134737.txt"
+ ],
+ "beir_cqadupstack_unix_123821": [
+  "29/105592.txt",
+  "96/86632.txt",
+  "bf/10745.txt"
+ ],
+ "beir_cqadupstack_unix_123959": [
+  "80/34334.txt",
+  "8a/93755.txt"
+ ],
+ "beir_cqadupstack_unix_124293": [
+  "01/109812.txt"
+ ],
+ "beir_cqadupstack_unix_124351": [
+  "5b/105203.txt",
+  "8f/34786.txt",
+  "98/2857.txt",
+  "ae/106480.txt",
+  "b1/84292.txt",
+  "bc/25566.txt",
+  "e0/126186.txt"
+ ],
+ "beir_cqadupstack_unix_124356": [
+  "1b/123711.txt"
+ ],
+ "beir_cqadupstack_unix_124995": [
+  "c4/34273.txt"
+ ],
+ "beir_cqadupstack_unix_125058": [
+  "29/68956.txt",
+  "97/104830.txt"
+ ],
+ "beir_cqadupstack_unix_12522": [
+  "90/92410.txt"
+ ],
+ "beir_cqadupstack_unix_125683": [
+  "2d/122672.txt"
+ ],
+ "beir_cqadupstack_unix_125850": [
+  "5b/56902.txt",
+  "5e/145881.txt",
+  "5e/24761.txt",
+  "94/114688.txt",
+  "99/29295.txt",
+  "a8/122818.txt",
+  "bd/74565.txt",
+  "bf/24107.txt",
+  "f0/122954.txt"
+ ],
+ "beir_cqadupstack_unix_125862": [
+  "41/96636.txt",
+  "68/12578.txt"
+ ],
+ "beir_cqadupstack_unix_126068": [
+  "22/14324.txt"
+ ],
+ "beir_cqadupstack_unix_126154": [
+  "86/126230.txt"
+ ],
+ "beir_cqadupstack_unix_126165": [
+  "1a/108878.txt",
+  "db/130776.txt"
+ ],
+ "beir_cqadupstack_unix_126176": [
+  "5c/126177.txt"
+ ],
+ "beir_cqadupstack_unix_1262": [
+  "81/152442.txt"
+ ],
+ "beir_cqadupstack_unix_126269": [
+  "1a/20797.txt",
+  "1b/127761.txt",
+  "4d/126188.txt",
+  "99/92772.txt",
+  "dd/143677.txt",
+  "ea/67435.txt",
+  "f9/18830.txt"
+ ],
+ "beir_cqadupstack_unix_126349": [
+  "d1/90998.txt"
+ ],
+ "beir_cqadupstack_unix_126393": [
+  "00/116180.txt"
+ ],
+ "beir_cqadupstack_unix_126694": [
+  "4d/126526.txt"
+ ],
+ "beir_cqadupstack_unix_126914": [
+  "25/80344.txt"
+ ],
+ "beir_cqadupstack_unix_127110": [
+  "56/127317.txt",
+  "67/36679.txt"
+ ],
+ "beir_cqadupstack_unix_127117": [
+  "03/80277.txt"
+ ],
+ "beir_cqadupstack_unix_12725": [
+  "e7/12732.txt"
+ ],
+ "beir_cqadupstack_unix_127268": [
+  "0d/78376.txt",
+  "20/152157.txt"
+ ],
+ "beir_cqadupstack_unix_127421": [
+  "ae/2751.txt",
+  "b1/29314.txt"
+ ],
+ "beir_cqadupstack_unix_127432": [
+  "e8/144096.txt"
+ ],
+ "beir_cqadupstack_unix_12755": [
+  "18/140780.txt",
+  "fb/59769.txt"
+ ],
+ "beir_cqadupstack_unix_127978": [
+  "84/127979.txt"
+ ],
+ "beir_cqadupstack_unix_128060": [
+  "38/85249.txt",
+  "aa/126134.txt",
+  "b8/150512.txt",
+  "e6/108752.txt"
+ ],
+ "beir_cqadupstack_unix_128118": [
+  "d0/99431.txt"
+ ],
+ "beir_cqadupstack_unix_128279": [
+  "0b/60276.txt"
+ ],
+ "beir_cqadupstack_unix_128921": [
+  "2c/119905.txt"
+ ],
+ "beir_cqadupstack_unix_129072": [
+  "08/41571.txt",
+  "7d/141287.txt",
+  "90/95955.txt",
+  "e4/94126.txt",
+  "ed/9590.txt"
+ ],
+ "beir_cqadupstack_unix_129175": [
+  "5c/41246.txt"
+ ],
+ "beir_cqadupstack_unix_129240": [
+  "a1/78022.txt"
+ ],
+ "beir_cqadupstack_unix_12949": [
+  "eb/6713.txt"
+ ],
+ "beir_cqadupstack_unix_129596": [
+  "24/131801.txt"
+ ],
+ "beir_cqadupstack_unix_12976": [
+  "60/29214.txt"
+ ],
+ "beir_cqadupstack_unix_12986": [
+  "bf/93385.txt"
+ ],
+ "beir_cqadupstack_unix_13046": [
+  "9c/154093.txt"
+ ],
+ "beir_cqadupstack_unix_130628": [
+  "0f/122422.txt",
+  "58/2126.txt",
+  "96/52741.txt"
+ ],
+ "beir_cqadupstack_unix_130796": [
+  "1c/90443.txt"
+ ],
+ "beir_cqadupstack_unix_130824": [
+  "1a/98795.txt",
+  "4e/65634.txt",
+  "87/52385.txt",
+  "dc/43882.txt"
+ ],
+ "beir_cqadupstack_unix_130844": [
+  "85/130873.txt"
+ ],
+ "beir_cqadupstack_unix_130906": [
+  "44/117125.txt",
+  "56/364.txt"
+ ],
+ "beir_cqadupstack_unix_131168": [
+  "cd/131178.txt"
+ ],
+ "beir_cqadupstack_unix_13147": [
+  "19/38922.txt",
+  "28/33261.txt"
+ ],
+ "beir_cqadupstack_unix_131527": [
+  "38/135066.txt"
+ ],
+ "beir_cqadupstack_unix_13157": [
+  "e1/13158.txt"
+ ],
+ "beir_cqadupstack_unix_131649": [
+  "d7/15140.txt"
+ ],
+ "beir_cqadupstack_unix_131699": [
+  "c0/121071.txt"
+ ],
+ "beir_cqadupstack_unix_131918": [
+  "11/77296.txt"
+ ],
+ "beir_cqadupstack_unix_13208": [
+  "22/30.txt"
+ ],
+ "beir_cqadupstack_unix_132115": [
+  "f8/137007.txt"
+ ],
+ "beir_cqadupstack_unix_132122": [
+  "19/79642.txt",
+  "a5/88142.txt"
+ ],
+ "beir_cqadupstack_unix_13214": [
+  "57/3733.txt"
+ ],
+ "beir_cqadupstack_unix_132142": [
+  "a7/83773.txt"
+ ],
+ "beir_cqadupstack_unix_132225": [
+  "42/132135.txt"
+ ],
+ "beir_cqadupstack_unix_132350": [
+  "d6/42847.txt"
+ ],
+ "beir_cqadupstack_unix_13251": [
+  "ed/61504.txt"
+ ],
+ "beir_cqadupstack_unix_13260": [
+  "27/92045.txt",
+  "89/7793.txt"
+ ],
+ "beir_cqadupstack_unix_132657": [
+  "1b/132656.txt"
+ ],
+ "beir_cqadupstack_unix_132669": [
+  "9e/6781.txt",
+  "c6/126318.txt",
+  "d1/76189.txt"
+ ],
+ "beir_cqadupstack_unix_132856": [
+  "83/24014.txt"
+ ],
+ "beir_cqadupstack_unix_13314": [
+  "72/146622.txt"
+ ],
+ "beir_cqadupstack_unix_13316": [
+  "ee/6277.txt"
+ ],
+ "beir_cqadupstack_unix_133950": [
+  "e1/133947.txt"
+ ],
+ "beir_cqadupstack_unix_1340": [
+  "63/55066.txt"
+ ],
+ "beir_cqadupstack_unix_134155": [
+  "3a/134165.txt"
+ ],
+ "beir_cqadupstack_unix_134483": [
+  "8a/147670.txt"
+ ],
+ "beir_cqadupstack_unix_134498": [
+  "0a/151523.txt"
+ ],
+ "beir_cqadupstack_unix_13451": [
+  "d4/147035.txt"
+ ],
+ "beir_cqadupstack_unix_136171": [
+  "05/79970.txt"
+ ],
+ "beir_cqadupstack_unix_136228": [
+  "19/102191.txt",
+  "f2/139167.txt"
+ ],
+ "beir_cqadupstack_unix_136258": [
+  "b3/61659.txt"
+ ],
+ "beir_cqadupstack_unix_136444": [
+  "83/136652.txt"
+ ],
+ "beir_cqadupstack_unix_13660": [
+  "d3/5017.txt"
+ ],
+ "beir_cqadupstack_unix_137219": [
+  "29/137134.txt"
+ ],
+ "beir_cqadupstack_unix_137486": [
+  "c3/105346.txt"
+ ],
+ "beir_cqadupstack_unix_137520": [
+  "28/131897.txt",
+  "42/5528.txt",
+  "bf/89483.txt",
+  "c5/90446.txt",
+  "ea/479.txt",
+  "f1/94385.txt"
+ ],
+ "beir_cqadupstack_unix_137634": [
+  "9a/62819.txt"
+ ],
+ "beir_cqadupstack_unix_137856": [
+  "f6/28420.txt"
+ ],
+ "beir_cqadupstack_unix_137955": [
+  "7c/21251.txt",
+  "94/150449.txt"
+ ],
+ "beir_cqadupstack_unix_138150": [
+  "c3/13272.txt"
+ ],
+ "beir_cqadupstack_unix_138224": [
+  "8c/138264.txt"
+ ],
+ "beir_cqadupstack_unix_138291": [
+  "f7/138263.txt"
+ ],
+ "beir_cqadupstack_unix_138374": [
+  "f2/138704.txt"
+ ],
+ "beir_cqadupstack_unix_138376": [
+  "78/137896.txt"
+ ],
+ "beir_cqadupstack_unix_138398": [
+  "23/47407.txt",
+  "2b/152748.txt",
+  "44/61726.txt",
+  "a8/150078.txt",
+  "af/139776.txt",
+  "b7/94318.txt",
+  "fc/130721.txt",
+  "ff/152055.txt"
+ ],
+ "beir_cqadupstack_unix_138485": [
+  "02/145212.txt"
+ ],
+ "beir_cqadupstack_unix_138592": [
+  "28/2865.txt",
+  "91/30754.txt",
+  "e0/67282.txt"
+ ],
+ "beir_cqadupstack_unix_138674": [
+  "6b/4489.txt"
+ ],
+ "beir_cqadupstack_unix_138737": [
+  "11/122238.txt"
+ ],
+ "beir_cqadupstack_unix_138877": [
+  "88/43133.txt",
+  "b5/31476.txt"
+ ],
+ "beir_cqadupstack_unix_139152": [
+  "d3/113964.txt"
+ ],
+ "beir_cqadupstack_unix_139154": [
+  "4a/55359.txt"
+ ],
+ "beir_cqadupstack_unix_139501": [
+  "aa/121904.txt"
+ ],
+ "beir_cqadupstack_unix_139854": [
+  "e4/139698.txt"
+ ],
+ "beir_cqadupstack_unix_139886": [
+  "12/37821.txt",
+  "9a/3052.txt"
+ ],
+ "beir_cqadupstack_unix_13996": [
+  "1a/78268.txt",
+  "fb/42365.txt"
+ ],
+ "beir_cqadupstack_unix_14010": [
+  "0f/74625.txt",
+  "54/110059.txt",
+  "e5/52389.txt"
+ ],
+ "beir_cqadupstack_unix_140267": [
+  "20/77113.txt",
+  "2a/68990.txt",
+  "51/67579.txt",
+  "6b/16022.txt",
+  "cf/136547.txt",
+  "d7/4430.txt"
+ ],
+ "beir_cqadupstack_unix_140565": [
+  "14/111872.txt"
+ ],
+ "beir_cqadupstack_unix_140857": [
+  "9d/67987.txt"
+ ],
+ "beir_cqadupstack_unix_140902": [
+  "42/570.txt"
+ ],
+ "beir_cqadupstack_unix_141307": [
+  "60/124487.txt"
+ ],
+ "beir_cqadupstack_unix_141402": [
+  "c3/141296.txt"
+ ],
+ "beir_cqadupstack_unix_141558": [
+  "35/116939.txt"
+ ],
+ "beir_cqadupstack_unix_1426": [
+  "3d/2797.txt"
+ ],
+ "beir_cqadupstack_unix_14384": [
+  "2b/38415.txt",
+  "c8/69010.txt"
+ ],
+ "beir_cqadupstack_unix_143871": [
+  "08/61768.txt"
+ ],
+ "beir_cqadupstack_unix_143907": [
+  "aa/36714.txt"
+ ],
+ "beir_cqadupstack_unix_143964": [
+  "4c/74146.txt"
+ ],
+ "beir_cqadupstack_unix_144007": [
+  "35/12769.txt"
+ ],
+ "beir_cqadupstack_unix_144070": [
+  "f8/79888.txt"
+ ],
+ "beir_cqadupstack_unix_144109": [
+  "f1/105876.txt"
+ ],
+ "beir_cqadupstack_unix_144187": [
+  "20/118148.txt"
+ ],
+ "beir_cqadupstack_unix_144190": [
+  "e4/55233.txt"
+ ],
+ "beir_cqadupstack_unix_144271": [
+  "ec/57830.txt"
+ ],
+ "beir_cqadupstack_unix_144601": [
+  "7e/49582.txt"
+ ],
+ "beir_cqadupstack_unix_1449": [
+  "82/5771.txt"
+ ],
+ "beir_cqadupstack_unix_145133": [
+  "42/48585.txt",
+  "bf/17780.txt"
+ ],
+ "beir_cqadupstack_unix_145207": [
+  "cd/136382.txt"
+ ],
+ "beir_cqadupstack_unix_14537": [
+  "be/112310.txt"
+ ],
+ "beir_cqadupstack_unix_14560": [
+  "38/80585.txt"
+ ],
+ "beir_cqadupstack_unix_145801": [
+  "0e/5609.txt",
+  "c4/91173.txt"
+ ],
+ "beir_cqadupstack_unix_146062": [
+  "fb/145415.txt"
+ ],
+ "beir_cqadupstack_unix_146114": [
+  "05/99074.txt",
+  "5e/140893.txt",
+  "e2/13776.txt"
+ ],
+ "beir_cqadupstack_unix_146145": [
+  "54/152615.txt"
+ ],
+ "beir_cqadupstack_unix_1464": [
+  "4a/75428.txt"
+ ],
+ "beir_cqadupstack_unix_146521": [
+  "a1/155405.txt"
+ ],
+ "beir_cqadupstack_unix_146666": [
+  "95/96197.txt"
+ ],
+ "beir_cqadupstack_unix_146773": [
+  "66/32250.txt"
+ ],
+ "beir_cqadupstack_unix_14680": [
+  "93/154891.txt",
+  "c8/13977.txt"
+ ],
+ "beir_cqadupstack_unix_1469": [
+  "cf/2330.txt"
+ ],
+ "beir_cqadupstack_unix_147242": [
+  "07/8916.txt"
+ ],
+ "beir_cqadupstack_unix_147309": [
+  "9b/67399.txt",
+  "c6/139181.txt"
+ ],
+ "beir_cqadupstack_unix_147386": [
+  "60/95867.txt",
+  "ce/119229.txt",
+  "e8/27350.txt"
+ ],
+ "beir_cqadupstack_unix_147430": [
+  "7e/145160.txt"
+ ],
+ "beir_cqadupstack_unix_147568": [
+  "5a/132457.txt"
+ ],
+ "beir_cqadupstack_unix_147831": [
+  "77/33249.txt"
+ ],
+ "beir_cqadupstack_unix_148069": [
+  "6a/32264.txt"
+ ],
+ "beir_cqadupstack_unix_148074": [
+  "3d/7950.txt"
+ ],
+ "beir_cqadupstack_unix_14815": [
+  "8c/124127.txt"
+ ],
+ "beir_cqadupstack_unix_148353": [
+  "05/72785.txt",
+  "09/81182.txt",
+  "0f/149497.txt",
+  "25/71242.txt",
+  "5c/25384.txt",
+  "64/61380.txt",
+  "97/56298.txt",
+  "a6/4034.txt",
+  "be/46714.txt",
+  "c0/27209.txt",
+  "ca/49106.txt",
+  "e3/22473.txt",
+  "eb/33768.txt",
+  "ec/9534.txt",
+  "fd/117113.txt"
+ ],
+ "beir_cqadupstack_unix_148420": [
+  "1c/5832.txt"
+ ],
+ "beir_cqadupstack_unix_148715": [
+  "a6/148859.txt"
+ ],
+ "beir_cqadupstack_unix_148777": [
+  "58/60507.txt"
+ ],
+ "beir_cqadupstack_unix_148843": [
+  "95/109841.txt",
+  "bd/18087.txt",
+  "c3/96095.txt"
+ ],
+ "beir_cqadupstack_unix_14887": [
+  "7a/95939.txt"
+ ],
+ "beir_cqadupstack_unix_148950": [
+  "78/148937.txt"
+ ],
+ "beir_cqadupstack_unix_148953": [
+  "fb/139946.txt"
+ ],
+ "beir_cqadupstack_unix_148967": [
+  "4c/129059.txt"
+ ],
+ "beir_cqadupstack_unix_149001": [
+  "19/148438.txt"
+ ],
+ "beir_cqadupstack_unix_149451": [
+  "53/149506.txt"
+ ],
+ "beir_cqadupstack_unix_149694": [
+  "fd/149802.txt"
+ ],
+ "beir_cqadupstack_unix_14971": [
+  "95/35231.txt"
+ ],
+ "beir_cqadupstack_unix_150063": [
+  "23/21743.txt",
+  "94/58067.txt",
+  "e2/9954.txt",
+  "f1/98579.txt"
+ ],
+ "beir_cqadupstack_unix_150158": [
+  "cf/150075.txt"
+ ],
+ "beir_cqadupstack_unix_150331": [
+  "9f/150189.txt",
+  "a5/131605.txt",
+  "be/42567.txt"
+ ],
+ "beir_cqadupstack_unix_150844": [
+  "e3/150876.txt"
+ ],
+ "beir_cqadupstack_unix_150847": [
+  "fc/13085.txt"
+ ],
+ "beir_cqadupstack_unix_151023": [
+  "32/71192.txt"
+ ],
+ "beir_cqadupstack_unix_151091": [
+  "9a/1755.txt"
+ ],
+ "beir_cqadupstack_unix_151113": [
+  "ea/26675.txt"
+ ],
+ "beir_cqadupstack_unix_151238": [
+  "be/56072.txt",
+  "f2/28827.txt",
+  "f4/78752.txt"
+ ],
+ "beir_cqadupstack_unix_151455": [
+  "e7/85364.txt"
+ ],
+ "beir_cqadupstack_unix_151498": [
+  "08/85578.txt",
+  "40/84166.txt"
+ ],
+ "beir_cqadupstack_unix_151566": [
+  "24/44733.txt",
+  "33/29578.txt",
+  "57/119450.txt",
+  "86/48649.txt",
+  "a0/146518.txt"
+ ],
+ "beir_cqadupstack_unix_152412": [
+  "36/153928.txt"
+ ],
+ "beir_cqadupstack_unix_152426": [
+  "78/55392.txt",
+  "bb/88216.txt"
+ ],
+ "beir_cqadupstack_unix_152691": [
+  "85/2381.txt"
+ ],
+ "beir_cqadupstack_unix_152733": [
+  "c2/98084.txt"
+ ],
+ "beir_cqadupstack_unix_152763": [
+  "06/44985.txt",
+  "e5/118847.txt"
+ ],
+ "beir_cqadupstack_unix_15324": [
+  "4c/15207.txt"
+ ],
+ "beir_cqadupstack_unix_153248": [
+  "0e/60034.txt"
+ ],
+ "beir_cqadupstack_unix_153318": [
+  "06/131766.txt",
+  "0b/147185.txt",
+  "4c/150982.txt",
+  "53/149120.txt",
+  "7d/151807.txt",
+  "92/147207.txt",
+  "94/131688.txt",
+  "cc/149472.txt",
+  "ce/150187.txt"
+ ],
+ "beir_cqadupstack_unix_153569": [
+  "50/11327.txt"
+ ],
+ "beir_cqadupstack_unix_153587": [
+  "70/97302.txt"
+ ],
+ "beir_cqadupstack_unix_15360": [
+  "d8/124163.txt"
+ ],
+ "beir_cqadupstack_unix_15366": [
+  "67/66320.txt"
+ ],
+ "beir_cqadupstack_unix_153974": [
+  "cb/115549.txt"
+ ],
+ "beir_cqadupstack_unix_153977": [
+  "c9/47341.txt"
+ ],
+ "beir_cqadupstack_unix_154509": [
+  "50/98801.txt"
+ ],
+ "beir_cqadupstack_unix_154591": [
+  "07/24739.txt",
+  "f9/33389.txt"
+ ],
+ "beir_cqadupstack_unix_154733": [
+  "31/24952.txt",
+  "aa/117102.txt"
+ ],
+ "beir_cqadupstack_unix_154740": [
+  "5e/155193.txt"
+ ],
+ "beir_cqadupstack_unix_154803": [
+  "d0/154878.txt"
+ ],
+ "beir_cqadupstack_unix_155289": [
+  "15/49936.txt"
+ ],
+ "beir_cqadupstack_unix_155418": [
+  "6a/94835.txt"
+ ],
+ "beir_cqadupstack_unix_155463": [
+  "77/8656.txt",
+  "ee/137899.txt"
+ ],
+ "beir_cqadupstack_unix_1555": [
+  "3e/46032.txt"
+ ],
+ "beir_cqadupstack_unix_15611": [
+  "a6/126890.txt",
+  "a7/7013.txt",
+  "cb/111605.txt"
+ ],
+ "beir_cqadupstack_unix_15932": [
+  "56/155282.txt"
+ ],
+ "beir_cqadupstack_unix_16076": [
+  "13/73384.txt",
+  "92/47771.txt"
+ ],
+ "beir_cqadupstack_unix_16120": [
+  "c9/12335.txt",
+  "dc/114682.txt"
+ ],
+ "beir_cqadupstack_unix_16301": [
+  "97/14368.txt"
+ ],
+ "beir_cqadupstack_unix_1636": [
+  "3a/112163.txt"
+ ],
+ "beir_cqadupstack_unix_16785": [
+  "87/16279.txt"
+ ],
+ "beir_cqadupstack_unix_16815": [
+  "8a/101963.txt"
+ ],
+ "beir_cqadupstack_unix_16890": [
+  "6a/52617.txt",
+  "82/77725.txt"
+ ],
+ "beir_cqadupstack_unix_16978": [
+  "24/144579.txt",
+  "b5/80861.txt",
+  "d7/71455.txt",
+  "eb/87233.txt"
+ ],
+ "beir_cqadupstack_unix_1709": [
+  "3c/58580.txt"
+ ],
+ "beir_cqadupstack_unix_17108": [
+  "ca/4029.txt"
+ ],
+ "beir_cqadupstack_unix_17122": [
+  "6b/56481.txt"
+ ],
+ "beir_cqadupstack_unix_17263": [
+  "16/17229.txt",
+  "6f/108980.txt",
+  "72/24477.txt",
+  "ac/137838.txt",
+  "c2/4004.txt",
+  "c8/38574.txt"
+ ],
+ "beir_cqadupstack_unix_1729": [
+  "98/96753.txt"
+ ],
+ "beir_cqadupstack_unix_173": [
+  "a4/148013.txt",
+  "e9/67974.txt"
+ ],
+ "beir_cqadupstack_unix_17316": [
+  "1d/17334.txt"
+ ],
+ "beir_cqadupstack_unix_17323": [
+  "34/149183.txt"
+ ],
+ "beir_cqadupstack_unix_1736": [
+  "b8/24601.txt",
+  "d7/67753.txt"
+ ],
+ "beir_cqadupstack_unix_17428": [
+  "60/44699.txt"
+ ],
+ "beir_cqadupstack_unix_17779": [
+  "3e/25662.txt",
+  "ab/96356.txt"
+ ],
+ "beir_cqadupstack_unix_17810": [
+  "1b/107879.txt",
+  "20/58262.txt",
+  "31/19495.txt",
+  "6f/21280.txt",
+  "8d/4126.txt"
+ ],
+ "beir_cqadupstack_unix_17815": [
+  "92/58514.txt"
+ ],
+ "beir_cqadupstack_unix_17865": [
+  "ec/139356.txt"
+ ],
+ "beir_cqadupstack_unix_17949": [
+  "49/116218.txt"
+ ],
+ "beir_cqadupstack_unix_1800": [
+  "2c/83771.txt",
+  "46/4738.txt"
+ ],
+ "beir_cqadupstack_unix_18151": [
+  "7b/23098.txt"
+ ],
+ "beir_cqadupstack_unix_18224": [
+  "aa/112034.txt"
+ ],
+ "beir_cqadupstack_unix_1832": [
+  "38/86571.txt"
+ ],
+ "beir_cqadupstack_unix_18583": [
+  "ff/4632.txt"
+ ],
+ "beir_cqadupstack_unix_18684": [
+  "9b/32010.txt"
+ ],
+ "beir_cqadupstack_unix_18743": [
+  "19/124945.txt",
+  "26/23903.txt"
+ ],
+ "beir_cqadupstack_unix_18760": [
+  "53/140348.txt"
+ ],
+ "beir_cqadupstack_unix_18765": [
+  "1c/56720.txt",
+  "6d/25166.txt",
+  "9e/34549.txt"
+ ],
+ "beir_cqadupstack_unix_18796": [
+  "1d/24959.txt",
+  "fe/40987.txt"
+ ],
+ "beir_cqadupstack_unix_18841": [
+  "02/46852.txt",
+  "72/85563.txt",
+  "ba/47640.txt"
+ ],
+ "beir_cqadupstack_unix_18877": [
+  "ac/20808.txt"
+ ],
+ "beir_cqadupstack_unix_18937": [
+  "ae/996.txt"
+ ],
+ "beir_cqadupstack_unix_1910": [
+  "5c/50499.txt",
+  "73/60084.txt",
+  "92/11964.txt"
+ ],
+ "beir_cqadupstack_unix_19101": [
+  "d7/19099.txt"
+ ],
+ "beir_cqadupstack_unix_19225": [
+  "c4/5977.txt"
+ ],
+ "beir_cqadupstack_unix_19232": [
+  "71/30120.txt"
+ ],
+ "beir_cqadupstack_unix_1924": [
+  "ed/84284.txt"
+ ],
+ "beir_cqadupstack_unix_19520": [
+  "30/4195.txt",
+  "89/7894.txt"
+ ],
+ "beir_cqadupstack_unix_19654": [
+  "44/42022.txt",
+  "84/81527.txt",
+  "c7/21411.txt",
+  "ef/72266.txt"
+ ],
+ "beir_cqadupstack_unix_19686": [
+  "29/19681.txt"
+ ],
+ "beir_cqadupstack_unix_19871": [
+  "34/18304.txt"
+ ],
+ "beir_cqadupstack_unix_19882": [
+  "0c/34331.txt"
+ ],
+ "beir_cqadupstack_unix_19915": [
+  "aa/104109.txt"
+ ],
+ "beir_cqadupstack_unix_1993": [
+  "eb/4462.txt"
+ ],
+ "beir_cqadupstack_unix_2010": [
+  "83/39129.txt"
+ ],
+ "beir_cqadupstack_unix_20112": [
+  "00/4390.txt"
+ ],
+ "beir_cqadupstack_unix_20193": [
+  "94/98835.txt"
+ ],
+ "beir_cqadupstack_unix_2038": [
+  "7b/41913.txt"
+ ],
+ "beir_cqadupstack_unix_20396": [
+  "5b/49706.txt",
+  "f1/75074.txt"
+ ],
+ "beir_cqadupstack_unix_2051": [
+  "ac/541.txt"
+ ],
+ "beir_cqadupstack_unix_20536": [
+  "d9/17664.txt"
+ ],
+ "beir_cqadupstack_unix_2059": [
+  "01/40495.txt",
+  "f3/40590.txt"
+ ],
+ "beir_cqadupstack_unix_2062": [
+  "d2/78771.txt"
+ ],
+ "beir_cqadupstack_unix_20692": [
+  "0d/105804.txt"
+ ],
+ "beir_cqadupstack_unix_20720": [
+  "e6/23511.txt"
+ ],
+ "beir_cqadupstack_unix_20751": [
+  "35/20671.txt"
+ ],
+ "beir_cqadupstack_unix_20804": [
+  "35/21220.txt"
+ ],
+ "beir_cqadupstack_unix_20878": [
+  "eb/9132.txt"
+ ],
+ "beir_cqadupstack_unix_20900": [
+  "fc/144095.txt"
+ ],
+ "beir_cqadupstack_unix_20972": [
+  "22/4572.txt"
+ ],
+ "beir_cqadupstack_unix_21306": [
+  "0a/60884.txt"
+ ],
+ "beir_cqadupstack_unix_21316": [
+  "ce/37922.txt"
+ ],
+ "beir_cqadupstack_unix_21439": [
+  "41/68473.txt"
+ ],
+ "beir_cqadupstack_unix_21449": [
+  "92/14310.txt"
+ ],
+ "beir_cqadupstack_unix_21920": [
+  "c6/73532.txt"
+ ],
+ "beir_cqadupstack_unix_21956": [
+  "97/8414.txt"
+ ],
+ "beir_cqadupstack_unix_22419": [
+  "23/66196.txt"
+ ],
+ "beir_cqadupstack_unix_22494": [
+  "72/41997.txt"
+ ],
+ "beir_cqadupstack_unix_22604": [
+  "5e/48326.txt"
+ ],
+ "beir_cqadupstack_unix_22674": [
+  "6f/28939.txt"
+ ],
+ "beir_cqadupstack_unix_22762": [
+  "28/21859.txt"
+ ],
+ "beir_cqadupstack_unix_23163": [
+  "18/93522.txt"
+ ],
+ "beir_cqadupstack_unix_23246": [
+  "72/26579.txt",
+  "7a/9575.txt"
+ ],
+ "beir_cqadupstack_unix_23306": [
+  "37/8268.txt"
+ ],
+ "beir_cqadupstack_unix_2342": [
+  "bf/28411.txt"
+ ],
+ "beir_cqadupstack_unix_23734": [
+  "fc/3320.txt"
+ ],
+ "beir_cqadupstack_unix_23833": [
+  "3e/88644.txt"
+ ],
+ "beir_cqadupstack_unix_24145": [
+  "ee/28384.txt"
+ ],
+ "beir_cqadupstack_unix_24351": [
+  "53/114550.txt",
+  "5e/107665.txt",
+  "66/50069.txt",
+  "a3/83855.txt",
+  "ae/107059.txt",
+  "c4/33167.txt",
+  "c7/25684.txt",
+  "e1/10121.txt"
+ ],
+ "beir_cqadupstack_unix_24410": [
+  "63/9818.txt"
+ ],
+ "beir_cqadupstack_unix_24441": [
+  "b0/20460.txt"
+ ],
+ "beir_cqadupstack_unix_24550": [
+  "b7/14594.txt"
+ ],
+ "beir_cqadupstack_unix_24625": [
+  "e0/91475.txt"
+ ],
+ "beir_cqadupstack_unix_24758": [
+  "c1/10852.txt"
+ ],
+ "beir_cqadupstack_unix_24878": [
+  "2f/102354.txt"
+ ],
+ "beir_cqadupstack_unix_24989": [
+  "42/25122.txt"
+ ],
+ "beir_cqadupstack_unix_25049": [
+  "ca/84596.txt",
+  "e8/10922.txt"
+ ],
+ "beir_cqadupstack_unix_2505": [
+  "0c/10588.txt"
+ ],
+ "beir_cqadupstack_unix_25138": [
+  "68/67992.txt"
+ ],
+ "beir_cqadupstack_unix_25327": [
+  "c8/103045.txt"
+ ],
+ "beir_cqadupstack_unix_25372": [
+  "56/84388.txt",
+  "a4/88628.txt"
+ ],
+ "beir_cqadupstack_unix_25404": [
+  "4d/4091.txt",
+  "55/40139.txt",
+  "df/103788.txt",
+  "e0/11330.txt"
+ ],
+ "beir_cqadupstack_unix_25541": [
+  "64/13093.txt"
+ ],
+ "beir_cqadupstack_unix_25690": [
+  "f7/40150.txt"
+ ],
+ "beir_cqadupstack_unix_2577": [
+  "53/110250.txt",
+  "71/111075.txt",
+  "85/39059.txt",
+  "ad/1537.txt"
+ ],
+ "beir_cqadupstack_unix_25948": [
+  "f7/53390.txt"
+ ],
+ "beir_cqadupstack_unix_26006": [
+  "88/26106.txt"
+ ],
+ "beir_cqadupstack_unix_26035": [
+  "5f/55839.txt"
+ ],
+ "beir_cqadupstack_unix_2605": [
+  "01/44495.txt"
+ ],
+ "beir_cqadupstack_unix_26051": [
+  "60/26045.txt"
+ ],
+ "beir_cqadupstack_unix_2606": [
+  "33/100679.txt",
+  "78/102994.txt"
+ ],
+ "beir_cqadupstack_unix_26237": [
+  "8d/110749.txt"
+ ],
+ "beir_cqadupstack_unix_26350": [
+  "07/89530.txt"
+ ],
+ "beir_cqadupstack_unix_26385": [
+  "47/47483.txt",
+  "89/11296.txt",
+  "fa/26577.txt"
+ ],
+ "beir_cqadupstack_unix_2658": [
+  "bd/123168.txt"
+ ],
+ "beir_cqadupstack_unix_26598": [
+  "15/45107.txt",
+  "6d/63062.txt"
+ ],
+ "beir_cqadupstack_unix_26676": [
+  "3a/56642.txt",
+  "97/113524.txt"
+ ],
+ "beir_cqadupstack_unix_26928": [
+  "9d/32309.txt"
+ ],
+ "beir_cqadupstack_unix_26934": [
+  "a8/39227.txt"
+ ],
+ "beir_cqadupstack_unix_27006": [
+  "18/27585.txt"
+ ],
+ "beir_cqadupstack_unix_27021": [
+  "b2/27068.txt"
+ ],
+ "beir_cqadupstack_unix_27178": [
+  "4b/29840.txt"
+ ],
+ "beir_cqadupstack_unix_272": [
+  "12/127525.txt"
+ ],
+ "beir_cqadupstack_unix_27220": [
+  "7b/114737.txt"
+ ],
+ "beir_cqadupstack_unix_27271": [
+  "14/128471.txt",
+  "7a/78949.txt"
+ ],
+ "beir_cqadupstack_unix_27382": [
+  "35/31013.txt"
+ ],
+ "beir_cqadupstack_unix_2759": [
+  "6d/38279.txt"
+ ],
+ "beir_cqadupstack_unix_27594": [
+  "e1/67929.txt"
+ ],
+ "beir_cqadupstack_unix_27841": [
+  "4d/123743.txt",
+  "55/67111.txt",
+  "56/49796.txt",
+  "b2/80882.txt",
+  "d9/86721.txt",
+  "ee/1596.txt"
+ ],
+ "beir_cqadupstack_unix_28267": [
+  "08/131161.txt",
+  "27/126702.txt",
+  "46/22387.txt",
+  "47/61073.txt",
+  "58/91895.txt",
+  "93/74947.txt",
+  "c2/147560.txt",
+  "fd/127861.txt"
+ ],
+ "beir_cqadupstack_unix_28269": [
+  "ee/11004.txt"
+ ],
+ "beir_cqadupstack_unix_28363": [
+  "90/81642.txt"
+ ],
+ "beir_cqadupstack_unix_28506": [
+  "af/665.txt"
+ ],
+ "beir_cqadupstack_unix_28571": [
+  "1a/88444.txt",
+  "af/126864.txt"
+ ],
+ "beir_cqadupstack_unix_28615": [
+  "67/58030.txt",
+  "6d/35088.txt"
+ ],
+ "beir_cqadupstack_unix_28771": [
+  "06/21788.txt"
+ ],
+ "beir_cqadupstack_unix_2888": [
+  "08/34808.txt"
+ ],
+ "beir_cqadupstack_unix_29182": [
+  "77/86123.txt"
+ ],
+ "beir_cqadupstack_unix_29450": [
+  "71/31078.txt"
+ ],
+ "beir_cqadupstack_unix_29470": [
+  "5c/101529.txt"
+ ],
+ "beir_cqadupstack_unix_29791": [
+  "2a/93071.txt"
+ ],
+ "beir_cqadupstack_unix_29884": [
+  "7d/107186.txt"
+ ],
+ "beir_cqadupstack_unix_30111": [
+  "75/45377.txt"
+ ],
+ "beir_cqadupstack_unix_30303": [
+  "61/85231.txt"
+ ],
+ "beir_cqadupstack_unix_30400": [
+  "36/93082.txt",
+  "8b/98481.txt"
+ ],
+ "beir_cqadupstack_unix_30470": [
+  "32/139785.txt",
+  "46/103952.txt"
+ ],
+ "beir_cqadupstack_unix_30621": [
+  "49/96817.txt",
+  "9d/23145.txt",
+  "df/58304.txt",
+  "f1/31210.txt"
+ ],
+ "beir_cqadupstack_unix_30676": [
+  "02/106118.txt",
+  "82/90055.txt",
+  "9e/21650.txt"
+ ],
+ "beir_cqadupstack_unix_30925": [
+  "1e/48721.txt",
+  "cf/124420.txt",
+  "db/34065.txt"
+ ],
+ "beir_cqadupstack_unix_30956": [
+  "44/30878.txt"
+ ],
+ "beir_cqadupstack_unix_31187": [
+  "5a/87391.txt"
+ ],
+ "beir_cqadupstack_unix_31379": [
+  "2e/32454.txt"
+ ],
+ "beir_cqadupstack_unix_31751": [
+  "90/27692.txt",
+  "dd/3171.txt"
+ ],
+ "beir_cqadupstack_unix_31876": [
+  "13/114926.txt"
+ ],
+ "beir_cqadupstack_unix_32000": [
+  "21/32015.txt",
+  "6d/9646.txt"
+ ],
+ "beir_cqadupstack_unix_32140": [
+  "03/33154.txt",
+  "8f/31071.txt"
+ ],
+ "beir_cqadupstack_unix_32210": [
+  "63/49007.txt",
+  "64/67172.txt",
+  "fd/99185.txt"
+ ],
+ "beir_cqadupstack_unix_32222": [
+  "24/30189.txt",
+  "b9/139447.txt"
+ ],
+ "beir_cqadupstack_unix_32314": [
+  "6d/21016.txt"
+ ],
+ "beir_cqadupstack_unix_3239": [
+  "9e/102276.txt"
+ ],
+ "beir_cqadupstack_unix_32584": [
+  "19/60319.txt"
+ ],
+ "beir_cqadupstack_unix_33030": [
+  "38/64306.txt",
+  "53/119151.txt",
+  "7b/53607.txt",
+  "96/128817.txt",
+  "9f/24026.txt",
+  "e8/49067.txt"
+ ],
+ "beir_cqadupstack_unix_33099": [
+  "fa/11262.txt"
+ ],
+ "beir_cqadupstack_unix_33203": [
+  "a5/150689.txt"
+ ],
+ "beir_cqadupstack_unix_33413": [
+  "0a/33364.txt"
+ ],
+ "beir_cqadupstack_unix_33519": [
+  "4b/60101.txt"
+ ],
+ "beir_cqadupstack_unix_33541": [
+  "8d/41915.txt"
+ ],
+ "beir_cqadupstack_unix_33729": [
+  "e7/106603.txt"
+ ],
+ "beir_cqadupstack_unix_34004": [
+  "97/88171.txt"
+ ],
+ "beir_cqadupstack_unix_3409": [
+  "ef/4436.txt"
+ ],
+ "beir_cqadupstack_unix_34174": [
+  "6e/48233.txt"
+ ],
+ "beir_cqadupstack_unix_34238": [
+  "54/28283.txt"
+ ],
+ "beir_cqadupstack_unix_3431": [
+  "71/33348.txt"
+ ],
+ "beir_cqadupstack_unix_34315": [
+  "b8/80.txt"
+ ],
+ "beir_cqadupstack_unix_34435": [
+  "4c/52041.txt",
+  "7c/145247.txt"
+ ],
+ "beir_cqadupstack_unix_34516": [
+  "71/6891.txt"
+ ],
+ "beir_cqadupstack_unix_34584": [
+  "da/23330.txt"
+ ],
+ "beir_cqadupstack_unix_3467": [
+  "8d/111611.txt"
+ ],
+ "beir_cqadupstack_unix_34898": [
+  "41/34896.txt"
+ ],
+ "beir_cqadupstack_unix_34970": [
+  "90/813.txt",
+  "d4/154955.txt"
+ ],
+ "beir_cqadupstack_unix_3515": [
+  "be/41730.txt"
+ ],
+ "beir_cqadupstack_unix_35241": [
+  "de/85808.txt"
+ ],
+ "beir_cqadupstack_unix_35279": [
+  "84/83897.txt"
+ ],
+ "beir_cqadupstack_unix_35338": [
+  "73/74347.txt",
+  "f0/98531.txt"
+ ],
+ "beir_cqadupstack_unix_35416": [
+  "23/46144.txt",
+  "f4/41699.txt"
+ ],
+ "beir_cqadupstack_unix_3543": [
+  "8e/140044.txt"
+ ],
+ "beir_cqadupstack_unix_35580": [
+  "3d/4899.txt",
+  "9b/64621.txt",
+  "ea/78002.txt",
+  "f9/124631.txt"
+ ],
+ "beir_cqadupstack_unix_35732": [
+  "93/35981.txt"
+ ],
+ "beir_cqadupstack_unix_35929": [
+  "dd/78484.txt"
+ ],
+ "beir_cqadupstack_unix_3645": [
+  "25/9501.txt",
+  "4f/75909.txt",
+  "62/37809.txt",
+  "d1/37534.txt"
+ ],
+ "beir_cqadupstack_unix_3646": [
+  "63/1645.txt"
+ ],
+ "beir_cqadupstack_unix_36540": [
+  "09/45042.txt",
+  "c5/124062.txt",
+  "c7/111643.txt",
+  "dc/57769.txt"
+ ],
+ "beir_cqadupstack_unix_366": [
+  "05/146077.txt",
+  "36/103281.txt",
+  "39/127102.txt",
+  "c7/123914.txt",
+  "dd/106565.txt"
+ ],
+ "beir_cqadupstack_unix_36682": [
+  "c7/20446.txt"
+ ],
+ "beir_cqadupstack_unix_36815": [
+  "7e/56275.txt"
+ ],
+ "beir_cqadupstack_unix_36871": [
+  "98/150623.txt"
+ ],
+ "beir_cqadupstack_unix_37313": [
+  "82/80695.txt"
+ ],
+ "beir_cqadupstack_unix_37366": [
+  "1c/10806.txt",
+  "4f/89480.txt"
+ ],
+ "beir_cqadupstack_unix_3747": [
+  "14/154467.txt",
+  "21/121408.txt",
+  "48/88642.txt"
+ ],
+ "beir_cqadupstack_unix_3757": [
+  "3d/3019.txt"
+ ],
+ "beir_cqadupstack_unix_37964": [
+  "c9/41046.txt"
+ ],
+ "beir_cqadupstack_unix_3809": [
+  "89/46037.txt"
+ ],
+ "beir_cqadupstack_unix_38162": [
+  "40/96574.txt"
+ ],
+ "beir_cqadupstack_unix_38191": [
+  "81/81796.txt",
+  "ef/1045.txt"
+ ],
+ "beir_cqadupstack_unix_3838": [
+  "89/2179.txt"
+ ],
+ "beir_cqadupstack_unix_3842": [
+  "ce/141451.txt"
+ ],
+ "beir_cqadupstack_unix_38619": [
+  "c4/33909.txt"
+ ],
+ "beir_cqadupstack_unix_38634": [
+  "46/149970.txt"
+ ],
+ "beir_cqadupstack_unix_38737": [
+  "0c/91748.txt"
+ ],
+ "beir_cqadupstack_unix_3886": [
+  "25/101384.txt"
+ ],
+ "beir_cqadupstack_unix_38910": [
+  "8e/63558.txt"
+ ],
+ "beir_cqadupstack_unix_3892": [
+  "33/10631.txt"
+ ],
+ "beir_cqadupstack_unix_38951": [
+  "4c/146502.txt"
+ ],
+ "beir_cqadupstack_unix_39145": [
+  "8c/141123.txt"
+ ],
+ "beir_cqadupstack_unix_39168": [
+  "cd/9024.txt"
+ ],
+ "beir_cqadupstack_unix_3958": [
+  "6e/8707.txt"
+ ],
+ "beir_cqadupstack_unix_39652": [
+  "96/98810.txt",
+  "f3/19439.txt"
+ ],
+ "beir_cqadupstack_unix_39663": [
+  "06/64799.txt"
+ ],
+ "beir_cqadupstack_unix_39755": [
+  "86/33838.txt",
+  "8c/2300.txt",
+  "dc/64598.txt"
+ ],
+ "beir_cqadupstack_unix_40143": [
+  "07/60299.txt"
+ ],
+ "beir_cqadupstack_unix_40442": [
+  "65/110441.txt"
+ ],
+ "beir_cqadupstack_unix_40749": [
+  "18/110042.txt"
+ ],
+ "beir_cqadupstack_unix_41070": [
+  "86/119502.txt"
+ ],
+ "beir_cqadupstack_unix_41141": [
+  "a6/141046.txt"
+ ],
+ "beir_cqadupstack_unix_41258": [
+  "34/114816.txt"
+ ],
+ "beir_cqadupstack_unix_41336": [
+  "11/144548.txt",
+  "5c/92935.txt"
+ ],
+ "beir_cqadupstack_unix_4144": [
+  "0c/49638.txt",
+  "7e/78539.txt",
+  "bc/76786.txt",
+  "fe/78534.txt"
+ ],
+ "beir_cqadupstack_unix_41493": [
+  "3d/25055.txt",
+  "fa/83891.txt"
+ ],
+ "beir_cqadupstack_unix_41555": [
+  "a0/43752.txt"
+ ],
+ "beir_cqadupstack_unix_41770": [
+  "b9/128180.txt"
+ ],
+ "beir_cqadupstack_unix_42010": [
+  "44/40786.txt",
+  "a8/122276.txt",
+  "fc/108733.txt"
+ ],
+ "beir_cqadupstack_unix_42032": [
+  "3b/27352.txt",
+  "61/42146.txt",
+  "7d/21598.txt",
+  "8e/50158.txt",
+  "9d/105767.txt",
+  "be/44512.txt",
+  "e3/26342.txt",
+  "f7/96279.txt"
+ ],
+ "beir_cqadupstack_unix_4219": [
+  "b6/56910.txt"
+ ],
+ "beir_cqadupstack_unix_42379": [
+  "af/45101.txt"
+ ],
+ "beir_cqadupstack_unix_42543": [
+  "22/102644.txt"
+ ],
+ "beir_cqadupstack_unix_4271": [
+  "d2/1571.txt"
+ ],
+ "beir_cqadupstack_unix_42735": [
+  "38/21363.txt",
+  "3f/88864.txt"
+ ],
+ "beir_cqadupstack_unix_43073": [
+  "14/145455.txt"
+ ],
+ "beir_cqadupstack_unix_43154": [
+  "15/12842.txt"
+ ],
+ "beir_cqadupstack_unix_43212": [
+  "8f/2881.txt"
+ ],
+ "beir_cqadupstack_unix_43338": [
+  "20/57768.txt"
+ ],
+ "beir_cqadupstack_unix_43465": [
+  "5c/67165.txt"
+ ],
+ "beir_cqadupstack_unix_43481": [
+  "52/18061.txt",
+  "6d/77764.txt",
+  "bc/11000.txt"
+ ],
+ "beir_cqadupstack_unix_43617": [
+  "21/5156.txt",
+  "a6/3961.txt",
+  "b5/24322.txt"
+ ],
+ "beir_cqadupstack_unix_43636": [
+  "0d/43629.txt"
+ ],
+ "beir_cqadupstack_unix_43638": [
+  "4a/2949.txt",
+  "d0/43785.txt"
+ ],
+ "beir_cqadupstack_unix_43886": [
+  "1f/63502.txt",
+  "39/38236.txt",
+  "4f/6068.txt",
+  "b9/22504.txt"
+ ],
+ "beir_cqadupstack_unix_4402": [
+  "a7/4950.txt"
+ ],
+ "beir_cqadupstack_unix_44031": [
+  "b7/36886.txt"
+ ],
+ "beir_cqadupstack_unix_44040": [
+  "04/72509.txt"
+ ],
+ "beir_cqadupstack_unix_44068": [
+  "d5/71760.txt"
+ ],
+ "beir_cqadupstack_unix_4422": [
+  "70/152808.txt",
+  "95/130630.txt"
+ ],
+ "beir_cqadupstack_unix_4426": [
+  "c1/49345.txt",
+  "e0/112413.txt"
+ ],
+ "beir_cqadupstack_unix_44288": [
+  "40/30207.txt",
+  "41/114698.txt",
+  "50/64461.txt",
+  "ab/84428.txt",
+  "b1/120237.txt",
+  "c5/68545.txt",
+  "d4/76174.txt"
+ ],
+ "beir_cqadupstack_unix_44421": [
+  "53/5251.txt",
+  "87/100671.txt"
+ ],
+ "beir_cqadupstack_unix_44686": [
+  "4c/100847.txt"
+ ],
+ "beir_cqadupstack_unix_44853": [
+  "e7/42671.txt"
+ ],
+ "beir_cqadupstack_unix_45025": [
+  "41/60583.txt"
+ ],
+ "beir_cqadupstack_unix_45040": [
+  "e5/28647.txt"
+ ],
+ "beir_cqadupstack_unix_45051": [
+  "5a/148861.txt",
+  "dc/68410.txt"
+ ],
+ "beir_cqadupstack_unix_45120": [
+  "eb/50372.txt"
+ ],
+ "beir_cqadupstack_unix_45259": [
+  "40/21965.txt"
+ ],
+ "beir_cqadupstack_unix_4547": [
+  "fc/4649.txt"
+ ],
+ "beir_cqadupstack_unix_45580": [
+  "70/42060.txt"
+ ],
+ "beir_cqadupstack_unix_45582": [
+  "87/92664.txt",
+  "a1/40401.txt",
+  "d2/20048.txt",
+  "e2/143911.txt"
+ ],
+ "beir_cqadupstack_unix_4561": [
+  "7b/75620.txt",
+  "ee/8497.txt"
+ ],
+ "beir_cqadupstack_unix_45626": [
+  "bd/10834.txt"
+ ],
+ "beir_cqadupstack_unix_45665": [
+  "e3/61471.txt"
+ ],
+ "beir_cqadupstack_unix_45746": [
+  "8c/9241.txt"
+ ],
+ "beir_cqadupstack_unix_4595": [
+  "d8/19718.txt"
+ ],
+ "beir_cqadupstack_unix_46344": [
+  "f9/18455.txt",
+  "ff/60668.txt"
+ ],
+ "beir_cqadupstack_unix_46350": [
+  "2c/55257.txt"
+ ],
+ "beir_cqadupstack_unix_46382": [
+  "d6/43421.txt"
+ ],
+ "beir_cqadupstack_unix_46410": [
+  "20/46408.txt"
+ ],
+ "beir_cqadupstack_unix_46645": [
+  "38/47263.txt"
+ ],
+ "beir_cqadupstack_unix_46715": [
+  "a1/115035.txt"
+ ],
+ "beir_cqadupstack_unix_46749": [
+  "d1/18327.txt"
+ ],
+ "beir_cqadupstack_unix_46796": [
+  "a5/23179.txt"
+ ],
+ "beir_cqadupstack_unix_46821": [
+  "4d/46363.txt"
+ ],
+ "beir_cqadupstack_unix_46898": [
+  "2b/81374.txt",
+  "68/4681.txt"
+ ],
+ "beir_cqadupstack_unix_46974": [
+  "64/89386.txt",
+  "94/92322.txt"
+ ],
+ "beir_cqadupstack_unix_47048": [
+  "a0/47075.txt"
+ ],
+ "beir_cqadupstack_unix_47330": [
+  "2a/27042.txt"
+ ],
+ "beir_cqadupstack_unix_47344": [
+  "1c/102484.txt"
+ ],
+ "beir_cqadupstack_unix_47360": [
+  "35/47508.txt"
+ ],
+ "beir_cqadupstack_unix_47577": [
+  "9e/2161.txt"
+ ],
+ "beir_cqadupstack_unix_4770": [
+  "16/55049.txt",
+  "f4/23347.txt"
+ ],
+ "beir_cqadupstack_unix_47730": [
+  "0d/18294.txt"
+ ],
+ "beir_cqadupstack_unix_47918": [
+  "ae/105747.txt"
+ ],
+ "beir_cqadupstack_unix_47941": [
+  "04/52411.txt"
+ ],
+ "beir_cqadupstack_unix_48103": [
+  "67/48274.txt"
+ ],
+ "beir_cqadupstack_unix_48124": [
+  "9d/10050.txt"
+ ],
+ "beir_cqadupstack_unix_48381": [
+  "61/139075.txt"
+ ],
+ "beir_cqadupstack_unix_48653": [
+  "71/76316.txt"
+ ],
+ "beir_cqadupstack_unix_48777": [
+  "9a/66408.txt"
+ ],
+ "beir_cqadupstack_unix_49003": [
+  "66/29601.txt"
+ ],
+ "beir_cqadupstack_unix_49058": [
+  "30/55376.txt",
+  "82/78797.txt",
+  "92/76643.txt",
+  "99/119790.txt",
+  "d3/14102.txt",
+  "e1/34795.txt"
+ ],
+ "beir_cqadupstack_unix_49183": [
+  "bc/63391.txt"
+ ],
+ "beir_cqadupstack_unix_49471": [
+  "7c/43539.txt"
+ ],
+ "beir_cqadupstack_unix_49477": [
+  "39/129409.txt"
+ ],
+ "beir_cqadupstack_unix_49567": [
+  "74/68181.txt"
+ ],
+ "beir_cqadupstack_unix_4961": [
+  "92/12937.txt"
+ ],
+ "beir_cqadupstack_unix_4965": [
+  "6c/32041.txt"
+ ],
+ "beir_cqadupstack_unix_49779": [
+  "43/138462.txt",
+  "ac/81933.txt"
+ ],
+ "beir_cqadupstack_unix_49785": [
+  "bb/23748.txt"
+ ],
+ "beir_cqadupstack_unix_49809": [
+  "f7/129309.txt"
+ ],
+ "beir_cqadupstack_unix_49942": [
+  "3d/87442.txt",
+  "a0/115509.txt",
+  "e9/9853.txt"
+ ],
+ "beir_cqadupstack_unix_50044": [
+  "4f/56128.txt",
+  "db/58970.txt"
+ ],
+ "beir_cqadupstack_unix_50101": [
+  "c2/64123.txt"
+ ],
+ "beir_cqadupstack_unix_50150": [
+  "06/31970.txt"
+ ],
+ "beir_cqadupstack_unix_50186": [
+  "04/21013.txt"
+ ],
+ "beir_cqadupstack_unix_50208": [
+  "9d/14721.txt"
+ ],
+ "beir_cqadupstack_unix_50279": [
+  "7c/15655.txt"
+ ],
+ "beir_cqadupstack_unix_50313": [
+  "5f/148827.txt"
+ ],
+ "beir_cqadupstack_unix_50343": [
+  "28/50326.txt"
+ ],
+ "beir_cqadupstack_unix_50508": [
+  "14/33557.txt",
+  "67/57807.txt"
+ ],
+ "beir_cqadupstack_unix_51911": [
+  "10/38583.txt"
+ ],
+ "beir_cqadupstack_unix_51971": [
+  "22/89428.txt",
+  "43/2028.txt",
+  "9d/122023.txt"
+ ],
+ "beir_cqadupstack_unix_51993": [
+  "e7/129249.txt"
+ ],
+ "beir_cqadupstack_unix_52108": [
+  "e8/81240.txt"
+ ],
+ "beir_cqadupstack_unix_52268": [
+  "68/1052.txt"
+ ],
+ "beir_cqadupstack_unix_52277": [
+  "03/110852.txt"
+ ],
+ "beir_cqadupstack_unix_52349": [
+  "d7/53189.txt"
+ ],
+ "beir_cqadupstack_unix_52559": [
+  "8b/7823.txt"
+ ],
+ "beir_cqadupstack_unix_52668": [
+  "b8/39064.txt",
+  "da/109691.txt"
+ ],
+ "beir_cqadupstack_unix_5268": [
+  "30/2273.txt"
+ ],
+ "beir_cqadupstack_unix_52764": [
+  "2f/19425.txt"
+ ],
+ "beir_cqadupstack_unix_52845": [
+  "4f/32753.txt",
+  "75/17286.txt"
+ ],
+ "beir_cqadupstack_unix_52908": [
+  "20/89362.txt"
+ ],
+ "beir_cqadupstack_unix_53017": [
+  "16/107142.txt"
+ ],
+ "beir_cqadupstack_unix_53119": [
+  "f9/24157.txt"
+ ],
+ "beir_cqadupstack_unix_53128": [
+  "11/153056.txt",
+  "ff/27717.txt"
+ ],
+ "beir_cqadupstack_unix_53143": [
+  "92/18360.txt"
+ ],
+ "beir_cqadupstack_unix_53196": [
+  "c1/28851.txt"
+ ],
+ "beir_cqadupstack_unix_53250": [
+  "58/43760.txt",
+  "e1/5535.txt"
+ ],
+ "beir_cqadupstack_unix_53252": [
+  "2b/148168.txt"
+ ],
+ "beir_cqadupstack_unix_53460": [
+  "73/116369.txt",
+  "b0/22527.txt"
+ ],
+ "beir_cqadupstack_unix_53542": [
+  "03/34623.txt",
+  "26/106969.txt",
+  "65/43237.txt",
+  "7c/53313.txt",
+  "a3/74977.txt"
+ ],
+ "beir_cqadupstack_unix_53563": [
+  "51/12439.txt"
+ ],
+ "beir_cqadupstack_unix_53591": [
+  "17/102092.txt",
+  "a5/26790.txt"
+ ],
+ "beir_cqadupstack_unix_53814": [
+  "df/128176.txt"
+ ],
+ "beir_cqadupstack_unix_53875": [
+  "3f/81953.txt"
+ ],
+ "beir_cqadupstack_unix_53937": [
+  "ca/43196.txt"
+ ],
+ "beir_cqadupstack_unix_5478": [
+  "65/13816.txt",
+  "d5/46621.txt"
+ ],
+ "beir_cqadupstack_unix_54975": [
+  "f8/93613.txt"
+ ],
+ "beir_cqadupstack_unix_55124": [
+  "f2/17404.txt"
+ ],
+ "beir_cqadupstack_unix_55195": [
+  "ce/5642.txt",
+  "ef/134963.txt"
+ ],
+ "beir_cqadupstack_unix_55223": [
+  "2b/41170.txt"
+ ],
+ "beir_cqadupstack_unix_55546": [
+  "72/49516.txt",
+  "8e/47826.txt",
+  "98/14684.txt",
+  "d1/50210.txt"
+ ],
+ "beir_cqadupstack_unix_55576": [
+  "14/3934.txt"
+ ],
+ "beir_cqadupstack_unix_55719": [
+  "fc/38365.txt"
+ ],
+ "beir_cqadupstack_unix_55808": [
+  "df/81345.txt"
+ ],
+ "beir_cqadupstack_unix_55848": [
+  "f6/1677.txt"
+ ],
+ "beir_cqadupstack_unix_55875": [
+  "26/13547.txt",
+  "3f/25602.txt",
+  "95/110329.txt",
+  "95/15793.txt"
+ ],
+ "beir_cqadupstack_unix_55954": [
+  "9c/34077.txt",
+  "c6/115620.txt"
+ ],
+ "beir_cqadupstack_unix_56054": [
+  "8d/716.txt"
+ ],
+ "beir_cqadupstack_unix_56065": [
+  "c0/37660.txt"
+ ],
+ "beir_cqadupstack_unix_56123": [
+  "5b/92457.txt"
+ ],
+ "beir_cqadupstack_unix_56174": [
+  "e1/7380.txt"
+ ],
+ "beir_cqadupstack_unix_56395": [
+  "5f/103068.txt",
+  "68/48672.txt"
+ ],
+ "beir_cqadupstack_unix_56429": [
+  "b0/80399.txt"
+ ],
+ "beir_cqadupstack_unix_56473": [
+  "08/117314.txt",
+  "0c/53097.txt",
+  "1c/147679.txt",
+  "2b/13391.txt",
+  "38/55614.txt",
+  "3b/21475.txt",
+  "40/134395.txt",
+  "40/91699.txt",
+  "53/89964.txt",
+  "7a/99562.txt",
+  "9e/79768.txt",
+  "d8/68505.txt",
+  "e9/66220.txt",
+  "ed/30063.txt",
+  "f3/53259.txt",
+  "ff/30246.txt"
+ ],
+ "beir_cqadupstack_unix_56479": [
+  "03/74213.txt",
+  "53/42757.txt"
+ ],
+ "beir_cqadupstack_unix_56495": [
+  "09/102233.txt"
+ ],
+ "beir_cqadupstack_unix_5665": [
+  "41/56153.txt",
+  "ae/33315.txt"
+ ],
+ "beir_cqadupstack_unix_56834": [
+  "24/615.txt"
+ ],
+ "beir_cqadupstack_unix_56836": [
+  "2e/149661.txt",
+  "66/83947.txt",
+  "92/7425.txt",
+  "be/63275.txt"
+ ],
+ "beir_cqadupstack_unix_56868": [
+  "7e/38205.txt"
+ ],
+ "beir_cqadupstack_unix_56975": [
+  "55/20903.txt",
+  "ca/20577.txt"
+ ],
+ "beir_cqadupstack_unix_57012": [
+  "54/20803.txt"
+ ],
+ "beir_cqadupstack_unix_57046": [
+  "d8/50727.txt"
+ ],
+ "beir_cqadupstack_unix_5711": [
+  "00/25996.txt"
+ ],
+ "beir_cqadupstack_unix_57239": [
+  "a1/10876.txt"
+ ],
+ "beir_cqadupstack_unix_57570": [
+  "df/26128.txt"
+ ],
+ "beir_cqadupstack_unix_57706": [
+  "52/2976.txt",
+  "f6/63765.txt"
+ ],
+ "beir_cqadupstack_unix_57777": [
+  "3b/37911.txt"
+ ],
+ "beir_cqadupstack_unix_58017": [
+  "62/56024.txt"
+ ],
+ "beir_cqadupstack_unix_58344": [
+  "84/58566.txt"
+ ],
+ "beir_cqadupstack_unix_58643": [
+  "27/55587.txt",
+  "51/73709.txt",
+  "f3/6311.txt"
+ ],
+ "beir_cqadupstack_unix_58651": [
+  "6e/67867.txt"
+ ],
+ "beir_cqadupstack_unix_58825": [
+  "59/8518.txt"
+ ],
+ "beir_cqadupstack_unix_5888": [
+  "06/39761.txt"
+ ],
+ "beir_cqadupstack_unix_58880": [
+  "e1/147240.txt"
+ ],
+ "beir_cqadupstack_unix_58963": [
+  "09/19807.txt",
+  "dd/122353.txt"
+ ],
+ "beir_cqadupstack_unix_59098": [
+  "4b/25493.txt"
+ ],
+ "beir_cqadupstack_unix_59171": [
+  "02/116955.txt",
+  "3b/38808.txt",
+  "90/123457.txt"
+ ],
+ "beir_cqadupstack_unix_59570": [
+  "30/59652.txt"
+ ],
+ "beir_cqadupstack_unix_5959": [
+  "33/152347.txt",
+  "76/130700.txt"
+ ],
+ "beir_cqadupstack_unix_60257": [
+  "e1/152857.txt"
+ ],
+ "beir_cqadupstack_unix_604": [
+  "1c/83475.txt"
+ ],
+ "beir_cqadupstack_unix_60404": [
+  "4a/61581.txt"
+ ],
+ "beir_cqadupstack_unix_60459": [
+  "21/150429.txt"
+ ],
+ "beir_cqadupstack_unix_60481": [
+  "4b/60637.txt"
+ ],
+ "beir_cqadupstack_unix_60544": [
+  "3e/61855.txt",
+  "a4/72723.txt",
+  "d3/3556.txt"
+ ],
+ "beir_cqadupstack_unix_60710": [
+  "c4/60632.txt"
+ ],
+ "beir_cqadupstack_unix_60901": [
+  "b1/17243.txt"
+ ],
+ "beir_cqadupstack_unix_60905": [
+  "37/37950.txt",
+  "a3/108674.txt"
+ ],
+ "beir_cqadupstack_unix_61305": [
+  "cc/102407.txt"
+ ],
+ "beir_cqadupstack_unix_61308": [
+  "d4/61306.txt"
+ ],
+ "beir_cqadupstack_unix_61313": [
+  "1f/114414.txt",
+  "3a/1136.txt",
+  "58/49115.txt",
+  "96/81657.txt",
+  "98/114340.txt",
+  "a3/155029.txt",
+  "a5/56799.txt"
+ ],
+ "beir_cqadupstack_unix_61401": [
+  "73/65551.txt"
+ ],
+ "beir_cqadupstack_unix_61627": [
+  "f9/38121.txt"
+ ],
+ "beir_cqadupstack_unix_61646": [
+  "dd/40587.txt"
+ ],
+ "beir_cqadupstack_unix_61712": [
+  "62/38903.txt"
+ ],
+ "beir_cqadupstack_unix_61719": [
+  "ee/97025.txt"
+ ],
+ "beir_cqadupstack_unix_61931": [
+  "57/81861.txt",
+  "7c/145651.txt"
+ ],
+ "beir_cqadupstack_unix_61947": [
+  "3b/39237.txt"
+ ],
+ "beir_cqadupstack_unix_6199": [
+  "a9/6298.txt"
+ ],
+ "beir_cqadupstack_unix_61997": [
+  "54/129451.txt",
+  "58/12998.txt",
+  "96/150014.txt",
+  "bf/116275.txt"
+ ],
+ "beir_cqadupstack_unix_62015": [
+  "c9/66156.txt"
+ ],
+ "beir_cqadupstack_unix_62109": [
+  "16/892.txt"
+ ],
+ "beir_cqadupstack_unix_62221": [
+  "3b/50692.txt"
+ ],
+ "beir_cqadupstack_unix_62355": [
+  "e1/107246.txt"
+ ],
+ "beir_cqadupstack_unix_62830": [
+  "76/103260.txt"
+ ],
+ "beir_cqadupstack_unix_629": [
+  "0d/101924.txt"
+ ],
+ "beir_cqadupstack_unix_6301": [
+  "0e/73627.txt",
+  "59/109348.txt"
+ ],
+ "beir_cqadupstack_unix_63266": [
+  "7c/13926.txt",
+  "bb/63969.txt"
+ ],
+ "beir_cqadupstack_unix_63284": [
+  "6a/46127.txt"
+ ],
+ "beir_cqadupstack_unix_63335": [
+  "0f/52793.txt"
+ ],
+ "beir_cqadupstack_unix_63594": [
+  "98/21602.txt"
+ ],
+ "beir_cqadupstack_unix_63783": [
+  "6b/44077.txt",
+  "c9/76991.txt"
+ ],
+ "beir_cqadupstack_unix_6393": [
+  "11/90811.txt"
+ ],
+ "beir_cqadupstack_unix_6409": [
+  "b0/96963.txt"
+ ],
+ "beir_cqadupstack_unix_64203": [
+  "32/64198.txt"
+ ],
+ "beir_cqadupstack_unix_64595": [
+  "cb/49299.txt"
+ ],
+ "beir_cqadupstack_unix_64672": [
+  "5f/114358.txt"
+ ],
+ "beir_cqadupstack_unix_64762": [
+  "01/71646.txt"
+ ],
+ "beir_cqadupstack_unix_64861": [
+  "2e/145251.txt"
+ ],
+ "beir_cqadupstack_unix_6505": [
+  "e9/6506.txt"
+ ],
+ "beir_cqadupstack_unix_65110": [
+  "b2/65093.txt"
+ ],
+ "beir_cqadupstack_unix_65115": [
+  "93/57130.txt",
+  "fc/4109.txt"
+ ],
+ "beir_cqadupstack_unix_65315": [
+  "ed/127428.txt"
+ ],
+ "beir_cqadupstack_unix_65354": [
+  "6b/15826.txt",
+  "f6/41207.txt"
+ ],
+ "beir_cqadupstack_unix_65505": [
+  "73/106126.txt"
+ ],
+ "beir_cqadupstack_unix_6551": [
+  "c6/25249.txt"
+ ],
+ "beir_cqadupstack_unix_66062": [
+  "98/2533.txt"
+ ],
+ "beir_cqadupstack_unix_66097": [
+  "ee/66352.txt"
+ ],
+ "beir_cqadupstack_unix_66110": [
+  "91/29310.txt"
+ ],
+ "beir_cqadupstack_unix_66131": [
+  "80/66262.txt",
+  "96/6870.txt"
+ ],
+ "beir_cqadupstack_unix_66796": [
+  "02/86606.txt"
+ ],
+ "beir_cqadupstack_unix_6681": [
+  "c5/3037.txt"
+ ],
+ "beir_cqadupstack_unix_6686": [
+  "10/5123.txt",
+  "24/24016.txt",
+  "d3/25005.txt"
+ ],
+ "beir_cqadupstack_unix_66899": [
+  "e5/66488.txt"
+ ],
+ "beir_cqadupstack_unix_66918": [
+  "ce/18615.txt"
+ ],
+ "beir_cqadupstack_unix_6704": [
+  "14/27516.txt"
+ ],
+ "beir_cqadupstack_unix_6726": [
+  "89/55218.txt"
+ ],
+ "beir_cqadupstack_unix_67462": [
+  "a2/67491.txt"
+ ],
+ "beir_cqadupstack_unix_67503": [
+  "9c/91933.txt"
+ ],
+ "beir_cqadupstack_unix_67758": [
+  "b5/28983.txt"
+ ],
+ "beir_cqadupstack_unix_6777": [
+  "16/46487.txt",
+  "23/98070.txt",
+  "46/14831.txt",
+  "bd/102647.txt",
+  "fc/11011.txt"
+ ],
+ "beir_cqadupstack_unix_67794": [
+  "13/68138.txt"
+ ],
+ "beir_cqadupstack_unix_6790": [
+  "93/79419.txt",
+  "d8/108177.txt"
+ ],
+ "beir_cqadupstack_unix_6800": [
+  "f9/57371.txt"
+ ],
+ "beir_cqadupstack_unix_68255": [
+  "3a/72893.txt",
+  "8e/55.txt",
+  "cb/49613.txt"
+ ],
+ "beir_cqadupstack_unix_685": [
+  "5d/126876.txt"
+ ],
+ "beir_cqadupstack_unix_6854": [
+  "59/40342.txt"
+ ],
+ "beir_cqadupstack_unix_68721": [
+  "94/24347.txt"
+ ],
+ "beir_cqadupstack_unix_68945": [
+  "77/68941.txt"
+ ],
+ "beir_cqadupstack_unix_70": [
+  "53/61757.txt"
+ ],
+ "beir_cqadupstack_unix_70630": [
+  "85/70614.txt"
+ ],
+ "beir_cqadupstack_unix_70796": [
+  "ce/71118.txt"
+ ],
+ "beir_cqadupstack_unix_71121": [
+  "71/87981.txt"
+ ],
+ "beir_cqadupstack_unix_71176": [
+  "b5/153436.txt"
+ ],
+ "beir_cqadupstack_unix_71221": [
+  "6c/71430.txt"
+ ],
+ "beir_cqadupstack_unix_71504": [
+  "ce/132283.txt"
+ ],
+ "beir_cqadupstack_unix_71566": [
+  "bc/71685.txt"
+ ],
+ "beir_cqadupstack_unix_71585": [
+  "2b/76521.txt",
+  "3e/126040.txt"
+ ],
+ "beir_cqadupstack_unix_71857": [
+  "12/106642.txt",
+  "1d/110978.txt",
+  "59/92071.txt",
+  "b1/10.txt",
+  "f1/37231.txt"
+ ],
+ "beir_cqadupstack_unix_71902": [
+  "67/38849.txt"
+ ],
+ "beir_cqadupstack_unix_72096": [
+  "e4/63809.txt"
+ ],
+ "beir_cqadupstack_unix_7215": [
+  "c1/46670.txt"
+ ],
+ "beir_cqadupstack_unix_73": [
+  "4c/47704.txt"
+ ],
+ "beir_cqadupstack_unix_73116": [
+  "b7/91477.txt"
+ ],
+ "beir_cqadupstack_unix_73228": [
+  "03/37469.txt"
+ ],
+ "beir_cqadupstack_unix_73293": [
+  "03/8462.txt"
+ ],
+ "beir_cqadupstack_unix_73475": [
+  "ae/3510.txt"
+ ],
+ "beir_cqadupstack_unix_73527": [
+  "58/21847.txt"
+ ],
+ "beir_cqadupstack_unix_73750": [
+  "41/84239.txt"
+ ],
+ "beir_cqadupstack_unix_73836": [
+  "9d/73846.txt"
+ ],
+ "beir_cqadupstack_unix_73989": [
+  "76/87644.txt"
+ ],
+ "beir_cqadupstack_unix_74076": [
+  "41/97983.txt"
+ ],
+ "beir_cqadupstack_unix_74117": [
+  "11/9832.txt"
+ ],
+ "beir_cqadupstack_unix_7412": [
+  "9e/101492.txt",
+  "cf/84728.txt",
+  "e8/120703.txt"
+ ],
+ "beir_cqadupstack_unix_74135": [
+  "6d/5488.txt"
+ ],
+ "beir_cqadupstack_unix_74195": [
+  "56/73740.txt"
+ ],
+ "beir_cqadupstack_unix_74322": [
+  "52/22698.txt",
+  "e9/151579.txt"
+ ],
+ "beir_cqadupstack_unix_746": [
+  "5f/99263.txt"
+ ],
+ "beir_cqadupstack_unix_74867": [
+  "1c/131118.txt"
+ ],
+ "beir_cqadupstack_unix_7493": [
+  "db/7487.txt"
+ ],
+ "beir_cqadupstack_unix_75059": [
+  "e0/147587.txt"
+ ],
+ "beir_cqadupstack_unix_75289": [
+  "f9/28682.txt"
+ ],
+ "beir_cqadupstack_unix_75364": [
+  "59/74978.txt"
+ ],
+ "beir_cqadupstack_unix_75686": [
+  "9e/82436.txt"
+ ],
+ "beir_cqadupstack_unix_75992": [
+  "41/75427.txt"
+ ],
+ "beir_cqadupstack_unix_76151": [
+  "77/110213.txt",
+  "d2/33279.txt"
+ ],
+ "beir_cqadupstack_unix_76162": [
+  "31/147223.txt",
+  "41/73170.txt",
+  "58/39837.txt",
+  "86/14270.txt",
+  "ac/96308.txt",
+  "c1/25898.txt"
+ ],
+ "beir_cqadupstack_unix_76263": [
+  "f4/27087.txt"
+ ],
+ "beir_cqadupstack_unix_7631": [
+  "29/4599.txt",
+  "6e/8405.txt"
+ ],
+ "beir_cqadupstack_unix_76478": [
+  "c6/27623.txt"
+ ],
+ "beir_cqadupstack_unix_76490": [
+  "63/85918.txt",
+  "98/128046.txt"
+ ],
+ "beir_cqadupstack_unix_7658": [
+  "c6/14517.txt"
+ ],
+ "beir_cqadupstack_unix_767": [
+  "01/244.txt"
+ ],
+ "beir_cqadupstack_unix_76803": [
+  "94/137481.txt"
+ ],
+ "beir_cqadupstack_unix_76805": [
+  "e0/120831.txt"
+ ],
+ "beir_cqadupstack_unix_76870": [
+  "5c/76418.txt"
+ ],
+ "beir_cqadupstack_unix_77410": [
+  "20/132256.txt"
+ ],
+ "beir_cqadupstack_unix_77492": [
+  "bc/21850.txt"
+ ],
+ "beir_cqadupstack_unix_7772": [
+  "51/5515.txt",
+  "61/57907.txt",
+  "94/10729.txt",
+  "c4/117074.txt",
+  "eb/10507.txt"
+ ],
+ "beir_cqadupstack_unix_77852": [
+  "de/113473.txt"
+ ],
+ "beir_cqadupstack_unix_77934": [
+  "6a/49096.txt",
+  "a0/20975.txt",
+  "eb/22640.txt"
+ ],
+ "beir_cqadupstack_unix_77951": [
+  "7c/9580.txt"
+ ],
+ "beir_cqadupstack_unix_77969": [
+  "45/43229.txt"
+ ],
+ "beir_cqadupstack_unix_78176": [
+  "f0/78158.txt"
+ ],
+ "beir_cqadupstack_unix_78182": [
+  "2f/79381.txt"
+ ],
+ "beir_cqadupstack_unix_78210": [
+  "75/46305.txt",
+  "86/76705.txt"
+ ],
+ "beir_cqadupstack_unix_78316": [
+  "fe/37803.txt"
+ ],
+ "beir_cqadupstack_unix_78442": [
+  "08/17116.txt"
+ ],
+ "beir_cqadupstack_unix_78501": [
+  "08/19008.txt",
+  "66/151425.txt",
+  "71/76772.txt",
+  "8e/80199.txt"
+ ],
+ "beir_cqadupstack_unix_78578": [
+  "06/41740.txt"
+ ],
+ "beir_cqadupstack_unix_78659": [
+  "d5/78628.txt"
+ ],
+ "beir_cqadupstack_unix_7870": [
+  "c3/19217.txt"
+ ],
+ "beir_cqadupstack_unix_78821": [
+  "40/40539.txt"
+ ],
+ "beir_cqadupstack_unix_78886": [
+  "1e/58282.txt"
+ ],
+ "beir_cqadupstack_unix_78925": [
+  "b0/52762.txt",
+  "b0/63992.txt",
+  "cc/77406.txt"
+ ],
+ "beir_cqadupstack_unix_79207": [
+  "e6/79208.txt"
+ ],
+ "beir_cqadupstack_unix_79211": [
+  "91/5656.txt",
+  "b7/91910.txt"
+ ],
+ "beir_cqadupstack_unix_79316": [
+  "08/109547.txt"
+ ],
+ "beir_cqadupstack_unix_79688": [
+  "33/89786.txt"
+ ],
+ "beir_cqadupstack_unix_797": [
+  "a0/60000.txt",
+  "a7/17204.txt"
+ ],
+ "beir_cqadupstack_unix_79837": [
+  "08/14210.txt"
+ ],
+ "beir_cqadupstack_unix_79882": [
+  "6e/93723.txt"
+ ],
+ "beir_cqadupstack_unix_7998": [
+  "5c/103121.txt"
+ ],
+ "beir_cqadupstack_unix_80088": [
+  "cf/63902.txt",
+  "f1/70367.txt"
+ ],
+ "beir_cqadupstack_unix_80177": [
+  "62/80132.txt"
+ ],
+ "beir_cqadupstack_unix_80362": [
+  "75/76402.txt"
+ ],
+ "beir_cqadupstack_unix_80437": [
+  "94/119804.txt"
+ ],
+ "beir_cqadupstack_unix_80466": [
+  "03/90389.txt",
+  "60/87312.txt"
+ ],
+ "beir_cqadupstack_unix_8056": [
+  "e8/8367.txt"
+ ],
+ "beir_cqadupstack_unix_80692": [
+  "df/140272.txt"
+ ],
+ "beir_cqadupstack_unix_80733": [
+  "bb/54960.txt"
+ ],
+ "beir_cqadupstack_unix_80757": [
+  "43/58384.txt",
+  "51/45276.txt"
+ ],
+ "beir_cqadupstack_unix_80876": [
+  "86/12731.txt"
+ ],
+ "beir_cqadupstack_unix_80934": [
+  "04/80990.txt"
+ ],
+ "beir_cqadupstack_unix_80968": [
+  "3c/112179.txt"
+ ],
+ "beir_cqadupstack_unix_81023": [
+  "00/49763.txt",
+  "01/70483.txt",
+  "0d/6345.txt",
+  "30/70951.txt",
+  "3f/10281.txt",
+  "bb/35183.txt",
+  "f0/20885.txt"
+ ],
+ "beir_cqadupstack_unix_81224": [
+  "bd/141128.txt"
+ ],
+ "beir_cqadupstack_unix_81238": [
+  "b3/43952.txt"
+ ],
+ "beir_cqadupstack_unix_81355": [
+  "3e/87768.txt"
+ ],
+ "beir_cqadupstack_unix_81628": [
+  "35/21808.txt"
+ ],
+ "beir_cqadupstack_unix_81677": [
+  "06/79269.txt",
+  "0a/78295.txt"
+ ],
+ "beir_cqadupstack_unix_81834": [
+  "50/88012.txt"
+ ],
+ "beir_cqadupstack_unix_81845": [
+  "20/50665.txt",
+  "6a/38175.txt",
+  "a2/109806.txt"
+ ],
+ "beir_cqadupstack_unix_82021": [
+  "31/70393.txt"
+ ],
+ "beir_cqadupstack_unix_82314": [
+  "41/99062.txt"
+ ],
+ "beir_cqadupstack_unix_82424": [
+  "5e/9271.txt"
+ ],
+ "beir_cqadupstack_unix_82515": [
+  "1d/42841.txt",
+  "cd/19430.txt"
+ ],
+ "beir_cqadupstack_unix_82612": [
+  "65/47795.txt"
+ ],
+ "beir_cqadupstack_unix_82657": [
+  "af/82647.txt"
+ ],
+ "beir_cqadupstack_unix_82805": [
+  "e6/6924.txt"
+ ],
+ "beir_cqadupstack_unix_82837": [
+  "ea/82811.txt"
+ ],
+ "beir_cqadupstack_unix_83017": [
+  "57/7529.txt",
+  "61/104407.txt"
+ ],
+ "beir_cqadupstack_unix_83120": [
+  "04/140520.txt"
+ ],
+ "beir_cqadupstack_unix_83127": [
+  "8c/20104.txt"
+ ],
+ "beir_cqadupstack_unix_83257": [
+  "3a/91714.txt"
+ ],
+ "beir_cqadupstack_unix_83273": [
+  "0d/137119.txt"
+ ],
+ "beir_cqadupstack_unix_83357": [
+  "b3/40954.txt"
+ ],
+ "beir_cqadupstack_unix_83381": [
+  "94/19494.txt"
+ ],
+ "beir_cqadupstack_unix_83491": [
+  "f3/92111.txt"
+ ],
+ "beir_cqadupstack_unix_8396": [
+  "67/79120.txt"
+ ],
+ "beir_cqadupstack_unix_84175": [
+  "41/153015.txt"
+ ],
+ "beir_cqadupstack_unix_84179": [
+  "ad/50425.txt"
+ ],
+ "beir_cqadupstack_unix_84191": [
+  "7f/74797.txt",
+  "dc/49263.txt"
+ ],
+ "beir_cqadupstack_unix_84233": [
+  "10/18701.txt",
+  "d0/132651.txt"
+ ],
+ "beir_cqadupstack_unix_84246": [
+  "9e/77545.txt"
+ ],
+ "beir_cqadupstack_unix_8430": [
+  "85/46322.txt"
+ ],
+ "beir_cqadupstack_unix_84376": [
+  "10/83038.txt"
+ ],
+ "beir_cqadupstack_unix_84540": [
+  "e9/42052.txt"
+ ],
+ "beir_cqadupstack_unix_84544": [
+  "48/84541.txt"
+ ],
+ "beir_cqadupstack_unix_84760": [
+  "f6/85405.txt"
+ ],
+ "beir_cqadupstack_unix_84888": [
+  "53/58769.txt"
+ ],
+ "beir_cqadupstack_unix_84955": [
+  "0c/26941.txt"
+ ],
+ "beir_cqadupstack_unix_85009": [
+  "79/135064.txt",
+  "bd/97875.txt"
+ ],
+ "beir_cqadupstack_unix_85021": [
+  "a5/97149.txt"
+ ],
+ "beir_cqadupstack_unix_85305": [
+  "20/9356.txt"
+ ],
+ "beir_cqadupstack_unix_85352": [
+  "e9/138289.txt"
+ ],
+ "beir_cqadupstack_unix_8554": [
+  "58/91396.txt"
+ ],
+ "beir_cqadupstack_unix_85678": [
+  "17/47183.txt",
+  "24/27312.txt",
+  "2a/148592.txt",
+  "32/16894.txt",
+  "43/4335.txt",
+  "48/106663.txt",
+  "71/1416.txt",
+  "7b/42801.txt",
+  "8c/129370.txt",
+  "98/61559.txt",
+  "c3/4830.txt",
+  "c5/25747.txt",
+  "d8/78657.txt",
+  "dd/154579.txt",
+  "eb/31322.txt",
+  "ed/151092.txt"
+ ],
+ "beir_cqadupstack_unix_85728": [
+  "f5/85391.txt"
+ ],
+ "beir_cqadupstack_unix_85757": [
+  "23/74500.txt"
+ ],
+ "beir_cqadupstack_unix_85865": [
+  "09/105765.txt"
+ ],
+ "beir_cqadupstack_unix_85928": [
+  "10/104619.txt"
+ ],
+ "beir_cqadupstack_unix_85971": [
+  "5f/66030.txt",
+  "80/26111.txt",
+  "82/93969.txt",
+  "ec/6411.txt"
+ ],
+ "beir_cqadupstack_unix_86036": [
+  "0d/1254.txt",
+  "ed/86518.txt",
+  "f8/77154.txt"
+ ],
+ "beir_cqadupstack_unix_86209": [
+  "43/4956.txt"
+ ],
+ "beir_cqadupstack_unix_86219": [
+  "cb/120982.txt"
+ ],
+ "beir_cqadupstack_unix_86296": [
+  "1a/80864.txt"
+ ],
+ "beir_cqadupstack_unix_8647": [
+  "3f/84337.txt",
+  "7f/68647.txt"
+ ],
+ "beir_cqadupstack_unix_86535": [
+  "55/86793.txt"
+ ],
+ "beir_cqadupstack_unix_86621": [
+  "9c/55430.txt"
+ ],
+ "beir_cqadupstack_unix_86674": [
+  "44/1524.txt"
+ ],
+ "beir_cqadupstack_unix_86694": [
+  "05/27333.txt"
+ ],
+ "beir_cqadupstack_unix_86996": [
+  "54/85666.txt"
+ ],
+ "beir_cqadupstack_unix_87005": [
+  "34/62387.txt"
+ ],
+ "beir_cqadupstack_unix_87054": [
+  "c9/86740.txt"
+ ],
+ "beir_cqadupstack_unix_87129": [
+  "53/148.txt",
+  "82/19219.txt"
+ ],
+ "beir_cqadupstack_unix_87258": [
+  "a9/41693.txt"
+ ],
+ "beir_cqadupstack_unix_87380": [
+  "fc/88120.txt"
+ ],
+ "beir_cqadupstack_unix_87633": [
+  "43/91229.txt",
+  "63/95953.txt",
+  "66/89714.txt",
+  "82/94643.txt"
+ ],
+ "beir_cqadupstack_unix_87667": [
+  "04/105197.txt",
+  "28/66889.txt",
+  "37/35782.txt",
+  "69/77565.txt",
+  "78/132235.txt",
+  "c5/76821.txt",
+  "eb/48741.txt"
+ ],
+ "beir_cqadupstack_unix_87928": [
+  "e5/5451.txt"
+ ],
+ "beir_cqadupstack_unix_881": [
+  "4b/77392.txt",
+  "ae/23315.txt"
+ ],
+ "beir_cqadupstack_unix_88313": [
+  "f9/81904.txt"
+ ],
+ "beir_cqadupstack_unix_88452": [
+  "21/10263.txt"
+ ],
+ "beir_cqadupstack_unix_88550": [
+  "55/88519.txt"
+ ],
+ "beir_cqadupstack_unix_88602": [
+  "c1/18231.txt"
+ ],
+ "beir_cqadupstack_unix_88675": [
+  "a2/92020.txt"
+ ],
+ "beir_cqadupstack_unix_88718": [
+  "20/1314.txt",
+  "e4/57245.txt"
+ ],
+ "beir_cqadupstack_unix_88808": [
+  "b0/92384.txt"
+ ],
+ "beir_cqadupstack_unix_89107": [
+  "90/98119.txt",
+  "fb/77718.txt"
+ ],
+ "beir_cqadupstack_unix_89262": [
+  "15/10081.txt",
+  "31/60717.txt",
+  "35/101519.txt",
+  "3d/87011.txt",
+  "5b/34465.txt"
+ ],
+ "beir_cqadupstack_unix_89469": [
+  "54/90999.txt"
+ ],
+ "beir_cqadupstack_unix_89941": [
+  "2d/74713.txt"
+ ],
+ "beir_cqadupstack_unix_90073": [
+  "c6/114500.txt"
+ ],
+ "beir_cqadupstack_unix_90198": [
+  "9f/89516.txt"
+ ],
+ "beir_cqadupstack_unix_90206": [
+  "29/130682.txt"
+ ],
+ "beir_cqadupstack_unix_90244": [
+  "28/136701.txt",
+  "6b/30370.txt"
+ ],
+ "beir_cqadupstack_unix_90294": [
+  "7c/147224.txt"
+ ],
+ "beir_cqadupstack_unix_90299": [
+  "0b/16387.txt"
+ ],
+ "beir_cqadupstack_unix_9053": [
+  "4c/9054.txt"
+ ],
+ "beir_cqadupstack_unix_90772": [
+  "9d/91109.txt"
+ ],
+ "beir_cqadupstack_unix_90838": [
+  "9d/86797.txt"
+ ],
+ "beir_cqadupstack_unix_90853": [
+  "12/109125.txt",
+  "ee/102083.txt"
+ ],
+ "beir_cqadupstack_unix_90883": [
+  "8a/93425.txt"
+ ],
+ "beir_cqadupstack_unix_91060": [
+  "b2/123440.txt"
+ ],
+ "beir_cqadupstack_unix_9107": [
+  "c0/75296.txt"
+ ],
+ "beir_cqadupstack_unix_9123": [
+  "2b/48951.txt",
+  "b8/125385.txt",
+  "bb/127946.txt"
+ ],
+ "beir_cqadupstack_unix_9125": [
+  "32/24702.txt"
+ ],
+ "beir_cqadupstack_unix_91343": [
+  "3f/29697.txt"
+ ],
+ "beir_cqadupstack_unix_91576": [
+  "6f/1926.txt"
+ ],
+ "beir_cqadupstack_unix_91976": [
+  "51/150754.txt",
+  "7a/10408.txt"
+ ],
+ "beir_cqadupstack_unix_92150": [
+  "13/36310.txt"
+ ],
+ "beir_cqadupstack_unix_92172": [
+  "94/1785.txt",
+  "9f/1003.txt"
+ ],
+ "beir_cqadupstack_unix_92503": [
+  "d0/75757.txt"
+ ],
+ "beir_cqadupstack_unix_92643": [
+  "4e/88824.txt",
+  "ed/151999.txt"
+ ],
+ "beir_cqadupstack_unix_92653": [
+  "f8/45950.txt"
+ ],
+ "beir_cqadupstack_unix_92689": [
+  "88/92524.txt"
+ ],
+ "beir_cqadupstack_unix_92710": [
+  "11/68247.txt",
+  "16/118012.txt",
+  "1d/155320.txt",
+  "36/62288.txt",
+  "3e/70642.txt",
+  "4f/21675.txt",
+  "52/110569.txt",
+  "6a/3773.txt",
+  "7b/109787.txt",
+  "9a/29060.txt",
+  "a5/27559.txt",
+  "d1/50006.txt"
+ ],
+ "beir_cqadupstack_unix_92809": [
+  "25/3586.txt",
+  "27/36274.txt",
+  "78/63677.txt",
+  "89/55116.txt",
+  "95/153172.txt",
+  "ab/30983.txt",
+  "ba/18081.txt",
+  "d1/9838.txt"
+ ],
+ "beir_cqadupstack_unix_92876": [
+  "ad/118494.txt"
+ ],
+ "beir_cqadupstack_unix_92880": [
+  "3a/88590.txt"
+ ],
+ "beir_cqadupstack_unix_92920": [
+  "3c/95880.txt"
+ ],
+ "beir_cqadupstack_unix_93012": [
+  "a9/92915.txt"
+ ],
+ "beir_cqadupstack_unix_93117": [
+  "23/93120.txt"
+ ],
+ "beir_cqadupstack_unix_93209": [
+  "77/33502.txt"
+ ],
+ "beir_cqadupstack_unix_93602": [
+  "56/111657.txt",
+  "67/48322.txt"
+ ],
+ "beir_cqadupstack_unix_9361": [
+  "0b/10323.txt"
+ ],
+ "beir_cqadupstack_unix_93657": [
+  "a7/90027.txt"
+ ],
+ "beir_cqadupstack_unix_93686": [
+  "03/87403.txt",
+  "76/86363.txt",
+  "c9/93639.txt"
+ ],
+ "beir_cqadupstack_unix_94247": [
+  "7c/19793.txt",
+  "94/5621.txt"
+ ],
+ "beir_cqadupstack_unix_94270": [
+  "7f/94251.txt"
+ ],
+ "beir_cqadupstack_unix_94297": [
+  "10/8750.txt"
+ ],
+ "beir_cqadupstack_unix_94345": [
+  "66/36949.txt"
+ ],
+ "beir_cqadupstack_unix_94517": [
+  "11/92081.txt"
+ ],
+ "beir_cqadupstack_unix_94775": [
+  "e1/132368.txt"
+ ],
+ "beir_cqadupstack_unix_94780": [
+  "f4/4495.txt"
+ ],
+ "beir_cqadupstack_unix_94837": [
+  "fb/73359.txt"
+ ],
+ "beir_cqadupstack_unix_9496": [
+  "05/81075.txt",
+  "78/110402.txt"
+ ],
+ "beir_cqadupstack_unix_954": [
+  "db/116629.txt"
+ ],
+ "beir_cqadupstack_unix_9605": [
+  "b3/153641.txt"
+ ],
+ "beir_cqadupstack_unix_96131": [
+  "b4/82357.txt"
+ ],
+ "beir_cqadupstack_unix_96343": [
+  "0b/61658.txt",
+  "10/144335.txt",
+  "1e/6387.txt",
+  "30/115772.txt",
+  "57/149533.txt",
+  "5d/96324.txt",
+  "6d/91271.txt",
+  "74/107088.txt",
+  "ce/96418.txt",
+  "d4/146466.txt",
+  "d5/49746.txt",
+  "ee/75126.txt",
+  "ef/55722.txt"
+ ],
+ "beir_cqadupstack_unix_96348": [
+  "45/7441.txt"
+ ],
+ "beir_cqadupstack_unix_96484": [
+  "29/96488.txt"
+ ],
+ "beir_cqadupstack_unix_96526": [
+  "ad/16011.txt"
+ ],
+ "beir_cqadupstack_unix_96579": [
+  "1f/7574.txt"
+ ],
+ "beir_cqadupstack_unix_96698": [
+  "4f/99221.txt"
+ ],
+ "beir_cqadupstack_unix_96700": [
+  "e5/129264.txt",
+  "f8/101089.txt"
+ ],
+ "beir_cqadupstack_unix_96712": [
+  "c8/69112.txt"
+ ],
+ "beir_cqadupstack_unix_96728": [
+  "de/96410.txt"
+ ],
+ "beir_cqadupstack_unix_96868": [
+  "cd/88878.txt"
+ ],
+ "beir_cqadupstack_unix_96938": [
+  "26/92199.txt"
+ ],
+ "beir_cqadupstack_unix_96957": [
+  "1c/52906.txt",
+  "29/74685.txt"
+ ],
+ "beir_cqadupstack_unix_96965": [
+  "74/83984.txt"
+ ],
+ "beir_cqadupstack_unix_97105": [
+  "41/19353.txt"
+ ],
+ "beir_cqadupstack_unix_97157": [
+  "36/150175.txt"
+ ],
+ "beir_cqadupstack_unix_97223": [
+  "fe/97233.txt"
+ ],
+ "beir_cqadupstack_unix_97446": [
+  "07/56640.txt",
+  "35/10241.txt",
+  "3e/48725.txt",
+  "79/147619.txt",
+  "9b/36261.txt"
+ ],
+ "beir_cqadupstack_unix_97572": [
+  "f9/89111.txt"
+ ],
+ "beir_cqadupstack_unix_97715": [
+  "65/15014.txt"
+ ],
+ "beir_cqadupstack_unix_97735": [
+  "78/97796.txt"
+ ],
+ "beir_cqadupstack_unix_97876": [
+  "c2/97886.txt"
+ ],
+ "beir_cqadupstack_unix_98029": [
+  "4b/98036.txt"
+ ],
+ "beir_cqadupstack_unix_98103": [
+  "a5/22394.txt"
+ ],
+ "beir_cqadupstack_unix_98231": [
+  "a5/47710.txt"
+ ],
+ "beir_cqadupstack_unix_98353": [
+  "57/16084.txt"
+ ],
+ "beir_cqadupstack_unix_98527": [
+  "ab/98524.txt"
+ ],
+ "beir_cqadupstack_unix_98693": [
+  "aa/71379.txt"
+ ],
+ "beir_cqadupstack_unix_98697": [
+  "39/147033.txt",
+  "58/91642.txt"
+ ],
+ "beir_cqadupstack_unix_98820": [
+  "1f/88240.txt"
+ ],
+ "beir_cqadupstack_unix_98868": [
+  "06/16375.txt",
+  "65/80094.txt",
+  "c6/64759.txt"
+ ],
+ "beir_cqadupstack_unix_98993": [
+  "8f/87560.txt"
+ ],
+ "beir_cqadupstack_unix_99004": [
+  "3e/55490.txt"
+ ],
+ "beir_cqadupstack_unix_99129": [
+  "55/99123.txt",
+  "ee/99179.txt"
+ ],
+ "beir_cqadupstack_unix_99243": [
+  "bf/136455.txt"
+ ],
+ "beir_cqadupstack_unix_9926": [
+  "73/1542.txt"
+ ],
+ "beir_cqadupstack_unix_99325": [
+  "74/25334.txt",
+  "a2/1288.txt",
+  "a4/6155.txt",
+  "ca/29939.txt"
+ ],
+ "beir_cqadupstack_unix_9971": [
+  "85/59456.txt",
+  "e2/65782.txt"
+ ],
+ "beir_cqadupstack_unix_9997": [
+  "ef/17601.txt"
+ ]
+}

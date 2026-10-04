@@ -1,0 +1,19 @@
+{
+ "source": "BEIR cqadupstack/gaming (UKP mirror zip; corpus.jsonl, queries.jsonl, qrels/test.tsv)",
+ "corpus_root": "F:\\Projects\\beir\\beir_cqadupstack_gaming\\corpus",
+ "docs": 45301,
+ "docs_under_min_bytes": 2,
+ "docs_over_max_bytes": 0,
+ "path_collisions": 0,
+ "n_needles": 1595,
+ "qrels_positive_total": 2263,
+ "gold_per_needle_max": 30,
+ "graded": false,
+ "queries_that_are_corpus_docs": 0,
+ "drops": {
+  "no_positive_qrel": 0,
+  "gold_absent_from_corpus": 0,
+  "query_text_missing": 0
+ },
+ "drop_names": {}
+}

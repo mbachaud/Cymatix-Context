@@ -19,6 +19,10 @@ unset (shipped defaults, daemon off — BASELINES exception (d)).
 Usage:
   python -P benchmarks/dogfood/sweeps/run_beir_round1.py
   python -P benchmarks/dogfood/sweeps/run_beir_round1.py --tags beir_scifact
+  python -P benchmarks/dogfood/sweeps/run_beir_round1.py --tags beir_quora,beir_trec_covid
+
+Receipts and the run-log folder carry today's date unless BEIR_RUN_STAMP is
+set (round 1 used 2026-10-03).
 """
 from __future__ import annotations
 
@@ -32,8 +36,10 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-STAMP = "2026-10-03"
-RUN_DIR = Path(r"F:\tmp\beir_round1_2026-10-03")
+# Receipt date stamp and run-log folder. Defaults to today; set
+# BEIR_RUN_STAMP=2026-10-03 to resume or re-score the round-1 receipts.
+STAMP = os.environ.get("BEIR_RUN_STAMP") or time.strftime("%Y-%m-%d")
+RUN_DIR = Path(rf"F:\tmp\beir_round1_{STAMP}")
 COLD_GATE_S = 3600
 RUN_TIMEOUT_S = 12 * 3600
 RANK_DUMP = 200
@@ -123,7 +129,9 @@ def build(tag: str, p: dict) -> bool:
     if not p["resolved"].exists():
         cmd = [sys.executable, "-P", str(ROOT / "scripts" / "resolve_bench_needles.py"),
                "--tag", tag, "--db", str(p["db"]), "--bench-dir", str(p["bench"]),
-               "--corpus-root", str(p["corpus"])]
+               "--corpus-root", str(p["corpus"]),
+               # beir_* profiles set min_file_bytes = 1 (build_fixture_matrix)
+               "--min-file-bytes", "1"]
         if run(f"resolve_{tag}", cmd) != 0:
             return False
     return True
