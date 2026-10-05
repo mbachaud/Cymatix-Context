@@ -46,7 +46,25 @@ LEVELS = {
     "classifier_class": ["default", "factual", "multi_hop", "procedural", "arithmetic"],
     "health_status": ["sparse", "aligned", "denatured", "abstain"],
 }
-FEATURE_SETS = ("shipped_like", "scale_free", "all_served")
+FEATURE_SETS = ("shipped_like", "scale_free", "all_served", "agreement", "all_with_agreement")
+# Dense-free agreement + coverage signals (lane_signals.py), recorded by the
+# replay under row["lane_signals"]. Each enters as value + "<name>_missing"
+# indicator so an unmeasurable signal is never read as 0 evidence.
+LANE_KEYS = ("lanes_fired", "top1_lanes", "lanes_top3_agree", "frac_lanes_agree",
+             "fts5_top1_is_fused_top1", "query_term_coverage")
+
+
+def _lane_features(row: Mapping) -> List[float]:
+    sig = row.get("lane_signals") or {}
+    out = []
+    for key in LANE_KEYS:
+        v = sig.get(key)
+        out += [0.0 if v is None else float(v), 1.0 if v is None else 0.0]
+    return out
+
+
+def _lane_names() -> List[str]:
+    return [n for key in LANE_KEYS for n in (key, f"{key}_missing")]
 
 
 def _f(row: Mapping, key: str) -> float:
@@ -60,10 +78,12 @@ def feature_names(name: str) -> List[str]:
     base = ["log_ratio_top2", "rel_gap", "coordinate_confidence", "log_pool_size"]
     if name == "scale_free":
         return base
-    if name == "all_served":
+    if name in ("all_served", "all_with_agreement"):
         extra = ["top_score", "score_gap", "log1p_delivered_count"]
         onehot = [f"{k}={lv}" for k, levels in LEVELS.items() for lv in levels]
-        return base + extra + onehot
+        return base + extra + onehot + (_lane_names() if name == "all_with_agreement" else [])
+    if name == "agreement":
+        return base + _lane_names()
     raise ValueError(name)
 
 
@@ -76,10 +96,12 @@ def feature_vector(row: Mapping, name: str) -> List[float]:
             _f(row, "coordinate_confidence"), math.log(max(_f(row, "pool_size"), 1.0))]
     if name == "scale_free":
         return base
-    if name == "all_served":
+    if name in ("all_served", "all_with_agreement"):
         extra = [top, gap, math.log1p(_f(row, "delivered_count"))]
         onehot = [1.0 if row.get(k) == lv else 0.0 for k, levels in LEVELS.items() for lv in levels]
-        return base + extra + onehot
+        return base + extra + onehot + (_lane_features(row) if name == "all_with_agreement" else [])
+    if name == "agreement":
+        return base + _lane_features(row)
     raise ValueError(name)
 
 

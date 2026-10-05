@@ -50,6 +50,19 @@ def test_categoricals_are_one_hot_over_known_levels():
     assert sum(tiers) == 1.0
 
 
+def test_agreement_features_carry_explicit_missing_flags():
+    row = dict(ROW, lane_signals={"lanes_fired": 3, "top1_lanes": 2, "lanes_top3_agree": 2,
+                                  "frac_lanes_agree": 2 / 3, "fts5_top1_is_fused_top1": True,
+                                  "query_term_coverage": None})
+    names = probe.feature_names("agreement")
+    f = dict(zip(names, probe.feature_vector(row, "agreement")))
+    assert f["frac_lanes_agree"] == pytest.approx(2 / 3) and f["frac_lanes_agree_missing"] == 0.0
+    assert f["fts5_top1_is_fused_top1"] == 1.0
+    assert f["query_term_coverage"] == 0.0 and f["query_term_coverage_missing"] == 1.0
+    no_sig = dict(zip(names, probe.feature_vector(dict(ROW), "agreement")))
+    assert no_sig["lanes_fired_missing"] == 1.0
+
+
 def test_labels():
     assert probe.label(ROW, "rank1") == 1
     assert probe.label(dict(ROW, rank_of_first_gold=3), "rank1") == 0

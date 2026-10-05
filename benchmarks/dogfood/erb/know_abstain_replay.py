@@ -84,6 +84,11 @@ from ablation_ladder import (  # noqa: E402  (path-inserted sibling module)
     set_dotted,
 )
 
+_KNOW_DIR = _HERE.parent / "know"
+if str(_KNOW_DIR) not in sys.path:
+    sys.path.insert(0, str(_KNOW_DIR))
+from lane_signals import lane_signals as _lane_signals  # noqa: E402  (#482 sibling module)
+
 # ── Arm table ────────────────────────────────────────────────────────────
 # Dotted-knob overrides applied to a FRESH load_config() per arm. Empty =
 # shipped config untouched.
@@ -180,7 +185,7 @@ def run_arm(
         calibration_from_config,
         compute_confidence,
     )
-    from cymatix_context.scoring.know_decision import _agree_from_tier_contributions
+    from cymatix_context.scoring.know_decision import _agree_or_unknown
     from cymatix_context.server.helpers import _compute_know_or_miss_block
 
     cfg = load_config(config_path) if config_path else load_config()
@@ -306,7 +311,8 @@ def run_arm(
                 tier_contrib = getattr(window, "tier_contributions", None)
                 if tier_contrib is None:
                     tier_contrib = getattr(manager.genome, "last_tier_contributions", {}) or {}
-                lex_agree = _agree_from_tier_contributions(tier_contrib, k=3)
+                # Mirrors the served route (#482): None when no dense lane ran.
+                lex_agree = _agree_or_unknown(tier_contrib, k=3)
                 genes_proxy: List[Any] = []
                 if delivered:
                     try:
@@ -325,18 +331,35 @@ def run_arm(
                                 genes_proxy.append(_P(gid, r["source_id"]))
                     except Exception:  # noqa: BLE001
                         genes_proxy = []
-                coord_conf = _coordinate_confidence(needle["query"], genes_proxy) if genes_proxy else 0.0
+                coord_conf = _coordinate_confidence(needle["query"], genes_proxy) if genes_proxy else None
                 freshness_min = getattr(window.context_health, "freshness_min", None)
+                # #482: None inputs pass through as "unknown" (compute_confidence
+                # accepts them); coercing with bool()/float() would turn
+                # unknown back into negative evidence, or raise on None.
                 confidence_raw = float(compute_confidence(
                     top_score=top_score,
                     score_gap=score_gap,
-                    lexical_dense_agree=bool(lex_agree),
-                    coordinate_confidence=float(coord_conf),
+                    lexical_dense_agree=lex_agree,
+                    coordinate_confidence=coord_conf,
                     calibration=cal,
                     freshness_min=freshness_min,
                 ))
             except Exception as exc:  # noqa: BLE001
                 errors.append(f"{nm}: confidence_raw failed: {type(exc).__name__}: {exc}")
+
+            # #482: dense-free agreement + coverage signals (benchmarks/
+            # dogfood/know/lane_signals.py) for the know/miss feature probe.
+            lane_sig = None
+            try:
+                fused = [g for g, _ in sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))]
+                top1_text = None
+                if fused:
+                    hit = manager.genome.read_conn.execute(  # property: per-thread reader
+                        "SELECT content FROM genes WHERE gene_id = ?", (fused[0],)).fetchone()
+                    top1_text = hit[0] if hit and isinstance(hit[0], str) else None
+                lane_sig = _lane_signals(tier_contrib, fused, query=needle["query"], top1_text=top1_text)
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"{nm}: lane_signals failed: {type(exc).__name__}: {exc}")
 
             ranked_ids = list(getattr(manager.genome, "last_ranked_ids", None) or ())
             classifier_meta = meta.get("classifier") or {}
@@ -372,6 +395,7 @@ def run_arm(
                 # #482: the fifth [know] feature, recorded so a refit sees the
                 # same input compute_confidence used (None = no contribution).
                 "freshness_min": round(float(freshness_min), 6) if freshness_min is not None else None,
+                "lane_signals": lane_sig,
                 "confidence_raw": round(confidence_raw, 6) if confidence_raw is not None else None,
                 "empty_window_gold_rank1": 1 if (dg["delivered_count"] == 0 and first == 1) else 0,
             })

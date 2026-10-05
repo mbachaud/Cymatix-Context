@@ -165,14 +165,19 @@ def do_job(name: str, job: str) -> bool:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--only", default="", help="comma list of bed names")
+    ap.add_argument("--skip", default="", help="comma list of bed names to leave out")
+    ap.add_argument("--jobs", default="", help="comma list of job kinds to run (muted, replay); default all")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
-    names = [n for n in BEDS if not args.only or n in args.only.split(",")]
+    skip = set(filter(None, args.skip.split(",")))
+    kinds = set(filter(None, args.jobs.split(",")))
+    names = [n for n in BEDS if (not args.only or n in args.only.split(",")) and n not in skip]
     missing = [n for n in names for p in (BEDS[n]["db"], BEDS[n]["resolved"], BEDS[n]["gold"])
                if not Path(p).exists()]
     if missing:
         raise SystemExit(f"missing inputs for: {sorted(set(missing))}")
-    queue = [(n, j) for n in names for j in BEDS[n]["jobs"] if not all(p.exists() for p in outputs(n, j))]
+    queue = [(n, j) for n in names for j in BEDS[n]["jobs"]
+             if (not kinds or j in kinds) and not all(p.exists() for p in outputs(n, j))]
     log.info("stamp %s: %d jobs pending over %d beds", STAMP, len(queue), len({n for n, _ in queue}))
     if args.dry_run:
         for n, j in queue:
