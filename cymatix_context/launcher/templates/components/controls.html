@@ -24,7 +24,7 @@
       {% if state.genes %}
         <div class="metric">
           <span class="metric-value">{{ "{:,}".format(state.genes.total) }}</span>
-          <span class="metric-label">genes</span>
+          <span class="metric-label">chunks</span>
         </div>
       {% endif %}
       {% if state.tools %}
@@ -37,17 +37,16 @@
   </div>
 
   <div class="controls-buttons">
-    <button type="button" class="btn btn--start" data-action="start"
-      {% if state.cymatix.running %}disabled{% endif %}>
-      Start
-    </button>
+    {# One primary control; its label names what the next click does. #}
     <button type="button" class="btn btn--restart" data-action="restart"
       {% if not state.cymatix.running %}disabled{% endif %}>
       Restart
     </button>
-    <button type="button" class="btn btn--stop" data-action="stop"
-      {% if not state.cymatix.running %}disabled{% endif %}>
-      Stop
+    <button type="button" class="btn btn--toggle" data-action="toggle" aria-live="polite"
+      data-running="{{ 'true' if state.cymatix.running else 'false' }}"
+      data-pending="{{ 'true' if state.cymatix.start_pending else 'false' }}"
+      {% if state.cymatix.start_pending %}disabled{% endif %}>
+      <span data-toggle-label>{% if state.cymatix.start_pending %}Starting…{% elif state.cymatix.running %}Stop{% else %}Start{% endif %}</span>
     </button>
   </div>
 </section>

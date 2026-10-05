@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 
+from ..cli.cmd_mcp import supported_hosts
 from ..cli.dispatcher import invoked_prog
 import hmac
 import json
@@ -297,6 +298,8 @@ def create_app(
             launcher_port=_launcher_port(request),
             # Desktop app window: compact chrome + the native-actions rail.
             embedded=request.query_params.get("embedded") == "1",
+            # The rail's host list is the CLI's own table, not a template literal.
+            mcp_hosts=supported_hosts(),
         )
         return HTMLResponse(html)
 

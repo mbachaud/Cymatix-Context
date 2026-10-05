@@ -34,7 +34,6 @@ from .graph_summary import GraphSummaryCache
 from .status_cache import GENERIC_NEXT_ACTION, StatusCache, unavailable_snapshot
 from .supervisor import CymatixSupervisor
 from .host_labels import compose_label, host_pretty, vendor_pretty
-from .model_labels import model_pretty
 
 log = logging.getLogger("cymatix.launcher.collector")
 
@@ -54,6 +53,23 @@ def _coerce_value(value: Any) -> str:
     return str(value)
 
 
+# A flag that reads one of these is switched off; enums and numbers
+# (fusion_mode, expression_tokens, ...) are always in effect, so they never fold.
+_INACTIVE_VALUES = frozenset({"off", "false", "disabled", "none"})
+
+# Fallback tooltip text for /admin/components entries that arrive without a
+# description of their own. The server's text wins when it sends one.
+_COMPONENT_GLOSSARY = {
+    "ribosome": "Compressor: shortens retrieved chunks before they are delivered. Off by default.",
+    "sema": "Semantic encoder (MiniLM): similarity boosts at ingest and query time.",
+    "cpu_tagger": "Ingest-time tagger: assigns keywords and entities to each chunk, on CPU.",
+    "splade": "Sparse term-expansion encoder. Opt-in; off by default.",
+    "dense_bgem3": "BGE-M3 dense embeddings for semantic recall. Opt-in; off by default.",
+    "entity_graph": "Entity index: links chunks that mention the same entity.",
+    "headroom": "Headroom proxy integration: routes upstream requests through Headroom.",
+}
+
+
 def _switchboard_summary(settings: List[Dict[str, Any]]) -> str:
     """One-line chip summary for the dashboard: 'rrf · dense:on · rerank:off · ...'."""
     pick = {s["label"]: s["value"] for s in settings}
@@ -70,8 +86,8 @@ def _switchboard_summary(settings: List[Dict[str, Any]]) -> str:
 def _build_tooltip(participant: Dict[str, Any]) -> Dict[str, str]:
     """Compose the tooltip field bundle from a participant dict.
 
-    Each label is either a pretty-mapped value or an explicit placeholder
-    that hints at the cause:
+    Each label is either the value the agent announced, verbatim, or an
+    explicit placeholder that hints at the cause:
       - model_label: "Not announced" when model_id is NULL
       - ide_label:   "Not detected" when ide_detected is NULL
       - agent_kind_label: "Not set"  when agent_kind is NULL
@@ -94,7 +110,7 @@ def _build_tooltip(participant: Dict[str, Any]) -> Dict[str, str]:
     new in this change; there is no prior column to fall back to).
     """
     return {
-        "model_label": model_pretty(participant.get("model_id")) or "Not announced",
+        "model_label": participant.get("model_id") or "Not announced",
         "ide_label": (
             host_pretty(participant.get("ide_detected"))
             or host_pretty(participant.get("mcp_host"))   # PR #26 backward-compat fallback
@@ -835,6 +851,7 @@ class StateCollector:
             for component in all_components
             if self._is_operator_tool(component)
         ]
+        entries = [self._with_description(c) for c in entries]
         if not entries:
             return None
         source_count = int(components.get("count", len(all_components)) or 0)
@@ -845,6 +862,14 @@ class StateCollector:
             "entries": entries,
             "last_activity_s_ago": components.get("last_activity_s_ago"),
         }
+
+    @staticmethod
+    def _with_description(component: Dict[str, Any]) -> Dict[str, Any]:
+        """Tooltip text: the server's own description, else the glossary."""
+        if component.get("description"):
+            return component
+        text = _COMPONENT_GLOSSARY.get(str(component.get("name", "")).strip().lower())
+        return {**component, "description": text} if text else component
 
     def _is_operator_tool(self, component: Dict[str, Any]) -> bool:
         name = str(component.get("name", "")).strip().lower()
@@ -900,6 +925,7 @@ class StateCollector:
                 "value": _coerce_value(value),
                 "group": group,
                 "description": desc,
+                "active": _coerce_value(value) not in _INACTIVE_VALUES,
             }
 
         retrieval = cfg.retrieval

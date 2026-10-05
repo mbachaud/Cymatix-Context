@@ -1,16 +1,13 @@
-"""Pretty-label composition for the dashboard agent badges.
+"""Agent badge labels for the dashboard.
+
+The dashboard carries no vendor, host or model names of its own. Whatever an
+agent announced (``agent_kind``, ``mcp_host``) is shown exactly as received, so
+a tool the code has never heard of appears the first time it connects.
 
 Exercises:
-- known vendors → pretty form
-- known hosts → pretty form (incl. "vscode" → "VS Code")
-- unknown values → echoed verbatim (no silent drop)
+- announced values echo verbatim (no pretty-name map)
+- the "unknown" marker on the host axis counts as missing
 - compose_label with both / vendor-only / host-only / neither
-
-Also absorbs `test_model_labels.py` (see the ``TestModelLabels`` section
-below) — `model_labels.py` is a sibling pure-function module that follows
-"the same pattern as host_labels" (its own docstring's words): known IDs
-map to canonical display form, unknown IDs echo verbatim, None/empty
-returns None.
 """
 import pytest
 
@@ -19,56 +16,41 @@ from cymatix_context.launcher.host_labels import (
     host_pretty,
     compose_label,
 )
-from cymatix_context.launcher.model_labels import model_pretty
 
 
-def test_vendor_pretty_known():
-    assert vendor_pretty("claude-code") == "Claude Code"
-    assert vendor_pretty("claude-desktop") == "Claude Desktop"
-    assert vendor_pretty("codex") == "Codex"
-    assert vendor_pretty("gemini") == "Gemini"
+@pytest.mark.parametrize("value", ["claude-code", "codex", "gemini", "acme-bot"])
+def test_vendor_echoes_verbatim(value):
+    assert vendor_pretty(value) == value
 
 
-def test_vendor_pretty_unknown_echoes_verbatim():
-    assert vendor_pretty("acme-bot") == "acme-bot"
-
-
-def test_vendor_pretty_none():
+def test_vendor_none():
     assert vendor_pretty(None) is None
     assert vendor_pretty("") is None
 
 
-def test_host_pretty_known():
-    assert host_pretty("claude-code") == "Claude Code"
-    assert host_pretty("gemini-cli") == "Gemini CLI"
-    assert host_pretty("antigravity") == "Antigravity"
-    assert host_pretty("cursor") == "Cursor"
-    assert host_pretty("vscode") == "VS Code"
-    assert host_pretty("vscode-continue") == "VS Code (Continue)"
+@pytest.mark.parametrize("value", ["vscode", "antigravity", "gemini-cli", "zed"])
+def test_host_echoes_verbatim(value):
+    assert host_pretty(value) == value
 
 
-def test_host_pretty_unknown_echoes_verbatim():
-    assert host_pretty("zed") == "zed"
-
-
-def test_host_pretty_unknown_marker_returns_none():
+def test_host_unknown_marker_returns_none():
     """The MCP server defaults CYMATIX_MCP_HOST to 'unknown' — we don't
-    want a meaningless 'Unknown' chip cluttering the dashboard."""
+    want a meaningless 'unknown' chip cluttering the dashboard."""
     assert host_pretty("unknown") is None
     assert host_pretty(None) is None
     assert host_pretty("") is None
 
 
 def test_compose_label_both():
-    assert compose_label("claude-code", "vscode") == "Claude Code + VS Code"
+    assert compose_label("claude-code", "vscode") == "claude-code + vscode"
 
 
 def test_compose_label_vendor_only():
-    assert compose_label("claude-code", None) == "Claude Code"
+    assert compose_label("claude-code", None) == "claude-code"
 
 
 def test_compose_label_host_only():
-    assert compose_label(None, "antigravity") == "Antigravity"
+    assert compose_label(None, "antigravity") == "antigravity"
 
 
 def test_compose_label_neither_returns_none():
@@ -77,61 +59,22 @@ def test_compose_label_neither_returns_none():
 
 
 def test_compose_label_dedupes_when_vendor_equals_host():
-    """Common case: CYMATIX_AGENT_KIND=claude-code and CYMATIX_MCP_HOST=claude-code.
-    Render as a single chip, not 'Claude Code + Claude Code'."""
-    assert compose_label("claude-code", "claude-code") == "Claude Code"
+    """Common case: CYMATIX_AGENT_KIND=codex and CYMATIX_MCP_HOST=codex.
+    Render a single chip, not 'codex + codex'."""
+    assert compose_label("codex", "codex") == "codex"
 
 
 def test_compose_label_dedupes_case_insensitive():
-    """Asymmetric mapping: 'codex' vendor maps to 'Codex' via _VENDOR_MAP,
-    but the same string as a host echoes verbatim ('codex'). Case-insensitive
-    dedup collapses them to a single 'Codex' chip rather than 'Codex + codex'.
-    Observed in the wild: Codex's MCP wrapper sends agent_kind=mcp_host=codex."""
-    assert compose_label("codex", "codex") == "Codex"
+    assert compose_label("Codex", "codex") == "Codex"
 
 
 @pytest.mark.parametrize(
     ("agent_kind", "mcp_host", "expected"),
     [
-        ("claude-code", "claude-code", "Claude Code"),
-        ("codex", "codex", "Codex"),
-        ("gemini", "gemini-cli", "Gemini + Gemini CLI"),
-        ("gemini", "antigravity", "Gemini + Antigravity"),
+        ("claude-code", "claude-code", "claude-code"),
+        ("gemini", "gemini-cli", "gemini + gemini-cli"),
+        ("gemini", "antigravity", "gemini + antigravity"),
     ],
 )
-def test_compose_label_for_supported_host_profiles(
-    agent_kind: str, mcp_host: str, expected: str
-):
+def test_compose_label_for_host_profiles(agent_kind, mcp_host, expected):
     assert compose_label(agent_kind, mcp_host) == expected
-
-
-class TestModelLabels:
-    """Absorbed from the deleted `test_model_labels.py`.
-
-    model_labels.py maps known model_id strings reported via cymatix_announce
-    to a canonical display form for the dashboard tooltip; unknown IDs echo
-    verbatim (no fabrication) and None/empty returns None — the same
-    contract host_pretty/vendor_pretty implement above, just for models.
-    """
-
-    def test_known_anthropic_models(self):
-        assert model_pretty("claude-opus-4-7") == "Claude Opus 4.7"
-        assert model_pretty("claude-sonnet-4-6") == "Claude Sonnet 4.6"
-        assert model_pretty("claude-haiku-4-5") == "Claude Haiku 4.5"
-
-    def test_known_anthropic_with_context_qualifier(self):
-        assert model_pretty("claude-opus-4-7-1m") == "Claude Opus 4.7 (1M context)"
-
-    def test_known_openai_models(self):
-        assert model_pretty("gpt-5") == "GPT-5"
-
-    def test_known_google_models(self):
-        assert model_pretty("gemini-2-5-pro") == "Gemini 2.5 Pro"
-
-    def test_unknown_model_id_echoes_verbatim(self):
-        """Don't fabricate a pretty form — echo what the agent reported."""
-        assert model_pretty("acme-experimental-7b") == "acme-experimental-7b"
-
-    def test_none_returns_none(self):
-        assert model_pretty(None) is None
-        assert model_pretty("") is None
