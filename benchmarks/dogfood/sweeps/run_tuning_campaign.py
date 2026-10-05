@@ -99,11 +99,20 @@ logging.basicConfig(
 log = logging.getLogger("tuning_campaign")
 
 
+# 2026-10-05 (#482): know/miss replay under the tag-lanes-muted config on
+# every bed -- the leading default candidate is the config a know refit would
+# ship with. Opt-in via --jobs replay_muted.
+for _bed in BEDS.values():
+    _bed["jobs"] = [*_bed["jobs"], "replay_muted"]
+
+
 def outputs(name: str, job: str) -> list[Path]:
     bed = BEDS[name]
     rec = bed["dir"] / "receipts"
     if job == "replay":
         return [rec / f"know_replay_{name}_{STAMP}.json"]
+    if job == "replay_muted":
+        return [rec / f"know_replay_muted_{name}_{STAMP}.json"]
     ladder = rec / f"ladder_{name}_diag_tag_lanes_muted_seed0_{STAMP}.json"
     if bed["beir"]:
         return [ladder, rec / f"beir_ndcg_{name}_diag_tag_lanes_muted_{STAMP}.json"]
@@ -141,12 +150,14 @@ def do_job(name: str, job: str) -> bool:
     bed = BEDS[name]
     outs = outputs(name, job)
     base = [sys.executable, "-P"]
-    if job == "replay":
+    if job in ("replay", "replay_muted"):
+        # Arm postflip_default applies no overrides, so --config IS the arm.
+        config = SHIPPED if job == "replay" else MUTED
         cmd = base + [str(REPLAY), "--genome", bed["db"], "--resolved", str(bed["resolved"]),
                       "--gold", str(bed["gold"]), "--limit", "0", "--k", "12",
-                      "--arms", "postflip_default", "--config", str(SHIPPED),
+                      "--arms", "postflip_default", "--config", str(config),
                       "--stamp", STAMP, "--out", str(outs[0])]
-        return run(f"replay_{name}", cmd) == 0 and outs[0].exists()
+        return run(f"{job}_{name}", cmd) == 0 and outs[0].exists()
     if not outs[0].exists():
         cmd = base + [str(LADDER), "--genome", bed["db"], "--resolved", str(bed["resolved"]),
                       "--gold", str(bed["gold"]), "--limit", "0", "--k", "12", "--arms", "baseline",
