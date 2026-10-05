@@ -404,6 +404,16 @@
       handleStoreAction(action, actionButton);
       return;
     }
+    if (action === "obs-enable" || action === "obs-disable") {
+      // Enabling starts the sidecar, then restarts the backend so it exports.
+      if (action === "obs-disable" && !window.confirm(
+          "Stop observability?\n\nCymatix will restart so it stops exporting.")) {
+        return;
+      }
+      postGenome("/api/control/observability/" + action.slice("obs-".length),
+        {}, actionButton);
+      return;
+    }
     if (action === "genome-select") {
       const path = actionButton.dataset.genomePath;
       if (!path) return;

@@ -612,6 +612,7 @@ EXPECTED_ROUTES = {
     "/api/control/bench/start",
     "/api/control/bench/stop",
     "/api/control/lanes/{name}/{action}",
+    "/api/control/observability/{action}",
     "/api/control/restart",
     "/api/control/start",
     "/api/control/stop",

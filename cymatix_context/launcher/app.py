@@ -66,6 +66,7 @@ DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/cymatix-overview/cymatix-overview
 DEFAULT_PROMETHEUS_URL = "http://127.0.0.1:9090/graph"
 
 if TYPE_CHECKING:
+    from .observability_control import ObservabilityControl
     from .observability_supervisor import ObservabilitySupervisor
 
 LAUNCHER_DIR = Path(__file__).resolve().parent
@@ -96,6 +97,7 @@ def create_app(
     collector: StateCollector,
     observability: Optional["ObservabilitySupervisor"] = None,
     observability_install_pending: bool = False,
+    observability_control: Optional["ObservabilityControl"] = None,
     grafana_url: str = DEFAULT_GRAFANA_URL,
     prometheus_url: str = DEFAULT_PROMETHEUS_URL,
     bench_supervisor: Optional[CymatixSupervisor] = None,
@@ -187,17 +189,26 @@ def create_app(
         state — service health from the supervisor plus the telemetry
         links the Monitoring tab renders. None when the operator opted
         out via CYMATIX_OBSERVABILITY=0 (panel hidden entirely)."""
-        if observability is None and not observability_install_pending:
+        control = observability_control.snapshot() if observability_control else None
+        if control is not None and control["status"] == "unavailable":
+            return None
+        if control is None and observability is None and not observability_install_pending:
             return None
         statuses = (
             observability.all_statuses() if observability is not None else {}
         )
+        services = (
+            control["services"] if control is not None
+            else [{"name": name, "status": status}
+                  for name, status in sorted(statuses.items())]
+        )
         return {
-            "install_pending": observability_install_pending,
-            "services": [
-                {"name": name, "status": status}
-                for name, status in sorted(statuses.items())
-            ],
+            "install_pending": (control["status"] == "not_installed")
+            if control is not None else observability_install_pending,
+            # Present only when the dashboard itself can start/stop the stack
+            # (the desktop app's headless launcher).
+            "control": control,
+            "services": services,
             "links": {
                 "grafana": grafana_url,
                 "grafana_base": _grafana_base,
@@ -660,6 +671,29 @@ def create_app(
         except SupervisorError as exc:
             return JSONResponse({"error": str(exc)}, status_code=500)
 
+    @app.post("/api/control/observability/{action}")
+    def api_observability_control(action: str):
+        """Enable or stop the observability sidecar from the dashboard."""
+        from .observability_control import NotInstalled
+        if observability_control is None or action not in ("enable", "disable"):
+            return JSONResponse({"ok": False, "error": "unknown action"}, status_code=404)
+        if action == "disable":
+            observability_control.disable()
+        else:
+            try:
+                observability_control.enable()
+            except NotInstalled as exc:
+                return JSONResponse(
+                    {"ok": False, "status": str(exc),
+                     "error": "The observability sidecar is not installed on this "
+                              "machine. Run scripts/install-native-observability.ps1."},
+                    status_code=409,
+                )
+        return JSONResponse(
+            {"ok": True, "status": observability_control.snapshot()["status"]},
+            status_code=202,
+        )
+
     @app.post("/api/control/restart")
     def api_control_restart():
         try:
@@ -707,6 +741,8 @@ def create_app(
             except Exception:
                 log.warning("shutdown: stopping lane %s failed", name, exc_info=True)
                 left_running.append(name)
+        if observability_control is not None:
+            observability_control.shutdown()
         server = getattr(app.state, "uvicorn_server", None)
         if server is not None:
             server.should_exit = True
@@ -1433,6 +1469,28 @@ def main(argv: Optional[list] = None) -> int:
         # into the stack we just started. Explicit user env wins.
         _start_observability_stack(observability_sup)
 
+    # The desktop app's headless launcher does not start the sidecar at boot
+    # (the tray does); its dashboard gets an Enable button instead.
+    observability_control = None
+    if args.headless and not args.tray:
+        from .observability_control import ObservabilityControl
+
+        def _restart_backend() -> None:
+            if supervisor.is_running():
+                supervisor.restart(reason="observability toggled (dashboard)")
+
+        def _build():
+            sup, _pending = _maybe_build_observability()
+            return sup
+
+        observability_control = ObservabilityControl(
+            build=_build,
+            start=_start_observability_stack,
+            restart_backend=_restart_backend,
+            is_installed=_observability_install_complete,
+            is_opted_out=_should_skip_observability,
+        )
+
     # Adopt or start cymatix before the UI comes up.
     if needs_db_selection:
         log.info(
@@ -1481,6 +1539,7 @@ def main(argv: Optional[list] = None) -> int:
         needs_db_selection=needs_db_selection,
         lanes=lane_runtimes,
         primary_lane=primary_lane,
+        observability_control=observability_control,
         token=headless_token,
         ready_info=(
             {"host": args.host, "port": headless_sock.getsockname()[1]}

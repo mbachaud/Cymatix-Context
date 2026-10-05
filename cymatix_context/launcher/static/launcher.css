@@ -1377,6 +1377,14 @@ body.rail-collapsed .desktop-rail__body {
   margin-top: 0.6rem;
 }
 
+.obs-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 .db-create__input {
   flex: 1;
   font: inherit;
