@@ -114,6 +114,16 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
 
     cymatix = CymatixContextManager(config)
 
+    # Per-store settings (sidecar next to the .db): Freeze opens the store
+    # read-only and keeps sync off; a sync block overrides the global [sync]
+    # for this store only. No sidecar = nothing changes.
+    from ..store_settings import apply_to_sync_config, load_settings
+    _store_settings = load_settings(config.genome.path)
+    if _store_settings.frozen:
+        cymatix.genome.read_only = True
+        log.info("Store %s is frozen: read-only, sync off", config.genome.path)
+    config.sync = apply_to_sync_config(config.sync, _store_settings)
+
     # W2-B: emit the compressor info-metric for dashboard visibility.
     try:
         from ..telemetry import ribosome_info_gauge

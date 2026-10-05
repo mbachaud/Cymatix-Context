@@ -45,7 +45,14 @@
 
   <ul class="panel-list database-list">
     {% for entry in state.database.entries %}
-      <li class="panel-list__item database-entry {% if entry.is_active %}database-entry--active{% endif %}">
+      {% set st = entry.settings or {} %}
+      {% set frozen = st.get("frozen") %}
+      {% set sync = entry.sync or {} %}
+      <li class="panel-list__item database-entry {% if entry.is_active %}database-entry--active{% endif %}{% if frozen %} database-entry--frozen{% endif %}"
+          data-store-path="{{ entry.path }}" data-store-frozen="{{ 'true' if frozen else 'false' }}"
+          data-store-sync="{{ 'true' if sync.get('enabled') else 'false' }}"
+          data-store-active="{{ 'true' if entry.is_active else 'false' }}"
+          data-store-roots="{{ (st.get('sync_roots') if sync.get('source') == 'store' else sync.get('roots', [])) | tojson | forceescape }}">
         <div class="database-entry__header">
           <span class="database-dot {% if entry.is_active %}database-dot--on{% endif %}" aria-hidden="true"></span>
           <strong class="database-entry__name">{{ entry.name }}</strong>
@@ -55,6 +62,7 @@
             <button class="btn btn--mini" data-action="genome-select"
                     data-genome-path="{{ entry.path }}">Select</button>
           {% endif %}
+          {% if frozen %}<span class="database-entry__tag database-entry__tag--frozen">frozen / read-only</span>{% endif %}
           <span class="muted database-entry__stats">
             {{ "{:,}".format(entry.total_genes) }} documents · {{ entry.size_mb }} MB
           </span>
@@ -77,6 +85,43 @@
         {% else %}
           <p class="muted database-entry__folders-empty">No source folders recorded.</p>
         {% endif %}
+
+        {# Per-store settings, saved in a sidecar file beside the .db. #}
+        <div class="store-settings">
+          <div class="store-settings__row">
+            <button type="button" class="switch" role="switch" data-action="store-sync"
+                    aria-checked="{{ 'true' if sync.get('enabled') else 'false' }}"
+                    data-store-path="{{ entry.path }}" {% if frozen %}disabled{% endif %}>
+              <span class="switch__track"><span class="switch__knob"></span></span>Auto-sync
+            </button>
+            <span class="muted">
+              {% if frozen %}Paused while frozen
+              {% elif sync.get('enabled') %}Watching {{ (sync.get('roots') or [])|length }} folder{{ '' if (sync.get('roots') or [])|length == 1 else 's' }}
+                {% if sync.get('source') == 'global' %}(from cymatix.toml){% endif %}
+              {% elif not entry.is_active %}Saved setting; runs when this store is active
+              {% else %}Off{% endif %}
+            </span>
+            <button type="button" class="switch store-settings__freeze" role="switch" data-action="store-freeze"
+                    aria-checked="{{ 'true' if frozen else 'false' }}" data-store-path="{{ entry.path }}"
+                    title="A frozen store is read-only: ingest is refused and sync is paused.">
+              <span class="switch__track"><span class="switch__knob"></span></span>Freeze
+            </button>
+          </div>
+          <div class="store-settings__folders">
+            {% for root in (sync.get('roots') or []) %}
+              <span class="folder-chip">
+                <span class="path-value">{{ root }}</span>
+                {% if sync.get('source') == 'store' %}
+                  <button type="button" class="folder-chip__remove" data-action="store-remove-folder"
+                          data-store-path="{{ entry.path }}" data-folder="{{ root }}"
+                          aria-label="Stop watching {{ root }}" {% if frozen %}disabled{% endif %}>&#10005;</button>
+                {% endif %}
+              </span>
+            {% endfor %}
+            <button type="button" class="btn btn--mini" data-action="store-add-folder"
+                    data-store-path="{{ entry.path }}" {% if frozen %}disabled{% endif %}>Add parent folder&hellip;</button>
+          </div>
+        </div>
       </li>
     {% else %}
       <li class="panel-list__item muted">No knowledge stores discovered.</li>

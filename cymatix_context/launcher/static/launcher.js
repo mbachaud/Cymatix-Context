@@ -399,6 +399,11 @@
         {}, actionButton);
       return;
     }
+    if (action === "store-sync" || action === "store-freeze" ||
+        action === "store-add-folder" || action === "store-remove-folder") {
+      handleStoreAction(action, actionButton);
+      return;
+    }
     if (action === "genome-select") {
       const path = actionButton.dataset.genomePath;
       if (!path) return;
@@ -431,6 +436,70 @@
         refreshControls();
       }, 750);
     }
+  }
+
+  /* Per-store settings: saved beside the .db by POST /api/genome/settings.
+     Changing the active store restarts the server, so that asks first. */
+  function storeRow(btn) {
+    return btn.closest("[data-store-path]");
+  }
+
+  function storeRoots(row) {
+    try {
+      const roots = JSON.parse(row.dataset.storeRoots || "[]");
+      return Array.isArray(roots) ? roots : [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  async function handleStoreAction(action, btn) {
+    const row = storeRow(btn);
+    if (!row) return;
+    const path = row.dataset.storePath;
+    const isActive = row.dataset.storeActive === "true";
+    const roots = storeRoots(row);
+    let payload = null;
+    let verb = "";
+
+    if (action === "store-freeze") {
+      const freeze = row.dataset.storeFrozen !== "true";
+      payload = { frozen: freeze };
+      verb = freeze ? "Freeze" : "Unfreeze";
+    } else if (action === "store-sync") {
+      const on = row.dataset.storeSync !== "true";
+      // Send the folders too: a store still following cymatix.toml adopts
+      // them, so switching on or off never loses the list.
+      payload = { sync_enabled: on, sync_roots: roots };
+      verb = on ? "Turn on auto-sync for" : "Turn off auto-sync for";
+    } else if (action === "store-remove-folder") {
+      const folder = btn.dataset.folder;
+      payload = { sync_roots: roots.filter((r) => r !== folder) };
+      verb = "Stop watching a folder in";
+    } else if (action === "store-add-folder") {
+      let folder = null;
+      if (window.cymatix && window.cymatix.pickFolder) {
+        try {
+          folder = await window.cymatix.pickFolder();
+        } catch (err) {
+          window.alert("Could not open the folder picker: " + err);
+          return;
+        }
+      } else {
+        folder = window.prompt("Folder to keep in sync (full path):");
+      }
+      if (!folder) return;
+      payload = { sync_enabled: true, sync_roots: roots.concat([folder]) };
+      verb = "Watch a new folder in";
+    }
+    if (!payload) return;
+
+    if (isActive && !window.confirm(
+        verb + " the active knowledge store?\n\nCymatix will restart to apply it.")) {
+      return;
+    }
+    payload.path = path;
+    postGenome("/api/genome/settings", payload, btn);
   }
 
   document.addEventListener("submit", function (evt) {

@@ -1006,10 +1006,31 @@ class StateCollector:
             log.warning("Database panel: discovery failed (%s)", exc, exc_info=True)
             return {"error": str(exc), "entries": []}
 
+        from dataclasses import asdict
+        from ..store_settings import load_settings
+        try:
+            from ..config import load_config
+            global_sync = load_config().sync
+        except Exception:
+            global_sync = None
+
         out_entries = []
         for info in entries:
             row = info.as_dict()
             row["is_active"] = is_active(info)
+            # Per-store sidecar, read fresh each poll (the registry cache
+            # is keyed on the .db file, which the sidecar does not touch).
+            settings = load_settings(info.path)
+            row["settings"] = asdict(settings)
+            # What the store actually runs with: its own sync block wins,
+            # else the global [sync] section.
+            if settings.sync_enabled is not None:
+                row["sync"] = {"enabled": settings.sync_enabled and not settings.frozen,
+                               "roots": settings.sync_roots, "source": "store"}
+            else:
+                row["sync"] = {"enabled": bool(global_sync and global_sync.enabled) and not settings.frozen,
+                               "roots": list(global_sync.roots) if global_sync else [],
+                               "source": "global"}
             out_entries.append(row)
 
         return {

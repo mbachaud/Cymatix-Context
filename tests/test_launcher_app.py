@@ -617,6 +617,7 @@ EXPECTED_ROUTES = {
     "/api/control/stop",
     "/api/genome/create",
     "/api/genome/select",
+    "/api/genome/settings",
     "/api/genomes",
     "/api/lanes",
     "/api/shutdown",

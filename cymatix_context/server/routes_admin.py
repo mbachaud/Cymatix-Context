@@ -1306,7 +1306,9 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                     config, sema_codec=getattr(cymatix, "_sema_codec", None)
                 ),
             )
-            new_store.read_only = read_only
+            # A frozen store stays read-only whatever the caller asked for.
+            from ..store_settings import load_settings as _load_store_settings
+            new_store.read_only = read_only or _load_store_settings(path).frozen
             # Boot applies this post-construction (WS3); mirror it here.
             _apply_symbol_expansion_cap(
                 new_store, config.retrieval.symbol_expansion_cap

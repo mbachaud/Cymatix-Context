@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('cymatix', {
   installMcp: (host, lane) => ipcRenderer.invoke('cymatix:install-mcp', { host, lane }),
   copyDiagnostics: () => ipcRenderer.invoke('cymatix:copy-diagnostics'),
   openLogs: () => ipcRenderer.invoke('cymatix:open-logs'),
+  pickFolder: () => ipcRenderer.invoke('cymatix:pick-folder'),
   getLaunchAtLogin: () => ipcRenderer.invoke('cymatix:get-login'),
   setLaunchAtLogin: (enabled) => ipcRenderer.invoke('cymatix:set-login', Boolean(enabled)),
 });

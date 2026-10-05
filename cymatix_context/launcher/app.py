@@ -485,6 +485,66 @@ def create_app(
             status_code=202,
         )
 
+    @app.post("/api/genome/settings")
+    async def api_genome_settings(request: Request):
+        """Per-store settings (sync folders, Freeze), saved beside the .db.
+
+        Only stores the registry knows about can be written. A change to the
+        active store restarts the server so it opens with the new settings.
+        """
+        from . import genome_registry
+        from ..store_settings import MIN_INTERVAL_S, load_settings, save_settings
+
+        body = await request.json()
+        if not isinstance(body, dict) or not body.get("path"):
+            return JSONResponse({"ok": False, "error": "missing 'path'"}, status_code=400)
+        target = Path(str(body["path"])).resolve()
+        known = {str(i.path).lower() for i in genome_registry.discover_genomes()}
+        if str(target).lower() not in known:
+            return JSONResponse({"ok": False, "error": "unknown knowledge store"}, status_code=404)
+
+        fields = ("frozen", "sync_enabled", "sync_roots", "sync_interval_s")
+        if not any(k in body for k in fields):
+            return JSONResponse({"ok": False, "error": "nothing to change"}, status_code=400)
+        settings = load_settings(target)
+        for key in ("frozen", "sync_enabled"):
+            if key in body:
+                if not isinstance(body[key], bool):
+                    return JSONResponse({"ok": False, "error": f"'{key}' must be true or false"}, status_code=400)
+                setattr(settings, key, body[key])
+        if "sync_roots" in body:
+            roots = body["sync_roots"]
+            if not isinstance(roots, list) or not all(isinstance(r, str) for r in roots):
+                return JSONResponse({"ok": False, "error": "'sync_roots' must be a list of paths"}, status_code=400)
+            resolved_roots: List[str] = []
+            for r in roots:
+                p = Path(r).expanduser().resolve()
+                if not p.is_dir():
+                    return JSONResponse({"ok": False, "error": f"not a folder: {r}"}, status_code=400)
+                if str(p) not in resolved_roots:
+                    resolved_roots.append(str(p))
+            settings.sync_roots = resolved_roots
+        if "sync_interval_s" in body:
+            iv = body["sync_interval_s"]
+            if isinstance(iv, bool) or not isinstance(iv, (int, float)):
+                return JSONResponse({"ok": False, "error": "'sync_interval_s' must be a number"}, status_code=400)
+            settings.sync_interval_s = max(MIN_INTERVAL_S, float(iv))
+        save_settings(target, settings)
+        genome_registry.clear_cache()
+
+        active = str(genome_registry.active_genome_path().resolve()).lower() == str(target).lower()
+        if not (active and supervisor.is_running()):
+            return JSONResponse({"ok": True, "restarting": False})
+
+        def _worker() -> None:
+            try:
+                supervisor.restart(reason=f"store settings changed for {target.name} (dashboard)")
+            except Exception:
+                log.error("Store-settings restart failed (%s)", target, exc_info=True)
+
+        threading.Thread(target=_worker, name="cymatix-store-settings", daemon=True).start()
+        return JSONResponse({"ok": True, "restarting": True}, status_code=202)
+
     @app.post("/api/genome/select")
     async def api_genome_select(request: Request):
         body = await request.json()
