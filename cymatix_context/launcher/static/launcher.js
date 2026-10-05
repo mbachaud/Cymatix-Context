@@ -255,10 +255,9 @@
       }
 
       const startPending = state?.cymatix?.start_pending === true;
-      // A click's "Starting…/Stopping…" holds until the server reaches the
-      // state the click asked for (or the safety deadline passes).
-      if (pendingAction !== null &&
-          (running === (pendingAction === "start") || monotonicMs() > pendingDeadlineMs)) {
+      // A click's "Starting…/Stopping…" holds until its POST resolves (see
+      // sendControl); the deadline is a backstop for a request that never does.
+      if (pendingAction !== null && monotonicMs() > pendingDeadlineMs) {
         pendingAction = null;
       }
       const btnRestart = document.querySelector('[data-action="restart"]');
@@ -276,12 +275,14 @@
     const btn = document.querySelector('[data-action="toggle"]');
     if (!btn) return;
     const label = btn.querySelector("[data-toggle-label]") || btn;
-    const busy = pendingAction !== null || startPending;
+    // startPending only relabels: the supervisor flag is sticky, so it must
+    // never disable the one control that can stop a hung start.
+    const starting = pendingAction === "start" || (running && startPending);
     btn.dataset.running = running ? "true" : "false";
-    btn.dataset.pending = busy ? "true" : "false";
-    btn.disabled = busy;
+    btn.dataset.pending = (pendingAction !== null || starting) ? "true" : "false";
+    btn.disabled = pendingAction !== null;
     if (pendingAction === "stop") label.textContent = "Stopping…";
-    else if (pendingAction === "start" || startPending) label.textContent = "Starting…";
+    else if (starting) label.textContent = "Starting…";
     else label.textContent = running ? "Stop" : "Start";
   }
 
@@ -329,6 +330,7 @@
       pendingAction = null;
       alert(action + " failed: " + err);
     } finally {
+      pendingAction = null;
       setTimeout(() => {
         fetchPanels();
         refreshControls();

@@ -18,12 +18,12 @@ from cymatix_context.launcher.collector import StateCollector
 from tests.test_launcher_dashboard_wiring import FakeSupervisor
 
 
-def _client(state: dict) -> TestClient:
+def _client(state: dict, start_pending: bool = False) -> TestClient:
     collector = MagicMock()
     collector.collect.return_value = state
-    app = create_app(
-        store=SimpleNamespace(), supervisor=FakeSupervisor(), collector=collector,
-    )
+    sup = FakeSupervisor()
+    sup.last_start_pending = start_pending   # the app derives start_pending from this
+    app = create_app(store=SimpleNamespace(), supervisor=sup, collector=collector)
     return TestClient(app)
 
 
@@ -54,11 +54,25 @@ def test_stopped_state_offers_start():
     assert "Start" in toggle and "Stop" not in toggle
 
 
-def test_toggle_script_picks_the_next_action():
+@pytest.mark.parametrize("running", [True, False])
+def test_stale_start_pending_never_disables_the_toggle(running):
+    """last_start_pending is sticky on the supervisor; a dead-end disabled
+    button must be impossible whatever it says."""
+    state = {"cymatix": {"running": running, "pid": 1, "port": 11437}}
+    with _client(state, start_pending=True) as c:
+        html = c.get("/").text
+    tag = html.split('data-action="toggle"', 1)[1].split(">", 1)[0]
+    assert "disabled" not in tag
+    label = html.split("data-toggle-label>", 1)[1].split("</span>", 1)[0]
+    assert label == ("Starting…" if running else "Start")
+
+
+def test_toggle_is_only_disabled_by_its_own_click():
     with _client(RUNNING) as c:
         js = c.get("/static/launcher.js").text
-    assert '"toggle"' in js
-    assert 'data-action="toggle"' in js or "[data-action=\"toggle\"]" in js
+    assert "btn.disabled = pendingAction !== null;" in js
+    # a start click is held until the POST resolves, not until the first poll
+    assert "running === (pendingAction" not in js
 
 
 # ── Chunks wording ──────────────────────────────────────────────────────
@@ -117,6 +131,15 @@ def test_component_rows_carry_a_description_tooltip():
     assert 'title=""' not in html
 
 
+def test_glossary_fills_in_a_missing_description():
+    c = StateCollector(supervisor=MagicMock())
+    filled = c._with_description({"name": "splade", "kind": "encoder"})
+    assert "Opt-in" in filled["description"]
+    assert "description" not in c._with_description({"name": "nope", "kind": "x"})
+    # the server's own text wins
+    assert c._with_description({"name": "splade", "description": "mine"})["description"] == "mine"
+
+
 # ── compact switchboard ─────────────────────────────────────────────────
 
 
@@ -125,8 +148,10 @@ def test_switchboard_marks_off_flags_inactive():
     by = {e["label"]: e for e in s["settings"]}
     assert by["fusion_mode"]["active"] is True          # enums always show
     assert by["expression_tokens"]["active"] is True    # numbers always show
-    for e in s["settings"]:
-        assert e["active"] is (e["value"] not in {"off", "false", "disabled", "none"})
+    assert by["pki_enabled"]["active"] is False         # default-off flag
+    assert by["session_delivery_enabled"]["active"] is True
+    for empty in ("", "—"):
+        assert StateCollector._is_active_value(empty) is False
 
 
 def test_switchboard_template_folds_inactive_settings():

@@ -44,9 +44,10 @@
     </button>
     <button type="button" class="btn btn--toggle" data-action="toggle" aria-live="polite"
       data-running="{{ 'true' if state.cymatix.running else 'false' }}"
-      data-pending="{{ 'true' if state.cymatix.start_pending else 'false' }}"
-      {% if state.cymatix.start_pending %}disabled{% endif %}>
-      <span data-toggle-label>{% if state.cymatix.start_pending %}Starting…{% elif state.cymatix.running %}Stop{% else %}Start{% endif %}</span>
+      data-pending="{{ 'true' if (state.cymatix.running and state.cymatix.start_pending) else 'false' }}">
+      {# Never disabled by start_pending: it is sticky on the supervisor, and a
+         hung start must stay stoppable. While starting, the click is Stop. #}
+      <span data-toggle-label>{% if state.cymatix.running and state.cymatix.start_pending %}Starting…{% elif state.cymatix.running %}Stop{% else %}Start{% endif %}</span>
     </button>
   </div>
 </section>

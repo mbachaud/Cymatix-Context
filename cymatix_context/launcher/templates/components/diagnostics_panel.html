@@ -44,7 +44,7 @@
     {% endif %}
   </dl>
 
-  {% if state.cymatix.paths %}
+  {% if state.cymatix.paths and state.cymatix.paths.cymatix_log %}
     <div class="diagnostics-actions">
       {# Native folder open exists only in the desktop shell (window.cymatix);
          launcher.js adds body.has-bridge when it is present. #}

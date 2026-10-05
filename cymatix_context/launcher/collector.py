@@ -55,7 +55,7 @@ def _coerce_value(value: Any) -> str:
 
 # A flag that reads one of these is switched off; enums and numbers
 # (fusion_mode, expression_tokens, ...) are always in effect, so they never fold.
-_INACTIVE_VALUES = frozenset({"off", "false", "disabled", "none"})
+_INACTIVE_VALUES = frozenset({"off", "false", "disabled", "none", "", "—"})
 
 # Fallback tooltip text for /admin/components entries that arrive without a
 # description of their own. The server's text wins when it sends one.
@@ -864,6 +864,10 @@ class StateCollector:
         }
 
     @staticmethod
+    def _is_active_value(coerced: str) -> bool:
+        return coerced not in _INACTIVE_VALUES
+
+    @staticmethod
     def _with_description(component: Dict[str, Any]) -> Dict[str, Any]:
         """Tooltip text: the server's own description, else the glossary."""
         if component.get("description"):
@@ -925,7 +929,7 @@ class StateCollector:
                 "value": _coerce_value(value),
                 "group": group,
                 "description": desc,
-                "active": _coerce_value(value) not in _INACTIVE_VALUES,
+                "active": StateCollector._is_active_value(_coerce_value(value)),
             }
 
         retrieval = cfg.retrieval
