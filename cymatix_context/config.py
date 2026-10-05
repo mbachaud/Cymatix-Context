@@ -1247,6 +1247,12 @@ _KNOW_DEFAULT_S_REF: float = 1.0
 _KNOW_DEFAULT_G_REF: float = 0.5
 _KNOW_DEFAULT_EMIT_FLOOR: float = 0.55
 _KNOW_DEFAULT_STALE_AFTER_DAYS: int = 30
+# Feature count of the [know] logistic (betas = intercept + one per feature).
+_KNOW_N_FEATURES: int = len(_KNOW_DEFAULT_BETAS) - 1
+# Input names in beta order (== scoring.know_calibration.FEATURE_NAMES).
+_KNOW_FEATURE_NAMES: tuple = (
+    "top_score", "score_gap", "lexical_dense_agree", "coordinate_confidence", "freshness_min",
+)
 
 
 @dataclass
@@ -1281,6 +1287,10 @@ class KnowConfig:
     # Stage 4 (spec §9, issue #63): age in days after which the /context
     # response flags ``calibration_stale``.
     stale_after_days: int = _KNOW_DEFAULT_STALE_AFTER_DAYS
+    # Issue #482: per-feature value (b1..b5 order, feature space) used when an input is unavailable — no dense lane, nothing delivered, freshness unknown; normally the calibration-set means. None = legacy: unavailable inputs contribute nothing.
+    neutral: Optional[List[float]] = None
+    # Issue #482: the inputs available when the betas were fit (names from top_score, score_gap, lexical_dense_agree, coordinate_confidence, freshness_min). Inputs outside it, or that the enabled lanes cannot produce, count as unavailable, and /context warns calibration_profile_mismatch. None = fit profile not recorded.
+    fitted_inputs: Optional[List[str]] = None
 
 
 @dataclass
@@ -2251,7 +2261,35 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
                 log.warning("[know] %s is malformed; using default %s", key, default)
                 return default
 
+        neutral: Optional[List[float]] = None
+        if k.get("neutral") is not None:
+            try:
+                parsed = [float(v) for v in k["neutral"]]
+            except (TypeError, ValueError):
+                parsed = []
+            if len(parsed) == _KNOW_N_FEATURES:
+                neutral = parsed
+            else:
+                log.warning(
+                    "[know] neutral must be a list of %d numbers; ignoring it "
+                    "(unavailable inputs contribute nothing)", _KNOW_N_FEATURES,
+                )
+
+        fitted_inputs: Optional[List[str]] = None
+        if k.get("fitted_inputs") is not None:
+            raw_fit = k["fitted_inputs"]
+            names = [str(v) for v in raw_fit] if isinstance(raw_fit, list) else []
+            if names and set(names) <= set(_KNOW_FEATURE_NAMES):
+                fitted_inputs = names
+            else:
+                log.warning(
+                    "[know] fitted_inputs must list names from %s; ignoring it "
+                    "(fit profile not recorded)", ", ".join(_KNOW_FEATURE_NAMES),
+                )
+
         cfg.know = KnowConfig(
+            neutral=neutral,
+            fitted_inputs=fitted_inputs,
             emit_floor=_know_float("emit_floor", _KNOW_DEFAULT_EMIT_FLOOR),
             s_ref=_know_float("s_ref", _KNOW_DEFAULT_S_REF),
             g_ref=_know_float("g_ref", _KNOW_DEFAULT_G_REF),

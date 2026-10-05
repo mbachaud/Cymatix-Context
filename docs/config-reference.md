@@ -1090,6 +1090,8 @@ produces the bench JSONL.
 | `calibrated_at` | `Optional[str]` | `None` | Written by scripts/calibrate_know_confidence.py; None = uncalibrated. |
 | `calibrated_on_n` | `Optional[int]` | `None` |  |
 | `stale_after_days` | `int` | `30` | Stage 4 (spec §9, issue #63): age in days after which the /context response flags ``calibration_stale``. |
+| `neutral` | `Optional[List[float]]` | `None` | Issue #482: per-feature value (b1..b5 order, feature space) used when an input is unavailable — no dense lane, nothing delivered, freshness unknown; normally the calibration-set means. None = legacy: unavailable inputs contribute nothing. |
+| `fitted_inputs` | `Optional[List[str]]` | `None` | Issue #482: the inputs available when the betas were fit (names from top_score, score_gap, lexical_dense_agree, coordinate_confidence, freshness_min). Inputs outside it, or that the enabled lanes cannot produce, count as unavailable, and /context warns calibration_profile_mismatch. None = fit profile not recorded. |
 <!-- END GENERATED -->
 
 `stale_after_days` (Stage 7, spec §9 / issue #63) is the age in days

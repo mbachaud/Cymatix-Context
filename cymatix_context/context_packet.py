@@ -761,9 +761,9 @@ def _attach_know_or_miss(
     (treated as empty) so direct callers / older tests keep working —
     they just get the no-agreement-signal direction, which is safe.
     """
-    from .scoring.know_calibration import load_calibration_from_toml
+    from .scoring.know_calibration import load_calibration_and_inputs
     from .scoring.know_decision import (
-        _agree_from_tier_contributions,
+        _agree_or_unknown,
         decide_know_or_miss,
     )
     from .schemas import ContextHealth, ContextWindow, KnowBlock, MissBlock
@@ -844,9 +844,12 @@ def _attach_know_or_miss(
     # caller passes nothing (older direct callers / tests), we fall back
     # to an empty dict — the safe no-agreement-signal direction.
     tier_contrib = tier_contributions or {}
-    lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)
+    # #482: None (unknown) when no dense lane ran, not False.
+    lex_dense_agree = _agree_or_unknown(tier_contrib, k=3)
 
-    cal = load_calibration_from_toml()
+    # #482: one config read gives the calibration and the inputs the enabled
+    # lanes can produce, so a lane toggle needs no calibration edit.
+    cal, live_inputs = load_calibration_and_inputs()
     top_gene = genes[0] if genes else None
     block = decide_know_or_miss(
         window=shim_window,
@@ -859,6 +862,7 @@ def _attach_know_or_miss(
         ratio=ratio,
         calibration=cal,
         freshness_status="stale" if _all_needs_refresh else None,
+        live_inputs=live_inputs,
     )
     if isinstance(block, KnowBlock) and _items and not _has_verified:
         # Unverified-fresh evidence only (stale_risk / needs_refresh with
