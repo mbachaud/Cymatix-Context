@@ -12,6 +12,26 @@
   exactly what the agent announced: the vendor, host and model name maps are
   gone (`model_labels.py` removed), and the Connect-a-chat host list comes from
   the CLI's install table instead of a template literal.
+- **feat(stores): per-store settings and Freeze.** Each knowledge store gets an
+  optional sidecar `<store>.db.cymatix.json` holding its auto-sync folders and
+  a Freeze flag (`cymatix_context/store_settings.py`). Freeze means read-only:
+  the store opens `read_only`, its sync is off, and `/ingest` and
+  `/consolidate` answer 409. A store's own sync block overrides the global
+  `[sync]` enabled/roots/interval for that store only; with no sidecar nothing
+  changes. The dashboard's Database panel shows Auto-sync, Freeze and folder
+  chips per store (`POST /api/genome/settings`, restarts only when the active
+  store changed), and the desktop app gets a native folder picker.
+- **feat(launcher): Delivery panel.** The assemble ring entry carries
+  `delivered_chunks` and `delivered_chars`; the dashboard shows chunks and
+  characters per packet and packet latency (retrieval + assembly, last / avg /
+  p95) in place of the Tokens panel, which keeps lifetime tokens as one line.
+- **feat(launcher): Enable/Stop observability in the desktop app.** The
+  headless launcher never started the OTel sidecar; the Monitoring panel now
+  has an Enable/Stop button (stack first, then the backend restarts to export;
+  a failed start never restarts the backend).
+- **fix(launcher): the 2 s refresh no longer drops keyboard focus.** Only
+  panels whose HTML changed are replaced, and focus is handed back to a
+  replaced control.
 
 ## 0.11.0 (2026-10-01)
 

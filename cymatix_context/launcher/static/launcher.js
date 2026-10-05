@@ -156,7 +156,9 @@
     const activeTab = panels.dataset.activeTab || "overview";
     const doc = domParser.parseFromString(htmlString, "text/html");
     const newNodes = Array.from(doc.body.childNodes);
-    panels.replaceChildren(...newNodes);
+    const focus = focusKey();
+    patchPanels(newNodes, doc);
+    restoreFocus(focus);
     panels.dataset.activeTab = activeTab;
     panelsRenderedAt = monotonicMs();
     restoreAgentOpenState();
@@ -164,6 +166,44 @@
     restorePipelineDevView();
     restoreSwitchboardOff();
     markObservationAge();
+  }
+
+  /* Replace only the panels whose HTML changed. A whole-block swap every
+     2 s dropped keyboard focus, hover and in-panel scroll even when nothing
+     had changed (measured: ~96 KB / ~1,460 nodes per swap on a loaded
+     store). Falls back to the full swap when the panel list changes shape
+     or the DOM lacks the APIs (the node test harness' stub). */
+  function patchPanels(newNodes, doc) {
+    const next = Array.from((doc.body && doc.body.children) || []);
+    const cur = Array.from(panels.children || []);
+    const canPatch = next.length > 0 && next.length === cur.length &&
+      next.every((n, i) => typeof n.outerHTML === "string" &&
+        typeof cur[i].outerHTML === "string" && typeof cur[i].replaceWith === "function");
+    if (!canPatch) {
+      panels.replaceChildren(...newNodes);
+      return;
+    }
+    next.forEach((n, i) => {
+      if (cur[i].outerHTML !== n.outerHTML) cur[i].replaceWith(n);
+    });
+  }
+
+  /* Which control had focus, so a replaced panel can hand it back. */
+  function focusKey() {
+    const el = document.activeElement;
+    if (!el || !el.dataset || !panels.contains || !panels.contains(el)) return null;
+    return { action: el.dataset.action || "", path: el.dataset.storePath || "",
+      folder: el.dataset.folder || "", tab: el.dataset.tab || "" };
+  }
+
+  function restoreFocus(key) {
+    if (!key || (!key.action && !key.tab)) return;
+    const now = document.activeElement;
+    if (now && now !== document.body && panels.contains(now)) return;
+    const hit = Array.from(panels.querySelectorAll("[data-action]")).find((el) =>
+      (el.dataset.action || "") === key.action && (el.dataset.storePath || "") === key.path &&
+      (el.dataset.folder || "") === key.folder);
+    if (hit && typeof hit.focus === "function") hit.focus();
   }
 
   function restoreSwitchboardOff() {
