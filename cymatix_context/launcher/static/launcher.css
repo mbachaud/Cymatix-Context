@@ -596,7 +596,7 @@ body.rail-collapsed .desktop-rail__body {
 }
 
 .panel--genes,
-.panel--tokens,
+.panel--delivery,
 .panel--diagnostics,
 .panel--agents,
 .panel--all-agents,
@@ -931,7 +931,7 @@ body.rail-collapsed .desktop-rail__body {
 .panels[data-active-tab="agents"] .panel--participants,
 .panels[data-active-tab="agents"] .panel--agents,
 .panels[data-active-tab="genome"] .panel--genes,
-.panels[data-active-tab="genome"] .panel--tokens,
+.panels[data-active-tab="genome"] .panel--delivery,
 .panels[data-active-tab="genome"] .panel--models,
 .panels[data-active-tab="genome"] .panel--tools,
 .panels[data-active-tab="genome"] .panel--database,

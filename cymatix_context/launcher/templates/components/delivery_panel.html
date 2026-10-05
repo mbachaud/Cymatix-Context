@@ -1,0 +1,48 @@
+{# Delivery: what recent packets delivered and how long they took. Built from
+   the pipeline ring (collector._delivery_panel), so it describes the last few
+   packets, not a lifetime. Replaces the old Tokens panel; the lifetime token
+   count stays as one small line. #}
+
+<section class="panel panel--delivery">
+  <h2 class="panel-title">
+    Delivery
+    {% if state.delivery %}
+      <span class="panel-count-muted">last {{ state.delivery.samples }} packet{{ '' if state.delivery.samples == 1 else 's' }}</span>
+    {% endif %}
+  </h2>
+
+  {% if not state.delivery %}
+    <p class="muted">No packets yet. Send a query through <code>/context</code> to fill this in.</p>
+  {% else %}
+    <dl class="panel-kv">
+      <dt>Chunks per packet</dt>
+      <dd>
+        {% if state.delivery.chunks %}
+          {{ "{:,}".format(state.delivery.chunks.last) }}
+          <span class="muted">last / {{ state.delivery.chunks.avg }} avg</span>
+        {% else %}<span class="muted">not reported by this engine</span>{% endif %}
+      </dd>
+      <dt>Characters per packet</dt>
+      <dd>
+        {% if state.delivery.chars %}
+          {{ "{:,}".format(state.delivery.chars.last) }}
+          <span class="muted">last / {{ "{:,.0f}".format(state.delivery.chars.avg) }} avg</span>
+        {% else %}<span class="muted">not reported by this engine</span>{% endif %}
+      </dd>
+      <dt>Packet latency</dt>
+      <dd title="Retrieval plus assembly; excludes work done after the answer is built">
+        {{ state.delivery.latency_ms.last }} ms
+        <span class="muted">last / {{ state.delivery.latency_ms.avg }} avg / {{ state.delivery.latency_ms.p95 }} p95</span>
+      </dd>
+    </dl>
+  {% endif %}
+
+  {% if state.tokens %}
+    <p class="muted delivery-lifetime">
+      Lifetime tokens {{ "{:,}".format(state.tokens.lifetime.total) }}
+      {% if state.tokens.lifetime.estimated > 0 %}
+        ({{ "{:,}".format(state.tokens.lifetime.exact) }} exact + {{ "{:,}".format(state.tokens.lifetime.estimated) }} estimated)
+      {% endif %}
+    </p>
+  {% endif %}
+</section>
