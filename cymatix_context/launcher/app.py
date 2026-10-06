@@ -528,9 +528,13 @@ def create_app(
             if not isinstance(roots, list) or not all(isinstance(r, str) for r in roots):
                 return JSONResponse({"ok": False, "error": "'sync_roots' must be a list of paths"}, status_code=400)
             resolved_roots: List[str] = []
+            # A folder already in the list may be offline (an unplugged
+            # drive); only a newly added one has to exist, so one missing
+            # root never blocks an unrelated change.
+            already = {str(Path(r).resolve()).lower() for r in settings.sync_roots}
             for r in roots:
                 p = Path(r).expanduser().resolve()
-                if not p.is_dir():
+                if not p.is_dir() and str(p).lower() not in already:
                     return JSONResponse({"ok": False, "error": f"not a folder: {r}"}, status_code=400)
                 if str(p) not in resolved_roots:
                     resolved_roots.append(str(p))
@@ -540,7 +544,10 @@ def create_app(
             if isinstance(iv, bool) or not isinstance(iv, (int, float)):
                 return JSONResponse({"ok": False, "error": "'sync_interval_s' must be a number"}, status_code=400)
             settings.sync_interval_s = max(MIN_INTERVAL_S, float(iv))
-        save_settings(target, settings)
+        try:
+            save_settings(target, settings)
+        except OSError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
         genome_registry.clear_cache()
 
         active = str(genome_registry.active_genome_path().resolve()).lower() == str(target).lower()
@@ -1210,6 +1217,44 @@ def _start_observability_stack(
         _export_otel_env_for_backend()
 
 
+def _start_observability_stack_strict(observability_sup: "ObservabilitySupervisor") -> None:
+    """Start the stack for the dashboard's Enable button.
+
+    Unlike the tray's boot-time helper this does not swallow failures: the
+    control reports them, and must not restart the backend toward a
+    collector that is not there.
+    """
+    observability_sup.start_all()
+    _export_otel_env_for_backend()
+    from .observability_health import SERVICE_PORTS, is_port_bound
+    otlp_port = SERVICE_PORTS["collector"][0]
+    if not is_port_bound("127.0.0.1", otlp_port):
+        raise RuntimeError(
+            f"the collector is not accepting connections on :{otlp_port}"
+        )
+
+
+def _build_observability_control(supervisor) -> "ObservabilityControl":
+    """The desktop launcher's Enable/Stop observability controller."""
+    from .observability_control import ObservabilityControl
+
+    def _restart_backend() -> None:
+        if supervisor.is_running():
+            supervisor.restart(reason="observability toggled (dashboard)")
+
+    def _build():
+        sup, _pending = _maybe_build_observability()
+        return sup
+
+    return ObservabilityControl(
+        build=_build,
+        start=_start_observability_stack_strict,
+        restart_backend=_restart_backend,
+        is_installed=_observability_install_complete,
+        is_opted_out=_should_skip_observability,
+    )
+
+
 def _handle_service_command(command: str, dry_run: bool, port: int = 11438) -> int:
     """Handle install-service / uninstall-service subcommands.
 
@@ -1473,23 +1518,7 @@ def main(argv: Optional[list] = None) -> int:
     # (the tray does); its dashboard gets an Enable button instead.
     observability_control = None
     if args.headless and not args.tray:
-        from .observability_control import ObservabilityControl
-
-        def _restart_backend() -> None:
-            if supervisor.is_running():
-                supervisor.restart(reason="observability toggled (dashboard)")
-
-        def _build():
-            sup, _pending = _maybe_build_observability()
-            return sup
-
-        observability_control = ObservabilityControl(
-            build=_build,
-            start=_start_observability_stack,
-            restart_backend=_restart_backend,
-            is_installed=_observability_install_complete,
-            is_opted_out=_should_skip_observability,
-        )
+        observability_control = _build_observability_control(supervisor)
 
     # Adopt or start cymatix before the UI comes up.
     if needs_db_selection:

@@ -5,6 +5,8 @@ with ``read_only`` set, sync is off, and /ingest refuses with a clear 409."""
 from __future__ import annotations
 
 import json
+import os
+import time
 import logging
 from pathlib import Path
 
@@ -18,7 +20,7 @@ from cymatix_context.store_settings import (
     save_settings,
     sidecar_path,
 )
-from tests.conftest import make_client, make_cymatix_config
+from tests.conftest import make_client, make_cymatix_config, make_gene
 
 
 # ── the module ──────────────────────────────────────────────────────────
@@ -140,3 +142,71 @@ def test_store_sidecar_can_turn_sync_on(tmp_path):
         status = c.get("/sync/status").json()
     assert status["enabled"] is True
     assert status["roots"] == [str(docs.resolve())]
+
+
+# ── Freeze covers every write to the knowledge content ──────────────────
+
+
+def _rows(genome):
+    return genome.conn.execute(
+        "SELECT gene_id, chromatin, epigenetics FROM genes ORDER BY gene_id"
+    ).fetchall()
+
+
+def _seed(c, tmp_path):
+    src = tmp_path / "src.txt"
+    src.write_text("seed", encoding="utf-8")
+    gene = make_gene(content="a frozen store keeps its chunks exactly as they were")
+    gene.source_id = str(src)
+    genome = c.app.state.cymatix.genome
+    genome.read_only = False                      # seed first, then freeze
+    genome.upsert_gene(gene, apply_gate=False)
+    return genome, gene
+
+
+def test_frozen_store_does_not_compact_or_tombstone(tmp_path):
+    with _client(tmp_path, StoreSettings(frozen=True)) as c:
+        genome, gene = _seed(c, tmp_path)
+        genome.read_only = True
+        before = [tuple(r) for r in _rows(genome)]
+        os.utime(gene.source_id, (time.time() + 99, time.time() + 99))   # source "changed"
+        assert genome.compact() == 0
+        assert genome.compress_to_heterochromatin(gene.gene_id) is False
+        assert [tuple(r) for r in _rows(genome)] == before
+
+
+def test_unfrozen_store_still_tombstones(tmp_path):
+    with _client(tmp_path, None) as c:
+        genome, gene = _seed(c, tmp_path)
+        assert genome.compress_to_heterochromatin(gene.gene_id) is True
+
+
+def test_sync_pass_on_a_frozen_store_changes_nothing(tmp_path):
+    from cymatix_context.sync.worker import SyncWorker
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "a.md").write_text("new file that must not land", encoding="utf-8")
+    with _client(tmp_path, StoreSettings(frozen=True)) as c:
+        cymatix = c.app.state.cymatix
+        before = cymatix.genome.conn.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+        report = SyncWorker(cymatix, SyncConfig(enabled=True, roots=[str(docs)]), holder="t").run_pass()
+        after = cymatix.genome.conn.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+    assert (report.ingested, report.deleted, report.tombstoned) == (0, 0, 0)
+    assert after == before
+
+
+def test_sidecar_save_survives_a_busy_replace(tmp_path, monkeypatch):
+    """On Windows os.replace can briefly fail while a poll reads the sidecar."""
+    db = tmp_path / "genome.db"
+    real, calls = os.replace, {"n": 0}
+
+    def flaky(src, dst):
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise PermissionError("busy")
+        return real(src, dst)
+
+    monkeypatch.setattr(os, "replace", flaky)
+    save_settings(db, StoreSettings(frozen=True))
+    assert load_settings(db).frozen is True
+    assert not list(tmp_path.glob("*.tmp"))

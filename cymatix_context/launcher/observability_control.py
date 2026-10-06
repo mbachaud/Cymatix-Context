@@ -63,6 +63,7 @@ class ObservabilityControl:
         self._status = STATUS_STOPPED
         self._error: Optional[str] = None
         self._exported_env = False
+        self._closing = False
 
     # ── state ──────────────────────────────────────────────────────
 
@@ -109,6 +110,17 @@ class ObservabilityControl:
             before = os.environ.get(OTEL_ENV, "").strip()
             self._start(sup)
             exported = not before and os.environ.get(OTEL_ENV, "").strip() == "1"
+            with self._lock:
+                closing = self._closing
+            if closing:
+                # The launcher began exiting while this was starting: do not
+                # leave the stack behind or restart the backend.
+                sup.shutdown()
+                if exported:
+                    os.environ.pop(OTEL_ENV, None)
+                with self._lock:
+                    self._status = STATUS_STOPPED
+                return
             # Only now that the stack is up does the backend learn about it.
             self._restart_backend()
             with self._lock:
@@ -155,6 +167,7 @@ class ObservabilityControl:
     def shutdown(self) -> None:
         """Launcher exit: stop the stack, leave the backend alone."""
         with self._lock:
+            self._closing = True
             sup, self._sup = self._sup, None
         if sup is not None:
             try:

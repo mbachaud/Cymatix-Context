@@ -14,9 +14,12 @@
   the CLI's install table instead of a template literal.
 - **feat(stores): per-store settings and Freeze.** Each knowledge store gets an
   optional sidecar `<store>.db.cymatix.json` holding its auto-sync folders and
-  a Freeze flag (`cymatix_context/store_settings.py`). Freeze means read-only:
-  the store opens `read_only`, its sync is off, and `/ingest` and
-  `/consolidate` answer 409. A store's own sync block overrides the global
+  a Freeze flag (`cymatix_context/store_settings.py`). Freeze means the
+  knowledge content is read-only: the store opens `read_only` (documents,
+  tiers, links and health records are not written, including by queries,
+  compaction and tombstoning), its sync is off, and `/ingest` and
+  `/consolidate` answer 409. Session, delivery-log and query-log tables still
+  write, so the file is not byte-identical after use. A store's own sync block overrides the global
   `[sync]` enabled/roots/interval for that store only; with no sidecar nothing
   changes. The dashboard's Database panel shows Auto-sync, Freeze and folder
   chips per store (`POST /api/genome/settings`, restarts only when the active

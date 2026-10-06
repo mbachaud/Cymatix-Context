@@ -49,7 +49,7 @@
       {% set frozen = st.get("frozen") %}
       {% set sync = entry.sync or {} %}
       <li class="panel-list__item database-entry {% if entry.is_active %}database-entry--active{% endif %}{% if frozen %} database-entry--frozen{% endif %}"
-          data-store-path="{{ entry.path }}" data-store-frozen="{{ 'true' if frozen else 'false' }}"
+          data-store-row data-store-path="{{ entry.path }}" data-store-frozen="{{ 'true' if frozen else 'false' }}"
           data-store-sync="{{ 'true' if sync.get('enabled') else 'false' }}"
           data-store-active="{{ 'true' if entry.is_active else 'false' }}"
           data-store-roots="{{ (st.get('sync_roots') if sync.get('source') == 'store' else sync.get('roots', [])) | tojson | forceescape }}">

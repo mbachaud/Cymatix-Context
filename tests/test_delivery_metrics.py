@@ -43,6 +43,7 @@ def _req(rid, ts, *, express, assemble, chunks=None, chars=None, tail=5.0):
     if chunks is not None:
         asm["delivered_chunks"], asm["delivered_chars"] = chunks, chars
     return [
+        {"request_id": rid, "stage": "classify", "ms": 0.0, "ts": ts},
         {"request_id": rid, "stage": "express", "ms": express, "ts": ts + 0.1},
         asm,
         {"request_id": rid, "stage": "tail_writes", "ms": tail, "ts": ts + 0.3},
@@ -83,6 +84,41 @@ def test_an_older_engine_without_the_counts_still_reports_latency():
     p = _panel(_req("a", 1.0, express=10, assemble=5))
     assert p["chunks"] is None and p["chars"] is None
     assert p["latency_ms"]["last"] == 15.0
+
+
+def _miss(rid, ts):
+    """A packet that stopped before assemble (empty result / abstain)."""
+    return [{"request_id": rid, "stage": s, "ms": 5.0, "ts": ts + i / 10}
+            for i, s in enumerate(["classify", "extract", "express"])]
+
+
+def test_misses_count_as_zero_chunk_packets():
+    events = (_req("a", 1.0, express=10, assemble=5, chunks=10, chars=100)
+              + _miss("b", 2.0)
+              + _req("c", 3.0, express=10, assemble=5, chunks=11, chars=110))
+    p = _panel(events)
+    assert p["samples"] == 3
+    assert p["chunks"]["avg"] == 7.0                    # (10 + 0 + 11) / 3
+    assert p["chunks"]["last"] == 11
+
+
+def test_the_newest_unfinished_request_is_not_counted_yet():
+    events = _req("a", 1.0, express=10, assemble=5, chunks=10, chars=100) + _miss("b", 2.0)
+    p = _panel(events)
+    assert p["samples"] == 1 and p["chunks"]["last"] == 10
+
+
+def test_a_request_cut_by_the_ring_wrap_is_skipped():
+    cut = [{"request_id": "x", "stage": "assemble", "ms": 5.0, "ts": 0.5,
+            "delivered_chunks": 12, "delivered_chars": 1}]       # its classify rolled off
+    p = _panel(cut + _req("a", 1.0, express=10, assemble=5, chunks=4, chars=40))
+    assert p["samples"] == 1 and p["chunks"]["avg"] == 4.0
+
+
+def test_last_is_the_newest_numeric_value():
+    events = (_req("a", 1.0, express=10, assemble=5, chunks=10, chars=100)
+              + _req("b", 2.0, express=10, assemble=5))         # no counts reported
+    assert _panel(events)["chunks"]["last"] == 10
 
 
 def test_no_events_means_no_panel():

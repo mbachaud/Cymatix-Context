@@ -193,17 +193,21 @@
     const el = document.activeElement;
     if (!el || !el.dataset || !panels.contains || !panels.contains(el)) return null;
     return { action: el.dataset.action || "", path: el.dataset.storePath || "",
-      folder: el.dataset.folder || "", tab: el.dataset.tab || "" };
+      folder: el.dataset.folder || "", tab: el.dataset.tab || "",
+      lane: el.dataset.lane || "", genome: el.dataset.genomePath || "" };
   }
 
   function restoreFocus(key) {
     if (!key || (!key.action && !key.tab)) return;
     const now = document.activeElement;
     if (now && now !== document.body && panels.contains(now)) return;
-    const hit = Array.from(panels.querySelectorAll("[data-action]")).find((el) =>
+    const hits = Array.from(panels.querySelectorAll("[data-action]")).filter((el) =>
       (el.dataset.action || "") === key.action && (el.dataset.storePath || "") === key.path &&
-      (el.dataset.folder || "") === key.folder);
-    if (hit && typeof hit.focus === "function") hit.focus();
+      (el.dataset.folder || "") === key.folder && (el.dataset.lane || "") === key.lane &&
+      (el.dataset.genomePath || "") === key.genome);
+    // Only when exactly one control matches: focusing "the first Stop" could
+    // put Enter on the wrong lane.
+    if (hits.length === 1 && typeof hits[0].focus === "function") hits[0].focus();
   }
 
   function restoreSwitchboardOff() {
@@ -491,7 +495,9 @@
   /* Per-store settings: saved beside the .db by POST /api/genome/settings.
      Changing the active store restarts the server, so that asks first. */
   function storeRow(btn) {
-    return btn.closest("[data-store-path]");
+    // data-store-row marks the <li> only: every control also carries
+    // data-store-path, so matching on that would find the button itself.
+    return btn.closest("[data-store-row]");
   }
 
   function storeRoots(row) {

@@ -1142,24 +1142,37 @@ class StateCollector:
         for ev in payload.get("events", []) or []:
             rid = ev.get("request_id") or "?"
             row = by_req.setdefault(rid, {"ts": 0.0, "ms": 0.0, "done": False,
+                                          "started": False,
                                           "chunks": None, "chars": None})
             stage = ev.get("stage")
             row["ts"] = max(row["ts"], float(ev.get("ts") or 0.0))
             if stage in StateCollector._PACKET_STAGES:
                 row["ms"] += float(ev.get("ms") or 0.0)
+            if stage == "classify":
+                row["started"] = True
             if stage == "assemble":
                 row["done"] = True
                 row["chunks"] = ev.get("delivered_chunks")
                 row["chars"] = ev.get("delivered_chars")
-        samples = sorted((r for r in by_req.values() if r["done"]), key=lambda r: r["ts"])
+        # A packet counts once its first stage is in the ring (a request whose
+        # early stages rolled off would understate latency). One that never
+        # reached assemble was a miss or abstain: it delivered nothing. The
+        # newest such request may still be running, so it is held back.
+        ordered = sorted((r for r in by_req.values() if r["started"]), key=lambda r: r["ts"])
+        if ordered and not ordered[-1]["done"]:
+            ordered = ordered[:-1]
+        samples = ordered
         if not samples:
             return None
+        for r in samples:
+            if not r["done"]:
+                r["chunks"], r["chars"] = 0, 0
 
         def _pair(key: str) -> Optional[Dict[str, Any]]:
             vals = [r[key] for r in samples if isinstance(r[key], (int, float))]
             if not vals:
                 return None
-            return {"last": samples[-1][key], "avg": round(sum(vals) / len(vals), 1)}
+            return {"last": vals[-1], "avg": round(sum(vals) / len(vals), 1)}
 
         times = sorted(r["ms"] for r in samples)
         rank = max(1, -(-95 * len(times) // 100))      # nearest rank, ceil(0.95 n)

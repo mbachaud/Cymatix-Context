@@ -89,6 +89,20 @@ def test_a_root_that_is_not_a_directory_is_rejected(world):
     assert not (world.other.with_name(world.other.name + ".cymatix.json")).exists()
 
 
+def test_an_already_saved_root_that_has_gone_missing_does_not_block_changes(world):
+    """One unplugged drive must not stop the user toggling sync or freezing."""
+    gone = world.tmp / "unplugged"
+    gone.mkdir()
+    _post(world, path=str(world.other), sync_enabled=True, sync_roots=[str(gone)])
+    gone.rmdir()
+    r = _post(world, path=str(world.other), sync_enabled=False, sync_roots=[str(gone.resolve())])
+    assert r.status_code == 200
+    assert load_settings(world.other).sync_enabled is False
+    # ...but a NEW root still has to exist
+    r = _post(world, path=str(world.other), sync_roots=[str(gone.resolve()), str(world.tmp / "typo")])
+    assert r.status_code == 400
+
+
 def test_wrong_types_are_rejected(world):
     assert _post(world, path=str(world.other), frozen="yes").status_code == 400
     assert _post(world, path=str(world.other), sync_roots="x").status_code == 400
@@ -118,6 +132,32 @@ def test_panel_html_has_the_controls(world):
     app = create_app(store=SimpleNamespace(), supervisor=FakeSupervisor(), collector=collector)
     with TestClient(app) as c:
         html = c.get("/api/state/panels").text
+    # The JS reads the store's state from its row. Every control carries its
+    # own data-store-path, so the row needs a marker no control shares, or
+    # closest() finds the button itself and every action sends the wrong state.
+    from html.parser import HTMLParser
+
+    class Rows(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.rows, self.buttons_with_marker = [], 0
+
+        def handle_starttag(self, tag, attrs):
+            a = dict(attrs)
+            if "data-store-row" in a:
+                if tag == "button":
+                    self.buttons_with_marker += 1
+                else:
+                    self.rows.append((tag, a))
+
+    p = Rows()
+    p.feed(html)
+    assert p.buttons_with_marker == 0 and len(p.rows) == 2
+    for tag, a in p.rows:
+        assert tag == "li"
+        for key in ("data-store-path", "data-store-frozen", "data-store-sync",
+                    "data-store-active", "data-store-roots"):
+            assert key in a, key
     assert 'data-action="store-freeze"' in html
     assert 'data-action="store-sync"' in html
     assert 'data-action="store-add-folder"' in html

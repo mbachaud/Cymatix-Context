@@ -95,6 +95,65 @@ def test_enable_builds_starts_and_restarts_the_backend_once():
                                 {"name": "prometheus", "status": "green"}]
 
 
+def test_shutdown_during_a_start_does_not_leave_the_stack_running():
+    calls, pending = Calls(), []
+    c = ObservabilityControl(
+        build=lambda: calls.obs, start=lambda sup: None,
+        restart_backend=lambda: setattr(calls, "restarts", calls.restarts + 1),
+        is_installed=lambda: True, is_opted_out=lambda: False,
+        run_async=pending.append,                       # the start thread has not run yet
+    )
+    c.enable()
+    assert c.snapshot()["status"] == "starting"
+    c.shutdown()                                        # launcher exits mid-start
+    pending[0]()                                        # the start thread now runs
+    assert calls.obs.shutdowns == 1                     # the stack it built is torn down
+    assert calls.restarts == 0
+    assert c.snapshot()["status"] == "stopped"
+
+
+def test_the_real_start_wiring_reports_a_failed_stack_as_an_error(monkeypatch):
+    """_start_observability_stack swallows start_all() errors for the tray; the
+    desktop control must not, or a dead stack shows as running and the backend
+    restarts toward a collector that is not there."""
+    from cymatix_context.launcher import app as app_mod
+
+    class DeadStack(FakeObs):
+        def start_all(self):
+            raise RuntimeError("port 4317 busy")
+
+    restarts = []
+    sup = SimpleNamespace(is_running=lambda: True, restart=lambda reason="": restarts.append(reason))
+    monkeypatch.setattr(app_mod, "_maybe_build_observability", lambda: (DeadStack(), False))
+    monkeypatch.setattr(app_mod, "_observability_install_complete", lambda: True)
+    monkeypatch.setattr(app_mod, "_should_skip_observability", lambda: False)
+    ctl = app_mod._build_observability_control(sup)
+    ctl._run_async = lambda fn: fn()
+    ctl.enable()
+    snap = ctl.snapshot()
+    assert snap["status"] == "error" and "4317" in snap["error"]
+    assert restarts == []
+
+
+def test_a_stack_whose_collector_never_binds_is_an_error(monkeypatch):
+    from cymatix_context.launcher import app as app_mod
+    import cymatix_context.launcher.observability_health as health
+
+    class Quiet(FakeObs):
+        def start_all(self):
+            pass
+
+    sup = SimpleNamespace(is_running=lambda: True, restart=lambda reason="": None)
+    monkeypatch.setattr(app_mod, "_maybe_build_observability", lambda: (Quiet(), False))
+    monkeypatch.setattr(app_mod, "_observability_install_complete", lambda: True)
+    monkeypatch.setattr(app_mod, "_should_skip_observability", lambda: False)
+    monkeypatch.setattr(health, "is_port_bound", lambda host, port: False)
+    ctl = app_mod._build_observability_control(sup)
+    ctl._run_async = lambda fn: fn()
+    ctl.enable()
+    assert ctl.snapshot()["status"] == "error"
+
+
 def test_a_failed_start_reports_the_error_and_can_retry():
     calls = Calls()
     c = _control(calls, build_error=RuntimeError("port busy"))

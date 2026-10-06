@@ -5,8 +5,13 @@ folders and its Freeze flag. The settings follow the file when it is moved or
 copied, and reading them never opens the store, so a frozen store can be
 described without touching it.
 
-Freeze means read-only: the server opens the store with ``read_only`` set (its
-upserts no-op), turns sync off, and ``/ingest`` refuses with a 409.
+Freeze means the knowledge content is read-only: the server opens the store
+with ``read_only`` set (documents, tiers, graph links and health records are
+not written, including by queries, compaction and tombstoning), turns sync
+off, and ``/ingest`` and ``/consolidate`` refuse with a 409. Operational
+tables (session registry and presence, delivery log, CWoLa query log) still
+write, because the server cannot run without them; a frozen store's file is
+therefore not byte-identical after use.
 
 The sidecar is optional. With none, nothing changes: the global ``[sync]``
 section applies and the store is writable. A ``sync`` block in the sidecar
@@ -23,6 +28,7 @@ import dataclasses
 import json
 import logging
 import os
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Union
@@ -103,8 +109,21 @@ def save_settings(db_path: Union[str, Path], settings: StoreSettings) -> Path:
     }
     tmp = path.with_name(path.name + ".tmp")
     tmp.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    os.replace(tmp, path)
-    return path
+    # On Windows the replace can fail briefly while a dashboard poll has the
+    # sidecar open for reading, so retry before giving up.
+    for attempt in range(8):
+        try:
+            os.replace(tmp, path)
+            return path
+        except PermissionError:
+            if attempt == 7:
+                break
+            time.sleep(0.05)
+    try:
+        tmp.unlink()
+    except OSError:
+        pass
+    raise PermissionError(f"could not write {path} (in use); try again")
 
 
 def apply_to_sync_config(base: SyncConfig, settings: StoreSettings) -> SyncConfig:
