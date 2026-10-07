@@ -1293,6 +1293,12 @@ class KnowConfig:
     neutral: Optional[List[float]] = None
     # Issue #482: the inputs available when the betas were fit (names from top_score, score_gap, lexical_dense_agree, coordinate_confidence, freshness_min). Inputs outside it, or that the enabled lanes cannot produce, count as unavailable, and /context warns calibration_profile_mismatch. None = fit profile not recorded.
     fitted_inputs: Optional[List[str]] = None
+    # Issue #482: which formula produces know confidence. "legacy" = the betas above. "lanes" = dense-free logistic over what every query has (score shape, coordinate_confidence, lane agreement; scoring/know_lanes.py) using lanes_intercept + lanes_betas. The gates before confidence (abstain, freshness, supersession) are the same either way.
+    model: str = "legacy"
+    # Issue #482: intercept of the "lanes" model (written by scripts/fit_know_lanes.py).
+    lanes_intercept: float = 0.0
+    # Issue #482: {feature name: beta} for the "lanes" model; names from scoring/know_lanes.FEATURE_NAMES, absent names weigh 0 (written by scripts/fit_know_lanes.py).
+    lanes_betas: Dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -2295,7 +2301,30 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
                     "(fit profile not recorded)", ", ".join(_KNOW_FEATURE_NAMES),
                 )
 
+        model = str(k.get("model", "legacy")).strip().lower()
+        if model not in ("legacy", "lanes"):
+            log.warning("[know] model must be 'legacy' or 'lanes', got %r; using 'legacy'", k.get("model"))
+            model = "legacy"
+        from .scoring.know_lanes import FEATURE_NAMES as _LANE_FEATURES
+        lanes_betas: Dict[str, float] = {}
+        raw_lb = k.get("lanes_betas") or {}
+        if isinstance(raw_lb, dict):
+            for name, val in raw_lb.items():
+                if name not in _LANE_FEATURES:
+                    log.warning("[know] lanes_betas: unknown feature %r ignored (known: %s)",
+                                name, ", ".join(_LANE_FEATURES))
+                    continue
+                try:
+                    lanes_betas[str(name)] = float(val)
+                except (TypeError, ValueError):
+                    log.warning("[know] lanes_betas: %r is not a number; ignored", name)
+        else:
+            log.warning("[know] lanes_betas must be a table of {feature = beta}; ignoring it")
+
         cfg.know = KnowConfig(
+            model=model,
+            lanes_intercept=_know_float("lanes_intercept", 0.0),
+            lanes_betas=lanes_betas,
             neutral=neutral,
             fitted_inputs=fitted_inputs,
             emit_floor=_know_float("emit_floor", _KNOW_DEFAULT_EMIT_FLOOR),

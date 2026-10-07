@@ -358,6 +358,10 @@ def _decide_know_or_miss_impl(
     # #482: inputs the enabled lanes can produce (know_calibration.
     # producible_inputs); None = no masking (legacy callers).
     live_inputs: Optional[Collection[str]] = None,
+    # #482: confidence from another model ([know] model = "lanes"); None =
+    # the legacy compute_confidence logistic. Every gate before branch 4
+    # still runs; only the number compared with emit_floor changes.
+    confidence_override: Optional[float] = None,
 ) -> KnowBlock | MissBlock:
     """Single source of truth for the know/miss split.
 
@@ -472,15 +476,18 @@ def _decide_know_or_miss_impl(
     # plumbs freshness_min through so a stale top-K shaves the
     # confidence and may push otherwise borderline retrievals under
     # emit_floor (spec §10).
-    confidence = compute_confidence(
-        top_score=top_score,
-        score_gap=score_gap,
-        lexical_dense_agree=lexical_dense_agree,
-        coordinate_confidence=coordinate_confidence,
-        calibration=cal,
-        freshness_min=freshness_min,
-        live_inputs=live_inputs,
-    )
+    if confidence_override is not None:
+        confidence = max(0.0, min(1.0, float(confidence_override)))
+    else:
+        confidence = compute_confidence(
+            top_score=top_score,
+            score_gap=score_gap,
+            lexical_dense_agree=lexical_dense_agree,
+            coordinate_confidence=coordinate_confidence,
+            calibration=cal,
+            freshness_min=freshness_min,
+            live_inputs=live_inputs,
+        )
     if confidence < cal.emit_floor:
         # Branch 3c: cold — would-be sparse miss but the cold-tier
         # peek surfaced archived hits (spec §6). Promote to "cold"

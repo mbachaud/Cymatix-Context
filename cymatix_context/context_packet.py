@@ -891,6 +891,26 @@ def _attach_know_or_miss(
     # lanes can produce, so a lane toggle needs no calibration edit.
     cal, live_inputs = load_calibration_and_inputs()
     top_gene = genes[0] if genes else None
+    # #482: [know] model = "lanes" -- same dense-free confidence as /context.
+    confidence_override = None
+    if score_map:
+        from .scoring import know_lanes as _kl
+
+        lanes_model = _kl.load_lanes_model()
+        if lanes_model is not None:
+            try:
+                order = _kl.fused_order(score_map)
+                by_id = {g.gene_id: g for g in genes}
+                top1 = by_id.get(order[0]) if order else None
+                confidence_override = _kl.served_lanes_confidence(
+                    lanes_model, scores=score_map, tier_contributions=tier_contrib, query=query,
+                    top1_text=getattr(top1, "content", None), coordinate_confidence=coordinate_confidence,
+                )
+            except Exception:  # noqa: BLE001 -- intentional recovery boundary
+                import logging
+                logging.getLogger("cymatix.context_packet").warning(
+                    "know lanes model failed; using the legacy logistic", exc_info=True)
+                confidence_override = None
     block = decide_know_or_miss(
         window=shim_window,
         query=query,
@@ -903,6 +923,7 @@ def _attach_know_or_miss(
         calibration=cal,
         freshness_status="stale" if _all_needs_refresh else None,
         live_inputs=live_inputs,
+        confidence_override=confidence_override,
     )
     if isinstance(block, KnowBlock) and _items and not _has_verified:
         # Unverified-fresh evidence only (stale_risk / needs_refresh with
