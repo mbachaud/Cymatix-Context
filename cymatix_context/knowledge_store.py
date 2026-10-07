@@ -5640,7 +5640,10 @@ class KnowledgeStore:
     # ── Get single document ─────────────────────────────────────────────
 
     def get_doc(self, gene_id: str) -> Optional[Gene]:
-        row = self.conn.execute(
+        # read_conn, not the shared writer: /context calls this while another
+        # request's touch_genes holds _write_lock mid-UPDATE on conn, and two
+        # threads on one connection hard-deadlock on py3.14 sqlite3.
+        row = self.read_conn.execute(
             "SELECT * FROM genes WHERE gene_id = ?", (gene_id,)
         ).fetchone()
         return self._row_to_gene(row) if row else None
