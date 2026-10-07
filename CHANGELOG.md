@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **feat(launcher): dashboard UX pass, part 1** (plan: `docs/design/2026-10-05-dashboard-ux-pass.md`).
+  One Start/Stop button whose label names the next action (Starting… / Stopping…
+  while pending), Restart kept beside it, and a header that wraps instead of
+  overlapping the metric tiles. The switchboard shows only settings in effect,
+  with the rest folded behind "N switched off". "Genes" is "Chunks" in labels
+  (API keys unchanged). Component rows get tooltips. Diagnostics gains
+  Open folder (desktop shell) and Copy path. Agent chips and tooltips show
+  exactly what the agent announced: the vendor, host and model name maps are
+  gone (`model_labels.py` removed), and the Connect-a-chat host list comes from
+  the CLI's install table instead of a template literal.
+
 ## 0.11.0 (2026-10-01)
 
 **Use Cymatix while you build with it: several knowledge stores and engine

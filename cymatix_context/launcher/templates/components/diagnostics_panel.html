@@ -43,4 +43,14 @@
       <dd class="path-value">{{ state.cymatix.paths.cymatix_log }}</dd>
     {% endif %}
   </dl>
+
+  {% if state.cymatix.paths and state.cymatix.paths.cymatix_log %}
+    <div class="diagnostics-actions">
+      {# Native folder open exists only in the desktop shell (window.cymatix);
+         launcher.js adds body.has-bridge when it is present. #}
+      <button type="button" class="btn needs-bridge" data-action="desktop-open-logs">Open folder</button>
+      <button type="button" class="btn" data-action="copy-path"
+              data-copy-text="{{ state.cymatix.paths.cymatix_log }}">Copy path</button>
+    </div>
+  {% endif %}
 </section>

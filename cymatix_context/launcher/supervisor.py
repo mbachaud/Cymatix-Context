@@ -422,7 +422,9 @@ class CymatixSupervisor:
                     timeout, proc.pid, exc,
                 )
                 self._record_error("start", str(exc))
-                self._last_start_pending = True
+                # A Stop during the wait clears the store; reporting "still
+                # starting" for a process that is gone would strand the UI.
+                self._last_start_pending = self.store.state.cymatix_pid == proc.pid
                 return proc.pid
 
         log.info("Cymatix started (pid=%d)", proc.pid)
@@ -438,6 +440,7 @@ class CymatixSupervisor:
     ) -> None:
         """Announce, wait, kill, wait for port to free up."""
         if not self.is_running():
+            self._last_start_pending = False
             raise NotRunning("cymatix is not running")
 
         pid = self.store.state.cymatix_pid
@@ -457,6 +460,7 @@ class CymatixSupervisor:
             if _port_is_free(self.cymatix_host, self.cymatix_port):
                 self.store.clear_cymatix()
                 self._owns_cymatix_process = False
+                self._last_start_pending = False
                 log.info("Cymatix stopped (pid=%d)", pid)
                 self._clear_error()
                 return

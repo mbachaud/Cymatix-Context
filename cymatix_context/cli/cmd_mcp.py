@@ -45,6 +45,11 @@ _TARGETS: Dict[str, Dict[str, str]] = {
 _DEFAULT_SCOPE = {"claude-desktop": "user", "gemini-cli": "user"}
 
 
+def supported_hosts() -> list:
+    """Host ids ``install`` accepts: the one list the desktop rail offers."""
+    return sorted(_TARGETS)
+
+
 def target_path(
     host: str,
     scope: str,
