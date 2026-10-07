@@ -450,6 +450,16 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             _warnings: list[str] = []
             if _cal_stale:
                 _warnings.append("calibration_stale")
+            # #482: the calibration's fit profile vs the inputs the enabled
+            # lanes can produce (e.g. fit with dense on, served with it off).
+            try:
+                from ..scoring.know_calibration import (
+                    know_profile_warnings as _know_profile_warnings,
+                    producible_inputs as _producible_inputs,
+                )
+                _warnings += _know_profile_warnings(_cal_for_warn, _producible_inputs(config))
+            except Exception:
+                log.debug("know input-profile warning compute failed", exc_info=True)
 
             response["agent"] = {
                 "caller_model_class": caller_model_class,

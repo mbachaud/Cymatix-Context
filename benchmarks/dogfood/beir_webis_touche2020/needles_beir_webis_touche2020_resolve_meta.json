@@ -1,0 +1,414 @@
+{
+ "date": "2026-10-04T15:41:41.407322+00:00",
+ "db": "F:\\tmp\\beir_webis_touche2020_bed\\beir_webis_touche2020.db",
+ "corpus_root": "F:\\Projects\\beir\\beir_webis_touche2020\\corpus",
+ "min_file_bytes": 1,
+ "needles_total": 49,
+ "needles_resolvable": 49,
+ "dropped": [],
+ "gold_files_wanted": 920,
+ "gold_files_size_gated": 0,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 4,
+ "per_needle": {
+  "beir_webis_touche2020_1": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_10": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 62,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_11": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 22,
+   "gold_files_resolved": 22,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_12": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_13": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_14": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 19,
+   "gold_files_resolved": 19,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_15": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 27,
+   "gold_files_resolved": 27,
+   "gold_genes": 49,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_16": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_17": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 51,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_18": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_19": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 26,
+   "gold_files_resolved": 25,
+   "gold_genes": 39,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_2": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_20": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 36,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_21": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 23,
+   "gold_files_resolved": 23,
+   "gold_genes": 41,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_22": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_23": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 27,
+   "gold_files_resolved": 26,
+   "gold_genes": 51,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_24": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 39,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_26": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 23,
+   "gold_files_resolved": 23,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_27": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 51,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_28": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_29": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 28,
+   "gold_files_resolved": 28,
+   "gold_genes": 58,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_3": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_30": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 19,
+   "gold_files_resolved": 19,
+   "gold_genes": 39,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_31": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_32": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_33": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 28,
+   "gold_files_resolved": 28,
+   "gold_genes": 45,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_34": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 23,
+   "gold_files_resolved": 23,
+   "gold_genes": 42,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_35": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 41,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_36": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_37": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_38": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_39": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 36,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_4": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 20,
+   "gold_files_resolved": 20,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_webis_touche2020\\corpus\\92\\h_92f281b453ab7a6cec38d7c547a51952a090bc0f.txt",
+    "F:\\Projects\\beir\\beir_webis_touche2020\\corpus\\92\\h_92f281b453ab7a6cec38d7c547a51952a090bc0f.txt"
+   ]
+  },
+  "beir_webis_touche2020_40": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_41": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_42": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_43": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_44": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_45": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_46": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 19,
+   "gold_files_resolved": 19,
+   "gold_genes": 41,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_47": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 44,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_48": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_49": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 19,
+   "gold_files_resolved": 19,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_5": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_webis_touche2020\\corpus\\a4\\h_a466134498df497516fa551b5df9945c46ff3a16.txt"
+   ]
+  },
+  "beir_webis_touche2020_50": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_6": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_7": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 23,
+   "gold_files_resolved": 23,
+   "gold_genes": 37,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_8": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 31,
+   "gold_files_resolved": 31,
+   "gold_genes": 54,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_webis_touche2020_9": {
+   "question_type": "beir_webis_touche2020",
+   "gold_files": 32,
+   "gold_files_resolved": 32,
+   "gold_genes": 52,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_webis_touche2020\\corpus\\e8\\h_e80f65906673482fa40560ae6e1ad4e0e4507581.txt"
+   ]
+  }
+ }
+}

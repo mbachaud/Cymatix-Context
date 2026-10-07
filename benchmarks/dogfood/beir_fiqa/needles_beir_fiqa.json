@@ -1,0 +1,3244 @@
+{
+ "needles": [
+  {
+   "name": "beir_fiqa_10034",
+   "query": "Tax implications of holding EWU (or other such UK ETFs) as a US citizen?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10039",
+   "query": "Do individual investors use Google to obtain stock quotes?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10109",
+   "query": "Why does Charles Schwab have a Mandatory Settlement Period after selling stocks?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10122",
+   "query": "Why diversify stocks/investments?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10136",
+   "query": "How to minimise the risk of a reduction in purchase power in case of Brexit for money held in a bank account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10137",
+   "query": "F-1 student investing in foreign markets",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10152",
+   "query": "What does a high operating margin but a small but positive ROE imply about a company?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10183",
+   "query": "How are various types of income taxed differently in the USA?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10213",
+   "query": "Looking for good investment vehicle for seasonal work and savings",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10246",
+   "query": "Understanding the T + 3 settlement days rule",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10267",
+   "query": "How should I prepare for the next financial crisis?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_104",
+   "query": "Investing/business with other people's money: How does it work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10414",
+   "query": "What is considered high or low when talking about volume?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10447",
+   "query": "Is there an advantage to a traditional but non-deductable IRA over a taxable account? [duplicate]",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10462",
+   "query": "Is it okay to be married, 30 years old and have no retirement?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10482",
+   "query": "Rollover into bond fund to do dollar cost averaging [duplicate]",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10497",
+   "query": "Why would you elect to apply a refund to next year's tax bill?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10526",
+   "query": "What extra information might be obtained from the next highest bids in an order book?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10547",
+   "query": "How much do brokerages pay exchanges per trade?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10558",
+   "query": "Investment strategy for 401k when rolling over soon",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10596",
+   "query": "Does a market maker sell (buy) at a bid or ask price?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_106",
+   "query": "What approaches are there for pricing a small business?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10601",
+   "query": "Bitcoin Cost Basis Purchases",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10628",
+   "query": "What happens with the “long” buyer of a stock when somebody else's short fails (that is, unlimited loss bankrupts short seller)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10639",
+   "query": "Short term parking of a large inheritance?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10645",
+   "query": "Explain the details and benefits of rebalancing a retirement portfolio?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10674",
+   "query": "How to sell a stock in a crashing market?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10710",
+   "query": "Probablity of touching In the money vs expiring in the money for an american option",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10734",
+   "query": "How do you translate a per year salary into a part-time per hour job?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1074",
+   "query": "How common is “pass-through” health insurance?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10792",
+   "query": "How can I calculate a “running” return using XIRR in a spreadsheet?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10808",
+   "query": "What are a few sites that make it easy to invest in high interest rate mutual funds?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10809",
+   "query": "Definitions of leverage and of leverage factor",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10812",
+   "query": "Is is possible to dispute IRS underpayment penalties?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10827",
+   "query": "How much should I be contributing to my 401k given my employer's contribution?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10845",
+   "query": "Rationale behind using 12, 26 and 9 to calculate MACD",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1085",
+   "query": "How do disputed debts work on credit reports?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_109",
+   "query": "How to account for money earned and spent prior to establishing business bank accounts?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1090",
+   "query": "Need a formula to determine monthly payments received at time t if I'm reinvesting my returns",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10912",
+   "query": "Forex independent investments",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10932",
+   "query": "Transferring money from 403B to 401K?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10975",
+   "query": "How to contribute to Roth IRA when income is at the maximum limit & you have employer-sponsored 401k plans?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10979",
+   "query": "Closing a futures position",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_10994",
+   "query": "Net loss not distributed by mutual funds to their shareholders?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_11039",
+   "query": "Pay off credit card debt or earn employer 401(k) match?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_11054",
+   "query": "Short Term Capital Gains tax vs. IRA Withdrawal Tax w/o Quarterly Est. Taxes",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_11088",
+   "query": "Am I required to have a lawyer create / oversee creation of my will?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1150",
+   "query": "How are the best way to make and save money at 22 years old",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1157",
+   "query": "Personal taxes for Shopify / Paypal shop?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1159",
+   "query": "what is the best way to do a freelancing job over the summer for a student",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1198",
+   "query": "What are the consequences of IRS “reclassification” on both employer and employee?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1230",
+   "query": "How does Walmart account their expired food",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1281",
+   "query": "How FTB and IRS find mistakes in amended tax returns? Are their processes reliable?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1284",
+   "query": "Tax consequences when foreign currency changes in value",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1297",
+   "query": "Why aren't there solutions for electronic itemized receipt for retail in-store purchases?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1306",
+   "query": "I made an investment with a company that contacted me, was it safe?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1309",
+   "query": "Why does FlagStar Bank harass you about payments within grace period?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1310",
+   "query": "Is is possible to take a mortgage using Bitcoin as collateral?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1321",
+   "query": "Are social media accounts (e.g. YouTube, Twitter, Instagram, etc.) considered assets?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1322",
+   "query": "Is this follow-up after a car crash a potential scam?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1391",
+   "query": "How is taxation for youtube/twitch etc monetization handled in the UK?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1393",
+   "query": "Which is better when working as a contractor, 1099 or incorporating?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1415",
+   "query": "I am not VAT registered. Do I need to buy from my supplier with excl VAT prices or incl VAT?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1416",
+   "query": "US resident with Canadian income via T4A-NR",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1441",
+   "query": "What's the difference between Market Cap and NAV?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1451",
+   "query": "How do you find an ethical, honest independent insurance broker in Canada?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1469",
+   "query": "Why do some companies report how well their EBITDA performed even if their overall net profit did equally well?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_15",
+   "query": "Can I send a money order from USPS as a business?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1530",
+   "query": "What is the proper way to report additional income for taxes (specifically, Android development)?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1670",
+   "query": "Investing in hemp producers in advance of possible legalization in Canada?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1676",
+   "query": "W2 vs 1099 Employee status",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1736",
+   "query": "How can people have such high credit card debts?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1748",
+   "query": "How high should I set my KickStarter funding goal in order to have $35,000 left over?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1783",
+   "query": "Freelancing Tax implication",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_18",
+   "query": "1 EIN doing business under multiple business names",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1812",
+   "query": "splitting a joint mortgage - one owner in home",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1815",
+   "query": "Rules for SEP contributions in an LLC?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1819",
+   "query": "Found an old un-cashed paycheck. How long is it good for? What to do if it's expired?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1824",
+   "query": "Is there a way to open a U.S. bank account for my LLC remotely?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1826",
+   "query": "Is the contribution towards Employment Insurance (EI) wasted if I never get fired, or are my premiums refunded?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1832",
+   "query": "Warren Buffett and Charles Munger advice for small investors?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1871",
+   "query": "Is there any US bank that does not charge for incoming wire transfers?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1877",
+   "query": "As a Sole Proprietor, will “employer” Solo 401k contributions count towards gross income?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1889",
+   "query": "Reporting financial gains from my online store",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1915",
+   "query": "Should I pay a company who failed to collect VAT from me over 6 months ago?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1920",
+   "query": "Clarification on student expenses - To file the tax for the next year",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1933",
+   "query": "UK sole trader who often buys products/services on behalf of clients – do I deduct from declared income or claim as allowable expenses?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1948",
+   "query": "Which colors can one use to fill out a check in the US?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_1994",
+   "query": "Does the IRS reprieve those who have to commute for work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2010",
+   "query": "Paypal website donations without being a charity",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2051",
+   "query": "Where to find the 5 or 10 year returns for a mutual fund?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2070",
+   "query": "Advantage of credit union or local community bank over larger nationwide banks such as BOA, Chase, etc.?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2075",
+   "query": "Are stories of turning a few thousands into millions by trading stocks real?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2076",
+   "query": "Can vet / veterinary bills be considered deductions (tax-deductible) for Income Tax purposes [Canada]?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2088",
+   "query": "How would I go about selling the stock of a privately held company?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2108",
+   "query": "Can I pay taxes using bill pay from my on-line checking account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2118",
+   "query": "What happened in Argentina in 2001 bank sector? did the banks closed? all or some?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2154",
+   "query": "What tax software automatically determines the best filing status, etc?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2181",
+   "query": "What are the risks & rewards of being a self-employed independent contractor / consultant vs. being a permanent employee?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2183",
+   "query": "Why are there many small banks and more banks in the U.S.?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2204",
+   "query": "What's an economic explanation for why greeting cards are so expensive?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2264",
+   "query": "Personal Tax Return software for Linux?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2296",
+   "query": "How does a bank make money on an interest free secured loan?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2306",
+   "query": "To whom should I report fraud on both of my credit cards?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2316",
+   "query": "What exchange rate does El Al use when converting final payment amount to shekels?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2318",
+   "query": "F1 student and eBay selling tax",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2330",
+   "query": "How can I determine if a debt consolidation offer is real or a scam?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2334",
+   "query": "How do you determine “excess cash” for Enterprise Value calculations from a balance sheet?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2348",
+   "query": "Why can't you just have someone invest for you and split the profits (and losses) with him?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2376",
+   "query": "Why do gas stations charge different amounts in the same local area?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2383",
+   "query": "Should I Purchase Health Insurance Through My S-Corp",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2384",
+   "query": "Tax: 1099 paper form",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2385",
+   "query": "As director, can I invoice my self-owned company?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2388",
+   "query": "Do financial advisors get better deals on mortgages?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2395",
+   "query": "Freelance site with lowest commission fees?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2398",
+   "query": "Frustrated Landlord",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2399",
+   "query": "Where do web sites get foreign exchange currency rate / quote information?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2400",
+   "query": "Will I be paid dividends if I own shares?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2407",
+   "query": "How long to wait after getting a mortgage to increase my credit limit?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2416",
+   "query": "Why should a company go public?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2423",
+   "query": "At what age should I start or stop saving money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2443",
+   "query": "What are some way to transfer money from Hong Kong to India on a monthly basis?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2445",
+   "query": "How do I notify the IRS of a new member to an LLC?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2460",
+   "query": "What are the consequences of not respecting a notice period when leaving a job?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2465",
+   "query": "Can capital expenses for volunteer purposes be deducted from income?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2472",
+   "query": "How do I deal with a mistaken attempt to collect a debt from me that is owed by someone else?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2486",
+   "query": "Is working on a W2 basis, with benefits paid to me, a good idea?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2498",
+   "query": "How do I calculate tax liability on the turnover of a small vendor?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2513",
+   "query": "How does revenue shared with someone else go into my tax return in Canada?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2516",
+   "query": "Which banks have cash-deposit machines in Germany?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2549",
+   "query": "How to graph the market year over year? for example Dow Jones Index",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2551",
+   "query": "How to find cheaper alternatives to a traditional home telephone line?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2568",
+   "query": "How to pay with cash when car shopping?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2579",
+   "query": "What to do when a job offer is made but with a salary less than what was asked for?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2580",
+   "query": "Stock market vs. baseball card trading analogy",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2587",
+   "query": "Typically how many digits are in a cheque number?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2589",
+   "query": "How can I detect potential fraud in a company before investing in them?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2590",
+   "query": "Are non-residents or foreigners permitted to buy or own shares of UK companies?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2593",
+   "query": "Am I “cheating the system” by opening up a tiny account with a credit union and then immediately applying for a huge loan?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2598",
+   "query": "Is it possible for US retail forex traders to trade exotic currencies?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_26",
+   "query": "Applying for and receiving business credit",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2648",
+   "query": "How does unemployment insurance work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2676",
+   "query": "Tax question about selling a car",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2685",
+   "query": "What ways are there for us to earn a little extra side money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2695",
+   "query": "Buy a parking spot and rent it out, or invest savings in an interest-bearing account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2713",
+   "query": "Physical Checks - Mailing",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2724",
+   "query": "How do you determine the dividend payout date for Mutual Funds?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2737",
+   "query": "What to do with an old building to get money",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2747",
+   "query": "What evidence do I need to declare tutoring income on my income tax?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2749",
+   "query": "Is it possible to create a self-managed superannuation fund to act as a mortage offset? (Australia)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2790",
+   "query": "Should I pay more than 20% down on a home?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2801",
+   "query": "If I deposit money as cash does it count as direct deposit?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2856",
+   "query": "How can I cash out a check internationally?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2857",
+   "query": "I have around 60K $. Thinking about investing in Oil, how to proceed?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2880",
+   "query": "Can I transfer my investment property into a SMSF?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2885",
+   "query": "Merits of buying apartment houses and renting them",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2891",
+   "query": "May I claim money earned but not received in 2012",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2895",
+   "query": "Where should a young student put their money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2903",
+   "query": "How should I file my taxes as a contractor?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2923",
+   "query": "Should I give to charity by check or credit card?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2964",
+   "query": "Unmarried Couple Splitting up with Joint Ownership of Home",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2968",
+   "query": "Should I prioritize retirement savings inside of my HSA?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_2994",
+   "query": "Work on the side for my wife's company",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3006",
+   "query": "Strategies for putting away money for a child's future (college, etc.)?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3008",
+   "query": "What are my chances at getting a mortgage with Terrible credit but High income",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3014",
+   "query": "What investments are positively related to the housing market decline?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3033",
+   "query": "Tax consequences of changing state residency?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3039",
+   "query": "Can increasing my tax withholding from my full-time job cover FICA taxes for my freelance work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3049",
+   "query": "How to calculate my estimated taxes. 1099 MISC + Self Employment",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3051",
+   "query": "What items are exempt from the VAT? [U.K.]",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3067",
+   "query": "Should I make extra payments to my under water mortgage or increase my savings?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3085",
+   "query": "How long can I convert 401(k) to Roth 401(k)?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3091",
+   "query": "Am I considered in debt if I pay a mortgage?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3103",
+   "query": "AVS Address Verification System of BOTH Credit and Debit Cards - WHERE, HOW?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3115",
+   "query": "How can I live outside of the rat race of American life with 300k?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3125",
+   "query": "Claiming mileage allowances, what are the rules/guidelines?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3148",
+   "query": "Can a car company refuse to give me a copy of my contract or balance details?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3149",
+   "query": "Tips for insurance coverage for one-man-teams",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3177",
+   "query": "Vanguard ETF vs mutual fund",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3179",
+   "query": "Calculation, timing, and taxes related to profit distribution of an S-corp?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3186",
+   "query": "United States Treasury Not Endorsing Checks",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3189",
+   "query": "Diversify my retirement investments with a Roth IRA",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3254",
+   "query": "Why do people buy US dollars on the black market?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3264",
+   "query": "Pros and Cons of Interest Only Loans",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3357",
+   "query": "Why big clients want the contractor to be incorporated before giving them work",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3369",
+   "query": "Why should one only contribute up to the employer's match in a 401(k)?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3394",
+   "query": "What is the easiest way to back-test index funds and ETFs?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_34",
+   "query": "401k Transfer After Business Closure",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3404",
+   "query": "In US, is it a good idea to hire a tax consultant for doing taxes?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3405",
+   "query": "Non Resident aliens - Question of standard vs itemized",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3446",
+   "query": "What's the difference between Term and Whole Life insurance?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3451",
+   "query": "Should you keep your stocks if you are too late to sell?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3453",
+   "query": "How does spot-futures arbitrage work in the gold market?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3480",
+   "query": "Why is OkPay not allowed in the United States?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3490",
+   "query": "Tax Witholding for Stock Sale",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3500",
+   "query": "Why invest in becoming a landlord?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3503",
+   "query": "Is there any instance where less leverage will get you a better return on a rental property?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3512",
+   "query": "As an employee, when is it inappropriate to request to see your young/startup company's financial statements?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3528",
+   "query": "In the US, does getting a loan with a cosigner, help your credit rating?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3530",
+   "query": "How to exclude stock from mutual fund",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3534",
+   "query": "Why do dishonour fees exist?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3566",
+   "query": "Where can I buy stocks if I only want to invest a little bit at a time, and not really be involved in trading?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3569",
+   "query": "Funds in closed bank account have gone to the government",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3594",
+   "query": "If I were to get into a life situation where I would not be able to make regular payments, do lenders typically provide options other than default?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3612",
+   "query": "How can I buy and sell the same stock on the same day?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3615",
+   "query": "My previous and current employers both use Fidelity for 401(k). Does it make sense to rollover?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3625",
+   "query": "What should I do with my paper financial documents?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3682",
+   "query": "Short selling - lender's motivation",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3683",
+   "query": "Can I trust the Motley Fool?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3694",
+   "query": "Has anyone created a documentary about folks who fail to save enough for retirement?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3724",
+   "query": "Should you always max out contributions to your 401k?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3735",
+   "query": "Shorting Stocks And Margin Account Minimum",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3759",
+   "query": "Simplifying money management",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3767",
+   "query": "What should I be doing to protect myself from identity theft?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3771",
+   "query": "Best way to buy Japanese yen for travel?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3781",
+   "query": "What is the rough estimate of salary value for a taxpayer to pay AMT?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3789",
+   "query": "How to work around the Owner Occupancy Affidavit to buy another home in less than a year?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3791",
+   "query": "\"When people say 'Interest rates are at all time low!\"\" … Which interest rate are they actually referring to?\"",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3801",
+   "query": "Can a bunch of wealthy people force Facebook to go public?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3822",
+   "query": "How to change a large quantity of U.S. dollars into Euros?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3829",
+   "query": "Are all VISA cards connected with bank accounts?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3830",
+   "query": "US citizen transferring money to Indian fiance to buy property",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3837",
+   "query": "Opening a Roth IRA account, what is the fee structure for Vanguard, Scottrade and TIAA-CREF",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3859",
+   "query": "Buying an investment property in Australia - what are the advantages and disadvantages of building a house vs buying an existing one?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3875",
+   "query": "Does freedom to provide services allow me contracting in Germany without paying taxes there (but in my home EU country)?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3888",
+   "query": "Why I can't view my debit card pre-authorized amounts?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3909",
+   "query": "How to rescue my money from negative interest?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3932",
+   "query": "How do historically low interest rates affect real estate prices?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3934",
+   "query": "Should market based health insurance premiums be factored into 6 months emergency fund savings?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_3995",
+   "query": "I have more than $250,000 in a US Bank account… mistake?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4007",
+   "query": "What is a reasonable salary for the owner and sole member of a small S-Corp?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4011",
+   "query": "How can I deal with a spouse who compulsively spends?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4019",
+   "query": "How and Should I Invest (As a college 18 year old with minimal living expenses)?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4031",
+   "query": "28 years old and just inherited large amount of money and real estate - unsure what to do with it",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4037",
+   "query": "How separate individual expenses from family expenses in Gnucash?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4047",
+   "query": "Does doing your “research”/“homework” on stocks make any sense?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4071",
+   "query": "If our economy crashes, and cash is worthless, should i buy gold or silver",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4084",
+   "query": "What industries soar when oil prices go up?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4102",
+   "query": "How can I determine if my rate of return is “good” for the market I am in?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4103",
+   "query": "What causes US Treasury I bond fixed interest to increase?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4105",
+   "query": "As an investor what are side effects of Quantitative Easing in US and in EU?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4116",
+   "query": "Would the effects of an anticipated default by a nation be mostly symbolic?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4125",
+   "query": "Alternative means of salary for my employees",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4142",
+   "query": "Relation between inflation rates and interest rates",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4153",
+   "query": "How do I invest in emerging markets",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4179",
+   "query": "Why could the serious financial woes of some EU member states lead to the end of the Euro?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4188",
+   "query": "Why is the stock market rising after Trump's attack on the TPP?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_42",
+   "query": "What are the ins/outs of writing equipment purchases off as business expenses in a home based business?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4205",
+   "query": "How and why does the exchange rate of a currency change almost everyday?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4233",
+   "query": "Are personal finance / money management classes taught in high school, anywhere?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4265",
+   "query": "Does it make any sense to directly contribute to reducing the US national debt?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4286",
+   "query": "Given advice “buy term insurance and invest the rest”, how should one “invest the rest”?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4289",
+   "query": "Does the currency exchange rate contain any additional information at all?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4306",
+   "query": "How do currency markets work? What factors are behind why currencies go up or down?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4312",
+   "query": "Is it true that 90% of investors lose their money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4335",
+   "query": "What is the US Fair Tax?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4339",
+   "query": "What could happen to Detroit Municipal bonds because of Detroit's filing for bankruptcy?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4394",
+   "query": "Transfer $50k to another person's account (in California, USA)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4409",
+   "query": "My friend wants to put my name down for a house he's buying. What risks would I be taking?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4411",
+   "query": "How does the importance of a cash emergency fund change when you live in a country with nationalized healthcare?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4414",
+   "query": "Do high interest rates lead to higher bond yields or lower?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4415",
+   "query": "How much is inflation?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4433",
+   "query": "When should you use an actively managed mutual fund in a 401k?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4447",
+   "query": "Should I always hold short term bonds till maturity?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4464",
+   "query": "Are Australian mutual fund fees large compared to US?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4465",
+   "query": "How to donate to charity that will make a difference?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4484",
+   "query": "Has the likelihood of getting a lower interest rate by calling & asking been reduced by recent credit card regulations?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4499",
+   "query": "Is investing exlusively in a small-cap index fund a wise investment?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4500",
+   "query": "What to ask Warren Buffet at the Berkshire Hathaway shareholder meeting?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4504",
+   "query": "what is the best way of investment which gives returns forever?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4514",
+   "query": "What intrinsic, non-monetary value does gold have as a commodity?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4523",
+   "query": "What should I do with my $25k to invest as a 20 years old?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4539",
+   "query": "How should I save money if the real interest rate (after inflation) is negative?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4571",
+   "query": "HSBC Hong Kong's “Deposit Plus” Product: What is it, and what strategies to employ?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4600",
+   "query": "Why government bonds fluctuate so much, even though interest rates don't change that often?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4605",
+   "query": "If the U.S. defaults on its debt, what will happen to my bank money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4615",
+   "query": "Are solar cell panels and wind mills worth the money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4640",
+   "query": "What can my relatives do to minimize their out of pocket expenses on their fathers estate",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4641",
+   "query": "Where should I park my rainy-day / emergency fund?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4678",
+   "query": "Finance, Cash or Lease?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4681",
+   "query": "How to fix Finance::Quote to pull quotes in GnuCash",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4700",
+   "query": "Better to get loan from finance company or bank considering the drop of credit score?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4714",
+   "query": "Personal finance app where I can mark transactions as “reviewed”?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_475",
+   "query": "Do I need a new EIN since I am hiring employees for my LLC?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4756",
+   "query": "What is the formula for the Tesla Finance calculation?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4767",
+   "query": "New car: buy with cash or 0% financing",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4775",
+   "query": "Should I finance a car to build credit for a mortgage next year?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4777",
+   "query": "How to finance necessary repairs to our home in order to sell it?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4785",
+   "query": "What is the difference between a structured collar and a normal collar in finance?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4804",
+   "query": "How do financial services aimed at women differ from conventional services?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4813",
+   "query": "Dealer Financing Fell Through on vehicle purchase: Scam?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4823",
+   "query": "Close to retirement & we may move within 7 years. Should we re-finance our mortgage, or not?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4827",
+   "query": "Are all financial advisors compensated in the same way?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4837",
+   "query": "When applying for a mortgage, can it also cover outstanding debts?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4844",
+   "query": "How to read bond yield quotes? What do the time, coupon, price, yield, and time mean?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4845",
+   "query": "What is the difference between fund and portfolio?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4846",
+   "query": "Is there anything comparable to/resembling CNN's Fear and Greed Index?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4863",
+   "query": "How to calculate new price for bond if yield increases",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4865",
+   "query": "Why are historical prices of stocks different on different websites? Which one should I believe?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4920",
+   "query": "Does financing a portfolio on margin affect the variance of a portfolio?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4942",
+   "query": "find stock composition of a publicly traded fund",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4946",
+   "query": "Something looks off about Mitsubishi financial data",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4955",
+   "query": "How to calculate the value of a bond that is priced to yield X%",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4962",
+   "query": "Net Cash Flows from Selling the Bond and Investing",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4968",
+   "query": "Reasons behind a large price movement of a penny stock without any recent news releases?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4981",
+   "query": "Where can I find open source portfolio management software?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_4999",
+   "query": "Looking for a good source for Financial Statements",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5021",
+   "query": "Is there a more flexible stock chart service, e.g. permitting choice of colours when comparing multiple stocks?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_503",
+   "query": "Privacy preferences on creditworthiness data",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5030",
+   "query": "Why pay for end-of-day historical prices?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_504",
+   "query": "Have plenty of cash flow but bad credit",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5045",
+   "query": "Why are we taxed on revenue and companies on profit?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5054",
+   "query": "How to stress test an investment plan?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5061",
+   "query": "What fiscal scrutiny can be expected from IRS in early retirement?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5064",
+   "query": "How much should a graduate student attempt to save?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5067",
+   "query": "LLC: Where should the funds for initial startup costs come from?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5080",
+   "query": "Is there a standard or best practice way to handle money from an expiring UTMA account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5083",
+   "query": "Co-signer deceased",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5085",
+   "query": "What is vested stock and yearly dividends?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5086",
+   "query": "Mortgage loan implications when tearing down existing house and building new one?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5090",
+   "query": "Should I take a student loan to pursue my undergraduate studies in France?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5125",
+   "query": "Regarding Australian CBS takeover of TEN",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5134",
+   "query": "Why does Yahoo Finance's data for a Vanguard fund's dividend per share not match the info from Vanguard?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_515",
+   "query": "financial institution wants share member break down for single member LLC",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5150",
+   "query": "What credit card information are offline US merchants allowed to collect for purposes other than the transaction?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5155",
+   "query": "For insurance, why should you refuse $4,000/year for only 10 years and prefer $500/year indefinitely?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5172",
+   "query": "does interest payment on loan stay the same if I pay early",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5178",
+   "query": "Formula that predicts whether one is better off investing or paying down debt",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5185",
+   "query": "Invest in low cost small cap index funds when saving towards retirement?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5196",
+   "query": "I might use a credit card convenience check. What should I consider?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5206",
+   "query": "Is it a good idea to get an unsecured loan to pay off a credit card that won't lower a high rate?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5228",
+   "query": "How does the bank/IRS know whether a bank transfer over $14k is a gift or loan repayment?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5231",
+   "query": "Where to find CSV or JSON data for publicly traded companies listed with their IPO date?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5241",
+   "query": "Mortgage vs. Cash for U.S. home buy now",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5254",
+   "query": "How do I calculate the quarterly returns of a stock index?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5255",
+   "query": "Thrift Saving Plan (TSP) Share Price Charts",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5264",
+   "query": "Does a company's stock price give any indication to or affect their revenue?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5271",
+   "query": "Why are auto leases stubbornly strict about visa status and how to work around that?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_529",
+   "query": "Sole proprietorship or LLC?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5331",
+   "query": "Exercises of employee share options",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5343",
+   "query": "“International credit report” for French nationals?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5347",
+   "query": "car loan life insurance",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5356",
+   "query": "Historical stock prices: Where to find free / low cost data for offline analysis?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5369",
+   "query": "Paying for things on credit and immediately paying them off: any help for credit rating?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5374",
+   "query": "What were the main causes of the spike and drop of DRYS's stock price?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5380",
+   "query": "Can somebody explain “leveraged debt investment positions” and “exposures” in this context for me, please?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5402",
+   "query": "Is it impossible to get a home loan with a poor credit history after a divorce?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5410",
+   "query": "Dealership made me the secondary owner to my own car",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5422",
+   "query": "What are some good books for learning stocks, bonds, derivatives e.t.c for beginner with a math background?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5427",
+   "query": "How do auto-loan payments factor into taxes for cars that are solely used by dependent(s)?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5460",
+   "query": "Paying off a loan with a loan to get a better interest rate",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5464",
+   "query": "Resources on Buying Rental Properties",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_547",
+   "query": "What percentage of my company should I have if I only put money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_549",
+   "query": "Where to request ACH Direct DEBIT of funds from MY OWN personal bank account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5503",
+   "query": "Tax considerations for selling a property below appraised value to family?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5505",
+   "query": "Can I deduct interest and fees on a loan for qualified medical expenses?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5511",
+   "query": "Pay off car loan entirely or leave $1 until the end of the loan period?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5534",
+   "query": "How does “taking over payments” work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5549",
+   "query": "Pros / cons of being more involved with IRA investments [duplicate]",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5585",
+   "query": "Is there any site you can find out about the 'bonus features' of credit cards?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_559",
+   "query": "Challenged an apparently bogus credit card charge, what happens now?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5592",
+   "query": "Are “hard money loans” meant only for real estate?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_56",
+   "query": "Can a entrepreneur hire a self-employed business owner?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5616",
+   "query": "How and where do companies publish financial reports?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5620",
+   "query": "What's the fuss about identity theft?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5646",
+   "query": "Do I need multiple credit monitoring services?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5653",
+   "query": "Steps and timing of the SEIS investment (in the UK)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5683",
+   "query": "What is the PEG ratio? How is the PEG ratio calculated? How is the PEG ratio useful for stock investing?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_570",
+   "query": "Employer options when setting up 401k for employees",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5710",
+   "query": "Bucketing investments to track individual growths",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5741",
+   "query": "Learning investing and the stock market",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5763",
+   "query": "What is the best way to get a “rough” home appraisal prior to starting the refinance process?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5782",
+   "query": "Pay off credit cards in one lump sum, or spread over a few months?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5790",
+   "query": "FX losses on non-UK mortgage for UK property - tax deductable?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5808",
+   "query": "How do you calculate return on investment for a share of stock?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_585",
+   "query": "Following an investment guru a good idea?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5853",
+   "query": "Paying Off Principal of Home vs. Investing In Mutual Fund",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5862",
+   "query": "Can I get a discount on merchandise by paying with cash instead of credit?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_588",
+   "query": "Is there a reason to buy a 0% yield bond?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5888",
+   "query": "Interest charges on balance transfer when purchases are involved",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5903",
+   "query": "Fees aside, what factors could account for performance differences between U.S. large-cap index ETFs?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5906",
+   "query": "0% APR first 12 months on new credit card. Can I exceed that 30% rule of thumb and not hurt my credit score?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_594",
+   "query": "Should a retail trader bother about reading SEC filings",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5940",
+   "query": "How does investment into a private company work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5951",
+   "query": "Why can't house prices be out of tune with salaries",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5970",
+   "query": "How to calculate ownership for property with a partner",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5981",
+   "query": "Is it a good investment for a foreigner to purchase a flat/apartment in China?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_5993",
+   "query": "Why would anyone want to pay off their debts in a way other than “highest interest” first?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6002",
+   "query": "15 year mortgage vs 30 year paid off in 15",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6004",
+   "query": "Put-Call parity - what is the difference between the two representations?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6005",
+   "query": "Why might it be advisable to keep student debt vs. paying it off quickly?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6009",
+   "query": "Why can low volume move a stock price drastically?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_603",
+   "query": "Will one’s education loan application be rejected if one doesn't have a payslip providing collateral?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_604",
+   "query": "Is there a dollar amount that, when adding Massachusetts Sales Tax, precisely equals $200?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6041",
+   "query": "Most effective Fundamental Analysis indicators for market entry",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6080",
+   "query": "Is ScholarShare a legitimate entity for a 529 plan in California?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6110",
+   "query": "Why does short selling require borrowing?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6121",
+   "query": "What are my best options if I don't have a lot of credit lines for housing loans?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6122",
+   "query": "Better to rent condo to daughter or put her on title?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6131",
+   "query": "Is it ever a good idea to close credit cards?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6133",
+   "query": "What happens to all of the options when they expire?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6142",
+   "query": "How does stabilization work during an IPO?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6146",
+   "query": "Lost credit card replaced with new card and new numbers. Credit score affected?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6199",
+   "query": "How can all these countries owe so much money?  Why & where did they borrow it from?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_620",
+   "query": "Is it wise to have plenty of current accounts in different banks?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6219",
+   "query": "Are there Investable Real Estate Indices which track Geographical Locations?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_622",
+   "query": "Accidentally opened a year term CD account, then realized I need the money sooner. What to do?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6221",
+   "query": "To pay off a student loan, should I save up a lump sum payoff payment or pay extra each month?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6252",
+   "query": "Is this mortgage advice good, or is it hooey?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6262",
+   "query": "Help required on estimating SSA benefit amounts",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6278",
+   "query": "What is the best way to help my dad consolidate his credit card debt at a lower rate?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6395",
+   "query": "Option settlement for calendar spreads",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6410",
+   "query": "Will an ETF immediately reflect a reconstitution of underlying index",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6420",
+   "query": "Does the bid/ask concept exist in dealer markets?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6441",
+   "query": "Trading with Settled / Unsettled Funds (T+3)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6467",
+   "query": "Advice on strategy for when to sell",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6468",
+   "query": "Why deep in the money options have very low liquidity",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6479",
+   "query": "Trading on exchanges or via brokerage companies?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6525",
+   "query": "Does it make sense to trade my GOOGL shares for GOOG and pocket the difference?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6554",
+   "query": "Mutual fund value went down, shares went up, no action taken by me",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6562",
+   "query": "Cheapest way to “wire” money in an Australian bank account to a person in England, while I'm in Laos?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_659",
+   "query": "Buying from an aggressive salesperson",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6611",
+   "query": "How does Vanguard determine the optimal asset allocation for their Target Retirement Funds?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6612",
+   "query": "If I have a lot of debt and the housing market is rising, should I rent and slowly pay off my debt or buy and roll the debt into a mortgage?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6625",
+   "query": "What does a high theta mean for an option position?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6629",
+   "query": "Tax treatment of a boxed trade?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6635",
+   "query": "Why don't share prices of a company rise every other Friday when the company buys shares for its own employees?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6644",
+   "query": "How to know precisely when a SWIFT is issued by a bank?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6647",
+   "query": "What is meant by “priced in”?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6668",
+   "query": "Approximate IT company valuation (to proximate stock options value)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6679",
+   "query": "Specifically when do options expire?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6683",
+   "query": "Who are the sellers for the new public stocks?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6713",
+   "query": "Will my father still be eligible for SNAP if I claim him as my dependent?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6715",
+   "query": "What does it mean if “IPOs - normally are sold with an `underwriting discount` (a built in commission)”",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_672",
+   "query": "Credit and Debit",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6746",
+   "query": "What happens if stock purchased on margin plummets below what I have in the brokerage?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6787",
+   "query": "Would it make sense to sell a stock, then repurchase it for tax purposes?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6792",
+   "query": "Where to find the full book of outstanding bids/asks for a stock?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_68",
+   "query": "Intentions of Deductible Amount for Small Business",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6800",
+   "query": "I don't live in America. How can I buy IPO stock of newly listed companies in the United States?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6803",
+   "query": "What are the common moving averages used in a “Golden Cross” stock evaluation?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6807",
+   "query": "How to incorporate dividends while calculating annual return of a Stock",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6814",
+   "query": "Selling Stock - All or Nothing?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6832",
+   "query": "incorrect printed information on check stock",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6835",
+   "query": "Are bond ETF capital gains taxed similar to stock or stock funds if held for more than 1 year?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_684",
+   "query": "Beyond RRSP deductions, how does a high income earner save on taxes?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6849",
+   "query": "What do the points in a stock market index epresent?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6862",
+   "query": "Canada discount stock brokers: Interactive Brokers vs. Questrade?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6867",
+   "query": "Will there always be somebody selling/buying in every stock?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_687",
+   "query": "Online tool to connect to my bank account and tell me what I spend in different categories?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6875",
+   "query": "Where to find free Thailand stock recommendations and research?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_689",
+   "query": "Receive credit card payment sending my customer details to a credit card processing company?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6890",
+   "query": "Where does the money go when I buy stocks?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6891",
+   "query": "What is the theory behind Rick Van Ness's risk calculation in the video about diversification?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6896",
+   "query": "Selling high, pay capital gains, re-purchase later",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6901",
+   "query": "Rules for Broker Behavior with Covered Calls",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6907",
+   "query": "Nominal value of shares",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6909",
+   "query": "Why do stocks priced above $2.00 on the ASX sometimes move in $0.005 increments?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_691",
+   "query": "How to categorize credit card payments?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6959",
+   "query": "What is the term for the quantity (high price minus low price) for a stock?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_6985",
+   "query": "Bed and Breakfast, Same Day Capital Gains UK",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_699",
+   "query": "Prepaid Rent (Accrual Based Accounting)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_701",
+   "query": "What are the ins/outs of writing-off part of one's rent for working at home?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7017",
+   "query": "Basic Algorithmic Trading Strategy",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7068",
+   "query": "Making money through CFD",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7071",
+   "query": "ESPP strategy - Sell right away or hold?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7080",
+   "query": "Wash sale rule with dividend reinvestment",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7096",
+   "query": "What's the formula for profits and losses when I delta hedge?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7098",
+   "query": "Can another tax loss be used to offset capital gains taxes? How does it work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7105",
+   "query": "What is the difference between fixed-income duration and equity duration?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7109",
+   "query": "How do I analyse moving averages?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7124",
+   "query": "How come we can find stocks with a Price-to-Book ratio less than 1?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7141",
+   "query": "Do investors go long option contracts when they cannot cover the exercise of the options?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7145",
+   "query": "Are there “buy and hold” passively managed funds?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_715",
+   "query": "what would you do with $100K saving?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7178",
+   "query": "Should an ADR that is being delisted be sold off?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7188",
+   "query": "What explains the enormous increase in gold price in the early 21st century?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7205",
+   "query": "Is it possible to see option prices from the past?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7206",
+   "query": "Who Bought A Large Number Of Shares?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_721",
+   "query": "What are “upstream investments” and “downstream investments” in this context?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7218",
+   "query": "What margin is required to initiate and maintain a short sale",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7221",
+   "query": "How Technical Analysts react to non-market hours effects",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7269",
+   "query": "How do I track investment performance in Quicken across rollovers?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7279",
+   "query": "If I invest in securities denominated in a foreign currency, should I hedge my currency risk?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7295",
+   "query": "Selling non-dividend for dividend stocks",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7311",
+   "query": "Finance, Social Capital IPOA.U",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7326",
+   "query": "Do brokers execute every trade on the exchange?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7329",
+   "query": "Does Implied Volatilty factor in all known future events?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7344",
+   "query": "How is the Dow divisor calculated?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7345",
+   "query": "What do these numbers mean? (futures)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7377",
+   "query": "What type of returns Vanguard is quoting?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7431",
+   "query": "Pay off mortgage or invest in high value saving account",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_744",
+   "query": "What options are available for a home loan with poor credit but a good rental history?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7441",
+   "query": "Since many brokers disallow investors from shorting sub-$5 stocks, why don't all companies split their stock until it is sub-$5",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7445",
+   "query": "IS it the wrong time to get into the equity market immediately after large gains?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7448",
+   "query": "If an index goes up because an underlying company issues more shares, what happens to the ETF",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7456",
+   "query": "What is market order's relation to bid ask spread?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7463",
+   "query": "Pros/cons of borrowing money using a mortgage loan and investing it in a low-fee index fund?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7467",
+   "query": "Stocks are traded on secondary markets?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7484",
+   "query": "Why sometimes payable date is BEFORE the ex-dividend date?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_750",
+   "query": "Paid part of my state refund back last year; now must declare the initial amount as income?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7509",
+   "query": "Investment Portfolio Setup for beginner",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7512",
+   "query": "understanding the process/payment of short sale dividends",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7513",
+   "query": "Where are Bogleheadian World ETFs or Index funds?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7529",
+   "query": "Does the expense ratio of a fund-of-funds include the expense ratios of its holdings?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_753",
+   "query": "Taxes due for hobbyist Group Buy",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7533",
+   "query": "Investing tax (savings)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7534",
+   "query": "Can you explain why it's better to invest now rather than waiting for the market to dip?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7590",
+   "query": "Why are US target retirement funds weighted so heavily towards US stocks?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7592",
+   "query": "few question about debit credit and liabilities",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7594",
+   "query": "Converting annual interbank rates into monthly rates",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7622",
+   "query": "Best way to pay off debt?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7633",
+   "query": "Can a trade happen “in between” the bid and ask price?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_766",
+   "query": "Will the ex-homeowner still owe money after a foreclosure?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7674",
+   "query": "Choosing the limit when making a limit order?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7700",
+   "query": "Should I re-allocate my portfolio now or let it balance out over time?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7702",
+   "query": "Bond ETFs vs actual bonds",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7705",
+   "query": "Why would I pick a specific ETF over an equivalent Mutual Fund?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7734",
+   "query": "Can PE ratio of stocks be compared to other investments?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7747",
+   "query": "What happens to bonds values when interest rates rise? [duplicate]",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7754",
+   "query": "Inverse Relationship between Volatility and Beta",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7758",
+   "query": "Bid/ask spreads for index funds",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_776",
+   "query": "Can saving/investing 15% of your income starting age 25, likely make you a millionaire?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7801",
+   "query": "What are some well known or well regarded arguments against investing?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7803",
+   "query": "Can the Delta be used to calculate the option premium given a certain target?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7823",
+   "query": "Retirement Funds: Betterment vs Vanguard Life strategy vs Target Retirement",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7876",
+   "query": "Why do stocks split?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7879",
+   "query": "Any Tips on How to Get the Highest Returns Within 4 Months by Investing in Stocks?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7880",
+   "query": "Are there index tracking funds that avoid the “buy high - sell low” problem?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7911",
+   "query": "What is the difference between a 'trader' and a 'stockbroker'?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7925",
+   "query": "Can I sell a stock immediately?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7928",
+   "query": "If I believe a stock is going to fall, what options do I have to invest on this?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7936",
+   "query": "Why naked call writing is risky compare to Covered call?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_7992",
+   "query": "What type of pension should I get?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8",
+   "query": "How to deposit a cheque issued to an associate in my business into my business account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8002",
+   "query": "What is the tax treatment of scrip dividends in the UK?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8005",
+   "query": "Difference between Vanguard sp500 UCITS and Vanguard sp500",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8013",
+   "query": "Frequency of investments to maximise returns (and minimise fees)",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8017",
+   "query": "Purchasing ETFs when (pretty much) everything else is maxed out",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8034",
+   "query": "What is the average cost of a portfolio on a trading site?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8040",
+   "query": "Best way to make most of savings with ISA and Offset mortgage",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8072",
+   "query": "What does it mean “sell on ask” , “sell on bid” in stocks?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8079",
+   "query": "Growth rate plus dividend yieid total?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_810",
+   "query": "Can I open a bank account in the US remotely? Will I pay taxes for the money on it?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8102",
+   "query": "When do I sell a stock that I hold as a long-term position?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8116",
+   "query": "A-B-C Class Shares: What's the difference?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8121",
+   "query": "Can I calculate stock value with Williams%R if I know the last set?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_813",
+   "query": "Income Tax and Investments",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8202",
+   "query": "What accounted for DXJR's huge drop in stock price?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8230",
+   "query": "Why would this kind of penny stock increase so much in value?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8247",
+   "query": "Tax on Stocks or ETF's",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8271",
+   "query": "Income in zero-interest environment",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8275",
+   "query": "Buy/Selling prices at the stock exchange represent someone Selling/Buying at that price?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8296",
+   "query": "Can the beta of a stock be used as a lagging indicator for the stock w.r.t the market",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8332",
+   "query": "Why do put option prices go higher when the underlying stock tanks (drops)?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8351",
+   "query": "What happens when a calendar spread is assigned in a non-margin account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8378",
+   "query": "Should I wait a few days to sell ESPP Stock?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8456",
+   "query": "What typically happens to unvested stock during an acquisition?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8475",
+   "query": "Why I cannot find a “Pure Cash” option in 401k investments?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_849",
+   "query": "Accounting for reimbursements that exceed actual expenses",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8507",
+   "query": "When to sell a stock?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8512",
+   "query": "Is it possible to transfer stock I already own into my Roth IRA without having to sell the stock?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8513",
+   "query": "Buy on dip when earnings fail?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_852",
+   "query": "Dalbar: How can the average investor lose money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_853",
+   "query": "What will my taxes be as self employed?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8532",
+   "query": "What do these options trading terms mean?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8537",
+   "query": "What is an “Options Account”?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8539",
+   "query": "Can the risk of investing in an asset be different for different investors?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8544",
+   "query": "Strategies to recover from a bad short-term call options purchase where the underlying dropped instead?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_858",
+   "query": "Is it bad practice to invest in stocks that fluctuate by single points throughout the day?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_859",
+   "query": "Any reason to keep around my account with my old, 'big' bank?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8592",
+   "query": "Tax implications of exercising ISOs and using proceeds to exercise more ISOs",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8632",
+   "query": "Is it best to exercise options shares when they vest, or wait",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8635",
+   "query": "Is there any flaw in this investment scheme?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_864",
+   "query": "Why use accounting software like Quickbooks instead of Excel spreadsheets?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8702",
+   "query": "Why is early exercise generally not recommended for an in-the-money option?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8779",
+   "query": "How does a defined contribution plan work",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8789",
+   "query": "What does “profits to the shareholders jumped to 15 cents a share” mean?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_879",
+   "query": "Capital improvement and depreciation in restaurant LLC",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8795",
+   "query": "Stock exchanges using open outcry",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8832",
+   "query": "Is it possible to buy commodity ETFs (e.g. silver) through Questrade?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8834",
+   "query": "Pros/Cons of Buying Discounted Company Stock",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_885",
+   "query": "How long do credit cards keep working after you disappear?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8855",
+   "query": "How do i get into investing stocks [duplicate]",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8874",
+   "query": "When can you adjust for (and re-allow) a disallowed year-end (December) wash-sale loss?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_89",
+   "query": "How can I deposit a check made out to my business into my personal account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8934",
+   "query": "Dividend yield for multiple years?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8937",
+   "query": "“In-the-Money” vs “Out-of-the-Money” Call Options",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8947",
+   "query": "Can a Roth IRA be used as a savings account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_895",
+   "query": "California tells me I didn't file documents for an LLC that isn't mine. What do I do?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8959",
+   "query": "How is the opening-day price of a stock decided?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8970",
+   "query": "What's the difference, if any, between stock appreciation and compound interest?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8974",
+   "query": "As a 22-year-old, how risky should I be with my 401(k) investments?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_8982",
+   "query": "Are Exchange-Traded Funds (ETFs) less safe than regular mutual funds?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_90",
+   "query": "Filing personal with 1099s versus business s-corp?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_904",
+   "query": "How do I set up Quickbooks for a small property rental company that holds its properties in separate LLC's?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9060",
+   "query": "Buying puts without owning underlying",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9088",
+   "query": "Brokerage account for charity",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9108",
+   "query": "Starting an investment portfolio with Rs 5,000/-",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9115",
+   "query": "Why does the calculation for percentage profit vary based on whether a position is short vs. long?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9126",
+   "query": "Short an option - random assignment?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9164",
+   "query": "Bonds vs equities: crash theory",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9174",
+   "query": "Which U.S. online discount broker is the best value for money?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9188",
+   "query": "Selling mutual fund and buying equivalent ETF: Can I 1031 exchange?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9245",
+   "query": "Stock Options for a company bought out in cash and stock",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9275",
+   "query": "Do I have to pay a capital gains tax if I rebuy the same stock within 30 days?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_928",
+   "query": "How can I determine if a FHA loan refinance offer is from a reputable lender",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_929",
+   "query": "Freelancer: Should I start a second bank account?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9291",
+   "query": "Are there any consequences for investing in Vanguard's Admiral Shares funds instead of ETF's in a Roth IRA?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9296",
+   "query": "Why would Two ETFs tracking Identical Indexes Produce different Returns?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_932",
+   "query": "Is freelance income earned by a U.S. citizen while living abroad subject to state income tax?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9329",
+   "query": "Interactive Brokers: IOPTS and list of structured products",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9332",
+   "query": "What can I do with a physical stock certificate for a now-mutual company?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9381",
+   "query": "Trade? Buy and hold? Or both?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9385",
+   "query": "Meaning of reinvestment",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_939",
+   "query": "How to correct a tax return filed electronically and already approved?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9391",
+   "query": "Should I replace bonds in a passive investment strategy",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_94",
+   "query": "Using credit card points to pay for tax deductible business expenses",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9403",
+   "query": "Abundance of Cash - What should I do?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_945",
+   "query": "Paid by an American company but working from France: where should I pay taxes?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9481",
+   "query": "What are reasonable administrative fees for an IRA?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9487",
+   "query": "Is a public company allowed to issue new shares below market price without consulting shareholders?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9548",
+   "query": "How do I research, analyze, and choose the right mutual fund for a roth ira?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9556",
+   "query": "How does pre-market trading work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9565",
+   "query": "What are the tax benefits of dividends vs selling stock",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_957",
+   "query": "How can I withdraw money from my LLC?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9598",
+   "query": "How do index funds actually work?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9617",
+   "query": "What differentiates index funds and ETFs?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9633",
+   "query": "Video recommendation for stock market education",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9643",
+   "query": "Is there any public data available to determine an ETF's holdings?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9644",
+   "query": "If early exercise is a bad idea, why American option is more expensive than European [duplicate]",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9646",
+   "query": "Do common stocks and preferred stocks have any differences in terms of percentage of the company per unit they represent?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9668",
+   "query": "Do stock option prices predicate the underlying stock's movement?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9701",
+   "query": "How to bet against the London housing market?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9733",
+   "query": "Due Diligence - Dilution?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9735",
+   "query": "What are “equity assets”?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9737",
+   "query": "Long(100%)-Short(-100%) investment explanation",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9771",
+   "query": "Is there any emprical research done on 'adding to a loser'",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_98",
+   "query": "How can I make $250,000.00 from trading/investing/business within 5 years?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9808",
+   "query": "Selling To Close",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9824",
+   "query": "Where can end-of-day data be downloaded for corporate bonds?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9871",
+   "query": "What should I do with the 50k I have sitting in a European bank?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_988",
+   "query": "Where should I invest my savings?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9882",
+   "query": "Money-market or cash-type ETFs for foreigners with U.S brokerage account",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9925",
+   "query": "What does Chapter 11 Bankruptcy mean to an investor holding shares of a Chapter 11 Company?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9929",
+   "query": "Investing in commodities, pros and cons?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9961",
+   "query": "Employer rollover from 403b to 401k?",
+   "question_type": "beir_fiqa"
+  },
+  {
+   "name": "beir_fiqa_9979",
+   "query": "What is the best way to invest in gold as a hedge against inflation without having to hold physical gold?",
+   "question_type": "beir_fiqa"
+  }
+ ]
+}

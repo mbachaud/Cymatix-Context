@@ -1,0 +1,5364 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_unix_10055",
+   "query": "Why does `last` show '{' and '|' in the TTY field?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_100755",
+   "query": "Bring Debian to second Position in the GRUB Menu at startup",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_100874",
+   "query": "need to display hard error , transport error & soft errors above 2",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101118",
+   "query": "Is there an easy method for installing binary builds of glibc?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101158",
+   "query": "SSH tunneling via few hosts",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101285",
+   "query": "What does a high load with an empty top mean?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101321",
+   "query": "Proper escape sequence for a non-standard file name",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101326",
+   "query": "Set Static IP in CentOS 6.4?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101330",
+   "query": "Pin or hold? What's the proper way to tell apt-get dist-upgrade that I want to keep a particular package over another?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101392",
+   "query": "Why does halt not turn the machine off?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101527",
+   "query": "How can the number of files in a directory be determined by viewing \"ls -ld\" output?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10158",
+   "query": "Splitting large directory tree into specified-size chunks?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101772",
+   "query": "Xorg.conf to only use part of screen",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101797",
+   "query": "How to report time and other information on all bash commands?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_101847",
+   "query": "Cannot expand asterisk without proper permission",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102016",
+   "query": "How do I columnate a list of items with minimal width?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102024",
+   "query": "How to install linux (BackBox) and windows on the same computer?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10220",
+   "query": "listing packages in Debian, a la `dpkg -l`, but including the package origin/source",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102312",
+   "query": "No matter how many times I try re-installing Linux Mint, I get a GRUB error. How do I fix it?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102453",
+   "query": "What does `init [2]` mean in the COMMAND column of ps?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102492",
+   "query": "raid5 exchange 1 of 3 harddrives",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102504",
+   "query": "Hard links versus symbolic links: which one is faster / smaller?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102553",
+   "query": "Current IP address as visible from the internet?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102624",
+   "query": "What does a dot after the file permission bits mean?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102732",
+   "query": "Regex and patterns on a ksh command line",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_102812",
+   "query": "Can't execute a file with execute permission bit set",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_103019",
+   "query": "Can't install new applications",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_103180",
+   "query": "How does the Linux desktop perform system actions?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_103242",
+   "query": "Need help in removing specific character",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_103270",
+   "query": "How do I get the current bandwidth speed of an interface from the terminal?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1033",
+   "query": "How to change font-size, number of rows / columns on a terminal",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_103549",
+   "query": "Yanked USB Key During Move",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10355",
+   "query": "git and remote security with Encfs",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_103731",
+   "query": "Run a command without making me wait",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_103963",
+   "query": "cycle through one command's output and use in another command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_104018",
+   "query": "Set dynamic window title based on command input",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_104125",
+   "query": "How do I delete files with spaces in them in bash script?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10418",
+   "query": "How to find power draw in watts?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_104429",
+   "query": "How do I edit a file as root?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_104791",
+   "query": "How can I disable the button of my CD/DVD drive?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_104797",
+   "query": "HDD indicator blinks when I run out of memory, but I have no swap configured",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105026",
+   "query": "boot partition is almost full in CentOS",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105030",
+   "query": "Bash Syntax Colouring",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105220",
+   "query": "Why is learning command line imporatant?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105278",
+   "query": "Resetting password of another Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105365",
+   "query": "How to add the logs to a crontab with time stamp",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105402",
+   "query": "/dev/disk/ lists disks, why /dev/net/ doesn't list network interfaces?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105417",
+   "query": "GPS stopped working, gpsctl says: \"gpsctl:ERROR: packet recognition timed out\"",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105717",
+   "query": "upgrading an O.S. affects which file systems?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10575",
+   "query": "Can't add user to sudoers file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105840",
+   "query": "nohup: ignoring input and redirecting stderr to stdout",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105908",
+   "query": "How to display meminfo in megabytes in top?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_105940",
+   "query": "Nested POSIX groups in Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10597",
+   "query": "Reattach to lost X11 session",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10617",
+   "query": "Arch Linux not booting after system update",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_106377",
+   "query": "How to route traffic to different interfaces for different ports",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10646",
+   "query": "Repeat a Unix command every x seconds forever",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_106544",
+   "query": "Use xargs input in eval command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_106680",
+   "query": "Invert colors on one window",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10692",
+   "query": "How do I get which to show aliases?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107111",
+   "query": "what is meant by vi and emacs editing modes",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107131",
+   "query": "Find files systemwide that are created within a date range",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107138",
+   "query": "I want to print a line when a user login",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107168",
+   "query": "What's the practical difference between `command` and $(command)?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107290",
+   "query": "Extract date from a variable in a different format",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10731",
+   "query": "Common multiple SSH connections file handling issue",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107541",
+   "query": "Add ssh user with minimum rights for backup",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107823",
+   "query": "How can the output of ldd be checked to see of they exist on a different system or not?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107917",
+   "query": "How to modify the shell prompt?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_107967",
+   "query": "Is there a way to keep an app running after closing the terminal that calls it?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_108222",
+   "query": "Linux - Sending a command to a screen through a shell script?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10825",
+   "query": "Remember a half-typed command while I check something",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_108782",
+   "query": "Pass the output of previous command to next as an argument",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_10893",
+   "query": "What did Ken Thompson mean when he said, \"I'd spell create with an 'e'.\"",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_109536",
+   "query": "If you ^Z from a process, it gets \"stopped\". How do you switch back in?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_109862",
+   "query": "#!/bin/bash: No such file or directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_110269",
+   "query": "The amount of time since the system was last booted",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_110282",
+   "query": "CP: max source files number arguments for copy utility",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_110401",
+   "query": "Need a command sequence that will move files from one directory to another based on a particular year?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_110540",
+   "query": "Adding Postgres bins to PATH: should I `export`?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_110563",
+   "query": "How can the order of execution in the shell as it relates to redirection be upset about 1 time out of a 1000 on my system?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_110595",
+   "query": "Why do forked processes sometimes appear with brackets [] around their name in ps?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_110822",
+   "query": "Using bash \"&\" operator with \";\" delineator?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_111118",
+   "query": "How can I interact with my home router via a device on the local network using ssh?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_111197",
+   "query": "Routing Application through different network interfaces",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_111331",
+   "query": "Evolution of the shell",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_111355",
+   "query": "How to redirect the output of any command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_111631",
+   "query": "Windows partition hidden?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_111650",
+   "query": "How to set up wireshark with correct permissions",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_11172",
+   "query": "How can I kill a <defunct> process whose parent is init?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_11182",
+   "query": "Mapping key combination with xmodmap",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_112326",
+   "query": "How to start command in bash without blocking console",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_11343",
+   "query": "Linux tools to treat files as sets and perform set operations on them",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_113589",
+   "query": "How to have longer key bindings for stty",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_113715",
+   "query": "How can I concatenate all files in a directory together in one command line operation?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_113774",
+   "query": "Permission denied to change gid(group) of a file I own",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_114013",
+   "query": "Edit file on image created with dd",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_11406",
+   "query": "How to search for file contents",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_114235",
+   "query": "Weird behaviour on debian machine",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_114274",
+   "query": "An init-script does not get called on shutdown",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_114608",
+   "query": "ls: show file size with thousand separator",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_114613",
+   "query": "How to determine which init system is used?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_11472",
+   "query": "Automount USB drives with no GUI requirement (halevt replacement)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_114943",
+   "query": "Can sed replace new line characters?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_115202",
+   "query": "Third level domains",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_115686",
+   "query": "How to route \"single ip\" to different interfaces",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116070",
+   "query": "granting write permissions to a group to a folder",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116210",
+   "query": "What is the appropriate kernel for the i7-4770K CPU?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116389",
+   "query": "Recursively delete all files with a given extension",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116498",
+   "query": "List the file permissions of only the current directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116640",
+   "query": "What is maximum RAM supportable by Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116702",
+   "query": "How can I listen to communication between a process and a serial port?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1168",
+   "query": "how to glob every hidden file except current and parent directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116847",
+   "query": "lsmod outputs: Not tainted",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116849",
+   "query": "Why load is high despite the fact that neither CPU or disk is overused",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_116989",
+   "query": "Why is df -h size, util and dispo not corresponding to each other",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117050",
+   "query": "Program for making a complete ISO-image of damaged DVD by multiple readings?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117148",
+   "query": "How can I run reboot as a normal user without needing to enter a password?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117184",
+   "query": "Most efficient way of purging of 10TB data from SAN?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117467",
+   "query": "How to permanently set environmental variables",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117609",
+   "query": "Capture Error of LS to file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117629",
+   "query": "How to ask for a password to mount crypted swap at boot time on Linux Mint 16 with initramfs-tools?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117643",
+   "query": "Check for Process if Same is Running",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117928",
+   "query": "Disable login for useradd",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_117975",
+   "query": "disable mail notification on login",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_118219",
+   "query": "Free disk space from a JBoss log file which is still being written to",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_118558",
+   "query": "Is the busybox cpio THAT different from GNU cpio?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_118593",
+   "query": "Wrapper command that runs program in temporary directory and deletes it after execution",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_118853",
+   "query": "What means the s in ls file permissions?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_11889",
+   "query": "Pasting X selection (not clipboard contents) with keyboard",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_118950",
+   "query": "What do the number in the file metadata mean",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_118964",
+   "query": "Share config among ssh aliases",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119298",
+   "query": "How can I extract images from a pdf file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119463",
+   "query": "Updating last modified time of a file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119583",
+   "query": "How to trick a particular command into thinking it is a different date?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119662",
+   "query": "Can we make grep faster by indexing words in files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119698",
+   "query": "When was file created",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119733",
+   "query": "Can a superuser (with 'root' access) manipulate data on a database installed on the server?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119772",
+   "query": "Why is GParted listing an empty parition as using 43.90 GB?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119779",
+   "query": "alternatives to adding entry in /etc/hosts",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119812",
+   "query": "setting environment variable as a function of another env variable",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119996",
+   "query": "How can I hide a command line from (e.g.) top & htop?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_119999",
+   "query": "Linux Mint Booting Installed Partition",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120045",
+   "query": "How to sed and put back the part of the match?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120067",
+   "query": "Copy files without changing owner",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120114",
+   "query": "How to use quick substitution to replace all the strings of the previous command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120134",
+   "query": "Terminal data flows",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120327",
+   "query": "Cron Job - Log Each Minutes Activity",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120432",
+   "query": "How can I have a SSH banner appear BEFORE the \"login as:\" prompt?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12046",
+   "query": "Is there any book , Tutorial on very very advanced shell scripting",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120615",
+   "query": "How to comment multiple lines at once?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120796",
+   "query": "logic behind deleting files where user does not have right to write",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_120800",
+   "query": "Bash in php exec don't color png and mp3 files on Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_121130",
+   "query": "difference between \"ls –alR /\" and \"ls –alR / &\"?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_121144",
+   "query": "Authentication failure for FTP server",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_121222",
+   "query": "Identifying genes from a list of genes",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_121415",
+   "query": "shell script header for best compatibility",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_121716",
+   "query": "unable to open X server",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_121761",
+   "query": "Having ssh tunneling itself for remote access from a third machine",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12186",
+   "query": "Are there any good tools besides SeleniumRC that can fetch webpages including content post-painted by JavaScript?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_122014",
+   "query": "setting output of a command to a variable",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12203",
+   "query": "\"rsync: failed to set permissions on ...\" error with rsync -a or -p option",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_122289",
+   "query": "why is install-recommends default true?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12236",
+   "query": "Best resources to learn bash scripting?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_122399",
+   "query": "Where is the value for current \"In USE\" keyboard layout in the system",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_122824",
+   "query": "My Kali desktop is messed up after trying to change Login-Background.png in /usr/share/images",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12283",
+   "query": "unix, difference between path starting with '/' and '//'",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_122889",
+   "query": "Debian and Systemd: breaking ordering cycle error",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_122944",
+   "query": "Unable to open Windows Disk partitions in solaris 11",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_122971",
+   "query": "Logging and controlling changes to the system",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12332",
+   "query": "Which are the biggest offshoots of UNIX?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_123364",
+   "query": "Where can I find more information about /dev/pts/*, /dev/ptmx, tty and pseudo terminals",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_123590",
+   "query": "How to copy remote files to local if you don't have permission on the remote directory?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_123650",
+   "query": "What is the ` character or symbol called and what is its significance outside of SE code formatting?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_123652",
+   "query": "Openssl upgraded via apt-get, `openssl version` showing previous version",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_123821",
+   "query": "How to record the actual running time of a program with other programs running?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_123959",
+   "query": "How to limit a user's RAM on Ubuntu?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_124293",
+   "query": "Why does fstrim trim all of the free space on my mdraid mirror after a reboot?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_124351",
+   "query": "Transfer files client-server inside a SSH session",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_124356",
+   "query": "centos patch heartbleed bug",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_124995",
+   "query": "TAR Backup to Remote Server",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_125058",
+   "query": "How can I use iptables to block certain processes from accessing the network?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12522",
+   "query": "Installing two glibc alongside in debian/ubuntu",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_125683",
+   "query": "Moving pacman from root to /home partition",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_125850",
+   "query": "changing the names of files within a directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_125862",
+   "query": "How to find out when an application was installed and when the applications/libraries it depends on are installed?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126068",
+   "query": "How to know my server's time offset?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126154",
+   "query": "Unrar local files to remote server",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126165",
+   "query": "How to access my webserver from the host machine?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126176",
+   "query": "VPN client for linux machine + support checkpoint gateway",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1262",
+   "query": "Where did the \"wheel\" group get its name?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126269",
+   "query": "Passwordless sudo not working",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126349",
+   "query": "Disable commands for users",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126393",
+   "query": "I get low disk space warning after my last upgrade",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126694",
+   "query": "Enabling wired internet connection with dhcp during Arch Linux Installation?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_126914",
+   "query": "How does sudo really work?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_127110",
+   "query": "Which process scheduler is my linux system using?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_127117",
+   "query": "Why Service accounts in Linux and Unix Systems?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12725",
+   "query": "how to build lc tool in linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_127268",
+   "query": "Delete all files in a directory whose name do not match a line in a file list",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_127421",
+   "query": "Ransomware like BitCrypt dangerous for linux system",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_127432",
+   "query": "Logging SSH access attempts",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12755",
+   "query": "How to forward X over SSH from Ubuntu machine?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_127978",
+   "query": "ext4 to btrfs conversion: how many times the whole volume will be read during the process?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_128060",
+   "query": "finding specific path for an installed program",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_128118",
+   "query": "Filter partial output of some script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_128279",
+   "query": "How Linux is implementing case sensitivity and what are its benefits over windows",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_128921",
+   "query": "Regular expressions in a shell",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_129072",
+   "query": "What's the difference between $@ and $*",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_129175",
+   "query": "Redirect output of a command to two different files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_129240",
+   "query": "tail display whole file and then only changes",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12949",
+   "query": "sudo nt passing after redirection operator",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_129596",
+   "query": "Some puzzles of how to close file descriptors on sh or bash",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12976",
+   "query": "How to move 100 files from a folder containing thousands?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_12986",
+   "query": "How to copy the partition layout of a whole disk using standard tools",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13046",
+   "query": "Format of /etc/hosts on Linux (different from Windows?)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_130628",
+   "query": "Why does it take more time for a login to fail than to succeed?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_130796",
+   "query": "What is the difference between all and default in kernel setting?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_130824",
+   "query": "Difference between \".\" and \"./\" while setting the environment variables using export?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_130844",
+   "query": "How do I route traffic between eth0:0 and eth0",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_130906",
+   "query": "Why doesn't setuid not work?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_131168",
+   "query": "renaming multiple files increment order",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13147",
+   "query": "Rename all the files within a folder with prefix “Unix_”",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_131527",
+   "query": "routing based on source IP",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13157",
+   "query": "Renaming multiple files based on their contents",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_131649",
+   "query": "Free DNS Clients",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_131699",
+   "query": "Difference between useradd and adduser",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_131918",
+   "query": "Is it possible to make zcat output text even if it's uncompressed?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13208",
+   "query": "GCC installation prefix under Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_132115",
+   "query": "How to find reason a notebook wakes up?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_132122",
+   "query": "shell or python script to transpose rows to columns",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13214",
+   "query": "How many files can be saved in one directory on Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_132142",
+   "query": "\"error while loading shared libraries: libopenal.so.1\" while installing Drox Operative",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_132225",
+   "query": "bash completion on posix mode",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_132350",
+   "query": "What are the specific naming conventions for variables in bash shell scripting language?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13251",
+   "query": "Batch delete exif info",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13260",
+   "query": "How to run command at startup in linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_132657",
+   "query": "how to avoid NSCD for DNS",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_132669",
+   "query": "What is bitwise.c~?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_132856",
+   "query": "Writing a shell script in Ubuntu to process several layers as a single animated GIF file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13314",
+   "query": "File system for an SSD drive",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13316",
+   "query": "Good OpenWRT alternative?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_133950",
+   "query": "convert many eps files in single page pdf or ps file using shell script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1340",
+   "query": "Is there any program to provide a consistent interface across multiple archive types?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_134155",
+   "query": "How do you keep the password hidden when invoked during the su command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_134483",
+   "query": "Why my ethernet interface is called enp0s10 instead of eth0?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_134498",
+   "query": "mysql database no space available",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13451",
+   "query": "What is the \"directory order\" of files in a directory (used by `ls -U`)?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_136171",
+   "query": "ACL is NOT enabled but it's working",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_136228",
+   "query": "-exec isn't being passed all the files found by find",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_136258",
+   "query": "What are the advantages / disadvantages Linux file hierarchy has in compare to other OSs?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_136444",
+   "query": "AWK: Nested Conditional Subset of Rows",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13660",
+   "query": "Is it possible to login via ssh to unlock LUKS drives?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_137219",
+   "query": "Execute snippet of code when key is pressed",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_137486",
+   "query": "Disallow Changing of Passwords",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_137520",
+   "query": "How do I log out/disconnect from SSH after starting a process with output to keep it running?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_137634",
+   "query": "\"including\" files in fstab",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_137856",
+   "query": "How hide the grub 2 start up screen in debian during bootup?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_137955",
+   "query": "Directory permissions for read/write children",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138150",
+   "query": "How to combine Bash's read with HERE-document when shopt -os errexit is in place?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138224",
+   "query": "Remote access - grey background in Debian 7",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138291",
+   "query": "replace $ with £ using sed command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138374",
+   "query": "Extract Values from simple html file via grep/awk",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138376",
+   "query": "Why All the text is invisible in Intellij?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138398",
+   "query": "How to get lines 10 to 100 from a 200 line file into a new file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138485",
+   "query": "Is there a way to administrate multiple computers at the same time?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138592",
+   "query": "How to clone a Debian installation?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138674",
+   "query": "Dynamic congifuration of monitors (Debian, Intel i915)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138737",
+   "query": "tmux protocol mismatch with no upgrade",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_138877",
+   "query": "Extracting text using sed does not work as expected",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_139152",
+   "query": "configure ToggleShowDesktop in Openbox to only act on specified layer",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_139154",
+   "query": "Show output only if both words match using grep",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_139501",
+   "query": "How to determine who started a process?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_139854",
+   "query": "Why does wget return a HTTP 403 error to download openSSH pet?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_139886",
+   "query": "Terminal sometimes fails to find executables on local directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_13996",
+   "query": "How can I break away from an SSH session that has crashed?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_14010",
+   "query": "The merits of a partitionless filesystem",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_140267",
+   "query": "Why do I have to execute bash programs with ./?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_140565",
+   "query": "Backup of data from Linux PC",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_140857",
+   "query": "i3 mirrors laptop screen on monitor, wasting space",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_140902",
+   "query": "Archives used for software packaging and distribution",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_141307",
+   "query": "What does typing a single apostrophe do in terminal?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_141402",
+   "query": "SCP Automation in production environment",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_141558",
+   "query": "Using regex in locate",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1426",
+   "query": "How do you choose a distribution?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_14384",
+   "query": "How do I know that my CPU supports 64bit operating systems under Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_143871",
+   "query": "What is the difference between ~ and / in paths",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_143907",
+   "query": "How can one ensure bandwidth is not hijacked?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_143964",
+   "query": "How to slice a text file into several files of 100 lines each?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_144007",
+   "query": "Symbolic link permission changes",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_144070",
+   "query": "What is \"built-in\" command in bash",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_144109",
+   "query": "command type \"hashed\"?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_144187",
+   "query": "Calculate Total disk i/o by a single process",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_144190",
+   "query": "cd to the most recently created directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_144271",
+   "query": "Unix - Addressing filename with space for script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_144601",
+   "query": "Bash script question - skip enter key press",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1449",
+   "query": "Lightweight outgoing SMTP server",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_145133",
+   "query": "How to search and list files and folders with specific pattern?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_145207",
+   "query": "Upgraded to mint 17, keyboard stuck in non-english (wrong layout) language - can't login",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_14537",
+   "query": "How to limit resource usage to save CPU+RAM for a certain process?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_14560",
+   "query": "How to recover data from a bad SD card?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_145801",
+   "query": "paths for searching executables",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_146062",
+   "query": "Missing repository problem (404 Not Found)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_146114",
+   "query": "How to find which application is creating a particular file in a path?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_146145",
+   "query": "How do I stop a bash shell PS1 color to stop at the end of the command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1464",
+   "query": "vim auto indenting even after setting noai option",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_146521",
+   "query": "Result of diff two files with switched lines says missing the same line twice",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_146666",
+   "query": "How do you patch a kernel?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_146773",
+   "query": "why bash increment: `n=0;((n++));` return error?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_14680",
+   "query": "How to use find command with wildcard when current directory contains a match?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1469",
+   "query": "bash directory shortcuts",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_147242",
+   "query": "How to kill - softly?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_147309",
+   "query": "Can I move the source folder after I compiled the code inside?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_147386",
+   "query": "chown as non-root user",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_147430",
+   "query": "Compare two strings in a shell script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_147568",
+   "query": "Is there a way to pass a Password to ssh automatically?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_147831",
+   "query": "Get number of installed RAM sticks on server and size",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148069",
+   "query": "IPTables rules for specific processes",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148074",
+   "query": "Unix filesys reserved space",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_14815",
+   "query": "Process descendants",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148353",
+   "query": "Show error messages and information that a program was killed on another terminal",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148420",
+   "query": "Tmux log output",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148715",
+   "query": "I don't know how to cancel job",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148777",
+   "query": "scroll through output using `less` or `tail -f` while keeping the header visible",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148843",
+   "query": "Searching in man pages",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_14887",
+   "query": "The way to use `/usr/bin/env sed -f ` in shebang?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148950",
+   "query": "I have to calculate values from two files and store the result in output file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148953",
+   "query": "Unix Useradd - Audit list of users added to system",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_148967",
+   "query": "How to use a shell variable inside sed's s command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_149001",
+   "query": "moving a process to fg and bg",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_149451",
+   "query": "Install R in my own directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_149694",
+   "query": "Automatic sleep not working in Gnome",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_14971",
+   "query": "Searching for string in files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_150063",
+   "query": "Why are these values not appending correctly when appended to the pipeline?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_150158",
+   "query": "how to create a v.imrc",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_150331",
+   "query": "How to customize Linux without sudo/root access?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_150844",
+   "query": "File manager that shows bit rate for mp3 files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_150847",
+   "query": "How can I run a GUI on my server through SSH?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_151023",
+   "query": "Reading file with different formats",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_151091",
+   "query": "Determin if the currnet terminal has a dark or light theme",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_151113",
+   "query": "How to change primary group?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_151238",
+   "query": "characters stick at the CLI",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_151455",
+   "query": "Show signals received by processes",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_151498",
+   "query": "What does \"mv *\" do?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_151566",
+   "query": "How can I pass a filename containing percent signs (%) as a parameter to a shell script in cron?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_152412",
+   "query": "`seq` and bash brace expansion failing",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_152426",
+   "query": "How to combine arithmetic expansion and brace expansion?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_152691",
+   "query": "How to disable beep sound in Linux CentOS 7 command line?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_152733",
+   "query": "bashrc in custom folder",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_152763",
+   "query": "Memory Usage in Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_15324",
+   "query": "None of the dot-files is sourced when running bash via ssh, part II",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_153248",
+   "query": "Looking at the content of a character device's file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_153318",
+   "query": "Storing whitespace in a shell script variable",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_153569",
+   "query": "SSH - Is it possible for an SSH session to take complete control of the client?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_153587",
+   "query": "environement variable assignment followed by command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_15360",
+   "query": "How to add a ssh user who only has permissions to access specific folder?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_15366",
+   "query": "newgrp and groups assigned via pam_group.so",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_153974",
+   "query": "How to export a subset of a 'less' output",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_153977",
+   "query": "Automatically put an alias into ~/.bashrc or ~/.zshrc",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_154509",
+   "query": "How can I make sed not append a newline character?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_154591",
+   "query": "Repeat Last N commands",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_154733",
+   "query": "Operations only on complete files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_154740",
+   "query": "Using nohup to keep a script running indefinitely",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_154803",
+   "query": "Obtaining information about system hardware",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_155289",
+   "query": "How to SFTP through proxy if there is no netcat?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_155418",
+   "query": "Is it possible to run binvox (or any X11 app) on a Linux server without display?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_155463",
+   "query": "Understanding the Different Bin Locations",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1555",
+   "query": "How can I move files by type recursively from a directory and its sub-directories to another directory?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_15611",
+   "query": "What is the difference between 'su -' and 'su root'?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_15932",
+   "query": "How do I add a user in SVN?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_16076",
+   "query": "Is it possible to follow a command (run repeatedly)? as one would follow a file using tail -f?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_16120",
+   "query": "In bash how can I change the color of my command prompt?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_16301",
+   "query": "Open Group Base Specifications, Single UNIX Specification and POSIX",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1636",
+   "query": "How do I bind the tmux prefix to a Super?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_16785",
+   "query": "Is 'some_program <some_file' faster than 'cat some_file | some_program'?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_16815",
+   "query": "What does DISPLAY=:0.0 actually mean?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_16890",
+   "query": "How to make a machine accessible from the LAN using its hostname",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_16978",
+   "query": "How to make password-less login work",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1709",
+   "query": "How to fix Ctrl + arrows in Vim?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17108",
+   "query": "Why is there a '.d' in 'init.d'?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17122",
+   "query": "Is it possible to install the linux kernel alone?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17263",
+   "query": "Launching application from terminal",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1729",
+   "query": "Does installing and using Wine open up your Linux platform to windows virus'?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_173",
+   "query": "How to compile and install programs from source",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17316",
+   "query": "Check for process already running in webfaction?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17323",
+   "query": "Installing a .deb package in home directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1736",
+   "query": "When do su and sudo use different passwords?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17428",
+   "query": "Moved bin and other folders! How to get them back?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17779",
+   "query": "How can I build a custom distribution for running a simple web browser?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17810",
+   "query": "Computer terminal and virtual console",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17815",
+   "query": "running script with \". \" and with \"source \"",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17865",
+   "query": "How can I find out which package installed a particular executable?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_17949",
+   "query": "What is the difference between `grep`, `egrep`, and `fgrep`?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1800",
+   "query": "How to specify a custom autocomplete for specific commands?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18151",
+   "query": "How to follow links in linux man pages?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18224",
+   "query": "How to add a user to sudoers file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1832",
+   "query": "Why do some commands have man pages and other commands use --help?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18583",
+   "query": "Why is my PATH not listed in my .bashrc file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18684",
+   "query": "Access history of a file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18743",
+   "query": "What's the point in adding a new line to the end of a file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18760",
+   "query": "How does the \"tail\" command's \"-f\" parameter work?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18765",
+   "query": "Best way to remove file extension from a string?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18796",
+   "query": "How to apply changes of newly added user groups without needing to reboot?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18841",
+   "query": "Measuring RAM usage of a program",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18877",
+   "query": "What is the proper sudoers syntax to add a user?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_18937",
+   "query": "Why most unix don't have undelete function?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1910",
+   "query": "How linux handles multiple path separators (/home////username///file)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19101",
+   "query": "Does Mint Linux have apport-bug for bug reporting?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19225",
+   "query": "Where can I find the Official File Hierarchy Standard for UNIX?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19232",
+   "query": "Boot-loader to boot to an encrypted partition",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1924",
+   "query": "Create services in Linux (Start up in linux)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19520",
+   "query": "Is it possible to \"fork\" STDOUT to two different locations?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19654",
+   "query": "Changing extension to multiple files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19686",
+   "query": "Open Sakura in home directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19871",
+   "query": "Have to type out whole path in order to execute an application in OSX",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19882",
+   "query": "Directory size calculation difference",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_19915",
+   "query": "Is there any method to mount a block of memory as a filesystem in linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_1993",
+   "query": "Make package explicitly installed in pacman",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2010",
+   "query": "What does the Broken pipe message mean in an SSH session?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20112",
+   "query": "sudo without password - security?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20193",
+   "query": "How to make putty to not break my session after some time?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2038",
+   "query": "Commandline gstreamer player",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20396",
+   "query": "Make cd automatically ls",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2051",
+   "query": "bash: recall command by typing some characters of it",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20536",
+   "query": "reformatting output with aligned columns",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2059",
+   "query": "Linux for low-end hardware and internet browsing",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2062",
+   "query": "grep - why do brackets in grep pattern remove the grep process from ps results?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20692",
+   "query": "Knowing Privilege rights on a file in Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20720",
+   "query": "Managing disk space on servers",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20751",
+   "query": "Note-taking and outlining using Vi: On startup, highlight tags and display tags in a preview window",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20804",
+   "query": "In a regular expression, which characters need escaping?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20878",
+   "query": "Tmux not scaling to fill the window",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20900",
+   "query": "Recommended reverse firewall applications for linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_20972",
+   "query": "Which is the best KDE-based distribution?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_21306",
+   "query": "Use the system Compose database in Gtk applications",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_21316",
+   "query": "Which application should I blame for compulsively creating a directory again and again?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_21439",
+   "query": "Get Position of RAID Hard Drives",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_21449",
+   "query": "How can I prevent Apt-Get from autoremoving packages?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_21920",
+   "query": "SSH output isn't line buffered?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_21956",
+   "query": "Pretty tail -f for log files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_22419",
+   "query": "Show lines matching a pattern and the 4 lines before each",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_22494",
+   "query": "Copy file to xclip and paste to Firefox",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_22604",
+   "query": "How to bulk convert all the file in a file system branch between Unix and Windows line break format?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_22674",
+   "query": "Shell script for moving oldest files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_22762",
+   "query": "How to give regular users the write privilege to an external drive?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_23163",
+   "query": "Newlines in filenames",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_23246",
+   "query": "Hard links vs. Soft links: When would you want to use one over the other?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_23306",
+   "query": "Can the background of the log-in screen of linux mint 11 change?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2342",
+   "query": "Why is there a * When There is Mention of Unix Throughout the Internet?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_23734",
+   "query": "What are the significant differences between different shells?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_23833",
+   "query": "How can I tell what version of linux I'm using?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24145",
+   "query": "How can different file descriptors point to the same file in open file table?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24351",
+   "query": "Remotely control an xorg session",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24410",
+   "query": "How do I connect to a new wifi on the command line?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24441",
+   "query": "Get file created/creation time?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24550",
+   "query": "Unix (Ubuntu Server): $PYTHONPATH resets to blank when I reboot",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24625",
+   "query": "How to completely disable swap?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24758",
+   "query": "what is the difference between \"/sbin/nologin\" and \"/bin/false\"?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24878",
+   "query": "How do I install g++ on RHEL6?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_24989",
+   "query": "How to use regrex with AWK for string replacement in this example?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_25049",
+   "query": "How do I close a terminal without saving the history?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2505",
+   "query": "Which run dialog",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_25138",
+   "query": "How to print certain columns by name?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_25327",
+   "query": "watch command alias expansion",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_25372",
+   "query": "Turn off buffering in pipe",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_25404",
+   "query": "Is there a difference between Linux and Unix?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_25541",
+   "query": "Updating tar.gz daily only with changed files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_25690",
+   "query": "How do I prevent a script from terminating when the shell exits?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2577",
+   "query": "How can I move files and view the progress (e.g. with a progress bar)?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_25948",
+   "query": "Parallelizing a for loop",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26006",
+   "query": "Is there a root password on OS X and Ubuntu?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26035",
+   "query": "What are suitable distros for the Asus EEE PC 701 4G?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2605",
+   "query": "Change main partition size to install another distribution",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26051",
+   "query": "What are all the items on the cover of the \"Linux Administration Handbook\"?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2606",
+   "query": "Get list of required libraries when installing something from source",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26237",
+   "query": "ISO file readonly?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26350",
+   "query": "Mail vs. mail what is the difference",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26385",
+   "query": "Use command line to download file which is accessible only in a given session",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2658",
+   "query": "Why use swap when there is more than enough free space in RAM?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26598",
+   "query": "How can I increase the number of inodes in an ext4 filesystem?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26676",
+   "query": "How to check if a shell is login/interactive/batch",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26928",
+   "query": "Should I install 32 or 64 bit?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_26934",
+   "query": "Using sftp to Transfer a Directory?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_27006",
+   "query": "Which *nix distro is most lightweight for running virtual machines?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_27021",
+   "query": "How to name a file in the deepest level of a directory tree",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_27178",
+   "query": "Vim :s replace first N < g occurrences on a line",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_272",
+   "query": "Simple file transfer",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_27220",
+   "query": "ssh + nohup does not work",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_27271",
+   "query": "What file system is my file on?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_27382",
+   "query": "How do I reverse a for loop?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2759",
+   "query": "Why does sed act differently depending on the output file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_27594",
+   "query": "Why do we need to use visudo instead of directly modifying the sudoers file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_27841",
+   "query": "How to make \"notify-send\" work from daemon application",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_28267",
+   "query": "what does \"serial=${serial##*.}\" do?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_28269",
+   "query": "How to get root inside of vi?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_28363",
+   "query": "What's the difference between \"s\" and \"S\" in ls -la?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_28506",
+   "query": "How do you install Grub2 on a USB stick?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_28571",
+   "query": "Redirect traffic through vpn on an as needed basis",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_28615",
+   "query": "How to hide commands typed in a Linux shell?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_28771",
+   "query": "How to remove last part of a path in bash?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_2888",
+   "query": "Correct textual name for <<",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_29182",
+   "query": "Meaning of \"* */1 * * *\" cron entry?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_29450",
+   "query": "Shell: how to go to the beginning of line when you are inside a screen?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_29470",
+   "query": "Keep running a script via ssh",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_29791",
+   "query": ".bash_profile not sourced when running su",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_29884",
+   "query": "Two prefix commands for tmux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_30111",
+   "query": "How to grep a text recursively on BusyBox 1.0?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_30303",
+   "query": "How to create a DEB file manually?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_30400",
+   "query": "Execute remote commands, completely detaching from the ssh connection",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_30470",
+   "query": "What does `:-` mean in a shell script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_30621",
+   "query": "Execute command for x seconds?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_30676",
+   "query": "Block Internet Access for 1 User",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_30925",
+   "query": "In Bash, when to alias, when to script, and when to write a function?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_30956",
+   "query": "How to access the data stored in guest operating system(i.e Virtual machine) from Host system",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_31187",
+   "query": "How to enable crash reports/core dumps/stack trace logging globally?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_31379",
+   "query": "install firefox in ubuntu-server edition",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_31751",
+   "query": "Doubt on the value of PS1 environment variable",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_31876",
+   "query": "What do these commands mean?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_32000",
+   "query": "stdout , stderr and logging using the script command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_32140",
+   "query": "Autentification on SSH connection in OneLine",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_32210",
+   "query": "using single or double bracket - bash",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_32222",
+   "query": "Shell script executing in the terminal but not from shell script file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_32314",
+   "query": "using SSH to connect to remote CentOS 5.6 server where Firefox running on server is very slow",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3239",
+   "query": "How can I reproduce commands run on one machine on another machine?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_32584",
+   "query": "Insert a multiline string into another string",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_33030",
+   "query": "process files in a directory as they appear",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_33099",
+   "query": "How to check progress when cloning a disk using `dd`?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_33203",
+   "query": "How does load average work with modern CPU's?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_33413",
+   "query": "Change directory with -d in shell script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_33519",
+   "query": "How to make X less sensitive when right clicking?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_33541",
+   "query": "`free`: output format",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_33729",
+   "query": "Need help to make rows into column with awk or sed",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34004",
+   "query": "How does tcp-keepalive work in ssh?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3409",
+   "query": "Beginning to learn Unix and Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34174",
+   "query": "How can I limit the output speed of stdout?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34238",
+   "query": "Complete files from a different directory in bash",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3431",
+   "query": "What to use to harden Linux box? Apparmor, SELinux, grsecurity, SMACK, chroot?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34315",
+   "query": "What is the best book every Unix or Linux user should read?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34435",
+   "query": "top output: cpu usage > 100%",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34516",
+   "query": "Can I create a man page for a script?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34584",
+   "query": "How to make unused dependencies clean with yum?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3467",
+   "query": "What does \"rc\" in .bashrc stand for?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34898",
+   "query": "Can an interupt be processed by software, without hardware support?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_34970",
+   "query": "Way to determine where certain global parameter is configured",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3515",
+   "query": "31 Debian CDs -- Why? and which do I need for a vanilla desktop install?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_35241",
+   "query": "How to combine two grep statements and display their results together?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_35279",
+   "query": "Typescript -terminal recording into video?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_35338",
+   "query": "su vs sudo -s vs sudo bash",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_35416",
+   "query": "Four tasks in parallel... how do I do that?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3543",
+   "query": "Expand KDE activities concept to the shell",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_35580",
+   "query": "What is the difference between $var and \"$var\"?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_35732",
+   "query": "What is the easiest way to execute text from tail at the command line?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_35929",
+   "query": "How can we change root password?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3645",
+   "query": "How can I check which shell I am currently using?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3646",
+   "query": "How can I list only the directories present in a directory using ls?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_36540",
+   "query": "Why am I still getting a password prompt with ssh with public key authentication?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_366",
+   "query": "Convince grep to output all lines, not just those with matches",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_36682",
+   "query": "Printing files as PDF with syntax highlighting via terminal",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_36815",
+   "query": "Find out network traffic per IP",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_36871",
+   "query": "Where should a local executable be placed?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_37313",
+   "query": "How do I grep for multiple patterns?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_37366",
+   "query": "Alt-Left on OSX to behave like Alt-Left on Ubuntu",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3747",
+   "query": "Understanding the exclamation mark (!) in bash",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3757",
+   "query": "Find the disk-space usage of a directory and all it's files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_37964",
+   "query": "Disable direct login for normal users (like oracle) in linux but allow scp and sftp?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3809",
+   "query": "How can I make a program executable from everywhere",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_38162",
+   "query": "How can I force unzip / zip not to create a subdirectory when I extract it?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_38191",
+   "query": "Terminal 256 colors don't work through Tmux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3838",
+   "query": "zsh autcomplete not updating path executables",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3842",
+   "query": "How can I scroll within the output of my watch command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_38619",
+   "query": "Numerically sorting files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_38634",
+   "query": "Is there any way to exit \"less\" without clearing the screen?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_38737",
+   "query": "SSH login with clear text password as a parameter?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3886",
+   "query": "Difference between nohup, disown and &",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_38910",
+   "query": "Cygwin has no watch command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3892",
+   "query": "How do I send stdin to the clipboard?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_38951",
+   "query": "What is the 'working directory' when cron executes a job",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_39145",
+   "query": "Execute command in remote active terminal",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_39168",
+   "query": "bash: get last stdout",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_3958",
+   "query": "What's difference between FISH and SFTP?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_39652",
+   "query": "Colorized `cat` for source and script files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_39663",
+   "query": "How to disable laptop keyboard on plugging in a USB keyboard?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_39755",
+   "query": "Find out exact CPU model, Mainboard, RAM / server model?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_40143",
+   "query": "How to know if /dev/sdX is a connected USB or HDD?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_40442",
+   "query": "Which installed software packages use the most disk space on Debian?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_40749",
+   "query": "Remove duplicate $PATH entries with awk command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_41070",
+   "query": "Aptitude on Debian 6.0.4 \"media change\" to CD ROM",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_41141",
+   "query": "How to clean up the RAM memory that is being used as cache memory?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_41258",
+   "query": "What is a good tool to sync two computers",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_41336",
+   "query": "Where do the files go if you mount a drive to a folder that already contains files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4144",
+   "query": "How to have correct permissions of files from usb disks?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_41493",
+   "query": "How to ssh to a server using another server?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_41555",
+   "query": "can't change file permission",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_41770",
+   "query": "How can I copy a file and create the target directories at the same time?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_42010",
+   "query": "Re-assigning (specifically, incrementing) a variable in a bash script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_42032",
+   "query": "How to set environment variable JAVA_HOME that will be saved on exit?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4219",
+   "query": "How do I get bash completion for command aliases?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_42379",
+   "query": "Find recursively all archive files of diverse archive formats and search them for file name patterns",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_42543",
+   "query": "Can I restrict a user to use special programs?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4271",
+   "query": "bash get file name and extension",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_42735",
+   "query": "Run a script automatically as I switch to a directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43073",
+   "query": "Custom xkb layout in which one key creates two unicode code points",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43154",
+   "query": "How do I set permissions for a directory so that files and directories created under it maintain group write permissions?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43212",
+   "query": "X11 send notification to all users on all DISPLAY's",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43338",
+   "query": "Renaming a bunch of files with date modified timestamp at the end of the filename?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43465",
+   "query": "What's the default order of linux sort?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43481",
+   "query": "File not found for file which is there",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43617",
+   "query": "Tools to visualize file size distributions",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43636",
+   "query": "Why does this compound command report errors when copying directories?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43638",
+   "query": "How to change environment variables without re-logging to UI?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_43886",
+   "query": "Monitor file system",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4402",
+   "query": "What is a Superblock, Inode, Dentry and a File?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_44031",
+   "query": "How to save command line history without logout?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_44040",
+   "query": "A standard tool to convert a byte-count into human KiB MiB etc; like du, ls1",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_44068",
+   "query": "Use a shell variable to execute a comand",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4422",
+   "query": "Is gnu coreutils sort broken?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4426",
+   "query": "Access to original contents of mount point",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_44288",
+   "query": "Run gui application on startup",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_44421",
+   "query": "One machine & two keyboard, mouse & monitors",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_44686",
+   "query": "Finding command execution time in hindsight",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_44853",
+   "query": "Why process wont start in Inittab",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45025",
+   "query": "How to suspend and bring a background process to foreground",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45040",
+   "query": "Why isn't there a server edition for Fedora like Ubuntu?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45051",
+   "query": "Format external hard drive to linux compatible file system",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45120",
+   "query": "Given a git patch id, how to find out which kernel release contains it?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45259",
+   "query": "list Windows shared folders (samba) available in the local network?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4547",
+   "query": "NIS and autofs error",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45580",
+   "query": "Loading a custom library",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45582",
+   "query": "Can servers be synchronised to share the same configurations?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4561",
+   "query": "How do I find out what hard disks are in the system?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45626",
+   "query": "Output file contents while they change",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45665",
+   "query": "Default Guake tab names",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_45746",
+   "query": "Group Permission on public_html",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4595",
+   "query": "Searching for a command line tagging tool for mp3 and ogg that supports pictures",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46344",
+   "query": "How do I get this find and rename command to work with subdirectories?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46350",
+   "query": "Switching to superuser while shell script is running",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46382",
+   "query": "Recreating EXT4 partition without losing data",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46410",
+   "query": "package management",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46645",
+   "query": "how can I use bash as my login shell when my sysadmin refuses to let me change it",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46715",
+   "query": "Piping from grep to awk not working",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46749",
+   "query": "Find and remove many files by specific content",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46796",
+   "query": "How to pass a variable to an sh child process?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46821",
+   "query": "Duplicate keystrokes onto remote computer in realtime",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46898",
+   "query": "Sort a file based on 1 column",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_46974",
+   "query": "What is the difference between > and >> (especially as it relates to use with the cat program)?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_47048",
+   "query": "Combining 2 different cut outputs in a single command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_47330",
+   "query": "What exactly are Linux kernel headers?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_47344",
+   "query": "The \"yes\" command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_47360",
+   "query": "Associating a function in Emacs after looking up the code with M-x describe-key",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_47577",
+   "query": "rsync: how to include files with name ending in a specific string",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4770",
+   "query": "Quoting in ssh $host $FOO and ssh $host \"sudo su user -c $FOO\" type constructs",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_47730",
+   "query": "Rescale a PDF file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_47918",
+   "query": "How to grep a specific line _and_ the first line of a file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_47941",
+   "query": "What's wrong with these two cron job's?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_48103",
+   "query": "Construct a command by putting a string into a tty",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_48124",
+   "query": "File descriptor linked to socket or pipe in proc",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_48381",
+   "query": "Fixing scrolling in nano running in tmux in mate-terminal",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_48653",
+   "query": "Does quiesce exist for Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_48777",
+   "query": "Command to display first few and last few lines of a file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49003",
+   "query": "How do I unbooklet a PDF-booklet?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49058",
+   "query": "Shouldn't there be more RAM free than this?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49183",
+   "query": "MySQL not getting started on linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49471",
+   "query": "How do I find out if my computer has PAE using Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49477",
+   "query": "Got less output with print0 option on find?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49567",
+   "query": "How do you access internet in RHEL 5 using Android smartphone USB LAN?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4961",
+   "query": "Which mp3 tagging tool for Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_4965",
+   "query": "keep duplicates out of $PATH on source",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49779",
+   "query": "Can I change the font of terminal?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49785",
+   "query": "Distribution for eldery people",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49809",
+   "query": "Console Text Editor with Windows-like keyboard shortcuts (ctrl-z, x, c, v)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_49942",
+   "query": "Simple jail for user with open-ssh",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50044",
+   "query": "Use a script parameter in awk",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50101",
+   "query": "Where to locate \"sockets\"",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50150",
+   "query": "Can I map a key (caps lock) so it does one thing pressed alone, and another when pressed with a second key?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50186",
+   "query": "Home folder name with Unicode characters?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50208",
+   "query": "How to change the working directory of invoking shell using a script?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50279",
+   "query": "Is it against linux ethos to provide a progress indicator for running commands?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50313",
+   "query": "How do I perform an action on all files with a specific extension in subfolders in an elegant way?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50343",
+   "query": "I specifically want to delete my grep output string from the text file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_50508",
+   "query": "Reusing ssh session for repeated rsync commands",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_51911",
+   "query": "Unable to change file permissions",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_51971",
+   "query": "Ssh through two servers and a user in one command line",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_51993",
+   "query": "A Web ssh/telnet client",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52108",
+   "query": "How to create SHA512 password hashes on command line",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52268",
+   "query": "Why is it a bad idea to run as root?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52277",
+   "query": "Pacman option to assume \"yes\" to every question?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52349",
+   "query": "Bash while loop and reading from pipe",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52559",
+   "query": "How to compile a c program without leaving the editor?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52668",
+   "query": "How to fix hard-disk error connected by usb?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_5268",
+   "query": "How do I merge two *.avi files into one?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52764",
+   "query": "/ is out of blocks, can't find out why",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52845",
+   "query": "How do I use this .ttf file as my terminal font?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_52908",
+   "query": "How do I \"merge\" two text files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53017",
+   "query": "How do you enter a directory that's name is only a minus?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53119",
+   "query": "Best distro for programming",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53128",
+   "query": "Difference between passwd and passwd- file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53143",
+   "query": "Move a file and re-target all of its symlinks",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53196",
+   "query": "How to block https facebook site using iptables",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53250",
+   "query": "Package managers for local installations under home directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53252",
+   "query": "How to read the messages during power off",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53460",
+   "query": "Change PS1 without hitting enter",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53542",
+   "query": "How to determine the filesystem of an unmounted device?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53563",
+   "query": "Is it possible to modify the colors in bash?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53591",
+   "query": "Command line e-mailing",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53814",
+   "query": "Configure up-arrow to browse through commands with same initial characters rather than all previous commands",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53875",
+   "query": "Is there any impact of reaping zombie processes?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_53937",
+   "query": "How can I choose which OS grub will reboot me into—before I reboot?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_5478",
+   "query": "What process created this X11 window?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_54975",
+   "query": "How to check that a daemon is listening on what interface?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55124",
+   "query": "Remove a block of lines between two patterns",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55195",
+   "query": "kill -9 hangs, unable to kill process (murder proof process)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55223",
+   "query": "Can't boot Scientific Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55546",
+   "query": "Removing Color Codes From Output",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55576",
+   "query": "PS command ouput limited to 80 bytes only",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55719",
+   "query": "How to loop through each file in FTP directory using a bash script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55808",
+   "query": "Make program first read from pipe, then from keyboard",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55848",
+   "query": "Xmodmap on bashrc not working",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55875",
+   "query": "Why is some filesystem space used even though the filesystem is empty?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_55954",
+   "query": "How to build a custom kernel?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56054",
+   "query": "Time Machine Server on Fedora",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56065",
+   "query": "Where to place a Bash shell redirection for a command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56123",
+   "query": "Remove line containing certain string and the following line",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56174",
+   "query": "Permanently fixed screen titles",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56395",
+   "query": "Replace semicolons to commas between the quotes only",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56429",
+   "query": "How to print all lines after a match up to the end of the file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56473",
+   "query": "Linux isn't sure whether a file exists or not",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56479",
+   "query": "How to delete a file to the trash in BASH (Linux)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56495",
+   "query": "What's the difference between running a program as a daemon and forking it into background with '&'?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_5665",
+   "query": "What does etc stand for?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56834",
+   "query": "How do I force a user to log out?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56836",
+   "query": "Can you specify an enclosure for cut?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56868",
+   "query": "Modify environment variable in a running process",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_56975",
+   "query": "What's the command to \"prepend\" a line to a file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_57012",
+   "query": "Coloring shell command and output differrently",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_57046",
+   "query": "Remote GUI login from Windows machine to Linux machine",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_5711",
+   "query": "Why does '/' have an '..' entry?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_57239",
+   "query": "Unix cp wildcard with directory structure",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_57570",
+   "query": "Connect to SSH from outside LAN",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_57706",
+   "query": "Difference between 3 commands which are used to execute shell script?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_57777",
+   "query": "connect to a remote server through ssh",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_58017",
+   "query": "Upstart script produces folder with question mark at the end. Why?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_58344",
+   "query": "mounting problem during installation of archlinux on dell xps one",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_58643",
+   "query": "How to fix dpkg-buildpackage: command not found?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_58651",
+   "query": "Adjusting keyboard sensitivity in a command line terminal?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_58825",
+   "query": "Assigning IP address to environment variable",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_5888",
+   "query": "How to apply recursively chmod directories without affecting files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_58880",
+   "query": "How does vim steal root owned files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_58963",
+   "query": "Script to convert filenames to lowercase depending on extension",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_59098",
+   "query": "How can I access (including read and write) a linux file system from a windows machine on the same network",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_59171",
+   "query": "Why is cd not a file in /bin?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_59570",
+   "query": "Implementing patch for changing a CPU frequency governor",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_5959",
+   "query": "How can I pause/resume rsync",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_60257",
+   "query": "How to create a sequence with leading zeroes using brace expansion",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_604",
+   "query": "Isn't less just more?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_60404",
+   "query": "Manipulate file name piped from find command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_60459",
+   "query": "How to make bash put prompt on a new line after cat command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_60481",
+   "query": "Match word containing characters beyond a-zA-Z",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_60544",
+   "query": "Allowing ssh, but only to execute a specific script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_60710",
+   "query": "Cannot boot into Windows 7 after deleting Linux partitions",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_60901",
+   "query": "Recover ext3 files from hard disk with bad sector",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_60905",
+   "query": "Shell script to delete all files which are older",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61305",
+   "query": "What should I check after an unauthorized access?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61308",
+   "query": "Is setting up fstab like this dangerous?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61313",
+   "query": "Renaming Files according to Pattern",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61401",
+   "query": "\"~/\" receives a permission denied error in Csh",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61627",
+   "query": "How to find the device is connected to which usb hub in linux OS?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61646",
+   "query": "Why are .so files executable?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61712",
+   "query": "Change command name in Linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61719",
+   "query": "Changing tmux .bash_profile behavior",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61931",
+   "query": "Redirect all subsequent commands' stderr using exec",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61947",
+   "query": "Move files replacing?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6199",
+   "query": "How do I install mercurial on openSUSE?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_61997",
+   "query": "Recovering from \"chmod -R 777 /\" in Ubuntu",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_62015",
+   "query": "Running an executable in PATH with the same name as an existing function",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_62109",
+   "query": "How can I see a process' thread count?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_62221",
+   "query": "Find functions, commands, and builtins",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_62355",
+   "query": "Is there a tool/website to compare package status in different Linux distributions?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_62830",
+   "query": "\"error setting up gummiboot-efi\" on Archboot UEFI install",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_629",
+   "query": "Is it possible to rename a Unix user account?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6301",
+   "query": "How do I read from /proc/$pid/mem under Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_63266",
+   "query": "mv * folder (avoiding 'cannot move' error)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_63284",
+   "query": "why cannot rename subdir when parent dir owner is not the same user",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_63335",
+   "query": "How to remove all white spaces just between brackets [] using bash?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_63594",
+   "query": "Avoiding temporary files in zsh",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_63783",
+   "query": "What is the function of user group root?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6393",
+   "query": "How do you move all files (including hidden) in a directory to another?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6409",
+   "query": "How does Linux kernel compare to microkernel architectures?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_64203",
+   "query": "How to get lighter (more white) themes for Xfce?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_64595",
+   "query": "Why do inode-based file systems NOT need reboot after updating library versions?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_64672",
+   "query": "How to cut (select) a field from text line counting from the end?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_64762",
+   "query": "how to convert a shell script into binary executable?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_64861",
+   "query": "How to display numbers in reverse order using seq(1)?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6505",
+   "query": "Need to upgrade svn on centos",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_65110",
+   "query": "No more coredumps after migrating to systemd",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_65115",
+   "query": "Total vs listed directories",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_65315",
+   "query": "How to do a continous 'wc -l' with gnu texttools?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_65354",
+   "query": "Why can't I trim a file using `head`?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_65505",
+   "query": "How can I configure zsh to let it explain to me where I can retrieve an executable instead of saying file not found?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6551",
+   "query": "How can I set env variables so that KDE recognizes them?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_66062",
+   "query": "Reasons for choosing primary over logical partitions",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_66097",
+   "query": "Find all files with a Python Shebang",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_66110",
+   "query": "Contradictory information from \"top\"",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_66131",
+   "query": "upgrade OpenSSL from 0.9.8w to 1.0.0i or 1.0.1a on Linux server",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_66796",
+   "query": "Select greatest numbered filename",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6681",
+   "query": "Re hardlink and old rsnapshot backups",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6686",
+   "query": "Clean up / after accidentally extracting archive into it?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_66899",
+   "query": "How to tell grep to match special character at beginning of each word",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_66918",
+   "query": "Run a program at startup after starting display services",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6704",
+   "query": "How can I grep in PDF files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6726",
+   "query": "How do I ensure that a terminal remains scrollable?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_67462",
+   "query": "Linux kernel is not finding the initrd correctly",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_67503",
+   "query": "Move all files with a certain extension from multiple subdirectories into one directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_67758",
+   "query": "move a directory with a single character (back quote) as its name",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6777",
+   "query": "How to clean up file extensions?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_67794",
+   "query": "How to search files where two different words exist?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6790",
+   "query": "executing a sh script from the cron",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6800",
+   "query": "pwd without symlinks",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_68255",
+   "query": "Why do . and .. have a file size of 4 kB and 12 kB, respectively?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_685",
+   "query": "Why put things other than /home to a separate partition?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_6854",
+   "query": "Can I identify my RAM without shutting down linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_68721",
+   "query": "Where should user configuration files go?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_68945",
+   "query": "Working of the [0-9]",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_70",
+   "query": "What Unix commands can be used as a semaphore/lock?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_70630",
+   "query": "Must parse ls -Al output and get file or directory name",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_70796",
+   "query": "Sort with unequal whitespace in first column",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_71121",
+   "query": "determine shell in script during runtime",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_71176",
+   "query": "Howto find duplicate files on disk",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_71221",
+   "query": "How to use find to remove *.py~ and *.pyc files at once?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_71504",
+   "query": "File extensions and association with programs in linux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_71566",
+   "query": "read file record by record and do transformation to the subsequent record based on above record and write into another file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_71585",
+   "query": "Convert ls -l output format to chmod format",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_71857",
+   "query": "What is the @ after directory listing mean?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_71902",
+   "query": "Is there any website having command line environment of Linux, for practicing commands?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_72096",
+   "query": "Grab text from detached screen",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_7215",
+   "query": "Deleting all files in a folder except files X, Y, and Z",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73",
+   "query": "How can I set the processor affinity of a process on Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73116",
+   "query": "Time synchronization of machines on LAN to GPS NTP server on the LAN",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73228",
+   "query": "Input/output file.txt in bash shell",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73293",
+   "query": "In bash, how can I erase an alias without logout?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73475",
+   "query": "List all my variables",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73527",
+   "query": "why . and .. are listed when ls -a command executed?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73750",
+   "query": "difference between function foo() {} and foo() {}",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73836",
+   "query": "Failed to sign CSR with the CA root key",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_73989",
+   "query": "Why do Unix man pages use double backticks in place of double quotes?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_74076",
+   "query": "Permanent Environment Variable for all users",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_74117",
+   "query": "Why is resolv.conf spelled without the 'e'?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_7412",
+   "query": "How to reconnect a logically disconnected USB device?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_74135",
+   "query": "LINUX: Permissions for files: Identify if it is a file or directory, and its access allowed to the world, user, and group",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_74195",
+   "query": "Watch goes blank on refresh",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_74322",
+   "query": "Tailing a New File with an Old Name",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_746",
+   "query": "How could I remember how to use redirection?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_74867",
+   "query": "Can I bridge \"backwards\" from an ssh connection to my local emacs-server?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_7493",
+   "query": "Why is the US international keyboard layout on Debian different?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_75059",
+   "query": "How to blacklist a correct bad RAM sector according to MemTest86+ error indication?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_75289",
+   "query": "difference between non-builtin 'test' and '['",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_75364",
+   "query": "copy sas file from prior version directory to new version directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_75686",
+   "query": "Online course that covers Unix/Linux Systems programming",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_75992",
+   "query": "Renamed network interfaces",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_76151",
+   "query": "Remove random string from particular position in file names",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_76162",
+   "query": "How do I capture the return status and use tee at the same time in korn shell?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_76263",
+   "query": "`ps | grep | kill` aborts my script prematurely",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_7631",
+   "query": "error booting the custom compiled kernel 2.6.37 on ubuntu 10.04 : gave up waiting on root device",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_76478",
+   "query": "What does this code do?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_76490",
+   "query": "\"No such file or directory\" on an executable, yet file exists and ldd reports all libraries present",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_7658",
+   "query": "Linux: Writing a watchdog to monitor multiple processes",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_767",
+   "query": "What is the real difference between \"apt-get\" and \"aptitude\"? (How about \"wajig\"?)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_76803",
+   "query": "How to run a script when install a rpm package?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_76805",
+   "query": "Read log file between two dates",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_76870",
+   "query": "cat files in current folder and all subfolders",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_77410",
+   "query": "CentOS conservative governor, nice error",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_77492",
+   "query": "Special File that causes I/O error",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_7772",
+   "query": "Is there a tool that hooks to two directories and synchronizes them as soon as something changes?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_77852",
+   "query": "How to recover from a chmod -R 000 /bin?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_77934",
+   "query": "Parameters of script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_77951",
+   "query": "Traceback (most recent call last) error appears on terminal",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_77969",
+   "query": "'screen' utility : how to prevent it to handle the display?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78176",
+   "query": "vmblock on archlinux",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78182",
+   "query": "How to lock users after 5 unsuccessful login tries?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78210",
+   "query": "How do I find the running GUI environment from the terminal?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78316",
+   "query": "How to use arguments with 'find -exec'?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78442",
+   "query": "How to start tmux so that it won't get killed on exit in last windows?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78501",
+   "query": "Ssh to a box, run a command, output data to a file, then move on to the next IP adress",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78578",
+   "query": "What is the '+' in find command for?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78659",
+   "query": "Setting up Helvetica with fontconfig",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_7870",
+   "query": "How to check how long a process has been running?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78821",
+   "query": "How can I rename all files with one extension to a different extension recursively",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78886",
+   "query": "LVM to extend a partition?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_78925",
+   "query": "How to sort by multiple columns?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_79207",
+   "query": "When using 'yum list installed' why are some entries listed in bold?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_79211",
+   "query": "Can linux systems on multiple virtual machines share the same swap partition?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_79316",
+   "query": "How to deal with spaces in a variable",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_79688",
+   "query": "Directories are listed twice",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_797",
+   "query": "Where is implemented the definitions of the kernel header files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_79837",
+   "query": "How to delete directory ' :q!'?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_79882",
+   "query": "What exactly did mv /tmp/folder/* /* do to my filesystem?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_7998",
+   "query": "Which bash will expand  {1..$VAR} in the same way that zsh does",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80088",
+   "query": "How to find files by the time in their filename?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80177",
+   "query": "How to install Cinnamon with SLiM on Arch Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80362",
+   "query": "What does <<< mean?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80437",
+   "query": "How can I run an hdparm command after boot and resume on Fedora 19?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80466",
+   "query": "Making Debian Bleeding Edge",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_8056",
+   "query": "Disable screen blanking on text console",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80692",
+   "query": "Refer to an item in `dirs`",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80733",
+   "query": "Possible to get RAID1, by simply adding HDD?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80757",
+   "query": "Add a suffix string to end of each line?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80876",
+   "query": "/usr/ucb/cc: language optional software package not installed",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80934",
+   "query": "C Shell Array Declaration Syntax, () vs {}",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_80968",
+   "query": "How can I create automatically expiring user accounts?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_81023",
+   "query": "Which tool can tell me the distribution of Linux that is running when uname is generic?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_81224",
+   "query": "How to go to the previous working directory in terminal?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_81238",
+   "query": "How should I compile a dev package from source?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_81355",
+   "query": "Trouble with read line script in Cygwin",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_81628",
+   "query": "is there an alternative to tail -f that has convenient scrolling?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_81677",
+   "query": "Setting up network from a \"minimal\" CentOS 6.4 install",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_81834",
+   "query": "How can I change the default \"ens33\" network device to old \"eth0\" on Fedora 19?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_81845",
+   "query": "difference between bash, -bash and /bin/bash in ps output",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_82021",
+   "query": "What is the equivalent of apt-file in portage, if any?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_82314",
+   "query": "how to find the type of img file and mount it",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_82424",
+   "query": "How to check which client is accessing Unix?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_82515",
+   "query": "How can I filter those \"Permission denied\" from find output?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_82612",
+   "query": "Installed Win7 after Ubuntu, Win removed Ubuntu boot option",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_82657",
+   "query": "Trouble with mv and adding the date",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_82805",
+   "query": "file modified while doing scp/cp",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_82837",
+   "query": "Fedora's command-not-found doesn't work",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_83017",
+   "query": "How does one view what the contents of symbolic link are, instead of the destination?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_83120",
+   "query": "iptables: how to allow traffic from redirected port",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_83127",
+   "query": "Ubuntu directory permissions - Sticky bit - Prevent deletion of a file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_83257",
+   "query": "Does kernel: EDAC MC0: UE page 0x0 point to bad memory, a driver, or something else?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_83273",
+   "query": "How To Diagnose Faulty (onboard) Network Adapter",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_83357",
+   "query": "Staggering the authentication delay on failed `su` or `sudo`",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_83381",
+   "query": "Visualizing ansi color escape codes in log files correctly in Emacs",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_83491",
+   "query": "Wrapper for package managers",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_8396",
+   "query": "Bash: Display exit status in prompt:",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84175",
+   "query": "Create a symbolic link relative to the current directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84179",
+   "query": "Why is the first line comment of .sh file necessary?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84191",
+   "query": "How to create nested directory in a single command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84233",
+   "query": "Keyboard shortcut to copy current command from terminal to clipboard",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84246",
+   "query": "How many clipboards are in system?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_8430",
+   "query": "How to remove all empty directories in a subtree?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84376",
+   "query": "How to remove the last character from every line in a text file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84540",
+   "query": "twitter status updates from command line (via cURL)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84544",
+   "query": "Mapping single key (such as 'F1') to multiple keys (such as 'Ctrl+C') in Gnome",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84760",
+   "query": "Should /usr and /home be on different partitions?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84888",
+   "query": "Can we run objective c on UNIX operating system?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_84955",
+   "query": "Given a CSV file, how do I delete the content between the 2nd and 3rd tabs of each row?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85009",
+   "query": "Shell, Concatenating 2 strings to reference a 3rd variable",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85021",
+   "query": "In Bash scripting, what's the meaning of \" $! \"?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85305",
+   "query": "Is there a standard POSIX way of doing `tac`",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85352",
+   "query": "How can I `alias sudo !!`?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_8554",
+   "query": "Parsing XML's , JSON's and newer data file formats in UNIX using command line utilities",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85678",
+   "query": "insert text in a file using echo command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85728",
+   "query": "How to switch to editing command in text editor",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85757",
+   "query": "Store password as hash in wpa_supplicant.conf?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85865",
+   "query": "Trim with LVM and dm-crypt",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85928",
+   "query": "How to make apt recognize an installed tar package?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_85971",
+   "query": "Rsync and take name/path changes into account",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86036",
+   "query": "Use same arguments with different command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86209",
+   "query": "Why is bash interpreting characters that I have character escaped?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86219",
+   "query": "one IP several guests same port 22",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86296",
+   "query": "Is it OK to store /var/tmp on a SSD?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_8647",
+   "query": "gnu find and masking the {} for some shells - which?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86535",
+   "query": "File permissions of file when tranferring from Windows to Unix",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86621",
+   "query": "The difference that quotation marks make in find command",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86674",
+   "query": "How can I change the date modified of a folder to the last changed file inside?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86694",
+   "query": "Can I use several pipelines as a argument?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_86996",
+   "query": "Is there something as flexible as crontab for user-level autostarts?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_87005",
+   "query": "How to download files from a remote Linux (Ubuntu) Server?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_87054",
+   "query": "Booting into shell instead of graphical interface",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_87129",
+   "query": "Customizing console appearance",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_87258",
+   "query": "Delete all files except certain subfolder",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_87380",
+   "query": "Using a reference to a bash string variable in sed",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_87633",
+   "query": "Physical host or VM",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_87667",
+   "query": "cp : short way of copying",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_87928",
+   "query": "Combining rsync --files-from with --delete",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_881",
+   "query": "Ensure a process is always running",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_88313",
+   "query": "how to duplicate values of each row under each for n times?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_88452",
+   "query": "Concatenating two variables with an underscore",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_88550",
+   "query": "vlookup function in unix",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_88602",
+   "query": "scp from remote host fails due to login greeting set in .bashrc",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_88675",
+   "query": "Is there any way to check df -k hanging for nfs mount issues?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_88718",
+   "query": "Setting up a shared folder with group: ACL and file creation",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_88808",
+   "query": "Empty the contents of a file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_89107",
+   "query": "Which cmd is the best for determining the OS' word size (32/64)-bit?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_89262",
+   "query": "How to adapt a Linux like fedora, ubuntu etc. to make my own linux distro?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_89469",
+   "query": "What should I be aware of when installing Linux on a Mac?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_89941",
+   "query": "How proc gets updated about the devices",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90073",
+   "query": "Does 'rm .*' ever delete the parent directory?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90198",
+   "query": "What happens to argument in alias after using it once?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90206",
+   "query": "What does the `who` command result `root :0` mean?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90244",
+   "query": "bash: Run command in background and capture pid",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90294",
+   "query": "How can I pipe colored tree result to less or more?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90299",
+   "query": "How to get 256 color support in a login shell TTY?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9053",
+   "query": "Why does \"xdg-open\" fail although \"xdg-mime query defaut \" succeeds on Ubuntu 10.10?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90772",
+   "query": "First characters of the command repeated in the display when completing",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90838",
+   "query": "(standard_in) 1: parse error",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90853",
+   "query": "How can I run ssh-add automatically, without password prompt?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_90883",
+   "query": "Is it possible to run pure GNU?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_91060",
+   "query": "Why is `find -name *.jks` not returning some files?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9107",
+   "query": "How can I run Firefox on Linux headlessly (i.e. without requiring libgtk-x11-2.0.so.0)?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9123",
+   "query": "Is there a one-liner that allows me to create a directory and move into it at the same time?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9125",
+   "query": "How do I find text within a file and have it search multiple subfolders?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_91343",
+   "query": "What option(s) would you use to sort a file named foo in place, that is replacing the original file with the sorted version?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_91576",
+   "query": "mail doesn't work",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_91976",
+   "query": "What is the cheapest way to run AIX 6-7 at home?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92150",
+   "query": "Multiple media convertions fail",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92172",
+   "query": "Can Any one Suggest good Linux OS Tutorial?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92503",
+   "query": "Access a NTFS external drive in centos",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92643",
+   "query": "Is there way to replace value of symbolic link?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92653",
+   "query": "Proper way to delete contents of directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92689",
+   "query": "Distro for low-RAM with most recent package versions",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92710",
+   "query": "How to create alias to kill processes running on a TCP/IP port?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92809",
+   "query": "What are the numbers after program names in Linux/GNU documentation?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92876",
+   "query": "How to copy multiple files but keep their extensions the same?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92880",
+   "query": "How to print dates between two different dates",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_92920",
+   "query": "Use the command bar in bash without I/O?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_93012",
+   "query": "-bash: syntax error near unexpected token `;'",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_93117",
+   "query": "find all commands with wh, find by part of keyword in man page",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_93209",
+   "query": "Should I use LVM or not?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_93602",
+   "query": "Resize an extended partition to the whole drive",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9361",
+   "query": "What does \"-\" mean as an argument to a command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_93657",
+   "query": "How driver is specified for any device?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_93686",
+   "query": "Can I prove that an SSD is broken?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_94247",
+   "query": "SSH connection establishment too slow",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_94270",
+   "query": "How to install squashfs-tools on Ubuntu?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_94297",
+   "query": "ksh:Get files created on specific date in directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_94345",
+   "query": "Can i use & variable of sed for doing operation inside $()?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_94517",
+   "query": "Removing in interactive mode",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_94775",
+   "query": "List all commands that a shell knows",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_94780",
+   "query": "Alternative shells (Javascript, Ruby, etc)?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_94837",
+   "query": "Having trouble uncompressing a few files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9496",
+   "query": "Looping through files with spaces in the names?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_954",
+   "query": "How does keyboard mapping work in Linux?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9605",
+   "query": "How can I detect if the shell is controlled from SSH?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96131",
+   "query": "What does * next to the file name mean in the output of ls?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96343",
+   "query": "How to take effect `usermod` command without logout and login",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96348",
+   "query": "Reason for the inability of root to send a fatal signal to PID 1/init",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96484",
+   "query": "How can I configure syslog.conf file, to log iptables messages in a separate file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96526",
+   "query": "BIOS don't recognize my bootable USB",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96579",
+   "query": "What is the difference between ' and \"?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96698",
+   "query": "Mac OS X Darwin: how to reset admin password?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96700",
+   "query": "Equivalent of iwlist to see who is around?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96712",
+   "query": "Variable Substitution in sed",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96728",
+   "query": "Extract a single file from a tar file and put it to another directory",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96868",
+   "query": "Why do I see myself twice when I run the who command?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96938",
+   "query": "Bash script - determine vendor and install system (apt-get, yum etc)",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96957",
+   "query": "Delete all jpg in a folder that are smaller than specific width/heigth",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_96965",
+   "query": "How to check where users come from?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_97105",
+   "query": "How to use grep command to find the matching pattern and some more characters?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_97157",
+   "query": "Syntax error in shell script",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_97223",
+   "query": "Fix broken apt: insserv: Service killprocs has to be enabled to start service single",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_97446",
+   "query": "Why this sort command gives me an empty file?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_97572",
+   "query": "Logging violations of rules in limits.conf",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_97715",
+   "query": "Ubuntu- How do I change clock speed from terminal?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_97735",
+   "query": "Start up commads in LUBUNTU",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_97876",
+   "query": "How to unpack a downloaded tar.bz2 archive?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98029",
+   "query": "Need a shell script which should send a mail to me once every 20 days",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98103",
+   "query": "Hard link for directories",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98231",
+   "query": "Symbolic link path",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98353",
+   "query": "Executable not visible when run with sudo",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98527",
+   "query": "sox returns an error when I try to handle mp3 files",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98693",
+   "query": "getaddrinfo() from shell?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98697",
+   "query": "Bash command to open a system's terminal",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98820",
+   "query": "Why does a working standalone nested function/script not work inside a larger script?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98868",
+   "query": "Self complied version of GCC overwriting package installed version",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_98993",
+   "query": "What is the language that appears on the first line of a script?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_99004",
+   "query": "udev rules to identify a USB storage media?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_99129",
+   "query": "Extract in beteen tages in a text file",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_99243",
+   "query": "How can I grep for a string containing regex metacharacters like $ and '?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9926",
+   "query": "Can I redirect stdout from a background application after starting it?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_99325",
+   "query": "Automatically save bash command history in screen session",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9971",
+   "query": "How do I find how long ago a Linux system was installed?",
+   "question_type": "beir_cqadupstack_unix"
+  },
+  {
+   "name": "beir_cqadupstack_unix_9997",
+   "query": "Resources for portable shell programming",
+   "question_type": "beir_cqadupstack_unix"
+  }
+ ]
+}

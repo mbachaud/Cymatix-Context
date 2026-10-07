@@ -1,0 +1,2534 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_webmasters_10012",
+   "query": "Google Analytics - Showing multiple site stats at once",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10104",
+   "query": "Looking for software that has a shopping cart where I can sell licensed photos",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10177",
+   "query": "how to do bing seo",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10242",
+   "query": "PHP based ad server ( alternative to OpenX )",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10473",
+   "query": "Providing fake info during domain registration - does it matter?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10626",
+   "query": "Strange spam posts not making sense",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10756",
+   "query": "Will HTML5 adoption render my site search engine unoptimized?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10838",
+   "query": "How is anti-hotlinking done?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10886",
+   "query": "Any recommended forum software for commercial/busniess discussion",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_10993",
+   "query": "SSL Certification on both www and no-www domains",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_1115",
+   "query": "Can we ignore visitors without JavaScript enabled?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11256",
+   "query": "Are temporarily hidden elements bad for search-engine rankings?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11262",
+   "query": "How to make sure that my web application would be stable?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11383",
+   "query": "Alternative to Pingdom website monitoring service",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11413",
+   "query": "SEO - 2 websites in the same domain",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11457",
+   "query": "IP Addresses of Known Spammers",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11492",
+   "query": "SEO Heading Tags",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11544",
+   "query": "How can I help Google build SiteLinks?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11560",
+   "query": "SEO preference for WWW or HTTP:// protocol redirection? Do www websites rank better than NON-www?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11637",
+   "query": "Strange incoming links appearing on site statistics",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_11663",
+   "query": "How can we find the develpoment language of a specific website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_1208",
+   "query": "Self-rated Content",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_12228",
+   "query": "Google Analytics: How can I track between http:// and https:// profiles for a domain?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_12333",
+   "query": "How to grep (or find) on cPanel?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_12583",
+   "query": "Subdomain versus new domain",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_12690",
+   "query": "Ratio of No-follow & Do-follow Backlinks",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_12759",
+   "query": "Should I choose sub-directories over sub-domains in this case?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_12911",
+   "query": "What is linkbaiting?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_12960",
+   "query": "SEO: How to Separate Fact from Fiction?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_12974",
+   "query": "SEO - New web page are not getting indexing",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_13056",
+   "query": "Buying/registering domain name",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_13170",
+   "query": "Alt attribute for SEO recommendation",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_1318",
+   "query": "Alternatives to Google Website Optimizer",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_13510",
+   "query": "Are hyphens bad for domain names?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_1355",
+   "query": "Is there any way to have search engines not index a certain section of a page?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_13850",
+   "query": "Will Google's New +1 Count For SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_13920",
+   "query": "Does a site's bounce rate influence Google rankings?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_13959",
+   "query": "Changing nameservers for a domain on GoDaddy",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14174",
+   "query": "How to hide my website from search engines using robots.txt?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14390",
+   "query": "Is SEO effected when URL changes from .php to not including .php",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14457",
+   "query": "What does WWW do?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14473",
+   "query": "Google Analytics and the EU cookie directive. Who will fall foul of the law? Google or the developer?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_1449",
+   "query": "Why does SEO seem to hinge on using wordpress?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14543",
+   "query": "Building for different screen sizes",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14546",
+   "query": "best practice to migrate server",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14644",
+   "query": "How do I find the Alexa traffic rank of a site that uses a subdomain?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14669",
+   "query": "Hide a file showing up in google search",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_14818",
+   "query": "Improve SEO for a project that differs from another only by 1 character",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_15137",
+   "query": "So now Google has said no to old browsers when can the rest of us follow suit?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_15361",
+   "query": "Cheap stock images website (per image pricing)",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_15362",
+   "query": "Stackexchange meta tags",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_15422",
+   "query": "SEO: What are SEO benefits of submitting to Yahoo Directory?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_15578",
+   "query": "help with htaccess code for navigation",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_15834",
+   "query": "Why do websites have a contact form? isn't an email address enough?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_15871",
+   "query": "404 monitoring tool for websites?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_15878",
+   "query": "Content appearing under multiple categories; anything I can do to prevent duplicate penalty?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16067",
+   "query": "How do I control how often search engines visit my site?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16170",
+   "query": "Effect of adding link from PR1 site to PR0 site?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16186",
+   "query": "Any tool to sketch layout?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16299",
+   "query": "Is there a maximum size that web pages should be kept under?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16390",
+   "query": "Preventing robots from crawling specific part of a page",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16396",
+   "query": "website dns redirects to another",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16398",
+   "query": "is it a good seo practice to put relative keywords in a hidden div?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16420",
+   "query": "Subfolder won't permenantly redirect to subdomain",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16437",
+   "query": "URLs which begin \"www2\"",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16614",
+   "query": "Anonymous website",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16769",
+   "query": "Why is my site not approved by Google Adsense?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16799",
+   "query": "Are files in a hidden directory safe?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_16999",
+   "query": "Tool or plugin required to show out in which html files a given css selectors is used",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_17080",
+   "query": "Ad service that supports ssl (secure publishing)",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_17124",
+   "query": "Where can I host / run periodically a ruby script for free?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_17162",
+   "query": "Step by step website developent",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_17281",
+   "query": "Can I find out who is +1ing my website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_17314",
+   "query": "SEO questions about website page titles",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_1766",
+   "query": "New HTML5 elements and search engine ranking impact?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_17724",
+   "query": "Is there risk to registering a domain using extension from another country?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_17914",
+   "query": "What is a lot of traffic?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_18",
+   "query": "Should I use HTML5 and/or CSS3 to build my website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_18011",
+   "query": "HTTP and HTTPS impacts on SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_18050",
+   "query": "One multi-domain analytics profile, or one analytics profiles per domain?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_18185",
+   "query": "How to find the records for domain name purchased today and in past?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_18395",
+   "query": "How does Google recognize publish date of a post",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_18607",
+   "query": "Unlimited free sitemap generator for Nginx?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_18763",
+   "query": "How Google reacts on display:none for CSS media query?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_18978",
+   "query": "Retrieve Facebook Like count after changing URL structure for entire website",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19134",
+   "query": "My website was spammed with Russian porn links and my ranking dropped by half",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19168",
+   "query": "How to send mass email and not get treated as spam",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19176",
+   "query": "Does google always downrank pages with hidden texts",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19275",
+   "query": "How long it takes for google to refresh the page information? How can I achieve to make it faster?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19362",
+   "query": "What is deleteme.xxxxxxxx.php",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19406",
+   "query": "Is the meta tag for keywords not useful anymore?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19517",
+   "query": "Google Analytics underestimating pageviews and visitors",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19559",
+   "query": "Applying domain name to a subfolder/path",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19576",
+   "query": "Is there any way to find out how often a certain query is sent to a search engine?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19637",
+   "query": "How can I point a subdomain at another server?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19714",
+   "query": "Shared Web Hosting provider for video or social networking sites",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19742",
+   "query": "Google Analytics unable to validate my site during setup",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19813",
+   "query": "Adding <description> metadata in php / html for google results page",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19906",
+   "query": "Duplicate meta description",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_19978",
+   "query": "How do I setup 301 redirects in Google Apps site?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20078",
+   "query": "new domain, old links are 301'd from old domain to new, how will this affect my rankings?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20093",
+   "query": "Why treat these as URLs with different path capitalization and trailing slash as different?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20143",
+   "query": "What are pitfalls in SEO when internationalizing a website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20161",
+   "query": "Thousands of 404 errors in Google Webmaster Tools",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20252",
+   "query": "Do search engines index a new domain that just redirect to the main site?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20257",
+   "query": "Defense against rude web crawlers",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20424",
+   "query": "blogger multiple custom domains?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20827",
+   "query": "Business Website Fraudulently Copied; What Can We Do to Get Fraudulent Chinese Site Taken Down",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20933",
+   "query": "Which mobile browsers for testing?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_20992",
+   "query": "Reducing the number of js or css files downloaded?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_21110",
+   "query": "List of phones that support media queries?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_21183",
+   "query": "What happens when a domain name reached it's expiration date?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_21377",
+   "query": "W3C Compliance v SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_21423",
+   "query": "How to make my page load faster?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_21427",
+   "query": "Are there any programs that i can use to test my website against hacks?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_216",
+   "query": "What are some good resources for generating privacy policies and terms of use?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_21633",
+   "query": "How did this website get a custom search bar listed under their search results?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_21636",
+   "query": "Favicon Best Practices",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_21768",
+   "query": "Connecting +1s on a Google+ Business Page and a webpage",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_22301",
+   "query": "How does Google's Traffic Estimator calculate the \"Estimated Avg. CPC\"?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_22392",
+   "query": "A script that would create snapshots of web pages",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_22483",
+   "query": "Does adding google analytics improve google ranking",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_22495",
+   "query": "Google analytics - drop in traffic",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_22618",
+   "query": "To change URL to user friendly URL",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_22658",
+   "query": "My site disappeared from Google search, how long does it take to get back?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_22684",
+   "query": "Titles in Google results contain spammy prefixes",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_2272",
+   "query": "Does Google cache robots.txt?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_22877",
+   "query": "SEO: Where do I start?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_23382",
+   "query": "How to remove trailing slashes from URL with .htaccess?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_23532",
+   "query": "Browser vesions I should consider when testing compatibility (besides IE)?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_23546",
+   "query": "What's the best way to create your own website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_23954",
+   "query": "Adaptive websites - considered keyword stuffing by Googlebot?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_23993",
+   "query": "complex heading tags: should I avoid them?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_24083",
+   "query": "Ideal word count per web page?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_24298",
+   "query": "Old content, new URL's, how to keep the old URL's still working? 301 redirects?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_24427",
+   "query": "What do you know about how google/search engines see's/crawls PDF files?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_2448",
+   "query": "How to choose a CMS system for a small web site?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_24550",
+   "query": "Self hosted PHP shopping cart with no storefront?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_24749",
+   "query": "Stopping Apache from serving requests for content from other sites",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_24888",
+   "query": "How to get Google Page Rank for a site hosted Blog",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_24997",
+   "query": "Website falsely blocked because of spam. Does anyone know how we should proceed?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_25062",
+   "query": "Any other web Analytics tool other than Google Analytics",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_25189",
+   "query": "Users often say my website is infected, but can't find any evidence of this?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_25315",
+   "query": "Hotlinking: what is it, and why shouldn't people do it?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_25434",
+   "query": "need help with making seo friendly links",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_25470",
+   "query": "Is minifying id and class names a bad SEO practice?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_25752",
+   "query": "Dev site indexed by Google",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_25869",
+   "query": "Managing Client's Hosting and Domain Services",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26060",
+   "query": "How to overcome browser-specific font rendering differences?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26080",
+   "query": "Redirect domain address to host address with cloaking",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26132",
+   "query": "Is it a bad idea for my homepage to be in a sub-folder?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26181",
+   "query": "Displaying a \"coming soon\" image to users whilst I work on website redevelopment",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26206",
+   "query": "Is \"robots.txt\" necessarily needed?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26240",
+   "query": "Why would Google Rich Snippets work for one site author but not another?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26361",
+   "query": "Are shorter URIs better from an SEO perspective?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26386",
+   "query": "Can google crawl an URL (say some static HTML file) that has no pointing link?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26573",
+   "query": "Link error checking tool for linux",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_26849",
+   "query": "Which symbol should I use in Meta Title: \"|\" or \"-\"?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_27087",
+   "query": "Best practice for SEO \"special characters\" in products pages",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_27237",
+   "query": "What Does Local SEO Consist of and How Does it Differ From Website SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_2726",
+   "query": "How can I get search engines to crawl my site and see a localised view of my data?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_274",
+   "query": "How to choose between web hosting and cloud hosting?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_27520",
+   "query": "I'm using a CNAME to send www. traffic to domain without www. Will this hurt my SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_27720",
+   "query": "SEO Reseller Programs",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_27802",
+   "query": "Hiding a particulat page from search engines not to index",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_27860",
+   "query": "Frequency to submit sitemap to search engines",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_2793",
+   "query": "Live view of online visitors",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28094",
+   "query": "What are the best SMS APIs out there?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28144",
+   "query": "How do I deal with content scrapers?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28205",
+   "query": "How to improve a single-paged site search result",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_2822",
+   "query": "free SSL certificates?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_2823",
+   "query": "Problem integrating Adsense with Google Analytics",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28266",
+   "query": "URL length and content optimised for SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28367",
+   "query": "Loading another domain's content in a modal iframe - acceptable?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28653",
+   "query": "Can I invoke Google to check my robots.txt?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28757",
+   "query": "Collapsible menu and amount of links in a web page",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28825",
+   "query": "DNS takes too long to resolve",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28961",
+   "query": "How to find unsecured content on a webpage",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28978",
+   "query": "Googlebot crawler is indexing and giving value to useless words",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_28994",
+   "query": "Someone else is using our Google Analytics Tracking code number. What do we do?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_29030",
+   "query": "Does adding a description to menu links have any SEO value?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_29238",
+   "query": "Should i host the country specific website in the server at same country?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_29762",
+   "query": "Do URL shorteners such as bit.ly affect SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_29766",
+   "query": "What methods are effective/necessary to quickly remove URLs from the Google index?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_29800",
+   "query": "Tool to view currently used CSS definitions",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_29829",
+   "query": "Make Google +1 button +1 a specific URL rather than the URL it's on?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30213",
+   "query": "Does searchbots index content in iframe",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30214",
+   "query": "How do I make sure my website is live all the time?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30379",
+   "query": "Google search results",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30412",
+   "query": "What are some good services for brainstorming domain name ideas?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30548",
+   "query": "Prevent virtual host on same server interact on apache",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30685",
+   "query": "Proper caching method with .htaccess",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30705",
+   "query": "Redirecting from blogger to custom domain",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30776",
+   "query": "Google Analytics - Traffic Source - Search engine - (Not Provided)",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30908",
+   "query": "How do I prevent access to an add-on domain's root directory from main hosting domain name",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_30938",
+   "query": "SEO and multiple domains to same site",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_310",
+   "query": "HTML validation: is it worth it?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_31008",
+   "query": "Is an xml sitemap good or bad",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_31056",
+   "query": "How long usually it takes to effect google ranking after revise contents?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_31089",
+   "query": "How many days would update if I modify page meta:title and meta:description?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_31203",
+   "query": "Preview content on website linking to full page, SEO strikes for duplicate content?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_31354",
+   "query": "SEO and Spelling mistakes in keyword",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_31629",
+   "query": "Google reverse an analytic",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_31724",
+   "query": "Impact of +1 on blogpost for the rootsite",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_32276",
+   "query": "Having either www.domainname.com or domainname.com is really required?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_32347",
+   "query": "Could crosslinking using very general anchor texts be a reason for a drop in rankings?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_32352",
+   "query": "Where is Google getting the title of my page from?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_32360",
+   "query": "Does the stop keywords matter?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_3242",
+   "query": "What are the best ways to start driving traffic to a new website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_32459",
+   "query": "Finding estimated traffic to a website",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_32519",
+   "query": "How to redirect an old url to a new url via htaccess? Website uses Wordpress",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_32659",
+   "query": "Joomla Sites hacked by DR-MTMRD",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_32703",
+   "query": "How Does Amazon have so much information in a tweet?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_33178",
+   "query": "How to make a sub-domain an alias of other domain when a wilcard exist to that level in the dns server",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_3320",
+   "query": "Why google is not showing links to my site in result?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_33415",
+   "query": "Is it possible to stop Chrome and other browsers from pre-fetching/rendering my site?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_335",
+   "query": "What are some great tools to use for keyword research?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_33561",
+   "query": "What is the name for landing pages that are one long page?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_33627",
+   "query": "Is there any way to discover the traffic of a site I don't control?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34173",
+   "query": "Subdomains vs. subdirectory – status as of 2012.",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34375",
+   "query": "When will my old page stop appearing on Google?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34481",
+   "query": "I want to host clients' websites, but not their email. What's the easiest way to handle this?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34492",
+   "query": "Pointing .com and .ca domain names",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34510",
+   "query": "How can I simulate a website loading slowly?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34525",
+   "query": "Google Places seo?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34605",
+   "query": "How can I see what Wikipedia pages link to my website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34810",
+   "query": "Title of the page in search results and title of google's cached version are different. Why?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34871",
+   "query": "How to hide download file from bots?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34882",
+   "query": "Mobile site robots.txt",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34903",
+   "query": "How to overcome politics of the net (Google translate code refuses to work from a specific region)",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_3496",
+   "query": "Do subdomains help/hurt SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_34986",
+   "query": "How to register a .er domain?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_35073",
+   "query": "Validation Meta tag for Bing",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_35212",
+   "query": "Does google see the output of document.write?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_35272",
+   "query": "Does text size and placement on page have an effect on SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_35768",
+   "query": "Is this Anti-Scraping technique viable with Crawl-Delay?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_35933",
+   "query": "How to serve WAMP website over internet?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_35939",
+   "query": "Is hidden content (display: none;) -indexed- by search engines?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_36278",
+   "query": "What is the SEO impact of moving my domain to another IP address and what is the right way of doing this?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_36434",
+   "query": "What should filenames and URLs of images contain for SEO benefit?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_3770",
+   "query": "SEO Geolocation",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_37723",
+   "query": "Why are my backlinks not showing on google on this asp.net website with all I've done?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_37727",
+   "query": "How to solve \"Login Only\" rejection?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_38014",
+   "query": "Is having a 'home' navigation item on the home page negative to your sites SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_38139",
+   "query": "Redirect non-www to www while preserving protocol",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_38155",
+   "query": "Add a record in my panel route my domain from host.com to www.host.com in dot net panel",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_38562",
+   "query": "SEO - folder or file",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_38693",
+   "query": "Chrome says my website is Serbian...how do I \"force\" chrome to use english?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_38838",
+   "query": "Concerns about moving media files to a CDN and impact on SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_38994",
+   "query": "Is there a general rule of thumb for which browsers to optimize your site for?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_39092",
+   "query": "Do WordPress websites get indexed quicker by search engines than a regular website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_39250",
+   "query": "Which keyword should I use: colors or colours or a combination of both?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_3932",
+   "query": "keyword stuffing in SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_3952",
+   "query": "Understanding Alexa rank, it isn't showing many of my back links?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_41035",
+   "query": "Should I send my content to other websites by RSS Feed?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_41061",
+   "query": "Should you rel=\"nofollow\" on links which go to non-canonical pages",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_41118",
+   "query": "Do online webhosting accounts allow the customers to install and run webservers like node.js?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_4166",
+   "query": "SEO benefits of URL as: www.example.com/category/subcategory/",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_42190",
+   "query": "Connection speed for a website from UK to Australia",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_42564",
+   "query": "Changing default date range in Google Analyics?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_42576",
+   "query": "Is it a good idea to register multiple domains pointing to a single website",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_4269",
+   "query": "Where is the best place to find stock website templates?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_42860",
+   "query": "https:// search results appearing on Google for purely http:// site",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_42884",
+   "query": "Pagination for product listing, what to use? \"canonical\" or \"rel-prev-next\" or do nothing?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_43228",
+   "query": "URL re-write for indexed pages",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_43468",
+   "query": "How to view website from different locations",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_43494",
+   "query": "Search Rankings and new website",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44049",
+   "query": "What is the maximum number of DNS A-records you can use on one domain?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44070",
+   "query": "Website that allows users to interact via SMS (at a charge)",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44071",
+   "query": "Can I hide an embedded YouTube video or is that against the terms of use?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_4424",
+   "query": "addthis button default message",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44240",
+   "query": "Redirection transparent to Google and other SE",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44420",
+   "query": "How to do SEO for a one page web application?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44440",
+   "query": "google search index what is fresh content",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44629",
+   "query": "SEO handling of ever changing portion of site",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_4473",
+   "query": "What is a \"back link\" and how does it affect search ranking?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44782",
+   "query": "Can we use a copyrighted material if there is no copyright information and there is no way to contact the author",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44798",
+   "query": "google removed links from the index",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_44936",
+   "query": "change the static IP address to domain name",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_45",
+   "query": "What are some options for taking payments on my website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_45147",
+   "query": "website won't work without www. on 123-reg",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_45395",
+   "query": "How to direct https requests to http while SSL cert expired?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_45402",
+   "query": "Site Indexed in Yahoo and Bing but not Google",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_45465",
+   "query": "Is it a bad idea to use a domain hack for my personal website name?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_4596",
+   "query": "How to remove malware from website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47031",
+   "query": "Removing GA from Sites",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47040",
+   "query": "Will Google penalize my site for switching content upon page load?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47071",
+   "query": "What does the keyword 'clicks' mean or constitute in web analytics",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47083",
+   "query": "How to know if certain IP is blocked in china?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47088",
+   "query": "Request change of address for non-root level domain name",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47270",
+   "query": "What are the most commonly used and basic Apache htaccess redirects?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47342",
+   "query": "Are keywords in URLs good SEO or needlessly redundant?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47349",
+   "query": "Is Google ok with multiple rel=\"author\" links?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47577",
+   "query": "Google Pagerank (PR) History and Next Upcoming Updates",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47771",
+   "query": "Is it good to index category in search engines?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47772",
+   "query": "is it good for SEO to hierarchy the site links?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_4780",
+   "query": "What role do article submission directories play in SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47811",
+   "query": "Googlebot craw rate is too slow for a huge site",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47931",
+   "query": "Subdomain or domain?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_47970",
+   "query": "Best links architecture for items under sections and categories?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_48094",
+   "query": "Could globally applying rel=\"nofollow\" to external links have a negative SEO impact",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_48136",
+   "query": "Get rank for non english keyword in a english site",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_48200",
+   "query": "Tell Google to ignore parts of website",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_48366",
+   "query": "Site blocked by content filter",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_48692",
+   "query": "If a website has no backlinks, would it ever get listed in Google?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_48699",
+   "query": "Changing host bad for SEO ranking?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_48716",
+   "query": "How to avoid page views from an adult site in my blog?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_49067",
+   "query": "Will moving Images to CDN effect Google Image search results?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_49088",
+   "query": "Which is good to target, singular or plural keyword?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_49400",
+   "query": "Restoring a site (SEO) after 6 months of downtime",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_49618",
+   "query": "Browser compatibility issues",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_49736",
+   "query": "What are the SEO Benefits of adding a Tumblr feed to a website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_49751",
+   "query": "Effect of redirection on ranking",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_49781",
+   "query": "Benefit of date in URL segments",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_49794",
+   "query": "How to move a single page of content to a new domain",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5007",
+   "query": "Seo: Change the title of a page",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_50224",
+   "query": "Forwarding naked domain to www",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_50234",
+   "query": "Best way to prevent Google from indexing a directory",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_50415",
+   "query": "Best way to handle query string params no longer used",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_50428",
+   "query": "If not H1 tags, what can be used?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_50475",
+   "query": "How to fix soft 404 errors in GWT?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_50664",
+   "query": "Web design company backlinking technique",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_50839",
+   "query": "How to get business map location displayed in the right hand sidebar of the Google search results page?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_50974",
+   "query": "Issues with trailing slash vs no trailing slash and if I even need to redirect?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51011",
+   "query": "Home Page plagiarism risks from a competitors",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51099",
+   "query": "With Robots.txt disallow all, why was my site still getting traffic?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51152",
+   "query": "SEO: Redirecting an incoming link to a discontinued product to a very similar product",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51198",
+   "query": "Does Google cap impressions of my website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51304",
+   "query": "Multiple domains, same content",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51528",
+   "query": "Added new redirected domain with lots of visitors bouncing - is that bad for us?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51652",
+   "query": "Redirecting all 404 pages in Wordpress is not good SEO, but what is?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51674",
+   "query": "Someone is copying my blog content. Does it affect my blog’s ranking on Google?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51823",
+   "query": "What domain structure is best for a forum according to SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_51902",
+   "query": "Using same Google Adsense units for web and mobile versions",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_52172",
+   "query": "What are best SEO practices when deleting a webpage? What return code should I use?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_52307",
+   "query": "Changing web hosting companies",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_52395",
+   "query": "How did Google find my unlinked newly created pages?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_52624",
+   "query": "How can I objectively check my search engine ranking?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_52642",
+   "query": "How is it possible that Google has indexed more URLs than a sitemap contains?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5265",
+   "query": "How do I set expiration headers for CSS, JS, and Images?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_52683",
+   "query": "How to dynamically change the host URL?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5269",
+   "query": "Self hosted Web Analytics like urchin",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_52812",
+   "query": "How to prevent misattributed goal conversions to Facebook and accounts.google.com in Google Analytics?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53076",
+   "query": "Adding http:// in internal links",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53156",
+   "query": "Google AdSense in my website",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_533",
+   "query": "How to add SMS text messaging functionality to my website?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53305",
+   "query": "Crawling problem with AJAX search result pages",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53405",
+   "query": "Google Analytics: How can 'Avg time on page' stat be larger than my 'Avg visit duration' stat?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53438",
+   "query": "How to hide “all traffic” when plotting rows in Google Analytics?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53468",
+   "query": "Google webmaster Tool showing : 170 not found 404 errors!",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53486",
+   "query": "Warning in Google structured data: either price or review or availability needs to be present",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53626",
+   "query": "What to do with discontinued product pages?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53713",
+   "query": "How to Recover Lost Website/ blog data with no backup?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53714",
+   "query": "SEO for Google Maps applications?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5385",
+   "query": "Page appears indexed in Google but not findable for any search terms?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_53891",
+   "query": "Why is Google reporting no authorship when I created the link?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_54038",
+   "query": "How do you find all the links to disavow for a Google reconsideration request?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_54138",
+   "query": "SEO and Mobile XML sitemap",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_54261",
+   "query": "301 redirect www to non-www",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_54378",
+   "query": "How to make DNS server propagate faster if you are a site owner?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_54423",
+   "query": "Foolproof way to ensure Google news pulls the correct image for its thumbnails?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_54834",
+   "query": "Duplicate content caused by HTTPS pages",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_54851",
+   "query": "Business not showing up on right hand side of google search",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_54970",
+   "query": "Creating sub domain on webmin",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55000",
+   "query": "Using the same keywords in many URLs",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55220",
+   "query": "SEO problem with mispelled domain",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55225",
+   "query": "Querystring case differences and duplicate content",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55228",
+   "query": "change of address to subdomain",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55265",
+   "query": "Use SSL on Heroku without paying Heroku for SSL?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55279",
+   "query": "How can I rewrite URL without losing Facebook likes, tweets, etc",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55334",
+   "query": "How long for data highlighter mark up to appear in structured data tool?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5550",
+   "query": "How to provide Google reviews information?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55501",
+   "query": "Main index redirect to sub folder (e.g. domain.com/site)",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55509",
+   "query": "Switching domain and hosting providers - questions about email",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55780",
+   "query": "Can a PHP generated main page be indexed by Google?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55898",
+   "query": "Does text ad exchange or traffic exchange or auto surf websites good for google ranking?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_55945",
+   "query": "Adsense for my site was disapproved due to insufficient content",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56018",
+   "query": "Should I use HTTPS for my WordPress blog?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56074",
+   "query": "What resolution does Google use while crawling a site with responsive/adaptive design?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56101",
+   "query": "Why have the number of impressions reported by Google Webmaster Tools become so little?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56160",
+   "query": "Choose the Google Sitelinks that are shown when somebody searches for my website",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56418",
+   "query": "Does it help if my tld contains words that describe the function of my business?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5653",
+   "query": "Does the Google spider render JavaScript?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56600",
+   "query": "Store name appears twice in meta titles while searching in Google?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5662",
+   "query": "How do I get images containing text to be indexed by search engines?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56655",
+   "query": "Lazy-loading content and SEO impact",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56712",
+   "query": "How do I get my website public?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56754",
+   "query": "Keyword adding in footer tag in the website will it help for SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56765",
+   "query": "Sitelinks and domain name",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56820",
+   "query": "Sitemap.xml doesn't seem to be working properly",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56853",
+   "query": "When seeking to acquire a legacy domain from a site owner, what should I look for in the domain history?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_56919",
+   "query": "How to submit sitemap to google?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57028",
+   "query": "Can competitors get your website penalized?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57073",
+   "query": "How to find out why our website is blocked by Sophos and Websense?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57085",
+   "query": "How do google bots work for sites that are database driven?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57102",
+   "query": "Domains - real differences & advantages between .com | .org | .net",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57273",
+   "query": "Sudden decrease in number of pages indexed in Google",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57582",
+   "query": "Is there a limit to the number of web properties one can create in Google Analytics?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57768",
+   "query": "Why use meta description, when we know, if we do not use meta description in a webpage, the Google will show the article text, in SERP?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57880",
+   "query": "Page gone: 404, or other options?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57886",
+   "query": "How to prevent Google (and others) from indexing the site under construction?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57894",
+   "query": "Different URLs with duplicate content",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_57933",
+   "query": "Domain Branding: Is Making A Word Plural Relevant?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_58185",
+   "query": "Will 404 pages hurt website page ranking?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_58280",
+   "query": "find-new/posts&recent=1 as homepage: what about SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_58382",
+   "query": "Is it good ideo seo point of view- to give noindex or nofollow to labels and tags?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5845",
+   "query": "Alternative to AdSense",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_5852",
+   "query": "What's the a good mailing list manager/platform?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_58535",
+   "query": "Adding Disqus to wordpress effect SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_58576",
+   "query": "How can I rewrite to my .htaccess in PHP?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_58703",
+   "query": "Bing Webmaster Tools missing www",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_58888",
+   "query": "How to prevent Google from showing sub domain name as title in search result?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_59029",
+   "query": "Mobile and desktop SEO, double content",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_59293",
+   "query": "Started out with a .co.uk site now want to go to .com",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_593",
+   "query": "Which meta tags are not worth the effort?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_59326",
+   "query": "Why would I use a robots.txt file?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_59568",
+   "query": "Will the \"Geographic Target\" of my website negatively affect my search ranking?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_59697",
+   "query": "SEO: best way to deal with short lifetime URLs?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_59788",
+   "query": "How to protect a form from spam?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_59891",
+   "query": "Why our mails go to spam box in Gmail?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_59898",
+   "query": "Linking to my website from my clients sites",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_60423",
+   "query": "Should Good Content Strategy Possibly Create Multiple Domains?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_60617",
+   "query": "How to combine GZip + CDN for faster page loads?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_61080",
+   "query": "What's the quickest way to do a \"clean\" google search?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_61084",
+   "query": "Rating for website page",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_61201",
+   "query": "What is the correct and better language code format in URL and hreflang?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_61272",
+   "query": "Setting up Nginx Load Balancing",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_61375",
+   "query": "Website maintenance - SEO - 503",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_61507",
+   "query": "Redirecting entire old domain to new domain",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_61737",
+   "query": "Using directories vs http get?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_61798",
+   "query": "Is buying a localized domain and redirecting it to my main site a good idea for SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_6185",
+   "query": "New META TAGS with positive effects for seo ranking in 2011 and beyond",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_62996",
+   "query": "link:www.example.com returns 0 results",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_63070",
+   "query": "Does having a dynamic URL for all pages in my blog put me at disadvantage SEO wise?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_63152",
+   "query": "Google indexing pages very slowly",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_63489",
+   "query": "SEO-meta description crawling issue",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_63508",
+   "query": "New TLDs and Their Impact on SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_63582",
+   "query": "Should paginated content have unique meta tags?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_63591",
+   "query": "Why are the stats for HTML Improvements in Google Webmaster Tools not decreasing?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_64632",
+   "query": "How many back links should be created within 7 days?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_64708",
+   "query": "separate domains vs subdomains",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_64858",
+   "query": "Does paid traffic improve SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_64907",
+   "query": "Blocked URLS in My webmater Tools",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_64909",
+   "query": "Subdomains for UK and USA",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_64944",
+   "query": "How rel=\"next\" and rel=\"prev\" helps in SEO if used for pagination?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_64967",
+   "query": "Best way to get improve SEO ranking for image-based site",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_65130",
+   "query": "Using microdata for SEO will help to increase SERP Position?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_6519",
+   "query": "Does server location or TLD affects SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_65395",
+   "query": "Split domain name between two hosts (separate webmail and webhost)",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_6556",
+   "query": "Does the order of keywords matter in a page title?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_65733",
+   "query": "Does removing ID from url improve SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_65804",
+   "query": "Social media logos and their bg",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_6602",
+   "query": "Data sources for Alexa and Compete rankings",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_66976",
+   "query": "Only Allowing My IP with .htaccess for Maintenance Mode",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_66979",
+   "query": "How to organize this site?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_67085",
+   "query": "Moving site new domain web.config IIS8.5 page level",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_67155",
+   "query": "Establishing Authorship",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_67266",
+   "query": "Website logo text - best tag for SEO purposes?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_67512",
+   "query": "Transferred hosting and website not online for 2 weeks during transition - will this affect search results?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_67720",
+   "query": "Do my blog page views help my main site's page ranking, if they are on the same domain?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_6790",
+   "query": "Dating CMS ideas",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_6791",
+   "query": "image behind adsense",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_6796",
+   "query": "Make the content area div come next the menu bar",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_67970",
+   "query": "Create a Google Information Panel",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_68063",
+   "query": "How to remove external backlinks?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_68094",
+   "query": "HTTP to only HTTPS Google wmtools",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_68299",
+   "query": "phpBB - Reducing Spam",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_68349",
+   "query": "google analytics - calculate peak concurrent users for a given hour",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_68455",
+   "query": "Which technique is useful for image SEO, when images is coming from CSS?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_68635",
+   "query": "negative seo myth or reality",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_6890",
+   "query": "Are HTML tables bad for SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7136",
+   "query": "Pagination, Duplicate Content, and SEO",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7209",
+   "query": ".CO Domains. Worthwhile?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7299",
+   "query": "StackOverflow and Google search",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7377",
+   "query": "How to register a domain for a beginner?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7383",
+   "query": "SEO one longer page vs. several targeted subpages?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7424",
+   "query": "New Domain Registration - Price differences",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7451",
+   "query": "google cache grabber",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7484",
+   "query": "bounce rate and Alexa ranking clarifications",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7864",
+   "query": "How to Estimate Needed Bandwidth for New Web Application?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_7889",
+   "query": "Are there any difference between `<h1> ... <h6>` tags for SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8001",
+   "query": "Am I legally liable for user generated content and comments?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_803",
+   "query": "When does a website require a privacy policy and/or terms of use?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8206",
+   "query": "How do you start an on-line community?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8273",
+   "query": "SSL certificate - which one to buy?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8354",
+   "query": "What does the double slash mean in URLs?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_848",
+   "query": "How to use rel='canonical' properly",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8501",
+   "query": "Self ads targeting",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8536",
+   "query": "How do I get a domain from a grabber without paying?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8710",
+   "query": "Google doesn't seem to update the description or title of my homepage",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8798",
+   "query": "Hosted version of Yahoo! answers",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8836",
+   "query": "Do dedicated IP addresses improve SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_8861",
+   "query": "Is there anything better than awstats?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9118",
+   "query": "Should page contents be same all time for SEO?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9347",
+   "query": "IE6 Support - When to drop it?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9540",
+   "query": "Where is the line drawn with domain names which include a trademark?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9543",
+   "query": "Search Engine results from different locations",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9572",
+   "query": "Why won't title attributes get indexed in Google?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_971",
+   "query": "What are the best ways to implement cross browser css?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9739",
+   "query": "Which URL format is better? domain.com/[id]/title OR domain.com/title/[id].html",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9777",
+   "query": "Risk for hosting SEO links",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9848",
+   "query": "Squeezing all the SEO out of a URL as possible",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9897",
+   "query": "How does google calculate bounce rate?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9943",
+   "query": "Helpdesk software",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9947",
+   "query": "How can I buy a domain that has already been registered?",
+   "question_type": "beir_cqadupstack_webmasters"
+  },
+  {
+   "name": "beir_cqadupstack_webmasters_9968",
+   "query": "When removing a bunch of files from a website, is 301 to the start page appropriate?",
+   "question_type": "beir_cqadupstack_webmasters"
+  }
+ ]
+}

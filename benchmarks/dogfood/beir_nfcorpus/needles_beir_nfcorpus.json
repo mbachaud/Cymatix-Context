@@ -1,0 +1,1619 @@
+{
+ "needles": [
+  {
+   "name": "beir_nfcorpus_PLAIN-1008",
+   "query": "deafness",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1018",
+   "query": "DHA",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-102",
+   "query": "Stopping Heart Disease in Childhood",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1028",
+   "query": "dietary scoring",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1039",
+   "query": "domoic acid",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1050",
+   "query": "Dr. Dean Ornish",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1066",
+   "query": "Dr. Walter Willett",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1088",
+   "query": "ECMO",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1098",
+   "query": "eggnog",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1109",
+   "query": "endocrine disruptors",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1119",
+   "query": "energy drinks",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-112",
+   "query": "Food Dyes and ADHD",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1130",
+   "query": "ergothioneine",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1141",
+   "query": "Evidence-based medicine",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1151",
+   "query": "factory farming practices",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1161",
+   "query": "fava beans",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1172",
+   "query": "fenugreek",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1183",
+   "query": "Finland",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1193",
+   "query": "flax oil",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-12",
+   "query": "Exploiting Autophagy to Live Longer",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1203",
+   "query": "folic acid",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1214",
+   "query": "Fosamax",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1225",
+   "query": "fructose",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-123",
+   "query": "How Citrus Might Help Keep Your Hands Warm",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1236",
+   "query": "galactosemia",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1249",
+   "query": "genetic manipulation",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1262",
+   "query": "Global Burden of Disease Study",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1275",
+   "query": "goji berries",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1288",
+   "query": "grapes",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1299",
+   "query": "growth promoters",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1309",
+   "query": "halibut",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1320",
+   "query": "Harvard Physicians’ Study II",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-133",
+   "query": "Starving Tumors of Their Blood Supply",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1331",
+   "query": "hearing",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1342",
+   "query": "heme iron",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1353",
+   "query": "hernia",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1363",
+   "query": "Hiroshima",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1374",
+   "query": "hormonal dysfunction",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1387",
+   "query": "hyperactivity",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1398",
+   "query": "IGF-1",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1409",
+   "query": "industrial toxins",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1419",
+   "query": "insects",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1429",
+   "query": "Iowa Women’s Health Study",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-143",
+   "query": "Are Dental X-Rays Safe?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1441",
+   "query": "Japan",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1453",
+   "query": "junk food",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1463",
+   "query": "kidney beans",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1473",
+   "query": "kohlrabi",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1485",
+   "query": "lard",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1496",
+   "query": "leeks",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1506",
+   "query": "leucine",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1516",
+   "query": "Lindane",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1527",
+   "query": "liver disease",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-153",
+   "query": "How Should I Take Probiotics?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1537",
+   "query": "low-carb diets",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1547",
+   "query": "lyme disease",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1557",
+   "query": "magnesium",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1568",
+   "query": "maple syrup",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1579",
+   "query": "mastitis",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1590",
+   "query": "medical ethics",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1601",
+   "query": "memory",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1611",
+   "query": "mesquite",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1621",
+   "query": "Mevacor",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1635",
+   "query": "milk",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1645",
+   "query": "molasses",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-165",
+   "query": "Breast Cancer & Alcohol: How Much is Safe?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1656",
+   "query": "mouth cancer",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1667",
+   "query": "muscle health",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1679",
+   "query": "myelopathy",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1690",
+   "query": "National Academy of Sciences",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1700",
+   "query": "Native Americans",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1710",
+   "query": "neurocysticercosis",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1721",
+   "query": "NIH-AARP study",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1731",
+   "query": "norovirus",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1741",
+   "query": "nuts",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-175",
+   "query": "Diet and Cellulite",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1752",
+   "query": "okra",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1762",
+   "query": "oral intraepithelial neoplasia",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1772",
+   "query": "organotins",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1784",
+   "query": "oxen meat",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1794",
+   "query": "Panama",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1805",
+   "query": "Parkinson's disease",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1817",
+   "query": "peanut butter",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1827",
+   "query": "Peoria",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1837",
+   "query": "pesticides",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1847",
+   "query": "philippines",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1857",
+   "query": "phytic acid",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-186",
+   "query": "Best Treatment for Constipation",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1867",
+   "query": "pineapples",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1877",
+   "query": "plant-based diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1887",
+   "query": "poisonous plants",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1897",
+   "query": "polypropylene plastic",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1909",
+   "query": "pork",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1919",
+   "query": "poultry workers",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1929",
+   "query": "prenatal vitamins",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1940",
+   "query": "prolactin",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1950",
+   "query": "prunes",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-196",
+   "query": "Should We Avoid Titanium Dioxide?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1962",
+   "query": "pumpkin",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1972",
+   "query": "quinine",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1983",
+   "query": "rapamycin",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-1995",
+   "query": "red tea",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2",
+   "query": "Do Cholesterol Statin Drugs Cause Breast Cancer?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2009",
+   "query": "rhabdomyolysis",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2019",
+   "query": "rickets",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2030",
+   "query": "Rutin",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2040",
+   "query": "salmon",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2051",
+   "query": "saturated fat",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2061",
+   "query": "seafood",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-207",
+   "query": "Avoiding Cooked Meat Carcinogens",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2071",
+   "query": "serotonin",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2081",
+   "query": "shelf life",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2092",
+   "query": "sirtuins",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2102",
+   "query": "smoking",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2113",
+   "query": "soil health",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2124",
+   "query": "spearmint",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2134",
+   "query": "Splenda",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2145",
+   "query": "St. John's wort",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2156",
+   "query": "stevia",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2167",
+   "query": "subsidies",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-217",
+   "query": "Plant-Based Diets for Psoriasis",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2177",
+   "query": "sulfur",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2187",
+   "query": "suppositories",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2197",
+   "query": "sweeteners",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2209",
+   "query": "taro",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2220",
+   "query": "tempeh",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2230",
+   "query": "thiamine",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2240",
+   "query": "titanium dioxide",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2250",
+   "query": "tongue worm",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2261",
+   "query": "trans fats",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-227",
+   "query": "Increasing Muscle Strength with Fenugreek",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2271",
+   "query": "Tufts",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2281",
+   "query": "turnips",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2291",
+   "query": "ultra-processed foods",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-23",
+   "query": "How to Reduce Exposure to Alkylphenols Through Your Diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2301",
+   "query": "uterine health",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2311",
+   "query": "veal",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2321",
+   "query": "veggie chicken",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2332",
+   "query": "viral infections",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2343",
+   "query": "vitamin K",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2354",
+   "query": "walnut oil",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2364",
+   "query": "weight gain",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2375",
+   "query": "whiting",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-238",
+   "query": "How Chemically Contaminated Are We?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2386",
+   "query": "worms",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2396",
+   "query": "Yale",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2408",
+   "query": "Zoloft",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2430",
+   "query": "Preventing Brain Loss with B Vitamins?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2440",
+   "query": "More Than an Apple a Day: Combating Common Diseases",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2450",
+   "query": "Are Organic Foods Safer?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2460",
+   "query": "Diabetes as a Disease of Fat Toxicity",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2470",
+   "query": "Is Milk Good for Our Bones?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-248",
+   "query": "Treating an Enlarged Prostate With Diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2480",
+   "query": "Preventing Ulcerative Colitis with Diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2490",
+   "query": "The Actual Benefit of Diet vs. Drugs",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2500",
+   "query": "The Saturated Fat Studies: Buttering Up the Public",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2510",
+   "query": "Coffee and Artery Function",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2520",
+   "query": "Caloric Restriction vs. Plant-Based Diets",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2530",
+   "query": "Infectobesity: Adenovirus 36 and Childhood Obesity",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2540",
+   "query": "Does Cholesterol Size Matter?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2550",
+   "query": "Barriers to Heart Disease Prevention",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2560",
+   "query": "Childhood Constipation and Cow’s Milk",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2570",
+   "query": "Diabetics Should Take Their Pulses",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2580",
+   "query": "Academy of Nutrition and Dietetics Conflicts of Interest",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-259",
+   "query": "Optimal Phytosterol Dose and Source",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2590",
+   "query": "Do Vegetarians Get Enough Protein?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2600",
+   "query": "Eggs and Arterial Function",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2610",
+   "query": "Treating Asthma With Plants vs. Supplements?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2620",
+   "query": "Phytates for the Treatment of Cancer",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2630",
+   "query": "Alkylphenol Endocrine Disruptors and Allergies",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2640",
+   "query": "Chicken Salmonella Thanks to Meat Industry Lawsuit",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2650",
+   "query": "Turmeric Curcumin and Osteoarthritis",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2660",
+   "query": "How Long to Detox From Fish Before Pregnancy?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2670",
+   "query": "Is Caramel Color Carcinogenic?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2680",
+   "query": "Counteracting the Effects of Dioxins Through Diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2690",
+   "query": "Chronic Headaches and Pork Tapeworms",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-270",
+   "query": "Is Caffeinated Tea Really Dehydrating?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2700",
+   "query": "Heart Disease Starts in Childhood",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2710",
+   "query": "Artificial Food Colors and ADHD",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2720",
+   "query": "Keeping Your Hands Warm With Citrus",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2730",
+   "query": "Anti-Angiogenesis: Cutting Off Tumor Supply Lines",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2740",
+   "query": "Cancer Risk From CT Scan Radiation",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2750",
+   "query": "Preventing the Common Cold with Probiotics?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2760",
+   "query": "Eating Healthy on a Budget",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2770",
+   "query": "Flaxseeds & Breast Cancer Survival: Clinical Evidence",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2780",
+   "query": "Do Fruit & Nut Bars Cause Weight Gain?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2790",
+   "query": "Titanium Dioxide & Inflammatory Bowel Disease",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-280",
+   "query": "Mercury Testing Recommended Before Pregnancy",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2800",
+   "query": "Prolonged Liver Function Enhancement From Broccoli",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2810",
+   "query": "Apple Juice May Be Worse Than Sugar Water",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2820",
+   "query": "Preventing Strokes with Diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2830",
+   "query": "Neurobiology of Artificial Sweeteners",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2840",
+   "query": "Benefits of Fenugreek Seeds",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2850",
+   "query": "More Antibiotics In White Meat or Dark Meat?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2860",
+   "query": "BPA Plastic and Male Sexual Dysfunction",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2870",
+   "query": "Filled Full of Lead",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2880",
+   "query": "The Answer to the Pritikin Puzzle",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2890",
+   "query": "To Snack or Not to Snack?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2900",
+   "query": "Boosting Good Bacteria in the Colon Without Probiotics",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-291",
+   "query": "Stool Size and Breast Cancer Risk",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2910",
+   "query": "Optimal Phytosterol Dose",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2920",
+   "query": "Human Neurotransmitters in Plants",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2930",
+   "query": "Kiwifruit for Irritable Bowel Syndrome",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2940",
+   "query": "Dietary Treatment of Crohn's Disease",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2950",
+   "query": "Unsafe at Any Feed",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2960",
+   "query": "Pharmacists Versus Health Food Store Employees: Who Gives Better Advice?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2970",
+   "query": "Preventing Cataracts with Diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2981",
+   "query": "Cheese Mites and Maggots",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-2991",
+   "query": "Cholesterol and Lower Back Pain",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3001",
+   "query": "EPIC Findings on Lymphoma",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3014",
+   "query": "Sometimes the Enzyme Myth Is True",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3026",
+   "query": "Vitamin C-Enriched Bacon",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3037",
+   "query": "Out of the Lab Onto the Track",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3053",
+   "query": "Dragon's Blood",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3063",
+   "query": "Better Than Goji Berries",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-307",
+   "query": "Vitamin D: Shedding some light on the new recommendations",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3074",
+   "query": "How to Help Prevent Abdominal Aortic Aneurysms",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3085",
+   "query": "The Difficulty of Arriving at a Vitamin D Recommendation",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3097",
+   "query": "Amyloid and Apple Juice",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3116",
+   "query": "Dietary Guidelines: From Dairies to Berries",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3131",
+   "query": "Are Avocados Good for You?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3141",
+   "query": "Relieving Yourself of Excess Estrogen",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3151",
+   "query": "Too Much Iodine Can Be as Bad as Too Little",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3161",
+   "query": "Is Milk and Mucus a Myth?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3171",
+   "query": "Convergence of Evidence",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3181",
+   "query": "Is Dragon Fruit Good For You?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3191",
+   "query": "Is Distilled Fish Oil Toxin-Free?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-320",
+   "query": "Breast Cancer and Diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3201",
+   "query": "Acne & Cancer Connection",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3211",
+   "query": "Overdosing on Greens",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3221",
+   "query": "Dietary Theory of Alzheimer's",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3231",
+   "query": "Meat & Multiple Myeloma",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3241",
+   "query": "Apthous Ulcer Mystery Solved",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3251",
+   "query": "EPIC Study",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3261",
+   "query": "Update on Herbalife®",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3271",
+   "query": "Saturated Fat & Cancer Progression",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3281",
+   "query": "Aluminum in Vaccines vs. Food",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3292",
+   "query": "Are Multivitamins Good For You?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-33",
+   "query": "What’s Driving America’s Obesity Problem?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3302",
+   "query": "Fish Fog",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3312",
+   "query": "Sexually Transmitted Fish Toxin",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-332",
+   "query": "Can antioxidant-rich spices counteract the effects of a high-fat meal?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3322",
+   "query": "Veggies vs. Cancer",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3332",
+   "query": "Alcohol Risks vs. Benefits",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3342",
+   "query": "Is Coconut Milk Good For You?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3352",
+   "query": "Boosting Heart Nerve Control",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3362",
+   "query": "Kuna Indian Secret",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3372",
+   "query": "The Healthiest Sweetener",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3382",
+   "query": "Are Artificial Colors Bad for You?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3392",
+   "query": "Healthiest Airplane Beverage",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3402",
+   "query": "Antioxidant Content of 300 Foods",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3412",
+   "query": "Plant vs. Cow Calcium",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3422",
+   "query": "Vitamin Supplements Worth Taking",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3432",
+   "query": "Healthy Chocolate Milkshakes",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-344",
+   "query": "Dioxins Stored in Our Own Fat May Increase Diabetes Risk",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3442",
+   "query": "The Healthiest Vegetables",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3452",
+   "query": "Bowel Movement Frequency",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3462",
+   "query": "Olive Oil and Artery Function",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-3472",
+   "query": "How Doctors Responded to Being Named a Leading Killer",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-358",
+   "query": "Didn't another study show carnitine was good for the heart?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-371",
+   "query": "Any update on the scary in vitro avocado data?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-383",
+   "query": "What do you think of Dr. Jenkins' take on paleolithic diets?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-395",
+   "query": "What about pepper plus turmeric in V8 juice?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-407",
+   "query": "Is annatto food coloring safe?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-418",
+   "query": "Fresh fruit versus frozen--which is better?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-430",
+   "query": "Are krill oil supplements better than fish oil capsules?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-44",
+   "query": "Who Should be Careful About Curcumin?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-441",
+   "query": "Is apple cider vinegar good for you?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-457",
+   "query": "How can you believe in any scientific study?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-468",
+   "query": "Is vitamin D3 (cholecalciferol) preferable to D2 (ergocalciferol)?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-478",
+   "query": "accidents",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-488",
+   "query": "adenovirus 36",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-499",
+   "query": "African-American",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-510",
+   "query": "airport scanners",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-520",
+   "query": "Alli",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-531",
+   "query": "alternative medicine",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-541",
+   "query": "American Dental Association",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-551",
+   "query": "amnesia",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-56",
+   "query": "Foods for Glaucoma",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-561",
+   "query": "aneurysm",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-571",
+   "query": "anisakis",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-583",
+   "query": "antinutrients",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-593",
+   "query": "apnea",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-603",
+   "query": "Arkansas",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-613",
+   "query": "ascorbic acid",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-623",
+   "query": "Atkins diet",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-634",
+   "query": "avocados",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-645",
+   "query": "bagels",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-660",
+   "query": "beans",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-671",
+   "query": "benzene",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-68",
+   "query": "What is Actually in Chicken Nuggets?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-681",
+   "query": "betel nuts",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-691",
+   "query": "bioavailability",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-701",
+   "query": "black raspberries",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-711",
+   "query": "blood clots",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-721",
+   "query": "BMAA",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-731",
+   "query": "bone fractures",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-741",
+   "query": "BPH",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-751",
+   "query": "BRCA genes",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-761",
+   "query": "breast pain",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-771",
+   "query": "bronchiolitis obliterans",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-78",
+   "query": "What Do Meat Purge and Cola Have in Common?",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-782",
+   "query": "Bush administration",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-792",
+   "query": "cadaverine",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-806",
+   "query": "caloric restriction",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-817",
+   "query": "canker sores",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-827",
+   "query": "carcinogens",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-838",
+   "query": "carrageenan",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-850",
+   "query": "cauliflower",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-872",
+   "query": "chanterelle mushrooms",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-882",
+   "query": "Chernobyl",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-892",
+   "query": "chickpeas",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-902",
+   "query": "chlorophyll",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-91",
+   "query": "Chronic Headaches and Pork Parasites",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-913",
+   "query": "cinnamon",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-924",
+   "query": "cocaine",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-934",
+   "query": "coffee",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-946",
+   "query": "coma",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-956",
+   "query": "cooking methods",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-966",
+   "query": "cortisol",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-977",
+   "query": "crib death",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-987",
+   "query": "cumin",
+   "question_type": "beir_nfcorpus"
+  },
+  {
+   "name": "beir_nfcorpus_PLAIN-997",
+   "query": "Czechoslovakia",
+   "question_type": "beir_nfcorpus"
+  }
+ ]
+}

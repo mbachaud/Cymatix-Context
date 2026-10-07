@@ -1,0 +1,2921 @@
+{
+ "beir_cqadupstack_gis_100061": [
+  "31967db6d8e6add9"
+ ],
+ "beir_cqadupstack_gis_100114": [
+  "d124c9f5d33b5ac6"
+ ],
+ "beir_cqadupstack_gis_100116": [
+  "6e1c4da38541fb89"
+ ],
+ "beir_cqadupstack_gis_100280": [
+  "94ee111b7e37d906"
+ ],
+ "beir_cqadupstack_gis_10046": [
+  "0ba6578834abc68b"
+ ],
+ "beir_cqadupstack_gis_10053": [
+  "f1c6262f49be7e38"
+ ],
+ "beir_cqadupstack_gis_101403": [
+  "8d986c9455923338"
+ ],
+ "beir_cqadupstack_gis_101706": [
+  "754a4ea53bc89f24"
+ ],
+ "beir_cqadupstack_gis_101869": [
+  "b459fe0e314d6ba5"
+ ],
+ "beir_cqadupstack_gis_101874": [
+  "3ebff07e0c60c10f",
+  "46bab7e64e022829",
+  "48f980767235d6f4",
+  "627463610c9d6cdc",
+  "66bdf72c0b58fc10",
+  "92b155efb9c1cbe1",
+  "ead03a24bce9b8de",
+  "f9b65cec6e23bd0f",
+  "fba7acabb36e4451"
+ ],
+ "beir_cqadupstack_gis_101969": [
+  "87f9de9a2f59b14b"
+ ],
+ "beir_cqadupstack_gis_101995": [
+  "03e2c9e539926e1e"
+ ],
+ "beir_cqadupstack_gis_101998": [
+  "8fdccaa4238a27fa"
+ ],
+ "beir_cqadupstack_gis_102080": [
+  "f507190a2d0a4aa6"
+ ],
+ "beir_cqadupstack_gis_102106": [
+  "f1a576a3e0ed5f27"
+ ],
+ "beir_cqadupstack_gis_102156": [
+  "47c286c9fd66c57a",
+  "8f8cc63fbcf04f5a",
+  "e00ef0e692d49eaa",
+  "e18b38986bcb4989"
+ ],
+ "beir_cqadupstack_gis_102288": [
+  "6416b64583aa698e"
+ ],
+ "beir_cqadupstack_gis_102301": [
+  "0a47603b1510f241"
+ ],
+ "beir_cqadupstack_gis_102346": [
+  "70a7ec4760e0318b"
+ ],
+ "beir_cqadupstack_gis_102641": [
+  "115ccdfa3633a367",
+  "243fe8069780a7f0",
+  "72d5834c7d823944",
+  "9125ceaaca976ee0",
+  "a09071aed4a85074",
+  "d728f0672fe0ad18"
+ ],
+ "beir_cqadupstack_gis_102682": [
+  "3e84ff23a4bccd2d",
+  "5fa5ae8b18c51348",
+  "cb704154cdeea8a9"
+ ],
+ "beir_cqadupstack_gis_102713": [
+  "d385618b86a3a684"
+ ],
+ "beir_cqadupstack_gis_102819": [
+  "4e6d63bf3cf97217"
+ ],
+ "beir_cqadupstack_gis_102820": [
+  "1112a0829d2d763e"
+ ],
+ "beir_cqadupstack_gis_103157": [
+  "cf729e548587e06c"
+ ],
+ "beir_cqadupstack_gis_103514": [
+  "cea71b9b8914839a",
+  "e8227ec49ab8da1a"
+ ],
+ "beir_cqadupstack_gis_10352": [
+  "0535d45dd80a1e30"
+ ],
+ "beir_cqadupstack_gis_103641": [
+  "3136b61dd839c0bc"
+ ],
+ "beir_cqadupstack_gis_103703": [
+  "33abd83e9130798d"
+ ],
+ "beir_cqadupstack_gis_103709": [
+  "7b4acd9e562683a2"
+ ],
+ "beir_cqadupstack_gis_103797": [
+  "3a58beb16dcb9eb1"
+ ],
+ "beir_cqadupstack_gis_103892": [
+  "94f6005c12c4a148"
+ ],
+ "beir_cqadupstack_gis_104005": [
+  "3c5a83e7baba9187"
+ ],
+ "beir_cqadupstack_gis_104133": [
+  "cad4e8657b4b6032"
+ ],
+ "beir_cqadupstack_gis_104165": [
+  "d58f94d8d08b7c47"
+ ],
+ "beir_cqadupstack_gis_104243": [
+  "b5e0697a3d8cd75f"
+ ],
+ "beir_cqadupstack_gis_104332": [
+  "0abb8c51c95bf698"
+ ],
+ "beir_cqadupstack_gis_104344": [
+  "198708e74bf6dad8",
+  "7837a6546a666e98"
+ ],
+ "beir_cqadupstack_gis_104370": [
+  "572655c5d817096e"
+ ],
+ "beir_cqadupstack_gis_104497": [
+  "1eeabe416fec478c"
+ ],
+ "beir_cqadupstack_gis_104538": [
+  "9eaad13eb4aae96d"
+ ],
+ "beir_cqadupstack_gis_104562": [
+  "1622e5d7f648c0ec"
+ ],
+ "beir_cqadupstack_gis_106808": [
+  "d8348307bdf80e5a"
+ ],
+ "beir_cqadupstack_gis_10703": [
+  "0264855ec52d3250",
+  "122d2323f567b7c9",
+  "2c148e346f5a2c1e",
+  "414e5edee80214c7"
+ ],
+ "beir_cqadupstack_gis_107062": [
+  "a884fd844a6682cb"
+ ],
+ "beir_cqadupstack_gis_107227": [
+  "46fa06f6ff9b564a"
+ ],
+ "beir_cqadupstack_gis_107474": [
+  "6226c47c5ddccfec"
+ ],
+ "beir_cqadupstack_gis_107521": [
+  "2814c4873a18dabe",
+  "35795bf77c4dc06f",
+  "4ff965db8ee68f0c"
+ ],
+ "beir_cqadupstack_gis_107562": [
+  "8bd4b3db41a5c2b8"
+ ],
+ "beir_cqadupstack_gis_107800": [
+  "33485772a20a036f"
+ ],
+ "beir_cqadupstack_gis_108154": [
+  "2e6ea74a39fba916"
+ ],
+ "beir_cqadupstack_gis_108380": [
+  "5b93a48b92396340"
+ ],
+ "beir_cqadupstack_gis_108397": [
+  "2f9c660c509e4a81",
+  "6d2eaa8ad3fdf143",
+  "73ebca7068633c01",
+  "831961ad2429ba1d",
+  "85dfaf74771303a6"
+ ],
+ "beir_cqadupstack_gis_108635": [
+  "a9759c539ef235bc"
+ ],
+ "beir_cqadupstack_gis_108752": [
+  "5c854dd1494dc528"
+ ],
+ "beir_cqadupstack_gis_108971": [
+  "aa8e1360ddf955b3"
+ ],
+ "beir_cqadupstack_gis_109024": [
+  "2abcfcf8ecf7984d"
+ ],
+ "beir_cqadupstack_gis_109049": [
+  "111e695f40b12339",
+  "96c9f31f48a76c79"
+ ],
+ "beir_cqadupstack_gis_109173": [
+  "04116dc92673d7ce",
+  "2964582277c3685d",
+  "84313994e81d4f99"
+ ],
+ "beir_cqadupstack_gis_109190": [
+  "5f05c199278b69d2"
+ ],
+ "beir_cqadupstack_gis_109197": [
+  "4f58fbb0d2ef34a0",
+  "d8cf9b820d64ef7d"
+ ],
+ "beir_cqadupstack_gis_109234": [
+  "b5df2de3176b8088"
+ ],
+ "beir_cqadupstack_gis_109262": [
+  "c7d37666de051cbf"
+ ],
+ "beir_cqadupstack_gis_109290": [
+  "935755042f9897ae"
+ ],
+ "beir_cqadupstack_gis_10932": [
+  "c590d09c323bd660"
+ ],
+ "beir_cqadupstack_gis_109392": [
+  "485b1d7bd6fdea5e"
+ ],
+ "beir_cqadupstack_gis_109853": [
+  "07f9c67d637e5a4f",
+  "712f7baf6a27d13f"
+ ],
+ "beir_cqadupstack_gis_109967": [
+  "9276c70f41bf2b2f"
+ ],
+ "beir_cqadupstack_gis_110161": [
+  "ba2b1bb3728f5fa8"
+ ],
+ "beir_cqadupstack_gis_110394": [
+  "d5d9f1d506332091"
+ ],
+ "beir_cqadupstack_gis_110409": [
+  "29f97166ec747b0d"
+ ],
+ "beir_cqadupstack_gis_110543": [
+  "23e971f44b4f039c",
+  "577bd500b62a8465",
+  "6ccc425e36281521",
+  "a81aabc9de092f6a",
+  "b0ff79d49d62912b",
+  "cb8af858ec7ed834",
+  "fc549e82d5bfb5c8"
+ ],
+ "beir_cqadupstack_gis_110551": [
+  "f95207a863b8ec4f"
+ ],
+ "beir_cqadupstack_gis_110829": [
+  "639771e435af8cd0"
+ ],
+ "beir_cqadupstack_gis_111374": [
+  "94c30baebd572efe"
+ ],
+ "beir_cqadupstack_gis_111438": [
+  "2ec2f40901d076c1"
+ ],
+ "beir_cqadupstack_gis_111471": [
+  "5f77a727f20dd9bc"
+ ],
+ "beir_cqadupstack_gis_111596": [
+  "845db900bc634e31"
+ ],
+ "beir_cqadupstack_gis_111659": [
+  "7d5b080587a021ec"
+ ],
+ "beir_cqadupstack_gis_111685": [
+  "e6c4958008e46316"
+ ],
+ "beir_cqadupstack_gis_111715": [
+  "bd2769c0c27d927b"
+ ],
+ "beir_cqadupstack_gis_111781": [
+  "23088f4222129ba9"
+ ],
+ "beir_cqadupstack_gis_111838": [
+  "deab22b3f2496e38"
+ ],
+ "beir_cqadupstack_gis_111850": [
+  "0c24e437007ec050",
+  "537d379cfddcdb77"
+ ],
+ "beir_cqadupstack_gis_11204": [
+  "0d395610914f7441"
+ ],
+ "beir_cqadupstack_gis_11216": [
+  "85d03d9157a85148"
+ ],
+ "beir_cqadupstack_gis_112166": [
+  "5b4a9371618afb1c"
+ ],
+ "beir_cqadupstack_gis_112238": [
+  "29d15781850d7305"
+ ],
+ "beir_cqadupstack_gis_112298": [
+  "663021f66acb881d"
+ ],
+ "beir_cqadupstack_gis_112391": [
+  "0b055757d1512aae",
+  "607c81e72263ec6c",
+  "8fe9bd7028dbdd65"
+ ],
+ "beir_cqadupstack_gis_112519": [
+  "99e2a94dcf6923f3"
+ ],
+ "beir_cqadupstack_gis_112534": [
+  "3795d9e48934466c"
+ ],
+ "beir_cqadupstack_gis_112600": [
+  "a452876137b1b944"
+ ],
+ "beir_cqadupstack_gis_112654": [
+  "891026cfe9a3f89e"
+ ],
+ "beir_cqadupstack_gis_112933": [
+  "3697eae9479c6e4e",
+  "588ec056304ee313"
+ ],
+ "beir_cqadupstack_gis_113003": [
+  "6327cf7c90e4596a"
+ ],
+ "beir_cqadupstack_gis_113052": [
+  "aafff50c00b9e79c"
+ ],
+ "beir_cqadupstack_gis_113405": [
+  "5d265835e9b07895"
+ ],
+ "beir_cqadupstack_gis_11431": [
+  "fb570858bd3ea18d"
+ ],
+ "beir_cqadupstack_gis_11705": [
+  "560b2b505aa0496c"
+ ],
+ "beir_cqadupstack_gis_11761": [
+  "1de8c593aad52b4b",
+  "adef95dd1d9fd769"
+ ],
+ "beir_cqadupstack_gis_12446": [
+  "c65a573d090bd477"
+ ],
+ "beir_cqadupstack_gis_12459": [
+  "bef3a42866cbf833"
+ ],
+ "beir_cqadupstack_gis_12493": [
+  "dfc43eb675a4c28f"
+ ],
+ "beir_cqadupstack_gis_12630": [
+  "20bca27b87a82655",
+  "e13d1a2b29dee569"
+ ],
+ "beir_cqadupstack_gis_12833": [
+  "f3eaced1668beb5d"
+ ],
+ "beir_cqadupstack_gis_13029": [
+  "2ea73686f25751dc",
+  "f49acda2256dd79e"
+ ],
+ "beir_cqadupstack_gis_13107": [
+  "84371ea30a16e4e5"
+ ],
+ "beir_cqadupstack_gis_13484": [
+  "6c74c3932f84ccdf"
+ ],
+ "beir_cqadupstack_gis_13691": [
+  "4d72481e95faf704",
+  "c090eb695a32779b",
+  "d5f79c680f39d0cf"
+ ],
+ "beir_cqadupstack_gis_13891": [
+  "4bfc72b529e03483"
+ ],
+ "beir_cqadupstack_gis_14066": [
+  "ab89f4153d7da80c",
+  "ce5bd20eb7295208"
+ ],
+ "beir_cqadupstack_gis_14142": [
+  "04a3e1a682e57266",
+  "2915c28bdbad3d6c",
+  "4f3decd1eb1a0294",
+  "835a4da0f1207dc4",
+  "ea90494b15fca4fe"
+ ],
+ "beir_cqadupstack_gis_14455": [
+  "f3f2c20119669826"
+ ],
+ "beir_cqadupstack_gis_1449": [
+  "134d37fc09ec3210",
+  "31bdca5b305ca092"
+ ],
+ "beir_cqadupstack_gis_14650": [
+  "66c0cfb183a5c24f",
+  "75f337b74ed55bd9",
+  "7c16c030160d75c6"
+ ],
+ "beir_cqadupstack_gis_147": [
+  "6604852ba6e5d6fb",
+  "fe96679961b8458f"
+ ],
+ "beir_cqadupstack_gis_14750": [
+  "3c47b99f9c223bdb",
+  "4527bd042d907a5e",
+  "f397f1ea431d5a55"
+ ],
+ "beir_cqadupstack_gis_14849": [
+  "38c1df9ac625beeb"
+ ],
+ "beir_cqadupstack_gis_14972": [
+  "f3f0e507e77757f8"
+ ],
+ "beir_cqadupstack_gis_14993": [
+  "27ad2938d157a13a"
+ ],
+ "beir_cqadupstack_gis_15168": [
+  "43604376b8192a37",
+  "ad6e8e6f3e056ba5"
+ ],
+ "beir_cqadupstack_gis_15185": [
+  "3e7bc50e5fdc0bdd"
+ ],
+ "beir_cqadupstack_gis_15287": [
+  "87b6be61d89a74c4"
+ ],
+ "beir_cqadupstack_gis_1551": [
+  "d00c5f802a4ee0ee"
+ ],
+ "beir_cqadupstack_gis_15565": [
+  "0a4ac8a61b30e5e9",
+  "f18e305bd038d384"
+ ],
+ "beir_cqadupstack_gis_15607": [
+  "668405b14511ee16"
+ ],
+ "beir_cqadupstack_gis_15755": [
+  "6adf6c8eaf03e7e6"
+ ],
+ "beir_cqadupstack_gis_16073": [
+  "8e1fdcaa7a403290"
+ ],
+ "beir_cqadupstack_gis_16656": [
+  "63457d3ce970d17f"
+ ],
+ "beir_cqadupstack_gis_16741": [
+  "68b84a75108315bf"
+ ],
+ "beir_cqadupstack_gis_16752": [
+  "5a6ef02d60a2387b"
+ ],
+ "beir_cqadupstack_gis_16990": [
+  "3687b612be5bace4"
+ ],
+ "beir_cqadupstack_gis_16992": [
+  "21f401efafefa775"
+ ],
+ "beir_cqadupstack_gis_17003": [
+  "2bd8ec8d45bfedeb"
+ ],
+ "beir_cqadupstack_gis_17035": [
+  "4960c6ba67890edb"
+ ],
+ "beir_cqadupstack_gis_17129": [
+  "9800d00d1b2ab228"
+ ],
+ "beir_cqadupstack_gis_17184": [
+  "5c3865d948c5b55a"
+ ],
+ "beir_cqadupstack_gis_17299": [
+  "a43c044d3fdff033"
+ ],
+ "beir_cqadupstack_gis_17478": [
+  "bfbc729518ad24c9"
+ ],
+ "beir_cqadupstack_gis_17503": [
+  "e2e25d347a82b017"
+ ],
+ "beir_cqadupstack_gis_17550": [
+  "1762690322a6674c",
+  "cd395ba37cbd8f73"
+ ],
+ "beir_cqadupstack_gis_18057": [
+  "66c4e6a533418765"
+ ],
+ "beir_cqadupstack_gis_18103": [
+  "bd37b494d5633e1e"
+ ],
+ "beir_cqadupstack_gis_1811": [
+  "fa5ea9a74551aecb"
+ ],
+ "beir_cqadupstack_gis_18473": [
+  "35c692329dc3063b"
+ ],
+ "beir_cqadupstack_gis_18874": [
+  "12b16410b7fda92c",
+  "eab89ed32c77749e"
+ ],
+ "beir_cqadupstack_gis_1892": [
+  "1bef0d6c6aafd81a",
+  "bad375abade1952e"
+ ],
+ "beir_cqadupstack_gis_19033": [
+  "810ae0397a52ecb1"
+ ],
+ "beir_cqadupstack_gis_19047": [
+  "99bc4ae1318a4604",
+  "a6064ecdddfd5816"
+ ],
+ "beir_cqadupstack_gis_19064": [
+  "ee415afc0e6e10d2"
+ ],
+ "beir_cqadupstack_gis_19221": [
+  "e921b37964e19d17"
+ ],
+ "beir_cqadupstack_gis_19256": [
+  "d4b0cf2e23f3b332"
+ ],
+ "beir_cqadupstack_gis_19257": [
+  "3e4849e744287797"
+ ],
+ "beir_cqadupstack_gis_19437": [
+  "773665603d1c6ad4"
+ ],
+ "beir_cqadupstack_gis_19522": [
+  "47c2ec3c3fd6c6a9"
+ ],
+ "beir_cqadupstack_gis_19580": [
+  "19fec7a8c89c6908"
+ ],
+ "beir_cqadupstack_gis_19794": [
+  "a0825555a1cf3272"
+ ],
+ "beir_cqadupstack_gis_1987": [
+  "bf8e3ed00e2e7ee1"
+ ],
+ "beir_cqadupstack_gis_2": [
+  "85b990d837ba5c19"
+ ],
+ "beir_cqadupstack_gis_20018": [
+  "316d13ecd4f82f62"
+ ],
+ "beir_cqadupstack_gis_20095": [
+  "6aeeb7b16b2567dd"
+ ],
+ "beir_cqadupstack_gis_202": [
+  "11035e80c0c088d8",
+  "ed46f903aa5e0687",
+  "ffb13712825c64fe"
+ ],
+ "beir_cqadupstack_gis_20279": [
+  "ec2212b74eac1aeb"
+ ],
+ "beir_cqadupstack_gis_20286": [
+  "3574713487d9f208"
+ ],
+ "beir_cqadupstack_gis_2039": [
+  "8da272d13c74554e",
+  "956d9ec238abb47d"
+ ],
+ "beir_cqadupstack_gis_20420": [
+  "0a70214bfb04ae52",
+  "363daab3d9718015",
+  "4d59861f8e82e875"
+ ],
+ "beir_cqadupstack_gis_20521": [
+  "53bf1fe7b04fb270"
+ ],
+ "beir_cqadupstack_gis_20566": [
+  "59d0e08739dde551"
+ ],
+ "beir_cqadupstack_gis_20594": [
+  "6931a47161e1d5b1"
+ ],
+ "beir_cqadupstack_gis_20604": [
+  "eef3ffa6e56e8e1c"
+ ],
+ "beir_cqadupstack_gis_2071": [
+  "3be312e951509f84"
+ ],
+ "beir_cqadupstack_gis_20793": [
+  "4848e85f03927705"
+ ],
+ "beir_cqadupstack_gis_20870": [
+  "ae1a802473255abf"
+ ],
+ "beir_cqadupstack_gis_21118": [
+  "197c4d9c1796b3e0",
+  "62d21ee79d6dd9f6",
+  "74fb5c284de66763",
+  "f3b390028fe85eb1"
+ ],
+ "beir_cqadupstack_gis_21296": [
+  "6063e04a508a8bbb"
+ ],
+ "beir_cqadupstack_gis_21566": [
+  "b7f2a5f3025f73b5"
+ ],
+ "beir_cqadupstack_gis_21575": [
+  "57d829cd52219354"
+ ],
+ "beir_cqadupstack_gis_21616": [
+  "c6917f3f9a8659d3"
+ ],
+ "beir_cqadupstack_gis_2170": [
+  "8947286e2c162717"
+ ],
+ "beir_cqadupstack_gis_21722": [
+  "8e94daed81899297",
+  "97a9809c3a8ba937"
+ ],
+ "beir_cqadupstack_gis_21937": [
+  "fe49027227d64705"
+ ],
+ "beir_cqadupstack_gis_21985": [
+  "95e22d805b3d17ad"
+ ],
+ "beir_cqadupstack_gis_22114": [
+  "76cfdad7b9063eee"
+ ],
+ "beir_cqadupstack_gis_22201": [
+  "023f85cf83d3e267",
+  "03f901dabb9f6de8",
+  "331d9f7410dff07a",
+  "46c2fc42aee77920",
+  "b9a1767e6dbb6c70",
+  "c55f7a06e4ccd73f",
+  "d3fdaa4e0b3dc6e5"
+ ],
+ "beir_cqadupstack_gis_22255": [
+  "49e2152e91d25c54"
+ ],
+ "beir_cqadupstack_gis_22545": [
+  "2d07d97e59e0ea0f"
+ ],
+ "beir_cqadupstack_gis_22560": [
+  "554bf7b965495e76",
+  "75c8d53f7f608453"
+ ],
+ "beir_cqadupstack_gis_22751": [
+  "1e9b974ea4ca02e3"
+ ],
+ "beir_cqadupstack_gis_22755": [
+  "41c9b48f7ad493eb"
+ ],
+ "beir_cqadupstack_gis_22818": [
+  "7ab01219cd154ade"
+ ],
+ "beir_cqadupstack_gis_22895": [
+  "ee6ba6754dac2d99"
+ ],
+ "beir_cqadupstack_gis_22952": [
+  "6584b02d380bfe94"
+ ],
+ "beir_cqadupstack_gis_2312": [
+  "e94155272b13358f"
+ ],
+ "beir_cqadupstack_gis_23129": [
+  "362c2afbe68ddf7a",
+  "ef9c7042ce49aacf"
+ ],
+ "beir_cqadupstack_gis_23300": [
+  "0e6c5fbfca5d26e2"
+ ],
+ "beir_cqadupstack_gis_23614": [
+  "4fe7bfe3e667fef2"
+ ],
+ "beir_cqadupstack_gis_23688": [
+  "d276bf8e886681f0"
+ ],
+ "beir_cqadupstack_gis_23717": [
+  "1bc6386547b9444f"
+ ],
+ "beir_cqadupstack_gis_23735": [
+  "ad8bfed5ecca1642",
+  "c7a8eda62b461ea4",
+  "ff9e46ec745b7b8e"
+ ],
+ "beir_cqadupstack_gis_23763": [
+  "34326ec4056b1533"
+ ],
+ "beir_cqadupstack_gis_23919": [
+  "521f6c9fd666476c",
+  "e93656f6b691aaf9"
+ ],
+ "beir_cqadupstack_gis_23993": [
+  "d24f445ba45c3fd5"
+ ],
+ "beir_cqadupstack_gis_24001": [
+  "a26b624f5301f6e4"
+ ],
+ "beir_cqadupstack_gis_24127": [
+  "e9b13488e127a495"
+ ],
+ "beir_cqadupstack_gis_24258": [
+  "d384814e0ceee57f"
+ ],
+ "beir_cqadupstack_gis_24300": [
+  "da519977d6926939"
+ ],
+ "beir_cqadupstack_gis_24486": [
+  "a60f910970d74c7d"
+ ],
+ "beir_cqadupstack_gis_24590": [
+  "8d742b30474ea8ce"
+ ],
+ "beir_cqadupstack_gis_24628": [
+  "5ca7628f15c6b77a"
+ ],
+ "beir_cqadupstack_gis_24646": [
+  "a1726cb1a56165e8"
+ ],
+ "beir_cqadupstack_gis_24735": [
+  "bfdbb935f1926c58"
+ ],
+ "beir_cqadupstack_gis_24878": [
+  "062793233888fd25"
+ ],
+ "beir_cqadupstack_gis_24933": [
+  "b1a8129935319e61"
+ ],
+ "beir_cqadupstack_gis_2498": [
+  "cbf1733f9174c921"
+ ],
+ "beir_cqadupstack_gis_25117": [
+  "1dbf7892ba6742fc"
+ ],
+ "beir_cqadupstack_gis_25177": [
+  "6388ef5471b9b9ad",
+  "92ca00896403f209"
+ ],
+ "beir_cqadupstack_gis_25353": [
+  "b388c44a412046c5"
+ ],
+ "beir_cqadupstack_gis_25361": [
+  "8a4aa47fa293b844"
+ ],
+ "beir_cqadupstack_gis_25522": [
+  "17cd003ee8fbaebf"
+ ],
+ "beir_cqadupstack_gis_256": [
+  "6cdb35f4abab3667"
+ ],
+ "beir_cqadupstack_gis_25709": [
+  "c090a3bb0914859e"
+ ],
+ "beir_cqadupstack_gis_2587": [
+  "c1c1fb62b1e7619c"
+ ],
+ "beir_cqadupstack_gis_26050": [
+  "5b7162675f5ff78d"
+ ],
+ "beir_cqadupstack_gis_26262": [
+  "9beeb9019d7762f6"
+ ],
+ "beir_cqadupstack_gis_26452": [
+  "ddf53b6a4fb1a99d"
+ ],
+ "beir_cqadupstack_gis_26484": [
+  "c63c1721dcb068d9"
+ ],
+ "beir_cqadupstack_gis_26523": [
+  "d5a46fbb70bf49c0"
+ ],
+ "beir_cqadupstack_gis_26676": [
+  "00e223b20d9aec96"
+ ],
+ "beir_cqadupstack_gis_26707": [
+  "c2e40f7308355b26"
+ ],
+ "beir_cqadupstack_gis_26725": [
+  "88844872f5d3b7ba",
+  "f251672f52c30118"
+ ],
+ "beir_cqadupstack_gis_2682": [
+  "d5916f180d6c5e99",
+  "eca2a1e29704be31"
+ ],
+ "beir_cqadupstack_gis_26846": [
+  "3ccaeb2eb3564f80"
+ ],
+ "beir_cqadupstack_gis_2685": [
+  "085b92689e43615c"
+ ],
+ "beir_cqadupstack_gis_26979": [
+  "7079f41cf753f81e"
+ ],
+ "beir_cqadupstack_gis_26996": [
+  "79a9dcbe86e505e3"
+ ],
+ "beir_cqadupstack_gis_27070": [
+  "4f080145b694facb"
+ ],
+ "beir_cqadupstack_gis_27073": [
+  "76c34c643be1677a"
+ ],
+ "beir_cqadupstack_gis_27094": [
+  "80e572e313c9301a"
+ ],
+ "beir_cqadupstack_gis_27171": [
+  "9207735d82ed271c"
+ ],
+ "beir_cqadupstack_gis_27190": [
+  "4f656fd253d0077b"
+ ],
+ "beir_cqadupstack_gis_27235": [
+  "e46ca17d438af908"
+ ],
+ "beir_cqadupstack_gis_27381": [
+  "376a8a8deff249be",
+  "6a4f2ade8f8de17e",
+  "bb88ac0ff61bdf7a"
+ ],
+ "beir_cqadupstack_gis_27434": [
+  "5c9a70fb80edf2eb"
+ ],
+ "beir_cqadupstack_gis_27623": [
+  "2fcfe67ec1c91417"
+ ],
+ "beir_cqadupstack_gis_27676": [
+  "eb8a723c9b42b4bb"
+ ],
+ "beir_cqadupstack_gis_27683": [
+  "e721d992571bde6b"
+ ],
+ "beir_cqadupstack_gis_2777": [
+  "9188e73b83d240c9"
+ ],
+ "beir_cqadupstack_gis_27806": [
+  "6df45222a13c1184"
+ ],
+ "beir_cqadupstack_gis_27822": [
+  "1851e53ff41c3ff1"
+ ],
+ "beir_cqadupstack_gis_27905": [
+  "299575966d3c4a03"
+ ],
+ "beir_cqadupstack_gis_28031": [
+  "05e8498d34ffea2f"
+ ],
+ "beir_cqadupstack_gis_28105": [
+  "a3d606550d56fc2f"
+ ],
+ "beir_cqadupstack_gis_28260": [
+  "289d6273113edaac"
+ ],
+ "beir_cqadupstack_gis_28406": [
+  "7d5900f225f8fd37"
+ ],
+ "beir_cqadupstack_gis_28521": [
+  "a04b94e320a69e1e"
+ ],
+ "beir_cqadupstack_gis_28566": [
+  "87eadd47a333d1bd"
+ ],
+ "beir_cqadupstack_gis_28567": [
+  "b90e8af65678bb07"
+ ],
+ "beir_cqadupstack_gis_28568": [
+  "ed3072a3180b4a90"
+ ],
+ "beir_cqadupstack_gis_28667": [
+  "7ba674d225ccaaf0",
+  "7dd3f4b0a86f0183",
+  "803d18d7e55687f7",
+  "ee4a9347fad1d8a2"
+ ],
+ "beir_cqadupstack_gis_28757": [
+  "9b527bc565471c96"
+ ],
+ "beir_cqadupstack_gis_28881": [
+  "475c2ef6d31cbb5a"
+ ],
+ "beir_cqadupstack_gis_28888": [
+  "b5b8fec8ba2141bc"
+ ],
+ "beir_cqadupstack_gis_29084": [
+  "b8dfe6c46ccbd1f5"
+ ],
+ "beir_cqadupstack_gis_29257": [
+  "6e291a8e8512314c"
+ ],
+ "beir_cqadupstack_gis_29305": [
+  "758ec3296057065f"
+ ],
+ "beir_cqadupstack_gis_29470": [
+  "279d4c623a20f04b"
+ ],
+ "beir_cqadupstack_gis_29501": [
+  "b7b3e177b8181e66",
+  "d8a87dce36b23037"
+ ],
+ "beir_cqadupstack_gis_29734": [
+  "5cbeb2dc2ee7a575"
+ ],
+ "beir_cqadupstack_gis_2976": [
+  "c58ce32483e7eb6c"
+ ],
+ "beir_cqadupstack_gis_29777": [
+  "b365c8d1cd9ca481"
+ ],
+ "beir_cqadupstack_gis_29825": [
+  "bafed247ba7fbcb8"
+ ],
+ "beir_cqadupstack_gis_29863": [
+  "42faab3f26e05ec0"
+ ],
+ "beir_cqadupstack_gis_29888": [
+  "4e300400b7e3ef5a"
+ ],
+ "beir_cqadupstack_gis_30018": [
+  "f3a2f8be9a2db566"
+ ],
+ "beir_cqadupstack_gis_30053": [
+  "4151cf07590f8730"
+ ],
+ "beir_cqadupstack_gis_30183": [
+  "fe481a62d4e2b857"
+ ],
+ "beir_cqadupstack_gis_30230": [
+  "774aa795603b4954"
+ ],
+ "beir_cqadupstack_gis_30250": [
+  "59c30695f395bda1"
+ ],
+ "beir_cqadupstack_gis_305": [
+  "e7b9a69311973914"
+ ],
+ "beir_cqadupstack_gis_30624": [
+  "0f98bbd638082631"
+ ],
+ "beir_cqadupstack_gis_30670": [
+  "ab7e4f992c255da7",
+  "e9aaa5803dd76f06"
+ ],
+ "beir_cqadupstack_gis_3083": [
+  "2a3c8054ac7d56b1"
+ ],
+ "beir_cqadupstack_gis_30895": [
+  "0802f3cbd09c0175",
+  "22a990a80aa8e44f",
+  "b8f7c9a425572ec2"
+ ],
+ "beir_cqadupstack_gis_30920": [
+  "df0b52fae367769f"
+ ],
+ "beir_cqadupstack_gis_30970": [
+  "c6e4b6a892573eb2"
+ ],
+ "beir_cqadupstack_gis_31129": [
+  "437186d22c55ad5d"
+ ],
+ "beir_cqadupstack_gis_31147": [
+  "4c172c9cb48f641a"
+ ],
+ "beir_cqadupstack_gis_31154": [
+  "0ff4339ce3dcbac7"
+ ],
+ "beir_cqadupstack_gis_31235": [
+  "4d5251ed7a3d3dea"
+ ],
+ "beir_cqadupstack_gis_31236": [
+  "f71d67e9232cf66b"
+ ],
+ "beir_cqadupstack_gis_31261": [
+  "7e9cfa9b8d5fa434"
+ ],
+ "beir_cqadupstack_gis_31341": [
+  "f51a0c88d0b34f6e"
+ ],
+ "beir_cqadupstack_gis_31402": [
+  "2f0694749f6f5f0f"
+ ],
+ "beir_cqadupstack_gis_31900": [
+  "14852a25d3e426bd"
+ ],
+ "beir_cqadupstack_gis_32082": [
+  "71c9f0ac2ff906a2",
+  "c4e25b082319fd55"
+ ],
+ "beir_cqadupstack_gis_32269": [
+  "d7222094d1792282"
+ ],
+ "beir_cqadupstack_gis_32310": [
+  "590b752e06b671e5"
+ ],
+ "beir_cqadupstack_gis_32321": [
+  "f17b5fbdf6642607"
+ ],
+ "beir_cqadupstack_gis_32407": [
+  "209c69a3b5832527"
+ ],
+ "beir_cqadupstack_gis_32468": [
+  "4d7fc80b16d25011",
+  "f936281d1b09b3fa"
+ ],
+ "beir_cqadupstack_gis_32514": [
+  "93b99ebb0ee1721b"
+ ],
+ "beir_cqadupstack_gis_32723": [
+  "fbaaa03685b40bee"
+ ],
+ "beir_cqadupstack_gis_32877": [
+  "049e430da88658aa"
+ ],
+ "beir_cqadupstack_gis_33018": [
+  "047f67dd9d731023"
+ ],
+ "beir_cqadupstack_gis_33033": [
+  "5d0dcec8d271daab"
+ ],
+ "beir_cqadupstack_gis_33208": [
+  "0c874ff6e01d3952",
+  "59f11a93a4d88e04"
+ ],
+ "beir_cqadupstack_gis_33251": [
+  "bfc5122eb191f1d8",
+  "c8a3a1dc7a23d44e"
+ ],
+ "beir_cqadupstack_gis_33291": [
+  "c800d2db72d1e4d0"
+ ],
+ "beir_cqadupstack_gis_33310": [
+  "5c7d46543202df5c"
+ ],
+ "beir_cqadupstack_gis_33364": [
+  "93aba2694bde1251"
+ ],
+ "beir_cqadupstack_gis_33402": [
+  "157b39442a8663cb"
+ ],
+ "beir_cqadupstack_gis_33629": [
+  "01716f5db2a295e9",
+  "64ad31ed2de3d510"
+ ],
+ "beir_cqadupstack_gis_33700": [
+  "04662cde01fea35e"
+ ],
+ "beir_cqadupstack_gis_33756": [
+  "4e0d024384640a75"
+ ],
+ "beir_cqadupstack_gis_33826": [
+  "0cf53d87eac0ff4a",
+  "8424210ddacf9322",
+  "9967e0fb7a305be1",
+  "b24b4940a03c4f93",
+  "bea1103436f4927e"
+ ],
+ "beir_cqadupstack_gis_33852": [
+  "14a6938f6eee871d"
+ ],
+ "beir_cqadupstack_gis_33887": [
+  "4a4edd31081d79cb"
+ ],
+ "beir_cqadupstack_gis_33945": [
+  "39c1ddd3892ee8bf"
+ ],
+ "beir_cqadupstack_gis_34204": [
+  "0d43165c14b37d93",
+  "a0792e39ba7d98a1",
+  "fd3f57fdc30deed8"
+ ],
+ "beir_cqadupstack_gis_34237": [
+  "715a0675c0dce3a4"
+ ],
+ "beir_cqadupstack_gis_34406": [
+  "4a0a919f5a39f096"
+ ],
+ "beir_cqadupstack_gis_34532": [
+  "d7dc2c60375f2981"
+ ],
+ "beir_cqadupstack_gis_34612": [
+  "08a3bda42e24e13e"
+ ],
+ "beir_cqadupstack_gis_34929": [
+  "8fa003a0a6a13774"
+ ],
+ "beir_cqadupstack_gis_34985": [
+  "aa255dc54ed27822"
+ ],
+ "beir_cqadupstack_gis_35106": [
+  "dc97757f9171bfbd"
+ ],
+ "beir_cqadupstack_gis_35183": [
+  "4511df4e25c6ae5e"
+ ],
+ "beir_cqadupstack_gis_35187": [
+  "7494d5d090b6c171"
+ ],
+ "beir_cqadupstack_gis_35369": [
+  "5e53ef3275f370c1"
+ ],
+ "beir_cqadupstack_gis_35540": [
+  "8bdac4fd97d0f00e"
+ ],
+ "beir_cqadupstack_gis_35591": [
+  "765b4ed74c4207d0"
+ ],
+ "beir_cqadupstack_gis_35593": [
+  "96d74ca1e8d52687"
+ ],
+ "beir_cqadupstack_gis_35624": [
+  "0c7bd25c0e78881b",
+  "40fd9594e89db962",
+  "52dce10ced3c7c62",
+  "a7944407e382d345",
+  "aa21af133d324dde",
+  "c46803161eca413d"
+ ],
+ "beir_cqadupstack_gis_35670": [
+  "132d01dc40fd7b00"
+ ],
+ "beir_cqadupstack_gis_3574": [
+  "cd2791637a4570d9"
+ ],
+ "beir_cqadupstack_gis_36774": [
+  "cf3aa768e5ed9475"
+ ],
+ "beir_cqadupstack_gis_36891": [
+  "3ad22560e913f0c4",
+  "75a22e279fd1b2dc",
+  "9cee7f8d5e39e9a2",
+  "c081c6a55b23d2a1"
+ ],
+ "beir_cqadupstack_gis_37125": [
+  "a1e05b2565d60a81"
+ ],
+ "beir_cqadupstack_gis_37252": [
+  "02dc0f1919cc1b97"
+ ],
+ "beir_cqadupstack_gis_37304": [
+  "943dd101adebfb7b"
+ ],
+ "beir_cqadupstack_gis_37474": [
+  "32027575904281b3"
+ ],
+ "beir_cqadupstack_gis_37518": [
+  "9568229cf48db505"
+ ],
+ "beir_cqadupstack_gis_37543": [
+  "92bc9b337a7952e6"
+ ],
+ "beir_cqadupstack_gis_37622": [
+  "31ecc9869be3c01e"
+ ],
+ "beir_cqadupstack_gis_37656": [
+  "efe3e153b2aa3a18"
+ ],
+ "beir_cqadupstack_gis_38855": [
+  "0fa0353beb8c0bd9",
+  "213d2b54671fe402",
+  "9d9bb21fd420b37e",
+  "9e4cba00dc16cf10",
+  "a3bea3ebc1746800",
+  "b7552223c06e7dc2",
+  "edd7cbff210eb946"
+ ],
+ "beir_cqadupstack_gis_3887": [
+  "baba2f37480086e1"
+ ],
+ "beir_cqadupstack_gis_39028": [
+  "f6a71d6b50220c36"
+ ],
+ "beir_cqadupstack_gis_39151": [
+  "31d54691d215dc63"
+ ],
+ "beir_cqadupstack_gis_39168": [
+  "62dedaaa595c880c"
+ ],
+ "beir_cqadupstack_gis_3945": [
+  "4aadb857859720da"
+ ],
+ "beir_cqadupstack_gis_4011": [
+  "8a6b991d697dd242"
+ ],
+ "beir_cqadupstack_gis_40536": [
+  "4a03987e9e402cb4"
+ ],
+ "beir_cqadupstack_gis_40624": [
+  "01ac95edcf282a45",
+  "4e4623077ff40465"
+ ],
+ "beir_cqadupstack_gis_40650": [
+  "ca69d6cd62a46305"
+ ],
+ "beir_cqadupstack_gis_40697": [
+  "f30ad5e674651032"
+ ],
+ "beir_cqadupstack_gis_40728": [
+  "8c6841789f7282a4"
+ ],
+ "beir_cqadupstack_gis_40813": [
+  "e41001dcf4dd6a4d"
+ ],
+ "beir_cqadupstack_gis_4086": [
+  "bfea3321e70ab9a0"
+ ],
+ "beir_cqadupstack_gis_40919": [
+  "75c94a2c68774b65"
+ ],
+ "beir_cqadupstack_gis_40943": [
+  "ea7d8fd198b7b435"
+ ],
+ "beir_cqadupstack_gis_40991": [
+  "6d0ec5aac3adf100"
+ ],
+ "beir_cqadupstack_gis_41135": [
+  "8b21dfd61f810c2c"
+ ],
+ "beir_cqadupstack_gis_41251": [
+  "ac02ccfafecf5548"
+ ],
+ "beir_cqadupstack_gis_41307": [
+  "06e94e2027c7b6b0",
+  "5282e7d3fc91cc03"
+ ],
+ "beir_cqadupstack_gis_41423": [
+  "55e034ad7ac2c832"
+ ],
+ "beir_cqadupstack_gis_41491": [
+  "52b8fcf905c93f91"
+ ],
+ "beir_cqadupstack_gis_41498": [
+  "46e7133e241577d9"
+ ],
+ "beir_cqadupstack_gis_41608": [
+  "6e49ea68ac8af77c"
+ ],
+ "beir_cqadupstack_gis_41725": [
+  "a2d87b59b6d5db68"
+ ],
+ "beir_cqadupstack_gis_41829": [
+  "1743a9d2285af888"
+ ],
+ "beir_cqadupstack_gis_41880": [
+  "7164df8f4c45d44e",
+  "c4022a4f49cbd411"
+ ],
+ "beir_cqadupstack_gis_41985": [
+  "a73ceaf6892793fd"
+ ],
+ "beir_cqadupstack_gis_420": [
+  "daaaf9d0fe0ce238"
+ ],
+ "beir_cqadupstack_gis_42019": [
+  "a9db3d758f3940f0"
+ ],
+ "beir_cqadupstack_gis_42044": [
+  "ed2bbd937b4e76d2"
+ ],
+ "beir_cqadupstack_gis_4230": [
+  "510eb69e07a43e11"
+ ],
+ "beir_cqadupstack_gis_42358": [
+  "2cb1eaa3d2f75d3d"
+ ],
+ "beir_cqadupstack_gis_42434": [
+  "1080652af1fbc441",
+  "4172fa2d1ccd5b2f",
+  "602fd984052e7cd0"
+ ],
+ "beir_cqadupstack_gis_42500": [
+  "8b2651d6b07711f2"
+ ],
+ "beir_cqadupstack_gis_42516": [
+  "73022526b6b5145b"
+ ],
+ "beir_cqadupstack_gis_42580": [
+  "f6e32653dbcb9c9f"
+ ],
+ "beir_cqadupstack_gis_42584": [
+  "55a91ba8bfcadd90",
+  "a8d78857ef2eefa8"
+ ],
+ "beir_cqadupstack_gis_42598": [
+  "2ab41793bf96ccb0"
+ ],
+ "beir_cqadupstack_gis_42661": [
+  "e848e3d502faaafc"
+ ],
+ "beir_cqadupstack_gis_42682": [
+  "95e3051311ce8e3f"
+ ],
+ "beir_cqadupstack_gis_42689": [
+  "da3d7b27fbb2e1bf"
+ ],
+ "beir_cqadupstack_gis_42776": [
+  "5a66e7f1bceb1241",
+  "a250b32c34a864a4"
+ ],
+ "beir_cqadupstack_gis_42947": [
+  "f187fca9546a5bab"
+ ],
+ "beir_cqadupstack_gis_43037": [
+  "9c24f05f58dccaa1"
+ ],
+ "beir_cqadupstack_gis_43129": [
+  "8ebb2d89a355b0f5"
+ ],
+ "beir_cqadupstack_gis_43238": [
+  "b22908ab909409ef"
+ ],
+ "beir_cqadupstack_gis_43290": [
+  "724355118bc6e00e"
+ ],
+ "beir_cqadupstack_gis_43400": [
+  "cb3565b410c50773"
+ ],
+ "beir_cqadupstack_gis_43617": [
+  "71f09a0137c1a569"
+ ],
+ "beir_cqadupstack_gis_43796": [
+  "477835391f2d1d00"
+ ],
+ "beir_cqadupstack_gis_43920": [
+  "1478a018362e455e"
+ ],
+ "beir_cqadupstack_gis_44009": [
+  "ccc7781219ab3960"
+ ],
+ "beir_cqadupstack_gis_44018": [
+  "f51a4a327104613b"
+ ],
+ "beir_cqadupstack_gis_44035": [
+  "2fd1b4dd92233960"
+ ],
+ "beir_cqadupstack_gis_44063": [
+  "f366f6867022b4cc"
+ ],
+ "beir_cqadupstack_gis_44098": [
+  "7b54ac23957de52d",
+  "b0285a0333d6edd8"
+ ],
+ "beir_cqadupstack_gis_44116": [
+  "30bce892e1a40fcc"
+ ],
+ "beir_cqadupstack_gis_44205": [
+  "69819e204df25d50"
+ ],
+ "beir_cqadupstack_gis_44208": [
+  "6de99427c7727c7c"
+ ],
+ "beir_cqadupstack_gis_44334": [
+  "41bd91a2198f4f24"
+ ],
+ "beir_cqadupstack_gis_44393": [
+  "c5ebe848e2f41716"
+ ],
+ "beir_cqadupstack_gis_44410": [
+  "49042d74aece8b5a",
+  "8ba136941611c4ae",
+  "d689f14c5cb7fc9c"
+ ],
+ "beir_cqadupstack_gis_44411": [
+  "c814d07686b31366"
+ ],
+ "beir_cqadupstack_gis_44426": [
+  "547a86d6d5465970"
+ ],
+ "beir_cqadupstack_gis_44502": [
+  "ae77ce723b953328"
+ ],
+ "beir_cqadupstack_gis_44536": [
+  "f79a8920054f3e5f"
+ ],
+ "beir_cqadupstack_gis_44671": [
+  "2a924612fa44fc89"
+ ],
+ "beir_cqadupstack_gis_44926": [
+  "8e59be573d5bee17"
+ ],
+ "beir_cqadupstack_gis_44948": [
+  "dce9bf8d82813d64"
+ ],
+ "beir_cqadupstack_gis_44998": [
+  "5e69242b5b1bfa17"
+ ],
+ "beir_cqadupstack_gis_45159": [
+  "b060731759595770"
+ ],
+ "beir_cqadupstack_gis_45195": [
+  "5b81a600ed47a593"
+ ],
+ "beir_cqadupstack_gis_4531": [
+  "d0c0c6059342b403",
+  "e807e2059b147233"
+ ],
+ "beir_cqadupstack_gis_45334": [
+  "67156890da980e4e"
+ ],
+ "beir_cqadupstack_gis_45365": [
+  "d806404ba792719d"
+ ],
+ "beir_cqadupstack_gis_45449": [
+  "342335fa88634bc8",
+  "4468009d7047bc70",
+  "7648c67f00300bf8",
+  "83762f9da8a26a3e",
+  "91e6c87af0766cfd",
+  "b1e33c7acd4dacc6",
+  "c5cd61b6ecfadade"
+ ],
+ "beir_cqadupstack_gis_45469": [
+  "43251e67dd52e6d1"
+ ],
+ "beir_cqadupstack_gis_45619": [
+  "b29e819e5c10ebf8",
+  "ccfc0dc9f72c38ef"
+ ],
+ "beir_cqadupstack_gis_46634": [
+  "11e8d47787e81fec",
+  "89e126be59740155"
+ ],
+ "beir_cqadupstack_gis_46716": [
+  "0c54cd510984f71a",
+  "fac052b3add50760"
+ ],
+ "beir_cqadupstack_gis_46741": [
+  "7038cc3197067e61",
+  "facbd1d18b1585d7"
+ ],
+ "beir_cqadupstack_gis_46842": [
+  "4871b469b829bff0",
+  "c2ae24b2036df02e"
+ ],
+ "beir_cqadupstack_gis_46862": [
+  "df17eb0560f4cdff"
+ ],
+ "beir_cqadupstack_gis_46866": [
+  "54ad669dab36d64a"
+ ],
+ "beir_cqadupstack_gis_47991": [
+  "33b7a29efaf4819c"
+ ],
+ "beir_cqadupstack_gis_48142": [
+  "60447ff6219ea470",
+  "d49d73c82e604455",
+  "d4f09212b26ac711"
+ ],
+ "beir_cqadupstack_gis_48151": [
+  "fcd1c2efe4454874"
+ ],
+ "beir_cqadupstack_gis_48192": [
+  "7ee1cdb7d4b5d05f"
+ ],
+ "beir_cqadupstack_gis_48265": [
+  "164f3d1d126988a2"
+ ],
+ "beir_cqadupstack_gis_4828": [
+  "ebc1472e8526096d"
+ ],
+ "beir_cqadupstack_gis_48352": [
+  "8dcbf6945e84f8b5"
+ ],
+ "beir_cqadupstack_gis_48364": [
+  "3740c18f12766df8"
+ ],
+ "beir_cqadupstack_gis_48392": [
+  "2e6a724d88fba0a5"
+ ],
+ "beir_cqadupstack_gis_48549": [
+  "8c7200151387f480"
+ ],
+ "beir_cqadupstack_gis_48552": [
+  "7885fc5bb142c35d"
+ ],
+ "beir_cqadupstack_gis_48799": [
+  "7ac4229291b63403"
+ ],
+ "beir_cqadupstack_gis_48872": [
+  "084eec1052223738"
+ ],
+ "beir_cqadupstack_gis_48899": [
+  "489b18fa5e5bb071"
+ ],
+ "beir_cqadupstack_gis_49001": [
+  "47e1971cfd9da00e"
+ ],
+ "beir_cqadupstack_gis_4901": [
+  "ed412626c72bcd8f"
+ ],
+ "beir_cqadupstack_gis_4906": [
+  "c4160ccdb251a3b3",
+  "e50713b061890270"
+ ],
+ "beir_cqadupstack_gis_49477": [
+  "b5f71bfdadc64d3f"
+ ],
+ "beir_cqadupstack_gis_49728": [
+  "d01d4fb46cf2fe89"
+ ],
+ "beir_cqadupstack_gis_49729": [
+  "808dffa020318864"
+ ],
+ "beir_cqadupstack_gis_49802": [
+  "df4945e70f5fd952"
+ ],
+ "beir_cqadupstack_gis_49844": [
+  "25fdc0239be2baac",
+  "9af84d76b53ab6b8",
+  "f4f7f582e5be277d"
+ ],
+ "beir_cqadupstack_gis_49869": [
+  "cb9f248fc78f892f"
+ ],
+ "beir_cqadupstack_gis_49904": [
+  "e064b06cbe2e5b1c"
+ ],
+ "beir_cqadupstack_gis_50010": [
+  "3f0b89955a14b309",
+  "4477bc44d20a8117",
+  "a93cd47ced7465a2"
+ ],
+ "beir_cqadupstack_gis_50046": [
+  "1d5dbc6901a61ebd"
+ ],
+ "beir_cqadupstack_gis_50108": [
+  "336ceb8c65404376",
+  "954e8aea31095e48"
+ ],
+ "beir_cqadupstack_gis_50165": [
+  "3687b4165110c7f8",
+  "9ecf43097c619905"
+ ],
+ "beir_cqadupstack_gis_50169": [
+  "56567fb5cd4b87e4"
+ ],
+ "beir_cqadupstack_gis_50208": [
+  "aed50a0729ab479a"
+ ],
+ "beir_cqadupstack_gis_50217": [
+  "1b5ec1023db6b29c"
+ ],
+ "beir_cqadupstack_gis_50325": [
+  "958203d1adc7007a"
+ ],
+ "beir_cqadupstack_gis_5041": [
+  "5fd4f3c051eeb126"
+ ],
+ "beir_cqadupstack_gis_50415": [
+  "3a55443e03cfa4bf"
+ ],
+ "beir_cqadupstack_gis_50537": [
+  "4b840e7d6d215cd9",
+  "5104fc8776223f44"
+ ],
+ "beir_cqadupstack_gis_50754": [
+  "79d164e89d9d8fdd"
+ ],
+ "beir_cqadupstack_gis_50769": [
+  "0d9f0fd7a2bbb903"
+ ],
+ "beir_cqadupstack_gis_50825": [
+  "e1ac6e357ace8fee"
+ ],
+ "beir_cqadupstack_gis_50844": [
+  "f17da48fd23bfdc7"
+ ],
+ "beir_cqadupstack_gis_5086": [
+  "e3c7ece07897fef0"
+ ],
+ "beir_cqadupstack_gis_5132": [
+  "ccbc55c2f521dd0d"
+ ],
+ "beir_cqadupstack_gis_51929": [
+  "60e4fc5589f8563f"
+ ],
+ "beir_cqadupstack_gis_51986": [
+  "ace87b9649e1049f"
+ ],
+ "beir_cqadupstack_gis_51989": [
+  "465aeaf00284c1c8"
+ ],
+ "beir_cqadupstack_gis_52292": [
+  "337c8e1f8bf87950"
+ ],
+ "beir_cqadupstack_gis_52409": [
+  "e7a9f63d59350970"
+ ],
+ "beir_cqadupstack_gis_52462": [
+  "3573554257f9e979"
+ ],
+ "beir_cqadupstack_gis_52483": [
+  "0e7f9dec1d801a49"
+ ],
+ "beir_cqadupstack_gis_52818": [
+  "7d7709865a13b616"
+ ],
+ "beir_cqadupstack_gis_52847": [
+  "26faeef71e78ec5d"
+ ],
+ "beir_cqadupstack_gis_52975": [
+  "e41d474c6878ba0e"
+ ],
+ "beir_cqadupstack_gis_53039": [
+  "244df882dbe6e070"
+ ],
+ "beir_cqadupstack_gis_53081": [
+  "304dd883269db502"
+ ],
+ "beir_cqadupstack_gis_53091": [
+  "74f6a778d821e87f"
+ ],
+ "beir_cqadupstack_gis_53262": [
+  "4408f780cbcf2413"
+ ],
+ "beir_cqadupstack_gis_53265": [
+  "8303eb0cbe4e024f"
+ ],
+ "beir_cqadupstack_gis_53348": [
+  "7cb79587ec155e6f"
+ ],
+ "beir_cqadupstack_gis_53402": [
+  "720ae672cf753517"
+ ],
+ "beir_cqadupstack_gis_53528": [
+  "e2d957ff51afe117"
+ ],
+ "beir_cqadupstack_gis_53569": [
+  "fe760c719051008f"
+ ],
+ "beir_cqadupstack_gis_53620": [
+  "09ea16ea98702fd3"
+ ],
+ "beir_cqadupstack_gis_53785": [
+  "bff9a0de891adb39"
+ ],
+ "beir_cqadupstack_gis_54065": [
+  "8f8bd1cdae4abd82"
+ ],
+ "beir_cqadupstack_gis_54094": [
+  "eb75dda9a640a21e"
+ ],
+ "beir_cqadupstack_gis_54244": [
+  "13370b5834bd2c92"
+ ],
+ "beir_cqadupstack_gis_54266": [
+  "cc0e7233b84f6b2c"
+ ],
+ "beir_cqadupstack_gis_54481": [
+  "ff3e44c46ab6426a"
+ ],
+ "beir_cqadupstack_gis_54803": [
+  "707cd3b86e38ea2b"
+ ],
+ "beir_cqadupstack_gis_54949": [
+  "e0218b5a84caa026"
+ ],
+ "beir_cqadupstack_gis_55119": [
+  "70c7d7780f4d74e4"
+ ],
+ "beir_cqadupstack_gis_55129": [
+  "198f95deaed8674e"
+ ],
+ "beir_cqadupstack_gis_55196": [
+  "33695e30ab3d93c3",
+  "7beb58fc0fd01c65",
+  "937bc5d4807e225d",
+  "eddeb2cea6b552f2",
+  "f5a6d924b2640c3e"
+ ],
+ "beir_cqadupstack_gis_55549": [
+  "3e280ac55717dbab"
+ ],
+ "beir_cqadupstack_gis_5568": [
+  "c1696a62bd524230"
+ ],
+ "beir_cqadupstack_gis_5579": [
+  "567d05ba3312b562"
+ ],
+ "beir_cqadupstack_gis_5583": [
+  "80ec72b6e6fd3ef0",
+  "ec2f1460d21d0b18"
+ ],
+ "beir_cqadupstack_gis_5640": [
+  "3cdfeb3d09084e59"
+ ],
+ "beir_cqadupstack_gis_56774": [
+  "5579f6801e145269"
+ ],
+ "beir_cqadupstack_gis_56843": [
+  "bc8e6974ea23d2ba"
+ ],
+ "beir_cqadupstack_gis_5686": [
+  "6846aace75b0d02c"
+ ],
+ "beir_cqadupstack_gis_56862": [
+  "148c3dec7b40a155"
+ ],
+ "beir_cqadupstack_gis_56953": [
+  "a751ef6fb5a8987c"
+ ],
+ "beir_cqadupstack_gis_56957": [
+  "b200b672a50bc137"
+ ],
+ "beir_cqadupstack_gis_57028": [
+  "7b302d7e3d13a477"
+ ],
+ "beir_cqadupstack_gis_57151": [
+  "db8d2351b6d98877"
+ ],
+ "beir_cqadupstack_gis_57210": [
+  "5b57986dc1da4716",
+  "c18bc2e51ec9f3bf"
+ ],
+ "beir_cqadupstack_gis_57331": [
+  "0979be3e0848f1f5"
+ ],
+ "beir_cqadupstack_gis_57394": [
+  "0e007b81ed491017"
+ ],
+ "beir_cqadupstack_gis_57438": [
+  "05294076c65875ad"
+ ],
+ "beir_cqadupstack_gis_57477": [
+  "1799472bdd1e9db7"
+ ],
+ "beir_cqadupstack_gis_57521": [
+  "d742fc036f2e3e28"
+ ],
+ "beir_cqadupstack_gis_5761": [
+  "28c88541017a5c38",
+  "54b3ff834c70e675",
+  "6631851dfb0b7f92",
+  "ac36a383d7652def"
+ ],
+ "beir_cqadupstack_gis_57784": [
+  "0d16600701e26ec1"
+ ],
+ "beir_cqadupstack_gis_57796": [
+  "e7e8430d5a138e64"
+ ],
+ "beir_cqadupstack_gis_58054": [
+  "35d84ed5e23c19d5"
+ ],
+ "beir_cqadupstack_gis_58127": [
+  "fb0e056cfc128e71"
+ ],
+ "beir_cqadupstack_gis_58224": [
+  "6fc814eaf8938aab",
+  "fb4ea56ac483f446"
+ ],
+ "beir_cqadupstack_gis_58262": [
+  "8320049ca65b9937"
+ ],
+ "beir_cqadupstack_gis_58321": [
+  "0af04f383b4d8d2e",
+  "4e1ba72d7a64a57e"
+ ],
+ "beir_cqadupstack_gis_58377": [
+  "76fbec74c1a2a37f",
+  "a9d738ee525614e5"
+ ],
+ "beir_cqadupstack_gis_58640": [
+  "ff489dbad9a51a6c"
+ ],
+ "beir_cqadupstack_gis_58660": [
+  "2a35d3a4e90e6b7b"
+ ],
+ "beir_cqadupstack_gis_58757": [
+  "72a6868890ebffca"
+ ],
+ "beir_cqadupstack_gis_58783": [
+  "cfd94e91022f945e"
+ ],
+ "beir_cqadupstack_gis_58787": [
+  "7684f06bba687d15"
+ ],
+ "beir_cqadupstack_gis_58845": [
+  "62f4f61eb94cc3c3",
+  "c6d25f45c2465d57",
+  "eeff4b41c325609c"
+ ],
+ "beir_cqadupstack_gis_59083": [
+  "9b5f4262a25ac5b3"
+ ],
+ "beir_cqadupstack_gis_59091": [
+  "07571b2ce0677a13"
+ ],
+ "beir_cqadupstack_gis_59170": [
+  "0a01443bbe9a795a"
+ ],
+ "beir_cqadupstack_gis_59173": [
+  "0f41dd52c470c1a6"
+ ],
+ "beir_cqadupstack_gis_59203": [
+  "c6c142b7babc1ac3"
+ ],
+ "beir_cqadupstack_gis_59339": [
+  "9a85c783ed67f2ca"
+ ],
+ "beir_cqadupstack_gis_59356": [
+  "e6bedb5bcff9f9d3"
+ ],
+ "beir_cqadupstack_gis_59580": [
+  "aef43060ca292eb3",
+  "fbdf6964782c9700"
+ ],
+ "beir_cqadupstack_gis_59582": [
+  "e42a9ae8212373ad"
+ ],
+ "beir_cqadupstack_gis_59604": [
+  "bbe3d6dabde7a9b3"
+ ],
+ "beir_cqadupstack_gis_59610": [
+  "e775f00b0d600433"
+ ],
+ "beir_cqadupstack_gis_59740": [
+  "fd0949342aad035f"
+ ],
+ "beir_cqadupstack_gis_59858": [
+  "8bc380ab142d0afd",
+  "a3eba15d72d4e8ef"
+ ],
+ "beir_cqadupstack_gis_59865": [
+  "038eba7b955027f1"
+ ],
+ "beir_cqadupstack_gis_59869": [
+  "59fc2b55721149b3"
+ ],
+ "beir_cqadupstack_gis_59902": [
+  "a4fd6965dd5f241d"
+ ],
+ "beir_cqadupstack_gis_60210": [
+  "8f9dbb8313c9b80a"
+ ],
+ "beir_cqadupstack_gis_60398": [
+  "516e8f7db3b9693d",
+  "fc53fcdd97152315"
+ ],
+ "beir_cqadupstack_gis_60710": [
+  "9abb597fdae4571b"
+ ],
+ "beir_cqadupstack_gis_60712": [
+  "18da8571cfef1143"
+ ],
+ "beir_cqadupstack_gis_60848": [
+  "da1b34947b3a4ec1"
+ ],
+ "beir_cqadupstack_gis_60905": [
+  "a3c165b89e1c868c"
+ ],
+ "beir_cqadupstack_gis_60928": [
+  "e5ac47897972e82e"
+ ],
+ "beir_cqadupstack_gis_61044": [
+  "ef72649261aa7f8d"
+ ],
+ "beir_cqadupstack_gis_61142": [
+  "9ed2ee15acfda8fa"
+ ],
+ "beir_cqadupstack_gis_613": [
+  "d3dcdc65923f197b"
+ ],
+ "beir_cqadupstack_gis_61301": [
+  "187ee28b44025814"
+ ],
+ "beir_cqadupstack_gis_61326": [
+  "efff7bb9c232ea32"
+ ],
+ "beir_cqadupstack_gis_61393": [
+  "8cb338ce8722ed16"
+ ],
+ "beir_cqadupstack_gis_61411": [
+  "56ccab998db6b765"
+ ],
+ "beir_cqadupstack_gis_6148": [
+  "e8ad1cb897b6c3fb"
+ ],
+ "beir_cqadupstack_gis_61482": [
+  "1e7bea6849448381",
+  "a2d1366fb0b6bd55"
+ ],
+ "beir_cqadupstack_gis_61499": [
+  "17cb261c0463052b",
+  "2e75e890986c1b87"
+ ],
+ "beir_cqadupstack_gis_61862": [
+  "384a48abf44cc921",
+  "9be5c5b96e421c32"
+ ],
+ "beir_cqadupstack_gis_61909": [
+  "c69dfaaffa463507"
+ ],
+ "beir_cqadupstack_gis_61945": [
+  "63dae15c3dd3d570"
+ ],
+ "beir_cqadupstack_gis_62026": [
+  "a79f9435bd38fd5e"
+ ],
+ "beir_cqadupstack_gis_62103": [
+  "1eadcfa8a8c8ed6d",
+  "7f7a1b4ed00a5f02"
+ ],
+ "beir_cqadupstack_gis_62121": [
+  "76fc63ab235f25d0"
+ ],
+ "beir_cqadupstack_gis_62390": [
+  "246eb6395363722c"
+ ],
+ "beir_cqadupstack_gis_62406": [
+  "8cb9d67f92e2c775",
+  "9d4652fb2db16c5b",
+  "f4ee04c062e201db"
+ ],
+ "beir_cqadupstack_gis_62627": [
+  "2486850c613f9ce4"
+ ],
+ "beir_cqadupstack_gis_62837": [
+  "fcec2ca0e911375a"
+ ],
+ "beir_cqadupstack_gis_62908": [
+  "524ceacdc2548056"
+ ],
+ "beir_cqadupstack_gis_62949": [
+  "260e78426cc7b394"
+ ],
+ "beir_cqadupstack_gis_630": [
+  "733d63c1945d1d07"
+ ],
+ "beir_cqadupstack_gis_63022": [
+  "82c77044a49cf6ae"
+ ],
+ "beir_cqadupstack_gis_63024": [
+  "9b003dbc6d288918"
+ ],
+ "beir_cqadupstack_gis_63235": [
+  "53248ee12af37954"
+ ],
+ "beir_cqadupstack_gis_63240": [
+  "9a2f3f0472656117"
+ ],
+ "beir_cqadupstack_gis_63394": [
+  "167ca6ee2762a39d"
+ ],
+ "beir_cqadupstack_gis_63395": [
+  "6817665840e2cdd1"
+ ],
+ "beir_cqadupstack_gis_63868": [
+  "aa1325065a7ba8f2"
+ ],
+ "beir_cqadupstack_gis_63931": [
+  "ce97938f488923cd"
+ ],
+ "beir_cqadupstack_gis_64065": [
+  "9aec982a111152b8"
+ ],
+ "beir_cqadupstack_gis_64227": [
+  "c615dfb4772d9688"
+ ],
+ "beir_cqadupstack_gis_64392": [
+  "c55ade5641c6d361"
+ ],
+ "beir_cqadupstack_gis_6440": [
+  "46951b0e21254c62"
+ ],
+ "beir_cqadupstack_gis_64644": [
+  "6d43eb16ed8de73f"
+ ],
+ "beir_cqadupstack_gis_6470": [
+  "0d1a0c94896d9727",
+  "feaa8a05ab1a4311"
+ ],
+ "beir_cqadupstack_gis_64714": [
+  "473fbe2c674b676d"
+ ],
+ "beir_cqadupstack_gis_64876": [
+  "e688692890ad3e19"
+ ],
+ "beir_cqadupstack_gis_64950": [
+  "a4bbfce484fab896"
+ ],
+ "beir_cqadupstack_gis_6508": [
+  "41ca0f77641ca547"
+ ],
+ "beir_cqadupstack_gis_65190": [
+  "1ce9ced493a83c0d"
+ ],
+ "beir_cqadupstack_gis_65366": [
+  "70bdeb12f3fcca3a"
+ ],
+ "beir_cqadupstack_gis_65403": [
+  "931338cbbc3c632f",
+  "9f3d2e69b52f7944"
+ ],
+ "beir_cqadupstack_gis_65794": [
+  "a9178bb9dc1c7e54"
+ ],
+ "beir_cqadupstack_gis_66113": [
+  "de84e38076fbeeda",
+  "e008b7e918f09633"
+ ],
+ "beir_cqadupstack_gis_66259": [
+  "43240952d299161a"
+ ],
+ "beir_cqadupstack_gis_66477": [
+  "dd9fb1bd49489607"
+ ],
+ "beir_cqadupstack_gis_66563": [
+  "8926265024ec05b0"
+ ],
+ "beir_cqadupstack_gis_66824": [
+  "5cf66c5315bfa8b0"
+ ],
+ "beir_cqadupstack_gis_66888": [
+  "1bdd33a8a33e2213"
+ ],
+ "beir_cqadupstack_gis_67025": [
+  "5e00d968e3bc8e9a"
+ ],
+ "beir_cqadupstack_gis_67035": [
+  "a6100d218c42ff1a"
+ ],
+ "beir_cqadupstack_gis_6704": [
+  "e757d71f7322b1fc"
+ ],
+ "beir_cqadupstack_gis_67103": [
+  "4e7b4b8fc9ba331b"
+ ],
+ "beir_cqadupstack_gis_6720": [
+  "e78fdbb171d7acc5"
+ ],
+ "beir_cqadupstack_gis_67312": [
+  "f57cc0e59bbeb0a4"
+ ],
+ "beir_cqadupstack_gis_67474": [
+  "05d5b9cc889979d7"
+ ],
+ "beir_cqadupstack_gis_67581": [
+  "fe803a1bd9845810"
+ ],
+ "beir_cqadupstack_gis_67588": [
+  "aa43b348127bd048"
+ ],
+ "beir_cqadupstack_gis_67804": [
+  "8fb03ce8478bddc7"
+ ],
+ "beir_cqadupstack_gis_67825": [
+  "170fd786bf44e12e"
+ ],
+ "beir_cqadupstack_gis_67887": [
+  "4fcc3b31b7c00371"
+ ],
+ "beir_cqadupstack_gis_6790": [
+  "198b34d0c5fd60b1"
+ ],
+ "beir_cqadupstack_gis_6804": [
+  "6c264fbe52a392c3"
+ ],
+ "beir_cqadupstack_gis_68168": [
+  "f2297e80057037ca"
+ ],
+ "beir_cqadupstack_gis_68175": [
+  "51115ad8985dbc10"
+ ],
+ "beir_cqadupstack_gis_68233": [
+  "a345445b96d51309"
+ ],
+ "beir_cqadupstack_gis_68273": [
+  "4e8cfcd2d00c7145"
+ ],
+ "beir_cqadupstack_gis_68389": [
+  "4ade14f1f49cd1f1"
+ ],
+ "beir_cqadupstack_gis_68545": [
+  "f848e8bc95ba3942"
+ ],
+ "beir_cqadupstack_gis_68546": [
+  "670c1982d0b04ef9"
+ ],
+ "beir_cqadupstack_gis_68566": [
+  "3e093918513be1b0"
+ ],
+ "beir_cqadupstack_gis_68624": [
+  "ee59442686f41428"
+ ],
+ "beir_cqadupstack_gis_68843": [
+  "e1721f2eb3605a34"
+ ],
+ "beir_cqadupstack_gis_68897": [
+  "820579f1896ff613"
+ ],
+ "beir_cqadupstack_gis_68956": [
+  "db96d52ff93e32cf"
+ ],
+ "beir_cqadupstack_gis_69137": [
+  "1f2fbf7cc33caeca"
+ ],
+ "beir_cqadupstack_gis_69294": [
+  "feb2cceecfb8f5bf"
+ ],
+ "beir_cqadupstack_gis_6933": [
+  "72c7b12c2c4e1182"
+ ],
+ "beir_cqadupstack_gis_6948": [
+  "b0a8ad55fb524712"
+ ],
+ "beir_cqadupstack_gis_69722": [
+  "f0554c7b4b05142c"
+ ],
+ "beir_cqadupstack_gis_69857": [
+  "5f013e5fc3034759"
+ ],
+ "beir_cqadupstack_gis_6995": [
+  "75751e6f03606ad7"
+ ],
+ "beir_cqadupstack_gis_70185": [
+  "981690fec9815f5a"
+ ],
+ "beir_cqadupstack_gis_70301": [
+  "07b1380d203fe769"
+ ],
+ "beir_cqadupstack_gis_70411": [
+  "cf539cb8fb8be409"
+ ],
+ "beir_cqadupstack_gis_70591": [
+  "16205cd0cbcf0a4f"
+ ],
+ "beir_cqadupstack_gis_70645": [
+  "5b2e55b9aa33c1b5"
+ ],
+ "beir_cqadupstack_gis_70758": [
+  "f7174fbc9bc3d503"
+ ],
+ "beir_cqadupstack_gis_7077": [
+  "5fe9518806610aff"
+ ],
+ "beir_cqadupstack_gis_7078": [
+  "ab020527a82f7663"
+ ],
+ "beir_cqadupstack_gis_70921": [
+  "94f5bb6e96bfafbc"
+ ],
+ "beir_cqadupstack_gis_70922": [
+  "d9b5359eaa6578ed"
+ ],
+ "beir_cqadupstack_gis_71105": [
+  "5c1f1be81a69a58a"
+ ],
+ "beir_cqadupstack_gis_7147": [
+  "bf83fd30e60260ca"
+ ],
+ "beir_cqadupstack_gis_71504": [
+  "8bd7b10b7a621fad",
+  "cbad57e234374e45"
+ ],
+ "beir_cqadupstack_gis_71719": [
+  "3c028b0838960d9b"
+ ],
+ "beir_cqadupstack_gis_71872": [
+  "81d4c2b217fb7083"
+ ],
+ "beir_cqadupstack_gis_71926": [
+  "dec99eb326661d5c"
+ ],
+ "beir_cqadupstack_gis_72051": [
+  "66ff2a65ca2f55c3",
+  "a7b70b39daa7b3e8"
+ ],
+ "beir_cqadupstack_gis_72059": [
+  "96a9b6bb9211f37b",
+  "c42bcaf6726f2ef7",
+  "c8929575f738742f"
+ ],
+ "beir_cqadupstack_gis_72193": [
+  "d627f04f5664181b"
+ ],
+ "beir_cqadupstack_gis_72244": [
+  "873c396c668e7fc6"
+ ],
+ "beir_cqadupstack_gis_72260": [
+  "7c15defcd5c1236e"
+ ],
+ "beir_cqadupstack_gis_72298": [
+  "13edc196654924a1"
+ ],
+ "beir_cqadupstack_gis_72392": [
+  "0d92d8a3e9f19fbf"
+ ],
+ "beir_cqadupstack_gis_72393": [
+  "df5e71bd5543cff9"
+ ],
+ "beir_cqadupstack_gis_72448": [
+  "432f520353b9840e"
+ ],
+ "beir_cqadupstack_gis_72506": [
+  "295e56c081990ae3"
+ ],
+ "beir_cqadupstack_gis_72575": [
+  "ecebe3f7dfafb77f"
+ ],
+ "beir_cqadupstack_gis_72851": [
+  "260842bda88dd996"
+ ],
+ "beir_cqadupstack_gis_7297": [
+  "1e779b8d2fbed341"
+ ],
+ "beir_cqadupstack_gis_72985": [
+  "e0d464795dd7377e"
+ ],
+ "beir_cqadupstack_gis_73307": [
+  "1ddcae1fa193c305"
+ ],
+ "beir_cqadupstack_gis_7339": [
+  "2cad82951412a3c7",
+  "73f47e91cc4d4c81",
+  "add1ffffd54b380a"
+ ],
+ "beir_cqadupstack_gis_73394": [
+  "efe81d9ba781d66c"
+ ],
+ "beir_cqadupstack_gis_73397": [
+  "d049133c1a8667c4"
+ ],
+ "beir_cqadupstack_gis_73458": [
+  "81b88b48118d5bd8"
+ ],
+ "beir_cqadupstack_gis_73476": [
+  "96fcbc330f8e9285",
+  "b0d52445b18a3c1f"
+ ],
+ "beir_cqadupstack_gis_73524": [
+  "0e08f7e78644ce83"
+ ],
+ "beir_cqadupstack_gis_73542": [
+  "bfc17d118d9d698a"
+ ],
+ "beir_cqadupstack_gis_73649": [
+  "de3e85cedb4678fd"
+ ],
+ "beir_cqadupstack_gis_73736": [
+  "492b9f54248e67f6"
+ ],
+ "beir_cqadupstack_gis_74079": [
+  "203ece528467694e",
+  "3ad8ff0f10ecdf3b",
+  "908ae1ce009a0484"
+ ],
+ "beir_cqadupstack_gis_74120": [
+  "f2fcaf4efd978dec"
+ ],
+ "beir_cqadupstack_gis_74244": [
+  "902843c69db52b52"
+ ],
+ "beir_cqadupstack_gis_74301": [
+  "6fe76c814e90d4ae",
+  "7eb21a53f5c6a123",
+  "ceae35a23c95da0e"
+ ],
+ "beir_cqadupstack_gis_74453": [
+  "519c2b7df08c7986"
+ ],
+ "beir_cqadupstack_gis_74480": [
+  "722b19b97e1f4b7f"
+ ],
+ "beir_cqadupstack_gis_74543": [
+  "fbc6cfde6348e6fe"
+ ],
+ "beir_cqadupstack_gis_74554": [
+  "23f71a77dec75a0e"
+ ],
+ "beir_cqadupstack_gis_74658": [
+  "1359e151b06aa1cd",
+  "8429382b9b9df983"
+ ],
+ "beir_cqadupstack_gis_74692": [
+  "29e1ba5c6b1d00fb"
+ ],
+ "beir_cqadupstack_gis_75092": [
+  "824bcad66504b09f"
+ ],
+ "beir_cqadupstack_gis_75104": [
+  "99ada0dc1767bae7"
+ ],
+ "beir_cqadupstack_gis_75119": [
+  "da93ed53ec3cf0d7"
+ ],
+ "beir_cqadupstack_gis_75155": [
+  "204b933eb6f83840",
+  "9963bcce80d8e31a",
+  "a0515038742c0fb1"
+ ],
+ "beir_cqadupstack_gis_75212": [
+  "9e43c56684d3be34"
+ ],
+ "beir_cqadupstack_gis_75289": [
+  "e3ed167f5384c262"
+ ],
+ "beir_cqadupstack_gis_75324": [
+  "f7ac84440cb29d73"
+ ],
+ "beir_cqadupstack_gis_75525": [
+  "986436454c82ddcd"
+ ],
+ "beir_cqadupstack_gis_75588": [
+  "3b2c0fafb14d20dc"
+ ],
+ "beir_cqadupstack_gis_75602": [
+  "0f09a173f94616a5",
+  "db7132810334824c"
+ ],
+ "beir_cqadupstack_gis_75685": [
+  "2f8923adc89e6700",
+  "6b95f49cb249440d"
+ ],
+ "beir_cqadupstack_gis_75859": [
+  "e80cf31e4a1516f5"
+ ],
+ "beir_cqadupstack_gis_75876": [
+  "963514073cc3ec59"
+ ],
+ "beir_cqadupstack_gis_75899": [
+  "51fa7190c90b7964",
+  "7f09625e117a7551"
+ ],
+ "beir_cqadupstack_gis_75928": [
+  "c7acb7e668d4f270"
+ ],
+ "beir_cqadupstack_gis_75951": [
+  "3fa57b09b78a968f"
+ ],
+ "beir_cqadupstack_gis_76181": [
+  "6f38c469d0266fc9"
+ ],
+ "beir_cqadupstack_gis_7651": [
+  "de17fec77992b41e"
+ ],
+ "beir_cqadupstack_gis_76606": [
+  "fd10e35f01be4eb5"
+ ],
+ "beir_cqadupstack_gis_76655": [
+  "f1bc4d63797ac9a3"
+ ],
+ "beir_cqadupstack_gis_76880": [
+  "6f15763c97b83820"
+ ],
+ "beir_cqadupstack_gis_76962": [
+  "dea086804a73ab80"
+ ],
+ "beir_cqadupstack_gis_77184": [
+  "2d3579c89300c6fc",
+  "35bc447533b7cebf",
+  "5532f26c523cca26"
+ ],
+ "beir_cqadupstack_gis_77288": [
+  "d47640933e2cec24"
+ ],
+ "beir_cqadupstack_gis_77425": [
+  "58b9dab07a5984d9"
+ ],
+ "beir_cqadupstack_gis_77463": [
+  "2e1b8ec94db069e0"
+ ],
+ "beir_cqadupstack_gis_77958": [
+  "80e1074d5bbad240"
+ ],
+ "beir_cqadupstack_gis_7803": [
+  "2f1396b8e72db91b"
+ ],
+ "beir_cqadupstack_gis_78120": [
+  "5ab0dc9798c37e7f"
+ ],
+ "beir_cqadupstack_gis_78330": [
+  "5e7d13d9a02130b5"
+ ],
+ "beir_cqadupstack_gis_78439": [
+  "e046b339ea16ab63"
+ ],
+ "beir_cqadupstack_gis_78651": [
+  "b2889de522dad3a9"
+ ],
+ "beir_cqadupstack_gis_78794": [
+  "fc9bd531dac9556d"
+ ],
+ "beir_cqadupstack_gis_78865": [
+  "a4c7c4ec45cdfc96"
+ ],
+ "beir_cqadupstack_gis_78923": [
+  "0703e2ae73cbe15a"
+ ],
+ "beir_cqadupstack_gis_79078": [
+  "96ccf3931c66376d"
+ ],
+ "beir_cqadupstack_gis_79328": [
+  "82ae37f58066075a"
+ ],
+ "beir_cqadupstack_gis_79339": [
+  "220d53de5b988119"
+ ],
+ "beir_cqadupstack_gis_79730": [
+  "9bee3d681ef619de"
+ ],
+ "beir_cqadupstack_gis_79803": [
+  "9217e00ef883e7c5"
+ ],
+ "beir_cqadupstack_gis_80006": [
+  "aec1bf8ac5d295df",
+  "b113a06471617642"
+ ],
+ "beir_cqadupstack_gis_80037": [
+  "72b7b6884f882960",
+  "a8dbc35e5d56e740"
+ ],
+ "beir_cqadupstack_gis_80094": [
+  "96da08e64c4965ab"
+ ],
+ "beir_cqadupstack_gis_80127": [
+  "eaeef4ddf139c1ac"
+ ],
+ "beir_cqadupstack_gis_8032": [
+  "14fa2780a04b2d1c",
+  "431ae58ebc46e0c3",
+  "43bc103ec2389c98"
+ ],
+ "beir_cqadupstack_gis_80454": [
+  "48146a39dbbbce85"
+ ],
+ "beir_cqadupstack_gis_80543": [
+  "640f911ba5cb148b"
+ ],
+ "beir_cqadupstack_gis_80662": [
+  "1e04d5f108c64c7e"
+ ],
+ "beir_cqadupstack_gis_80674": [
+  "0d39c398830aa2a8"
+ ],
+ "beir_cqadupstack_gis_80885": [
+  "3bf384d70d6bf86e"
+ ],
+ "beir_cqadupstack_gis_80960": [
+  "22a2e0a253eb2f0b"
+ ],
+ "beir_cqadupstack_gis_81110": [
+  "b11a64af5eddaa6e"
+ ],
+ "beir_cqadupstack_gis_81121": [
+  "1502ce2b8e072887"
+ ],
+ "beir_cqadupstack_gis_81212": [
+  "e282b884a91cf3dc"
+ ],
+ "beir_cqadupstack_gis_81324": [
+  "6614b23f3e2ba41d"
+ ],
+ "beir_cqadupstack_gis_81621": [
+  "74c5fb1f1da20a9d"
+ ],
+ "beir_cqadupstack_gis_8178": [
+  "33941ebaa9a35cce"
+ ],
+ "beir_cqadupstack_gis_8191": [
+  "5787456cf2819689"
+ ],
+ "beir_cqadupstack_gis_81928": [
+  "8fa034184cd6be6f"
+ ],
+ "beir_cqadupstack_gis_82121": [
+  "33d84ef1efb0b789",
+  "baa3fb8e6cb12a33",
+  "cf4fc0403c1e2926"
+ ],
+ "beir_cqadupstack_gis_82134": [
+  "15ad8df8acef72b0"
+ ],
+ "beir_cqadupstack_gis_82175": [
+  "955808517e399d4c"
+ ],
+ "beir_cqadupstack_gis_82242": [
+  "739e5141c2bd4ed7"
+ ],
+ "beir_cqadupstack_gis_82271": [
+  "8ad7fad382170481"
+ ],
+ "beir_cqadupstack_gis_823": [
+  "2c74de999e776081",
+  "eab480091676d5d1"
+ ],
+ "beir_cqadupstack_gis_82415": [
+  "78a06844c03fb010"
+ ],
+ "beir_cqadupstack_gis_82476": [
+  "18e17b2dd447c927"
+ ],
+ "beir_cqadupstack_gis_82598": [
+  "8fb620c09e129762"
+ ],
+ "beir_cqadupstack_gis_82618": [
+  "b4f8a6ba0ccd5090"
+ ],
+ "beir_cqadupstack_gis_82718": [
+  "9db9d3d3c4654cfd",
+  "a8fa9dd52e298050"
+ ],
+ "beir_cqadupstack_gis_8277": [
+  "d5c90aebef7ed568"
+ ],
+ "beir_cqadupstack_gis_82873": [
+  "e99aa3094d33980f"
+ ],
+ "beir_cqadupstack_gis_82905": [
+  "c83767ee2fc3bc6a"
+ ],
+ "beir_cqadupstack_gis_82931": [
+  "7909a3c8be786a94"
+ ],
+ "beir_cqadupstack_gis_83212": [
+  "5e032df64b4fc367",
+  "7f8072bea3e38907",
+  "9fc55a9465070feb"
+ ],
+ "beir_cqadupstack_gis_83229": [
+  "aae3899448514d8f"
+ ],
+ "beir_cqadupstack_gis_83316": [
+  "db4bb83d8bce46eb",
+  "e7746193d43f4b84"
+ ],
+ "beir_cqadupstack_gis_83359": [
+  "c0bc912ede012b2b"
+ ],
+ "beir_cqadupstack_gis_83372": [
+  "31b866e7b04886f5"
+ ],
+ "beir_cqadupstack_gis_83509": [
+  "0cb3311a3c26d138"
+ ],
+ "beir_cqadupstack_gis_83977": [
+  "6d035fde860023f9"
+ ],
+ "beir_cqadupstack_gis_8401": [
+  "1a89fccbd9300281"
+ ],
+ "beir_cqadupstack_gis_84063": [
+  "41c93d24217ebf81",
+  "d2a32acbf6351d37"
+ ],
+ "beir_cqadupstack_gis_84141": [
+  "80186bce58402cd7"
+ ],
+ "beir_cqadupstack_gis_8449": [
+  "66dea55c20c4a406"
+ ],
+ "beir_cqadupstack_gis_8453": [
+  "0ab0e8d66a53f26f"
+ ],
+ "beir_cqadupstack_gis_84552": [
+  "6ab8f7ea43375822"
+ ],
+ "beir_cqadupstack_gis_84786": [
+  "77c9e8e0c7e87e63"
+ ],
+ "beir_cqadupstack_gis_84956": [
+  "28bd2f45d0e209ea",
+  "e4dbe612a3d34a63"
+ ],
+ "beir_cqadupstack_gis_85031": [
+  "5203349e807dc9f5"
+ ],
+ "beir_cqadupstack_gis_85111": [
+  "f5f7ce9cc1212764"
+ ],
+ "beir_cqadupstack_gis_85147": [
+  "233b4f5a3ad8f645"
+ ],
+ "beir_cqadupstack_gis_85393": [
+  "bdfcffe6440a343f"
+ ],
+ "beir_cqadupstack_gis_85540": [
+  "627e44404d286a83"
+ ],
+ "beir_cqadupstack_gis_85592": [
+  "d7a963319dcab0f3"
+ ],
+ "beir_cqadupstack_gis_85596": [
+  "1c1921fd5d52c3f6"
+ ],
+ "beir_cqadupstack_gis_8571": [
+  "49aeab3c6ce648be"
+ ],
+ "beir_cqadupstack_gis_85825": [
+  "0fcf2bbb244df009"
+ ],
+ "beir_cqadupstack_gis_85897": [
+  "3c4b1be3e34da032",
+  "99cf9e13d8de32ee"
+ ],
+ "beir_cqadupstack_gis_85993": [
+  "96cc7d5a57db106a"
+ ],
+ "beir_cqadupstack_gis_86075": [
+  "3a527882209c9a47"
+ ],
+ "beir_cqadupstack_gis_86106": [
+  "4aece880eda283de"
+ ],
+ "beir_cqadupstack_gis_86300": [
+  "3c204fb7d7a6d2c4"
+ ],
+ "beir_cqadupstack_gis_86333": [
+  "ebcdbd785a5060a0"
+ ],
+ "beir_cqadupstack_gis_86383": [
+  "52bc9e34d0f481ca",
+  "feb37cc3a36458f1"
+ ],
+ "beir_cqadupstack_gis_86444": [
+  "17f313dcd979af32",
+  "e181722302c60ed1"
+ ],
+ "beir_cqadupstack_gis_86754": [
+  "e0c4f4e2890f39dc"
+ ],
+ "beir_cqadupstack_gis_86847": [
+  "3c33e10190908bc4"
+ ],
+ "beir_cqadupstack_gis_87004": [
+  "4a57275e2a4ff1ac"
+ ],
+ "beir_cqadupstack_gis_87031": [
+  "3bf0e5a116dbd686"
+ ],
+ "beir_cqadupstack_gis_87248": [
+  "e4372df2fe128870"
+ ],
+ "beir_cqadupstack_gis_87401": [
+  "ca0a7eb74c08680e"
+ ],
+ "beir_cqadupstack_gis_87432": [
+  "67f8a045f7d99ace",
+  "8f98ba7e7a5b1a55"
+ ],
+ "beir_cqadupstack_gis_87478": [
+  "50bfe314d984111f"
+ ],
+ "beir_cqadupstack_gis_87720": [
+  "86fcdba2fccdfea8"
+ ],
+ "beir_cqadupstack_gis_8794": [
+  "51c3ee4abd49d5f2"
+ ],
+ "beir_cqadupstack_gis_88104": [
+  "6f6ed0111a9ba43c"
+ ],
+ "beir_cqadupstack_gis_88220": [
+  "ce475ab5fbf8d787"
+ ],
+ "beir_cqadupstack_gis_88236": [
+  "8c7f795a61aab9ef"
+ ],
+ "beir_cqadupstack_gis_88252": [
+  "62dc1f712b609693"
+ ],
+ "beir_cqadupstack_gis_88301": [
+  "0c16852ca3c8512a"
+ ],
+ "beir_cqadupstack_gis_88371": [
+  "782c675455b96f85"
+ ],
+ "beir_cqadupstack_gis_88477": [
+  "04139d031362d95b",
+  "63f25e1905fd70de"
+ ],
+ "beir_cqadupstack_gis_88715": [
+  "6bf9fcea39cac99c",
+  "6d6ae5ed370ad912",
+  "fcd2af652a775c37"
+ ],
+ "beir_cqadupstack_gis_88723": [
+  "cc9133bc8efe5c06"
+ ],
+ "beir_cqadupstack_gis_88792": [
+  "2a6fd8e68d9e975c"
+ ],
+ "beir_cqadupstack_gis_89038": [
+  "693391b487955106"
+ ],
+ "beir_cqadupstack_gis_89103": [
+  "c94fe39a21eb56a1"
+ ],
+ "beir_cqadupstack_gis_89114": [
+  "7ad33145d8a15838"
+ ],
+ "beir_cqadupstack_gis_89165": [
+  "23de6077575ed8cc"
+ ],
+ "beir_cqadupstack_gis_89177": [
+  "38b15e811e9956e1",
+  "45814f23d0d8d283",
+  "d2db1fe6be609f75",
+  "fa19e2a47c2907d8"
+ ],
+ "beir_cqadupstack_gis_89221": [
+  "7be013dc1ec5de05"
+ ],
+ "beir_cqadupstack_gis_89232": [
+  "7a5d53329a417714"
+ ],
+ "beir_cqadupstack_gis_8929": [
+  "6969ab35a4a2ea72"
+ ],
+ "beir_cqadupstack_gis_89326": [
+  "31b5be33d95d3026"
+ ],
+ "beir_cqadupstack_gis_89468": [
+  "7556983fba2eebd8"
+ ],
+ "beir_cqadupstack_gis_89760": [
+  "ddc49e4f730e610e"
+ ],
+ "beir_cqadupstack_gis_898": [
+  "fd63d3bb7d5918e9"
+ ],
+ "beir_cqadupstack_gis_89898": [
+  "45100e77285b9206"
+ ],
+ "beir_cqadupstack_gis_89922": [
+  "c0ecce1a34a83c5f"
+ ],
+ "beir_cqadupstack_gis_90084": [
+  "42169227de78142c",
+  "c790e88aa1c77bb5"
+ ],
+ "beir_cqadupstack_gis_91102": [
+  "6173b67ec8f646cf"
+ ],
+ "beir_cqadupstack_gis_91477": [
+  "ef71618b130f5f73"
+ ],
+ "beir_cqadupstack_gis_9157": [
+  "42fc7dd4f1763563",
+  "6db426627e4392ab"
+ ],
+ "beir_cqadupstack_gis_91707": [
+  "a9be6879a5c1a318",
+  "cf3039c06d300cc3"
+ ],
+ "beir_cqadupstack_gis_91790": [
+  "a3e1ced924799953"
+ ],
+ "beir_cqadupstack_gis_91886": [
+  "1a350a9d39a3555c",
+  "3214ae3ff5b06d2e",
+  "3cbe010617d9d0e9",
+  "b593331aeb4d3083"
+ ],
+ "beir_cqadupstack_gis_91949": [
+  "5fb6af9f7b7e536d"
+ ],
+ "beir_cqadupstack_gis_9210": [
+  "7cb9018b5bd9a4ef"
+ ],
+ "beir_cqadupstack_gis_92312": [
+  "e9ed92d16a4d0d6f"
+ ],
+ "beir_cqadupstack_gis_92396": [
+  "16118f0656a2a109"
+ ],
+ "beir_cqadupstack_gis_92645": [
+  "9def8f151bf8b027"
+ ],
+ "beir_cqadupstack_gis_92748": [
+  "3e1e87367c6a87c4"
+ ],
+ "beir_cqadupstack_gis_92772": [
+  "8e2e8cc916eeed46"
+ ],
+ "beir_cqadupstack_gis_92820": [
+  "6b922f98f3dc4a96"
+ ],
+ "beir_cqadupstack_gis_92941": [
+  "5984ce87456d12fa"
+ ],
+ "beir_cqadupstack_gis_93093": [
+  "74b0e7dbf451aba8"
+ ],
+ "beir_cqadupstack_gis_93519": [
+  "9b72fc2fa9a0319d"
+ ],
+ "beir_cqadupstack_gis_93696": [
+  "4667bba1edc820ec"
+ ],
+ "beir_cqadupstack_gis_93697": [
+  "90238f34abf6985b"
+ ],
+ "beir_cqadupstack_gis_93936": [
+  "d5528096b1ec4bc4"
+ ],
+ "beir_cqadupstack_gis_93950": [
+  "98dd17560072142c"
+ ],
+ "beir_cqadupstack_gis_94148": [
+  "181cec4d9f059929"
+ ],
+ "beir_cqadupstack_gis_94191": [
+  "b1ececb8f292a696"
+ ],
+ "beir_cqadupstack_gis_94280": [
+  "20140089e8ae18f9"
+ ],
+ "beir_cqadupstack_gis_94446": [
+  "f84804df40064d1f"
+ ],
+ "beir_cqadupstack_gis_9462": [
+  "5e3ac2b5f1eb51ae",
+  "7ac93defec1a15f4"
+ ],
+ "beir_cqadupstack_gis_94643": [
+  "b70bda18b6887b1f"
+ ],
+ "beir_cqadupstack_gis_94706": [
+  "18891a9171bbf3d9"
+ ],
+ "beir_cqadupstack_gis_94874": [
+  "cedee344249704df"
+ ],
+ "beir_cqadupstack_gis_95035": [
+  "5a68a584a5938bd1"
+ ],
+ "beir_cqadupstack_gis_95249": [
+  "1e3d6a430f63e28f",
+  "3a5cf1c1abb7c4bf"
+ ],
+ "beir_cqadupstack_gis_95568": [
+  "40e44ed452df7f92"
+ ],
+ "beir_cqadupstack_gis_957": [
+  "b1506932e30410cf"
+ ],
+ "beir_cqadupstack_gis_9614": [
+  "bf9861b62f04df6d"
+ ],
+ "beir_cqadupstack_gis_96153": [
+  "2b499d89c94ff287"
+ ],
+ "beir_cqadupstack_gis_9659": [
+  "dec933ee9e81dc2c"
+ ],
+ "beir_cqadupstack_gis_97303": [
+  "f8b0f96ca7aee870"
+ ],
+ "beir_cqadupstack_gis_97741": [
+  "0aadab53665aee83",
+  "27106e6a74eae998",
+  "44d0c0b1091a0982",
+  "45b608e7891daa42",
+  "4a9f08fd00a1f2b6",
+  "4cf71e28708cb246",
+  "6b8589022fe45291",
+  "a5c7ab173f24bcd7",
+  "b070145258974b2f",
+  "b6f234d01429e18c",
+  "e6368da6f6b8a97a"
+ ],
+ "beir_cqadupstack_gis_97771": [
+  "41ec4693e2db638d"
+ ],
+ "beir_cqadupstack_gis_97776": [
+  "28f12fac3743ccd0",
+  "3a2631c3bbc87c30",
+  "3a3f07e00ee74893",
+  "3ad81d0f6ecbc4ee",
+  "50d3d00bdac7d99d",
+  "63003aae780ff182",
+  "64184200e25634d3",
+  "644c68f0944bff54",
+  "6658f03a55bcd1b3",
+  "75c078b1a487ddc0",
+  "88648b7f4ef7c70e",
+  "8a175dbddad6435b",
+  "945594be1af1122f",
+  "94c2fea2e4377288",
+  "9aae65bd39b0db99",
+  "9c1fad1aee8b7e0e",
+  "afefa0c537439908",
+  "c8d4946c0e33108f",
+  "ced115da77b50cdd",
+  "f87024f52d6a9d59",
+  "f96d715c240bdf27",
+  "fd40f9f55bcff064"
+ ],
+ "beir_cqadupstack_gis_97814": [
+  "7fff92721d0e7a65"
+ ],
+ "beir_cqadupstack_gis_97845": [
+  "7b66c99265fa8a16"
+ ],
+ "beir_cqadupstack_gis_97939": [
+  "663f791d99f0e471"
+ ],
+ "beir_cqadupstack_gis_98028": [
+  "5cbb1c321ca7c2e8"
+ ],
+ "beir_cqadupstack_gis_98053": [
+  "04aa3d1cf5dd3a6c"
+ ],
+ "beir_cqadupstack_gis_98076": [
+  "703ad95d8b7b764f"
+ ],
+ "beir_cqadupstack_gis_9894": [
+  "6cb439afb52a2571"
+ ],
+ "beir_cqadupstack_gis_99711": [
+  "72b117cf91ec492f",
+  "7ecb67517f560c87",
+  "ee16915615993a07"
+ ],
+ "beir_cqadupstack_gis_99850": [
+  "5445d129afea2748"
+ ],
+ "beir_cqadupstack_gis_99993": [
+  "9bff99091bfd7f7e"
+ ]
+}

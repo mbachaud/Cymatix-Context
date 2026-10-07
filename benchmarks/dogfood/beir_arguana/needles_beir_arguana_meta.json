@@ -1,0 +1,27 @@
+{
+ "source": "BEIR arguana (UKP mirror zip; corpus.jsonl, queries.jsonl, qrels/test.tsv)",
+ "corpus_root": "F:\\Projects\\beir\\beir_arguana\\corpus",
+ "docs": 8674,
+ "docs_under_min_bytes": 1,
+ "docs_over_max_bytes": 0,
+ "path_collisions": 0,
+ "n_needles": 1401,
+ "qrels_positive_total": 1401,
+ "gold_per_needle_max": 1,
+ "graded": false,
+ "queries_that_are_corpus_docs": 1294,
+ "drops": {
+  "no_positive_qrel": 0,
+  "gold_absent_from_corpus": 5,
+  "query_text_missing": 0
+ },
+ "drop_names": {
+  "gold_absent_from_corpus": [
+   "beir_arguana_test-education-ufsdfkhbwu-con03a",
+   "beir_arguana_test-free-speech-debate-yfsdfkhbwu-con03a",
+   "beir_arguana_test-politics-dhwem-pro06a",
+   "beir_arguana_test-science-sghwbdgmo-con03a",
+   "beir_arguana_test-society-asfhwapg-con04a"
+  ]
+ }
+}

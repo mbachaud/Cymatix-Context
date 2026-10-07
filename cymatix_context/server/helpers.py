@@ -24,9 +24,13 @@ from pydantic import BaseModel
 from ..accel import json_loads
 from ..config import CymatixConfig
 from ..context_manager import CymatixContextManager
-from ..scoring.know_calibration import calibration_from_config, load_calibration_from_toml
+from ..scoring.know_calibration import (
+    calibration_from_config,
+    load_calibration_and_inputs,
+    producible_inputs,
+)
 from ..scoring.know_decision import (
-    _agree_from_tier_contributions,
+    _agree_or_unknown,
     decide_know_or_miss,
     _is_code_shaped,
 )
@@ -327,7 +331,8 @@ def _compute_know_or_miss_block(
         _win_contrib if _win_contrib is not None
         else (getattr(cymatix.genome, "last_tier_contributions", {}) or {})
     )
-    lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)
+    # #482: None (unknown) when no dense lane ran, not False.
+    lex_dense_agree = _agree_or_unknown(tier_contrib, k=3)
 
     # Coordinate confidence -- promoted to first-class in Stage 6 (section 9).
     # Lazy-import to avoid a server -> context_packet -> server cycle.
@@ -363,7 +368,8 @@ def _compute_know_or_miss_block(
         except Exception:
             log.debug("Stage-6 gene fetch for coordinate_confidence failed", exc_info=True)
 
-    coord_conf = _coordinate_confidence(query, genes) if genes else 0.0
+    # #482: nothing delivered = coordinate unknown, not "wrong location".
+    coord_conf = _coordinate_confidence(query, genes) if genes else None
 
     # Calibration -- prefer the manager's already-loaded config ([know] is
     # a first-class config section since the 2026-06-12 default-honesty
@@ -371,8 +377,11 @@ def _compute_know_or_miss_block(
     _live_cfg = getattr(cymatix, "config", None)
     if _live_cfg is not None and getattr(_live_cfg, "know", None) is not None:
         cal = calibration_from_config(_live_cfg.know)
+        # #482: inputs the enabled lanes can produce -- toggling a lane is
+        # picked up here, no calibration edit needed.
+        live_inputs = producible_inputs(_live_cfg)
     else:
-        cal = load_calibration_from_toml()
+        cal, live_inputs = load_calibration_and_inputs()
 
     # Stage 7 (spec section 3) -- freshness_min from the rebuilt _compute_health.
     # ``ContextHealth.freshness_min`` is Optional[float]; None falls
@@ -482,6 +491,7 @@ def _compute_know_or_miss_block(
         freshness_status=freshness_status,
         successor_source_id=successor_source_id,
         cold_refresh_targets=cold_targets,
+        live_inputs=live_inputs,
     )
 
 

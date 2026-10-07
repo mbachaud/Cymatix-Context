@@ -1,0 +1,3429 @@
+{
+ "beir_cqadupstack_programmers_100095": {
+  "07/154733.txt": 1,
+  "38/63174.txt": 1,
+  "66/213963.txt": 1,
+  "a1/242811.txt": 1,
+  "fa/221498.txt": 1
+ },
+ "beir_cqadupstack_programmers_100685": {
+  "87/100671.txt": 1,
+  "d9/233470.txt": 1
+ },
+ "beir_cqadupstack_programmers_100959": {
+  "d3/199309.txt": 1
+ },
+ "beir_cqadupstack_programmers_101164": {
+  "71/10035.txt": 1,
+  "76/109171.txt": 1
+ },
+ "beir_cqadupstack_programmers_102008": {
+  "12/109436.txt": 1
+ },
+ "beir_cqadupstack_programmers_102348": {
+  "d1/78547.txt": 1
+ },
+ "beir_cqadupstack_programmers_102518": {
+  "7d/195081.txt": 1,
+  "8c/236323.txt": 1
+ },
+ "beir_cqadupstack_programmers_102679": {
+  "ea/51553.txt": 1
+ },
+ "beir_cqadupstack_programmers_102999": {
+  "d6/123044.txt": 1
+ },
+ "beir_cqadupstack_programmers_103089": {
+  "2c/131122.txt": 1
+ },
+ "beir_cqadupstack_programmers_103133": {
+  "e7/53970.txt": 1
+ },
+ "beir_cqadupstack_programmers_103263": {
+  "5f/130073.txt": 1
+ },
+ "beir_cqadupstack_programmers_103471": {
+  "cc/206312.txt": 1
+ },
+ "beir_cqadupstack_programmers_104096": {
+  "e4/100553.txt": 1,
+  "e9/125712.txt": 1
+ },
+ "beir_cqadupstack_programmers_104111": {
+  "8c/136163.txt": 1,
+  "b1/14914.txt": 1,
+  "cc/91196.txt": 1,
+  "d2/25564.txt": 1
+ },
+ "beir_cqadupstack_programmers_104122": {
+  "dd/96331.txt": 1
+ },
+ "beir_cqadupstack_programmers_104517": {
+  "e2/94054.txt": 1
+ },
+ "beir_cqadupstack_programmers_10495": {
+  "b1/132395.txt": 1
+ },
+ "beir_cqadupstack_programmers_105380": {
+  "db/240877.txt": 1
+ },
+ "beir_cqadupstack_programmers_106693": {
+  "2c/232652.txt": 1
+ },
+ "beir_cqadupstack_programmers_107265": {
+  "c7/130186.txt": 1,
+  "ce/201312.txt": 1
+ },
+ "beir_cqadupstack_programmers_107326": {
+  "e2/38597.txt": 1
+ },
+ "beir_cqadupstack_programmers_107774": {
+  "b5/54536.txt": 1
+ },
+ "beir_cqadupstack_programmers_107986": {
+  "28/224307.txt": 1
+ },
+ "beir_cqadupstack_programmers_108292": {
+  "d0/81718.txt": 1
+ },
+ "beir_cqadupstack_programmers_108309": {
+  "c2/143629.txt": 1
+ },
+ "beir_cqadupstack_programmers_108395": {
+  "14/194795.txt": 1,
+  "55/45230.txt": 1,
+  "dc/96729.txt": 1
+ },
+ "beir_cqadupstack_programmers_10857": {
+  "cd/230398.txt": 1
+ },
+ "beir_cqadupstack_programmers_108855": {
+  "cf/223236.txt": 1
+ },
+ "beir_cqadupstack_programmers_109279": {
+  "48/230934.txt": 1
+ },
+ "beir_cqadupstack_programmers_109818": {
+  "73/208713.txt": 1
+ },
+ "beir_cqadupstack_programmers_10998": {
+  "2f/223634.txt": 1
+ },
+ "beir_cqadupstack_programmers_110190": {
+  "26/205797.txt": 1
+ },
+ "beir_cqadupstack_programmers_110270": {
+  "87/110274.txt": 1,
+  "f2/39284.txt": 1
+ },
+ "beir_cqadupstack_programmers_110471": {
+  "69/11257.txt": 1,
+  "b7/22809.txt": 1,
+  "f0/121798.txt": 1
+ },
+ "beir_cqadupstack_programmers_110518": {
+  "4c/156877.txt": 1
+ },
+ "beir_cqadupstack_programmers_110595": {
+  "09/209401.txt": 1,
+  "17/206979.txt": 1,
+  "77/136596.txt": 1,
+  "90/210707.txt": 1,
+  "94/74764.txt": 1,
+  "cd/10793.txt": 1,
+  "d0/83837.txt": 1
+ },
+ "beir_cqadupstack_programmers_110730": {
+  "9c/110804.txt": 1,
+  "d2/250337.txt": 1,
+  "e1/244381.txt": 1
+ },
+ "beir_cqadupstack_programmers_110788": {
+  "92/9099.txt": 1
+ },
+ "beir_cqadupstack_programmers_111003": {
+  "16/14033.txt": 1,
+  "4e/134984.txt": 1,
+  "50/181837.txt": 1,
+  "83/219747.txt": 1,
+  "a3/73832.txt": 1,
+  "a9/55536.txt": 1
+ },
+ "beir_cqadupstack_programmers_111475": {
+  "96/104867.txt": 1
+ },
+ "beir_cqadupstack_programmers_111633": {
+  "26/141592.txt": 1
+ },
+ "beir_cqadupstack_programmers_111663": {
+  "2e/49.txt": 1
+ },
+ "beir_cqadupstack_programmers_111757": {
+  "75/40845.txt": 1
+ },
+ "beir_cqadupstack_programmers_111788": {
+  "4a/2682.txt": 1,
+  "9d/130341.txt": 1
+ },
+ "beir_cqadupstack_programmers_111802": {
+  "53/35594.txt": 1,
+  "82/94643.txt": 1,
+  "ef/210913.txt": 1
+ },
+ "beir_cqadupstack_programmers_111846": {
+  "59/142632.txt": 1
+ },
+ "beir_cqadupstack_programmers_111881": {
+  "65/111890.txt": 1,
+  "96/58031.txt": 1,
+  "b0/114303.txt": 1,
+  "bf/26191.txt": 1,
+  "e2/66389.txt": 1,
+  "fe/108258.txt": 1
+ },
+ "beir_cqadupstack_programmers_112485": {
+  "75/65384.txt": 1,
+  "f6/211087.txt": 1
+ },
+ "beir_cqadupstack_programmers_112974": {
+  "46/20204.txt": 1
+ },
+ "beir_cqadupstack_programmers_113209": {
+  "2c/220822.txt": 1,
+  "b0/30254.txt": 1,
+  "e2/108546.txt": 1
+ },
+ "beir_cqadupstack_programmers_113295": {
+  "86/126121.txt": 1
+ },
+ "beir_cqadupstack_programmers_113726": {
+  "f4/83553.txt": 1
+ },
+ "beir_cqadupstack_programmers_114258": {
+  "dd/199368.txt": 1
+ },
+ "beir_cqadupstack_programmers_114286": {
+  "1a/172917.txt": 1,
+  "4b/207296.txt": 1
+ },
+ "beir_cqadupstack_programmers_114520": {
+  "2b/100480.txt": 1,
+  "37/40172.txt": 1,
+  "82/201457.txt": 1,
+  "8e/114727.txt": 1,
+  "c6/197983.txt": 1,
+  "fe/137252.txt": 1
+ },
+ "beir_cqadupstack_programmers_114629": {
+  "75/54568.txt": 1
+ },
+ "beir_cqadupstack_programmers_114755": {
+  "6c/88714.txt": 1,
+  "fe/102452.txt": 1
+ },
+ "beir_cqadupstack_programmers_114819": {
+  "5a/26537.txt": 1
+ },
+ "beir_cqadupstack_programmers_114958": {
+  "bf/139360.txt": 1
+ },
+ "beir_cqadupstack_programmers_115425": {
+  "23/115359.txt": 1
+ },
+ "beir_cqadupstack_programmers_115525": {
+  "09/170348.txt": 1
+ },
+ "beir_cqadupstack_programmers_115769": {
+  "0f/202675.txt": 1,
+  "c8/101282.txt": 1
+ },
+ "beir_cqadupstack_programmers_115910": {
+  "21/232391.txt": 1
+ },
+ "beir_cqadupstack_programmers_115920": {
+  "5e/160896.txt": 1,
+  "c8/84278.txt": 1
+ },
+ "beir_cqadupstack_programmers_116148": {
+  "cf/89092.txt": 1
+ },
+ "beir_cqadupstack_programmers_116242": {
+  "04/152891.txt": 1,
+  "93/147156.txt": 1,
+  "a1/113936.txt": 1,
+  "b3/1483.txt": 1,
+  "b5/245455.txt": 1
+ },
+ "beir_cqadupstack_programmers_116330": {
+  "1e/81072.txt": 1
+ },
+ "beir_cqadupstack_programmers_116491": {
+  "44/35208.txt": 1,
+  "c4/28139.txt": 1
+ },
+ "beir_cqadupstack_programmers_116730": {
+  "c7/207057.txt": 1
+ },
+ "beir_cqadupstack_programmers_116988": {
+  "c1/4319.txt": 1
+ },
+ "beir_cqadupstack_programmers_117030": {
+  "76/173466.txt": 1,
+  "8f/178154.txt": 1
+ },
+ "beir_cqadupstack_programmers_117403": {
+  "70/52486.txt": 1
+ },
+ "beir_cqadupstack_programmers_117766": {
+  "53/118404.txt": 1,
+  "d1/48401.txt": 1
+ },
+ "beir_cqadupstack_programmers_117825": {
+  "24/109409.txt": 1,
+  "5c/220233.txt": 1
+ },
+ "beir_cqadupstack_programmers_117852": {
+  "ec/200538.txt": 1
+ },
+ "beir_cqadupstack_programmers_1180": {
+  "d5/114078.txt": 1
+ },
+ "beir_cqadupstack_programmers_118064": {
+  "00/224934.txt": 1,
+  "79/95718.txt": 1,
+  "7d/70877.txt": 1,
+  "98/219767.txt": 1,
+  "9b/107834.txt": 1,
+  "f7/49379.txt": 1
+ },
+ "beir_cqadupstack_programmers_118108": {
+  "62/43329.txt": 1
+ },
+ "beir_cqadupstack_programmers_118140": {
+  "8f/194922.txt": 1
+ },
+ "beir_cqadupstack_programmers_118301": {
+  "1d/122026.txt": 1
+ },
+ "beir_cqadupstack_programmers_118558": {
+  "35/54018.txt": 1
+ },
+ "beir_cqadupstack_programmers_119367": {
+  "37/129675.txt": 1,
+  "a0/42792.txt": 1
+ },
+ "beir_cqadupstack_programmers_119466": {
+  "ba/95212.txt": 1
+ },
+ "beir_cqadupstack_programmers_119513": {
+  "48/144385.txt": 1
+ },
+ "beir_cqadupstack_programmers_119814": {
+  "96/188154.txt": 1
+ },
+ "beir_cqadupstack_programmers_1200": {
+  "1b/55991.txt": 1
+ },
+ "beir_cqadupstack_programmers_120477": {
+  "90/192113.txt": 1
+ },
+ "beir_cqadupstack_programmers_120488": {
+  "75/119470.txt": 1
+ },
+ "beir_cqadupstack_programmers_120541": {
+  "3a/102906.txt": 1
+ },
+ "beir_cqadupstack_programmers_120628": {
+  "14/163062.txt": 1
+ },
+ "beir_cqadupstack_programmers_121167": {
+  "5b/184376.txt": 1
+ },
+ "beir_cqadupstack_programmers_121218": {
+  "b2/119488.txt": 1,
+  "f5/225744.txt": 1
+ },
+ "beir_cqadupstack_programmers_121887": {
+  "b1/57197.txt": 1
+ },
+ "beir_cqadupstack_programmers_121998": {
+  "bc/196000.txt": 1
+ },
+ "beir_cqadupstack_programmers_122071": {
+  "56/55284.txt": 1
+ },
+ "beir_cqadupstack_programmers_122233": {
+  "ca/240763.txt": 1,
+  "dc/237387.txt": 1
+ },
+ "beir_cqadupstack_programmers_122244": {
+  "6c/140027.txt": 1,
+  "d2/2715.txt": 1
+ },
+ "beir_cqadupstack_programmers_122437": {
+  "7d/218558.txt": 1,
+  "95/121830.txt": 1,
+  "f3/9730.txt": 1
+ },
+ "beir_cqadupstack_programmers_123270": {
+  "9a/221.txt": 1,
+  "a9/69788.txt": 1
+ },
+ "beir_cqadupstack_programmers_123456": {
+  "bd/132436.txt": 1
+ },
+ "beir_cqadupstack_programmers_123834": {
+  "03/5153.txt": 1
+ },
+ "beir_cqadupstack_programmers_123851": {
+  "4d/648.txt": 1,
+  "c0/120281.txt": 1,
+  "fb/22854.txt": 1
+ },
+ "beir_cqadupstack_programmers_124533": {
+  "02/98123.txt": 1,
+  "83/5267.txt": 1
+ },
+ "beir_cqadupstack_programmers_12472": {
+  "59/11523.txt": 1
+ },
+ "beir_cqadupstack_programmers_124817": {
+  "0a/121073.txt": 1,
+  "11/21697.txt": 1
+ },
+ "beir_cqadupstack_programmers_125108": {
+  "47/44842.txt": 1,
+  "62/90057.txt": 1,
+  "dd/213738.txt": 1
+ },
+ "beir_cqadupstack_programmers_125252": {
+  "b4/247.txt": 1
+ },
+ "beir_cqadupstack_programmers_125373": {
+  "24/119968.txt": 1,
+  "95/12807.txt": 1
+ },
+ "beir_cqadupstack_programmers_125715": {
+  "ce/566.txt": 1
+ },
+ "beir_cqadupstack_programmers_126130": {
+  "29/96192.txt": 1
+ },
+ "beir_cqadupstack_programmers_126965": {
+  "d4/83716.txt": 1
+ },
+ "beir_cqadupstack_programmers_127201": {
+  "1d/127158.txt": 1
+ },
+ "beir_cqadupstack_programmers_127535": {
+  "23/25969.txt": 1,
+  "c9/193509.txt": 1,
+  "e7/23535.txt": 1
+ },
+ "beir_cqadupstack_programmers_12773": {
+  "9d/124109.txt": 1
+ },
+ "beir_cqadupstack_programmers_127867": {
+  "47/96322.txt": 1,
+  "c0/130070.txt": 1
+ },
+ "beir_cqadupstack_programmers_128044": {
+  "11/10340.txt": 1
+ },
+ "beir_cqadupstack_programmers_128548": {
+  "74/100656.txt": 1,
+  "90/61678.txt": 1,
+  "97/370.txt": 1
+ },
+ "beir_cqadupstack_programmers_129141": {
+  "0e/28098.txt": 1
+ },
+ "beir_cqadupstack_programmers_129520": {
+  "be/141485.txt": 1
+ },
+ "beir_cqadupstack_programmers_129543": {
+  "f9/238362.txt": 1
+ },
+ "beir_cqadupstack_programmers_129603": {
+  "11/224528.txt": 1,
+  "1f/72806.txt": 1,
+  "20/237245.txt": 1,
+  "2a/195107.txt": 1,
+  "3e/7559.txt": 1,
+  "4a/136639.txt": 1,
+  "4e/216347.txt": 1,
+  "4f/1224.txt": 1,
+  "6f/196648.txt": 1,
+  "70/101528.txt": 1,
+  "8d/251620.txt": 1,
+  "aa/49202.txt": 1,
+  "c0/39855.txt": 1,
+  "c4/186217.txt": 1,
+  "c8/18379.txt": 1,
+  "f3/195045.txt": 1,
+  "f4/128202.txt": 1,
+  "fc/113593.txt": 1,
+  "fd/193723.txt": 1,
+  "fd/213763.txt": 1
+ },
+ "beir_cqadupstack_programmers_130256": {
+  "22/27454.txt": 1,
+  "75/132173.txt": 1,
+  "c3/141654.txt": 1
+ },
+ "beir_cqadupstack_programmers_130335": {
+  "ac/130173.txt": 1
+ },
+ "beir_cqadupstack_programmers_130582": {
+  "17/60926.txt": 1,
+  "e2/95823.txt": 1
+ },
+ "beir_cqadupstack_programmers_130743": {
+  "11/150606.txt": 1
+ },
+ "beir_cqadupstack_programmers_130948": {
+  "ee/251533.txt": 1
+ },
+ "beir_cqadupstack_programmers_131314": {
+  "13/83079.txt": 1,
+  "37/125222.txt": 1,
+  "3f/107828.txt": 1,
+  "4a/36920.txt": 1,
+  "4e/99922.txt": 1,
+  "58/204999.txt": 1,
+  "5e/179004.txt": 1,
+  "68/126830.txt": 1,
+  "83/56742.txt": 1,
+  "8d/39032.txt": 1,
+  "98/44.txt": 1,
+  "a4/178552.txt": 1,
+  "b0/35521.txt": 1,
+  "dd/184051.txt": 1,
+  "fd/73148.txt": 1
+ },
+ "beir_cqadupstack_programmers_131381": {
+  "09/7157.txt": 1
+ },
+ "beir_cqadupstack_programmers_131408": {
+  "20/52534.txt": 1,
+  "b5/199116.txt": 1
+ },
+ "beir_cqadupstack_programmers_131451": {
+  "b3/131324.txt": 1
+ },
+ "beir_cqadupstack_programmers_131701": {
+  "69/221662.txt": 1
+ },
+ "beir_cqadupstack_programmers_1319": {
+  "16/85573.txt": 1
+ },
+ "beir_cqadupstack_programmers_132074": {
+  "aa/34356.txt": 1
+ },
+ "beir_cqadupstack_programmers_132281": {
+  "7c/213391.txt": 1,
+  "c3/53624.txt": 1
+ },
+ "beir_cqadupstack_programmers_132520": {
+  "c8/84866.txt": 1
+ },
+ "beir_cqadupstack_programmers_132578": {
+  "7e/74020.txt": 1
+ },
+ "beir_cqadupstack_programmers_133096": {
+  "62/134564.txt": 1
+ },
+ "beir_cqadupstack_programmers_133330": {
+  "aa/68058.txt": 1
+ },
+ "beir_cqadupstack_programmers_133424": {
+  "54/24681.txt": 1
+ },
+ "beir_cqadupstack_programmers_133565": {
+  "54/221000.txt": 1
+ },
+ "beir_cqadupstack_programmers_133664": {
+  "89/135873.txt": 1
+ },
+ "beir_cqadupstack_programmers_133782": {
+  "b4/10791.txt": 1
+ },
+ "beir_cqadupstack_programmers_133872": {
+  "20/35501.txt": 1
+ },
+ "beir_cqadupstack_programmers_133937": {
+  "d7/27335.txt": 1
+ },
+ "beir_cqadupstack_programmers_134037": {
+  "ac/97824.txt": 1
+ },
+ "beir_cqadupstack_programmers_134244": {
+  "8b/155943.txt": 1
+ },
+ "beir_cqadupstack_programmers_135047": {
+  "69/170740.txt": 1
+ },
+ "beir_cqadupstack_programmers_135701": {
+  "19/135697.txt": 1
+ },
+ "beir_cqadupstack_programmers_135970": {
+  "35/70919.txt": 1
+ },
+ "beir_cqadupstack_programmers_135993": {
+  "2c/50819.txt": 1,
+  "69/95310.txt": 1,
+  "a6/167080.txt": 1
+ },
+ "beir_cqadupstack_programmers_136195": {
+  "3d/76376.txt": 1
+ },
+ "beir_cqadupstack_programmers_136382": {
+  "de/88784.txt": 1
+ },
+ "beir_cqadupstack_programmers_136449": {
+  "4f/116678.txt": 1
+ },
+ "beir_cqadupstack_programmers_136629": {
+  "57/139893.txt": 1,
+  "66/182267.txt": 1
+ },
+ "beir_cqadupstack_programmers_136634": {
+  "11/137088.txt": 1,
+  "45/213267.txt": 1,
+  "6e/136987.txt": 1,
+  "85/205248.txt": 1,
+  "8a/200960.txt": 1,
+  "ba/55481.txt": 1,
+  "c8/136994.txt": 1,
+  "ea/89158.txt": 1,
+  "ef/139821.txt": 1
+ },
+ "beir_cqadupstack_programmers_13676": {
+  "ae/53302.txt": 1
+ },
+ "beir_cqadupstack_programmers_136774": {
+  "70/136762.txt": 1,
+  "b1/239036.txt": 1
+ },
+ "beir_cqadupstack_programmers_136908": {
+  "20/226178.txt": 1
+ },
+ "beir_cqadupstack_programmers_136993": {
+  "bf/157236.txt": 1
+ },
+ "beir_cqadupstack_programmers_137344": {
+  "7d/232219.txt": 1
+ },
+ "beir_cqadupstack_programmers_137439": {
+  "0a/64544.txt": 1
+ },
+ "beir_cqadupstack_programmers_13786": {
+  "b8/65080.txt": 1,
+  "cc/195012.txt": 1
+ },
+ "beir_cqadupstack_programmers_137973": {
+  "58/19244.txt": 1
+ },
+ "beir_cqadupstack_programmers_138026": {
+  "fc/28314.txt": 1
+ },
+ "beir_cqadupstack_programmers_138182": {
+  "bd/237853.txt": 1
+ },
+ "beir_cqadupstack_programmers_138396": {
+  "26/78028.txt": 1,
+  "61/198592.txt": 1
+ },
+ "beir_cqadupstack_programmers_138447": {
+  "8e/134028.txt": 1
+ },
+ "beir_cqadupstack_programmers_138642": {
+  "70/103233.txt": 1
+ },
+ "beir_cqadupstack_programmers_138643": {
+  "0a/190414.txt": 1,
+  "c6/74832.txt": 1
+ },
+ "beir_cqadupstack_programmers_138726": {
+  "36/138860.txt": 1
+ },
+ "beir_cqadupstack_programmers_138908": {
+  "bb/140364.txt": 1
+ },
+ "beir_cqadupstack_programmers_139037": {
+  "f8/251743.txt": 1
+ },
+ "beir_cqadupstack_programmers_139171": {
+  "23/166039.txt": 1,
+  "50/141522.txt": 1
+ },
+ "beir_cqadupstack_programmers_139418": {
+  "14/133015.txt": 1
+ },
+ "beir_cqadupstack_programmers_139442": {
+  "2d/6790.txt": 1
+ },
+ "beir_cqadupstack_programmers_139663": {
+  "9e/208805.txt": 1
+ },
+ "beir_cqadupstack_programmers_140004": {
+  "a1/198714.txt": 1
+ },
+ "beir_cqadupstack_programmers_140264": {
+  "e3/233474.txt": 1
+ },
+ "beir_cqadupstack_programmers_140266": {
+  "4b/48698.txt": 1
+ },
+ "beir_cqadupstack_programmers_140561": {
+  "e5/38382.txt": 1
+ },
+ "beir_cqadupstack_programmers_140876": {
+  "17/70822.txt": 1,
+  "30/88707.txt": 1,
+  "50/194979.txt": 1
+ },
+ "beir_cqadupstack_programmers_141232": {
+  "9d/182077.txt": 1
+ },
+ "beir_cqadupstack_programmers_141411": {
+  "f9/159870.txt": 1
+ },
+ "beir_cqadupstack_programmers_141961": {
+  "c8/54397.txt": 1
+ },
+ "beir_cqadupstack_programmers_141973": {
+  "f8/152486.txt": 1
+ },
+ "beir_cqadupstack_programmers_142292": {
+  "9c/12087.txt": 1
+ },
+ "beir_cqadupstack_programmers_142612": {
+  "ee/194111.txt": 1
+ },
+ "beir_cqadupstack_programmers_142974": {
+  "d5/142970.txt": 1
+ },
+ "beir_cqadupstack_programmers_143127": {
+  "c7/133134.txt": 1
+ },
+ "beir_cqadupstack_programmers_143722": {
+  "4d/145989.txt": 1
+ },
+ "beir_cqadupstack_programmers_144058": {
+  "b1/139482.txt": 1
+ },
+ "beir_cqadupstack_programmers_144556": {
+  "37/77610.txt": 1,
+  "ab/64592.txt": 1
+ },
+ "beir_cqadupstack_programmers_144717": {
+  "4b/231062.txt": 1
+ },
+ "beir_cqadupstack_programmers_144829": {
+  "92/120315.txt": 1
+ },
+ "beir_cqadupstack_programmers_144892": {
+  "ab/67632.txt": 1
+ },
+ "beir_cqadupstack_programmers_145055": {
+  "57/152999.txt": 1
+ },
+ "beir_cqadupstack_programmers_145437": {
+  "06/41740.txt": 1,
+  "27/245907.txt": 1,
+  "2b/131332.txt": 1,
+  "34/180001.txt": 1,
+  "36/113313.txt": 1,
+  "42/109602.txt": 1,
+  "6f/207207.txt": 1,
+  "bc/129075.txt": 1,
+  "cc/229691.txt": 1,
+  "ed/239189.txt": 1,
+  "ee/108240.txt": 1,
+  "fd/163459.txt": 1
+ },
+ "beir_cqadupstack_programmers_145518": {
+  "9c/8968.txt": 1
+ },
+ "beir_cqadupstack_programmers_145722": {
+  "9d/36367.txt": 1
+ },
+ "beir_cqadupstack_programmers_14582": {
+  "b3/21336.txt": 1
+ },
+ "beir_cqadupstack_programmers_146065": {
+  "d3/229897.txt": 1,
+  "f4/10424.txt": 1
+ },
+ "beir_cqadupstack_programmers_146272": {
+  "ca/27798.txt": 1
+ },
+ "beir_cqadupstack_programmers_14645": {
+  "7c/131370.txt": 1
+ },
+ "beir_cqadupstack_programmers_146810": {
+  "7e/212111.txt": 1
+ },
+ "beir_cqadupstack_programmers_147134": {
+  "51/152407.txt": 1,
+  "7a/161389.txt": 1
+ },
+ "beir_cqadupstack_programmers_147185": {
+  "95/195015.txt": 1,
+  "c6/124526.txt": 1,
+  "f3/28651.txt": 1
+ },
+ "beir_cqadupstack_programmers_147240": {
+  "51/113763.txt": 1,
+  "bb/117276.txt": 1,
+  "e4/76151.txt": 1
+ },
+ "beir_cqadupstack_programmers_147273": {
+  "ba/234657.txt": 1
+ },
+ "beir_cqadupstack_programmers_147977": {
+  "36/208224.txt": 1
+ },
+ "beir_cqadupstack_programmers_14831": {
+  "f0/48895.txt": 1
+ },
+ "beir_cqadupstack_programmers_148747": {
+  "45/38642.txt": 1
+ },
+ "beir_cqadupstack_programmers_14975": {
+  "f6/187556.txt": 1
+ },
+ "beir_cqadupstack_programmers_15004": {
+  "49/130412.txt": 1,
+  "e4/3139.txt": 1
+ },
+ "beir_cqadupstack_programmers_150479": {
+  "56/9885.txt": 1
+ },
+ "beir_cqadupstack_programmers_150633": {
+  "cb/114331.txt": 1,
+  "cd/246777.txt": 1
+ },
+ "beir_cqadupstack_programmers_150888": {
+  "65/245621.txt": 1,
+  "cf/179003.txt": 1
+ },
+ "beir_cqadupstack_programmers_151103": {
+  "35/157096.txt": 1
+ },
+ "beir_cqadupstack_programmers_152094": {
+  "32/228287.txt": 1
+ },
+ "beir_cqadupstack_programmers_15239": {
+  "ed/52608.txt": 1
+ },
+ "beir_cqadupstack_programmers_152678": {
+  "01/101893.txt": 1
+ },
+ "beir_cqadupstack_programmers_15286": {
+  "90/160173.txt": 1
+ },
+ "beir_cqadupstack_programmers_153581": {
+  "d0/23891.txt": 1
+ },
+ "beir_cqadupstack_programmers_153631": {
+  "6c/105786.txt": 1
+ },
+ "beir_cqadupstack_programmers_154155": {
+  "f7/201156.txt": 1
+ },
+ "beir_cqadupstack_programmers_154339": {
+  "36/141818.txt": 1,
+  "55/50658.txt": 1,
+  "7f/222389.txt": 1,
+  "f3/220.txt": 1,
+  "f7/105917.txt": 1
+ },
+ "beir_cqadupstack_programmers_154593": {
+  "a0/48634.txt": 1
+ },
+ "beir_cqadupstack_programmers_154679": {
+  "b0/211448.txt": 1
+ },
+ "beir_cqadupstack_programmers_154954": {
+  "97/220219.txt": 1
+ },
+ "beir_cqadupstack_programmers_155469": {
+  "01/96246.txt": 1,
+  "15/46637.txt": 1,
+  "99/132214.txt": 1
+ },
+ "beir_cqadupstack_programmers_155659": {
+  "28/187787.txt": 1,
+  "72/141144.txt": 1,
+  "7f/51115.txt": 1,
+  "e8/106647.txt": 1
+ },
+ "beir_cqadupstack_programmers_156771": {
+  "ee/204335.txt": 1
+ },
+ "beir_cqadupstack_programmers_156794": {
+  "1f/156795.txt": 1
+ },
+ "beir_cqadupstack_programmers_156848": {
+  "9b/156592.txt": 1
+ },
+ "beir_cqadupstack_programmers_15829": {
+  "28/230462.txt": 1
+ },
+ "beir_cqadupstack_programmers_158359": {
+  "60/139497.txt": 1,
+  "ed/166171.txt": 1
+ },
+ "beir_cqadupstack_programmers_158397": {
+  "47/194873.txt": 1
+ },
+ "beir_cqadupstack_programmers_158534": {
+  "64/210393.txt": 1,
+  "7c/170808.txt": 1,
+  "82/103779.txt": 1,
+  "cb/194446.txt": 1
+ },
+ "beir_cqadupstack_programmers_158591": {
+  "e0/235623.txt": 1
+ },
+ "beir_cqadupstack_programmers_159089": {
+  "02/159096.txt": 1
+ },
+ "beir_cqadupstack_programmers_159373": {
+  "e6/255891.txt": 1
+ },
+ "beir_cqadupstack_programmers_159626": {
+  "77/164991.txt": 1
+ },
+ "beir_cqadupstack_programmers_159666": {
+  "9c/240294.txt": 1,
+  "a1/159637.txt": 1
+ },
+ "beir_cqadupstack_programmers_16010": {
+  "c7/231208.txt": 1
+ },
+ "beir_cqadupstack_programmers_160628": {
+  "e7/240965.txt": 1
+ },
+ "beir_cqadupstack_programmers_161303": {
+  "43/190181.txt": 1,
+  "53/21802.txt": 1,
+  "6c/38423.txt": 1,
+  "94/120497.txt": 1,
+  "a5/158631.txt": 1,
+  "a5/202879.txt": 1,
+  "b6/187886.txt": 1,
+  "d8/120828.txt": 1
+ },
+ "beir_cqadupstack_programmers_161711": {
+  "f0/74222.txt": 1
+ },
+ "beir_cqadupstack_programmers_161809": {
+  "9a/237845.txt": 1,
+  "ce/156883.txt": 1
+ },
+ "beir_cqadupstack_programmers_162583": {
+  "d2/204488.txt": 1
+ },
+ "beir_cqadupstack_programmers_162931": {
+  "19/145446.txt": 1
+ },
+ "beir_cqadupstack_programmers_163408": {
+  "84/154022.txt": 1
+ },
+ "beir_cqadupstack_programmers_163752": {
+  "0b/104009.txt": 1,
+  "23/13279.txt": 1,
+  "27/1386.txt": 1,
+  "86/1985.txt": 1,
+  "9c/84120.txt": 1
+ },
+ "beir_cqadupstack_programmers_163822": {
+  "14/27686.txt": 1
+ },
+ "beir_cqadupstack_programmers_163924": {
+  "7a/149491.txt": 1
+ },
+ "beir_cqadupstack_programmers_163933": {
+  "52/200739.txt": 1,
+  "a2/166165.txt": 1
+ },
+ "beir_cqadupstack_programmers_164599": {
+  "29/175824.txt": 1
+ },
+ "beir_cqadupstack_programmers_164665": {
+  "88/166640.txt": 1,
+  "bc/215013.txt": 1
+ },
+ "beir_cqadupstack_programmers_164799": {
+  "7d/42181.txt": 1,
+  "8e/210503.txt": 1
+ },
+ "beir_cqadupstack_programmers_16528": {
+  "e0/177979.txt": 1
+ },
+ "beir_cqadupstack_programmers_165668": {
+  "0b/77637.txt": 1,
+  "33/166215.txt": 1,
+  "6a/23019.txt": 1,
+  "79/3199.txt": 1,
+  "ad/77206.txt": 1
+ },
+ "beir_cqadupstack_programmers_165725": {
+  "26/199345.txt": 1
+ },
+ "beir_cqadupstack_programmers_165735": {
+  "ff/194792.txt": 1
+ },
+ "beir_cqadupstack_programmers_166136": {
+  "cd/193565.txt": 1
+ },
+ "beir_cqadupstack_programmers_166314": {
+  "b7/214018.txt": 1
+ },
+ "beir_cqadupstack_programmers_166798": {
+  "b0/166374.txt": 1
+ },
+ "beir_cqadupstack_programmers_166884": {
+  "02/205803.txt": 1,
+  "05/198337.txt": 1,
+  "15/206366.txt": 1,
+  "22/211363.txt": 1,
+  "2b/201804.txt": 1,
+  "37/213284.txt": 1,
+  "43/255817.txt": 1,
+  "45/201636.txt": 1,
+  "53/214327.txt": 1,
+  "5f/252568.txt": 1,
+  "69/187478.txt": 1,
+  "77/254235.txt": 1,
+  "78/210372.txt": 1,
+  "7f/209822.txt": 1,
+  "85/220888.txt": 1,
+  "8e/148849.txt": 1,
+  "9f/47789.txt": 1,
+  "b5/205425.txt": 1,
+  "bf/137941.txt": 1,
+  "c8/191208.txt": 1,
+  "ca/198565.txt": 1,
+  "cd/107669.txt": 1,
+  "d7/218429.txt": 1,
+  "eb/195989.txt": 1,
+  "ec/243331.txt": 1,
+  "f2/94429.txt": 1
+ },
+ "beir_cqadupstack_programmers_166895": {
+  "11/220479.txt": 1
+ },
+ "beir_cqadupstack_programmers_16708": {
+  "51/29852.txt": 1,
+  "b8/239180.txt": 1,
+  "ea/66393.txt": 1
+ },
+ "beir_cqadupstack_programmers_167277": {
+  "84/201971.txt": 1,
+  "8c/105313.txt": 1,
+  "e1/141554.txt": 1
+ },
+ "beir_cqadupstack_programmers_16732": {
+  "3e/250078.txt": 1
+ },
+ "beir_cqadupstack_programmers_167890": {
+  "b3/133506.txt": 1
+ },
+ "beir_cqadupstack_programmers_168685": {
+  "80/255866.txt": 1
+ },
+ "beir_cqadupstack_programmers_169962": {
+  "52/180371.txt": 1
+ },
+ "beir_cqadupstack_programmers_170138": {
+  "0a/132612.txt": 1,
+  "29/254398.txt": 1,
+  "66/229549.txt": 1,
+  "6d/107723.txt": 1,
+  "7a/189222.txt": 1,
+  "8c/237843.txt": 1,
+  "8e/224350.txt": 1,
+  "ad/231300.txt": 1,
+  "e5/145941.txt": 1,
+  "ed/177831.txt": 1,
+  "f6/82682.txt": 1
+ },
+ "beir_cqadupstack_programmers_170966": {
+  "1a/249701.txt": 1,
+  "25/176876.txt": 1,
+  "a4/57491.txt": 1,
+  "bc/143736.txt": 1
+ },
+ "beir_cqadupstack_programmers_171701": {
+  "e8/194354.txt": 1
+ },
+ "beir_cqadupstack_programmers_173320": {
+  "1b/213411.txt": 1,
+  "73/80045.txt": 1
+ },
+ "beir_cqadupstack_programmers_17341": {
+  "7e/246584.txt": 1
+ },
+ "beir_cqadupstack_programmers_174762": {
+  "27/225705.txt": 1
+ },
+ "beir_cqadupstack_programmers_175014": {
+  "75/170981.txt": 1
+ },
+ "beir_cqadupstack_programmers_175309": {
+  "b1/228043.txt": 1
+ },
+ "beir_cqadupstack_programmers_175561": {
+  "f8/171066.txt": 1
+ },
+ "beir_cqadupstack_programmers_175583": {
+  "51/12439.txt": 1,
+  "5e/234881.txt": 1,
+  "af/65179.txt": 1,
+  "b1/187876.txt": 1
+ },
+ "beir_cqadupstack_programmers_175594": {
+  "8f/66858.txt": 1
+ },
+ "beir_cqadupstack_programmers_17568": {
+  "5d/220129.txt": 1
+ },
+ "beir_cqadupstack_programmers_176102": {
+  "81/151229.txt": 1
+ },
+ "beir_cqadupstack_programmers_176471": {
+  "87/158848.txt": 1
+ },
+ "beir_cqadupstack_programmers_17696": {
+  "2b/133186.txt": 1,
+  "36/49741.txt": 1
+ },
+ "beir_cqadupstack_programmers_177907": {
+  "3e/9351.txt": 1
+ },
+ "beir_cqadupstack_programmers_178018": {
+  "fa/180552.txt": 1
+ },
+ "beir_cqadupstack_programmers_17826": {
+  "73/116369.txt": 1
+ },
+ "beir_cqadupstack_programmers_178916": {
+  "e8/105191.txt": 1
+ },
+ "beir_cqadupstack_programmers_17898": {
+  "5c/209408.txt": 1
+ },
+ "beir_cqadupstack_programmers_179002": {
+  "13/66035.txt": 1
+ },
+ "beir_cqadupstack_programmers_179162": {
+  "5d/234851.txt": 1,
+  "98/236362.txt": 1
+ },
+ "beir_cqadupstack_programmers_179554": {
+  "55/199657.txt": 1
+ },
+ "beir_cqadupstack_programmers_179618": {
+  "46/202639.txt": 1,
+  "ec/49550.txt": 1
+ },
+ "beir_cqadupstack_programmers_179763": {
+  "be/190978.txt": 1
+ },
+ "beir_cqadupstack_programmers_180012": {
+  "bb/86461.txt": 1
+ },
+ "beir_cqadupstack_programmers_180165": {
+  "dc/206878.txt": 1
+ },
+ "beir_cqadupstack_programmers_18059": {
+  "13/201396.txt": 1,
+  "30/182105.txt": 1,
+  "e9/157928.txt": 1
+ },
+ "beir_cqadupstack_programmers_180904": {
+  "81/233484.txt": 1
+ },
+ "beir_cqadupstack_programmers_181527": {
+  "c7/195140.txt": 1
+ },
+ "beir_cqadupstack_programmers_181780": {
+  "83/207423.txt": 1,
+  "df/183836.txt": 1,
+  "e2/151541.txt": 1
+ },
+ "beir_cqadupstack_programmers_182009": {
+  "86/256181.txt": 1
+ },
+ "beir_cqadupstack_programmers_182207": {
+  "9e/162853.txt": 1
+ },
+ "beir_cqadupstack_programmers_182229": {
+  "b7/77897.txt": 1
+ },
+ "beir_cqadupstack_programmers_18371": {
+  "1f/98688.txt": 1,
+  "32/54375.txt": 1,
+  "5c/186372.txt": 1,
+  "79/1947.txt": 1,
+  "aa/74650.txt": 1,
+  "d7/80065.txt": 1,
+  "db/196865.txt": 1,
+  "e5/109418.txt": 1,
+  "f4/93384.txt": 1
+ },
+ "beir_cqadupstack_programmers_18444": {
+  "65/216296.txt": 1,
+  "7e/13439.txt": 1
+ },
+ "beir_cqadupstack_programmers_184874": {
+  "67/194746.txt": 1
+ },
+ "beir_cqadupstack_programmers_185671": {
+  "32/18454.txt": 1,
+  "3d/77530.txt": 1,
+  "4a/118703.txt": 1,
+  "81/198587.txt": 1,
+  "81/233410.txt": 1,
+  "89/104551.txt": 1,
+  "c2/201320.txt": 1,
+  "e1/250653.txt": 1
+ },
+ "beir_cqadupstack_programmers_185712": {
+  "ea/121326.txt": 1
+ },
+ "beir_cqadupstack_programmers_186377": {
+  "30/170246.txt": 1,
+  "50/205162.txt": 1,
+  "8e/118740.txt": 1,
+  "e8/10736.txt": 1
+ },
+ "beir_cqadupstack_programmers_186438": {
+  "13/184654.txt": 1,
+  "18/220252.txt": 1,
+  "9f/237492.txt": 1
+ },
+ "beir_cqadupstack_programmers_186465": {
+  "76/215253.txt": 1
+ },
+ "beir_cqadupstack_programmers_186690": {
+  "0c/238270.txt": 1
+ },
+ "beir_cqadupstack_programmers_18679": {
+  "50/104945.txt": 1
+ },
+ "beir_cqadupstack_programmers_186932": {
+  "69/1376.txt": 1
+ },
+ "beir_cqadupstack_programmers_187026": {
+  "47/11726.txt": 1
+ },
+ "beir_cqadupstack_programmers_188381": {
+  "92/119168.txt": 1
+ },
+ "beir_cqadupstack_programmers_189096": {
+  "0d/195373.txt": 1,
+  "3a/246648.txt": 1,
+  "3f/251592.txt": 1,
+  "83/33851.txt": 1,
+  "9b/16365.txt": 1,
+  "a8/26349.txt": 1,
+  "be/97758.txt": 1,
+  "d2/140125.txt": 1
+ },
+ "beir_cqadupstack_programmers_189426": {
+  "10/182171.txt": 1,
+  "28/138951.txt": 1,
+  "36/100214.txt": 1,
+  "41/196882.txt": 1,
+  "5d/15515.txt": 1,
+  "b2/235702.txt": 1,
+  "c9/238896.txt": 1
+ },
+ "beir_cqadupstack_programmers_189824": {
+  "e5/21148.txt": 1
+ },
+ "beir_cqadupstack_programmers_189983": {
+  "9e/167752.txt": 1
+ },
+ "beir_cqadupstack_programmers_190542": {
+  "84/76528.txt": 1
+ },
+ "beir_cqadupstack_programmers_190649": {
+  "60/253678.txt": 1
+ },
+ "beir_cqadupstack_programmers_190758": {
+  "65/10581.txt": 1
+ },
+ "beir_cqadupstack_programmers_190853": {
+  "53/58237.txt": 1,
+  "fc/250706.txt": 1
+ },
+ "beir_cqadupstack_programmers_190955": {
+  "95/250540.txt": 1
+ },
+ "beir_cqadupstack_programmers_191191": {
+  "32/191867.txt": 1
+ },
+ "beir_cqadupstack_programmers_191358": {
+  "0f/235206.txt": 1,
+  "cb/197996.txt": 1
+ },
+ "beir_cqadupstack_programmers_191539": {
+  "6b/121328.txt": 1,
+  "bd/210331.txt": 1
+ },
+ "beir_cqadupstack_programmers_191759": {
+  "07/154796.txt": 1,
+  "26/150432.txt": 1,
+  "a4/102507.txt": 1,
+  "b9/100637.txt": 1,
+  "c1/188208.txt": 1,
+  "dd/173624.txt": 1
+ },
+ "beir_cqadupstack_programmers_191961": {
+  "10/71148.txt": 1
+ },
+ "beir_cqadupstack_programmers_192": {
+  "91/236051.txt": 1
+ },
+ "beir_cqadupstack_programmers_192037": {
+  "9d/114782.txt": 1
+ },
+ "beir_cqadupstack_programmers_193269": {
+  "1a/177539.txt": 1
+ },
+ "beir_cqadupstack_programmers_193415": {
+  "33/204871.txt": 1,
+  "45/224769.txt": 1,
+  "cb/236489.txt": 1,
+  "d2/196811.txt": 1,
+  "f9/198852.txt": 1
+ },
+ "beir_cqadupstack_programmers_193496": {
+  "cc/112458.txt": 1
+ },
+ "beir_cqadupstack_programmers_193586": {
+  "af/88145.txt": 1
+ },
+ "beir_cqadupstack_programmers_193895": {
+  "e8/241223.txt": 1
+ },
+ "beir_cqadupstack_programmers_193929": {
+  "3f/238749.txt": 1,
+  "b5/194765.txt": 1
+ },
+ "beir_cqadupstack_programmers_193996": {
+  "25/207004.txt": 1,
+  "64/5597.txt": 1,
+  "81/65085.txt": 1
+ },
+ "beir_cqadupstack_programmers_194106": {
+  "a9/138561.txt": 1
+ },
+ "beir_cqadupstack_programmers_194321": {
+  "6a/170003.txt": 1
+ },
+ "beir_cqadupstack_programmers_194373": {
+  "6c/3519.txt": 1,
+  "d5/78175.txt": 1,
+  "fe/119155.txt": 1
+ },
+ "beir_cqadupstack_programmers_194395": {
+  "6e/193778.txt": 1,
+  "d8/39798.txt": 1
+ },
+ "beir_cqadupstack_programmers_194646": {
+  "56/215260.txt": 1
+ },
+ "beir_cqadupstack_programmers_194679": {
+  "8c/153507.txt": 1
+ },
+ "beir_cqadupstack_programmers_194958": {
+  "19/163203.txt": 1
+ },
+ "beir_cqadupstack_programmers_194975": {
+  "31/75905.txt": 1
+ },
+ "beir_cqadupstack_programmers_195073": {
+  "d9/149868.txt": 1
+ },
+ "beir_cqadupstack_programmers_195094": {
+  "cb/19007.txt": 1
+ },
+ "beir_cqadupstack_programmers_195337": {
+  "3a/223471.txt": 1,
+  "6c/207196.txt": 1,
+  "8b/141834.txt": 1,
+  "8e/228095.txt": 1
+ },
+ "beir_cqadupstack_programmers_195416": {
+  "bf/171024.txt": 1
+ },
+ "beir_cqadupstack_programmers_19558": {
+  "16/69215.txt": 1,
+  "18/128911.txt": 1,
+  "32/106284.txt": 1,
+  "9f/39499.txt": 1,
+  "b8/199085.txt": 1,
+  "d6/115282.txt": 1,
+  "e3/23604.txt": 1
+ },
+ "beir_cqadupstack_programmers_195656": {
+  "cb/127215.txt": 1
+ },
+ "beir_cqadupstack_programmers_195719": {
+  "51/195718.txt": 1
+ },
+ "beir_cqadupstack_programmers_196139": {
+  "14/200936.txt": 1
+ },
+ "beir_cqadupstack_programmers_196260": {
+  "0d/180824.txt": 1
+ },
+ "beir_cqadupstack_programmers_196356": {
+  "4e/103318.txt": 1,
+  "c7/139377.txt": 1
+ },
+ "beir_cqadupstack_programmers_196366": {
+  "49/128023.txt": 1,
+  "82/60231.txt": 1,
+  "c2/72611.txt": 1,
+  "c6/7927.txt": 1
+ },
+ "beir_cqadupstack_programmers_196546": {
+  "f6/124146.txt": 1
+ },
+ "beir_cqadupstack_programmers_196615": {
+  "0e/154510.txt": 1
+ },
+ "beir_cqadupstack_programmers_196700": {
+  "62/119477.txt": 1,
+  "d9/75072.txt": 1
+ },
+ "beir_cqadupstack_programmers_196876": {
+  "22/45202.txt": 1,
+  "ab/191998.txt": 1,
+  "b8/41990.txt": 1
+ },
+ "beir_cqadupstack_programmers_196913": {
+  "b0/159964.txt": 1
+ },
+ "beir_cqadupstack_programmers_196930": {
+  "a5/194353.txt": 1
+ },
+ "beir_cqadupstack_programmers_196990": {
+  "9a/206256.txt": 1
+ },
+ "beir_cqadupstack_programmers_197056": {
+  "5c/159813.txt": 1,
+  "9c/150045.txt": 1,
+  "d2/170009.txt": 1
+ },
+ "beir_cqadupstack_programmers_197251": {
+  "1b/45259.txt": 1,
+  "32/119094.txt": 1,
+  "74/99445.txt": 1,
+  "76/79938.txt": 1,
+  "8d/33020.txt": 1
+ },
+ "beir_cqadupstack_programmers_197443": {
+  "d7/114846.txt": 1
+ },
+ "beir_cqadupstack_programmers_19750": {
+  "05/234889.txt": 1
+ },
+ "beir_cqadupstack_programmers_197746": {
+  "ba/229095.txt": 1
+ },
+ "beir_cqadupstack_programmers_197838": {
+  "48/114560.txt": 1,
+  "91/57.txt": 1
+ },
+ "beir_cqadupstack_programmers_198240": {
+  "fd/101273.txt": 1
+ },
+ "beir_cqadupstack_programmers_19842": {
+  "a9/22073.txt": 1
+ },
+ "beir_cqadupstack_programmers_198549": {
+  "b4/198539.txt": 1
+ },
+ "beir_cqadupstack_programmers_198936": {
+  "2b/134241.txt": 1
+ },
+ "beir_cqadupstack_programmers_198995": {
+  "02/137696.txt": 1,
+  "22/117103.txt": 1,
+  "2f/119253.txt": 1,
+  "31/179060.txt": 1,
+  "38/43528.txt": 1,
+  "69/151317.txt": 1,
+  "76/216197.txt": 1,
+  "83/9598.txt": 1,
+  "87/200730.txt": 1,
+  "91/119415.txt": 1,
+  "91/212499.txt": 1,
+  "c1/129918.txt": 1,
+  "c9/8721.txt": 1,
+  "cc/124536.txt": 1,
+  "e2/113947.txt": 1,
+  "ed/15742.txt": 1
+ },
+ "beir_cqadupstack_programmers_199162": {
+  "46/185925.txt": 1
+ },
+ "beir_cqadupstack_programmers_199303": {
+  "82/154283.txt": 1
+ },
+ "beir_cqadupstack_programmers_199698": {
+  "12/132343.txt": 1
+ },
+ "beir_cqadupstack_programmers_199803": {
+  "c8/213826.txt": 1
+ },
+ "beir_cqadupstack_programmers_199827": {
+  "32/117692.txt": 1
+ },
+ "beir_cqadupstack_programmers_199838": {
+  "f3/229311.txt": 1
+ },
+ "beir_cqadupstack_programmers_199873": {
+  "d5/4107.txt": 1
+ },
+ "beir_cqadupstack_programmers_200031": {
+  "2e/205716.txt": 1
+ },
+ "beir_cqadupstack_programmers_200064": {
+  "ef/147689.txt": 1
+ },
+ "beir_cqadupstack_programmers_20023": {
+  "7a/14673.txt": 1,
+  "83/255531.txt": 1
+ },
+ "beir_cqadupstack_programmers_200360": {
+  "73/240565.txt": 1
+ },
+ "beir_cqadupstack_programmers_200362": {
+  "5a/108085.txt": 1,
+  "89/161384.txt": 1,
+  "91/128691.txt": 1,
+  "98/113306.txt": 1,
+  "a3/101785.txt": 1
+ },
+ "beir_cqadupstack_programmers_200497": {
+  "d3/195571.txt": 1
+ },
+ "beir_cqadupstack_programmers_200545": {
+  "f6/97985.txt": 1
+ },
+ "beir_cqadupstack_programmers_200709": {
+  "a2/253995.txt": 1
+ },
+ "beir_cqadupstack_programmers_200861": {
+  "04/82432.txt": 1
+ },
+ "beir_cqadupstack_programmers_20092": {
+  "1d/242742.txt": 1
+ },
+ "beir_cqadupstack_programmers_201041": {
+  "fc/228516.txt": 1
+ },
+ "beir_cqadupstack_programmers_201119": {
+  "0a/201108.txt": 1
+ },
+ "beir_cqadupstack_programmers_201130": {
+  "dc/206610.txt": 1
+ },
+ "beir_cqadupstack_programmers_201237": {
+  "bb/66614.txt": 1
+ },
+ "beir_cqadupstack_programmers_201844": {
+  "a7/84822.txt": 1
+ },
+ "beir_cqadupstack_programmers_201894": {
+  "71/137165.txt": 1
+ },
+ "beir_cqadupstack_programmers_202273": {
+  "1d/111932.txt": 1,
+  "f6/99389.txt": 1
+ },
+ "beir_cqadupstack_programmers_202770": {
+  "92/105352.txt": 1
+ },
+ "beir_cqadupstack_programmers_202804": {
+  "39/155565.txt": 1
+ },
+ "beir_cqadupstack_programmers_202889": {
+  "0a/9.txt": 1,
+  "53/38055.txt": 1
+ },
+ "beir_cqadupstack_programmers_202903": {
+  "4a/14968.txt": 1
+ },
+ "beir_cqadupstack_programmers_203362": {
+  "1a/255390.txt": 1
+ },
+ "beir_cqadupstack_programmers_203469": {
+  "0c/6662.txt": 1,
+  "a0/214528.txt": 1
+ },
+ "beir_cqadupstack_programmers_203483": {
+  "84/118376.txt": 1
+ },
+ "beir_cqadupstack_programmers_203776": {
+  "7a/132331.txt": 1
+ },
+ "beir_cqadupstack_programmers_203970": {
+  "7f/240379.txt": 1
+ },
+ "beir_cqadupstack_programmers_204206": {
+  "3c/51997.txt": 1
+ },
+ "beir_cqadupstack_programmers_204410": {
+  "24/206734.txt": 1
+ },
+ "beir_cqadupstack_programmers_204443": {
+  "3e/227654.txt": 1
+ },
+ "beir_cqadupstack_programmers_204521": {
+  "90/233548.txt": 1
+ },
+ "beir_cqadupstack_programmers_204580": {
+  "41/196628.txt": 1
+ },
+ "beir_cqadupstack_programmers_204840": {
+  "f9/200885.txt": 1
+ },
+ "beir_cqadupstack_programmers_204938": {
+  "35/61091.txt": 1,
+  "a6/152654.txt": 1
+ },
+ "beir_cqadupstack_programmers_205279": {
+  "6a/1015.txt": 1
+ },
+ "beir_cqadupstack_programmers_205359": {
+  "6d/241506.txt": 1
+ },
+ "beir_cqadupstack_programmers_205562": {
+  "71/176078.txt": 1
+ },
+ "beir_cqadupstack_programmers_205638": {
+  "11/220365.txt": 1,
+  "7f/16807.txt": 1
+ },
+ "beir_cqadupstack_programmers_206199": {
+  "10/145784.txt": 1
+ },
+ "beir_cqadupstack_programmers_206254": {
+  "07/34440.txt": 1,
+  "52/188561.txt": 1,
+  "c3/171203.txt": 1,
+  "f8/245895.txt": 1
+ },
+ "beir_cqadupstack_programmers_20653": {
+  "32/37317.txt": 1,
+  "97/126359.txt": 1,
+  "b4/19987.txt": 1,
+  "da/81160.txt": 1
+ },
+ "beir_cqadupstack_programmers_206754": {
+  "63/12186.txt": 1,
+  "64/99255.txt": 1,
+  "a3/218988.txt": 1,
+  "ac/206102.txt": 1,
+  "c1/29488.txt": 1,
+  "d1/53714.txt": 1,
+  "ef/143161.txt": 1,
+  "f8/41539.txt": 1
+ },
+ "beir_cqadupstack_programmers_206755": {
+  "2d/61738.txt": 1,
+  "33/20950.txt": 1,
+  "9e/83688.txt": 1,
+  "a0/69050.txt": 1,
+  "b6/195226.txt": 1
+ },
+ "beir_cqadupstack_programmers_206816": {
+  "2a/122485.txt": 1,
+  "98/230451.txt": 1,
+  "a0/220461.txt": 1,
+  "b6/127128.txt": 1
+ },
+ "beir_cqadupstack_programmers_20684": {
+  "bf/124831.txt": 1
+ },
+ "beir_cqadupstack_programmers_207815": {
+  "42/172879.txt": 1,
+  "8e/207111.txt": 1
+ },
+ "beir_cqadupstack_programmers_208698": {
+  "0d/213368.txt": 1,
+  "15/115520.txt": 1
+ },
+ "beir_cqadupstack_programmers_208815": {
+  "5d/147423.txt": 1
+ },
+ "beir_cqadupstack_programmers_208867": {
+  "46/17675.txt": 1
+ },
+ "beir_cqadupstack_programmers_208976": {
+  "a4/186581.txt": 1
+ },
+ "beir_cqadupstack_programmers_209070": {
+  "6e/5435.txt": 1,
+  "be/10644.txt": 1
+ },
+ "beir_cqadupstack_programmers_209129": {
+  "92/118295.txt": 1,
+  "cd/240767.txt": 1
+ },
+ "beir_cqadupstack_programmers_209479": {
+  "0d/31753.txt": 1,
+  "f3/117114.txt": 1
+ },
+ "beir_cqadupstack_programmers_209609": {
+  "55/203408.txt": 1
+ },
+ "beir_cqadupstack_programmers_209764": {
+  "33/164256.txt": 1
+ },
+ "beir_cqadupstack_programmers_209857": {
+  "fc/39027.txt": 1
+ },
+ "beir_cqadupstack_programmers_210049": {
+  "c9/10675.txt": 1
+ },
+ "beir_cqadupstack_programmers_210327": {
+  "cd/204711.txt": 1,
+  "e2/231194.txt": 1
+ },
+ "beir_cqadupstack_programmers_210346": {
+  "f3/176153.txt": 1
+ },
+ "beir_cqadupstack_programmers_210360": {
+  "d2/244912.txt": 1
+ },
+ "beir_cqadupstack_programmers_210472": {
+  "07/227812.txt": 1,
+  "64/198485.txt": 1
+ },
+ "beir_cqadupstack_programmers_210496": {
+  "a6/66708.txt": 1
+ },
+ "beir_cqadupstack_programmers_210532": {
+  "94/209967.txt": 1
+ },
+ "beir_cqadupstack_programmers_210623": {
+  "78/132485.txt": 1,
+  "a1/213076.txt": 1,
+  "a4/210212.txt": 1,
+  "bc/93269.txt": 1,
+  "cf/131264.txt": 1
+ },
+ "beir_cqadupstack_programmers_210635": {
+  "f2/148875.txt": 1
+ },
+ "beir_cqadupstack_programmers_210637": {
+  "49/210645.txt": 1
+ },
+ "beir_cqadupstack_programmers_210693": {
+  "21/118479.txt": 1
+ },
+ "beir_cqadupstack_programmers_210864": {
+  "4c/183645.txt": 1
+ },
+ "beir_cqadupstack_programmers_211276": {
+  "b0/53037.txt": 1
+ },
+ "beir_cqadupstack_programmers_211319": {
+  "19/113430.txt": 1
+ },
+ "beir_cqadupstack_programmers_211477": {
+  "39/53585.txt": 1,
+  "54/135218.txt": 1,
+  "77/111837.txt": 1,
+  "fe/164756.txt": 1
+ },
+ "beir_cqadupstack_programmers_211610": {
+  "49/178317.txt": 1,
+  "5c/186549.txt": 1
+ },
+ "beir_cqadupstack_programmers_211640": {
+  "99/211647.txt": 1
+ },
+ "beir_cqadupstack_programmers_211678": {
+  "18/39368.txt": 1,
+  "47/106568.txt": 1,
+  "4f/78478.txt": 1,
+  "c3/238452.txt": 1,
+  "c9/203320.txt": 1
+ },
+ "beir_cqadupstack_programmers_21230": {
+  "86/120094.txt": 1
+ },
+ "beir_cqadupstack_programmers_212300": {
+  "af/216107.txt": 1
+ },
+ "beir_cqadupstack_programmers_21256": {
+  "51/108601.txt": 1
+ },
+ "beir_cqadupstack_programmers_212575": {
+  "b8/163240.txt": 1
+ },
+ "beir_cqadupstack_programmers_212932": {
+  "e2/152965.txt": 1
+ },
+ "beir_cqadupstack_programmers_213070": {
+  "28/190528.txt": 1
+ },
+ "beir_cqadupstack_programmers_213173": {
+  "e8/49067.txt": 1
+ },
+ "beir_cqadupstack_programmers_213449": {
+  "f7/246278.txt": 1
+ },
+ "beir_cqadupstack_programmers_213452": {
+  "59/198284.txt": 1
+ },
+ "beir_cqadupstack_programmers_213603": {
+  "ba/213135.txt": 1
+ },
+ "beir_cqadupstack_programmers_21397": {
+  "0e/224869.txt": 1,
+  "6d/134213.txt": 1
+ },
+ "beir_cqadupstack_programmers_21403": {
+  "cc/48117.txt": 1
+ },
+ "beir_cqadupstack_programmers_214494": {
+  "0b/16646.txt": 1
+ },
+ "beir_cqadupstack_programmers_214734": {
+  "38/198783.txt": 1,
+  "3e/255687.txt": 1
+ },
+ "beir_cqadupstack_programmers_214784": {
+  "0d/214787.txt": 1,
+  "79/214721.txt": 1
+ },
+ "beir_cqadupstack_programmers_215042": {
+  "b3/14596.txt": 1
+ },
+ "beir_cqadupstack_programmers_215235": {
+  "1e/224829.txt": 1,
+  "25/232084.txt": 1,
+  "34/225323.txt": 1,
+  "9e/204786.txt": 1,
+  "be/236492.txt": 1,
+  "d7/235045.txt": 1,
+  "dd/224365.txt": 1,
+  "ee/221766.txt": 1
+ },
+ "beir_cqadupstack_programmers_215248": {
+  "b6/164050.txt": 1
+ },
+ "beir_cqadupstack_programmers_215427": {
+  "8e/218487.txt": 1
+ },
+ "beir_cqadupstack_programmers_215474": {
+  "82/237597.txt": 1,
+  "c1/138089.txt": 1,
+  "ee/165543.txt": 1
+ },
+ "beir_cqadupstack_programmers_215703": {
+  "71/2776.txt": 1
+ },
+ "beir_cqadupstack_programmers_215727": {
+  "6f/165532.txt": 1
+ },
+ "beir_cqadupstack_programmers_215826": {
+  "9d/253442.txt": 1
+ },
+ "beir_cqadupstack_programmers_216195": {
+  "97/219531.txt": 1
+ },
+ "beir_cqadupstack_programmers_216301": {
+  "be/78675.txt": 1
+ },
+ "beir_cqadupstack_programmers_216639": {
+  "ef/174733.txt": 1
+ },
+ "beir_cqadupstack_programmers_218121": {
+  "13/99980.txt": 1,
+  "1e/238413.txt": 1,
+  "2a/237894.txt": 1,
+  "4a/233040.txt": 1,
+  "54/204944.txt": 1,
+  "73/208650.txt": 1,
+  "77/230966.txt": 1,
+  "7f/81083.txt": 1,
+  "8e/206802.txt": 1,
+  "93/210572.txt": 1,
+  "94/196441.txt": 1,
+  "9c/83167.txt": 1,
+  "aa/209311.txt": 1,
+  "b1/7217.txt": 1,
+  "b7/178352.txt": 1,
+  "b9/99794.txt": 1,
+  "ba/228258.txt": 1,
+  "c4/50387.txt": 1,
+  "d8/135845.txt": 1,
+  "de/82159.txt": 1,
+  "e4/242700.txt": 1,
+  "e7/157251.txt": 1
+ },
+ "beir_cqadupstack_programmers_218184": {
+  "03/99306.txt": 1
+ },
+ "beir_cqadupstack_programmers_218447": {
+  "f9/213768.txt": 1
+ },
+ "beir_cqadupstack_programmers_218869": {
+  "77/87965.txt": 1
+ },
+ "beir_cqadupstack_programmers_219028": {
+  "d7/220080.txt": 1
+ },
+ "beir_cqadupstack_programmers_21907": {
+  "b7/105089.txt": 1
+ },
+ "beir_cqadupstack_programmers_219198": {
+  "7c/126924.txt": 1
+ },
+ "beir_cqadupstack_programmers_220023": {
+  "d0/24987.txt": 1
+ },
+ "beir_cqadupstack_programmers_220049": {
+  "3a/37294.txt": 1
+ },
+ "beir_cqadupstack_programmers_220343": {
+  "bc/124821.txt": 1
+ },
+ "beir_cqadupstack_programmers_220444": {
+  "91/147480.txt": 1,
+  "95/64926.txt": 1
+ },
+ "beir_cqadupstack_programmers_220872": {
+  "03/193807.txt": 1,
+  "0c/149539.txt": 1,
+  "21/59810.txt": 1,
+  "3c/127118.txt": 1,
+  "e5/225093.txt": 1
+ },
+ "beir_cqadupstack_programmers_220890": {
+  "0f/184695.txt": 1
+ },
+ "beir_cqadupstack_programmers_221009": {
+  "9c/146070.txt": 1
+ },
+ "beir_cqadupstack_programmers_221030": {
+  "ea/34959.txt": 1
+ },
+ "beir_cqadupstack_programmers_221234": {
+  "0c/79585.txt": 1
+ },
+ "beir_cqadupstack_programmers_221365": {
+  "3b/229003.txt": 1
+ },
+ "beir_cqadupstack_programmers_22146": {
+  "40/143390.txt": 1
+ },
+ "beir_cqadupstack_programmers_221615": {
+  "18/209376.txt": 1
+ },
+ "beir_cqadupstack_programmers_221619": {
+  "fb/104442.txt": 1
+ },
+ "beir_cqadupstack_programmers_222362": {
+  "70/232321.txt": 1,
+  "f6/188712.txt": 1
+ },
+ "beir_cqadupstack_programmers_222464": {
+  "a3/222465.txt": 1
+ },
+ "beir_cqadupstack_programmers_222508": {
+  "14/156722.txt": 1,
+  "36/195155.txt": 1
+ },
+ "beir_cqadupstack_programmers_223027": {
+  "0c/85612.txt": 1,
+  "3a/110452.txt": 1,
+  "5e/42200.txt": 1,
+  "62/145583.txt": 1,
+  "75/209015.txt": 1,
+  "a9/108476.txt": 1,
+  "d7/27147.txt": 1
+ },
+ "beir_cqadupstack_programmers_223148": {
+  "43/145034.txt": 1
+ },
+ "beir_cqadupstack_programmers_223250": {
+  "23/238250.txt": 1
+ },
+ "beir_cqadupstack_programmers_223596": {
+  "42/223624.txt": 1
+ },
+ "beir_cqadupstack_programmers_223718": {
+  "07/222145.txt": 1,
+  "2d/15820.txt": 1,
+  "34/229688.txt": 1,
+  "43/165754.txt": 1,
+  "c5/154500.txt": 1
+ },
+ "beir_cqadupstack_programmers_223815": {
+  "4c/223767.txt": 1
+ },
+ "beir_cqadupstack_programmers_224036": {
+  "2c/184464.txt": 1
+ },
+ "beir_cqadupstack_programmers_224434": {
+  "8c/87457.txt": 1
+ },
+ "beir_cqadupstack_programmers_224752": {
+  "7e/19649.txt": 1
+ },
+ "beir_cqadupstack_programmers_224835": {
+  "02/139321.txt": 1
+ },
+ "beir_cqadupstack_programmers_225153": {
+  "be/225145.txt": 1
+ },
+ "beir_cqadupstack_programmers_225354": {
+  "29/126721.txt": 1
+ },
+ "beir_cqadupstack_programmers_225387": {
+  "a4/225375.txt": 1
+ },
+ "beir_cqadupstack_programmers_225504": {
+  "14/247084.txt": 1,
+  "1c/191524.txt": 1,
+  "30/97879.txt": 1,
+  "66/206863.txt": 1,
+  "86/152020.txt": 1,
+  "a7/32840.txt": 1,
+  "e1/43211.txt": 1
+ },
+ "beir_cqadupstack_programmers_225870": {
+  "71/125182.txt": 1
+ },
+ "beir_cqadupstack_programmers_225931": {
+  "38/242724.txt": 1
+ },
+ "beir_cqadupstack_programmers_226233": {
+  "9e/205925.txt": 1
+ },
+ "beir_cqadupstack_programmers_226357": {
+  "38/64306.txt": 1
+ },
+ "beir_cqadupstack_programmers_227720": {
+  "d7/147214.txt": 1,
+  "f2/187009.txt": 1
+ },
+ "beir_cqadupstack_programmers_227818": {
+  "cf/225893.txt": 1
+ },
+ "beir_cqadupstack_programmers_227993": {
+  "1c/7629.txt": 1,
+  "43/76392.txt": 1
+ },
+ "beir_cqadupstack_programmers_228187": {
+  "91/69254.txt": 1
+ },
+ "beir_cqadupstack_programmers_228584": {
+  "42/62948.txt": 1,
+  "5e/224859.txt": 1
+ },
+ "beir_cqadupstack_programmers_228848": {
+  "04/151055.txt": 1
+ },
+ "beir_cqadupstack_programmers_228973": {
+  "16/68455.txt": 1
+ },
+ "beir_cqadupstack_programmers_229170": {
+  "38/149871.txt": 1
+ },
+ "beir_cqadupstack_programmers_229657": {
+  "09/238335.txt": 1,
+  "54/167938.txt": 1,
+  "6e/56585.txt": 1,
+  "7a/233695.txt": 1,
+  "c3/233399.txt": 1,
+  "dd/252419.txt": 1
+ },
+ "beir_cqadupstack_programmers_230145": {
+  "e0/111920.txt": 1
+ },
+ "beir_cqadupstack_programmers_230199": {
+  "6d/207819.txt": 1
+ },
+ "beir_cqadupstack_programmers_230206": {
+  "68/72259.txt": 1
+ },
+ "beir_cqadupstack_programmers_23021": {
+  "e3/253301.txt": 1
+ },
+ "beir_cqadupstack_programmers_230250": {
+  "6b/152753.txt": 1
+ },
+ "beir_cqadupstack_programmers_230280": {
+  "97/85235.txt": 1
+ },
+ "beir_cqadupstack_programmers_230534": {
+  "4e/78083.txt": 1,
+  "91/230634.txt": 1,
+  "fc/165380.txt": 1
+ },
+ "beir_cqadupstack_programmers_230604": {
+  "f0/231577.txt": 1
+ },
+ "beir_cqadupstack_programmers_230778": {
+  "64/181567.txt": 1,
+  "f2/78334.txt": 1
+ },
+ "beir_cqadupstack_programmers_231491": {
+  "e4/158640.txt": 1
+ },
+ "beir_cqadupstack_programmers_23276": {
+  "1f/137285.txt": 1,
+  "8d/191103.txt": 1
+ },
+ "beir_cqadupstack_programmers_232812": {
+  "a5/150760.txt": 1,
+  "cd/232145.txt": 1,
+  "f6/154723.txt": 1
+ },
+ "beir_cqadupstack_programmers_232843": {
+  "7e/65477.txt": 1,
+  "b9/254717.txt": 1,
+  "f4/198691.txt": 1
+ },
+ "beir_cqadupstack_programmers_233038": {
+  "38/32526.txt": 1
+ },
+ "beir_cqadupstack_programmers_23313": {
+  "46/175150.txt": 1,
+  "d7/95213.txt": 1
+ },
+ "beir_cqadupstack_programmers_233342": {
+  "00/166530.txt": 1,
+  "23/149782.txt": 1,
+  "54/40439.txt": 1
+ },
+ "beir_cqadupstack_programmers_233503": {
+  "7a/233515.txt": 1
+ },
+ "beir_cqadupstack_programmers_233592": {
+  "c7/188609.txt": 1
+ },
+ "beir_cqadupstack_programmers_233615": {
+  "01/196257.txt": 1,
+  "13/132952.txt": 1
+ },
+ "beir_cqadupstack_programmers_233981": {
+  "fb/176497.txt": 1
+ },
+ "beir_cqadupstack_programmers_234001": {
+  "72/42795.txt": 1,
+  "cc/196996.txt": 1
+ },
+ "beir_cqadupstack_programmers_234066": {
+  "2e/109295.txt": 1
+ },
+ "beir_cqadupstack_programmers_234449": {
+  "55/180777.txt": 1,
+  "e3/34354.txt": 1
+ },
+ "beir_cqadupstack_programmers_234511": {
+  "cb/125836.txt": 1,
+  "df/233495.txt": 1
+ },
+ "beir_cqadupstack_programmers_234620": {
+  "01/33379.txt": 1,
+  "75/210788.txt": 1,
+  "de/102856.txt": 1
+ },
+ "beir_cqadupstack_programmers_234820": {
+  "10/198228.txt": 1,
+  "71/202443.txt": 1,
+  "b1/24485.txt": 1,
+  "df/158373.txt": 1,
+  "df/180585.txt": 1,
+  "ff/215586.txt": 1
+ },
+ "beir_cqadupstack_programmers_234962": {
+  "17/182314.txt": 1,
+  "51/89841.txt": 1,
+  "7c/242889.txt": 1,
+  "a5/243090.txt": 1
+ },
+ "beir_cqadupstack_programmers_23507": {
+  "e8/194398.txt": 1
+ },
+ "beir_cqadupstack_programmers_235283": {
+  "24/235361.txt": 1
+ },
+ "beir_cqadupstack_programmers_235468": {
+  "a0/112402.txt": 1
+ },
+ "beir_cqadupstack_programmers_235645": {
+  "42/148108.txt": 1,
+  "8c/192000.txt": 1,
+  "c7/246225.txt": 1
+ },
+ "beir_cqadupstack_programmers_236370": {
+  "bd/117572.txt": 1
+ },
+ "beir_cqadupstack_programmers_236415": {
+  "14/132691.txt": 1
+ },
+ "beir_cqadupstack_programmers_236473": {
+  "80/109629.txt": 1
+ },
+ "beir_cqadupstack_programmers_23652": {
+  "34/175066.txt": 1
+ },
+ "beir_cqadupstack_programmers_236571": {
+  "48/120019.txt": 1,
+  "57/198675.txt": 1
+ },
+ "beir_cqadupstack_programmers_236853": {
+  "e8/59880.txt": 1
+ },
+ "beir_cqadupstack_programmers_236903": {
+  "d4/89453.txt": 1
+ },
+ "beir_cqadupstack_programmers_237065": {
+  "4a/206.txt": 1
+ },
+ "beir_cqadupstack_programmers_237157": {
+  "8d/101157.txt": 1
+ },
+ "beir_cqadupstack_programmers_237226": {
+  "b1/255486.txt": 1
+ },
+ "beir_cqadupstack_programmers_237431": {
+  "a4/236668.txt": 1
+ },
+ "beir_cqadupstack_programmers_237577": {
+  "8b/7823.txt": 1
+ },
+ "beir_cqadupstack_programmers_237584": {
+  "0b/79755.txt": 1
+ },
+ "beir_cqadupstack_programmers_237593": {
+  "79/237543.txt": 1
+ },
+ "beir_cqadupstack_programmers_237738": {
+  "53/226229.txt": 1
+ },
+ "beir_cqadupstack_programmers_237935": {
+  "51/195252.txt": 1
+ },
+ "beir_cqadupstack_programmers_238057": {
+  "70/231199.txt": 1
+ },
+ "beir_cqadupstack_programmers_238325": {
+  "5c/122477.txt": 1,
+  "b3/87696.txt": 1
+ },
+ "beir_cqadupstack_programmers_238386": {
+  "99/187613.txt": 1
+ },
+ "beir_cqadupstack_programmers_238546": {
+  "5e/170791.txt": 1
+ },
+ "beir_cqadupstack_programmers_239016": {
+  "f4/202950.txt": 1
+ },
+ "beir_cqadupstack_programmers_239210": {
+  "0a/242768.txt": 1
+ },
+ "beir_cqadupstack_programmers_240454": {
+  "8c/180216.txt": 1
+ },
+ "beir_cqadupstack_programmers_240612": {
+  "9d/75436.txt": 1
+ },
+ "beir_cqadupstack_programmers_240734": {
+  "74/222403.txt": 1
+ },
+ "beir_cqadupstack_programmers_241389": {
+  "cd/214340.txt": 1
+ },
+ "beir_cqadupstack_programmers_241411": {
+  "76/216765.txt": 1
+ },
+ "beir_cqadupstack_programmers_24170": {
+  "a4/207436.txt": 1
+ },
+ "beir_cqadupstack_programmers_242610": {
+  "a6/164353.txt": 1,
+  "c3/135313.txt": 1
+ },
+ "beir_cqadupstack_programmers_243347": {
+  "03/245693.txt": 1
+ },
+ "beir_cqadupstack_programmers_244705": {
+  "30/147055.txt": 1,
+  "43/234753.txt": 1,
+  "4c/157155.txt": 1,
+  "64/66480.txt": 1,
+  "a6/221536.txt": 1,
+  "c2/5560.txt": 1
+ },
+ "beir_cqadupstack_programmers_244866": {
+  "b1/178886.txt": 1
+ },
+ "beir_cqadupstack_programmers_245115": {
+  "03/199735.txt": 1,
+  "c4/234412.txt": 1
+ },
+ "beir_cqadupstack_programmers_245274": {
+  "2d/243154.txt": 1
+ },
+ "beir_cqadupstack_programmers_24542": {
+  "8e/114885.txt": 1
+ },
+ "beir_cqadupstack_programmers_246066": {
+  "cb/47032.txt": 1
+ },
+ "beir_cqadupstack_programmers_246354": {
+  "61/123088.txt": 1,
+  "80/136133.txt": 1,
+  "a5/115783.txt": 1,
+  "ae/170704.txt": 1,
+  "bf/30974.txt": 1,
+  "dc/14744.txt": 1
+ },
+ "beir_cqadupstack_programmers_246532": {
+  "a6/135718.txt": 1
+ },
+ "beir_cqadupstack_programmers_246568": {
+  "3e/110380.txt": 1,
+  "4d/234057.txt": 1
+ },
+ "beir_cqadupstack_programmers_246634": {
+  "87/246627.txt": 1
+ },
+ "beir_cqadupstack_programmers_246813": {
+  "11/183865.txt": 1
+ },
+ "beir_cqadupstack_programmers_247103": {
+  "38/232627.txt": 1,
+  "6d/59713.txt": 1,
+  "96/87152.txt": 1,
+  "cb/63048.txt": 1
+ },
+ "beir_cqadupstack_programmers_247135": {
+  "b1/219438.txt": 1
+ },
+ "beir_cqadupstack_programmers_247382": {
+  "74/229968.txt": 1
+ },
+ "beir_cqadupstack_programmers_24804": {
+  "77/243279.txt": 1
+ },
+ "beir_cqadupstack_programmers_249892": {
+  "07/54591.txt": 1
+ },
+ "beir_cqadupstack_programmers_250164": {
+  "5d/127624.txt": 1
+ },
+ "beir_cqadupstack_programmers_250203": {
+  "2a/185130.txt": 1
+ },
+ "beir_cqadupstack_programmers_250291": {
+  "02/84514.txt": 1
+ },
+ "beir_cqadupstack_programmers_25063": {
+  "6c/141860.txt": 1
+ },
+ "beir_cqadupstack_programmers_250707": {
+  "4b/215874.txt": 1
+ },
+ "beir_cqadupstack_programmers_250953": {
+  "46/233401.txt": 1
+ },
+ "beir_cqadupstack_programmers_251126": {
+  "ca/237237.txt": 1
+ },
+ "beir_cqadupstack_programmers_251222": {
+  "0d/177651.txt": 1
+ },
+ "beir_cqadupstack_programmers_251643": {
+  "c6/233492.txt": 1
+ },
+ "beir_cqadupstack_programmers_251707": {
+  "33/255903.txt": 1
+ },
+ "beir_cqadupstack_programmers_251756": {
+  "a2/9810.txt": 1,
+  "c4/231891.txt": 1,
+  "dc/132248.txt": 1,
+  "ff/236016.txt": 1
+ },
+ "beir_cqadupstack_programmers_25234": {
+  "ed/9991.txt": 1
+ },
+ "beir_cqadupstack_programmers_252495": {
+  "11/230933.txt": 1
+ },
+ "beir_cqadupstack_programmers_252532": {
+  "be/252938.txt": 1
+ },
+ "beir_cqadupstack_programmers_252595": {
+  "57/233461.txt": 1
+ },
+ "beir_cqadupstack_programmers_253026": {
+  "e6/142144.txt": 1
+ },
+ "beir_cqadupstack_programmers_253042": {
+  "11/213959.txt": 1,
+  "47/243205.txt": 1,
+  "6e/246826.txt": 1,
+  "90/252712.txt": 1,
+  "91/183819.txt": 1,
+  "9e/107884.txt": 1
+ },
+ "beir_cqadupstack_programmers_253267": {
+  "15/133404.txt": 1
+ },
+ "beir_cqadupstack_programmers_253453": {
+  "60/76123.txt": 1
+ },
+ "beir_cqadupstack_programmers_253496": {
+  "58/81624.txt": 1
+ },
+ "beir_cqadupstack_programmers_253650": {
+  "2d/137096.txt": 1,
+  "68/127522.txt": 1
+ },
+ "beir_cqadupstack_programmers_254008": {
+  "bb/195104.txt": 1
+ },
+ "beir_cqadupstack_programmers_254083": {
+  "30/179624.txt": 1
+ },
+ "beir_cqadupstack_programmers_254339": {
+  "b5/228711.txt": 1,
+  "ef/173518.txt": 1
+ },
+ "beir_cqadupstack_programmers_254424": {
+  "15/83797.txt": 1
+ },
+ "beir_cqadupstack_programmers_254936": {
+  "36/142065.txt": 1,
+  "d4/231001.txt": 1
+ },
+ "beir_cqadupstack_programmers_255031": {
+  "6d/220296.txt": 1
+ },
+ "beir_cqadupstack_programmers_255912": {
+  "cc/135234.txt": 1
+ },
+ "beir_cqadupstack_programmers_25600": {
+  "00/103102.txt": 1
+ },
+ "beir_cqadupstack_programmers_257": {
+  "c5/39594.txt": 1
+ },
+ "beir_cqadupstack_programmers_26030": {
+  "3d/88158.txt": 1
+ },
+ "beir_cqadupstack_programmers_26371": {
+  "d9/51586.txt": 1
+ },
+ "beir_cqadupstack_programmers_2654": {
+  "ae/15636.txt": 1
+ },
+ "beir_cqadupstack_programmers_26642": {
+  "e0/117684.txt": 1
+ },
+ "beir_cqadupstack_programmers_26901": {
+  "7f/178384.txt": 1
+ },
+ "beir_cqadupstack_programmers_27022": {
+  "96/29149.txt": 1
+ },
+ "beir_cqadupstack_programmers_27410": {
+  "19/117061.txt": 1,
+  "c5/87182.txt": 1,
+  "e8/141292.txt": 1,
+  "fc/67354.txt": 1
+ },
+ "beir_cqadupstack_programmers_2757": {
+  "0a/50545.txt": 1,
+  "0c/104346.txt": 1,
+  "f4/9403.txt": 1
+ },
+ "beir_cqadupstack_programmers_28050": {
+  "86/42142.txt": 1
+ },
+ "beir_cqadupstack_programmers_28379": {
+  "33/105862.txt": 1,
+  "49/77466.txt": 1,
+  "68/104975.txt": 1
+ },
+ "beir_cqadupstack_programmers_28825": {
+  "53/79561.txt": 1
+ },
+ "beir_cqadupstack_programmers_29109": {
+  "37/137011.txt": 1
+ },
+ "beir_cqadupstack_programmers_29513": {
+  "98/200303.txt": 1,
+  "dc/55653.txt": 1
+ },
+ "beir_cqadupstack_programmers_29534": {
+  "69/135383.txt": 1,
+  "95/228686.txt": 1
+ },
+ "beir_cqadupstack_programmers_31558": {
+  "50/89025.txt": 1,
+  "b2/255248.txt": 1
+ },
+ "beir_cqadupstack_programmers_32425": {
+  "2c/67295.txt": 1
+ },
+ "beir_cqadupstack_programmers_32482": {
+  "38/247251.txt": 1
+ },
+ "beir_cqadupstack_programmers_32571": {
+  "63/63970.txt": 1
+ },
+ "beir_cqadupstack_programmers_32617": {
+  "1f/96809.txt": 1
+ },
+ "beir_cqadupstack_programmers_32956": {
+  "61/213942.txt": 1
+ },
+ "beir_cqadupstack_programmers_34173": {
+  "24/222285.txt": 1,
+  "3a/7482.txt": 1,
+  "65/193161.txt": 1
+ },
+ "beir_cqadupstack_programmers_34485": {
+  "74/56674.txt": 1,
+  "93/141147.txt": 1
+ },
+ "beir_cqadupstack_programmers_34559": {
+  "86/126230.txt": 1,
+  "b6/101762.txt": 1
+ },
+ "beir_cqadupstack_programmers_35074": {
+  "a2/142652.txt": 1,
+  "e7/74815.txt": 1
+ },
+ "beir_cqadupstack_programmers_35610": {
+  "0a/206673.txt": 1
+ },
+ "beir_cqadupstack_programmers_35925": {
+  "9a/38165.txt": 1,
+  "b6/211173.txt": 1,
+  "db/194820.txt": 1
+ },
+ "beir_cqadupstack_programmers_36175": {
+  "94/182306.txt": 1
+ },
+ "beir_cqadupstack_programmers_36297": {
+  "5f/55493.txt": 1
+ },
+ "beir_cqadupstack_programmers_36561": {
+  "02/71593.txt": 1
+ },
+ "beir_cqadupstack_programmers_36731": {
+  "2e/170731.txt": 1
+ },
+ "beir_cqadupstack_programmers_36925": {
+  "88/105283.txt": 1
+ },
+ "beir_cqadupstack_programmers_36961": {
+  "91/80587.txt": 1
+ },
+ "beir_cqadupstack_programmers_37029": {
+  "11/184412.txt": 1,
+  "8b/215687.txt": 1
+ },
+ "beir_cqadupstack_programmers_37249": {
+  "1d/190801.txt": 1,
+  "27/235527.txt": 1,
+  "57/159003.txt": 1,
+  "98/252.txt": 1,
+  "c8/107698.txt": 1
+ },
+ "beir_cqadupstack_programmers_3747": {
+  "05/209124.txt": 1,
+  "07/14492.txt": 1,
+  "08/252392.txt": 1,
+  "09/40676.txt": 1,
+  "0d/233169.txt": 1,
+  "10/174770.txt": 1,
+  "11/66438.txt": 1,
+  "19/41409.txt": 1,
+  "1a/199975.txt": 1,
+  "1c/61655.txt": 1,
+  "1d/127658.txt": 1,
+  "1d/225052.txt": 1,
+  "1d/255311.txt": 1,
+  "1e/135311.txt": 1,
+  "23/226534.txt": 1,
+  "24/167209.txt": 1,
+  "24/197842.txt": 1,
+  "24/201350.txt": 1,
+  "25/188933.txt": 1,
+  "25/202107.txt": 1,
+  "2b/245426.txt": 1,
+  "2c/223869.txt": 1,
+  "2d/109262.txt": 1,
+  "2d/80625.txt": 1,
+  "2e/28551.txt": 1,
+  "2e/34227.txt": 1,
+  "2f/125435.txt": 1,
+  "30/177058.txt": 1,
+  "32/98930.txt": 1,
+  "34/106168.txt": 1,
+  "35/114835.txt": 1,
+  "35/211755.txt": 1,
+  "35/237891.txt": 1,
+  "37/39468.txt": 1,
+  "3b/146471.txt": 1,
+  "3d/202757.txt": 1,
+  "3f/210248.txt": 1,
+  "42/114316.txt": 1,
+  "49/196414.txt": 1,
+  "49/228468.txt": 1,
+  "49/239018.txt": 1,
+  "4a/194347.txt": 1,
+  "4d/139683.txt": 1,
+  "4d/193990.txt": 1,
+  "4d/238007.txt": 1,
+  "4f/213973.txt": 1,
+  "4f/75866.txt": 1,
+  "50/170894.txt": 1,
+  "50/171652.txt": 1,
+  "52/221144.txt": 1,
+  "55/199870.txt": 1,
+  "5a/210078.txt": 1,
+  "5b/198244.txt": 1,
+  "5b/205786.txt": 1,
+  "60/181044.txt": 1,
+  "62/171295.txt": 1,
+  "65/159662.txt": 1,
+  "65/46272.txt": 1,
+  "67/134470.txt": 1,
+  "67/205515.txt": 1,
+  "6a/183851.txt": 1,
+  "6a/205760.txt": 1,
+  "6f/246688.txt": 1,
+  "70/193553.txt": 1,
+  "70/234266.txt": 1,
+  "74/234763.txt": 1,
+  "75/238597.txt": 1,
+  "76/67166.txt": 1,
+  "78/204872.txt": 1,
+  "7a/29671.txt": 1,
+  "7d/188292.txt": 1,
+  "7d/87757.txt": 1,
+  "7e/206404.txt": 1,
+  "7e/252588.txt": 1,
+  "80/196449.txt": 1,
+  "81/220235.txt": 1,
+  "85/236482.txt": 1,
+  "86/87114.txt": 1,
+  "8d/228702.txt": 1,
+  "8d/247034.txt": 1,
+  "92/215935.txt": 1,
+  "95/102649.txt": 1,
+  "96/222641.txt": 1,
+  "98/178856.txt": 1,
+  "99/115839.txt": 1,
+  "9e/228371.txt": 1,
+  "9f/141005.txt": 1,
+  "a1/155488.txt": 1,
+  "a1/170109.txt": 1,
+  "a3/229690.txt": 1,
+  "a4/100680.txt": 1,
+  "a4/162923.txt": 1,
+  "a7/211470.txt": 1,
+  "a8/198124.txt": 1,
+  "a8/78881.txt": 1,
+  "aa/68399.txt": 1,
+  "af/132977.txt": 1,
+  "af/254915.txt": 1,
+  "af/39411.txt": 1,
+  "b0/180186.txt": 1,
+  "b4/225860.txt": 1,
+  "b6/186021.txt": 1,
+  "bb/235678.txt": 1,
+  "bf/253273.txt": 1,
+  "c0/253622.txt": 1,
+  "c1/87460.txt": 1,
+  "c3/132926.txt": 1,
+  "c6/206475.txt": 1,
+  "c7/225955.txt": 1,
+  "c7/43948.txt": 1,
+  "cc/6395.txt": 1,
+  "cf/219834.txt": 1,
+  "cf/225341.txt": 1,
+  "d3/250746.txt": 1,
+  "d4/253834.txt": 1,
+  "d9/141968.txt": 1,
+  "db/129951.txt": 1,
+  "dd/95589.txt": 1,
+  "df/254360.txt": 1,
+  "e1/246223.txt": 1,
+  "e4/177624.txt": 1,
+  "e4/230521.txt": 1,
+  "e4/238734.txt": 1,
+  "e5/254643.txt": 1,
+  "e5/86454.txt": 1,
+  "e7/222544.txt": 1,
+  "e8/219467.txt": 1,
+  "e9/16326.txt": 1,
+  "ed/196847.txt": 1,
+  "ee/167492.txt": 1,
+  "ee/6268.txt": 1,
+  "ef/50576.txt": 1,
+  "f0/192089.txt": 1,
+  "f2/37091.txt": 1,
+  "f4/126224.txt": 1,
+  "f4/21538.txt": 1,
+  "f5/163455.txt": 1,
+  "f6/39386.txt": 1,
+  "f7/204639.txt": 1,
+  "f8/121844.txt": 1,
+  "f8/211528.txt": 1,
+  "f9/47416.txt": 1,
+  "fb/101391.txt": 1,
+  "fb/105018.txt": 1,
+  "fb/190048.txt": 1,
+  "fc/131052.txt": 1,
+  "fe/29788.txt": 1,
+  "ff/134855.txt": 1,
+  "ff/199144.txt": 1
+ },
+ "beir_cqadupstack_programmers_3766": {
+  "50/71619.txt": 1
+ },
+ "beir_cqadupstack_programmers_37677": {
+  "ad/214059.txt": 1
+ },
+ "beir_cqadupstack_programmers_37987": {
+  "4e/186269.txt": 1
+ },
+ "beir_cqadupstack_programmers_38087": {
+  "eb/198405.txt": 1
+ },
+ "beir_cqadupstack_programmers_38265": {
+  "09/96238.txt": 1,
+  "be/39353.txt": 1,
+  "d8/117179.txt": 1
+ },
+ "beir_cqadupstack_programmers_38566": {
+  "01/58824.txt": 1,
+  "36/96421.txt": 1
+ },
+ "beir_cqadupstack_programmers_39282": {
+  "51/199852.txt": 1
+ },
+ "beir_cqadupstack_programmers_39378": {
+  "00/253165.txt": 1
+ },
+ "beir_cqadupstack_programmers_3997": {
+  "21/46920.txt": 1
+ },
+ "beir_cqadupstack_programmers_40063": {
+  "6a/234273.txt": 1,
+  "90/235566.txt": 1
+ },
+ "beir_cqadupstack_programmers_40297": {
+  "98/163321.txt": 1
+ },
+ "beir_cqadupstack_programmers_41545": {
+  "87/108435.txt": 1,
+  "ff/103501.txt": 1
+ },
+ "beir_cqadupstack_programmers_41981": {
+  "e1/113079.txt": 1
+ },
+ "beir_cqadupstack_programmers_42817": {
+  "6a/155055.txt": 1
+ },
+ "beir_cqadupstack_programmers_42938": {
+  "14/119228.txt": 1
+ },
+ "beir_cqadupstack_programmers_43086": {
+  "40/118342.txt": 1
+ },
+ "beir_cqadupstack_programmers_43729": {
+  "13/196391.txt": 1,
+  "58/22153.txt": 1,
+  "8e/205877.txt": 1
+ },
+ "beir_cqadupstack_programmers_43796": {
+  "2d/181933.txt": 1
+ },
+ "beir_cqadupstack_programmers_44959": {
+  "b6/203375.txt": 1
+ },
+ "beir_cqadupstack_programmers_45378": {
+  "13/53669.txt": 1,
+  "5b/190096.txt": 1,
+  "da/213684.txt": 1
+ },
+ "beir_cqadupstack_programmers_46252": {
+  "9c/105891.txt": 1
+ },
+ "beir_cqadupstack_programmers_46434": {
+  "4b/221075.txt": 1
+ },
+ "beir_cqadupstack_programmers_46513": {
+  "6f/47558.txt": 1
+ },
+ "beir_cqadupstack_programmers_46685": {
+  "85/198741.txt": 1
+ },
+ "beir_cqadupstack_programmers_47370": {
+  "ec/142186.txt": 1
+ },
+ "beir_cqadupstack_programmers_4765": {
+  "aa/86502.txt": 1,
+  "bc/10313.txt": 1
+ },
+ "beir_cqadupstack_programmers_492": {
+  "56/95355.txt": 1,
+  "58/201529.txt": 1
+ },
+ "beir_cqadupstack_programmers_49836": {
+  "55/20262.txt": 1
+ },
+ "beir_cqadupstack_programmers_49959": {
+  "9d/126950.txt": 1
+ },
+ "beir_cqadupstack_programmers_50755": {
+  "32/122689.txt": 1,
+  "6a/237809.txt": 1,
+  "93/53123.txt": 1
+ },
+ "beir_cqadupstack_programmers_51268": {
+  "de/114484.txt": 1
+ },
+ "beir_cqadupstack_programmers_51465": {
+  "5c/244941.txt": 1
+ },
+ "beir_cqadupstack_programmers_51987": {
+  "6e/232245.txt": 1
+ },
+ "beir_cqadupstack_programmers_52158": {
+  "4a/65316.txt": 1
+ },
+ "beir_cqadupstack_programmers_52833": {
+  "35/1.txt": 1,
+  "9e/119600.txt": 1,
+  "ab/173118.txt": 1,
+  "c3/201657.txt": 1,
+  "ea/121775.txt": 1
+ },
+ "beir_cqadupstack_programmers_52961": {
+  "05/49488.txt": 1
+ },
+ "beir_cqadupstack_programmers_53517": {
+  "b9/200930.txt": 1
+ },
+ "beir_cqadupstack_programmers_53572": {
+  "f1/128725.txt": 1
+ },
+ "beir_cqadupstack_programmers_53612": {
+  "2e/110242.txt": 1
+ },
+ "beir_cqadupstack_programmers_54373": {
+  "42/109192.txt": 1,
+  "44/194340.txt": 1
+ },
+ "beir_cqadupstack_programmers_54451": {
+  "ea/136860.txt": 1
+ },
+ "beir_cqadupstack_programmers_54959": {
+  "0e/209055.txt": 1,
+  "17/116028.txt": 1,
+  "18/25707.txt": 1,
+  "38/83706.txt": 1,
+  "4d/173244.txt": 1,
+  "78/223692.txt": 1,
+  "af/41473.txt": 1,
+  "b5/96946.txt": 1,
+  "c1/129349.txt": 1,
+  "e2/50818.txt": 1
+ },
+ "beir_cqadupstack_programmers_55065": {
+  "40/96934.txt": 1
+ },
+ "beir_cqadupstack_programmers_55267": {
+  "6c/162786.txt": 1
+ },
+ "beir_cqadupstack_programmers_55334": {
+  "cc/109087.txt": 1
+ },
+ "beir_cqadupstack_programmers_55697": {
+  "0c/103285.txt": 1,
+  "42/33816.txt": 1
+ },
+ "beir_cqadupstack_programmers_56031": {
+  "eb/157590.txt": 1
+ },
+ "beir_cqadupstack_programmers_56848": {
+  "0a/202642.txt": 1,
+  "12/194497.txt": 1,
+  "17/10656.txt": 1,
+  "1b/24737.txt": 1,
+  "1c/35890.txt": 1,
+  "48/55238.txt": 1,
+  "58/211511.txt": 1,
+  "5d/78234.txt": 1,
+  "5f/63386.txt": 1,
+  "60/46716.txt": 1,
+  "63/115951.txt": 1,
+  "69/111531.txt": 1,
+  "6a/54796.txt": 1,
+  "72/255542.txt": 1,
+  "7c/92337.txt": 1,
+  "7f/113688.txt": 1,
+  "93/45803.txt": 1,
+  "a1/15449.txt": 1,
+  "a3/221031.txt": 1,
+  "a9/140423.txt": 1,
+  "c7/202606.txt": 1,
+  "c9/143271.txt": 1,
+  "c9/70117.txt": 1,
+  "e2/29396.txt": 1,
+  "e3/125746.txt": 1,
+  "e4/176302.txt": 1,
+  "e8/109719.txt": 1,
+  "eb/202508.txt": 1,
+  "f1/166540.txt": 1,
+  "fb/110638.txt": 1,
+  "fb/131051.txt": 1,
+  "fd/94822.txt": 1
+ },
+ "beir_cqadupstack_programmers_57047": {
+  "92/207030.txt": 1
+ },
+ "beir_cqadupstack_programmers_57068": {
+  "47/155210.txt": 1
+ },
+ "beir_cqadupstack_programmers_57243": {
+  "7a/158936.txt": 1
+ },
+ "beir_cqadupstack_programmers_57405": {
+  "94/186605.txt": 1
+ },
+ "beir_cqadupstack_programmers_57435": {
+  "1e/62817.txt": 1,
+  "1f/194582.txt": 1,
+  "32/142098.txt": 1,
+  "40/29062.txt": 1,
+  "57/34122.txt": 1,
+  "79/203896.txt": 1,
+  "9a/177167.txt": 1,
+  "9f/45641.txt": 1,
+  "c6/26596.txt": 1,
+  "f2/193282.txt": 1
+ },
+ "beir_cqadupstack_programmers_57576": {
+  "ef/80167.txt": 1
+ },
+ "beir_cqadupstack_programmers_58887": {
+  "51/205557.txt": 1
+ },
+ "beir_cqadupstack_programmers_59091": {
+  "de/98786.txt": 1
+ },
+ "beir_cqadupstack_programmers_59496": {
+  "37/73667.txt": 1
+ },
+ "beir_cqadupstack_programmers_59520": {
+  "8d/143069.txt": 1
+ },
+ "beir_cqadupstack_programmers_59606": {
+  "1a/198085.txt": 1
+ },
+ "beir_cqadupstack_programmers_60216": {
+  "df/55373.txt": 1
+ },
+ "beir_cqadupstack_programmers_604": {
+  "4d/170573.txt": 1
+ },
+ "beir_cqadupstack_programmers_60409": {
+  "2f/198836.txt": 1
+ },
+ "beir_cqadupstack_programmers_60994": {
+  "00/34843.txt": 1
+ },
+ "beir_cqadupstack_programmers_61558": {
+  "d8/102819.txt": 1
+ },
+ "beir_cqadupstack_programmers_61745": {
+  "3a/55351.txt": 1
+ },
+ "beir_cqadupstack_programmers_61798": {
+  "8f/207987.txt": 1,
+  "91/251418.txt": 1,
+  "e0/246618.txt": 1
+ },
+ "beir_cqadupstack_programmers_61980": {
+  "78/137896.txt": 1
+ },
+ "beir_cqadupstack_programmers_62060": {
+  "07/224104.txt": 1
+ },
+ "beir_cqadupstack_programmers_62765": {
+  "e8/83117.txt": 1
+ },
+ "beir_cqadupstack_programmers_64671": {
+  "5f/203618.txt": 1
+ },
+ "beir_cqadupstack_programmers_64722": {
+  "f4/141427.txt": 1
+ },
+ "beir_cqadupstack_programmers_6476": {
+  "d8/19718.txt": 1
+ },
+ "beir_cqadupstack_programmers_65918": {
+  "b5/114002.txt": 1
+ },
+ "beir_cqadupstack_programmers_6625": {
+  "58/56508.txt": 1
+ },
+ "beir_cqadupstack_programmers_663": {
+  "8e/10920.txt": 1
+ },
+ "beir_cqadupstack_programmers_66735": {
+  "19/194146.txt": 1
+ },
+ "beir_cqadupstack_programmers_66764": {
+  "2c/125689.txt": 1,
+  "3d/85506.txt": 1
+ },
+ "beir_cqadupstack_programmers_66834": {
+  "09/216915.txt": 1,
+  "7d/874.txt": 1
+ },
+ "beir_cqadupstack_programmers_67707": {
+  "39/99051.txt": 1
+ },
+ "beir_cqadupstack_programmers_67750": {
+  "c3/53948.txt": 1
+ },
+ "beir_cqadupstack_programmers_67931": {
+  "22/202541.txt": 1,
+  "a4/232940.txt": 1
+ },
+ "beir_cqadupstack_programmers_67960": {
+  "6e/106909.txt": 1
+ },
+ "beir_cqadupstack_programmers_68867": {
+  "c3/95719.txt": 1
+ },
+ "beir_cqadupstack_programmers_69242": {
+  "02/134697.txt": 1,
+  "3a/294.txt": 1,
+  "5e/113175.txt": 1,
+  "6b/64958.txt": 1,
+  "ec/150853.txt": 1
+ },
+ "beir_cqadupstack_programmers_70755": {
+  "05/39940.txt": 1
+ },
+ "beir_cqadupstack_programmers_7126": {
+  "27/196673.txt": 1
+ },
+ "beir_cqadupstack_programmers_71904": {
+  "f9/72079.txt": 1
+ },
+ "beir_cqadupstack_programmers_71917": {
+  "70/39247.txt": 1,
+  "fd/61530.txt": 1
+ },
+ "beir_cqadupstack_programmers_7242": {
+  "85/119652.txt": 1
+ },
+ "beir_cqadupstack_programmers_72768": {
+  "b9/184202.txt": 1
+ },
+ "beir_cqadupstack_programmers_73304": {
+  "a6/125414.txt": 1
+ },
+ "beir_cqadupstack_programmers_73541": {
+  "54/71358.txt": 1,
+  "d3/211636.txt": 1
+ },
+ "beir_cqadupstack_programmers_73934": {
+  "c9/19006.txt": 1
+ },
+ "beir_cqadupstack_programmers_74086": {
+  "31/190152.txt": 1,
+  "46/188384.txt": 1,
+  "4a/212781.txt": 1,
+  "f4/236501.txt": 1
+ },
+ "beir_cqadupstack_programmers_74386": {
+  "4c/58432.txt": 1
+ },
+ "beir_cqadupstack_programmers_74493": {
+  "8c/20466.txt": 1,
+  "b3/201716.txt": 1
+ },
+ "beir_cqadupstack_programmers_74580": {
+  "06/224520.txt": 1
+ },
+ "beir_cqadupstack_programmers_750": {
+  "60/246058.txt": 1
+ },
+ "beir_cqadupstack_programmers_7536": {
+  "7d/7305.txt": 1
+ },
+ "beir_cqadupstack_programmers_7565": {
+  "01/135175.txt": 1,
+  "30/7859.txt": 1,
+  "94/83507.txt": 1
+ },
+ "beir_cqadupstack_programmers_76182": {
+  "4b/134523.txt": 1
+ },
+ "beir_cqadupstack_programmers_76801": {
+  "95/51712.txt": 1
+ },
+ "beir_cqadupstack_programmers_77146": {
+  "6c/103095.txt": 1
+ },
+ "beir_cqadupstack_programmers_7747": {
+  "99/127932.txt": 1
+ },
+ "beir_cqadupstack_programmers_77731": {
+  "97/14706.txt": 1
+ },
+ "beir_cqadupstack_programmers_78176": {
+  "ce/88416.txt": 1
+ },
+ "beir_cqadupstack_programmers_78431": {
+  "b4/72271.txt": 1
+ },
+ "beir_cqadupstack_programmers_78903": {
+  "54/64818.txt": 1,
+  "df/79189.txt": 1
+ },
+ "beir_cqadupstack_programmers_78956": {
+  "d9/115257.txt": 1
+ },
+ "beir_cqadupstack_programmers_79624": {
+  "62/41999.txt": 1
+ },
+ "beir_cqadupstack_programmers_79765": {
+  "ad/94651.txt": 1
+ },
+ "beir_cqadupstack_programmers_80694": {
+  "9f/106705.txt": 1
+ },
+ "beir_cqadupstack_programmers_80826": {
+  "01/10580.txt": 1,
+  "9a/66040.txt": 1
+ },
+ "beir_cqadupstack_programmers_81062": {
+  "6d/121864.txt": 1,
+  "a1/101496.txt": 1
+ },
+ "beir_cqadupstack_programmers_81131": {
+  "6d/81875.txt": 1
+ },
+ "beir_cqadupstack_programmers_81478": {
+  "7d/44623.txt": 1
+ },
+ "beir_cqadupstack_programmers_81591": {
+  "4d/191549.txt": 1
+ },
+ "beir_cqadupstack_programmers_81674": {
+  "1f/1095.txt": 1
+ },
+ "beir_cqadupstack_programmers_81705": {
+  "a8/205180.txt": 1,
+  "e3/253552.txt": 1
+ },
+ "beir_cqadupstack_programmers_81838": {
+  "22/233044.txt": 1,
+  "a4/231963.txt": 1
+ },
+ "beir_cqadupstack_programmers_82227": {
+  "55/131969.txt": 1,
+  "89/756.txt": 1,
+  "9e/90228.txt": 1,
+  "b0/132806.txt": 1,
+  "b2/191990.txt": 1,
+  "b8/113273.txt": 1
+ },
+ "beir_cqadupstack_programmers_82286": {
+  "92/82035.txt": 1
+ },
+ "beir_cqadupstack_programmers_84001": {
+  "2b/18303.txt": 1
+ },
+ "beir_cqadupstack_programmers_84638": {
+  "a4/140156.txt": 1
+ },
+ "beir_cqadupstack_programmers_84778": {
+  "8a/198241.txt": 1
+ },
+ "beir_cqadupstack_programmers_84909": {
+  "cb/138905.txt": 1
+ },
+ "beir_cqadupstack_programmers_84966": {
+  "ea/231201.txt": 1
+ },
+ "beir_cqadupstack_programmers_85019": {
+  "1a/84939.txt": 1,
+  "24/119249.txt": 1
+ },
+ "beir_cqadupstack_programmers_8544": {
+  "71/99935.txt": 1
+ },
+ "beir_cqadupstack_programmers_85691": {
+  "ca/168315.txt": 1
+ },
+ "beir_cqadupstack_programmers_8588": {
+  "2f/108518.txt": 1
+ },
+ "beir_cqadupstack_programmers_86656": {
+  "67/59928.txt": 1,
+  "8b/99735.txt": 1
+ },
+ "beir_cqadupstack_programmers_86904": {
+  "49/127934.txt": 1,
+  "b7/102353.txt": 1
+ },
+ "beir_cqadupstack_programmers_87082": {
+  "da/35276.txt": 1
+ },
+ "beir_cqadupstack_programmers_87321": {
+  "27/129478.txt": 1
+ },
+ "beir_cqadupstack_programmers_87452": {
+  "34/95202.txt": 1,
+  "4b/231434.txt": 1
+ },
+ "beir_cqadupstack_programmers_88028": {
+  "81/48697.txt": 1
+ },
+ "beir_cqadupstack_programmers_88392": {
+  "97/203507.txt": 1
+ },
+ "beir_cqadupstack_programmers_8886": {
+  "d3/122763.txt": 1
+ },
+ "beir_cqadupstack_programmers_89491": {
+  "7c/103850.txt": 1,
+  "fa/194939.txt": 1
+ },
+ "beir_cqadupstack_programmers_89554": {
+  "15/96524.txt": 1
+ },
+ "beir_cqadupstack_programmers_8958": {
+  "fd/1371.txt": 1
+ },
+ "beir_cqadupstack_programmers_89819": {
+  "3a/65081.txt": 1,
+  "5c/225296.txt": 1
+ },
+ "beir_cqadupstack_programmers_89944": {
+  "87/121829.txt": 1
+ },
+ "beir_cqadupstack_programmers_89947": {
+  "42/196946.txt": 1
+ },
+ "beir_cqadupstack_programmers_90217": {
+  "63/204455.txt": 1
+ },
+ "beir_cqadupstack_programmers_90438": {
+  "82/105137.txt": 1
+ },
+ "beir_cqadupstack_programmers_91064": {
+  "6d/198384.txt": 1
+ },
+ "beir_cqadupstack_programmers_91629": {
+  "26/114963.txt": 1,
+  "6c/111215.txt": 1,
+  "8a/73233.txt": 1
+ },
+ "beir_cqadupstack_programmers_91816": {
+  "64/188875.txt": 1
+ },
+ "beir_cqadupstack_programmers_91945": {
+  "40/197131.txt": 1
+ },
+ "beir_cqadupstack_programmers_91976": {
+  "96/5232.txt": 1
+ },
+ "beir_cqadupstack_programmers_92339": {
+  "0c/178512.txt": 1
+ },
+ "beir_cqadupstack_programmers_92393": {
+  "8a/213811.txt": 1
+ },
+ "beir_cqadupstack_programmers_92465": {
+  "8d/191293.txt": 1,
+  "d2/115958.txt": 1
+ },
+ "beir_cqadupstack_programmers_93016": {
+  "4e/26454.txt": 1
+ },
+ "beir_cqadupstack_programmers_93124": {
+  "b2/214970.txt": 1
+ },
+ "beir_cqadupstack_programmers_9320": {
+  "d1/126410.txt": 1
+ },
+ "beir_cqadupstack_programmers_93245": {
+  "a5/101300.txt": 1
+ },
+ "beir_cqadupstack_programmers_93462": {
+  "7a/5780.txt": 1
+ },
+ "beir_cqadupstack_programmers_93826": {
+  "af/206745.txt": 1,
+  "b4/25052.txt": 1
+ },
+ "beir_cqadupstack_programmers_93848": {
+  "f9/219091.txt": 1
+ },
+ "beir_cqadupstack_programmers_940": {
+  "7d/74258.txt": 1
+ },
+ "beir_cqadupstack_programmers_94024": {
+  "62/86636.txt": 1
+ },
+ "beir_cqadupstack_programmers_94780": {
+  "79/126205.txt": 1
+ },
+ "beir_cqadupstack_programmers_94932": {
+  "40/56772.txt": 1,
+  "68/254077.txt": 1
+ },
+ "beir_cqadupstack_programmers_95335": {
+  "18/95491.txt": 1
+ },
+ "beir_cqadupstack_programmers_95363": {
+  "f1/92385.txt": 1
+ },
+ "beir_cqadupstack_programmers_95373": {
+  "e3/4183.txt": 1
+ },
+ "beir_cqadupstack_programmers_95465": {
+  "03/196043.txt": 1
+ },
+ "beir_cqadupstack_programmers_95626": {
+  "73/123495.txt": 1
+ },
+ "beir_cqadupstack_programmers_95637": {
+  "81/209615.txt": 1,
+  "c6/58515.txt": 1
+ },
+ "beir_cqadupstack_programmers_95786": {
+  "d9/40350.txt": 1
+ },
+ "beir_cqadupstack_programmers_95933": {
+  "ac/75476.txt": 1
+ },
+ "beir_cqadupstack_programmers_95942": {
+  "c4/95946.txt": 1
+ },
+ "beir_cqadupstack_programmers_96504": {
+  "4f/136005.txt": 1,
+  "c9/140691.txt": 1
+ },
+ "beir_cqadupstack_programmers_96638": {
+  "11/105196.txt": 1
+ },
+ "beir_cqadupstack_programmers_97269": {
+  "08/129069.txt": 1
+ },
+ "beir_cqadupstack_programmers_97338": {
+  "db/165625.txt": 1
+ },
+ "beir_cqadupstack_programmers_97357": {
+  "78/4325.txt": 1
+ },
+ "beir_cqadupstack_programmers_97446": {
+  "64/240708.txt": 1
+ },
+ "beir_cqadupstack_programmers_97511": {
+  "f8/118571.txt": 1
+ },
+ "beir_cqadupstack_programmers_97660": {
+  "5d/103418.txt": 1,
+  "76/9161.txt": 1,
+  "87/209017.txt": 1
+ },
+ "beir_cqadupstack_programmers_97785": {
+  "c6/146160.txt": 1
+ },
+ "beir_cqadupstack_programmers_97832": {
+  "5d/13006.txt": 1
+ },
+ "beir_cqadupstack_programmers_97912": {
+  "58/17443.txt": 1
+ },
+ "beir_cqadupstack_programmers_9813": {
+  "11/98999.txt": 1
+ },
+ "beir_cqadupstack_programmers_98324": {
+  "ef/98485.txt": 1
+ },
+ "beir_cqadupstack_programmers_98509": {
+  "25/51307.txt": 1,
+  "4c/198458.txt": 1,
+  "d3/137177.txt": 1,
+  "f0/226488.txt": 1
+ },
+ "beir_cqadupstack_programmers_98651": {
+  "a6/151375.txt": 1
+ },
+ "beir_cqadupstack_programmers_98691": {
+  "68/48413.txt": 1,
+  "ee/115690.txt": 1
+ },
+ "beir_cqadupstack_programmers_98749": {
+  "af/7686.txt": 1
+ },
+ "beir_cqadupstack_programmers_98758": {
+  "b7/23270.txt": 1
+ },
+ "beir_cqadupstack_programmers_98905": {
+  "92/196987.txt": 1
+ },
+ "beir_cqadupstack_programmers_9944": {
+  "08/237868.txt": 1,
+  "32/200620.txt": 1,
+  "38/106365.txt": 1,
+  "49/174815.txt": 1,
+  "57/198433.txt": 1,
+  "91/87573.txt": 1,
+  "c5/13892.txt": 1,
+  "c7/127545.txt": 1,
+  "d4/4951.txt": 1,
+  "dd/3317.txt": 1
+ },
+ "beir_cqadupstack_programmers_9948": {
+  "5e/4180.txt": 1,
+  "89/20949.txt": 1,
+  "e0/20407.txt": 1
+ },
+ "beir_cqadupstack_programmers_99499": {
+  "f2/131545.txt": 1
+ },
+ "beir_cqadupstack_programmers_99647": {
+  "f9/99487.txt": 1
+ }
+}
