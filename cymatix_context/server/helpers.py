@@ -398,6 +398,7 @@ def _compute_know_or_miss_block(
     if top_gene is not None and gene_ids:
         try:
             from ..retrieval.freshness import (
+                apply_freshness_basis,
                 check_superseded,
                 revalidate_and_mark,
             )
@@ -450,6 +451,13 @@ def _compute_know_or_miss_block(
                 except Exception:
                     log.debug("Stage-7 revalidate failed", exc_info=True)
                     freshness_status = None
+                # #482: [context] freshness_basis="source" reads a source
+                # this machine cannot find as unknown, not stale.
+                _ctx_cfg = getattr(_live_cfg, "context", None)
+                freshness_status = apply_freshness_basis(
+                    freshness_status,
+                    getattr(_ctx_cfg, "freshness_basis", "clock"),
+                )
 
                 try:
                     successor_source_id = check_superseded(

@@ -655,6 +655,7 @@ returning their preserved content (only possible after C.1 made
 | `cold_tier_k` | `int` | `3` | Max cold-tier documents to retrieve per query |
 | `cold_tier_min_cosine` | `float` | `0.15` | SEMA cosine floor (sparse 20-dim — see Genome.query_cold_tier) |
 | `fingerprint_mode_profile` | `str` | `"balanced"` | "fast" \| "balanced" \| "quality" |
+| `freshness_basis` | `str` | `"clock"` | Issue #482: what decides an item's freshness. "clock" = age since last verification (legacy; a static store goes stale ~15 days after ingest). "source" = ask the source: unchanged on disk = verified, changed = needs refresh, not on this disk = unknown (not stale). |
 <!-- END GENERATED -->
 
 **Example.**

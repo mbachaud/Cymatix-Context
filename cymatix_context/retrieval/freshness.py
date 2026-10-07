@@ -182,6 +182,23 @@ def revalidate_source(
     return "fresh" if mtime <= float(last_verified) else "stale"
 
 
+FRESHNESS_BASES = ("clock", "source")
+
+
+def apply_freshness_basis(status: Optional[str], basis: str) -> Optional[str]:
+    """Map a ``revalidate_source`` verdict through ``[context] freshness_basis``.
+
+    "clock" (legacy, default) is the identity: a source this machine cannot
+    find stays "missing", which the know gate demotes to miss(stale).
+    "source" (#482) reads "missing" as "unknown": an archived or imported
+    store whose sources were never on this disk has unknown freshness, not
+    stale freshness. A source that changed on disk is still "stale".
+    """
+    if basis == "source" and status == "missing":
+        return "unknown"
+    return status
+
+
 def revalidate_and_mark(
     genome,
     gene: "Gene",
@@ -299,6 +316,8 @@ __all__ = [
     "DEFAULT_CACHE_TTL_S",
     "MTIME_CACHE_MAX_ENTRIES",
     "FreshnessStatus",
+    "FRESHNESS_BASES",
+    "apply_freshness_basis",
     "revalidate_source",
     "revalidate_and_mark",
     "check_superseded",
