@@ -12,6 +12,25 @@
   exactly what the agent announced: the vendor, host and model name maps are
   gone (`model_labels.py` removed), and the Connect-a-chat host list comes from
   the CLI's install table instead of a template literal.
+- **fix(store): concurrent `/context` requests no longer deadlock the server.**
+  `KnowledgeStore.get_doc` read through the shared writer connection, unlocked,
+  from the event loop (via the know/miss block), while another request's
+  `touch_genes` held `_write_lock` mid-UPDATE on that same connection: the
+  py3.14 sqlite3 shared-connection hang. The server stopped answering
+  everything, `/health` included. Found by a three-lane load probe on
+  2026-10-07; `get_doc` now uses the per-thread `read_conn`. Test:
+  `tests/test_get_doc_reader_conn.py` (deterministic writer-SQL contract plus a
+  child-process hammer that is killed if it wedges).
+- **bench(beir): BEIR rounds 1-2, tag-lanes-muted diagnostic arm, dense-free
+  know/miss tooling** (#482, #487). Adds BEIR corpus builders and `beir_*`
+  profiles (per-profile `min_file_bytes`), `beir_ndcg.py`, ladder
+  `--rank-dump`, needle/gold banks for 20 BEIR sets, and two opt-in `[know]`
+  keys, `neutral` and `fitted_inputs`, both defaulting to `None` (legacy
+  behaviour, no shipped-default change). Results are on #482.
+- **repo: benchmark receipt trees are no longer tracked** (#484).
+  `benchmarks/dogfood/**/receipts*/` is ignored. Receipts are archived in the
+  private `mbachaud/cymatix-receipts` repository; the history up to `e3825e4b`
+  keeps the old copies.
 
 ## 0.11.0 (2026-10-01)
 
