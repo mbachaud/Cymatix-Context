@@ -10,6 +10,17 @@
   after ingest, and `/context` treats a source this machine cannot find as
   stale: on the ERB 947k bed that forced 470/470 queries to `miss(stale)`
   before know confidence was read. No default change, so no receipt is required.
+- **feat(know): `[know] model = "lanes"`** (opt-in, #482; default `"legacy"`
+  unchanged). A dense-free know confidence built from inputs every query has:
+  the scale-free score shape, `coordinate_confidence`, and lane agreement
+  (`scoring/know_lanes.py`). Each input enters with a missing indicator, so an
+  unmeasurable signal never counts as 0 evidence. The gates before confidence
+  are unchanged. `scripts/fit_know_lanes.py` fits it from `know_abstain_replay`
+  receipts and writes a `[know]` block; it never edits `cymatix.toml`. On the
+  first fit (27 corpora, 32,299 queries) the leave-one-corpus-out pooled AUC
+  is 0.751, against 0.413 for the shipped betas. Calibration does not yet
+  transfer (precision 0.33 at the 0.45 floor), so the model stays opt-in until
+  a per-store floor and the receipt-gated A/B exist.
 
 ## 0.11.1 (2026-10-07)
 

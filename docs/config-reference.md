@@ -1093,6 +1093,9 @@ produces the bench JSONL.
 | `stale_after_days` | `int` | `30` | Stage 4 (spec §9, issue #63): age in days after which the /context response flags ``calibration_stale``. |
 | `neutral` | `Optional[List[float]]` | `None` | Issue #482: per-feature value (b1..b5 order, feature space) used when an input is unavailable — no dense lane, nothing delivered, freshness unknown; normally the calibration-set means. None = legacy: unavailable inputs contribute nothing. |
 | `fitted_inputs` | `Optional[List[str]]` | `None` | Issue #482: the inputs available when the betas were fit (names from top_score, score_gap, lexical_dense_agree, coordinate_confidence, freshness_min). Inputs outside it, or that the enabled lanes cannot produce, count as unavailable, and /context warns calibration_profile_mismatch. None = fit profile not recorded. |
+| `model` | `str` | `"legacy"` | Issue #482: which formula produces know confidence. "legacy" = the betas above. "lanes" = dense-free logistic over what every query has (score shape, coordinate_confidence, lane agreement; scoring/know_lanes.py) using lanes_intercept + lanes_betas. The gates before confidence (abstain, freshness, supersession) are the same either way. |
+| `lanes_intercept` | `float` | `0.0` | Issue #482: intercept of the "lanes" model (written by scripts/fit_know_lanes.py). |
+| `lanes_betas` | `Dict[str, float]` | `{}` | Issue #482: {feature name: beta} for the "lanes" model; names from scoring/know_lanes.FEATURE_NAMES, absent names weigh 0 (written by scripts/fit_know_lanes.py). |
 <!-- END GENERATED -->
 
 `stale_after_days` (Stage 7, spec §9 / issue #63) is the age in days

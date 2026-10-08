@@ -485,6 +485,30 @@ def _compute_know_or_miss_block(
         log.debug("Stage-7 cold-tier peek failed", exc_info=True)
         cold_targets = []
 
+    # #482: [know] model = "lanes" -- dense-free confidence over what this
+    # query actually produced (scoring/know_lanes.py). Any failure falls back
+    # to the legacy logistic rather than breaking the route.
+    confidence_override = None
+    _know_cfg = getattr(_live_cfg, "know", None)
+    if getattr(_know_cfg, "model", "legacy") == "lanes" and raw_scores:
+        try:
+            from ..scoring.know_lanes import LanesModel, fused_order, served_lanes_confidence
+
+            top1_text = None
+            order = fused_order(raw_scores)
+            reader = getattr(cymatix.genome, "read_conn", None)
+            if order and reader is not None:
+                hit = reader.execute("SELECT content FROM genes WHERE gene_id = ?", (order[0],)).fetchone()
+                top1_text = hit[0] if hit and isinstance(hit[0], str) else None
+            confidence_override = served_lanes_confidence(
+                LanesModel(_know_cfg.lanes_intercept, dict(_know_cfg.lanes_betas)),
+                scores=raw_scores, tier_contributions=tier_contrib, query=query,
+                top1_text=top1_text, coordinate_confidence=coord_conf,
+            )
+        except Exception:  # noqa: BLE001 -- intentional recovery boundary
+            log.warning("know lanes model failed; using the legacy logistic", exc_info=True)
+            confidence_override = None
+
     return decide_know_or_miss(
         window=window,
         query=query,
@@ -500,6 +524,7 @@ def _compute_know_or_miss_block(
         successor_source_id=successor_source_id,
         cold_refresh_targets=cold_targets,
         live_inputs=live_inputs,
+        confidence_override=confidence_override,
     )
 
 
