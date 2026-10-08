@@ -1,0 +1,4384 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_programmers_100095",
+   "query": "Should organizations penalize developers for the amount of defect reports filed against code they worked on?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_100685",
+   "query": "Making money with Open Source as a developer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_100959",
+   "query": "How do you unit test private methods?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_101164",
+   "query": "How difficult is it to transition from a software test engineer to a software development engineer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_102008",
+   "query": "Why isn't the line count in Visual Studio zero-based?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_102348",
+   "query": "My lead does not co-operate (may be lack of knowledge or unwillingness)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_102518",
+   "query": "What are the benefits and disadvantages in the approaches of C#, Java and Scala to Closures/Lambdas/...?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_102679",
+   "query": "What should I do before open sourcing a project?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_102999",
+   "query": "Should we use python 2.6 or 2.7 or 3.x?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_103089",
+   "query": "How to improve my programming knowledge?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_103133",
+   "query": "Is there a canonical source for learning C# and .NET internals?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_103263",
+   "query": "Scrum: how to handle backlog-items that are longer than one sprint",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_103471",
+   "query": "How should I handle invalid user input?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_104096",
+   "query": "Which platform to choose, Java or .NET?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_104111",
+   "query": "What is meant by a senior (insert language here) developer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_104122",
+   "query": "Dealing with change requests from clients for an old system that only take 5 minutes to implement",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_104517",
+   "query": "How can I get more experience with lower level programming?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_10495",
+   "query": "Do you work contract projects in addition to your full-time job?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_105380",
+   "query": "Architectural differences between dynamic and static languages",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_106693",
+   "query": "Should a design document contain a discussion of the pros/cons to a given design or should it focus on facts and rationale?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_107265",
+   "query": "When should I start learning a PHP Framework",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_107326",
+   "query": "How much Stack Overflow reputation makes it worth putting in CV?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_107774",
+   "query": "With agile, what do when a user story doesn't get completed in an iteration?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_107986",
+   "query": "Should we encourage coding styles in favor of developer's autonomy, or discourage it in favor of consistency?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_108292",
+   "query": "Java developing server-client solutions",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_108309",
+   "query": "Extracting user requirements from a person who does not know how to express himself",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_108395",
+   "query": "Application development practices in a non-software company",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_10857",
+   "query": "Should you document everything or just most?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_108855",
+   "query": "When is it necessary to use ORM tools?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_109279",
+   "query": "License validation and calling home",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_109818",
+   "query": "Is code like this a \"train wreck\" (in violation of Law of Demeter)?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_10998",
+   "query": "What does the Jamie Zawinski's quotation about regular expressions mean?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_110190",
+   "query": "How granular should TDD tests be?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_110270",
+   "query": "What's the difference between Enterprise Architect , Software/Solution Architect and a Dev Senior?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_110471",
+   "query": "Open source projects - motivation",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_110518",
+   "query": "Binaries in source control",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_110595",
+   "query": "git / other VCS - how often to commit?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_110730",
+   "query": "Benefits to starting JavaScript \"for\" loops at 0, or just traditional?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_110788",
+   "query": "Anonymous chat and fear of talking openly",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111003",
+   "query": "How to promote my open source project",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111475",
+   "query": "C++ Renaissance - marketing slogan?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111633",
+   "query": "What does SVN do better than Git?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111663",
+   "query": "Why isn't functional programming embraced more widely? ",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111757",
+   "query": "Raw JavaScript or jQuery? Where to start from?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111788",
+   "query": "Selling a webapp: I don't want sell my source code!!! What do I sell so?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111802",
+   "query": "Should I learn design patterns or algorithms to improve my logical thinking skills?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111846",
+   "query": "Should you write good documentation and clean code to increase the \"Bus Factor\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_111881",
+   "query": "How much do i need to learn in order to get an entry level asp.net job?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_112485",
+   "query": "What is the benefit of studying bitwise operators?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_112974",
+   "query": "If not working an internship, should I work for free?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_113209",
+   "query": "Is garbage collection necessary?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_113295",
+   "query": "When to use C over C++, and C++ over C?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_113726",
+   "query": "Simplifying Database Schema for Extensibility by non-expert Users",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_114258",
+   "query": "As a sole developer (for now), how should I be using Git?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_114286",
+   "query": "What books or resources would you recommend to learn practical OO design and development concepts?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_114520",
+   "query": "Is it wrong or bad to use autocomplete?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_114629",
+   "query": "Is there an alternative to Google Code Search?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_114755",
+   "query": "Transitioning To Java",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_114819",
+   "query": "Are 9 to 5 programmers looked down upon?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_114958",
+   "query": "Is Safari Books Online still the best game in town?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_115425",
+   "query": "Is there a list of common usernames to reserve in a new system?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_115525",
+   "query": "Packages organisation with MVC design pattern",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_115769",
+   "query": "What are these different Java versions for?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_115910",
+   "query": "Does adding unit tests make sense for well-known legacy code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_115920",
+   "query": "First Steps of Making a Programming Language",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_116148",
+   "query": "Which is more important career-wise: Length of time spent on a project, or personal projects?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_116242",
+   "query": "How to name parts of your program as a non native English speaker",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_116330",
+   "query": "Why don't more languages support recursive/nested comments?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_116491",
+   "query": "Do employers care about what college your degree is from?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_116730",
+   "query": "Programming with ADD/ADHD",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_116988",
+   "query": "How to improve typing skills for a developer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_117030",
+   "query": "What is the point of Java's package naming convention?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_117403",
+   "query": "Will Python developers find it easier to learn C (and vice versa)?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_117766",
+   "query": "How can I learn to write idiomatic C++?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_117825",
+   "query": "Is it ok to write a quick software programme and then refactor it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_117852",
+   "query": "Using \"catching exceptions\" to improve readability, Good or Bad?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_1180",
+   "query": "VB.Net vs C# debate",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_118064",
+   "query": "Is it necessary to know and understand design patterns in order to be a professional programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_118108",
+   "query": "Why is an array of characters called a String in Object Oriented languages?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_118140",
+   "query": "How can I get the benefit of working with a co-worker if I have no co-workers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_118301",
+   "query": "A simple ways to improve the release quality in RAD environment",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_118558",
+   "query": "How do I make code open-source?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_119367",
+   "query": "Should service test classes connect to the database",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_119466",
+   "query": "Traditional ASP.Net WebForms vs ASP.Net MVC",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_119513",
+   "query": "Learning to program without a computer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_119814",
+   "query": "What should be tested in Javascript?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_1200",
+   "query": "Is there a canonical tutorial or book on functional programming concepts?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_120477",
+   "query": "What Part of Your Project Should be in Source Code Control?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_120488",
+   "query": "Programming in academic environment vs industry environment",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_120541",
+   "query": "Is there a language that allows this syntax: add(elements)at(index);",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_120628",
+   "query": "Is using build-in sorting considered cheating in practice tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_121167",
+   "query": "Why do some languages recommend using spaces rather than tabs?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_121218",
+   "query": "What are the pros and cons of storing files in DB2 vs folders?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_121887",
+   "query": "How to estimate effort required to convert a large codebase to another language/platform",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_121998",
+   "query": "MIT vs. BSD vs. Dual License",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_122071",
+   "query": "What's cool about Lisp nowadays?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_122233",
+   "query": "How to deal with checked exceptions that cannot ever be thrown",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_122244",
+   "query": "Single Line Conditions and Loops - Best Practice",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_122437",
+   "query": "How to organize functional programs",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_123270",
+   "query": "Why \"Foo\" is so a special word?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_123456",
+   "query": "What are the most needed skills for someone entering the workforce as a software engineer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_123834",
+   "query": "Prerequisites to become a technical architect",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_123851",
+   "query": "How do you estimate?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_124533",
+   "query": "Will it hurt my reputation if I don't deliver what I'm expected to?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_12472",
+   "query": "How to deal with customers who don't understand the complexity of their requests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_124817",
+   "query": "Using frameworks or writing code without any framework ? Which is better for 3 months aged PHP programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_125108",
+   "query": "Will I ever be able to code client-side browser code in a language of my choice?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_125252",
+   "query": "Worth it to Learn an Archaic Language?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_125373",
+   "query": "How should I write my if statements?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_125715",
+   "query": "Do we still have a case against the goto statement?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_126130",
+   "query": "Example of an Object Oriented System design",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_126965",
+   "query": "Learning Django by example",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_127201",
+   "query": "How do you manage extensibility in your multi-tenant systems?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_127535",
+   "query": "Has the time gone to think about user with JavaScript disabled in browser?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_12773",
+   "query": "Is the GoF book still the one to read?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_127867",
+   "query": "What programmers should do if there are no tasks in hand for few days?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_128044",
+   "query": "How to protect own software from copying",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_128548",
+   "query": "When should I stop programming / coding?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_129141",
+   "query": "Is CSS a programming language?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_129520",
+   "query": "Difference between static testing and code review",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_129543",
+   "query": "What is the best way to handle product versioning and branching of long term projects?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_129603",
+   "query": "How do I approach a coworker about his or her code quality?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_130256",
+   "query": "Should I focus on web development or try other technologies?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_130335",
+   "query": "Why is Scala more scalable than other languages?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_130582",
+   "query": "Linux Programmer moving to Windows",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_130743",
+   "query": "How do I choose what code to review?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_130948",
+   "query": "Stack-instructions machines",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_131314",
+   "query": "Certifications needed to get an interview with no experience and no degree.",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_131381",
+   "query": "What are the best-practice / norms to order functions in files or classes?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_131408",
+   "query": "Java GNU Licensing",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_131451",
+   "query": "Difference between Dependency Injection (DI) & Inversion of Control (IOC)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_131701",
+   "query": "Search algorithm with co-ordinate (x,y) hints?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_1319",
+   "query": "What questions do you ask about a company before deciding to work there?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_132074",
+   "query": "How do I write a specification?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_132281",
+   "query": "Are C and/or C++ viable/practical options for web development?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_132520",
+   "query": "How to emphasize the differences between Software Engineering, Computer Engineering and Computer Science to high schoolers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_132578",
+   "query": "What issues should we be aware of converting to Agile/Scrum with a project that's underway?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_133096",
+   "query": "Is it OK to put a link to Q&A sites in a program's comments?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_133330",
+   "query": "What's wrong with mutability and can it be desirable?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_133424",
+   "query": "Being the goto developer vs being a solid team member?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_133565",
+   "query": "Programming with a group of people I've never met",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_133664",
+   "query": "Ideas to get you programming mojo back?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_133782",
+   "query": "How to properly approach a GitHub workflow as a solo developer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_133872",
+   "query": "Localised programming languages",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_133937",
+   "query": "Methods to rewrite a program",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_134037",
+   "query": "Advice for improving analytical skills and thought process",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_134244",
+   "query": "Is validating HTML a thing of the past?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_135047",
+   "query": "New to TDD. Should I avoid private methods now?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_135701",
+   "query": "Why is it so difficult to fix buffer overflows?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_135970",
+   "query": "how can I improve my c++ skills",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_135993",
+   "query": "How can I quantify the amount of technical debt that exists in a project?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_136195",
+   "query": "Do I need to know how to program before going to university if I want to study programming?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_136382",
+   "query": "Should a novice programmer learn several languages at once?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_136449",
+   "query": "Importance of bitwise thinking",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_136629",
+   "query": "Should developers enter bugs into the bug tracking system?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_136634",
+   "query": "What degree of mathematical knowledge should a programmer have?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_13676",
+   "query": "Would you allow your programmers to use Messenger and social networks like Facebook?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_136774",
+   "query": "Flipping the desired bit of an integer number",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_136908",
+   "query": "Why Use !boolean_variable Over boolean_variable == false",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_136993",
+   "query": "Interpreted vs Compiled: A useful distinction?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_137344",
+   "query": "How does one decide if a data object type should be designed to be immutable?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_137439",
+   "query": "Intellectual Property Rights - Starting a new Job",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_13786",
+   "query": "How is software scalability measured?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_137973",
+   "query": "if it's been designed correctly is AOP useful?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_138026",
+   "query": "IF ELSE shorthand. Does it hurt readability",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_138182",
+   "query": "Can Javascript code be encrypted making it hard for someone to copy?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_138396",
+   "query": "How to Mentor a Junior Developer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_138447",
+   "query": "Can I show previous company work in a CV portfolio?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_138642",
+   "query": "Is there a drawback in defining multiple small DRY classes, instead of bigger more repetitive classes?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_138643",
+   "query": "Why is Python used for high-performance/scientific computing (but Ruby isn't)?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_138726",
+   "query": "What are proven advantages of tools like GWT over pure JavaScript frameworks?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_138908",
+   "query": "Is a Front-End Web Developer a \"Programmer\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_139037",
+   "query": "Simple & short license notice for proprietary code",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_139171",
+   "query": "Defensive Programming vs Exception Handling?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_139418",
+   "query": "Reference public exposed property or private field in other parts of a class",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_139442",
+   "query": "How do I prove I'm a capable full-time hire after 3 years of a CS degree & lots of summer experience?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_139663",
+   "query": "Confusion about dual license (MIT/GPL) javascript for use on my website",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_140004",
+   "query": "Why choose an established CMS as opposed to building one from scratch?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_140264",
+   "query": "Is a company order to switch to a certain IDE a red flag?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_140266",
+   "query": "To program in free time as a programmer, is to show that programming is passion. If not, is the programmer good?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_140561",
+   "query": "Difference between software analyst, software developer and programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_140876",
+   "query": "Options for Opensource license?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_141232",
+   "query": "What's shell script's advantage over interpreted programming languages?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_141411",
+   "query": "What is enterprise software, exactly?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_141961",
+   "query": "Teaching java interfaces to absolute beginners: What is a good example?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_141973",
+   "query": "How do you achieve a numeric versioning scheme with Git?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_142292",
+   "query": "Are there code reviews in opensource projects? If so, what tools are used to do this?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_142612",
+   "query": "When Agile goes wrong",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_142974",
+   "query": "best way to handle a many to many relationship?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_143127",
+   "query": "Android Development: MVC vs MVVM",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_143722",
+   "query": "Is there a language that transcompiles to C with a better syntax?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_144058",
+   "query": "Why do different languages use different Code Line Delimiters?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_144556",
+   "query": "Is continuous integration useful for a team of two developers who write a lot of code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_144717",
+   "query": "Advantages and disadvantages of building a single page web application",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_144829",
+   "query": "Standards for mixing languages within one application?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_144892",
+   "query": "Depend on built technology, or build your own",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_145055",
+   "query": "Are there guidelines on how many parameters a function should accept?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_145437",
+   "query": "Why use an interface when the class can directly implement the functions?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_145518",
+   "query": "Teaching Programming to Kids",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_145722",
+   "query": "Freelancing - Share the source code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_14582",
+   "query": "How do you organize your projects folders?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_146065",
+   "query": "Is there really Object-relational impedance mismatch?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_146272",
+   "query": "Method size in an OOP language, for instance - in Java",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_14645",
+   "query": "What are effective interview questions?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_146810",
+   "query": "Interpreting profiling results",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_147134",
+   "query": "How should I test randomness?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_147185",
+   "query": "How does a beginner programmer find a mentor for learning from doing?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_147240",
+   "query": "Where are functional languages used?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_147273",
+   "query": "Confusion about proper use of * wildcard in SQL",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_147977",
+   "query": "Is it wrong to use a boolean parameter to determine behavior?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_14831",
+   "query": "How to teach Exception Handling for New Programmers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_148747",
+   "query": "Abstract Data Type and Data Structure",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_14975",
+   "query": "What do you do with a heisenbug?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_15004",
+   "query": "At which point do you \"know\" a technology enough to list it on a resume",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_150479",
+   "query": "How to make sure the application source code has a proper documentation for new programmers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_150633",
+   "query": "Exception hierarchy design",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_150888",
+   "query": "Using static in PHP",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_151103",
+   "query": "What is the purpose of \"re-type your email\" field?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_152094",
+   "query": "null pointers vs. Null Object Pattern",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_15239",
+   "query": "For what problems is object oriented programming not a good choice?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_152678",
+   "query": "Save match details to SQLite or XML?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_15286",
+   "query": "Best approach to learning web programming",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_153581",
+   "query": "What does RESTful web applications mean?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_153631",
+   "query": "Should each app have its own database, or should small apps be merged into one?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_154155",
+   "query": "Should you keep a copy of all the code you write?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_154339",
+   "query": "Advice on SCRUM for the solitary developer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_154593",
+   "query": "How to get motivation and time to learn outside of work?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_154679",
+   "query": "Reformatting and version control",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_154954",
+   "query": "How to refactor a method which breaks \"The law of Demeter\" principle?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_155469",
+   "query": "Keep coding the wrong way to remain consistent?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_155659",
+   "query": "Java language book for an experienced programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_156771",
+   "query": "How to get good design when using agile methods?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_156794",
+   "query": "Database lock on gSoap server during storing data in table",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_156848",
+   "query": "Designing a library that is easy to use: composition or inheritance",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_15829",
+   "query": "Advice for solo programmer whose team will expand in the near future",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_158359",
+   "query": "How can calculus and linear algebra be useful to a system programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_158397",
+   "query": "Do large test methods indicate a code smell?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_158534",
+   "query": "Pros and Cons of holding all the business logic in stored procedures in web application",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_158591",
+   "query": "How to avoid typo errors, etc?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_159089",
+   "query": "Return magic value, throw exception or return false on failure?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_159373",
+   "query": "What backs up the claim that C++ can be faster than a JVM or CLR with JIT?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_159626",
+   "query": "Licensing for hosted open source and 3rd party libraries",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_159666",
+   "query": "Which programming language is Curiosity written in?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_16010",
+   "query": "Is it bad to use Unicode characters in variable names?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_160628",
+   "query": "version control security",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_161303",
+   "query": "Is it bad practice to use public fields?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_161711",
+   "query": "Is it must for a junior Programmer to have a mentor?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_161809",
+   "query": "Is it typical for a unit test suite to be larger than the code it tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_162583",
+   "query": "Why is the rec keyword needed in F#?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_162931",
+   "query": "How to avoid being an API programmer only?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_163408",
+   "query": "How do I advertise for volunteers for my open source project",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_163752",
+   "query": "How can I give a basic idea of what I'm working on to a non programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_163822",
+   "query": "Code Measuring and Metrics Tools?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_163924",
+   "query": "Where can I find a punched card simulator?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_163933",
+   "query": "What technologies are used for Game development now days?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_164599",
+   "query": "Verification of requirements question",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_164665",
+   "query": "Programming languages with a Lisp-like syntax extension mechanism",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_164799",
+   "query": "QA - Developer communication",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_16528",
+   "query": "Single statement if block - braces or no?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_165668",
+   "query": "How to manage/control software versions?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_165725",
+   "query": "Git branching and tagging best practices",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_165735",
+   "query": "Improving without mentor",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_166136",
+   "query": "Switching licenses, or cross licensing existing GNU GPL v3 software",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_166314",
+   "query": "How Do I Determine the Value of a Technical book?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_166798",
+   "query": "What does \"general purpose system\" mean for Java SE Embedded?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_166884",
+   "query": "Should I extract specific functionality into a function and why?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_166895",
+   "query": "What are the problems python 3 new features solve?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_16708",
+   "query": "How do you stay motivated for hobby projects?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_167277",
+   "query": "How is it possible to write the compiler of a programming language with that language itself",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_16732",
+   "query": "Unit testing internal components",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_167890",
+   "query": "Is StackOverflow making me stupid?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_168685",
+   "query": "Does software rot refer primarily to performance, or to messy code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_169962",
+   "query": "Hiring developers - listing IDE as a requirement?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_170138",
+   "query": "Is this a violation of the Liskov Substitution Principle?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_170966",
+   "query": "Isn't class scope purely for organization?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_171701",
+   "query": "Big Oh notation does not mention constant value",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_173320",
+   "query": "Does a programmer really need college?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_17341",
+   "query": "Compiler Warnings",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_174762",
+   "query": "How to show code samples in an interview?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_175014",
+   "query": "Strategies for invoking subclass methods on generic objects",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_175309",
+   "query": "Code maintenance: To add comments in code or to just leave it to the version control?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_175561",
+   "query": "When to open source a project under development?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_175583",
+   "query": "Alternative to \"inheritance versus composition?\"",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_175594",
+   "query": "C++ - Constructor or Initialize Method to Startup",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_17568",
+   "query": "As a programmer, are you required to do timesheets?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_176102",
+   "query": "A toolset for self improvement and learning",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_176471",
+   "query": "Seeking documents on the philosophy of Google's Go?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_17696",
+   "query": "Writing a Software Requirement Specification",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_177907",
+   "query": "What's the difference between VBA and VB Script?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_178018",
+   "query": "Tips or techniques to use when you don't know how to code something?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_17826",
+   "query": "How do people read big technical books?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_178916",
+   "query": "Store image as logic file (in db by using binary format) or physical file (in the server)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_17898",
+   "query": "What's a nice explanation for pointers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_179002",
+   "query": "IoC containers and service locator pattern",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_179162",
+   "query": "Best way to protect website application code",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_179554",
+   "query": "What is the difference between technical specifications and design documents?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_179618",
+   "query": "How to test if a hashing algorithm is good?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_179763",
+   "query": "How to create a manager class without global variables nor singletons?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_180012",
+   "query": "Is there any reason not to go directly from client-side Javascript to a database?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_180165",
+   "query": "Hardware requirements",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_18059",
+   "query": "How do you explain refactoring to a non-technical person?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_180904",
+   "query": "Are header files actually good?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_181527",
+   "query": "Why is reverse debugging rarely used?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_181780",
+   "query": "When should the VCS history of a project be deleted?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_182009",
+   "query": "Why notify and wait are not declared in threads?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_182207",
+   "query": "Can I ask the job interviewer to show me their code before joining the company?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_182229",
+   "query": "Why does Java's Collections.unmodifiableList return a List interface instead of an UnmodifiableList interface?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_18371",
+   "query": "How do you interview someone with more experience than you?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_18444",
+   "query": "What should you bring to the table as a Software Architect?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_184874",
+   "query": "Is Ken Thompson's compiler hack still a threat?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_185671",
+   "query": "Should methods always return from one place?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_185712",
+   "query": "Bridge Design Pattern - I still don't get it",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_186377",
+   "query": "Developers taking code home - how bad is it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_186438",
+   "query": "Why does File.Open in .Net throw exceptions and not follow exception handling best practices?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_186465",
+   "query": "What will be the better way for data retrieval on application that needs to handle limited amount of data?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_186690",
+   "query": "Relative value of manual vs automated testing",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_18679",
+   "query": "How do I learn algorithms and data structures?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_186932",
+   "query": "How to deal with Ghost bugs which appears in undocumented test-case scenarios?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_187026",
+   "query": "How to get better at debugging?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_188381",
+   "query": "Engineering interview candidate refuses to use whiteboard",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_189096",
+   "query": "Knowledge Transfer and software development",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_189426",
+   "query": "About the usage of assertions",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_189824",
+   "query": "I would like to learn to write database-driven web applications. Where should I start?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_189983",
+   "query": "Obsessed with finding most elegant solution",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_190542",
+   "query": "Steps to open source a small project",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_190649",
+   "query": "What's the right balance between code consistency and code improvement?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_190758",
+   "query": "Should I check integrity in my application code or defer to the database?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_190853",
+   "query": "Is using `continue`, `break` in non-`switch` loops and `?:` bad practice?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_190955",
+   "query": "Using public final rather than private getters",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_191191",
+   "query": "How to deal with undesired commits that break long-running release builds?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_191358",
+   "query": "How does one sandbox a web application",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_191539",
+   "query": "Wrapping specific checked exception in domain unchecked ones?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_191759",
+   "query": "Can a developer perform testing efficiently?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_191961",
+   "query": "Why do some big projects, like Git and Debian, only use a mailing list and not an issue tracker?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_192",
+   "query": "Is test coverage an adequate measure of code quality?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_192037",
+   "query": "How does understanding computer architecture help a programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_193269",
+   "query": "Unit-testing functions without business logic (only checks)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_193415",
+   "query": "Best practices for sharing tiny snippets of code across projects",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_193496",
+   "query": "What is the netiquette for forking other people's open source projects?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_193586",
+   "query": "Using a development language (Python) before putting it into C++",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_193895",
+   "query": "Responsibilities of Build Script and Build Server",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_193929",
+   "query": "\"Too object-oriented\"",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_193996",
+   "query": "How important is it to have a computer science degree?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_194106",
+   "query": "What are the advantages of server-side Javascript and when would you use it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_194321",
+   "query": "Software Design and architecture from Scratch",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_194373",
+   "query": "Learning new concepts is an infinite loop. How do I go about it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_194395",
+   "query": "Command line tools vs IDE (Eclipse )",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_194646",
+   "query": "What methods are there to avoid a stack overflow in a recursive algorithm?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_194679",
+   "query": "Is it common to spend your first few weeks at a new job trying to fix your designated workstation?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_194958",
+   "query": "Which Agile methodology could my small team use?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_194975",
+   "query": "Readable regular expressions without losing their power?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_195073",
+   "query": "How to properly design REST",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_195094",
+   "query": "Day-to-Day Differences between Software Engineering and Web Developer Positions",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_195337",
+   "query": "Is there any difference between pointers and references?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_195416",
+   "query": "Why do we still use a programming language instead of using just SQL?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_19558",
+   "query": "How to start project?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_195656",
+   "query": "Power of HTML5?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_195719",
+   "query": "Functional Programming: efficiently handling whole world changes?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196139",
+   "query": "Programming by Intention, Depth-First or Breadth-First?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196260",
+   "query": "Does a programming language have to be compiled to be considered a programming language?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196356",
+   "query": "iPhone development - Which model to test?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196366",
+   "query": "How to fix quickly, dummy errors?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196546",
+   "query": "What is a good analogy to explain how software development is different than building a bridge?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196615",
+   "query": "XML vs SQL for content display on an ecommerce website",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196700",
+   "query": "How to maintain a steady pace at development?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196876",
+   "query": "Is C a pre-requisite in order to learn C++ effectively?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196913",
+   "query": "Is the use of JUnit feasible for a short duration project of around 3 months?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196930",
+   "query": "GSOC along with an internship",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_196990",
+   "query": "OOP principles and method names",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_197056",
+   "query": "The need for adding an interface to every class",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_197251",
+   "query": "Write then optimise or write optimised",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_197443",
+   "query": "Whatever happened to Pascal?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_19750",
+   "query": "How to get back to Software Engineering after a break?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_197746",
+   "query": "What is the benefit of the MoSCoW technique?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_197838",
+   "query": "What are the downsides of mixing tabs and spaces?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_198240",
+   "query": "Approaches to isolating tests that require a database?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_19842",
+   "query": "What are some well known applications written in F#?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_198549",
+   "query": "Re-architecting a classic inheritance design",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_198936",
+   "query": "How does a new programmer plan a code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_198995",
+   "query": "Evaluate one's skill and improve it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_199162",
+   "query": "Should I write compact code or code with lots of spaces?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_199303",
+   "query": "How can a non-developer help promote/develop unit tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_199698",
+   "query": "What are the best ways to find fellow coders to work on hobby open-source projects?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_199803",
+   "query": "Is the development of CLI apps considered \"backward\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_199827",
+   "query": "I don't understand how TDD helps me get a good design if I need a design to start testing it",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_199838",
+   "query": "How can I avoid editing conflicts repeatedly when merging from one to branch to another?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_199873",
+   "query": "Is it bad to use giant label comments to mark off sections of code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_200031",
+   "query": "Do I need JUnit tests for the controller layer on a MVC when I have a database layer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_200064",
+   "query": "Is there a unified source code documentation generator?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_20023",
+   "query": "Is Java (still) the cross platform language of choice?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_200360",
+   "query": "How to generate random numbers with a (negative) sloping distribution?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_200362",
+   "query": "Does dedicated maintenance work hamper a programmer's career?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_200497",
+   "query": "Tex and Absence of bugs",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_200545",
+   "query": "Over thinking development",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_200709",
+   "query": "Is the usage of internal scope blocks within a function bad style?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_200861",
+   "query": "How does the operating system regain control when multitasking?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_20092",
+   "query": "How do I convince my company to contribute towards Open-Source?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_201041",
+   "query": "Programming against a protocol in Objective-C",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_201119",
+   "query": "Web Authentication using PKI Certs",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_201130",
+   "query": "How do you balance out code structuring (few big functions vs. many small ones)?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_201237",
+   "query": "I am incompetent; how can I fix it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_201844",
+   "query": "Ways for a young programmer to not feel intimidated at my first REAL programming job?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_201894",
+   "query": "embedding programming languages into other languages",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_202273",
+   "query": "When does SOAP make more sense than REST?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_202770",
+   "query": "Why should I adopt MVC?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_202804",
+   "query": "How to organise OO code",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_202889",
+   "query": "Getting work done in a small office",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_202903",
+   "query": "Do teams get more productive by adding more developers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_203362",
+   "query": "Need help understanding Mocks and Stubs",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_203469",
+   "query": "If my team has low skill, should I lower the skill of my code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_203483",
+   "query": "What is a Non-Functional Requirement?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_203776",
+   "query": "What exactly is \"big O\" notation?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_203970",
+   "query": "When to use primitive vs class in Java?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_204206",
+   "query": "Painfully Stupid Method Names in Legacy Code: Fix or Leave as Warning?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_204410",
+   "query": "How are GPL-compatible licenses like MIT usable in GPL programs without being subject to the copyleft provision?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_204443",
+   "query": "Coding convention regarding the usage of underscores",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_204521",
+   "query": "Is there a canonical source supporting \"all-surrogates\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_204580",
+   "query": "managing information/functionality on shared common project classes",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_204840",
+   "query": "Difference between application-level and system-level testing",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_204938",
+   "query": "When is it okay to open-source something?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_205279",
+   "query": "How your team manage shared password/key",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_205359",
+   "query": "API Authentication, One time token VS Dynamic tokens",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_205562",
+   "query": "Good logging technique for small projects on Java",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_205638",
+   "query": "When is a catch clause empty",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_206199",
+   "query": "What should a self-taught developer learn in order to work with others?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_206254",
+   "query": "Difference between a server and a client",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_20653",
+   "query": "Is it better to specialize in a single field I like, or expand into other fields to broaden my horizons?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_206754",
+   "query": "What is the best way to track / record the current programming project you work on?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_206755",
+   "query": "IDE vs. Text Editor",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_206816",
+   "query": "Clarification of \"avoid if-else\" advice",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_20684",
+   "query": "Why would you use MVC over Web Forms?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_207815",
+   "query": "Why don't we have a non-turing complete general purpose language yet?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_208698",
+   "query": "Multiple meanings for one variable?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_208815",
+   "query": "Drawbacks of using pure html in webforms?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_208867",
+   "query": "Component based software engineering vs Service Oriented Architecture",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_208976",
+   "query": "Good practice to use namespace or prefix to indicate what file function is from?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_209070",
+   "query": "Tips for managing an offshore development team",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_209129",
+   "query": "Without C++-like destructors, how do we return resources that aren't managed by garbage collector in Java?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_209479",
+   "query": "School vs Self-Taught",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_209609",
+   "query": "How to use unit testing?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_209764",
+   "query": "catch(Exception ex) would this example be a code smell?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_209857",
+   "query": "Open source development life cycle",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210049",
+   "query": "What kind of programming languages have the highest pedagogical value?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210327",
+   "query": "What is the one or the few major changes from Java 6 to Java 7, couldn't JBoss do that already with Java 5?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210346",
+   "query": "After years of working alone, other developers will finally see my (buggy) code. What should I do?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210360",
+   "query": "Stopping developers committing to the wrong branch on DVCS",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210472",
+   "query": "Is renewal of MIT license needed on github at the beginning of each year?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210496",
+   "query": "Is it common to run out of work towards the end of a sprint?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210532",
+   "query": "What are the alternatives to resx file",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210623",
+   "query": "GPLv3 licensing and Software-as-a-Service web apps",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210635",
+   "query": "Determine dependency between .NET projects",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210637",
+   "query": "Program design with multiple data sets, algorithms and results",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210693",
+   "query": "Who fixes broken tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_210864",
+   "query": "Is Pair Programming also used to train less experienced developers and bring them up to speed?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_211276",
+   "query": "Why would I ever use delegates if I'm not doing events?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_211319",
+   "query": "Excessive use “this” keyword in Java",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_211477",
+   "query": "Test Driven Development vs Behavior Driven Development",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_211610",
+   "query": "Refactorable God v.s. too many classe",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_211640",
+   "query": "Switch Parent Children relationship in C#",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_211678",
+   "query": "How to do you judge the value of using TDD or plain unit testing in an Open Source project? Is there a good rule of thumb?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_21230",
+   "query": "What are the pros and cons for the employer of code questions during an interview?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_212300",
+   "query": "Why are CIL and CLR required in .NET?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_21256",
+   "query": "Why do we study Java at university?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_212575",
+   "query": "Why are algorithms and data structures important?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_212932",
+   "query": "What's better either pass a class instance to the method or just primitives?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_213070",
+   "query": "What are the guidelines for either throwing an exception or failing silently for nonvalid arguments?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_213173",
+   "query": "What To Do If I've Found a Vulnerability In a Possible Future Employers Site?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_213449",
+   "query": "How do I create every permutation",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_213452",
+   "query": "Is there any reason zero should still equal false in a new programming language?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_213603",
+   "query": "Handling Server Response Timeouts",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_21397",
+   "query": "What's the recommended control naming convention for XAML markup?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_21403",
+   "query": "Why do large IT projects tend to fail or have big cost/schedule overruns?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_214494",
+   "query": "Throwing exception from a property when my object state is invalid",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_214734",
+   "query": "Is programming in layers real?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_214784",
+   "query": "Rails: The Law of Demeter",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_215042",
+   "query": "How to cut the line between quality and time?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_215235",
+   "query": "unit level testing, agile, and refactoring",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_215248",
+   "query": "Is there an established or defined best practice for source control branching between development and production builds?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_215427",
+   "query": "What should I do if I have a genius team lead which does not share?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_215474",
+   "query": "What are the tools required to build a compiler?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_215703",
+   "query": "Is the Joel Test really a good gauging tool?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_215727",
+   "query": "Double equals (Not equality) during assigning Java",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_215826",
+   "query": "Make methods that do not depend on instance fields, static?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_216195",
+   "query": "Should single purpose utility app use a class",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_216301",
+   "query": "Are there any formalized/mathematical theories of software testing?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_216639",
+   "query": "Unit-testing code that relies on untestable 3rd party code",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_218121",
+   "query": "Good fix vs Quick fix",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_218184",
+   "query": "How should I make searching a relational database more efficient?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_218447",
+   "query": "Do algorithms published in academic journals need to be licensed?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_218869",
+   "query": "Is explicit else needed in initialisers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_219028",
+   "query": "How to safeguard a REST API for only trusted mobile applications",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_21907",
+   "query": "Open Source but not Free Software (or vice versa)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_219198",
+   "query": "Why do modern websites still insist on archaic username/password requirements?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_220023",
+   "query": "Evolution versions of applications",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_220049",
+   "query": "Verbose or concise logging",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_220343",
+   "query": "Which is better approach for writing automated tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_220444",
+   "query": "Should we always write Defensive null check in code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_220872",
+   "query": "Structured code vs Duplicate code. Modifiability",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_220890",
+   "query": "When did current source control management emerge?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_221009",
+   "query": "SPA thin or thick architecture",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_221030",
+   "query": "What is the difference between apache and tomcat in the xampp control panel?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_221234",
+   "query": "Is there a license that forbids distribution and gives a Github repo owner full rights?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_221365",
+   "query": "Mozilla Public License (MPL 2.0) vs Lesser GNU General Public License (LGPL 3.0)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_22146",
+   "query": "Best books on the theory and practice of software architecture?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_221615",
+   "query": "Why do dynamic languages make it more difficult to maintain large codebases?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_221619",
+   "query": "How to handle multiple similar projects? Why?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_222362",
+   "query": "If I fork an open source project and make improvements in the fork, will it or I offend the original authors?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_222464",
+   "query": "Designing online exam",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_222508",
+   "query": "Can you call yourself a programmer if you don't understand how a computer works",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_223027",
+   "query": "At what point is version control needed?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_223148",
+   "query": "Two months in my new job, still having trouble learning a new codebase. How can I improve?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_223250",
+   "query": "Do Scrum sprints mean to work at the fastest pace possible?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_223596",
+   "query": "Should I refactor a F class from code climate?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_223718",
+   "query": "Specifics of Switch and If statements",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_223815",
+   "query": "Auto Transaction Failsafe's, Coldfusion Schedule Files",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_224036",
+   "query": "How to isolate a massive and changeable web service",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_224434",
+   "query": "Why do we still use floats?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_224752",
+   "query": "In which file types I should include the copyright header?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_224835",
+   "query": "How should I validate code when there is no one to do code review?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_225153",
+   "query": "Best practice or design patterns for retrieval of data for reporting and dashboards in a domain-rich application",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_225354",
+   "query": "Logic inside class properties setters & getters",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_225387",
+   "query": "C# Code Design Issue",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_225504",
+   "query": "Is it normal to look back on codes when coding?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_225870",
+   "query": "Deploying Database Schema changes in a patching process",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_225931",
+   "query": "Workaround for Java checked exceptions",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_226233",
+   "query": "Use of LGPL libraries on android devices (in a single closed source .apk)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_226357",
+   "query": "Should unit-tests be entirely self-contained?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_227720",
+   "query": "How to shorten the case statement from hades?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_227818",
+   "query": "Is it bad practice to encapsulate a single operation in a class?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_227993",
+   "query": "Coding standards for c#",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_228187",
+   "query": "Licensing - Using Standard C Library",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_228584",
+   "query": "Why is BigDecimal the best data type for currency?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_228848",
+   "query": "How does Java handle cyclic data references when serializing an object?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_228973",
+   "query": "Upgrading old ASP classic to newer standards",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_229170",
+   "query": "Scrum: requirements clarification vs changing scope",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_229657",
+   "query": "Is there a difference between declaring variables outside or inside a loop?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_230145",
+   "query": "what is the meaning of f(n) = O(g(n))?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_230199",
+   "query": "How to identify performance bottlenecks in your software",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_230206",
+   "query": "Is it better to use already build plugins/extensions or code your own in programming projects",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_23021",
+   "query": "Refactor or Concentrate on Completing App",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_230250",
+   "query": "outOfMemoryException in android emulator",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_230280",
+   "query": "How to address the concerns of the software architect but still maintain collective code ownership?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_230534",
+   "query": "Able to read Code but struggling majorly to write it",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_230604",
+   "query": "What exactly is procedural programming? How exactly is it different from OOP? Is it the same as functional programming?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_230778",
+   "query": "Should I consider loosely-coupling for class methods as well?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_231491",
+   "query": "Why is quality engineering difficult?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_23276",
+   "query": "How does one become a leader in a team of programmers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_232812",
+   "query": "Too many CS files in a single project",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_232843",
+   "query": "From a TDD perspective, am I a bad person if I test against a live endpoint instead of a mock?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_233038",
+   "query": "Why many Ruby gems won't work on Windows",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_23313",
+   "query": "Programmers forgetting syntax",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_233342",
+   "query": "Best practices for introducing testing to a large, stable, legacy Java application?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_233503",
+   "query": "How to reuse c++ code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_233592",
+   "query": "Unit testing of non-atomic methods",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_233615",
+   "query": "Joel Test: Quiet working space as a developer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_233981",
+   "query": "Characterization in Testing: Unit test or Functional test",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_234001",
+   "query": "Is a language that provides more abstractions to use it's own API, considered higher-level than a language that doesn't?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_234066",
+   "query": "Publish an app on Google Play from Iran",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_234449",
+   "query": "How to avoid programmers duplicating code",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_234511",
+   "query": "What is the best practice for arranging third-party library licenses \"paperwork\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_234620",
+   "query": "Developing an big system in a a small company",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_234820",
+   "query": "design patterns in Javascript - toggle functionality",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_234962",
+   "query": "What are the advantages of recursion compared to iteration?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_23507",
+   "query": "What is the path to JavaScript mastery?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_235283",
+   "query": "How To Invoke A Method When It's Class is Accessed (Any Method) - \"OnClassEnter\"",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_235468",
+   "query": "How can I make my logging more useful?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_235645",
+   "query": "Singleton: Why is a global point of access bad?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_236370",
+   "query": "Query regarding MIT licence",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_236415",
+   "query": "Is machine language always binary?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_236473",
+   "query": "Advantages and disadvantages of making one DB per customer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_23652",
+   "query": "How can I promote software reuse in a large company?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_236571",
+   "query": "Understanding object-oriented programming: why is it important?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_236853",
+   "query": "Is there a performance difference between ++x over x++?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_236903",
+   "query": "What are the benefits of using Polymorphism 'in the real world' - as opposed to not using it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237065",
+   "query": "How to know what to test in TDD?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237157",
+   "query": "UML class diagram - instantiation dependency relationship: who depends on who?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237226",
+   "query": "Designing XML - confused between attributes and elements",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237431",
+   "query": "Algorithm to calculate scheduling of task list, check feasibility",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237577",
+   "query": "How to (or should I) have one assert per test with object comparisons?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237584",
+   "query": "Zero Day Exploit Ethics/Etiquette",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237593",
+   "query": "how to find average bits per symbol using huffman code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237738",
+   "query": "Should failing unit tests that we're not going to fix be removed?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_237935",
+   "query": "High-Level Classes and Low-Level Classes",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_238057",
+   "query": "Can the possibility of a data race be ignored in some cases? (while having concurrent threads)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_238325",
+   "query": "Is it okay to not completely understand code functionality?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_238386",
+   "query": "Is inheritance that adds rules bad?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_238546",
+   "query": "Single programmer working on a project from different computers: is Dropbox a good solution?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_239016",
+   "query": "Is this the correct understanding of tight coupling and loose coupling",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_239210",
+   "query": "Theoretically bug-free programs",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_240454",
+   "query": "Should I feel \"uncomfortable\" using auto in C++?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_240612",
+   "query": "Forking BSD-Project and changing license",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_240734",
+   "query": "For web apps (vs web pages) why not put scripts and css inline?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_241389",
+   "query": "Should interface only be used for behavior and not to show logical data grouped together?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_241411",
+   "query": "How to structure my java packages",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_24170",
+   "query": "After how much experience, should one start to use a framework for serious development?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_242610",
+   "query": "what's the point of method overloading?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_243347",
+   "query": "Regex to String generation",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_244705",
+   "query": "What kind of code would Kent Beck avoid unit testing?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_244866",
+   "query": "Matching the superclass's constructor's parameter list, is treating a null default value as a non-null value within a constructor a violation of LSP?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_245115",
+   "query": "static or non-static, that is the question?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_245274",
+   "query": "How to define different names for the same type and have the compiler check them?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_24542",
+   "query": "Choosing a functional programming language",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_246066",
+   "query": "Using GPL library in our software",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_246354",
+   "query": "What are the benefits of learning an old programming language?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_246532",
+   "query": "Estimated work remaining doesn't get lower",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_246568",
+   "query": "Linking a GPL executable from proprietary .bat script",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_246634",
+   "query": "Select design pattern - user stage",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_246813",
+   "query": "Redundant function to clarify purpose?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_247103",
+   "query": "How to manage a relatively large one-man project?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_247135",
+   "query": "Using rvalue references to signal function behaviour",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_247382",
+   "query": "Value of passing by reference",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_24804",
+   "query": "Is Page Scraping and Data Mining Moral / Legal?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_249892",
+   "query": "Started wrong with a project. Should I start over?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_250164",
+   "query": "Can someone help me understand MVC?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_250203",
+   "query": "Refactoring previous intern's noodle code with future interns in mind",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_250291",
+   "query": "Why does C have no competitors in low level stuff?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_25063",
+   "query": "Google is good or bad for programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_250707",
+   "query": "How should I remember what I was doing and why on a project 3 months back?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_250953",
+   "query": "Referencing StackOverflow questions in comments",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_251126",
+   "query": "Error messages from Web API, should I use error codes?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_251222",
+   "query": "How to learn new technologies in short period of time?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_251643",
+   "query": "Which language introduced the idea of private (hidden) variables?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_251707",
+   "query": "Client-side coding: How to prevent malicious use?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_251756",
+   "query": "Customer is \"deeply disappointed\" in software because of one bug. How to reply?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_25234",
+   "query": "What to do about \"stopping point syndrome\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_252495",
+   "query": "When using Visual Studio 2012 do you have to use the drag and drop system?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_252532",
+   "query": "Should I place functions that are only used in one other function, within that function?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_252595",
+   "query": "Android testing - bugs not reproducible",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_253026",
+   "query": "Python case statement?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_253042",
+   "query": "Is it a newbie mistake to avoid branching?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_253267",
+   "query": "Equal or less than 15 lines per method(function) principle?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_253453",
+   "query": "How to convey that a project is too ambitious?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_253496",
+   "query": "How do we add software to a machine?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_253650",
+   "query": "How to write a user story specific to tasks in this case",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_254008",
+   "query": "What would you call the concept of CofeeScript or Sass to be?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_254083",
+   "query": "If there's no problem treating a statement as an expression, why was there a distinction in the first place in some programming languages?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_254339",
+   "query": "When to to use which - Interface vs. Abstract Class?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_254424",
+   "query": "Changelog in Comments Versus Source Control Log",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_254936",
+   "query": "Database conceptual Question",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_255031",
+   "query": "How 'child proof' should i write code as a solo programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_255912",
+   "query": "Can I use Agile even when the client doesn't want to participate?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_25600",
+   "query": "What would you consider best practice workflow tools for web application (PHP) development?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_257",
+   "query": "I program from home. What can I do to be more productive?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_26030",
+   "query": "At what point during a project is it unreasonable to leave?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_26371",
+   "query": "Do employers hiring for software jobs care about the classes you took in CS masters program?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_2654",
+   "query": "What parts of your coding standard contribute to quality code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_26642",
+   "query": "How useful is a portfolio of home projects?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_26901",
+   "query": "How to convince your boss to give you a better developer machine?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_27022",
+   "query": "How do you take advantage of your whiteboard in your development team?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_27410",
+   "query": "Is there a canonical book on Ruby on Rails?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_2757",
+   "query": "How many monitors do you use? Why? How they are used?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_28050",
+   "query": "API/Technical Writers Guide",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_28379",
+   "query": "Place to have my code reviewed by others",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_28825",
+   "query": "Open Source code bounties",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_29109",
+   "query": "Is there any reason to use C++ instead of C, Perl, Python, etc.?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_29513",
+   "query": "Is reinventing the wheel really all that bad?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_29534",
+   "query": "Are debugging skills important to become a good programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_31558",
+   "query": "version control for small team",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_32425",
+   "query": "I still can't figure out how to program?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_32482",
+   "query": "Can an algorithm be patented?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_32571",
+   "query": "design pattern for unit testing?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_32617",
+   "query": "Would you see any use of a Trilean (True, False, ??)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_32956",
+   "query": "What are the common revenue models for free-software companies?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_34173",
+   "query": "Does heavy library and code snippet usage make you a bad programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_34485",
+   "query": "What is the difference between all-static-methods and applying a singleton pattern?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_34559",
+   "query": "How do you keep track of the authors of code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_35074",
+   "query": "I'm a Subversion geek, why should I consider or not consider Mercurial or Git or any other DVCS?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_35610",
+   "query": "test driven development - Who should write the tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_35925",
+   "query": "When is it more productive to build your own framework than to use an existing one?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_36175",
+   "query": "What are the disadvantages of writing code before writing unit tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_36297",
+   "query": "Switching Programming Languages",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_36561",
+   "query": "Woes of a Junior Developer - is it possible to not be cut out for programming?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_36731",
+   "query": "Where do you draw the line for your perfectionism?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_36925",
+   "query": "Weeding out real agile from buzzword agile in an interview",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_36961",
+   "query": "Where can I find statistics / figures on how long testing should / could take?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_37029",
+   "query": "Difference between defect and bug in testing",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_37249",
+   "query": "The Singleton Pattern",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_3747",
+   "query": "How can I sell a legacy program rewrite to the business?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_3766",
+   "query": "How to tackle a boss who thinks everybody in this world is wrong except him?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_37677",
+   "query": "Programming skills, problem solving genius or language guru?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_37987",
+   "query": "I've been hired on as a entry-level game developer at a company and have little/no experience in API programming, what should I expect?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_38087",
+   "query": "What does a standard code review contain?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_38265",
+   "query": "What does the suffix after software engineer/developer job titles mean?  (e.g. Software Developer III)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_38566",
+   "query": "The importance of javascript and the best way to learn it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_39282",
+   "query": "Building a DSL: Scripted atop a general-purpose language or stand-alone?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_39378",
+   "query": "When should I use mock objects?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_3997",
+   "query": "Does off-shore resourcing work?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_40063",
+   "query": "Should character encodings besides UTF-8 (and maybe UTF-16/UTF-32) be deprecated?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_40297",
+   "query": "What is a \"side effect?\"",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_41545",
+   "query": "Reasons to Use a VM For Development",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_41981",
+   "query": "Where can I find programming work online?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_42817",
+   "query": "Why not Spring framework?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_42938",
+   "query": "Dealing with frustration when things don't work",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_43086",
+   "query": "Colleague unwilling to use unit tests \"as it's more to code\"",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_43729",
+   "query": "Learning Multiple Languages Simultaneously",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_43796",
+   "query": "How to open-source a project whose git repository has copyrighted media in the history?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_44959",
+   "query": "Is C++ suitable as a first language?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_45378",
+   "query": "Is commented out code really always bad?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_46252",
+   "query": "How to explain a layperson why a developer should not be interrupted while neck-deep in coding?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_46434",
+   "query": "How can software be protected from piracy?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_46513",
+   "query": "Working for international NGO's as a programmer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_46685",
+   "query": "Tips for a first year CS student looking for a summer internship to gain experience?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_47370",
+   "query": "Java dev learning Python: what concepts do I need to wrap my head around?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_4765",
+   "query": "When do you know it's time to move on from your current job?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_492",
+   "query": "How important is the ability to touch-type?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_49836",
+   "query": "Are there any downsides of 2 developers getting married?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_49959",
+   "query": "Recommended books on C++",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_50755",
+   "query": "Should I keep investing into data structures and algorithms?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_51268",
+   "query": "How important is Domain knowledge vs. Technical knowledge?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_51465",
+   "query": "How to differentiate between trivial and non-trivial software?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_51987",
+   "query": "How to include an apache library with my opensource code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_52158",
+   "query": "What are best practices when giving a presentation to programmers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_52833",
+   "query": "Is writing comments inside methods not a good practice?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_52961",
+   "query": "Need for a framework",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_53517",
+   "query": "What does Tim Peters mean by \"complex is better than complicated\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_53572",
+   "query": "How to improve the quality of app descriptions",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_53612",
+   "query": "Is it essential to learn algorithms to be a real programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_54373",
+   "query": "When would someone use MongoDB (or similar) over traditional RDMS?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_54451",
+   "query": "Library vs. framework vs API?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_54959",
+   "query": "How do I know when my development skills are good enough for a real job?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_55065",
+   "query": "How to calculate the quality of software project",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_55267",
+   "query": "How do you balance documentation requirements with Agile developments",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_55334",
+   "query": "High level vs. low level programming. Do I really have to choose?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_55697",
+   "query": "How do managers know if a person is a good or a bad programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_56031",
+   "query": "Version control comments - past or present tense",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_56848",
+   "query": "How does one keep up with all the new tools/languages/framework?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_57047",
+   "query": "How do you classify bug severity? ",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_57068",
+   "query": "Why are objects passed by reference?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_57243",
+   "query": "Resources for improving your comprehension of recursion?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_57405",
+   "query": "If you have designed (and implemented) a programming language, what to do to make it gain attention/popularity?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_57435",
+   "query": "How to Structure Bonuses for Software Developers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_57576",
+   "query": "About plagiarism",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_58887",
+   "query": "How do you feel that it is time to move and learn another programming language?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_59091",
+   "query": "Why does a computer science degree matter to a professional programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_59496",
+   "query": "What pricing model has more benefits in mobile app stores: free or paid?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_59520",
+   "query": "Good interview programming projects",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_59606",
+   "query": "Is type safety worth the trade-offs?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_60216",
+   "query": "Does programming knowledge have a half-life?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_604",
+   "query": "Is the 80 character limit still relevant in times of widescreen monitors?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_60409",
+   "query": "stuck on a programming problem solution",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_60994",
+   "query": "Why is software schedule estimation so hard?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_61558",
+   "query": "Turn away a bug if no reproducible test case exists?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_61745",
+   "query": "Effective methods for managing work tasks? (documenting/remembering/prioritizing)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_61798",
+   "query": "How much database access should developers have?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_61980",
+   "query": "Is ageism in software development based on anything other than bias?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_62060",
+   "query": "Intentional misspellings to avoid reserved words",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_62765",
+   "query": "How can I get into \"programmer mind\" more quickly and more often?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_64671",
+   "query": "For a large website developed in PHP, is it necessary to have a framework?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_64722",
+   "query": "Getting Overwhelmed: Tips for noobs",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_6476",
+   "query": "Have you tried programming via Collaborative Text Editing?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_65918",
+   "query": "Importance of learning to google efficiently for a programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_6625",
+   "query": "How to recruit programmers for an open source project and kick-start it?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_663",
+   "query": "What should be the ideal computer science and engineering course topics?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_66735",
+   "query": "What do great APIs have in common?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_66764",
+   "query": "Recomendation for Math books related to computer science",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_66834",
+   "query": "What is the best practice for gathering requirements when a customer does not know what he wants?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_67707",
+   "query": "When and why you should use void (instead of i.e. bool/int)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_67750",
+   "query": "Can one forget programming if it is not practiced for some time?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_67931",
+   "query": "How do you handle database change deployments?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_67960",
+   "query": "When do you not give help to less experienced programmers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_68867",
+   "query": "How to decide between storage formats and what are example use cases for some of them?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_69242",
+   "query": "How to get started in opensource projects and programs",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_70755",
+   "query": "Are long hours and no benefits the norm for a junior programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_7126",
+   "query": "Advantages of object-oriented programming",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_71904",
+   "query": "Scrum for a single programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_71917",
+   "query": "Getting involved with an Open Source Project",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_7242",
+   "query": "What are the chances of Google's Go becoming a mainstream language?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_72768",
+   "query": "Does \"Inversion of Control\" promote \"Anemic Domain Model\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_73304",
+   "query": "How do you deal with an information hoarder?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_73541",
+   "query": "Writing an (end-) user documentation",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_73934",
+   "query": "Should CSS be listed on your resume under Languages?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_74086",
+   "query": "if ('constant' == $variable) vs. if ($variable == 'constant')",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_74386",
+   "query": "How Do You Organize Your ASP.NET MVC 3 Applications?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_74493",
+   "query": "Proper syntax formatting for SQL?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_74580",
+   "query": "Looking for Case Studies of How TDD Improved Quality and/or Speed of Development",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_750",
+   "query": "What should you test with unit tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_7536",
+   "query": "If you favor \"T *var\", do you ever write \"T*\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_7565",
+   "query": "How to learn Agile as a Solo Developer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_76182",
+   "query": "How to get a job with no experience?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_76801",
+   "query": "Why functional programming?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_77146",
+   "query": "Why to let / not let developers test their own work",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_7747",
+   "query": "Do you think that exposure to BASIC can mutilate your mind?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_77731",
+   "query": "Does Salary mean being On-Call 24/7?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_78176",
+   "query": "How do I comply with the EU Cookie Directive?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_78431",
+   "query": "How much should my project manager know?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_78903",
+   "query": "How can I be more productive at work? (additional context inside)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_78956",
+   "query": "I no longer want to be a developer",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_79624",
+   "query": "What is the reason most people have predetermined fear of programming & how should skilled make them fearless?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_79765",
+   "query": "What is \"the Cloud\" and how does it relate to development?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_80694",
+   "query": "How do I choose an Android phone for testing my application?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_80826",
+   "query": "What should I do to leave a job professionally?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_81062",
+   "query": "Data input validation - Where? How much?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_81131",
+   "query": "Going from PHP to Java",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_81478",
+   "query": "Starting career as SDET, is this a big block to be SDE later (1 or 2 years later)",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_81591",
+   "query": "In the absense of a CS degree, how can I \"fill in the gaps\" so to speak?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_81674",
+   "query": "Do you create a design with UML before you start?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_81705",
+   "query": "Rewriting GPL code to change license",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_81838",
+   "query": "What is the difference between the factory pattern and abstract factory?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_82227",
+   "query": "Programming practice - Is there a site that has a daily \"write a method to do X\" type challange?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_82286",
+   "query": "Open Source Licenses Question",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_84001",
+   "query": "Is it worth Learning XML as a web developer when JSON is better for AJAX?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_84638",
+   "query": "What is the objective of unit testing?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_84778",
+   "query": "Trailing forward slash in directory names - good programming practice?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_84909",
+   "query": "Jobs that use programming which aren't in the technology sector",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_84966",
+   "query": "Should Git be used for documentation and project management? Should the code be in a separate repository?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_85019",
+   "query": "Making an internship most effective, useful and fun for both parties",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_8544",
+   "query": "MonoTouch vs Objective-C for iPhone/iPod/iPad development",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_85691",
+   "query": "Building websites, which is the better approach MVP or MVC?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_8588",
+   "query": "What's the history of the non-official pronunciation of SQL?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_86656",
+   "query": "Are \"TDD Tests\" different to Unit Tests?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_86904",
+   "query": "Why do most of us use 'i' as a loop counter variable?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_87082",
+   "query": "web framework or not for web app development",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_87321",
+   "query": "What is the Best Way to Incentivize a Team of Developers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_87452",
+   "query": "Internationalization : What things to think about?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_88028",
+   "query": "Be a better programmer or an irreplacable employee?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_88392",
+   "query": "Why is closure important for JavaScript?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_8886",
+   "query": "Can someone find a job as a programmer without an education?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_89491",
+   "query": "Almost graduate, how to prepare myself for the \"real world\"?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_89554",
+   "query": "Is learning technology by reading books obsolete?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_8958",
+   "query": "What are signs that a project might turn out bad?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_89819",
+   "query": "Getting management approval to invest more in unit testing",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_89944",
+   "query": "if I use .NET Framework for my application, do I have to pay anything to Microsoft?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_89947",
+   "query": "How can I keep my visualstudio database project in sync with my database?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_90217",
+   "query": "Determining what is a useful unit test",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_90438",
+   "query": "Monitor screen size and programming ease",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_91064",
+   "query": "Mono & Commercial Projects",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_91629",
+   "query": "Best Java book you have read so far",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_91816",
+   "query": "When to use a API/Library and when to write your own?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_91945",
+   "query": "How are you handling browser compatibility in the new \"rapid release\" world?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_91976",
+   "query": "On developing deep programming knowledge",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_92339",
+   "query": "When do you use a struct instead of a class?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_92393",
+   "query": "What does the Spring framework do? Should I use it?  Why or why not?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_92465",
+   "query": "How should I structure our common modules to maximize reuse and reduce duplication?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_93016",
+   "query": "Is age a factor when looking for internships?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_93124",
+   "query": "EAV - is it really bad in all scenarios?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_9320",
+   "query": "Why is Lisp useful?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_93245",
+   "query": "Software Testing Techniques",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_93462",
+   "query": "Career Prospects: Women at Management positions in Software",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_93826",
+   "query": "How do I explain \"Recursion\" to a 8 years old kid?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_93848",
+   "query": "How to measure an IT workplace?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_940",
+   "query": "What are your favorite version control systems?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_94024",
+   "query": "Does unit test increase productivity?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_94780",
+   "query": "Do Diversified Skills Foster or Hinder Specialization?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_94932",
+   "query": "Compiler/OS Design - Where to start",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95335",
+   "query": "How much HTML and CSS should server side developer know?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95363",
+   "query": "Should code reviewers test as part of the review?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95373",
+   "query": "How much time do you / is acceptable to waste?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95465",
+   "query": "Language Choice for Algorithm Competitions",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95626",
+   "query": "Getting start with Zend PHP framwork",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95637",
+   "query": "How can I tell in an interview if a programmer is passionate about programming?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95786",
+   "query": "How did the idea of Exception-handling emerge into programming languages?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95933",
+   "query": "What are practitioner's thoughts of the IEEE software engineering certifications?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_95942",
+   "query": "\"Benefit Package\" as part of consulting fee",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_96504",
+   "query": "How can I teach a bright person, with no programming experience, how to program?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_96638",
+   "query": "Interviewing a developer who's skilled in a language you don't know",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97269",
+   "query": "How do you handle a graphic designer who thinks he's a web designer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97338",
+   "query": "What are the boundaries between the responsibilities of a web designer and a web developer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97357",
+   "query": "Programming at Home vs Programming at Workplace",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97446",
+   "query": "If a variable has getter and setter, should it be public?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97511",
+   "query": "What should an embedded developer know on day one?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97660",
+   "query": "What recommendations can you give in managing a team of remote software engineers?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97785",
+   "query": "My Dad is impatient with the pace of my learning to program. What do I do?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97832",
+   "query": "How to motivate someone(including myself) not to give up learning something?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_97912",
+   "query": "How do you define elegant code?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_9813",
+   "query": "Where do you find the time?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_98324",
+   "query": "When does TDD fail?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_98509",
+   "query": "Why would a company develop an atmosphere which discourage code comments?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_98651",
+   "query": "What are the advantages of the Intel C++ compiler?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_98691",
+   "query": "Excessive use \"final\" keyword in Java",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_98749",
+   "query": "Work in a company as a Soft. Engineer or take a Master?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_98758",
+   "query": "Will using Linux make me a better programmer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_98905",
+   "query": "How can I get better at whiteboard interview questions?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_9944",
+   "query": "What is the difference between software engineer and software developer?",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_9948",
+   "query": "How to sell a high SO reputation at an interview",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_99499",
+   "query": "iOS Development Certifications",
+   "question_type": "beir_cqadupstack_programmers"
+  },
+  {
+   "name": "beir_cqadupstack_programmers_99647",
+   "query": "How do I adapt to pre-interview challenge questions?",
+   "question_type": "beir_cqadupstack_programmers"
+  }
+ ]
+}

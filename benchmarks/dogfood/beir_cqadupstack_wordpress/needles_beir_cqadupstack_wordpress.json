@@ -1,0 +1,2709 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_wordpress_100230",
+   "query": "adding the full image path to a wordpress javascript file",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_100547",
+   "query": "How to redirect all page requests to a single \"goodbye\" homepage?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_100726",
+   "query": "Add custom attributes to menu items without plugin",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_100833",
+   "query": "FB - Comment Moderation Tool bug or error in the code?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_100939",
+   "query": "simple solution for restricting access to (some) uploads/downloads",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_101042",
+   "query": "Changing upload directory for plugin uploads only",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_101619",
+   "query": "adding parent link to submenu",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_101834",
+   "query": "CPT admin column auto order by date instead of title",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_102451",
+   "query": "Export data as CSV in back end with proper HTTP headers",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_10310",
+   "query": "authenticate user without password from email activation link",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_103181",
+   "query": "Sorting: custom query with orderby meta_value_num THEN by title",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_103227",
+   "query": "Exclude subcategories from the url",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_104061",
+   "query": "Auto generate meta data value in post",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_104307",
+   "query": "How does wordpress distinguish a plugin's main php file from other php files?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_104373",
+   "query": "Custom template for a product in Woocommerce",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_104722",
+   "query": "Media Library page super slow, loading up full quality images",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_105641",
+   "query": "Help with Wordpress Walker Function",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_105772",
+   "query": "Move Title and the Content WYSIWYG editor position",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_10582",
+   "query": "How to add Disqus comment count",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_105940",
+   "query": "Passing a variable into Contact Form 7",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_106",
+   "query": "Can I rename the wp-admin folder?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_106371",
+   "query": "gallery - size is thumbnail by default change it to medium",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_106451",
+   "query": "load plugin with ajax",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_106559",
+   "query": "dbDelta using Foreign key not working on update",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_10706",
+   "query": "WP 3.1 - archive pages for custom content types possible now without a plugin?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_107249",
+   "query": "Remove title attribute from tag cloud widget",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_109333",
+   "query": "Twenty Eleven Theme",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_109646",
+   "query": "Active Plugins for current blog in WP Multisite Network?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_109793",
+   "query": "Delete Associated Media Upon Page Deletion",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_109985",
+   "query": "How to pass arguments to add_action()",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_110349",
+   "query": "Template Hierarchy: confused with index.php, front-page.php, home.php",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_110766",
+   "query": "Multidimensional array problem with update_post_meta",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_110768",
+   "query": "returning 404 page error on form submission",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_11085",
+   "query": "Truncating custom fields",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_111254",
+   "query": "What are the minimum database privileges to run WP?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_112010",
+   "query": "Strip shortcode from excerpt",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_112043",
+   "query": "How can i list all user registered on my website and have pagination",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_112088",
+   "query": "Let admin users edit member profiles from front end",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_112685",
+   "query": "Thickbox doesn't respect dimensions when used in admin",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_112773",
+   "query": "How can I inject html after the [x]th widget inside a Sidebar?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_113196",
+   "query": "Send message to author without showing email address",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_113211",
+   "query": "Calling up a second Theme functions.php",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_113235",
+   "query": "Add number new posts (post_status = pending) to administration menu",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_113631",
+   "query": "Putting PHP variables into javascript",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_113901",
+   "query": "Don´t allow access wp-admin for non-admins but allow to upload files",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_114225",
+   "query": "Set default Screen Options on theme setup",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_114271",
+   "query": "Retrieve categories of a WooCommerce product in hierachical order",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_114350",
+   "query": "how to saved the values ​​of selected checkboxes in an array",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_114581",
+   "query": "Replace Paid Shipping Method With Free Shipping Method WooCommerce",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_114673",
+   "query": "Articles show some of text",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_114734",
+   "query": "How To Customize Position of »add to cart« of WooCommerce on Product Page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_114909",
+   "query": "WordPress Image Scaling Quality",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_114914",
+   "query": "rewrite script to use wp_remote_get instead of file_get_contents_curl",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_115020",
+   "query": "Listing pages which uses specific template",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_115021",
+   "query": "date function not correctly returning date",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_115278",
+   "query": "Admin Post - Keep Child Below Parent",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_115676",
+   "query": "Change core metaboxes labels",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_115783",
+   "query": "I'm not able to get access to $wpdb",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_116260",
+   "query": "Turn Custom Post Title into external link",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_116288",
+   "query": "Getting the count of a shortcode that is nested",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_116514",
+   "query": "Setting up a virtual subdirectory to display identical content as root directory",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_116609",
+   "query": "What is meant by __('page','twentytwelve')",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_116880",
+   "query": "Serve HTTPS requests from subdomain",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_116917",
+   "query": "Notification when new post is submitted",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_116953",
+   "query": "Show all post types in the same table of posts",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_11722",
+   "query": "Applying automatic link class to images embedded to posts",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_117349",
+   "query": "What is the Best Way to Secure a Commercial Wordpress Plugin?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_117353",
+   "query": "How to add images to taxonomy terms?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_117385",
+   "query": "date_query seems to be ignored by wp_query",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_117546",
+   "query": "is_active_sidebar() Always Returns False",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_11798",
+   "query": "Loading template files from a subfolder in my theme?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_11822",
+   "query": "how to limit search to post titles?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_118731",
+   "query": "WordPress keeps writing rewrite rules to .htaccess",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_118742",
+   "query": "Auto-create/assign category from post title",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_11920",
+   "query": "Submit post and upload image from front-end",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_119271",
+   "query": "Text Widget Automatically Adding Website Link",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_119560",
+   "query": "How can I edit the content in index.php?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_119899",
+   "query": "How to increase excerpt length in wordpress?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_119988",
+   "query": "Loading post like facebook on scrool to bottom",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120122",
+   "query": "How to enqueue script or style in a theme's template file?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120126",
+   "query": "WP Query / Meta Query",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120193",
+   "query": "assign 2 $args to one wp_query",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120216",
+   "query": "Include wp-load.php in custom PHP script",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120247",
+   "query": "How to add an image in the widget zone?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120339",
+   "query": "Difference between do_action and add_action",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120377",
+   "query": "Declare plugin dependency",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120675",
+   "query": "add_submenu_page set for multiple roles",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120710",
+   "query": "query multiple posts orderby two custom fields?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_120772",
+   "query": "Updating existing table in wordpress plugin",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_121058",
+   "query": "Permission of uploads folder",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_121132",
+   "query": "How to trigger the core WPLANG to make automatically set a language when the theme is activated?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_121143",
+   "query": "Show only second level menu items?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_121219",
+   "query": "Words After Url Redirect to Matching Blog Posts",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_121406",
+   "query": "How to remove/hide elements from the admin menu?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_121464",
+   "query": "Can one display a specific page on the WordPress dashboard using the WordPress dashboard API?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_121540",
+   "query": "How to access WP database inside ipn.php?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_121686",
+   "query": "How to make category page as the home page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_12201",
+   "query": "WordPress Multisite - global categories",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_123135",
+   "query": "Shortcode executing order wrongly",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_123182",
+   "query": "Custom admin column disappearing when using Quick Edit",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_123237",
+   "query": "Pagination in get post of custom post type",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_12360",
+   "query": "custom registration form",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124300",
+   "query": "disable comments if array exists",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124341",
+   "query": "Redirect to correct author template based on author role",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124344",
+   "query": "How do you make your theme Child Theme-able?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124354",
+   "query": "Why wp_register_style() is important while I'm using a complete wp_enqueue_style()?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124358",
+   "query": "paging is not working properly on news archives page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124420",
+   "query": "Local environment update WordPress require FTP server",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124555",
+   "query": "Filter username field on registration for profanity and unwanted words",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124573",
+   "query": "Using a url variable, is there a way to display a draft post when not logged in",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124626",
+   "query": "How to include taxonomy.php from wp-includes the proper way?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_124848",
+   "query": "Security: How to disallow viewing/browsing by author?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_125050",
+   "query": "How to Override \"Blog pages show at most\" in tag.php",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_125066",
+   "query": "Image gallery thumbnails on product page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_125200",
+   "query": "How can I loop into two different DIVS without repeating the DIVs",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_12531",
+   "query": "Is it possible to add a first and latest posts link?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_125356",
+   "query": "Get custom taxonomies from multiple posts",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_125634",
+   "query": "How do I use update_option to give me a new option name each time a form is submitted?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_125937",
+   "query": "Lock my blog only for me",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_125980",
+   "query": "Worth enqueue_scripts for mobile via is_mobile?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_126186",
+   "query": "How can I process $post->post_content before echoing it?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_126266",
+   "query": "Report/Flag post function?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_126871",
+   "query": "Without user loging inner page is disable wordpress",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_126942",
+   "query": "Multiple taxonomies & terms (no hyperlinking) in 1 function",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_127252",
+   "query": "page template within custom post type",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_127277",
+   "query": "How to use ajax_url in front end when using with theme?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_127487",
+   "query": "How to change location, charset in Wordpress query",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_127653",
+   "query": "Sessions in word press",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_128323",
+   "query": "Wordpress Multisite - Change Permalinks On Subdomain Posts To Postname",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_128535",
+   "query": "post_date_gmt and post_date",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_128768",
+   "query": "WordPress Updates 3.5.2 to 3.8 Any Problem?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_12889",
+   "query": "Will WP work on a multi-server environment?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_128969",
+   "query": "Get_post_meta returns Array instead of actual value",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_128979",
+   "query": "How to return Javascript variable to wordpress",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_129425",
+   "query": "Why I have this error when I try to install this old blog on my local webserver?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_129497",
+   "query": "Transferring WordPress Instances",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_129512",
+   "query": "get_template_part within plugin",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_129620",
+   "query": "Reduce repetitive code filtering custom post type categories",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_129865",
+   "query": "Is a conditional image creation with add_image_size possible and which would be the best hook?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_13",
+   "query": "Updates for a private plugin?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_130158",
+   "query": "custom admin screen or setting screen for a custom post type",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_130519",
+   "query": "Loading jQuery and jQuery plugin script files correctly",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_130675",
+   "query": "How to change posts page to use own template",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_130926",
+   "query": "How to move images from /uploads to the /uploads/Year/Month structure?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_131190",
+   "query": "Transform php shortcode into a widget",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_131399",
+   "query": "Share login data/cookies between multiple installations",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_131405",
+   "query": "Adding dashicon fonts to the admin of pre 3.8 installs",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_131589",
+   "query": "how to change the default login page of wordpress from wp-login.php to custom login page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_131758",
+   "query": "Migration from Squarespace to WordPress: Remove leading 0 from %monthnum% in permalinks",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_131767",
+   "query": "Overwriting a theme function with a plugin",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_131890",
+   "query": "Apply comment to different post (not the current post)",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_131958",
+   "query": "Queries gone haywire since update to 3.8.1",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_132179",
+   "query": "How to load dynamic content via jquery/css in a page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_132260",
+   "query": "query two meta values",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_132282",
+   "query": "Removing WordPress version number from included files",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_133545",
+   "query": "Sort posts by title, sort array by largest number",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_133665",
+   "query": "Can variables be used to rewrite a Custom Post Type permalink?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_133674",
+   "query": "How to show an error message after publishing a post?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_133953",
+   "query": "How to add a box underneath the Post Box in Wordpress admin?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_133985",
+   "query": "Multiple WYSIWYG editors with settings teeny => true",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_134026",
+   "query": "Setting an attribute as variation in woo commerce via php",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_134062",
+   "query": "How to get date using timezone saved in options?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_134069",
+   "query": "Getting start_el() error",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_134128",
+   "query": "ajax response is 0 instead of 'script'",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_134249",
+   "query": "When using a cache plugin I destroyed a menu structure",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_134661",
+   "query": "WP Nonce with Ajax- is it always neccessary?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_134839",
+   "query": "Is it possible to install WordPress within WordPress installation?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_135083",
+   "query": "WP_Query & posts_per_page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_135315",
+   "query": "Change default gallery image size?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_135581",
+   "query": "Privacy Blog, maybe?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_136322",
+   "query": "WP Cron: Save third party data as user meta",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_13636",
+   "query": "How to add pages to custom menus on the fly",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_136756",
+   "query": "Retrieve all posts within tag OR category?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_137307",
+   "query": "transition_comment_status gets called when untrashing comments",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_137409",
+   "query": "How to print a shortcode?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_137986",
+   "query": "WordPress 3.9 - Trouble Editing new TinyMCE",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_138051",
+   "query": "How do I enqueue a js file in functions.php for a if lt IE 9 statement?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_138076",
+   "query": "Wordpress pie register custom registration",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_138329",
+   "query": "Make WordPress search for only this tags or exclude certain tags from search",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_138627",
+   "query": "Wordpress double post name distinguish by term",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_138977",
+   "query": "Adding help for user when using $wp_customize->add_control()",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_139269",
+   "query": "WordPress taxonomy radio buttons",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_1395",
+   "query": "Adding Custom Field to Taxonomy Input :Panel",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_139638",
+   "query": "Adding a photo to each WP user",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_139850",
+   "query": "How to reinit tinymce for wp_editor after ajax?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_140139",
+   "query": "multisite: allow only specific users to update sites",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_140141",
+   "query": "Random posts loop order",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_140444",
+   "query": "How to edit the admin photo?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_140966",
+   "query": "How do I disable comments on a page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_141017",
+   "query": "relation OR instead of AND - Filtered term ID's in loop",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_141110",
+   "query": "Why does wp add slashes to $_POST?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_141117",
+   "query": "CPT search using meta_query and meta key as array",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_141132",
+   "query": "Automatically Share Posts Across Wordpress Multisite",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_141149",
+   "query": "Duplicate domain database to local - How?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_14169",
+   "query": "Return $post_id when DOING_AUTOSAVE?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_142221",
+   "query": "rewrite url for a single custom post on a multisite",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_142792",
+   "query": "Monthly Archive page for custom post type",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_14306",
+   "query": "Using wp_query is it possible to orderby taxonomy?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_143301",
+   "query": "Default image (logo) for customizer",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_143303",
+   "query": "Child theme preview missing",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_143540",
+   "query": "Sort pre_get_posts by multiple Simple Fields meta values?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_143727",
+   "query": "setting global and using as argument",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_144627",
+   "query": "How to remove a filter that has been added as a function",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_145589",
+   "query": "Post label \"new!\" in wp_nav_menu using class?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_145692",
+   "query": "Sort posts by category priority",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_145811",
+   "query": "Menu items (all menus) being deleted randomly on their own",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_14677",
+   "query": "Automatically create pages in a post based on number of words",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_147194",
+   "query": "I have a wp_media uploader question",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_147385",
+   "query": "Is it OK to remove theme credits from footer?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_14773",
+   "query": "Retrieving a custom link on an attachment",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_147797",
+   "query": "Getting latest posts from network",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_147867",
+   "query": "Export my posts from WordPress blog, each to single PDF file, incl. images",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_147885",
+   "query": "$post->ID not working but the get_the_id() is",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_149013",
+   "query": "Display a list of subcategories a post belongs to",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_149263",
+   "query": "Enqueue Stylesheets After Theme's \"rtl.css\"",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_149850",
+   "query": "Static posts page with home.php",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_150122",
+   "query": "Woothemes Canvas - Variable Excerpt Length",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_1507",
+   "query": "Steps to Take to Hide the Fact a Site is Using WordPress?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_151384",
+   "query": "Help to cleanup this code",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_152253",
+   "query": "Multisite: List all Blogs alphabetically",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_152334",
+   "query": "How to show file size of featured image?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_152453",
+   "query": "Wordpress metabox file upload in custom post",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_15251",
+   "query": "Moving a blog from Tumblr to Wordpress",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_15376",
+   "query": "How to set default screen options?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_154271",
+   "query": "Why is my ajax live search not working when i use a shortcode to call it?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_154454",
+   "query": "Remove Parent Image Size and Create Different Size",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_154470",
+   "query": "Why this Wordpress page.php file contain the posts loop?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_154579",
+   "query": "Most commented post should be the first post in the blog",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_154873",
+   "query": "How to make Next and Previous attached image navigation on the attachment page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_156820",
+   "query": "I need to run a AJAX Fuction from within a WP_Query but only works on first item",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_15699",
+   "query": "Export whole wordpress blog to PDF or similar including images",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_15764",
+   "query": "\"Leave a comment\" link even when you can't",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_157779",
+   "query": "Error opening in a admin panel",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_157865",
+   "query": "Function in Child Theme not overriding Parent Theme function",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_158089",
+   "query": "Echo Insert Media in input",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_158113",
+   "query": "How to change the publishing date of each posts?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_158194",
+   "query": "Multi site - pass post between sites",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_158284",
+   "query": "Plugin update without overwriting the functionality",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_15840",
+   "query": "How to rename default posts-type Posts",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_158432",
+   "query": "How to increase menu size limit?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_158469",
+   "query": "Paginate Term Archive?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_158874",
+   "query": "Is it possible to use meta_query with both AND and OR relations?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_159089",
+   "query": "Get \"wp_get_nav_menu_items\" to sort alphabetically",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_159238",
+   "query": "Custom register and login page for Wordpress",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_16004",
+   "query": "Redirect user to original url after login?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_160041",
+   "query": "How to make this change without changing the core?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_160568",
+   "query": "How do I create a link that will always show the latest post?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_160595",
+   "query": "Why I can't align an image center using Tiny MCE editor?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_16414",
+   "query": "Can't edit style.css in subdirectory of my theme?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_16709",
+   "query": "meta_query with meta values as serialize arrays",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_16727",
+   "query": "Questions about WordPress.org theme review",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_175",
+   "query": "Marking future dated post as published",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_17715",
+   "query": "Plugin search sorting for admin section - Wordpress",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_17947",
+   "query": "Expanding the allowed HTML tags in comments?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_19031",
+   "query": "WP plugin updates",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_194",
+   "query": "How to show a single post on the front page but have normal paging?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_19446",
+   "query": "WordPress upgrade now receiving Error 101 (net::ERR_CONNECTION_RESET): Unknown error",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_19607",
+   "query": "Wordpress Copyright Dillema (i.e. Powered by)",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_199",
+   "query": "Steps to Optimize WordPress in Regard to Server Load?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_20194",
+   "query": "Super WordPress debugging toolkit and triage procedures?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_20196",
+   "query": "Transient / object cache maximum key length",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_20923",
+   "query": "How can I make add_image_size() crop from the top?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_2100",
+   "query": "Database synchronization between dev/staging and production",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_21152",
+   "query": "display all posts in wordpress admin",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_21341",
+   "query": "Alternative to query_posts for main loop?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_21367",
+   "query": "When you create a custom post type, does that also create capabilities for editing/deleting that post type automatically?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_21634",
+   "query": "What is your take: TimThumb vs. WordPress Thumbnails? The great debate",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_21742",
+   "query": "jQuery plugin function is not a function",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_21952",
+   "query": "WP_Query with checkbox meta_query",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_22134",
+   "query": "Add Plugins to Wordpress Theme",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_222",
+   "query": "Do deactivated plugins slow down a WordPress site?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_22943",
+   "query": "how do I get_sidebar into a varaible?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_23089",
+   "query": "Are get_bloginfo queries cached to start, or should they be cached?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_23263",
+   "query": "Syntax highlighting for post/page editor",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_23710",
+   "query": "Why isn't the Settings API designed to work for plugins using custom admin menus?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_24173",
+   "query": "How should I best incorporate WordPress in my static website?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_24443",
+   "query": "When is it appropriate to create a new table in the WordPress database?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_24650",
+   "query": "Hooks for Links Box",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_24652",
+   "query": "subdomain archiving",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_24924",
+   "query": "Programmatically change post templates?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_25099",
+   "query": "Change login error messages",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_25118",
+   "query": "Change comments form title on a page by page basis",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_25344",
+   "query": "How do you make relational post types in Wordpress?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_25385",
+   "query": "How to autologin users after creating a new site (multisite)?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_25461",
+   "query": "How to determine the current widget's parent container (sidebar widget id)",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_26110",
+   "query": "What methods to use to create small, editable pieces of text for static pages?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_2623",
+   "query": "Include custom taxonomy term in search",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_26595",
+   "query": "Listing Authors - URL Formats",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_2680",
+   "query": "best way to overide plugin CSS?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_27832",
+   "query": "WP_query 'orderby=none' Problem",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_27840",
+   "query": "How to have a custom URL structure for a custom post type?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_27941",
+   "query": "Getting 404.php instead of single-<post-type>.php",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_29338",
+   "query": "How to show 'login error' and 'lost password' on my template page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_29822",
+   "query": "Custom bulk_action",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_30139",
+   "query": "Adding a class (arrows) to main menu links that have children?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_3041",
+   "query": "Make WordPress WYSIWYG not strip out iframe's",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_3068",
+   "query": "How to detect WP plugins used on a site",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_31143",
+   "query": "How to remove attachments size attribute",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_31512",
+   "query": "Custom Post Type Slug / Page Slug Conflict - Prevent use of reserved slug on page save?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_31531",
+   "query": "Automated adding of one tag to all the posts in a category",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_32004",
+   "query": "How to validate WordPress generated password in DB using PHP?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_32297",
+   "query": "Use template_include with custom post types",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_32584",
+   "query": "Localization: I want the backend: english and frontend in defined language",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_33072",
+   "query": "How to remove feeds from WordPress totally?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_33193",
+   "query": "How do you load WordPress from an external script when using MultiSite?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_33198",
+   "query": "First item in each category list is not a link",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_33913",
+   "query": "Exclude admin from the top commenters list",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_3396",
+   "query": "Create custom page templates with plugins?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_35139",
+   "query": "*box for images displayed as a post's [gallery]",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_35416",
+   "query": "Re Order Editor to be after meta box",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_36017",
+   "query": "custom slug for custom post type",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_36118",
+   "query": "How to HIDE everything in PUBLISH metabox except Move to Trash & PUBLISH button",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_36149",
+   "query": "How to place random widgets in the Wordpress sidebar?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_36174",
+   "query": "How to disable generation of default image sizes for some custom post types?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_36493",
+   "query": "Get post thumbnail size",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_36772",
+   "query": "Image Captions Have a 10px Extra Margin, And It's Not CSS?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_3725",
+   "query": "WordPress frameworks and parent themes",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_37256",
+   "query": "Paged posts - how to use numbers and next/previous links?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_3727",
+   "query": "How can I install a plugin on a Wordpress.com hosted blog?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_37828",
+   "query": "Is there a plugin that will override the \"Error establishing a database connection\" message?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_38361",
+   "query": "Advanced search form with filters for custom taxonomies and custom fields",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_39446",
+   "query": "Change The Title Of a Meta Box",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_39665",
+   "query": "custom htaccess rewrite rule for page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_40173",
+   "query": "How-to: push a GitHub repo to the wordpress plugin servers",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_40353",
+   "query": "Change custom post type to hierarchical after being registered",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_40805",
+   "query": "How to secure WordPress XMLRPC?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_40994",
+   "query": "single-{$post_type}-{slug}.php for custom post types",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_41207",
+   "query": "How do I enqueue styles/scripts on certain /wp-admin pages?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_41634",
+   "query": "How can you upload an image from within a settings page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_41934",
+   "query": "Plugin that would allow WordPress Authors to \"follow\" other Authors and query \"Activity Info\" from that",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_42120",
+   "query": "Remove slug in taxonomy url",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_42586",
+   "query": "How to troubleshoot WordPress issues?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_4259",
+   "query": "Limiting sessions to one IP at a time",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_42882",
+   "query": "current_shortcode() - detect currently used shortcode",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_42891",
+   "query": "How to create live autofill search?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_42893",
+   "query": "Wordpress Plugin function callback by URL",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_43004",
+   "query": "wp_enqueue has a resource but doesn't generate a script tag",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_4307",
+   "query": "How can I add an image upload field directly to a custom write panel?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_4336",
+   "query": "Is There A Hook To Process The Content Of The Text Widget?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_43643",
+   "query": "Make a navigation menu in the same post",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_43657",
+   "query": "White-list file types for media upload",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_44110",
+   "query": "PageLines theme: how to change the background color of the main content vs. entire page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_44516",
+   "query": "Can someone please help me find a solution to my youtube embed problems?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_4514",
+   "query": "How do I customise the new user welcome email",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_45437",
+   "query": "Including jQuery and JavaScript files the correct way",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_458",
+   "query": "OpenID for WordPress 3.x?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_46136",
+   "query": "Archive by Year",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_46398",
+   "query": "Check before publishing, if already exist post with current custom field value",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_46469",
+   "query": "Can I Prevent Enumeration of Usernames?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_46547",
+   "query": "How to use logout function on custom menu link?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_47049",
+   "query": "What is the correct way to use wordpress functions outside wordpress files?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_47346",
+   "query": "How can I display parent and child taxonomies in separate drop downs?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_4751",
+   "query": "Adding Pages to Menus - No Page Hierarchy in Backend",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_477",
+   "query": "How do I get the size of an attachment file?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_4789",
+   "query": "Changing the 'wp-admin' URL to whatever I want",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_48145",
+   "query": "\"Discussion\" checkboxes unchecked by default on pages?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_49020",
+   "query": "Handling jQuery Component Collision",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_49154",
+   "query": "Hide other users' posts in admin panel",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_49339",
+   "query": "Notice that the wp_enqueue_style is not being called correctly! ",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_4984",
+   "query": "Resizing all images",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_50033",
+   "query": "featuring old articles without messing up with the archive",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_50044",
+   "query": "how query string in wordpress receive the value other than post and page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_50092",
+   "query": "Custom meta box shown when template is chosen",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_50478",
+   "query": "Scan for first image in post and display it",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_50530",
+   "query": "custom post types, wp_get_archives and add_rewrite_rule",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_50649",
+   "query": "How to scale up featured post thumbnail?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_51005",
+   "query": "RSS Feed Custom Title?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_51281",
+   "query": "Add a Save Button to Custom Meta Box",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_51444",
+   "query": "Add extra parameters after permalink?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_52002",
+   "query": "Add Page number to Meta Description in Wordpress SEO by Yoast",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_5220",
+   "query": "Automatic Updates For Private And Commercial Themes?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_52330",
+   "query": "How to remove \"login to reply\" from individual comments",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_52400",
+   "query": "How to save a translation of a plugin in \"CodeStyling Localization\"?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_52489",
+   "query": "the_date() not working",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_5331",
+   "query": "append_content help",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_53403",
+   "query": "Wordpress Beginer to Guru",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_53486",
+   "query": "How to add or remove metabox each page separately?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_53866",
+   "query": "How to use a Must-Use plugin to hide a regular one and to hide itself?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_5422",
+   "query": "How to move the wordpress site from test url to main url?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_55227",
+   "query": "How to execute conditional script when on new customize.php (Theme Customize) screen",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_55522",
+   "query": "How to prefix post permalinks with /blog/ - without affecting custom post types?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_55550",
+   "query": "Short_title character problem",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56206",
+   "query": "Permalink: postname EXCEPT for blog",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56256",
+   "query": "Custom Post Type Pagination Doesn't Work in Wordpress 3.4",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56343",
+   "query": "Template issues getting ajax search results",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56476",
+   "query": "How not to display posts from a certain category?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56652",
+   "query": "Filtering the Admin Comments List to Show Only Comments from the Current User?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56775",
+   "query": "Add Comment Custom Field",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56779",
+   "query": "Check if post is being published for the first time, or is an already published post being updated",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56781",
+   "query": "shortcode outputs first before the page content",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_56966",
+   "query": "Custom $wpdb Query for Custom Post Type by Category",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_5742",
+   "query": "Change the Author Slug from Username to Nickname",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_57446",
+   "query": "Custom Taxonomy Archives on Custom Post type Page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_5748",
+   "query": "How to replace the domain name in a Wordpress database?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_57512",
+   "query": "Determine if Term has Grandparent/Great-Grandparent",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_57944",
+   "query": "Why does wordpress keep asking for ftp login info when I go to install a plugin",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_58391",
+   "query": "Is moving wp-config outside the web root really beneficial?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_58481",
+   "query": "List Custom Post Types by Date Archive",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_58903",
+   "query": "Mandatory fields in Custom Post Types",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_59590",
+   "query": "how to style an individual page in a category",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_59753",
+   "query": "Wp_Insert_Post: Do not insert if the title exists",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_59767",
+   "query": "Order by custom field date with ASC order",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_59891",
+   "query": "trying to add custom landing page to Twenty Eleven- can't get rid of Twenty Eleven header/container?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_60132",
+   "query": "How can I add custom fields in a custom post type?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_60383",
+   "query": "Correct process for a new Page Template?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_60831",
+   "query": "Duplicate posts",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_6106",
+   "query": "Remove parent category from permalink? Basically only have the child category?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_61455",
+   "query": "Cron job not run on activation",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_6163",
+   "query": "Commenting in user profile page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_61749",
+   "query": "Adding meta values to permalink",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_62036",
+   "query": "How to show Next/Previous within the same Category?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_62054",
+   "query": "Custom Walker: how to get ID in function start_lvl",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_6247",
+   "query": "Can I turn off write-in tags/taxonomies?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_62573",
+   "query": "Remove the Yoast SEO Post Metabox",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_62820",
+   "query": "Custom post type not displaying content from single-{custopm post type} page ctd",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_62999",
+   "query": "Worthwhile to restrict direct access of theme files?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_63041",
+   "query": "Removing the URL field from Comments",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_63098",
+   "query": "How do I turn comments off for pages, but not posts?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_63277",
+   "query": "How to get the top most term (top ancestor) of a custom taxonomy child term?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_63292",
+   "query": "how to make custom posts sticky?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_63418",
+   "query": "Removing user fields",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_63424",
+   "query": "How To Modify The Loop in archives.php To Have 11 Posts Per Page and CSS Styling",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_63840",
+   "query": "Is it possible to have full category-parent/post-name with custom post types?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_63917",
+   "query": "Can a developer adopt a plugin marked as \"not updated in over 2 years\"?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_64001",
+   "query": "Best way to customise wp_nav_menu",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_64050",
+   "query": "Does WordPress send data about your blog to WordPress.org or Automattic?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_64389",
+   "query": "WordPress independent plugin upgrade notification system",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_64808",
+   "query": "conditional shortcode not working",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_65446",
+   "query": "Load wp_editor via ajax",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_66180",
+   "query": "Programmatically insert hierarchical terms & set terms for post causes glitch?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_6645",
+   "query": "Turn a URL into an Attachment / Post ID",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_66606",
+   "query": "replace plugin .po without modifying plugin core?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_66943",
+   "query": "How to repeat a loop after 4 posts",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_66944",
+   "query": "Conditional Tag Based on Age of Post",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_67065",
+   "query": "Properly add an upload media button in a meta box field",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_67480",
+   "query": "Custom background for the index page only?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_6774",
+   "query": "Restricting access to files within a specific folder",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_67780",
+   "query": "Restrict url to one segment, even when page or post is nested",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_67790",
+   "query": "Custom search form with empty parameters",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_68040",
+   "query": "How to be notified when a YT video becomes unavailable on my website?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_69386",
+   "query": "shortcodes output before content",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_69388",
+   "query": "How can I track active users of my plugin? and why doesn't WordPress.Org offer this?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_69460",
+   "query": "Get multiple custom field values in a $wpdb query",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_69772",
+   "query": "Execute function when post is published",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_70203",
+   "query": "Final Attempt - Adding default post content based on category?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_70519",
+   "query": "Shared Members between two different wordpress installations with different databases",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_70979",
+   "query": "Remove Meta-boxes (Yoast SEO plugin)",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_71000",
+   "query": "paginate_links refers to \"Not Found\" page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_71005",
+   "query": "Theme development: Pre-activated widgets",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_71304",
+   "query": "Action hook for custom tax edit",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_71381",
+   "query": "How to disable `SQL_CALC_FOUND_ROWS`",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_71922",
+   "query": "how to change capability required to view an admin page?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_72116",
+   "query": "How can I display all Multisite blogs where this user is administrator?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_73031",
+   "query": "Where to put my code: plugin or functions.php?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_73367",
+   "query": "How do I sort multiples pages?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_73385",
+   "query": "Make search result returned only from tags!",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_73782",
+   "query": "Showing shortcode of contact form instead of displaying form",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_74160",
+   "query": "Showing A Menu When Only Users Are Logged In",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_74517",
+   "query": "Must Log In to Visit Site",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_74853",
+   "query": "Apply custom role capabilities to administrator (without plugin)",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_75565",
+   "query": "How to use same email for multiple users",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_75665",
+   "query": "Archive listing of posts by publish year (multiple years)",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_75723",
+   "query": "Get user input from a form",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_76072",
+   "query": "$wpdb->prepare() warning in WordPress 3.5",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_76125",
+   "query": "Change the default-view of Media Library in 3.5?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_76216",
+   "query": "How to add a filter based on custom field to admin user list",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_76334",
+   "query": "Prevent menu from loading in a page template",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_76720",
+   "query": "How to use taxonomies on attachments with the new Media Library?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_76943",
+   "query": "Add New Footer Widget Area with Limited Options?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_77012",
+   "query": "publish_post action hook not working",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_77227",
+   "query": "Enqueue Google Web Fonts Without Messing Up Symbols In URL",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_77424",
+   "query": "Show category list on attachment page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_77597",
+   "query": "How to Create a Custom WordPress Install Package?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_77661",
+   "query": "Next_posts_link() works only with original $wp_query",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_78062",
+   "query": "How can I fix this code",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_78325",
+   "query": "How to add dynamically the main parent pages's custom fields and their values to all sub-pages?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_78357",
+   "query": "My wordpress site must be being affected by outside sources",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_78368",
+   "query": "is_singular won't call my functions?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_78544",
+   "query": "How to write an efficient metabox with repetitive fields",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_78630",
+   "query": "ID of images from wordpress galelry",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_78792",
+   "query": "How to select featured images for 1500 posts?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_78881",
+   "query": "Wordpress 3.5 Media Manager - add a button",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_79894",
+   "query": "Save Thumbnails From wp_oembed_get Function",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_79903",
+   "query": "Author Pages For Custom Post Types",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_79914",
+   "query": "Limit the post for differents custom post type in the same wp_query",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_80266",
+   "query": "Performance and styles problem after changing permalink structure",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_80454",
+   "query": "How to know which one is the main query?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_8050",
+   "query": "Definitive list of WordPress books",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_81591",
+   "query": "Making epub, pdf, mobi formats available in a post?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_82051",
+   "query": "Meta data posted in different table",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_82343",
+   "query": "How to display links in specific page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_82718",
+   "query": "How do I implement the Wordpress Iris picker into my plugin on the front-end?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_83102",
+   "query": "How do you change the theme location?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_83435",
+   "query": "Wordpress video end function",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_83650",
+   "query": "Adding admin-ajax.php to the frontend. Good or bad idea?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_84254",
+   "query": "WP.org API: Accessing plugin downloads \"Today\" value?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_84314",
+   "query": "Custom .php page that contains json for dynamically loaded content",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_84986",
+   "query": "How to add additional JavaScript code",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_85416",
+   "query": "Advanced custom field plugin not showing in admin sidebar",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_859",
+   "query": "Show a WP 3.0 Custom Menu in an HTML Select with Auto-Navigation?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_87264",
+   "query": "Do I need to use The Loop on pages?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_87478",
+   "query": "How do I position meta_box on post edit screen after the title?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_87514",
+   "query": "Make Google index the entire post if it is separated into several pages",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_87746",
+   "query": "query_posts() vs get_posts() multiple loops",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_87779",
+   "query": "Taxonomy view page doesn't show terms with parents",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_88062",
+   "query": "Preset categories in wordpress by GET-paremters",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_88093",
+   "query": "Settings API enable default settings on theme install?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_88549",
+   "query": "How to reduce the database query-es",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_89409",
+   "query": "Need oop for wordpress theme?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_89886",
+   "query": "How to create a custom search for custom post type?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_90199",
+   "query": "How to declare WooCommerce support in your theme",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_90241",
+   "query": "Dynamic content in a static page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_90939",
+   "query": "All-in-One Event Calendar: Custom Query - Getting each event Instance",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_91166",
+   "query": "How to disable WordPress from creating thumbnails?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_9202",
+   "query": "Thumbnail (featured image) of next and previous post is not being properly displayed!",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_92103",
+   "query": "Disable Wordpress URL auto complete",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_9231",
+   "query": "What's the preferred method of writing AJAX-enabled plugins?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_92551",
+   "query": "How to retrieve an image from a post and display it before excerpt of a post?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_9308",
+   "query": "How to split a loop into multiple columns",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_93830",
+   "query": "Really simple query giving error in SQL syntax",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_94615",
+   "query": "How to set up wordpress domain mapping on MAMP Pro",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_94682",
+   "query": "Issue after changing permalink structure",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_94705",
+   "query": "Link to subpages on the same page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_95576",
+   "query": "Increase of failed login attempts, brute force attacks?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_95799",
+   "query": "Is it possible to disable a function of a parent theme?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_96199",
+   "query": "What does \"_x( \" and \"__(\" mean in Custom Post Type Arguments",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_96361",
+   "query": "Categorising themes by folders in backend",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_96563",
+   "query": "Call sidebar from a template",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_96762",
+   "query": "How to make a meta box field a requirement",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_96945",
+   "query": "How do I just display the part of the array that I want to?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_97895",
+   "query": "Plugin works for default post types, but not for custom",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_98226",
+   "query": "Admin Menus - Name Menu different from first Submenu",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_98899",
+   "query": "Creating Theme Settings Page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_98913",
+   "query": "Add Parent to List of Subpages",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_98939",
+   "query": "Allow acces to wp-admin in wordpress",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_98995",
+   "query": "Custom post type archive and single.php files not working",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_99042",
+   "query": "Pagination problem in custom post type used as front page",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_99138",
+   "query": "Creating a Custom Post Type as a Plugin? Why?",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_99282",
+   "query": "Code Only On Mobile",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_99338",
+   "query": "Loaded JavaScript file not showing",
+   "question_type": "beir_cqadupstack_wordpress"
+  },
+  {
+   "name": "beir_cqadupstack_wordpress_99386",
+   "query": "How to load wordpress sidebar using AJAX",
+   "question_type": "beir_cqadupstack_wordpress"
+  }
+ ]
+}

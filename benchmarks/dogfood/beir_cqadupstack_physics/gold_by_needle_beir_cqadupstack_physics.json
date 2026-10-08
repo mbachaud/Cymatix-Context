@@ -1,0 +1,4021 @@
+{
+ "beir_cqadupstack_physics_100037": [
+  "e41c8276d0cebe8c"
+ ],
+ "beir_cqadupstack_physics_100041": [
+  "91790c76c1cc8690"
+ ],
+ "beir_cqadupstack_physics_100056": [
+  "27341203d5806c6a",
+  "35118135869ea5c7",
+  "356cef17b11248a2"
+ ],
+ "beir_cqadupstack_physics_100197": [
+  "f48fd20590125ac0"
+ ],
+ "beir_cqadupstack_physics_100251": [
+  "0ce824bf6903e166",
+  "f5d66e4ee96b61af"
+ ],
+ "beir_cqadupstack_physics_100572": [
+  "27a4aa2ee3309e91"
+ ],
+ "beir_cqadupstack_physics_1008": [
+  "d25c0e96b01c21c6"
+ ],
+ "beir_cqadupstack_physics_101150": [
+  "840e0f48d55c1bb8"
+ ],
+ "beir_cqadupstack_physics_101188": [
+  "07f0f90f5019ad03"
+ ],
+ "beir_cqadupstack_physics_101291": [
+  "789aef8440077a5b"
+ ],
+ "beir_cqadupstack_physics_10130": [
+  "5079b0475a125e58"
+ ],
+ "beir_cqadupstack_physics_10139": [
+  "be9a1fd25a01ac82"
+ ],
+ "beir_cqadupstack_physics_101398": [
+  "4659ed0968f9634e"
+ ],
+ "beir_cqadupstack_physics_101404": [
+  "b3b19acf97a39fee"
+ ],
+ "beir_cqadupstack_physics_101443": [
+  "8c6b2a846635f854"
+ ],
+ "beir_cqadupstack_physics_10154": [
+  "d595faafee4d2608"
+ ],
+ "beir_cqadupstack_physics_10161": [
+  "b4ffadb9f07f07be"
+ ],
+ "beir_cqadupstack_physics_101624": [
+  "c0711ba54ca569aa"
+ ],
+ "beir_cqadupstack_physics_10163": [
+  "89e932b683c15b36",
+  "bfaec3a197d4d426"
+ ],
+ "beir_cqadupstack_physics_101649": [
+  "a63addf033c06731"
+ ],
+ "beir_cqadupstack_physics_101674": [
+  "9d3e21dcd99d5819"
+ ],
+ "beir_cqadupstack_physics_101725": [
+  "011ec8aecf313f3c",
+  "2f1fbd1e6a36cda5",
+  "5767d8a305171cf2",
+  "91260df2e0d133a1",
+  "a1ed18d52d7f2d6b"
+ ],
+ "beir_cqadupstack_physics_101727": [
+  "42b7b72d22018d7d",
+  "c39891125da48c15"
+ ],
+ "beir_cqadupstack_physics_102076": [
+  "c9c85c97a21003b0"
+ ],
+ "beir_cqadupstack_physics_102222": [
+  "b221349c39170ae0"
+ ],
+ "beir_cqadupstack_physics_102363": [
+  "17dfde880729d56f",
+  "3f760331852c4ce7",
+  "4485c617c6ecbeb8",
+  "4e5ec514d770adce",
+  "8f57e98679b74eab",
+  "a52751b93de2477c",
+  "ce38ecae3b621479",
+  "d7c877c8ff8a907c"
+ ],
+ "beir_cqadupstack_physics_102366": [
+  "301d50e6723ac246",
+  "4643bad7b1a7e306"
+ ],
+ "beir_cqadupstack_physics_102370": [
+  "6828c7db23e170de",
+  "fe5c6ac16fcd3050"
+ ],
+ "beir_cqadupstack_physics_102423": [
+  "568f95525bf39d96"
+ ],
+ "beir_cqadupstack_physics_102477": [
+  "6826e4d5524c406d",
+  "c8303e629d5346c2"
+ ],
+ "beir_cqadupstack_physics_102517": [
+  "1d1e4f54559d9fb0"
+ ],
+ "beir_cqadupstack_physics_10252": [
+  "fa33c7c2ce07c13e"
+ ],
+ "beir_cqadupstack_physics_102627": [
+  "07ff28d203c25abf",
+  "61d26c43ab41261a",
+  "6955df70751a6a1d"
+ ],
+ "beir_cqadupstack_physics_102680": [
+  "bd447f89ba75c075"
+ ],
+ "beir_cqadupstack_physics_102719": [
+  "7a89546af85a3f1b"
+ ],
+ "beir_cqadupstack_physics_102760": [
+  "d49f7367cf68b620"
+ ],
+ "beir_cqadupstack_physics_102791": [
+  "c15182670689229a",
+  "f74233df7c1e3e99"
+ ],
+ "beir_cqadupstack_physics_102941": [
+  "d55f94c822390c9f"
+ ],
+ "beir_cqadupstack_physics_10308": [
+  "11548ef2bd47b6c9"
+ ],
+ "beir_cqadupstack_physics_10311": [
+  "47bad9c71f73299e"
+ ],
+ "beir_cqadupstack_physics_103110": [
+  "70db1fbacbf058ee"
+ ],
+ "beir_cqadupstack_physics_103160": [
+  "2fb3d02e546c5cab"
+ ],
+ "beir_cqadupstack_physics_103448": [
+  "28ae489ad585006a",
+  "9c64d243fec79f9c",
+  "bc3336f248a85619"
+ ],
+ "beir_cqadupstack_physics_10362": [
+  "2136868944a73682",
+  "5ec89523de6da123"
+ ],
+ "beir_cqadupstack_physics_103641": [
+  "384a5dbdac8a5a91",
+  "3da42c584db888a2",
+  "d8a47de316084c4a",
+  "de6b5aff68f297dc"
+ ],
+ "beir_cqadupstack_physics_103670": [
+  "641c133cdf0d0f10"
+ ],
+ "beir_cqadupstack_physics_103931": [
+  "8010b5537fdfada2",
+  "ade67dcb6a89be43"
+ ],
+ "beir_cqadupstack_physics_104019": [
+  "458a74e29fe84e40"
+ ],
+ "beir_cqadupstack_physics_104144": [
+  "11467e125d0a6d57",
+  "594c400d573afa5f",
+  "bce956f2dc7720b5",
+  "c184d294a45093ad",
+  "e18820c2be7bc00e"
+ ],
+ "beir_cqadupstack_physics_104196": [
+  "3b3d93eaf8e2690c",
+  "57cf8c7dd7dc543f"
+ ],
+ "beir_cqadupstack_physics_104237": [
+  "e90e53508d74e960"
+ ],
+ "beir_cqadupstack_physics_104301": [
+  "251e2cbbaef522b7",
+  "4440387d9845cbc5"
+ ],
+ "beir_cqadupstack_physics_104302": [
+  "0adeec51ae149100"
+ ],
+ "beir_cqadupstack_physics_104423": [
+  "a704b4a3cd13ee47"
+ ],
+ "beir_cqadupstack_physics_104468": [
+  "b07dc8de3e596b4c"
+ ],
+ "beir_cqadupstack_physics_104513": [
+  "67c84b7f4ccdadb3",
+  "6cf3b2bf931970da",
+  "fc48b9d381f86cb3"
+ ],
+ "beir_cqadupstack_physics_10470": [
+  "83aad47d574eb6ea",
+  "befd005921023c2c",
+  "ebb22105cb4382a7"
+ ],
+ "beir_cqadupstack_physics_10496": [
+  "c89735872b8ff154"
+ ],
+ "beir_cqadupstack_physics_105013": [
+  "3ebfd5cc15591d94"
+ ],
+ "beir_cqadupstack_physics_105071": [
+  "0764ef2c46f8b5d8",
+  "3ecd4d31b2bd5740",
+  "53537451eb460231"
+ ],
+ "beir_cqadupstack_physics_1051": [
+  "5feecc4b0204e26c"
+ ],
+ "beir_cqadupstack_physics_105183": [
+  "44fc7404339ed287",
+  "b47250461a44937e"
+ ],
+ "beir_cqadupstack_physics_105239": [
+  "00c938ba7fc4ccae",
+  "2df493c5613f396e",
+  "3669908ba17d06ce",
+  "537e9af258c22756",
+  "5d1c258c8ba806fe",
+  "61c74663a9e712a2",
+  "88f657c54656272e",
+  "9ee16f799663a647",
+  "a695b2d34ffae1f8",
+  "b8fb660a65f9122d",
+  "c53a40635a089759",
+  "ca641d0bfa60cd18",
+  "d099147e956393e5"
+ ],
+ "beir_cqadupstack_physics_105316": [
+  "4e1e940efe715fbb"
+ ],
+ "beir_cqadupstack_physics_105398": [
+  "e8d1f15db28d0c2d"
+ ],
+ "beir_cqadupstack_physics_105483": [
+  "175918d6ee99975b"
+ ],
+ "beir_cqadupstack_physics_105681": [
+  "42823956e613082f"
+ ],
+ "beir_cqadupstack_physics_105735": [
+  "e9d50f5061ef400c"
+ ],
+ "beir_cqadupstack_physics_105833": [
+  "6a51690f9050fde7"
+ ],
+ "beir_cqadupstack_physics_105875": [
+  "1a308ec12af3e825",
+  "d0758f52f99b2f76"
+ ],
+ "beir_cqadupstack_physics_106065": [
+  "8812846278a1e9cb"
+ ],
+ "beir_cqadupstack_physics_106078": [
+  "1852fe9513ac5060"
+ ],
+ "beir_cqadupstack_physics_106287": [
+  "3fa235c0d53a28d0",
+  "91ab15c68a106f2b",
+  "d0b3867cdc4b6758"
+ ],
+ "beir_cqadupstack_physics_106378": [
+  "2a6702bc6e966657"
+ ],
+ "beir_cqadupstack_physics_106484": [
+  "01d598433a02f8f1",
+  "ca9a4d223f661c68"
+ ],
+ "beir_cqadupstack_physics_106501": [
+  "db5f298a41934ca8"
+ ],
+ "beir_cqadupstack_physics_106543": [
+  "0c7aa28911166c67",
+  "25b43aaa5f5219c7"
+ ],
+ "beir_cqadupstack_physics_106652": [
+  "c46641a4807e20fd"
+ ],
+ "beir_cqadupstack_physics_107023": [
+  "5179e4c69510a7e9",
+  "7d4b70b0a831f1a1"
+ ],
+ "beir_cqadupstack_physics_107113": [
+  "b8a1153552f854d8"
+ ],
+ "beir_cqadupstack_physics_107546": [
+  "6d0014282c315e5e"
+ ],
+ "beir_cqadupstack_physics_107561": [
+  "52d55b6320655411"
+ ],
+ "beir_cqadupstack_physics_107563": [
+  "378d45719a59742a"
+ ],
+ "beir_cqadupstack_physics_107614": [
+  "6efedf333badc240"
+ ],
+ "beir_cqadupstack_physics_107671": [
+  "a1a79885d1992d90"
+ ],
+ "beir_cqadupstack_physics_107746": [
+  "aad0f08f13b09c46"
+ ],
+ "beir_cqadupstack_physics_107919": [
+  "3a9f19a6845a7848"
+ ],
+ "beir_cqadupstack_physics_1080": [
+  "724a3f5113b92283",
+  "744cdc3af9f5d2e9",
+  "df9444d755f90588"
+ ],
+ "beir_cqadupstack_physics_108212": [
+  "4538e65a01352139"
+ ],
+ "beir_cqadupstack_physics_108214": [
+  "dc71b0e40d7269bb"
+ ],
+ "beir_cqadupstack_physics_108569": [
+  "6ff8f1ff499da1be",
+  "fcb0a1d7d8c333d9"
+ ],
+ "beir_cqadupstack_physics_108661": [
+  "68a162dba72f0b05"
+ ],
+ "beir_cqadupstack_physics_10870": [
+  "5ad042352d1bc79c"
+ ],
+ "beir_cqadupstack_physics_108924": [
+  "31fb7bc0d8474bd0",
+  "6f274c9ed5275069"
+ ],
+ "beir_cqadupstack_physics_10895": [
+  "e0064baa5f8356d4"
+ ],
+ "beir_cqadupstack_physics_109060": [
+  "c8d3f2ba645736c5"
+ ],
+ "beir_cqadupstack_physics_109332": [
+  "092e2964bb72475b",
+  "0dd2a6de35ad8298",
+  "2411cf314dc6ed98",
+  "249b44a5a2a00b1c",
+  "525ad0fec7505b27",
+  "69bd541c4b6384dd",
+  "789e80b056603ffe",
+  "bbe78362f224c8ea",
+  "c1b083c493aca34e",
+  "e65194f41c8600ca",
+  "fc2a254bf33f084c"
+ ],
+ "beir_cqadupstack_physics_109364": [
+  "17b9ccfbf7766f76"
+ ],
+ "beir_cqadupstack_physics_109636": [
+  "0b381b1c291534d2"
+ ],
+ "beir_cqadupstack_physics_109850": [
+  "2f3640dfeee1d041"
+ ],
+ "beir_cqadupstack_physics_109957": [
+  "0d8fdf02db6d24d9",
+  "d7369b1773cf3460"
+ ],
+ "beir_cqadupstack_physics_109982": [
+  "33d07cf28f4d81aa"
+ ],
+ "beir_cqadupstack_physics_109992": [
+  "38f174b1553526d6"
+ ],
+ "beir_cqadupstack_physics_110077": [
+  "0b020afd2ac0fc9e"
+ ],
+ "beir_cqadupstack_physics_11014": [
+  "4100f6c4793379ac"
+ ],
+ "beir_cqadupstack_physics_110207": [
+  "6832c146012ca9a4"
+ ],
+ "beir_cqadupstack_physics_110330": [
+  "77fbb778210a1e42"
+ ],
+ "beir_cqadupstack_physics_110395": [
+  "e5ef8d6968f9ad5d"
+ ],
+ "beir_cqadupstack_physics_110401": [
+  "5ba63db9bf469dbd"
+ ],
+ "beir_cqadupstack_physics_110543": [
+  "0be12f59259252e9"
+ ],
+ "beir_cqadupstack_physics_110554": [
+  "3fb868cd293318eb",
+  "aa2ca924ef4d7554"
+ ],
+ "beir_cqadupstack_physics_110581": [
+  "c22dbbdbf731fc45"
+ ],
+ "beir_cqadupstack_physics_110615": [
+  "dc90b77461d86185"
+ ],
+ "beir_cqadupstack_physics_110669": [
+  "f5bde7f719ede514"
+ ],
+ "beir_cqadupstack_physics_110736": [
+  "140513b479444696"
+ ],
+ "beir_cqadupstack_physics_111172": [
+  "7530f311fe7be470"
+ ],
+ "beir_cqadupstack_physics_111213": [
+  "179f4ffacfcb36f0"
+ ],
+ "beir_cqadupstack_physics_111236": [
+  "ecbdde8935a7cdaf"
+ ],
+ "beir_cqadupstack_physics_111382": [
+  "29233d5e446bc3c8",
+  "40039cc8749a47d8",
+  "9348d82868b8578f",
+  "b1992d80540f38fb",
+  "daa0d1619302173e",
+  "e664560512a39a9b"
+ ],
+ "beir_cqadupstack_physics_111530": [
+  "f6da3aab909e388a"
+ ],
+ "beir_cqadupstack_physics_111546": [
+  "2bb322675ed0cfd3",
+  "928d46ffe627e2ba",
+  "e74279c6ba8f1c7d"
+ ],
+ "beir_cqadupstack_physics_111696": [
+  "f4e23b8e00a83b2c"
+ ],
+ "beir_cqadupstack_physics_111784": [
+  "90abe7b804a1ddf7",
+  "af1aac156bb8b4a5"
+ ],
+ "beir_cqadupstack_physics_111866": [
+  "57357764904fa550"
+ ],
+ "beir_cqadupstack_physics_11188": [
+  "219584f212ed7f15",
+  "c09fcfc34636b146"
+ ],
+ "beir_cqadupstack_physics_11194": [
+  "c7ddedf8475b96aa"
+ ],
+ "beir_cqadupstack_physics_111959": [
+  "af2f1a3c37a1cf6b"
+ ],
+ "beir_cqadupstack_physics_112011": [
+  "bc92937386a35173"
+ ],
+ "beir_cqadupstack_physics_112270": [
+  "46519b70a54c85f7"
+ ],
+ "beir_cqadupstack_physics_112406": [
+  "15b44e1101bc3e72"
+ ],
+ "beir_cqadupstack_physics_112476": [
+  "59a004564d5bdb63"
+ ],
+ "beir_cqadupstack_physics_112629": [
+  "4400efd33ac28e0f"
+ ],
+ "beir_cqadupstack_physics_112799": [
+  "7a7d537f96e3c7e7"
+ ],
+ "beir_cqadupstack_physics_112820": [
+  "c4fb219873c92e4b"
+ ],
+ "beir_cqadupstack_physics_112866": [
+  "c63383c87c90d50d"
+ ],
+ "beir_cqadupstack_physics_11299": [
+  "31170de2eb1327a6"
+ ],
+ "beir_cqadupstack_physics_113267": [
+  "d4fa36c5550c131d"
+ ],
+ "beir_cqadupstack_physics_113523": [
+  "cf8c28829a2e4e4b"
+ ],
+ "beir_cqadupstack_physics_113527": [
+  "29e4126173feadf8",
+  "56906dda03493bab",
+  "dd20604347063940"
+ ],
+ "beir_cqadupstack_physics_113548": [
+  "ccc1db4a094407da"
+ ],
+ "beir_cqadupstack_physics_113647": [
+  "8eb430bbf769cf8f"
+ ],
+ "beir_cqadupstack_physics_113660": [
+  "a7606719d35c9c21"
+ ],
+ "beir_cqadupstack_physics_113722": [
+  "8422be552d1cdc2b"
+ ],
+ "beir_cqadupstack_physics_113749": [
+  "43b7a0049e321740"
+ ],
+ "beir_cqadupstack_physics_113830": [
+  "a9912a96841711d9"
+ ],
+ "beir_cqadupstack_physics_11396": [
+  "2ec169bab0d44be3",
+  "97db1324dcf5a74a",
+  "fdbcb29876d1fc00"
+ ],
+ "beir_cqadupstack_physics_113973": [
+  "474ca005b4f44ca3",
+  "703d1a1e1cd1702c",
+  "e3b3b7597e9af7f1"
+ ],
+ "beir_cqadupstack_physics_113982": [
+  "3585063f37439b04"
+ ],
+ "beir_cqadupstack_physics_114483": [
+  "937a8a2af82ed545"
+ ],
+ "beir_cqadupstack_physics_114887": [
+  "1d65d9e2b15ac456",
+  "3a142dd3148a50a1",
+  "795893d5d5c9f67e",
+  "c7055257fa5ef8b6"
+ ],
+ "beir_cqadupstack_physics_115204": [
+  "34f140b057eb8a0f",
+  "72cdbf0925c0f1a1"
+ ],
+ "beir_cqadupstack_physics_11527": [
+  "6a70b3f75735b120",
+  "f460c27e044cf349"
+ ],
+ "beir_cqadupstack_physics_11542": [
+  "8783d5f00ce1f897",
+  "a84e7f849ccca1ca",
+  "b99e1f1b009f7944",
+  "d30e7779890466a6"
+ ],
+ "beir_cqadupstack_physics_11588": [
+  "bcac1b4ccda88c6b"
+ ],
+ "beir_cqadupstack_physics_116230": [
+  "41bb17aff0b124c3",
+  "58de6080df126818",
+  "7f803fe66fcc8b6e"
+ ],
+ "beir_cqadupstack_physics_116281": [
+  "c1e28b07f22406ef"
+ ],
+ "beir_cqadupstack_physics_116657": [
+  "073a5c435e06e7c1"
+ ],
+ "beir_cqadupstack_physics_11673": [
+  "edd609c2f01b086a"
+ ],
+ "beir_cqadupstack_physics_116842": [
+  "02ec6041a1486ee1",
+  "06a495580817c220",
+  "1afb717d13dbdea3",
+  "2426ef3fa72ebd58",
+  "342f25f3602d1f9f",
+  "3ad18e9f42541431",
+  "48755da2bde31e62",
+  "9430d170dc3e60ab",
+  "a5b7b6755b3920a3",
+  "b87dc5c8a6504d30",
+  "ba0537510e0a9ec9",
+  "d46f1366cde25e90",
+  "dc56dd6cab3e9b55",
+  "e1f4202aed022985"
+ ],
+ "beir_cqadupstack_physics_116851": [
+  "286de2f41eb0e301"
+ ],
+ "beir_cqadupstack_physics_11686": [
+  "daec525372be5f0d"
+ ],
+ "beir_cqadupstack_physics_116921": [
+  "b8f3fd50ddbecedb"
+ ],
+ "beir_cqadupstack_physics_117120": [
+  "40788721fe461c63"
+ ],
+ "beir_cqadupstack_physics_117205": [
+  "5d22f2db7ae7be08",
+  "c5a7574407d87a92"
+ ],
+ "beir_cqadupstack_physics_117223": [
+  "14a5b5af88ef98b4",
+  "30ecc7d2606f4173",
+  "41ae184320bff6c5",
+  "69fb6c906f0566d5",
+  "d8c978b5138e7bd6",
+  "ffb1313b077e0097"
+ ],
+ "beir_cqadupstack_physics_118717": [
+  "e05fb6bfa41879e5"
+ ],
+ "beir_cqadupstack_physics_11878": [
+  "edeb2140b7ca693c",
+  "ffc16985442f97d7"
+ ],
+ "beir_cqadupstack_physics_118807": [
+  "56d148001beeed63"
+ ],
+ "beir_cqadupstack_physics_118900": [
+  "8d71aab5e1c843bb"
+ ],
+ "beir_cqadupstack_physics_118988": [
+  "72f30ac05c37017d"
+ ],
+ "beir_cqadupstack_physics_119083": [
+  "a6e48f3910bc1241"
+ ],
+ "beir_cqadupstack_physics_119103": [
+  "4ad42ede63131366"
+ ],
+ "beir_cqadupstack_physics_119176": [
+  "76c16d474d36eb68"
+ ],
+ "beir_cqadupstack_physics_119284": [
+  "ccc5008f806e8bc5"
+ ],
+ "beir_cqadupstack_physics_119441": [
+  "8b9d7ad32e7b9066"
+ ],
+ "beir_cqadupstack_physics_119673": [
+  "0db90070a82e5411",
+  "1d09fdfd6c8f44c8",
+  "4d64817ba23dc552",
+  "88ef52fe41891321",
+  "974afbf82cc8dffd",
+  "9917953bce0adfed",
+  "bab04cbfb221f4d8",
+  "d2c4fa05a8275b13"
+ ],
+ "beir_cqadupstack_physics_119935": [
+  "a7a1bbeb0134f765"
+ ],
+ "beir_cqadupstack_physics_120107": [
+  "a73478f2a2899c08"
+ ],
+ "beir_cqadupstack_physics_12012": [
+  "3ed62da6b87a8323",
+  "53a45605a504d9a7",
+  "58f0a2e7b492824a",
+  "5e0e252479c451e3",
+  "d689ec33199a09f9"
+ ],
+ "beir_cqadupstack_physics_120124": [
+  "6bf08aee4245a17c"
+ ],
+ "beir_cqadupstack_physics_120191": [
+  "fa8118e1b879a9b9"
+ ],
+ "beir_cqadupstack_physics_12046": [
+  "415dcc94041cea91",
+  "731e86a4661a55ce",
+  "a2ec935e85f4fa4b",
+  "cba7b4218346888e"
+ ],
+ "beir_cqadupstack_physics_121476": [
+  "28e93b126f747b3d"
+ ],
+ "beir_cqadupstack_physics_121536": [
+  "f993a95b78a78067"
+ ],
+ "beir_cqadupstack_physics_12169": [
+  "5bbd63d305ba5db9"
+ ],
+ "beir_cqadupstack_physics_1217": [
+  "7db39f4d021b2281"
+ ],
+ "beir_cqadupstack_physics_121717": [
+  "f74e4feeb7d07b54"
+ ],
+ "beir_cqadupstack_physics_121911": [
+  "c01906158e2672db"
+ ],
+ "beir_cqadupstack_physics_122413": [
+  "5bbf7af0395d84c4"
+ ],
+ "beir_cqadupstack_physics_122564": [
+  "f3ee280882501d17"
+ ],
+ "beir_cqadupstack_physics_122635": [
+  "7103af40845997f6"
+ ],
+ "beir_cqadupstack_physics_122841": [
+  "137af0ee77fc10b3"
+ ],
+ "beir_cqadupstack_physics_122941": [
+  "d653bf28d2c797a1"
+ ],
+ "beir_cqadupstack_physics_123055": [
+  "5c038975c410b944"
+ ],
+ "beir_cqadupstack_physics_123173": [
+  "b29f85bf668f409b"
+ ],
+ "beir_cqadupstack_physics_123210": [
+  "6d34f22b0192a169",
+  "c1db80db0c447c8c"
+ ],
+ "beir_cqadupstack_physics_123267": [
+  "a30fd5614166ee3a"
+ ],
+ "beir_cqadupstack_physics_123513": [
+  "269a9aa21804666a"
+ ],
+ "beir_cqadupstack_physics_123610": [
+  "1aeee7ee83651769"
+ ],
+ "beir_cqadupstack_physics_123743": [
+  "9c42e4766e200a41"
+ ],
+ "beir_cqadupstack_physics_123803": [
+  "0bab6e16d63d58ee",
+  "628d03996237c46e",
+  "997c073c614fca1d",
+  "ad47736e098a4222",
+  "bc440ea621f6da58"
+ ],
+ "beir_cqadupstack_physics_123857": [
+  "0aa4084cf2f66879"
+ ],
+ "beir_cqadupstack_physics_12463": [
+  "cdd2514ebcda9dc3",
+  "e9ba9267f4963c8e"
+ ],
+ "beir_cqadupstack_physics_12557": [
+  "21013e0305677ece"
+ ],
+ "beir_cqadupstack_physics_12559": [
+  "2bcde9716fdbdcd7",
+  "df49864bbeb27324"
+ ],
+ "beir_cqadupstack_physics_12560": [
+  "48a77c8ebde1453f"
+ ],
+ "beir_cqadupstack_physics_12589": [
+  "31222bc6d852112d"
+ ],
+ "beir_cqadupstack_physics_125938": [
+  "f301f45e8e643a94"
+ ],
+ "beir_cqadupstack_physics_126264": [
+  "cd26b8221e53e470"
+ ],
+ "beir_cqadupstack_physics_126296": [
+  "46921c546680207a"
+ ],
+ "beir_cqadupstack_physics_126504": [
+  "cd82f7927201f886"
+ ],
+ "beir_cqadupstack_physics_126610": [
+  "2db7be0236e31087",
+  "34111e08acad2f0c",
+  "595d043693c2c019",
+  "60e9a16e69574bf4",
+  "67544b17119812db"
+ ],
+ "beir_cqadupstack_physics_126619": [
+  "02e9aac3d6270a2b",
+  "040f06d6b0fd5f3d",
+  "04142cbbcd50523f",
+  "04c18521fb8c38de",
+  "1cbbbea20a4bdaf0",
+  "28b6b9936e756260",
+  "28fce435ecd4251c",
+  "2b7ce94b61c8994f",
+  "3e961a9c2b7f4dc4",
+  "406095f9b6e6708c",
+  "40c97ad4a6952542",
+  "46fe5c3fe0bee892",
+  "4a6eba3b8dc12ce1",
+  "4e7f9dc6dcfbc702",
+  "5816103d5070155a",
+  "60e32390c645d1fe",
+  "7645b63a8c8dc29e",
+  "78e32f0f86c019a1",
+  "83bd12c1d41e8caa",
+  "8ef2a9e8d5268161",
+  "bee150eff2096053",
+  "cc2aca2fdb76dbc4",
+  "ce2bad49f1b8b09d",
+  "d438a7b61b10c281",
+  "d6ea3c842b07a1fd",
+  "eb9a1c8e34f8bcba"
+ ],
+ "beir_cqadupstack_physics_12664": [
+  "38b3d185854d1022"
+ ],
+ "beir_cqadupstack_physics_126691": [
+  "d2277686c7f62c20"
+ ],
+ "beir_cqadupstack_physics_126694": [
+  "275c1014a0b62366",
+  "d4af2214958d51f0"
+ ],
+ "beir_cqadupstack_physics_126766": [
+  "ccd1fa49e0e185d4"
+ ],
+ "beir_cqadupstack_physics_126769": [
+  "a574eff8ad247d62",
+  "cdf736a12acc9f72",
+  "d179cb28e4a46b5c"
+ ],
+ "beir_cqadupstack_physics_126921": [
+  "3186fabc968cba9b",
+  "52cce5260dc40664"
+ ],
+ "beir_cqadupstack_physics_12717": [
+  "1af5d09c6b7924fa"
+ ],
+ "beir_cqadupstack_physics_127408": [
+  "08ad2c8f6d3966fb"
+ ],
+ "beir_cqadupstack_physics_127461": [
+  "4dd17e1d85d7db5a"
+ ],
+ "beir_cqadupstack_physics_127538": [
+  "d3cea07523942b0f"
+ ],
+ "beir_cqadupstack_physics_12756": [
+  "49d10b6be141ec45",
+  "b1fd192cc5ff455f",
+  "e40ad2558cc1e7ee"
+ ],
+ "beir_cqadupstack_physics_127616": [
+  "2302a936c3f30be1",
+  "3a62f77805052435",
+  "40c544c36ba5d1a6",
+  "78071aabc232595b",
+  "ba2787a6cf8aeed5",
+  "bfc463d910f21797",
+  "d5540a83b524127a",
+  "e4353186eedaa5ec",
+  "e8896deddd1a73ea"
+ ],
+ "beir_cqadupstack_physics_127940": [
+  "8e40862d185588f0"
+ ],
+ "beir_cqadupstack_physics_128161": [
+  "23989dcfba62e1d4",
+  "41fd9ccc5c1ef525",
+  "8e7cf020f6bc9984",
+  "8f268ed20d8ebf8f",
+  "bbe9830cffa96d32",
+  "d4db74002ef6b5c2"
+ ],
+ "beir_cqadupstack_physics_128196": [
+  "7b0f929967611a5e",
+  "936fc057eba6f650"
+ ],
+ "beir_cqadupstack_physics_128389": [
+  "97454a74715802f8",
+  "c4738f270824c2a7",
+  "d607ebcfb49c7b52"
+ ],
+ "beir_cqadupstack_physics_128702": [
+  "c823ea3748785de0"
+ ],
+ "beir_cqadupstack_physics_128875": [
+  "52e41b84ae648f87"
+ ],
+ "beir_cqadupstack_physics_128891": [
+  "5790deefed0df495"
+ ],
+ "beir_cqadupstack_physics_129030": [
+  "0f641604f9b70eab",
+  "435910a6284df9d1"
+ ],
+ "beir_cqadupstack_physics_129137": [
+  "5136b3feef9168db"
+ ],
+ "beir_cqadupstack_physics_129206": [
+  "f07163c0dd2c2aaa"
+ ],
+ "beir_cqadupstack_physics_129314": [
+  "1290b57e01cf25e8"
+ ],
+ "beir_cqadupstack_physics_129340": [
+  "f3b4dfa6600db42a"
+ ],
+ "beir_cqadupstack_physics_129350": [
+  "d7abe540c48708b1"
+ ],
+ "beir_cqadupstack_physics_129378": [
+  "14e5280f3596c73a",
+  "1f55fc526bdf8e49",
+  "5a045d9ac3050f44",
+  "5a0f697f6cc541e7",
+  "647d6b65f74ced24",
+  "c9ba5f56d2a449a7",
+  "cd455f2741d12135",
+  "f2a13a63b22e1ed7"
+ ],
+ "beir_cqadupstack_physics_129408": [
+  "90962a6dbcf36f59"
+ ],
+ "beir_cqadupstack_physics_129593": [
+  "2fa6c4f5ebc747a0"
+ ],
+ "beir_cqadupstack_physics_129654": [
+  "a98795e976d9dfeb"
+ ],
+ "beir_cqadupstack_physics_129715": [
+  "ea2c024ce97cc975"
+ ],
+ "beir_cqadupstack_physics_12995": [
+  "b026e21aca529853"
+ ],
+ "beir_cqadupstack_physics_129991": [
+  "5e8e8c1c38cce83c"
+ ],
+ "beir_cqadupstack_physics_130116": [
+  "165130e383d57545"
+ ],
+ "beir_cqadupstack_physics_130171": [
+  "e0c907c8405bb4ec"
+ ],
+ "beir_cqadupstack_physics_13020": [
+  "9dcb6a0e37e9c2dd"
+ ],
+ "beir_cqadupstack_physics_13030": [
+  "2ea0697269676286"
+ ],
+ "beir_cqadupstack_physics_130509": [
+  "71ca95528136e000"
+ ],
+ "beir_cqadupstack_physics_130676": [
+  "148a696e39dcccf2",
+  "1ed55e9966b78dcd",
+  "60f117f29c7918bd",
+  "762ae31cb75d86c0",
+  "99693fbc9bd8eebc",
+  "a6ba303ef0cc710a",
+  "c93af5362a67b71f"
+ ],
+ "beir_cqadupstack_physics_130686": [
+  "29f245a5c21ee7a6",
+  "6dc5757a8fad8d66",
+  "c2949a7f69fc3cc9",
+  "e1cc082bb5d69fcb",
+  "edfe9098ba5d905b"
+ ],
+ "beir_cqadupstack_physics_130767": [
+  "00263f01d2bd3222",
+  "0dafea9bcb5bb55f",
+  "33a0291030f4dc3d",
+  "5c7a161f08788ea7",
+  "6835325d6674b3a0",
+  "d783aed5f786f8b5",
+  "dab196e624767b20"
+ ],
+ "beir_cqadupstack_physics_130773": [
+  "cf98e9092ce7ebc6"
+ ],
+ "beir_cqadupstack_physics_130936": [
+  "0c394c4bb3b270a8",
+  "c4ebb122d3aaaa92"
+ ],
+ "beir_cqadupstack_physics_130985": [
+  "e420b000047e0f4d"
+ ],
+ "beir_cqadupstack_physics_130999": [
+  "a9758366982e5809",
+  "d6a6fb55fc627b0e"
+ ],
+ "beir_cqadupstack_physics_131352": [
+  "f31b77110a3a8ad8"
+ ],
+ "beir_cqadupstack_physics_131364": [
+  "25a89793ca249b4c",
+  "e6cd7a3bb7134171"
+ ],
+ "beir_cqadupstack_physics_131505": [
+  "3b0a245c8c989f53",
+  "47a55ff6ae95acf2",
+  "6364acb1eb433f5f",
+  "8e833e187326cc20",
+  "a9901d1da4170001",
+  "b806fe6961a18bae",
+  "d21cb825499f66fc"
+ ],
+ "beir_cqadupstack_physics_13157": [
+  "72c7d00d75949940",
+  "b61df80c39e01b47",
+  "ea891353e41a7e32"
+ ],
+ "beir_cqadupstack_physics_1317": [
+  "9be1962d0f3a9010"
+ ],
+ "beir_cqadupstack_physics_131758": [
+  "49ec40c1cc2df021",
+  "586b41209f606464"
+ ],
+ "beir_cqadupstack_physics_132043": [
+  "ec8cc84f3c49d57a"
+ ],
+ "beir_cqadupstack_physics_132058": [
+  "47746106bc8d1bb0",
+  "aed852dfbb256d28",
+  "b06968f72684a5d2",
+  "cc6149a58319acc6"
+ ],
+ "beir_cqadupstack_physics_13220": [
+  "01f59aba943d95e0",
+  "1b0cab805b61b8f1",
+  "67cfb7cff7090dd3",
+  "a4fc66395324db4e",
+  "a83b066af74840d4"
+ ],
+ "beir_cqadupstack_physics_132440": [
+  "7b00296476936e9d"
+ ],
+ "beir_cqadupstack_physics_132449": [
+  "328ded25afb9bf12",
+  "4ef3932b0434c95e",
+  "8c513619f99cddf5",
+  "c23360f750eca920"
+ ],
+ "beir_cqadupstack_physics_132602": [
+  "f5525bc04d298c92"
+ ],
+ "beir_cqadupstack_physics_132788": [
+  "a0eaac90b2b027a7"
+ ],
+ "beir_cqadupstack_physics_132988": [
+  "acd16546c2b5fffd",
+  "b907d48d65ab92f3"
+ ],
+ "beir_cqadupstack_physics_133093": [
+  "ea4fabf4e5b232b4"
+ ],
+ "beir_cqadupstack_physics_133096": [
+  "01ae4c37d14b9cfa",
+  "1846893a51d6036b",
+  "57fd4cfeb7cf27cf",
+  "5a15d07094209dee",
+  "5d450f579c3ce9a0",
+  "64cb0282a9155255",
+  "6cc78253ffe7381e",
+  "72032387c76f7e99",
+  "72d5d0d25929a5f4",
+  "75e7446972646a0d",
+  "7fb74e21864733e2",
+  "9827566a98e8e928",
+  "9c57419b9e439402",
+  "a0e80cb7051d4c5c",
+  "a1c1e4ba3c03b945",
+  "a75298abd6eae429",
+  "b07c1324e7622074",
+  "ba3e74fdfc495292",
+  "c3fda1c28b338548",
+  "e74f1c4f83e17cef",
+  "ee2a3fe64a94c625",
+  "ee525bb936a08701",
+  "f68e16ae5a086842",
+  "f855e7e2c8e7612a"
+ ],
+ "beir_cqadupstack_physics_133230": [
+  "d5c217bbb0e0d071"
+ ],
+ "beir_cqadupstack_physics_13325": [
+  "dc6d18433a0833d4"
+ ],
+ "beir_cqadupstack_physics_133431": [
+  "935429fd287e6949"
+ ],
+ "beir_cqadupstack_physics_133488": [
+  "ab4065d269b2f715"
+ ],
+ "beir_cqadupstack_physics_13349": [
+  "6fdfdac8cf662751"
+ ],
+ "beir_cqadupstack_physics_133564": [
+  "04d27cd9721b2953",
+  "41ae41155c2523cd",
+  "5d34e3f1c8004277",
+  "efc581791db8a1eb"
+ ],
+ "beir_cqadupstack_physics_133703": [
+  "4de54f5162a4140d"
+ ],
+ "beir_cqadupstack_physics_133707": [
+  "a512e5aac3dcac83"
+ ],
+ "beir_cqadupstack_physics_133714": [
+  "c6b06a73fd3f08e0"
+ ],
+ "beir_cqadupstack_physics_133820": [
+  "af8b85c8ff2b1218"
+ ],
+ "beir_cqadupstack_physics_133829": [
+  "e1b42c8920cffb88"
+ ],
+ "beir_cqadupstack_physics_133876": [
+  "6c500e120004c5e1"
+ ],
+ "beir_cqadupstack_physics_13388": [
+  "5251e723ca5d781d"
+ ],
+ "beir_cqadupstack_physics_133924": [
+  "199517b3f801f535",
+  "208526c7df8637b6",
+  "26bae378546dee74",
+  "333269495071de41",
+  "7fc1f2987eac1698",
+  "827d98d108400114",
+  "8db3dcba1ea260de"
+ ],
+ "beir_cqadupstack_physics_133942": [
+  "55561245819d5af9",
+  "ed6c84f8500a620d"
+ ],
+ "beir_cqadupstack_physics_134081": [
+  "752d38dfd9edf020",
+  "e205b3d58748d4e8",
+  "e3e8bcd4bcede1fe"
+ ],
+ "beir_cqadupstack_physics_134127": [
+  "8a27af8746c7bbe8"
+ ],
+ "beir_cqadupstack_physics_134157": [
+  "0a0e21c83812f1c8",
+  "55fce1c04793dc00",
+  "c0ce11e3b3b9ffb0",
+  "e99883747ed2ec73"
+ ],
+ "beir_cqadupstack_physics_134199": [
+  "a858be846f1af28d",
+  "d719c8844cdde47c"
+ ],
+ "beir_cqadupstack_physics_1343": [
+  "085f5e4c693756fb"
+ ],
+ "beir_cqadupstack_physics_134356": [
+  "17cbba3d9af9aab0",
+  "2def30414d81151b"
+ ],
+ "beir_cqadupstack_physics_134370": [
+  "80448e78b45589c5"
+ ],
+ "beir_cqadupstack_physics_134378": [
+  "2992756a0fc3d746"
+ ],
+ "beir_cqadupstack_physics_134559": [
+  "8dea0da1f0d88fec"
+ ],
+ "beir_cqadupstack_physics_134809": [
+  "fed20d24f23c3244"
+ ],
+ "beir_cqadupstack_physics_134979": [
+  "572c1313be8068b2",
+  "c76f1ea936335c84",
+  "d3435f3f4c118a32"
+ ],
+ "beir_cqadupstack_physics_134987": [
+  "77047580181b5e8c"
+ ],
+ "beir_cqadupstack_physics_135007": [
+  "664e96569a8cecf2"
+ ],
+ "beir_cqadupstack_physics_135096": [
+  "94b55c327055d132"
+ ],
+ "beir_cqadupstack_physics_135115": [
+  "07f08aba84d9dabc"
+ ],
+ "beir_cqadupstack_physics_135145": [
+  "39764e5a95ad3cd6"
+ ],
+ "beir_cqadupstack_physics_135377": [
+  "309235b276ca2a1c"
+ ],
+ "beir_cqadupstack_physics_135382": [
+  "0ab11e62c52138ad"
+ ],
+ "beir_cqadupstack_physics_13557": [
+  "356963105b1e6331",
+  "994333e6fe315744"
+ ],
+ "beir_cqadupstack_physics_13624": [
+  "8722b5bf4a03eef1"
+ ],
+ "beir_cqadupstack_physics_1372": [
+  "9ed03ba61a8b3f8d"
+ ],
+ "beir_cqadupstack_physics_13851": [
+  "090085d72364f7f7"
+ ],
+ "beir_cqadupstack_physics_13917": [
+  "bdc4c20c11c1e10c"
+ ],
+ "beir_cqadupstack_physics_14044": [
+  "d1548e34c0c9a76f"
+ ],
+ "beir_cqadupstack_physics_14142": [
+  "bedc51d66c039dae"
+ ],
+ "beir_cqadupstack_physics_14255": [
+  "17ae27bc2050ee49"
+ ],
+ "beir_cqadupstack_physics_14362": [
+  "a33d091ddc22a7e4"
+ ],
+ "beir_cqadupstack_physics_1442": [
+  "64a70e63b7a4d594"
+ ],
+ "beir_cqadupstack_physics_14436": [
+  "e664ec475274be93"
+ ],
+ "beir_cqadupstack_physics_147": [
+  "db6c5740f3e0d5c0"
+ ],
+ "beir_cqadupstack_physics_14760": [
+  "ee1f434893f0c1de"
+ ],
+ "beir_cqadupstack_physics_14791": [
+  "dc1813ab4e34ff83"
+ ],
+ "beir_cqadupstack_physics_14865": [
+  "b6eeef76d953f58f"
+ ],
+ "beir_cqadupstack_physics_15055": [
+  "0e65076d6a86a1af",
+  "42df7552f8b9cb21",
+  "7921c68f23ac5147",
+  "a773efee7dea0518",
+  "b85a576cf1a9c30a",
+  "e81dca4d1b69dd89",
+  "f0ee1eba9e7309fb",
+  "f8b29c3e58a649ab"
+ ],
+ "beir_cqadupstack_physics_15263": [
+  "56e44ca746a53c8b"
+ ],
+ "beir_cqadupstack_physics_156": [
+  "94f2c431251db281"
+ ],
+ "beir_cqadupstack_physics_15640": [
+  "45ad0b38342312bf"
+ ],
+ "beir_cqadupstack_physics_15684": [
+  "4a0c0ec85625f180"
+ ],
+ "beir_cqadupstack_physics_15855": [
+  "7168c9f8db49564d",
+  "efc7aec0d6c81e5b"
+ ],
+ "beir_cqadupstack_physics_1601": [
+  "e9a0d9e8f8f5d305"
+ ],
+ "beir_cqadupstack_physics_16020": [
+  "99403f75d8c65b28"
+ ],
+ "beir_cqadupstack_physics_16082": [
+  "5821eb2688025f16"
+ ],
+ "beir_cqadupstack_physics_16206": [
+  "4e6879b7216f788f"
+ ],
+ "beir_cqadupstack_physics_16305": [
+  "f66c24a855226b5e"
+ ],
+ "beir_cqadupstack_physics_16415": [
+  "e9e2069f5287c142"
+ ],
+ "beir_cqadupstack_physics_16596": [
+  "a58379664be7cc39"
+ ],
+ "beir_cqadupstack_physics_16620": [
+  "961f8c1d55a6f57f"
+ ],
+ "beir_cqadupstack_physics_16626": [
+  "b09b90f930b0ae76"
+ ],
+ "beir_cqadupstack_physics_16708": [
+  "67df05354af997d6",
+  "81a4a849b9d3c6a7",
+  "eeae9398bae2db8c"
+ ],
+ "beir_cqadupstack_physics_16725": [
+  "701b3c70af098b0f"
+ ],
+ "beir_cqadupstack_physics_16755": [
+  "cfd53d9239692312"
+ ],
+ "beir_cqadupstack_physics_1683": [
+  "3f1b1261c4a7e2a2"
+ ],
+ "beir_cqadupstack_physics_1686": [
+  "4a9c3b3b60eaf640",
+  "55720b0aa24464c2",
+  "5c433312ce372415",
+  "f458f65ee085b0b1"
+ ],
+ "beir_cqadupstack_physics_16885": [
+  "0c2c308ff0b0b161"
+ ],
+ "beir_cqadupstack_physics_17034": [
+  "550824ee61c58499"
+ ],
+ "beir_cqadupstack_physics_17259": [
+  "086fb84b4a71ecda",
+  "1c03a627696e55f9",
+  "1f4aac43129e9bec",
+  "29ed015b74308823",
+  "34c3b18bbfb104e3",
+  "38f34d809dcc0d35",
+  "3c82c6dce2b6b886",
+  "3f37e2e5aa05ce33",
+  "3fb6a6f36f33f74c",
+  "402083ee3d4d273d",
+  "427544bec93b009d",
+  "57e219d224aad85d",
+  "587e3dc066165cda",
+  "730d14b1575a9e96",
+  "746a91dac163aa9f",
+  "8219f206ac53f090",
+  "822d1e26a7a4e220",
+  "89e63c5fe7d75444",
+  "8d332e0674a6aa43",
+  "94c0e218a781756c",
+  "95766734c3e7fdbf",
+  "9db38a202326865e",
+  "a938fa1160987b52",
+  "b4b85a8d80e4455e",
+  "b97ce7a396226773",
+  "bb6430beba1e0a11",
+  "c0826cf0ecf90457",
+  "d21ec3f3112525b1",
+  "dadaef758065b2db",
+  "dc65b69d12623105",
+  "dcf21ef96d808dc2",
+  "ed84bf2b7d6ff8dc",
+  "f00fa2e3b252aa84",
+  "f0d380dba9c50695",
+  "f2d0bf495b8ff5ad",
+  "f4c6aae053d3b619",
+  "f7d66607c91d45ae"
+ ],
+ "beir_cqadupstack_physics_17408": [
+  "3d2d86f9f35766eb"
+ ],
+ "beir_cqadupstack_physics_1775": [
+  "3d30820363b4cf54",
+  "61ccba960125e8c0",
+  "8021d98fc1500766",
+  "9b5c843d58e213b2"
+ ],
+ "beir_cqadupstack_physics_17944": [
+  "7a98503ef561b1a0"
+ ],
+ "beir_cqadupstack_physics_18028": [
+  "5fcbe7db6451cac5"
+ ],
+ "beir_cqadupstack_physics_18148": [
+  "1d0a6b0c38903466"
+ ],
+ "beir_cqadupstack_physics_18170": [
+  "c89173f576785524"
+ ],
+ "beir_cqadupstack_physics_18473": [
+  "605ddd7eabb92076",
+  "b199c342fdbe2d87"
+ ],
+ "beir_cqadupstack_physics_18563": [
+  "af3c40c27bff9a7f"
+ ],
+ "beir_cqadupstack_physics_18602": [
+  "36c0b06c13a8b1e1",
+  "5fb47e7db19c9130",
+  "721cb8d675fe4222",
+  "c18336f513254c87"
+ ],
+ "beir_cqadupstack_physics_18662": [
+  "782ef194bb002e4b"
+ ],
+ "beir_cqadupstack_physics_18670": [
+  "31c5717493154754"
+ ],
+ "beir_cqadupstack_physics_18691": [
+  "d58f2b18e34298e0"
+ ],
+ "beir_cqadupstack_physics_18793": [
+  "4800f129d7b1a1c7"
+ ],
+ "beir_cqadupstack_physics_1888": [
+  "ae727f247e911073"
+ ],
+ "beir_cqadupstack_physics_19043": [
+  "124283f2f1bb00e2",
+  "47a777a08a5239ea"
+ ],
+ "beir_cqadupstack_physics_1915": [
+  "866af7a80499f430"
+ ],
+ "beir_cqadupstack_physics_19262": [
+  "2819915a72777d7a",
+  "2a5658eb3dd1bed8",
+  "2aed0c4d8cd43719",
+  "515303fb50d52662",
+  "55104f1d6e350b4e",
+  "8915c3a87e80277f",
+  "924dda0dd7634f3f",
+  "b4787d1903b739c8"
+ ],
+ "beir_cqadupstack_physics_193": [
+  "28cd95989de76ca2",
+  "29302850d1962742",
+  "2973ca1cccaf29ed",
+  "2b0cbbc0bca46286",
+  "6680296d06f446dd",
+  "7008e590373859e4",
+  "8abf120211c9522e",
+  "c0620b6ec103d051",
+  "cf9855f48177d978",
+  "e81e102ee0f32b6c",
+  "e8b4b1c1e6e35461",
+  "ef09a9175928417b",
+  "f7fca04b7ef8fafd"
+ ],
+ "beir_cqadupstack_physics_19370": [
+  "1fad3f7c891c188e"
+ ],
+ "beir_cqadupstack_physics_19417": [
+  "b5fdc69011eccf0f"
+ ],
+ "beir_cqadupstack_physics_19536": [
+  "88f7cf869822d57e"
+ ],
+ "beir_cqadupstack_physics_19548": [
+  "ed7de6950aa86e21"
+ ],
+ "beir_cqadupstack_physics_1957": [
+  "b1be400e53badff2"
+ ],
+ "beir_cqadupstack_physics_19632": [
+  "b034c05c9ef7d85b",
+  "f0bfe13be7760e76"
+ ],
+ "beir_cqadupstack_physics_198": [
+  "91252d016fa1533f"
+ ],
+ "beir_cqadupstack_physics_19802": [
+  "59bd0821f5c55492"
+ ],
+ "beir_cqadupstack_physics_19816": [
+  "f1a5cf13e8a685a3"
+ ],
+ "beir_cqadupstack_physics_1982": [
+  "65180fa917000b56"
+ ],
+ "beir_cqadupstack_physics_1984": [
+  "582ef10ea1c59cfd",
+  "626a9ebba6862d26",
+  "839707eee00c9d61",
+  "89f1897ad6dc868d",
+  "9a6c40f2d222660b",
+  "b15aa6deb88577ce",
+  "c0cadf2746c5568d"
+ ],
+ "beir_cqadupstack_physics_19970": [
+  "bf03b38429ecc6ef"
+ ],
+ "beir_cqadupstack_physics_20056": [
+  "65e2f53760e53d91"
+ ],
+ "beir_cqadupstack_physics_20303": [
+  "7094ce7133247226"
+ ],
+ "beir_cqadupstack_physics_20333": [
+  "176f3614f32295fc",
+  "85d752d141d34826",
+  "eb2d990c507b5590"
+ ],
+ "beir_cqadupstack_physics_2041": [
+  "cfcb3c3aca68a8f3"
+ ],
+ "beir_cqadupstack_physics_20460": [
+  "f4ea8cd7e9d5e581"
+ ],
+ "beir_cqadupstack_physics_2051": [
+  "d208e1aae1dda288"
+ ],
+ "beir_cqadupstack_physics_2056": [
+  "cefbfd8a06dd9011"
+ ],
+ "beir_cqadupstack_physics_20637": [
+  "96e7e4718d6f17d1"
+ ],
+ "beir_cqadupstack_physics_2066": [
+  "dff0cb64b5533c2a"
+ ],
+ "beir_cqadupstack_physics_20675": [
+  "5c7d815892ab2ac9"
+ ],
+ "beir_cqadupstack_physics_20744": [
+  "3e2ba749b6e3d27c"
+ ],
+ "beir_cqadupstack_physics_21051": [
+  "82383b6117fb8fa0",
+  "87a7d81e3235f3d0",
+  "fb5b3c96cdeb8579"
+ ],
+ "beir_cqadupstack_physics_21194": [
+  "3574b75ecc6f502f"
+ ],
+ "beir_cqadupstack_physics_21301": [
+  "3aae9d3e36819cef"
+ ],
+ "beir_cqadupstack_physics_21319": [
+  "1830bf4a751e3c89",
+  "87c2ec03ddf50637",
+  "9c3e0b6f73ea517a",
+  "c471c54d792aae66"
+ ],
+ "beir_cqadupstack_physics_21384": [
+  "17233fdafff4d911"
+ ],
+ "beir_cqadupstack_physics_21487": [
+  "5847dd51a74a2f70",
+  "78830023a7921285",
+  "8b8f64ee18eb946a",
+  "ee2a986b058e8321"
+ ],
+ "beir_cqadupstack_physics_21654": [
+  "6266d44661162d87"
+ ],
+ "beir_cqadupstack_physics_21721": [
+  "269255ce0e36f1e3"
+ ],
+ "beir_cqadupstack_physics_21771": [
+  "1598ecb2af21ac02",
+  "53b453b964d20f73"
+ ],
+ "beir_cqadupstack_physics_22010": [
+  "6006aa39f9af5f49"
+ ],
+ "beir_cqadupstack_physics_22046": [
+  "40222dde8bbfb6d1",
+  "4c1fb7912ffe83db",
+  "b745a645fa0aaf59"
+ ],
+ "beir_cqadupstack_physics_22252": [
+  "a1ae0162128285db"
+ ],
+ "beir_cqadupstack_physics_22404": [
+  "374d5fc6a5f33a84"
+ ],
+ "beir_cqadupstack_physics_2254": [
+  "322dde7c6567e631",
+  "a180daf88b325ed2"
+ ],
+ "beir_cqadupstack_physics_22542": [
+  "81c6b0ff069ca826",
+  "dd1a5a0b7f1076e0"
+ ],
+ "beir_cqadupstack_physics_22566": [
+  "c3602f943b103324"
+ ],
+ "beir_cqadupstack_physics_22713": [
+  "5f505864d96eb6f0"
+ ],
+ "beir_cqadupstack_physics_22803": [
+  "ff4b0b58b3a28481"
+ ],
+ "beir_cqadupstack_physics_2281": [
+  "70b4de325e510b80"
+ ],
+ "beir_cqadupstack_physics_2289": [
+  "94f96f0aa6cfdac3"
+ ],
+ "beir_cqadupstack_physics_22923": [
+  "a7f3af907ab770ec"
+ ],
+ "beir_cqadupstack_physics_22960": [
+  "4553d5fbca72b26e",
+  "d7c54a35ecc5af1f",
+  "fb482c78e42f13a3"
+ ],
+ "beir_cqadupstack_physics_23007": [
+  "b32a3f506d81f054"
+ ],
+ "beir_cqadupstack_physics_23038": [
+  "81bbaa4570e28940"
+ ],
+ "beir_cqadupstack_physics_23118": [
+  "d7ec640a64359a67"
+ ],
+ "beir_cqadupstack_physics_23358": [
+  "8a6b41fa3d1be193"
+ ],
+ "beir_cqadupstack_physics_23487": [
+  "94a9eb77944db518"
+ ],
+ "beir_cqadupstack_physics_23625": [
+  "190588de7f71b889",
+  "9e0253f7982d521b"
+ ],
+ "beir_cqadupstack_physics_23753": [
+  "a8b01241539118c2",
+  "b23604afd27416df",
+  "eebe6675b575b17c"
+ ],
+ "beir_cqadupstack_physics_23879": [
+  "09ba5ebe23e95da5"
+ ],
+ "beir_cqadupstack_physics_23930": [
+  "3da09d8064f11a5a",
+  "9fbe21045bc57bc5"
+ ],
+ "beir_cqadupstack_physics_24131": [
+  "3b8d7991d5ebc15a",
+  "d34cef1d20123bcd"
+ ],
+ "beir_cqadupstack_physics_24231": [
+  "0ab395827da19eac",
+  "2dac7feb9ecef27b",
+  "36057db5a73590ca",
+  "3d9fa7cecf596822",
+  "4f5c137261604236",
+  "560862df9cffad4c",
+  "6566ed2940287f19",
+  "ab7da6b50dc12663",
+  "f6b810be67cbfb02",
+  "fc2fa455258b7444"
+ ],
+ "beir_cqadupstack_physics_24359": [
+  "db9e7c7735659b69"
+ ],
+ "beir_cqadupstack_physics_24540": [
+  "db91c371364f0a4f"
+ ],
+ "beir_cqadupstack_physics_24588": [
+  "050df8e9898ec0c3",
+  "2e0bdd186c01f69e"
+ ],
+ "beir_cqadupstack_physics_24596": [
+  "dc93454bbd0c9c39"
+ ],
+ "beir_cqadupstack_physics_24827": [
+  "17286dad2ee5942e"
+ ],
+ "beir_cqadupstack_physics_24841": [
+  "20f4d1871d39d287",
+  "3d8543145f275160",
+  "508552ae4ec1917c",
+  "5681ee5f4b50f3b7",
+  "6943ae558dcfe7ba",
+  "74604dc220cd29a5",
+  "b6f9fa12f8529710",
+  "efa466712dd8926f",
+  "f1cc6e7bf75d5e8a",
+  "fbddc9b0671550c2"
+ ],
+ "beir_cqadupstack_physics_25110": [
+  "df4720e098afab45"
+ ],
+ "beir_cqadupstack_physics_25145": [
+  "97f5f18a840844c0"
+ ],
+ "beir_cqadupstack_physics_252": [
+  "8355014685e4d338"
+ ],
+ "beir_cqadupstack_physics_25378": [
+  "498c4559d0734648"
+ ],
+ "beir_cqadupstack_physics_25437": [
+  "7eb79ac32c0a609c",
+  "b14ea9dd4d00b31c",
+  "b8965a7769f694a4"
+ ],
+ "beir_cqadupstack_physics_2554": [
+  "1007ba0101296efe",
+  "3094d77956506f23",
+  "81c62852f86817bb",
+  "83547f369d6e9b5f",
+  "ba3cc0d14e7d6e9b",
+  "e17febba0b38f5b5"
+ ],
+ "beir_cqadupstack_physics_25637": [
+  "40889e8a4cbd424b"
+ ],
+ "beir_cqadupstack_physics_25883": [
+  "3e21750a395c59b0"
+ ],
+ "beir_cqadupstack_physics_26066": [
+  "c65cfe5e07c7e5c0"
+ ],
+ "beir_cqadupstack_physics_26307": [
+  "ec380c25f8142db6"
+ ],
+ "beir_cqadupstack_physics_26478": [
+  "892212c4f56370a3"
+ ],
+ "beir_cqadupstack_physics_2684": [
+  "48e9871b7e5481ef",
+  "f04f84c18cf256de",
+  "fbd9aec7f1582eeb"
+ ],
+ "beir_cqadupstack_physics_26845": [
+  "0b2e085a2bcd40e6"
+ ],
+ "beir_cqadupstack_physics_2687": [
+  "d5af2686b8fe29f6",
+  "e8d0d9cd3b356653"
+ ],
+ "beir_cqadupstack_physics_26992": [
+  "407405d2e8e096e4"
+ ],
+ "beir_cqadupstack_physics_27041": [
+  "dc9e021edc4086c5"
+ ],
+ "beir_cqadupstack_physics_27078": [
+  "419a7b185dd11344"
+ ],
+ "beir_cqadupstack_physics_271": [
+  "9de4a21537aae305"
+ ],
+ "beir_cqadupstack_physics_2721": [
+  "528fea2f9f83688f"
+ ],
+ "beir_cqadupstack_physics_27326": [
+  "003e96e2374753b1"
+ ],
+ "beir_cqadupstack_physics_27423": [
+  "8febed753c68587c"
+ ],
+ "beir_cqadupstack_physics_27496": [
+  "f0062b6c38c0cfe9"
+ ],
+ "beir_cqadupstack_physics_27641": [
+  "85bb92fe031be92a"
+ ],
+ "beir_cqadupstack_physics_27753": [
+  "51254dc9e1dd05dc"
+ ],
+ "beir_cqadupstack_physics_27847": [
+  "424777d6f2a193f3"
+ ],
+ "beir_cqadupstack_physics_28093": [
+  "229b60e38be7ef24"
+ ],
+ "beir_cqadupstack_physics_28094": [
+  "4a0007e1316435dd"
+ ],
+ "beir_cqadupstack_physics_28174": [
+  "1af54c09d100db3e"
+ ],
+ "beir_cqadupstack_physics_28417": [
+  "4fe065c5af731285"
+ ],
+ "beir_cqadupstack_physics_28527": [
+  "03ed3ecb645dbb74",
+  "9ec9093d0d5dd37d"
+ ],
+ "beir_cqadupstack_physics_2860": [
+  "affcbc04906b1313"
+ ],
+ "beir_cqadupstack_physics_28647": [
+  "033fa7ab86b8c81c"
+ ],
+ "beir_cqadupstack_physics_28699": [
+  "3e272f47e881a23e"
+ ],
+ "beir_cqadupstack_physics_28720": [
+  "0c8f93a5e6a06bcc",
+  "d2d5b5e9546929bd",
+  "e1c0f0e607e11b23"
+ ],
+ "beir_cqadupstack_physics_28781": [
+  "78cb94eca1f7c107"
+ ],
+ "beir_cqadupstack_physics_28895": [
+  "76c9265ee1d63835",
+  "b7ec1ff99aa839e9",
+  "cc654203ae479ceb"
+ ],
+ "beir_cqadupstack_physics_28929": [
+  "48fa5a5b5228c5a1"
+ ],
+ "beir_cqadupstack_physics_29176": [
+  "40ec8bac41508394"
+ ],
+ "beir_cqadupstack_physics_29200": [
+  "d6b63d90acda0ef0"
+ ],
+ "beir_cqadupstack_physics_29208": [
+  "6d617b40f438d905",
+  "9ea6dceb65d3fb63"
+ ],
+ "beir_cqadupstack_physics_29355": [
+  "0c0d155bfb756800"
+ ],
+ "beir_cqadupstack_physics_29477": [
+  "c56a174372a62e45"
+ ],
+ "beir_cqadupstack_physics_29523": [
+  "46ed805f51384cb6"
+ ],
+ "beir_cqadupstack_physics_29642": [
+  "6e110e5a66d037cb"
+ ],
+ "beir_cqadupstack_physics_2974": [
+  "49aecdedf4d1ede3"
+ ],
+ "beir_cqadupstack_physics_29766": [
+  "206dd4bffc3a4896",
+  "4bd9c6bff00bc803"
+ ],
+ "beir_cqadupstack_physics_29794": [
+  "b6c8d721a71f263f"
+ ],
+ "beir_cqadupstack_physics_29901": [
+  "0174f9ac222489df",
+  "0aee0f2d29fc79fa",
+  "14be78000784e86a",
+  "15aefeb102310700",
+  "2bdad7bf4624939d",
+  "abe2fae66c3dc3b0",
+  "b9b0e8d60741f9f1",
+  "eb1786e9b5427d05"
+ ],
+ "beir_cqadupstack_physics_29903": [
+  "6fda9097ff47531b"
+ ],
+ "beir_cqadupstack_physics_29956": [
+  "cc366b8c313874ea"
+ ],
+ "beir_cqadupstack_physics_3009": [
+  "d698e03883925762",
+  "f13dd24d0b6d6a8e"
+ ],
+ "beir_cqadupstack_physics_30134": [
+  "0693caca7b71c829",
+  "1fbe35585e8f30ad",
+  "3fa38e73381af9b3",
+  "8dddef30e55f4ef6",
+  "a0a7ea5b810a641c",
+  "bb6644b8d46d6aa6"
+ ],
+ "beir_cqadupstack_physics_30198": [
+  "8be483e930fbe782"
+ ],
+ "beir_cqadupstack_physics_30353": [
+  "b9b4620b904483b3"
+ ],
+ "beir_cqadupstack_physics_30597": [
+  "51a367654e11eeaf",
+  "a4ab76fcfbba01bc",
+  "de3c70ce240fe884",
+  "e5d06c96ecb06824"
+ ],
+ "beir_cqadupstack_physics_30616": [
+  "0f4b35b37cb1c998"
+ ],
+ "beir_cqadupstack_physics_30732": [
+  "73e949ac0bd5d946",
+  "8ced58b00ac653eb",
+  "dbfcbbe47a8f80be"
+ ],
+ "beir_cqadupstack_physics_30909": [
+  "44edf1891998573d"
+ ],
+ "beir_cqadupstack_physics_30922": [
+  "b7051a7e01e2c0b8"
+ ],
+ "beir_cqadupstack_physics_31029": [
+  "517e6e2fbe361434"
+ ],
+ "beir_cqadupstack_physics_31039": [
+  "87ac820520335e99"
+ ],
+ "beir_cqadupstack_physics_312": [
+  "afbb88122f54a454"
+ ],
+ "beir_cqadupstack_physics_31326": [
+  "10cd220c0c5a1e9b"
+ ],
+ "beir_cqadupstack_physics_31387": [
+  "004639a5925bb4bf",
+  "9b35d8c299b59f52",
+  "9d5ff13d5b218e84",
+  "ac3637d9d60179f2",
+  "b47915c029151f63",
+  "e80c1159685221c1"
+ ],
+ "beir_cqadupstack_physics_31395": [
+  "0e793639c9703710"
+ ],
+ "beir_cqadupstack_physics_31827": [
+  "5ef83c2d0c057367"
+ ],
+ "beir_cqadupstack_physics_31869": [
+  "4f5c1a7c5b639f86"
+ ],
+ "beir_cqadupstack_physics_31950": [
+  "607a4ec3bcae6a19"
+ ],
+ "beir_cqadupstack_physics_32096": [
+  "26df303602996ef8"
+ ],
+ "beir_cqadupstack_physics_32120": [
+  "facfcc88ba553381"
+ ],
+ "beir_cqadupstack_physics_32122": [
+  "22162df71c65470e",
+  "483c92b9e3b0fd42",
+  "647216602533d7c4",
+  "de431f829abbe533"
+ ],
+ "beir_cqadupstack_physics_3244": [
+  "03850bef3bf530eb",
+  "4a8575f28c611000",
+  "5b3aa92935297de3",
+  "ac0a7fe92988d573"
+ ],
+ "beir_cqadupstack_physics_32501": [
+  "5fff4198f3900d09"
+ ],
+ "beir_cqadupstack_physics_3264": [
+  "81738bbfca20e3cd"
+ ],
+ "beir_cqadupstack_physics_32699": [
+  "9d407129771d1b0e"
+ ],
+ "beir_cqadupstack_physics_33258": [
+  "2f83cae2741b2f1f"
+ ],
+ "beir_cqadupstack_physics_335": [
+  "6d8cc218d1f9a7c1",
+  "dc261939cba5dbbf"
+ ],
+ "beir_cqadupstack_physics_33507": [
+  "4168e0ee723c63ab",
+  "c3c6957f4a725986"
+ ],
+ "beir_cqadupstack_physics_33621": [
+  "3ccee2fa8e87ecd1",
+  "52cd7f8400bc027c",
+  "c6e262070463d2a8"
+ ],
+ "beir_cqadupstack_physics_33822": [
+  "1c1796c00412ea77"
+ ],
+ "beir_cqadupstack_physics_33998": [
+  "603073eeb0aee5ee",
+  "746d26a7dc0df608"
+ ],
+ "beir_cqadupstack_physics_34130": [
+  "2ab7d798b44f42d0"
+ ],
+ "beir_cqadupstack_physics_34352": [
+  "b995150a7e766df5"
+ ],
+ "beir_cqadupstack_physics_34364": [
+  "87a09fbcf5280e85",
+  "c31bb18f67168489"
+ ],
+ "beir_cqadupstack_physics_34366": [
+  "48c67c43627a5a96"
+ ],
+ "beir_cqadupstack_physics_34500": [
+  "27ff1ccd6fb08c01",
+  "2980717279a4a5e2",
+  "400d7fb3ced6e3cd",
+  "6b3795acc1198627",
+  "956c668eb7cd4132",
+  "a81a790233d7f8f4",
+  "c230498fb4485592",
+  "d6bdeb254dcbd03a"
+ ],
+ "beir_cqadupstack_physics_34689": [
+  "464a5f1579918458"
+ ],
+ "beir_cqadupstack_physics_34834": [
+  "ec2894a02490f136"
+ ],
+ "beir_cqadupstack_physics_35139": [
+  "4ccfe006365faf9f"
+ ],
+ "beir_cqadupstack_physics_3521": [
+  "b2974adf394f007f"
+ ],
+ "beir_cqadupstack_physics_35218": [
+  "4a78dcc5d7bb2375"
+ ],
+ "beir_cqadupstack_physics_35313": [
+  "16cac944bfca5d60"
+ ],
+ "beir_cqadupstack_physics_35645": [
+  "7c6543d7bbc8f079"
+ ],
+ "beir_cqadupstack_physics_35660": [
+  "d1ed7ba2058a7990"
+ ],
+ "beir_cqadupstack_physics_357": [
+  "9326dbbd2a1395ba"
+ ],
+ "beir_cqadupstack_physics_35781": [
+  "f92df6b1308dcb93"
+ ],
+ "beir_cqadupstack_physics_36146": [
+  "0f9bc5c68eb5ce3f"
+ ],
+ "beir_cqadupstack_physics_36167": [
+  "d227a8307fdc7c7e"
+ ],
+ "beir_cqadupstack_physics_36303": [
+  "387f3fc6ce5dba22",
+  "478e9f7b3f047fa6"
+ ],
+ "beir_cqadupstack_physics_36412": [
+  "e33c087561d8e7fa"
+ ],
+ "beir_cqadupstack_physics_36440": [
+  "4d80d4566c0e8001",
+  "b8b6aff2af5fcff0",
+  "f165b17bcd3537ad"
+ ],
+ "beir_cqadupstack_physics_36498": [
+  "ae77b0f6129127b7"
+ ],
+ "beir_cqadupstack_physics_3656": [
+  "3390b84550622bfc"
+ ],
+ "beir_cqadupstack_physics_37702": [
+  "a9d47b9febbb8ee1",
+  "b757af8a8c19056b",
+  "e8e7a02f3e1e8b81"
+ ],
+ "beir_cqadupstack_physics_37730": [
+  "6206469dd36597a4"
+ ],
+ "beir_cqadupstack_physics_37772": [
+  "8be989985253bfc8"
+ ],
+ "beir_cqadupstack_physics_37881": [
+  "b6733ba75d9718ec"
+ ],
+ "beir_cqadupstack_physics_3795": [
+  "4c057594b17a87b4"
+ ],
+ "beir_cqadupstack_physics_37966": [
+  "06729a7710756217",
+  "0810e54f168b7dd6",
+  "09de257f13727b36",
+  "0c3949431119bb9a",
+  "1b493dedbe78dc33",
+  "207ddaea3719d0c2",
+  "2eb9b04921cccf01",
+  "314fc23d4e7c7f63",
+  "348fd9a5197834d6",
+  "354ce9b54c3faaec",
+  "47399f0bfdf3b2e9",
+  "547ab2adff281369",
+  "5657704d47b389e6",
+  "60a5ce318f471287",
+  "64b4cb243e9de4cf",
+  "85ecb639b95572f9",
+  "a83994753d982d5a",
+  "aa3bda64c3db2621",
+  "c82f8a5d4c07d83b",
+  "cdc89da7a1500e10",
+  "d59b4cf7fb22c61d",
+  "d76a43da232c5829",
+  "e38d7f3129530fd9",
+  "f6dde9fc38f1058a"
+ ],
+ "beir_cqadupstack_physics_37981": [
+  "925cf78bcc2f39b5"
+ ],
+ "beir_cqadupstack_physics_3799": [
+  "cf606fc727e392c8"
+ ],
+ "beir_cqadupstack_physics_38236": [
+  "9663343ccf327da8"
+ ],
+ "beir_cqadupstack_physics_38246": [
+  "51b94b229276c43d"
+ ],
+ "beir_cqadupstack_physics_38313": [
+  "041e30dadcbe405d",
+  "49639b88498d3c7b",
+  "7ea1a4dc52144f5a"
+ ],
+ "beir_cqadupstack_physics_3833": [
+  "e4ee9a9e53935001"
+ ],
+ "beir_cqadupstack_physics_38397": [
+  "5a34e30151b50b84"
+ ],
+ "beir_cqadupstack_physics_38399": [
+  "93057bb063240597"
+ ],
+ "beir_cqadupstack_physics_38404": [
+  "2878424633e2170c",
+  "5f1e734e8f5fd7a1",
+  "821d56203b20258b"
+ ],
+ "beir_cqadupstack_physics_38561": [
+  "d2e1d324250ae054",
+  "e5269f87552b18d9"
+ ],
+ "beir_cqadupstack_physics_38961": [
+  "18d5b4c6a859906f",
+  "1902ff42a96deb8f",
+  "26db0f08c20608f1",
+  "5eb40d819e50a1c1",
+  "bc76e053c265eff3",
+  "e24c165739eeba7b",
+  "f2f3b3b6934e5044"
+ ],
+ "beir_cqadupstack_physics_38963": [
+  "05c236ec8c8b82b5"
+ ],
+ "beir_cqadupstack_physics_391": [
+  "64b45303373e912c",
+  "8698e00daeb1831b"
+ ],
+ "beir_cqadupstack_physics_39131": [
+  "55e4227c902dfdb9"
+ ],
+ "beir_cqadupstack_physics_39161": [
+  "c59b48aa07f32509"
+ ],
+ "beir_cqadupstack_physics_39170": [
+  "ceadaf6b27d4eb33"
+ ],
+ "beir_cqadupstack_physics_39253": [
+  "65d71136f75c57de"
+ ],
+ "beir_cqadupstack_physics_39263": [
+  "75b1a27c2ad04cf3"
+ ],
+ "beir_cqadupstack_physics_39344": [
+  "03938fa2ee2e099e",
+  "044d0dbbc7940056",
+  "06c34fac5d41de7a",
+  "0771b0b8e8156c37",
+  "0b358af0066cc612",
+  "0c3e61bafceb3010",
+  "0d85b362473b43cf",
+  "0f9fd14bfe73a587",
+  "1526ab53dd2197d9",
+  "17a715e294d1afaf",
+  "18551b5fc488d265",
+  "19264d2487931694",
+  "1dfb7dfbfb8b518f",
+  "216e845d8d674fd7",
+  "2637e3763b42d07a",
+  "2b0976547cfc1327",
+  "2d8b8011b2374c69",
+  "322a27b5d25fca85",
+  "366f035c6a76b0a5",
+  "3f98554e3d277193",
+  "46339cd0e984c45d",
+  "4782cd71b20d92b5",
+  "4fac69672d57bef9",
+  "558c9fe8b6d73ec8",
+  "5663e3c38489b66a",
+  "58ad9cd9af6c7f52",
+  "5bafdcdda7b8a1d3",
+  "5bea109fbb74b2f8",
+  "5d9dae79ce5a0a4c",
+  "5fef88b381408d2a",
+  "623a5e9e817f4614",
+  "62eada9ddcd64568",
+  "63bc15fab13c502d",
+  "63edb565d7243b28",
+  "64c64791c252efc2",
+  "66feb2e9a4b8c146",
+  "782f0c74790db5d4",
+  "7bc1e693afc1f7b1",
+  "87d2314b5d5dc0aa",
+  "88bf4ca120f12984",
+  "89b0d5689b0a6748",
+  "91acde1b4312ba20",
+  "91b91232e8f1c584",
+  "935cadfd44ed813e",
+  "944f9635b6f9564a",
+  "951e94966eff82e5",
+  "9677bcf503eef9f8",
+  "97d147f49a9ac62f",
+  "9addb3430f1acfcd",
+  "9c49cb85062f4079",
+  "a12601e047ef4fa0",
+  "a3d00352b240bee6",
+  "a778f6936acf6785",
+  "ac19829f3b58c830",
+  "aff577e65d61da85",
+  "b355c74139063ede",
+  "bdf885fa50dc5088",
+  "be9438232a61ab93",
+  "c55d19c81dfeb738",
+  "cccd10664c0e6792",
+  "d0cd2c5dcc732ca2",
+  "d3d1a0c4321dcdf5",
+  "d7e69e89884245b8",
+  "d9d1d1f874e0045b",
+  "dcec971acbdd96f5",
+  "dd20b6a86bbf3c05",
+  "de111517a4c1e715",
+  "e0ce94d7e471ca55",
+  "e5f747cb31ade7d7",
+  "e608c47a11dce99e",
+  "f823e5bb3166a073",
+  "fb91c6bd8d5c5bc8",
+  "fb981a41a51a2f01",
+  "fbc428fe065969d9"
+ ],
+ "beir_cqadupstack_physics_39428": [
+  "7c18b392c531d5c8"
+ ],
+ "beir_cqadupstack_physics_39654": [
+  "ed986597500ae0e6"
+ ],
+ "beir_cqadupstack_physics_401": [
+  "9a007ac8e813f7c3"
+ ],
+ "beir_cqadupstack_physics_409": [
+  "a5498886da498e5f"
+ ],
+ "beir_cqadupstack_physics_41211": [
+  "558a67f373e03a3c"
+ ],
+ "beir_cqadupstack_physics_41245": [
+  "7a6e4ee90550cc2b"
+ ],
+ "beir_cqadupstack_physics_41386": [
+  "2f879afd10f71d19",
+  "4d3f6b5d10089392",
+  "79417ced0ab7736f",
+  "b14d2a851720d744"
+ ],
+ "beir_cqadupstack_physics_41424": [
+  "106d5c129a0d6f9c",
+  "6c9de4e22b79c571",
+  "d81dc4d78b725bd9"
+ ],
+ "beir_cqadupstack_physics_41494": [
+  "48734c2bf17c28bc"
+ ],
+ "beir_cqadupstack_physics_41573": [
+  "688385a9386a4912"
+ ],
+ "beir_cqadupstack_physics_41717": [
+  "19ef091f3088ad89"
+ ],
+ "beir_cqadupstack_physics_41741": [
+  "1868c85f3bf5de6f"
+ ],
+ "beir_cqadupstack_physics_41937": [
+  "4df2df12c90820ae"
+ ],
+ "beir_cqadupstack_physics_4289": [
+  "43ba923cefc5cf3e"
+ ],
+ "beir_cqadupstack_physics_43023": [
+  "0a5253d3d1fb39eb",
+  "da589fb399c0d553"
+ ],
+ "beir_cqadupstack_physics_43232": [
+  "03320da5695f36e3",
+  "3373186a4c131c06"
+ ],
+ "beir_cqadupstack_physics_43322": [
+  "0c7fbbed08a395e8"
+ ],
+ "beir_cqadupstack_physics_43406": [
+  "c30d3bdd5b66b4e6"
+ ],
+ "beir_cqadupstack_physics_43491": [
+  "bbd1e30e782ad375"
+ ],
+ "beir_cqadupstack_physics_43665": [
+  "b76a9180a5606cf9"
+ ],
+ "beir_cqadupstack_physics_43768": [
+  "2a45cd7009c0124c"
+ ],
+ "beir_cqadupstack_physics_43859": [
+  "075eeccc45a2caef"
+ ],
+ "beir_cqadupstack_physics_43919": [
+  "938cf3c649295088"
+ ],
+ "beir_cqadupstack_physics_43986": [
+  "7af5ea1d24ec853f"
+ ],
+ "beir_cqadupstack_physics_44130": [
+  "ab8ea5f43151e201"
+ ],
+ "beir_cqadupstack_physics_44193": [
+  "aeb7d3d94fc3f5ee"
+ ],
+ "beir_cqadupstack_physics_44351": [
+  "b8ea2734a17318a8"
+ ],
+ "beir_cqadupstack_physics_44509": [
+  "0d799c0e790724e4"
+ ],
+ "beir_cqadupstack_physics_4453": [
+  "0c9ce9718fbe37aa",
+  "0e23ec1d9ce92793",
+  "611677591ed8c306",
+  "6a506314041dd622",
+  "926067f15be01705",
+  "d73386e8aa521be3",
+  "f02ddf9f09fed7c9",
+  "f29326370585fd51",
+  "fd0c138619037a4d"
+ ],
+ "beir_cqadupstack_physics_44586": [
+  "04daa72eeb80d8ee"
+ ],
+ "beir_cqadupstack_physics_44718": [
+  "09e15bb3cb3bbae3"
+ ],
+ "beir_cqadupstack_physics_44882": [
+  "ff4187b39dc79618"
+ ],
+ "beir_cqadupstack_physics_44974": [
+  "f9651511c78659be"
+ ],
+ "beir_cqadupstack_physics_4506": [
+  "e66c091af36baf53"
+ ],
+ "beir_cqadupstack_physics_45067": [
+  "76798663d1de9b4f",
+  "cb489e47487f1a66"
+ ],
+ "beir_cqadupstack_physics_45105": [
+  "7986e5387eff2b7a"
+ ],
+ "beir_cqadupstack_physics_45108": [
+  "f7cdbd9199b423e9"
+ ],
+ "beir_cqadupstack_physics_45247": [
+  "b712a076e7aeb90c",
+  "cdbdee17a07330ea"
+ ],
+ "beir_cqadupstack_physics_45495": [
+  "0322c6ee175b75d0"
+ ],
+ "beir_cqadupstack_physics_45545": [
+  "92a6a295c567548c"
+ ],
+ "beir_cqadupstack_physics_45634": [
+  "93568469f36cc803"
+ ],
+ "beir_cqadupstack_physics_45743": [
+  "5552bbf997b2db59"
+ ],
+ "beir_cqadupstack_physics_45849": [
+  "91d5114f5391fd3b"
+ ],
+ "beir_cqadupstack_physics_46089": [
+  "9aa290e9edf16219"
+ ],
+ "beir_cqadupstack_physics_4617": [
+  "3ff223b05701f815",
+  "4a5f70ca74c5560e",
+  "e58800e7531d26e1"
+ ],
+ "beir_cqadupstack_physics_46180": [
+  "90c4b57a6c1ddc33"
+ ],
+ "beir_cqadupstack_physics_46324": [
+  "f732233958f418d3"
+ ],
+ "beir_cqadupstack_physics_46327": [
+  "6abea49db8bec0a7"
+ ],
+ "beir_cqadupstack_physics_4635": [
+  "6afb6c75712c00e6"
+ ],
+ "beir_cqadupstack_physics_46639": [
+  "9c790ac9bf210bfc"
+ ],
+ "beir_cqadupstack_physics_46743": [
+  "d711b200ae8a47d0"
+ ],
+ "beir_cqadupstack_physics_46798": [
+  "b7144c9e959e6bd7"
+ ],
+ "beir_cqadupstack_physics_46824": [
+  "eaf5755deab6b86d"
+ ],
+ "beir_cqadupstack_physics_46863": [
+  "05b5ba316b39a887"
+ ],
+ "beir_cqadupstack_physics_46933": [
+  "481a16e3edef445e",
+  "55cf56a6e4fd81b0",
+  "8191e100fd21b6a8",
+  "9dbf13f9e8c2d231"
+ ],
+ "beir_cqadupstack_physics_4704": [
+  "74104548afae15ed"
+ ],
+ "beir_cqadupstack_physics_47104": [
+  "6821b126cec9adf4",
+  "d280e668cd0c388d"
+ ],
+ "beir_cqadupstack_physics_47105": [
+  "3961db417621b327",
+  "ba32061be97dfa8b"
+ ],
+ "beir_cqadupstack_physics_47128": [
+  "201c9df5d1dd5e3d"
+ ],
+ "beir_cqadupstack_physics_47135": [
+  "394552cf1bfd68b5",
+  "629c820c39cc5138"
+ ],
+ "beir_cqadupstack_physics_47136": [
+  "29e914b2affa063d"
+ ],
+ "beir_cqadupstack_physics_47224": [
+  "53a4f394f69fe1c5"
+ ],
+ "beir_cqadupstack_physics_47259": [
+  "de1bb0a3f8709752"
+ ],
+ "beir_cqadupstack_physics_47284": [
+  "54c11e858f79d751"
+ ],
+ "beir_cqadupstack_physics_47291": [
+  "46f4c53525247f9e"
+ ],
+ "beir_cqadupstack_physics_4731": [
+  "a7918ef8e017297f"
+ ],
+ "beir_cqadupstack_physics_47379": [
+  "b7d481eb01e3fbb5"
+ ],
+ "beir_cqadupstack_physics_47389": [
+  "ca374d505fd8acdf"
+ ],
+ "beir_cqadupstack_physics_47941": [
+  "fee8ceb9b4c06743"
+ ],
+ "beir_cqadupstack_physics_48196": [
+  "5745339055ac9a94",
+  "ca34ba25536fc9c0",
+  "e3b2fb46429f05a9"
+ ],
+ "beir_cqadupstack_physics_48435": [
+  "50d3581dbc1c50c0"
+ ],
+ "beir_cqadupstack_physics_48469": [
+  "5d7cc8fadc10a83c"
+ ],
+ "beir_cqadupstack_physics_48534": [
+  "44e93ee0a2a2e45f"
+ ],
+ "beir_cqadupstack_physics_48548": [
+  "ad56e2185f238246",
+  "b632c751f30861e2"
+ ],
+ "beir_cqadupstack_physics_49837": [
+  "8fd82210ded4af4b"
+ ],
+ "beir_cqadupstack_physics_49940": [
+  "074c0bb96cbd9b57",
+  "57adcbe8e8a3a188",
+  "6fd997019389633e",
+  "7a9fc6ef21595328"
+ ],
+ "beir_cqadupstack_physics_49956": [
+  "37ed2e3e8c0c5e76",
+  "d0d1530953652627"
+ ],
+ "beir_cqadupstack_physics_50015": [
+  "9bea8313a171811a",
+  "bff3c702e62387c6"
+ ],
+ "beir_cqadupstack_physics_5057": [
+  "4a74b9eae1eee3bf",
+  "c98ea8bd355410b6",
+  "d904961e1ea71ff8"
+ ],
+ "beir_cqadupstack_physics_51213": [
+  "e4c60a265353a690"
+ ],
+ "beir_cqadupstack_physics_51295": [
+  "bac4e57fef9edb74",
+  "c8d4ad00b67568f9",
+  "df6dbc4cc6f7571f"
+ ],
+ "beir_cqadupstack_physics_51711": [
+  "528114d5a825d984"
+ ],
+ "beir_cqadupstack_physics_51723": [
+  "b1c52c327d1cefb7"
+ ],
+ "beir_cqadupstack_physics_51776": [
+  "ab6e3199dc6d10a3"
+ ],
+ "beir_cqadupstack_physics_51838": [
+  "a8f8826212431de8"
+ ],
+ "beir_cqadupstack_physics_51908": [
+  "10404683a18eda33"
+ ],
+ "beir_cqadupstack_physics_51990": [
+  "554e32edd56515ab"
+ ],
+ "beir_cqadupstack_physics_51995": [
+  "bf25406fb1f695f8"
+ ],
+ "beir_cqadupstack_physics_52008": [
+  "22264ab49c69360e",
+  "5185718931311445"
+ ],
+ "beir_cqadupstack_physics_52024": [
+  "c9fa7bddc373c582"
+ ],
+ "beir_cqadupstack_physics_52062": [
+  "26143a815f6750e7"
+ ],
+ "beir_cqadupstack_physics_52155": [
+  "b347dc4af35a4fdc"
+ ],
+ "beir_cqadupstack_physics_52195": [
+  "d3de671e404c8091"
+ ],
+ "beir_cqadupstack_physics_52273": [
+  "fc520488d58249a6"
+ ],
+ "beir_cqadupstack_physics_52306": [
+  "bb3fb43545031157"
+ ],
+ "beir_cqadupstack_physics_52391": [
+  "ea800445552efb35"
+ ],
+ "beir_cqadupstack_physics_52396": [
+  "1cd0847ca88617fe"
+ ],
+ "beir_cqadupstack_physics_52487": [
+  "289386cd7e1bd990"
+ ],
+ "beir_cqadupstack_physics_52515": [
+  "0cf91fb5e18b3ed8"
+ ],
+ "beir_cqadupstack_physics_52555": [
+  "23a37c88436792b4"
+ ],
+ "beir_cqadupstack_physics_52837": [
+  "b4e1772da3a100cd"
+ ],
+ "beir_cqadupstack_physics_52845": [
+  "b1f189bd633d1a12",
+  "edc356357239253f"
+ ],
+ "beir_cqadupstack_physics_53168": [
+  "6a785a02ef060a43"
+ ],
+ "beir_cqadupstack_physics_53356": [
+  "81e9fb4054f5e568",
+  "973f5aec84540b40"
+ ],
+ "beir_cqadupstack_physics_53519": [
+  "295cd1a0d4f18811",
+  "b4c3599ac0cd7770"
+ ],
+ "beir_cqadupstack_physics_53602": [
+  "0185ec13137b3027",
+  "438d7047aba9a3c6"
+ ],
+ "beir_cqadupstack_physics_53663": [
+  "0df02dd546ce5234",
+  "a89135a7408ace94"
+ ],
+ "beir_cqadupstack_physics_53708": [
+  "40defad443f2713f",
+  "db0fb5015677171d"
+ ],
+ "beir_cqadupstack_physics_53734": [
+  "e6f914151b5eb082"
+ ],
+ "beir_cqadupstack_physics_53790": [
+  "b975a5aa5968432c"
+ ],
+ "beir_cqadupstack_physics_542": [
+  "414c2c1c6aa980f0",
+  "5418c4954efd9232",
+  "9cf93f27f635121d"
+ ],
+ "beir_cqadupstack_physics_54317": [
+  "5ed356e3ff3f20fe",
+  "a8494afe02e9b4ac",
+  "bfdc02d6ea33c1e0"
+ ],
+ "beir_cqadupstack_physics_54431": [
+  "b226d4e9cae2ed8a"
+ ],
+ "beir_cqadupstack_physics_54437": [
+  "61f3f64711b5e19f",
+  "bab531a9ec2de0b2"
+ ],
+ "beir_cqadupstack_physics_54480": [
+  "8aa07abca46fb9a1"
+ ],
+ "beir_cqadupstack_physics_54656": [
+  "f8936a16529cc7b4"
+ ],
+ "beir_cqadupstack_physics_55091": [
+  "4f09295c1e6eb4bf",
+  "f8a9abe0e2a29ef7"
+ ],
+ "beir_cqadupstack_physics_55143": [
+  "64f0972ccf58dc41",
+  "69212b61407c9d4f"
+ ],
+ "beir_cqadupstack_physics_55190": [
+  "9a01420f6489f511",
+  "a0709ffcd6c30b23"
+ ],
+ "beir_cqadupstack_physics_55195": [
+  "a58819ac8a6142cf"
+ ],
+ "beir_cqadupstack_physics_55340": [
+  "b41dd63768cbe8b5"
+ ],
+ "beir_cqadupstack_physics_55458": [
+  "1af7b869c8f27343",
+  "9fb1f97317233482",
+  "d1c1761d08e2f917"
+ ],
+ "beir_cqadupstack_physics_55698": [
+  "af43325a93bd4153"
+ ],
+ "beir_cqadupstack_physics_55719": [
+  "b08bc07d17a3018a"
+ ],
+ "beir_cqadupstack_physics_55760": [
+  "1a8ba4316e691e70"
+ ],
+ "beir_cqadupstack_physics_5587": [
+  "1f7fb6e51e46465c"
+ ],
+ "beir_cqadupstack_physics_55965": [
+  "f89b8b51949cc592",
+  "fe41b1213b1e30e2"
+ ],
+ "beir_cqadupstack_physics_5613": [
+  "ca5949b4a08ac3e4",
+  "fd56e014100d6952"
+ ],
+ "beir_cqadupstack_physics_5615": [
+  "3dbfddb85b1f7ea2",
+  "98f9238ac595d970"
+ ],
+ "beir_cqadupstack_physics_56355": [
+  "41ed410650cd2b3a",
+  "a78361a892bc36ec",
+  "b28c8f3b0f51d007",
+  "fefbb3fd00f39700"
+ ],
+ "beir_cqadupstack_physics_56470": [
+  "1e9b050085b87ecf",
+  "58be83932bd1e28b",
+  "b60dda1fe1fd829a"
+ ],
+ "beir_cqadupstack_physics_56657": [
+  "afb9e39cea5be958"
+ ],
+ "beir_cqadupstack_physics_56851": [
+  "321f9330f717822a"
+ ],
+ "beir_cqadupstack_physics_56888": [
+  "4d809c51f9a9c6cf"
+ ],
+ "beir_cqadupstack_physics_56966": [
+  "0982ec79a4a791b5",
+  "fdb83db66e1c52d3"
+ ],
+ "beir_cqadupstack_physics_56973": [
+  "7dfaaf565eb21aa4",
+  "a871267f1ff97845"
+ ],
+ "beir_cqadupstack_physics_56983": [
+  "86441904c3d209f1"
+ ],
+ "beir_cqadupstack_physics_57137": [
+  "33f3cdf47f868be8"
+ ],
+ "beir_cqadupstack_physics_57181": [
+  "1d0ba5e2a6c2358e",
+  "664871b7e6da7960",
+  "db9bd593a8c65d03"
+ ],
+ "beir_cqadupstack_physics_57312": [
+  "420964b756d252c2"
+ ],
+ "beir_cqadupstack_physics_57317": [
+  "2d13b32195d6a6fb"
+ ],
+ "beir_cqadupstack_physics_57333": [
+  "5e3fd09ef67f9986"
+ ],
+ "beir_cqadupstack_physics_57390": [
+  "953ac0db9eef8144",
+  "c54245769f46e565"
+ ],
+ "beir_cqadupstack_physics_57643": [
+  "62db8d1b057b3907"
+ ],
+ "beir_cqadupstack_physics_57975": [
+  "d7551728fe07a909"
+ ],
+ "beir_cqadupstack_physics_58122": [
+  "03140cc3635ee5ef",
+  "6bb8a21188c14410",
+  "dec3b5be6a0b8ede"
+ ],
+ "beir_cqadupstack_physics_5839": [
+  "e84cb30b47becd7c"
+ ],
+ "beir_cqadupstack_physics_5851": [
+  "254f834c2f18501c"
+ ],
+ "beir_cqadupstack_physics_59438": [
+  "4f6480c88d17fa51"
+ ],
+ "beir_cqadupstack_physics_59617": [
+  "d2c5b5c728f6f90b"
+ ],
+ "beir_cqadupstack_physics_59635": [
+  "02be3257df9ac494",
+  "5d33fd08aae4e330",
+  "8e4911a836173aeb",
+  "be6414a8a03b7c2e",
+  "ee41346953a94cdf",
+  "f7b4b805690774f7"
+ ],
+ "beir_cqadupstack_physics_59815": [
+  "047fb26ef814b8bd",
+  "57301c5478fb6c6a"
+ ],
+ "beir_cqadupstack_physics_60016": [
+  "15592b0b5757d4d5",
+  "229659734d5ed9e4",
+  "2d8c33db9bdf50e6",
+  "3b48657946ab3b51",
+  "803248eddaee3e09",
+  "8bbe6a1ae00710c0",
+  "c18d17e9186ba579",
+  "c6eaa23123dad26f",
+  "f994d8c78eac6b5c"
+ ],
+ "beir_cqadupstack_physics_60336": [
+  "7cb47589728229dc"
+ ],
+ "beir_cqadupstack_physics_60476": [
+  "a9ccd091188e8b78"
+ ],
+ "beir_cqadupstack_physics_60699": [
+  "7fc7ebefd2b6d054"
+ ],
+ "beir_cqadupstack_physics_60763": [
+  "19a3b30cff25f798",
+  "783346173974d6b8",
+  "b115e3fcc0ef51ff"
+ ],
+ "beir_cqadupstack_physics_60830": [
+  "0b475c74f95d3757"
+ ],
+ "beir_cqadupstack_physics_60899": [
+  "d115e38b7098faa1"
+ ],
+ "beir_cqadupstack_physics_60900": [
+  "0923db3bf5437f95",
+  "1137c4320988fda5",
+  "27ce456a378da739",
+  "34155763e829d3ae",
+  "3cbe96f973ecefd5",
+  "3f08dbe3722f4cb3",
+  "43a5d748fac96ae0",
+  "44e0eb6dd95f0341",
+  "5fef848b1a91d240",
+  "9ab740b95e91050a",
+  "a45bd3e31122ed8b",
+  "aa0963ebd446b7c1",
+  "b7329be3d41b1d6e",
+  "c2287ca488a80112",
+  "dbb1145be0d4b8c0",
+  "f27161614fffe551",
+  "fc3b516937f8dde0"
+ ],
+ "beir_cqadupstack_physics_61000": [
+  "c9e8c43e7192ffeb"
+ ],
+ "beir_cqadupstack_physics_61031": [
+  "60156926faf3b504"
+ ],
+ "beir_cqadupstack_physics_61086": [
+  "28630b7631edeec4",
+  "d52c9c44658dd9e4"
+ ],
+ "beir_cqadupstack_physics_61455": [
+  "f0d8e9099cf9324b"
+ ],
+ "beir_cqadupstack_physics_6147": [
+  "be3d67ac34b8da49"
+ ],
+ "beir_cqadupstack_physics_61592": [
+  "33e1cee46986ff23"
+ ],
+ "beir_cqadupstack_physics_61643": [
+  "8a7c52931e657981"
+ ],
+ "beir_cqadupstack_physics_61699": [
+  "20aa224ad32d2ed9"
+ ],
+ "beir_cqadupstack_physics_61845": [
+  "a396eea71367862f",
+  "ad3d70e35e17d71e"
+ ],
+ "beir_cqadupstack_physics_61936": [
+  "3e3df06455f96b8d"
+ ],
+ "beir_cqadupstack_physics_61948": [
+  "0790ea5c2f6d9969",
+  "1edcb5dce22c27ed",
+  "49314e02245818bb",
+  "510203bc071da2b7",
+  "5843cb456bb45275",
+  "835e8ad881250b98",
+  "c7d4d5e662467cf9",
+  "cf1f27019f1fc560",
+  "f091cb6967b00e2d"
+ ],
+ "beir_cqadupstack_physics_6197": [
+  "4691674169171439"
+ ],
+ "beir_cqadupstack_physics_62099": [
+  "68016b30229ad9fc"
+ ],
+ "beir_cqadupstack_physics_62222": [
+  "48056c99c7ffc33e"
+ ],
+ "beir_cqadupstack_physics_62474": [
+  "247e2c7fca865b4c",
+  "cb3c6850497f5cb2"
+ ],
+ "beir_cqadupstack_physics_62637": [
+  "6b3c47e301260bee"
+ ],
+ "beir_cqadupstack_physics_62653": [
+  "661c462fd0f5054c"
+ ],
+ "beir_cqadupstack_physics_6271": [
+  "603863f59dea5d57",
+  "b37608ec2902c34d"
+ ],
+ "beir_cqadupstack_physics_62711": [
+  "c5adc3e805d8751c"
+ ],
+ "beir_cqadupstack_physics_63023": [
+  "0ff3d4506a61b527",
+  "3fcdc182a53acda2",
+  "689c2e25410f0e98",
+  "794408480034b3a9",
+  "7d8cb822f4a0a844",
+  "c4782179d252ca78"
+ ],
+ "beir_cqadupstack_physics_63138": [
+  "303310f2c78d8859"
+ ],
+ "beir_cqadupstack_physics_63278": [
+  "3742cc26bf2473fb"
+ ],
+ "beir_cqadupstack_physics_63424": [
+  "bb4bdffdd2a747a3"
+ ],
+ "beir_cqadupstack_physics_63456": [
+  "35116d027ce44623"
+ ],
+ "beir_cqadupstack_physics_63590": [
+  "aa60f4ff78bdb819"
+ ],
+ "beir_cqadupstack_physics_63626": [
+  "48428e8073cb88b0"
+ ],
+ "beir_cqadupstack_physics_63811": [
+  "5c08117e6b066201"
+ ],
+ "beir_cqadupstack_physics_6384": [
+  "5c4860e5624b342c"
+ ],
+ "beir_cqadupstack_physics_63987": [
+  "02270d2229d47e38",
+  "ccd43bb2f818ea52",
+  "edeea0acdc2002ca"
+ ],
+ "beir_cqadupstack_physics_6400": [
+  "7c83f990cb562e06",
+  "9ad13c6ad24faff8"
+ ],
+ "beir_cqadupstack_physics_64253": [
+  "2bd096e1aab30dba"
+ ],
+ "beir_cqadupstack_physics_64647": [
+  "d051fd795b8bb3d5"
+ ],
+ "beir_cqadupstack_physics_64670": [
+  "dee6597da923b23d"
+ ],
+ "beir_cqadupstack_physics_64751": [
+  "737f4c6fb80213dc"
+ ],
+ "beir_cqadupstack_physics_64834": [
+  "3553af5fe630d286"
+ ],
+ "beir_cqadupstack_physics_6533": [
+  "a9ab6193c7803870"
+ ],
+ "beir_cqadupstack_physics_65339": [
+  "c393ac83158e7c5b"
+ ],
+ "beir_cqadupstack_physics_65584": [
+  "92c2701ea7ca4882"
+ ],
+ "beir_cqadupstack_physics_65688": [
+  "9f5d3f7f6b2ed9bf"
+ ],
+ "beir_cqadupstack_physics_6582": [
+  "e9d3cdc2f054d308"
+ ],
+ "beir_cqadupstack_physics_66044": [
+  "753535746bec88c7",
+  "d16928cd68a737ed"
+ ],
+ "beir_cqadupstack_physics_661": [
+  "ea67ab36e7e8cdf5"
+ ],
+ "beir_cqadupstack_physics_66220": [
+  "4b8120e045ed4800"
+ ],
+ "beir_cqadupstack_physics_66363": [
+  "2de6f9e0875df3dd"
+ ],
+ "beir_cqadupstack_physics_66476": [
+  "7f1c0b9ce054cbc5",
+  "e73c34be10f3aee2"
+ ],
+ "beir_cqadupstack_physics_66527": [
+  "e4221d1f7df7e156"
+ ],
+ "beir_cqadupstack_physics_66538": [
+  "42bb0ce9a0acc1ee"
+ ],
+ "beir_cqadupstack_physics_66658": [
+  "7b0409dfd0e01dfb"
+ ],
+ "beir_cqadupstack_physics_6682": [
+  "304135139632780f",
+  "3bf92fca2e539b50"
+ ],
+ "beir_cqadupstack_physics_66922": [
+  "3bb90aa7eb2e0cb4",
+  "40f7feab9318fa96"
+ ],
+ "beir_cqadupstack_physics_66980": [
+  "e50e55cca9534232"
+ ],
+ "beir_cqadupstack_physics_67186": [
+  "5782f01431943a11",
+  "aaec4fbff5aea15a",
+  "b5426ad157d32ab9"
+ ],
+ "beir_cqadupstack_physics_67188": [
+  "e95148ded8710b08"
+ ],
+ "beir_cqadupstack_physics_6725": [
+  "0252002cedbbdf3f"
+ ],
+ "beir_cqadupstack_physics_67571": [
+  "65087215e3ba5544"
+ ],
+ "beir_cqadupstack_physics_67616": [
+  "733d75284ceedaaa",
+  "86e54f4c5e9c79a5",
+  "8b7b7370579f7147",
+  "a894c585d57911b5"
+ ],
+ "beir_cqadupstack_physics_67712": [
+  "7f42ad843dc5b6e8"
+ ],
+ "beir_cqadupstack_physics_67746": [
+  "313a478f779ede17",
+  "6e98ba99eeb69a4f",
+  "93ce388dc3554222",
+  "bef7632c1a47bb98"
+ ],
+ "beir_cqadupstack_physics_67880": [
+  "fef99355a982976c"
+ ],
+ "beir_cqadupstack_physics_68112": [
+  "ff47bf35a702609d"
+ ],
+ "beir_cqadupstack_physics_68198": [
+  "c9e6893b979c7e55"
+ ],
+ "beir_cqadupstack_physics_68223": [
+  "dc1ad92264de35d0"
+ ],
+ "beir_cqadupstack_physics_68233": [
+  "044f3d31d7801052"
+ ],
+ "beir_cqadupstack_physics_68234": [
+  "b21fb56c9f7ebf1c"
+ ],
+ "beir_cqadupstack_physics_68289": [
+  "15de8d8829c2ca3a",
+  "30838d35ad3efb60",
+  "987b8885f192d318"
+ ],
+ "beir_cqadupstack_physics_68302": [
+  "251fda2ca9521351"
+ ],
+ "beir_cqadupstack_physics_68512": [
+  "965169f119004b71",
+  "b19cb9cd61a286da",
+  "cfb9ecda3bde52f3"
+ ],
+ "beir_cqadupstack_physics_68573": [
+  "4b4f5e3e4d4426df"
+ ],
+ "beir_cqadupstack_physics_68599": [
+  "62bad9fff5b1dd7d",
+  "767b64613d07b352",
+  "bbd141ef4fcf41b8",
+  "f7775c1f16e64662"
+ ],
+ "beir_cqadupstack_physics_6863": [
+  "08aa36497cba2a3b"
+ ],
+ "beir_cqadupstack_physics_68639": [
+  "b5c088d55096c673"
+ ],
+ "beir_cqadupstack_physics_68684": [
+  "125d9dc10d50b0e5",
+  "41ebce661edc1606",
+  "6526badb6194c581",
+  "862837b7f87a7abb",
+  "da80d2de592010dd",
+  "e4105f0de358d9ef",
+  "ec3c6452470d4561"
+ ],
+ "beir_cqadupstack_physics_68757": [
+  "9a9808f393ae1f12",
+  "d4d30596f4b0923b"
+ ],
+ "beir_cqadupstack_physics_68898": [
+  "56ae80033995ec68",
+  "61803924c86f29e7",
+  "b526f1b73f57dc5a",
+  "d71ce3770cada028",
+  "e078061883ec738b"
+ ],
+ "beir_cqadupstack_physics_68911": [
+  "1ff46b4a978c7ad4",
+  "3868a4167983fb02",
+  "5fe7804dda9e5a81",
+  "8d277fb7dce4b64e"
+ ],
+ "beir_cqadupstack_physics_68940": [
+  "9a0bbb97d079325f"
+ ],
+ "beir_cqadupstack_physics_68955": [
+  "54974e363a398d07"
+ ],
+ "beir_cqadupstack_physics_69281": [
+  "08c4ce55904c7605"
+ ],
+ "beir_cqadupstack_physics_69350": [
+  "2bc0e3db08cafdf9",
+  "4e6c31e30ea044f1",
+  "a0e153873e1f64c1"
+ ],
+ "beir_cqadupstack_physics_69657": [
+  "a85a4b34559f98c2"
+ ],
+ "beir_cqadupstack_physics_69679": [
+  "2d350d8ab4dc01f9"
+ ],
+ "beir_cqadupstack_physics_69726": [
+  "43403e703d15de12"
+ ],
+ "beir_cqadupstack_physics_69778": [
+  "ef0a3175941e54f8"
+ ],
+ "beir_cqadupstack_physics_69855": [
+  "2582ecc4911a9b0b",
+  "f847ea73f4258fc4"
+ ],
+ "beir_cqadupstack_physics_70123": [
+  "b5941d5dcbe93931"
+ ],
+ "beir_cqadupstack_physics_70147": [
+  "0edcadf7d4521732",
+  "12435dc520ceed5b",
+  "24f883a2ae606fba",
+  "3c8767b139db5f98",
+  "426766d4cd2872c3",
+  "4ac70bb7c26d1987",
+  "6f3199efb6d66c26",
+  "7b7546cb30a188df",
+  "86a6d3cc1263a14c",
+  "9e6fa90984b81d79",
+  "c456273d254cbeab",
+  "cf1b882e4c68e877",
+  "dff6429d28797956"
+ ],
+ "beir_cqadupstack_physics_70186": [
+  "0f340176a45b64bc",
+  "d87bedef891e9a78"
+ ],
+ "beir_cqadupstack_physics_70200": [
+  "d69ac66109498f5b"
+ ],
+ "beir_cqadupstack_physics_70439": [
+  "715642c6b062a69b",
+  "889d0f2dbc1f0eff"
+ ],
+ "beir_cqadupstack_physics_70463": [
+  "3a72022582e5d0f4"
+ ],
+ "beir_cqadupstack_physics_70541": [
+  "cffa1f166cf2aa21"
+ ],
+ "beir_cqadupstack_physics_70597": [
+  "1607f98eec5d1234"
+ ],
+ "beir_cqadupstack_physics_7063": [
+  "19259fa3a815b573",
+  "a34bd0ddcf1b02e7"
+ ],
+ "beir_cqadupstack_physics_70651": [
+  "edf6bb1df01df391"
+ ],
+ "beir_cqadupstack_physics_70747": [
+  "3b3af2e354283e09"
+ ],
+ "beir_cqadupstack_physics_7112": [
+  "f7356faf2e11cb4b"
+ ],
+ "beir_cqadupstack_physics_71126": [
+  "1ac5bb72e9c93666",
+  "34779aac4a20c643",
+  "7fbea326b9874a27",
+  "8fe0f7792b207193",
+  "973b70f48705aae2",
+  "9e4ca88c0efb0b42",
+  "baadc5f457f4e00a",
+  "c4ac1032f88af28f",
+  "dd91cd550344ffea",
+  "e380b3af8c5c5a4d",
+  "eb57793cfda1534f",
+  "fdc0551ed18ccc6e"
+ ],
+ "beir_cqadupstack_physics_71292": [
+  "2fa7f89eb50bc5dd"
+ ],
+ "beir_cqadupstack_physics_71309": [
+  "dc0759e2f13c8ad0"
+ ],
+ "beir_cqadupstack_physics_71503": [
+  "37c3d1b0ba8e50c6"
+ ],
+ "beir_cqadupstack_physics_71576": [
+  "4f06bf2074d2d035",
+  "da02b80686d5829d"
+ ],
+ "beir_cqadupstack_physics_71589": [
+  "3ffcf322f6b77b36",
+  "60c39d3145825fe1"
+ ],
+ "beir_cqadupstack_physics_71620": [
+  "7d9d93c4b326e3e6"
+ ],
+ "beir_cqadupstack_physics_71639": [
+  "799e7603e42c0884"
+ ],
+ "beir_cqadupstack_physics_71649": [
+  "18a749444473ad93"
+ ],
+ "beir_cqadupstack_physics_71772": [
+  "28d6f74a20cd8e4d",
+  "eab1b855a9a8fd5a"
+ ],
+ "beir_cqadupstack_physics_71823": [
+  "4acca06c49e2c023",
+  "e5b495d80536e410"
+ ],
+ "beir_cqadupstack_physics_71901": [
+  "083868e589a7ca25"
+ ],
+ "beir_cqadupstack_physics_72447": [
+  "1017e370fcadefd7",
+  "6d959f304fc661fb"
+ ],
+ "beir_cqadupstack_physics_72510": [
+  "6b5a340d9b642300"
+ ],
+ "beir_cqadupstack_physics_72535": [
+  "6848f1f109df6fdc"
+ ],
+ "beir_cqadupstack_physics_72549": [
+  "9c123f0bf35d58f3",
+  "b9068b6a2e643116"
+ ],
+ "beir_cqadupstack_physics_7276": [
+  "b6f2e570e64532b4"
+ ],
+ "beir_cqadupstack_physics_72788": [
+  "eb90d66794c1ef7c"
+ ],
+ "beir_cqadupstack_physics_72983": [
+  "5c9d9deae5862dc3"
+ ],
+ "beir_cqadupstack_physics_73051": [
+  "5a8f6ca9ef7b3b10",
+  "6845bac5249c4408"
+ ],
+ "beir_cqadupstack_physics_73114": [
+  "f9d815e07fd45d9f"
+ ],
+ "beir_cqadupstack_physics_73162": [
+  "8a1825dd3fc87b4d",
+  "8e070baa4d52247f"
+ ],
+ "beir_cqadupstack_physics_73209": [
+  "ebd3c7d5139ae0b5"
+ ],
+ "beir_cqadupstack_physics_73234": [
+  "f4a251d96edd0ed7"
+ ],
+ "beir_cqadupstack_physics_73275": [
+  "59901fd99adaa936"
+ ],
+ "beir_cqadupstack_physics_73279": [
+  "0e81e0bc2d9d80dc",
+  "93e0c685eb5811ea"
+ ],
+ "beir_cqadupstack_physics_73299": [
+  "f8c24a7a70758b58"
+ ],
+ "beir_cqadupstack_physics_73329": [
+  "c9515961c9b4e131",
+  "f330238660c7aa59"
+ ],
+ "beir_cqadupstack_physics_73393": [
+  "43cb0ebab6322a64"
+ ],
+ "beir_cqadupstack_physics_73528": [
+  "ec3069929912e768"
+ ],
+ "beir_cqadupstack_physics_73813": [
+  "50c84c8362b99d56"
+ ],
+ "beir_cqadupstack_physics_73825": [
+  "b75bc2f24f7fafeb"
+ ],
+ "beir_cqadupstack_physics_73945": [
+  "301393cfd347d440"
+ ],
+ "beir_cqadupstack_physics_74020": [
+  "83f4a9496378a7d9"
+ ],
+ "beir_cqadupstack_physics_74087": [
+  "0f2b9c1a712879df",
+  "1b204a120bf9a92d",
+  "3825c0be462a076f",
+  "6d4bd6e9a55342bc",
+  "b9344fc09c10efe6",
+  "daf1e97ee6a653fe"
+ ],
+ "beir_cqadupstack_physics_7421": [
+  "6b9224525179c340"
+ ],
+ "beir_cqadupstack_physics_743": [
+  "45845e0df9e6b96a"
+ ],
+ "beir_cqadupstack_physics_74333": [
+  "32a294ec45ae5249",
+  "3b6c4e661089e9e3",
+  "514af413fb101369",
+  "63128eaf03ad1154",
+  "756b01846638f171",
+  "a4dd454547a577fb",
+  "d322649bc487c363",
+  "dd92bea0e21bf5ec",
+  "ef3323af043c6b90"
+ ],
+ "beir_cqadupstack_physics_74517": [
+  "a6fdc4a0bcf472ba"
+ ],
+ "beir_cqadupstack_physics_74788": [
+  "3837fa56236aaac8"
+ ],
+ "beir_cqadupstack_physics_7479": [
+  "4efe98174e704ed4",
+  "d15bf0357b084c40"
+ ],
+ "beir_cqadupstack_physics_75002": [
+  "36701958d64cbdd5"
+ ],
+ "beir_cqadupstack_physics_75108": [
+  "3c74f3f442a86c5b"
+ ],
+ "beir_cqadupstack_physics_75286": [
+  "0def43f0b8d047f6",
+  "2c01b6be1b2dc172",
+  "3b28ec49853c0b61"
+ ],
+ "beir_cqadupstack_physics_75352": [
+  "0560bda00d424097"
+ ],
+ "beir_cqadupstack_physics_75363": [
+  "dab915965d648c74"
+ ],
+ "beir_cqadupstack_physics_75385": [
+  "41f6c816f6edf276"
+ ],
+ "beir_cqadupstack_physics_75715": [
+  "58a6e16bc64852e0",
+  "9f060f534f103666"
+ ],
+ "beir_cqadupstack_physics_75756": [
+  "217caaa64e7797bc",
+  "31c00a275dfcade2"
+ ],
+ "beir_cqadupstack_physics_75876": [
+  "1f830ca20a8de131"
+ ],
+ "beir_cqadupstack_physics_75977": [
+  "73b9e01c6949839a"
+ ],
+ "beir_cqadupstack_physics_76100": [
+  "4f8b1abecb04e3d4",
+  "5ee4eb4e019c2b6b",
+  "e769263898770a95"
+ ],
+ "beir_cqadupstack_physics_7633": [
+  "06ecf2d10ac3b0b9"
+ ],
+ "beir_cqadupstack_physics_76367": [
+  "6cafe8e6463100a8",
+  "8d860997c4fcb500",
+  "c61c4d9d55de0426",
+  "d26e225ffce3a187"
+ ],
+ "beir_cqadupstack_physics_7668": [
+  "8f30e50e83f15f66"
+ ],
+ "beir_cqadupstack_physics_76726": [
+  "233f9f43f4146189",
+  "36937cc6528a8882",
+  "557c6a380ff2f0a4"
+ ],
+ "beir_cqadupstack_physics_77020": [
+  "1a809ec552d4617a"
+ ],
+ "beir_cqadupstack_physics_77143": [
+  "d5d04de029a9eb51"
+ ],
+ "beir_cqadupstack_physics_77282": [
+  "05fb6ef45e912102"
+ ],
+ "beir_cqadupstack_physics_7732": [
+  "db41a23ac7578443"
+ ],
+ "beir_cqadupstack_physics_77373": [
+  "20992b0ae9cbcdbc",
+  "3a218ae6671cab19",
+  "f8a05fa680c2a0aa",
+  "fe554efbc9a07d96"
+ ],
+ "beir_cqadupstack_physics_77525": [
+  "c5e112b706204423"
+ ],
+ "beir_cqadupstack_physics_77741": [
+  "4a5f91a9f113d9ff"
+ ],
+ "beir_cqadupstack_physics_77867": [
+  "99bdc060c312c96a"
+ ],
+ "beir_cqadupstack_physics_78095": [
+  "0cfed6855b7e8687",
+  "1bfdd8b8d68bc394",
+  "4e941425dd9f6e84",
+  "5403e41ff53bea34",
+  "7efce4e2ec83404b",
+  "9e38f847daee4f36",
+  "a18f9cd76977597d",
+  "c75674a47ea4e0b2",
+  "ccbc1f6ced4351a2",
+  "da8a8e04093e41f9",
+  "defb6af20df49af6"
+ ],
+ "beir_cqadupstack_physics_78222": [
+  "00d22880486da24e"
+ ],
+ "beir_cqadupstack_physics_78500": [
+  "1fc5137a52dc9a32"
+ ],
+ "beir_cqadupstack_physics_78508": [
+  "dde2c94c6c397e15",
+  "e902d6bf6ced5be9"
+ ],
+ "beir_cqadupstack_physics_78732": [
+  "b94bfd7b84e7e511"
+ ],
+ "beir_cqadupstack_physics_78741": [
+  "9486c94f69994d04"
+ ],
+ "beir_cqadupstack_physics_7877": [
+  "4cb5429c4ae91b19",
+  "c34bcd76af862a1e"
+ ],
+ "beir_cqadupstack_physics_78827": [
+  "792903a5605209ff"
+ ],
+ "beir_cqadupstack_physics_78965": [
+  "67d6aaee357c5bc7",
+  "abd815343c7f5346"
+ ],
+ "beir_cqadupstack_physics_7905": [
+  "053808949fefe99c",
+  "26f1f943b20d313e"
+ ],
+ "beir_cqadupstack_physics_79085": [
+  "18f38e41a5e8a120",
+  "24a3cb1d5f9e5938",
+  "49e54a77ce8b8079",
+  "a827070a5452c687"
+ ],
+ "beir_cqadupstack_physics_79136": [
+  "6e74c1e7a338f113"
+ ],
+ "beir_cqadupstack_physics_79568": [
+  "4f40a99c9153bd85"
+ ],
+ "beir_cqadupstack_physics_79685": [
+  "f6b204b810b34db0"
+ ],
+ "beir_cqadupstack_physics_80433": [
+  "1c33d30c674e146e"
+ ],
+ "beir_cqadupstack_physics_80467": [
+  "ef1c27c040102b6e"
+ ],
+ "beir_cqadupstack_physics_80777": [
+  "724542f88421de89"
+ ],
+ "beir_cqadupstack_physics_8081": [
+  "0e860b597c2b49ef"
+ ],
+ "beir_cqadupstack_physics_80872": [
+  "1f62145acfae8633",
+  "7b4192f5ef548932"
+ ],
+ "beir_cqadupstack_physics_80932": [
+  "845eebbe62a99936"
+ ],
+ "beir_cqadupstack_physics_80966": [
+  "2b5383afa7b5eb34"
+ ],
+ "beir_cqadupstack_physics_81414": [
+  "278aab9bd7f4f71d"
+ ],
+ "beir_cqadupstack_physics_81480": [
+  "4ffffb9efe3e2c4f",
+  "fa5e7211dd03a9dd"
+ ],
+ "beir_cqadupstack_physics_81536": [
+  "25595c586657d075",
+  "c6e59516eee5adf1",
+  "fce443cc8c393adf"
+ ],
+ "beir_cqadupstack_physics_81561": [
+  "85b7d3d767f58f7e",
+  "bc37e29b081d7d3d"
+ ],
+ "beir_cqadupstack_physics_81779": [
+  "916a90382c47d03f",
+  "fbee84c6d648f524"
+ ],
+ "beir_cqadupstack_physics_81787": [
+  "737d9f9c944dbf95"
+ ],
+ "beir_cqadupstack_physics_82125": [
+  "eb8d128dbdb80c83"
+ ],
+ "beir_cqadupstack_physics_82417": [
+  "3e7f6e9641e5cf5c",
+  "7b57e49563b3f656"
+ ],
+ "beir_cqadupstack_physics_82418": [
+  "2b05bcd3fd8fe197"
+ ],
+ "beir_cqadupstack_physics_8248": [
+  "93485d01a1559808"
+ ],
+ "beir_cqadupstack_physics_82599": [
+  "6115399d9d6d4a71"
+ ],
+ "beir_cqadupstack_physics_82821": [
+  "7c2b6bf933e93ccb"
+ ],
+ "beir_cqadupstack_physics_82874": [
+  "8b7b0b797f91f448"
+ ],
+ "beir_cqadupstack_physics_83070": [
+  "34bce9c0a3a9d8d9"
+ ],
+ "beir_cqadupstack_physics_83101": [
+  "7744acb537454a21"
+ ],
+ "beir_cqadupstack_physics_83265": [
+  "340fc0bb5314d6fa",
+  "6b456ca4f6310cc4",
+  "9c94a53b0a67ea70",
+  "af2174a44e3e9f19",
+  "c520506e9bdb452d",
+  "e041f3d441e84839"
+ ],
+ "beir_cqadupstack_physics_8347": [
+  "08e6438a31558d13",
+  "dbaa3262e9329ba0",
+  "e15940827b8a065e"
+ ],
+ "beir_cqadupstack_physics_83524": [
+  "9634b36f721122db"
+ ],
+ "beir_cqadupstack_physics_83701": [
+  "44f8ffd33c1177c0",
+  "81a8a956ffe286ab",
+  "bdc92ace3be4e245"
+ ],
+ "beir_cqadupstack_physics_83735": [
+  "4493820accf8fc80"
+ ],
+ "beir_cqadupstack_physics_8379": [
+  "9ba5e1dbd40c72e2"
+ ],
+ "beir_cqadupstack_physics_83845": [
+  "f57534a622df2c70"
+ ],
+ "beir_cqadupstack_physics_83866": [
+  "2b4ef640091fe58b"
+ ],
+ "beir_cqadupstack_physics_8420": [
+  "24769af98a5db64a",
+  "b9a48ba65a4e854a",
+  "d8f8d411ee86a4ae"
+ ],
+ "beir_cqadupstack_physics_85975": [
+  "ec6a6008f904a7bf"
+ ],
+ "beir_cqadupstack_physics_86270": [
+  "d9b6b554cf4d089b"
+ ],
+ "beir_cqadupstack_physics_86345": [
+  "2e7c47d6d41dc5ea"
+ ],
+ "beir_cqadupstack_physics_86367": [
+  "4a586b714dd95891"
+ ],
+ "beir_cqadupstack_physics_86424": [
+  "253b19470c4ca106",
+  "846d6f6b8e0031ca"
+ ],
+ "beir_cqadupstack_physics_86517": [
+  "e9a1bc40ba4fd8a2"
+ ],
+ "beir_cqadupstack_physics_86528": [
+  "494525df8683b351"
+ ],
+ "beir_cqadupstack_physics_86597": [
+  "6bc89b73317d5995",
+  "a5ef9b22f6c90c73"
+ ],
+ "beir_cqadupstack_physics_86989": [
+  "53a04cd70aae17c2"
+ ],
+ "beir_cqadupstack_physics_8701": [
+  "828a341092cfd7cb"
+ ],
+ "beir_cqadupstack_physics_8709": [
+  "141f77135753234d",
+  "d7edcd5f312025c4"
+ ],
+ "beir_cqadupstack_physics_87140": [
+  "7bbe37962798a297"
+ ],
+ "beir_cqadupstack_physics_87260": [
+  "6dde63a9406627cc"
+ ],
+ "beir_cqadupstack_physics_87376": [
+  "3765d2be129b6516"
+ ],
+ "beir_cqadupstack_physics_87476": [
+  "0e50b11fbda57326",
+  "b657f027d0e9fd98",
+  "f64a0a105caa0558"
+ ],
+ "beir_cqadupstack_physics_87686": [
+  "a643e09b6ac9ddf7"
+ ],
+ "beir_cqadupstack_physics_87715": [
+  "32286d192274bef3"
+ ],
+ "beir_cqadupstack_physics_87725": [
+  "a84c7825bdc23e95"
+ ],
+ "beir_cqadupstack_physics_87829": [
+  "73452253b08bfd95"
+ ],
+ "beir_cqadupstack_physics_8784": [
+  "2a5d11b386229802",
+  "8e952f36a935d2e6"
+ ],
+ "beir_cqadupstack_physics_87880": [
+  "1af0bca6fef39afd"
+ ],
+ "beir_cqadupstack_physics_87976": [
+  "afb03d493546ea24"
+ ],
+ "beir_cqadupstack_physics_88026": [
+  "7d5be43e4f0945c2"
+ ],
+ "beir_cqadupstack_physics_88077": [
+  "842f27ee85035673"
+ ],
+ "beir_cqadupstack_physics_885": [
+  "aecc3e1147cc0b42"
+ ],
+ "beir_cqadupstack_physics_88537": [
+  "ccf0c2a648efe462"
+ ],
+ "beir_cqadupstack_physics_88545": [
+  "4ca06543d31d34a7"
+ ],
+ "beir_cqadupstack_physics_88606": [
+  "0d144c1cdb3bace9"
+ ],
+ "beir_cqadupstack_physics_89002": [
+  "4d76f570a2a798ef"
+ ],
+ "beir_cqadupstack_physics_89335": [
+  "faaf75473a1978b3"
+ ],
+ "beir_cqadupstack_physics_89360": [
+  "4520d48c5e06b8f1",
+  "688ed02bae7f08e3"
+ ],
+ "beir_cqadupstack_physics_89377": [
+  "193f2fdf16bf7e27"
+ ],
+ "beir_cqadupstack_physics_89378": [
+  "117dad2697486328",
+  "3b600c9a7020f869",
+  "607ba6383345b715",
+  "cde39449209a66e5",
+  "f54d90e2bd2c7c49"
+ ],
+ "beir_cqadupstack_physics_89787": [
+  "3f6ecaccafadafeb"
+ ],
+ "beir_cqadupstack_physics_89914": [
+  "6be6e854d4da4f4a"
+ ],
+ "beir_cqadupstack_physics_89988": [
+  "b3c322b1196955c7",
+  "bc9a992333e7255a",
+  "f96a8de45b42ee7e"
+ ],
+ "beir_cqadupstack_physics_9": [
+  "e8649798ff097186"
+ ],
+ "beir_cqadupstack_physics_90034": [
+  "5a887105f5a89bad"
+ ],
+ "beir_cqadupstack_physics_90044": [
+  "06005ddd08e2da81"
+ ],
+ "beir_cqadupstack_physics_90128": [
+  "148003ad99777415",
+  "a7ace8d4dd845480",
+  "aa3a54c0f4684244"
+ ],
+ "beir_cqadupstack_physics_9045": [
+  "770414ab45df8c01",
+  "f3b4120dd75d3466"
+ ],
+ "beir_cqadupstack_physics_90469": [
+  "213ec2b5f412c0d1",
+  "39038a9c30261c33"
+ ],
+ "beir_cqadupstack_physics_9049": [
+  "661226e9b6087cb9"
+ ],
+ "beir_cqadupstack_physics_90635": [
+  "1a01d1922c68ad8b"
+ ],
+ "beir_cqadupstack_physics_90646": [
+  "05e82424ce5df728"
+ ],
+ "beir_cqadupstack_physics_90715": [
+  "2b2af7f564d3174a",
+  "ea4b4290bbc0dc21"
+ ],
+ "beir_cqadupstack_physics_90908": [
+  "235d3260279b90b3"
+ ],
+ "beir_cqadupstack_physics_91181": [
+  "4195e06343f8da40"
+ ],
+ "beir_cqadupstack_physics_9122": [
+  "3ea721b9802da181",
+  "6b64e803f14e2d83",
+  "fd1026baf1fbf96e"
+ ],
+ "beir_cqadupstack_physics_91286": [
+  "5995fb9c0c299f81"
+ ],
+ "beir_cqadupstack_physics_91392": [
+  "468121ca2862afe4"
+ ],
+ "beir_cqadupstack_physics_91534": [
+  "052d14df84f08bca",
+  "0f105fbd7117dc69",
+  "2d8fb87a18c6aa51",
+  "44582f46c2e6ca12",
+  "cb91d47c8ff5d58c"
+ ],
+ "beir_cqadupstack_physics_91797": [
+  "f7f248a8a6cf220b"
+ ],
+ "beir_cqadupstack_physics_91803": [
+  "1e7f501b4e13304f"
+ ],
+ "beir_cqadupstack_physics_9194": [
+  "b6217e06c6338dd8"
+ ],
+ "beir_cqadupstack_physics_91972": [
+  "3f3f75062c0ce965"
+ ],
+ "beir_cqadupstack_physics_92051": [
+  "85c10a820efe3099"
+ ],
+ "beir_cqadupstack_physics_92245": [
+  "2852108ad79922d0"
+ ],
+ "beir_cqadupstack_physics_92293": [
+  "129e1873882d5cba",
+  "1c138368d4fadb06",
+  "4ac1694014f9511d",
+  "673323abe132c234",
+  "7e06d2b792823602",
+  "a380454b30dbd873",
+  "b4fc0ac7b48ac99d",
+  "e8ec892888b7b881",
+  "fd4167d646d10202"
+ ],
+ "beir_cqadupstack_physics_92301": [
+  "ca3349f029dc23af"
+ ],
+ "beir_cqadupstack_physics_92313": [
+  "539a0f8327fc2378"
+ ],
+ "beir_cqadupstack_physics_92454": [
+  "17cd72fde46529f4"
+ ],
+ "beir_cqadupstack_physics_92571": [
+  "83130af6723b682e"
+ ],
+ "beir_cqadupstack_physics_92662": [
+  "0dba3b663a1f2e64",
+  "51f9cf15287adb42"
+ ],
+ "beir_cqadupstack_physics_92739": [
+  "073429f9b3c41dcf",
+  "83c1807a9c63c384",
+  "f5e34aae78da4c0e"
+ ],
+ "beir_cqadupstack_physics_92747": [
+  "306dc2724582a840"
+ ],
+ "beir_cqadupstack_physics_92990": [
+  "0da3135f8c99b693"
+ ],
+ "beir_cqadupstack_physics_93130": [
+  "6024aa7df1d64435",
+  "7b3a84244b921d1d",
+  "988dc932caf3556b"
+ ],
+ "beir_cqadupstack_physics_9340": [
+  "557729649791b591",
+  "ff8fb970cba3081f"
+ ],
+ "beir_cqadupstack_physics_93530": [
+  "38c346b6ffd4cef8"
+ ],
+ "beir_cqadupstack_physics_9371": [
+  "2ee6b269c191a2ba",
+  "3ec2a1f51c57d68e"
+ ],
+ "beir_cqadupstack_physics_93771": [
+  "fe4ff2c0b0ae9974"
+ ],
+ "beir_cqadupstack_physics_93874": [
+  "6961175757013376"
+ ],
+ "beir_cqadupstack_physics_9389": [
+  "aa2fcf6a398c5b33"
+ ],
+ "beir_cqadupstack_physics_94040": [
+  "0d0d54e8d6378205"
+ ],
+ "beir_cqadupstack_physics_94132": [
+  "93f5bd4490828494"
+ ],
+ "beir_cqadupstack_physics_94133": [
+  "5b5b96b9e250a0a4"
+ ],
+ "beir_cqadupstack_physics_944": [
+  "011f77d3ed040b34",
+  "25af8c7de3533973",
+  "982685159541e484"
+ ],
+ "beir_cqadupstack_physics_9449": [
+  "91df5f170e9fe3c2"
+ ],
+ "beir_cqadupstack_physics_94567": [
+  "aa9d78c7d848b30c"
+ ],
+ "beir_cqadupstack_physics_9468": [
+  "83897de1ff51bf3c",
+  "ab1b423d47c4b051"
+ ],
+ "beir_cqadupstack_physics_94812": [
+  "b130261cb50a92b5"
+ ],
+ "beir_cqadupstack_physics_94819": [
+  "3643ddc0a90d504b",
+  "b373fcb95c6177e7"
+ ],
+ "beir_cqadupstack_physics_94901": [
+  "757fbb73fd1ad557"
+ ],
+ "beir_cqadupstack_physics_9495": [
+  "1e6e4ef43bc11bba",
+  "f08fe88d233f5826"
+ ],
+ "beir_cqadupstack_physics_95053": [
+  "31e6286895ce7a56"
+ ],
+ "beir_cqadupstack_physics_95193": [
+  "29e8c70e14f8bd9f"
+ ],
+ "beir_cqadupstack_physics_9526": [
+  "e45dc74e76fb73f4"
+ ],
+ "beir_cqadupstack_physics_95361": [
+  "870d429db058114b"
+ ],
+ "beir_cqadupstack_physics_95366": [
+  "965e3346aa15aff5"
+ ],
+ "beir_cqadupstack_physics_95411": [
+  "7d823708f4274bba"
+ ],
+ "beir_cqadupstack_physics_95460": [
+  "0eb2057627dd0334"
+ ],
+ "beir_cqadupstack_physics_95705": [
+  "26aed5cff9365435"
+ ],
+ "beir_cqadupstack_physics_95756": [
+  "2aaa9e47e197dc8f"
+ ],
+ "beir_cqadupstack_physics_95864": [
+  "3b8c1fc80c423374"
+ ],
+ "beir_cqadupstack_physics_95889": [
+  "9c8b15f718a49170"
+ ],
+ "beir_cqadupstack_physics_96010": [
+  "02f900623443feb6",
+  "55ad6a1b16fa86bb",
+  "e95ebbd41f163933"
+ ],
+ "beir_cqadupstack_physics_96081": [
+  "50ecfd9fbea1bb86"
+ ],
+ "beir_cqadupstack_physics_96335": [
+  "7df341932d826fc8",
+  "b2ddad22b1dfd968"
+ ],
+ "beir_cqadupstack_physics_96562": [
+  "7032acf560bb4e31"
+ ],
+ "beir_cqadupstack_physics_9663": [
+  "ce46afb0f686506f"
+ ],
+ "beir_cqadupstack_physics_9708": [
+  "dc4fd4a21ea1c5a5"
+ ],
+ "beir_cqadupstack_physics_9751": [
+  "3b023f8c7280013e",
+  "859f53b920759730",
+  "f49ac5c26f2f8bac"
+ ],
+ "beir_cqadupstack_physics_97812": [
+  "330c408f5694090a",
+  "795f6a5e3cc9e92f"
+ ],
+ "beir_cqadupstack_physics_97886": [
+  "121f3d0a4075db87"
+ ],
+ "beir_cqadupstack_physics_98000": [
+  "3feaee33814ffd21",
+  "606e2b9753f6be73",
+  "76742855e22c3532",
+  "a37cb3ae1a102142",
+  "f99acdfc8ac6d6cf",
+  "fd16593e22079b17"
+ ],
+ "beir_cqadupstack_physics_98027": [
+  "124edb15be35185a",
+  "16c0eca2efac37cc",
+  "39feeb999976769a",
+  "66cb6e023b79415a",
+  "6cbc4d970f7c5533",
+  "bcd8a02c55e905d4",
+  "d30760edf73cd09f",
+  "de092d5c9a429ae2"
+ ],
+ "beir_cqadupstack_physics_98157": [
+  "e9fb4e6e5ba6e30a"
+ ],
+ "beir_cqadupstack_physics_98437": [
+  "de0e8796f4bc749a"
+ ],
+ "beir_cqadupstack_physics_98459": [
+  "0e671a2fb92da8e9"
+ ],
+ "beir_cqadupstack_physics_98516": [
+  "bd64c46e9c97c405",
+  "d4dcc00ed03d1fda"
+ ],
+ "beir_cqadupstack_physics_9864": [
+  "ec970c391a5a58ab"
+ ],
+ "beir_cqadupstack_physics_98714": [
+  "dbf9ed82870f2dd9"
+ ],
+ "beir_cqadupstack_physics_98758": [
+  "39a07cddf6ac8ac1"
+ ],
+ "beir_cqadupstack_physics_9898": [
+  "0d581d7dc366e052",
+  "751dbba22b92c1c7",
+  "abd5127561dfb22e"
+ ],
+ "beir_cqadupstack_physics_98980": [
+  "4fd43ba094584f34",
+  "b6ae88184a0f2929"
+ ],
+ "beir_cqadupstack_physics_99338": [
+  "f549f78dcca02991"
+ ],
+ "beir_cqadupstack_physics_99505": [
+  "0f925d287778c9d0"
+ ],
+ "beir_cqadupstack_physics_99535": [
+  "5a6e0d267f571c53",
+  "ae04bb37a3236958"
+ ],
+ "beir_cqadupstack_physics_99754": [
+  "c91f5ae7a1cc6b19"
+ ],
+ "beir_cqadupstack_physics_99779": [
+  "e0114303308cddf3"
+ ],
+ "beir_cqadupstack_physics_99865": [
+  "2bd8ac0dcfcec4eb"
+ ]
+}

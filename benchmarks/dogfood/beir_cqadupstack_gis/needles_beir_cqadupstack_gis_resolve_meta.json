@@ -1,0 +1,7095 @@
+{
+ "date": "2026-10-04T08:54:37.221851+00:00",
+ "db": "F:\\tmp\\beir_cqadupstack_gis_bed\\beir_cqadupstack_gis.db",
+ "corpus_root": "F:\\Projects\\beir\\beir_cqadupstack_gis\\corpus",
+ "min_file_bytes": 1,
+ "needles_total": 885,
+ "needles_resolvable": 885,
+ "dropped": [],
+ "gold_files_wanted": 1114,
+ "gold_files_size_gated": 0,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 0,
+ "per_needle": {
+  "beir_cqadupstack_gis_100061": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_100114": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_100116": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_100280": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_10046": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_10053": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_101403": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_101706": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_101869": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_101874": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_101969": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_101995": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_101998": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102080": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102106": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102156": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102288": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102301": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102346": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102641": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102682": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102713": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102819": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_102820": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_103157": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_103514": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_10352": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_103641": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_103703": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_103709": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_103797": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_103892": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104005": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104133": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104165": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104243": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104332": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104344": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104370": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104497": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104538": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_104562": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_106808": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_10703": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_107062": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_107227": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_107474": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_107521": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_107562": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_107800": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_108154": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_108380": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_108397": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_108635": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_108752": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_108971": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109024": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109049": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109173": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109190": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109197": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109234": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109262": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109290": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_10932": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109392": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109853": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_109967": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_110161": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_110394": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_110409": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_110543": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_110551": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_110829": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111374": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111438": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111471": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111596": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111659": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111685": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111715": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111781": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111838": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_111850": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_11204": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_11216": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112166": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112238": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112298": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112391": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112519": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112534": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112600": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112654": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_112933": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_113003": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_113052": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_113405": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_11431": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_11705": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_11761": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_12446": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_12459": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_12493": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_12630": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_12833": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_13029": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_13107": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_13484": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_13691": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_13891": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_14066": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_14142": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_14455": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_1449": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_14650": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_147": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_14750": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_14849": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_14972": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_14993": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_15168": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_15185": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_15287": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_1551": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_15565": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_15607": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_15755": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_16073": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_16656": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_16741": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_16752": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_16990": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_16992": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_17003": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_17035": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_17129": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_17184": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_17299": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_17478": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_17503": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_17550": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_18057": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_18103": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_1811": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_18473": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_18874": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_1892": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19033": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19047": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19064": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19221": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19256": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19257": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19437": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19522": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19580": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_19794": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_1987": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20018": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20095": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_202": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20279": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20286": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2039": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20420": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20521": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20566": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20594": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20604": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2071": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20793": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_20870": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_21118": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_21296": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_21566": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_21575": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_21616": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2170": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_21722": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_21937": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_21985": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22114": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22201": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22255": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22545": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22560": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22751": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22755": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22818": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22895": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_22952": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2312": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23129": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23300": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23614": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23688": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23717": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23735": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23763": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23919": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_23993": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24001": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24127": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24258": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24300": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24486": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24590": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24628": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24646": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24735": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24878": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_24933": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2498": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_25117": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_25177": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_25353": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_25361": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_25522": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_256": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_25709": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2587": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26050": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26262": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26452": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26484": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26523": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26676": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26707": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26725": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2682": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26846": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2685": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26979": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_26996": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27070": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27073": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27094": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27171": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27190": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27235": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27381": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27434": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27623": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27676": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27683": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2777": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27806": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27822": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_27905": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28031": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28105": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28260": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28406": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28521": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28566": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28567": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28568": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28667": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28757": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28881": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_28888": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29084": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29257": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29305": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29470": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29501": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29734": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_2976": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29777": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29825": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29863": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_29888": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30018": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30053": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30183": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30230": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30250": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_305": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30624": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30670": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_3083": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30895": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30920": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_30970": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31129": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31147": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31154": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31235": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31236": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31261": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31341": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31402": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_31900": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32082": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32269": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32310": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32321": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32407": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32468": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32514": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32723": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_32877": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33018": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33033": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33208": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33251": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33291": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33310": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33364": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33402": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33629": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33700": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33756": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33826": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33852": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33887": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_33945": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_34204": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_34237": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_34406": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_34532": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_34612": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_34929": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_34985": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35106": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35183": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35187": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35369": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35540": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35591": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35593": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35624": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_35670": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_3574": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_36774": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_36891": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_37125": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_37252": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_37304": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_37474": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_37518": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_37543": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_37622": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_37656": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_38855": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_3887": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_39028": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_39151": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_39168": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_3945": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_4011": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40536": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40624": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40650": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40697": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40728": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40813": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_4086": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40919": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40943": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_40991": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41135": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41251": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41307": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41423": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41491": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41498": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41608": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41725": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41829": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41880": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_41985": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_420": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42019": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42044": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_4230": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42358": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42434": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42500": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42516": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42580": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42584": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42598": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42661": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42682": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42689": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42776": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_42947": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_43037": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_43129": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_43238": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_43290": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_43400": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_43617": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_43796": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_43920": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44009": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44018": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44035": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44063": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44098": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44116": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44205": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44208": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44334": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44393": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44410": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44411": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44426": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44502": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44536": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44671": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44926": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44948": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_44998": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_45159": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_45195": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_4531": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_45334": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_45365": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_45449": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_45469": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_45619": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_46634": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_46716": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_46741": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_46842": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_46862": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_46866": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_47991": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48142": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48151": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48192": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48265": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_4828": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48352": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48364": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48392": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48549": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48552": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48799": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48872": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_48899": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_49001": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_4901": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_4906": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_49477": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_49728": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_49729": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_49802": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_49844": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_49869": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_49904": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50010": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50046": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50108": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50165": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50169": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50208": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50217": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50325": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5041": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50415": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50537": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50754": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50769": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50825": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_50844": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5086": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5132": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_51929": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_51986": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_51989": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_52292": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_52409": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_52462": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_52483": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_52818": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_52847": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_52975": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53039": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53081": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53091": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53262": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53265": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53348": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53402": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53528": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53569": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53620": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_53785": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_54065": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_54094": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_54244": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_54266": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_54481": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_54803": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_54949": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_55119": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_55129": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_55196": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_55549": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5568": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5579": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5583": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5640": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_56774": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_56843": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5686": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_56862": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_56953": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_56957": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57028": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57151": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57210": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57331": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57394": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57438": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57477": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57521": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_5761": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57784": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_57796": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58054": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58127": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58224": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58262": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58321": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58377": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58640": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58660": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58757": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58783": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58787": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_58845": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59083": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59091": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59170": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59173": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59203": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59339": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59356": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59580": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59582": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59604": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59610": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59740": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59858": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59865": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59869": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_59902": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_60210": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_60398": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_60710": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_60712": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_60848": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_60905": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_60928": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61044": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61142": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_613": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61301": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61326": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61393": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61411": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6148": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61482": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61499": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61862": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61909": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_61945": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62026": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62103": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62121": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62390": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62406": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62627": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62837": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62908": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_62949": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_630": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_63022": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_63024": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_63235": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_63240": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_63394": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_63395": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_63868": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_63931": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_64065": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_64227": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_64392": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6440": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_64644": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6470": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_64714": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_64876": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_64950": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6508": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_65190": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_65366": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_65403": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_65794": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_66113": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_66259": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_66477": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_66563": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_66824": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_66888": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67025": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67035": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6704": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67103": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6720": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67312": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67474": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67581": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67588": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67804": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67825": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_67887": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6790": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6804": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68168": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68175": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68233": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68273": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68389": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68545": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68546": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68566": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68624": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68843": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68897": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_68956": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_69137": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_69294": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6933": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6948": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_69722": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_69857": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_6995": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_70185": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_70301": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_70411": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_70591": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_70645": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_70758": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_7077": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_7078": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_70921": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_70922": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_71105": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_7147": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_71504": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_71719": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_71872": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_71926": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72051": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72059": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72193": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72244": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72260": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72298": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72392": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72393": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72448": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72506": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72575": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72851": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_7297": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_72985": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73307": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_7339": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73394": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73397": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73458": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73476": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73524": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73542": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73649": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_73736": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74079": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74120": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74244": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74301": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74453": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74480": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74543": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74554": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74658": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_74692": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75092": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75104": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75119": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75155": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75212": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75289": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75324": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75525": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75588": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75602": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75685": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75859": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75876": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75899": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75928": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_75951": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_76181": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_7651": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_76606": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_76655": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_76880": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_76962": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_77184": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_77288": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_77425": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_77463": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_77958": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_7803": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_78120": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_78330": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_78439": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_78651": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_78794": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_78865": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_78923": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_79078": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_79328": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_79339": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_79730": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_79803": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80006": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80037": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80094": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80127": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8032": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80454": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80543": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80662": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80674": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80885": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_80960": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_81110": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_81121": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_81212": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_81324": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_81621": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8178": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8191": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_81928": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82121": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82134": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82175": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82242": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82271": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_823": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82415": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82476": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82598": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82618": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82718": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8277": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82873": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82905": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_82931": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_83212": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_83229": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_83316": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_83359": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_83372": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_83509": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_83977": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8401": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_84063": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_84141": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8449": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8453": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_84552": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_84786": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_84956": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85031": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85111": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85147": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85393": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85540": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85592": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85596": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8571": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85825": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85897": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_85993": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_86075": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_86106": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_86300": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_86333": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_86383": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_86444": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_86754": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_86847": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_87004": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_87031": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_87248": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_87401": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_87432": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_87478": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_87720": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8794": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88104": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88220": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88236": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88252": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88301": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88371": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88477": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88715": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88723": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_88792": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89038": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89103": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89114": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89165": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89177": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89221": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89232": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_8929": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89326": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89468": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89760": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_898": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89898": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_89922": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_90084": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_91102": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_91477": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_9157": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_91707": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_91790": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_91886": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_91949": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_9210": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_92312": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_92396": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_92645": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_92748": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_92772": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_92820": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_92941": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_93093": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_93519": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_93696": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_93697": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_93936": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_93950": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_94148": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_94191": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_94280": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_94446": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_9462": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_94643": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_94706": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_94874": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_95035": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_95249": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_95568": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_957": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_9614": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_96153": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_9659": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_97303": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_97741": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_97771": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_97776": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 22,
+   "gold_files_resolved": 22,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_97814": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_97845": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_97939": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_98028": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_98053": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_98076": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_9894": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_99711": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_99850": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_gis_99993": {
+   "question_type": "beir_cqadupstack_gis",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  }
+ }
+}

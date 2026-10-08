@@ -45,7 +45,7 @@ import logging
 import math
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import Collection, Optional, Sequence
 
 log = logging.getLogger("cymatix.know_calibration")
 
@@ -144,6 +144,19 @@ class KnowCalibration:
     # to ``agent.warnings``. Operator action: re-run
     # ``scripts/calibrate_know_confidence.py``.
     stale_after_days: int = DEFAULT_STALE_AFTER_DAYS
+    # #482: value each feature (in feature space, b1..b5 order) takes when
+    # its input is UNAVAILABLE -- no dense lane for lexical_dense_agree,
+    # nothing delivered for coordinate_confidence, freshness unknown.
+    # Normally the feature's mean in the calibration set, written alongside
+    # the betas by the fitter. None = legacy behaviour: an unknown input
+    # contributes nothing to the logit (identical to a 0.0 / False input).
+    neutral: Optional[tuple[float, ...]] = None
+    # #482: the inputs (FEATURE_NAMES) that were available when these betas
+    # were fit. An input outside this set never contributes its observed
+    # value -- its coefficient was not learned from it -- and is treated as
+    # unknown. None = fit profile not recorded (legacy): no masking, no
+    # profile warning.
+    fitted_inputs: Optional[tuple[str, ...]] = None
 
     def expected_betas_len(self) -> int:
         """Required length of the betas tuple: intercept + N_FEATURES.
@@ -253,10 +266,11 @@ def compute_confidence(
     *,
     top_score: float,
     score_gap: float,
-    lexical_dense_agree: bool,
-    coordinate_confidence: float,
+    lexical_dense_agree: Optional[bool],
+    coordinate_confidence: Optional[float],
     calibration: Optional[KnowCalibration] = None,
     freshness_min: Optional[float] = None,
+    live_inputs: Optional[Collection[str]] = None,
 ) -> float:
     """Map five signals to a calibrated KnowBlock confidence.
 
@@ -264,13 +278,26 @@ def compute_confidence(
     combination so out-of-distribution values do not blow up the
     logit. Returns a probability in [0, 1].
 
+    ``None`` means the input is UNAVAILABLE, not negative (#482). An
+    unavailable feature contributes ``beta_i * calibration.neutral[i]``
+    when the calibration carries a neutral vector, and nothing otherwise
+    (the legacy behaviour, identical to passing False / 0.0).
+
+    An input is also treated as unavailable, whatever value was passed,
+    when it is outside ``calibration.fitted_inputs`` (its coefficient was
+    not learned from it) or outside ``live_inputs`` (the enabled lanes
+    cannot produce it -- see ``producible_inputs``). Both default to None,
+    meaning no masking, so legacy callers are unchanged.
+
     Args:
         top_score: raw rank-1 score from the retriever (post-fusion).
         score_gap: top1 - top2 score gap in the same units as top_score.
         lexical_dense_agree: True if the top-K of the lexical and the
-            dense rankers intersect. Cheap binary signal.
+            dense rankers intersect. Cheap binary signal. None when no
+            dense lane ran (dense retrieval off), so agreement is unknown.
         coordinate_confidence: blend of folder + file-grain path overlap
-            in [0, 1] (see context_packet._coordinate_confidence).
+            in [0, 1] (see context_packet._coordinate_confidence). None
+            when nothing was delivered to measure it on.
         calibration: optional override; defaults to ``KnowCalibration()``.
         freshness_min: Stage 7 (spec §10) — minimum decay across the
             retrieved candidates, in [0, 1]. ``None`` is treated as
@@ -301,18 +328,45 @@ def compute_confidence(
     s_ref = cal.s_ref if cal.s_ref > 0 else DEFAULT_S_REF
     g_ref = cal.g_ref if cal.g_ref > 0 else DEFAULT_G_REF
 
+    neutral = cal.neutral if cal.neutral is not None and len(cal.neutral) == N_FEATURES else None
+
+    def _unknown(i: int) -> float:
+        # Feature index i (0-based, b1..b5 order). Legacy: no contribution.
+        return float(neutral[i]) if neutral is not None else 0.0
+
+    def _usable(name: str) -> bool:
+        return ((cal.fitted_inputs is None or name in cal.fitted_inputs)
+                and (live_inputs is None or name in live_inputs))
+
+    if not _usable("top_score"):
+        top_score = None
+    if not _usable("score_gap"):
+        score_gap = None
+    if not _usable("lexical_dense_agree"):
+        lexical_dense_agree = None
+    if not _usable("coordinate_confidence"):
+        coordinate_confidence = None
+    if not _usable("freshness_min"):
+        freshness_min = None
+
     z = float(betas[0])
-    z += float(betas[1]) * math.tanh(float(top_score) / s_ref)
-    z += float(betas[2]) * math.tanh(float(score_gap) / g_ref)
-    z += float(betas[3]) * (1.0 if lexical_dense_agree else 0.0)
-    z += float(betas[4]) * max(0.0, min(1.0, float(coordinate_confidence)))
-    # Stage 7 — β5 * clamp01(freshness_min). ``None`` falls through as
-    # 0 contribution rather than 0.0-clamped — operationally these
-    # are similar in this defaults regime, but the None branch
-    # preserves the spec semantics of "freshness unknown" being
-    # neutral rather than maximally-stale.
-    if freshness_min is not None and len(betas) >= 6:
-        z += float(betas[5]) * max(0.0, min(1.0, float(freshness_min)))
+    z += float(betas[1]) * (_unknown(0) if top_score is None else math.tanh(float(top_score) / s_ref))
+    z += float(betas[2]) * (_unknown(1) if score_gap is None else math.tanh(float(score_gap) / g_ref))
+    z += float(betas[3]) * (
+        _unknown(2) if lexical_dense_agree is None else (1.0 if lexical_dense_agree else 0.0)
+    )
+    z += float(betas[4]) * (
+        _unknown(3) if coordinate_confidence is None
+        else max(0.0, min(1.0, float(coordinate_confidence)))
+    )
+    # Stage 7 — β5 * clamp01(freshness_min). ``None`` is "freshness
+    # unknown": the neutral value when calibrated with one, else no
+    # contribution (the original Stage 7 semantics).
+    if len(betas) >= 6:
+        z += float(betas[5]) * (
+            _unknown(4) if freshness_min is None
+            else max(0.0, min(1.0, float(freshness_min)))
+        )
 
     return _sigmoid(z)
 
@@ -353,6 +407,8 @@ def calibration_from_config(know_cfg) -> KnowCalibration:
             "monotone-constrained calibration on a delivery-balanced bench.",
             ", ".join(violations),
         )
+    neutral = getattr(know_cfg, "neutral", None)
+    fitted = getattr(know_cfg, "fitted_inputs", None)
     return KnowCalibration(
         betas=betas,
         s_ref=float(know_cfg.s_ref),
@@ -361,7 +417,74 @@ def calibration_from_config(know_cfg) -> KnowCalibration:
         calibrated_at=know_cfg.calibrated_at,
         calibrated_on_n=know_cfg.calibrated_on_n,
         stale_after_days=int(know_cfg.stale_after_days),
+        neutral=tuple(float(v) for v in neutral) if neutral is not None else None,
+        fitted_inputs=tuple(str(v) for v in fitted) if fitted is not None else None,
     )
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Input profile (#482): which know inputs the enabled lanes can produce
+# ─────────────────────────────────────────────────────────────────────
+
+def producible_inputs(cfg) -> frozenset[str]:
+    """Know inputs the live config can produce, derived from its enabled lanes.
+
+    top_score, score_gap, coordinate_confidence and freshness_min come from
+    every retrieval. lexical_dense_agree needs a dense-type ranker (one of
+    ``know_decision._DENSE_TIERS``): BGE-M3 dense recall, SPLADE, the SEMA
+    boost, or the SEMA cold tier. When none is enabled the agreement input
+    cannot exist, so a calibration that relied on it is mis-specified --
+    flipping a lane on or off is picked up here with no manual edit.
+    """
+    names = set(FEATURE_NAMES) - {"lexical_dense_agree"}
+    dense_lane = any((
+        bool(getattr(getattr(cfg, "retrieval", None), "dense_embedding_enabled", False)),
+        bool(getattr(getattr(cfg, "ingestion", None), "splade_enabled", False)),
+        bool(getattr(getattr(cfg, "ingestion", None), "sema_embed_on_ingest", False)),
+        bool(getattr(getattr(cfg, "context", None), "cold_tier_enabled", False)),
+    ))
+    if dense_lane:
+        names.add("lexical_dense_agree")
+    return frozenset(names)
+
+
+def profile_mismatch(cal: KnowCalibration, live_inputs: Collection[str]) -> list[str]:
+    """Inputs fit-but-not-producible or producible-but-not-fit, sorted.
+
+    Empty when the calibration does not record its fit profile (legacy).
+    """
+    if cal.fitted_inputs is None:
+        return []
+    return sorted(set(cal.fitted_inputs) ^ set(live_inputs))
+
+
+def know_profile_warnings(cal: KnowCalibration, live_inputs: Collection[str]) -> list[str]:
+    """Agent warnings for the input profile: ``calibration_profile_mismatch``
+    when the calibration's fit profile is known and differs from what the
+    enabled lanes can produce (re-run the calibration to use the new lanes)."""
+    return ["calibration_profile_mismatch"] if profile_mismatch(cal, live_inputs) else []
+
+
+def load_calibration_and_inputs(
+    toml_path: Optional[str | Path] = None,
+) -> tuple[KnowCalibration, Optional[frozenset[str]]]:
+    """(calibration, producible inputs) for callers without a loaded config.
+
+    The calibration comes through ``load_calibration_from_toml`` (its
+    soft-fail behaviour and test seam unchanged); the input profile from the
+    same config path. If the profile cannot be read, inputs are ``None`` (no
+    masking) -- the loader never breaks retrieval.
+    """
+    cal = load_calibration_from_toml(toml_path)
+    try:
+        from ..config import load_config
+
+        cfg = load_config() if toml_path is None else load_config(str(toml_path))
+        return cal, producible_inputs(cfg)
+    except Exception:  # noqa: BLE001 -- the calibration loader never breaks retrieval
+        log.warning("know_calibration: could not read the lane profile; no input masking",
+                    exc_info=True)
+        return cal, None
 
 
 def load_calibration_from_toml(

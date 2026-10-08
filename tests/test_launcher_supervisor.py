@@ -173,7 +173,38 @@ class TestStart:
         assert supervisor.last_start_pending is True
 
 
+    def test_timeout_after_a_stop_does_not_mark_pending(self, supervisor, store):
+        """Stop clicked while start() is still waiting: when the wait later
+        times out the process is gone, so "starting" must not be reported
+        (the dashboard would show a dead Starting state)."""
+        supervisor._psutil = _FakePsutil(alive_pids=set())
+        fake_popen = MagicMock()
+        fake_popen.pid = 54321
+
+        def _stopped_meanwhile(timeout=None):
+            store.clear_cymatix()
+            raise StartupTimeout("timeout")
+
+        with patch("cymatix_context.launcher.supervisor._port_is_free", return_value=True):
+            with patch("subprocess.Popen", return_value=fake_popen):
+                with patch.object(supervisor, "_wait_for_ready", side_effect=_stopped_meanwhile):
+                    supervisor.start()
+
+        assert supervisor.last_start_pending is False
+
+
 class TestStop:
+    def test_stop_clears_a_stale_start_pending(self, supervisor, store):
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
+        supervisor._psutil = _FakePsutil(
+            alive_pids={12345},
+            cmdlines={12345: ["python", "-m", "uvicorn", "cymatix_context._asgi:app"]},
+        )
+        supervisor._last_start_pending = True
+        with patch.object(supervisor, "_announce_restart"),                 patch.object(supervisor, "_kill_tree"),                 patch("cymatix_context.launcher.supervisor._port_is_free", return_value=True):
+            supervisor.stop(reason="test", announce=False)
+        assert supervisor.last_start_pending is False
+
     def test_refuses_when_not_running(self, supervisor):
         supervisor._psutil = _FakePsutil(alive_pids=set())
         with pytest.raises(NotRunning):

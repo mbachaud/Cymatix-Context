@@ -1,0 +1,19 @@
+{
+ "source": "BEIR webis-touche2020 (UKP mirror zip; corpus.jsonl, queries.jsonl, qrels/test.tsv)",
+ "corpus_root": "F:\\Projects\\beir\\beir_webis_touche2020\\corpus",
+ "docs": 382545,
+ "docs_under_min_bytes": 11291,
+ "docs_over_max_bytes": 0,
+ "path_collisions": 0,
+ "n_needles": 49,
+ "qrels_positive_total": 932,
+ "gold_per_needle_max": 32,
+ "graded": true,
+ "queries_that_are_corpus_docs": 0,
+ "drops": {
+  "no_positive_qrel": 0,
+  "gold_absent_from_corpus": 0,
+  "query_text_missing": 0
+ },
+ "drop_names": {}
+}

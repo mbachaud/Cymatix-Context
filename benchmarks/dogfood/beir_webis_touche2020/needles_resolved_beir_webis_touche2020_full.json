@@ -1,0 +1,249 @@
+{
+ "needles": [
+  {
+   "name": "beir_webis_touche2020_1",
+   "query": "Should teachers get tenure?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_10",
+   "query": "Should any vaccines be required for children?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_11",
+   "query": "Should performance-enhancing drugs be accepted in sports?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_12",
+   "query": "Should birth control pills be available over the counter?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_13",
+   "query": "Can alternative energy effectively replace fossil fuels?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_14",
+   "query": "Is sexual orientation determined at birth?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_15",
+   "query": "Should animals be used for scientific or commercial testing?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_16",
+   "query": "Should prescription drugs be advertised directly to consumers?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_17",
+   "query": "Should recreational marijuana be legal?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_18",
+   "query": "Should churches remain tax-exempt?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_19",
+   "query": "Should gay marriage be legal?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_2",
+   "query": "Is vaping with e-cigarettes safe?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_20",
+   "query": "Is drinking milk healthy for humans?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_21",
+   "query": "Is human activity primarily responsible for global climate change?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_22",
+   "query": "Is a two-state solution an acceptable solution to the Israeli-Palestinian conflict?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_23",
+   "query": "Should euthanasia or physician-assisted suicide be legal?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_24",
+   "query": "Does lowering the federal corporate income tax rate create jobs?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_26",
+   "query": "Do standardized tests improve education?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_27",
+   "query": "Should more gun control laws be enacted?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_28",
+   "query": "Should prostitution be legal?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_29",
+   "query": "Should the government allow illegal immigrants to become citizens?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_3",
+   "query": "Should insider trading be allowed?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_30",
+   "query": "Should adults have the right to carry a concealed handgun?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_31",
+   "query": "Is obesity a disease?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_32",
+   "query": "Do electronic voting machines improve the voting process?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_33",
+   "query": "Should people become vegetarian?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_34",
+   "query": "Are social networking sites good for our society?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_35",
+   "query": "Do violent video games contribute to youth violence?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_36",
+   "query": "Is golf a sport?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_37",
+   "query": "Is cell phone radiation safe?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_38",
+   "query": "Should marijuana be a medical option?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_39",
+   "query": "Should the federal minimum wage be increased?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_4",
+   "query": "Should corporal punishment be used in schools?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_40",
+   "query": "Should the death penalty be allowed?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_41",
+   "query": "Should student loan debt be easier to discharge in bankruptcy?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_42",
+   "query": "Should fighting be allowed in hockey?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_43",
+   "query": "Should bottled water be banned?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_44",
+   "query": "Should election day be a national holiday?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_45",
+   "query": "Should the penny stay in circulation?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_46",
+   "query": "Should net neutrality be restored?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_47",
+   "query": "Is homework beneficial?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_48",
+   "query": "Should the voting age be lowered?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_49",
+   "query": "Should body cameras be mandatory for police?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_5",
+   "query": "Should social security be privatized?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_50",
+   "query": "Should everyone get a universal basic income?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_6",
+   "query": "Is a college education worth it?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_7",
+   "query": "Should felons who have completed their sentence be allowed to vote?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_8",
+   "query": "Should abortion be legal?",
+   "question_type": "beir_webis_touche2020"
+  },
+  {
+   "name": "beir_webis_touche2020_9",
+   "query": "Should students have to wear school uniforms?",
+   "question_type": "beir_webis_touche2020"
+  }
+ ]
+}

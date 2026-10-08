@@ -1,0 +1,4013 @@
+{
+ "beir_cqadupstack_physics_100037": [
+  "35/100105.txt"
+ ],
+ "beir_cqadupstack_physics_100041": [
+  "ae/101271.txt"
+ ],
+ "beir_cqadupstack_physics_100056": [
+  "11/105196.txt",
+  "86/80807.txt",
+  "e7/129249.txt"
+ ],
+ "beir_cqadupstack_physics_100197": [
+  "24/52937.txt"
+ ],
+ "beir_cqadupstack_physics_100251": [
+  "20/39165.txt",
+  "3e/41093.txt"
+ ],
+ "beir_cqadupstack_physics_100572": [
+  "66/11732.txt"
+ ],
+ "beir_cqadupstack_physics_1008": [
+  "6f/2932.txt"
+ ],
+ "beir_cqadupstack_physics_101150": [
+  "8a/102469.txt"
+ ],
+ "beir_cqadupstack_physics_101188": [
+  "cc/135151.txt"
+ ],
+ "beir_cqadupstack_physics_101291": [
+  "fa/101289.txt"
+ ],
+ "beir_cqadupstack_physics_10130": [
+  "1a/4669.txt"
+ ],
+ "beir_cqadupstack_physics_10139": [
+  "ef/83151.txt"
+ ],
+ "beir_cqadupstack_physics_101398": [
+  "45/63290.txt"
+ ],
+ "beir_cqadupstack_physics_101404": [
+  "18/102598.txt"
+ ],
+ "beir_cqadupstack_physics_101443": [
+  "23/12879.txt"
+ ],
+ "beir_cqadupstack_physics_10154": [
+  "83/7713.txt"
+ ],
+ "beir_cqadupstack_physics_10161": [
+  "a3/18500.txt"
+ ],
+ "beir_cqadupstack_physics_101624": [
+  "7a/7327.txt"
+ ],
+ "beir_cqadupstack_physics_10163": [
+  "0d/131470.txt",
+  "4f/9354.txt"
+ ],
+ "beir_cqadupstack_physics_101649": [
+  "77/80028.txt"
+ ],
+ "beir_cqadupstack_physics_101674": [
+  "e7/101257.txt"
+ ],
+ "beir_cqadupstack_physics_101725": [
+  "0e/34115.txt",
+  "b4/44934.txt",
+  "cf/67247.txt",
+  "de/18925.txt",
+  "fa/65124.txt"
+ ],
+ "beir_cqadupstack_physics_101727": [
+  "75/83715.txt",
+  "b8/64356.txt"
+ ],
+ "beir_cqadupstack_physics_102076": [
+  "c4/101116.txt"
+ ],
+ "beir_cqadupstack_physics_102222": [
+  "19/14232.txt"
+ ],
+ "beir_cqadupstack_physics_102363": [
+  "1b/16532.txt",
+  "46/3324.txt",
+  "5c/65363.txt",
+  "65/116644.txt",
+  "75/7781.txt",
+  "c6/51198.txt",
+  "d4/59958.txt",
+  "f0/75698.txt"
+ ],
+ "beir_cqadupstack_physics_102366": [
+  "70/51844.txt",
+  "73/14056.txt"
+ ],
+ "beir_cqadupstack_physics_102370": [
+  "02/1836.txt",
+  "20/7437.txt"
+ ],
+ "beir_cqadupstack_physics_102423": [
+  "43/67118.txt"
+ ],
+ "beir_cqadupstack_physics_102477": [
+  "7e/98854.txt",
+  "ca/89402.txt"
+ ],
+ "beir_cqadupstack_physics_102517": [
+  "ff/100498.txt"
+ ],
+ "beir_cqadupstack_physics_10252": [
+  "3e/55194.txt"
+ ],
+ "beir_cqadupstack_physics_102627": [
+  "31/123198.txt",
+  "49/32011.txt",
+  "4b/128896.txt"
+ ],
+ "beir_cqadupstack_physics_102680": [
+  "f5/75471.txt"
+ ],
+ "beir_cqadupstack_physics_102719": [
+  "e8/80511.txt"
+ ],
+ "beir_cqadupstack_physics_102760": [
+  "44/106059.txt"
+ ],
+ "beir_cqadupstack_physics_102791": [
+  "60/66779.txt",
+  "73/41676.txt"
+ ],
+ "beir_cqadupstack_physics_102941": [
+  "d3/128115.txt"
+ ],
+ "beir_cqadupstack_physics_10308": [
+  "96/111765.txt"
+ ],
+ "beir_cqadupstack_physics_10311": [
+  "64/106321.txt"
+ ],
+ "beir_cqadupstack_physics_103110": [
+  "f7/123491.txt"
+ ],
+ "beir_cqadupstack_physics_103160": [
+  "1a/18705.txt"
+ ],
+ "beir_cqadupstack_physics_103448": [
+  "94/73003.txt",
+  "aa/75710.txt",
+  "d5/40763.txt"
+ ],
+ "beir_cqadupstack_physics_10362": [
+  "0f/100670.txt",
+  "22/24116.txt"
+ ],
+ "beir_cqadupstack_physics_103641": [
+  "3f/53813.txt",
+  "97/15002.txt",
+  "d0/16775.txt",
+  "fb/17425.txt"
+ ],
+ "beir_cqadupstack_physics_103670": [
+  "61/102202.txt"
+ ],
+ "beir_cqadupstack_physics_103931": [
+  "7d/52148.txt",
+  "b3/21336.txt"
+ ],
+ "beir_cqadupstack_physics_104019": [
+  "42/95609.txt"
+ ],
+ "beir_cqadupstack_physics_104144": [
+  "04/127253.txt",
+  "67/24068.txt",
+  "a8/54184.txt",
+  "c9/114133.txt",
+  "fb/59960.txt"
+ ],
+ "beir_cqadupstack_physics_104196": [
+  "52/28069.txt",
+  "c4/9333.txt"
+ ],
+ "beir_cqadupstack_physics_104237": [
+  "44/5905.txt"
+ ],
+ "beir_cqadupstack_physics_104301": [
+  "35/23760.txt",
+  "55/7041.txt"
+ ],
+ "beir_cqadupstack_physics_104302": [
+  "e8/109129.txt"
+ ],
+ "beir_cqadupstack_physics_104423": [
+  "e5/60492.txt"
+ ],
+ "beir_cqadupstack_physics_104468": [
+  "44/73450.txt"
+ ],
+ "beir_cqadupstack_physics_104513": [
+  "cb/115098.txt"
+ ],
+ "beir_cqadupstack_physics_10470": [
+  "25/111988.txt",
+  "9b/106754.txt",
+  "d0/121516.txt"
+ ],
+ "beir_cqadupstack_physics_10496": [
+  "65/66099.txt"
+ ],
+ "beir_cqadupstack_physics_105013": [
+  "ec/16474.txt"
+ ],
+ "beir_cqadupstack_physics_105071": [
+  "0f/110323.txt",
+  "ee/57857.txt",
+  "f0/2767.txt"
+ ],
+ "beir_cqadupstack_physics_1051": [
+  "c0/843.txt"
+ ],
+ "beir_cqadupstack_physics_105183": [
+  "61/61809.txt",
+  "d1/62216.txt"
+ ],
+ "beir_cqadupstack_physics_105239": [
+  "09/107808.txt",
+  "0f/132971.txt",
+  "2d/25759.txt",
+  "34/103918.txt",
+  "40/18900.txt",
+  "4c/22876.txt",
+  "83/10612.txt",
+  "8c/54701.txt",
+  "b4/107930.txt",
+  "ce/122003.txt",
+  "ce/72819.txt",
+  "f2/65361.txt",
+  "f7/62411.txt"
+ ],
+ "beir_cqadupstack_physics_105316": [
+  "68/30366.txt"
+ ],
+ "beir_cqadupstack_physics_105398": [
+  "35/38869.txt"
+ ],
+ "beir_cqadupstack_physics_105483": [
+  "78/6762.txt"
+ ],
+ "beir_cqadupstack_physics_105681": [
+  "5e/105705.txt"
+ ],
+ "beir_cqadupstack_physics_105735": [
+  "66/105761.txt"
+ ],
+ "beir_cqadupstack_physics_105833": [
+  "0d/27665.txt"
+ ],
+ "beir_cqadupstack_physics_105875": [
+  "28/52943.txt",
+  "8c/40843.txt"
+ ],
+ "beir_cqadupstack_physics_106065": [
+  "16/20919.txt"
+ ],
+ "beir_cqadupstack_physics_106078": [
+  "69/13474.txt"
+ ],
+ "beir_cqadupstack_physics_106287": [
+  "37/112250.txt",
+  "39/128271.txt",
+  "c3/2916.txt"
+ ],
+ "beir_cqadupstack_physics_106378": [
+  "93/35681.txt"
+ ],
+ "beir_cqadupstack_physics_106484": [
+  "8c/119697.txt",
+  "c2/116584.txt"
+ ],
+ "beir_cqadupstack_physics_106501": [
+  "0c/15546.txt"
+ ],
+ "beir_cqadupstack_physics_106543": [
+  "68/73962.txt",
+  "90/26427.txt"
+ ],
+ "beir_cqadupstack_physics_106652": [
+  "01/107195.txt"
+ ],
+ "beir_cqadupstack_physics_107023": [
+  "4b/94869.txt",
+  "a1/23441.txt"
+ ],
+ "beir_cqadupstack_physics_107113": [
+  "27/63149.txt"
+ ],
+ "beir_cqadupstack_physics_107546": [
+  "6c/23866.txt"
+ ],
+ "beir_cqadupstack_physics_107561": [
+  "a6/57672.txt"
+ ],
+ "beir_cqadupstack_physics_107563": [
+  "cd/107562.txt"
+ ],
+ "beir_cqadupstack_physics_107614": [
+  "86/107885.txt"
+ ],
+ "beir_cqadupstack_physics_107671": [
+  "6d/9731.txt"
+ ],
+ "beir_cqadupstack_physics_107746": [
+  "bf/29235.txt"
+ ],
+ "beir_cqadupstack_physics_107919": [
+  "0f/100911.txt"
+ ],
+ "beir_cqadupstack_physics_1080": [
+  "0b/132721.txt",
+  "1f/67285.txt",
+  "cb/133713.txt"
+ ],
+ "beir_cqadupstack_physics_108212": [
+  "79/130318.txt"
+ ],
+ "beir_cqadupstack_physics_108214": [
+  "9a/1603.txt"
+ ],
+ "beir_cqadupstack_physics_108569": [
+  "d7/36079.txt",
+  "f5/11500.txt"
+ ],
+ "beir_cqadupstack_physics_108661": [
+  "4b/15587.txt"
+ ],
+ "beir_cqadupstack_physics_10870": [
+  "1c/13958.txt"
+ ],
+ "beir_cqadupstack_physics_108924": [
+  "5e/6687.txt",
+  "b7/60499.txt"
+ ],
+ "beir_cqadupstack_physics_10895": [
+  "4b/2178.txt"
+ ],
+ "beir_cqadupstack_physics_109060": [
+  "f9/86686.txt"
+ ],
+ "beir_cqadupstack_physics_109332": [
+  "06/51279.txt",
+  "17/19869.txt",
+  "47/114362.txt",
+  "4c/19388.txt",
+  "79/88528.txt",
+  "93/45078.txt",
+  "b4/3534.txt",
+  "da/83346.txt",
+  "dd/64185.txt",
+  "e4/99583.txt",
+  "ea/55278.txt"
+ ],
+ "beir_cqadupstack_physics_109364": [
+  "94/5109.txt"
+ ],
+ "beir_cqadupstack_physics_109636": [
+  "f2/56620.txt"
+ ],
+ "beir_cqadupstack_physics_109850": [
+  "5f/26435.txt"
+ ],
+ "beir_cqadupstack_physics_109957": [
+  "58/74535.txt",
+  "9a/43813.txt"
+ ],
+ "beir_cqadupstack_physics_109982": [
+  "7d/133581.txt"
+ ],
+ "beir_cqadupstack_physics_109992": [
+  "25/83488.txt"
+ ],
+ "beir_cqadupstack_physics_110077": [
+  "10/109991.txt"
+ ],
+ "beir_cqadupstack_physics_11014": [
+  "c3/44821.txt"
+ ],
+ "beir_cqadupstack_physics_110207": [
+  "c8/98708.txt"
+ ],
+ "beir_cqadupstack_physics_110330": [
+  "75/110530.txt"
+ ],
+ "beir_cqadupstack_physics_110395": [
+  "93/931.txt"
+ ],
+ "beir_cqadupstack_physics_110401": [
+  "4b/113331.txt"
+ ],
+ "beir_cqadupstack_physics_110543": [
+  "97/13445.txt"
+ ],
+ "beir_cqadupstack_physics_110554": [
+  "02/21138.txt",
+  "52/57871.txt"
+ ],
+ "beir_cqadupstack_physics_110581": [
+  "ad/26257.txt"
+ ],
+ "beir_cqadupstack_physics_110615": [
+  "42/110744.txt"
+ ],
+ "beir_cqadupstack_physics_110669": [
+  "19/112068.txt"
+ ],
+ "beir_cqadupstack_physics_110736": [
+  "b8/118669.txt"
+ ],
+ "beir_cqadupstack_physics_111172": [
+  "88/104955.txt"
+ ],
+ "beir_cqadupstack_physics_111213": [
+  "72/56133.txt"
+ ],
+ "beir_cqadupstack_physics_111236": [
+  "c5/87239.txt"
+ ],
+ "beir_cqadupstack_physics_111382": [
+  "24/46237.txt",
+  "32/104141.txt",
+  "78/134798.txt",
+  "ce/104197.txt",
+  "d7/113574.txt",
+  "eb/101049.txt"
+ ],
+ "beir_cqadupstack_physics_111530": [
+  "0a/776.txt"
+ ],
+ "beir_cqadupstack_physics_111546": [
+  "11/127402.txt",
+  "1f/109776.txt",
+  "fa/122275.txt"
+ ],
+ "beir_cqadupstack_physics_111696": [
+  "d0/110246.txt"
+ ],
+ "beir_cqadupstack_physics_111784": [
+  "18/76354.txt",
+  "7f/123862.txt"
+ ],
+ "beir_cqadupstack_physics_111866": [
+  "bf/14082.txt"
+ ],
+ "beir_cqadupstack_physics_11188": [
+  "ce/77585.txt",
+  "e6/128378.txt"
+ ],
+ "beir_cqadupstack_physics_11194": [
+  "4a/64436.txt"
+ ],
+ "beir_cqadupstack_physics_111959": [
+  "a1/29696.txt"
+ ],
+ "beir_cqadupstack_physics_112011": [
+  "2f/102097.txt"
+ ],
+ "beir_cqadupstack_physics_112270": [
+  "fc/128218.txt"
+ ],
+ "beir_cqadupstack_physics_112406": [
+  "78/105703.txt"
+ ],
+ "beir_cqadupstack_physics_112476": [
+  "61/28547.txt"
+ ],
+ "beir_cqadupstack_physics_112629": [
+  "92/111761.txt"
+ ],
+ "beir_cqadupstack_physics_112799": [
+  "36/112118.txt"
+ ],
+ "beir_cqadupstack_physics_112820": [
+  "ba/107061.txt"
+ ],
+ "beir_cqadupstack_physics_112866": [
+  "08/113825.txt"
+ ],
+ "beir_cqadupstack_physics_11299": [
+  "13/3892.txt"
+ ],
+ "beir_cqadupstack_physics_113267": [
+  "94/131788.txt"
+ ],
+ "beir_cqadupstack_physics_113523": [
+  "0f/129034.txt"
+ ],
+ "beir_cqadupstack_physics_113527": [
+  "cd/67366.txt",
+  "e9/16326.txt",
+  "f2/118498.txt"
+ ],
+ "beir_cqadupstack_physics_113548": [
+  "ab/60614.txt"
+ ],
+ "beir_cqadupstack_physics_113647": [
+  "2b/18301.txt"
+ ],
+ "beir_cqadupstack_physics_113660": [
+  "fa/126675.txt"
+ ],
+ "beir_cqadupstack_physics_113722": [
+  "8e/116370.txt"
+ ],
+ "beir_cqadupstack_physics_113749": [
+  "04/116693.txt"
+ ],
+ "beir_cqadupstack_physics_113830": [
+  "f6/134044.txt"
+ ],
+ "beir_cqadupstack_physics_11396": [
+  "0b/95526.txt",
+  "57/44959.txt",
+  "df/105516.txt"
+ ],
+ "beir_cqadupstack_physics_113973": [
+  "04/91501.txt",
+  "d6/126154.txt",
+  "e0/95462.txt"
+ ],
+ "beir_cqadupstack_physics_113982": [
+  "72/87207.txt"
+ ],
+ "beir_cqadupstack_physics_114483": [
+  "6c/119668.txt"
+ ],
+ "beir_cqadupstack_physics_114887": [
+  "29/78558.txt",
+  "a0/69050.txt",
+  "c9/81982.txt",
+  "e2/10400.txt"
+ ],
+ "beir_cqadupstack_physics_115204": [
+  "2f/4071.txt",
+  "53/11251.txt"
+ ],
+ "beir_cqadupstack_physics_11527": [
+  "2b/24192.txt",
+  "85/128558.txt"
+ ],
+ "beir_cqadupstack_physics_11542": [
+  "10/21720.txt",
+  "a8/122190.txt",
+  "d7/46155.txt",
+  "da/78995.txt"
+ ],
+ "beir_cqadupstack_physics_11588": [
+  "10/11670.txt"
+ ],
+ "beir_cqadupstack_physics_116230": [
+  "38/90190.txt",
+  "4a/18588.txt",
+  "c7/78672.txt"
+ ],
+ "beir_cqadupstack_physics_116281": [
+  "53/126488.txt"
+ ],
+ "beir_cqadupstack_physics_116657": [
+  "f2/116632.txt"
+ ],
+ "beir_cqadupstack_physics_11673": [
+  "8f/28311.txt"
+ ],
+ "beir_cqadupstack_physics_116842": [
+  "20/69636.txt",
+  "27/66383.txt",
+  "2f/52044.txt",
+  "2f/99117.txt",
+  "30/126723.txt",
+  "3d/119217.txt",
+  "45/69812.txt",
+  "55/18446.txt",
+  "8f/2481.txt",
+  "b3/43626.txt",
+  "d3/132519.txt",
+  "e3/119067.txt",
+  "f6/81324.txt",
+  "fc/41686.txt"
+ ],
+ "beir_cqadupstack_physics_116851": [
+  "9e/128354.txt"
+ ],
+ "beir_cqadupstack_physics_11686": [
+  "22/97871.txt"
+ ],
+ "beir_cqadupstack_physics_116921": [
+  "c2/119282.txt"
+ ],
+ "beir_cqadupstack_physics_117120": [
+  "81/15249.txt"
+ ],
+ "beir_cqadupstack_physics_117205": [
+  "22/132535.txt",
+  "e3/131204.txt"
+ ],
+ "beir_cqadupstack_physics_117223": [
+  "13/130359.txt",
+  "1a/79738.txt",
+  "1d/94049.txt",
+  "2a/30658.txt",
+  "32/20289.txt",
+  "40/111189.txt"
+ ],
+ "beir_cqadupstack_physics_118717": [
+  "75/113677.txt"
+ ],
+ "beir_cqadupstack_physics_11878": [
+  "31/104364.txt",
+  "ee/77622.txt"
+ ],
+ "beir_cqadupstack_physics_118807": [
+  "b7/39442.txt"
+ ],
+ "beir_cqadupstack_physics_118900": [
+  "7a/96679.txt"
+ ],
+ "beir_cqadupstack_physics_118988": [
+  "e6/59248.txt"
+ ],
+ "beir_cqadupstack_physics_119083": [
+  "3a/113818.txt"
+ ],
+ "beir_cqadupstack_physics_119103": [
+  "10/9296.txt"
+ ],
+ "beir_cqadupstack_physics_119176": [
+  "e1/68902.txt"
+ ],
+ "beir_cqadupstack_physics_119284": [
+  "94/110305.txt"
+ ],
+ "beir_cqadupstack_physics_119441": [
+  "eb/133554.txt"
+ ],
+ "beir_cqadupstack_physics_119673": [
+  "0a/2206.txt",
+  "18/34507.txt",
+  "2b/131025.txt",
+  "4b/76665.txt",
+  "52/100864.txt",
+  "6c/3158.txt",
+  "89/7358.txt",
+  "a0/104050.txt"
+ ],
+ "beir_cqadupstack_physics_119935": [
+  "76/29094.txt"
+ ],
+ "beir_cqadupstack_physics_120107": [
+  "a4/87107.txt"
+ ],
+ "beir_cqadupstack_physics_12012": [
+  "04/1787.txt",
+  "0b/91405.txt",
+  "70/64415.txt",
+  "b1/63001.txt",
+  "b6/361.txt"
+ ],
+ "beir_cqadupstack_physics_120124": [
+  "55/26297.txt"
+ ],
+ "beir_cqadupstack_physics_120191": [
+  "fe/121203.txt"
+ ],
+ "beir_cqadupstack_physics_12046": [
+  "b8/24263.txt",
+  "bd/108783.txt",
+  "e9/109236.txt",
+  "f2/115210.txt"
+ ],
+ "beir_cqadupstack_physics_121476": [
+  "af/37952.txt"
+ ],
+ "beir_cqadupstack_physics_121536": [
+  "a4/126449.txt"
+ ],
+ "beir_cqadupstack_physics_12169": [
+  "65/29226.txt"
+ ],
+ "beir_cqadupstack_physics_1217": [
+  "37/134738.txt"
+ ],
+ "beir_cqadupstack_physics_121717": [
+  "fc/41858.txt"
+ ],
+ "beir_cqadupstack_physics_121911": [
+  "76/122063.txt"
+ ],
+ "beir_cqadupstack_physics_122413": [
+  "3c/34178.txt"
+ ],
+ "beir_cqadupstack_physics_122564": [
+  "7c/28036.txt"
+ ],
+ "beir_cqadupstack_physics_122635": [
+  "e7/70994.txt"
+ ],
+ "beir_cqadupstack_physics_122841": [
+  "c5/17335.txt"
+ ],
+ "beir_cqadupstack_physics_122941": [
+  "7b/24934.txt"
+ ],
+ "beir_cqadupstack_physics_123055": [
+  "d1/3580.txt"
+ ],
+ "beir_cqadupstack_physics_123173": [
+  "d1/123170.txt"
+ ],
+ "beir_cqadupstack_physics_123210": [
+  "0e/52719.txt",
+  "bf/12385.txt"
+ ],
+ "beir_cqadupstack_physics_123267": [
+  "af/88145.txt"
+ ],
+ "beir_cqadupstack_physics_123513": [
+  "06/54615.txt"
+ ],
+ "beir_cqadupstack_physics_123610": [
+  "e7/90995.txt"
+ ],
+ "beir_cqadupstack_physics_123743": [
+  "d9/123817.txt"
+ ],
+ "beir_cqadupstack_physics_123803": [
+  "27/28673.txt",
+  "8d/74254.txt",
+  "ac/1673.txt",
+  "b4/108626.txt",
+  "c0/128292.txt"
+ ],
+ "beir_cqadupstack_physics_123857": [
+  "f1/75338.txt"
+ ],
+ "beir_cqadupstack_physics_12463": [
+  "2c/12435.txt",
+  "c5/76716.txt"
+ ],
+ "beir_cqadupstack_physics_12557": [
+  "7d/59882.txt"
+ ],
+ "beir_cqadupstack_physics_12559": [
+  "2d/71641.txt",
+  "32/44253.txt"
+ ],
+ "beir_cqadupstack_physics_12560": [
+  "68/38594.txt"
+ ],
+ "beir_cqadupstack_physics_12589": [
+  "51/25896.txt"
+ ],
+ "beir_cqadupstack_physics_125938": [
+  "46/126013.txt"
+ ],
+ "beir_cqadupstack_physics_126264": [
+  "d4/1690.txt"
+ ],
+ "beir_cqadupstack_physics_126296": [
+  "48/126193.txt"
+ ],
+ "beir_cqadupstack_physics_126504": [
+  "bc/133008.txt"
+ ],
+ "beir_cqadupstack_physics_126610": [
+  "3f/45653.txt",
+  "4a/2095.txt",
+  "95/63306.txt",
+  "a8/63859.txt",
+  "b7/78277.txt"
+ ],
+ "beir_cqadupstack_physics_126619": [
+  "04/48502.txt",
+  "15/133216.txt",
+  "19/125962.txt",
+  "1b/14896.txt",
+  "1c/30764.txt",
+  "25/74107.txt",
+  "28/29082.txt",
+  "2b/89675.txt",
+  "39/61794.txt",
+  "3e/76917.txt",
+  "45/99885.txt",
+  "47/57442.txt",
+  "4e/94877.txt",
+  "5a/62744.txt",
+  "64/3541.txt",
+  "66/116464.txt",
+  "6e/2229.txt",
+  "82/8142.txt",
+  "9d/51733.txt",
+  "ba/51933.txt",
+  "bb/63969.txt",
+  "cc/68812.txt",
+  "da/133556.txt",
+  "dd/68600.txt",
+  "ee/131645.txt",
+  "f6/119490.txt"
+ ],
+ "beir_cqadupstack_physics_12664": [
+  "df/132499.txt"
+ ],
+ "beir_cqadupstack_physics_126691": [
+  "c8/111279.txt"
+ ],
+ "beir_cqadupstack_physics_126694": [
+  "2e/126718.txt",
+  "bf/81800.txt"
+ ],
+ "beir_cqadupstack_physics_126766": [
+  "81/134964.txt"
+ ],
+ "beir_cqadupstack_physics_126769": [
+  "88/43133.txt",
+  "d7/15970.txt",
+  "db/21288.txt"
+ ],
+ "beir_cqadupstack_physics_126921": [
+  "19/2167.txt",
+  "66/24566.txt"
+ ],
+ "beir_cqadupstack_physics_12717": [
+  "31/24461.txt"
+ ],
+ "beir_cqadupstack_physics_127408": [
+  "0c/46015.txt"
+ ],
+ "beir_cqadupstack_physics_127461": [
+  "8c/33428.txt"
+ ],
+ "beir_cqadupstack_physics_127538": [
+  "43/414.txt"
+ ],
+ "beir_cqadupstack_physics_12756": [
+  "09/81955.txt",
+  "cb/77626.txt",
+  "ef/128932.txt"
+ ],
+ "beir_cqadupstack_physics_127616": [
+  "0d/45912.txt",
+  "0e/234.txt",
+  "30/61711.txt",
+  "40/102547.txt",
+  "97/98255.txt",
+  "af/57615.txt",
+  "c0/73469.txt",
+  "f2/14457.txt",
+  "f8/14074.txt"
+ ],
+ "beir_cqadupstack_physics_127940": [
+  "9a/214.txt"
+ ],
+ "beir_cqadupstack_physics_128161": [
+  "12/107820.txt",
+  "17/66387.txt",
+  "b4/93268.txt",
+  "d3/99795.txt",
+  "df/128873.txt",
+  "f4/2230.txt"
+ ],
+ "beir_cqadupstack_physics_128196": [
+  "0c/81465.txt",
+  "24/127030.txt"
+ ],
+ "beir_cqadupstack_physics_128389": [
+  "0b/59213.txt",
+  "9e/130311.txt",
+  "d9/107907.txt"
+ ],
+ "beir_cqadupstack_physics_128702": [
+  "db/14695.txt"
+ ],
+ "beir_cqadupstack_physics_128875": [
+  "5f/128879.txt"
+ ],
+ "beir_cqadupstack_physics_128891": [
+  "a9/32269.txt"
+ ],
+ "beir_cqadupstack_physics_129030": [
+  "34/134105.txt",
+  "5d/95023.txt"
+ ],
+ "beir_cqadupstack_physics_129137": [
+  "41/19405.txt"
+ ],
+ "beir_cqadupstack_physics_129206": [
+  "05/123525.txt"
+ ],
+ "beir_cqadupstack_physics_129314": [
+  "62/92805.txt"
+ ],
+ "beir_cqadupstack_physics_129340": [
+  "ae/96045.txt"
+ ],
+ "beir_cqadupstack_physics_129350": [
+  "b3/56070.txt"
+ ],
+ "beir_cqadupstack_physics_129378": [
+  "45/17082.txt",
+  "64/77322.txt",
+  "80/2838.txt",
+  "ab/134904.txt",
+  "b1/133856.txt",
+  "cf/107918.txt",
+  "f9/48120.txt",
+  "fe/65695.txt"
+ ],
+ "beir_cqadupstack_physics_129408": [
+  "27/127760.txt"
+ ],
+ "beir_cqadupstack_physics_129593": [
+  "a7/96007.txt"
+ ],
+ "beir_cqadupstack_physics_129654": [
+  "f2/129613.txt"
+ ],
+ "beir_cqadupstack_physics_129715": [
+  "0b/28165.txt"
+ ],
+ "beir_cqadupstack_physics_12995": [
+  "0b/12996.txt"
+ ],
+ "beir_cqadupstack_physics_129991": [
+  "4b/83531.txt"
+ ],
+ "beir_cqadupstack_physics_130116": [
+  "bd/132357.txt"
+ ],
+ "beir_cqadupstack_physics_130171": [
+  "ad/43707.txt"
+ ],
+ "beir_cqadupstack_physics_13020": [
+  "41/34125.txt"
+ ],
+ "beir_cqadupstack_physics_13030": [
+  "38/102789.txt"
+ ],
+ "beir_cqadupstack_physics_130509": [
+  "d1/62470.txt"
+ ],
+ "beir_cqadupstack_physics_130676": [
+  "01/106605.txt",
+  "58/123337.txt",
+  "61/109535.txt",
+  "6f/118756.txt",
+  "89/57199.txt",
+  "bd/75693.txt",
+  "ee/72847.txt"
+ ],
+ "beir_cqadupstack_physics_130686": [
+  "1c/65335.txt",
+  "2a/75082.txt",
+  "5c/110805.txt",
+  "87/51346.txt",
+  "ab/87818.txt"
+ ],
+ "beir_cqadupstack_physics_130767": [
+  "9f/65878.txt",
+  "9f/90350.txt",
+  "a2/27794.txt",
+  "b7/66602.txt",
+  "c6/55393.txt",
+  "d7/54516.txt",
+  "ea/54162.txt"
+ ],
+ "beir_cqadupstack_physics_130773": [
+  "aa/105256.txt"
+ ],
+ "beir_cqadupstack_physics_130936": [
+  "0f/72588.txt",
+  "46/68381.txt"
+ ],
+ "beir_cqadupstack_physics_130985": [
+  "32/131038.txt"
+ ],
+ "beir_cqadupstack_physics_130999": [
+  "5e/114748.txt",
+  "75/116425.txt"
+ ],
+ "beir_cqadupstack_physics_131352": [
+  "42/51332.txt"
+ ],
+ "beir_cqadupstack_physics_131364": [
+  "07/19285.txt",
+  "e6/88486.txt"
+ ],
+ "beir_cqadupstack_physics_131505": [
+  "04/80365.txt",
+  "12/81243.txt",
+  "41/91442.txt",
+  "49/1557.txt",
+  "6b/120067.txt",
+  "7d/34134.txt",
+  "80/108575.txt"
+ ],
+ "beir_cqadupstack_physics_13157": [
+  "2b/128490.txt",
+  "a0/31457.txt",
+  "b5/30517.txt"
+ ],
+ "beir_cqadupstack_physics_1317": [
+  "c9/130437.txt"
+ ],
+ "beir_cqadupstack_physics_131758": [
+  "a7/46946.txt",
+  "c0/126912.txt"
+ ],
+ "beir_cqadupstack_physics_132043": [
+  "59/45255.txt"
+ ],
+ "beir_cqadupstack_physics_132058": [
+  "30/3119.txt",
+  "67/63974.txt",
+  "7b/107097.txt",
+  "a1/2774.txt"
+ ],
+ "beir_cqadupstack_physics_13220": [
+  "43/6646.txt",
+  "4e/107193.txt",
+  "86/14270.txt",
+  "a7/8107.txt",
+  "c1/10852.txt"
+ ],
+ "beir_cqadupstack_physics_132440": [
+  "87/46673.txt"
+ ],
+ "beir_cqadupstack_physics_132449": [
+  "a9/20234.txt",
+  "ab/14079.txt",
+  "c9/82172.txt",
+  "e4/506.txt"
+ ],
+ "beir_cqadupstack_physics_132602": [
+  "8b/132695.txt"
+ ],
+ "beir_cqadupstack_physics_132788": [
+  "75/89708.txt"
+ ],
+ "beir_cqadupstack_physics_132988": [
+  "9e/53321.txt",
+  "ce/6202.txt"
+ ],
+ "beir_cqadupstack_physics_133093": [
+  "2d/106203.txt"
+ ],
+ "beir_cqadupstack_physics_133096": [
+  "00/19012.txt",
+  "08/2110.txt",
+  "13/70832.txt",
+  "1c/127848.txt",
+  "1f/29498.txt",
+  "2e/111456.txt",
+  "30/24324.txt",
+  "54/56651.txt",
+  "55/110684.txt",
+  "58/37569.txt",
+  "5f/2982.txt",
+  "63/31117.txt",
+  "69/131224.txt",
+  "77/1801.txt",
+  "78/32953.txt",
+  "80/123061.txt",
+  "8a/99528.txt",
+  "b1/130842.txt",
+  "c2/129304.txt",
+  "d7/3660.txt",
+  "de/131800.txt",
+  "ed/134149.txt",
+  "f1/3518.txt",
+  "f2/95005.txt"
+ ],
+ "beir_cqadupstack_physics_133230": [
+  "7e/133238.txt"
+ ],
+ "beir_cqadupstack_physics_13325": [
+  "4f/16250.txt"
+ ],
+ "beir_cqadupstack_physics_133431": [
+  "40/30154.txt"
+ ],
+ "beir_cqadupstack_physics_133488": [
+  "d6/95010.txt"
+ ],
+ "beir_cqadupstack_physics_13349": [
+  "a9/10021.txt"
+ ],
+ "beir_cqadupstack_physics_133564": [
+  "2b/122408.txt",
+  "a4/133834.txt",
+  "c0/90760.txt",
+  "c6/43592.txt"
+ ],
+ "beir_cqadupstack_physics_133703": [
+  "4b/133033.txt"
+ ],
+ "beir_cqadupstack_physics_133707": [
+  "b3/134372.txt"
+ ],
+ "beir_cqadupstack_physics_133714": [
+  "38/16339.txt"
+ ],
+ "beir_cqadupstack_physics_133820": [
+  "5d/19670.txt"
+ ],
+ "beir_cqadupstack_physics_133829": [
+  "a3/133983.txt"
+ ],
+ "beir_cqadupstack_physics_133876": [
+  "a8/62416.txt"
+ ],
+ "beir_cqadupstack_physics_13388": [
+  "c7/57288.txt"
+ ],
+ "beir_cqadupstack_physics_133924": [
+  "37/118652.txt",
+  "4a/96611.txt",
+  "52/99636.txt",
+  "66/8219.txt",
+  "78/7346.txt",
+  "92/67549.txt",
+  "96/103610.txt"
+ ],
+ "beir_cqadupstack_physics_133942": [
+  "00/91149.txt",
+  "97/132613.txt"
+ ],
+ "beir_cqadupstack_physics_134081": [
+  "12/65646.txt",
+  "3d/115001.txt",
+  "e3/108230.txt"
+ ],
+ "beir_cqadupstack_physics_134127": [
+  "d1/79787.txt"
+ ],
+ "beir_cqadupstack_physics_134157": [
+  "5d/103820.txt",
+  "98/47417.txt",
+  "9a/67647.txt",
+  "c3/78119.txt"
+ ],
+ "beir_cqadupstack_physics_134199": [
+  "01/103208.txt",
+  "0e/69604.txt"
+ ],
+ "beir_cqadupstack_physics_1343": [
+  "fc/81085.txt"
+ ],
+ "beir_cqadupstack_physics_134356": [
+  "09/112038.txt",
+  "c3/34024.txt"
+ ],
+ "beir_cqadupstack_physics_134370": [
+  "96/95538.txt"
+ ],
+ "beir_cqadupstack_physics_134378": [
+  "ea/121775.txt"
+ ],
+ "beir_cqadupstack_physics_134559": [
+  "dd/81191.txt"
+ ],
+ "beir_cqadupstack_physics_134809": [
+  "10/134147.txt"
+ ],
+ "beir_cqadupstack_physics_134979": [
+  "04/47193.txt",
+  "17/78975.txt",
+  "87/48447.txt"
+ ],
+ "beir_cqadupstack_physics_134987": [
+  "5d/134969.txt"
+ ],
+ "beir_cqadupstack_physics_135007": [
+  "c6/26877.txt"
+ ],
+ "beir_cqadupstack_physics_135096": [
+  "69/135016.txt"
+ ],
+ "beir_cqadupstack_physics_135115": [
+  "7e/129566.txt"
+ ],
+ "beir_cqadupstack_physics_135145": [
+  "34/135140.txt"
+ ],
+ "beir_cqadupstack_physics_135377": [
+  "08/135347.txt"
+ ],
+ "beir_cqadupstack_physics_135382": [
+  "50/135379.txt"
+ ],
+ "beir_cqadupstack_physics_13557": [
+  "0e/74683.txt",
+  "86/78317.txt"
+ ],
+ "beir_cqadupstack_physics_13624": [
+  "9c/14855.txt"
+ ],
+ "beir_cqadupstack_physics_1372": [
+  "7f/29445.txt"
+ ],
+ "beir_cqadupstack_physics_13851": [
+  "70/68111.txt"
+ ],
+ "beir_cqadupstack_physics_13917": [
+  "39/52659.txt"
+ ],
+ "beir_cqadupstack_physics_14044": [
+  "bb/17137.txt"
+ ],
+ "beir_cqadupstack_physics_14142": [
+  "5d/3081.txt"
+ ],
+ "beir_cqadupstack_physics_14255": [
+  "20/11394.txt"
+ ],
+ "beir_cqadupstack_physics_14362": [
+  "cf/19900.txt"
+ ],
+ "beir_cqadupstack_physics_1442": [
+  "46/112518.txt"
+ ],
+ "beir_cqadupstack_physics_14436": [
+  "72/44647.txt"
+ ],
+ "beir_cqadupstack_physics_147": [
+  "93/55560.txt"
+ ],
+ "beir_cqadupstack_physics_14760": [
+  "93/13170.txt"
+ ],
+ "beir_cqadupstack_physics_14791": [
+  "6d/27775.txt"
+ ],
+ "beir_cqadupstack_physics_14865": [
+  "8e/86051.txt"
+ ],
+ "beir_cqadupstack_physics_15055": [
+  "03/69317.txt",
+  "14/64616.txt",
+  "1a/37749.txt",
+  "8f/93600.txt",
+  "ba/1077.txt",
+  "bb/71846.txt",
+  "e5/90347.txt",
+  "e9/23797.txt"
+ ],
+ "beir_cqadupstack_physics_15263": [
+  "c5/17175.txt"
+ ],
+ "beir_cqadupstack_physics_156": [
+  "39/129446.txt"
+ ],
+ "beir_cqadupstack_physics_15640": [
+  "b7/129218.txt"
+ ],
+ "beir_cqadupstack_physics_15684": [
+  "ea/88649.txt"
+ ],
+ "beir_cqadupstack_physics_15855": [
+  "92/70178.txt",
+  "94/48421.txt"
+ ],
+ "beir_cqadupstack_physics_1601": [
+  "37/55273.txt"
+ ],
+ "beir_cqadupstack_physics_16020": [
+  "30/27909.txt"
+ ],
+ "beir_cqadupstack_physics_16082": [
+  "24/16081.txt"
+ ],
+ "beir_cqadupstack_physics_16206": [
+  "8a/54415.txt"
+ ],
+ "beir_cqadupstack_physics_16305": [
+  "9e/10670.txt"
+ ],
+ "beir_cqadupstack_physics_16415": [
+  "d0/16408.txt"
+ ],
+ "beir_cqadupstack_physics_16596": [
+  "23/20155.txt"
+ ],
+ "beir_cqadupstack_physics_16620": [
+  "9e/103986.txt"
+ ],
+ "beir_cqadupstack_physics_16626": [
+  "21/19354.txt"
+ ],
+ "beir_cqadupstack_physics_16708": [
+  "4d/131102.txt",
+  "b0/20761.txt",
+  "dd/105603.txt"
+ ],
+ "beir_cqadupstack_physics_16725": [
+  "ca/27159.txt"
+ ],
+ "beir_cqadupstack_physics_16755": [
+  "e6/127515.txt"
+ ],
+ "beir_cqadupstack_physics_1683": [
+  "58/70766.txt"
+ ],
+ "beir_cqadupstack_physics_1686": [
+  "57/14897.txt",
+  "aa/93470.txt",
+  "c7/91974.txt",
+  "f7/98387.txt"
+ ],
+ "beir_cqadupstack_physics_16885": [
+  "7c/69303.txt"
+ ],
+ "beir_cqadupstack_physics_17034": [
+  "c8/69718.txt"
+ ],
+ "beir_cqadupstack_physics_17259": [
+  "01/106718.txt",
+  "04/2272.txt",
+  "04/40968.txt",
+  "0a/107798.txt",
+  "29/46553.txt",
+  "2b/118472.txt",
+  "30/12736.txt",
+  "34/21122.txt",
+  "36/103729.txt",
+  "39/72598.txt",
+  "3a/51646.txt",
+  "3c/74029.txt",
+  "41/114798.txt",
+  "41/55731.txt",
+  "45/106535.txt",
+  "4d/13297.txt",
+  "4e/60790.txt",
+  "4f/102106.txt",
+  "51/30497.txt",
+  "52/69839.txt",
+  "63/68746.txt",
+  "67/2175.txt",
+  "6d/134446.txt",
+  "6f/112666.txt",
+  "80/80442.txt",
+  "89/14390.txt",
+  "8b/26742.txt",
+  "8d/111067.txt",
+  "94/23466.txt",
+  "be/108836.txt",
+  "c4/87835.txt",
+  "d3/19873.txt",
+  "e2/56319.txt",
+  "e4/5456.txt",
+  "e7/13952.txt",
+  "f1/116333.txt",
+  "f3/66632.txt"
+ ],
+ "beir_cqadupstack_physics_17408": [
+  "29/112903.txt"
+ ],
+ "beir_cqadupstack_physics_1775": [
+  "17/92238.txt",
+  "37/134766.txt",
+  "3d/30624.txt",
+  "5a/46397.txt"
+ ],
+ "beir_cqadupstack_physics_17944": [
+  "c5/126497.txt"
+ ],
+ "beir_cqadupstack_physics_18028": [
+  "01/17650.txt"
+ ],
+ "beir_cqadupstack_physics_18148": [
+  "62/20562.txt"
+ ],
+ "beir_cqadupstack_physics_18170": [
+  "af/26936.txt"
+ ],
+ "beir_cqadupstack_physics_18473": [
+  "be/55976.txt",
+  "e7/54874.txt"
+ ],
+ "beir_cqadupstack_physics_18563": [
+  "6a/62588.txt"
+ ],
+ "beir_cqadupstack_physics_18602": [
+  "42/9857.txt",
+  "4e/51374.txt",
+  "76/111307.txt",
+  "fe/128335.txt"
+ ],
+ "beir_cqadupstack_physics_18662": [
+  "81/5979.txt"
+ ],
+ "beir_cqadupstack_physics_18670": [
+  "aa/103165.txt"
+ ],
+ "beir_cqadupstack_physics_18691": [
+  "ac/26933.txt"
+ ],
+ "beir_cqadupstack_physics_18793": [
+  "13/135369.txt"
+ ],
+ "beir_cqadupstack_physics_1888": [
+  "7a/14378.txt"
+ ],
+ "beir_cqadupstack_physics_19043": [
+  "17/102859.txt",
+  "40/57543.txt"
+ ],
+ "beir_cqadupstack_physics_1915": [
+  "61/37729.txt"
+ ],
+ "beir_cqadupstack_physics_19262": [
+  "0e/16814.txt",
+  "47/129479.txt",
+  "5c/5014.txt",
+  "61/53237.txt",
+  "a3/93955.txt",
+  "dc/114415.txt",
+  "e4/38735.txt",
+  "ed/22409.txt"
+ ],
+ "beir_cqadupstack_physics_193": [
+  "07/91301.txt",
+  "21/99883.txt",
+  "47/89736.txt",
+  "4e/30791.txt",
+  "5b/75708.txt",
+  "79/78045.txt",
+  "7b/27056.txt",
+  "7e/53950.txt",
+  "bf/74000.txt",
+  "c9/91888.txt",
+  "d6/24479.txt",
+  "dc/133959.txt",
+  "ec/117195.txt"
+ ],
+ "beir_cqadupstack_physics_19370": [
+  "23/123127.txt"
+ ],
+ "beir_cqadupstack_physics_19417": [
+  "cf/66243.txt"
+ ],
+ "beir_cqadupstack_physics_19536": [
+  "9b/34147.txt"
+ ],
+ "beir_cqadupstack_physics_19548": [
+  "41/19552.txt"
+ ],
+ "beir_cqadupstack_physics_1957": [
+  "90/40738.txt"
+ ],
+ "beir_cqadupstack_physics_19632": [
+  "54/41680.txt",
+  "d8/135199.txt"
+ ],
+ "beir_cqadupstack_physics_198": [
+  "d8/2489.txt"
+ ],
+ "beir_cqadupstack_physics_19802": [
+  "22/19761.txt"
+ ],
+ "beir_cqadupstack_physics_19816": [
+  "3e/129921.txt"
+ ],
+ "beir_cqadupstack_physics_1982": [
+  "b3/75711.txt"
+ ],
+ "beir_cqadupstack_physics_1984": [
+  "25/9089.txt",
+  "52/101967.txt",
+  "75/128425.txt",
+  "76/108602.txt",
+  "a5/125957.txt",
+  "ca/85991.txt",
+  "d7/23250.txt"
+ ],
+ "beir_cqadupstack_physics_19970": [
+  "77/30978.txt"
+ ],
+ "beir_cqadupstack_physics_20056": [
+  "8f/54529.txt"
+ ],
+ "beir_cqadupstack_physics_20303": [
+  "ba/7470.txt"
+ ],
+ "beir_cqadupstack_physics_20333": [
+  "4c/23787.txt",
+  "7e/76232.txt",
+  "80/22256.txt"
+ ],
+ "beir_cqadupstack_physics_2041": [
+  "94/6428.txt"
+ ],
+ "beir_cqadupstack_physics_20460": [
+  "1f/93333.txt"
+ ],
+ "beir_cqadupstack_physics_2051": [
+  "4a/68294.txt"
+ ],
+ "beir_cqadupstack_physics_2056": [
+  "44/2023.txt"
+ ],
+ "beir_cqadupstack_physics_20637": [
+  "c3/21715.txt"
+ ],
+ "beir_cqadupstack_physics_2066": [
+  "1b/30538.txt"
+ ],
+ "beir_cqadupstack_physics_20675": [
+  "1a/20734.txt"
+ ],
+ "beir_cqadupstack_physics_20744": [
+  "7d/9098.txt"
+ ],
+ "beir_cqadupstack_physics_21051": [
+  "00/70456.txt",
+  "70/34173.txt",
+  "f7/80163.txt"
+ ],
+ "beir_cqadupstack_physics_21194": [
+  "57/14235.txt"
+ ],
+ "beir_cqadupstack_physics_21301": [
+  "d1/66297.txt"
+ ],
+ "beir_cqadupstack_physics_21319": [
+  "1a/48086.txt",
+  "59/63036.txt",
+  "85/48074.txt",
+  "fc/47669.txt"
+ ],
+ "beir_cqadupstack_physics_21384": [
+  "ce/19165.txt"
+ ],
+ "beir_cqadupstack_physics_21487": [
+  "2c/108502.txt",
+  "74/82143.txt",
+  "79/45578.txt",
+  "f7/16484.txt"
+ ],
+ "beir_cqadupstack_physics_21654": [
+  "35/21966.txt"
+ ],
+ "beir_cqadupstack_physics_21721": [
+  "dc/127921.txt"
+ ],
+ "beir_cqadupstack_physics_21771": [
+  "68/92535.txt",
+  "f5/118941.txt"
+ ],
+ "beir_cqadupstack_physics_22010": [
+  "d6/127193.txt"
+ ],
+ "beir_cqadupstack_physics_22046": [
+  "63/103712.txt",
+  "c9/43137.txt",
+  "e2/54675.txt"
+ ],
+ "beir_cqadupstack_physics_22252": [
+  "30/98728.txt"
+ ],
+ "beir_cqadupstack_physics_22404": [
+  "85/12599.txt"
+ ],
+ "beir_cqadupstack_physics_2254": [
+  "18/3859.txt",
+  "ac/128347.txt"
+ ],
+ "beir_cqadupstack_physics_22542": [
+  "08/104800.txt",
+  "ed/29327.txt"
+ ],
+ "beir_cqadupstack_physics_22566": [
+  "5b/8133.txt"
+ ],
+ "beir_cqadupstack_physics_22713": [
+  "af/94481.txt"
+ ],
+ "beir_cqadupstack_physics_22803": [
+  "ce/114188.txt"
+ ],
+ "beir_cqadupstack_physics_2281": [
+  "ea/129855.txt"
+ ],
+ "beir_cqadupstack_physics_2289": [
+  "7f/78486.txt"
+ ],
+ "beir_cqadupstack_physics_22923": [
+  "c1/35833.txt"
+ ],
+ "beir_cqadupstack_physics_22960": [
+  "05/100768.txt",
+  "33/94210.txt",
+  "52/53475.txt"
+ ],
+ "beir_cqadupstack_physics_23007": [
+  "90/131657.txt"
+ ],
+ "beir_cqadupstack_physics_23038": [
+  "39/29596.txt"
+ ],
+ "beir_cqadupstack_physics_23118": [
+  "fd/111814.txt"
+ ],
+ "beir_cqadupstack_physics_23358": [
+  "95/82048.txt"
+ ],
+ "beir_cqadupstack_physics_23487": [
+  "b3/96013.txt"
+ ],
+ "beir_cqadupstack_physics_23625": [
+  "1e/90865.txt",
+  "e6/47619.txt"
+ ],
+ "beir_cqadupstack_physics_23753": [
+  "e5/27734.txt"
+ ],
+ "beir_cqadupstack_physics_23879": [
+  "7f/83020.txt"
+ ],
+ "beir_cqadupstack_physics_23930": [
+  "59/118799.txt",
+  "93/55318.txt"
+ ],
+ "beir_cqadupstack_physics_24131": [
+  "0d/11492.txt",
+  "dc/759.txt"
+ ],
+ "beir_cqadupstack_physics_24231": [
+  "08/29340.txt",
+  "0e/14996.txt",
+  "4a/14968.txt",
+  "4a/17197.txt",
+  "4b/107848.txt",
+  "66/14979.txt",
+  "88/14973.txt",
+  "c9/15010.txt",
+  "cb/15053.txt",
+  "d2/131442.txt"
+ ],
+ "beir_cqadupstack_physics_24359": [
+  "4b/86335.txt"
+ ],
+ "beir_cqadupstack_physics_24540": [
+  "c0/4972.txt"
+ ],
+ "beir_cqadupstack_physics_24588": [
+  "bb/62361.txt",
+  "c8/26728.txt"
+ ],
+ "beir_cqadupstack_physics_24596": [
+  "ab/123060.txt"
+ ],
+ "beir_cqadupstack_physics_24827": [
+  "76/16781.txt"
+ ],
+ "beir_cqadupstack_physics_24841": [
+  "13/118665.txt",
+  "27/10933.txt",
+  "27/70150.txt",
+  "2f/99572.txt",
+  "50/86109.txt",
+  "a4/68953.txt",
+  "b5/11185.txt",
+  "ca/74007.txt",
+  "d0/55444.txt",
+  "de/102856.txt"
+ ],
+ "beir_cqadupstack_physics_25110": [
+  "86/134336.txt"
+ ],
+ "beir_cqadupstack_physics_25145": [
+  "02/78624.txt"
+ ],
+ "beir_cqadupstack_physics_252": [
+  "12/67278.txt"
+ ],
+ "beir_cqadupstack_physics_25378": [
+  "d5/35443.txt"
+ ],
+ "beir_cqadupstack_physics_25437": [
+  "53/60948.txt",
+  "a6/121986.txt",
+  "b6/4116.txt"
+ ],
+ "beir_cqadupstack_physics_2554": [
+  "18/132594.txt",
+  "20/123411.txt",
+  "3a/77238.txt",
+  "40/123106.txt",
+  "5f/123111.txt",
+  "f0/93461.txt"
+ ],
+ "beir_cqadupstack_physics_25637": [
+  "12/106361.txt"
+ ],
+ "beir_cqadupstack_physics_25883": [
+  "31/25070.txt"
+ ],
+ "beir_cqadupstack_physics_26066": [
+  "b9/21360.txt"
+ ],
+ "beir_cqadupstack_physics_26307": [
+  "73/14212.txt"
+ ],
+ "beir_cqadupstack_physics_26478": [
+  "89/57010.txt"
+ ],
+ "beir_cqadupstack_physics_2684": [
+  "02/26408.txt",
+  "3b/58094.txt",
+  "8f/57868.txt"
+ ],
+ "beir_cqadupstack_physics_26845": [
+  "44/67986.txt"
+ ],
+ "beir_cqadupstack_physics_2687": [
+  "73/14785.txt",
+  "a7/14782.txt"
+ ],
+ "beir_cqadupstack_physics_26992": [
+  "45/22159.txt"
+ ],
+ "beir_cqadupstack_physics_27041": [
+  "82/16080.txt"
+ ],
+ "beir_cqadupstack_physics_27078": [
+  "60/13465.txt"
+ ],
+ "beir_cqadupstack_physics_271": [
+  "89/134680.txt"
+ ],
+ "beir_cqadupstack_physics_2721": [
+  "87/106760.txt"
+ ],
+ "beir_cqadupstack_physics_27326": [
+  "ee/17850.txt"
+ ],
+ "beir_cqadupstack_physics_27423": [
+  "90/20773.txt"
+ ],
+ "beir_cqadupstack_physics_27496": [
+  "b5/22120.txt"
+ ],
+ "beir_cqadupstack_physics_27641": [
+  "88/38930.txt"
+ ],
+ "beir_cqadupstack_physics_27753": [
+  "0d/24042.txt"
+ ],
+ "beir_cqadupstack_physics_27847": [
+  "89/35987.txt"
+ ],
+ "beir_cqadupstack_physics_28093": [
+  "df/99888.txt"
+ ],
+ "beir_cqadupstack_physics_28094": [
+  "00/14700.txt"
+ ],
+ "beir_cqadupstack_physics_28174": [
+  "67/121883.txt"
+ ],
+ "beir_cqadupstack_physics_28417": [
+  "c6/28536.txt"
+ ],
+ "beir_cqadupstack_physics_28527": [
+  "8d/28519.txt",
+  "c7/30153.txt"
+ ],
+ "beir_cqadupstack_physics_2860": [
+  "cf/74190.txt"
+ ],
+ "beir_cqadupstack_physics_28647": [
+  "59/28228.txt"
+ ],
+ "beir_cqadupstack_physics_28699": [
+  "93/65145.txt"
+ ],
+ "beir_cqadupstack_physics_28720": [
+  "30/62003.txt",
+  "34/98131.txt",
+  "c1/92492.txt"
+ ],
+ "beir_cqadupstack_physics_28781": [
+  "fa/31256.txt"
+ ],
+ "beir_cqadupstack_physics_28895": [
+  "07/17.txt",
+  "25/65521.txt",
+  "bc/40875.txt"
+ ],
+ "beir_cqadupstack_physics_28929": [
+  "d9/22700.txt"
+ ],
+ "beir_cqadupstack_physics_29176": [
+  "f6/11287.txt"
+ ],
+ "beir_cqadupstack_physics_29200": [
+  "76/35572.txt"
+ ],
+ "beir_cqadupstack_physics_29208": [
+  "5b/26464.txt",
+  "e4/73705.txt"
+ ],
+ "beir_cqadupstack_physics_29355": [
+  "0c/113410.txt"
+ ],
+ "beir_cqadupstack_physics_29477": [
+  "b7/29805.txt"
+ ],
+ "beir_cqadupstack_physics_29523": [
+  "63/29517.txt"
+ ],
+ "beir_cqadupstack_physics_29642": [
+  "eb/78.txt"
+ ],
+ "beir_cqadupstack_physics_2974": [
+  "8c/31162.txt"
+ ],
+ "beir_cqadupstack_physics_29766": [
+  "82/46643.txt",
+  "98/104294.txt"
+ ],
+ "beir_cqadupstack_physics_29794": [
+  "e6/35339.txt"
+ ],
+ "beir_cqadupstack_physics_29901": [
+  "2f/2166.txt",
+  "53/41507.txt",
+  "74/86111.txt",
+  "7a/29487.txt",
+  "8b/7823.txt",
+  "b3/56135.txt",
+  "b7/20599.txt",
+  "fd/74181.txt"
+ ],
+ "beir_cqadupstack_physics_29903": [
+  "18/41576.txt"
+ ],
+ "beir_cqadupstack_physics_29956": [
+  "84/30295.txt"
+ ],
+ "beir_cqadupstack_physics_3009": [
+  "08/71817.txt",
+  "44/60726.txt"
+ ],
+ "beir_cqadupstack_physics_30134": [
+  "02/64623.txt",
+  "1b/24001.txt",
+  "31/129730.txt",
+  "4f/68717.txt",
+  "ae/119732.txt",
+  "ef/122602.txt"
+ ],
+ "beir_cqadupstack_physics_30198": [
+  "9c/66856.txt"
+ ],
+ "beir_cqadupstack_physics_30353": [
+  "bc/96374.txt"
+ ],
+ "beir_cqadupstack_physics_30597": [
+  "bc/106882.txt",
+  "bd/111052.txt",
+  "e2/97889.txt",
+  "f4/110026.txt"
+ ],
+ "beir_cqadupstack_physics_30616": [
+  "93/24832.txt"
+ ],
+ "beir_cqadupstack_physics_30732": [
+  "1e/31374.txt",
+  "2b/56647.txt",
+  "f2/123377.txt"
+ ],
+ "beir_cqadupstack_physics_30909": [
+  "02/126814.txt"
+ ],
+ "beir_cqadupstack_physics_30922": [
+  "95/105758.txt"
+ ],
+ "beir_cqadupstack_physics_31029": [
+  "9d/88507.txt"
+ ],
+ "beir_cqadupstack_physics_31039": [
+  "5f/33916.txt"
+ ],
+ "beir_cqadupstack_physics_312": [
+  "73/1267.txt"
+ ],
+ "beir_cqadupstack_physics_31326": [
+  "c4/113583.txt"
+ ],
+ "beir_cqadupstack_physics_31387": [
+  "30/92091.txt",
+  "3c/130199.txt",
+  "40/93722.txt",
+  "67/11197.txt",
+  "87/32498.txt",
+  "d0/24404.txt"
+ ],
+ "beir_cqadupstack_physics_31395": [
+  "af/33334.txt"
+ ],
+ "beir_cqadupstack_physics_31827": [
+  "d8/126773.txt"
+ ],
+ "beir_cqadupstack_physics_31869": [
+  "2a/24548.txt"
+ ],
+ "beir_cqadupstack_physics_31950": [
+  "a8/31247.txt"
+ ],
+ "beir_cqadupstack_physics_32096": [
+  "fe/62155.txt"
+ ],
+ "beir_cqadupstack_physics_32120": [
+  "c8/39421.txt"
+ ],
+ "beir_cqadupstack_physics_32122": [
+  "02/131986.txt",
+  "ba/78261.txt",
+  "da/71722.txt",
+  "fb/46599.txt"
+ ],
+ "beir_cqadupstack_physics_3244": [
+  "9f/21041.txt",
+  "aa/8918.txt",
+  "cf/96051.txt",
+  "d9/69122.txt"
+ ],
+ "beir_cqadupstack_physics_32501": [
+  "71/81945.txt"
+ ],
+ "beir_cqadupstack_physics_3264": [
+  "00/102006.txt"
+ ],
+ "beir_cqadupstack_physics_32699": [
+  "b4/43234.txt"
+ ],
+ "beir_cqadupstack_physics_33258": [
+  "19/68833.txt"
+ ],
+ "beir_cqadupstack_physics_335": [
+  "84/47617.txt",
+  "ec/80926.txt"
+ ],
+ "beir_cqadupstack_physics_33507": [
+  "0f/105209.txt",
+  "69/20822.txt"
+ ],
+ "beir_cqadupstack_physics_33621": [
+  "49/104664.txt",
+  "a4/80331.txt",
+  "c2/5670.txt"
+ ],
+ "beir_cqadupstack_physics_33822": [
+  "ea/679.txt"
+ ],
+ "beir_cqadupstack_physics_33998": [
+  "80/21753.txt",
+  "88/95512.txt"
+ ],
+ "beir_cqadupstack_physics_34130": [
+  "57/43048.txt"
+ ],
+ "beir_cqadupstack_physics_34352": [
+  "56/119015.txt"
+ ],
+ "beir_cqadupstack_physics_34364": [
+  "8a/41038.txt",
+  "e2/31475.txt"
+ ],
+ "beir_cqadupstack_physics_34366": [
+  "c0/104952.txt"
+ ],
+ "beir_cqadupstack_physics_34500": [
+  "02/45999.txt",
+  "0d/130172.txt",
+  "48/69095.txt",
+  "49/129546.txt",
+  "63/63970.txt",
+  "78/130979.txt",
+  "78/937.txt",
+  "8b/41930.txt"
+ ],
+ "beir_cqadupstack_physics_34689": [
+  "38/103444.txt"
+ ],
+ "beir_cqadupstack_physics_34834": [
+  "6f/106876.txt"
+ ],
+ "beir_cqadupstack_physics_35139": [
+  "9a/105973.txt"
+ ],
+ "beir_cqadupstack_physics_3521": [
+  "29/131462.txt"
+ ],
+ "beir_cqadupstack_physics_35218": [
+  "9f/39031.txt"
+ ],
+ "beir_cqadupstack_physics_35313": [
+  "f7/1639.txt"
+ ],
+ "beir_cqadupstack_physics_35645": [
+  "82/34203.txt"
+ ],
+ "beir_cqadupstack_physics_35660": [
+  "04/60639.txt"
+ ],
+ "beir_cqadupstack_physics_357": [
+  "e1/72272.txt"
+ ],
+ "beir_cqadupstack_physics_35781": [
+  "10/38627.txt"
+ ],
+ "beir_cqadupstack_physics_36146": [
+  "ec/36131.txt"
+ ],
+ "beir_cqadupstack_physics_36167": [
+  "e5/69984.txt"
+ ],
+ "beir_cqadupstack_physics_36303": [
+  "05/78481.txt",
+  "3b/38945.txt"
+ ],
+ "beir_cqadupstack_physics_36412": [
+  "0e/2952.txt"
+ ],
+ "beir_cqadupstack_physics_36440": [
+  "07/89803.txt",
+  "a5/51418.txt",
+  "cd/64908.txt"
+ ],
+ "beir_cqadupstack_physics_36498": [
+  "a2/114829.txt"
+ ],
+ "beir_cqadupstack_physics_3656": [
+  "35/29167.txt"
+ ],
+ "beir_cqadupstack_physics_37702": [
+  "59/13611.txt",
+  "74/55856.txt",
+  "9e/78960.txt"
+ ],
+ "beir_cqadupstack_physics_37730": [
+  "71/67107.txt"
+ ],
+ "beir_cqadupstack_physics_37772": [
+  "51/126510.txt"
+ ],
+ "beir_cqadupstack_physics_37881": [
+  "27/86821.txt"
+ ],
+ "beir_cqadupstack_physics_3795": [
+  "75/51919.txt"
+ ],
+ "beir_cqadupstack_physics_37966": [
+  "16/107352.txt",
+  "17/111449.txt",
+  "28/111438.txt",
+  "2e/102063.txt",
+  "32/79331.txt",
+  "3a/99224.txt",
+  "4f/81650.txt",
+  "63/94492.txt",
+  "65/90140.txt",
+  "76/129977.txt",
+  "76/41787.txt",
+  "7f/16807.txt",
+  "83/127412.txt",
+  "87/7446.txt",
+  "a9/122335.txt",
+  "ac/32140.txt",
+  "b9/62621.txt",
+  "c8/30505.txt",
+  "ca/100402.txt",
+  "e1/112154.txt",
+  "e1/116367.txt",
+  "e3/63555.txt",
+  "f0/11398.txt",
+  "fa/76886.txt"
+ ],
+ "beir_cqadupstack_physics_37981": [
+  "fd/31254.txt"
+ ],
+ "beir_cqadupstack_physics_3799": [
+  "55/98976.txt"
+ ],
+ "beir_cqadupstack_physics_38236": [
+  "43/113651.txt"
+ ],
+ "beir_cqadupstack_physics_38246": [
+  "19/37571.txt"
+ ],
+ "beir_cqadupstack_physics_38313": [
+  "36/31355.txt",
+  "ce/102566.txt",
+  "f5/17741.txt"
+ ],
+ "beir_cqadupstack_physics_3833": [
+  "13/29949.txt"
+ ],
+ "beir_cqadupstack_physics_38397": [
+  "b1/56555.txt"
+ ],
+ "beir_cqadupstack_physics_38399": [
+  "b7/100363.txt"
+ ],
+ "beir_cqadupstack_physics_38404": [
+  "8b/99181.txt",
+  "b0/95614.txt",
+  "d8/92080.txt"
+ ],
+ "beir_cqadupstack_physics_38561": [
+  "7a/75166.txt",
+  "c3/114544.txt"
+ ],
+ "beir_cqadupstack_physics_38961": [
+  "0f/62532.txt",
+  "16/21851.txt",
+  "28/129591.txt",
+  "76/48615.txt",
+  "7f/95754.txt",
+  "a4/48292.txt",
+  "d3/28601.txt"
+ ],
+ "beir_cqadupstack_physics_38963": [
+  "c9/41780.txt"
+ ],
+ "beir_cqadupstack_physics_391": [
+  "49/103421.txt",
+  "8e/58101.txt"
+ ],
+ "beir_cqadupstack_physics_39131": [
+  "5b/30824.txt"
+ ],
+ "beir_cqadupstack_physics_39161": [
+  "38/46688.txt"
+ ],
+ "beir_cqadupstack_physics_39170": [
+  "65/14179.txt"
+ ],
+ "beir_cqadupstack_physics_39253": [
+  "65/109491.txt"
+ ],
+ "beir_cqadupstack_physics_39263": [
+  "eb/102350.txt"
+ ],
+ "beir_cqadupstack_physics_39344": [
+  "0a/119913.txt",
+  "14/60882.txt",
+  "15/363.txt",
+  "1d/123854.txt",
+  "1f/45172.txt",
+  "23/45941.txt",
+  "24/37865.txt",
+  "25/105021.txt",
+  "29/79602.txt",
+  "2d/132075.txt",
+  "31/108334.txt",
+  "33/121430.txt",
+  "35/32533.txt",
+  "38/109698.txt",
+  "39/83933.txt",
+  "3a/16593.txt",
+  "3d/121637.txt",
+  "40/103274.txt",
+  "42/20641.txt",
+  "42/57309.txt",
+  "4e/22696.txt",
+  "4f/6068.txt",
+  "57/47621.txt",
+  "58/96531.txt",
+  "64/106344.txt",
+  "66/23107.txt",
+  "68/105041.txt",
+  "69/129543.txt",
+  "6d/38687.txt",
+  "6e/102002.txt",
+  "79/94249.txt",
+  "84/2219.txt",
+  "86/110298.txt",
+  "86/9165.txt",
+  "8b/33215.txt",
+  "8b/63767.txt",
+  "8d/105247.txt",
+  "8f/57514.txt",
+  "90/106337.txt",
+  "99/119790.txt",
+  "9b/71096.txt",
+  "9d/92156.txt",
+  "9f/88650.txt",
+  "a2/52143.txt",
+  "a2/79477.txt",
+  "a7/106607.txt",
+  "ac/62556.txt",
+  "b2/31917.txt",
+  "b5/119957.txt",
+  "b5/75129.txt",
+  "b6/92540.txt",
+  "b7/88480.txt",
+  "b9/20149.txt",
+  "bc/110296.txt",
+  "bd/133067.txt",
+  "cb/21576.txt",
+  "cd/79340.txt",
+  "cd/88858.txt",
+  "d1/119386.txt",
+  "d3/107048.txt",
+  "da/24621.txt",
+  "da/72088.txt",
+  "df/74605.txt",
+  "df/78233.txt",
+  "df/86546.txt",
+  "e0/106186.txt",
+  "e6/128998.txt",
+  "e8/74079.txt",
+  "eb/109478.txt",
+  "f1/39188.txt",
+  "f3/12175.txt",
+  "fd/14951.txt"
+ ],
+ "beir_cqadupstack_physics_39428": [
+  "08/6450.txt"
+ ],
+ "beir_cqadupstack_physics_39654": [
+  "38/60715.txt"
+ ],
+ "beir_cqadupstack_physics_401": [
+  "48/99397.txt"
+ ],
+ "beir_cqadupstack_physics_409": [
+  "4a/63243.txt"
+ ],
+ "beir_cqadupstack_physics_41211": [
+  "bf/53221.txt"
+ ],
+ "beir_cqadupstack_physics_41245": [
+  "5b/5483.txt"
+ ],
+ "beir_cqadupstack_physics_41386": [
+  "a2/10309.txt",
+  "b7/33404.txt",
+  "c7/77775.txt",
+  "cc/107013.txt"
+ ],
+ "beir_cqadupstack_physics_41424": [
+  "97/68484.txt",
+  "9e/110253.txt",
+  "fe/86282.txt"
+ ],
+ "beir_cqadupstack_physics_41494": [
+  "d8/39616.txt"
+ ],
+ "beir_cqadupstack_physics_41573": [
+  "7e/40829.txt"
+ ],
+ "beir_cqadupstack_physics_41717": [
+  "c9/104402.txt"
+ ],
+ "beir_cqadupstack_physics_41741": [
+  "1a/128765.txt"
+ ],
+ "beir_cqadupstack_physics_41937": [
+  "36/41991.txt"
+ ],
+ "beir_cqadupstack_physics_4289": [
+  "51/77532.txt"
+ ],
+ "beir_cqadupstack_physics_43023": [
+  "2e/25254.txt",
+  "df/20844.txt"
+ ],
+ "beir_cqadupstack_physics_43232": [
+  "18/116936.txt",
+  "7b/51271.txt"
+ ],
+ "beir_cqadupstack_physics_43322": [
+  "16/92388.txt"
+ ],
+ "beir_cqadupstack_physics_43406": [
+  "32/89475.txt"
+ ],
+ "beir_cqadupstack_physics_43491": [
+  "cb/8256.txt"
+ ],
+ "beir_cqadupstack_physics_43665": [
+  "d8/18119.txt"
+ ],
+ "beir_cqadupstack_physics_43768": [
+  "d2/134282.txt"
+ ],
+ "beir_cqadupstack_physics_43859": [
+  "7f/87183.txt"
+ ],
+ "beir_cqadupstack_physics_43919": [
+  "19/2006.txt"
+ ],
+ "beir_cqadupstack_physics_43986": [
+  "4f/113546.txt"
+ ],
+ "beir_cqadupstack_physics_44130": [
+  "bb/44300.txt"
+ ],
+ "beir_cqadupstack_physics_44193": [
+  "52/3468.txt"
+ ],
+ "beir_cqadupstack_physics_44351": [
+  "4a/20034.txt"
+ ],
+ "beir_cqadupstack_physics_44509": [
+  "42/82729.txt"
+ ],
+ "beir_cqadupstack_physics_4453": [
+  "06/67899.txt",
+  "2f/66733.txt",
+  "61/70424.txt",
+  "8e/102785.txt",
+  "9f/9720.txt",
+  "af/130332.txt",
+  "c4/79313.txt",
+  "d6/62398.txt",
+  "ff/35674.txt"
+ ],
+ "beir_cqadupstack_physics_44586": [
+  "54/1030.txt"
+ ],
+ "beir_cqadupstack_physics_44718": [
+  "cd/44629.txt"
+ ],
+ "beir_cqadupstack_physics_44882": [
+  "73/89222.txt"
+ ],
+ "beir_cqadupstack_physics_44974": [
+  "e5/44967.txt"
+ ],
+ "beir_cqadupstack_physics_4506": [
+  "d8/6377.txt"
+ ],
+ "beir_cqadupstack_physics_45067": [
+  "04/128796.txt",
+  "d8/129163.txt"
+ ],
+ "beir_cqadupstack_physics_45105": [
+  "db/51796.txt"
+ ],
+ "beir_cqadupstack_physics_45108": [
+  "32/7584.txt"
+ ],
+ "beir_cqadupstack_physics_45247": [
+  "77/41291.txt",
+  "8b/119357.txt"
+ ],
+ "beir_cqadupstack_physics_45495": [
+  "e8/10651.txt"
+ ],
+ "beir_cqadupstack_physics_45545": [
+  "5a/32368.txt"
+ ],
+ "beir_cqadupstack_physics_45634": [
+  "0b/45836.txt"
+ ],
+ "beir_cqadupstack_physics_45743": [
+  "fc/72252.txt"
+ ],
+ "beir_cqadupstack_physics_45849": [
+  "22/46097.txt"
+ ],
+ "beir_cqadupstack_physics_46089": [
+  "a4/91919.txt"
+ ],
+ "beir_cqadupstack_physics_4617": [
+  "02/103292.txt",
+  "90/44486.txt",
+  "94/96390.txt"
+ ],
+ "beir_cqadupstack_physics_46180": [
+  "f2/886.txt"
+ ],
+ "beir_cqadupstack_physics_46324": [
+  "79/97902.txt"
+ ],
+ "beir_cqadupstack_physics_46327": [
+  "f9/103584.txt"
+ ],
+ "beir_cqadupstack_physics_4635": [
+  "b5/69456.txt"
+ ],
+ "beir_cqadupstack_physics_46639": [
+  "f6/23028.txt"
+ ],
+ "beir_cqadupstack_physics_46743": [
+  "52/47660.txt"
+ ],
+ "beir_cqadupstack_physics_46798": [
+  "04/123156.txt"
+ ],
+ "beir_cqadupstack_physics_46824": [
+  "04/34113.txt"
+ ],
+ "beir_cqadupstack_physics_46863": [
+  "64/17524.txt"
+ ],
+ "beir_cqadupstack_physics_46933": [
+  "1d/102970.txt",
+  "72/5508.txt",
+  "e0/101105.txt",
+  "fe/102569.txt"
+ ],
+ "beir_cqadupstack_physics_4704": [
+  "07/40978.txt"
+ ],
+ "beir_cqadupstack_physics_47104": [
+  "7e/11136.txt",
+  "f2/32598.txt"
+ ],
+ "beir_cqadupstack_physics_47105": [
+  "1a/129983.txt",
+  "bc/63241.txt"
+ ],
+ "beir_cqadupstack_physics_47128": [
+  "9c/59696.txt"
+ ],
+ "beir_cqadupstack_physics_47135": [
+  "45/41672.txt",
+  "52/30268.txt"
+ ],
+ "beir_cqadupstack_physics_47136": [
+  "ba/45802.txt"
+ ],
+ "beir_cqadupstack_physics_47224": [
+  "55/102421.txt"
+ ],
+ "beir_cqadupstack_physics_47259": [
+  "3a/113123.txt"
+ ],
+ "beir_cqadupstack_physics_47284": [
+  "ab/47266.txt"
+ ],
+ "beir_cqadupstack_physics_47291": [
+  "4b/6997.txt"
+ ],
+ "beir_cqadupstack_physics_4731": [
+  "34/64497.txt"
+ ],
+ "beir_cqadupstack_physics_47379": [
+  "b1/90581.txt"
+ ],
+ "beir_cqadupstack_physics_47389": [
+  "9b/44101.txt"
+ ],
+ "beir_cqadupstack_physics_47941": [
+  "c7/98595.txt"
+ ],
+ "beir_cqadupstack_physics_48196": [
+  "2c/6108.txt",
+  "6c/131972.txt",
+  "e3/103169.txt"
+ ],
+ "beir_cqadupstack_physics_48435": [
+  "05/20752.txt"
+ ],
+ "beir_cqadupstack_physics_48469": [
+  "77/52252.txt"
+ ],
+ "beir_cqadupstack_physics_48534": [
+  "e2/2408.txt"
+ ],
+ "beir_cqadupstack_physics_48548": [
+  "4c/110359.txt",
+  "ab/93087.txt"
+ ],
+ "beir_cqadupstack_physics_49837": [
+  "48/3327.txt"
+ ],
+ "beir_cqadupstack_physics_49940": [
+  "77/7615.txt",
+  "94/106770.txt",
+  "a4/114433.txt",
+  "f0/6464.txt"
+ ],
+ "beir_cqadupstack_physics_49956": [
+  "9c/89833.txt",
+  "d5/30550.txt"
+ ],
+ "beir_cqadupstack_physics_50015": [
+  "23/50020.txt",
+  "77/50024.txt"
+ ],
+ "beir_cqadupstack_physics_5057": [
+  "a4/30267.txt",
+  "a9/34015.txt",
+  "f1/15.txt"
+ ],
+ "beir_cqadupstack_physics_51213": [
+  "a6/105817.txt"
+ ],
+ "beir_cqadupstack_physics_51295": [
+  "59/21100.txt",
+  "ab/129140.txt",
+  "e4/14377.txt"
+ ],
+ "beir_cqadupstack_physics_51711": [
+  "7f/57423.txt"
+ ],
+ "beir_cqadupstack_physics_51723": [
+  "89/48048.txt"
+ ],
+ "beir_cqadupstack_physics_51776": [
+  "f0/48311.txt"
+ ],
+ "beir_cqadupstack_physics_51838": [
+  "b8/69971.txt"
+ ],
+ "beir_cqadupstack_physics_51908": [
+  "24/26764.txt"
+ ],
+ "beir_cqadupstack_physics_51990": [
+  "f1/94385.txt"
+ ],
+ "beir_cqadupstack_physics_51995": [
+  "9c/49862.txt"
+ ],
+ "beir_cqadupstack_physics_52008": [
+  "ab/127380.txt",
+  "ab/35177.txt"
+ ],
+ "beir_cqadupstack_physics_52024": [
+  "e8/65174.txt"
+ ],
+ "beir_cqadupstack_physics_52062": [
+  "12/48543.txt"
+ ],
+ "beir_cqadupstack_physics_52155": [
+  "02/52200.txt"
+ ],
+ "beir_cqadupstack_physics_52195": [
+  "df/133030.txt"
+ ],
+ "beir_cqadupstack_physics_52273": [
+  "28/76819.txt"
+ ],
+ "beir_cqadupstack_physics_52306": [
+  "f0/19825.txt"
+ ],
+ "beir_cqadupstack_physics_52391": [
+  "76/18527.txt"
+ ],
+ "beir_cqadupstack_physics_52396": [
+  "34/18950.txt"
+ ],
+ "beir_cqadupstack_physics_52487": [
+  "4a/52511.txt"
+ ],
+ "beir_cqadupstack_physics_52515": [
+  "bc/52578.txt"
+ ],
+ "beir_cqadupstack_physics_52555": [
+  "2a/78678.txt"
+ ],
+ "beir_cqadupstack_physics_52837": [
+  "b6/106589.txt"
+ ],
+ "beir_cqadupstack_physics_52845": [
+  "5d/90501.txt",
+  "da/36469.txt"
+ ],
+ "beir_cqadupstack_physics_53168": [
+  "b5/93611.txt"
+ ],
+ "beir_cqadupstack_physics_53356": [
+  "25/41589.txt",
+  "d8/93900.txt"
+ ],
+ "beir_cqadupstack_physics_53519": [
+  "44/91326.txt",
+  "57/6047.txt"
+ ],
+ "beir_cqadupstack_physics_53602": [
+  "66/52048.txt",
+  "8e/116567.txt"
+ ],
+ "beir_cqadupstack_physics_53663": [
+  "15/16766.txt",
+  "40/27637.txt"
+ ],
+ "beir_cqadupstack_physics_53708": [
+  "8d/106767.txt",
+  "a9/106570.txt"
+ ],
+ "beir_cqadupstack_physics_53734": [
+  "4e/119309.txt"
+ ],
+ "beir_cqadupstack_physics_53790": [
+  "78/52379.txt"
+ ],
+ "beir_cqadupstack_physics_542": [
+  "48/21028.txt",
+  "6e/63764.txt",
+  "ac/60411.txt"
+ ],
+ "beir_cqadupstack_physics_54317": [
+  "19/30005.txt",
+  "2b/1073.txt",
+  "f1/70060.txt"
+ ],
+ "beir_cqadupstack_physics_54431": [
+  "9a/110205.txt"
+ ],
+ "beir_cqadupstack_physics_54437": [
+  "17/119384.txt",
+  "5f/29007.txt"
+ ],
+ "beir_cqadupstack_physics_54480": [
+  "0a/7737.txt"
+ ],
+ "beir_cqadupstack_physics_54656": [
+  "4f/107659.txt"
+ ],
+ "beir_cqadupstack_physics_55091": [
+  "16/73079.txt",
+  "5f/22578.txt"
+ ],
+ "beir_cqadupstack_physics_55143": [
+  "56/116869.txt",
+  "97/51700.txt"
+ ],
+ "beir_cqadupstack_physics_55190": [
+  "a9/7738.txt",
+  "c3/72242.txt"
+ ],
+ "beir_cqadupstack_physics_55195": [
+  "7f/53877.txt"
+ ],
+ "beir_cqadupstack_physics_55340": [
+  "8d/60805.txt"
+ ],
+ "beir_cqadupstack_physics_55458": [
+  "78/102767.txt",
+  "7b/23098.txt",
+  "ac/93902.txt"
+ ],
+ "beir_cqadupstack_physics_55698": [
+  "be/57366.txt"
+ ],
+ "beir_cqadupstack_physics_55719": [
+  "31/67358.txt"
+ ],
+ "beir_cqadupstack_physics_55760": [
+  "e0/54733.txt"
+ ],
+ "beir_cqadupstack_physics_5587": [
+  "35/23763.txt"
+ ],
+ "beir_cqadupstack_physics_55965": [
+  "55/54975.txt",
+  "c8/70809.txt"
+ ],
+ "beir_cqadupstack_physics_5613": [
+  "4f/47779.txt",
+  "ea/127119.txt"
+ ],
+ "beir_cqadupstack_physics_5615": [
+  "0e/117180.txt",
+  "bd/20905.txt"
+ ],
+ "beir_cqadupstack_physics_56355": [
+  "3b/26397.txt",
+  "4a/1165.txt",
+  "d4/134761.txt",
+  "fa/17519.txt"
+ ],
+ "beir_cqadupstack_physics_56470": [
+  "87/28563.txt",
+  "b0/67441.txt",
+  "f4/25733.txt"
+ ],
+ "beir_cqadupstack_physics_56657": [
+  "61/121993.txt"
+ ],
+ "beir_cqadupstack_physics_56851": [
+  "f8/110209.txt"
+ ],
+ "beir_cqadupstack_physics_56888": [
+  "ae/56872.txt"
+ ],
+ "beir_cqadupstack_physics_56966": [
+  "08/93.txt",
+  "3a/47084.txt"
+ ],
+ "beir_cqadupstack_physics_56973": [
+  "8d/127602.txt",
+  "a3/3644.txt"
+ ],
+ "beir_cqadupstack_physics_56983": [
+  "ef/56962.txt"
+ ],
+ "beir_cqadupstack_physics_57137": [
+  "84/60037.txt"
+ ],
+ "beir_cqadupstack_physics_57181": [
+  "79/31897.txt",
+  "a7/31362.txt",
+  "b3/31293.txt"
+ ],
+ "beir_cqadupstack_physics_57312": [
+  "d5/1663.txt"
+ ],
+ "beir_cqadupstack_physics_57317": [
+  "55/112881.txt"
+ ],
+ "beir_cqadupstack_physics_57333": [
+  "16/54917.txt"
+ ],
+ "beir_cqadupstack_physics_57390": [
+  "5f/92450.txt",
+  "e4/68948.txt"
+ ],
+ "beir_cqadupstack_physics_57643": [
+  "86/33466.txt"
+ ],
+ "beir_cqadupstack_physics_57975": [
+  "3b/19400.txt"
+ ],
+ "beir_cqadupstack_physics_58122": [
+  "09/69169.txt",
+  "be/535.txt",
+  "c7/123365.txt"
+ ],
+ "beir_cqadupstack_physics_5839": [
+  "df/89701.txt"
+ ],
+ "beir_cqadupstack_physics_5851": [
+  "ac/114109.txt"
+ ],
+ "beir_cqadupstack_physics_59438": [
+  "47/60541.txt"
+ ],
+ "beir_cqadupstack_physics_59617": [
+  "6e/55254.txt"
+ ],
+ "beir_cqadupstack_physics_59635": [
+  "19/6483.txt",
+  "20/99341.txt",
+  "31/83755.txt",
+  "99/109085.txt",
+  "ce/93191.txt",
+  "e9/2658.txt"
+ ],
+ "beir_cqadupstack_physics_59815": [
+  "ab/56276.txt",
+  "e5/22080.txt"
+ ],
+ "beir_cqadupstack_physics_60016": [
+  "55/130203.txt",
+  "97/36019.txt",
+  "a4/20282.txt",
+  "bd/10325.txt",
+  "da/61212.txt",
+  "df/133861.txt",
+  "e1/126643.txt",
+  "e8/73663.txt",
+  "f5/117034.txt"
+ ],
+ "beir_cqadupstack_physics_60336": [
+  "94/37998.txt"
+ ],
+ "beir_cqadupstack_physics_60476": [
+  "44/103872.txt"
+ ],
+ "beir_cqadupstack_physics_60699": [
+  "c7/6787.txt"
+ ],
+ "beir_cqadupstack_physics_60763": [
+  "36/48328.txt",
+  "93/63434.txt",
+  "eb/52049.txt"
+ ],
+ "beir_cqadupstack_physics_60830": [
+  "25/78137.txt"
+ ],
+ "beir_cqadupstack_physics_60899": [
+  "d2/26605.txt"
+ ],
+ "beir_cqadupstack_physics_60900": [
+  "00/103060.txt",
+  "1b/129073.txt",
+  "30/112000.txt",
+  "3c/93653.txt",
+  "53/104937.txt",
+  "54/26549.txt",
+  "61/70725.txt",
+  "62/12049.txt",
+  "78/92125.txt",
+  "7e/57402.txt",
+  "81/131708.txt",
+  "83/65547.txt",
+  "9a/25591.txt",
+  "b0/112494.txt",
+  "cf/76927.txt",
+  "db/104964.txt",
+  "fb/60519.txt"
+ ],
+ "beir_cqadupstack_physics_61000": [
+  "8d/48589.txt"
+ ],
+ "beir_cqadupstack_physics_61031": [
+  "b7/31509.txt"
+ ],
+ "beir_cqadupstack_physics_61086": [
+  "43/4700.txt",
+  "c0/60441.txt"
+ ],
+ "beir_cqadupstack_physics_61455": [
+  "d8/90943.txt"
+ ],
+ "beir_cqadupstack_physics_6147": [
+  "96/22627.txt"
+ ],
+ "beir_cqadupstack_physics_61592": [
+  "30/60869.txt"
+ ],
+ "beir_cqadupstack_physics_61643": [
+  "74/19499.txt"
+ ],
+ "beir_cqadupstack_physics_61699": [
+  "29/71907.txt"
+ ],
+ "beir_cqadupstack_physics_61845": [
+  "13/9661.txt",
+  "cb/29641.txt"
+ ],
+ "beir_cqadupstack_physics_61936": [
+  "8a/83325.txt"
+ ],
+ "beir_cqadupstack_physics_61948": [
+  "50/28984.txt",
+  "50/5150.txt",
+  "71/102559.txt",
+  "7e/41501.txt",
+  "81/7838.txt",
+  "95/12807.txt",
+  "97/46014.txt",
+  "e8/2355.txt",
+  "e8/55039.txt"
+ ],
+ "beir_cqadupstack_physics_6197": [
+  "be/131281.txt"
+ ],
+ "beir_cqadupstack_physics_62099": [
+  "c2/62111.txt"
+ ],
+ "beir_cqadupstack_physics_62222": [
+  "a2/64277.txt"
+ ],
+ "beir_cqadupstack_physics_62474": [
+  "74/66159.txt",
+  "b4/16213.txt"
+ ],
+ "beir_cqadupstack_physics_62637": [
+  "a8/126796.txt"
+ ],
+ "beir_cqadupstack_physics_62653": [
+  "e0/39299.txt"
+ ],
+ "beir_cqadupstack_physics_6271": [
+  "58/103813.txt",
+  "bd/77465.txt"
+ ],
+ "beir_cqadupstack_physics_62711": [
+  "b2/26704.txt"
+ ],
+ "beir_cqadupstack_physics_63023": [
+  "1a/118850.txt",
+  "4e/64114.txt",
+  "94/59977.txt",
+  "9d/290.txt",
+  "bd/95030.txt",
+  "f9/112478.txt"
+ ],
+ "beir_cqadupstack_physics_63138": [
+  "71/63300.txt"
+ ],
+ "beir_cqadupstack_physics_63278": [
+  "b2/97878.txt"
+ ],
+ "beir_cqadupstack_physics_63424": [
+  "3c/53611.txt"
+ ],
+ "beir_cqadupstack_physics_63456": [
+  "18/56833.txt"
+ ],
+ "beir_cqadupstack_physics_63590": [
+  "ae/107995.txt"
+ ],
+ "beir_cqadupstack_physics_63626": [
+  "51/77959.txt"
+ ],
+ "beir_cqadupstack_physics_63811": [
+  "6c/132702.txt"
+ ],
+ "beir_cqadupstack_physics_6384": [
+  "f7/24776.txt"
+ ],
+ "beir_cqadupstack_physics_63987": [
+  "72/80679.txt",
+  "85/41770.txt",
+  "88/62996.txt"
+ ],
+ "beir_cqadupstack_physics_6400": [
+  "60/15797.txt",
+  "a5/7141.txt"
+ ],
+ "beir_cqadupstack_physics_64253": [
+  "45/25509.txt"
+ ],
+ "beir_cqadupstack_physics_64647": [
+  "45/72072.txt"
+ ],
+ "beir_cqadupstack_physics_64670": [
+  "64/45448.txt"
+ ],
+ "beir_cqadupstack_physics_64751": [
+  "a7/67445.txt"
+ ],
+ "beir_cqadupstack_physics_64834": [
+  "91/57030.txt"
+ ],
+ "beir_cqadupstack_physics_6533": [
+  "5d/25151.txt"
+ ],
+ "beir_cqadupstack_physics_65339": [
+  "6c/128654.txt"
+ ],
+ "beir_cqadupstack_physics_65584": [
+  "af/64509.txt"
+ ],
+ "beir_cqadupstack_physics_65688": [
+  "a3/90685.txt"
+ ],
+ "beir_cqadupstack_physics_6582": [
+  "ed/7477.txt"
+ ],
+ "beir_cqadupstack_physics_66044": [
+  "05/29961.txt",
+  "e3/111076.txt"
+ ],
+ "beir_cqadupstack_physics_661": [
+  "51/46724.txt"
+ ],
+ "beir_cqadupstack_physics_66220": [
+  "28/67071.txt"
+ ],
+ "beir_cqadupstack_physics_66363": [
+  "f5/44453.txt"
+ ],
+ "beir_cqadupstack_physics_66476": [
+  "8e/3193.txt",
+  "be/134517.txt"
+ ],
+ "beir_cqadupstack_physics_66527": [
+  "a5/3294.txt"
+ ],
+ "beir_cqadupstack_physics_66538": [
+  "24/5031.txt"
+ ],
+ "beir_cqadupstack_physics_66658": [
+  "29/114330.txt"
+ ],
+ "beir_cqadupstack_physics_6682": [
+  "19/102232.txt",
+  "2c/38865.txt"
+ ],
+ "beir_cqadupstack_physics_66922": [
+  "6c/2717.txt",
+  "ef/108178.txt"
+ ],
+ "beir_cqadupstack_physics_66980": [
+  "17/5524.txt"
+ ],
+ "beir_cqadupstack_physics_67186": [
+  "65/3500.txt",
+  "ba/15899.txt",
+  "cc/107713.txt"
+ ],
+ "beir_cqadupstack_physics_67188": [
+  "2e/62175.txt"
+ ],
+ "beir_cqadupstack_physics_6725": [
+  "74/40789.txt"
+ ],
+ "beir_cqadupstack_physics_67571": [
+  "9c/37629.txt"
+ ],
+ "beir_cqadupstack_physics_67616": [
+  "35/1.txt",
+  "3f/52669.txt",
+  "5c/131129.txt",
+  "f4/822.txt"
+ ],
+ "beir_cqadupstack_physics_67712": [
+  "e8/8163.txt"
+ ],
+ "beir_cqadupstack_physics_67746": [
+  "27/11321.txt",
+  "2c/13338.txt",
+  "85/17039.txt",
+  "fa/36422.txt"
+ ],
+ "beir_cqadupstack_physics_67880": [
+  "97/87452.txt"
+ ],
+ "beir_cqadupstack_physics_68112": [
+  "a8/121402.txt"
+ ],
+ "beir_cqadupstack_physics_68198": [
+  "76/67412.txt"
+ ],
+ "beir_cqadupstack_physics_68223": [
+  "ca/109703.txt"
+ ],
+ "beir_cqadupstack_physics_68233": [
+  "21/17756.txt"
+ ],
+ "beir_cqadupstack_physics_68234": [
+  "19/35939.txt"
+ ],
+ "beir_cqadupstack_physics_68289": [
+  "45/64126.txt",
+  "bb/16048.txt",
+  "e1/17421.txt"
+ ],
+ "beir_cqadupstack_physics_68302": [
+  "3d/5265.txt"
+ ],
+ "beir_cqadupstack_physics_68512": [
+  "71/105896.txt",
+  "d9/34164.txt",
+  "fb/101598.txt"
+ ],
+ "beir_cqadupstack_physics_68573": [
+  "f2/75425.txt"
+ ],
+ "beir_cqadupstack_physics_68599": [
+  "7d/44706.txt",
+  "9b/15102.txt",
+  "b1/75397.txt",
+  "b4/15303.txt"
+ ],
+ "beir_cqadupstack_physics_6863": [
+  "b6/6768.txt"
+ ],
+ "beir_cqadupstack_physics_68639": [
+  "02/78228.txt"
+ ],
+ "beir_cqadupstack_physics_68684": [
+  "1a/88441.txt",
+  "25/72128.txt",
+  "87/128741.txt",
+  "91/20003.txt",
+  "be/9415.txt",
+  "fa/103367.txt",
+  "fe/44949.txt"
+ ],
+ "beir_cqadupstack_physics_68757": [
+  "bc/91498.txt",
+  "ce/110984.txt"
+ ],
+ "beir_cqadupstack_physics_68898": [
+  "78/1121.txt",
+  "a2/113374.txt",
+  "af/65082.txt",
+  "cc/66161.txt",
+  "d6/127928.txt"
+ ],
+ "beir_cqadupstack_physics_68911": [
+  "13/80503.txt",
+  "43/68471.txt",
+  "b2/17109.txt",
+  "bc/75467.txt"
+ ],
+ "beir_cqadupstack_physics_68940": [
+  "4c/116952.txt"
+ ],
+ "beir_cqadupstack_physics_68955": [
+  "76/134103.txt"
+ ],
+ "beir_cqadupstack_physics_69281": [
+  "51/3983.txt"
+ ],
+ "beir_cqadupstack_physics_69350": [
+  "18/129214.txt",
+  "48/71043.txt",
+  "9e/59921.txt"
+ ],
+ "beir_cqadupstack_physics_69657": [
+  "df/13233.txt"
+ ],
+ "beir_cqadupstack_physics_69679": [
+  "45/2679.txt"
+ ],
+ "beir_cqadupstack_physics_69726": [
+  "94/56245.txt"
+ ],
+ "beir_cqadupstack_physics_69778": [
+  "a2/98323.txt"
+ ],
+ "beir_cqadupstack_physics_69855": [
+  "13/33273.txt",
+  "ac/109800.txt"
+ ],
+ "beir_cqadupstack_physics_70123": [
+  "94/13141.txt"
+ ],
+ "beir_cqadupstack_physics_70147": [
+  "00/93830.txt",
+  "01/42004.txt",
+  "13/100076.txt",
+  "3a/56864.txt",
+  "3c/18502.txt",
+  "43/75489.txt",
+  "7f/38713.txt",
+  "99/24888.txt",
+  "9b/12140.txt",
+  "a5/26083.txt",
+  "a6/17325.txt",
+  "c8/105248.txt",
+  "e6/7819.txt"
+ ],
+ "beir_cqadupstack_physics_70186": [
+  "5e/93692.txt",
+  "ea/77459.txt"
+ ],
+ "beir_cqadupstack_physics_70200": [
+  "bf/129732.txt"
+ ],
+ "beir_cqadupstack_physics_70439": [
+  "19/8227.txt",
+  "ca/93964.txt"
+ ],
+ "beir_cqadupstack_physics_70463": [
+  "29/4349.txt"
+ ],
+ "beir_cqadupstack_physics_70541": [
+  "87/104226.txt"
+ ],
+ "beir_cqadupstack_physics_70597": [
+  "e4/102584.txt"
+ ],
+ "beir_cqadupstack_physics_7063": [
+  "42/48642.txt",
+  "82/30900.txt"
+ ],
+ "beir_cqadupstack_physics_70651": [
+  "d8/120139.txt"
+ ],
+ "beir_cqadupstack_physics_70747": [
+  "d7/63961.txt"
+ ],
+ "beir_cqadupstack_physics_7112": [
+  "7f/8817.txt"
+ ],
+ "beir_cqadupstack_physics_71126": [
+  "26/44115.txt",
+  "2d/65812.txt",
+  "2f/54801.txt",
+  "56/102542.txt",
+  "5a/129382.txt",
+  "6d/38665.txt",
+  "87/129860.txt",
+  "94/94124.txt",
+  "96/105573.txt",
+  "a5/11820.txt",
+  "ce/103492.txt",
+  "cf/466.txt"
+ ],
+ "beir_cqadupstack_physics_71292": [
+  "c2/102877.txt"
+ ],
+ "beir_cqadupstack_physics_71309": [
+  "50/9847.txt"
+ ],
+ "beir_cqadupstack_physics_71503": [
+  "a7/88466.txt"
+ ],
+ "beir_cqadupstack_physics_71576": [
+  "51/134135.txt",
+  "a7/16633.txt"
+ ],
+ "beir_cqadupstack_physics_71589": [
+  "18/61016.txt",
+  "83/26682.txt"
+ ],
+ "beir_cqadupstack_physics_71620": [
+  "db/53169.txt"
+ ],
+ "beir_cqadupstack_physics_71639": [
+  "97/16018.txt"
+ ],
+ "beir_cqadupstack_physics_71649": [
+  "c6/70047.txt"
+ ],
+ "beir_cqadupstack_physics_71772": [
+  "05/34008.txt",
+  "97/45320.txt"
+ ],
+ "beir_cqadupstack_physics_71823": [
+  "47/131810.txt",
+  "fe/120071.txt"
+ ],
+ "beir_cqadupstack_physics_71901": [
+  "d4/2409.txt"
+ ],
+ "beir_cqadupstack_physics_72447": [
+  "2b/127390.txt",
+  "a7/17177.txt"
+ ],
+ "beir_cqadupstack_physics_72510": [
+  "2c/71763.txt"
+ ],
+ "beir_cqadupstack_physics_72535": [
+  "d7/49960.txt"
+ ],
+ "beir_cqadupstack_physics_72549": [
+  "50/64232.txt",
+  "96/71129.txt"
+ ],
+ "beir_cqadupstack_physics_7276": [
+  "1c/104648.txt"
+ ],
+ "beir_cqadupstack_physics_72788": [
+  "47/90359.txt"
+ ],
+ "beir_cqadupstack_physics_72983": [
+  "28/71055.txt"
+ ],
+ "beir_cqadupstack_physics_73051": [
+  "12/118590.txt",
+  "db/13577.txt"
+ ],
+ "beir_cqadupstack_physics_73114": [
+  "2e/34874.txt"
+ ],
+ "beir_cqadupstack_physics_73162": [
+  "3c/38670.txt",
+  "81/77690.txt"
+ ],
+ "beir_cqadupstack_physics_73209": [
+  "8d/1048.txt"
+ ],
+ "beir_cqadupstack_physics_73234": [
+  "13/68138.txt"
+ ],
+ "beir_cqadupstack_physics_73275": [
+  "a8/68200.txt"
+ ],
+ "beir_cqadupstack_physics_73279": [
+  "22/8477.txt",
+  "a1/73488.txt"
+ ],
+ "beir_cqadupstack_physics_73299": [
+  "95/52034.txt"
+ ],
+ "beir_cqadupstack_physics_73329": [
+  "23/51962.txt",
+  "de/53385.txt"
+ ],
+ "beir_cqadupstack_physics_73393": [
+  "33/102798.txt"
+ ],
+ "beir_cqadupstack_physics_73528": [
+  "02/25802.txt"
+ ],
+ "beir_cqadupstack_physics_73813": [
+  "6a/65237.txt"
+ ],
+ "beir_cqadupstack_physics_73825": [
+  "83/6438.txt"
+ ],
+ "beir_cqadupstack_physics_73945": [
+  "19/67826.txt"
+ ],
+ "beir_cqadupstack_physics_74020": [
+  "bd/128983.txt"
+ ],
+ "beir_cqadupstack_physics_74087": [
+  "0b/71568.txt",
+  "3d/92259.txt",
+  "67/66265.txt",
+  "a1/61731.txt",
+  "ee/94833.txt",
+  "f7/387.txt"
+ ],
+ "beir_cqadupstack_physics_7421": [
+  "a2/63302.txt"
+ ],
+ "beir_cqadupstack_physics_743": [
+  "03/52198.txt"
+ ],
+ "beir_cqadupstack_physics_74333": [
+  "3d/108222.txt",
+  "54/32237.txt",
+  "87/32112.txt",
+  "a8/17651.txt",
+  "a9/109510.txt",
+  "ac/65964.txt",
+  "c1/77294.txt",
+  "dd/32110.txt",
+  "ef/44926.txt"
+ ],
+ "beir_cqadupstack_physics_74517": [
+  "4b/74593.txt"
+ ],
+ "beir_cqadupstack_physics_74788": [
+  "59/77276.txt"
+ ],
+ "beir_cqadupstack_physics_7479": [
+  "58/89276.txt",
+  "ed/108079.txt"
+ ],
+ "beir_cqadupstack_physics_75002": [
+  "56/75391.txt"
+ ],
+ "beir_cqadupstack_physics_75108": [
+  "4f/18115.txt"
+ ],
+ "beir_cqadupstack_physics_75286": [
+  "5f/96273.txt",
+  "d9/46112.txt",
+  "f4/89993.txt"
+ ],
+ "beir_cqadupstack_physics_75352": [
+  "c0/59753.txt"
+ ],
+ "beir_cqadupstack_physics_75363": [
+  "6d/91269.txt"
+ ],
+ "beir_cqadupstack_physics_75385": [
+  "79/76507.txt"
+ ],
+ "beir_cqadupstack_physics_75715": [
+  "38/76267.txt",
+  "a4/72723.txt"
+ ],
+ "beir_cqadupstack_physics_75756": [
+  "e7/45695.txt",
+  "ed/73666.txt"
+ ],
+ "beir_cqadupstack_physics_75876": [
+  "15/61679.txt"
+ ],
+ "beir_cqadupstack_physics_75977": [
+  "11/70051.txt"
+ ],
+ "beir_cqadupstack_physics_76100": [
+  "18/8659.txt",
+  "39/8671.txt",
+  "6d/9689.txt"
+ ],
+ "beir_cqadupstack_physics_7633": [
+  "5e/104094.txt"
+ ],
+ "beir_cqadupstack_physics_76367": [
+  "22/43327.txt",
+  "87/31694.txt",
+  "c7/72163.txt",
+  "ca/16549.txt"
+ ],
+ "beir_cqadupstack_physics_7668": [
+  "9b/107684.txt"
+ ],
+ "beir_cqadupstack_physics_76726": [
+  "1d/29905.txt",
+  "48/113850.txt",
+  "60/29921.txt"
+ ],
+ "beir_cqadupstack_physics_77020": [
+  "27/20477.txt"
+ ],
+ "beir_cqadupstack_physics_77143": [
+  "f6/100879.txt"
+ ],
+ "beir_cqadupstack_physics_77282": [
+  "3e/77285.txt"
+ ],
+ "beir_cqadupstack_physics_7732": [
+  "dc/95097.txt"
+ ],
+ "beir_cqadupstack_physics_77373": [
+  "20/19216.txt",
+  "33/47442.txt",
+  "cc/296.txt",
+  "f4/108088.txt"
+ ],
+ "beir_cqadupstack_physics_77525": [
+  "65/80040.txt"
+ ],
+ "beir_cqadupstack_physics_77741": [
+  "94/54323.txt"
+ ],
+ "beir_cqadupstack_physics_77867": [
+  "c3/73954.txt"
+ ],
+ "beir_cqadupstack_physics_78095": [
+  "04/112653.txt",
+  "39/58154.txt",
+  "47/54278.txt",
+  "4a/112349.txt",
+  "83/1193.txt",
+  "8d/44669.txt",
+  "9c/16390.txt",
+  "aa/100564.txt",
+  "ad/133996.txt",
+  "b6/80090.txt",
+  "bc/48287.txt"
+ ],
+ "beir_cqadupstack_physics_78222": [
+  "9b/116364.txt"
+ ],
+ "beir_cqadupstack_physics_78500": [
+  "51/78718.txt"
+ ],
+ "beir_cqadupstack_physics_78508": [
+  "ba/21866.txt",
+  "e6/87456.txt"
+ ],
+ "beir_cqadupstack_physics_78732": [
+  "3b/6208.txt"
+ ],
+ "beir_cqadupstack_physics_78741": [
+  "17/23469.txt"
+ ],
+ "beir_cqadupstack_physics_7877": [
+  "64/80287.txt",
+  "8f/133837.txt"
+ ],
+ "beir_cqadupstack_physics_78827": [
+  "bb/132482.txt"
+ ],
+ "beir_cqadupstack_physics_78965": [
+  "b7/69043.txt",
+  "ec/10089.txt"
+ ],
+ "beir_cqadupstack_physics_7905": [
+  "5d/105413.txt",
+  "fa/69502.txt"
+ ],
+ "beir_cqadupstack_physics_79085": [
+  "c6/33222.txt",
+  "cf/126263.txt",
+  "d2/131117.txt",
+  "d3/75788.txt"
+ ],
+ "beir_cqadupstack_physics_79136": [
+  "f2/29016.txt"
+ ],
+ "beir_cqadupstack_physics_79568": [
+  "e3/79274.txt"
+ ],
+ "beir_cqadupstack_physics_79685": [
+  "ff/126839.txt"
+ ],
+ "beir_cqadupstack_physics_80433": [
+  "0a/133526.txt"
+ ],
+ "beir_cqadupstack_physics_80467": [
+  "f7/168.txt"
+ ],
+ "beir_cqadupstack_physics_80777": [
+  "24/8359.txt"
+ ],
+ "beir_cqadupstack_physics_8081": [
+  "b3/12593.txt"
+ ],
+ "beir_cqadupstack_physics_80872": [
+  "40/96142.txt",
+  "7a/93918.txt"
+ ],
+ "beir_cqadupstack_physics_80932": [
+  "6a/82020.txt"
+ ],
+ "beir_cqadupstack_physics_80966": [
+  "12/43782.txt"
+ ],
+ "beir_cqadupstack_physics_81414": [
+  "86/123190.txt"
+ ],
+ "beir_cqadupstack_physics_81480": [
+  "18/104933.txt",
+  "a4/8062.txt"
+ ],
+ "beir_cqadupstack_physics_81536": [
+  "54/118687.txt",
+  "7f/22773.txt",
+  "89/114436.txt"
+ ],
+ "beir_cqadupstack_physics_81561": [
+  "94/98835.txt",
+  "c2/1720.txt"
+ ],
+ "beir_cqadupstack_physics_81779": [
+  "02/71757.txt",
+  "68/5277.txt"
+ ],
+ "beir_cqadupstack_physics_81787": [
+  "3c/87676.txt"
+ ],
+ "beir_cqadupstack_physics_82125": [
+  "90/7.txt"
+ ],
+ "beir_cqadupstack_physics_82417": [
+  "a4/34341.txt",
+  "d8/9290.txt"
+ ],
+ "beir_cqadupstack_physics_82418": [
+  "38/91563.txt"
+ ],
+ "beir_cqadupstack_physics_8248": [
+  "7f/8358.txt"
+ ],
+ "beir_cqadupstack_physics_82599": [
+  "76/82597.txt"
+ ],
+ "beir_cqadupstack_physics_82821": [
+  "20/83908.txt"
+ ],
+ "beir_cqadupstack_physics_82874": [
+  "a4/119831.txt"
+ ],
+ "beir_cqadupstack_physics_83070": [
+  "dc/86178.txt"
+ ],
+ "beir_cqadupstack_physics_83101": [
+  "ec/93693.txt"
+ ],
+ "beir_cqadupstack_physics_83265": [
+  "2a/34911.txt",
+  "40/10301.txt",
+  "78/101295.txt",
+  "a5/32483.txt",
+  "c3/99589.txt",
+  "eb/83105.txt"
+ ],
+ "beir_cqadupstack_physics_8347": [
+  "8d/63211.txt",
+  "98/17844.txt",
+  "db/12417.txt"
+ ],
+ "beir_cqadupstack_physics_83524": [
+  "85/86063.txt"
+ ],
+ "beir_cqadupstack_physics_83701": [
+  "5d/6584.txt",
+  "73/34243.txt",
+  "aa/56081.txt"
+ ],
+ "beir_cqadupstack_physics_83735": [
+  "56/133853.txt"
+ ],
+ "beir_cqadupstack_physics_8379": [
+  "33/2392.txt"
+ ],
+ "beir_cqadupstack_physics_83845": [
+  "9c/70176.txt"
+ ],
+ "beir_cqadupstack_physics_83866": [
+  "92/27968.txt"
+ ],
+ "beir_cqadupstack_physics_8420": [
+  "15/38550.txt",
+  "24/128217.txt",
+  "a5/4243.txt"
+ ],
+ "beir_cqadupstack_physics_85975": [
+  "8f/85979.txt"
+ ],
+ "beir_cqadupstack_physics_86270": [
+  "a7/3309.txt"
+ ],
+ "beir_cqadupstack_physics_86345": [
+  "41/132835.txt"
+ ],
+ "beir_cqadupstack_physics_86367": [
+  "5e/4180.txt"
+ ],
+ "beir_cqadupstack_physics_86424": [
+  "5d/2644.txt",
+  "6a/122981.txt"
+ ],
+ "beir_cqadupstack_physics_86517": [
+  "46/59242.txt"
+ ],
+ "beir_cqadupstack_physics_86528": [
+  "67/77275.txt"
+ ],
+ "beir_cqadupstack_physics_86597": [
+  "82/6530.txt",
+  "9f/4068.txt"
+ ],
+ "beir_cqadupstack_physics_86989": [
+  "df/57542.txt"
+ ],
+ "beir_cqadupstack_physics_8701": [
+  "ef/9862.txt"
+ ],
+ "beir_cqadupstack_physics_8709": [
+  "68/41020.txt",
+  "77/69700.txt"
+ ],
+ "beir_cqadupstack_physics_87140": [
+  "32/68930.txt"
+ ],
+ "beir_cqadupstack_physics_87260": [
+  "77/19937.txt"
+ ],
+ "beir_cqadupstack_physics_87376": [
+  "c6/3445.txt"
+ ],
+ "beir_cqadupstack_physics_87476": [
+  "58/98723.txt",
+  "5b/65457.txt",
+  "fc/64869.txt"
+ ],
+ "beir_cqadupstack_physics_87686": [
+  "12/25252.txt"
+ ],
+ "beir_cqadupstack_physics_87715": [
+  "b6/80400.txt"
+ ],
+ "beir_cqadupstack_physics_87725": [
+  "37/21831.txt"
+ ],
+ "beir_cqadupstack_physics_87829": [
+  "99/24010.txt"
+ ],
+ "beir_cqadupstack_physics_8784": [
+  "17/556.txt",
+  "90/82934.txt"
+ ],
+ "beir_cqadupstack_physics_87880": [
+  "77/30946.txt"
+ ],
+ "beir_cqadupstack_physics_87976": [
+  "16/130188.txt"
+ ],
+ "beir_cqadupstack_physics_88026": [
+  "af/93009.txt"
+ ],
+ "beir_cqadupstack_physics_88077": [
+  "fd/45203.txt"
+ ],
+ "beir_cqadupstack_physics_885": [
+  "57/123167.txt"
+ ],
+ "beir_cqadupstack_physics_88537": [
+  "0f/46801.txt"
+ ],
+ "beir_cqadupstack_physics_88545": [
+  "f6/17076.txt"
+ ],
+ "beir_cqadupstack_physics_88606": [
+  "2b/88599.txt"
+ ],
+ "beir_cqadupstack_physics_89002": [
+  "a0/133374.txt"
+ ],
+ "beir_cqadupstack_physics_89335": [
+  "6d/39712.txt"
+ ],
+ "beir_cqadupstack_physics_89360": [
+  "40/74881.txt",
+  "76/69013.txt"
+ ],
+ "beir_cqadupstack_physics_89377": [
+  "7a/21781.txt"
+ ],
+ "beir_cqadupstack_physics_89378": [
+  "28/16063.txt",
+  "6b/34214.txt",
+  "ad/108496.txt",
+  "e3/134357.txt",
+  "ee/36242.txt"
+ ],
+ "beir_cqadupstack_physics_89787": [
+  "c9/90026.txt"
+ ],
+ "beir_cqadupstack_physics_89914": [
+  "a0/29175.txt"
+ ],
+ "beir_cqadupstack_physics_89988": [
+  "3d/68135.txt",
+  "40/29328.txt",
+  "86/4079.txt"
+ ],
+ "beir_cqadupstack_physics_9": [
+  "51/3912.txt"
+ ],
+ "beir_cqadupstack_physics_90034": [
+  "51/91234.txt"
+ ],
+ "beir_cqadupstack_physics_90044": [
+  "01/47611.txt"
+ ],
+ "beir_cqadupstack_physics_90128": [
+  "7a/46573.txt"
+ ],
+ "beir_cqadupstack_physics_9045": [
+  "8d/39512.txt",
+  "dd/55042.txt"
+ ],
+ "beir_cqadupstack_physics_90469": [
+  "4e/128345.txt",
+  "57/131072.txt"
+ ],
+ "beir_cqadupstack_physics_9049": [
+  "5b/134915.txt"
+ ],
+ "beir_cqadupstack_physics_90635": [
+  "32/9665.txt"
+ ],
+ "beir_cqadupstack_physics_90646": [
+  "a9/110790.txt"
+ ],
+ "beir_cqadupstack_physics_90715": [
+  "bf/75457.txt",
+  "fb/427.txt"
+ ],
+ "beir_cqadupstack_physics_90908": [
+  "64/109900.txt"
+ ],
+ "beir_cqadupstack_physics_91181": [
+  "3a/100154.txt"
+ ],
+ "beir_cqadupstack_physics_9122": [
+  "33/63220.txt",
+  "57/123793.txt",
+  "c4/69055.txt"
+ ],
+ "beir_cqadupstack_physics_91286": [
+  "68/109088.txt"
+ ],
+ "beir_cqadupstack_physics_91392": [
+  "a5/65690.txt"
+ ],
+ "beir_cqadupstack_physics_91534": [
+  "06/90435.txt",
+  "09/112359.txt",
+  "1b/1847.txt",
+  "28/39258.txt",
+  "56/8441.txt"
+ ],
+ "beir_cqadupstack_physics_91797": [
+  "27/30772.txt"
+ ],
+ "beir_cqadupstack_physics_91803": [
+  "cc/70054.txt"
+ ],
+ "beir_cqadupstack_physics_9194": [
+  "09/107241.txt"
+ ],
+ "beir_cqadupstack_physics_91972": [
+  "bd/907.txt"
+ ],
+ "beir_cqadupstack_physics_92051": [
+  "db/106712.txt"
+ ],
+ "beir_cqadupstack_physics_92245": [
+  "58/74892.txt"
+ ],
+ "beir_cqadupstack_physics_92293": [
+  "2a/3436.txt",
+  "4f/62390.txt",
+  "5a/90822.txt",
+  "73/28422.txt",
+  "a9/127198.txt",
+  "af/81793.txt",
+  "b7/37839.txt",
+  "bb/29632.txt",
+  "c4/90482.txt"
+ ],
+ "beir_cqadupstack_physics_92301": [
+  "9d/93421.txt"
+ ],
+ "beir_cqadupstack_physics_92313": [
+  "11/78138.txt"
+ ],
+ "beir_cqadupstack_physics_92454": [
+  "bf/92456.txt"
+ ],
+ "beir_cqadupstack_physics_92571": [
+  "77/111990.txt"
+ ],
+ "beir_cqadupstack_physics_92662": [
+  "8b/48731.txt",
+  "be/79091.txt"
+ ],
+ "beir_cqadupstack_physics_92739": [
+  "5c/66371.txt",
+  "b1/110411.txt",
+  "c4/95489.txt"
+ ],
+ "beir_cqadupstack_physics_92747": [
+  "7e/101730.txt"
+ ],
+ "beir_cqadupstack_physics_92990": [
+  "35/92997.txt"
+ ],
+ "beir_cqadupstack_physics_93130": [
+  "2b/88780.txt",
+  "79/98361.txt",
+  "b6/120172.txt"
+ ],
+ "beir_cqadupstack_physics_9340": [
+  "2a/40924.txt",
+  "fd/26827.txt"
+ ],
+ "beir_cqadupstack_physics_93530": [
+  "24/18255.txt"
+ ],
+ "beir_cqadupstack_physics_9371": [
+  "c9/39293.txt",
+  "db/9375.txt"
+ ],
+ "beir_cqadupstack_physics_93771": [
+  "72/82536.txt"
+ ],
+ "beir_cqadupstack_physics_93874": [
+  "7d/6157.txt"
+ ],
+ "beir_cqadupstack_physics_9389": [
+  "35/36057.txt"
+ ],
+ "beir_cqadupstack_physics_94040": [
+  "5f/45514.txt"
+ ],
+ "beir_cqadupstack_physics_94132": [
+  "b8/107144.txt"
+ ],
+ "beir_cqadupstack_physics_94133": [
+  "09/87047.txt"
+ ],
+ "beir_cqadupstack_physics_944": [
+  "05/575.txt",
+  "43/9560.txt",
+  "ba/76126.txt"
+ ],
+ "beir_cqadupstack_physics_9449": [
+  "2a/116612.txt"
+ ],
+ "beir_cqadupstack_physics_94567": [
+  "da/94600.txt"
+ ],
+ "beir_cqadupstack_physics_9468": [
+  "2a/114166.txt",
+  "59/35702.txt"
+ ],
+ "beir_cqadupstack_physics_94812": [
+  "4d/36092.txt"
+ ],
+ "beir_cqadupstack_physics_94819": [
+  "05/52628.txt",
+  "5e/111514.txt"
+ ],
+ "beir_cqadupstack_physics_94901": [
+  "25/95233.txt"
+ ],
+ "beir_cqadupstack_physics_9495": [
+  "61/65542.txt",
+  "85/63032.txt"
+ ],
+ "beir_cqadupstack_physics_95053": [
+  "79/95388.txt"
+ ],
+ "beir_cqadupstack_physics_95193": [
+  "f4/99005.txt"
+ ],
+ "beir_cqadupstack_physics_9526": [
+  "59/63242.txt"
+ ],
+ "beir_cqadupstack_physics_95361": [
+  "8c/95368.txt"
+ ],
+ "beir_cqadupstack_physics_95366": [
+  "e2/95823.txt"
+ ],
+ "beir_cqadupstack_physics_95411": [
+  "cf/118901.txt"
+ ],
+ "beir_cqadupstack_physics_95460": [
+  "6d/22894.txt"
+ ],
+ "beir_cqadupstack_physics_95705": [
+  "a0/98035.txt"
+ ],
+ "beir_cqadupstack_physics_95756": [
+  "bb/86774.txt"
+ ],
+ "beir_cqadupstack_physics_95864": [
+  "6b/131147.txt"
+ ],
+ "beir_cqadupstack_physics_95889": [
+  "74/103049.txt"
+ ],
+ "beir_cqadupstack_physics_96010": [
+  "cf/77199.txt",
+  "df/8610.txt",
+  "ec/71940.txt"
+ ],
+ "beir_cqadupstack_physics_96081": [
+  "6f/128889.txt"
+ ],
+ "beir_cqadupstack_physics_96335": [
+  "86/28297.txt",
+  "cf/131910.txt"
+ ],
+ "beir_cqadupstack_physics_96562": [
+  "39/96490.txt"
+ ],
+ "beir_cqadupstack_physics_9663": [
+  "7a/20047.txt"
+ ],
+ "beir_cqadupstack_physics_9708": [
+  "df/44599.txt"
+ ],
+ "beir_cqadupstack_physics_9751": [
+  "23/126735.txt",
+  "6b/92143.txt",
+  "ba/111803.txt"
+ ],
+ "beir_cqadupstack_physics_97812": [
+  "6f/75782.txt",
+  "99/20071.txt"
+ ],
+ "beir_cqadupstack_physics_97886": [
+  "2c/95672.txt"
+ ],
+ "beir_cqadupstack_physics_98000": [
+  "19/95587.txt",
+  "34/102208.txt",
+  "3e/53232.txt",
+  "52/53009.txt",
+  "6c/98832.txt",
+  "dc/100186.txt"
+ ],
+ "beir_cqadupstack_physics_98027": [
+  "11/8115.txt",
+  "55/25271.txt",
+  "75/7359.txt",
+  "87/98587.txt",
+  "89/126168.txt",
+  "9a/77614.txt",
+  "cd/100429.txt",
+  "e8/24017.txt"
+ ],
+ "beir_cqadupstack_physics_98157": [
+  "77/29.txt"
+ ],
+ "beir_cqadupstack_physics_98437": [
+  "a1/129775.txt"
+ ],
+ "beir_cqadupstack_physics_98459": [
+  "8b/114876.txt"
+ ],
+ "beir_cqadupstack_physics_98516": [
+  "bf/112439.txt",
+  "e1/3014.txt"
+ ],
+ "beir_cqadupstack_physics_9864": [
+  "8e/61689.txt"
+ ],
+ "beir_cqadupstack_physics_98714": [
+  "1b/103041.txt"
+ ],
+ "beir_cqadupstack_physics_98758": [
+  "c3/48026.txt"
+ ],
+ "beir_cqadupstack_physics_9898": [
+  "1a/34154.txt",
+  "97/99686.txt",
+  "b5/109287.txt"
+ ],
+ "beir_cqadupstack_physics_98980": [
+  "91/24319.txt",
+  "bf/106425.txt"
+ ],
+ "beir_cqadupstack_physics_99338": [
+  "c1/77760.txt"
+ ],
+ "beir_cqadupstack_physics_99505": [
+  "c7/130186.txt"
+ ],
+ "beir_cqadupstack_physics_99535": [
+  "aa/99813.txt",
+  "fa/99468.txt"
+ ],
+ "beir_cqadupstack_physics_99754": [
+  "c6/23834.txt"
+ ],
+ "beir_cqadupstack_physics_99779": [
+  "ba/99267.txt"
+ ],
+ "beir_cqadupstack_physics_99865": [
+  "f4/99652.txt"
+ ]
+}

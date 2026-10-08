@@ -29,7 +29,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import TYPE_CHECKING, Collection, Optional, Sequence
 
 from ..accel import extract_query_signals
 from .know_calibration import (
@@ -305,6 +305,35 @@ def _agree_from_tier_contributions(
     return _lexical_dense_agree(lex_top, dense_top, k=k)
 
 
+def _agree_or_unknown(
+    tier_contributions: dict | None,
+    *,
+    k: int = 3,
+) -> Optional[bool]:
+    """``lexical_dense_agree`` for the confidence logistic, or None if unknowable.
+
+    #482: agreement between the lexical and the dense rankers can only be
+    observed when BOTH fired. With dense retrieval off (the shipped default
+    since 2026-08-15) no dense tier ever contributes, and
+    ``_agree_from_tier_contributions`` returns False -- which the logistic
+    read as "the rankers disagree" on every query. This returns None
+    (unavailable) unless at least one candidate carries a positive lexical
+    tier score and at least one carries a positive dense tier score; then it
+    defers to ``_agree_from_tier_contributions``.
+    """
+    if not tier_contributions or not isinstance(tier_contributions, dict):
+        return None
+    has_lex = has_dense = False
+    for tier_map in tier_contributions.values():
+        if not isinstance(tier_map, dict):
+            continue
+        has_lex = has_lex or any(float(tier_map.get(t, 0.0)) > 0 for t in _LEXICAL_TIERS)
+        has_dense = has_dense or any(float(tier_map.get(t, 0.0)) > 0 for t in _DENSE_TIERS)
+        if has_lex and has_dense:
+            return _agree_from_tier_contributions(tier_contributions, k=k)
+    return None
+
+
 # ─────────────────────────────────────────────────────────────────────
 # Discriminator
 # ─────────────────────────────────────────────────────────────────────
@@ -315,8 +344,8 @@ def _decide_know_or_miss_impl(
     query: str,
     top_score: float,
     score_gap: float,
-    lexical_dense_agree: bool,
-    coordinate_confidence: float,
+    lexical_dense_agree: Optional[bool],
+    coordinate_confidence: Optional[float],
     top_gene: "Optional[Gene]" = None,
     ratio: Optional[float] = None,
     calibration: Optional[KnowCalibration] = None,
@@ -326,6 +355,9 @@ def _decide_know_or_miss_impl(
     freshness_status: Optional[str] = None,
     successor_source_id: Optional[str] = None,
     cold_refresh_targets: Optional[Sequence[str]] = None,
+    # #482: inputs the enabled lanes can produce (know_calibration.
+    # producible_inputs); None = no masking (legacy callers).
+    live_inputs: Optional[Collection[str]] = None,
 ) -> KnowBlock | MissBlock:
     """Single source of truth for the know/miss split.
 
@@ -334,8 +366,10 @@ def _decide_know_or_miss_impl(
         query: the original query string (for escalation + beacon).
         top_score: rank-1 score from the retriever.
         score_gap: top1 - top2 score gap.
-        lexical_dense_agree: see _lexical_dense_agree().
-        coordinate_confidence: blend of folder + file-grain match.
+        lexical_dense_agree: see _lexical_dense_agree(); None = unknown
+            (no dense lane ran, see ``_agree_or_unknown``).
+        coordinate_confidence: blend of folder + file-grain match; None =
+            unknown (nothing delivered to measure it on).
         top_gene: the rank-1 Document, used only for the gene_id_match beacon.
         ratio: top/2nd score ratio if pre-computed; defaults derived from
             ``window.metadata["ratio"]``, then 0.0.
@@ -445,6 +479,7 @@ def _decide_know_or_miss_impl(
         coordinate_confidence=coordinate_confidence,
         calibration=cal,
         freshness_min=freshness_min,
+        live_inputs=live_inputs,
     )
     if confidence < cal.emit_floor:
         # Branch 3c: cold — would-be sparse miss but the cold-tier
@@ -480,10 +515,14 @@ def _decide_know_or_miss_impl(
         confidence=float(confidence),
         top_score=float(top_score),
         score_gap=float(score_gap),
+        # Wire contract unchanged (#482): an unknown input reports False /
+        # 0.0 on the KnowBlock; only the confidence logistic treats it as
+        # unavailable rather than negative.
         lexical_dense_agree=bool(lexical_dense_agree),
         gene_id_match=_gene_id_beacon(query, top_gene),
         coordinate_confidence=float(
-            max(0.0, min(1.0, coordinate_confidence))
+            0.0 if coordinate_confidence is None
+            else max(0.0, min(1.0, coordinate_confidence))
         ),
         soft_stale=soft_stale,
     )

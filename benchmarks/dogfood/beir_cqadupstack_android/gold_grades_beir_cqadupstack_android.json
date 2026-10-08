@@ -1,0 +1,3096 @@
+{
+ "beir_cqadupstack_android_10118": {
+  "35/4345.txt": 1
+ },
+ "beir_cqadupstack_android_1033": {
+  "1d/12234.txt": 1
+ },
+ "beir_cqadupstack_android_10336": {
+  "d2/11373.txt": 1,
+  "f4/18989.txt": 1
+ },
+ "beir_cqadupstack_android_1035": {
+  "30/17290.txt": 1
+ },
+ "beir_cqadupstack_android_10351": {
+  "13/10856.txt": 1
+ },
+ "beir_cqadupstack_android_10414": {
+  "c3/29637.txt": 1
+ },
+ "beir_cqadupstack_android_10519": {
+  "d5/46615.txt": 1
+ },
+ "beir_cqadupstack_android_10523": {
+  "93/48751.txt": 1
+ },
+ "beir_cqadupstack_android_10702": {
+  "4d/1784.txt": 1,
+  "ed/34489.txt": 1
+ },
+ "beir_cqadupstack_android_10811": {
+  "10/16806.txt": 1,
+  "55/37788.txt": 1,
+  "84/22435.txt": 1,
+  "89/5652.txt": 1,
+  "cc/25016.txt": 1,
+  "cf/20199.txt": 1
+ },
+ "beir_cqadupstack_android_10996": {
+  "5d/10548.txt": 1
+ },
+ "beir_cqadupstack_android_1102": {
+  "18/11400.txt": 1,
+  "3d/64786.txt": 1,
+  "b3/1629.txt": 1
+ },
+ "beir_cqadupstack_android_11099": {
+  "ac/10112.txt": 1
+ },
+ "beir_cqadupstack_android_11129": {
+  "b6/9577.txt": 1
+ },
+ "beir_cqadupstack_android_11333": {
+  "0c/49799.txt": 1,
+  "24/4510.txt": 1,
+  "5c/3002.txt": 1
+ },
+ "beir_cqadupstack_android_11339": {
+  "1c/13958.txt": 1
+ },
+ "beir_cqadupstack_android_11546": {
+  "e0/18572.txt": 1
+ },
+ "beir_cqadupstack_android_1156": {
+  "2b/8112.txt": 1
+ },
+ "beir_cqadupstack_android_11872": {
+  "40/16499.txt": 1,
+  "f3/16115.txt": 1
+ },
+ "beir_cqadupstack_android_11884": {
+  "04/9627.txt": 1,
+  "c1/2097.txt": 1,
+  "fc/5495.txt": 1
+ },
+ "beir_cqadupstack_android_11885": {
+  "55/16870.txt": 1,
+  "92/1051.txt": 1
+ },
+ "beir_cqadupstack_android_1198": {
+  "bf/52990.txt": 1
+ },
+ "beir_cqadupstack_android_12033": {
+  "e3/54811.txt": 1
+ },
+ "beir_cqadupstack_android_12047": {
+  "9e/7851.txt": 1
+ },
+ "beir_cqadupstack_android_12129": {
+  "3a/5039.txt": 1
+ },
+ "beir_cqadupstack_android_1217": {
+  "21/8733.txt": 1,
+  "2c/1071.txt": 1
+ },
+ "beir_cqadupstack_android_12233": {
+  "1f/4504.txt": 1
+ },
+ "beir_cqadupstack_android_12250": {
+  "70/15519.txt": 1
+ },
+ "beir_cqadupstack_android_12262": {
+  "01/18297.txt": 1,
+  "71/18621.txt": 1
+ },
+ "beir_cqadupstack_android_12265": {
+  "82/19119.txt": 1
+ },
+ "beir_cqadupstack_android_12347": {
+  "fa/55100.txt": 1
+ },
+ "beir_cqadupstack_android_12412": {
+  "b6/1841.txt": 1
+ },
+ "beir_cqadupstack_android_12470": {
+  "54/33479.txt": 1
+ },
+ "beir_cqadupstack_android_12587": {
+  "df/13275.txt": 1
+ },
+ "beir_cqadupstack_android_12639": {
+  "89/61029.txt": 1
+ },
+ "beir_cqadupstack_android_12650": {
+  "72/5113.txt": 1
+ },
+ "beir_cqadupstack_android_12665": {
+  "1a/4391.txt": 1
+ },
+ "beir_cqadupstack_android_12723": {
+  "90/80931.txt": 1
+ },
+ "beir_cqadupstack_android_12729": {
+  "95/12807.txt": 1
+ },
+ "beir_cqadupstack_android_12802": {
+  "33/26813.txt": 1
+ },
+ "beir_cqadupstack_android_12831": {
+  "e9/82229.txt": 1
+ },
+ "beir_cqadupstack_android_12834": {
+  "15/64361.txt": 1,
+  "1d/64241.txt": 1,
+  "2f/41361.txt": 1,
+  "33/37685.txt": 1,
+  "33/48431.txt": 1,
+  "34/48325.txt": 1,
+  "45/38501.txt": 1,
+  "47/75901.txt": 1,
+  "49/72966.txt": 1,
+  "52/74698.txt": 1,
+  "52/80669.txt": 1,
+  "59/76997.txt": 1,
+  "6c/28296.txt": 1,
+  "70/77015.txt": 1,
+  "7a/79403.txt": 1,
+  "7c/49555.txt": 1,
+  "83/59345.txt": 1,
+  "87/47903.txt": 1,
+  "92/81568.txt": 1,
+  "94/54956.txt": 1,
+  "97/25646.txt": 1,
+  "9a/82210.txt": 1,
+  "a7/50853.txt": 1,
+  "ac/53995.txt": 1,
+  "af/25698.txt": 1,
+  "b2/48505.txt": 1,
+  "b6/54047.txt": 1,
+  "bb/39536.txt": 1,
+  "bf/48169.txt": 1,
+  "c3/3135.txt": 1,
+  "c4/78527.txt": 1,
+  "c8/75422.txt": 1,
+  "d6/77633.txt": 1,
+  "df/69040.txt": 1,
+  "e2/42227.txt": 1,
+  "e4/64354.txt": 1,
+  "e5/47975.txt": 1,
+  "e8/69564.txt": 1,
+  "f1/81583.txt": 1,
+  "f4/75691.txt": 1,
+  "f7/54272.txt": 1,
+  "fa/75527.txt": 1
+ },
+ "beir_cqadupstack_android_13069": {
+  "35/21369.txt": 1,
+  "42/21183.txt": 1
+ },
+ "beir_cqadupstack_android_13102": {
+  "98/8011.txt": 1
+ },
+ "beir_cqadupstack_android_13185": {
+  "32/9550.txt": 1
+ },
+ "beir_cqadupstack_android_13368": {
+  "c2/13693.txt": 1
+ },
+ "beir_cqadupstack_android_13605": {
+  "3b/38378.txt": 1,
+  "63/81915.txt": 1
+ },
+ "beir_cqadupstack_android_13662": {
+  "53/6432.txt": 1,
+  "bc/224.txt": 1,
+  "ef/15598.txt": 1
+ },
+ "beir_cqadupstack_android_13683": {
+  "82/15220.txt": 1
+ },
+ "beir_cqadupstack_android_14046": {
+  "00/28298.txt": 1,
+  "a8/8850.txt": 1
+ },
+ "beir_cqadupstack_android_14162": {
+  "fe/21308.txt": 1
+ },
+ "beir_cqadupstack_android_14164": {
+  "ee/12702.txt": 1
+ },
+ "beir_cqadupstack_android_14168": {
+  "65/15014.txt": 1
+ },
+ "beir_cqadupstack_android_14256": {
+  "f7/24429.txt": 1
+ },
+ "beir_cqadupstack_android_1431": {
+  "80/24268.txt": 1,
+  "97/28148.txt": 1
+ },
+ "beir_cqadupstack_android_14426": {
+  "0e/34115.txt": 1,
+  "11/2951.txt": 1,
+  "3e/11449.txt": 1,
+  "f9/17422.txt": 1
+ },
+ "beir_cqadupstack_android_14490": {
+  "d7/9497.txt": 1
+ },
+ "beir_cqadupstack_android_1452": {
+  "10/25511.txt": 1
+ },
+ "beir_cqadupstack_android_14628": {
+  "2e/25854.txt": 1
+ },
+ "beir_cqadupstack_android_14651": {
+  "85/7030.txt": 1
+ },
+ "beir_cqadupstack_android_14662": {
+  "42/4998.txt": 1,
+  "6a/34958.txt": 1,
+  "8c/47891.txt": 1,
+  "ce/686.txt": 1
+ },
+ "beir_cqadupstack_android_14677": {
+  "bd/4218.txt": 1
+ },
+ "beir_cqadupstack_android_14718": {
+  "6c/12912.txt": 1
+ },
+ "beir_cqadupstack_android_14764": {
+  "57/36978.txt": 1
+ },
+ "beir_cqadupstack_android_14795": {
+  "e8/10922.txt": 1
+ },
+ "beir_cqadupstack_android_14884": {
+  "ac/15216.txt": 1
+ },
+ "beir_cqadupstack_android_15001": {
+  "7b/77416.txt": 1
+ },
+ "beir_cqadupstack_android_15009": {
+  "93/21892.txt": 1
+ },
+ "beir_cqadupstack_android_15066": {
+  "49/899.txt": 1
+ },
+ "beir_cqadupstack_android_15138": {
+  "49/9977.txt": 1,
+  "51/15533.txt": 1,
+  "ba/48997.txt": 1,
+  "dc/19852.txt": 1
+ },
+ "beir_cqadupstack_android_152": {
+  "7d/967.txt": 1
+ },
+ "beir_cqadupstack_android_15404": {
+  "b0/66717.txt": 1
+ },
+ "beir_cqadupstack_android_15434": {
+  "ba/66436.txt": 1
+ },
+ "beir_cqadupstack_android_15581": {
+  "00/54005.txt": 1
+ },
+ "beir_cqadupstack_android_15615": {
+  "fc/4649.txt": 1
+ },
+ "beir_cqadupstack_android_15640": {
+  "f7/6896.txt": 1
+ },
+ "beir_cqadupstack_android_15645": {
+  "c1/29165.txt": 1
+ },
+ "beir_cqadupstack_android_15688": {
+  "5b/770.txt": 1,
+  "f9/6922.txt": 1
+ },
+ "beir_cqadupstack_android_15701": {
+  "de/37308.txt": 1
+ },
+ "beir_cqadupstack_android_15828": {
+  "10/982.txt": 1
+ },
+ "beir_cqadupstack_android_15943": {
+  "2a/4421.txt": 1
+ },
+ "beir_cqadupstack_android_15947": {
+  "d4/56188.txt": 1
+ },
+ "beir_cqadupstack_android_15953": {
+  "7b/10082.txt": 1
+ },
+ "beir_cqadupstack_android_1600": {
+  "8a/1758.txt": 1
+ },
+ "beir_cqadupstack_android_16078": {
+  "bf/19940.txt": 1,
+  "cc/53384.txt": 1,
+  "d4/19401.txt": 1,
+  "f1/2569.txt": 1,
+  "fb/18972.txt": 1
+ },
+ "beir_cqadupstack_android_16137": {
+  "19/10229.txt": 1,
+  "52/69084.txt": 1
+ },
+ "beir_cqadupstack_android_16186": {
+  "12/8301.txt": 1
+ },
+ "beir_cqadupstack_android_16220": {
+  "57/19673.txt": 1,
+  "ef/38769.txt": 1,
+  "f5/75508.txt": 1
+ },
+ "beir_cqadupstack_android_16236": {
+  "5d/22541.txt": 1
+ },
+ "beir_cqadupstack_android_16367": {
+  "e4/27658.txt": 1
+ },
+ "beir_cqadupstack_android_16657": {
+  "3b/26621.txt": 1,
+  "95/37142.txt": 1,
+  "cf/2700.txt": 1
+ },
+ "beir_cqadupstack_android_16725": {
+  "1b/81425.txt": 1
+ },
+ "beir_cqadupstack_android_16836": {
+  "33/45705.txt": 1
+ },
+ "beir_cqadupstack_android_16915": {
+  "6a/57578.txt": 1
+ },
+ "beir_cqadupstack_android_16962": {
+  "7c/6331.txt": 1
+ },
+ "beir_cqadupstack_android_17159": {
+  "06/34248.txt": 1
+ },
+ "beir_cqadupstack_android_17210": {
+  "ed/18269.txt": 1
+ },
+ "beir_cqadupstack_android_17319": {
+  "c4/33701.txt": 1
+ },
+ "beir_cqadupstack_android_17402": {
+  "88/28823.txt": 1
+ },
+ "beir_cqadupstack_android_17433": {
+  "85/21207.txt": 1,
+  "8a/987.txt": 1,
+  "ee/16588.txt": 1
+ },
+ "beir_cqadupstack_android_17482": {
+  "49/18919.txt": 1
+ },
+ "beir_cqadupstack_android_17584": {
+  "a3/17346.txt": 1
+ },
+ "beir_cqadupstack_android_17640": {
+  "01/43361.txt": 1
+ },
+ "beir_cqadupstack_android_17642": {
+  "f2/17338.txt": 1
+ },
+ "beir_cqadupstack_android_17736": {
+  "2a/130.txt": 1,
+  "ea/6042.txt": 1
+ },
+ "beir_cqadupstack_android_1799": {
+  "ed/27268.txt": 1
+ },
+ "beir_cqadupstack_android_1805": {
+  "9c/17549.txt": 1,
+  "9c/5539.txt": 1
+ },
+ "beir_cqadupstack_android_18065": {
+  "89/28136.txt": 1
+ },
+ "beir_cqadupstack_android_18121": {
+  "c4/14546.txt": 1
+ },
+ "beir_cqadupstack_android_18342": {
+  "25/54938.txt": 1,
+  "5e/40625.txt": 1,
+  "a4/54474.txt": 1,
+  "db/7069.txt": 1
+ },
+ "beir_cqadupstack_android_18528": {
+  "b8/14958.txt": 1
+ },
+ "beir_cqadupstack_android_18777": {
+  "a3/46965.txt": 1
+ },
+ "beir_cqadupstack_android_18823": {
+  "b7/37997.txt": 1
+ },
+ "beir_cqadupstack_android_18876": {
+  "d5/18243.txt": 1
+ },
+ "beir_cqadupstack_android_18930": {
+  "e7/18812.txt": 1
+ },
+ "beir_cqadupstack_android_18935": {
+  "c5/18936.txt": 1
+ },
+ "beir_cqadupstack_android_19094": {
+  "32/29630.txt": 1
+ },
+ "beir_cqadupstack_android_19184": {
+  "ca/14421.txt": 1
+ },
+ "beir_cqadupstack_android_19279": {
+  "be/6592.txt": 1
+ },
+ "beir_cqadupstack_android_1931": {
+  "11/25624.txt": 1,
+  "57/81338.txt": 1,
+  "af/6540.txt": 1
+ },
+ "beir_cqadupstack_android_19336": {
+  "ed/29511.txt": 1
+ },
+ "beir_cqadupstack_android_19726": {
+  "3f/18958.txt": 1
+ },
+ "beir_cqadupstack_android_19844": {
+  "26/65135.txt": 1
+ },
+ "beir_cqadupstack_android_19971": {
+  "00/9687.txt": 1,
+  "02/25116.txt": 1,
+  "02/41568.txt": 1,
+  "03/2889.txt": 1,
+  "04/11120.txt": 1,
+  "04/23225.txt": 1,
+  "04/79628.txt": 1,
+  "05/63816.txt": 1,
+  "06/23515.txt": 1,
+  "06/78496.txt": 1,
+  "07/40964.txt": 1,
+  "09/25258.txt": 1,
+  "0b/17152.txt": 1,
+  "0b/71339.txt": 1,
+  "0e/77353.txt": 1,
+  "0e/78650.txt": 1,
+  "0e/79509.txt": 1,
+  "0f/10862.txt": 1,
+  "10/27749.txt": 1,
+  "15/45107.txt": 1,
+  "15/46814.txt": 1,
+  "16/56289.txt": 1,
+  "16/57684.txt": 1,
+  "18/37314.txt": 1,
+  "19/48063.txt": 1,
+  "19/77256.txt": 1,
+  "1a/4797.txt": 1,
+  "1b/13503.txt": 1,
+  "1c/24495.txt": 1,
+  "1d/81978.txt": 1,
+  "1f/16672.txt": 1,
+  "21/55585.txt": 1,
+  "21/65009.txt": 1,
+  "24/20600.txt": 1,
+  "24/37452.txt": 1,
+  "25/58250.txt": 1,
+  "26/3475.txt": 1,
+  "26/43289.txt": 1,
+  "28/53201.txt": 1,
+  "2a/55256.txt": 1,
+  "2b/77077.txt": 1,
+  "2d/4184.txt": 1,
+  "2d/69357.txt": 1,
+  "2e/19376.txt": 1,
+  "2f/23935.txt": 1,
+  "32/14353.txt": 1,
+  "32/60680.txt": 1,
+  "33/13405.txt": 1,
+  "34/56848.txt": 1,
+  "38/34078.txt": 1,
+  "3a/6498.txt": 1,
+  "3c/13762.txt": 1,
+  "3d/58068.txt": 1,
+  "3f/34136.txt": 1,
+  "40/32584.txt": 1,
+  "41/18788.txt": 1,
+  "42/81004.txt": 1,
+  "43/56952.txt": 1,
+  "43/70137.txt": 1,
+  "44/12153.txt": 1,
+  "44/38551.txt": 1,
+  "46/64411.txt": 1,
+  "47/20602.txt": 1,
+  "49/4997.txt": 1,
+  "4c/55535.txt": 1,
+  "50/67675.txt": 1,
+  "51/18425.txt": 1,
+  "51/48203.txt": 1,
+  "52/26161.txt": 1,
+  "52/75791.txt": 1,
+  "54/25492.txt": 1,
+  "54/29394.txt": 1,
+  "54/56822.txt": 1,
+  "54/67994.txt": 1,
+  "56/37382.txt": 1,
+  "59/70287.txt": 1,
+  "59/925.txt": 1,
+  "5a/20906.txt": 1,
+  "5a/6840.txt": 1,
+  "5c/22484.txt": 1,
+  "5c/32663.txt": 1,
+  "5c/67221.txt": 1,
+  "5d/12762.txt": 1,
+  "5d/51559.txt": 1,
+  "5e/44632.txt": 1,
+  "5e/73179.txt": 1,
+  "5e/74811.txt": 1,
+  "5e/8037.txt": 1,
+  "5f/37220.txt": 1,
+  "60/25552.txt": 1,
+  "61/26726.txt": 1,
+  "61/58572.txt": 1,
+  "62/58488.txt": 1,
+  "63/61649.txt": 1,
+  "65/15715.txt": 1,
+  "65/72864.txt": 1,
+  "66/2695.txt": 1,
+  "66/59891.txt": 1,
+  "67/38074.txt": 1,
+  "67/63617.txt": 1,
+  "67/73235.txt": 1,
+  "69/34499.txt": 1,
+  "6b/63547.txt": 1,
+  "6d/3932.txt": 1,
+  "6e/61376.txt": 1,
+  "72/32589.txt": 1,
+  "72/46010.txt": 1,
+  "74/35014.txt": 1,
+  "75/69301.txt": 1,
+  "76/35850.txt": 1,
+  "76/70236.txt": 1,
+  "76/78842.txt": 1,
+  "77/14907.txt": 1,
+  "78/64550.txt": 1,
+  "7a/10408.txt": 1,
+  "7a/13510.txt": 1,
+  "7b/39397.txt": 1,
+  "7c/80678.txt": 1,
+  "7d/7180.txt": 1,
+  "7e/57180.txt": 1,
+  "7f/81967.txt": 1,
+  "80/40914.txt": 1,
+  "80/8843.txt": 1,
+  "81/5443.txt": 1,
+  "82/61162.txt": 1,
+  "82/69804.txt": 1,
+  "83/48214.txt": 1,
+  "83/73480.txt": 1,
+  "84/54550.txt": 1,
+  "85/53628.txt": 1,
+  "85/56112.txt": 1,
+  "87/71369.txt": 1,
+  "88/664.txt": 1,
+  "89/56278.txt": 1,
+  "89/68035.txt": 1,
+  "8c/6849.txt": 1,
+  "8d/57662.txt": 1,
+  "8e/49594.txt": 1,
+  "8e/66179.txt": 1,
+  "8e/75159.txt": 1,
+  "8f/4678.txt": 1,
+  "8f/57514.txt": 1,
+  "90/82137.txt": 1,
+  "91/10990.txt": 1,
+  "91/55888.txt": 1,
+  "92/81224.txt": 1,
+  "94/17662.txt": 1,
+  "94/2225.txt": 1,
+  "94/66694.txt": 1,
+  "96/60102.txt": 1,
+  "97/25025.txt": 1,
+  "99/5094.txt": 1,
+  "99/66472.txt": 1,
+  "9a/23590.txt": 1,
+  "9c/32929.txt": 1,
+  "9e/15895.txt": 1,
+  "9f/22957.txt": 1,
+  "a1/70020.txt": 1,
+  "a2/25870.txt": 1,
+  "a2/43042.txt": 1,
+  "a3/58123.txt": 1,
+  "a4/20850.txt": 1,
+  "a4/2129.txt": 1,
+  "a4/55877.txt": 1,
+  "a5/57171.txt": 1,
+  "a6/61190.txt": 1,
+  "a6/78850.txt": 1,
+  "a8/26461.txt": 1,
+  "a8/58997.txt": 1,
+  "a8/77140.txt": 1,
+  "aa/79577.txt": 1,
+  "ab/20013.txt": 1,
+  "ab/77081.txt": 1,
+  "ac/47027.txt": 1,
+  "ad/60747.txt": 1,
+  "ad/768.txt": 1,
+  "ae/181.txt": 1,
+  "ae/3340.txt": 1,
+  "ae/37532.txt": 1,
+  "af/40.txt": 1,
+  "af/69036.txt": 1,
+  "b1/5877.txt": 1,
+  "b3/56135.txt": 1,
+  "b6/56155.txt": 1,
+  "b6/64375.txt": 1,
+  "b7/55451.txt": 1,
+  "b9/24604.txt": 1,
+  "ba/51204.txt": 1,
+  "bb/43434.txt": 1,
+  "c0/14766.txt": 1,
+  "c0/25648.txt": 1,
+  "c0/40960.txt": 1,
+  "c1/25974.txt": 1,
+  "c2/51579.txt": 1,
+  "c5/64526.txt": 1,
+  "c6/11355.txt": 1,
+  "c6/3430.txt": 1,
+  "c6/42377.txt": 1,
+  "c7/30750.txt": 1,
+  "c9/41046.txt": 1,
+  "cb/13618.txt": 1,
+  "cb/21919.txt": 1,
+  "cb/23349.txt": 1,
+  "cb/64058.txt": 1,
+  "cc/77420.txt": 1,
+  "cd/34361.txt": 1,
+  "cf/59291.txt": 1,
+  "d0/33981.txt": 1,
+  "d1/24966.txt": 1,
+  "d1/78309.txt": 1,
+  "d1/847.txt": 1,
+  "d2/17140.txt": 1,
+  "d3/43624.txt": 1,
+  "d3/77907.txt": 1,
+  "d5/20016.txt": 1,
+  "d6/65619.txt": 1,
+  "d7/29389.txt": 1,
+  "d8/60863.txt": 1,
+  "d8/8616.txt": 1,
+  "d9/24575.txt": 1,
+  "da/36469.txt": 1,
+  "db/9248.txt": 1,
+  "dc/12218.txt": 1,
+  "dd/25354.txt": 1,
+  "dd/57174.txt": 1,
+  "de/75904.txt": 1,
+  "df/73035.txt": 1,
+  "e1/19853.txt": 1,
+  "e1/56110.txt": 1,
+  "e1/73149.txt": 1,
+  "e1/82055.txt": 1,
+  "e2/22879.txt": 1,
+  "e2/30259.txt": 1,
+  "e3/4278.txt": 1,
+  "e3/64304.txt": 1,
+  "e3/66066.txt": 1,
+  "e7/75673.txt": 1,
+  "e8/38426.txt": 1,
+  "e9/15464.txt": 1,
+  "e9/19894.txt": 1,
+  "ea/78176.txt": 1,
+  "eb/10069.txt": 1,
+  "ec/38779.txt": 1,
+  "ed/18827.txt": 1,
+  "ee/12045.txt": 1,
+  "ee/60714.txt": 1,
+  "ef/2297.txt": 1,
+  "ef/23808.txt": 1,
+  "f0/20113.txt": 1,
+  "f1/53675.txt": 1,
+  "f2/15779.txt": 1,
+  "f3/75234.txt": 1,
+  "f4/20782.txt": 1,
+  "f6/23613.txt": 1,
+  "f6/65709.txt": 1,
+  "f7/25164.txt": 1,
+  "f8/81559.txt": 1,
+  "f9/9656.txt": 1,
+  "fa/49832.txt": 1,
+  "fa/57628.txt": 1,
+  "fc/26532.txt": 1,
+  "fe/20195.txt": 1
+ },
+ "beir_cqadupstack_android_19992": {
+  "91/19985.txt": 1
+ },
+ "beir_cqadupstack_android_20198": {
+  "fa/5228.txt": 1
+ },
+ "beir_cqadupstack_android_20256": {
+  "f9/50076.txt": 1
+ },
+ "beir_cqadupstack_android_20317": {
+  "69/29384.txt": 1
+ },
+ "beir_cqadupstack_android_20405": {
+  "88/20525.txt": 1
+ },
+ "beir_cqadupstack_android_20440": {
+  "4e/20143.txt": 1
+ },
+ "beir_cqadupstack_android_20513": {
+  "1e/12608.txt": 1,
+  "64/77070.txt": 1,
+  "b8/79095.txt": 1,
+  "dc/81262.txt": 1,
+  "e2/40465.txt": 1,
+  "f5/9101.txt": 1
+ },
+ "beir_cqadupstack_android_20606": {
+  "b4/53903.txt": 1
+ },
+ "beir_cqadupstack_android_20728": {
+  "65/36377.txt": 1
+ },
+ "beir_cqadupstack_android_20746": {
+  "52/8290.txt": 1
+ },
+ "beir_cqadupstack_android_20751": {
+  "ac/65570.txt": 1
+ },
+ "beir_cqadupstack_android_20855": {
+  "07/46999.txt": 1
+ },
+ "beir_cqadupstack_android_20938": {
+  "54/13305.txt": 1
+ },
+ "beir_cqadupstack_android_20946": {
+  "38/20947.txt": 1
+ },
+ "beir_cqadupstack_android_21119": {
+  "39/34573.txt": 1,
+  "44/27473.txt": 1,
+  "8f/25008.txt": 1,
+  "c3/13448.txt": 1,
+  "dc/63354.txt": 1,
+  "dd/20045.txt": 1,
+  "f8/57300.txt": 1
+ },
+ "beir_cqadupstack_android_21151": {
+  "08/18312.txt": 1,
+  "0c/37470.txt": 1,
+  "2b/17228.txt": 1,
+  "31/27250.txt": 1,
+  "47/24752.txt": 1,
+  "99/49604.txt": 1,
+  "a8/18232.txt": 1,
+  "b0/41045.txt": 1,
+  "b9/26459.txt": 1
+ },
+ "beir_cqadupstack_android_21240": {
+  "43/45951.txt": 1,
+  "d2/12962.txt": 1
+ },
+ "beir_cqadupstack_android_21280": {
+  "51/3983.txt": 1
+ },
+ "beir_cqadupstack_android_21296": {
+  "fb/25585.txt": 1
+ },
+ "beir_cqadupstack_android_21512": {
+  "74/22867.txt": 1,
+  "de/29877.txt": 1
+ },
+ "beir_cqadupstack_android_21515": {
+  "17/73399.txt": 1,
+  "26/9317.txt": 1,
+  "2a/20207.txt": 1,
+  "31/15814.txt": 1,
+  "6a/70044.txt": 1,
+  "70/53588.txt": 1,
+  "7d/78861.txt": 1,
+  "85/23237.txt": 1,
+  "8a/35016.txt": 1,
+  "a9/7238.txt": 1,
+  "ac/18006.txt": 1,
+  "b7/25222.txt": 1,
+  "d9/58959.txt": 1
+ },
+ "beir_cqadupstack_android_21520": {
+  "7b/21550.txt": 1
+ },
+ "beir_cqadupstack_android_21556": {
+  "b4/37871.txt": 1
+ },
+ "beir_cqadupstack_android_21616": {
+  "08/36471.txt": 1,
+  "0b/65039.txt": 1,
+  "27/66754.txt": 1,
+  "48/40344.txt": 1,
+  "4f/55241.txt": 1,
+  "6d/15361.txt": 1,
+  "6e/48924.txt": 1,
+  "84/40145.txt": 1,
+  "a0/68243.txt": 1,
+  "bd/17462.txt": 1,
+  "be/24028.txt": 1,
+  "e4/27214.txt": 1,
+  "f2/47796.txt": 1
+ },
+ "beir_cqadupstack_android_21654": {
+  "e0/15383.txt": 1
+ },
+ "beir_cqadupstack_android_2172": {
+  "63/3089.txt": 1
+ },
+ "beir_cqadupstack_android_21779": {
+  "55/21967.txt": 1
+ },
+ "beir_cqadupstack_android_21861": {
+  "a4/7621.txt": 1
+ },
+ "beir_cqadupstack_android_21991": {
+  "a8/7351.txt": 1
+ },
+ "beir_cqadupstack_android_22003": {
+  "fb/4053.txt": 1
+ },
+ "beir_cqadupstack_android_22028": {
+  "c6/22034.txt": 1
+ },
+ "beir_cqadupstack_android_2203": {
+  "16/89.txt": 1,
+  "65/63888.txt": 1,
+  "7c/25561.txt": 1,
+  "86/710.txt": 1,
+  "95/37810.txt": 1,
+  "df/36838.txt": 1
+ },
+ "beir_cqadupstack_android_22133": {
+  "36/20457.txt": 1
+ },
+ "beir_cqadupstack_android_22148": {
+  "98/22642.txt": 1
+ },
+ "beir_cqadupstack_android_22357": {
+  "0f/7254.txt": 1
+ },
+ "beir_cqadupstack_android_2254": {
+  "73/4574.txt": 1
+ },
+ "beir_cqadupstack_android_22778": {
+  "e2/26584.txt": 1
+ },
+ "beir_cqadupstack_android_22802": {
+  "3e/80692.txt": 1
+ },
+ "beir_cqadupstack_android_22841": {
+  "c4/8877.txt": 1
+ },
+ "beir_cqadupstack_android_22905": {
+  "79/23989.txt": 1
+ },
+ "beir_cqadupstack_android_22912": {
+  "93/25797.txt": 1
+ },
+ "beir_cqadupstack_android_23055": {
+  "71/79075.txt": 1
+ },
+ "beir_cqadupstack_android_2310": {
+  "cc/1359.txt": 1
+ },
+ "beir_cqadupstack_android_23404": {
+  "8f/40462.txt": 1,
+  "9c/25225.txt": 1
+ },
+ "beir_cqadupstack_android_23440": {
+  "f8/34873.txt": 1
+ },
+ "beir_cqadupstack_android_23508": {
+  "97/23449.txt": 1
+ },
+ "beir_cqadupstack_android_23513": {
+  "15/18774.txt": 1
+ },
+ "beir_cqadupstack_android_23537": {
+  "0a/20450.txt": 1,
+  "80/15049.txt": 1
+ },
+ "beir_cqadupstack_android_23620": {
+  "4f/23683.txt": 1
+ },
+ "beir_cqadupstack_android_23622": {
+  "73/32977.txt": 1
+ },
+ "beir_cqadupstack_android_23710": {
+  "ba/1934.txt": 1
+ },
+ "beir_cqadupstack_android_2405": {
+  "2a/77155.txt": 1
+ },
+ "beir_cqadupstack_android_24079": {
+  "ab/13452.txt": 1
+ },
+ "beir_cqadupstack_android_24084": {
+  "14/33092.txt": 1
+ },
+ "beir_cqadupstack_android_24126": {
+  "a3/3476.txt": 1
+ },
+ "beir_cqadupstack_android_24293": {
+  "cf/25349.txt": 1
+ },
+ "beir_cqadupstack_android_2432": {
+  "4b/38460.txt": 1,
+  "5e/21112.txt": 1,
+  "9c/38256.txt": 1,
+  "a5/38179.txt": 1,
+  "ad/53873.txt": 1,
+  "fd/49771.txt": 1
+ },
+ "beir_cqadupstack_android_2437": {
+  "03/11429.txt": 1
+ },
+ "beir_cqadupstack_android_24379": {
+  "1c/25626.txt": 1
+ },
+ "beir_cqadupstack_android_24427": {
+  "78/23742.txt": 1
+ },
+ "beir_cqadupstack_android_24570": {
+  "35/1.txt": 1,
+  "3c/5223.txt": 1,
+  "5d/236.txt": 1,
+  "61/69734.txt": 1,
+  "9d/64481.txt": 1,
+  "9f/56745.txt": 1,
+  "d3/12666.txt": 1
+ },
+ "beir_cqadupstack_android_2461": {
+  "0f/1159.txt": 1
+ },
+ "beir_cqadupstack_android_2462": {
+  "c1/3197.txt": 1
+ },
+ "beir_cqadupstack_android_24646": {
+  "71/2472.txt": 1
+ },
+ "beir_cqadupstack_android_2466": {
+  "1a/18908.txt": 1,
+  "30/9357.txt": 1,
+  "5b/55189.txt": 1,
+  "bb/12703.txt": 1,
+  "da/15065.txt": 1
+ },
+ "beir_cqadupstack_android_24825": {
+  "0b/53103.txt": 1
+ },
+ "beir_cqadupstack_android_24959": {
+  "0f/25024.txt": 1
+ },
+ "beir_cqadupstack_android_25149": {
+  "29/46731.txt": 1
+ },
+ "beir_cqadupstack_android_25178": {
+  "3b/601.txt": 1
+ },
+ "beir_cqadupstack_android_25193": {
+  "31/23199.txt": 1
+ },
+ "beir_cqadupstack_android_25278": {
+  "09/3963.txt": 1,
+  "4d/7240.txt": 1
+ },
+ "beir_cqadupstack_android_25422": {
+  "40/21965.txt": 1
+ },
+ "beir_cqadupstack_android_25635": {
+  "db/37321.txt": 1
+ },
+ "beir_cqadupstack_android_25693": {
+  "0f/576.txt": 1,
+  "38/476.txt": 1,
+  "45/266.txt": 1,
+  "49/11485.txt": 1,
+  "78/26363.txt": 1,
+  "86/7001.txt": 1
+ },
+ "beir_cqadupstack_android_25707": {
+  "d8/14630.txt": 1
+ },
+ "beir_cqadupstack_android_25750": {
+  "ae/65086.txt": 1
+ },
+ "beir_cqadupstack_android_2581": {
+  "9c/64255.txt": 1
+ },
+ "beir_cqadupstack_android_25847": {
+  "8e/32659.txt": 1
+ },
+ "beir_cqadupstack_android_25905": {
+  "c0/6034.txt": 1
+ },
+ "beir_cqadupstack_android_25948": {
+  "4d/33065.txt": 1
+ },
+ "beir_cqadupstack_android_26001": {
+  "73/27064.txt": 1
+ },
+ "beir_cqadupstack_android_26142": {
+  "7c/50775.txt": 1
+ },
+ "beir_cqadupstack_android_26157": {
+  "d1/38649.txt": 1,
+  "d2/28226.txt": 1
+ },
+ "beir_cqadupstack_android_26170": {
+  "52/15932.txt": 1,
+  "d1/2622.txt": 1,
+  "f8/28887.txt": 1
+ },
+ "beir_cqadupstack_android_26226": {
+  "47/14249.txt": 1,
+  "6d/28644.txt": 1
+ },
+ "beir_cqadupstack_android_26238": {
+  "3a/5414.txt": 1,
+  "62/66260.txt": 1,
+  "83/55104.txt": 1,
+  "87/63915.txt": 1
+ },
+ "beir_cqadupstack_android_26239": {
+  "2e/25254.txt": 1
+ },
+ "beir_cqadupstack_android_26372": {
+  "fc/78730.txt": 1
+ },
+ "beir_cqadupstack_android_26463": {
+  "1f/26123.txt": 1
+ },
+ "beir_cqadupstack_android_26745": {
+  "6c/3930.txt": 1
+ },
+ "beir_cqadupstack_android_26826": {
+  "46/48733.txt": 1,
+  "80/38258.txt": 1,
+  "88/637.txt": 1
+ },
+ "beir_cqadupstack_android_27007": {
+  "58/49115.txt": 1
+ },
+ "beir_cqadupstack_android_27224": {
+  "b1/36843.txt": 1
+ },
+ "beir_cqadupstack_android_27321": {
+  "ae/27367.txt": 1
+ },
+ "beir_cqadupstack_android_27387": {
+  "87/1114.txt": 1
+ },
+ "beir_cqadupstack_android_27415": {
+  "64/29193.txt": 1
+ },
+ "beir_cqadupstack_android_27417": {
+  "c5/12150.txt": 1
+ },
+ "beir_cqadupstack_android_27673": {
+  "50/11327.txt": 1,
+  "e6/6981.txt": 1
+ },
+ "beir_cqadupstack_android_27725": {
+  "b1/2535.txt": 1
+ },
+ "beir_cqadupstack_android_2773": {
+  "26/68487.txt": 1
+ },
+ "beir_cqadupstack_android_27816": {
+  "02/73428.txt": 1,
+  "2c/34127.txt": 1,
+  "46/59479.txt": 1,
+  "85/39602.txt": 1
+ },
+ "beir_cqadupstack_android_27821": {
+  "e7/9679.txt": 1
+ },
+ "beir_cqadupstack_android_27996": {
+  "c6/27508.txt": 1
+ },
+ "beir_cqadupstack_android_28551": {
+  "00/7790.txt": 1,
+  "04/65105.txt": 1,
+  "a6/39682.txt": 1,
+  "aa/4418.txt": 1,
+  "b8/37604.txt": 1
+ },
+ "beir_cqadupstack_android_28637": {
+  "12/20733.txt": 1
+ },
+ "beir_cqadupstack_android_28652": {
+  "0a/19861.txt": 1,
+  "40/8276.txt": 1,
+  "ca/48594.txt": 1
+ },
+ "beir_cqadupstack_android_28662": {
+  "45/54338.txt": 1
+ },
+ "beir_cqadupstack_android_28711": {
+  "10/44215.txt": 1,
+  "3b/42206.txt": 1,
+  "51/75665.txt": 1,
+  "6e/63920.txt": 1,
+  "7d/2131.txt": 1,
+  "7d/65667.txt": 1,
+  "82/47.txt": 1,
+  "86/46982.txt": 1,
+  "87/52099.txt": 1,
+  "a1/18644.txt": 1,
+  "b1/54883.txt": 1,
+  "c0/26215.txt": 1,
+  "de/2492.txt": 1,
+  "f7/81448.txt": 1
+ },
+ "beir_cqadupstack_android_28745": {
+  "2e/34227.txt": 1
+ },
+ "beir_cqadupstack_android_28851": {
+  "d2/58477.txt": 1
+ },
+ "beir_cqadupstack_android_28896": {
+  "51/21015.txt": 1
+ },
+ "beir_cqadupstack_android_28970": {
+  "6f/22239.txt": 1
+ },
+ "beir_cqadupstack_android_2906": {
+  "eb/4491.txt": 1
+ },
+ "beir_cqadupstack_android_29109": {
+  "34/62694.txt": 1
+ },
+ "beir_cqadupstack_android_29152": {
+  "94/53447.txt": 1
+ },
+ "beir_cqadupstack_android_2916": {
+  "07/13569.txt": 1,
+  "d1/25535.txt": 1
+ },
+ "beir_cqadupstack_android_29208": {
+  "6f/28581.txt": 1,
+  "dd/2603.txt": 1
+ },
+ "beir_cqadupstack_android_29223": {
+  "a0/32805.txt": 1
+ },
+ "beir_cqadupstack_android_29452": {
+  "57/6435.txt": 1
+ },
+ "beir_cqadupstack_android_29502": {
+  "ca/27484.txt": 1
+ },
+ "beir_cqadupstack_android_29538": {
+  "36/285.txt": 1
+ },
+ "beir_cqadupstack_android_29631": {
+  "d7/6372.txt": 1
+ },
+ "beir_cqadupstack_android_29769": {
+  "1a/80864.txt": 1,
+  "3e/69263.txt": 1,
+  "8c/75826.txt": 1,
+  "cc/31966.txt": 1
+ },
+ "beir_cqadupstack_android_29845": {
+  "11/12114.txt": 1
+ },
+ "beir_cqadupstack_android_29907": {
+  "9f/26178.txt": 1
+ },
+ "beir_cqadupstack_android_30030": {
+  "67/20230.txt": 1
+ },
+ "beir_cqadupstack_android_30095": {
+  "40/29706.txt": 1
+ },
+ "beir_cqadupstack_android_30144": {
+  "8c/7593.txt": 1
+ },
+ "beir_cqadupstack_android_30216": {
+  "c3/19217.txt": 1
+ },
+ "beir_cqadupstack_android_30293": {
+  "92/57592.txt": 1
+ },
+ "beir_cqadupstack_android_30332": {
+  "04/56265.txt": 1,
+  "0a/9.txt": 1,
+  "11/39693.txt": 1,
+  "24/2258.txt": 1,
+  "30/4179.txt": 1,
+  "3c/14820.txt": 1,
+  "42/1349.txt": 1,
+  "42/1949.txt": 1,
+  "45/13758.txt": 1,
+  "4f/58382.txt": 1,
+  "52/63865.txt": 1,
+  "52/755.txt": 1,
+  "62/55804.txt": 1,
+  "7a/77121.txt": 1,
+  "7f/43476.txt": 1,
+  "81/28779.txt": 1,
+  "8a/519.txt": 1,
+  "91/16924.txt": 1,
+  "94/25983.txt": 1,
+  "a0/30211.txt": 1,
+  "a3/158.txt": 1,
+  "a9/4089.txt": 1,
+  "a9/50077.txt": 1,
+  "bb/65066.txt": 1,
+  "bc/18488.txt": 1,
+  "c6/34810.txt": 1,
+  "cf/55406.txt": 1,
+  "d9/18765.txt": 1,
+  "dd/49186.txt": 1,
+  "f0/38146.txt": 1
+ },
+ "beir_cqadupstack_android_30448": {
+  "d2/62601.txt": 1
+ },
+ "beir_cqadupstack_android_30487": {
+  "29/11812.txt": 1,
+  "3e/20118.txt": 1,
+  "b3/17114.txt": 1,
+  "c2/18111.txt": 1
+ },
+ "beir_cqadupstack_android_30541": {
+  "51/40737.txt": 1
+ },
+ "beir_cqadupstack_android_30674": {
+  "76/37580.txt": 1
+ },
+ "beir_cqadupstack_android_3072": {
+  "8f/59389.txt": 1
+ },
+ "beir_cqadupstack_android_3079": {
+  "33/56613.txt": 1,
+  "77/66073.txt": 1
+ },
+ "beir_cqadupstack_android_3106": {
+  "35/20771.txt": 1
+ },
+ "beir_cqadupstack_android_31811": {
+  "33/1624.txt": 1,
+  "83/56687.txt": 1
+ },
+ "beir_cqadupstack_android_31858": {
+  "d0/25964.txt": 1
+ },
+ "beir_cqadupstack_android_32009": {
+  "76/25584.txt": 1
+ },
+ "beir_cqadupstack_android_32106": {
+  "fd/32046.txt": 1
+ },
+ "beir_cqadupstack_android_32115": {
+  "ea/31915.txt": 1
+ },
+ "beir_cqadupstack_android_32298": {
+  "ad/9929.txt": 1,
+  "b6/3134.txt": 1
+ },
+ "beir_cqadupstack_android_32312": {
+  "4a/7145.txt": 1,
+  "ba/73499.txt": 1,
+  "f7/14169.txt": 1
+ },
+ "beir_cqadupstack_android_32373": {
+  "65/29416.txt": 1,
+  "a9/31836.txt": 1
+ },
+ "beir_cqadupstack_android_32405": {
+  "c2/17871.txt": 1
+ },
+ "beir_cqadupstack_android_32598": {
+  "a7/35818.txt": 1
+ },
+ "beir_cqadupstack_android_32759": {
+  "69/64366.txt": 1
+ },
+ "beir_cqadupstack_android_32789": {
+  "bf/22979.txt": 1
+ },
+ "beir_cqadupstack_android_32829": {
+  "2b/9905.txt": 1
+ },
+ "beir_cqadupstack_android_32878": {
+  "95/26133.txt": 1,
+  "be/32469.txt": 1
+ },
+ "beir_cqadupstack_android_32914": {
+  "fd/3359.txt": 1
+ },
+ "beir_cqadupstack_android_32974": {
+  "80/18663.txt": 1
+ },
+ "beir_cqadupstack_android_32979": {
+  "8b/33054.txt": 1
+ },
+ "beir_cqadupstack_android_33308": {
+  "e8/68268.txt": 1
+ },
+ "beir_cqadupstack_android_33329": {
+  "0f/48906.txt": 1,
+  "0f/65989.txt": 1,
+  "1f/4117.txt": 1,
+  "2a/14278.txt": 1,
+  "3c/7504.txt": 1,
+  "45/12616.txt": 1,
+  "ac/81880.txt": 1
+ },
+ "beir_cqadupstack_android_33496": {
+  "8d/77228.txt": 1,
+  "ab/65382.txt": 1,
+  "bd/51232.txt": 1
+ },
+ "beir_cqadupstack_android_33512": {
+  "a4/7079.txt": 1
+ },
+ "beir_cqadupstack_android_33515": {
+  "74/23396.txt": 1,
+  "eb/33811.txt": 1
+ },
+ "beir_cqadupstack_android_33526": {
+  "6e/16149.txt": 1
+ },
+ "beir_cqadupstack_android_33702": {
+  "50/35836.txt": 1
+ },
+ "beir_cqadupstack_android_33728": {
+  "44/1964.txt": 1
+ },
+ "beir_cqadupstack_android_33798": {
+  "c6/37754.txt": 1
+ },
+ "beir_cqadupstack_android_338": {
+  "f5/20215.txt": 1
+ },
+ "beir_cqadupstack_android_33894": {
+  "01/55820.txt": 1,
+  "17/17213.txt": 1,
+  "1d/77215.txt": 1,
+  "29/62433.txt": 1,
+  "3c/16691.txt": 1,
+  "3d/75816.txt": 1,
+  "4e/44209.txt": 1,
+  "57/64128.txt": 1,
+  "65/13081.txt": 1,
+  "67/27808.txt": 1,
+  "71/42272.txt": 1,
+  "79/10037.txt": 1,
+  "7a/26310.txt": 1,
+  "84/34058.txt": 1,
+  "92/7983.txt": 1,
+  "9b/41754.txt": 1,
+  "9c/75544.txt": 1,
+  "a7/48140.txt": 1,
+  "ad/4287.txt": 1,
+  "b1/47825.txt": 1,
+  "cf/81702.txt": 1,
+  "d0/39960.txt": 1,
+  "d2/4122.txt": 1,
+  "dd/24768.txt": 1,
+  "de/68213.txt": 1,
+  "e5/26099.txt": 1,
+  "ea/55336.txt": 1,
+  "f7/28866.txt": 1,
+  "fe/53041.txt": 1
+ },
+ "beir_cqadupstack_android_33941": {
+  "13/68120.txt": 1,
+  "18/81014.txt": 1,
+  "32/23097.txt": 1,
+  "ee/22997.txt": 1
+ },
+ "beir_cqadupstack_android_33964": {
+  "f5/17994.txt": 1
+ },
+ "beir_cqadupstack_android_33994": {
+  "ad/49689.txt": 1
+ },
+ "beir_cqadupstack_android_34507": {
+  "57/51554.txt": 1,
+  "7f/64515.txt": 1,
+  "92/33901.txt": 1,
+  "f2/12626.txt": 1
+ },
+ "beir_cqadupstack_android_34618": {
+  "61/19333.txt": 1
+ },
+ "beir_cqadupstack_android_34625": {
+  "c4/57778.txt": 1
+ },
+ "beir_cqadupstack_android_34704": {
+  "e0/82308.txt": 1
+ },
+ "beir_cqadupstack_android_34948": {
+  "97/48121.txt": 1
+ },
+ "beir_cqadupstack_android_34984": {
+  "92/27690.txt": 1
+ },
+ "beir_cqadupstack_android_35189": {
+  "1e/31933.txt": 1
+ },
+ "beir_cqadupstack_android_3521": {
+  "a5/60395.txt": 1,
+  "e1/38340.txt": 1
+ },
+ "beir_cqadupstack_android_35351": {
+  "0b/39372.txt": 1
+ },
+ "beir_cqadupstack_android_35541": {
+  "cd/35699.txt": 1
+ },
+ "beir_cqadupstack_android_35931": {
+  "5b/33610.txt": 1
+ },
+ "beir_cqadupstack_android_35956": {
+  "b4/35794.txt": 1
+ },
+ "beir_cqadupstack_android_36182": {
+  "d7/75822.txt": 1
+ },
+ "beir_cqadupstack_android_36468": {
+  "21/17315.txt": 1,
+  "a5/3680.txt": 1
+ },
+ "beir_cqadupstack_android_36706": {
+  "2d/37292.txt": 1,
+  "68/75291.txt": 1,
+  "b5/64505.txt": 1,
+  "bd/38722.txt": 1
+ },
+ "beir_cqadupstack_android_36794": {
+  "f4/23322.txt": 1
+ },
+ "beir_cqadupstack_android_36822": {
+  "42/20619.txt": 1
+ },
+ "beir_cqadupstack_android_36899": {
+  "e1/2958.txt": 1,
+  "e2/43605.txt": 1
+ },
+ "beir_cqadupstack_android_37": {
+  "7e/4779.txt": 1
+ },
+ "beir_cqadupstack_android_37020": {
+  "1c/8194.txt": 1,
+  "49/3769.txt": 1,
+  "74/1468.txt": 1,
+  "7d/70110.txt": 1
+ },
+ "beir_cqadupstack_android_3717": {
+  "0b/28891.txt": 1,
+  "62/927.txt": 1,
+  "63/24670.txt": 1,
+  "84/57532.txt": 1
+ },
+ "beir_cqadupstack_android_37230": {
+  "44/36629.txt": 1,
+  "e1/27156.txt": 1
+ },
+ "beir_cqadupstack_android_37246": {
+  "51/15388.txt": 1,
+  "fa/48788.txt": 1
+ },
+ "beir_cqadupstack_android_37371": {
+  "bd/37434.txt": 1
+ },
+ "beir_cqadupstack_android_37397": {
+  "98/33064.txt": 1
+ },
+ "beir_cqadupstack_android_37417": {
+  "81/18580.txt": 1
+ },
+ "beir_cqadupstack_android_3742": {
+  "07/2058.txt": 1,
+  "07/3334.txt": 1,
+  "12/53223.txt": 1,
+  "14/8364.txt": 1,
+  "23/2696.txt": 1,
+  "2b/1691.txt": 1,
+  "65/3261.txt": 1,
+  "6a/1703.txt": 1,
+  "6b/3665.txt": 1,
+  "6c/9184.txt": 1,
+  "6f/1823.txt": 1,
+  "82/4944.txt": 1,
+  "8d/8901.txt": 1,
+  "9d/558.txt": 1,
+  "a9/2425.txt": 1,
+  "ba/4395.txt": 1,
+  "bd/2770.txt": 1,
+  "c1/19467.txt": 1,
+  "d6/3235.txt": 1,
+  "da/3872.txt": 1,
+  "dc/3431.txt": 1
+ },
+ "beir_cqadupstack_android_37590": {
+  "3c/37327.txt": 1,
+  "e4/39562.txt": 1
+ },
+ "beir_cqadupstack_android_37599": {
+  "17/60926.txt": 1,
+  "6b/39285.txt": 1,
+  "c3/32948.txt": 1
+ },
+ "beir_cqadupstack_android_37736": {
+  "09/65208.txt": 1,
+  "67/36828.txt": 1,
+  "9f/81716.txt": 1,
+  "d2/63499.txt": 1,
+  "fe/20032.txt": 1
+ },
+ "beir_cqadupstack_android_37787": {
+  "65/2305.txt": 1,
+  "a3/70179.txt": 1,
+  "d5/52651.txt": 1
+ },
+ "beir_cqadupstack_android_37855": {
+  "52/37874.txt": 1
+ },
+ "beir_cqadupstack_android_3799": {
+  "72/3810.txt": 1
+ },
+ "beir_cqadupstack_android_38002": {
+  "a2/14023.txt": 1
+ },
+ "beir_cqadupstack_android_38010": {
+  "e5/27360.txt": 1
+ },
+ "beir_cqadupstack_android_38123": {
+  "e3/66985.txt": 1
+ },
+ "beir_cqadupstack_android_38246": {
+  "83/37992.txt": 1
+ },
+ "beir_cqadupstack_android_38351": {
+  "48/11789.txt": 1
+ },
+ "beir_cqadupstack_android_38409": {
+  "b2/33142.txt": 1
+ },
+ "beir_cqadupstack_android_38486": {
+  "96/24345.txt": 1,
+  "c3/13335.txt": 1
+ },
+ "beir_cqadupstack_android_38510": {
+  "42/38329.txt": 1,
+  "d9/73285.txt": 1
+ },
+ "beir_cqadupstack_android_38610": {
+  "b4/12097.txt": 1
+ },
+ "beir_cqadupstack_android_38806": {
+  "90/37443.txt": 1
+ },
+ "beir_cqadupstack_android_390": {
+  "22/13606.txt": 1,
+  "4e/35816.txt": 1,
+  "59/23562.txt": 1,
+  "7e/11414.txt": 1,
+  "b0/20296.txt": 1,
+  "b7/3062.txt": 1
+ },
+ "beir_cqadupstack_android_39128": {
+  "14/27516.txt": 1
+ },
+ "beir_cqadupstack_android_39137": {
+  "3f/29697.txt": 1,
+  "54/61245.txt": 1,
+  "63/33291.txt": 1,
+  "87/35493.txt": 1,
+  "8c/32857.txt": 1,
+  "b0/52983.txt": 1,
+  "c1/29488.txt": 1,
+  "da/29677.txt": 1,
+  "f8/43383.txt": 1
+ },
+ "beir_cqadupstack_android_39160": {
+  "fd/57898.txt": 1
+ },
+ "beir_cqadupstack_android_39230": {
+  "4f/47833.txt": 1
+ },
+ "beir_cqadupstack_android_39344": {
+  "9d/3091.txt": 1,
+  "c1/45815.txt": 1
+ },
+ "beir_cqadupstack_android_39382": {
+  "54/57658.txt": 1
+ },
+ "beir_cqadupstack_android_39424": {
+  "48/78901.txt": 1
+ },
+ "beir_cqadupstack_android_39435": {
+  "02/24398.txt": 1,
+  "68/29494.txt": 1
+ },
+ "beir_cqadupstack_android_39583": {
+  "f7/78993.txt": 1
+ },
+ "beir_cqadupstack_android_39707": {
+  "43/63504.txt": 1
+ },
+ "beir_cqadupstack_android_39805": {
+  "75/63680.txt": 1
+ },
+ "beir_cqadupstack_android_39809": {
+  "ac/4132.txt": 1
+ },
+ "beir_cqadupstack_android_40028": {
+  "94/40411.txt": 1
+ },
+ "beir_cqadupstack_android_40030": {
+  "73/12332.txt": 1
+ },
+ "beir_cqadupstack_android_40304": {
+  "91/701.txt": 1
+ },
+ "beir_cqadupstack_android_40383": {
+  "e7/45695.txt": 1
+ },
+ "beir_cqadupstack_android_40446": {
+  "d4/75613.txt": 1
+ },
+ "beir_cqadupstack_android_4062": {
+  "2d/43512.txt": 1
+ },
+ "beir_cqadupstack_android_4064": {
+  "4c/2171.txt": 1
+ },
+ "beir_cqadupstack_android_40754": {
+  "92/50744.txt": 1
+ },
+ "beir_cqadupstack_android_40813": {
+  "1c/16257.txt": 1
+ },
+ "beir_cqadupstack_android_40897": {
+  "2e/26917.txt": 1
+ },
+ "beir_cqadupstack_android_40917": {
+  "1d/40945.txt": 1
+ },
+ "beir_cqadupstack_android_40924": {
+  "0d/44398.txt": 1,
+  "80/66055.txt": 1
+ },
+ "beir_cqadupstack_android_40934": {
+  "cc/45928.txt": 1
+ },
+ "beir_cqadupstack_android_40963": {
+  "0d/21841.txt": 1,
+  "68/20732.txt": 1,
+  "6b/22624.txt": 1,
+  "6f/53192.txt": 1,
+  "b6/26635.txt": 1
+ },
+ "beir_cqadupstack_android_41023": {
+  "25/57064.txt": 1,
+  "aa/2086.txt": 1,
+  "d9/62653.txt": 1
+ },
+ "beir_cqadupstack_android_41496": {
+  "7f/19092.txt": 1
+ },
+ "beir_cqadupstack_android_41514": {
+  "11/77736.txt": 1
+ },
+ "beir_cqadupstack_android_41548": {
+  "01/58458.txt": 1,
+  "33/45160.txt": 1
+ },
+ "beir_cqadupstack_android_4158": {
+  "58/3036.txt": 1
+ },
+ "beir_cqadupstack_android_42097": {
+  "1d/40399.txt": 1,
+  "33/73155.txt": 1,
+  "c7/26879.txt": 1
+ },
+ "beir_cqadupstack_android_42325": {
+  "24/6736.txt": 1,
+  "62/7967.txt": 1
+ },
+ "beir_cqadupstack_android_4251": {
+  "be/39353.txt": 1
+ },
+ "beir_cqadupstack_android_4267": {
+  "0c/5011.txt": 1
+ },
+ "beir_cqadupstack_android_42681": {
+  "89/40517.txt": 1
+ },
+ "beir_cqadupstack_android_42761": {
+  "b1/26896.txt": 1
+ },
+ "beir_cqadupstack_android_42771": {
+  "e8/49908.txt": 1
+ },
+ "beir_cqadupstack_android_42820": {
+  "ba/78384.txt": 1
+ },
+ "beir_cqadupstack_android_42854": {
+  "10/37570.txt": 1
+ },
+ "beir_cqadupstack_android_43176": {
+  "d4/79636.txt": 1
+ },
+ "beir_cqadupstack_android_4319": {
+  "cc/7558.txt": 1
+ },
+ "beir_cqadupstack_android_43482": {
+  "71/45491.txt": 1
+ },
+ "beir_cqadupstack_android_43517": {
+  "f1/22452.txt": 1
+ },
+ "beir_cqadupstack_android_43718": {
+  "cc/77494.txt": 1
+ },
+ "beir_cqadupstack_android_43795": {
+  "f2/45499.txt": 1
+ },
+ "beir_cqadupstack_android_43876": {
+  "ef/24609.txt": 1
+ },
+ "beir_cqadupstack_android_43998": {
+  "97/44058.txt": 1
+ },
+ "beir_cqadupstack_android_44220": {
+  "0a/61594.txt": 1,
+  "0b/35847.txt": 1,
+  "12/69949.txt": 1,
+  "17/75121.txt": 1,
+  "1e/55361.txt": 1,
+  "21/63352.txt": 1,
+  "24/44831.txt": 1,
+  "2b/48295.txt": 1,
+  "2d/42426.txt": 1,
+  "31/18587.txt": 1,
+  "34/70096.txt": 1,
+  "39/82140.txt": 1,
+  "43/51927.txt": 1,
+  "52/52397.txt": 1,
+  "55/47389.txt": 1,
+  "58/42105.txt": 1,
+  "5a/19606.txt": 1,
+  "5a/46482.txt": 1,
+  "5c/46164.txt": 1,
+  "5e/43155.txt": 1,
+  "5e/46545.txt": 1,
+  "5e/77679.txt": 1,
+  "6f/64521.txt": 1,
+  "70/77659.txt": 1,
+  "76/45701.txt": 1,
+  "79/59431.txt": 1,
+  "7d/18029.txt": 1,
+  "7f/81937.txt": 1,
+  "87/48447.txt": 1,
+  "8c/33471.txt": 1,
+  "96/38373.txt": 1,
+  "a5/52918.txt": 1,
+  "ae/43086.txt": 1,
+  "b4/41873.txt": 1,
+  "ba/53355.txt": 1,
+  "c3/44821.txt": 1,
+  "c3/78119.txt": 1,
+  "c4/49091.txt": 1,
+  "ca/53761.txt": 1,
+  "cf/36860.txt": 1,
+  "cf/50961.txt": 1,
+  "e8/78983.txt": 1,
+  "e9/36342.txt": 1,
+  "eb/36030.txt": 1,
+  "eb/56685.txt": 1,
+  "ec/36131.txt": 1,
+  "ed/42233.txt": 1,
+  "ed/75689.txt": 1,
+  "f1/62523.txt": 1,
+  "f7/71459.txt": 1,
+  "f9/58254.txt": 1,
+  "fb/75778.txt": 1,
+  "fe/51536.txt": 1
+ },
+ "beir_cqadupstack_android_44270": {
+  "fe/65695.txt": 1
+ },
+ "beir_cqadupstack_android_4447": {
+  "20/72954.txt": 1
+ },
+ "beir_cqadupstack_android_44608": {
+  "0b/66872.txt": 1,
+  "18/56491.txt": 1,
+  "2a/81365.txt": 1,
+  "a8/65992.txt": 1,
+  "aa/79494.txt": 1,
+  "c4/74668.txt": 1,
+  "d4/75478.txt": 1
+ },
+ "beir_cqadupstack_android_44620": {
+  "05/55025.txt": 1
+ },
+ "beir_cqadupstack_android_44860": {
+  "a7/60664.txt": 1,
+  "af/42347.txt": 1
+ },
+ "beir_cqadupstack_android_44861": {
+  "03/41518.txt": 1,
+  "a9/32673.txt": 1
+ },
+ "beir_cqadupstack_android_44918": {
+  "40/79310.txt": 1
+ },
+ "beir_cqadupstack_android_45": {
+  "58/21523.txt": 1
+ },
+ "beir_cqadupstack_android_45054": {
+  "5b/66037.txt": 1
+ },
+ "beir_cqadupstack_android_45069": {
+  "ab/23391.txt": 1
+ },
+ "beir_cqadupstack_android_45071": {
+  "f4/39265.txt": 1
+ },
+ "beir_cqadupstack_android_45361": {
+  "43/4187.txt": 1
+ },
+ "beir_cqadupstack_android_45446": {
+  "65/17587.txt": 1,
+  "dc/38295.txt": 1
+ },
+ "beir_cqadupstack_android_45631": {
+  "3a/41813.txt": 1
+ },
+ "beir_cqadupstack_android_45944": {
+  "ca/45652.txt": 1
+ },
+ "beir_cqadupstack_android_46060": {
+  "5f/45779.txt": 1
+ },
+ "beir_cqadupstack_android_46065": {
+  "24/81154.txt": 1
+ },
+ "beir_cqadupstack_android_46186": {
+  "4b/77616.txt": 1
+ },
+ "beir_cqadupstack_android_4623": {
+  "a5/44642.txt": 1
+ },
+ "beir_cqadupstack_android_46259": {
+  "4a/45988.txt": 1
+ },
+ "beir_cqadupstack_android_46296": {
+  "16/53997.txt": 1,
+  "4b/11407.txt": 1,
+  "7b/16515.txt": 1
+ },
+ "beir_cqadupstack_android_46552": {
+  "23/30183.txt": 1,
+  "2a/52473.txt": 1,
+  "75/751.txt": 1,
+  "89/7358.txt": 1,
+  "b1/18796.txt": 1,
+  "bd/18320.txt": 1
+ },
+ "beir_cqadupstack_android_4657": {
+  "ff/4632.txt": 1
+ },
+ "beir_cqadupstack_android_46597": {
+  "77/45943.txt": 1
+ },
+ "beir_cqadupstack_android_46806": {
+  "b3/8295.txt": 1
+ },
+ "beir_cqadupstack_android_4706": {
+  "48/7073.txt": 1
+ },
+ "beir_cqadupstack_android_47202": {
+  "1e/65247.txt": 1,
+  "27/39823.txt": 1,
+  "8d/63033.txt": 1,
+  "91/53816.txt": 1
+ },
+ "beir_cqadupstack_android_47213": {
+  "4a/59884.txt": 1
+ },
+ "beir_cqadupstack_android_47290": {
+  "15/1120.txt": 1,
+  "21/14873.txt": 1,
+  "24/38645.txt": 1,
+  "50/31804.txt": 1
+ },
+ "beir_cqadupstack_android_47577": {
+  "93/418.txt": 1
+ },
+ "beir_cqadupstack_android_47613": {
+  "21/3986.txt": 1,
+  "36/35819.txt": 1
+ },
+ "beir_cqadupstack_android_47650": {
+  "6d/56587.txt": 1
+ },
+ "beir_cqadupstack_android_47651": {
+  "ee/45008.txt": 1
+ },
+ "beir_cqadupstack_android_47822": {
+  "e6/42641.txt": 1
+ },
+ "beir_cqadupstack_android_48012": {
+  "5b/23969.txt": 1
+ },
+ "beir_cqadupstack_android_483": {
+  "b6/30556.txt": 1
+ },
+ "beir_cqadupstack_android_48364": {
+  "d7/44144.txt": 1
+ },
+ "beir_cqadupstack_android_48720": {
+  "a8/48722.txt": 1
+ },
+ "beir_cqadupstack_android_48839": {
+  "13/59457.txt": 1,
+  "1f/4142.txt": 1,
+  "2c/69970.txt": 1,
+  "8b/16780.txt": 1
+ },
+ "beir_cqadupstack_android_48931": {
+  "b7/20599.txt": 1,
+  "d3/57554.txt": 1
+ },
+ "beir_cqadupstack_android_49079": {
+  "65/46873.txt": 1
+ },
+ "beir_cqadupstack_android_49271": {
+  "c8/54397.txt": 1
+ },
+ "beir_cqadupstack_android_50040": {
+  "14/6462.txt": 1,
+  "2a/3436.txt": 1,
+  "4a/6799.txt": 1,
+  "8b/5191.txt": 1
+ },
+ "beir_cqadupstack_android_5005": {
+  "78/1204.txt": 1
+ },
+ "beir_cqadupstack_android_50448": {
+  "66/50883.txt": 1
+ },
+ "beir_cqadupstack_android_50611": {
+  "6c/49465.txt": 1
+ },
+ "beir_cqadupstack_android_50751": {
+  "0b/48266.txt": 1,
+  "8d/341.txt": 1,
+  "b4/4236.txt": 1,
+  "cf/68822.txt": 1
+ },
+ "beir_cqadupstack_android_5084": {
+  "27/77485.txt": 1,
+  "b0/7906.txt": 1,
+  "fd/77484.txt": 1
+ },
+ "beir_cqadupstack_android_50901": {
+  "75/43495.txt": 1,
+  "ae/2026.txt": 1,
+  "e8/23919.txt": 1,
+  "ff/22797.txt": 1
+ },
+ "beir_cqadupstack_android_51153": {
+  "0e/20503.txt": 1,
+  "83/75543.txt": 1,
+  "f4/59243.txt": 1,
+  "fe/58297.txt": 1
+ },
+ "beir_cqadupstack_android_51252": {
+  "2e/52749.txt": 1
+ },
+ "beir_cqadupstack_android_51601": {
+  "cb/51253.txt": 1
+ },
+ "beir_cqadupstack_android_51645": {
+  "35/79016.txt": 1,
+  "91/38388.txt": 1,
+  "e0/60030.txt": 1
+ },
+ "beir_cqadupstack_android_52044": {
+  "80/34444.txt": 1
+ },
+ "beir_cqadupstack_android_52046": {
+  "f7/80768.txt": 1
+ },
+ "beir_cqadupstack_android_5206": {
+  "15/16.txt": 1,
+  "b0/19487.txt": 1
+ },
+ "beir_cqadupstack_android_52140": {
+  "51/55993.txt": 1
+ },
+ "beir_cqadupstack_android_52403": {
+  "b3/34647.txt": 1
+ },
+ "beir_cqadupstack_android_52498": {
+  "0e/28217.txt": 1,
+  "63/25359.txt": 1,
+  "88/79484.txt": 1,
+  "97/44080.txt": 1,
+  "e9/37185.txt": 1
+ },
+ "beir_cqadupstack_android_5251": {
+  "b4/11991.txt": 1
+ },
+ "beir_cqadupstack_android_52929": {
+  "75/42385.txt": 1
+ },
+ "beir_cqadupstack_android_53064": {
+  "22/66431.txt": 1,
+  "92/53395.txt": 1
+ },
+ "beir_cqadupstack_android_53256": {
+  "cc/81293.txt": 1
+ },
+ "beir_cqadupstack_android_53467": {
+  "f4/64528.txt": 1
+ },
+ "beir_cqadupstack_android_53497": {
+  "92/26846.txt": 1
+ },
+ "beir_cqadupstack_android_53572": {
+  "2d/3219.txt": 1,
+  "b2/12275.txt": 1
+ },
+ "beir_cqadupstack_android_53672": {
+  "6d/22018.txt": 1
+ },
+ "beir_cqadupstack_android_53898": {
+  "fa/44249.txt": 1
+ },
+ "beir_cqadupstack_android_54069": {
+  "1c/35943.txt": 1,
+  "73/9168.txt": 1,
+  "80/66777.txt": 1,
+  "8b/3339.txt": 1,
+  "a9/164.txt": 1,
+  "bb/2207.txt": 1,
+  "ce/6009.txt": 1,
+  "d7/7224.txt": 1
+ },
+ "beir_cqadupstack_android_54144": {
+  "07/57810.txt": 1,
+  "10/54902.txt": 1,
+  "bc/79030.txt": 1
+ },
+ "beir_cqadupstack_android_54175": {
+  "02/58901.txt": 1,
+  "15/12692.txt": 1,
+  "18/6596.txt": 1,
+  "21/12330.txt": 1,
+  "3f/15590.txt": 1,
+  "4e/19030.txt": 1,
+  "7b/56858.txt": 1,
+  "7e/55286.txt": 1,
+  "8c/25430.txt": 1,
+  "8d/5566.txt": 1,
+  "8e/728.txt": 1,
+  "94/64111.txt": 1,
+  "9f/29350.txt": 1,
+  "aa/26866.txt": 1,
+  "b4/58294.txt": 1,
+  "bb/47709.txt": 1,
+  "c0/17134.txt": 1
+ },
+ "beir_cqadupstack_android_54237": {
+  "00/79180.txt": 1,
+  "10/21773.txt": 1,
+  "38/35367.txt": 1,
+  "52/42234.txt": 1
+ },
+ "beir_cqadupstack_android_54337": {
+  "19/78517.txt": 1
+ },
+ "beir_cqadupstack_android_54590": {
+  "1c/43357.txt": 1,
+  "f5/43672.txt": 1
+ },
+ "beir_cqadupstack_android_5471": {
+  "b2/5514.txt": 1
+ },
+ "beir_cqadupstack_android_54839": {
+  "ba/5154.txt": 1
+ },
+ "beir_cqadupstack_android_549": {
+  "35/23571.txt": 1,
+  "c1/35427.txt": 1
+ },
+ "beir_cqadupstack_android_54919": {
+  "2c/35302.txt": 1
+ },
+ "beir_cqadupstack_android_55010": {
+  "0d/58097.txt": 1,
+  "51/20369.txt": 1
+ },
+ "beir_cqadupstack_android_55067": {
+  "9e/56020.txt": 1
+ },
+ "beir_cqadupstack_android_55124": {
+  "ed/37141.txt": 1,
+  "f4/54660.txt": 1
+ },
+ "beir_cqadupstack_android_55272": {
+  "85/10093.txt": 1
+ },
+ "beir_cqadupstack_android_55366": {
+  "46/6216.txt": 1
+ },
+ "beir_cqadupstack_android_55624": {
+  "c9/17414.txt": 1
+ },
+ "beir_cqadupstack_android_55733": {
+  "34/57091.txt": 1
+ },
+ "beir_cqadupstack_android_55866": {
+  "f2/876.txt": 1
+ },
+ "beir_cqadupstack_android_55887": {
+  "b6/62750.txt": 1
+ },
+ "beir_cqadupstack_android_55933": {
+  "05/52580.txt": 1
+ },
+ "beir_cqadupstack_android_55953": {
+  "63/66741.txt": 1
+ },
+ "beir_cqadupstack_android_56119": {
+  "6d/78041.txt": 1
+ },
+ "beir_cqadupstack_android_56252": {
+  "3f/41922.txt": 1
+ },
+ "beir_cqadupstack_android_56258": {
+  "12/65954.txt": 1,
+  "1b/59210.txt": 1,
+  "26/62684.txt": 1,
+  "2c/58326.txt": 1,
+  "43/56415.txt": 1,
+  "61/60194.txt": 1,
+  "86/59673.txt": 1,
+  "97/60705.txt": 1,
+  "99/58115.txt": 1,
+  "9c/58089.txt": 1,
+  "f6/69557.txt": 1
+ },
+ "beir_cqadupstack_android_56269": {
+  "ce/25623.txt": 1
+ },
+ "beir_cqadupstack_android_56477": {
+  "00/1759.txt": 1,
+  "05/70250.txt": 1,
+  "24/8612.txt": 1,
+  "75/38138.txt": 1,
+  "82/18186.txt": 1,
+  "85/66226.txt": 1,
+  "89/58092.txt": 1,
+  "b3/24194.txt": 1,
+  "bd/45952.txt": 1,
+  "d3/5381.txt": 1,
+  "f4/44183.txt": 1,
+  "ff/43092.txt": 1
+ },
+ "beir_cqadupstack_android_5667": {
+  "70/650.txt": 1,
+  "e0/45972.txt": 1
+ },
+ "beir_cqadupstack_android_56784": {
+  "4f/13347.txt": 1
+ },
+ "beir_cqadupstack_android_57001": {
+  "f8/51753.txt": 1
+ },
+ "beir_cqadupstack_android_57211": {
+  "bc/2078.txt": 1
+ },
+ "beir_cqadupstack_android_57257": {
+  "db/58334.txt": 1
+ },
+ "beir_cqadupstack_android_57295": {
+  "fe/56857.txt": 1
+ },
+ "beir_cqadupstack_android_58056": {
+  "da/41456.txt": 1
+ },
+ "beir_cqadupstack_android_58221": {
+  "75/50780.txt": 1,
+  "b8/50025.txt": 1
+ },
+ "beir_cqadupstack_android_58318": {
+  "3a/57188.txt": 1
+ },
+ "beir_cqadupstack_android_58322": {
+  "00/30527.txt": 1
+ },
+ "beir_cqadupstack_android_58346": {
+  "ef/25491.txt": 1
+ },
+ "beir_cqadupstack_android_58459": {
+  "5a/50721.txt": 1
+ },
+ "beir_cqadupstack_android_58499": {
+  "06/18250.txt": 1
+ },
+ "beir_cqadupstack_android_5855": {
+  "1a/4099.txt": 1
+ },
+ "beir_cqadupstack_android_58623": {
+  "59/59664.txt": 1
+ },
+ "beir_cqadupstack_android_58665": {
+  "b7/58786.txt": 1,
+  "d5/57548.txt": 1
+ },
+ "beir_cqadupstack_android_58770": {
+  "f1/63863.txt": 1
+ },
+ "beir_cqadupstack_android_58793": {
+  "2e/14555.txt": 1,
+  "95/61736.txt": 1
+ },
+ "beir_cqadupstack_android_58843": {
+  "94/73427.txt": 1
+ },
+ "beir_cqadupstack_android_58906": {
+  "73/71341.txt": 1
+ },
+ "beir_cqadupstack_android_59098": {
+  "af/59082.txt": 1
+ },
+ "beir_cqadupstack_android_59270": {
+  "a2/59482.txt": 1
+ },
+ "beir_cqadupstack_android_59632": {
+  "6c/78829.txt": 1,
+  "77/25731.txt": 1,
+  "b3/5826.txt": 1,
+  "b3/82156.txt": 1,
+  "ba/1699.txt": 1,
+  "e1/8910.txt": 1
+ },
+ "beir_cqadupstack_android_59689": {
+  "ca/14731.txt": 1
+ },
+ "beir_cqadupstack_android_59726": {
+  "2f/23046.txt": 1
+ },
+ "beir_cqadupstack_android_59861": {
+  "45/61155.txt": 1
+ },
+ "beir_cqadupstack_android_60547": {
+  "2d/16389.txt": 1
+ },
+ "beir_cqadupstack_android_60838": {
+  "55/31951.txt": 1
+ },
+ "beir_cqadupstack_android_609": {
+  "35/345.txt": 1
+ },
+ "beir_cqadupstack_android_60940": {
+  "1f/61366.txt": 1
+ },
+ "beir_cqadupstack_android_61184": {
+  "77/61182.txt": 1
+ },
+ "beir_cqadupstack_android_61198": {
+  "16/61133.txt": 1
+ },
+ "beir_cqadupstack_android_61210": {
+  "da/61212.txt": 1
+ },
+ "beir_cqadupstack_android_61246": {
+  "07/26855.txt": 1
+ },
+ "beir_cqadupstack_android_61297": {
+  "2f/54831.txt": 1,
+  "5e/24332.txt": 1
+ },
+ "beir_cqadupstack_android_61311": {
+  "0b/15042.txt": 1
+ },
+ "beir_cqadupstack_android_61323": {
+  "2c/36521.txt": 1
+ },
+ "beir_cqadupstack_android_61866": {
+  "4b/35452.txt": 1
+ },
+ "beir_cqadupstack_android_62120": {
+  "a5/53426.txt": 1
+ },
+ "beir_cqadupstack_android_62217": {
+  "7b/49114.txt": 1
+ },
+ "beir_cqadupstack_android_62349": {
+  "e7/77874.txt": 1
+ },
+ "beir_cqadupstack_android_62373": {
+  "d5/40763.txt": 1
+ },
+ "beir_cqadupstack_android_62376": {
+  "6d/47948.txt": 1
+ },
+ "beir_cqadupstack_android_6240": {
+  "65/13196.txt": 1
+ },
+ "beir_cqadupstack_android_62552": {
+  "26/5948.txt": 1,
+  "e8/13284.txt": 1
+ },
+ "beir_cqadupstack_android_62749": {
+  "3e/75730.txt": 1
+ },
+ "beir_cqadupstack_android_63014": {
+  "23/62756.txt": 1,
+  "80/63028.txt": 1,
+  "89/62969.txt": 1,
+  "d6/62959.txt": 1,
+  "e3/62963.txt": 1
+ },
+ "beir_cqadupstack_android_63025": {
+  "c2/14218.txt": 1
+ },
+ "beir_cqadupstack_android_632": {
+  "0b/216.txt": 1,
+  "4b/55995.txt": 1
+ },
+ "beir_cqadupstack_android_63322": {
+  "15/18008.txt": 1,
+  "77/27143.txt": 1,
+  "f3/78961.txt": 1,
+  "fd/18668.txt": 1
+ },
+ "beir_cqadupstack_android_63346": {
+  "25/63272.txt": 1
+ },
+ "beir_cqadupstack_android_63386": {
+  "a8/63381.txt": 1
+ },
+ "beir_cqadupstack_android_63983": {
+  "2c/64070.txt": 1
+ },
+ "beir_cqadupstack_android_64186": {
+  "0c/54982.txt": 1,
+  "2c/51622.txt": 1,
+  "3b/21660.txt": 1,
+  "91/9642.txt": 1,
+  "f0/37698.txt": 1
+ },
+ "beir_cqadupstack_android_64266": {
+  "ad/43707.txt": 1
+ },
+ "beir_cqadupstack_android_64381": {
+  "10/77774.txt": 1
+ },
+ "beir_cqadupstack_android_64520": {
+  "2c/64380.txt": 1
+ },
+ "beir_cqadupstack_android_64547": {
+  "c7/24342.txt": 1
+ },
+ "beir_cqadupstack_android_64569": {
+  "f2/64373.txt": 1
+ },
+ "beir_cqadupstack_android_64676": {
+  "9a/50491.txt": 1
+ },
+ "beir_cqadupstack_android_64848": {
+  "07/58273.txt": 1
+ },
+ "beir_cqadupstack_android_6494": {
+  "97/14467.txt": 1
+ },
+ "beir_cqadupstack_android_64944": {
+  "35/59175.txt": 1,
+  "45/1369.txt": 1
+ },
+ "beir_cqadupstack_android_64974": {
+  "45/41839.txt": 1
+ },
+ "beir_cqadupstack_android_65069": {
+  "bd/56595.txt": 1
+ },
+ "beir_cqadupstack_android_65097": {
+  "2e/68118.txt": 1,
+  "4f/1184.txt": 1,
+  "7c/19036.txt": 1,
+  "85/5777.txt": 1,
+  "ab/1009.txt": 1,
+  "ac/4473.txt": 1,
+  "af/3143.txt": 1,
+  "c8/77900.txt": 1,
+  "d3/9306.txt": 1
+ },
+ "beir_cqadupstack_android_65261": {
+  "43/78339.txt": 1,
+  "58/14683.txt": 1,
+  "82/75847.txt": 1,
+  "db/77723.txt": 1,
+  "f1/79557.txt": 1
+ },
+ "beir_cqadupstack_android_65288": {
+  "05/45178.txt": 1
+ },
+ "beir_cqadupstack_android_65366": {
+  "6e/65412.txt": 1
+ },
+ "beir_cqadupstack_android_65394": {
+  "0e/10253.txt": 1
+ },
+ "beir_cqadupstack_android_65442": {
+  "f4/34477.txt": 1
+ },
+ "beir_cqadupstack_android_6557": {
+  "46/4738.txt": 1
+ },
+ "beir_cqadupstack_android_6567": {
+  "e8/7232.txt": 1
+ },
+ "beir_cqadupstack_android_65744": {
+  "97/45320.txt": 1
+ },
+ "beir_cqadupstack_android_65762": {
+  "d3/73217.txt": 1
+ },
+ "beir_cqadupstack_android_65816": {
+  "f7/46499.txt": 1
+ },
+ "beir_cqadupstack_android_65860": {
+  "9f/25200.txt": 1,
+  "de/66280.txt": 1
+ },
+ "beir_cqadupstack_android_65878": {
+  "75/65844.txt": 1
+ },
+ "beir_cqadupstack_android_6603": {
+  "72/48574.txt": 1
+ },
+ "beir_cqadupstack_android_66285": {
+  "ff/41166.txt": 1
+ },
+ "beir_cqadupstack_android_66538": {
+  "cf/81906.txt": 1
+ },
+ "beir_cqadupstack_android_66595": {
+  "25/22848.txt": 1,
+  "5f/65553.txt": 1,
+  "cd/81292.txt": 1
+ },
+ "beir_cqadupstack_android_6693": {
+  "44/14853.txt": 1
+ },
+ "beir_cqadupstack_android_67068": {
+  "67/45834.txt": 1
+ },
+ "beir_cqadupstack_android_67136": {
+  "8a/2871.txt": 1
+ },
+ "beir_cqadupstack_android_67157": {
+  "63/67142.txt": 1
+ },
+ "beir_cqadupstack_android_67317": {
+  "21/28282.txt": 1
+ },
+ "beir_cqadupstack_android_67504": {
+  "3e/28599.txt": 1
+ },
+ "beir_cqadupstack_android_67714": {
+  "10/53757.txt": 1
+ },
+ "beir_cqadupstack_android_67797": {
+  "40/58828.txt": 1
+ },
+ "beir_cqadupstack_android_67878": {
+  "2f/44205.txt": 1,
+  "38/47263.txt": 1,
+  "c6/30322.txt": 1,
+  "e2/21141.txt": 1
+ },
+ "beir_cqadupstack_android_6815": {
+  "04/70094.txt": 1,
+  "0d/28037.txt": 1,
+  "40/27127.txt": 1,
+  "4b/24445.txt": 1,
+  "5d/36536.txt": 1,
+  "5d/5519.txt": 1,
+  "69/81271.txt": 1,
+  "7c/75095.txt": 1,
+  "7e/60023.txt": 1,
+  "89/32608.txt": 1,
+  "8f/17233.txt": 1,
+  "a7/21976.txt": 1,
+  "aa/2065.txt": 1,
+  "bc/32691.txt": 1,
+  "bd/8213.txt": 1,
+  "d2/14567.txt": 1,
+  "eb/52049.txt": 1
+ },
+ "beir_cqadupstack_android_68235": {
+  "f1/9108.txt": 1
+ },
+ "beir_cqadupstack_android_68447": {
+  "31/68457.txt": 1
+ },
+ "beir_cqadupstack_android_68459": {
+  "3a/69985.txt": 1,
+  "59/82470.txt": 1,
+  "5c/67225.txt": 1,
+  "75/69888.txt": 1,
+  "77/82508.txt": 1,
+  "9a/56661.txt": 1,
+  "ff/57456.txt": 1
+ },
+ "beir_cqadupstack_android_68680": {
+  "17/68676.txt": 1
+ },
+ "beir_cqadupstack_android_68687": {
+  "5f/82487.txt": 1
+ },
+ "beir_cqadupstack_android_68889": {
+  "25/49888.txt": 1
+ },
+ "beir_cqadupstack_android_6908": {
+  "50/7105.txt": 1
+ },
+ "beir_cqadupstack_android_69304": {
+  "b8/59554.txt": 1
+ },
+ "beir_cqadupstack_android_69387": {
+  "c0/44873.txt": 1
+ },
+ "beir_cqadupstack_android_69480": {
+  "19/60022.txt": 1,
+  "22/46857.txt": 1,
+  "28/75344.txt": 1,
+  "63/77134.txt": 1,
+  "88/82359.txt": 1,
+  "8b/63630.txt": 1,
+  "b7/37839.txt": 1,
+  "db/20364.txt": 1
+ },
+ "beir_cqadupstack_android_6949": {
+  "26/57683.txt": 1,
+  "55/44357.txt": 1
+ },
+ "beir_cqadupstack_android_697": {
+  "3d/9127.txt": 1
+ },
+ "beir_cqadupstack_android_69759": {
+  "79/44267.txt": 1,
+  "7e/28731.txt": 1,
+  "a4/14231.txt": 1
+ },
+ "beir_cqadupstack_android_69770": {
+  "51/69552.txt": 1
+ },
+ "beir_cqadupstack_android_69779": {
+  "3b/53803.txt": 1,
+  "f8/38129.txt": 1
+ },
+ "beir_cqadupstack_android_69837": {
+  "2a/17657.txt": 1
+ },
+ "beir_cqadupstack_android_7003": {
+  "8b/44600.txt": 1
+ },
+ "beir_cqadupstack_android_7064": {
+  "e3/19690.txt": 1
+ },
+ "beir_cqadupstack_android_7081": {
+  "f4/143.txt": 1
+ },
+ "beir_cqadupstack_android_7135": {
+  "80/8061.txt": 1
+ },
+ "beir_cqadupstack_android_71565": {
+  "26/33814.txt": 1
+ },
+ "beir_cqadupstack_android_71611": {
+  "13/48689.txt": 1
+ },
+ "beir_cqadupstack_android_71613": {
+  "98/64860.txt": 1
+ },
+ "beir_cqadupstack_android_71693": {
+  "cf/2997.txt": 1
+ },
+ "beir_cqadupstack_android_7237": {
+  "ef/3527.txt": 1
+ },
+ "beir_cqadupstack_android_72900": {
+  "49/51201.txt": 1,
+  "5b/75103.txt": 1
+ },
+ "beir_cqadupstack_android_72943": {
+  "58/75807.txt": 1,
+  "67/73253.txt": 1,
+  "6e/44615.txt": 1,
+  "81/7169.txt": 1
+ },
+ "beir_cqadupstack_android_73045": {
+  "d5/39687.txt": 1
+ },
+ "beir_cqadupstack_android_73075": {
+  "b6/73369.txt": 1
+ },
+ "beir_cqadupstack_android_73089": {
+  "8d/6731.txt": 1,
+  "c0/2198.txt": 1,
+  "fb/13695.txt": 1
+ },
+ "beir_cqadupstack_android_73197": {
+  "61/39892.txt": 1,
+  "66/55387.txt": 1,
+  "b7/24039.txt": 1
+ },
+ "beir_cqadupstack_android_73275": {
+  "ae/25502.txt": 1
+ },
+ "beir_cqadupstack_android_73392": {
+  "91/24436.txt": 1
+ },
+ "beir_cqadupstack_android_73415": {
+  "dd/73404.txt": 1
+ },
+ "beir_cqadupstack_android_74612": {
+  "20/42983.txt": 1
+ },
+ "beir_cqadupstack_android_74672": {
+  "ac/39542.txt": 1
+ },
+ "beir_cqadupstack_android_74798": {
+  "32/62056.txt": 1,
+  "3e/29282.txt": 1,
+  "42/62646.txt": 1,
+  "4e/19113.txt": 1,
+  "4e/896.txt": 1,
+  "50/7134.txt": 1,
+  "66/73559.txt": 1,
+  "7d/83.txt": 1,
+  "8f/11154.txt": 1,
+  "90/5918.txt": 1,
+  "92/12538.txt": 1,
+  "cd/77307.txt": 1,
+  "d6/19201.txt": 1,
+  "e6/29792.txt": 1,
+  "fb/11291.txt": 1
+ },
+ "beir_cqadupstack_android_748": {
+  "82/20456.txt": 1
+ },
+ "beir_cqadupstack_android_74828": {
+  "89/69553.txt": 1
+ },
+ "beir_cqadupstack_android_74933": {
+  "7a/75166.txt": 1
+ },
+ "beir_cqadupstack_android_75030": {
+  "26/58592.txt": 1
+ },
+ "beir_cqadupstack_android_75056": {
+  "2a/82293.txt": 1,
+  "52/75684.txt": 1,
+  "a8/82428.txt": 1
+ },
+ "beir_cqadupstack_android_75260": {
+  "23/74973.txt": 1
+ },
+ "beir_cqadupstack_android_75382": {
+  "bd/26860.txt": 1
+ },
+ "beir_cqadupstack_android_75520": {
+  "33/13954.txt": 1
+ },
+ "beir_cqadupstack_android_75755": {
+  "14/82333.txt": 1,
+  "4a/34059.txt": 1,
+  "55/48904.txt": 1,
+  "55/79280.txt": 1,
+  "65/45240.txt": 1,
+  "ab/45168.txt": 1,
+  "e0/4955.txt": 1
+ },
+ "beir_cqadupstack_android_75848": {
+  "33/2392.txt": 1
+ },
+ "beir_cqadupstack_android_75889": {
+  "19/49262.txt": 1
+ },
+ "beir_cqadupstack_android_75916": {
+  "08/42409.txt": 1,
+  "66/75924.txt": 1,
+  "ff/43444.txt": 1
+ },
+ "beir_cqadupstack_android_7680": {
+  "92/15919.txt": 1,
+  "b1/13974.txt": 1
+ },
+ "beir_cqadupstack_android_76976": {
+  "bc/27.txt": 1
+ },
+ "beir_cqadupstack_android_76996": {
+  "29/77001.txt": 1
+ },
+ "beir_cqadupstack_android_77102": {
+  "ac/77075.txt": 1
+ },
+ "beir_cqadupstack_android_77104": {
+  "04/52725.txt": 1
+ },
+ "beir_cqadupstack_android_77106": {
+  "83/38297.txt": 1
+ },
+ "beir_cqadupstack_android_7731": {
+  "df/32162.txt": 1
+ },
+ "beir_cqadupstack_android_77444": {
+  "67/5796.txt": 1,
+  "b9/71560.txt": 1,
+  "d7/81281.txt": 1,
+  "fe/28474.txt": 1
+ },
+ "beir_cqadupstack_android_77542": {
+  "84/39431.txt": 1
+ },
+ "beir_cqadupstack_android_77601": {
+  "1c/29976.txt": 1,
+  "37/26632.txt": 1,
+  "d6/28987.txt": 1
+ },
+ "beir_cqadupstack_android_7763": {
+  "41/23224.txt": 1
+ },
+ "beir_cqadupstack_android_77670": {
+  "55/4003.txt": 1
+ },
+ "beir_cqadupstack_android_7772": {
+  "05/56524.txt": 1,
+  "1e/22449.txt": 1,
+  "33/43552.txt": 1,
+  "35/39609.txt": 1,
+  "3e/9351.txt": 1,
+  "4e/68782.txt": 1,
+  "5d/16609.txt": 1,
+  "70/11728.txt": 1,
+  "74/45921.txt": 1,
+  "75/28129.txt": 1,
+  "93/43625.txt": 1,
+  "97/2298.txt": 1,
+  "9b/38870.txt": 1,
+  "bb/63982.txt": 1,
+  "c6/28536.txt": 1,
+  "d0/68583.txt": 1,
+  "e5/6479.txt": 1
+ },
+ "beir_cqadupstack_android_7774": {
+  "70/8928.txt": 1,
+  "80/29199.txt": 1,
+  "a5/38800.txt": 1,
+  "ad/8824.txt": 1
+ },
+ "beir_cqadupstack_android_77838": {
+  "68/73164.txt": 1,
+  "81/63904.txt": 1,
+  "8b/67724.txt": 1
+ },
+ "beir_cqadupstack_android_77858": {
+  "86/25210.txt": 1
+ },
+ "beir_cqadupstack_android_77981": {
+  "2c/21566.txt": 1
+ },
+ "beir_cqadupstack_android_78045": {
+  "70/59528.txt": 1
+ },
+ "beir_cqadupstack_android_78113": {
+  "33/34541.txt": 1,
+  "af/61288.txt": 1,
+  "d6/4206.txt": 1
+ },
+ "beir_cqadupstack_android_78118": {
+  "2c/39180.txt": 1,
+  "a6/77176.txt": 1
+ },
+ "beir_cqadupstack_android_78373": {
+  "20/70215.txt": 1
+ },
+ "beir_cqadupstack_android_78397": {
+  "13/78627.txt": 1
+ },
+ "beir_cqadupstack_android_78472": {
+  "50/10115.txt": 1,
+  "5d/78510.txt": 1
+ },
+ "beir_cqadupstack_android_78576": {
+  "4d/22884.txt": 1
+ },
+ "beir_cqadupstack_android_7866": {
+  "69/43429.txt": 1,
+  "9a/15263.txt": 1,
+  "c8/11217.txt": 1
+ },
+ "beir_cqadupstack_android_78682": {
+  "63/23858.txt": 1,
+  "73/23473.txt": 1,
+  "84/22373.txt": 1,
+  "b3/68947.txt": 1,
+  "c0/4210.txt": 1
+ },
+ "beir_cqadupstack_android_78711": {
+  "3e/48908.txt": 1,
+  "49/14910.txt": 1,
+  "53/63454.txt": 1,
+  "60/32430.txt": 1,
+  "c9/52622.txt": 1,
+  "e5/23595.txt": 1
+ },
+ "beir_cqadupstack_android_78828": {
+  "58/63481.txt": 1
+ },
+ "beir_cqadupstack_android_78964": {
+  "bc/63712.txt": 1,
+  "f6/78971.txt": 1
+ },
+ "beir_cqadupstack_android_79004": {
+  "91/79022.txt": 1,
+  "c0/79044.txt": 1
+ },
+ "beir_cqadupstack_android_79085": {
+  "26/806.txt": 1,
+  "2a/81285.txt": 1,
+  "45/66204.txt": 1,
+  "50/77628.txt": 1,
+  "59/74923.txt": 1,
+  "6b/50864.txt": 1,
+  "74/41937.txt": 1,
+  "8f/56407.txt": 1,
+  "92/32135.txt": 1,
+  "a6/15869.txt": 1,
+  "aa/19963.txt": 1,
+  "e0/23081.txt": 1,
+  "e4/32417.txt": 1
+ },
+ "beir_cqadupstack_android_79214": {
+  "77/43906.txt": 1
+ },
+ "beir_cqadupstack_android_7932": {
+  "9a/20165.txt": 1
+ },
+ "beir_cqadupstack_android_801": {
+  "1b/36084.txt": 1,
+  "28/6183.txt": 1,
+  "66/20656.txt": 1,
+  "82/2885.txt": 1,
+  "b7/68404.txt": 1,
+  "ba/24684.txt": 1,
+  "dc/6028.txt": 1
+ },
+ "beir_cqadupstack_android_8025": {
+  "1f/8260.txt": 1
+ },
+ "beir_cqadupstack_android_80703": {
+  "9b/58168.txt": 1
+ },
+ "beir_cqadupstack_android_8072": {
+  "54/7970.txt": 1
+ },
+ "beir_cqadupstack_android_80723": {
+  "62/57824.txt": 1
+ },
+ "beir_cqadupstack_android_8082": {
+  "6c/10488.txt": 1,
+  "7b/10295.txt": 1
+ },
+ "beir_cqadupstack_android_80901": {
+  "58/25065.txt": 1
+ },
+ "beir_cqadupstack_android_80936": {
+  "49/29447.txt": 1
+ },
+ "beir_cqadupstack_android_80943": {
+  "16/81056.txt": 1
+ },
+ "beir_cqadupstack_android_81023": {
+  "65/39548.txt": 1,
+  "82/44128.txt": 1
+ },
+ "beir_cqadupstack_android_81025": {
+  "b4/61540.txt": 1,
+  "bd/49509.txt": 1
+ },
+ "beir_cqadupstack_android_81055": {
+  "cc/40761.txt": 1
+ },
+ "beir_cqadupstack_android_81145": {
+  "d8/31928.txt": 1
+ },
+ "beir_cqadupstack_android_81210": {
+  "e9/8416.txt": 1
+ },
+ "beir_cqadupstack_android_81540": {
+  "d2/81555.txt": 1
+ },
+ "beir_cqadupstack_android_81597": {
+  "e9/45920.txt": 1
+ },
+ "beir_cqadupstack_android_81812": {
+  "2d/23750.txt": 1
+ },
+ "beir_cqadupstack_android_81832": {
+  "66/81835.txt": 1
+ },
+ "beir_cqadupstack_android_82179": {
+  "01/46810.txt": 1,
+  "06/22160.txt": 1,
+  "18/51407.txt": 1,
+  "28/30087.txt": 1,
+  "3d/41431.txt": 1,
+  "6d/1020.txt": 1,
+  "6f/54374.txt": 1,
+  "cd/9336.txt": 1
+ },
+ "beir_cqadupstack_android_82323": {
+  "49/50328.txt": 1,
+  "6e/69513.txt": 1,
+  "91/58667.txt": 1,
+  "dd/75401.txt": 1
+ },
+ "beir_cqadupstack_android_82440": {
+  "57/78789.txt": 1,
+  "62/76985.txt": 1,
+  "7f/81115.txt": 1,
+  "80/77782.txt": 1,
+  "92/40412.txt": 1,
+  "93/66489.txt": 1,
+  "a4/37697.txt": 1,
+  "d7/82489.txt": 1,
+  "f5/23010.txt": 1
+ },
+ "beir_cqadupstack_android_82474": {
+  "af/7686.txt": 1
+ },
+ "beir_cqadupstack_android_8299": {
+  "83/4996.txt": 1
+ },
+ "beir_cqadupstack_android_8321": {
+  "cc/775.txt": 1
+ },
+ "beir_cqadupstack_android_834": {
+  "05/63496.txt": 1,
+  "49/6625.txt": 1,
+  "51/20268.txt": 1,
+  "58/44752.txt": 1,
+  "78/11760.txt": 1,
+  "7d/29495.txt": 1,
+  "a0/28922.txt": 1,
+  "a1/47964.txt": 1,
+  "ad/59755.txt": 1,
+  "b0/41697.txt": 1,
+  "b8/54027.txt": 1,
+  "be/408.txt": 1,
+  "c7/8479.txt": 1,
+  "cd/19429.txt": 1,
+  "cd/6851.txt": 1,
+  "cf/12300.txt": 1,
+  "d0/14825.txt": 1,
+  "d4/81846.txt": 1,
+  "d9/17577.txt": 1,
+  "e1/50.txt": 1,
+  "ed/47175.txt": 1,
+  "f1/1559.txt": 1
+ },
+ "beir_cqadupstack_android_8436": {
+  "cd/19939.txt": 1
+ },
+ "beir_cqadupstack_android_8449": {
+  "42/995.txt": 1
+ },
+ "beir_cqadupstack_android_8536": {
+  "6e/33390.txt": 1
+ },
+ "beir_cqadupstack_android_8570": {
+  "b6/20826.txt": 1,
+  "d3/8738.txt": 1
+ },
+ "beir_cqadupstack_android_8576": {
+  "a3/16472.txt": 1
+ },
+ "beir_cqadupstack_android_8674": {
+  "df/55373.txt": 1
+ },
+ "beir_cqadupstack_android_8772": {
+  "d3/8090.txt": 1
+ },
+ "beir_cqadupstack_android_9199": {
+  "1d/827.txt": 1,
+  "f7/28080.txt": 1
+ },
+ "beir_cqadupstack_android_9237": {
+  "11/29875.txt": 1
+ },
+ "beir_cqadupstack_android_9269": {
+  "75/7571.txt": 1
+ },
+ "beir_cqadupstack_android_9289": {
+  "7c/10930.txt": 1
+ },
+ "beir_cqadupstack_android_9325": {
+  "53/1485.txt": 1,
+  "b0/366.txt": 1
+ },
+ "beir_cqadupstack_android_9327": {
+  "88/29411.txt": 1,
+  "bb/28515.txt": 1,
+  "bf/823.txt": 1,
+  "d6/27817.txt": 1
+ },
+ "beir_cqadupstack_android_9361": {
+  "4d/20055.txt": 1,
+  "cf/2245.txt": 1
+ },
+ "beir_cqadupstack_android_941": {
+  "06/33216.txt": 1,
+  "46/14430.txt": 1,
+  "9a/19809.txt": 1,
+  "a1/37447.txt": 1,
+  "b2/8764.txt": 1
+ },
+ "beir_cqadupstack_android_9422": {
+  "16/7099.txt": 1,
+  "bd/23701.txt": 1
+ },
+ "beir_cqadupstack_android_9541": {
+  "15/50675.txt": 1,
+  "27/27083.txt": 1,
+  "6c/33125.txt": 1,
+  "f9/27470.txt": 1
+ },
+ "beir_cqadupstack_android_9545": {
+  "df/44033.txt": 1
+ },
+ "beir_cqadupstack_android_9767": {
+  "fd/9961.txt": 1
+ },
+ "beir_cqadupstack_android_9826": {
+  "82/9997.txt": 1
+ }
+}

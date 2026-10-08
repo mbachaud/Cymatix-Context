@@ -1,0 +1,2886 @@
+{
+ "beir_cqadupstack_gis_100061": [
+  "cb/99967.txt"
+ ],
+ "beir_cqadupstack_gis_100114": [
+  "56/77560.txt"
+ ],
+ "beir_cqadupstack_gis_100116": [
+  "e8/54933.txt"
+ ],
+ "beir_cqadupstack_gis_100280": [
+  "e3/103090.txt"
+ ],
+ "beir_cqadupstack_gis_10046": [
+  "9b/30926.txt"
+ ],
+ "beir_cqadupstack_gis_10053": [
+  "e3/10423.txt"
+ ],
+ "beir_cqadupstack_gis_101403": [
+  "b4/100311.txt"
+ ],
+ "beir_cqadupstack_gis_101706": [
+  "30/88865.txt"
+ ],
+ "beir_cqadupstack_gis_101869": [
+  "37/25542.txt"
+ ],
+ "beir_cqadupstack_gis_101874": [
+  "36/30034.txt",
+  "62/91865.txt",
+  "71/76255.txt",
+  "97/17617.txt",
+  "a2/66368.txt",
+  "aa/19235.txt",
+  "b1/88827.txt",
+  "b3/5821.txt",
+  "be/98152.txt"
+ ],
+ "beir_cqadupstack_gis_101969": [
+  "cd/23959.txt"
+ ],
+ "beir_cqadupstack_gis_101995": [
+  "31/102044.txt"
+ ],
+ "beir_cqadupstack_gis_101998": [
+  "97/98032.txt"
+ ],
+ "beir_cqadupstack_gis_102080": [
+  "40/94242.txt"
+ ],
+ "beir_cqadupstack_gis_102106": [
+  "c0/37787.txt"
+ ],
+ "beir_cqadupstack_gis_102156": [
+  "b9/102014.txt"
+ ],
+ "beir_cqadupstack_gis_102288": [
+  "85/102384.txt"
+ ],
+ "beir_cqadupstack_gis_102301": [
+  "79/102262.txt"
+ ],
+ "beir_cqadupstack_gis_102346": [
+  "9a/102358.txt"
+ ],
+ "beir_cqadupstack_gis_102641": [
+  "23/97950.txt"
+ ],
+ "beir_cqadupstack_gis_102682": [
+  "d2/94585.txt"
+ ],
+ "beir_cqadupstack_gis_102713": [
+  "80/55206.txt"
+ ],
+ "beir_cqadupstack_gis_102819": [
+  "48/102736.txt"
+ ],
+ "beir_cqadupstack_gis_102820": [
+  "07/81048.txt"
+ ],
+ "beir_cqadupstack_gis_103157": [
+  "42/95609.txt"
+ ],
+ "beir_cqadupstack_gis_103514": [
+  "3b/103760.txt",
+  "9e/103520.txt"
+ ],
+ "beir_cqadupstack_gis_10352": [
+  "42/88806.txt"
+ ],
+ "beir_cqadupstack_gis_103641": [
+  "33/104267.txt"
+ ],
+ "beir_cqadupstack_gis_103703": [
+  "95/88092.txt"
+ ],
+ "beir_cqadupstack_gis_103709": [
+  "0c/9020.txt"
+ ],
+ "beir_cqadupstack_gis_103797": [
+  "9c/103902.txt"
+ ],
+ "beir_cqadupstack_gis_103892": [
+  "43/111237.txt"
+ ],
+ "beir_cqadupstack_gis_104005": [
+  "bc/107604.txt"
+ ],
+ "beir_cqadupstack_gis_104133": [
+  "6f/6062.txt"
+ ],
+ "beir_cqadupstack_gis_104165": [
+  "17/104161.txt"
+ ],
+ "beir_cqadupstack_gis_104243": [
+  "79/41626.txt"
+ ],
+ "beir_cqadupstack_gis_104332": [
+  "6b/104331.txt"
+ ],
+ "beir_cqadupstack_gis_104344": [
+  "5f/17368.txt",
+  "c4/20742.txt"
+ ],
+ "beir_cqadupstack_gis_104370": [
+  "1b/36954.txt"
+ ],
+ "beir_cqadupstack_gis_104497": [
+  "c2/37151.txt"
+ ],
+ "beir_cqadupstack_gis_104538": [
+  "f9/104533.txt"
+ ],
+ "beir_cqadupstack_gis_104562": [
+  "10/8750.txt"
+ ],
+ "beir_cqadupstack_gis_106808": [
+  "bf/15784.txt"
+ ],
+ "beir_cqadupstack_gis_10703": [
+  "4b/73282.txt",
+  "d5/10701.txt",
+  "f1/10619.txt",
+  "f7/90412.txt"
+ ],
+ "beir_cqadupstack_gis_107062": [
+  "64/107083.txt"
+ ],
+ "beir_cqadupstack_gis_107227": [
+  "b1/107377.txt"
+ ],
+ "beir_cqadupstack_gis_107474": [
+  "08/25061.txt"
+ ],
+ "beir_cqadupstack_gis_107521": [
+  "0d/107621.txt"
+ ],
+ "beir_cqadupstack_gis_107562": [
+  "f7/99691.txt"
+ ],
+ "beir_cqadupstack_gis_107800": [
+  "1d/11910.txt"
+ ],
+ "beir_cqadupstack_gis_108154": [
+  "4a/91701.txt"
+ ],
+ "beir_cqadupstack_gis_108380": [
+  "d1/9838.txt"
+ ],
+ "beir_cqadupstack_gis_108397": [
+  "46/65817.txt",
+  "f9/81061.txt"
+ ],
+ "beir_cqadupstack_gis_108635": [
+  "a1/108578.txt"
+ ],
+ "beir_cqadupstack_gis_108752": [
+  "dc/108736.txt"
+ ],
+ "beir_cqadupstack_gis_108971": [
+  "fd/37684.txt"
+ ],
+ "beir_cqadupstack_gis_109024": [
+  "d9/109101.txt"
+ ],
+ "beir_cqadupstack_gis_109049": [
+  "a1/17927.txt",
+  "e6/109456.txt"
+ ],
+ "beir_cqadupstack_gis_109173": [
+  "31/98.txt",
+  "89/1498.txt",
+  "ec/113212.txt"
+ ],
+ "beir_cqadupstack_gis_109190": [
+  "9d/109187.txt"
+ ],
+ "beir_cqadupstack_gis_109197": [
+  "af/74262.txt",
+  "b2/9431.txt"
+ ],
+ "beir_cqadupstack_gis_109234": [
+  "be/99615.txt"
+ ],
+ "beir_cqadupstack_gis_109262": [
+  "aa/111752.txt"
+ ],
+ "beir_cqadupstack_gis_109290": [
+  "53/13128.txt"
+ ],
+ "beir_cqadupstack_gis_10932": [
+  "87/14438.txt"
+ ],
+ "beir_cqadupstack_gis_109392": [
+  "83/24434.txt"
+ ],
+ "beir_cqadupstack_gis_109853": [
+  "55/30106.txt",
+  "ad/30084.txt"
+ ],
+ "beir_cqadupstack_gis_109967": [
+  "c2/110225.txt"
+ ],
+ "beir_cqadupstack_gis_110161": [
+  "d8/110419.txt"
+ ],
+ "beir_cqadupstack_gis_110394": [
+  "0c/91651.txt"
+ ],
+ "beir_cqadupstack_gis_110409": [
+  "69/110372.txt"
+ ],
+ "beir_cqadupstack_gis_110543": [
+  "90/31750.txt"
+ ],
+ "beir_cqadupstack_gis_110551": [
+  "05/4376.txt"
+ ],
+ "beir_cqadupstack_gis_110829": [
+  "c6/110287.txt"
+ ],
+ "beir_cqadupstack_gis_111374": [
+  "9a/60228.txt"
+ ],
+ "beir_cqadupstack_gis_111438": [
+  "26/109711.txt"
+ ],
+ "beir_cqadupstack_gis_111471": [
+  "32/70104.txt"
+ ],
+ "beir_cqadupstack_gis_111596": [
+  "96/37226.txt"
+ ],
+ "beir_cqadupstack_gis_111659": [
+  "29/25739.txt"
+ ],
+ "beir_cqadupstack_gis_111685": [
+  "f0/9334.txt"
+ ],
+ "beir_cqadupstack_gis_111715": [
+  "52/92757.txt"
+ ],
+ "beir_cqadupstack_gis_111781": [
+  "4c/111762.txt"
+ ],
+ "beir_cqadupstack_gis_111838": [
+  "cb/13618.txt"
+ ],
+ "beir_cqadupstack_gis_111850": [
+  "2c/3538.txt",
+  "c0/76909.txt"
+ ],
+ "beir_cqadupstack_gis_11204": [
+  "de/23745.txt"
+ ],
+ "beir_cqadupstack_gis_11216": [
+  "5d/75940.txt"
+ ],
+ "beir_cqadupstack_gis_112166": [
+  "ff/112267.txt"
+ ],
+ "beir_cqadupstack_gis_112238": [
+  "c8/25494.txt"
+ ],
+ "beir_cqadupstack_gis_112298": [
+  "28/112294.txt"
+ ],
+ "beir_cqadupstack_gis_112391": [
+  "0b/23118.txt",
+  "38/29168.txt",
+  "a6/22371.txt"
+ ],
+ "beir_cqadupstack_gis_112519": [
+  "5c/112173.txt"
+ ],
+ "beir_cqadupstack_gis_112534": [
+  "f1/33384.txt"
+ ],
+ "beir_cqadupstack_gis_112600": [
+  "32/53217.txt"
+ ],
+ "beir_cqadupstack_gis_112654": [
+  "46/86960.txt"
+ ],
+ "beir_cqadupstack_gis_112933": [
+  "71/9380.txt",
+  "fe/112897.txt"
+ ],
+ "beir_cqadupstack_gis_113003": [
+  "74/22735.txt"
+ ],
+ "beir_cqadupstack_gis_113052": [
+  "1a/64998.txt"
+ ],
+ "beir_cqadupstack_gis_113405": [
+  "d1/113576.txt"
+ ],
+ "beir_cqadupstack_gis_11431": [
+  "80/1197.txt"
+ ],
+ "beir_cqadupstack_gis_11705": [
+  "4a/52778.txt"
+ ],
+ "beir_cqadupstack_gis_11761": [
+  "0e/3755.txt",
+  "f3/10625.txt"
+ ],
+ "beir_cqadupstack_gis_12446": [
+  "0f/65308.txt"
+ ],
+ "beir_cqadupstack_gis_12459": [
+  "bd/76617.txt"
+ ],
+ "beir_cqadupstack_gis_12493": [
+  "7c/14903.txt"
+ ],
+ "beir_cqadupstack_gis_12630": [
+  "92/42.txt",
+  "9b/53152.txt"
+ ],
+ "beir_cqadupstack_gis_12833": [
+  "4c/111676.txt"
+ ],
+ "beir_cqadupstack_gis_13029": [
+  "57/21940.txt",
+  "f4/28291.txt"
+ ],
+ "beir_cqadupstack_gis_13107": [
+  "46/12242.txt"
+ ],
+ "beir_cqadupstack_gis_13484": [
+  "a2/62579.txt"
+ ],
+ "beir_cqadupstack_gis_13691": [
+  "96/52741.txt"
+ ],
+ "beir_cqadupstack_gis_13891": [
+  "1f/97250.txt"
+ ],
+ "beir_cqadupstack_gis_14066": [
+  "08/60858.txt",
+  "9e/60998.txt"
+ ],
+ "beir_cqadupstack_gis_14142": [
+  "31/17537.txt",
+  "4f/7839.txt",
+  "95/113435.txt",
+  "a2/111490.txt",
+  "b0/10756.txt"
+ ],
+ "beir_cqadupstack_gis_14455": [
+  "19/32166.txt"
+ ],
+ "beir_cqadupstack_gis_1449": [
+  "27/4346.txt",
+  "e5/58647.txt"
+ ],
+ "beir_cqadupstack_gis_14650": [
+  "4d/109809.txt",
+  "6c/79832.txt",
+  "f1/495.txt"
+ ],
+ "beir_cqadupstack_gis_147": [
+  "07/60236.txt",
+  "85/23442.txt"
+ ],
+ "beir_cqadupstack_gis_14750": [
+  "36/40452.txt",
+  "98/74210.txt",
+  "c9/59381.txt"
+ ],
+ "beir_cqadupstack_gis_14849": [
+  "27/15000.txt"
+ ],
+ "beir_cqadupstack_gis_14972": [
+  "c5/59832.txt"
+ ],
+ "beir_cqadupstack_gis_14993": [
+  "5b/9397.txt"
+ ],
+ "beir_cqadupstack_gis_15168": [
+  "e6/19644.txt",
+  "ee/104305.txt"
+ ],
+ "beir_cqadupstack_gis_15185": [
+  "fd/37144.txt"
+ ],
+ "beir_cqadupstack_gis_15287": [
+  "a3/15387.txt"
+ ],
+ "beir_cqadupstack_gis_1551": [
+  "01/91623.txt"
+ ],
+ "beir_cqadupstack_gis_15565": [
+  "a5/7274.txt",
+  "a6/6968.txt"
+ ],
+ "beir_cqadupstack_gis_15607": [
+  "d1/20626.txt"
+ ],
+ "beir_cqadupstack_gis_15755": [
+  "b5/12195.txt"
+ ],
+ "beir_cqadupstack_gis_16073": [
+  "9d/99541.txt"
+ ],
+ "beir_cqadupstack_gis_16656": [
+  "9e/15895.txt"
+ ],
+ "beir_cqadupstack_gis_16741": [
+  "51/75973.txt"
+ ],
+ "beir_cqadupstack_gis_16752": [
+  "54/76510.txt"
+ ],
+ "beir_cqadupstack_gis_16990": [
+  "b9/49854.txt"
+ ],
+ "beir_cqadupstack_gis_16992": [
+  "dd/81235.txt"
+ ],
+ "beir_cqadupstack_gis_17003": [
+  "b8/78543.txt"
+ ],
+ "beir_cqadupstack_gis_17035": [
+  "16/24255.txt"
+ ],
+ "beir_cqadupstack_gis_17129": [
+  "68/17288.txt"
+ ],
+ "beir_cqadupstack_gis_17184": [
+  "a7/75972.txt"
+ ],
+ "beir_cqadupstack_gis_17299": [
+  "1b/24091.txt"
+ ],
+ "beir_cqadupstack_gis_17478": [
+  "9f/63768.txt"
+ ],
+ "beir_cqadupstack_gis_17503": [
+  "c4/13289.txt"
+ ],
+ "beir_cqadupstack_gis_17550": [
+  "30/65401.txt",
+  "d4/48216.txt"
+ ],
+ "beir_cqadupstack_gis_18057": [
+  "3f/17857.txt"
+ ],
+ "beir_cqadupstack_gis_18103": [
+  "dc/108968.txt"
+ ],
+ "beir_cqadupstack_gis_1811": [
+  "23/2005.txt"
+ ],
+ "beir_cqadupstack_gis_18473": [
+  "aa/111652.txt"
+ ],
+ "beir_cqadupstack_gis_18874": [
+  "07/327.txt",
+  "a2/32024.txt"
+ ],
+ "beir_cqadupstack_gis_1892": [
+  "7d/85150.txt",
+  "e5/50638.txt"
+ ],
+ "beir_cqadupstack_gis_19033": [
+  "84/27675.txt"
+ ],
+ "beir_cqadupstack_gis_19047": [
+  "04/60494.txt",
+  "2d/62001.txt"
+ ],
+ "beir_cqadupstack_gis_19064": [
+  "c0/103457.txt"
+ ],
+ "beir_cqadupstack_gis_19221": [
+  "94/65246.txt"
+ ],
+ "beir_cqadupstack_gis_19256": [
+  "c3/19249.txt"
+ ],
+ "beir_cqadupstack_gis_19257": [
+  "83/66112.txt"
+ ],
+ "beir_cqadupstack_gis_19437": [
+  "5a/56941.txt"
+ ],
+ "beir_cqadupstack_gis_19522": [
+  "0e/4484.txt"
+ ],
+ "beir_cqadupstack_gis_19580": [
+  "91/75376.txt"
+ ],
+ "beir_cqadupstack_gis_19794": [
+  "4c/34446.txt"
+ ],
+ "beir_cqadupstack_gis_1987": [
+  "45/3301.txt"
+ ],
+ "beir_cqadupstack_gis_2": [
+  "2b/50829.txt"
+ ],
+ "beir_cqadupstack_gis_20018": [
+  "3c/112264.txt"
+ ],
+ "beir_cqadupstack_gis_20095": [
+  "98/92731.txt"
+ ],
+ "beir_cqadupstack_gis_202": [
+  "2c/60437.txt",
+  "3d/3633.txt",
+  "fd/71366.txt"
+ ],
+ "beir_cqadupstack_gis_20279": [
+  "a5/33132.txt"
+ ],
+ "beir_cqadupstack_gis_20286": [
+  "eb/66909.txt"
+ ],
+ "beir_cqadupstack_gis_2039": [
+  "2f/85441.txt",
+  "41/48994.txt"
+ ],
+ "beir_cqadupstack_gis_20420": [
+  "75/38947.txt",
+  "9a/111175.txt",
+  "ca/3651.txt"
+ ],
+ "beir_cqadupstack_gis_20521": [
+  "ee/19872.txt"
+ ],
+ "beir_cqadupstack_gis_20566": [
+  "c7/36922.txt"
+ ],
+ "beir_cqadupstack_gis_20594": [
+  "7a/20047.txt"
+ ],
+ "beir_cqadupstack_gis_20604": [
+  "3d/20900.txt"
+ ],
+ "beir_cqadupstack_gis_2071": [
+  "eb/14007.txt"
+ ],
+ "beir_cqadupstack_gis_20793": [
+  "ce/20904.txt"
+ ],
+ "beir_cqadupstack_gis_20870": [
+  "a5/58994.txt"
+ ],
+ "beir_cqadupstack_gis_21118": [
+  "28/57990.txt",
+  "4d/11949.txt"
+ ],
+ "beir_cqadupstack_gis_21296": [
+  "12/12452.txt"
+ ],
+ "beir_cqadupstack_gis_21566": [
+  "58/99603.txt"
+ ],
+ "beir_cqadupstack_gis_21575": [
+  "db/53169.txt"
+ ],
+ "beir_cqadupstack_gis_21616": [
+  "49/52365.txt"
+ ],
+ "beir_cqadupstack_gis_2170": [
+  "1d/9678.txt"
+ ],
+ "beir_cqadupstack_gis_21722": [
+  "a8/21741.txt",
+  "c5/21622.txt"
+ ],
+ "beir_cqadupstack_gis_21937": [
+  "2f/21033.txt"
+ ],
+ "beir_cqadupstack_gis_21985": [
+  "85/18778.txt"
+ ],
+ "beir_cqadupstack_gis_22114": [
+  "dc/22128.txt"
+ ],
+ "beir_cqadupstack_gis_22201": [
+  "06/110656.txt",
+  "22/39248.txt",
+  "29/84160.txt",
+  "39/59159.txt",
+  "69/26285.txt",
+  "b9/28170.txt",
+  "bb/76938.txt"
+ ],
+ "beir_cqadupstack_gis_22255": [
+  "c0/22228.txt"
+ ],
+ "beir_cqadupstack_gis_22545": [
+  "05/22552.txt"
+ ],
+ "beir_cqadupstack_gis_22560": [
+  "38/109112.txt",
+  "3b/25508.txt"
+ ],
+ "beir_cqadupstack_gis_22751": [
+  "b5/23892.txt"
+ ],
+ "beir_cqadupstack_gis_22755": [
+  "30/21995.txt"
+ ],
+ "beir_cqadupstack_gis_22818": [
+  "35/23571.txt"
+ ],
+ "beir_cqadupstack_gis_22895": [
+  "61/74831.txt"
+ ],
+ "beir_cqadupstack_gis_22952": [
+  "30/255.txt"
+ ],
+ "beir_cqadupstack_gis_2312": [
+  "9d/35167.txt"
+ ],
+ "beir_cqadupstack_gis_23129": [
+  "28/107228.txt",
+  "fd/10788.txt"
+ ],
+ "beir_cqadupstack_gis_23300": [
+  "a2/60157.txt"
+ ],
+ "beir_cqadupstack_gis_23614": [
+  "fc/75657.txt"
+ ],
+ "beir_cqadupstack_gis_23688": [
+  "29/38973.txt"
+ ],
+ "beir_cqadupstack_gis_23717": [
+  "82/45405.txt"
+ ],
+ "beir_cqadupstack_gis_23735": [
+  "9c/37634.txt",
+  "a9/63776.txt",
+  "d2/76648.txt"
+ ],
+ "beir_cqadupstack_gis_23763": [
+  "30/23843.txt"
+ ],
+ "beir_cqadupstack_gis_23919": [
+  "00/23905.txt",
+  "ce/24038.txt"
+ ],
+ "beir_cqadupstack_gis_23993": [
+  "d4/24186.txt"
+ ],
+ "beir_cqadupstack_gis_24001": [
+  "d6/24428.txt"
+ ],
+ "beir_cqadupstack_gis_24127": [
+  "4d/13249.txt"
+ ],
+ "beir_cqadupstack_gis_24258": [
+  "68/12329.txt"
+ ],
+ "beir_cqadupstack_gis_24300": [
+  "9e/42394.txt"
+ ],
+ "beir_cqadupstack_gis_24486": [
+  "33/56794.txt"
+ ],
+ "beir_cqadupstack_gis_24590": [
+  "36/94580.txt"
+ ],
+ "beir_cqadupstack_gis_24628": [
+  "d5/24564.txt"
+ ],
+ "beir_cqadupstack_gis_24646": [
+  "4e/25769.txt"
+ ],
+ "beir_cqadupstack_gis_24735": [
+  "29/24558.txt"
+ ],
+ "beir_cqadupstack_gis_24878": [
+  "bb/17137.txt"
+ ],
+ "beir_cqadupstack_gis_24933": [
+  "b8/31044.txt"
+ ],
+ "beir_cqadupstack_gis_2498": [
+  "40/67622.txt"
+ ],
+ "beir_cqadupstack_gis_25117": [
+  "a6/27538.txt"
+ ],
+ "beir_cqadupstack_gis_25177": [
+  "39/107692.txt",
+  "78/64886.txt"
+ ],
+ "beir_cqadupstack_gis_25353": [
+  "3b/31314.txt"
+ ],
+ "beir_cqadupstack_gis_25361": [
+  "6a/40906.txt"
+ ],
+ "beir_cqadupstack_gis_25522": [
+  "8e/8348.txt"
+ ],
+ "beir_cqadupstack_gis_256": [
+  "66/66838.txt"
+ ],
+ "beir_cqadupstack_gis_25709": [
+  "45/59890.txt"
+ ],
+ "beir_cqadupstack_gis_2587": [
+  "e2/45534.txt"
+ ],
+ "beir_cqadupstack_gis_26050": [
+  "2e/43031.txt"
+ ],
+ "beir_cqadupstack_gis_26262": [
+  "77/26292.txt"
+ ],
+ "beir_cqadupstack_gis_26452": [
+  "e9/58062.txt"
+ ],
+ "beir_cqadupstack_gis_26484": [
+  "28/26527.txt"
+ ],
+ "beir_cqadupstack_gis_26523": [
+  "71/24960.txt"
+ ],
+ "beir_cqadupstack_gis_26676": [
+  "36/67689.txt"
+ ],
+ "beir_cqadupstack_gis_26707": [
+  "7e/62999.txt"
+ ],
+ "beir_cqadupstack_gis_26725": [
+  "33/25368.txt",
+  "df/107819.txt"
+ ],
+ "beir_cqadupstack_gis_2682": [
+  "47/63273.txt",
+  "fd/109963.txt"
+ ],
+ "beir_cqadupstack_gis_26846": [
+  "ee/33461.txt"
+ ],
+ "beir_cqadupstack_gis_2685": [
+  "05/77040.txt"
+ ],
+ "beir_cqadupstack_gis_26979": [
+  "74/81249.txt"
+ ],
+ "beir_cqadupstack_gis_26996": [
+  "07/45030.txt"
+ ],
+ "beir_cqadupstack_gis_27070": [
+  "b2/27068.txt"
+ ],
+ "beir_cqadupstack_gis_27073": [
+  "0b/12501.txt"
+ ],
+ "beir_cqadupstack_gis_27094": [
+  "54/25956.txt"
+ ],
+ "beir_cqadupstack_gis_27171": [
+  "16/27060.txt"
+ ],
+ "beir_cqadupstack_gis_27190": [
+  "5c/27192.txt"
+ ],
+ "beir_cqadupstack_gis_27235": [
+  "c5/6749.txt"
+ ],
+ "beir_cqadupstack_gis_27381": [
+  "31/60566.txt",
+  "5a/15799.txt",
+  "b4/2276.txt"
+ ],
+ "beir_cqadupstack_gis_27434": [
+  "e9/29610.txt"
+ ],
+ "beir_cqadupstack_gis_27623": [
+  "fa/22458.txt"
+ ],
+ "beir_cqadupstack_gis_27676": [
+  "32/8140.txt"
+ ],
+ "beir_cqadupstack_gis_27683": [
+  "ef/22471.txt"
+ ],
+ "beir_cqadupstack_gis_2777": [
+  "4b/37297.txt"
+ ],
+ "beir_cqadupstack_gis_27806": [
+  "ff/41166.txt"
+ ],
+ "beir_cqadupstack_gis_27822": [
+  "d4/88053.txt"
+ ],
+ "beir_cqadupstack_gis_27905": [
+  "3c/27878.txt"
+ ],
+ "beir_cqadupstack_gis_28031": [
+  "3e/85294.txt"
+ ],
+ "beir_cqadupstack_gis_28105": [
+  "3f/64062.txt"
+ ],
+ "beir_cqadupstack_gis_28260": [
+  "e7/28086.txt"
+ ],
+ "beir_cqadupstack_gis_28406": [
+  "b4/25936.txt"
+ ],
+ "beir_cqadupstack_gis_28521": [
+  "f7/22852.txt"
+ ],
+ "beir_cqadupstack_gis_28566": [
+  "21/89904.txt"
+ ],
+ "beir_cqadupstack_gis_28567": [
+  "ec/28585.txt"
+ ],
+ "beir_cqadupstack_gis_28568": [
+  "22/27501.txt"
+ ],
+ "beir_cqadupstack_gis_28667": [
+  "2a/38936.txt",
+  "34/40863.txt",
+  "90/40561.txt",
+  "c3/50467.txt"
+ ],
+ "beir_cqadupstack_gis_28757": [
+  "92/23637.txt"
+ ],
+ "beir_cqadupstack_gis_28881": [
+  "cd/58209.txt"
+ ],
+ "beir_cqadupstack_gis_28888": [
+  "07/110778.txt"
+ ],
+ "beir_cqadupstack_gis_29084": [
+  "39/3589.txt"
+ ],
+ "beir_cqadupstack_gis_29257": [
+  "5c/20331.txt"
+ ],
+ "beir_cqadupstack_gis_29305": [
+  "05/28224.txt"
+ ],
+ "beir_cqadupstack_gis_29470": [
+  "f8/16513.txt"
+ ],
+ "beir_cqadupstack_gis_29501": [
+  "b8/91333.txt",
+  "bb/34080.txt"
+ ],
+ "beir_cqadupstack_gis_29734": [
+  "34/97245.txt"
+ ],
+ "beir_cqadupstack_gis_2976": [
+  "bd/14131.txt"
+ ],
+ "beir_cqadupstack_gis_29777": [
+  "5a/21917.txt"
+ ],
+ "beir_cqadupstack_gis_29825": [
+  "8b/29729.txt"
+ ],
+ "beir_cqadupstack_gis_29863": [
+  "7e/43449.txt"
+ ],
+ "beir_cqadupstack_gis_29888": [
+  "1e/65247.txt"
+ ],
+ "beir_cqadupstack_gis_30018": [
+  "44/83605.txt"
+ ],
+ "beir_cqadupstack_gis_30053": [
+  "c9/23856.txt"
+ ],
+ "beir_cqadupstack_gis_30183": [
+  "76/86908.txt"
+ ],
+ "beir_cqadupstack_gis_30230": [
+  "99/8340.txt"
+ ],
+ "beir_cqadupstack_gis_30250": [
+  "0c/71660.txt"
+ ],
+ "beir_cqadupstack_gis_305": [
+  "92/20465.txt"
+ ],
+ "beir_cqadupstack_gis_30624": [
+  "3e/30468.txt"
+ ],
+ "beir_cqadupstack_gis_30670": [
+  "77/84731.txt",
+  "7f/102607.txt"
+ ],
+ "beir_cqadupstack_gis_3083": [
+  "50/62116.txt"
+ ],
+ "beir_cqadupstack_gis_30895": [
+  "df/31310.txt"
+ ],
+ "beir_cqadupstack_gis_30920": [
+  "8e/31187.txt"
+ ],
+ "beir_cqadupstack_gis_30970": [
+  "41/25670.txt"
+ ],
+ "beir_cqadupstack_gis_31129": [
+  "50/92021.txt"
+ ],
+ "beir_cqadupstack_gis_31147": [
+  "3c/16691.txt"
+ ],
+ "beir_cqadupstack_gis_31154": [
+  "4f/24690.txt"
+ ],
+ "beir_cqadupstack_gis_31235": [
+  "b7/31215.txt"
+ ],
+ "beir_cqadupstack_gis_31236": [
+  "0c/75316.txt"
+ ],
+ "beir_cqadupstack_gis_31261": [
+  "bc/78378.txt"
+ ],
+ "beir_cqadupstack_gis_31341": [
+  "b6/15901.txt"
+ ],
+ "beir_cqadupstack_gis_31402": [
+  "b8/30989.txt"
+ ],
+ "beir_cqadupstack_gis_31900": [
+  "db/5999.txt"
+ ],
+ "beir_cqadupstack_gis_32082": [
+  "68/32963.txt",
+  "74/85038.txt"
+ ],
+ "beir_cqadupstack_gis_32269": [
+  "46/92285.txt"
+ ],
+ "beir_cqadupstack_gis_32310": [
+  "f1/72682.txt"
+ ],
+ "beir_cqadupstack_gis_32321": [
+  "7b/85631.txt"
+ ],
+ "beir_cqadupstack_gis_32407": [
+  "b3/90462.txt"
+ ],
+ "beir_cqadupstack_gis_32468": [
+  "79/77458.txt",
+  "d6/49406.txt"
+ ],
+ "beir_cqadupstack_gis_32514": [
+  "6c/24139.txt"
+ ],
+ "beir_cqadupstack_gis_32723": [
+  "55/31951.txt"
+ ],
+ "beir_cqadupstack_gis_32877": [
+  "44/43242.txt"
+ ],
+ "beir_cqadupstack_gis_33018": [
+  "c5/49461.txt"
+ ],
+ "beir_cqadupstack_gis_33033": [
+  "2e/19163.txt"
+ ],
+ "beir_cqadupstack_gis_33208": [
+  "63/51864.txt",
+  "6d/56587.txt"
+ ],
+ "beir_cqadupstack_gis_33251": [
+  "07/721.txt",
+  "20/34423.txt"
+ ],
+ "beir_cqadupstack_gis_33291": [
+  "5b/32338.txt"
+ ],
+ "beir_cqadupstack_gis_33310": [
+  "20/66054.txt"
+ ],
+ "beir_cqadupstack_gis_33364": [
+  "eb/33374.txt"
+ ],
+ "beir_cqadupstack_gis_33402": [
+  "f8/83234.txt"
+ ],
+ "beir_cqadupstack_gis_33629": [
+  "5d/90859.txt",
+  "ec/39080.txt"
+ ],
+ "beir_cqadupstack_gis_33700": [
+  "66/32250.txt"
+ ],
+ "beir_cqadupstack_gis_33756": [
+  "da/40674.txt"
+ ],
+ "beir_cqadupstack_gis_33826": [
+  "a0/39290.txt",
+  "b2/70661.txt"
+ ],
+ "beir_cqadupstack_gis_33852": [
+  "e6/48625.txt"
+ ],
+ "beir_cqadupstack_gis_33887": [
+  "db/89981.txt"
+ ],
+ "beir_cqadupstack_gis_33945": [
+  "29/32353.txt"
+ ],
+ "beir_cqadupstack_gis_34204": [
+  "0f/100314.txt",
+  "5c/68610.txt",
+  "a7/88128.txt"
+ ],
+ "beir_cqadupstack_gis_34237": [
+  "13/210.txt"
+ ],
+ "beir_cqadupstack_gis_34406": [
+  "33/29578.txt"
+ ],
+ "beir_cqadupstack_gis_34532": [
+  "6a/108094.txt"
+ ],
+ "beir_cqadupstack_gis_34612": [
+  "ff/43096.txt"
+ ],
+ "beir_cqadupstack_gis_34929": [
+  "d4/60860.txt"
+ ],
+ "beir_cqadupstack_gis_34985": [
+  "50/32762.txt"
+ ],
+ "beir_cqadupstack_gis_35106": [
+  "8c/75958.txt"
+ ],
+ "beir_cqadupstack_gis_35183": [
+  "22/30675.txt"
+ ],
+ "beir_cqadupstack_gis_35187": [
+  "e3/62877.txt"
+ ],
+ "beir_cqadupstack_gis_35369": [
+  "23/63683.txt"
+ ],
+ "beir_cqadupstack_gis_35540": [
+  "82/75322.txt"
+ ],
+ "beir_cqadupstack_gis_35591": [
+  "ef/35198.txt"
+ ],
+ "beir_cqadupstack_gis_35593": [
+  "46/59242.txt"
+ ],
+ "beir_cqadupstack_gis_35624": [
+  "0f/25727.txt",
+  "ad/33423.txt",
+  "ae/46701.txt",
+  "de/19098.txt",
+  "e8/19135.txt",
+  "fa/14323.txt"
+ ],
+ "beir_cqadupstack_gis_35670": [
+  "e9/35099.txt"
+ ],
+ "beir_cqadupstack_gis_3574": [
+  "26/78028.txt"
+ ],
+ "beir_cqadupstack_gis_36774": [
+  "85/28353.txt"
+ ],
+ "beir_cqadupstack_gis_36891": [
+  "87/43765.txt",
+  "91/14919.txt",
+  "be/82114.txt",
+  "f1/102128.txt"
+ ],
+ "beir_cqadupstack_gis_37125": [
+  "d7/70369.txt"
+ ],
+ "beir_cqadupstack_gis_37252": [
+  "b8/102978.txt"
+ ],
+ "beir_cqadupstack_gis_37304": [
+  "c8/101875.txt"
+ ],
+ "beir_cqadupstack_gis_37474": [
+  "57/37453.txt"
+ ],
+ "beir_cqadupstack_gis_37518": [
+  "8e/31036.txt"
+ ],
+ "beir_cqadupstack_gis_37543": [
+  "e3/31696.txt"
+ ],
+ "beir_cqadupstack_gis_37622": [
+  "ba/37615.txt"
+ ],
+ "beir_cqadupstack_gis_37656": [
+  "16/23467.txt"
+ ],
+ "beir_cqadupstack_gis_38855": [
+  "22/2523.txt",
+  "69/13474.txt",
+  "7b/52421.txt",
+  "b0/52547.txt",
+  "c0/21761.txt",
+  "f4/53291.txt",
+  "fe/49508.txt"
+ ],
+ "beir_cqadupstack_gis_3887": [
+  "34/1336.txt"
+ ],
+ "beir_cqadupstack_gis_39028": [
+  "79/711.txt"
+ ],
+ "beir_cqadupstack_gis_39151": [
+  "f6/18595.txt"
+ ],
+ "beir_cqadupstack_gis_39168": [
+  "21/76249.txt"
+ ],
+ "beir_cqadupstack_gis_3945": [
+  "0c/58530.txt"
+ ],
+ "beir_cqadupstack_gis_4011": [
+  "00/37563.txt"
+ ],
+ "beir_cqadupstack_gis_40536": [
+  "67/50835.txt"
+ ],
+ "beir_cqadupstack_gis_40624": [
+  "62/38862.txt",
+  "97/66875.txt"
+ ],
+ "beir_cqadupstack_gis_40650": [
+  "d4/40461.txt"
+ ],
+ "beir_cqadupstack_gis_40697": [
+  "8b/67724.txt"
+ ],
+ "beir_cqadupstack_gis_40728": [
+  "78/43423.txt"
+ ],
+ "beir_cqadupstack_gis_40813": [
+  "0e/34115.txt"
+ ],
+ "beir_cqadupstack_gis_4086": [
+  "ad/66409.txt"
+ ],
+ "beir_cqadupstack_gis_40919": [
+  "70/41297.txt"
+ ],
+ "beir_cqadupstack_gis_40943": [
+  "96/14150.txt"
+ ],
+ "beir_cqadupstack_gis_40991": [
+  "37/29103.txt"
+ ],
+ "beir_cqadupstack_gis_41135": [
+  "67/41130.txt"
+ ],
+ "beir_cqadupstack_gis_41251": [
+  "ab/41364.txt"
+ ],
+ "beir_cqadupstack_gis_41307": [
+  "3f/90834.txt",
+  "d8/57338.txt"
+ ],
+ "beir_cqadupstack_gis_41423": [
+  "19/22172.txt"
+ ],
+ "beir_cqadupstack_gis_41491": [
+  "97/80250.txt"
+ ],
+ "beir_cqadupstack_gis_41498": [
+  "12/37821.txt"
+ ],
+ "beir_cqadupstack_gis_41608": [
+  "c5/63133.txt"
+ ],
+ "beir_cqadupstack_gis_41725": [
+  "ba/22175.txt"
+ ],
+ "beir_cqadupstack_gis_41829": [
+  "a8/85296.txt"
+ ],
+ "beir_cqadupstack_gis_41880": [
+  "1c/22937.txt",
+  "51/57163.txt"
+ ],
+ "beir_cqadupstack_gis_41985": [
+  "39/42236.txt"
+ ],
+ "beir_cqadupstack_gis_420": [
+  "74/98332.txt"
+ ],
+ "beir_cqadupstack_gis_42019": [
+  "9f/30432.txt"
+ ],
+ "beir_cqadupstack_gis_42044": [
+  "65/70910.txt"
+ ],
+ "beir_cqadupstack_gis_4230": [
+  "c3/51868.txt"
+ ],
+ "beir_cqadupstack_gis_42358": [
+  "67/42344.txt"
+ ],
+ "beir_cqadupstack_gis_42434": [
+  "08/35025.txt",
+  "21/104190.txt",
+  "f9/29127.txt"
+ ],
+ "beir_cqadupstack_gis_42500": [
+  "91/60653.txt"
+ ],
+ "beir_cqadupstack_gis_42516": [
+  "49/18833.txt"
+ ],
+ "beir_cqadupstack_gis_42580": [
+  "b4/65487.txt"
+ ],
+ "beir_cqadupstack_gis_42584": [
+  "01/103874.txt",
+  "fc/75735.txt"
+ ],
+ "beir_cqadupstack_gis_42598": [
+  "08/75920.txt"
+ ],
+ "beir_cqadupstack_gis_42661": [
+  "23/30194.txt"
+ ],
+ "beir_cqadupstack_gis_42682": [
+  "ac/82469.txt"
+ ],
+ "beir_cqadupstack_gis_42689": [
+  "be/42717.txt"
+ ],
+ "beir_cqadupstack_gis_42776": [
+  "00/50508.txt",
+  "5f/75185.txt"
+ ],
+ "beir_cqadupstack_gis_42947": [
+  "0a/20450.txt"
+ ],
+ "beir_cqadupstack_gis_43037": [
+  "f5/107087.txt"
+ ],
+ "beir_cqadupstack_gis_43129": [
+  "a5/82919.txt"
+ ],
+ "beir_cqadupstack_gis_43238": [
+  "b3/43626.txt"
+ ],
+ "beir_cqadupstack_gis_43290": [
+  "22/84213.txt"
+ ],
+ "beir_cqadupstack_gis_43400": [
+  "b4/94261.txt"
+ ],
+ "beir_cqadupstack_gis_43617": [
+  "98/59306.txt"
+ ],
+ "beir_cqadupstack_gis_43796": [
+  "9a/43813.txt"
+ ],
+ "beir_cqadupstack_gis_43920": [
+  "61/69110.txt"
+ ],
+ "beir_cqadupstack_gis_44009": [
+  "fe/46952.txt"
+ ],
+ "beir_cqadupstack_gis_44018": [
+  "00/2077.txt"
+ ],
+ "beir_cqadupstack_gis_44035": [
+  "f6/13086.txt"
+ ],
+ "beir_cqadupstack_gis_44063": [
+  "ce/74421.txt"
+ ],
+ "beir_cqadupstack_gis_44098": [
+  "94/40731.txt",
+  "bb/57062.txt"
+ ],
+ "beir_cqadupstack_gis_44116": [
+  "50/11667.txt"
+ ],
+ "beir_cqadupstack_gis_44205": [
+  "46/21552.txt"
+ ],
+ "beir_cqadupstack_gis_44208": [
+  "3f/45131.txt"
+ ],
+ "beir_cqadupstack_gis_44334": [
+  "db/16842.txt"
+ ],
+ "beir_cqadupstack_gis_44393": [
+  "e0/81987.txt"
+ ],
+ "beir_cqadupstack_gis_44410": [
+  "59/78466.txt",
+  "65/58852.txt",
+  "e1/91656.txt"
+ ],
+ "beir_cqadupstack_gis_44411": [
+  "15/48614.txt"
+ ],
+ "beir_cqadupstack_gis_44426": [
+  "5d/3127.txt"
+ ],
+ "beir_cqadupstack_gis_44502": [
+  "7c/22303.txt"
+ ],
+ "beir_cqadupstack_gis_44536": [
+  "e1/110101.txt"
+ ],
+ "beir_cqadupstack_gis_44671": [
+  "7c/21923.txt"
+ ],
+ "beir_cqadupstack_gis_44926": [
+  "58/15528.txt"
+ ],
+ "beir_cqadupstack_gis_44948": [
+  "55/32730.txt"
+ ],
+ "beir_cqadupstack_gis_44998": [
+  "0a/63295.txt"
+ ],
+ "beir_cqadupstack_gis_45159": [
+  "d8/55143.txt"
+ ],
+ "beir_cqadupstack_gis_45195": [
+  "76/29094.txt"
+ ],
+ "beir_cqadupstack_gis_4531": [
+  "3b/78783.txt",
+  "47/21.txt"
+ ],
+ "beir_cqadupstack_gis_45334": [
+  "b9/76124.txt"
+ ],
+ "beir_cqadupstack_gis_45365": [
+  "a9/83686.txt"
+ ],
+ "beir_cqadupstack_gis_45449": [
+  "16/63046.txt",
+  "27/103359.txt",
+  "35/102779.txt",
+  "56/81103.txt",
+  "7a/87329.txt",
+  "a8/59026.txt",
+  "f2/103494.txt"
+ ],
+ "beir_cqadupstack_gis_45469": [
+  "4a/91556.txt"
+ ],
+ "beir_cqadupstack_gis_45619": [
+  "2d/28308.txt",
+  "5f/4157.txt"
+ ],
+ "beir_cqadupstack_gis_46634": [
+  "54/46779.txt",
+  "ca/46888.txt"
+ ],
+ "beir_cqadupstack_gis_46716": [
+  "25/75485.txt",
+  "ac/48961.txt"
+ ],
+ "beir_cqadupstack_gis_46741": [
+  "33/101866.txt",
+  "7a/82872.txt"
+ ],
+ "beir_cqadupstack_gis_46842": [
+  "a5/27102.txt",
+  "fc/11992.txt"
+ ],
+ "beir_cqadupstack_gis_46862": [
+  "a3/65485.txt"
+ ],
+ "beir_cqadupstack_gis_46866": [
+  "6f/46762.txt"
+ ],
+ "beir_cqadupstack_gis_47991": [
+  "70/48518.txt"
+ ],
+ "beir_cqadupstack_gis_48142": [
+  "06/92194.txt",
+  "37/20054.txt",
+  "a8/26461.txt"
+ ],
+ "beir_cqadupstack_gis_48151": [
+  "35/45512.txt"
+ ],
+ "beir_cqadupstack_gis_48192": [
+  "66/55176.txt"
+ ],
+ "beir_cqadupstack_gis_48265": [
+  "23/70673.txt"
+ ],
+ "beir_cqadupstack_gis_4828": [
+  "e1/16259.txt"
+ ],
+ "beir_cqadupstack_gis_48352": [
+  "86/48522.txt"
+ ],
+ "beir_cqadupstack_gis_48364": [
+  "6f/72097.txt"
+ ],
+ "beir_cqadupstack_gis_48392": [
+  "94/41977.txt"
+ ],
+ "beir_cqadupstack_gis_48549": [
+  "a4/13171.txt"
+ ],
+ "beir_cqadupstack_gis_48552": [
+  "00/28704.txt"
+ ],
+ "beir_cqadupstack_gis_48799": [
+  "4d/52233.txt"
+ ],
+ "beir_cqadupstack_gis_48872": [
+  "b6/53676.txt"
+ ],
+ "beir_cqadupstack_gis_48899": [
+  "4e/40660.txt"
+ ],
+ "beir_cqadupstack_gis_49001": [
+  "c7/1553.txt"
+ ],
+ "beir_cqadupstack_gis_4901": [
+  "e7/62667.txt"
+ ],
+ "beir_cqadupstack_gis_4906": [
+  "08/75176.txt",
+  "22/57407.txt"
+ ],
+ "beir_cqadupstack_gis_49477": [
+  "8d/49260.txt"
+ ],
+ "beir_cqadupstack_gis_49728": [
+  "3f/76464.txt"
+ ],
+ "beir_cqadupstack_gis_49729": [
+  "2a/45148.txt"
+ ],
+ "beir_cqadupstack_gis_49802": [
+  "6f/32119.txt"
+ ],
+ "beir_cqadupstack_gis_49844": [
+  "7b/31706.txt",
+  "d9/52750.txt",
+  "ff/52250.txt"
+ ],
+ "beir_cqadupstack_gis_49869": [
+  "28/60066.txt"
+ ],
+ "beir_cqadupstack_gis_49904": [
+  "ee/37325.txt"
+ ],
+ "beir_cqadupstack_gis_50010": [
+  "71/59199.txt",
+  "ef/12859.txt",
+  "f4/53021.txt"
+ ],
+ "beir_cqadupstack_gis_50046": [
+  "a3/50029.txt"
+ ],
+ "beir_cqadupstack_gis_50108": [
+  "4a/61078.txt",
+  "8f/61049.txt"
+ ],
+ "beir_cqadupstack_gis_50165": [
+  "05/55109.txt",
+  "c7/37120.txt"
+ ],
+ "beir_cqadupstack_gis_50169": [
+  "3e/65278.txt"
+ ],
+ "beir_cqadupstack_gis_50208": [
+  "7f/7749.txt"
+ ],
+ "beir_cqadupstack_gis_50217": [
+  "d0/34872.txt"
+ ],
+ "beir_cqadupstack_gis_50325": [
+  "e0/111246.txt"
+ ],
+ "beir_cqadupstack_gis_5041": [
+  "a3/33462.txt"
+ ],
+ "beir_cqadupstack_gis_50415": [
+  "ec/25518.txt"
+ ],
+ "beir_cqadupstack_gis_50537": [
+  "8b/48537.txt",
+  "8c/44460.txt"
+ ],
+ "beir_cqadupstack_gis_50754": [
+  "35/52285.txt"
+ ],
+ "beir_cqadupstack_gis_50769": [
+  "f4/102704.txt"
+ ],
+ "beir_cqadupstack_gis_50825": [
+  "43/8186.txt"
+ ],
+ "beir_cqadupstack_gis_50844": [
+  "c4/48087.txt"
+ ],
+ "beir_cqadupstack_gis_5086": [
+  "58/72425.txt"
+ ],
+ "beir_cqadupstack_gis_5132": [
+  "8b/5191.txt"
+ ],
+ "beir_cqadupstack_gis_51929": [
+  "5f/84656.txt"
+ ],
+ "beir_cqadupstack_gis_51986": [
+  "a8/69221.txt"
+ ],
+ "beir_cqadupstack_gis_51989": [
+  "65/22584.txt"
+ ],
+ "beir_cqadupstack_gis_52292": [
+  "ca/51946.txt"
+ ],
+ "beir_cqadupstack_gis_52409": [
+  "01/83865.txt"
+ ],
+ "beir_cqadupstack_gis_52462": [
+  "bd/49462.txt"
+ ],
+ "beir_cqadupstack_gis_52483": [
+  "aa/71662.txt"
+ ],
+ "beir_cqadupstack_gis_52818": [
+  "1f/104162.txt"
+ ],
+ "beir_cqadupstack_gis_52847": [
+  "16/32711.txt"
+ ],
+ "beir_cqadupstack_gis_52975": [
+  "92/48925.txt"
+ ],
+ "beir_cqadupstack_gis_53039": [
+  "e7/49446.txt"
+ ],
+ "beir_cqadupstack_gis_53081": [
+  "1b/101669.txt"
+ ],
+ "beir_cqadupstack_gis_53091": [
+  "25/31259.txt"
+ ],
+ "beir_cqadupstack_gis_53262": [
+  "07/78508.txt"
+ ],
+ "beir_cqadupstack_gis_53265": [
+  "76/53817.txt"
+ ],
+ "beir_cqadupstack_gis_53348": [
+  "b6/1946.txt"
+ ],
+ "beir_cqadupstack_gis_53402": [
+  "3c/76462.txt"
+ ],
+ "beir_cqadupstack_gis_53528": [
+  "e4/31478.txt"
+ ],
+ "beir_cqadupstack_gis_53569": [
+  "fa/66194.txt"
+ ],
+ "beir_cqadupstack_gis_53620": [
+  "b6/110575.txt"
+ ],
+ "beir_cqadupstack_gis_53785": [
+  "c2/15775.txt"
+ ],
+ "beir_cqadupstack_gis_54065": [
+  "ea/84004.txt"
+ ],
+ "beir_cqadupstack_gis_54094": [
+  "bb/53784.txt"
+ ],
+ "beir_cqadupstack_gis_54244": [
+  "8f/85737.txt"
+ ],
+ "beir_cqadupstack_gis_54266": [
+  "fe/7199.txt"
+ ],
+ "beir_cqadupstack_gis_54481": [
+  "7c/112153.txt"
+ ],
+ "beir_cqadupstack_gis_54803": [
+  "14/42348.txt"
+ ],
+ "beir_cqadupstack_gis_54949": [
+  "10/77225.txt"
+ ],
+ "beir_cqadupstack_gis_55119": [
+  "db/59718.txt"
+ ],
+ "beir_cqadupstack_gis_55129": [
+  "ca/54291.txt"
+ ],
+ "beir_cqadupstack_gis_55196": [
+  "0a/68667.txt",
+  "2a/56968.txt",
+  "70/64415.txt",
+  "e1/7608.txt",
+  "fe/89950.txt"
+ ],
+ "beir_cqadupstack_gis_55549": [
+  "c8/26728.txt"
+ ],
+ "beir_cqadupstack_gis_5568": [
+  "ff/6296.txt"
+ ],
+ "beir_cqadupstack_gis_5579": [
+  "95/37142.txt"
+ ],
+ "beir_cqadupstack_gis_5583": [
+  "1c/102527.txt",
+  "e3/52222.txt"
+ ],
+ "beir_cqadupstack_gis_5640": [
+  "29/87877.txt"
+ ],
+ "beir_cqadupstack_gis_56774": [
+  "ee/11004.txt"
+ ],
+ "beir_cqadupstack_gis_56843": [
+  "fa/17712.txt"
+ ],
+ "beir_cqadupstack_gis_5686": [
+  "fd/68050.txt"
+ ],
+ "beir_cqadupstack_gis_56862": [
+  "9f/56913.txt"
+ ],
+ "beir_cqadupstack_gis_56953": [
+  "cf/56944.txt"
+ ],
+ "beir_cqadupstack_gis_56957": [
+  "cc/6616.txt"
+ ],
+ "beir_cqadupstack_gis_57028": [
+  "22/29146.txt"
+ ],
+ "beir_cqadupstack_gis_57151": [
+  "f9/64778.txt"
+ ],
+ "beir_cqadupstack_gis_57210": [
+  "8d/90607.txt",
+  "db/57362.txt"
+ ],
+ "beir_cqadupstack_gis_57331": [
+  "13/36942.txt"
+ ],
+ "beir_cqadupstack_gis_57394": [
+  "49/59513.txt"
+ ],
+ "beir_cqadupstack_gis_57438": [
+  "bf/2555.txt"
+ ],
+ "beir_cqadupstack_gis_57477": [
+  "fb/57274.txt"
+ ],
+ "beir_cqadupstack_gis_57521": [
+  "25/52353.txt"
+ ],
+ "beir_cqadupstack_gis_5761": [
+  "79/58356.txt",
+  "88/79363.txt",
+  "88/82691.txt",
+  "e6/65791.txt"
+ ],
+ "beir_cqadupstack_gis_57784": [
+  "b5/36801.txt"
+ ],
+ "beir_cqadupstack_gis_57796": [
+  "61/28364.txt"
+ ],
+ "beir_cqadupstack_gis_58054": [
+  "00/58035.txt"
+ ],
+ "beir_cqadupstack_gis_58127": [
+  "30/33608.txt"
+ ],
+ "beir_cqadupstack_gis_58224": [
+  "9c/76907.txt",
+  "a5/75591.txt"
+ ],
+ "beir_cqadupstack_gis_58262": [
+  "18/26657.txt"
+ ],
+ "beir_cqadupstack_gis_58321": [
+  "6d/73640.txt",
+  "df/57337.txt"
+ ],
+ "beir_cqadupstack_gis_58377": [
+  "13/23654.txt",
+  "56/70964.txt"
+ ],
+ "beir_cqadupstack_gis_58640": [
+  "46/58590.txt"
+ ],
+ "beir_cqadupstack_gis_58660": [
+  "7b/50212.txt"
+ ],
+ "beir_cqadupstack_gis_58757": [
+  "2c/58972.txt"
+ ],
+ "beir_cqadupstack_gis_58783": [
+  "9b/58168.txt"
+ ],
+ "beir_cqadupstack_gis_58787": [
+  "6a/60578.txt"
+ ],
+ "beir_cqadupstack_gis_58845": [
+  "55/75678.txt",
+  "58/6604.txt",
+  "d5/8720.txt"
+ ],
+ "beir_cqadupstack_gis_59083": [
+  "7e/8685.txt"
+ ],
+ "beir_cqadupstack_gis_59091": [
+  "3a/778.txt"
+ ],
+ "beir_cqadupstack_gis_59170": [
+  "55/24151.txt"
+ ],
+ "beir_cqadupstack_gis_59173": [
+  "7c/43608.txt"
+ ],
+ "beir_cqadupstack_gis_59203": [
+  "2a/57642.txt"
+ ],
+ "beir_cqadupstack_gis_59339": [
+  "1d/59711.txt"
+ ],
+ "beir_cqadupstack_gis_59356": [
+  "42/57347.txt"
+ ],
+ "beir_cqadupstack_gis_59580": [
+  "15/29464.txt",
+  "17/88593.txt"
+ ],
+ "beir_cqadupstack_gis_59582": [
+  "f8/50682.txt"
+ ],
+ "beir_cqadupstack_gis_59604": [
+  "07/60299.txt"
+ ],
+ "beir_cqadupstack_gis_59610": [
+  "42/58136.txt"
+ ],
+ "beir_cqadupstack_gis_59740": [
+  "22/18220.txt"
+ ],
+ "beir_cqadupstack_gis_59858": [
+  "07/88403.txt",
+  "30/6848.txt"
+ ],
+ "beir_cqadupstack_gis_59865": [
+  "8c/72970.txt"
+ ],
+ "beir_cqadupstack_gis_59869": [
+  "cd/9896.txt"
+ ],
+ "beir_cqadupstack_gis_59902": [
+  "13/58431.txt"
+ ],
+ "beir_cqadupstack_gis_60210": [
+  "cf/60394.txt"
+ ],
+ "beir_cqadupstack_gis_60398": [
+  "ba/62442.txt",
+  "f9/64658.txt"
+ ],
+ "beir_cqadupstack_gis_60710": [
+  "2a/59821.txt"
+ ],
+ "beir_cqadupstack_gis_60712": [
+  "3f/16479.txt"
+ ],
+ "beir_cqadupstack_gis_60848": [
+  "95/50423.txt"
+ ],
+ "beir_cqadupstack_gis_60905": [
+  "01/57067.txt"
+ ],
+ "beir_cqadupstack_gis_60928": [
+  "1d/60944.txt"
+ ],
+ "beir_cqadupstack_gis_61044": [
+  "7f/70066.txt"
+ ],
+ "beir_cqadupstack_gis_61142": [
+  "de/61493.txt"
+ ],
+ "beir_cqadupstack_gis_613": [
+  "52/46956.txt"
+ ],
+ "beir_cqadupstack_gis_61301": [
+  "d9/90847.txt"
+ ],
+ "beir_cqadupstack_gis_61326": [
+  "83/60917.txt"
+ ],
+ "beir_cqadupstack_gis_61393": [
+  "bf/31576.txt"
+ ],
+ "beir_cqadupstack_gis_61411": [
+  "bd/10834.txt"
+ ],
+ "beir_cqadupstack_gis_6148": [
+  "4e/30588.txt"
+ ],
+ "beir_cqadupstack_gis_61482": [
+  "26/29157.txt",
+  "42/52412.txt"
+ ],
+ "beir_cqadupstack_gis_61499": [
+  "2d/70622.txt",
+  "6d/80204.txt"
+ ],
+ "beir_cqadupstack_gis_61862": [
+  "64/77007.txt",
+  "a1/102531.txt"
+ ],
+ "beir_cqadupstack_gis_61909": [
+  "08/61768.txt"
+ ],
+ "beir_cqadupstack_gis_61945": [
+  "d7/5239.txt"
+ ],
+ "beir_cqadupstack_gis_62026": [
+  "04/86006.txt"
+ ],
+ "beir_cqadupstack_gis_62103": [
+  "7d/90431.txt",
+  "e5/16555.txt"
+ ],
+ "beir_cqadupstack_gis_62121": [
+  "82/91638.txt"
+ ],
+ "beir_cqadupstack_gis_62390": [
+  "9f/4528.txt"
+ ],
+ "beir_cqadupstack_gis_62406": [
+  "67/8844.txt",
+  "68/57997.txt",
+  "ef/27179.txt"
+ ],
+ "beir_cqadupstack_gis_62627": [
+  "68/14374.txt"
+ ],
+ "beir_cqadupstack_gis_62837": [
+  "bc/61329.txt"
+ ],
+ "beir_cqadupstack_gis_62908": [
+  "19/21910.txt"
+ ],
+ "beir_cqadupstack_gis_62949": [
+  "7a/83526.txt"
+ ],
+ "beir_cqadupstack_gis_630": [
+  "92/53553.txt"
+ ],
+ "beir_cqadupstack_gis_63022": [
+  "59/62860.txt"
+ ],
+ "beir_cqadupstack_gis_63024": [
+  "85/68660.txt"
+ ],
+ "beir_cqadupstack_gis_63235": [
+  "bb/94724.txt"
+ ],
+ "beir_cqadupstack_gis_63240": [
+  "7b/76262.txt"
+ ],
+ "beir_cqadupstack_gis_63394": [
+  "b8/32544.txt"
+ ],
+ "beir_cqadupstack_gis_63395": [
+  "dd/110658.txt"
+ ],
+ "beir_cqadupstack_gis_63868": [
+  "f0/21696.txt"
+ ],
+ "beir_cqadupstack_gis_63931": [
+  "91/53816.txt"
+ ],
+ "beir_cqadupstack_gis_64065": [
+  "ad/36795.txt"
+ ],
+ "beir_cqadupstack_gis_64227": [
+  "59/53471.txt"
+ ],
+ "beir_cqadupstack_gis_64392": [
+  "32/17638.txt"
+ ],
+ "beir_cqadupstack_gis_6440": [
+  "24/14469.txt"
+ ],
+ "beir_cqadupstack_gis_64644": [
+  "9c/37257.txt"
+ ],
+ "beir_cqadupstack_gis_6470": [
+  "16/97872.txt",
+  "b8/80.txt"
+ ],
+ "beir_cqadupstack_gis_64714": [
+  "e7/6398.txt"
+ ],
+ "beir_cqadupstack_gis_64876": [
+  "7f/64889.txt"
+ ],
+ "beir_cqadupstack_gis_64950": [
+  "c2/68983.txt"
+ ],
+ "beir_cqadupstack_gis_6508": [
+  "57/6047.txt"
+ ],
+ "beir_cqadupstack_gis_65190": [
+  "fe/70050.txt"
+ ],
+ "beir_cqadupstack_gis_65366": [
+  "26/4568.txt"
+ ],
+ "beir_cqadupstack_gis_65403": [
+  "22/57561.txt",
+  "37/107251.txt"
+ ],
+ "beir_cqadupstack_gis_65794": [
+  "0a/10260.txt"
+ ],
+ "beir_cqadupstack_gis_66113": [
+  "3f/92957.txt",
+  "b6/30006.txt"
+ ],
+ "beir_cqadupstack_gis_66259": [
+  "ee/66435.txt"
+ ],
+ "beir_cqadupstack_gis_66477": [
+  "78/67924.txt"
+ ],
+ "beir_cqadupstack_gis_66563": [
+  "c4/58605.txt"
+ ],
+ "beir_cqadupstack_gis_66824": [
+  "c3/10095.txt"
+ ],
+ "beir_cqadupstack_gis_66888": [
+  "5c/67221.txt"
+ ],
+ "beir_cqadupstack_gis_67025": [
+  "da/5068.txt"
+ ],
+ "beir_cqadupstack_gis_67035": [
+  "b8/107532.txt"
+ ],
+ "beir_cqadupstack_gis_6704": [
+  "a5/8288.txt"
+ ],
+ "beir_cqadupstack_gis_67103": [
+  "99/67101.txt"
+ ],
+ "beir_cqadupstack_gis_6720": [
+  "62/60829.txt"
+ ],
+ "beir_cqadupstack_gis_67312": [
+  "98/83825.txt"
+ ],
+ "beir_cqadupstack_gis_67474": [
+  "65/16561.txt"
+ ],
+ "beir_cqadupstack_gis_67581": [
+  "9a/67763.txt"
+ ],
+ "beir_cqadupstack_gis_67588": [
+  "70/110092.txt"
+ ],
+ "beir_cqadupstack_gis_67804": [
+  "ce/66578.txt"
+ ],
+ "beir_cqadupstack_gis_67825": [
+  "a8/2664.txt"
+ ],
+ "beir_cqadupstack_gis_67887": [
+  "77/44526.txt"
+ ],
+ "beir_cqadupstack_gis_6790": [
+  "2d/6844.txt"
+ ],
+ "beir_cqadupstack_gis_6804": [
+  "62/20562.txt"
+ ],
+ "beir_cqadupstack_gis_68168": [
+  "fc/68585.txt"
+ ],
+ "beir_cqadupstack_gis_68175": [
+  "59/90569.txt"
+ ],
+ "beir_cqadupstack_gis_68233": [
+  "8a/93816.txt"
+ ],
+ "beir_cqadupstack_gis_68273": [
+  "25/97627.txt"
+ ],
+ "beir_cqadupstack_gis_68389": [
+  "b1/75397.txt"
+ ],
+ "beir_cqadupstack_gis_68545": [
+  "b4/104073.txt"
+ ],
+ "beir_cqadupstack_gis_68546": [
+  "c7/29946.txt"
+ ],
+ "beir_cqadupstack_gis_68566": [
+  "ff/66746.txt"
+ ],
+ "beir_cqadupstack_gis_68624": [
+  "9d/85987.txt"
+ ],
+ "beir_cqadupstack_gis_68843": [
+  "92/104142.txt"
+ ],
+ "beir_cqadupstack_gis_68897": [
+  "24/44733.txt"
+ ],
+ "beir_cqadupstack_gis_68956": [
+  "15/69577.txt"
+ ],
+ "beir_cqadupstack_gis_69137": [
+  "70/104038.txt"
+ ],
+ "beir_cqadupstack_gis_69294": [
+  "e9/52858.txt"
+ ],
+ "beir_cqadupstack_gis_6933": [
+  "57/56943.txt"
+ ],
+ "beir_cqadupstack_gis_6948": [
+  "f4/6990.txt"
+ ],
+ "beir_cqadupstack_gis_69722": [
+  "0e/88894.txt"
+ ],
+ "beir_cqadupstack_gis_69857": [
+  "9d/15204.txt"
+ ],
+ "beir_cqadupstack_gis_6995": [
+  "97/8414.txt"
+ ],
+ "beir_cqadupstack_gis_70185": [
+  "59/72965.txt"
+ ],
+ "beir_cqadupstack_gis_70301": [
+  "15/68359.txt"
+ ],
+ "beir_cqadupstack_gis_70411": [
+  "c3/89618.txt"
+ ],
+ "beir_cqadupstack_gis_70591": [
+  "05/85144.txt"
+ ],
+ "beir_cqadupstack_gis_70645": [
+  "df/81963.txt"
+ ],
+ "beir_cqadupstack_gis_70758": [
+  "37/70665.txt"
+ ],
+ "beir_cqadupstack_gis_7077": [
+  "1b/57142.txt"
+ ],
+ "beir_cqadupstack_gis_7078": [
+  "e9/26814.txt"
+ ],
+ "beir_cqadupstack_gis_70921": [
+  "a4/44284.txt"
+ ],
+ "beir_cqadupstack_gis_70922": [
+  "5b/63771.txt"
+ ],
+ "beir_cqadupstack_gis_71105": [
+  "85/77169.txt"
+ ],
+ "beir_cqadupstack_gis_7147": [
+  "dc/70233.txt"
+ ],
+ "beir_cqadupstack_gis_71504": [
+  "03/40516.txt",
+  "1c/38948.txt"
+ ],
+ "beir_cqadupstack_gis_71719": [
+  "67/103000.txt"
+ ],
+ "beir_cqadupstack_gis_71872": [
+  "20/76355.txt"
+ ],
+ "beir_cqadupstack_gis_71926": [
+  "cf/71962.txt"
+ ],
+ "beir_cqadupstack_gis_72051": [
+  "94/72176.txt",
+  "c3/72242.txt"
+ ],
+ "beir_cqadupstack_gis_72059": [
+  "1c/72092.txt"
+ ],
+ "beir_cqadupstack_gis_72193": [
+  "74/113696.txt"
+ ],
+ "beir_cqadupstack_gis_72244": [
+  "d9/77043.txt"
+ ],
+ "beir_cqadupstack_gis_72260": [
+  "df/72206.txt"
+ ],
+ "beir_cqadupstack_gis_72298": [
+  "e8/45138.txt"
+ ],
+ "beir_cqadupstack_gis_72392": [
+  "50/112378.txt"
+ ],
+ "beir_cqadupstack_gis_72393": [
+  "93/26892.txt"
+ ],
+ "beir_cqadupstack_gis_72448": [
+  "41/73589.txt"
+ ],
+ "beir_cqadupstack_gis_72506": [
+  "e4/92597.txt"
+ ],
+ "beir_cqadupstack_gis_72575": [
+  "7b/26412.txt"
+ ],
+ "beir_cqadupstack_gis_72851": [
+  "6f/72358.txt"
+ ],
+ "beir_cqadupstack_gis_7297": [
+  "14/50581.txt"
+ ],
+ "beir_cqadupstack_gis_72985": [
+  "90/24260.txt"
+ ],
+ "beir_cqadupstack_gis_73307": [
+  "44/6171.txt"
+ ],
+ "beir_cqadupstack_gis_7339": [
+  "17/14446.txt",
+  "a4/8062.txt",
+  "cc/74872.txt"
+ ],
+ "beir_cqadupstack_gis_73394": [
+  "d6/73585.txt"
+ ],
+ "beir_cqadupstack_gis_73397": [
+  "f7/387.txt"
+ ],
+ "beir_cqadupstack_gis_73458": [
+  "51/73709.txt"
+ ],
+ "beir_cqadupstack_gis_73476": [
+  "42/73173.txt",
+  "ce/86120.txt"
+ ],
+ "beir_cqadupstack_gis_73524": [
+  "e0/93242.txt"
+ ],
+ "beir_cqadupstack_gis_73542": [
+  "70/77676.txt"
+ ],
+ "beir_cqadupstack_gis_73649": [
+  "0b/77002.txt"
+ ],
+ "beir_cqadupstack_gis_73736": [
+  "9e/92205.txt"
+ ],
+ "beir_cqadupstack_gis_74079": [
+  "21/72686.txt",
+  "5d/71841.txt",
+  "ca/73032.txt"
+ ],
+ "beir_cqadupstack_gis_74120": [
+  "77/73127.txt"
+ ],
+ "beir_cqadupstack_gis_74244": [
+  "de/9662.txt"
+ ],
+ "beir_cqadupstack_gis_74301": [
+  "72/74284.txt",
+  "a2/74179.txt",
+  "a8/74071.txt"
+ ],
+ "beir_cqadupstack_gis_74453": [
+  "d6/27457.txt"
+ ],
+ "beir_cqadupstack_gis_74480": [
+  "86/52949.txt"
+ ],
+ "beir_cqadupstack_gis_74543": [
+  "62/75646.txt"
+ ],
+ "beir_cqadupstack_gis_74554": [
+  "90/74521.txt"
+ ],
+ "beir_cqadupstack_gis_74658": [
+  "6a/52930.txt",
+  "79/21916.txt"
+ ],
+ "beir_cqadupstack_gis_74692": [
+  "28/37405.txt"
+ ],
+ "beir_cqadupstack_gis_75092": [
+  "4a/113743.txt"
+ ],
+ "beir_cqadupstack_gis_75104": [
+  "5e/57540.txt"
+ ],
+ "beir_cqadupstack_gis_75119": [
+  "c0/75296.txt"
+ ],
+ "beir_cqadupstack_gis_75155": [
+  "3d/35590.txt",
+  "5b/42232.txt",
+  "e9/89938.txt"
+ ],
+ "beir_cqadupstack_gis_75212": [
+  "9a/34600.txt"
+ ],
+ "beir_cqadupstack_gis_75289": [
+  "f2/14542.txt"
+ ],
+ "beir_cqadupstack_gis_75324": [
+  "5c/85289.txt"
+ ],
+ "beir_cqadupstack_gis_75525": [
+  "b5/24790.txt"
+ ],
+ "beir_cqadupstack_gis_75588": [
+  "60/107140.txt"
+ ],
+ "beir_cqadupstack_gis_75602": [
+  "3c/73856.txt",
+  "6f/74964.txt"
+ ],
+ "beir_cqadupstack_gis_75685": [
+  "b4/89253.txt",
+  "ce/87546.txt"
+ ],
+ "beir_cqadupstack_gis_75859": [
+  "49/30794.txt"
+ ],
+ "beir_cqadupstack_gis_75876": [
+  "c4/77861.txt"
+ ],
+ "beir_cqadupstack_gis_75899": [
+  "22/78214.txt",
+  "cf/80072.txt"
+ ],
+ "beir_cqadupstack_gis_75928": [
+  "ca/75820.txt"
+ ],
+ "beir_cqadupstack_gis_75951": [
+  "a1/31196.txt"
+ ],
+ "beir_cqadupstack_gis_76181": [
+  "27/76420.txt"
+ ],
+ "beir_cqadupstack_gis_7651": [
+  "ed/7644.txt"
+ ],
+ "beir_cqadupstack_gis_76606": [
+  "98/87677.txt"
+ ],
+ "beir_cqadupstack_gis_76655": [
+  "c3/101379.txt"
+ ],
+ "beir_cqadupstack_gis_76880": [
+  "83/76830.txt"
+ ],
+ "beir_cqadupstack_gis_76962": [
+  "92/34884.txt"
+ ],
+ "beir_cqadupstack_gis_77184": [
+  "20/89118.txt",
+  "88/664.txt",
+  "bf/60622.txt"
+ ],
+ "beir_cqadupstack_gis_77288": [
+  "c9/24402.txt"
+ ],
+ "beir_cqadupstack_gis_77425": [
+  "ab/43505.txt"
+ ],
+ "beir_cqadupstack_gis_77463": [
+  "0b/31684.txt"
+ ],
+ "beir_cqadupstack_gis_77958": [
+  "9c/76396.txt"
+ ],
+ "beir_cqadupstack_gis_7803": [
+  "90/12860.txt"
+ ],
+ "beir_cqadupstack_gis_78120": [
+  "83/68620.txt"
+ ],
+ "beir_cqadupstack_gis_78330": [
+  "a1/78022.txt"
+ ],
+ "beir_cqadupstack_gis_78439": [
+  "9d/53474.txt"
+ ],
+ "beir_cqadupstack_gis_78651": [
+  "e2/102959.txt"
+ ],
+ "beir_cqadupstack_gis_78794": [
+  "7e/11019.txt"
+ ],
+ "beir_cqadupstack_gis_78865": [
+  "52/78555.txt"
+ ],
+ "beir_cqadupstack_gis_78923": [
+  "64/77018.txt"
+ ],
+ "beir_cqadupstack_gis_79078": [
+  "49/79198.txt"
+ ],
+ "beir_cqadupstack_gis_79328": [
+  "93/28333.txt"
+ ],
+ "beir_cqadupstack_gis_79339": [
+  "8e/44142.txt"
+ ],
+ "beir_cqadupstack_gis_79730": [
+  "28/81631.txt"
+ ],
+ "beir_cqadupstack_gis_79803": [
+  "ee/91868.txt"
+ ],
+ "beir_cqadupstack_gis_80006": [
+  "24/53522.txt",
+  "4d/61473.txt"
+ ],
+ "beir_cqadupstack_gis_80037": [
+  "04/75614.txt",
+  "9b/53163.txt"
+ ],
+ "beir_cqadupstack_gis_80094": [
+  "1b/7809.txt"
+ ],
+ "beir_cqadupstack_gis_80127": [
+  "a5/79572.txt"
+ ],
+ "beir_cqadupstack_gis_8032": [
+  "0a/17679.txt",
+  "94/19494.txt",
+  "fe/40718.txt"
+ ],
+ "beir_cqadupstack_gis_80454": [
+  "02/102310.txt"
+ ],
+ "beir_cqadupstack_gis_80543": [
+  "11/66438.txt"
+ ],
+ "beir_cqadupstack_gis_80662": [
+  "61/81151.txt"
+ ],
+ "beir_cqadupstack_gis_80674": [
+  "40/16245.txt"
+ ],
+ "beir_cqadupstack_gis_80885": [
+  "11/68330.txt"
+ ],
+ "beir_cqadupstack_gis_80960": [
+  "1a/80864.txt"
+ ],
+ "beir_cqadupstack_gis_81110": [
+  "93/81079.txt"
+ ],
+ "beir_cqadupstack_gis_81121": [
+  "ea/13433.txt"
+ ],
+ "beir_cqadupstack_gis_81212": [
+  "e6/81273.txt"
+ ],
+ "beir_cqadupstack_gis_81324": [
+  "9a/81669.txt"
+ ],
+ "beir_cqadupstack_gis_81621": [
+  "a9/82050.txt"
+ ],
+ "beir_cqadupstack_gis_8178": [
+  "56/59442.txt"
+ ],
+ "beir_cqadupstack_gis_8191": [
+  "40/30154.txt"
+ ],
+ "beir_cqadupstack_gis_81928": [
+  "d4/20743.txt"
+ ],
+ "beir_cqadupstack_gis_82121": [
+  "4d/25366.txt",
+  "8a/79523.txt",
+  "fb/25548.txt"
+ ],
+ "beir_cqadupstack_gis_82134": [
+  "67/81549.txt"
+ ],
+ "beir_cqadupstack_gis_82175": [
+  "76/73836.txt"
+ ],
+ "beir_cqadupstack_gis_82242": [
+  "fc/82238.txt"
+ ],
+ "beir_cqadupstack_gis_82271": [
+  "19/54029.txt"
+ ],
+ "beir_cqadupstack_gis_823": [
+  "11/20117.txt",
+  "99/49033.txt"
+ ],
+ "beir_cqadupstack_gis_82415": [
+  "6c/33125.txt"
+ ],
+ "beir_cqadupstack_gis_82476": [
+  "15/17227.txt"
+ ],
+ "beir_cqadupstack_gis_82598": [
+  "b1/21633.txt"
+ ],
+ "beir_cqadupstack_gis_82618": [
+  "32/82081.txt"
+ ],
+ "beir_cqadupstack_gis_82718": [
+  "28/73630.txt",
+  "dc/81619.txt"
+ ],
+ "beir_cqadupstack_gis_8277": [
+  "85/9074.txt"
+ ],
+ "beir_cqadupstack_gis_82873": [
+  "db/75480.txt"
+ ],
+ "beir_cqadupstack_gis_82905": [
+  "39/30448.txt"
+ ],
+ "beir_cqadupstack_gis_82931": [
+  "e9/33685.txt"
+ ],
+ "beir_cqadupstack_gis_83212": [
+  "25/19338.txt",
+  "41/29997.txt",
+  "4c/73503.txt"
+ ],
+ "beir_cqadupstack_gis_83229": [
+  "6a/82587.txt"
+ ],
+ "beir_cqadupstack_gis_83316": [
+  "87/92193.txt",
+  "f8/83374.txt"
+ ],
+ "beir_cqadupstack_gis_83359": [
+  "a6/37425.txt"
+ ],
+ "beir_cqadupstack_gis_83372": [
+  "c7/88839.txt"
+ ],
+ "beir_cqadupstack_gis_83509": [
+  "f9/83120.txt"
+ ],
+ "beir_cqadupstack_gis_83977": [
+  "2a/83987.txt"
+ ],
+ "beir_cqadupstack_gis_8401": [
+  "94/5287.txt"
+ ],
+ "beir_cqadupstack_gis_84063": [
+  "0a/36724.txt",
+  "95/86549.txt"
+ ],
+ "beir_cqadupstack_gis_84141": [
+  "ff/83021.txt"
+ ],
+ "beir_cqadupstack_gis_8449": [
+  "cd/3302.txt"
+ ],
+ "beir_cqadupstack_gis_8453": [
+  "40/37033.txt"
+ ],
+ "beir_cqadupstack_gis_84552": [
+  "fe/8144.txt"
+ ],
+ "beir_cqadupstack_gis_84786": [
+  "3a/61065.txt"
+ ],
+ "beir_cqadupstack_gis_84956": [
+  "2d/113165.txt",
+  "91/18116.txt"
+ ],
+ "beir_cqadupstack_gis_85031": [
+  "79/81289.txt"
+ ],
+ "beir_cqadupstack_gis_85111": [
+  "a5/85043.txt"
+ ],
+ "beir_cqadupstack_gis_85147": [
+  "f1/3215.txt"
+ ],
+ "beir_cqadupstack_gis_85393": [
+  "a8/87765.txt"
+ ],
+ "beir_cqadupstack_gis_85540": [
+  "76/8529.txt"
+ ],
+ "beir_cqadupstack_gis_85592": [
+  "fd/93854.txt"
+ ],
+ "beir_cqadupstack_gis_85596": [
+  "d3/26993.txt"
+ ],
+ "beir_cqadupstack_gis_8571": [
+  "b6/102606.txt"
+ ],
+ "beir_cqadupstack_gis_85825": [
+  "0c/86576.txt"
+ ],
+ "beir_cqadupstack_gis_85897": [
+  "4c/80488.txt",
+  "cf/73048.txt"
+ ],
+ "beir_cqadupstack_gis_85993": [
+  "58/89758.txt"
+ ],
+ "beir_cqadupstack_gis_86075": [
+  "de/101790.txt"
+ ],
+ "beir_cqadupstack_gis_86106": [
+  "3e/86116.txt"
+ ],
+ "beir_cqadupstack_gis_86300": [
+  "52/84628.txt"
+ ],
+ "beir_cqadupstack_gis_86333": [
+  "7a/85611.txt"
+ ],
+ "beir_cqadupstack_gis_86383": [
+  "ca/27729.txt",
+  "d7/94086.txt"
+ ],
+ "beir_cqadupstack_gis_86444": [
+  "43/86773.txt",
+  "e1/87000.txt"
+ ],
+ "beir_cqadupstack_gis_86754": [
+  "eb/65503.txt"
+ ],
+ "beir_cqadupstack_gis_86847": [
+  "d7/86727.txt"
+ ],
+ "beir_cqadupstack_gis_87004": [
+  "18/32025.txt"
+ ],
+ "beir_cqadupstack_gis_87031": [
+  "c6/62548.txt"
+ ],
+ "beir_cqadupstack_gis_87248": [
+  "07/43268.txt"
+ ],
+ "beir_cqadupstack_gis_87401": [
+  "68/66719.txt"
+ ],
+ "beir_cqadupstack_gis_87432": [
+  "01/18479.txt",
+  "b9/79191.txt"
+ ],
+ "beir_cqadupstack_gis_87478": [
+  "70/84572.txt"
+ ],
+ "beir_cqadupstack_gis_87720": [
+  "be/10231.txt"
+ ],
+ "beir_cqadupstack_gis_8794": [
+  "e7/17620.txt"
+ ],
+ "beir_cqadupstack_gis_88104": [
+  "e5/88348.txt"
+ ],
+ "beir_cqadupstack_gis_88220": [
+  "26/88131.txt"
+ ],
+ "beir_cqadupstack_gis_88236": [
+  "93/15389.txt"
+ ],
+ "beir_cqadupstack_gis_88252": [
+  "07/79491.txt"
+ ],
+ "beir_cqadupstack_gis_88301": [
+  "77/58251.txt"
+ ],
+ "beir_cqadupstack_gis_88371": [
+  "a1/9408.txt"
+ ],
+ "beir_cqadupstack_gis_88477": [
+  "01/31605.txt",
+  "36/74780.txt"
+ ],
+ "beir_cqadupstack_gis_88715": [
+  "5d/59994.txt",
+  "90/88151.txt",
+  "b5/106802.txt"
+ ],
+ "beir_cqadupstack_gis_88723": [
+  "c3/91977.txt"
+ ],
+ "beir_cqadupstack_gis_88792": [
+  "52/71419.txt"
+ ],
+ "beir_cqadupstack_gis_89038": [
+  "2b/87111.txt"
+ ],
+ "beir_cqadupstack_gis_89103": [
+  "ad/37790.txt"
+ ],
+ "beir_cqadupstack_gis_89114": [
+  "0a/89245.txt"
+ ],
+ "beir_cqadupstack_gis_89165": [
+  "dd/48293.txt"
+ ],
+ "beir_cqadupstack_gis_89177": [
+  "2c/57841.txt",
+  "4e/29606.txt",
+  "5c/90367.txt",
+  "b4/89144.txt"
+ ],
+ "beir_cqadupstack_gis_89221": [
+  "23/33439.txt"
+ ],
+ "beir_cqadupstack_gis_89232": [
+  "5d/78510.txt"
+ ],
+ "beir_cqadupstack_gis_8929": [
+  "ba/11898.txt"
+ ],
+ "beir_cqadupstack_gis_89326": [
+  "d0/110165.txt"
+ ],
+ "beir_cqadupstack_gis_89468": [
+  "a2/44064.txt"
+ ],
+ "beir_cqadupstack_gis_89760": [
+  "d5/16962.txt"
+ ],
+ "beir_cqadupstack_gis_898": [
+  "f4/94252.txt"
+ ],
+ "beir_cqadupstack_gis_89898": [
+  "ce/78172.txt"
+ ],
+ "beir_cqadupstack_gis_89922": [
+  "1d/59729.txt"
+ ],
+ "beir_cqadupstack_gis_90084": [
+  "14/22691.txt",
+  "ce/61854.txt"
+ ],
+ "beir_cqadupstack_gis_91102": [
+  "07/95677.txt"
+ ],
+ "beir_cqadupstack_gis_91477": [
+  "15/91483.txt"
+ ],
+ "beir_cqadupstack_gis_9157": [
+  "36/62288.txt",
+  "da/70219.txt"
+ ],
+ "beir_cqadupstack_gis_91707": [
+  "49/91558.txt",
+  "7e/91419.txt"
+ ],
+ "beir_cqadupstack_gis_91790": [
+  "d6/91930.txt"
+ ],
+ "beir_cqadupstack_gis_91886": [
+  "04/17231.txt",
+  "36/48328.txt"
+ ],
+ "beir_cqadupstack_gis_91949": [
+  "0a/23376.txt"
+ ],
+ "beir_cqadupstack_gis_9210": [
+  "f7/61361.txt"
+ ],
+ "beir_cqadupstack_gis_92312": [
+  "ed/24947.txt"
+ ],
+ "beir_cqadupstack_gis_92396": [
+  "62/60527.txt"
+ ],
+ "beir_cqadupstack_gis_92645": [
+  "cc/9433.txt"
+ ],
+ "beir_cqadupstack_gis_92748": [
+  "c3/58680.txt"
+ ],
+ "beir_cqadupstack_gis_92772": [
+  "2a/80270.txt"
+ ],
+ "beir_cqadupstack_gis_92820": [
+  "12/92687.txt"
+ ],
+ "beir_cqadupstack_gis_92941": [
+  "29/91995.txt"
+ ],
+ "beir_cqadupstack_gis_93093": [
+  "47/40808.txt"
+ ],
+ "beir_cqadupstack_gis_93519": [
+  "1d/93694.txt"
+ ],
+ "beir_cqadupstack_gis_93696": [
+  "9d/93421.txt"
+ ],
+ "beir_cqadupstack_gis_93697": [
+  "45/93343.txt"
+ ],
+ "beir_cqadupstack_gis_93936": [
+  "28/94886.txt"
+ ],
+ "beir_cqadupstack_gis_93950": [
+  "52/94488.txt"
+ ],
+ "beir_cqadupstack_gis_94148": [
+  "a0/102838.txt"
+ ],
+ "beir_cqadupstack_gis_94191": [
+  "e9/73584.txt"
+ ],
+ "beir_cqadupstack_gis_94280": [
+  "5e/80589.txt"
+ ],
+ "beir_cqadupstack_gis_94446": [
+  "33/103422.txt"
+ ],
+ "beir_cqadupstack_gis_9462": [
+  "12/74408.txt",
+  "65/72250.txt"
+ ],
+ "beir_cqadupstack_gis_94643": [
+  "29/38868.txt"
+ ],
+ "beir_cqadupstack_gis_94706": [
+  "2e/33041.txt"
+ ],
+ "beir_cqadupstack_gis_94874": [
+  "1b/86802.txt"
+ ],
+ "beir_cqadupstack_gis_95035": [
+  "08/70216.txt"
+ ],
+ "beir_cqadupstack_gis_95249": [
+  "32/103366.txt",
+  "c0/103525.txt"
+ ],
+ "beir_cqadupstack_gis_95568": [
+  "03/78812.txt"
+ ],
+ "beir_cqadupstack_gis_957": [
+  "5a/59.txt"
+ ],
+ "beir_cqadupstack_gis_9614": [
+  "93/44296.txt"
+ ],
+ "beir_cqadupstack_gis_96153": [
+  "ef/108178.txt"
+ ],
+ "beir_cqadupstack_gis_9659": [
+  "23/111695.txt"
+ ],
+ "beir_cqadupstack_gis_97303": [
+  "fc/97301.txt"
+ ],
+ "beir_cqadupstack_gis_97741": [
+  "22/20572.txt",
+  "32/37085.txt",
+  "38/64140.txt",
+  "66/97331.txt",
+  "67/27057.txt",
+  "77/94674.txt",
+  "ad/108480.txt",
+  "c6/76539.txt",
+  "d5/74902.txt",
+  "e7/69361.txt"
+ ],
+ "beir_cqadupstack_gis_97771": [
+  "1f/97702.txt"
+ ],
+ "beir_cqadupstack_gis_97776": [
+  "00/75584.txt",
+  "0c/81595.txt",
+  "19/103390.txt",
+  "21/53210.txt",
+  "25/98188.txt",
+  "32/101591.txt",
+  "33/109258.txt",
+  "36/79775.txt",
+  "4d/109215.txt",
+  "54/36977.txt",
+  "6f/111556.txt",
+  "7f/24990.txt",
+  "a3/8238.txt",
+  "b3/82365.txt",
+  "b6/17903.txt",
+  "bd/62585.txt",
+  "be/11015.txt",
+  "c4/60632.txt",
+  "cf/69503.txt",
+  "da/86487.txt",
+  "e9/59875.txt",
+  "ea/8113.txt"
+ ],
+ "beir_cqadupstack_gis_97814": [
+  "d4/91537.txt"
+ ],
+ "beir_cqadupstack_gis_97845": [
+  "2d/3219.txt"
+ ],
+ "beir_cqadupstack_gis_97939": [
+  "c5/80376.txt"
+ ],
+ "beir_cqadupstack_gis_98028": [
+  "c4/3130.txt"
+ ],
+ "beir_cqadupstack_gis_98053": [
+  "f6/21382.txt"
+ ],
+ "beir_cqadupstack_gis_98076": [
+  "60/98189.txt"
+ ],
+ "beir_cqadupstack_gis_9894": [
+  "b3/57539.txt"
+ ],
+ "beir_cqadupstack_gis_99711": [
+  "5b/30526.txt",
+  "60/8650.txt",
+  "8a/84130.txt"
+ ],
+ "beir_cqadupstack_gis_99850": [
+  "39/24442.txt"
+ ],
+ "beir_cqadupstack_gis_99993": [
+  "08/61243.txt"
+ ]
+}

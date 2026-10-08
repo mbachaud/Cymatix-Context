@@ -1,0 +1,6909 @@
+{
+ "beir_cqadupstack_english_100173": [
+  "e95d91c8a832c942"
+ ],
+ "beir_cqadupstack_english_100414": [
+  "0813a223bc07b8b4"
+ ],
+ "beir_cqadupstack_english_100605": [
+  "a2e59d6eff7d655e"
+ ],
+ "beir_cqadupstack_english_100664": [
+  "52dd7f709dcdf05e",
+  "b13e7f329efefbdb"
+ ],
+ "beir_cqadupstack_english_100750": [
+  "0f7afc696e0fd864",
+  "265f6f7c103ce419",
+  "5339191f10c01b28",
+  "879108f257842315",
+  "9bc846746c9538a4",
+  "b5bb01b4f2293d52",
+  "ebc8228410f72aa5"
+ ],
+ "beir_cqadupstack_english_100870": [
+  "7bab2107b2a8f2eb",
+  "f153da0585da0542"
+ ],
+ "beir_cqadupstack_english_101125": [
+  "b322a0324e58efe6"
+ ],
+ "beir_cqadupstack_english_101130": [
+  "eb1a4d9b66c0f0b0"
+ ],
+ "beir_cqadupstack_english_101161": [
+  "febd074a3e222819"
+ ],
+ "beir_cqadupstack_english_101245": [
+  "8b82981797044b11",
+  "8f7f636c6b873855"
+ ],
+ "beir_cqadupstack_english_101332": [
+  "16249155c67dca71"
+ ],
+ "beir_cqadupstack_english_101444": [
+  "75aeb823ddfc0dc9"
+ ],
+ "beir_cqadupstack_english_101476": [
+  "6eb1b16b67baa71c"
+ ],
+ "beir_cqadupstack_english_101489": [
+  "15f6eefe6aef5f71",
+  "2de70fb99a3b7730",
+  "616fe4385f6610e5",
+  "62d0255d6b4f7ed7",
+  "661d0543ea2337bd",
+  "7a30d6d1adcfa337",
+  "a3a5af6a29beec19",
+  "a5097c59445b042b"
+ ],
+ "beir_cqadupstack_english_101589": [
+  "3f5d768c1a78d4e2"
+ ],
+ "beir_cqadupstack_english_101711": [
+  "67bc3900b6e711a2"
+ ],
+ "beir_cqadupstack_english_101775": [
+  "439ba4a3e5519bfe",
+  "8eed2851a1523f02"
+ ],
+ "beir_cqadupstack_english_101796": [
+  "30da4c18729a7dcc"
+ ],
+ "beir_cqadupstack_english_101972": [
+  "355d37f2efc8faa6",
+  "8271b6a243a44bd1",
+  "b4e273b8226181d1",
+  "f8241f0c3d6f9ecc"
+ ],
+ "beir_cqadupstack_english_102057": [
+  "f50b883001051423"
+ ],
+ "beir_cqadupstack_english_102316": [
+  "327874587ab83f39"
+ ],
+ "beir_cqadupstack_english_102345": [
+  "979ae76a8f94ca9a"
+ ],
+ "beir_cqadupstack_english_102364": [
+  "af2ab0dea67b88d7"
+ ],
+ "beir_cqadupstack_english_102502": [
+  "87dcaa58e5b7b93a",
+  "a9ae067e1062ac31",
+  "d3c3eaf5537a652c",
+  "ede6cde6e10b4b33"
+ ],
+ "beir_cqadupstack_english_102506": [
+  "665337181c7438de"
+ ],
+ "beir_cqadupstack_english_102728": [
+  "b7828d2eb9d3668e"
+ ],
+ "beir_cqadupstack_english_102863": [
+  "66a3214f2c51b347"
+ ],
+ "beir_cqadupstack_english_102953": [
+  "5df25c7180e340a0"
+ ],
+ "beir_cqadupstack_english_1031": [
+  "17cb50e86a6fb362",
+  "3cdb147e4aa52782",
+  "4b6549b67c74bf27",
+  "b0724822ddfdcfb5"
+ ],
+ "beir_cqadupstack_english_103230": [
+  "f4ea1ef271273956"
+ ],
+ "beir_cqadupstack_english_1035": [
+  "e10622f6aa752314",
+  "f86023844bf94055"
+ ],
+ "beir_cqadupstack_english_10364": [
+  "274f9f6aef55e0a9"
+ ],
+ "beir_cqadupstack_english_103656": [
+  "dea5de18e3163195"
+ ],
+ "beir_cqadupstack_english_103741": [
+  "4623f55445776831"
+ ],
+ "beir_cqadupstack_english_103866": [
+  "e9a1933a71327a23"
+ ],
+ "beir_cqadupstack_english_103930": [
+  "82e8ab8d648000b2"
+ ],
+ "beir_cqadupstack_english_103946": [
+  "f346123bdb1f44cb"
+ ],
+ "beir_cqadupstack_english_103961": [
+  "0bfa9d1ab0f7852d",
+  "413d19065b6979bc",
+  "4a9273d715bf6940",
+  "58f2f7962fe49af3",
+  "77f68db20898a54e",
+  "c57002478a0e9046",
+  "fe7fc585d444ac94"
+ ],
+ "beir_cqadupstack_english_104117": [
+  "6813cdbb4318c404"
+ ],
+ "beir_cqadupstack_english_104442": [
+  "b6f104e7a6ab59ad"
+ ],
+ "beir_cqadupstack_english_10458": [
+  "1cce354b93ed2f64",
+  "a72e0914997a97d3",
+  "b6a8d0e2ecf556ec"
+ ],
+ "beir_cqadupstack_english_104711": [
+  "1215b66a2c426390"
+ ],
+ "beir_cqadupstack_english_104905": [
+  "ae0033b45afd0170"
+ ],
+ "beir_cqadupstack_english_105026": [
+  "6bdb17d86e9e92e5"
+ ],
+ "beir_cqadupstack_english_105215": [
+  "09a8696ae57ab387"
+ ],
+ "beir_cqadupstack_english_10527": [
+  "d8605887aaa8b176"
+ ],
+ "beir_cqadupstack_english_105292": [
+  "3d1c50a3045a4b83",
+  "f3df6fd96828830b"
+ ],
+ "beir_cqadupstack_english_105481": [
+  "685fd659a8635eb8"
+ ],
+ "beir_cqadupstack_english_105591": [
+  "056391a5fe8aeb18"
+ ],
+ "beir_cqadupstack_english_10572": [
+  "67e1d3b01c9f9939"
+ ],
+ "beir_cqadupstack_english_105869": [
+  "0f2392763415720d"
+ ],
+ "beir_cqadupstack_english_105962": [
+  "02233e9158a48c02"
+ ],
+ "beir_cqadupstack_english_106052": [
+  "3253c18e68abd840"
+ ],
+ "beir_cqadupstack_english_106188": [
+  "274958499a1bad92",
+  "a5d7a69138ad9fb4",
+  "ff73fb6ef34acd1d"
+ ],
+ "beir_cqadupstack_english_106377": [
+  "08e25b169e3c8399",
+  "3764226475d35aad",
+  "efb7c54d1a64abf6"
+ ],
+ "beir_cqadupstack_english_10665": [
+  "5c92c00f6d91d88f"
+ ],
+ "beir_cqadupstack_english_106711": [
+  "e0d204e43a1a8910"
+ ],
+ "beir_cqadupstack_english_106729": [
+  "2f7395e54a703f1c"
+ ],
+ "beir_cqadupstack_english_106770": [
+  "4bf7e67ec2c08d65",
+  "52fd8755d4852f93",
+  "de90078a86549cc6"
+ ],
+ "beir_cqadupstack_english_106804": [
+  "7c1747e38b0aa562"
+ ],
+ "beir_cqadupstack_english_106932": [
+  "174fea411104fb31"
+ ],
+ "beir_cqadupstack_english_10705": [
+  "47af1ed142516c12",
+  "b46e4c00bc5c0bbd"
+ ],
+ "beir_cqadupstack_english_107228": [
+  "72b64140f827370b",
+  "d1c5840f3e282302"
+ ],
+ "beir_cqadupstack_english_107236": [
+  "570399ace4190d80"
+ ],
+ "beir_cqadupstack_english_107286": [
+  "f090bf7fd0ff146b"
+ ],
+ "beir_cqadupstack_english_107391": [
+  "b0fb3760b09952b8"
+ ],
+ "beir_cqadupstack_english_107822": [
+  "16642149c77d4818",
+  "b74eaf1c1b0446c1",
+  "c10b9b4f992b9afd"
+ ],
+ "beir_cqadupstack_english_108094": [
+  "c0464a595c627d2e"
+ ],
+ "beir_cqadupstack_english_10812": [
+  "4175b20646260647"
+ ],
+ "beir_cqadupstack_english_108162": [
+  "3ff6361773982520"
+ ],
+ "beir_cqadupstack_english_108299": [
+  "3b50f1c96df7528a",
+  "6ec8a4da234f922e",
+  "a66cc2c5c4d931e3"
+ ],
+ "beir_cqadupstack_english_108397": [
+  "0eabe488485d4a92",
+  "40a96f77553e8655"
+ ],
+ "beir_cqadupstack_english_108431": [
+  "347b2a970202912c",
+  "e788f2fec14ea459",
+  "ecf02ec262debb6b"
+ ],
+ "beir_cqadupstack_english_108457": [
+  "34d619d1fcd75f15",
+  "92ad1e4caffce695",
+  "cb163e8d6866bded"
+ ],
+ "beir_cqadupstack_english_108677": [
+  "3441de44a9e75e55"
+ ],
+ "beir_cqadupstack_english_109731": [
+  "3869b59852aca611"
+ ],
+ "beir_cqadupstack_english_10999": [
+  "52ff25a6f7cfdbd4",
+  "946425a6b9e56318",
+  "95ca4bee8dcca10f",
+  "e74cd5218199ac96"
+ ],
+ "beir_cqadupstack_english_110074": [
+  "16a3495da662e3a9"
+ ],
+ "beir_cqadupstack_english_110082": [
+  "87795925b29c8143",
+  "8ca6bcd1a4aa21cf"
+ ],
+ "beir_cqadupstack_english_110099": [
+  "43c880b63ca54436"
+ ],
+ "beir_cqadupstack_english_110231": [
+  "08ee1bb26c723f49"
+ ],
+ "beir_cqadupstack_english_110329": [
+  "e184d15906b592c8"
+ ],
+ "beir_cqadupstack_english_110365": [
+  "0b5b5343f44c3c28",
+  "4b5c7326695dd471",
+  "4bd1f4e5f9d75dd3",
+  "5c8c42b16f89db5f",
+  "76a3b6cece23adbb",
+  "9b60935797d71192",
+  "e83e57a455f9364a",
+  "f8df23bb517a5f6c"
+ ],
+ "beir_cqadupstack_english_110515": [
+  "7a7b6afb7ba4b159"
+ ],
+ "beir_cqadupstack_english_11065": [
+  "726e404d6254a292",
+  "9bba09666a940c84"
+ ],
+ "beir_cqadupstack_english_110759": [
+  "27aa6af48bf05bf8"
+ ],
+ "beir_cqadupstack_english_110799": [
+  "0ab66d218b8ed0c4"
+ ],
+ "beir_cqadupstack_english_110990": [
+  "31718a61c24ec953",
+  "bb4e7a63e0c7f891"
+ ],
+ "beir_cqadupstack_english_110992": [
+  "4d887c34170057cc",
+  "b3224a3792be421c"
+ ],
+ "beir_cqadupstack_english_111090": [
+  "2be86e610eed7582"
+ ],
+ "beir_cqadupstack_english_111208": [
+  "58c88e3b2c19a8fa"
+ ],
+ "beir_cqadupstack_english_111382": [
+  "fde3f95526964b85"
+ ],
+ "beir_cqadupstack_english_111495": [
+  "105961d6b20c9d69",
+  "80d1c4e7cfad974a"
+ ],
+ "beir_cqadupstack_english_111581": [
+  "0bb73e3089ea3a78"
+ ],
+ "beir_cqadupstack_english_111666": [
+  "17b25ec0bbd5b217",
+  "29de849f4b9129ed",
+  "80bdd16d5a92dfd6"
+ ],
+ "beir_cqadupstack_english_111709": [
+  "53bef2d7084b27a3",
+  "7b4a7888b7e29230"
+ ],
+ "beir_cqadupstack_english_111788": [
+  "299e12d9ef9087de",
+  "9b69f87d529d4d5c"
+ ],
+ "beir_cqadupstack_english_112023": [
+  "1c4b95eb57cda236"
+ ],
+ "beir_cqadupstack_english_112082": [
+  "63317a96d1d0ace7",
+  "c907d503f5329710",
+  "f0fa7f5382cfc2b9"
+ ],
+ "beir_cqadupstack_english_112420": [
+  "552e3b98c794cd42",
+  "b9b5b72392c934fc"
+ ],
+ "beir_cqadupstack_english_112717": [
+  "92e006ff0db1f92e"
+ ],
+ "beir_cqadupstack_english_112956": [
+  "01f3a4d37a662b48",
+  "0e5f9e174c8609a7",
+  "27e66f56c2b0d45b",
+  "2bba5b92c7cd0a1b",
+  "3099891b0b7a8e0e",
+  "34903c651eafb418",
+  "45d159b65624a9f5",
+  "4de4b72be6420c76",
+  "4f9d2591c9bc064a",
+  "8b151ee87b2909f3",
+  "8d244dc32da17a16",
+  "8f509db61933b01b",
+  "91c58e567b4e5f03",
+  "a6cdd828d7755b4a",
+  "af8d6219f8ee2be9",
+  "bd034a8a5eb6d6ff",
+  "beca954f19f21577",
+  "f3600dcbf118e50a"
+ ],
+ "beir_cqadupstack_english_113026": [
+  "07ddafd8f5b7f4d3",
+  "9b3f1e3d09b46f60"
+ ],
+ "beir_cqadupstack_english_113209": [
+  "7485a9b7a8b8af51",
+  "ee2573f80811d97c"
+ ],
+ "beir_cqadupstack_english_113243": [
+  "9ddc3e96d7663087"
+ ],
+ "beir_cqadupstack_english_113551": [
+  "c7234debea8b0d12"
+ ],
+ "beir_cqadupstack_english_113583": [
+  "12c3d94c55513f5b"
+ ],
+ "beir_cqadupstack_english_113762": [
+  "af63e7619fc24336"
+ ],
+ "beir_cqadupstack_english_113776": [
+  "7b36e61a7659fe64",
+  "d6bfa23538e97f33"
+ ],
+ "beir_cqadupstack_english_11380": [
+  "a37124a312490bab",
+  "e78c0bc2934cdb0e"
+ ],
+ "beir_cqadupstack_english_11395": [
+  "b4a5985ede19c230"
+ ],
+ "beir_cqadupstack_english_114017": [
+  "42a4246383f3e6e7",
+  "7b925b0daf80c622"
+ ],
+ "beir_cqadupstack_english_114077": [
+  "0a5f84278634e24b"
+ ],
+ "beir_cqadupstack_english_114123": [
+  "901fca61c2d49288"
+ ],
+ "beir_cqadupstack_english_114224": [
+  "02a971c8023ee5a0",
+  "03694901fa71fd3e",
+  "08423afc3d714e44",
+  "1efbb744bfceb633",
+  "4d60d4600c40a018",
+  "6f96ce9e178f3fc8",
+  "dcf3d4169269382b",
+  "ef99b09929f83cfc"
+ ],
+ "beir_cqadupstack_english_114302": [
+  "3e0fe5440b2c19ba"
+ ],
+ "beir_cqadupstack_english_114649": [
+  "aa41439209f8e600"
+ ],
+ "beir_cqadupstack_english_114707": [
+  "da04290dc7e77a68"
+ ],
+ "beir_cqadupstack_english_115296": [
+  "afce0ac14094e982"
+ ],
+ "beir_cqadupstack_english_11538": [
+  "73f42b8abd669834"
+ ],
+ "beir_cqadupstack_english_115642": [
+  "6d7a852cff31b99e"
+ ],
+ "beir_cqadupstack_english_115701": [
+  "001382f85d12cc37"
+ ],
+ "beir_cqadupstack_english_115753": [
+  "68c9c3af5aa2cb4c"
+ ],
+ "beir_cqadupstack_english_115828": [
+  "0f9299a7da88a24d"
+ ],
+ "beir_cqadupstack_english_115862": [
+  "71c0d7063da49d65"
+ ],
+ "beir_cqadupstack_english_115865": [
+  "7097af630168bfa7",
+  "8b6794a43e1b6b5c"
+ ],
+ "beir_cqadupstack_english_115866": [
+  "2592541ffe1cb3f2"
+ ],
+ "beir_cqadupstack_english_115922": [
+  "30ac47d52e6d3be9",
+  "3264e8bfd4ca2aa1",
+  "454c6d90f320a24e",
+  "5e03b2ad361f1a69",
+  "6267c5601d9a602c",
+  "ea180a7deb8b1f82",
+  "f7711dfa818763c1"
+ ],
+ "beir_cqadupstack_english_115928": [
+  "90331314be3a3837"
+ ],
+ "beir_cqadupstack_english_115941": [
+  "02cf57cfe500fc42"
+ ],
+ "beir_cqadupstack_english_115993": [
+  "2da6f4df3f4c6fe2"
+ ],
+ "beir_cqadupstack_english_116328": [
+  "e84c6ae18fac5b69"
+ ],
+ "beir_cqadupstack_english_116353": [
+  "36fcdb4f9b9700c7"
+ ],
+ "beir_cqadupstack_english_116384": [
+  "8d0d6ac8a352997f"
+ ],
+ "beir_cqadupstack_english_116587": [
+  "3ff82104712570db"
+ ],
+ "beir_cqadupstack_english_116590": [
+  "31053983ca4038eb"
+ ],
+ "beir_cqadupstack_english_116838": [
+  "045352fb7e8c4b3b"
+ ],
+ "beir_cqadupstack_english_117036": [
+  "b4c4b9819112a6f0"
+ ],
+ "beir_cqadupstack_english_117194": [
+  "c9c941b7f1f14c22"
+ ],
+ "beir_cqadupstack_english_117239": [
+  "55f785e608021970"
+ ],
+ "beir_cqadupstack_english_117344": [
+  "9eb0c2d3b3a90a92"
+ ],
+ "beir_cqadupstack_english_117350": [
+  "863ee7a2f1aa3bcb"
+ ],
+ "beir_cqadupstack_english_117485": [
+  "333dd1bb726cae1d",
+  "3ba0d4c7a85bcb3a",
+  "6f6f356ade9bb7a9",
+  "bbb2e72d228d8c8d"
+ ],
+ "beir_cqadupstack_english_117589": [
+  "1c9cf17bfa8b44e4"
+ ],
+ "beir_cqadupstack_english_117599": [
+  "f68c48d2e6f786d1"
+ ],
+ "beir_cqadupstack_english_1176": [
+  "3c24891b677f6876",
+  "3e6a4ca3d86952fc",
+  "42498b5e358f9da5",
+  "48e5d33d9ffae8c5",
+  "5255fbef7d9dea62",
+  "85b99a893dd869fd",
+  "be096d9ec1d616fd",
+  "c369e269f804c9ea",
+  "c45e9386e4086fa2",
+  "ccdb7dc5d4f118ad",
+  "eaaad0b9624d0f0a",
+  "f25c8ca839b1f7da"
+ ],
+ "beir_cqadupstack_english_117631": [
+  "94ad8d1189f111a9",
+  "9753955429ebcb3b",
+  "e44e4300db389fa3"
+ ],
+ "beir_cqadupstack_english_117833": [
+  "4cf6c3a8547ab037"
+ ],
+ "beir_cqadupstack_english_117871": [
+  "4fdbbdbce729932a"
+ ],
+ "beir_cqadupstack_english_117899": [
+  "c7447736f07ac138"
+ ],
+ "beir_cqadupstack_english_1183": [
+  "042550545225d60b"
+ ],
+ "beir_cqadupstack_english_118624": [
+  "95a70d8c001db8c6",
+  "bad70d425fe3c12d"
+ ],
+ "beir_cqadupstack_english_118702": [
+  "288ad842451ec4ba"
+ ],
+ "beir_cqadupstack_english_11874": [
+  "1a93e327d50203e2",
+  "9038c60ec8d70b12",
+  "de7367704922696d"
+ ],
+ "beir_cqadupstack_english_118797": [
+  "b8b261a68e02d5bd"
+ ],
+ "beir_cqadupstack_english_11887": [
+  "a4654c99a0b93899"
+ ],
+ "beir_cqadupstack_english_118871": [
+  "d86807931b643876"
+ ],
+ "beir_cqadupstack_english_11906": [
+  "97a7dd2c51beb2a4"
+ ],
+ "beir_cqadupstack_english_119077": [
+  "04660ec518c4f0ca",
+  "1b091127177d1782",
+  "55db1e783951a5fe",
+  "e7b0de64fd490229"
+ ],
+ "beir_cqadupstack_english_119134": [
+  "8386f791f32e980a",
+  "a3433555558d2164"
+ ],
+ "beir_cqadupstack_english_119416": [
+  "e391a6f0c9e25760"
+ ],
+ "beir_cqadupstack_english_119424": [
+  "98c0c5e3612b9d19"
+ ],
+ "beir_cqadupstack_english_119749": [
+  "b7ae575daeb0ea51"
+ ],
+ "beir_cqadupstack_english_119877": [
+  "96c5f8f9f8aef3da"
+ ],
+ "beir_cqadupstack_english_120068": [
+  "34fa0e262eb7fb8d"
+ ],
+ "beir_cqadupstack_english_120276": [
+  "fe8d987ef26ac98a"
+ ],
+ "beir_cqadupstack_english_120326": [
+  "38c29542f254c00a"
+ ],
+ "beir_cqadupstack_english_12040": [
+  "2f5c5bb550dfe50c",
+  "e9a2053a2a34fe00"
+ ],
+ "beir_cqadupstack_english_120407": [
+  "fb4344966ff44384"
+ ],
+ "beir_cqadupstack_english_12044": [
+  "2acaa656d773d878",
+  "3940e18a59a6a884",
+  "fde06f604a0b3462"
+ ],
+ "beir_cqadupstack_english_120577": [
+  "9e131427314da931"
+ ],
+ "beir_cqadupstack_english_120721": [
+  "2ac7f9a90e7c24f3"
+ ],
+ "beir_cqadupstack_english_121073": [
+  "81916e773bfc1dc6"
+ ],
+ "beir_cqadupstack_english_121088": [
+  "7540f2b1e3dfd602",
+  "d31072cea559aaf0",
+  "e66402a0959ce293"
+ ],
+ "beir_cqadupstack_english_121152": [
+  "3273956173eb53cd"
+ ],
+ "beir_cqadupstack_english_12124": [
+  "c3746180a12e0150"
+ ],
+ "beir_cqadupstack_english_121502": [
+  "e9c5a7b5c6967774"
+ ],
+ "beir_cqadupstack_english_121518": [
+  "bcfa824cf138dbfd"
+ ],
+ "beir_cqadupstack_english_121805": [
+  "6e319df9375e94d6"
+ ],
+ "beir_cqadupstack_english_121880": [
+  "d7926d71b77fa496"
+ ],
+ "beir_cqadupstack_english_121895": [
+  "54cd08881543566c"
+ ],
+ "beir_cqadupstack_english_121970": [
+  "b3266178807163e8",
+  "d101e8c162b50f77"
+ ],
+ "beir_cqadupstack_english_122168": [
+  "48c99ae9c8560b18",
+  "772eea45d408853c"
+ ],
+ "beir_cqadupstack_english_122187": [
+  "3f9783572c6edced",
+  "6df2fd5db264e87a",
+  "d785e04e13db0a66"
+ ],
+ "beir_cqadupstack_english_122201": [
+  "ee6f4184b1a7b520"
+ ],
+ "beir_cqadupstack_english_122277": [
+  "027c8e528a431882",
+  "2fa7aaef3360d447",
+  "7d65aaf318746da1",
+  "a81576057bc3de6b"
+ ],
+ "beir_cqadupstack_english_122473": [
+  "876aa317e946a890"
+ ],
+ "beir_cqadupstack_english_122641": [
+  "c6f26263e1f135ae"
+ ],
+ "beir_cqadupstack_english_122652": [
+  "08d6d4e23e31397b"
+ ],
+ "beir_cqadupstack_english_122740": [
+  "54c42464366b4a79",
+  "edaa5e952de400da"
+ ],
+ "beir_cqadupstack_english_122815": [
+  "2ac55abda6365b52"
+ ],
+ "beir_cqadupstack_english_122853": [
+  "11bf84ad9e6d2409",
+  "1fa86eeacad391ca",
+  "24954418eb95b603",
+  "31b0d45108a192d7",
+  "383f8a0aeb8e9f28",
+  "39a7fd8781b9a42b",
+  "3a79d8f74e2db3e3",
+  "3eed86f9a8a14f8c",
+  "53a43611dcff1269",
+  "65590b6964b592fb",
+  "7abc371f85fd9055",
+  "84895fafc4385cf1",
+  "8e6f26e4fc76e270",
+  "a08306ba5d855089",
+  "be011faf5916226c",
+  "bec6fe81a9f8fd84",
+  "c4e9d03b920f46d8",
+  "cba045fdd1feedcb",
+  "cd5df5551d82bbee",
+  "f63667bcf30603bd"
+ ],
+ "beir_cqadupstack_english_122934": [
+  "be6b03c67601b38c"
+ ],
+ "beir_cqadupstack_english_122969": [
+  "96d9c1bdf7c0f269"
+ ],
+ "beir_cqadupstack_english_123022": [
+  "37ce99e27f02d80c",
+  "3a6bf040c6b87c04",
+  "500bfaf0afdc1ca5",
+  "50a595125013c0b0",
+  "8c6e67738675e0bc",
+  "93e80846f0640ee7",
+  "dfed113c1e955799",
+  "f8f95a65b1d3b130"
+ ],
+ "beir_cqadupstack_english_123116": [
+  "911e94181b6c967d"
+ ],
+ "beir_cqadupstack_english_123139": [
+  "3e1854a9ff5032e2"
+ ],
+ "beir_cqadupstack_english_123642": [
+  "71fefc4b54e56323"
+ ],
+ "beir_cqadupstack_english_123947": [
+  "3ccde69a78501dcd",
+  "54da15ea92957aaa",
+  "54fbc07d15e57dd3",
+  "5ad35e9d5e1298d3",
+  "5e68c6bcf8074433",
+  "69cc2acabfde2471",
+  "6a85e6b8ddf0ff4d",
+  "6cc612f8517592c0",
+  "6fce93f37e158641",
+  "9a9101d00265dbc1",
+  "9d267fbe591c15b1",
+  "b0dc69777f9ed9d2",
+  "d2372714c63a2b51",
+  "d7c99f144a0feb46",
+  "dc406d351279d7d2",
+  "e6203b3e8048aa53",
+  "eb5166cf0597dc70",
+  "f7952e9eb43ec1a2"
+ ],
+ "beir_cqadupstack_english_12395": [
+  "8b84882cad7dddd1"
+ ],
+ "beir_cqadupstack_english_123953": [
+  "217fe78c6330c8fa"
+ ],
+ "beir_cqadupstack_english_124006": [
+  "28099a829dc2a4e4"
+ ],
+ "beir_cqadupstack_english_12404": [
+  "2071c7ad626e9f54",
+  "53a1d95af25828be"
+ ],
+ "beir_cqadupstack_english_124115": [
+  "3dc808d2f67d4561"
+ ],
+ "beir_cqadupstack_english_124351": [
+  "c874a45ec20688b6"
+ ],
+ "beir_cqadupstack_english_124504": [
+  "777f6637cb557522"
+ ],
+ "beir_cqadupstack_english_12458": [
+  "8f8eb324bca5f975",
+  "93361ec3ea195d71",
+  "d11935d1a97750c3",
+  "d596f73732c5150e",
+  "fc2ca19b46e8a32c"
+ ],
+ "beir_cqadupstack_english_124629": [
+  "a4772557d652f680"
+ ],
+ "beir_cqadupstack_english_12471": [
+  "e15ff92b7b24cbf3"
+ ],
+ "beir_cqadupstack_english_124768": [
+  "d89258edd4fb958d"
+ ],
+ "beir_cqadupstack_english_124812": [
+  "776bb1f0c9cf4c87"
+ ],
+ "beir_cqadupstack_english_124853": [
+  "11225fd0a0acee52"
+ ],
+ "beir_cqadupstack_english_125065": [
+  "6574cd2d4990910f"
+ ],
+ "beir_cqadupstack_english_125066": [
+  "9f67e546d00ba5ec"
+ ],
+ "beir_cqadupstack_english_125070": [
+  "d2dae69cc2780d0a"
+ ],
+ "beir_cqadupstack_english_12512": [
+  "0dc822c3759dffa3"
+ ],
+ "beir_cqadupstack_english_125375": [
+  "9e36899f8831428e",
+  "aa4675fd09cbc0cc",
+  "c4f6725e073e680f"
+ ],
+ "beir_cqadupstack_english_125405": [
+  "effef33d4f852242"
+ ],
+ "beir_cqadupstack_english_125481": [
+  "02da31114777d9d5",
+  "28ad6df8fb8bf969",
+  "87e5c3ffe49a036b",
+  "bbaeabaf4e105490",
+  "da157c4573715dcd",
+  "f9d86f9a458e6436"
+ ],
+ "beir_cqadupstack_english_125487": [
+  "5608c663320e4aab"
+ ],
+ "beir_cqadupstack_english_12558": [
+  "1e5089eba512a3b8"
+ ],
+ "beir_cqadupstack_english_125599": [
+  "b14e8254457dbcf5"
+ ],
+ "beir_cqadupstack_english_12580": [
+  "8694b425348532bb",
+  "8c769f20101ed40d",
+  "9c7ea6ef9e8e60f0",
+  "a3cdcf2a776e9ed8",
+  "aea4aaad1223370b",
+  "af6dd7d03dfac2d9",
+  "f197367ef0fe1046"
+ ],
+ "beir_cqadupstack_english_126032": [
+  "294453faa4d823e6"
+ ],
+ "beir_cqadupstack_english_126099": [
+  "6932026efacd886c"
+ ],
+ "beir_cqadupstack_english_126292": [
+  "e16880e448bfc583"
+ ],
+ "beir_cqadupstack_english_126344": [
+  "10c2f24b5f39586b",
+  "3c7276d251945a2d",
+  "493a239c0a79bfec",
+  "4ef49ec80a325b28",
+  "70d64b137b5b788f",
+  "7ec4db7d74234f8d",
+  "d4c11a900e523e52",
+  "e39f821f8c226458",
+  "f5189604af497af9"
+ ],
+ "beir_cqadupstack_english_12655": [
+  "bf5acd4cda2a4610"
+ ],
+ "beir_cqadupstack_english_126554": [
+  "22ab9b67ade7c26d"
+ ],
+ "beir_cqadupstack_english_126774": [
+  "106139df1ab35421",
+  "1b87807ff4fbcda8",
+  "2eb614f3b575f9f5",
+  "3bafcbba0b27015a",
+  "4b8d033f0d4c974f",
+  "ac6037a0d789da91",
+  "bba86b03d80dacbf",
+  "c2ad16991cc6e132",
+  "d2389b4f3fc1e3e3",
+  "ffa8b1a0800af7ac"
+ ],
+ "beir_cqadupstack_english_12690": [
+  "edf1a8dfe3db8cfb"
+ ],
+ "beir_cqadupstack_english_127087": [
+  "08327a3b407b8d55"
+ ],
+ "beir_cqadupstack_english_127137": [
+  "4af9b31b8c942621",
+  "594cf0c5dace8afb",
+  "7182110d38d7366c",
+  "82b883cd76a65310",
+  "b42a8fa496f8082b",
+  "ecdfd2bb6087569a"
+ ],
+ "beir_cqadupstack_english_127227": [
+  "1d333ceb380e8320"
+ ],
+ "beir_cqadupstack_english_127264": [
+  "ba8dc2f6586f881f"
+ ],
+ "beir_cqadupstack_english_127274": [
+  "475dd057430460f1",
+  "55be46f274b13172",
+  "753a7c86302b3586"
+ ],
+ "beir_cqadupstack_english_127410": [
+  "d85e84929f3b3be8"
+ ],
+ "beir_cqadupstack_english_127664": [
+  "b02e29a4539c4cfa",
+  "ead8a2ce9c036b45"
+ ],
+ "beir_cqadupstack_english_12777": [
+  "32c0a0864653ab8d",
+  "4a7c67d32828c023",
+  "78b3d642a2911ef1"
+ ],
+ "beir_cqadupstack_english_128083": [
+  "2be47f4e43b2c169",
+  "31ebcac0a9444d04",
+  "5ed801463d302881",
+  "6264a8c0fada5b9e",
+  "84b4e5a02d4d80e4",
+  "9d8f67af80a904f0",
+  "a29f074900a6278b",
+  "ae4254d442c59089",
+  "b04fb8c699d2740e",
+  "caafe3cd608efcee",
+  "fa2158395a41d1ea",
+  "fecca6012d293d31"
+ ],
+ "beir_cqadupstack_english_128085": [
+  "d0b72fd00541a564"
+ ],
+ "beir_cqadupstack_english_128514": [
+  "b154a7b484af0d6a"
+ ],
+ "beir_cqadupstack_english_128541": [
+  "04503960462d4d83",
+  "1c826a6a238c9f65",
+  "ec5fd857ab33f1a4"
+ ],
+ "beir_cqadupstack_english_128703": [
+  "a61c202663a2d8d1"
+ ],
+ "beir_cqadupstack_english_129071": [
+  "9d7afdc46af80794"
+ ],
+ "beir_cqadupstack_english_129607": [
+  "23d70957bdf556a7",
+  "3b7dba73bbfe590a",
+  "3f6c2740f1b89d86",
+  "43586cb7d600aa17",
+  "7d8b55c76722f51a",
+  "a38e05bd9d4f125b",
+  "c9c7807670a15117",
+  "d07ee11a5ed04a42",
+  "fa0230970db8fa7b"
+ ],
+ "beir_cqadupstack_english_12980": [
+  "3dda5926dbf594b2"
+ ],
+ "beir_cqadupstack_english_129805": [
+  "21ab43824e298f40"
+ ],
+ "beir_cqadupstack_english_129957": [
+  "9095046b8e4923b2",
+  "9ef6d7e802fd23c1",
+  "e2d77d29982e8589",
+  "f9754e87aaf91877"
+ ],
+ "beir_cqadupstack_english_130090": [
+  "08630f532b5909e5",
+  "73d2c31e30d8a929"
+ ],
+ "beir_cqadupstack_english_130140": [
+  "55cff691aa9bc5d6",
+  "616ef7292c1dced4",
+  "f4d6e0ead8baf240"
+ ],
+ "beir_cqadupstack_english_130448": [
+  "31519ab755482525"
+ ],
+ "beir_cqadupstack_english_130476": [
+  "dff348d5062ceccd"
+ ],
+ "beir_cqadupstack_english_13056": [
+  "00f3127fd5676655",
+  "54dde1ec2a5e6484",
+  "87b7f3954f456f7d",
+  "93037df2718c0353",
+  "a57f586bde6f683b",
+  "e4287ed007a05d39"
+ ],
+ "beir_cqadupstack_english_130587": [
+  "5dc2013c37f87d09",
+  "6bc04248ea7d8804",
+  "7d486b2fc72c036b",
+  "fdc331fa0019f143"
+ ],
+ "beir_cqadupstack_english_130673": [
+  "4f4c6a45585e474f"
+ ],
+ "beir_cqadupstack_english_131042": [
+  "7e06b25ace50fc11"
+ ],
+ "beir_cqadupstack_english_131045": [
+  "745ce1f0331add59"
+ ],
+ "beir_cqadupstack_english_131298": [
+  "1868d2b232228879"
+ ],
+ "beir_cqadupstack_english_131457": [
+  "850e951658cc4c99",
+  "8d26fc9499f36de8"
+ ],
+ "beir_cqadupstack_english_131494": [
+  "eb867ddd496bd599"
+ ],
+ "beir_cqadupstack_english_131500": [
+  "010de4dad47bd725",
+  "289c9f7f49e00cf6",
+  "31be4a853e83113e",
+  "827045b6d6c1bd06",
+  "9a10dd7454b58418",
+  "ac29cdee75f998f0",
+  "bed809aae80c502b",
+  "c1394c2382c9daf6",
+  "c2a6862c2f829dd5",
+  "d0302140169b4453",
+  "d80df15982104eeb",
+  "f807b184866290f5",
+  "fd6382a7d732ac6a"
+ ],
+ "beir_cqadupstack_english_131506": [
+  "8ef6a89df55000d5"
+ ],
+ "beir_cqadupstack_english_131560": [
+  "805e713f567d7c8c"
+ ],
+ "beir_cqadupstack_english_131699": [
+  "cfe212ec8788e6e4"
+ ],
+ "beir_cqadupstack_english_131741": [
+  "0035a06059f8146a",
+  "4adcdfcdc68581bc",
+  "78aabd481af1a57a",
+  "89477be2125e370a",
+  "a8531dc0c5091447",
+  "d249eb2449f7de4d",
+  "e3bb41625ff2f826"
+ ],
+ "beir_cqadupstack_english_13189": [
+  "53b27a6613dc67fb",
+  "a439c215d91644d4"
+ ],
+ "beir_cqadupstack_english_131967": [
+  "b31ef435de6a0169"
+ ],
+ "beir_cqadupstack_english_132102": [
+  "c43a2fcf9120a1bd"
+ ],
+ "beir_cqadupstack_english_132189": [
+  "5346fc97a1e3299d",
+  "ae942a931ffa58e8"
+ ],
+ "beir_cqadupstack_english_132238": [
+  "f02381bd3df4b0ef"
+ ],
+ "beir_cqadupstack_english_132293": [
+  "1244a643002a2a98",
+  "53fd21f1d6f2a1a2",
+  "5dd1bbccdc514ffe",
+  "68da6bf162f7f30d",
+  "7745f28cc8e8e179",
+  "bde26c6d1d0f0410",
+  "ce81d318229f972a",
+  "e192fc590ec1e0c0"
+ ],
+ "beir_cqadupstack_english_132377": [
+  "94425ae093c6f61b"
+ ],
+ "beir_cqadupstack_english_132437": [
+  "d491da0accde449d"
+ ],
+ "beir_cqadupstack_english_132585": [
+  "0d07ffdbd27cb18a",
+  "831e4e1a9104ca1a",
+  "8fd9d24dbb1fb614",
+  "a0ad3aa01c73280f",
+  "b69a9a50ad227453",
+  "b81e5bfb2eded0c2",
+  "bc1281540398d5bf"
+ ],
+ "beir_cqadupstack_english_132600": [
+  "056569de3d58c490",
+  "2eaabae88c94f000",
+  "3f9e20ebdb5e6fc5"
+ ],
+ "beir_cqadupstack_english_132802": [
+  "5424c2577c5330d3"
+ ],
+ "beir_cqadupstack_english_132863": [
+  "915bc77e0e4c64da"
+ ],
+ "beir_cqadupstack_english_132943": [
+  "4dd08bf1c5baae6d",
+  "5cb5d4833e8379a1",
+  "860b487645307251",
+  "c22d174fcbc6d9e2"
+ ],
+ "beir_cqadupstack_english_13299": [
+  "21d057474ff48f1e",
+  "a47b764eb2a3a695",
+  "c3026b2f8ff24eb2"
+ ],
+ "beir_cqadupstack_english_133057": [
+  "a3d4c4ad01b412c7"
+ ],
+ "beir_cqadupstack_english_133248": [
+  "053b5667fb40ba2b",
+  "433dceb8764a6022",
+  "86328454d217d01f",
+  "d50995071e648ff6"
+ ],
+ "beir_cqadupstack_english_13327": [
+  "affc7814d7725092"
+ ],
+ "beir_cqadupstack_english_133291": [
+  "e0743cacbd8e2af4"
+ ],
+ "beir_cqadupstack_english_13343": [
+  "5af5eb477ddab635"
+ ],
+ "beir_cqadupstack_english_133608": [
+  "c641fab16bd69b1d"
+ ],
+ "beir_cqadupstack_english_133651": [
+  "6934c5a2ce501eda",
+  "cf7c957d5dbb90d8"
+ ],
+ "beir_cqadupstack_english_133673": [
+  "0e7973ac31e048bc",
+  "277455e2ad4782e8",
+  "68a3c354ce06aa31",
+  "9c24af18bb273b6f",
+  "a57ee0d505747e18",
+  "c879accd8c2462e8"
+ ],
+ "beir_cqadupstack_english_133726": [
+  "d6b848fb2ee4e794"
+ ],
+ "beir_cqadupstack_english_133855": [
+  "7d5ae0fc8046893d"
+ ],
+ "beir_cqadupstack_english_1341": [
+  "79826391e60c7dff"
+ ],
+ "beir_cqadupstack_english_134192": [
+  "86662450e33cd526",
+  "b91b36c8714bc6ab",
+  "faf9a593467582f8"
+ ],
+ "beir_cqadupstack_english_134284": [
+  "06c6604b19fa9ce4",
+  "466adda6c293f334",
+  "5263b5e12c8ee73a",
+  "e91b76d3c9ef9690"
+ ],
+ "beir_cqadupstack_english_134434": [
+  "120b7ea6b182e745",
+  "161dbe312357d356",
+  "1996b028cefa7435",
+  "1de52fbafae16b06",
+  "1ebcd45bc595baaa",
+  "1fc2c672db7832aa",
+  "222458c82ed4ff2b",
+  "282f623c72375a74",
+  "2aa1b2e71c5c3468",
+  "2c96212caf7c8670",
+  "35b0553f582e14f6",
+  "5613e31c77538c6c",
+  "5b4174b9fe7a7480",
+  "5ffb32e03b5184f3",
+  "74f53831fa35dd94",
+  "7be68404a88feb39",
+  "88a0ae8c71f54e19",
+  "994fc68f942b4e44",
+  "a6d7e9faac31b792",
+  "b88e85ad3a7f44f0",
+  "cf8da51098633aef",
+  "e2c0301d47180ed3",
+  "e819731432ed84f2",
+  "f654b9d223b2e804"
+ ],
+ "beir_cqadupstack_english_134575": [
+  "fb644cc745fd02e8"
+ ],
+ "beir_cqadupstack_english_134706": [
+  "52664b7726456dcd"
+ ],
+ "beir_cqadupstack_english_134724": [
+  "9881b182c80aa723"
+ ],
+ "beir_cqadupstack_english_13484": [
+  "ad5048570a3c9cd6",
+  "cfdc91ff3e231510"
+ ],
+ "beir_cqadupstack_english_13528": [
+  "bdebce9df7f9a567",
+  "e19b76acc277c87c"
+ ],
+ "beir_cqadupstack_english_13631": [
+  "4a7847f9d5b81573"
+ ],
+ "beir_cqadupstack_english_136947": [
+  "d7e1ff392e5e30a9"
+ ],
+ "beir_cqadupstack_english_137258": [
+  "38a381e64cdf3c8d",
+  "38b172e770f9094f",
+  "7ca403fc90c0be26",
+  "8d6385253e7ca71e",
+  "98490766243489f1",
+  "a62b27fd3395a727",
+  "e9d2c457655e498d"
+ ],
+ "beir_cqadupstack_english_13735": [
+  "02e6f89edd31d1f7",
+  "a438c773881f97f5"
+ ],
+ "beir_cqadupstack_english_137435": [
+  "6db1a0a791364f65",
+  "e1b7a9e58b01ee8c"
+ ],
+ "beir_cqadupstack_english_137526": [
+  "5fa62b97e6c44eb9"
+ ],
+ "beir_cqadupstack_english_13758": [
+  "42a6c7f089ae07c2"
+ ],
+ "beir_cqadupstack_english_137698": [
+  "a6b96ce8c6bd5af5"
+ ],
+ "beir_cqadupstack_english_137713": [
+  "2e000c77ceb0a985",
+  "c8c09522467f75b7"
+ ],
+ "beir_cqadupstack_english_137907": [
+  "126ddc483f1392f1"
+ ],
+ "beir_cqadupstack_english_137950": [
+  "e07dd9af7916f2d8"
+ ],
+ "beir_cqadupstack_english_138110": [
+  "18fe6e66cc06ef37"
+ ],
+ "beir_cqadupstack_english_138158": [
+  "247d15098c398aae"
+ ],
+ "beir_cqadupstack_english_138216": [
+  "2da5726fe82f4794"
+ ],
+ "beir_cqadupstack_english_138595": [
+  "49fca3b3a7967e6d",
+  "4b5ea09da0c490de",
+  "6796e9e2cbb24675",
+  "8b43dba1e8c49884",
+  "c52fee72cc5d2509",
+  "d3e400011b383e94"
+ ],
+ "beir_cqadupstack_english_138717": [
+  "26afd430389938e7"
+ ],
+ "beir_cqadupstack_english_138811": [
+  "378edc6481ed68ee"
+ ],
+ "beir_cqadupstack_english_138841": [
+  "c5988ef933819da4"
+ ],
+ "beir_cqadupstack_english_139295": [
+  "77636ec83d7a2d74",
+  "8f19f95c80a45589"
+ ],
+ "beir_cqadupstack_english_139403": [
+  "df966690f1425bd1"
+ ],
+ "beir_cqadupstack_english_13942": [
+  "c8f22c28ac37bdc7"
+ ],
+ "beir_cqadupstack_english_139542": [
+  "333647e688a32594",
+  "98e565304b6f0e0d"
+ ],
+ "beir_cqadupstack_english_139738": [
+  "a0af80c4fdf835fd"
+ ],
+ "beir_cqadupstack_english_140038": [
+  "0e4228343378bd0d",
+  "af942c33562e16a3",
+  "bb2a5bdaea37cd74",
+  "c600eba697a03aea",
+  "d9703c32c5d4cd6c"
+ ],
+ "beir_cqadupstack_english_140455": [
+  "f9f9cfcacec2502d"
+ ],
+ "beir_cqadupstack_english_140461": [
+  "0a04f38062739db0",
+  "0e4022d909e4ea21",
+  "1283fad201396373",
+  "19716e095d1a2128",
+  "2bcfc5e8e562853c",
+  "332d757a50c2e875",
+  "364e31b11aa0b23d",
+  "405ccba23295b0fb",
+  "4423d6eb08860051",
+  "6cbcd1eb0211bfe9",
+  "70926f17e7bf4730",
+  "8455ea71d94ee809",
+  "9eab73664518f50d",
+  "bc4f1e50a4076f90",
+  "c82636d7b90070df",
+  "e1376c0a77c3cbdc",
+  "ebf2b58dfeb1a4a9"
+ ],
+ "beir_cqadupstack_english_140563": [
+  "9a3c846233518758"
+ ],
+ "beir_cqadupstack_english_140648": [
+  "5b18f7d1720468b0",
+  "cbd9bc1d5cd4293b",
+  "f09cc24ab33a9148"
+ ],
+ "beir_cqadupstack_english_14078": [
+  "1e954c8f65d055fe"
+ ],
+ "beir_cqadupstack_english_140854": [
+  "00236276d3fbb454",
+  "019039916fc66f8c",
+  "04d6aa44002b6d21",
+  "061ae396b78c8c9b",
+  "073d46c6d2285711",
+  "0a69ac3d7e9698ae",
+  "13b5901d2af66833",
+  "17e052bbd206b9b3",
+  "1c3fca1fa02b2123",
+  "1ecc01332ec87ab8",
+  "1f6da81c582191ba",
+  "2540859c9833413d",
+  "26fe6953032d4033",
+  "28c17cb3b85f22d3",
+  "297887375c6e2f64",
+  "3450d77ba27519ca",
+  "4105f2446ff9d8d7",
+  "443ed8425e142953",
+  "4604b4bc32590458",
+  "480d414a3608d54b",
+  "4926043f7ec2eabe",
+  "4951b74b7fdd8159",
+  "49b0b2e9bc34a1b4",
+  "49f543f92f885048",
+  "4ed346b7cd805f70",
+  "5954a95d40d1edfb",
+  "59ecd44e4c7c6250",
+  "5b5b0074eed20fd3",
+  "5cc776563781edb5",
+  "63d429ab25f194a1",
+  "66ff71d785930ebb",
+  "6cb3210f120c93ca",
+  "6cdfbf91c1730f81",
+  "70e946354859e7b6",
+  "7551f3fbe53c80a6",
+  "825cb75e89b29784",
+  "8330b75bcbb7b8b1",
+  "834ca48013c2680c",
+  "8390936af5541884",
+  "83dbbc64c6be9e37",
+  "86281620fd24185a",
+  "90691df9938932a3",
+  "919471d670fc71d8",
+  "94bc7d368867f4ca",
+  "96d06d7d8b367fec",
+  "9d40acb8d68cf3ee",
+  "9e5cabbb3183a852",
+  "a16a55c14ad50fb0",
+  "a3b7d7d892d38322",
+  "a702dc9725bd279c",
+  "a8a997d50ea6b95d",
+  "af02e5e74ef72870",
+  "bc2e5e8350aed8df",
+  "c1dee1f9c5347c23",
+  "c717c7747ad7090b",
+  "c8ac91c26c194b48",
+  "c9f7d12046340e5e",
+  "ce4b3f3c8f11f3d6",
+  "d0f9827f0df6a1f3",
+  "d14a09184fd68bd6",
+  "d1cad5e1d104033d",
+  "d6f78858702e503e",
+  "d7be4e4b3df5e852",
+  "da43277c06569ff7",
+  "dc70103554e9b37e",
+  "e25f85ef1d67d5df",
+  "e4283643669dbd0d",
+  "e6b5633e827aafae",
+  "e86431bb03194e94",
+  "e86485c5751dc820",
+  "ed21ab99e57075f1",
+  "ef9eb2f03f364532",
+  "f2f3e8b5d5404f82",
+  "f5d64ffbc0eca812"
+ ],
+ "beir_cqadupstack_english_140992": [
+  "ec8ed98c773a205a",
+  "ed28c5c82d7b3f20",
+  "f4d09c0cae40f48f"
+ ],
+ "beir_cqadupstack_english_141484": [
+  "b53e478805268b0d"
+ ],
+ "beir_cqadupstack_english_141561": [
+  "7ae1695538136766"
+ ],
+ "beir_cqadupstack_english_141724": [
+  "959e4a39ef572f09"
+ ],
+ "beir_cqadupstack_english_141898": [
+  "2440475bcf9be558",
+  "2b9e30190243f63a",
+  "60e6b34f40ed529c",
+  "6f395cac6bcc2523",
+  "6f78646b47973e2f",
+  "78340f4914561756",
+  "9f250fed761aafbc",
+  "afa2214114c4166a",
+  "d01a911a50bf02d6"
+ ],
+ "beir_cqadupstack_english_142126": [
+  "16f2a1dda9f980ca"
+ ],
+ "beir_cqadupstack_english_142514": [
+  "5772c4c8a246ec9b"
+ ],
+ "beir_cqadupstack_english_142522": [
+  "ddeb8d146aaf9c72"
+ ],
+ "beir_cqadupstack_english_14257": [
+  "b9ff55061f65a03a"
+ ],
+ "beir_cqadupstack_english_142663": [
+  "9165218b3de0f220"
+ ],
+ "beir_cqadupstack_english_14287": [
+  "cc63ddc42d000e19"
+ ],
+ "beir_cqadupstack_english_143015": [
+  "efee752524e48581"
+ ],
+ "beir_cqadupstack_english_143056": [
+  "81a822f9dc906121"
+ ],
+ "beir_cqadupstack_english_1431": [
+  "583a2e21ea57b45e"
+ ],
+ "beir_cqadupstack_english_143339": [
+  "08c8ea0f760a790c"
+ ],
+ "beir_cqadupstack_english_143433": [
+  "4895c0ad6a187380"
+ ],
+ "beir_cqadupstack_english_14348": [
+  "ca8dca6a0ec41375"
+ ],
+ "beir_cqadupstack_english_143712": [
+  "016037a0522b26ef",
+  "ef477be07e2dc2ee"
+ ],
+ "beir_cqadupstack_english_143904": [
+  "2289c117ab57e425",
+  "4fd9f6ea94ce5d28"
+ ],
+ "beir_cqadupstack_english_143907": [
+  "bbe372df2260f724"
+ ],
+ "beir_cqadupstack_english_143990": [
+  "1775159ef1693522"
+ ],
+ "beir_cqadupstack_english_144210": [
+  "68b7b97d97a40254"
+ ],
+ "beir_cqadupstack_english_144361": [
+  "b65d9039a0c66fe9"
+ ],
+ "beir_cqadupstack_english_144550": [
+  "b0397c055a13e4b0"
+ ],
+ "beir_cqadupstack_english_144622": [
+  "054a0e460f067821",
+  "5d13ab5caeb2cde1",
+  "c017f0171be9b394",
+  "ef3c2b8f5e08f073"
+ ],
+ "beir_cqadupstack_english_144743": [
+  "4d3f0b2405bbbe2b"
+ ],
+ "beir_cqadupstack_english_144792": [
+  "d58e46842cb4864e"
+ ],
+ "beir_cqadupstack_english_144883": [
+  "87071dea69c24656"
+ ],
+ "beir_cqadupstack_english_144927": [
+  "5c705cbd7efae8c0"
+ ],
+ "beir_cqadupstack_english_145071": [
+  "6231a0fb0c4adef2"
+ ],
+ "beir_cqadupstack_english_145299": [
+  "9906ef4397f1b05d",
+  "b8f64541d3f3e5bb"
+ ],
+ "beir_cqadupstack_english_145631": [
+  "1e38f58ab2910df4"
+ ],
+ "beir_cqadupstack_english_14565": [
+  "edf9e00f91f8385d"
+ ],
+ "beir_cqadupstack_english_145689": [
+  "08a666207f3494e8"
+ ],
+ "beir_cqadupstack_english_14603": [
+  "94e63681a031d956"
+ ],
+ "beir_cqadupstack_english_146129": [
+  "055289707c54d376",
+  "0c5bbacee69298ad",
+  "12eeee3a911d1b6a",
+  "15488b5eeedfae59",
+  "19f70b313b1b9106",
+  "1b35bee5de9749eb",
+  "1ca4b8a06acb8464",
+  "38290ef1de9498fb",
+  "41a9f32ba527ab74",
+  "433a145a3c77e47e",
+  "4e8255b4b3d5480f",
+  "53011c1ef94664c6",
+  "56015ee6b995ec5a",
+  "5bba7994d2b286ca",
+  "5d27474753038021",
+  "642a3016c1fe853f",
+  "64e380fc102897d3",
+  "67b67aa5e22d655b",
+  "6a95361bf6247613",
+  "70341a5814d5035f",
+  "856935f03096c37b",
+  "90877e7f0b604cd0",
+  "99aac7e026076d51",
+  "9acb28c6fc2c8705",
+  "9c8df084b22ed3ed",
+  "9d9ba3c3024fc25d",
+  "a66be592f9aacdb0",
+  "b0e6521d9b89dc08",
+  "b1f9ddb939e541b6",
+  "b3de8bfc0d9776ed",
+  "bda6f91c3e61e086",
+  "c252ce44ff0213c0",
+  "d1574475a1bfbd89",
+  "d194fc101400bcc6",
+  "da3dfa3f36f02a1b",
+  "daf41b55941df6d7",
+  "e11239b7e3b958f5",
+  "e2d44f804bd0c364",
+  "ec6fb14e91c1d799",
+  "f2897f5e6f72e7a0"
+ ],
+ "beir_cqadupstack_english_14613": [
+  "9a3c3a43dd4b9dff"
+ ],
+ "beir_cqadupstack_english_146176": [
+  "28b76742c05badfe",
+  "6f890ef284a6732b",
+  "89a8fb4b6dda0f6a"
+ ],
+ "beir_cqadupstack_english_146204": [
+  "fa69c2d9fac604c7"
+ ],
+ "beir_cqadupstack_english_14633": [
+  "c9a4357a028b02af"
+ ],
+ "beir_cqadupstack_english_146671": [
+  "9b2a8bd9f7ccba37"
+ ],
+ "beir_cqadupstack_english_14679": [
+  "12214aadd8e78b52",
+  "a75495213cd44cd7"
+ ],
+ "beir_cqadupstack_english_146795": [
+  "6c8286019127e440"
+ ],
+ "beir_cqadupstack_english_146798": [
+  "49d86341b0500d2e",
+  "f216c05c9f01f43c"
+ ],
+ "beir_cqadupstack_english_147162": [
+  "74983dae632a980b"
+ ],
+ "beir_cqadupstack_english_147477": [
+  "1536fccac9fa645a",
+  "3b47296a8671c94d",
+  "479bae52117a42a7",
+  "4a103b704384bfaf",
+  "8a6e2596b0d9689b",
+  "8cecfc1ea51e2bea",
+  "bfbfa03c2050de83"
+ ],
+ "beir_cqadupstack_english_14748": [
+  "2e6271476fa10eef"
+ ],
+ "beir_cqadupstack_english_147495": [
+  "9a5b53479d71cfac"
+ ],
+ "beir_cqadupstack_english_147539": [
+  "a1a119a9888a42c9"
+ ],
+ "beir_cqadupstack_english_147560": [
+  "f161f941a6f0edf9"
+ ],
+ "beir_cqadupstack_english_147763": [
+  "3a886d945ed1f54c",
+  "bb8b00245098ab39"
+ ],
+ "beir_cqadupstack_english_147827": [
+  "d3a83b768b36c4f2"
+ ],
+ "beir_cqadupstack_english_147852": [
+  "bb212ee31b212d2c"
+ ],
+ "beir_cqadupstack_english_147912": [
+  "7906c0587f5981c8",
+  "f14d9dc5953c2f96"
+ ],
+ "beir_cqadupstack_english_148025": [
+  "46f2927e39b28f68"
+ ],
+ "beir_cqadupstack_english_148228": [
+  "5266cf752db4ba3e"
+ ],
+ "beir_cqadupstack_english_148235": [
+  "f2954d17a522fbaf"
+ ],
+ "beir_cqadupstack_english_148653": [
+  "33f35d8e0b9e20b7",
+  "edd03a44f0210233"
+ ],
+ "beir_cqadupstack_english_14868": [
+  "a9f1b52ff8e33c41"
+ ],
+ "beir_cqadupstack_english_148682": [
+  "a0f8a94a062ecf7a"
+ ],
+ "beir_cqadupstack_english_148949": [
+  "52a69e44dfefaeaa"
+ ],
+ "beir_cqadupstack_english_148995": [
+  "a0664a8c6aade11d"
+ ],
+ "beir_cqadupstack_english_149432": [
+  "4c9498bce9c663d8"
+ ],
+ "beir_cqadupstack_english_14949": [
+  "3cc34573a26fe51a",
+  "80f58ce6bca3bc33"
+ ],
+ "beir_cqadupstack_english_149527": [
+  "7afabd47c5ad9555"
+ ],
+ "beir_cqadupstack_english_149650": [
+  "390a99d2c11384f2",
+  "88bb5b06de915643",
+  "ae56585f9857f686"
+ ],
+ "beir_cqadupstack_english_149726": [
+  "2f93ea03d5fccfcf"
+ ],
+ "beir_cqadupstack_english_149920": [
+  "16a35fd7f3fef6d2",
+  "5d2a29107701a9e8",
+  "d19bb033899f5119"
+ ],
+ "beir_cqadupstack_english_149922": [
+  "33aaa6442fda6e18"
+ ],
+ "beir_cqadupstack_english_150121": [
+  "ec59854722dc3adb"
+ ],
+ "beir_cqadupstack_english_150183": [
+  "5cf28583d3fd8b77",
+  "85aa17593546e913"
+ ],
+ "beir_cqadupstack_english_150250": [
+  "0e9b5420acc6316f"
+ ],
+ "beir_cqadupstack_english_150286": [
+  "7bbe0c831870053f"
+ ],
+ "beir_cqadupstack_english_150405": [
+  "55fc4a8864401c55"
+ ],
+ "beir_cqadupstack_english_150427": [
+  "ea568856bf334ab5"
+ ],
+ "beir_cqadupstack_english_150447": [
+  "49bfc539d6d5d413",
+  "57686607194d3c65"
+ ],
+ "beir_cqadupstack_english_1505": [
+  "97b91a510185cfdc",
+  "a24dd67d82515d2b"
+ ],
+ "beir_cqadupstack_english_150500": [
+  "a9ed17ed8af297fb",
+  "f06f68b6deada7ff"
+ ],
+ "beir_cqadupstack_english_150529": [
+  "4666525828e15b7b"
+ ],
+ "beir_cqadupstack_english_150601": [
+  "cb8e69a0989646ac"
+ ],
+ "beir_cqadupstack_english_150861": [
+  "5b3e4b7e3da850a1"
+ ],
+ "beir_cqadupstack_english_151022": [
+  "163c20f1a9535ae7",
+  "1b5dd0c5cb0a5cba",
+  "415b0dfc94b6c460",
+  "75b96926995ba8ea",
+  "b7106948a7e663b9"
+ ],
+ "beir_cqadupstack_english_15107": [
+  "99d298620abec64c"
+ ],
+ "beir_cqadupstack_english_151119": [
+  "88737162ce3b967b"
+ ],
+ "beir_cqadupstack_english_151242": [
+  "088a497816e5c452"
+ ],
+ "beir_cqadupstack_english_151285": [
+  "9f8f6d7da3272083"
+ ],
+ "beir_cqadupstack_english_151309": [
+  "e65c9b859c9e1e92"
+ ],
+ "beir_cqadupstack_english_151739": [
+  "283d2fcc2ee8fc91",
+  "7b6586d4565632c7",
+  "95cd82840b9a2ea7"
+ ],
+ "beir_cqadupstack_english_15183": [
+  "172dd314fb2cf5e4",
+  "d127e5f5e942f5d0",
+  "e34b5b2e5839d014"
+ ],
+ "beir_cqadupstack_english_151856": [
+  "1a71b934d52f21ee"
+ ],
+ "beir_cqadupstack_english_151928": [
+  "0f2f5f52bd89738d",
+  "226775ac0ce63f60",
+  "b7af57ef86962e16",
+  "d493d8b36215ca7c"
+ ],
+ "beir_cqadupstack_english_151980": [
+  "1c6241d2276d8c4a",
+  "2740fcb409a7cb7a",
+  "614cae35feca86f5",
+  "b2a68ddbd9807050"
+ ],
+ "beir_cqadupstack_english_152041": [
+  "52fff52a354f88bc"
+ ],
+ "beir_cqadupstack_english_152043": [
+  "1a7039cedbaec7c4"
+ ],
+ "beir_cqadupstack_english_152048": [
+  "04e347caad150034",
+  "2b423334df1e6061"
+ ],
+ "beir_cqadupstack_english_152448": [
+  "fdde78906225930a"
+ ],
+ "beir_cqadupstack_english_152584": [
+  "836ffec21f349531"
+ ],
+ "beir_cqadupstack_english_15261": [
+  "6caffc9298e69abc",
+  "d37cdb4b746c3b58",
+  "ed7beac9487f88c6"
+ ],
+ "beir_cqadupstack_english_152654": [
+  "6bce650e9df918e6"
+ ],
+ "beir_cqadupstack_english_152816": [
+  "c0fae89e21462a31"
+ ],
+ "beir_cqadupstack_english_152983": [
+  "0029e8a17c0e7cd1",
+  "1b868c15ea0b299f",
+  "52bd4146bf2894aa"
+ ],
+ "beir_cqadupstack_english_153114": [
+  "12ff97369038c7e7"
+ ],
+ "beir_cqadupstack_english_153149": [
+  "a27f28c74af5b204"
+ ],
+ "beir_cqadupstack_english_153211": [
+  "03a655c44a500f6a"
+ ],
+ "beir_cqadupstack_english_153285": [
+  "c67ecc64b8e9bb46"
+ ],
+ "beir_cqadupstack_english_153315": [
+  "0baa10987e00eaeb"
+ ],
+ "beir_cqadupstack_english_153468": [
+  "dafe0af345b09f72"
+ ],
+ "beir_cqadupstack_english_153603": [
+  "0cd04c4bff686cfc",
+  "0da9908441fe8bd1",
+  "15de4fb1d4c3fe4e",
+  "1b14fb9d2cbe1b3a",
+  "23fdeee243716f86",
+  "2b2d5cde6b5c4a81",
+  "2d6ce37e08ae7216",
+  "3717e4d993e7222a",
+  "4a684fe3e9826902",
+  "6a3a1071e0a6c1a7",
+  "757a7311db36b4c1",
+  "7b4fa98b909aadad",
+  "7cda3476dd6c07bf",
+  "7d6c53f7f59be224",
+  "8f14b7dc33eec6dd",
+  "93065c782fbc8b28",
+  "b4dc8749cc175260",
+  "bda76aae1731e62b",
+  "c4cdc3768f365285",
+  "c97e31198194a8f2",
+  "cfee5e1d403ea897",
+  "eafca7b0febdf4ad"
+ ],
+ "beir_cqadupstack_english_153677": [
+  "3722f5e3d95ec4b6",
+  "51b4080bcb6804cd",
+  "851dde700f970ae5"
+ ],
+ "beir_cqadupstack_english_153733": [
+  "112ea212081e56a7",
+  "26e76cb61b05953c",
+  "76e764443a5938cb",
+  "a1340722e0c949e3",
+  "af1499afa5724eee",
+  "afa09c5147d1efd7",
+  "e292d924ab93b160"
+ ],
+ "beir_cqadupstack_english_153832": [
+  "8f65cbfc69293314"
+ ],
+ "beir_cqadupstack_english_153996": [
+  "1ae5c7b71a0b14d1"
+ ],
+ "beir_cqadupstack_english_15400": [
+  "b4c7e643e03b31dc"
+ ],
+ "beir_cqadupstack_english_154045": [
+  "7ece4ae19c3372c4"
+ ],
+ "beir_cqadupstack_english_154190": [
+  "617eece20cb6dbe5"
+ ],
+ "beir_cqadupstack_english_154355": [
+  "9979afa26215c1dc"
+ ],
+ "beir_cqadupstack_english_154458": [
+  "1744f319f9830c7d",
+  "de0560e19bb357af"
+ ],
+ "beir_cqadupstack_english_154665": [
+  "24cd9d2242dc63f8"
+ ],
+ "beir_cqadupstack_english_154764": [
+  "729a8732e1c7b7df",
+  "b41d85539c9ebc11"
+ ],
+ "beir_cqadupstack_english_154815": [
+  "254ea761f151919a"
+ ],
+ "beir_cqadupstack_english_15488": [
+  "9ae784fdf8143144"
+ ],
+ "beir_cqadupstack_english_154964": [
+  "512ef765a029c537"
+ ],
+ "beir_cqadupstack_english_155459": [
+  "cccf9b2c44a57fd1"
+ ],
+ "beir_cqadupstack_english_155511": [
+  "8be7a5c3c2973b81"
+ ],
+ "beir_cqadupstack_english_155659": [
+  "92edadc96e1b87e6"
+ ],
+ "beir_cqadupstack_english_155712": [
+  "092764a7eed1129b",
+  "36752e8637a34f8b",
+  "65db815b4a57b15b",
+  "67f8aea46fafbc62"
+ ],
+ "beir_cqadupstack_english_156061": [
+  "58512d9b85814957",
+  "762acff8fe826395",
+  "90f9c0725141dfba",
+  "e30586b2f3dcac3b"
+ ],
+ "beir_cqadupstack_english_156653": [
+  "9293d306de31efe1"
+ ],
+ "beir_cqadupstack_english_156780": [
+  "a994374f2841e834"
+ ],
+ "beir_cqadupstack_english_156784": [
+  "1d1c43241a33903c",
+  "4d52b57618efce92",
+  "9b493c99b0e521f1",
+  "9c443166d7773b7b",
+  "a7a0135d0bb38697"
+ ],
+ "beir_cqadupstack_english_156822": [
+  "12290e84ea98208e"
+ ],
+ "beir_cqadupstack_english_156986": [
+  "7460c1891a08df2a"
+ ],
+ "beir_cqadupstack_english_15700": [
+  "b2b9afcc0d79566a"
+ ],
+ "beir_cqadupstack_english_15718": [
+  "232cab3dc6a4b5d2"
+ ],
+ "beir_cqadupstack_english_157241": [
+  "ac51857bcf0477ec"
+ ],
+ "beir_cqadupstack_english_157498": [
+  "7fbd01f9ee285f67"
+ ],
+ "beir_cqadupstack_english_157592": [
+  "016cf96c4bd2633e",
+  "070bea88c06b2672",
+  "0f4debb75802204a",
+  "101dd4bfe49d058b",
+  "1561a16a7c7d00aa",
+  "2a92a995b584b920",
+  "603851b86da4a89e",
+  "6bd061af0c3a4017",
+  "aee509a25b825279",
+  "bcb6acb5e3f2c7c0",
+  "cc1ffcafe8029a11",
+  "d2e66233b3b2cb78",
+  "e1e266af5dd40b25",
+  "e8ccc569806d0070",
+  "f225b289ca7a0fd6"
+ ],
+ "beir_cqadupstack_english_157703": [
+  "b440b2726662a79f"
+ ],
+ "beir_cqadupstack_english_1578": [
+  "022a80d5e4a6c425",
+  "da008d0acc13b53a"
+ ],
+ "beir_cqadupstack_english_157879": [
+  "a824eb0cea0ebbee"
+ ],
+ "beir_cqadupstack_english_157990": [
+  "7550d09f898ca181"
+ ],
+ "beir_cqadupstack_english_158190": [
+  "e9bd212ff3784c37"
+ ],
+ "beir_cqadupstack_english_158456": [
+  "24bfec2932b079d2",
+  "47afdae7a3b4eb67",
+  "52e886a1f64011b6"
+ ],
+ "beir_cqadupstack_english_158476": [
+  "654e87a015347a82"
+ ],
+ "beir_cqadupstack_english_15853": [
+  "198e509b7ce24e1b"
+ ],
+ "beir_cqadupstack_english_158716": [
+  "06624bfb2c1961a1",
+  "21fa5119bcec5c2c",
+  "23e538fa27f84939",
+  "2c4269d3c84e2bc7",
+  "46987e264e89a7da",
+  "4b7e6566a5dc7370",
+  "53dc9980aeb5477d",
+  "692fa642a6f469e0",
+  "6bb6bccd3b7f08af",
+  "7afcdee0bae9bc6f",
+  "7e43aeb723e7ca93",
+  "8f4ed8cbd664e718",
+  "a08170834285f8db",
+  "a192fe9bb22fd9a6",
+  "a7c336b49cfe953f",
+  "b1750a3d49043863",
+  "cf2bdda45de25923",
+  "ea150af0a42afdeb",
+  "ed969768d4cbee12",
+  "ef3e16eee3d02bec",
+  "f5d10684409a4993"
+ ],
+ "beir_cqadupstack_english_15874": [
+  "03a186e268881473"
+ ],
+ "beir_cqadupstack_english_15940": [
+  "ea8882e80a3822c8"
+ ],
+ "beir_cqadupstack_english_159612": [
+  "8b50e8f7a8eb8c4a"
+ ],
+ "beir_cqadupstack_english_15966": [
+  "591bc93b96c0ddca"
+ ],
+ "beir_cqadupstack_english_159769": [
+  "a8d71c811d5c8675"
+ ],
+ "beir_cqadupstack_english_159816": [
+  "4c67d23d236f1e95"
+ ],
+ "beir_cqadupstack_english_159849": [
+  "845363a5075579a5"
+ ],
+ "beir_cqadupstack_english_16000": [
+  "1245562990ecb61c",
+  "50f0ff51f749150c",
+  "62a9605f79e53660",
+  "a2e5419ad0756332"
+ ],
+ "beir_cqadupstack_english_16008": [
+  "2bf144cc09515758"
+ ],
+ "beir_cqadupstack_english_160277": [
+  "add200d1289c99a0"
+ ],
+ "beir_cqadupstack_english_160488": [
+  "e275e3003b24c51d"
+ ],
+ "beir_cqadupstack_english_1605": [
+  "4efe418e04be5208",
+  "cf75dbf9c1818f70"
+ ],
+ "beir_cqadupstack_english_160544": [
+  "bd86e7728ec8aa2a"
+ ],
+ "beir_cqadupstack_english_160616": [
+  "6b868ea9cdd4216c",
+  "8bc36ca073c5976c"
+ ],
+ "beir_cqadupstack_english_160893": [
+  "a86a22ae559d1b7f"
+ ],
+ "beir_cqadupstack_english_160962": [
+  "00b1e6e3785b8065"
+ ],
+ "beir_cqadupstack_english_161117": [
+  "35d47417608ae236"
+ ],
+ "beir_cqadupstack_english_161194": [
+  "d4e6c5a83d2ba2fd"
+ ],
+ "beir_cqadupstack_english_1613": [
+  "3c1f680b4fcf9fde",
+  "8f77c4fce98010db"
+ ],
+ "beir_cqadupstack_english_161302": [
+  "7214b74ff7d597ce"
+ ],
+ "beir_cqadupstack_english_161463": [
+  "1e0c93c3d2dce14b"
+ ],
+ "beir_cqadupstack_english_16172": [
+  "6cfbff8ed4ab3a6d"
+ ],
+ "beir_cqadupstack_english_161967": [
+  "1b488a89c9dbd812",
+  "59bd65e0fcf18141",
+  "7945cf653d6fa18b",
+  "a907d1c11e26b9e9"
+ ],
+ "beir_cqadupstack_english_161975": [
+  "02e83e5e739d29fc"
+ ],
+ "beir_cqadupstack_english_162359": [
+  "4276162135b2639e"
+ ],
+ "beir_cqadupstack_english_162372": [
+  "f09e5b7afcd4db1b"
+ ],
+ "beir_cqadupstack_english_162573": [
+  "007dc43f2431573d"
+ ],
+ "beir_cqadupstack_english_162794": [
+  "6d958f7ce14c589b"
+ ],
+ "beir_cqadupstack_english_162824": [
+  "113595c57bdc87c6"
+ ],
+ "beir_cqadupstack_english_162939": [
+  "f799c4eb8ef8cba7"
+ ],
+ "beir_cqadupstack_english_16304": [
+  "77df360b7c8798bc",
+  "c4c9cd4c7ecbfdf0"
+ ],
+ "beir_cqadupstack_english_16312": [
+  "0d950517ebc6b05d"
+ ],
+ "beir_cqadupstack_english_163232": [
+  "6fe51a42995d6fbf"
+ ],
+ "beir_cqadupstack_english_16356": [
+  "fe5f6a42407f6180"
+ ],
+ "beir_cqadupstack_english_163731": [
+  "4ca42f889b4ff916"
+ ],
+ "beir_cqadupstack_english_163994": [
+  "2b7ddd899639a960",
+  "50e581c3d62816dc"
+ ],
+ "beir_cqadupstack_english_164111": [
+  "dae4c008615b08b6"
+ ],
+ "beir_cqadupstack_english_164812": [
+  "a7333a71f42de2d6"
+ ],
+ "beir_cqadupstack_english_164871": [
+  "50c5ba45af45956d"
+ ],
+ "beir_cqadupstack_english_164878": [
+  "09244dec0da35e7f",
+  "1547c1ad1cab934d",
+  "54119da0559e5fd6",
+  "7cb26d7727952af4",
+  "8885623117f3bb31",
+  "94cbe502dc6d7919",
+  "e19e7c28c9ee455d",
+  "e715b98d9b962846"
+ ],
+ "beir_cqadupstack_english_164973": [
+  "7fa1dc969bcab89c"
+ ],
+ "beir_cqadupstack_english_164997": [
+  "651d263791c92325"
+ ],
+ "beir_cqadupstack_english_165294": [
+  "6c33e688ef5a80bf",
+  "89acd4768116fac5"
+ ],
+ "beir_cqadupstack_english_165633": [
+  "cac35a594b644183"
+ ],
+ "beir_cqadupstack_english_165893": [
+  "078d8da29b6458aa"
+ ],
+ "beir_cqadupstack_english_16602": [
+  "5a9936c5e8fb581d"
+ ],
+ "beir_cqadupstack_english_166093": [
+  "ef82357ede379827"
+ ],
+ "beir_cqadupstack_english_166166": [
+  "d8713f5de31d5212"
+ ],
+ "beir_cqadupstack_english_166500": [
+  "46f73ca9fdb5eae3",
+  "a7e8df062a4edabc"
+ ],
+ "beir_cqadupstack_english_16654": [
+  "4212e98e71128d03",
+  "9bb9d4d96d2b6494"
+ ],
+ "beir_cqadupstack_english_16655": [
+  "908915fe964a752b",
+  "97c315a7830148b0",
+  "d76c2317f576d401"
+ ],
+ "beir_cqadupstack_english_167041": [
+  "642abe2dec1207d6"
+ ],
+ "beir_cqadupstack_english_167321": [
+  "6cb6e00dd0f4ec94"
+ ],
+ "beir_cqadupstack_english_16750": [
+  "53bb4d68e8a52c94",
+  "b10e037adb36ef24"
+ ],
+ "beir_cqadupstack_english_167545": [
+  "82fb3961f6d0619c",
+  "926d862ae5dcca9d"
+ ],
+ "beir_cqadupstack_english_167620": [
+  "3de99fa15700b43c",
+  "4e0fee7683481346"
+ ],
+ "beir_cqadupstack_english_167685": [
+  "e0d048ee7cf61c21"
+ ],
+ "beir_cqadupstack_english_167706": [
+  "cecd6354df4c8e2e"
+ ],
+ "beir_cqadupstack_english_167900": [
+  "d8d7651c320e211e"
+ ],
+ "beir_cqadupstack_english_167983": [
+  "a882ea4e3fab92d4"
+ ],
+ "beir_cqadupstack_english_16813": [
+  "35d7d72e10835701",
+  "4deebfa98a16674b",
+  "536cc78d85e4414c",
+  "59084a0347764d70",
+  "79a738ffb280407c",
+  "8e3c799903f66fb0",
+  "aed74eda07c34799",
+  "e000356ef5919b03"
+ ],
+ "beir_cqadupstack_english_168268": [
+  "aeaad097cb8738f4"
+ ],
+ "beir_cqadupstack_english_16831": [
+  "e1be9e375162836e"
+ ],
+ "beir_cqadupstack_english_168334": [
+  "4d68faa538a2c5b7",
+  "db68410aab108b51"
+ ],
+ "beir_cqadupstack_english_168367": [
+  "ae9c208ae44c1f16"
+ ],
+ "beir_cqadupstack_english_168417": [
+  "197ee74376a96b30"
+ ],
+ "beir_cqadupstack_english_168419": [
+  "68602cb49d196301"
+ ],
+ "beir_cqadupstack_english_168543": [
+  "0c396898f25582c0",
+  "109d44a240ccbd96",
+  "1d4898ba01cadcc8",
+  "2846714b580e7d39",
+  "2aa04865f5874fb2",
+  "2d1e22c379b42e68",
+  "34093b1b5523a74b",
+  "3c084e7f23efe3a0",
+  "3e5de8cac231b461",
+  "4feb49065ad9350b",
+  "59d4dc126c51727b",
+  "629fd3d252884771",
+  "6bda357be702221c",
+  "6dfa2199c2baa33d",
+  "71f0d1ae9b77cbd0",
+  "732cbb15177ab1d8",
+  "73d155cb444d4c2a",
+  "75b47cb161d20aa4",
+  "792d484ec62b2791",
+  "7ba26fb223b91b87",
+  "7c6a2770c551356a",
+  "7fe613ab0fa72c0f",
+  "83ce7b55958df62c",
+  "9cccc6fec0b277d2",
+  "9e82681e5756628b",
+  "a687c893c7c13c09",
+  "a7076d97c5e2493e",
+  "b5d9929479d9f73b",
+  "bd0bf44494247c49",
+  "c63cbd88a3c218d2",
+  "c7276819f1f1f02a",
+  "ca7dba4143bb14b8",
+  "cf7eaca52dca6b7d",
+  "d1869412cb4aec6b",
+  "d205c13412b65457",
+  "d31fe303cade83d9",
+  "d4f384a2d392e672",
+  "dc398c55a0095177",
+  "de5c38bb351d8775",
+  "e3cadc882f594707",
+  "f0f72b5b0439543d",
+  "f1f5803eaafe2623"
+ ],
+ "beir_cqadupstack_english_168579": [
+  "652ca71c9bacfdcb"
+ ],
+ "beir_cqadupstack_english_168790": [
+  "4ef29c56526a9164"
+ ],
+ "beir_cqadupstack_english_16883": [
+  "e3ff29175e56782d"
+ ],
+ "beir_cqadupstack_english_168928": [
+  "75f105fa0e594db4",
+  "b41e2c5c0a5cd768"
+ ],
+ "beir_cqadupstack_english_168959": [
+  "e839ce7ef83127af"
+ ],
+ "beir_cqadupstack_english_169051": [
+  "1012605821987143"
+ ],
+ "beir_cqadupstack_english_169338": [
+  "dedf851c7fdb9251"
+ ],
+ "beir_cqadupstack_english_169667": [
+  "80e469697438ec0a"
+ ],
+ "beir_cqadupstack_english_169679": [
+  "8df2e4d3c9a8e3ec",
+  "90f67f4643782aeb",
+  "96520abb73790b52",
+  "bb1211f7f105fb5f",
+  "e48b04d423196932"
+ ],
+ "beir_cqadupstack_english_16983": [
+  "4ada5a044d17e99c"
+ ],
+ "beir_cqadupstack_english_16999": [
+  "18ad904f2742f4e4"
+ ],
+ "beir_cqadupstack_english_170189": [
+  "9c05acf6ac61b00e"
+ ],
+ "beir_cqadupstack_english_170577": [
+  "dd2564e526f037db"
+ ],
+ "beir_cqadupstack_english_170635": [
+  "bbae67fd46e783ea"
+ ],
+ "beir_cqadupstack_english_170723": [
+  "5b25b3403d170c28"
+ ],
+ "beir_cqadupstack_english_17081": [
+  "746b3e0e33bc9b57"
+ ],
+ "beir_cqadupstack_english_170830": [
+  "f2f2f9e3d97d7893"
+ ],
+ "beir_cqadupstack_english_170911": [
+  "0370d63ddf20b44b",
+  "074ac5fe328d9cf7",
+  "076eaeacf0997b12",
+  "082b35c0eda7ee38",
+  "0a52b9150860b6cd",
+  "12aa11206c2574a2",
+  "19f23ac285117e35",
+  "1b91f9057b91e182",
+  "1bef910478222883",
+  "23acab69acf53260",
+  "25f8e49a8b5a85e1",
+  "2c2767347bb51562",
+  "2c3644173ef245a3",
+  "2db263771f67af65",
+  "2eeefd13f37bc36d",
+  "3193c9df5cf980b9",
+  "35b510f135b91369",
+  "37671c40a7d44869",
+  "390acb12946c8b5c",
+  "3930375b9cf67394",
+  "3a317375e2b72351",
+  "3b089c1563e98ec0",
+  "3d00ba6e4ce003af",
+  "3e850a71aff010ba",
+  "4199e3c635b6215c",
+  "41fa51d9d3210a63",
+  "45b3aa1765e7bafc",
+  "4eb5d6b0c59386ef",
+  "51db73a60b8e2705",
+  "564287e1ac81a749",
+  "60f147c143e203a2",
+  "61f16882996cf3e4",
+  "68299773f5ae35b0",
+  "689d0ef907f144a8",
+  "69b753f6647b7239",
+  "69cffe07ee5fbb73",
+  "735ea21f72c27a52",
+  "7369c8508185cdb1",
+  "74150a7ceeaf5daa",
+  "74d6130cdcf862dd",
+  "7509484a4dec0b34",
+  "757a3a4f0d60ccfa",
+  "7fba61ef8725b474",
+  "839c5957ac486fcc",
+  "85bf9fe3b388c8ae",
+  "8f97dcd5dd758314",
+  "9c494fd83487b887",
+  "9c99a2dff2ab04c0",
+  "a0037e4f54c8a08b",
+  "a37d2e95a526261b",
+  "aced543410ef49d7",
+  "b0369ed6832068f9",
+  "b9ea9a3f1d3ea03e",
+  "bae787fd8ab274f7",
+  "bc11e361ed6836d8",
+  "c203f234afdeab50",
+  "c93a096d3db4e02d",
+  "c95fdd70474cd164",
+  "cd523c356d043c1b",
+  "d304e2ea0601160d",
+  "d4704667b99b4f6e",
+  "d65c3223d30ea824",
+  "dd0cc9b20a7aa9cb",
+  "de2977567403c256",
+  "e10d8c8383b7766d",
+  "e62552429468416b",
+  "ef244f9e5383c38a",
+  "efa98d2bf573c4e0",
+  "f31cc1bc7833da4e",
+  "fc65284a04f04742"
+ ],
+ "beir_cqadupstack_english_171029": [
+  "615649696e0ba460"
+ ],
+ "beir_cqadupstack_english_171077": [
+  "b6299f9da51dd7f8",
+  "eb23ad0eb14301c3"
+ ],
+ "beir_cqadupstack_english_171169": [
+  "b887e972d9e3f424"
+ ],
+ "beir_cqadupstack_english_171365": [
+  "20b78edc663bf00b",
+  "2d52c15f772de07a",
+  "904dd14cf7a73f9b",
+  "a61a2e82f77b3898"
+ ],
+ "beir_cqadupstack_english_17143": [
+  "0c0419f9b140c92b"
+ ],
+ "beir_cqadupstack_english_171733": [
+  "9f32ae35efc2d637"
+ ],
+ "beir_cqadupstack_english_171738": [
+  "2a12a12438219f4f",
+  "f3094d74fd73fa7b"
+ ],
+ "beir_cqadupstack_english_172": [
+  "09e7e1949f18d93a"
+ ],
+ "beir_cqadupstack_english_172031": [
+  "2c2da8fc8830723c"
+ ],
+ "beir_cqadupstack_english_172195": [
+  "7899732720291da6"
+ ],
+ "beir_cqadupstack_english_1723": [
+  "2c2b95cce0e000f0",
+  "8325d8925eb89390"
+ ],
+ "beir_cqadupstack_english_172575": [
+  "a896bfb3d2deedfe"
+ ],
+ "beir_cqadupstack_english_172880": [
+  "040085d5094d2ad4",
+  "1c005922fe1709f5",
+  "2dfd944f93908927",
+  "41e34bfe6ebae024",
+  "a9be3ab4f7c60d44"
+ ],
+ "beir_cqadupstack_english_173006": [
+  "2868d21b81819cca",
+  "3a1023f49a7ab361",
+  "64513bf862a3e374",
+  "d4c155ed02e783a8",
+  "ed5258d94ff5fae1"
+ ],
+ "beir_cqadupstack_english_173118": [
+  "11f002524072295b",
+  "ed0081f1bdfef50a"
+ ],
+ "beir_cqadupstack_english_173341": [
+  "01121eb7b2f06e83",
+  "1ca779df981543a3",
+  "4f0514b6194b3461",
+  "a4cfba7a7ffb8f6b",
+  "e4e91cdc16816b6a"
+ ],
+ "beir_cqadupstack_english_173349": [
+  "0163b1357d83d8c9",
+  "9354a0345a0b2923",
+  "b32705dc7eabc143"
+ ],
+ "beir_cqadupstack_english_173507": [
+  "db3d0310d18c2b9d"
+ ],
+ "beir_cqadupstack_english_173594": [
+  "39772092072a63e4"
+ ],
+ "beir_cqadupstack_english_173641": [
+  "c1a6ef74dece50b3"
+ ],
+ "beir_cqadupstack_english_173772": [
+  "a1bbfa26e3e3ff82"
+ ],
+ "beir_cqadupstack_english_173979": [
+  "7699a7cdbe9be442"
+ ],
+ "beir_cqadupstack_english_174119": [
+  "005441aa1d54760b",
+  "0a53bbc05849de65",
+  "0cf6ece1fae1dcd2",
+  "0d4b98d70cf59082",
+  "13b43ed7723a5d67",
+  "14f48e035d575325",
+  "20452a7e690346d5",
+  "221a2d2b86a75b9a",
+  "22a3e52911d5e68a",
+  "2fab6c3ac7ace2e1",
+  "330c9c435c4fb788",
+  "3855b24ecc0afef8",
+  "3d2f87abc60cccaf",
+  "423e525af31128cc",
+  "441ae870d321035c",
+  "4456df3c5a51c117",
+  "44b49dfec145c951",
+  "48aa1922d75a1fe2",
+  "4a3b3c2981edaa59",
+  "4f84161072882a54",
+  "56cf79210c89e755",
+  "57c69a88fcc0e16a",
+  "5cdc84ae5b63a737",
+  "5d0837635b63c655",
+  "60b42cd72c51a7b2",
+  "65624532d59bff0a",
+  "6c9b54573a324f14",
+  "6e8be0c99449a565",
+  "7698b4fe8b606801",
+  "770dbf70f833579d",
+  "79d6dc804c74721f",
+  "7d5a9a79a6f2515f",
+  "7f1270d61becbb3d",
+  "81514d103d78e12c",
+  "86387de42346b0bf",
+  "8770bdba5bfa2cb1",
+  "8a326dc3e22f7050",
+  "9000085a28a0cf83",
+  "90b240cbc5d4cf39",
+  "91c1fbc44c3a58a4",
+  "9243e8e4bd923525",
+  "92a07232d4d9166d",
+  "9c625caebea0603b",
+  "9ceb019c9682091e",
+  "a47a77a965cbda54",
+  "a742810cae13eec2",
+  "abf6faec54db958c",
+  "ae49ec2d2f974b4c",
+  "b125983eb205db98",
+  "b1729a1be7382edf",
+  "b345575dd2ea722a",
+  "b40b3ff94321ad12",
+  "be874b3f8be2de40",
+  "c9f3db9f29a55ef8",
+  "d1b151c04291d0a6",
+  "d557c6ba55a9d4e1",
+  "d8c3f8f0cc5adffd",
+  "e21a9f951ee66a3f",
+  "e409704918e0df57",
+  "ea8f029a22600cad",
+  "eb3b6a4595b08323",
+  "eeebf33dc1c9d7cf",
+  "eef43c61cfa41d19",
+  "ef69ef449a5bbde1",
+  "f1d13c80947540e9",
+  "f1fbb832cc817ab9",
+  "f230b9aacb90471f",
+  "f245ffd4f9130481"
+ ],
+ "beir_cqadupstack_english_174228": [
+  "197fa085cd5933f2"
+ ],
+ "beir_cqadupstack_english_17428": [
+  "477c8c8f400bda34"
+ ],
+ "beir_cqadupstack_english_174302": [
+  "d7f48e9a017d69cf"
+ ],
+ "beir_cqadupstack_english_17436": [
+  "197862c5a85a7dad",
+  "b10258c7f97cdd8b",
+  "cb8683f4d453ec1b"
+ ],
+ "beir_cqadupstack_english_174456": [
+  "fd1b092c57d4703c"
+ ],
+ "beir_cqadupstack_english_174547": [
+  "496463b8942f1a21",
+  "7fa88985f49ce26f"
+ ],
+ "beir_cqadupstack_english_174605": [
+  "c195c942ea3e2489"
+ ],
+ "beir_cqadupstack_english_1749": [
+  "22865c515865d700",
+  "7e6eed456fefe6c5",
+  "d292d1a973adc1f2",
+  "e6f961c44c51a77b"
+ ],
+ "beir_cqadupstack_english_174938": [
+  "7d3fa6fedfd51c18"
+ ],
+ "beir_cqadupstack_english_174939": [
+  "b768689a8b842e09"
+ ],
+ "beir_cqadupstack_english_175240": [
+  "3eec1867da724a23"
+ ],
+ "beir_cqadupstack_english_175415": [
+  "1da17b9461509cd4",
+  "5c964366ccab330c"
+ ],
+ "beir_cqadupstack_english_17616": [
+  "0b44d1f5e1ebf3df"
+ ],
+ "beir_cqadupstack_english_176821": [
+  "1d5cd06be181a164",
+  "99059ea5b10a63c6"
+ ],
+ "beir_cqadupstack_english_176908": [
+  "5a74e85dcf90dcd8"
+ ],
+ "beir_cqadupstack_english_177112": [
+  "5a01ffcbf9a70f74",
+  "5cf41dac7ecc607e",
+  "eb6283ece1da5ab3"
+ ],
+ "beir_cqadupstack_english_177268": [
+  "569ccb927a099ac4"
+ ],
+ "beir_cqadupstack_english_177784": [
+  "11b4a43025cfd298"
+ ],
+ "beir_cqadupstack_english_177912": [
+  "c5da18d760749d82"
+ ],
+ "beir_cqadupstack_english_177943": [
+  "216ec534a0b2d70e"
+ ],
+ "beir_cqadupstack_english_178012": [
+  "8966c8458c27dc45"
+ ],
+ "beir_cqadupstack_english_178040": [
+  "be607b46b317fe63"
+ ],
+ "beir_cqadupstack_english_178191": [
+  "51c4a4fbbf0f6394"
+ ],
+ "beir_cqadupstack_english_178255": [
+  "048b2cd1fdccc0ec"
+ ],
+ "beir_cqadupstack_english_178259": [
+  "5b3222309e482834"
+ ],
+ "beir_cqadupstack_english_178276": [
+  "0e51033123629fc5",
+  "94ebf9089700d397"
+ ],
+ "beir_cqadupstack_english_178471": [
+  "36e686c038b44069",
+  "47f592553d6c8f10"
+ ],
+ "beir_cqadupstack_english_178569": [
+  "5910409675d919ae",
+  "737e1a4697c72521",
+  "97cb23bdfb07df94",
+  "eb327a60b67f4172"
+ ],
+ "beir_cqadupstack_english_178577": [
+  "7db0bd94d581b12c"
+ ],
+ "beir_cqadupstack_english_178734": [
+  "3759b20f45224c09",
+  "59ae21a1364e40e4"
+ ],
+ "beir_cqadupstack_english_178767": [
+  "e54737b744dc11ca"
+ ],
+ "beir_cqadupstack_english_178956": [
+  "74c111b8062db7aa"
+ ],
+ "beir_cqadupstack_english_178984": [
+  "faf7561422fe772e"
+ ],
+ "beir_cqadupstack_english_178992": [
+  "ca7bc4c7598901c7"
+ ],
+ "beir_cqadupstack_english_17943": [
+  "3b15d8bd6af10cd7"
+ ],
+ "beir_cqadupstack_english_180171": [
+  "427b290c0948f2e8"
+ ],
+ "beir_cqadupstack_english_18022": [
+  "a7034b81198ba67a",
+  "b0d3216cc773ca3f",
+  "d2127d5d026cedf0",
+  "f92cd4c7c81989b7"
+ ],
+ "beir_cqadupstack_english_180287": [
+  "1a3ee2fdc5b0a8c6"
+ ],
+ "beir_cqadupstack_english_180338": [
+  "d96f0a53bf35459a",
+  "edd5c1b34a045cc6"
+ ],
+ "beir_cqadupstack_english_180365": [
+  "bac386492cc8f6a3"
+ ],
+ "beir_cqadupstack_english_180421": [
+  "b805678bc64cb759"
+ ],
+ "beir_cqadupstack_english_180422": [
+  "8370cacbeb0cee8d"
+ ],
+ "beir_cqadupstack_english_180542": [
+  "8f1f9e8a5ba7ff16"
+ ],
+ "beir_cqadupstack_english_180705": [
+  "130639a0678181ce",
+  "355c71e718ba8916",
+  "6c1fde4ee14b2b3f"
+ ],
+ "beir_cqadupstack_english_180785": [
+  "c31727dddc735cf1"
+ ],
+ "beir_cqadupstack_english_18085": [
+  "0e66faf21ba920cd",
+  "785f26df0769c737"
+ ],
+ "beir_cqadupstack_english_180929": [
+  "1614d49e77a478fa"
+ ],
+ "beir_cqadupstack_english_180991": [
+  "bd38ff227f28125f"
+ ],
+ "beir_cqadupstack_english_181097": [
+  "b9c2e3c9b5b248ec"
+ ],
+ "beir_cqadupstack_english_181269": [
+  "a9ef3a6ad0518133"
+ ],
+ "beir_cqadupstack_english_181372": [
+  "3706cb44984205f4"
+ ],
+ "beir_cqadupstack_english_181379": [
+  "2ef2e759c59219bb"
+ ],
+ "beir_cqadupstack_english_181501": [
+  "3ce1472f62eed402"
+ ],
+ "beir_cqadupstack_english_181642": [
+  "5b4ef7b1c61e8a29",
+  "7939b10a69786917",
+  "99f10647eb9fb3f3",
+  "e725b6c48a8bb3cb"
+ ],
+ "beir_cqadupstack_english_181684": [
+  "5a371d7499498daa"
+ ],
+ "beir_cqadupstack_english_181705": [
+  "87176732c52a7963"
+ ],
+ "beir_cqadupstack_english_181855": [
+  "5fd2d89e555db7b8"
+ ],
+ "beir_cqadupstack_english_181864": [
+  "7938146333d31b8c"
+ ],
+ "beir_cqadupstack_english_181923": [
+  "598b1a4487990be4",
+  "6b1421f26f8d964c"
+ ],
+ "beir_cqadupstack_english_181994": [
+  "af30ee81e83fd55a"
+ ],
+ "beir_cqadupstack_english_182052": [
+  "60afb98e6cba300f"
+ ],
+ "beir_cqadupstack_english_182189": [
+  "334f2e0ae9cc1a6a"
+ ],
+ "beir_cqadupstack_english_182203": [
+  "18ccd36a4e687597"
+ ],
+ "beir_cqadupstack_english_182304": [
+  "08d73dadb1090f0f",
+  "301b46b17bd4869b"
+ ],
+ "beir_cqadupstack_english_182328": [
+  "4545aecc88713b2e",
+  "61162dee57efcb45"
+ ],
+ "beir_cqadupstack_english_1824": [
+  "4b5f10372bb5e8f8"
+ ],
+ "beir_cqadupstack_english_182435": [
+  "8d0561ff25392ad7"
+ ],
+ "beir_cqadupstack_english_182562": [
+  "679c2bd6887fcc58"
+ ],
+ "beir_cqadupstack_english_182567": [
+  "caaa8d6fd51465ec",
+  "d31f5f3e5b1c5030",
+  "dc9b662d89b50c39"
+ ],
+ "beir_cqadupstack_english_184241": [
+  "12413c7752550349"
+ ],
+ "beir_cqadupstack_english_184518": [
+  "4dcc090f42051e27"
+ ],
+ "beir_cqadupstack_english_184740": [
+  "a3c524ecd32a93b8"
+ ],
+ "beir_cqadupstack_english_184788": [
+  "840c2c04cffe9481"
+ ],
+ "beir_cqadupstack_english_184947": [
+  "1151f66dd20370b6",
+  "2d9ef7e52dddbf1b"
+ ],
+ "beir_cqadupstack_english_185182": [
+  "30568fad822d39f5"
+ ],
+ "beir_cqadupstack_english_185218": [
+  "158147d2bbdf2793",
+  "302a9896d069853c",
+  "4d701627591d72f9",
+  "a854f1406d9c9f05",
+  "aba6887a5bf914b1"
+ ],
+ "beir_cqadupstack_english_185437": [
+  "0d3bf09e4c787d10"
+ ],
+ "beir_cqadupstack_english_18568": [
+  "521cf3f3823b8b14"
+ ],
+ "beir_cqadupstack_english_1858": [
+  "1224871d59a36a48",
+  "710779d23f88ef25",
+  "b8d9ed44ca4ceeaf"
+ ],
+ "beir_cqadupstack_english_185854": [
+  "642648ba908c6b12"
+ ],
+ "beir_cqadupstack_english_185998": [
+  "53557a8f9b2e7f28"
+ ],
+ "beir_cqadupstack_english_18602": [
+  "25f01b09ace24507",
+  "37e37a0fdf2f1602",
+  "44e5023e4dfb0dad"
+ ],
+ "beir_cqadupstack_english_18609": [
+  "4f372c2eaa40be11"
+ ],
+ "beir_cqadupstack_english_186153": [
+  "49d56edc2fb91b7f",
+  "a4a5e5554cc21789",
+  "c49a74efc8adc57b",
+  "f7ca8be8dce8b268"
+ ],
+ "beir_cqadupstack_english_186255": [
+  "c018293498edd739"
+ ],
+ "beir_cqadupstack_english_186262": [
+  "6052235960cf79b3",
+  "7f6568fd1a16f3e0"
+ ],
+ "beir_cqadupstack_english_186457": [
+  "014e4eede4c78ed1",
+  "0317d1ecc0247adf",
+  "03a34e1e797d0d87",
+  "078980d985e007e4",
+  "0a44ae73454e9969",
+  "165ddf06b6f8d017",
+  "1b72a6718cdc2b6f",
+  "29eac49d27451c7f",
+  "2c64e3c35bc5c16c",
+  "316845f2872e9363",
+  "364f7fe9f5bc09cd",
+  "392d627235d6b98e",
+  "3bf6ee0a56f70757",
+  "40a0f1a18554c7be",
+  "49b851c278b377d9",
+  "673b757df4813ba7",
+  "68dbe7742bb11ace",
+  "70fd9ea1d8436963",
+  "7841fee56de22de6",
+  "7c94d2b5740e5b74",
+  "82c1e4f3eb3976a8",
+  "8c6fa21b82478820",
+  "91a1aac87bb2fbfc",
+  "96d819c49b489360",
+  "9de851fde9351f68",
+  "9f0b899f629d2309",
+  "a2db96741c5c0fff",
+  "b6c1a021b865ab58",
+  "c212b6775c220076",
+  "c4cb250a1bcef5a1",
+  "c750f8ed49fa93e8",
+  "cb7b72a2a5c4bcbb",
+  "cba622edc0a85927",
+  "cd9ce8de9f1cacff",
+  "e449c8af16e3ea54",
+  "e47f524ad4b7a0db",
+  "e80b89cd6f7ae6b9",
+  "ed7eb20154f837ef"
+ ],
+ "beir_cqadupstack_english_186468": [
+  "5d39c147d0dadb5a"
+ ],
+ "beir_cqadupstack_english_186523": [
+  "66d89aecd8426f90"
+ ],
+ "beir_cqadupstack_english_186720": [
+  "33fd382e5ca0799f"
+ ],
+ "beir_cqadupstack_english_186805": [
+  "47e7a024d33c6002"
+ ],
+ "beir_cqadupstack_english_186970": [
+  "fd5541e7d8319650"
+ ],
+ "beir_cqadupstack_english_187037": [
+  "4126f6ee04f09f1e",
+  "977130b0c0d06ca5"
+ ],
+ "beir_cqadupstack_english_187161": [
+  "014c4cfa404db021",
+  "0b3897170933319b",
+  "108f148e8e073d1c",
+  "383aea00b922bee3",
+  "653950726fd17cbb",
+  "65ae50195d5adeb1",
+  "83787bedf6a722ab",
+  "a01b40535c28c291",
+  "a602a75e4ea60c51",
+  "bc39dcb8a9c140ba",
+  "bfbdda08d08d3962"
+ ],
+ "beir_cqadupstack_english_187284": [
+  "065299fb0a9a2cd1"
+ ],
+ "beir_cqadupstack_english_187329": [
+  "816b0aca0aa33e64"
+ ],
+ "beir_cqadupstack_english_18739": [
+  "05cdfc93e0cc1287",
+  "13de086363aafc73",
+  "1c0b35a63f01dfb0",
+  "1f923734ffd013f0",
+  "27048d0b8be03395",
+  "271b620cc79a86bd",
+  "2dbf7228cd8d195b",
+  "3dd4dae277c4f531",
+  "4332cf1b3276b690",
+  "53cda3058a7828c5",
+  "6e5d005b287c4169",
+  "6ff644ae552b1d29",
+  "742dbbde2fac15d1",
+  "7e1501690a8298ae",
+  "7ffb44b97058deb6",
+  "af4435f68e501a98",
+  "af8a80d48340836a",
+  "b8bb4556cd43e1a4",
+  "c28e200344e3e1c4",
+  "cac5b5ab35f1cfff",
+  "cb42bab65fc27cb4",
+  "de0a156aacdd8198",
+  "ea6bf67936cd2517"
+ ],
+ "beir_cqadupstack_english_187557": [
+  "8a4558a4c10ff822"
+ ],
+ "beir_cqadupstack_english_187725": [
+  "34f92bb5cbb5321b"
+ ],
+ "beir_cqadupstack_english_187789": [
+  "da5adc1e726ae8e2"
+ ],
+ "beir_cqadupstack_english_187988": [
+  "b96ba70a426c1fe7"
+ ],
+ "beir_cqadupstack_english_188076": [
+  "afa24663ae4cb587"
+ ],
+ "beir_cqadupstack_english_188082": [
+  "8ae6c1037e874da0"
+ ],
+ "beir_cqadupstack_english_18814": [
+  "a69c86d58e96f7f6"
+ ],
+ "beir_cqadupstack_english_188181": [
+  "4823c6553f862ef3"
+ ],
+ "beir_cqadupstack_english_188316": [
+  "15c6e79414e4e96e",
+  "b6970ee8e2fe0a0e"
+ ],
+ "beir_cqadupstack_english_188334": [
+  "15a6291291175563"
+ ],
+ "beir_cqadupstack_english_1884": [
+  "d98ae4af0232f609"
+ ],
+ "beir_cqadupstack_english_18863": [
+  "15498e235c04342a",
+  "428eee64df756459",
+  "447e49913b4c259d",
+  "74229641ff5f89ee",
+  "91ca535d5db9a805"
+ ],
+ "beir_cqadupstack_english_188632": [
+  "3e16726e1cb2ee47",
+  "8c4e425c840771fe",
+  "8f821b3c2f025bf8"
+ ],
+ "beir_cqadupstack_english_188668": [
+  "3d9eb1c58577c01b"
+ ],
+ "beir_cqadupstack_english_188731": [
+  "18c7597a5cbf4efa"
+ ],
+ "beir_cqadupstack_english_188839": [
+  "cc707dfa90d8e1c6"
+ ],
+ "beir_cqadupstack_english_188982": [
+  "acad3a6f69d84d31"
+ ],
+ "beir_cqadupstack_english_18929": [
+  "e5ce2784fda894f4"
+ ],
+ "beir_cqadupstack_english_189622": [
+  "4e3bea41f0e4dc78"
+ ],
+ "beir_cqadupstack_english_189671": [
+  "f878f75f6c1e7a09"
+ ],
+ "beir_cqadupstack_english_189751": [
+  "9c4fc896a6ef549d",
+  "aff03f90afc53883"
+ ],
+ "beir_cqadupstack_english_189798": [
+  "63ced7fc79ad5991"
+ ],
+ "beir_cqadupstack_english_189920": [
+  "9c3ac2d817a58e2b"
+ ],
+ "beir_cqadupstack_english_189936": [
+  "2936d9e002874738"
+ ],
+ "beir_cqadupstack_english_189981": [
+  "164f3f325bcbe9e9"
+ ],
+ "beir_cqadupstack_english_189996": [
+  "eee279c692e468ee"
+ ],
+ "beir_cqadupstack_english_19": [
+  "6b91b46ddb2980ba"
+ ],
+ "beir_cqadupstack_english_190009": [
+  "2908f0e624a5c36c",
+  "3a1e31c50b2936d3"
+ ],
+ "beir_cqadupstack_english_190038": [
+  "3b568177183e7d28"
+ ],
+ "beir_cqadupstack_english_190076": [
+  "d87ee42541912ac4"
+ ],
+ "beir_cqadupstack_english_190104": [
+  "c5733031f6c55318"
+ ],
+ "beir_cqadupstack_english_190218": [
+  "4a0b981c7bf0db00"
+ ],
+ "beir_cqadupstack_english_191724": [
+  "32089fa0e78d4fe0"
+ ],
+ "beir_cqadupstack_english_191792": [
+  "5e4ff53de065d4ac"
+ ],
+ "beir_cqadupstack_english_191928": [
+  "d056d5dc8465eff6"
+ ],
+ "beir_cqadupstack_english_19196": [
+  "e5d9f284f375f4e5"
+ ],
+ "beir_cqadupstack_english_192013": [
+  "cb00e93d192a35f9"
+ ],
+ "beir_cqadupstack_english_192051": [
+  "0efad1370b892b8e",
+  "10c5375dd1a15f4c",
+  "23b9d09f4d87f828",
+  "2bf53f10c1766e9b",
+  "2f88cac809e5e5d5",
+  "34603281c2c635d4",
+  "3a85285dec5068a4",
+  "3add70826758ce3d",
+  "3ca6d6236898eb77",
+  "3f22591e03736d32",
+  "449ec8f062cb5c4e",
+  "499890506e782fcf",
+  "5183a0bdbbd9ab0f",
+  "575f567c0d4d3198",
+  "57d84b60e227d3a4",
+  "586b2ffe9034488c",
+  "5ce7dcb75ced1ead",
+  "6214bbd973e379a0",
+  "63aae7ab46c790ac",
+  "646e608c119c07c0",
+  "6d87cc6ceebac34c",
+  "714122aae114d670",
+  "7278015e54bd5421",
+  "7341a07266d29b8c",
+  "7362d0a0d4906485",
+  "77aee1fba4458335",
+  "8e6bfb7409be22fc",
+  "9053c8d1f68f5466",
+  "90ffdbf921ceb3e3",
+  "97f8f7eb7994ccdb",
+  "98812d8b475e83a5",
+  "9a8a76c0018d4a7a",
+  "9b3f129a7e695f20",
+  "b98a5cf117f173b3",
+  "c09e804f0eaf0687",
+  "c28befbb519134fa",
+  "cc75aff16f34adb8",
+  "d1d2fe954d91f7c7",
+  "d6fac75bd18191d6",
+  "e6a37949e000ba4f",
+  "e882d83ce3aeb72c",
+  "ebfda924736ee962",
+  "ed9edcbfbe47ab56",
+  "ee0b5de87cfcc32c",
+  "f4c9b95239f4a43c",
+  "f86a0e7c46c5f3e1",
+  "f959f534e15a7eb9"
+ ],
+ "beir_cqadupstack_english_192100": [
+  "624c415ab571e3b6"
+ ],
+ "beir_cqadupstack_english_192334": [
+  "a25f8913979d772e",
+  "e90350675c550ed0"
+ ],
+ "beir_cqadupstack_english_192357": [
+  "c7036993dadbb9da"
+ ],
+ "beir_cqadupstack_english_192365": [
+  "c1f78b53d9b69c3f"
+ ],
+ "beir_cqadupstack_english_1925": [
+  "9ba70ddb39daee65"
+ ],
+ "beir_cqadupstack_english_192516": [
+  "ebab3cc23e969abd"
+ ],
+ "beir_cqadupstack_english_192576": [
+  "4265f947bb5b34c3",
+  "8bacb245ea8b4ee4"
+ ],
+ "beir_cqadupstack_english_192727": [
+  "05f71be62f8c546c"
+ ],
+ "beir_cqadupstack_english_192879": [
+  "129e7d6b766d348a"
+ ],
+ "beir_cqadupstack_english_193035": [
+  "fa1a4f4af73ab443"
+ ],
+ "beir_cqadupstack_english_193077": [
+  "0a6e12e7edc09e34",
+  "a79547c8dee2f4cd"
+ ],
+ "beir_cqadupstack_english_193152": [
+  "2249bf234ef03a1f"
+ ],
+ "beir_cqadupstack_english_193255": [
+  "507df2e2a75faf98"
+ ],
+ "beir_cqadupstack_english_193308": [
+  "0349b4bd949d5cc9",
+  "7e970ed9f48bc2fe",
+  "ce19b70c0815f4ef",
+  "e03993a0c0c8e058",
+  "f8bf5eaa169dd960"
+ ],
+ "beir_cqadupstack_english_193426": [
+  "05cecd99243414e8",
+  "89b7541d41ee0436"
+ ],
+ "beir_cqadupstack_english_193565": [
+  "35805549613a7aaa",
+  "f0bc29190a1acee5"
+ ],
+ "beir_cqadupstack_english_193642": [
+  "3c67b58b641b8a10"
+ ],
+ "beir_cqadupstack_english_193654": [
+  "390245dd26a21eee",
+  "8354fbe8c33b9cbe",
+  "e406ee0bac3490d8"
+ ],
+ "beir_cqadupstack_english_193749": [
+  "51ac740ffc7ec671"
+ ],
+ "beir_cqadupstack_english_193820": [
+  "5306c820ea19b029"
+ ],
+ "beir_cqadupstack_english_193827": [
+  "052bc0aac74613e7",
+  "bc31a667889b4194",
+  "d932b55a47b73614",
+  "da770bdb7d337cbb"
+ ],
+ "beir_cqadupstack_english_19399": [
+  "0296826165466b87",
+  "1933b1305168323e",
+  "1d7d9883f6cee749",
+  "222e107dfb1ee726",
+  "292a8f3f926437a4",
+  "2f89b5dd4e0422cc",
+  "34162aea62848fc4",
+  "39e89140f942d36d",
+  "3ca1b38898155f1e",
+  "45d9568566df0e6c",
+  "481bd7613a802153",
+  "48952b14c6818bf1",
+  "49487affa833695e",
+  "4b93b8e1734cafb3",
+  "5061ad9b0bdf9963",
+  "516e718729104657",
+  "546bbebc59b387d7",
+  "55bf0b0a379252ac",
+  "5915a753d15e7001",
+  "5b617f0655ae9138",
+  "60c1cfe1c56caeff",
+  "63040bd822d8b825",
+  "6559636fdcb272dc",
+  "751bf5fa3a79ed3e",
+  "79abe00540621b7c",
+  "7a4a68060add6037",
+  "7fb355bc827776cc",
+  "82a0f15d12ebb926",
+  "8cdeca472430c1cc",
+  "8de4177640e739f2",
+  "8fd2470b5c5b2dfb",
+  "97751217a4ad20ba",
+  "990fc703c6133fa9",
+  "9915bdf6ca406b95",
+  "a08da105906e3655",
+  "a535f3279ab30846",
+  "a5e3237c0851c71b",
+  "a75a1731c3b81304",
+  "a76ec076eda813f6",
+  "ab1de7372cf1e697",
+  "ac5975f82845db68",
+  "ae5535cc5d04924b",
+  "aee4f500efd8d609",
+  "b0c293ee3caaf96d",
+  "b326268804f48a56",
+  "b9cb74c4ee4ed92d",
+  "bc1ddfd8e9546c60",
+  "bffa44fb894523f8",
+  "c53aa852d8e8f6fa",
+  "c7c26e6800448585",
+  "c7ffa7efbe86ca1b",
+  "d1f9013dd618797f",
+  "da08711bd4f9418b",
+  "dad1c00e3f49a4a2",
+  "db21e5f0ac71d99e",
+  "dbf5b12dd3cf58a9",
+  "e9a2d3c9f03479d2",
+  "ec7585d8a2e9545d",
+  "f0eb58f14515d94d",
+  "f4659ce00f82e66a",
+  "f75304dae2cd4bd8",
+  "f766f59947f95967",
+  "f7b58d157881c578",
+  "fb56465e15588f38",
+  "fe5668ee370d36e8"
+ ],
+ "beir_cqadupstack_english_194063": [
+  "bd3eed14a7fc93c1"
+ ],
+ "beir_cqadupstack_english_19407": [
+  "85ed616c0704bef3"
+ ],
+ "beir_cqadupstack_english_194101": [
+  "73dfa0cd80958492"
+ ],
+ "beir_cqadupstack_english_19418": [
+  "c4d4acd3efd1d0c3"
+ ],
+ "beir_cqadupstack_english_194220": [
+  "06c725aa31bcd5df"
+ ],
+ "beir_cqadupstack_english_194244": [
+  "f3535a0e09cd18cc"
+ ],
+ "beir_cqadupstack_english_19427": [
+  "eeef1669a071872a"
+ ],
+ "beir_cqadupstack_english_194317": [
+  "0849ed124aaa8e67",
+  "0fbdc822a4d73abd",
+  "330cb2d3f5bf5bf3",
+  "36f52ed010bdbfdb",
+  "4301cda0487fc4fb",
+  "49acb68bbcae6532",
+  "501f1175bbdfa8b1",
+  "65663ac0ff90bdd6",
+  "736c8b2e53a6761e",
+  "79ef35bba8ec019d",
+  "822da61ca04f5ef1",
+  "8536a219c0f9404d",
+  "a8298d0ac6b0d150",
+  "e3ad0e38bdc7bc08"
+ ],
+ "beir_cqadupstack_english_194394": [
+  "0993e39b06a28b34",
+  "27ec034760ddd74f",
+  "35d48db10cf68096"
+ ],
+ "beir_cqadupstack_english_194462": [
+  "689d9db4af0440a7"
+ ],
+ "beir_cqadupstack_english_19450": [
+  "7a652febda390c51"
+ ],
+ "beir_cqadupstack_english_194605": [
+  "dda76b42e7588f54"
+ ],
+ "beir_cqadupstack_english_19471": [
+  "f01a5d5a8162e122"
+ ],
+ "beir_cqadupstack_english_194838": [
+  "64052554b7a17ee5"
+ ],
+ "beir_cqadupstack_english_194852": [
+  "234963dbad19c864"
+ ],
+ "beir_cqadupstack_english_194906": [
+  "8834072f86e13c3e"
+ ],
+ "beir_cqadupstack_english_194983": [
+  "ccff27b6baf55c0f"
+ ],
+ "beir_cqadupstack_english_195087": [
+  "d375c4635963188b"
+ ],
+ "beir_cqadupstack_english_195099": [
+  "ce250c9ceae0a4b9"
+ ],
+ "beir_cqadupstack_english_19533": [
+  "ebcbebeba9ea970e"
+ ],
+ "beir_cqadupstack_english_195337": [
+  "4f3ec6f6421f4b85",
+  "59051dc5bf0f2fb1"
+ ],
+ "beir_cqadupstack_english_1954": [
+  "e09df00f9ab57580"
+ ],
+ "beir_cqadupstack_english_195514": [
+  "c6aa992105d765fc"
+ ],
+ "beir_cqadupstack_english_195576": [
+  "8b1f266fc8070261"
+ ],
+ "beir_cqadupstack_english_195644": [
+  "213496665d263f3f"
+ ],
+ "beir_cqadupstack_english_195647": [
+  "a7a28cf3072d4534"
+ ],
+ "beir_cqadupstack_english_195792": [
+  "2220c31d676dbb46"
+ ],
+ "beir_cqadupstack_english_195955": [
+  "c040eb8ab80dfe22"
+ ],
+ "beir_cqadupstack_english_196025": [
+  "c8b69ef921e2450c"
+ ],
+ "beir_cqadupstack_english_196031": [
+  "0c550325d3671f8e",
+  "6516d4decb6befd3",
+  "9fb8047815522ef7"
+ ],
+ "beir_cqadupstack_english_1975": [
+  "16e76fa898a7fc24"
+ ],
+ "beir_cqadupstack_english_19772": [
+  "4438e62aef263b43",
+  "54a70c80307231c8"
+ ],
+ "beir_cqadupstack_english_19779": [
+  "cd2626b4383fd59a"
+ ],
+ "beir_cqadupstack_english_19790": [
+  "0673811c3b1227b5"
+ ],
+ "beir_cqadupstack_english_1990": [
+  "52dad853fb9c629f"
+ ],
+ "beir_cqadupstack_english_19967": [
+  "b3ba2c66f54b7da3"
+ ],
+ "beir_cqadupstack_english_20061": [
+  "67a2a24a5e643d31"
+ ],
+ "beir_cqadupstack_english_20097": [
+  "4eade929ed289e47"
+ ],
+ "beir_cqadupstack_english_20129": [
+  "229b8f323b5b727c"
+ ],
+ "beir_cqadupstack_english_20262": [
+  "008857784c982dd3"
+ ],
+ "beir_cqadupstack_english_20424": [
+  "4c1ea1f57552080e",
+  "4fa1b89abf9ae36c",
+  "b98448de896eb0a8"
+ ],
+ "beir_cqadupstack_english_20492": [
+  "ddf54cbcf05c81aa"
+ ],
+ "beir_cqadupstack_english_20708": [
+  "007debeef7be9519"
+ ],
+ "beir_cqadupstack_english_20908": [
+  "c53f64a9750e501f"
+ ],
+ "beir_cqadupstack_english_21032": [
+  "bdecdf0b0e371e39"
+ ],
+ "beir_cqadupstack_english_21078": [
+  "96bfa9427145749d"
+ ],
+ "beir_cqadupstack_english_21115": [
+  "53fc8fc084d1ce1c"
+ ],
+ "beir_cqadupstack_english_21153": [
+  "13a7eb68183e9b9e",
+  "3850511abbe73d57"
+ ],
+ "beir_cqadupstack_english_21198": [
+  "dfa104735d2c7e38"
+ ],
+ "beir_cqadupstack_english_21295": [
+  "2ecbf0f9546b4a89"
+ ],
+ "beir_cqadupstack_english_21336": [
+  "5d5f91179f128bf0"
+ ],
+ "beir_cqadupstack_english_21406": [
+  "76222713911349e4",
+  "b982b2efc292e00a"
+ ],
+ "beir_cqadupstack_english_21408": [
+  "01c727afff97c4e5",
+  "0b617f0b28e881b0",
+  "0c95535b964e6981",
+  "125fbc3922ff63f8",
+  "2834fa2f4cc58ba3",
+  "2e12fa3942c57ef1",
+  "4ab6ade4a7c49fa6",
+  "4f77185da9b2825d",
+  "50fbfa9e9a441a7a",
+  "5700a6894812777d",
+  "5bee973677342db2",
+  "5e623590e0736855",
+  "6ca7faffcb3d599d",
+  "6edc2f0fd7f182ef",
+  "7195076723e26d2b",
+  "72bd441b2e046cba",
+  "7d39bc8c4ece503f",
+  "96145ffe1719417f",
+  "a13deeed31f31946",
+  "aa27b55a45c1f02e",
+  "cebae542b0b51d16",
+  "d052c167d5790169",
+  "d0aee5865a6763ba",
+  "d0f0e472b2b8a87a",
+  "dc8e5f2f9284fdb7",
+  "e9066eb4c3ea507c",
+  "f920ea2e1c49aca5"
+ ],
+ "beir_cqadupstack_english_21556": [
+  "7659d6ba54a66cf9"
+ ],
+ "beir_cqadupstack_english_21601": [
+  "e3f4c9c15f383c9c"
+ ],
+ "beir_cqadupstack_english_21612": [
+  "144bed9c9d356dac",
+  "97bfd15a59a4225e",
+  "a12bc5add15ac030"
+ ],
+ "beir_cqadupstack_english_21616": [
+  "6fd1138df45a34b7",
+  "7c99070ee3582451"
+ ],
+ "beir_cqadupstack_english_21685": [
+  "e21a7e7f25507856"
+ ],
+ "beir_cqadupstack_english_21706": [
+  "0f6c9b00bf918f0f"
+ ],
+ "beir_cqadupstack_english_2178": [
+  "a1c12af615fd7ea4"
+ ],
+ "beir_cqadupstack_english_21935": [
+  "f91d40727ab233ab"
+ ],
+ "beir_cqadupstack_english_22194": [
+  "137462476d7fd62a",
+  "554d898974414536",
+  "c00692ba751d0f29"
+ ],
+ "beir_cqadupstack_english_2232": [
+  "b12a277f878d6a56"
+ ],
+ "beir_cqadupstack_english_22357": [
+  "47de95c4b2c14ec1"
+ ],
+ "beir_cqadupstack_english_22446": [
+  "1e72c6edf30e0b59",
+  "865e13793c318efe"
+ ],
+ "beir_cqadupstack_english_22603": [
+  "54840eae8ff244a2",
+  "57312280593bef99",
+  "7acb697948ca83e2",
+  "933469d57d3aaf53",
+  "b5b638bcb011c82c"
+ ],
+ "beir_cqadupstack_english_22650": [
+  "9f8d664dbd456124"
+ ],
+ "beir_cqadupstack_english_2288": [
+  "74d7f43e6c09cc09",
+  "f17d91ad29ad0758"
+ ],
+ "beir_cqadupstack_english_2293": [
+  "1940e4279ea04d72",
+  "5cd66e5501dc624b",
+  "78c6c1b355d566ff"
+ ],
+ "beir_cqadupstack_english_22955": [
+  "4e47757ea8d1a60c",
+  "5be2d12df897f070",
+  "64b720b450d83fdf",
+  "776468a68b8154b1",
+  "788eb5b92990a9a3",
+  "df3b4798811d6538",
+  "e74b40d9e7a4a3c9",
+  "fdd5f2128b689f9b"
+ ],
+ "beir_cqadupstack_english_22984": [
+  "199755044ffcda65",
+  "2dea3137bf4d5b56",
+  "4b74dc3827cb4527"
+ ],
+ "beir_cqadupstack_english_23482": [
+  "88b11fd365a8ca69"
+ ],
+ "beir_cqadupstack_english_23509": [
+  "00f1776ad8682eec",
+  "01efdab630b39661",
+  "30ba0348f1d1abb1",
+  "4801d0272744589e",
+  "4dd36bfd901f552b",
+  "a98388a8087f4b55",
+  "acd2b30fba866c00"
+ ],
+ "beir_cqadupstack_english_23648": [
+  "022964f67700b22c"
+ ],
+ "beir_cqadupstack_english_23690": [
+  "32c6343c8036fdd2",
+  "8b11eadf7b64e703"
+ ],
+ "beir_cqadupstack_english_23824": [
+  "82d601fd9590eab3"
+ ],
+ "beir_cqadupstack_english_23936": [
+  "9bf301e65572c9a1"
+ ],
+ "beir_cqadupstack_english_23970": [
+  "0788020e7422ac58",
+  "3b2d90dcc0db048b"
+ ],
+ "beir_cqadupstack_english_2412": [
+  "df17783126b95959"
+ ],
+ "beir_cqadupstack_english_24124": [
+  "7129c4047fd051b7"
+ ],
+ "beir_cqadupstack_english_2423": [
+  "15a014771eb7dde9",
+  "be67f7760c1e9f1b",
+  "e287a645ac8663ae"
+ ],
+ "beir_cqadupstack_english_2426": [
+  "091386bc74a7d9aa",
+  "178e743bb1b96b45"
+ ],
+ "beir_cqadupstack_english_24413": [
+  "6d5b5bd99b6759b6",
+  "f4a60a6ebb36e05d"
+ ],
+ "beir_cqadupstack_english_24441": [
+  "900435919ff4de18"
+ ],
+ "beir_cqadupstack_english_24471": [
+  "19a0a0f50821630a"
+ ],
+ "beir_cqadupstack_english_24525": [
+  "9a9a53115dbd6f71",
+  "c4cf7f5c26b89807"
+ ],
+ "beir_cqadupstack_english_24629": [
+  "0649a9e220a83693",
+  "b41fe2e432ee36a1",
+  "ddc82c465697d115"
+ ],
+ "beir_cqadupstack_english_2466": [
+  "5917d8b92c3af25d",
+  "a5fcee0b17f51a0e",
+  "a6dbd24152ef6423",
+  "e5f487aea6e8d72f"
+ ],
+ "beir_cqadupstack_english_2470": [
+  "07554164afbcec6f"
+ ],
+ "beir_cqadupstack_english_24768": [
+  "d7ee4d38797ff821"
+ ],
+ "beir_cqadupstack_english_24933": [
+  "866f5618fbcf086b"
+ ],
+ "beir_cqadupstack_english_2502": [
+  "b04c26a5d097d5ce",
+  "fa7b48267e3673f2"
+ ],
+ "beir_cqadupstack_english_25116": [
+  "454b425f1537bfb5",
+  "f3e493d18a67b265"
+ ],
+ "beir_cqadupstack_english_25147": [
+  "2fd45cef386449d2",
+  "5408b75b0001fc20"
+ ],
+ "beir_cqadupstack_english_25182": [
+  "96b8b72fa02b989a"
+ ],
+ "beir_cqadupstack_english_25230": [
+  "3433decb21000de3",
+  "4baacda6fabc4d55",
+  "6b03b46e100d05f1",
+  "e8058f22809a322c",
+  "f918c75663c54168"
+ ],
+ "beir_cqadupstack_english_25232": [
+  "7075ccd1b0a40514"
+ ],
+ "beir_cqadupstack_english_25259": [
+  "bda1a60b62ff2e4e",
+  "cdc44936def1516a"
+ ],
+ "beir_cqadupstack_english_25380": [
+  "083ad6ffa103c7ce",
+  "0c650d87951e039e",
+  "0e4754e830f636cd",
+  "b2fd4f10464fd274",
+  "ccc7e8f544dc9934",
+  "d56dccc61727fa77"
+ ],
+ "beir_cqadupstack_english_25400": [
+  "42f4d6b36df1598d",
+  "7cb41c3f51eb899c",
+  "c5f27d65dd5255dd"
+ ],
+ "beir_cqadupstack_english_25464": [
+  "6c923ad8791927a1"
+ ],
+ "beir_cqadupstack_english_2554": [
+  "512a6ad722bd7be5"
+ ],
+ "beir_cqadupstack_english_25617": [
+  "080b4f2c00e774c1"
+ ],
+ "beir_cqadupstack_english_25724": [
+  "feff0ade3aa6c462"
+ ],
+ "beir_cqadupstack_english_258": [
+  "09b029fb75d61c3d",
+  "19a7c566131a2d0b",
+  "d7c9c8ddc8a7b774"
+ ],
+ "beir_cqadupstack_english_25873": [
+  "babe8591b10372d0",
+  "fcef693a8e14b263"
+ ],
+ "beir_cqadupstack_english_25887": [
+  "6e34f137d775d383"
+ ],
+ "beir_cqadupstack_english_25956": [
+  "d885febe1af79e02"
+ ],
+ "beir_cqadupstack_english_26082": [
+  "049fdd55bb79f7a8"
+ ],
+ "beir_cqadupstack_english_26142": [
+  "e3a7524e2880881b"
+ ],
+ "beir_cqadupstack_english_26158": [
+  "05e30ef6669b2fc7"
+ ],
+ "beir_cqadupstack_english_26246": [
+  "8d924630675ef1e7"
+ ],
+ "beir_cqadupstack_english_26262": [
+  "385695e0d34f05bb",
+  "6958ada63fd18a57",
+  "75c7454925551329"
+ ],
+ "beir_cqadupstack_english_263": [
+  "af48f07b4a9ae17a"
+ ],
+ "beir_cqadupstack_english_2631": [
+  "09d4aa831cd11bf6",
+  "1e8a026daba63fd7",
+  "5b69d7a23a2ff63c",
+  "62c1e25b03ef501a"
+ ],
+ "beir_cqadupstack_english_26327": [
+  "8074c979e348b555"
+ ],
+ "beir_cqadupstack_english_2635": [
+  "f63b6c7117124078"
+ ],
+ "beir_cqadupstack_english_26385": [
+  "98551b923a2ea48f"
+ ],
+ "beir_cqadupstack_english_26451": [
+  "23d53c88643b317a"
+ ],
+ "beir_cqadupstack_english_26491": [
+  "1a8412692ce2c58f"
+ ],
+ "beir_cqadupstack_english_26498": [
+  "ec2e6f2b15e2d806"
+ ],
+ "beir_cqadupstack_english_26611": [
+  "1777bbe69f905fd2",
+  "1b788487f10a4e69",
+  "40aa3e997e3d2655",
+  "66bd66f8b6d0c9da",
+  "73eb9ad57a17ea4c",
+  "99281e5697176ce0",
+  "a8238e6faab6d4c8",
+  "abf0ec69ebe3a66e",
+  "ed35fdc9641ec16c",
+  "f05de8df4f44630c",
+  "f0bf7b30a136b2f8"
+ ],
+ "beir_cqadupstack_english_26621": [
+  "dedcb6a179de740c"
+ ],
+ "beir_cqadupstack_english_270": [
+  "2d97b72073da5071",
+  "486183c5ae68f65c",
+  "532521bc63e33a61"
+ ],
+ "beir_cqadupstack_english_27021": [
+  "b743fc628bf961fd"
+ ],
+ "beir_cqadupstack_english_27113": [
+  "f6f589592d4ed86d"
+ ],
+ "beir_cqadupstack_english_27270": [
+  "0e145e83fed7851f"
+ ],
+ "beir_cqadupstack_english_2743": [
+  "d5def359b8bbcd68"
+ ],
+ "beir_cqadupstack_english_27563": [
+  "e6d022afa1fbd707"
+ ],
+ "beir_cqadupstack_english_27640": [
+  "7a33ccafb3b9c41d"
+ ],
+ "beir_cqadupstack_english_27674": [
+  "12e1c82ee2b8c1c1"
+ ],
+ "beir_cqadupstack_english_27753": [
+  "a5382238f23e6f7e"
+ ],
+ "beir_cqadupstack_english_27918": [
+  "6ea3865c7cba89f7"
+ ],
+ "beir_cqadupstack_english_27947": [
+  "16a07b2511d73f8b",
+  "7a1c9de54a4499a3",
+  "e4df6be1f97d4c73"
+ ],
+ "beir_cqadupstack_english_28088": [
+  "0f8ea3d48adf1704"
+ ],
+ "beir_cqadupstack_english_28171": [
+  "29a1369be45d1a8a",
+  "340e042a2b24de24"
+ ],
+ "beir_cqadupstack_english_28177": [
+  "0cc2f43a24c4b09f"
+ ],
+ "beir_cqadupstack_english_28309": [
+  "423a87ee33fbe921"
+ ],
+ "beir_cqadupstack_english_2836": [
+  "6bb480fc5f60201f"
+ ],
+ "beir_cqadupstack_english_286": [
+  "92a9ab654956dfa8"
+ ],
+ "beir_cqadupstack_english_28601": [
+  "8daf21effdf6876e"
+ ],
+ "beir_cqadupstack_english_28661": [
+  "d381081ec482cbfd"
+ ],
+ "beir_cqadupstack_english_28662": [
+  "1013c07877482d43",
+  "68a123d7666d9d51",
+  "834e7db2f85007da",
+  "b089304fba1e44b8",
+  "d6de65b9beb16262",
+  "de5b3187c8bb961a"
+ ],
+ "beir_cqadupstack_english_28671": [
+  "e6b40e9ecd750917"
+ ],
+ "beir_cqadupstack_english_28729": [
+  "d8f145f2a2ab2907"
+ ],
+ "beir_cqadupstack_english_28824": [
+  "7b1001dac0e2a471"
+ ],
+ "beir_cqadupstack_english_28866": [
+  "10cb31a49452d0d5"
+ ],
+ "beir_cqadupstack_english_2903": [
+  "13505773612e83e9",
+  "34d58a4ee9dca081",
+  "55e98cb3095a8a0b",
+  "56ff2f6c7b45ae00",
+  "5f330bb6366a989a",
+  "687deff2426e0257",
+  "835b86ca2de25cc0",
+  "95feb511d84849d4",
+  "9efcdc4a7d5a3205",
+  "b86f91f184f974c5",
+  "f061181b98dda376"
+ ],
+ "beir_cqadupstack_english_29409": [
+  "12e94c3eb3ff4496",
+  "b4eed5345ac6d954"
+ ],
+ "beir_cqadupstack_english_29472": [
+  "bc24537f03a21f16"
+ ],
+ "beir_cqadupstack_english_29475": [
+  "d6e991fc456344c0"
+ ],
+ "beir_cqadupstack_english_29559": [
+  "685ae1a840a0bb40"
+ ],
+ "beir_cqadupstack_english_29593": [
+  "6d3ed06c08103ed6"
+ ],
+ "beir_cqadupstack_english_29805": [
+  "b8fa5385857c8aae"
+ ],
+ "beir_cqadupstack_english_30011": [
+  "66d83b5225248af5"
+ ],
+ "beir_cqadupstack_english_30321": [
+  "d5147a512299dd51"
+ ],
+ "beir_cqadupstack_english_30336": [
+  "05f47f38d0b58131",
+  "07965a7e21ba1573",
+  "07c68dcbbf73ed98",
+  "093b593bf632000f",
+  "0dd040c35586f840",
+  "10fab286450bad30",
+  "14ea4ec1cc6ac1ae",
+  "17598546abac70d8",
+  "1777a3efee870253",
+  "17844855d245845f",
+  "2140508bbb4b41ff",
+  "25aab04594d93f73",
+  "2ca48862ea9a3e86",
+  "2fb8bff179330df7",
+  "30460a0ae8d9cd1a",
+  "39ce12153016f1a2",
+  "3a1ae88fa031ab02",
+  "4130c06edd1c4949",
+  "431305e5c9f71fcf",
+  "475ee653090420a1",
+  "490842a4331986cd",
+  "4f38088974725101",
+  "5263dcd71194c6ac",
+  "57186629121e4db1",
+  "5762bf5b314133ea",
+  "632e225cc5fd3665",
+  "68483d428c708eac",
+  "6c373064b41ee808",
+  "6c4df5cfdd98388c",
+  "6f89c00d66009f6a",
+  "72bbcbbbd4f6d1ed",
+  "76179a4776826a44",
+  "7b86b9b8b57ea71d",
+  "809d3f51a18af0fe",
+  "83d5cab31779ce86",
+  "8551b570124c0e8d",
+  "87972b1dab219802",
+  "88b182ae58e8289a",
+  "8b3c708315b2760a",
+  "8e06bab95bdf5718",
+  "8e4cc5d3d28cb130",
+  "90d190373202314c",
+  "92420d362b666b3b",
+  "990b4ee4db97ab1f",
+  "9e16b6f183f42039",
+  "a14bd1c96b6cc658",
+  "a20e5f05740df640",
+  "a5d0af3de62b6c8f",
+  "a81d033e296f5fe0",
+  "a8d5013b001249cf",
+  "ae68b466c163022b",
+  "af784d7ea9f66a71",
+  "b00a1e56b5ac4211",
+  "b57220c09d7c9468",
+  "b73bc8b2ba26fa1f",
+  "ba21bea53f4ac560",
+  "bc1f55692b526928",
+  "bfde8689e293d708",
+  "c0c7e82ffafded38",
+  "c1093815160f3857",
+  "c141a39f569d95fe",
+  "c22f9ef29435940a",
+  "c23dafe9d6058f8d",
+  "c696c95b7e41f424",
+  "c97b04fb885e40c3",
+  "ca3e5d61e1dd1f3d",
+  "ccdcad8c91080357",
+  "cec3299ebd190865",
+  "d08ee98b73b840c6",
+  "d4a5828d304eac2b",
+  "d7ea01715440ef22",
+  "e14d961fb3ef099a",
+  "e3324b25c61c8db9",
+  "e6a3c30050600cab",
+  "e9c9616ace546fbf",
+  "f3a940c0c9f014c8",
+  "f8125a3389628543",
+  "fb013bb63ff0ced0",
+  "fbcefc5a1cbe58f1"
+ ],
+ "beir_cqadupstack_english_30385": [
+  "0cad2dc38b7c49fb",
+  "300607fbdc16aa9c",
+  "3d073e338cc6c09d",
+  "45539242a644d4b3",
+  "49978dea37503c1d",
+  "58f5b320a6761a96",
+  "62706753c891faa0",
+  "69a3adcf45d3a9a4",
+  "7d0f78f176e97de5",
+  "8b122b0e7521ce9d",
+  "b0971de7038f0026",
+  "d4eccaae9d197f97",
+  "e03121f7e3e7de6e",
+  "f1c770c3bfe647f3"
+ ],
+ "beir_cqadupstack_english_30422": [
+  "16e8224e917ed72a",
+  "b012c6c53e87c419"
+ ],
+ "beir_cqadupstack_english_30482": [
+  "46a35b8663a003b0"
+ ],
+ "beir_cqadupstack_english_30608": [
+  "943a478b12a639af"
+ ],
+ "beir_cqadupstack_english_30800": [
+  "245e8204a5194e63",
+  "d3ae3a7c669ff44f"
+ ],
+ "beir_cqadupstack_english_31033": [
+  "4a673bd013949f50",
+  "9bb063bc699848e8"
+ ],
+ "beir_cqadupstack_english_31060": [
+  "23a29bc3a909b94a",
+  "41b4a95133d8277b"
+ ],
+ "beir_cqadupstack_english_31142": [
+  "b2da19b0b12c308e"
+ ],
+ "beir_cqadupstack_english_31184": [
+  "2877dbb45ad98349",
+  "b39a5a4381379069"
+ ],
+ "beir_cqadupstack_english_3123": [
+  "8e89a8508e9dd8c4"
+ ],
+ "beir_cqadupstack_english_3139": [
+  "567555fc1fb3a0a4",
+  "6d07f8222d40846c",
+  "cc1537bcfda404f6"
+ ],
+ "beir_cqadupstack_english_31391": [
+  "87e735b102504fac"
+ ],
+ "beir_cqadupstack_english_315": [
+  "5615f958880d1221",
+  "8a05b94e87918d6c",
+  "c942f9a091be5fbb",
+  "f4cecd6c0f973251"
+ ],
+ "beir_cqadupstack_english_31566": [
+  "eb227af5ce2e5f41"
+ ],
+ "beir_cqadupstack_english_31644": [
+  "9cb760707d4b8253"
+ ],
+ "beir_cqadupstack_english_31918": [
+  "711fc48972a73bda"
+ ],
+ "beir_cqadupstack_english_32058": [
+  "6d810610d890c13b"
+ ],
+ "beir_cqadupstack_english_32060": [
+  "c6764602d1faa7b6"
+ ],
+ "beir_cqadupstack_english_32123": [
+  "7d553e00ef9a8bb6",
+  "ba1df4f77012af51"
+ ],
+ "beir_cqadupstack_english_32291": [
+  "04444134c147525a"
+ ],
+ "beir_cqadupstack_english_3230": [
+  "4af907e836f6a541",
+  "9b8129cd8c603524"
+ ],
+ "beir_cqadupstack_english_32311": [
+  "285800ce696af1db",
+  "386445aef057fd86"
+ ],
+ "beir_cqadupstack_english_3232": [
+  "c4586d88cffb1179"
+ ],
+ "beir_cqadupstack_english_32390": [
+  "77efa3c0ffbfc94e"
+ ],
+ "beir_cqadupstack_english_32438": [
+  "70023577907d3c49"
+ ],
+ "beir_cqadupstack_english_3259": [
+  "0ff4631b86739480"
+ ],
+ "beir_cqadupstack_english_32716": [
+  "c93c47cb0fa0a113"
+ ],
+ "beir_cqadupstack_english_32838": [
+  "fb6d345e01534300"
+ ],
+ "beir_cqadupstack_english_32976": [
+  "03d70b1a0dbf04fe"
+ ],
+ "beir_cqadupstack_english_33036": [
+  "193f8a2d6c510217",
+  "21f613dc4894f6b6",
+  "3c3914259de9a969",
+  "59ea3cb07590348e",
+  "747ceb5e96255dab",
+  "74bba1d71bb78f33",
+  "c5ec245aec2a9c28",
+  "d85233468b26f8cf",
+  "eed03e0bc6baada7"
+ ],
+ "beir_cqadupstack_english_33083": [
+  "2c03841a4acfe423"
+ ],
+ "beir_cqadupstack_english_33114": [
+  "045fa6a937af2bf4",
+  "18dde892a801451a",
+  "47a842cd00559dff",
+  "bf219b5973467c24",
+  "eb2c85cd7890a2e8"
+ ],
+ "beir_cqadupstack_english_33284": [
+  "327f9c5ccd3758b4"
+ ],
+ "beir_cqadupstack_english_3331": [
+  "64f34b115e7406ba"
+ ],
+ "beir_cqadupstack_english_33652": [
+  "e05921ef4e773dfa"
+ ],
+ "beir_cqadupstack_english_33786": [
+  "8bf48a646c80474c"
+ ],
+ "beir_cqadupstack_english_33866": [
+  "1f5446a31451fa79"
+ ],
+ "beir_cqadupstack_english_33910": [
+  "ee5df2e4f31b9d27"
+ ],
+ "beir_cqadupstack_english_33914": [
+  "1488bab2aea38f0c",
+  "ec6e2b87e32ed312"
+ ],
+ "beir_cqadupstack_english_33960": [
+  "589000f6a8448bdf"
+ ],
+ "beir_cqadupstack_english_33988": [
+  "4384c69722cf491e"
+ ],
+ "beir_cqadupstack_english_3402": [
+  "270544fc893580a0",
+  "6a2df61e1984e8e2"
+ ],
+ "beir_cqadupstack_english_34037": [
+  "27710f2e0264a584",
+  "3be3e673af0e8f4c",
+  "4d7a027efb407440",
+  "5c98a905e2728036",
+  "81a9fb07258dacbc",
+  "a6d1dc5ee3e00667",
+  "bc48348647119414"
+ ],
+ "beir_cqadupstack_english_34246": [
+  "fa512bdbc9cd524e"
+ ],
+ "beir_cqadupstack_english_34291": [
+  "65a4453266cf6556"
+ ],
+ "beir_cqadupstack_english_34356": [
+  "6429f005c1a01082",
+  "adfc5e6a288183a0",
+  "d04ccfe016e9ecd0"
+ ],
+ "beir_cqadupstack_english_34396": [
+  "77a33e5d1c9e0e1c"
+ ],
+ "beir_cqadupstack_english_3452": [
+  "1e3bc37bbcb3ac3d"
+ ],
+ "beir_cqadupstack_english_34712": [
+  "6cc126ea896a05f4",
+  "d5eddcc7df216903"
+ ],
+ "beir_cqadupstack_english_3480": [
+  "b58d1979669ad1a6"
+ ],
+ "beir_cqadupstack_english_34812": [
+  "19b260655c2fdb63"
+ ],
+ "beir_cqadupstack_english_34816": [
+  "0ceaddfeeebdcdb8"
+ ],
+ "beir_cqadupstack_english_35156": [
+  "c2466e9f3f4816b6"
+ ],
+ "beir_cqadupstack_english_35207": [
+  "11103c8df4ebbe26",
+  "98f9344e8d1380de"
+ ],
+ "beir_cqadupstack_english_35214": [
+  "63866e0db0727cdc",
+  "b42433ac8699ddba"
+ ],
+ "beir_cqadupstack_english_35359": [
+  "b140b3530f322cbd"
+ ],
+ "beir_cqadupstack_english_35440": [
+  "03402aa0b262af13"
+ ],
+ "beir_cqadupstack_english_35586": [
+  "7cedbea86f574786"
+ ],
+ "beir_cqadupstack_english_35670": [
+  "cb5a330d099c14d1"
+ ],
+ "beir_cqadupstack_english_35709": [
+  "48548768ef548e06",
+  "684ae75f6cd79796"
+ ],
+ "beir_cqadupstack_english_3572": [
+  "9f709065bdfd4dba"
+ ],
+ "beir_cqadupstack_english_3578": [
+  "07c42a7b0d96a22e",
+  "12078aaf5e1cd06a",
+  "1781bf5f46c73fe1",
+  "284a1f55f3ee9468",
+  "2c79f5c73de5723d",
+  "2ff7c1da0d8a5795",
+  "32fca78becb20e82",
+  "46ff9fe634309565",
+  "6a541a738b949873",
+  "b7160d6e74424ead",
+  "bda92ae37656aef8",
+  "d1c0b71c0b522d56",
+  "e11c1cb03c04ca88"
+ ],
+ "beir_cqadupstack_english_35806": [
+  "7d1ca5b87d1e561b"
+ ],
+ "beir_cqadupstack_english_35923": [
+  "016f1b299e7a8aa3",
+  "84557cc646354097",
+  "8e7e6bad38419d53",
+  "9b70dc35776eee7e",
+  "be8729068b1e3b0a",
+  "e55b1056d7f39dac"
+ ],
+ "beir_cqadupstack_english_36027": [
+  "44d8f4aa8096f4aa"
+ ],
+ "beir_cqadupstack_english_36039": [
+  "d1748ce49858fd16",
+  "f5b2d34c190fbd70"
+ ],
+ "beir_cqadupstack_english_3623": [
+  "00fa4123b3a646b7",
+  "300d9958726ae451",
+  "4d95369681132319",
+  "525dec61c0cb5257",
+  "ac398fd745cc10d7",
+  "b716c7080912a3e6",
+  "e084a5d81c1ce3b2",
+  "fecccd11281b4a5c"
+ ],
+ "beir_cqadupstack_english_36245": [
+  "d85f7b6ec74ae3a4"
+ ],
+ "beir_cqadupstack_english_36263": [
+  "1d81a710781831ee"
+ ],
+ "beir_cqadupstack_english_36460": [
+  "5a7ce9fdab9ef135"
+ ],
+ "beir_cqadupstack_english_36512": [
+  "0d4a9e3ada2a8530"
+ ],
+ "beir_cqadupstack_english_36670": [
+  "22808da4b0c8bbcb"
+ ],
+ "beir_cqadupstack_english_36843": [
+  "acc495e36095c9de"
+ ],
+ "beir_cqadupstack_english_3694": [
+  "961fad2224e5da0a"
+ ],
+ "beir_cqadupstack_english_3713": [
+  "6659d2ef05646385"
+ ],
+ "beir_cqadupstack_english_37211": [
+  "0fa06dc74a6c76bf"
+ ],
+ "beir_cqadupstack_english_37270": [
+  "b668029b584ca878",
+  "c0ca80c9cc70c52f"
+ ],
+ "beir_cqadupstack_english_37274": [
+  "326834e31ca7522a",
+  "78b19c343907035c"
+ ],
+ "beir_cqadupstack_english_37394": [
+  "3c6bf13c3f6c7a3f",
+  "7b2a8b34e3a60fae",
+  "aa2dc31b6d7dac6a"
+ ],
+ "beir_cqadupstack_english_37513": [
+  "7f4ba9a5ac97626d",
+  "928b74e6d7718318",
+  "99473007bea7f5d1",
+  "ea3c1fb293118d37"
+ ],
+ "beir_cqadupstack_english_37703": [
+  "f33e2bcd2c1d52fd"
+ ],
+ "beir_cqadupstack_english_37856": [
+  "52566e5c14656ff7"
+ ],
+ "beir_cqadupstack_english_37958": [
+  "485fa35381e784df",
+  "84659e7f70f3c253"
+ ],
+ "beir_cqadupstack_english_3798": [
+  "68d85657915db5ee"
+ ],
+ "beir_cqadupstack_english_37982": [
+  "122c76b4d5aedde8",
+  "e63aaf4ac8b75380"
+ ],
+ "beir_cqadupstack_english_38161": [
+  "a4ffa80e87ea6335"
+ ],
+ "beir_cqadupstack_english_38260": [
+  "27bd5b99a4d87264"
+ ],
+ "beir_cqadupstack_english_38388": [
+  "bfe71fa57a255a26"
+ ],
+ "beir_cqadupstack_english_385": [
+  "2406e8638d04376f"
+ ],
+ "beir_cqadupstack_english_38566": [
+  "d6c8a92e7a73ffa2"
+ ],
+ "beir_cqadupstack_english_38606": [
+  "198639206b1717d6",
+  "31bed8e9836460a5",
+  "f4453244c81e7992"
+ ],
+ "beir_cqadupstack_english_38730": [
+  "41101ba195104126"
+ ],
+ "beir_cqadupstack_english_389": [
+  "4b57e168bea4295a"
+ ],
+ "beir_cqadupstack_english_39424": [
+  "6bb031940bd8ec21",
+  "b302ba57afd7f280"
+ ],
+ "beir_cqadupstack_english_39551": [
+  "e40a7f7435439b3f"
+ ],
+ "beir_cqadupstack_english_396": [
+  "5bb5b4ab369d97d5"
+ ],
+ "beir_cqadupstack_english_3964": [
+  "5b7c3a6ca8de43bc"
+ ],
+ "beir_cqadupstack_english_39755": [
+  "1a5b4a1a3188aeaf",
+  "220b0668f69788e3",
+  "50b5116eb08e64fe",
+  "7397e6273a8985c9",
+  "a366e0b242b5a865",
+  "bf6bf63654595131",
+  "e6b222e3e6299d29"
+ ],
+ "beir_cqadupstack_english_3977": [
+  "526ced62b527c679"
+ ],
+ "beir_cqadupstack_english_39886": [
+  "c6eedcb84d19aa70"
+ ],
+ "beir_cqadupstack_english_39995": [
+  "946039e9a26515a5"
+ ],
+ "beir_cqadupstack_english_4009": [
+  "c5f8433a40453dc0"
+ ],
+ "beir_cqadupstack_english_40341": [
+  "123082a15864a14d"
+ ],
+ "beir_cqadupstack_english_40418": [
+  "5e89f3d847bb0a6b"
+ ],
+ "beir_cqadupstack_english_40610": [
+  "035dba31c7bd8a27"
+ ],
+ "beir_cqadupstack_english_40810": [
+  "0234d9fe151cbf40",
+  "aee9f82f2e63b532"
+ ],
+ "beir_cqadupstack_english_40968": [
+  "5da808d8255e6316",
+  "baf05a5fe7ba60ba"
+ ],
+ "beir_cqadupstack_english_41078": [
+  "7d3ed1f75a2aede0"
+ ],
+ "beir_cqadupstack_english_41147": [
+  "4f1afbf80c6cae31"
+ ],
+ "beir_cqadupstack_english_4119": [
+  "6a81fb82150161a4"
+ ],
+ "beir_cqadupstack_english_4146": [
+  "6b762afa1fc6b0b6",
+  "f92f64104f35e2f3"
+ ],
+ "beir_cqadupstack_english_41695": [
+  "6132fae0f871aa94"
+ ],
+ "beir_cqadupstack_english_4184": [
+  "1e3b09294bd23e42"
+ ],
+ "beir_cqadupstack_english_41907": [
+  "40ee79a2887736c7"
+ ],
+ "beir_cqadupstack_english_41972": [
+  "014f1c2acc7518f0"
+ ],
+ "beir_cqadupstack_english_41995": [
+  "717ea563417c37a2"
+ ],
+ "beir_cqadupstack_english_42097": [
+  "ea561073e7a5bf4d"
+ ],
+ "beir_cqadupstack_english_42120": [
+  "2879306134bd0863",
+  "dd270880096cc83c",
+  "f394e145ed027b58"
+ ],
+ "beir_cqadupstack_english_42141": [
+  "54c72b0000e35dd9"
+ ],
+ "beir_cqadupstack_english_42176": [
+  "23d17de6bc7d0475"
+ ],
+ "beir_cqadupstack_english_42358": [
+  "55d65a91c533b872",
+  "b702591acf757f83"
+ ],
+ "beir_cqadupstack_english_42633": [
+  "2d9e3ad2681e390d"
+ ],
+ "beir_cqadupstack_english_4274": [
+  "1306c4e3983436d6"
+ ],
+ "beir_cqadupstack_english_42800": [
+  "9bdd402eb12bdedb",
+  "9d3fe3be23057c89",
+  "d026b77545caf5d5"
+ ],
+ "beir_cqadupstack_english_42871": [
+  "e1d15aca3d8f250a"
+ ],
+ "beir_cqadupstack_english_42966": [
+  "47cd9dc60f4f4699"
+ ],
+ "beir_cqadupstack_english_43056": [
+  "d2918d90b6531bbb"
+ ],
+ "beir_cqadupstack_english_43152": [
+  "064103beaf66ac1a",
+  "40277ceb2b82348a",
+  "630a19aa792dc25c",
+  "658d575096752051",
+  "a3f42fd3659fa74f"
+ ],
+ "beir_cqadupstack_english_43771": [
+  "40135314637b50da"
+ ],
+ "beir_cqadupstack_english_43859": [
+  "2daff17be2996647",
+  "3a8d4cbb44323024",
+  "4762eb532954faa8",
+  "591f8c5cefefad45",
+  "59ee463f72db0752",
+  "64ecffec83773af9",
+  "694113d51b13b1a4",
+  "69f9c45acd98fb7c",
+  "6c878df8ad10177c",
+  "93963cfc48b9cc25",
+  "b8a3f4d09602ddd6",
+  "c4ed39219df41ae8",
+  "c8092de28e5d37c9",
+  "cddf0c2182c253fe",
+  "cf344d7ecade5a3c",
+  "d34fa190a24a4b6b",
+  "edf87e9b4c5aacb7",
+  "f2528b219625d931",
+  "f6df962ba9fe5479"
+ ],
+ "beir_cqadupstack_english_43972": [
+  "0e4447d1e37bccb3",
+  "8ae2ec5aab2b8890"
+ ],
+ "beir_cqadupstack_english_4411": [
+  "6d76ba5df61048a9"
+ ],
+ "beir_cqadupstack_english_4419": [
+  "61a0be9672f8ccae",
+  "a1d60ed726866a4e"
+ ],
+ "beir_cqadupstack_english_44196": [
+  "c690b6656c993aa0"
+ ],
+ "beir_cqadupstack_english_44223": [
+  "1c656e8793bf1076"
+ ],
+ "beir_cqadupstack_english_44227": [
+  "d780547bc8970f7b"
+ ],
+ "beir_cqadupstack_english_44328": [
+  "d5f7a99ff57f8b84"
+ ],
+ "beir_cqadupstack_english_44362": [
+  "29c2371d95c8bbc4",
+  "759af98e3812c2f6",
+  "b079142f636686fb",
+  "c1b3e9d7ac7abfe2",
+  "e0b6e1a5b77c0dba"
+ ],
+ "beir_cqadupstack_english_44452": [
+  "4eb353fc5e9c193f"
+ ],
+ "beir_cqadupstack_english_44588": [
+  "5d275b3e6f099faa"
+ ],
+ "beir_cqadupstack_english_44714": [
+  "87f30cc200f78170"
+ ],
+ "beir_cqadupstack_english_44736": [
+  "9862648348a7ad4a"
+ ],
+ "beir_cqadupstack_english_44942": [
+  "6282e44e31e55c52"
+ ],
+ "beir_cqadupstack_english_44945": [
+  "be295f3e7af0c3ad"
+ ],
+ "beir_cqadupstack_english_45053": [
+  "6529598d42a0203b"
+ ],
+ "beir_cqadupstack_english_45132": [
+  "6b5727b8bac880ed"
+ ],
+ "beir_cqadupstack_english_45225": [
+  "0f7785cd2ecc05e9",
+  "b617e4013fd4eba9"
+ ],
+ "beir_cqadupstack_english_45412": [
+  "d060029047083a07"
+ ],
+ "beir_cqadupstack_english_45445": [
+  "424ed73a612345f6",
+  "75e7643630e58220",
+  "8124823e498e3f3f",
+  "a6df17e02987ad86",
+  "f4ef2370f3a89832"
+ ],
+ "beir_cqadupstack_english_456": [
+  "7c96b2709868d518"
+ ],
+ "beir_cqadupstack_english_4562": [
+  "eb46aaaccd139953"
+ ],
+ "beir_cqadupstack_english_45630": [
+  "bafbf3dd16e4399c"
+ ],
+ "beir_cqadupstack_english_4576": [
+  "990f8e10c1ba1069"
+ ],
+ "beir_cqadupstack_english_45886": [
+  "478e53aeab6bfc8c",
+  "86f35fabcd4a7632",
+  "e286efd8f867fe2e"
+ ],
+ "beir_cqadupstack_english_46163": [
+  "2df38de40e172590",
+  "4878919613221a84"
+ ],
+ "beir_cqadupstack_english_4618": [
+  "083f3d6ff888dc0c"
+ ],
+ "beir_cqadupstack_english_46235": [
+  "833fb31f6429724c"
+ ],
+ "beir_cqadupstack_english_46306": [
+  "adaf547f0d7a5428"
+ ],
+ "beir_cqadupstack_english_46829": [
+  "864599e8bbd24537"
+ ],
+ "beir_cqadupstack_english_46842": [
+  "9e07c11a0ca29e5c"
+ ],
+ "beir_cqadupstack_english_46867": [
+  "c6d67d7d6bd666a7"
+ ],
+ "beir_cqadupstack_english_472": [
+  "33db654e5c35beb3",
+  "e7841af3af739253"
+ ],
+ "beir_cqadupstack_english_47399": [
+  "1a3ce82a806eb1df"
+ ],
+ "beir_cqadupstack_english_47595": [
+  "a23a85729abb0f30"
+ ],
+ "beir_cqadupstack_english_4761": [
+  "13f6f58bb6885454",
+  "1d0c402c8a3c0c59",
+  "46cd8f4c9d4ff058",
+  "5be5b8ecc861e71d",
+  "6125fbfe2a97a1a0",
+  "624bba132fbb740a",
+  "77a845435769bf90",
+  "8e4624ce8d11616d",
+  "99e3a5920d0f2848",
+  "d099cee4891053ec"
+ ],
+ "beir_cqadupstack_english_4776": [
+  "20931ebe87c3b3c1",
+  "fb8289df331ca7c1"
+ ],
+ "beir_cqadupstack_english_4781": [
+  "52f13716e6862903"
+ ],
+ "beir_cqadupstack_english_47852": [
+  "f9d1bf0191fd1c71"
+ ],
+ "beir_cqadupstack_english_4823": [
+  "63fcdb4bd4ff3cfe"
+ ],
+ "beir_cqadupstack_english_48234": [
+  "fae284fcd48486c7"
+ ],
+ "beir_cqadupstack_english_48352": [
+  "7548c10e99780976"
+ ],
+ "beir_cqadupstack_english_48383": [
+  "234c3783d2002155",
+  "391299b5b4ee0a35",
+  "bf0330e334f6fc1a",
+  "cfc6b21f749e5ee6",
+  "fd549f00c1c28447"
+ ],
+ "beir_cqadupstack_english_48555": [
+  "f88ddd78d33897c1"
+ ],
+ "beir_cqadupstack_english_4863": [
+  "3cedb2aef8149015",
+  "e0eb980a79610726"
+ ],
+ "beir_cqadupstack_english_48704": [
+  "2519cb4ae3899888"
+ ],
+ "beir_cqadupstack_english_48872": [
+  "a1b877f67f4c2464"
+ ],
+ "beir_cqadupstack_english_4906": [
+  "0cb6908d537638fc",
+  "5fe1b70688a5b200"
+ ],
+ "beir_cqadupstack_english_49404": [
+  "339f69baba0733c9"
+ ],
+ "beir_cqadupstack_english_49619": [
+  "18fd3a20f47d249d"
+ ],
+ "beir_cqadupstack_english_4965": [
+  "3a6ebbfe252ffd29"
+ ],
+ "beir_cqadupstack_english_49666": [
+  "ecac744edd6637a5"
+ ],
+ "beir_cqadupstack_english_4988": [
+  "74870f30e27c31ba",
+  "783b0c66a1aae05c"
+ ],
+ "beir_cqadupstack_english_50117": [
+  "8b658fd95beb901d"
+ ],
+ "beir_cqadupstack_english_5022": [
+  "96fb7f43a6a09fbc"
+ ],
+ "beir_cqadupstack_english_50266": [
+  "893bd10754172bd4",
+  "b115988b2380f4dd"
+ ],
+ "beir_cqadupstack_english_50276": [
+  "96d34e1a10803528"
+ ],
+ "beir_cqadupstack_english_50289": [
+  "89d5207ed95be056"
+ ],
+ "beir_cqadupstack_english_50474": [
+  "8c22116834d61344"
+ ],
+ "beir_cqadupstack_english_5057": [
+  "03694f31d206cd75",
+  "0e1efb3962fc5e4e",
+  "282319f07aa9f0e5",
+  "2bd2749709aa7f7f",
+  "32cc1a16c48a701e",
+  "4be94378f1ebf400",
+  "580d29702a4f8832",
+  "5818d4082551c660",
+  "6ae294e6a787c045",
+  "6d1b3a0d74134756",
+  "7063b4bcce1ff4ee",
+  "7612e2acb499d2be",
+  "78842b52924f8df9",
+  "7de643e0065a394c",
+  "83dd35c96da36165",
+  "8424398517b6c1cf",
+  "9f62a2a16b2f72c3",
+  "ab47fa5bf27dd486",
+  "abd7062e7310f43d",
+  "b3a89b10e4b966fb",
+  "b6ec738bf99ac48a",
+  "c2dc971d776a17ca",
+  "c32ae12399c4b0b0",
+  "dcdeb296f88215d4",
+  "e8b04898e7b0ca82",
+  "f0ae1041e43f1508"
+ ],
+ "beir_cqadupstack_english_50637": [
+  "986f59e77dd7ab76"
+ ],
+ "beir_cqadupstack_english_50693": [
+  "1a664fe9ce196ad7"
+ ],
+ "beir_cqadupstack_english_50740": [
+  "c41e37631a115efc"
+ ],
+ "beir_cqadupstack_english_50851": [
+  "22a69d75dd013e5c"
+ ],
+ "beir_cqadupstack_english_5111": [
+  "17752cca0869e9a6",
+  "39008b76a1cd721f",
+  "bbb2247371c6b8bb"
+ ],
+ "beir_cqadupstack_english_51123": [
+  "2f3816a519c04f46"
+ ],
+ "beir_cqadupstack_english_5128": [
+  "777660440c5a3fd6"
+ ],
+ "beir_cqadupstack_english_51402": [
+  "24e4e4c109f96247",
+  "57a53c52738b6808"
+ ],
+ "beir_cqadupstack_english_51480": [
+  "f6f3fbef9575ad26"
+ ],
+ "beir_cqadupstack_english_51537": [
+  "26aa1d0f00c2205c",
+  "d195e796dec6e3af",
+  "dd6b227c62bafbc6"
+ ],
+ "beir_cqadupstack_english_516": [
+  "19c0980debb81c33",
+  "36fe4c9b4fa8cd5e"
+ ],
+ "beir_cqadupstack_english_51637": [
+  "50250b3fa12caae8"
+ ],
+ "beir_cqadupstack_english_51652": [
+  "e09237901fe3656f"
+ ],
+ "beir_cqadupstack_english_51790": [
+  "177ff040de6544c0",
+  "3d51b5aa2d1580e0",
+  "a61c2e6135debce5",
+  "c3529d4729ec9031"
+ ],
+ "beir_cqadupstack_english_51810": [
+  "2da8a21c25acf4b3"
+ ],
+ "beir_cqadupstack_english_51879": [
+  "35a4f134e99aa92e"
+ ],
+ "beir_cqadupstack_english_51948": [
+  "efc9951d1b2562f2"
+ ],
+ "beir_cqadupstack_english_52057": [
+  "359a6a4600c85f74"
+ ],
+ "beir_cqadupstack_english_52112": [
+  "d9aed564a9dbce2c"
+ ],
+ "beir_cqadupstack_english_52332": [
+  "d53638885bc867cb"
+ ],
+ "beir_cqadupstack_english_52380": [
+  "2035e36d959ac72d"
+ ],
+ "beir_cqadupstack_english_52408": [
+  "d449d6054b4221ae"
+ ],
+ "beir_cqadupstack_english_5248": [
+  "0386abea8c45a6fb",
+  "ffce6508e21f7e2a"
+ ],
+ "beir_cqadupstack_english_5252": [
+  "711f004197de4a6e"
+ ],
+ "beir_cqadupstack_english_52579": [
+  "5c8e47b386596caf"
+ ],
+ "beir_cqadupstack_english_52750": [
+  "3036959c4b24ae10"
+ ],
+ "beir_cqadupstack_english_52901": [
+  "e9b10d7708a72685"
+ ],
+ "beir_cqadupstack_english_53071": [
+  "032c8960a484f3f3",
+  "1958c0198c9302ca",
+  "1f3180b4ea03de63",
+  "54170dc0c412932e",
+  "54b3c39fd6e85429",
+  "f1c909440acc4c30"
+ ],
+ "beir_cqadupstack_english_53546": [
+  "6407f7726bcb95cd"
+ ],
+ "beir_cqadupstack_english_53708": [
+  "de90614d7e4c08d3"
+ ],
+ "beir_cqadupstack_english_53730": [
+  "230b41c5e1925928"
+ ],
+ "beir_cqadupstack_english_53764": [
+  "105d139dfcc8f42e",
+  "89c1304f3a8e5df0",
+  "a4acea585acb5d6c"
+ ],
+ "beir_cqadupstack_english_53766": [
+  "ec3ccee228d631a6"
+ ],
+ "beir_cqadupstack_english_53826": [
+  "3d31600641840428"
+ ],
+ "beir_cqadupstack_english_53904": [
+  "12d716dd8ffd90f2"
+ ],
+ "beir_cqadupstack_english_53945": [
+  "54e2a7a0ab57bd9e"
+ ],
+ "beir_cqadupstack_english_53950": [
+  "b31d8992948a6846",
+  "e28cf1871d9e2667"
+ ],
+ "beir_cqadupstack_english_53955": [
+  "6d1a1883235b461e"
+ ],
+ "beir_cqadupstack_english_54070": [
+  "ed076d047d9709ee"
+ ],
+ "beir_cqadupstack_english_54166": [
+  "1072e88fada238ea"
+ ],
+ "beir_cqadupstack_english_5419": [
+  "16afd140dabf1812"
+ ],
+ "beir_cqadupstack_english_54251": [
+  "dd4311609d195220"
+ ],
+ "beir_cqadupstack_english_54309": [
+  "4478e736958c6e16"
+ ],
+ "beir_cqadupstack_english_54361": [
+  "9292678f510f8a3e"
+ ],
+ "beir_cqadupstack_english_54373": [
+  "3ea609590feb1014",
+  "c04d6c9779046fe0",
+  "c1ea226247eb58b8"
+ ],
+ "beir_cqadupstack_english_54389": [
+  "07c1f2c255bda68d"
+ ],
+ "beir_cqadupstack_english_54439": [
+  "4d839530c2ca3cf1",
+  "e5e6b33950ec6d25"
+ ],
+ "beir_cqadupstack_english_54532": [
+  "4f21caa5fa85168f"
+ ],
+ "beir_cqadupstack_english_54819": [
+  "b3178871ce178f3a"
+ ],
+ "beir_cqadupstack_english_54982": [
+  "0865ccdceeadeeb6"
+ ],
+ "beir_cqadupstack_english_55052": [
+  "7d1463b378c1cafe"
+ ],
+ "beir_cqadupstack_english_55245": [
+  "553f8d14f4959bf3",
+  "dcdd77b1d99b3596"
+ ],
+ "beir_cqadupstack_english_55404": [
+  "619fd190ddf79e13",
+  "6eac49f22b1e5371",
+  "f5d7730a2dea6c90"
+ ],
+ "beir_cqadupstack_english_55420": [
+  "8c098e2ee42f6c81",
+  "f9be783bc57e5bf9"
+ ],
+ "beir_cqadupstack_english_55628": [
+  "12f38fd3c00a98ca"
+ ],
+ "beir_cqadupstack_english_55702": [
+  "9495161a12d07118"
+ ],
+ "beir_cqadupstack_english_55711": [
+  "a2051f3e1137af36"
+ ],
+ "beir_cqadupstack_english_55762": [
+  "01f7e601c628317c",
+  "ff09093dfe38bab0"
+ ],
+ "beir_cqadupstack_english_55968": [
+  "7f41cdd429311309"
+ ],
+ "beir_cqadupstack_english_56019": [
+  "7fea9cb6a0f784ff"
+ ],
+ "beir_cqadupstack_english_56095": [
+  "85f6376546a56fd6"
+ ],
+ "beir_cqadupstack_english_56180": [
+  "492fec60d44ef568"
+ ],
+ "beir_cqadupstack_english_5619": [
+  "3cc16ada0cc46b6b",
+  "7f09c2d59bff2042"
+ ],
+ "beir_cqadupstack_english_56210": [
+  "026aa44ba36df10d"
+ ],
+ "beir_cqadupstack_english_56350": [
+  "9076b94df825a097"
+ ],
+ "beir_cqadupstack_english_56471": [
+  "2c0ab2c628c57f1c"
+ ],
+ "beir_cqadupstack_english_5648": [
+  "133cb7302292c3f6",
+  "f7d54d32eb9abeb1"
+ ],
+ "beir_cqadupstack_english_56625": [
+  "74c20019ee176ca9"
+ ],
+ "beir_cqadupstack_english_56639": [
+  "0b95825c08ff2aee"
+ ],
+ "beir_cqadupstack_english_57128": [
+  "0ad03e334925f89a",
+  "45eb4433dfaa9ff1",
+  "ec3b8f19c1be3cde",
+  "ee6344bf12c052fb"
+ ],
+ "beir_cqadupstack_english_57201": [
+  "8cbfb3bba87ce739"
+ ],
+ "beir_cqadupstack_english_57230": [
+  "2c38d4e6164d0153",
+  "7fb1ce3a82d3f602",
+  "851fda1ea52bd078"
+ ],
+ "beir_cqadupstack_english_57241": [
+  "c7939ff3fd0fc792"
+ ],
+ "beir_cqadupstack_english_57314": [
+  "59a55490de797ed3"
+ ],
+ "beir_cqadupstack_english_5734": [
+  "3fabfcf8cd6b7f1c",
+  "6ad96fe56f7c6d1e"
+ ],
+ "beir_cqadupstack_english_57434": [
+  "02638c9c00214e12",
+  "094d8a3f23cbd23a",
+  "0a3f4626060aaa76",
+  "0d5702b763d6cf6b",
+  "11f7967523d45561",
+  "1b001de6368a7848",
+  "1bdf10b705aeeaae",
+  "1c70f495e14032fa",
+  "235854e96b01f205",
+  "236e63c4ce120a8d",
+  "23e432d34de7e59d",
+  "2eef10fbdfe93481",
+  "32d6e8a944c9a4d0",
+  "340cd8cfeddfa44a",
+  "3bc43e17c85aac8c",
+  "41f76f9386882462",
+  "464838006c268577",
+  "46882e3c8c160965",
+  "56c0d24fb2cdfa75",
+  "57777f663f45ff47",
+  "589736b663a857a5",
+  "5b255a4c54e4886a",
+  "5fc1e3e9e1d61a65",
+  "62cb4d490854c61c",
+  "68f755d9d61d0d3b",
+  "6dd5028d0fd48472",
+  "6e27c3b59d37fbaf",
+  "6eeb7d8c92fe388d",
+  "7253eb8c1a252d3b",
+  "73deee20a61dd84b",
+  "78293455cbbd79cb",
+  "7abc64f835ecbd38",
+  "7c839b9133b5378c",
+  "83d343ff49eafd03",
+  "85f84a556533de7d",
+  "87c82772601d3f76",
+  "87d2534516160e27",
+  "893e389764a80f1b",
+  "8a94d74cee726393",
+  "90a3619b74c01430",
+  "94d39d0ff1db346a",
+  "9e8d6471ee19bd1b",
+  "a0b1df0315b54bb2",
+  "a1500bae4508c4af",
+  "a667a6bc919f1c19",
+  "a80bff9a55e2a881",
+  "a8d0020000cd42f6",
+  "b4ceb4438d3a6396",
+  "b5e88a84be859090",
+  "b7b7538da97d1483",
+  "b883b986f10f8038",
+  "cd0f1d6cb1e8cec9",
+  "dccfd96e29661c60",
+  "dd5dbf9693a6d232",
+  "e03ac7fc8c8464bd",
+  "e40496b8f026d383",
+  "ee2ba4e8721ca187",
+  "f6deca2743aa2fca",
+  "f7867fb50bbb2cef",
+  "fb9622884984dfae",
+  "ffb4c2ab310df993"
+ ],
+ "beir_cqadupstack_english_57488": [
+  "2ddaa6a7516abd82"
+ ],
+ "beir_cqadupstack_english_57613": [
+  "143a6c14b35dfff2"
+ ],
+ "beir_cqadupstack_english_57676": [
+  "1ea327339b4b5f40"
+ ],
+ "beir_cqadupstack_english_57747": [
+  "bc5c798dc2d88189"
+ ],
+ "beir_cqadupstack_english_57787": [
+  "00a1c9b25f1e864b",
+  "04c6afd1fdf474bc",
+  "05413c90631bc69b",
+  "059ae42400059469",
+  "07744d2231418a3f",
+  "0c21516e03050cd1",
+  "1334a0326e03a8c0",
+  "1c06b50b13f5fb44",
+  "1f0ebae2c534fa87",
+  "26364fca878431db",
+  "2756532261091298",
+  "2782b3e74a6a4fad",
+  "2c21bfe17291e2ea",
+  "2fb3fdf13fd2d0ba",
+  "340de1708b5def4c",
+  "36ba713124f2fb6b",
+  "3eef9c1645d11c3e",
+  "3f8188fa9348c1d7",
+  "42384d937107987f",
+  "50a7edd4fc5324b9",
+  "5c8ba0debc62146a",
+  "5ca67f408dfe351f",
+  "6223a9ae421c966c",
+  "6407919645b6d958",
+  "675af1796ad52da9",
+  "684f2c39e7930600",
+  "7034e48f8a89ec00",
+  "72e781b932db0d0e",
+  "79be78880494c4fa",
+  "7aa43a23eb94e7f1",
+  "7cde1c16f8a6aa6e",
+  "847a306d011af568",
+  "8918228ccdb777c1",
+  "8b06d53beee15392",
+  "8d2b974015e97e24",
+  "934230ef9919642e",
+  "9d5924610f7127d1",
+  "9f45db2c91245b42",
+  "9f4cdc1a829e3128",
+  "a055acfaa42666dd",
+  "a22551647bdccf39",
+  "a5537fc17d5af76f",
+  "a6e00b66be69df69",
+  "ad22bd7d30c271a1",
+  "b096a06ae41ecc39",
+  "b57c89ba7d0b69be",
+  "b989d3c9369a5990",
+  "bb964246702a5bfe",
+  "bf43cfb5cdb41f4e",
+  "bfb1ff67cf72e93e",
+  "c56264cb8b9effba",
+  "d613532e6f5173c7",
+  "d8e5598e4d6b322e",
+  "de4ab664633b3fe6",
+  "de6a32ee4d0dac01",
+  "e0b591c46a133393",
+  "e52821e1759ae5ab",
+  "eda7bb5ffdd65ead",
+  "eedbf78bb11eb92b",
+  "efa7ec241120dc3c",
+  "f1db8d2dc508d20b",
+  "f9c722489f544a54",
+  "fd2cce55e661eca8"
+ ],
+ "beir_cqadupstack_english_57816": [
+  "473fcbaafc19c1c1",
+  "4ace3bad3c027a12"
+ ],
+ "beir_cqadupstack_english_58100": [
+  "2860849546d8516a"
+ ],
+ "beir_cqadupstack_english_58103": [
+  "98e02818c68e475d",
+  "ab6265b2254795ac"
+ ],
+ "beir_cqadupstack_english_58240": [
+  "98466dac53678f73"
+ ],
+ "beir_cqadupstack_english_58344": [
+  "aca269dc05a061aa",
+  "c3e82343f3f59666"
+ ],
+ "beir_cqadupstack_english_58413": [
+  "178b0c4d8745df15"
+ ],
+ "beir_cqadupstack_english_58443": [
+  "2ac95dbc0e6437bf"
+ ],
+ "beir_cqadupstack_english_58692": [
+  "3127569d0edb477e"
+ ],
+ "beir_cqadupstack_english_58756": [
+  "b6624809a5f7f77c"
+ ],
+ "beir_cqadupstack_english_58788": [
+  "13c837a7cc902fae"
+ ],
+ "beir_cqadupstack_english_58883": [
+  "c581a6cae10cc171"
+ ],
+ "beir_cqadupstack_english_58907": [
+  "6ec53e1557345a06",
+  "f3655b1b15fccdae"
+ ],
+ "beir_cqadupstack_english_58931": [
+  "5cc2335fa2c1c45a"
+ ],
+ "beir_cqadupstack_english_59098": [
+  "de16de2cd5623235"
+ ],
+ "beir_cqadupstack_english_59167": [
+  "6c90c34feeedc303"
+ ],
+ "beir_cqadupstack_english_59247": [
+  "b163058b711a0c56"
+ ],
+ "beir_cqadupstack_english_593": [
+  "14262f940a6447e6",
+  "1b67071ac4314259",
+  "266b84a383d84062",
+  "4b464d583c42ee4f",
+  "4e5fd3973ca1cd80",
+  "8304c8ad206666d2",
+  "8463acbefd1c01e7",
+  "b50206c227a12726",
+  "c3f6767d56a6d64b",
+  "cba5f9bd8e426d2e",
+  "cd9a23e3cf5e3e1f",
+  "e186dd38e0f2dff3",
+  "ebc475f861057539"
+ ],
+ "beir_cqadupstack_english_59496": [
+  "d0956100870cbedc"
+ ],
+ "beir_cqadupstack_english_59530": [
+  "ff8deeef84147542"
+ ],
+ "beir_cqadupstack_english_59586": [
+  "eb641479d1d3e618"
+ ],
+ "beir_cqadupstack_english_5968": [
+  "96938c06118ccf8d"
+ ],
+ "beir_cqadupstack_english_59748": [
+  "58056a699a0ebb25"
+ ],
+ "beir_cqadupstack_english_5987": [
+  "057b98165966e106"
+ ],
+ "beir_cqadupstack_english_60189": [
+  "e763ab376bbaf490"
+ ],
+ "beir_cqadupstack_english_60271": [
+  "b9bb110418b62239",
+  "f427a0abcf71d284"
+ ],
+ "beir_cqadupstack_english_605": [
+  "38fac9068648b26c",
+  "5fcb96f2e6a355a5",
+  "6ca30d8d267a2ecf",
+  "931adc20765344f3",
+  "940add4e86ebc691",
+  "a9ba93d479ccd08e",
+  "b48cb4a887931e1c",
+  "be6494feade5f04e",
+  "ddf964cf7377ad5d",
+  "dfdd650016fd7c34",
+  "e18f57b038918d1c",
+  "e47af1d9c8bbaf09",
+  "f744f8c9e8ca04d3",
+  "ff42decd014ef21b"
+ ],
+ "beir_cqadupstack_english_6058": [
+  "1c9783dd42982d04"
+ ],
+ "beir_cqadupstack_english_60898": [
+  "f358158989122779"
+ ],
+ "beir_cqadupstack_english_60905": [
+  "3326b81c0769013d",
+  "b2bdefb85f9c8f3a"
+ ],
+ "beir_cqadupstack_english_60927": [
+  "9c0d263437d9337b"
+ ],
+ "beir_cqadupstack_english_60991": [
+  "21a823078fe65e58",
+  "59c050519bbb4d59",
+  "8378778a9862e0c1",
+  "ca7a35168d2eab1f"
+ ],
+ "beir_cqadupstack_english_61129": [
+  "f2da4011516afc18"
+ ],
+ "beir_cqadupstack_english_61177": [
+  "71d7bad16051bdc2"
+ ],
+ "beir_cqadupstack_english_61249": [
+  "1cc654edc970cdea",
+  "4c1b086f74ad04bf",
+  "5862c7c9a40b813b"
+ ],
+ "beir_cqadupstack_english_61299": [
+  "a88adca4eeb2000b",
+  "ff39de75203d97ad"
+ ],
+ "beir_cqadupstack_english_61310": [
+  "057da987eee5e901",
+  "941e30e1f7463717"
+ ],
+ "beir_cqadupstack_english_61359": [
+  "f18b304f8edb3698"
+ ],
+ "beir_cqadupstack_english_61371": [
+  "d74175c42721830e"
+ ],
+ "beir_cqadupstack_english_61552": [
+  "09b5acc24aee26de",
+  "217102d1a932c677",
+  "2eb6960b155bd19c",
+  "362daf8f26def1cd",
+  "370a310216c88aca",
+  "718a8bac154ad49a",
+  "87f5246cda2681d5",
+  "9f870640c88338e7",
+  "a036d7bb5606645f",
+  "a459528b90d33205",
+  "a53f0d10e9e0604b",
+  "c9b6900467cb14f1",
+  "d325d4ba1bd18e5c",
+  "d9f331a0cfd9954d"
+ ],
+ "beir_cqadupstack_english_61579": [
+  "23a3b955cfa70c28",
+  "24b5a765a7ecb247"
+ ],
+ "beir_cqadupstack_english_61627": [
+  "c8a74d3a49dc954e"
+ ],
+ "beir_cqadupstack_english_61628": [
+  "4cdecc4bb654b2c3"
+ ],
+ "beir_cqadupstack_english_61740": [
+  "3de9e5967dc910df",
+  "3f39149b26b347fb",
+  "ea5d0df3d67bcd18"
+ ],
+ "beir_cqadupstack_english_61765": [
+  "1d2276721870f4ff"
+ ],
+ "beir_cqadupstack_english_61934": [
+  "815fb589d442a057"
+ ],
+ "beir_cqadupstack_english_6195": [
+  "a0152b4cedad9293"
+ ],
+ "beir_cqadupstack_english_62014": [
+  "d6e3c0929277568d"
+ ],
+ "beir_cqadupstack_english_62084": [
+  "1a3044183f63d19a",
+  "3cb3be20309ad58f",
+  "565d5be6662228c8",
+  "a72d2b7d2f4e3561",
+  "b20818b851899e1c",
+  "d0747ce84e57f918",
+  "e759a687e21c3c55"
+ ],
+ "beir_cqadupstack_english_62159": [
+  "53bcedb4cc6ee37e"
+ ],
+ "beir_cqadupstack_english_62246": [
+  "9fdb98710396626f"
+ ],
+ "beir_cqadupstack_english_62249": [
+  "1ae6b0811f5c3712",
+  "43b1632d23f71787",
+  "54b762d631fd93b6",
+  "6df6bfb71180e923",
+  "b56223da92b4918a",
+  "da852ca586a1cfa6"
+ ],
+ "beir_cqadupstack_english_62285": [
+  "1204ee0b0a36164f"
+ ],
+ "beir_cqadupstack_english_62400": [
+  "dc4ea0e8ddf36719"
+ ],
+ "beir_cqadupstack_english_62482": [
+  "f4ee607b16a40547"
+ ],
+ "beir_cqadupstack_english_62535": [
+  "5bf59faed347399a",
+  "72f4219b65e91105"
+ ],
+ "beir_cqadupstack_english_62722": [
+  "aa4c037b18268db1"
+ ],
+ "beir_cqadupstack_english_62742": [
+  "feef75e7627f5d09"
+ ],
+ "beir_cqadupstack_english_62973": [
+  "b535738aa4076508"
+ ],
+ "beir_cqadupstack_english_63028": [
+  "5f81747b54979f3f"
+ ],
+ "beir_cqadupstack_english_63104": [
+  "113eddfe314f6a31",
+  "d5ca1bd894febf24"
+ ],
+ "beir_cqadupstack_english_63256": [
+  "164c08d1e4dd7ce9",
+  "3dc8f3c244d8e627",
+  "4569c097f63738c0",
+  "769cf4ab5720900f"
+ ],
+ "beir_cqadupstack_english_63398": [
+  "08dd1ab50e512952"
+ ],
+ "beir_cqadupstack_english_63523": [
+  "191bf3ec39f3740a",
+  "6e389aedd7704e81",
+  "7167bdb391bf28f8"
+ ],
+ "beir_cqadupstack_english_63787": [
+  "0b4711e6b50bdd29",
+  "17ba596c9503d457"
+ ],
+ "beir_cqadupstack_english_63983": [
+  "47aa9101c4a483c6"
+ ],
+ "beir_cqadupstack_english_64317": [
+  "1d245a7bcc6d0f05"
+ ],
+ "beir_cqadupstack_english_64326": [
+  "5e1e6c254b8649e9",
+  "e040823bd458127b"
+ ],
+ "beir_cqadupstack_english_64510": [
+  "04ece5f8048e4827"
+ ],
+ "beir_cqadupstack_english_64617": [
+  "cd863d97600ab344"
+ ],
+ "beir_cqadupstack_english_649": [
+  "f98831f0f9514d5b"
+ ],
+ "beir_cqadupstack_english_65028": [
+  "d0f847aca49f43f8"
+ ],
+ "beir_cqadupstack_english_65046": [
+  "66a01cdaf1bdec16"
+ ],
+ "beir_cqadupstack_english_65289": [
+  "4cb0618b484b4082"
+ ],
+ "beir_cqadupstack_english_65312": [
+  "2dc3d77a1284b46a",
+  "4783caaba02b3b8e"
+ ],
+ "beir_cqadupstack_english_65472": [
+  "d7e760e29ecc22eb"
+ ],
+ "beir_cqadupstack_english_65604": [
+  "dd5334eebf266e1b"
+ ],
+ "beir_cqadupstack_english_65676": [
+  "464ab4f482dfc757",
+  "815fe455b088da7d"
+ ],
+ "beir_cqadupstack_english_6582": [
+  "276990239e37218a"
+ ],
+ "beir_cqadupstack_english_65884": [
+  "03420cdbfe3c6c03",
+  "0ebd721b6a9ec794",
+  "12eb2c123959539e",
+  "234064a51a6f2a79",
+  "55aa73239d8a1ce7",
+  "63037d9141f3f5aa",
+  "676c94d87f2ade69",
+  "67af479f4af81d4a",
+  "698d3011dc182920",
+  "6d1405183fa0eca0",
+  "74fb10c8c6aab047",
+  "78fd5d558ab35829",
+  "8bcc073171b9876b",
+  "90c95c44a1a58a1f",
+  "9d2699ebec9e4723",
+  "b47da208ef9bdb3e",
+  "bea382e5848c6d39",
+  "bf6352c9bb647497",
+  "c4a8a45fd97a7932",
+  "e093245ae3551011",
+  "e242e99d4c4240a1",
+  "e5b2af2f464c491e",
+  "eaee5751f35eb2a6",
+  "f125f66f883054a2",
+  "f828f4d920cd1ad3",
+  "f8bdcfa631d10794",
+  "faaf6737c65ae44d",
+  "fb04791851a2137a"
+ ],
+ "beir_cqadupstack_english_65892": [
+  "43d6114a5803a3f5",
+  "446460d0d7eaf0c7"
+ ],
+ "beir_cqadupstack_english_6602": [
+  "117a44b68ef28538",
+  "e310748983855bcf",
+  "ebc972aa226aa16d"
+ ],
+ "beir_cqadupstack_english_66020": [
+  "e32d868e2108e8f2",
+  "e79ab91f9efd7922",
+  "ef71ad0e84ca9bfb"
+ ],
+ "beir_cqadupstack_english_66021": [
+  "47c222e92ed9c1fb",
+  "d350f5e6d94c5ff0",
+  "d7c0ad086e492f06"
+ ],
+ "beir_cqadupstack_english_66088": [
+  "19b490c0733dbeb1"
+ ],
+ "beir_cqadupstack_english_6609": [
+  "e01a2bb9e65d2ff3"
+ ],
+ "beir_cqadupstack_english_6618": [
+  "48abd2271b4a96b6",
+  "aaf9c5b19e848251"
+ ],
+ "beir_cqadupstack_english_66224": [
+  "d3dc860aad9c87ea"
+ ],
+ "beir_cqadupstack_english_66335": [
+  "a8cd23eb8ac3ccbf"
+ ],
+ "beir_cqadupstack_english_66453": [
+  "9696fb4cdab792e6"
+ ],
+ "beir_cqadupstack_english_66462": [
+  "9a0b7372e84df746"
+ ],
+ "beir_cqadupstack_english_66576": [
+  "afffc470bc9ae414"
+ ],
+ "beir_cqadupstack_english_66633": [
+  "111d829df8930ded"
+ ],
+ "beir_cqadupstack_english_66670": [
+  "3a1837489176283e"
+ ],
+ "beir_cqadupstack_english_66847": [
+  "be4e029ad5ce7337",
+  "f1f5a36091068653"
+ ],
+ "beir_cqadupstack_english_66972": [
+  "577736de0bdbbd32"
+ ],
+ "beir_cqadupstack_english_67056": [
+  "5e4355c3a89ed25b",
+  "a431b468a35708b5"
+ ],
+ "beir_cqadupstack_english_67080": [
+  "21071dfff71a1e89"
+ ],
+ "beir_cqadupstack_english_67167": [
+  "16587b6dc4c12a68"
+ ],
+ "beir_cqadupstack_english_67365": [
+  "8055ca8aade74c42",
+  "e82faddd704f9614"
+ ],
+ "beir_cqadupstack_english_67476": [
+  "274b3ac023e22a55",
+  "2cd22f5bb6e931ff"
+ ],
+ "beir_cqadupstack_english_67509": [
+  "2bf0a3756677da9b",
+  "32abe966f04bf24d",
+  "3900b9561e223091",
+  "60128b29531a1ff5",
+  "65ea667b4c310037",
+  "8151f83cb8386900",
+  "81f1c7df316b45e5",
+  "83f2aed4d0f9cdf6",
+  "87d030eac1aa37a6",
+  "90d1116270ce3346",
+  "9485fe013fdc450e",
+  "94f31f4277504a28",
+  "aedbe8d24c6e2fdc",
+  "b3165c5ffa0b67f6",
+  "c7a5271b5ecae0c7",
+  "cfc1b8c0295061fe",
+  "f069a741d500f74c",
+  "f448c2d9d671ef14",
+  "f4c965db435d8400"
+ ],
+ "beir_cqadupstack_english_67619": [
+  "1129cce44336bb60",
+  "1561010a391c1558",
+  "18081d7773e3e8ac",
+  "f75d8b9b5261c12b"
+ ],
+ "beir_cqadupstack_english_67701": [
+  "ae908f76ae7e4d80"
+ ],
+ "beir_cqadupstack_english_67703": [
+  "6f7b6ef41e24e586"
+ ],
+ "beir_cqadupstack_english_6776": [
+  "99eb3df2d47c2a0c"
+ ],
+ "beir_cqadupstack_english_67817": [
+  "2d561553e3c38269"
+ ],
+ "beir_cqadupstack_english_68098": [
+  "be35c627d43077e6",
+  "d919a6ae8817cf11"
+ ],
+ "beir_cqadupstack_english_68183": [
+  "92ca5e61abc0575a",
+  "a079b4e7555a072d"
+ ],
+ "beir_cqadupstack_english_68188": [
+  "83def7be78525548"
+ ],
+ "beir_cqadupstack_english_68235": [
+  "8d2c627840a7fca0"
+ ],
+ "beir_cqadupstack_english_68556": [
+  "e970f27ba087313d"
+ ],
+ "beir_cqadupstack_english_6857": [
+  "8799bee234891d91"
+ ],
+ "beir_cqadupstack_english_68615": [
+  "ec4666c6a72e402e"
+ ],
+ "beir_cqadupstack_english_68805": [
+  "4fe7162a4b5805d5"
+ ],
+ "beir_cqadupstack_english_69018": [
+  "91a968e8a2521793"
+ ],
+ "beir_cqadupstack_english_69129": [
+  "39eed5c059e71c93",
+  "53163f3e159d6be1"
+ ],
+ "beir_cqadupstack_english_69175": [
+  "d290e279ca467b02"
+ ],
+ "beir_cqadupstack_english_69547": [
+  "9822adb9741d1cb1"
+ ],
+ "beir_cqadupstack_english_69662": [
+  "b913bc5d3a58c1d5"
+ ],
+ "beir_cqadupstack_english_69944": [
+  "695bb535da701612"
+ ],
+ "beir_cqadupstack_english_69974": [
+  "9b2dfdac37d62c19",
+  "a245e734ea894a38",
+  "e9d9085070a9bb8a"
+ ],
+ "beir_cqadupstack_english_7": [
+  "dea5c9f742ef2a83"
+ ],
+ "beir_cqadupstack_english_70018": [
+  "02cf00f8f932d505"
+ ],
+ "beir_cqadupstack_english_70526": [
+  "f85551f81b58e719"
+ ],
+ "beir_cqadupstack_english_70728": [
+  "0e87d782c967eb29"
+ ],
+ "beir_cqadupstack_english_70756": [
+  "061b1aa2758b8b46",
+  "1af02641c42b182e",
+  "52550507b4327f87",
+  "64e1f2b9fd3782a8",
+  "80911609fd109f4e",
+  "ed5e274f85dc99cf"
+ ],
+ "beir_cqadupstack_english_70771": [
+  "88a8a3f8b7a28589"
+ ],
+ "beir_cqadupstack_english_70839": [
+  "bf244be578942b53"
+ ],
+ "beir_cqadupstack_english_7125": [
+  "88b98eaf50612887"
+ ],
+ "beir_cqadupstack_english_71270": [
+  "f9a37ed7aa28c835",
+  "fb93c25df2276c28"
+ ],
+ "beir_cqadupstack_english_71760": [
+  "7ef739996a49a1ed"
+ ],
+ "beir_cqadupstack_english_7177": [
+  "da03398e0aba4a5b"
+ ],
+ "beir_cqadupstack_english_71797": [
+  "254ae232280d98e1"
+ ],
+ "beir_cqadupstack_english_71986": [
+  "6d74e18a904517d3"
+ ],
+ "beir_cqadupstack_english_72175": [
+  "0fe411a51ebfbb77",
+  "31ba144075960ab3",
+  "416dc3b7617a5c31",
+  "b6cf0e067ddd3fc7",
+  "ed93632794a445cf"
+ ],
+ "beir_cqadupstack_english_72218": [
+  "87e67b177ad9bb39",
+  "a229499af3cd4a69"
+ ],
+ "beir_cqadupstack_english_7228": [
+  "f2c83ca0252c303d"
+ ],
+ "beir_cqadupstack_english_72359": [
+  "b2db7f64dfec6512",
+  "b829151d73c30194"
+ ],
+ "beir_cqadupstack_english_72384": [
+  "1c51f18c4b224868",
+  "848872a854901dd5"
+ ],
+ "beir_cqadupstack_english_72462": [
+  "62a34bff5f82490f"
+ ],
+ "beir_cqadupstack_english_7274": [
+  "eb209416dd191130"
+ ],
+ "beir_cqadupstack_english_72783": [
+  "7494d225faaddede"
+ ],
+ "beir_cqadupstack_english_72848": [
+  "94c96b8d3fab175a",
+  "e4896be259c8c916"
+ ],
+ "beir_cqadupstack_english_7297": [
+  "298ed151ae6d7c0c"
+ ],
+ "beir_cqadupstack_english_73224": [
+  "0a4f92677a23451d",
+  "2031f494b92efada",
+  "21a3d615d96a249f",
+  "36459dfea96a1e4e",
+  "610d03d196217593",
+  "6c6db9d0837269f5",
+  "85c74e89ac2fb107",
+  "bd5651c4d11ace73",
+  "c36987d68f1f32bc",
+  "cb85e9359c16a433",
+  "cc698aef403f3aeb",
+  "dc67c26ff932d985",
+  "dd4477f9fe3bb9c3",
+  "de3d9138c526d5f0",
+  "f7e2cb7aea9fc9b7"
+ ],
+ "beir_cqadupstack_english_73515": [
+  "193c090de934f491"
+ ],
+ "beir_cqadupstack_english_73702": [
+  "292c1d2a738ab3d6",
+  "3681f029acc8fe49",
+  "36e59fd1873f259d",
+  "82f1dc399e782c2f",
+  "95413b3914fa8a2f",
+  "9fcd3204d70d79ea",
+  "acb4980f9f191c7b",
+  "c83b061bcd2a7055",
+  "ca8831b8c99130b5",
+  "e88593c0f8cbe01b",
+  "efdd5f155fa43543"
+ ],
+ "beir_cqadupstack_english_73737": [
+  "255b0c609e928c01"
+ ],
+ "beir_cqadupstack_english_73822": [
+  "81e11b5421ba48c2"
+ ],
+ "beir_cqadupstack_english_73830": [
+  "298bac2103b2c6ef",
+  "2990b89b86c844c9",
+  "665e303ef4a45ff7",
+  "6b675b8774eb3a70",
+  "7357214e90a77bbb",
+  "a424cc6237eb1794",
+  "a9fd18e56a6a7402",
+  "bb07d04173f98d1e",
+  "be3c8f56c57c595b",
+  "f0f6307359c7559b"
+ ],
+ "beir_cqadupstack_english_74016": [
+  "4d2cbe2cc4590525",
+  "5508092cfd3801f0"
+ ],
+ "beir_cqadupstack_english_74127": [
+  "7253507ac84b0dec"
+ ],
+ "beir_cqadupstack_english_74161": [
+  "17a1b14cd7dd275e",
+  "5950cd61797e8a0b",
+  "aafa0afc300e4e67",
+  "b840de19ea58e969"
+ ],
+ "beir_cqadupstack_english_74169": [
+  "adf5de018a8d43c3"
+ ],
+ "beir_cqadupstack_english_74247": [
+  "047c6ca96a14aa53"
+ ],
+ "beir_cqadupstack_english_74272": [
+  "94868468fb9e0163",
+  "cecac354889cb700"
+ ],
+ "beir_cqadupstack_english_74450": [
+  "34e28ae2bdc0f809",
+  "63d2b8a4288acb50",
+  "76ceafba9b1f63da",
+  "7b08a869b0b3cf03",
+  "db570a174c590258",
+  "ee508ea744333ed7",
+  "f5e3a2eabbb351b1"
+ ],
+ "beir_cqadupstack_english_74502": [
+  "380291b4f525491e"
+ ],
+ "beir_cqadupstack_english_74553": [
+  "1e37dc32048bc5f4",
+  "84a8bea9db3ae4dd"
+ ],
+ "beir_cqadupstack_english_74576": [
+  "99e8b7445b6e1b06"
+ ],
+ "beir_cqadupstack_english_7469": [
+  "0b1225642d317699",
+  "6b69c855b9563c80",
+  "7010acc4ad1c52b3"
+ ],
+ "beir_cqadupstack_english_74765": [
+  "2833759d52550764"
+ ],
+ "beir_cqadupstack_english_74951": [
+  "7fa2fbc8e7675937",
+  "d63b47dc1c6632e2",
+  "e06555737a9af596",
+  "e5f44e5143e83011"
+ ],
+ "beir_cqadupstack_english_75096": [
+  "98212d575b3ee983"
+ ],
+ "beir_cqadupstack_english_75097": [
+  "9955d0130906b80c"
+ ],
+ "beir_cqadupstack_english_75103": [
+  "001e007b913ff01b"
+ ],
+ "beir_cqadupstack_english_75147": [
+  "c07088cbd47f5b14"
+ ],
+ "beir_cqadupstack_english_75252": [
+  "fe9771e5aa5e0fac"
+ ],
+ "beir_cqadupstack_english_75355": [
+  "aa73d85593f4c956",
+  "b51e007dd83fb73b"
+ ],
+ "beir_cqadupstack_english_7548": [
+  "020c5142ad5edc0e",
+  "05ba0f2b030fa44e",
+  "0b35dd8275f49841",
+  "0dc9c8f4440ce3b5",
+  "130d3072310b3531",
+  "27543a1cfec9027a",
+  "2b391b4de8d80edb",
+  "2e207abc03d59948",
+  "3674e808aefadf7c",
+  "3a52d119118098cd",
+  "40aa82a427927cac",
+  "4f007dd941bf950a",
+  "6236c37d6d3ae3eb",
+  "660d3bd033bdb990",
+  "709a2f07942fa5ea",
+  "7857e8e0968b7645",
+  "85ebe0f34d5f6cda",
+  "86897e43e5f3356d",
+  "88abbbb834397453",
+  "8a966a813585337a",
+  "8d73c010a02d6b9b",
+  "9404e73b122f8817",
+  "9d78b3a87d12b1e6",
+  "9ff083306b953f8f",
+  "a2aa5d3a6fd64d6a",
+  "a34597a9463c43b8",
+  "ac031b92f6526d15",
+  "bb53d45cc5716d73",
+  "c028504b63354823",
+  "c5af23a0f74c6039",
+  "ea1a9dc00cce9d9d"
+ ],
+ "beir_cqadupstack_english_75491": [
+  "253e852d65e32619",
+  "9c257bb5c539e196"
+ ],
+ "beir_cqadupstack_english_7567": [
+  "606e7aa5e22a32fc"
+ ],
+ "beir_cqadupstack_english_75847": [
+  "d736538d4d42bab2"
+ ],
+ "beir_cqadupstack_english_75860": [
+  "eef549b5f95218da"
+ ],
+ "beir_cqadupstack_english_75870": [
+  "6b7bf88a5278d789"
+ ],
+ "beir_cqadupstack_english_75931": [
+  "5c0b50addb535ae2"
+ ],
+ "beir_cqadupstack_english_76043": [
+  "f010f6687daeb3f1"
+ ],
+ "beir_cqadupstack_english_76048": [
+  "eca55aadcd7a53fd"
+ ],
+ "beir_cqadupstack_english_76103": [
+  "82484a2fa99839cc"
+ ],
+ "beir_cqadupstack_english_76120": [
+  "9d0c07547773ba38"
+ ],
+ "beir_cqadupstack_english_76209": [
+  "0334ecd490246f28",
+  "4c8c011a5bc5594a",
+  "ea93397477837f1a",
+  "feecae888691a8ed"
+ ],
+ "beir_cqadupstack_english_76299": [
+  "72cc0d767bd39d1e",
+  "8746680b0534e5e9"
+ ],
+ "beir_cqadupstack_english_76345": [
+  "742473e5b8a6ea67"
+ ],
+ "beir_cqadupstack_english_76420": [
+  "bd7a39eb0322604a"
+ ],
+ "beir_cqadupstack_english_76471": [
+  "40faacba66b20c5d",
+  "572c7fa74cebdb7c",
+  "5fca73e94aba2018",
+  "6f6e182c12c1a348",
+  "760102126e1e8a12",
+  "7f7d6d26fcce02e0",
+  "9d9800c65c52fa22"
+ ],
+ "beir_cqadupstack_english_768": [
+  "bc797a0f4c8652bd"
+ ],
+ "beir_cqadupstack_english_76823": [
+  "e3237ddc17e95a70"
+ ],
+ "beir_cqadupstack_english_76837": [
+  "fbc2768da158c431"
+ ],
+ "beir_cqadupstack_english_76850": [
+  "85040eef40030ad6"
+ ],
+ "beir_cqadupstack_english_7709": [
+  "3ccdcaa7066967b6"
+ ],
+ "beir_cqadupstack_english_77308": [
+  "c71e03684c824d10"
+ ],
+ "beir_cqadupstack_english_77999": [
+  "a1a5411543acbd4c"
+ ],
+ "beir_cqadupstack_english_78030": [
+  "ba2f3f423d8c9b6d"
+ ],
+ "beir_cqadupstack_english_78110": [
+  "29e5d2f3f8eb0a63"
+ ],
+ "beir_cqadupstack_english_78129": [
+  "d8404779451be1b7"
+ ],
+ "beir_cqadupstack_english_78191": [
+  "64b67f3acaee5595"
+ ],
+ "beir_cqadupstack_english_78329": [
+  "4eb8990c93b688bd"
+ ],
+ "beir_cqadupstack_english_78354": [
+  "3f0f38ee7fd5b35a"
+ ],
+ "beir_cqadupstack_english_78451": [
+  "e9c75a71ed3bca0b"
+ ],
+ "beir_cqadupstack_english_78529": [
+  "9b7ce6634903a316"
+ ],
+ "beir_cqadupstack_english_78532": [
+  "efe5518f1532da46"
+ ],
+ "beir_cqadupstack_english_78683": [
+  "30e0dfc80dab9e27",
+  "493cd16dcdf95bbe",
+  "c1c4566a2c62c9a8",
+  "cc180a3d7c027364"
+ ],
+ "beir_cqadupstack_english_7894": [
+  "e9366aa5f1997343"
+ ],
+ "beir_cqadupstack_english_78985": [
+  "07eab56931aa7f7f",
+  "587c4eb26c3334a3",
+  "6702e22aadecf2b4"
+ ],
+ "beir_cqadupstack_english_79008": [
+  "a8b3eb15697c6c6e"
+ ],
+ "beir_cqadupstack_english_79084": [
+  "449b032ce38ab0d1",
+  "bd1c972cb4a3dc0d",
+  "ddab8b5a0e254e95"
+ ],
+ "beir_cqadupstack_english_79125": [
+  "b4ebb942dece994f"
+ ],
+ "beir_cqadupstack_english_79188": [
+  "cd331a7b2cb9174f",
+  "ed5fc7f22d251d20"
+ ],
+ "beir_cqadupstack_english_79259": [
+  "1d7d96718c65e7d4",
+  "27c2dcdec48ab00b",
+  "825fb79ed5258189",
+  "9045e456b7cba67c"
+ ],
+ "beir_cqadupstack_english_79557": [
+  "39bc98709cb93785"
+ ],
+ "beir_cqadupstack_english_79626": [
+  "1c3ce7874f5a84a4"
+ ],
+ "beir_cqadupstack_english_79724": [
+  "03257fda65d44f47",
+  "37361ffe83c4163d",
+  "3796379b1d4479ae",
+  "8f0a75e2dfd028df",
+  "da5ba76deddab12a",
+  "ef5ee2df1a63dfcd"
+ ],
+ "beir_cqadupstack_english_79728": [
+  "00811d1535430a30",
+  "7fe3c304884f1ac1",
+  "e65564f4b3c9201d",
+  "f170eb01cf103d76"
+ ],
+ "beir_cqadupstack_english_79766": [
+  "a6b087251bf527a6"
+ ],
+ "beir_cqadupstack_english_79838": [
+  "0c704ff326be2aeb"
+ ],
+ "beir_cqadupstack_english_80007": [
+  "9ca7af0966521d62"
+ ],
+ "beir_cqadupstack_english_80412": [
+  "b19b430ac38ae3c8"
+ ],
+ "beir_cqadupstack_english_80547": [
+  "966e4119106b723b"
+ ],
+ "beir_cqadupstack_english_80599": [
+  "2e000635095fd660",
+  "7d94440b05fe5214"
+ ],
+ "beir_cqadupstack_english_80780": [
+  "1e59e2ae14e93d2e",
+  "46617d9bfd2b7479",
+  "53f2f061228c17f0",
+  "8e545d87ed636f36",
+  "ca24aab6b4524960",
+  "defa74296961e8a6",
+  "e99c68207620f7fe",
+  "f65cf1c9ad67389a"
+ ],
+ "beir_cqadupstack_english_80790": [
+  "d05d07fe541ae053"
+ ],
+ "beir_cqadupstack_english_80876": [
+  "38ac1655529df947"
+ ],
+ "beir_cqadupstack_english_80893": [
+  "82de3ce079616782"
+ ],
+ "beir_cqadupstack_english_81019": [
+  "5d24ad9651224850"
+ ],
+ "beir_cqadupstack_english_81093": [
+  "7dd45be20b8cbb72",
+  "816161deb6dea6b7"
+ ],
+ "beir_cqadupstack_english_81383": [
+  "ff370ae6644f3349"
+ ],
+ "beir_cqadupstack_english_81708": [
+  "d8fcbddc263ed82d"
+ ],
+ "beir_cqadupstack_english_818": [
+  "12bdbee09222ab5b"
+ ],
+ "beir_cqadupstack_english_8186": [
+  "870afafa49d13e9d"
+ ],
+ "beir_cqadupstack_english_8218": [
+  "a4e17faef5de31c6"
+ ],
+ "beir_cqadupstack_english_824": [
+  "7c3c734a99cfe5e1"
+ ],
+ "beir_cqadupstack_english_8257": [
+  "b43fc2712f581b1d"
+ ],
+ "beir_cqadupstack_english_82766": [
+  "ee5dad40c9c0dfd6"
+ ],
+ "beir_cqadupstack_english_82823": [
+  "3103f2facef53fec",
+  "9accb9823a1371aa",
+  "f0729d0346ed6640",
+  "f34b64c0d41e79e5"
+ ],
+ "beir_cqadupstack_english_82854": [
+  "96befe2a8bc657f9"
+ ],
+ "beir_cqadupstack_english_82887": [
+  "db6231d07d7f2fcc"
+ ],
+ "beir_cqadupstack_english_82938": [
+  "5ed6153e84cce1d4"
+ ],
+ "beir_cqadupstack_english_82939": [
+  "1cb4c08b8e425c1b"
+ ],
+ "beir_cqadupstack_english_83002": [
+  "3adb2717b5f67669"
+ ],
+ "beir_cqadupstack_english_8328": [
+  "9d1391d8020039d1",
+  "a610da2773592fce",
+  "b77a201a8bb3566c",
+  "c342b93ca60cac55"
+ ],
+ "beir_cqadupstack_english_83357": [
+  "8ec4beb835dc10c3"
+ ],
+ "beir_cqadupstack_english_83383": [
+  "028844347a80e7d1",
+  "aa7f521336ef99fe",
+  "df005ee53c02be0a"
+ ],
+ "beir_cqadupstack_english_834": [
+  "8b3e895d86dbb0f1"
+ ],
+ "beir_cqadupstack_english_83424": [
+  "63f94bf45e869449"
+ ],
+ "beir_cqadupstack_english_83430": [
+  "e810fc12558d77ed"
+ ],
+ "beir_cqadupstack_english_83442": [
+  "4486b2523f24141a"
+ ],
+ "beir_cqadupstack_english_83463": [
+  "be901405e69762d2"
+ ],
+ "beir_cqadupstack_english_83597": [
+  "62e0341f6ea7cad6",
+  "81c1600901b8aba9",
+  "cfb0afcbb6bbeab2"
+ ],
+ "beir_cqadupstack_english_83631": [
+  "16634e98f37b036f"
+ ],
+ "beir_cqadupstack_english_83783": [
+  "bf8e8533b215ecce",
+  "e01444210e47ce79",
+  "eb2a4a1fbf2cee41"
+ ],
+ "beir_cqadupstack_english_838": [
+  "25fd9d7fd7815929"
+ ],
+ "beir_cqadupstack_english_83897": [
+  "b84843b2d67d4a20",
+  "e57d41dce32a7de2"
+ ],
+ "beir_cqadupstack_english_83940": [
+  "5f22e0b3842942fe",
+  "817039c2beb3ed8c"
+ ],
+ "beir_cqadupstack_english_84070": [
+  "5f524990775ff4eb"
+ ],
+ "beir_cqadupstack_english_84171": [
+  "5aee132b63ac76d9"
+ ],
+ "beir_cqadupstack_english_84177": [
+  "297ded057af37603"
+ ],
+ "beir_cqadupstack_english_84325": [
+  "8003ac6e451542fb"
+ ],
+ "beir_cqadupstack_english_84427": [
+  "4fe8b674e9adefb6"
+ ],
+ "beir_cqadupstack_english_84540": [
+  "0551cff6d6367cbe",
+  "64eda94304d42089",
+  "9bc261b885214c9e",
+  "a5072b28fba442ee",
+  "cfc14d55a86dfbf6"
+ ],
+ "beir_cqadupstack_english_84554": [
+  "1e2a1f1bbc720ae8",
+  "949f439da8c30ce1"
+ ],
+ "beir_cqadupstack_english_84726": [
+  "a3854769e31646e6"
+ ],
+ "beir_cqadupstack_english_84836": [
+  "4a9c50fa5a3d1421"
+ ],
+ "beir_cqadupstack_english_84839": [
+  "5913d14a16d9a006"
+ ],
+ "beir_cqadupstack_english_84855": [
+  "46b895ac7c10d729"
+ ],
+ "beir_cqadupstack_english_85076": [
+  "44136f5b7d350761",
+  "7799c72d429f0bc4",
+  "93d8dd180dcf5586",
+  "c3732eb935fb8c6a",
+  "c90b0abeba59058d",
+  "cfa58a2e8228afda",
+  "e34a676fe1ff0041",
+  "eb5d6bfb58838966"
+ ],
+ "beir_cqadupstack_english_8509": [
+  "1b0cc1f95cc6f309"
+ ],
+ "beir_cqadupstack_english_85119": [
+  "c90bd57701bed7af"
+ ],
+ "beir_cqadupstack_english_85166": [
+  "0da71a8d4da6be5a"
+ ],
+ "beir_cqadupstack_english_8520": [
+  "18e5e1449c0d0888"
+ ],
+ "beir_cqadupstack_english_85320": [
+  "9ba75ec3d15f6e52"
+ ],
+ "beir_cqadupstack_english_8543": [
+  "187c728d1210e727"
+ ],
+ "beir_cqadupstack_english_85496": [
+  "11b0c7a7cf4a2f1d"
+ ],
+ "beir_cqadupstack_english_8554": [
+  "978c7b2f21552845"
+ ],
+ "beir_cqadupstack_english_8557": [
+  "4db913d803374005"
+ ],
+ "beir_cqadupstack_english_85608": [
+  "b70f7fe86be54798"
+ ],
+ "beir_cqadupstack_english_85663": [
+  "16722516ef438c19",
+  "54551b5a2afbec42",
+  "882a098f21d843ea"
+ ],
+ "beir_cqadupstack_english_85713": [
+  "a513625c7d815edb"
+ ],
+ "beir_cqadupstack_english_86751": [
+  "c05766461a61c8f8",
+  "ffe1762c63bc8d32"
+ ],
+ "beir_cqadupstack_english_87114": [
+  "0a0e7410809f165b",
+  "82ec15ceb3f62e36"
+ ],
+ "beir_cqadupstack_english_87306": [
+  "0c09c813e52cf8d3",
+  "15e3dd248bfcd195",
+  "44c978de896316e3",
+  "58f40c3d4d72155a",
+  "cff752bd2fb7265a"
+ ],
+ "beir_cqadupstack_english_87389": [
+  "a11910a9e02859b7"
+ ],
+ "beir_cqadupstack_english_87432": [
+  "bed075968c0213a1"
+ ],
+ "beir_cqadupstack_english_87454": [
+  "91088eb037ea183f",
+  "9ca3ae926cfec723"
+ ],
+ "beir_cqadupstack_english_87555": [
+  "623486e1beee740c",
+  "7e2d9912abd8b6a7"
+ ],
+ "beir_cqadupstack_english_87745": [
+  "de44e370db518863"
+ ],
+ "beir_cqadupstack_english_87900": [
+  "e91914a5bcb045a8",
+  "ec1accc9e1f4ca1b"
+ ],
+ "beir_cqadupstack_english_87913": [
+  "435dfb8c192f0434",
+  "5b069b9550c55207"
+ ],
+ "beir_cqadupstack_english_87924": [
+  "2ac3e0da05fcf1f3",
+  "6092ecc2f357578d",
+  "93c4075b12af346b"
+ ],
+ "beir_cqadupstack_english_87977": [
+  "b8b8ef089cb33091",
+  "edcd97a59d54b536"
+ ],
+ "beir_cqadupstack_english_87979": [
+  "a227723312731769",
+  "b1c946a9b481fe44"
+ ],
+ "beir_cqadupstack_english_88027": [
+  "06dcb2634074c14b",
+  "084b7abdfd13a5b2",
+  "09fa52206d3404ae",
+  "14f8df9d1ecf069d",
+  "1c95cee7df1ae7d8",
+  "1f9e0e3f5644d0af",
+  "2951ccf476cbafe7",
+  "301eac4fa5b35e0b",
+  "410ce7f569bd867b",
+  "4eee544a17cb67f7",
+  "594c67a443365121",
+  "6437fe6aab0fc44f",
+  "7159dc6bc14bdf60",
+  "7a2a8da3668eddde",
+  "87ec0c2e955eb69c",
+  "90e7b1326cb7637c",
+  "98e336d93efee900",
+  "993ee64319ee93e3",
+  "9e2947fd347779da",
+  "b8f2189454900839",
+  "c51ca17ee5569bf1",
+  "d143a552f1b6249f",
+  "df4ae4fcd354139f",
+  "e7152724883851c8",
+  "e819d522ccc9d1d7",
+  "ef12110f9840415f"
+ ],
+ "beir_cqadupstack_english_88109": [
+  "03e9d20986bac530",
+  "4fc59bbfcd916503",
+  "83940ed6c8a5e14d",
+  "bfbfd61f163af405",
+  "c3eb9ceaad5c2d05",
+  "c77ec63b23047c39",
+  "d0cb0e9e61968fe8",
+  "f42b1ba4243245ea"
+ ],
+ "beir_cqadupstack_english_88115": [
+  "1d0496176f2d838c"
+ ],
+ "beir_cqadupstack_english_88221": [
+  "b13ba68364ef5cd8"
+ ],
+ "beir_cqadupstack_english_88367": [
+  "c10f5df56e1ef877"
+ ],
+ "beir_cqadupstack_english_88382": [
+  "937afabe9c0aceab"
+ ],
+ "beir_cqadupstack_english_884": [
+  "c553df6e71c35e73",
+  "db122b69dccaabdf"
+ ],
+ "beir_cqadupstack_english_88411": [
+  "aa1bbc87563005c6"
+ ],
+ "beir_cqadupstack_english_8900": [
+  "9e57b91a8fc466c6"
+ ],
+ "beir_cqadupstack_english_8905": [
+  "5c6815f11daab022",
+  "881bfffcbd82b9a5",
+  "cfb0ea82968082bf"
+ ],
+ "beir_cqadupstack_english_89564": [
+  "3db6b91dd7bbeae8"
+ ],
+ "beir_cqadupstack_english_89571": [
+  "b0fb1f7785bf9836"
+ ],
+ "beir_cqadupstack_english_89604": [
+  "4de2c5f52956ff5d"
+ ],
+ "beir_cqadupstack_english_89661": [
+  "3e4e3360667cf0c7",
+  "4c6b32254a2e7330",
+  "55fbacebd6a04412",
+  "f7f58189b6d9fc94"
+ ],
+ "beir_cqadupstack_english_89698": [
+  "13ac4bf9a7153e2d",
+  "8344b6627daf36a0"
+ ],
+ "beir_cqadupstack_english_898": [
+  "2170c8f3060082c8"
+ ],
+ "beir_cqadupstack_english_89892": [
+  "5b549650cb374f8f"
+ ],
+ "beir_cqadupstack_english_90244": [
+  "ac3fd85cea56c93c"
+ ],
+ "beir_cqadupstack_english_90325": [
+  "49410369af8d57ea"
+ ],
+ "beir_cqadupstack_english_90388": [
+  "8a9738c1748d8aca"
+ ],
+ "beir_cqadupstack_english_90642": [
+  "51d71e80b8694b29",
+  "f46416f224122efc"
+ ],
+ "beir_cqadupstack_english_90666": [
+  "b7c03ac9a847c540"
+ ],
+ "beir_cqadupstack_english_90703": [
+  "b19a1f352b400bd8"
+ ],
+ "beir_cqadupstack_english_90874": [
+  "a62bab6c58128acd"
+ ],
+ "beir_cqadupstack_english_90875": [
+  "447e75890dca2846"
+ ],
+ "beir_cqadupstack_english_90892": [
+  "155d5a7844acebd0",
+  "464a5acb52735a49",
+  "51df05e7cd97f0e2",
+  "6b9bcdff4c4494e0"
+ ],
+ "beir_cqadupstack_english_90979": [
+  "f2ebdc57c5d5ffb3"
+ ],
+ "beir_cqadupstack_english_91056": [
+  "033b68bee681bc14",
+  "8bd2c8ee95ce957f"
+ ],
+ "beir_cqadupstack_english_91209": [
+  "0a69f9991333655b"
+ ],
+ "beir_cqadupstack_english_91230": [
+  "b7ffc6a8793abe5b"
+ ],
+ "beir_cqadupstack_english_91269": [
+  "56437c8f638300e2"
+ ],
+ "beir_cqadupstack_english_91343": [
+  "04898d74ea199f48",
+  "ceed1bc99f85552a"
+ ],
+ "beir_cqadupstack_english_91664": [
+  "8120200f1d198b4e",
+  "87550adfe5637ffe"
+ ],
+ "beir_cqadupstack_english_91676": [
+  "bac31ed44fadc972"
+ ],
+ "beir_cqadupstack_english_91727": [
+  "1900960feabcd3ec",
+  "47e383e0d2736af4",
+  "591abcd5b836c7c1",
+  "7b0b0f366b7c0157",
+  "b26acabf64ef94bd",
+  "b7d086371485017a"
+ ],
+ "beir_cqadupstack_english_91783": [
+  "29ca6b12ebf1128b"
+ ],
+ "beir_cqadupstack_english_91929": [
+  "6727ac9c11ab8a54"
+ ],
+ "beir_cqadupstack_english_91949": [
+  "1b484ce2195da768",
+  "28b2b8467aa7efba",
+  "60a672141be1259c",
+  "6ca1f0a1cdf708ee"
+ ],
+ "beir_cqadupstack_english_91973": [
+  "02a9690e7bbecf6b"
+ ],
+ "beir_cqadupstack_english_9205": [
+  "22b54622ad7f1b64",
+  "4d8b791d75b13b30",
+  "bfeb2bec35a26e4a",
+  "df48b509c9279882",
+  "e279d3bed04b6ba6",
+  "f538f753be07fead"
+ ],
+ "beir_cqadupstack_english_92178": [
+  "0ba8bf73d86688b6",
+  "4e16c80ea127b666"
+ ],
+ "beir_cqadupstack_english_92266": [
+  "0364a3854b660097",
+  "05f336c42051893c",
+  "100251ded5b24454",
+  "36b8e18f4c6efc7f",
+  "49a24a25de2cb2b4",
+  "697ea0cd43601820",
+  "6bd589ca07b26d26",
+  "859dc71c1b31671f",
+  "8d0878c776134ae8",
+  "9e243b3c1248130a",
+  "b9ebd36ad95fb756",
+  "dc21528c20de1f50",
+  "e19fd720b9eb28b3",
+  "e932db2580ed46a8"
+ ],
+ "beir_cqadupstack_english_92290": [
+  "00b43cf7d43550f5",
+  "0171840debcd0d0e",
+  "01fe81ad9d760916",
+  "56119909b92ef927",
+  "5a4bdfd84bbaef09",
+  "61cbcfe7d7acc4b3",
+  "61e71d7bcfd44900",
+  "9bed217a120def6c",
+  "a14e3701e4c4e4d6",
+  "cacf2a45701c4c27",
+  "da8450aa03c41702",
+  "fef8e423aa704d8b"
+ ],
+ "beir_cqadupstack_english_92354": [
+  "3c1d253a8c2f40e9"
+ ],
+ "beir_cqadupstack_english_92389": [
+  "31975e99c55c51bd",
+  "ab9e2e46e04fa89d"
+ ],
+ "beir_cqadupstack_english_9239": [
+  "52f1474e8b7954c5"
+ ],
+ "beir_cqadupstack_english_92439": [
+  "2119aa74143db18c"
+ ],
+ "beir_cqadupstack_english_92457": [
+  "5049b7fdc72b78e5",
+  "c24a4b509d25c033"
+ ],
+ "beir_cqadupstack_english_92762": [
+  "661834ca57b79846",
+  "7eb647e776a56323",
+  "7f96a113929306fb",
+  "ed89e842592996c5"
+ ],
+ "beir_cqadupstack_english_92768": [
+  "1732c578c5411ede"
+ ],
+ "beir_cqadupstack_english_92883": [
+  "b346c2972bdfd26c",
+  "dfb87c4b65807298"
+ ],
+ "beir_cqadupstack_english_92920": [
+  "b0b20bd025feb367"
+ ],
+ "beir_cqadupstack_english_93004": [
+  "2bcc92b95a74e785"
+ ],
+ "beir_cqadupstack_english_93137": [
+  "5051b2ab14bbb26c"
+ ],
+ "beir_cqadupstack_english_9323": [
+  "0db4fb9846253a75",
+  "112eae7174ada76f",
+  "266c5bbcb272fff5",
+  "7073d3c5f43c8a49",
+  "7b902cd518678355",
+  "c5aa1bde669e797a",
+  "d613f476df976372"
+ ],
+ "beir_cqadupstack_english_93455": [
+  "f2cb7ed5551a1031"
+ ],
+ "beir_cqadupstack_english_9354": [
+  "6e8e77ecc60798a8"
+ ],
+ "beir_cqadupstack_english_93650": [
+  "9e6b3c8714879f77"
+ ],
+ "beir_cqadupstack_english_93685": [
+  "5e41e79ed6977176"
+ ],
+ "beir_cqadupstack_english_9373": [
+  "15920d28e00ad8e1"
+ ],
+ "beir_cqadupstack_english_9404": [
+  "0d5a7daf2c87027b"
+ ],
+ "beir_cqadupstack_english_941": [
+  "4b9fc49f006f7060",
+  "6ca0e78c4cc8ea3f",
+  "6f67a2d2f064f9c3",
+  "91a5dac8ce9c91ed",
+  "b50b3e9c1aa70b26",
+  "caa5e57ad5fe78bf",
+  "e816c71d26ef1260"
+ ],
+ "beir_cqadupstack_english_9427": [
+  "16009a2275aea529"
+ ],
+ "beir_cqadupstack_english_9434": [
+  "48a668e246152b7e"
+ ],
+ "beir_cqadupstack_english_94494": [
+  "14f6baa67e5abd16",
+  "61b5b2d07ed2f751"
+ ],
+ "beir_cqadupstack_english_94523": [
+  "33ee400f9693fc3e",
+  "b4384fb6c9623cd4"
+ ],
+ "beir_cqadupstack_english_9467": [
+  "e908735e6e1bffda"
+ ],
+ "beir_cqadupstack_english_94744": [
+  "8276a5a64b331024"
+ ],
+ "beir_cqadupstack_english_94750": [
+  "6917b9f1c98ae66e"
+ ],
+ "beir_cqadupstack_english_94802": [
+  "604c63ba17f0c324",
+  "e9b17eb133e28388"
+ ],
+ "beir_cqadupstack_english_94873": [
+  "013176db613bcd61"
+ ],
+ "beir_cqadupstack_english_94882": [
+  "40fc32c153245909"
+ ],
+ "beir_cqadupstack_english_95062": [
+  "1cd29c194c073ff0",
+  "b7560d0a70b1b9d2",
+  "bbee3736e31d31ae"
+ ],
+ "beir_cqadupstack_english_95179": [
+  "bfb372010db388ec"
+ ],
+ "beir_cqadupstack_english_95194": [
+  "0874e7577a1661c5"
+ ],
+ "beir_cqadupstack_english_95261": [
+  "64c7a381c283d9fd"
+ ],
+ "beir_cqadupstack_english_95316": [
+  "8972159154cdb8d2"
+ ],
+ "beir_cqadupstack_english_95409": [
+  "3ae72b5117ad3a0f"
+ ],
+ "beir_cqadupstack_english_95444": [
+  "4425550de6703e67"
+ ],
+ "beir_cqadupstack_english_9549": [
+  "303a6c7d93ff06b5"
+ ],
+ "beir_cqadupstack_english_95796": [
+  "1b01b3edfb1c9f57"
+ ],
+ "beir_cqadupstack_english_95844": [
+  "0b3fd062db5ef520",
+  "12ea91983df1479d",
+  "3526d39d8d4e9a59"
+ ],
+ "beir_cqadupstack_english_9587": [
+  "9db9be2930823199"
+ ],
+ "beir_cqadupstack_english_95956": [
+  "0382bdc9a5aaf171",
+  "70ae7d905ae13150",
+  "a42883d8133d309e",
+  "a8ba9856c9cfd5a3",
+  "c5e22a6f85a9def3"
+ ],
+ "beir_cqadupstack_english_95958": [
+  "47fd58e6e33b5d5a"
+ ],
+ "beir_cqadupstack_english_95980": [
+  "09b44ecce17c3425"
+ ],
+ "beir_cqadupstack_english_9599": [
+  "3adc7e14e0e473f0"
+ ],
+ "beir_cqadupstack_english_96014": [
+  "826b365ffa382b95"
+ ],
+ "beir_cqadupstack_english_96152": [
+  "bf5fbd9c7a8e1d4d"
+ ],
+ "beir_cqadupstack_english_96177": [
+  "59aad2db5c92d780",
+  "81c81676d9fc8416",
+  "902073dc6c5f4c63",
+  "f1fd3f051c3aa51c"
+ ],
+ "beir_cqadupstack_english_96217": [
+  "10148efe0fba1ca8",
+  "39940b7ee801876e",
+  "4e3bd1c137dcdade",
+  "d0a5483be140905c"
+ ],
+ "beir_cqadupstack_english_96300": [
+  "daf48112a559a235"
+ ],
+ "beir_cqadupstack_english_96389": [
+  "bd9876a98c30b727"
+ ],
+ "beir_cqadupstack_english_9641": [
+  "995d775cf77d427b",
+  "a43ebbdfe8f069d5"
+ ],
+ "beir_cqadupstack_english_96460": [
+  "a52c9ba50e3a246f"
+ ],
+ "beir_cqadupstack_english_96499": [
+  "d255e25ba36286cc"
+ ],
+ "beir_cqadupstack_english_9660": [
+  "a6f8026721f2b40a"
+ ],
+ "beir_cqadupstack_english_96671": [
+  "111d7af000d2c792"
+ ],
+ "beir_cqadupstack_english_96771": [
+  "06f3b62afb548773",
+  "9a0330e5c7a8d7f0"
+ ],
+ "beir_cqadupstack_english_96871": [
+  "6f3a631580d82987"
+ ],
+ "beir_cqadupstack_english_96904": [
+  "0cd6e3b36d71a1f2",
+  "13e5b63e9ab8c07b",
+  "223b68b4f573985d",
+  "2c3677a6fdb6e9f3",
+  "2fe2212bf954d584",
+  "37b3dda5982f362a",
+  "3d80dfb9556b25e2",
+  "3f1bcf3cf3904b89",
+  "44ce3a385f1409cf",
+  "4e5632d0463aba6b",
+  "5c10e9dba72a7cef",
+  "5c1c3f5da8a44efc",
+  "5f2c4cc5d064f6ac",
+  "88d2f9d7f06363aa",
+  "8bbea36fe6497c94",
+  "9a052bd5bb5714f0",
+  "bde62e12c77178c4",
+  "c044da1d93102698",
+  "c42e70896d7b61ef",
+  "c430ec103ed95868",
+  "c5b813b3ab223e8b",
+  "c7eed392e4067065",
+  "e13ac2910cd5d8d6",
+  "e9512b3aff60d70a",
+  "ead1deb4d6c8396d",
+  "f545d2117005ecb6"
+ ],
+ "beir_cqadupstack_english_96961": [
+  "d1fd74f27051fc30"
+ ],
+ "beir_cqadupstack_english_96980": [
+  "1fa123c0477bdb58",
+  "4eceaf4b2c463de5",
+  "5e982071162144ba",
+  "6bc82066400af2ea"
+ ],
+ "beir_cqadupstack_english_97154": [
+  "01be6a16a39ee474",
+  "0b95ba45eae7d27c",
+  "1167324fed95de7b",
+  "23f3a3a8b7325406",
+  "2e6a9cb970b26211",
+  "3194e83465b5ed60",
+  "4425649c6d69f0c9",
+  "44e0cb915b23155e",
+  "4752158375207dfb",
+  "5111cc5b72f8cacb",
+  "5385af871ecb070d",
+  "5c24dcc5eadde3f8",
+  "6173b024f16b8179",
+  "617e4d99e9c7b585",
+  "69278504b7cda865",
+  "6ff3f89c058a1f6a",
+  "761b192e29c6821a",
+  "780c2979094ce093",
+  "78a62b5e9500fda9",
+  "78ca8f625630bf92",
+  "7fbd34fcb6afc352",
+  "8212b8a95488178e",
+  "939be4464c8c7c70",
+  "94547ba6aa661d75",
+  "9a8f177848de8b9d",
+  "9d6f25d643af86f6",
+  "9ee4c9798be2025d",
+  "a0dbdf860e10f6e2",
+  "ac1bd4d5d70e74ee",
+  "b52142d823c3acf5",
+  "b5a761330c931f69",
+  "bbcdef79347858f0",
+  "bc3595312f041be1",
+  "bec5f8b6bedae2d0",
+  "c03a74919fd77f9f",
+  "c42a661854deff95",
+  "d4f03101a01e0f03",
+  "d7dd8b9c8c86567b",
+  "e4556eb56068e085",
+  "e63a19405cdc758d",
+  "ea0615431e354453",
+  "f8dfeb05d95b3d44",
+  "ff78c702f17a108c"
+ ],
+ "beir_cqadupstack_english_97370": [
+  "c6ee139e32034a72"
+ ],
+ "beir_cqadupstack_english_97431": [
+  "4fe117a196040f25"
+ ],
+ "beir_cqadupstack_english_9752": [
+  "047dfb001a57ef46",
+  "3e964bae9eb177c1",
+  "6b6916a4e0e296a7",
+  "8187100707370a1e"
+ ],
+ "beir_cqadupstack_english_97522": [
+  "4449894df446bf0a"
+ ],
+ "beir_cqadupstack_english_97660": [
+  "2d73352afa1b3581"
+ ],
+ "beir_cqadupstack_english_9816": [
+  "ba776f10bfe84e47"
+ ],
+ "beir_cqadupstack_english_9891": [
+  "1d53a7aeadf5130a"
+ ],
+ "beir_cqadupstack_english_99957": [
+  "51240c266ae5e40c",
+  "58b29c24416bf60f",
+  "5be2d54a9f4d7a54",
+  "78cca2b5a131111c",
+  "aaaa319d08a59b10",
+  "c4dfbb176b1be268",
+  "ea992ec23650fd40",
+  "fb2d838b5536c283"
+ ]
+}

@@ -1,0 +1,3024 @@
+{
+ "beir_fiqa_10034": [
+  "59fd4bff216f87cc",
+  "65ac64820ecbd61f"
+ ],
+ "beir_fiqa_10039": [
+  "6bf53dbc6085314b"
+ ],
+ "beir_fiqa_10109": [
+  "11b5c15e136026e4",
+  "261576e7248f05cb",
+  "2b8d96113cc4110f",
+  "4f1487523f4512f2",
+  "4f7410576f5b2293",
+  "d9ee37c3410ae52b",
+  "de20017ba1b4c949"
+ ],
+ "beir_fiqa_10122": [
+  "28ebafaac22c5ed1",
+  "7db74311f11aab60",
+  "8a8ff4b15217cec8",
+  "c97634d58a67c8a7"
+ ],
+ "beir_fiqa_10136": [
+  "316af82f35b2493a",
+  "4bcae0c55acc86a7",
+  "e5c418b2c1d26520"
+ ],
+ "beir_fiqa_10137": [
+  "faf8c49b6f197e4d"
+ ],
+ "beir_fiqa_10152": [
+  "94a8d8244768c995"
+ ],
+ "beir_fiqa_10183": [
+  "4bd5af7902760d7c",
+  "9a274fb1e10013ed"
+ ],
+ "beir_fiqa_10213": [
+  "037428e589d9a634",
+  "a982559325087fcc",
+  "deb41d613cc9e94a"
+ ],
+ "beir_fiqa_10246": [
+  "250f2af6882c8cef",
+  "52cd0894f3827bbc"
+ ],
+ "beir_fiqa_10267": [
+  "89ecd97e154f8b7e",
+  "aaf117b6c0fe6592",
+  "c70f2268909845b4",
+  "c8b8241e0dad9699",
+  "da512f986c097239"
+ ],
+ "beir_fiqa_104": [
+  "10cb342da1836d60",
+  "8eea0968973f6321"
+ ],
+ "beir_fiqa_10414": [
+  "0db7320c0776fb23",
+  "c653c43dc63f4c34"
+ ],
+ "beir_fiqa_10447": [
+  "0ed417f283df2945",
+  "a5a8087749d180e8",
+  "c772f67b8c76e2cb"
+ ],
+ "beir_fiqa_10462": [
+  "0f34e465ba33a0da",
+  "179654852034f418",
+  "5419e39bbdf13756",
+  "69e68ffd7e9f25f0",
+  "c51a0895bc5de3fa",
+  "fcb434f211e9de45"
+ ],
+ "beir_fiqa_10482": [
+  "a5d9fff657aa312c"
+ ],
+ "beir_fiqa_10497": [
+  "027b7ea371cfc58e",
+  "0625f8e415196ded",
+  "117f41ceaa86c517",
+  "1fabc4d72d67f784",
+  "3b6bf2618fa24c73",
+  "7d99467e1f71a4b8",
+  "80842943a9e41ece",
+  "96469495db2d77bb",
+  "b5c424d0cde08aec",
+  "c7438101f1352f53"
+ ],
+ "beir_fiqa_10526": [
+  "0626c4c07a3602a7",
+  "c696c8ae2245d4d0"
+ ],
+ "beir_fiqa_10547": [
+  "598a28a9f0a0321f"
+ ],
+ "beir_fiqa_10558": [
+  "44d0e5361c4af871",
+  "75d561910aec9435"
+ ],
+ "beir_fiqa_10596": [
+  "0a5a891c9f0a10ec",
+  "35eee9dca67b8a17",
+  "750bbbedc7d1f255",
+  "dfdb0032e62c7ec6",
+  "faabcea15c823108"
+ ],
+ "beir_fiqa_106": [
+  "955fb86aea13d876"
+ ],
+ "beir_fiqa_10601": [
+  "363321a7f489bf42"
+ ],
+ "beir_fiqa_10628": [
+  "dbefd30ee8ed077c"
+ ],
+ "beir_fiqa_10639": [
+  "11ba72e50eed7f71",
+  "7663738ac8d254a0",
+  "7bc78a50a2f89646",
+  "aba0af4dd827e9b1",
+  "be842973505c0fdf"
+ ],
+ "beir_fiqa_10645": [
+  "35bdb5a62e658478",
+  "9ae4b24fbf5b10b8"
+ ],
+ "beir_fiqa_10674": [
+  "a03f152d802f88d7",
+  "ee0aeef599cbf56f",
+  "f066e7e000fed7b3",
+  "f2631d3154ab51ce"
+ ],
+ "beir_fiqa_10710": [
+  "c13810c113abb11c"
+ ],
+ "beir_fiqa_10734": [
+  "0085a6643fe589dc",
+  "40b0426c08eedbb1",
+  "4893d8aa26baf195",
+  "85ff3f29d353b9d7",
+  "a271852613bf9a7a",
+  "e53658a7d8669b21"
+ ],
+ "beir_fiqa_1074": [
+  "27fb17767d350c10",
+  "9a3da7e7379b80e0"
+ ],
+ "beir_fiqa_10792": [
+  "04b983f5925f898c",
+  "94558b3e8445a638"
+ ],
+ "beir_fiqa_10808": [
+  "2f9f22719045f820",
+  "af9987547a287be7",
+  "c78a54702bd4e9d7"
+ ],
+ "beir_fiqa_10809": [
+  "0c38cbe4667103ea",
+  "6229fdc90e140417",
+  "fa20ca942ee0b2ea"
+ ],
+ "beir_fiqa_10812": [
+  "06967c53074c1529",
+  "155a844eaea34708",
+  "7444812cdb2ddc7f",
+  "be4ed6ada26ea2de"
+ ],
+ "beir_fiqa_10827": [
+  "2e688a312978ef88",
+  "5e0a16e646522876",
+  "9dc78b1b07e9662f",
+  "bdedaf43b50ec9a0",
+  "d8c8393de738e155"
+ ],
+ "beir_fiqa_10845": [
+  "ac91f2775f7fd40d"
+ ],
+ "beir_fiqa_1085": [
+  "6245a78f676a7187",
+  "8804cf30fef44b08"
+ ],
+ "beir_fiqa_109": [
+  "05884e4ac9d12c3f"
+ ],
+ "beir_fiqa_1090": [
+  "600caa76e8be3737",
+  "63b4c95d87f64f90"
+ ],
+ "beir_fiqa_10912": [
+  "46c5ed63d2810231"
+ ],
+ "beir_fiqa_10932": [
+  "c3cf766c2eae5394"
+ ],
+ "beir_fiqa_10975": [
+  "2be21d4f562339f8"
+ ],
+ "beir_fiqa_10979": [
+  "0961344c1f12fbbb",
+  "235edaee8ff18785",
+  "959120ca5cf77d4a",
+  "b7c9b09cf279ce05"
+ ],
+ "beir_fiqa_10994": [
+  "0183d36ef867f711",
+  "337ce896d3b41fdd",
+  "c430b22213b2ad98"
+ ],
+ "beir_fiqa_11039": [
+  "0e88d2a55ec46631",
+  "1e0ae34e64c640bc",
+  "2011f93deb71a691",
+  "27209dacff3cdf5c",
+  "7cea847971a5d3e8",
+  "951d2691cef02947",
+  "b5ef6d0c11036408",
+  "daf64631878ab602"
+ ],
+ "beir_fiqa_11054": [
+  "00e25eb48dc0144b",
+  "b9964e727413e151"
+ ],
+ "beir_fiqa_11088": [
+  "546af51c97ac8da9"
+ ],
+ "beir_fiqa_1150": [
+  "4323088b596d5341",
+  "7cfd85ba0b6baf7a",
+  "b407ff6f2410a325",
+  "fdbbb6dd664a25bd"
+ ],
+ "beir_fiqa_1157": [
+  "8c1d7c3d84ecc39c",
+  "e05da3b6a2bab4cf"
+ ],
+ "beir_fiqa_1159": [
+  "582d755fa3337d3a"
+ ],
+ "beir_fiqa_1198": [
+  "3451540d1e46f275"
+ ],
+ "beir_fiqa_1230": [
+  "fa1da9e732fc545e"
+ ],
+ "beir_fiqa_1281": [
+  "7174a22cc7e5f888"
+ ],
+ "beir_fiqa_1284": [
+  "f08f60a024c76bb1"
+ ],
+ "beir_fiqa_1297": [
+  "dc3e366fc5c6b4d9"
+ ],
+ "beir_fiqa_1306": [
+  "b43db3b849357b98",
+  "b8681f8fd6f0047a",
+  "d22f6cf957305df9",
+  "db3b31e1d3cd022a"
+ ],
+ "beir_fiqa_1309": [
+  "5fa43f1da406219f",
+  "a8832f945a88ab19",
+  "d2139dcdef984252",
+  "e12c7ebf21278c56"
+ ],
+ "beir_fiqa_1310": [
+  "e67ccbd5f456dc86"
+ ],
+ "beir_fiqa_1321": [
+  "b60ca6a7c08870c6",
+  "d13b390386d86742"
+ ],
+ "beir_fiqa_1322": [
+  "4db0bbf2a8405a37",
+  "c4dffb414bc83d86",
+  "c9c7d8ab85d6dc9d",
+  "f548bdeafc0c7db4"
+ ],
+ "beir_fiqa_1391": [
+  "536943434e5d9cf1",
+  "7f6e900397a0631f",
+  "bd6e82dc6827f0b2"
+ ],
+ "beir_fiqa_1393": [
+  "4baee322e5adedee",
+  "95de415159572a58",
+  "a1aacaae4f79b440",
+  "d0570a1cb5038889",
+  "d3b8be15cee72817",
+  "ea37880870a89416"
+ ],
+ "beir_fiqa_1415": [
+  "31b64e810fd6fb70",
+  "551743be796853dc",
+  "adbd5bb312512dfd",
+  "c8533290540b4c09"
+ ],
+ "beir_fiqa_1416": [
+  "d357722f62dbcfd4"
+ ],
+ "beir_fiqa_1441": [
+  "3119717f790e86cb",
+  "86b9b4e81cbaadbf",
+  "e3705456fab063f2",
+  "f74dfcdbff29a6b3"
+ ],
+ "beir_fiqa_1451": [
+  "fc238bd1cd085985"
+ ],
+ "beir_fiqa_1469": [
+  "359e5446728c50b9"
+ ],
+ "beir_fiqa_15": [
+  "cb82dc7aaa99f051"
+ ],
+ "beir_fiqa_1530": [
+  "285f8b61af5cc6f0",
+  "2c1b2dde501c6062",
+  "550e037f4870e1a9"
+ ],
+ "beir_fiqa_1670": [
+  "010e887da32e0262",
+  "725c22cc6252343b",
+  "b6f1c91d49070a29"
+ ],
+ "beir_fiqa_1676": [
+  "142d4fa04f01d533",
+  "1d3e187c433fc1e7",
+  "cf345f8dbb34705a",
+  "e5606c1642eb0fe3"
+ ],
+ "beir_fiqa_1736": [
+  "414db90bea386666",
+  "4608d57e22e239af",
+  "556e2a7be30bd955",
+  "ad5d853d46a8f63f",
+  "ec8bee740309de4b"
+ ],
+ "beir_fiqa_1748": [
+  "0291c53d3c9fd197",
+  "56f78fadcc6620ff",
+  "7569d8e00215c647"
+ ],
+ "beir_fiqa_1783": [
+  "6862aef07c0ede0b"
+ ],
+ "beir_fiqa_18": [
+  "2e84b141a3a41ce4"
+ ],
+ "beir_fiqa_1812": [
+  "0ad9dd063dbe7126",
+  "c2b3dc8937adf865"
+ ],
+ "beir_fiqa_1815": [
+  "d48e2e8ce2c86b9a"
+ ],
+ "beir_fiqa_1819": [
+  "79aa9c143da96c93",
+  "8edacfff866df817",
+  "93687bdccebeea5d",
+  "bdb28e8370e795f7",
+  "c8ced2ab4ce9c67e",
+  "e5e0f0c4ed4bcb8c"
+ ],
+ "beir_fiqa_1824": [
+  "04a45e52ec75a5ea"
+ ],
+ "beir_fiqa_1826": [
+  "644e5f28d65fcd69",
+  "6d1e96d393ed8f29",
+  "c20427b9301a322f",
+  "f2cd44ddd56301e8"
+ ],
+ "beir_fiqa_1832": [
+  "004717132ee2e93a"
+ ],
+ "beir_fiqa_1871": [
+  "1a7a2ef271053112",
+  "8a3dba9d3c5b8d2f",
+  "8c5008522404b6a7",
+  "b2e4df0645e932e5"
+ ],
+ "beir_fiqa_1877": [
+  "e521bc4a21cf3488"
+ ],
+ "beir_fiqa_1889": [
+  "91fa29700a6742fe"
+ ],
+ "beir_fiqa_1915": [
+  "1a60a9c2e9352d4c",
+  "d1361aba0e3f08dd"
+ ],
+ "beir_fiqa_1920": [
+  "15db27a92657bcc5"
+ ],
+ "beir_fiqa_1933": [
+  "3d9ec9ce5baa9d70"
+ ],
+ "beir_fiqa_1948": [
+  "87793400526879ea"
+ ],
+ "beir_fiqa_1994": [
+  "41ace3694ac89895",
+  "431c1a109664e39f",
+  "4b8678a366efeab1",
+  "4c6032eea234186e",
+  "fef03dba3448daee"
+ ],
+ "beir_fiqa_2010": [
+  "2208ad8a2a5b6ecf",
+  "8e8d062b442602a7",
+  "a10e9a452a6dbefb"
+ ],
+ "beir_fiqa_2051": [
+  "65746fb3331d4228"
+ ],
+ "beir_fiqa_2070": [
+  "3241c0cdf7852891",
+  "3db7e6f2d6c3449b",
+  "d1928f0bb7507ba0"
+ ],
+ "beir_fiqa_2075": [
+  "055f5437e98fccc2",
+  "1845408b9b2694d0",
+  "3171b9c61d7af283",
+  "537d4d0736bf66bd",
+  "736f5d5b3a842172",
+  "ad889fd6ccadc71c",
+  "d6dc91e7b3f35a11",
+  "dfa6ec0a3aff4ccc",
+  "fd956e7348ea15bf"
+ ],
+ "beir_fiqa_2076": [
+  "7751c894a3b132b8",
+  "e69750e50645d508"
+ ],
+ "beir_fiqa_2088": [
+  "91985d0d3f20de79",
+  "9bceab636c11ba65"
+ ],
+ "beir_fiqa_2108": [
+  "68607eab81fed837",
+  "718e0fe7565ca5ef",
+  "bd7dacd17a6cdceb"
+ ],
+ "beir_fiqa_2118": [
+  "c4558f0b39ec0eb1"
+ ],
+ "beir_fiqa_2154": [
+  "532f00a703312a1a"
+ ],
+ "beir_fiqa_2181": [
+  "471317d00727f8f7",
+  "4f22d965afb71419"
+ ],
+ "beir_fiqa_2183": [
+  "48cc32af7c3903c9",
+  "4eb7fd844d48a731",
+  "5e2fb510d5705198",
+  "8d40c2e8a09b62de",
+  "976fe334090587d6",
+  "ab9eacdad9dd97b7"
+ ],
+ "beir_fiqa_2204": [
+  "08aa7d0fa98ab7ef",
+  "146032231b1cc9c0",
+  "546e1d208dbecb4f",
+  "57ac19d705bf7e8f",
+  "822b44e8a213010a",
+  "ab848649c2e94651",
+  "ca8c43e6f5a58cf3",
+  "fc047f1ff7b49f5a"
+ ],
+ "beir_fiqa_2264": [
+  "36a161ae233bae32",
+  "3785ddfb404e1954"
+ ],
+ "beir_fiqa_2296": [
+  "2350422476a6198f",
+  "31ec7f2a2ad8326e",
+  "3f23683c1a893909",
+  "80555176c2c82073",
+  "9072359741792ec6",
+  "b3f3d657b64d5828",
+  "dd0a5efa65399fe0",
+  "df4fdc2d40697548",
+  "e998a105c8b73bd0"
+ ],
+ "beir_fiqa_2306": [
+  "8182808738a62733",
+  "eff4628d375b26a7"
+ ],
+ "beir_fiqa_2316": [
+  "ae5cf66f45aed03d",
+  "f99090764af3dbc8"
+ ],
+ "beir_fiqa_2318": [
+  "80a19fce4c834f05"
+ ],
+ "beir_fiqa_2330": [
+  "59a753637f3785f8",
+  "66e47842ae6da6c0"
+ ],
+ "beir_fiqa_2334": [
+  "3a72c77deb192097",
+  "9878310c49260c88",
+  "f9bdebadacdc943a"
+ ],
+ "beir_fiqa_2348": [
+  "1160c26784c15e96",
+  "1c216ddab660d0c7",
+  "30b806ea8268bcdd",
+  "34aca58eb1fd8ff3",
+  "38ae8bc9cd14c9d4",
+  "48a6600817387f65",
+  "4c30149363f266db",
+  "67ad65c8852ed7ab",
+  "67bcd2ee54461c78",
+  "6e9d09a26d8c174d",
+  "7f9c828c051d5871",
+  "877c8aa8205b12bd",
+  "8ad808dadbaf788b",
+  "b0d62e5805b4015c",
+  "b3c17d6c36ec8752",
+  "bea87fd2bbf6c650",
+  "f618d1c2749cfb13"
+ ],
+ "beir_fiqa_2376": [
+  "055f0d4d3d186048",
+  "32083b8d4ca6964d",
+  "48c134ca96533110",
+  "a18749b532dbe7df",
+  "a29f62f219b211a9",
+  "acc9fd6b50b1d037",
+  "d9968d5229797ab9",
+  "e0a0b556f514d3d8",
+  "eb4e36eacdc6c931"
+ ],
+ "beir_fiqa_2383": [
+  "028dd7d729af2988",
+  "4ca12e8efc87c06d"
+ ],
+ "beir_fiqa_2384": [
+  "6036717c5b5ffd0f"
+ ],
+ "beir_fiqa_2385": [
+  "3ee6a866d1977378",
+  "eedce4e6b2b0b9ad"
+ ],
+ "beir_fiqa_2388": [
+  "6b0a6c657a31f5a8"
+ ],
+ "beir_fiqa_2395": [
+  "28240ba08b7a3f90"
+ ],
+ "beir_fiqa_2398": [
+  "352c265cbd0c8953",
+  "55117fe63912eb51",
+  "6017cd59d61db7c6",
+  "8499b0388ac5c05f",
+  "8c2c0e0252b07e96"
+ ],
+ "beir_fiqa_2399": [
+  "d4e6c10620781c95"
+ ],
+ "beir_fiqa_2400": [
+  "c11cde5c95e63f16",
+  "d8ef35db68a65a85",
+  "e9ad5b96e71eb400"
+ ],
+ "beir_fiqa_2407": [
+  "53cdf1908247b17e",
+  "ab10ff3c1d9c048e",
+  "e79e31761dae8387",
+  "f05206d786d25f27"
+ ],
+ "beir_fiqa_2416": [
+  "400b94bdd4b4f1f7",
+  "53126701cf24f18c",
+  "e1093e57e5e1df7e",
+  "e2a1932da6bf1709"
+ ],
+ "beir_fiqa_2423": [
+  "5048fd69530b7b65",
+  "68421d483fa09c8f",
+  "969e1c31cea62432",
+  "ba5c491db7735f53",
+  "c80160775dc6b851",
+  "cb8466cbdbb22225",
+  "e609911005b62324"
+ ],
+ "beir_fiqa_2443": [
+  "0f7c2a03c9e41bd4"
+ ],
+ "beir_fiqa_2445": [
+  "a32ceaee90d1f362"
+ ],
+ "beir_fiqa_2460": [
+  "7c351942533db350",
+  "7cf7181c8cede906",
+  "c2c58803b066cd15"
+ ],
+ "beir_fiqa_2465": [
+  "6e820340b0374d99",
+  "74bd4053c3f47e22",
+  "84c2d50a0ef155fe"
+ ],
+ "beir_fiqa_2472": [
+  "3803849b5a669c1f",
+  "e69958c51e56ef09",
+  "e70ec1ef24b96c53"
+ ],
+ "beir_fiqa_2486": [
+  "9a20695286712185"
+ ],
+ "beir_fiqa_2498": [
+  "007beaf660b4bc08"
+ ],
+ "beir_fiqa_2513": [
+  "062ae5bc059a10f9"
+ ],
+ "beir_fiqa_2516": [
+  "23f4a7c70031f6d4",
+  "428ca1bbb53c6937",
+  "bb256d33dc16bbda",
+  "fa72289aa9cc9221"
+ ],
+ "beir_fiqa_2549": [
+  "89be7fa0741db7b0",
+  "d9d608ec5272a594"
+ ],
+ "beir_fiqa_2551": [
+  "099de2ade74c030b",
+  "bcf2b39d73e1b9da",
+  "f6ae40190eac241d"
+ ],
+ "beir_fiqa_2568": [
+  "15a17ba63a57fa78",
+  "1df2ccf9e106e682",
+  "3bbf14f955729f8c",
+  "3ff4cd7a8146294d",
+  "55776457aa6e0181",
+  "c55c11fdc01ef58c",
+  "fb60df16b633b50c"
+ ],
+ "beir_fiqa_2579": [
+  "020cedc28f11f4cb",
+  "3cebb818e12be0ec",
+  "43bd9c64e9715b11",
+  "48c9bce8df7b9545",
+  "53e8ae1caa07bf14",
+  "d3d934000d137496"
+ ],
+ "beir_fiqa_2580": [
+  "88915092e2e808af",
+  "9f1f42d374ac2d31",
+  "f8cfc14ff851c1a7"
+ ],
+ "beir_fiqa_2587": [
+  "40ce31f7ace8296f"
+ ],
+ "beir_fiqa_2589": [
+  "dd05e84777c0cc06",
+  "ef5e31aa3bb74e00",
+  "f88939575203f8eb"
+ ],
+ "beir_fiqa_2590": [
+  "ba5bf4b50a909aa7",
+  "bb79a0c2fe65a582",
+  "efe563d2c534357c"
+ ],
+ "beir_fiqa_2593": [
+  "04db4a219751e6d4",
+  "0767bb4e66c2ccb4",
+  "0946a7eef5d97c75"
+ ],
+ "beir_fiqa_2598": [
+  "a516a95048c0f6e7",
+  "b9bab764e25b2999"
+ ],
+ "beir_fiqa_26": [
+  "0b2843d22fd18514",
+  "7fe8ae998c3d231d"
+ ],
+ "beir_fiqa_2648": [
+  "1703789bbdca61ee",
+  "d3c0d24b0d683b26"
+ ],
+ "beir_fiqa_2676": [
+  "0a8765d94a39ab2e"
+ ],
+ "beir_fiqa_2685": [
+  "179b772d1f7c596a",
+  "2efb60c1ff54183c",
+  "6cfb5d643c5c507b",
+  "77d61f1cb41da6bc",
+  "7fdf6d6b8859c224",
+  "8f5f6d051c3313f1",
+  "97af143f076dac3e",
+  "e4b27efe6da627bb"
+ ],
+ "beir_fiqa_2695": [
+  "468f9cdf3d876f03"
+ ],
+ "beir_fiqa_2713": [
+  "4341483455a13e9d",
+  "985fcf2cf661f5b9"
+ ],
+ "beir_fiqa_2724": [
+  "2cef7534fbddb25e",
+  "ac75098ee1766289"
+ ],
+ "beir_fiqa_2737": [
+  "93800c543c6ddbc8"
+ ],
+ "beir_fiqa_2747": [
+  "b90ca0fe4bf56efe"
+ ],
+ "beir_fiqa_2749": [
+  "71eed4ff63d65bad",
+  "ffbfa1ceb5e68ba4"
+ ],
+ "beir_fiqa_2790": [
+  "13835cb48c19f323",
+  "5a5fe7e5b35eeadf",
+  "7aee5e8281cd8cac",
+  "a00fb38615e3245d",
+  "b326635d1f0b78b0",
+  "f143ead0188d2264",
+  "fea09777a925a7de"
+ ],
+ "beir_fiqa_2801": [
+  "4bac7f2159d59adf",
+  "64b5f87c7bf3e273"
+ ],
+ "beir_fiqa_2856": [
+  "4a24564bb65eaf82",
+  "927c4f07364e844b",
+  "99d4f92dd9659d25",
+  "c700ce64a6a87c8b"
+ ],
+ "beir_fiqa_2857": [
+  "7493fb18d65aeb31",
+  "948b101fd5940cb1",
+  "b4655b82c7e7947f",
+  "cca9871ad496a83b"
+ ],
+ "beir_fiqa_2880": [
+  "9997c0a49dbd4125"
+ ],
+ "beir_fiqa_2885": [
+  "01f5e33065b4a88a",
+  "237a986110387ee9",
+  "424236fc661577ba",
+  "777f409e0d173540",
+  "e6d724218b48fd2d"
+ ],
+ "beir_fiqa_2891": [
+  "7b83eb93714c49e6"
+ ],
+ "beir_fiqa_2895": [
+  "9f9d61d01ef83cc9",
+  "fee185f985a65460"
+ ],
+ "beir_fiqa_2903": [
+  "c3636361cd074135"
+ ],
+ "beir_fiqa_2923": [
+  "1f6e8747fbe12422",
+  "3fd0bcbd4547202d",
+  "61af0d613897ec1f",
+  "89e382d6b2961ba2",
+  "abed52e77183869b"
+ ],
+ "beir_fiqa_2964": [
+  "2350d23a6a14ace1",
+  "cc67843bf0c0aafe"
+ ],
+ "beir_fiqa_2968": [
+  "775c4863cebdf5ac",
+  "7e4de1f847bf1fa0"
+ ],
+ "beir_fiqa_2994": [
+  "b0631499dc6c2996",
+  "f8065b76da20dd9b",
+  "f97f020a3d2e574c"
+ ],
+ "beir_fiqa_3006": [
+  "3f11dfcbc8f05d96",
+  "6d1dc866db6a7beb",
+  "aef9fec01d654b97",
+  "b9a42801accb288f",
+  "c4ed46763213c3c8",
+  "c655d9abab69e2c3"
+ ],
+ "beir_fiqa_3008": [
+  "14e6b406bcad5498",
+  "836b31d2098c7d66",
+  "c9ccc9e49bf5583d",
+  "d28cb98be2ce2bdd"
+ ],
+ "beir_fiqa_3014": [
+  "09f3b6951c36a1aa",
+  "1962e5457e20bb76",
+  "eee82daf5870dd7c"
+ ],
+ "beir_fiqa_3033": [
+  "1dac0584791900a8",
+  "ae265a90dbc15a63"
+ ],
+ "beir_fiqa_3039": [
+  "47dc122467ace243"
+ ],
+ "beir_fiqa_3049": [
+  "3218c09ac3354252",
+  "64f1f29b3e56357a",
+  "8d4b63a9adc87cc6",
+  "a4b9914ed3c26a58"
+ ],
+ "beir_fiqa_3051": [
+  "435bdc2b8b65af5e",
+  "ca1d8a36acf6de93"
+ ],
+ "beir_fiqa_3067": [
+  "11a006840397778c",
+  "3b4a87b38101f736"
+ ],
+ "beir_fiqa_3085": [
+  "861b93ea2d5b8201",
+  "94be8f0e8d738dff"
+ ],
+ "beir_fiqa_3091": [
+  "058376cc486985d2",
+  "0bece73429ba324f",
+  "16a1bd9c32e96a95",
+  "7a455ad372a32ae9",
+  "99e97a3cbbce4dc6",
+  "a7b63c7522607d7a",
+  "d51f8fcd93e04bbc"
+ ],
+ "beir_fiqa_3103": [
+  "d411a78bf730c374"
+ ],
+ "beir_fiqa_3115": [
+  "0c5ce6e54b035af3",
+  "10ca09997f0cb205",
+  "84d383de6de9961c",
+  "c03b0a6203eab1a3",
+  "d0271c69b8089085",
+  "f4199e16cc409c28"
+ ],
+ "beir_fiqa_3125": [
+  "a1a9684c14b1b590"
+ ],
+ "beir_fiqa_3148": [
+  "188b31598e596367",
+  "31647602c85950c6",
+  "3e6d9c1e2084750c",
+  "55402f056db59506",
+  "dbbba71512996e2b"
+ ],
+ "beir_fiqa_3149": [
+  "a15068b42c5f7ff3",
+  "eceda36fa6f6a8c2"
+ ],
+ "beir_fiqa_3177": [
+  "0ed74c955dde9b33",
+  "64459100029f11de",
+  "d6ee4aba5fd0fb09"
+ ],
+ "beir_fiqa_3179": [
+  "0686139b2754a138",
+  "698d8eba99ab1200"
+ ],
+ "beir_fiqa_3186": [
+  "4dc764ae21025e65",
+  "f74d65e8c215a1f8"
+ ],
+ "beir_fiqa_3189": [
+  "78d0c3e6aa26d8cc",
+  "8726a3679e8bac8f"
+ ],
+ "beir_fiqa_3254": [
+  "4357361f062a562d",
+  "e2cfaff79d117297",
+  "f75815de08ae5c3d"
+ ],
+ "beir_fiqa_3264": [
+  "081edd8781fd2027",
+  "56dea0cb484023c6",
+  "b17db2293889aba8",
+  "f2e576258f095588"
+ ],
+ "beir_fiqa_3357": [
+  "eec23329b2762ab0"
+ ],
+ "beir_fiqa_3369": [
+  "4879f707b2ac5404",
+  "4bc8db9e1d756c98",
+  "4fbd0c7b6ba062b6",
+  "793308d7891539c0",
+  "94dbe22838e23d47",
+  "96fa7419f4752898"
+ ],
+ "beir_fiqa_3394": [
+  "30fd6a5484f3e6c6",
+  "6d793261c1e086ca",
+  "a36e1120b06f975f",
+  "c1e9f0ff68f7c60e"
+ ],
+ "beir_fiqa_34": [
+  "faf4197c30ee37f1"
+ ],
+ "beir_fiqa_3404": [
+  "1c6053969c88f168",
+  "466bfad8640f9450",
+  "8aa8256fb1d50ff3",
+  "95d20c5bc6357ca1",
+  "9846a662035b7262",
+  "9f0afd216c56317e",
+  "9f47bb747810e748"
+ ],
+ "beir_fiqa_3405": [
+  "950b926d357fd3dc"
+ ],
+ "beir_fiqa_3446": [
+  "3d133176588cf050",
+  "3d5c84112780f77f",
+  "6182293f3d97adb8",
+  "61d2f0c952cbfe71",
+  "fe0cee94518e46d6"
+ ],
+ "beir_fiqa_3451": [
+  "05f2a5a0a6f39478",
+  "22051fd82a570fd6",
+  "2930cfe3768becac",
+  "436f537c839dc253",
+  "4a3f17c52d17333b",
+  "b970885f09622422",
+  "d7664504f8b164c5"
+ ],
+ "beir_fiqa_3453": [
+  "1d96ba27b61af42f",
+  "f99f0310a196b913"
+ ],
+ "beir_fiqa_3480": [
+  "03f2a4a35ad64238",
+  "5879a5731d8803c9",
+  "7eb0f4b79b0f14c3",
+  "cd1cb1f8c481101c"
+ ],
+ "beir_fiqa_3490": [
+  "3e252a7e5db6622d"
+ ],
+ "beir_fiqa_3500": [
+  "0897e473fedfd072",
+  "541a1912288e83d3",
+  "66ba02d1d3e78994",
+  "8f40067d5024dea0",
+  "e38caea8fb4b8f18",
+  "eeccc896c43734c4"
+ ],
+ "beir_fiqa_3503": [
+  "2c5450e2d2393a44",
+  "572f916d8d9eca76",
+  "75f71e3e97e95224",
+  "8485fd929598da1e",
+  "88bc676b68bc08f8",
+  "c0da8f5edba0079e",
+  "d8aee66f05af45d9"
+ ],
+ "beir_fiqa_3512": [
+  "7127fb8942718d95",
+  "b1a22767170c24dc",
+  "f7335ec642ee9ab8"
+ ],
+ "beir_fiqa_3528": [
+  "26bc8a4a7d16af05",
+  "e88c2e7302f07078"
+ ],
+ "beir_fiqa_3530": [
+  "296394238f8a156c",
+  "30a7bc7a33ee4f80",
+  "69d74b7aea0ae988"
+ ],
+ "beir_fiqa_3534": [
+  "7ad61440f31ae7d8"
+ ],
+ "beir_fiqa_3566": [
+  "8e68c5159eb84315",
+  "a938c7cec87a7ff8",
+  "c6f2854ffad3d2a0"
+ ],
+ "beir_fiqa_3569": [
+  "d4403badcd20a0ab"
+ ],
+ "beir_fiqa_3594": [
+  "0bcab2c5003ee94b",
+  "5e27f1c8f7bc7141",
+  "66c457ec75f6613a",
+  "7f8918cc68a37b58"
+ ],
+ "beir_fiqa_3612": [
+  "1942b7f074b6d8ce",
+  "6ee1898088f7d224",
+  "87b4a1b4149c7247",
+  "a58ca3a61ebf8f1c"
+ ],
+ "beir_fiqa_3615": [
+  "8b6f7230cb039754",
+  "9895ae682468bfc8"
+ ],
+ "beir_fiqa_3625": [
+  "5b29ff833055658f",
+  "5f9508e4aa99c95f",
+  "f3d646df5a3521af"
+ ],
+ "beir_fiqa_3682": [
+  "752024cfdc0ade8d",
+  "c00c2850236bd213"
+ ],
+ "beir_fiqa_3683": [
+  "6098158e63218725",
+  "80bff0789667d502",
+  "ad1451702712f85b",
+  "b8e60fe316daec4c",
+  "cc6a5666e2bdadd3",
+  "d3cb5e6f817df4e4"
+ ],
+ "beir_fiqa_3694": [
+  "6fea5d48942e3066",
+  "ccf2641383162143"
+ ],
+ "beir_fiqa_3724": [
+  "04d44b3ea51d34cb",
+  "124d09747c3c326b",
+  "30f814ef462946c9",
+  "350c058a4868022d",
+  "46a6ec94466d0a0a",
+  "4b1df7c837841c2d",
+  "82fccba334794547",
+  "c88f1578131bf1ba",
+  "d63a6b23380ad5b5",
+  "fc46454b83e97de5"
+ ],
+ "beir_fiqa_3735": [
+  "d2f7f55580352772",
+  "e974b7a7911fed2f",
+  "eabbae064e3321b5"
+ ],
+ "beir_fiqa_3759": [
+  "2aece7fc0b57e963",
+  "8de3de4ad1465463",
+  "e072c9effd524610"
+ ],
+ "beir_fiqa_3767": [
+  "5aa4a0e8a6b798ef",
+  "77351a7fff8a1565",
+  "7d1f3a4bd0bf34d4",
+  "b0a7a69e87d5f078",
+  "eaba6e06e8bf87de"
+ ],
+ "beir_fiqa_3771": [
+  "00775284ff53f541",
+  "0db933f8d02dc736",
+  "2307d97a6f76965f",
+  "3e886f6c627792e9",
+  "5324ace5f0990d2e",
+  "73f23890bba7b117"
+ ],
+ "beir_fiqa_3781": [
+  "70dd6d41ddd4fc14",
+  "ac8e17ec2499781b"
+ ],
+ "beir_fiqa_3789": [
+  "2bcf8ee61d3b951b",
+  "383a094351ca8b7a",
+  "4f48fc7bb937b446",
+  "61122812e6451038"
+ ],
+ "beir_fiqa_3791": [
+  "00f60364b6540cd2",
+  "258db0075e0ea7d1",
+  "b4c2357e93b1a272"
+ ],
+ "beir_fiqa_3801": [
+  "0fc55ca402512c0b",
+  "254f22f4ffb8ee94"
+ ],
+ "beir_fiqa_3822": [
+  "1fc3301ac016a49b",
+  "742160b63a81913a",
+  "803ec9e9cde510b1",
+  "fb07ce089ab0341c"
+ ],
+ "beir_fiqa_3829": [
+  "79086d60449f6b41",
+  "dd9d9465ca0579a6"
+ ],
+ "beir_fiqa_3830": [
+  "059ceff5b6048b19"
+ ],
+ "beir_fiqa_3837": [
+  "8dc85cd12405c087"
+ ],
+ "beir_fiqa_3859": [
+  "2e91bc22e41e840c"
+ ],
+ "beir_fiqa_3875": [
+  "d5d91a6bf5a92ffc",
+  "e6c43958d50917da"
+ ],
+ "beir_fiqa_3888": [
+  "507eac95d6f66793",
+  "c16a01092e2b0903",
+  "da2eb6486b6dac7d",
+  "fba0faa182d8d0c9"
+ ],
+ "beir_fiqa_3909": [
+  "175ebea9a9429e0d",
+  "181a4a5c4389c5bf",
+  "19933c9dad6ea32d",
+  "357d52a55e88cb2b",
+  "5d963edc11ec69a6",
+  "68c05b229ca89d02",
+  "7d6e9870b0d1e926",
+  "814e0fbb2bc41b63",
+  "82c6ea922fa15a24",
+  "863a161b0a6b6f49"
+ ],
+ "beir_fiqa_3932": [
+  "a5dbe4934309af94",
+  "c3370698475733b9"
+ ],
+ "beir_fiqa_3934": [
+  "b23cd0db34ed46cd",
+  "d385d3e99a68edd3",
+  "dde7c298bb8300e5",
+  "f42d01b67029003d"
+ ],
+ "beir_fiqa_3995": [
+  "05ccd23820d2faac",
+  "649226afc24c51cb",
+  "72ce470d176b006f",
+  "78da40db2b69279c",
+  "9bf8836852cef5a5"
+ ],
+ "beir_fiqa_4007": [
+  "49556ede6474f279",
+  "767318006d67d80d",
+  "a6423b44b55060c7"
+ ],
+ "beir_fiqa_4011": [
+  "59d4faf4acfe6f2e",
+  "6cd008b3117d5196",
+  "d83471868484571d"
+ ],
+ "beir_fiqa_4019": [
+  "0bed10d06a2a4fdd",
+  "5aa5eb60958757b5",
+  "81890445f54e5c0d",
+  "a1f64076d9ff34e3",
+  "ab7ae37e469a9a44",
+  "cad6b4c2b8335ab5",
+  "e4c903b1e66243dd"
+ ],
+ "beir_fiqa_4031": [
+  "6d54dfcd3be9a952",
+  "dfb57fb016374d24"
+ ],
+ "beir_fiqa_4037": [
+  "24e103c5d7e39ce6",
+  "7fed633e37ff75d3"
+ ],
+ "beir_fiqa_4047": [
+  "40eb2a7ab14e254b",
+  "509b38c1d4807412",
+  "bb49967bf690398c",
+  "d6c1aff4212a9464"
+ ],
+ "beir_fiqa_4071": [
+  "423f8bc5b1482a34"
+ ],
+ "beir_fiqa_4084": [
+  "57c59b5c159819e9",
+  "6f274a750038519b"
+ ],
+ "beir_fiqa_4102": [
+  "0d00599f8baf7dca",
+  "0f13948d14d4d4ab",
+  "ab26868f5bbacd6d",
+  "f401da43f6fb3a0a"
+ ],
+ "beir_fiqa_4103": [
+  "8432980daccd8e48"
+ ],
+ "beir_fiqa_4105": [
+  "340a8b7e5aa26dd2",
+  "9e9491bec9a8066c",
+  "fa2e03863f44d9f0"
+ ],
+ "beir_fiqa_4116": [
+  "1b75465660324790",
+  "f64adafd07b9a888"
+ ],
+ "beir_fiqa_4125": [
+  "601a07aa22c59264",
+  "61d4bf626a3cdafb"
+ ],
+ "beir_fiqa_4142": [
+  "601cf456c2ef686b",
+  "be2a0d0cee1792fa",
+  "d1cd7dfc81d927a8",
+  "e780d759cdceaf33"
+ ],
+ "beir_fiqa_4153": [
+  "7632a32e49051e90"
+ ],
+ "beir_fiqa_4179": [
+  "f2a9ff85bab9a96b"
+ ],
+ "beir_fiqa_4188": [
+  "1d56b30bafd2cf33"
+ ],
+ "beir_fiqa_42": [
+  "166b22159f0c1741",
+  "48a6af9b09c6f995",
+  "bc26cecf6213c419"
+ ],
+ "beir_fiqa_4205": [
+  "40eed9f52133734c",
+  "8358e5619128d6d4",
+  "c2936f4f5c68676e",
+  "d3984fcec94e1503"
+ ],
+ "beir_fiqa_4233": [
+  "0b8fc28a6eb7c92a",
+  "33a80a1ff4c1cacb",
+  "6b628583b79f5964",
+  "94b9c1f0d23cf33b",
+  "c49f71af3413a993"
+ ],
+ "beir_fiqa_4265": [
+  "0e89c3845181493f",
+  "a32719b807039321",
+  "bce406e9b033adc4",
+  "be36fb63f22a7554",
+  "c99d69e3edb6a7b9",
+  "ffc8f96554f19c5f"
+ ],
+ "beir_fiqa_4286": [
+  "091fbaabd6e8b7a4",
+  "4b710a1c07af588c"
+ ],
+ "beir_fiqa_4289": [
+  "ab771d2e8051a874",
+  "f079812f98634e86"
+ ],
+ "beir_fiqa_4306": [
+  "32efa07502e66e03",
+  "638ab6e93962f6c9",
+  "6affc73aae7d9298",
+  "bd65fb9600854746"
+ ],
+ "beir_fiqa_4312": [
+  "0f045fffab6485a2",
+  "1bf275009105294c",
+  "5be536247c7fe427",
+  "9d27b2506fbad28f",
+  "a308cff18e48cb88",
+  "cbc8baf5f8abcc1d",
+  "f86a955dcbc38d55"
+ ],
+ "beir_fiqa_4335": [
+  "311d0a0b3512fb73",
+  "759b38f4f7727632",
+  "8d004376a293651f",
+  "dfaa0aa616d863e6"
+ ],
+ "beir_fiqa_4339": [
+  "3bf0f1d9224874f8",
+  "5485f3a18a7d484c"
+ ],
+ "beir_fiqa_4394": [
+  "2236abd43101bc9f",
+  "d7d338e877ab4ddb"
+ ],
+ "beir_fiqa_4409": [
+  "1482ac4fbf8828bd",
+  "25a6847e23ea6f70",
+  "378be7d631b76c41",
+  "51691c2d115709f6",
+  "800353872eb99b30",
+  "93d85a1a7ba7a5b8",
+  "c802a11ff3a2a602",
+  "c8edd55706125f24",
+  "ee08d2f1b2d4a04c",
+  "fa40c1b8f8c6239e"
+ ],
+ "beir_fiqa_4411": [
+  "094051578299e3a0",
+  "71ef3b01e4435259",
+  "7c93d2cf67c069f9"
+ ],
+ "beir_fiqa_4414": [
+  "328a0a72ab8fc98f",
+  "d9037a261a914db7"
+ ],
+ "beir_fiqa_4415": [
+  "6648ae1089aaecac",
+  "74bef63c5c412a71",
+  "9dbff3c7354569ba",
+  "e3d3232286d5680e"
+ ],
+ "beir_fiqa_4433": [
+  "6256b283f0131f31",
+  "7303f0756dbefc1b"
+ ],
+ "beir_fiqa_4447": [
+  "6b3da02a0e150b7a"
+ ],
+ "beir_fiqa_4464": [
+  "b2924449d6b64de7"
+ ],
+ "beir_fiqa_4465": [
+  "13ad2af590023b2c",
+  "3be1ba8a8c41d521",
+  "a860a2bb2dd5d1af"
+ ],
+ "beir_fiqa_4484": [
+  "ca9ee2cd3318f5fc"
+ ],
+ "beir_fiqa_4499": [
+  "008a555c93a430b6",
+  "32f743a8c0519a3d",
+  "ee44eb3975c01cc2"
+ ],
+ "beir_fiqa_4500": [
+  "94c5069db5fca9ec",
+  "b4fb3c0d076166c9"
+ ],
+ "beir_fiqa_4504": [
+  "33127989c2f400e4",
+  "607332bc5652ff40"
+ ],
+ "beir_fiqa_4514": [
+  "0fcf82ab93b0e98b",
+  "16c51e894137b7b0",
+  "461a2a7f01f179c3",
+  "5450dd3b99f5a0a6",
+  "bfa9e2988f0f9707",
+  "f83bf8b350b83d85"
+ ],
+ "beir_fiqa_4523": [
+  "14006a0da713ca29",
+  "4ba00a483bceb96b",
+  "a93cc4d8635f63c2",
+  "b7e1f45ce9948af7",
+  "eac72d43dd1b90a9"
+ ],
+ "beir_fiqa_4539": [
+  "c751a62f8284074d",
+  "dbf1ed0652d8fc39"
+ ],
+ "beir_fiqa_4571": [
+  "9825337a72e625dc",
+  "c257abac39d5a36e",
+  "d77b4fa40aa5f613"
+ ],
+ "beir_fiqa_4600": [
+  "d6b1ee4dc7be2b8b"
+ ],
+ "beir_fiqa_4605": [
+  "0072440bf2f4033d",
+  "2eec095e993715dc",
+  "7e596ea901ee34b7",
+  "a462e78e4c5c723d",
+  "e5a71e4a738a06e0",
+  "ebfd89f852c2ae95",
+  "f8927c61d8672c65"
+ ],
+ "beir_fiqa_4615": [
+  "10a8f9a864c2cd6b",
+  "33b8f0d99106573d",
+  "521854b91b0dcf87",
+  "990ca5a3f12f215b",
+  "d0608ae15f70e1df",
+  "f9c06fafcce546b1"
+ ],
+ "beir_fiqa_4640": [
+  "65c5f87e9555eb11",
+  "7aec41e5f96f5d80",
+  "bcdd1d13dc859d1d"
+ ],
+ "beir_fiqa_4641": [
+  "1c0f377f1c8543de",
+  "472148832a3ff737",
+  "70b6e7168c1333f1",
+  "7b299e1cdaf895f9",
+  "9f0772a6c3411210",
+  "ea9fe158b02967a0"
+ ],
+ "beir_fiqa_4678": [
+  "5b35285afa3eb798"
+ ],
+ "beir_fiqa_4681": [
+  "e6dd0f5a57e58afa",
+  "ed1b1748b1d0d5e0"
+ ],
+ "beir_fiqa_4700": [
+  "5815488d0efdcbd3"
+ ],
+ "beir_fiqa_4714": [
+  "13b1d15bbccbb4fd",
+  "893de5924e6733d1",
+  "ea6471ccc351c57e",
+  "f99f8b2b443b0d7e"
+ ],
+ "beir_fiqa_475": [
+  "c16e23abb0e18a34"
+ ],
+ "beir_fiqa_4756": [
+  "1bb84e054f271b3f"
+ ],
+ "beir_fiqa_4767": [
+  "15e011a4cb6c18f7",
+  "284649337ca708fd",
+  "28f99b91953483f8",
+  "56c5c45976783a69",
+  "e68d029b64adb4fc"
+ ],
+ "beir_fiqa_4775": [
+  "638125d29db10342"
+ ],
+ "beir_fiqa_4777": [
+  "466d58623b53aaa0"
+ ],
+ "beir_fiqa_4785": [
+  "aa0507289a4b7abb"
+ ],
+ "beir_fiqa_4804": [
+  "1cc2125c80a87a9d",
+  "d10059f86c891978"
+ ],
+ "beir_fiqa_4813": [
+  "62c31d4a6018e6df"
+ ],
+ "beir_fiqa_4823": [
+  "370672d818530846",
+  "cc9dbad6069d6a74",
+  "f79b164b3dd9d9fe"
+ ],
+ "beir_fiqa_4827": [
+  "0db5a7936d85a0eb"
+ ],
+ "beir_fiqa_4837": [
+  "6a2ea02226b7a1f6",
+  "83c794359af61e08"
+ ],
+ "beir_fiqa_4844": [
+  "4f911ad73e57ba30",
+  "929fc2dcd486bc36"
+ ],
+ "beir_fiqa_4845": [
+  "1150e9274847dfe0",
+  "18d67e9aee1c5214",
+  "8db09458f92377d5"
+ ],
+ "beir_fiqa_4846": [
+  "835060582fee592c",
+  "b33c17e9769dcf99"
+ ],
+ "beir_fiqa_4863": [
+  "1a67bda3fbd93140",
+  "7e7544e536adf406",
+  "b228d02740acf86d"
+ ],
+ "beir_fiqa_4865": [
+  "2005edd3f3ef088e"
+ ],
+ "beir_fiqa_4920": [
+  "1515f4a8f382d960",
+  "b672dc8f11017bd5",
+  "bff7284744a99c91"
+ ],
+ "beir_fiqa_4942": [
+  "d39336f57b0ef9f7"
+ ],
+ "beir_fiqa_4946": [
+  "c38b93c21a117623"
+ ],
+ "beir_fiqa_4955": [
+  "8ac4467840ee063f"
+ ],
+ "beir_fiqa_4962": [
+  "22e1249036481a37",
+  "5e59cb6ff8ae6483"
+ ],
+ "beir_fiqa_4968": [
+  "78a16f6add78bae1"
+ ],
+ "beir_fiqa_4981": [
+  "149dce4f0b49f3c2",
+  "b92872a913c3ce77",
+  "de8eab0138aaf87e"
+ ],
+ "beir_fiqa_4999": [
+  "0190443976597051",
+  "a5606ba0b5b26111",
+  "cfd67a55e6fecd89",
+  "eed1f7585aedb214"
+ ],
+ "beir_fiqa_5021": [
+  "b21be570da49dcf5"
+ ],
+ "beir_fiqa_503": [
+  "baa18276c2886b68"
+ ],
+ "beir_fiqa_5030": [
+  "d1df7b145a4dd169"
+ ],
+ "beir_fiqa_504": [
+  "29b1b3e94366605d",
+  "ad2b715100b7ec4a",
+  "ada3e324318523a2"
+ ],
+ "beir_fiqa_5045": [
+  "efa5739793a42d77"
+ ],
+ "beir_fiqa_5054": [
+  "2c8aba1e5cfba6a5"
+ ],
+ "beir_fiqa_5061": [
+  "0724e6b020e8d615"
+ ],
+ "beir_fiqa_5064": [
+  "1c3a190fcbe20ba0",
+  "72dd9599a04c3ca8"
+ ],
+ "beir_fiqa_5067": [
+  "abaa3772702c6323"
+ ],
+ "beir_fiqa_5080": [
+  "b47ae16c3f52d330"
+ ],
+ "beir_fiqa_5083": [
+  "46efa313a1d8b0c6",
+  "8a7ca37ded4e868f"
+ ],
+ "beir_fiqa_5085": [
+  "50918c140ec6446e"
+ ],
+ "beir_fiqa_5086": [
+  "728180e6fc15a406"
+ ],
+ "beir_fiqa_5090": [
+  "cbe245257e39874a",
+  "cdbb85f2eccaf143"
+ ],
+ "beir_fiqa_5125": [
+  "fe68d9a00c5084b1"
+ ],
+ "beir_fiqa_5134": [
+  "46f7ed031859b108",
+  "ea59bef7b8795468"
+ ],
+ "beir_fiqa_515": [
+  "68eb20cec9e1cff2"
+ ],
+ "beir_fiqa_5150": [
+  "fa9cb9c9e976d564"
+ ],
+ "beir_fiqa_5155": [
+  "07675cc53d4c5df1"
+ ],
+ "beir_fiqa_5172": [
+  "cc6710a678f3d9f9",
+  "e9f2bb3c5c57e5b8"
+ ],
+ "beir_fiqa_5178": [
+  "16b12d84290f0ff0",
+  "5a758ff988036cba",
+  "b72f35c9169f0a78",
+  "c212a87a4fdf5943",
+  "efcf66710a98f877"
+ ],
+ "beir_fiqa_5185": [
+  "51923499068c8ea3",
+  "a3c7d6d29f639c5d"
+ ],
+ "beir_fiqa_5196": [
+  "45fb031637841861",
+  "5dafd800f9b4f650",
+  "893b783a96f1c35c"
+ ],
+ "beir_fiqa_5206": [
+  "07edbfc48637fdaf",
+  "75aff8558bdb7aae",
+  "c0209f1f8840ebf2",
+  "d402c6cf4d9195c4",
+  "e4a8f3f8941658e8"
+ ],
+ "beir_fiqa_5228": [
+  "fa541abfcacc6e74"
+ ],
+ "beir_fiqa_5231": [
+  "795067de9b75a4ee"
+ ],
+ "beir_fiqa_5241": [
+  "51257d044e7fce1d",
+  "5330343bc92f91f7",
+  "551450d6a297ddbb",
+  "62a5050e5aed4861",
+  "6e6438d58ed54d4c"
+ ],
+ "beir_fiqa_5254": [
+  "81bf9b2d5b036f56",
+  "e4a0a5962f4fa737"
+ ],
+ "beir_fiqa_5255": [
+  "cedade07463a26bf",
+  "d5b46f7ecbb5e340",
+  "fbcba3fea80ae62f"
+ ],
+ "beir_fiqa_5264": [
+  "0d3539cf3dfef8fb",
+  "273663bd1186e12c",
+  "67030a25542812cf",
+  "9493701313ecebff",
+  "e237e1fe89bb5685"
+ ],
+ "beir_fiqa_5271": [
+  "057ad39bcf4f7dd0",
+  "5b08d75e2b086cf2",
+  "5ba7064bca49824d"
+ ],
+ "beir_fiqa_529": [
+  "6c9331520e33dec2"
+ ],
+ "beir_fiqa_5331": [
+  "b895cf67ce2cdb7a"
+ ],
+ "beir_fiqa_5343": [
+  "fbe941a1556c1537"
+ ],
+ "beir_fiqa_5347": [
+  "f746392db62e7c79"
+ ],
+ "beir_fiqa_5356": [
+  "bbb5e30fac8ebc75",
+  "bd18733c2fcf69e4",
+  "bd8ca88bba177131",
+  "dcf860d052296b20",
+  "e0844d6165fb45e7"
+ ],
+ "beir_fiqa_5369": [
+  "7a66b8327e25a5d9",
+  "d581cd8a63bfb4dc"
+ ],
+ "beir_fiqa_5374": [
+  "c2fe031443352876"
+ ],
+ "beir_fiqa_5380": [
+  "25c1fc7d9f1a2cff"
+ ],
+ "beir_fiqa_5402": [
+  "5543bcf857498252",
+  "5a98ab982503ec70"
+ ],
+ "beir_fiqa_5410": [
+  "197d08b9d4e074a4",
+  "33546880b6b2d7b0",
+  "d7c30b4ab8322f8d"
+ ],
+ "beir_fiqa_5422": [
+  "0f5af9098e57926e",
+  "59e41402de1be1d9",
+  "842a4af2770d4e82",
+  "e580dc05172a9f0a"
+ ],
+ "beir_fiqa_5427": [
+  "1d0b6f661380bb69",
+  "478ee9f81fb27103"
+ ],
+ "beir_fiqa_5460": [
+  "42feafd2e959a0d2",
+  "49f11e5d3dc0d9d3",
+  "689ea5a1d020dc2a",
+  "8c061d92791de3eb",
+  "a6d3e6342fa9dbf3"
+ ],
+ "beir_fiqa_5464": [
+  "2915b53c77b6f0f5",
+  "69b812f76b3dce72",
+  "e9d586bd401bc8f5"
+ ],
+ "beir_fiqa_547": [
+  "1535eb2052ebbd5c",
+  "576db5528e6915b9"
+ ],
+ "beir_fiqa_549": [
+  "6d2a6cee32d94e49"
+ ],
+ "beir_fiqa_5503": [
+  "90d051d357787bda",
+  "910bdffd4b5ea4ec"
+ ],
+ "beir_fiqa_5505": [
+  "1f1537e5a52e2d69"
+ ],
+ "beir_fiqa_5511": [
+  "4e664ef147fee437",
+  "50d86ec6af5d2cab",
+  "62f90976a449d19d",
+  "9f8e40355a873113",
+  "a9e30763cbec7603",
+  "bd9b41f473605421",
+  "c19ea601375379c6",
+  "c5729ef8df97d1f1",
+  "ce4b7d0b44130181",
+  "d580e12be6684ab2",
+  "ecf960b9e7d6b661"
+ ],
+ "beir_fiqa_5534": [
+  "6cfba1ed4f2cd51f",
+  "c67cbb3e29cc5f95"
+ ],
+ "beir_fiqa_5549": [
+  "cab16693a939e041",
+  "f60c835e6f04cb23"
+ ],
+ "beir_fiqa_5585": [
+  "2982774ad959976c"
+ ],
+ "beir_fiqa_559": [
+  "bf3fd7d452092cf3"
+ ],
+ "beir_fiqa_5592": [
+  "518d97d23abb5bc8"
+ ],
+ "beir_fiqa_56": [
+  "20951d0d491f061e"
+ ],
+ "beir_fiqa_5616": [
+  "78805c2a07e475e4"
+ ],
+ "beir_fiqa_5620": [
+  "203085e2e4828754",
+  "3589dcbfe8a75c72",
+  "46e3eb958657d120",
+  "5979d40037ec21e1"
+ ],
+ "beir_fiqa_5646": [
+  "70c27c23541a0482",
+  "d838023fdc0bd074",
+  "df100d4819e132e1"
+ ],
+ "beir_fiqa_5653": [
+  "2043fbce940af592"
+ ],
+ "beir_fiqa_5683": [
+  "c199141d09f65abb",
+  "ef81caab82a21bfe"
+ ],
+ "beir_fiqa_570": [
+  "2fd2e9e330af9c66"
+ ],
+ "beir_fiqa_5710": [
+  "22509a1acf4b70b2"
+ ],
+ "beir_fiqa_5741": [
+  "63c6fcb68c286b28",
+  "b19e03a5b451a993"
+ ],
+ "beir_fiqa_5763": [
+  "ab9b1f1dffdce984",
+  "af6d07d2a14005ac",
+  "be1983a962910432"
+ ],
+ "beir_fiqa_5782": [
+  "19c0abe8b79c870a",
+  "734714fa4252d0fc",
+  "7df2357dbe39f418",
+  "b94f58ddef2db908",
+  "ca9f53ab37918ecb"
+ ],
+ "beir_fiqa_5790": [
+  "5ab67c75ecd64fe6"
+ ],
+ "beir_fiqa_5808": [
+  "7c8bda03022d4f4e"
+ ],
+ "beir_fiqa_585": [
+  "02c170ab2f28518e",
+  "2be6bb011ea31e75"
+ ],
+ "beir_fiqa_5853": [
+  "0f0f6b2bcaebcef4",
+  "10af11d400c7302b",
+  "232632881a9244a7",
+  "52e246b4693111b9",
+  "994bb8ad0479c417",
+  "9cb231810cb051c3",
+  "a00c9f17476cd168",
+  "cf78ee54877ba320"
+ ],
+ "beir_fiqa_5862": [
+  "406f7b8da7ab9041",
+  "acc8b6b0ad64c6c5",
+  "c536cb754ee6f063",
+  "daf20c0c83aa0e15"
+ ],
+ "beir_fiqa_588": [
+  "488d9974ed8fffb8",
+  "4d913ba05d8e0457"
+ ],
+ "beir_fiqa_5888": [
+  "b6d8aceaefc781d8",
+  "d55812b4652fb7f0"
+ ],
+ "beir_fiqa_5903": [
+  "ea6a02e1a9f17e57"
+ ],
+ "beir_fiqa_5906": [
+  "81c5c757c840c88d",
+  "d3dd0359db3e6398"
+ ],
+ "beir_fiqa_594": [
+  "33ba06b563fb08e7",
+  "997e42f158476c58"
+ ],
+ "beir_fiqa_5940": [
+  "159079a8711081d4",
+  "3abcb7badc2a7fcd",
+  "dfc6ccabc7e0aa90"
+ ],
+ "beir_fiqa_5951": [
+  "14ffa3ad92176921",
+  "359561a77c0a2432",
+  "39ac45d5babed92e",
+  "40649c9298b40a09",
+  "55fd2efad7f20ff5",
+  "7670c7234dc16636",
+  "96b7dc4a10add718",
+  "c1b0bed91eb13691",
+  "e155ff72cfe3b41b"
+ ],
+ "beir_fiqa_5970": [
+  "787d86ee075f87c3",
+  "d5af6f3359479517",
+  "d8661da2b1bfe83f"
+ ],
+ "beir_fiqa_5981": [
+  "1c049350545d49a0",
+  "358a506856543758",
+  "4b6ad9738fba9152",
+  "c1a51172dddeef34",
+  "ce6c09a92e4971ab"
+ ],
+ "beir_fiqa_5993": [
+  "0eb42d392827dadd",
+  "19ff5a197b93c1ef",
+  "35a05e98b9b6d134",
+  "403f90dc05a25808",
+  "4f18ee64343634fd",
+  "55e679bac9dda0be",
+  "62ccb6aef5fc55ce",
+  "62cd9d405c2aeb8d",
+  "72935dcd44ff5cfe",
+  "a2f02d6b887539ae",
+  "abfba7c1e9175f50",
+  "c51be8e9707a4ff0",
+  "c6ef2de0d3c955ab",
+  "de345ae02d04b479",
+  "e92cf6513d9fa560",
+  "f2b9455af53ae17f"
+ ],
+ "beir_fiqa_6002": [
+  "027746b67afddc5a",
+  "2f746c61472a60e1",
+  "3f0d5b66a199badf",
+  "408e54b6f77a1477",
+  "4255097d25b4aabb",
+  "54e79b3c382e6a8f",
+  "68654794e962e135",
+  "6ad870aa1cb57e4a",
+  "88ad83d2148f0885",
+  "ba735fd4132c25a5",
+  "c89be87802726342"
+ ],
+ "beir_fiqa_6004": [
+  "849edbdd5e5bdb1f"
+ ],
+ "beir_fiqa_6005": [
+  "00ea2dfd021fcd4b",
+  "08f51b3e74b95b57",
+  "22f15de582c27302",
+  "42c50d8ab8af285b",
+  "78014c7cb098407d",
+  "81d1507f60290a4d",
+  "9c94f8502e801490",
+  "bcbeb4d20f7af197",
+  "cab214cb080d38f2",
+  "cc250bdebfd778c9",
+  "dbd9f2aa1537f7de",
+  "e1d7b77e1d30d0c8",
+  "f6d0c98e966f6839"
+ ],
+ "beir_fiqa_6009": [
+  "e103f5448161ea97"
+ ],
+ "beir_fiqa_603": [
+  "ba22235198c4dd74"
+ ],
+ "beir_fiqa_604": [
+  "628b2d5d14e103aa",
+  "7797c75ada6dc686",
+  "81179d4b4526a864"
+ ],
+ "beir_fiqa_6041": [
+  "314f65f5a1801a39",
+  "47c9be3b88355143",
+  "aa3e8f5c08ddad3e",
+  "d33aee6181f16a25"
+ ],
+ "beir_fiqa_6080": [
+  "4f7c490590237d2b",
+  "64cce2e9e613d5a7"
+ ],
+ "beir_fiqa_6110": [
+  "1f316e2f80501d1a",
+  "26ded9c6ffa436ce",
+  "2bd66078b3d5b0d0",
+  "2cbd3801a3fee053",
+  "8cf8f79d7f9e22d8",
+  "c2d1e53e9beb09a4",
+  "c3be97500ca008d9",
+  "c45d8fed69245c36"
+ ],
+ "beir_fiqa_6121": [
+  "247d504a3fa96d15",
+  "933be9a78199f7a9"
+ ],
+ "beir_fiqa_6122": [
+  "222e11c813a66d7b",
+  "6bd5b88d0f36a6b4",
+  "bf1748d0f6783c45"
+ ],
+ "beir_fiqa_6131": [
+  "0c6701bfde43c788",
+  "0f056c08df6f9aba",
+  "23023179c7666d98",
+  "3185b5492d08c54c",
+  "38ea7a27f2dc6301",
+  "56adcd28edd50817",
+  "66acae474267e329",
+  "c8544d2aea8423a4",
+  "cd6b2441c8254bd7",
+  "d6552928d1a5091f",
+  "dc9535b4d3560e83",
+  "fb305c006bec7160"
+ ],
+ "beir_fiqa_6133": [
+  "99d4a5a1fa500f03",
+  "d26f6a179fb3a432"
+ ],
+ "beir_fiqa_6142": [
+  "546987568095b56c",
+  "b6ae218e1e9414cc"
+ ],
+ "beir_fiqa_6146": [
+  "38f581fa136eefbb",
+  "f43d925fdae5df86"
+ ],
+ "beir_fiqa_6199": [
+  "2f88e970493b0478",
+  "c3fa543e594e1de4",
+  "c6a6c2c49ebac4a5",
+  "f92f623451af9830"
+ ],
+ "beir_fiqa_620": [
+  "33ff37c227269e0d",
+  "3baf831edfa5fb1f",
+  "9f542c9d8c338931",
+  "a923a5be069ef4f9",
+  "c02e97512fa3292b"
+ ],
+ "beir_fiqa_6219": [
+  "c1acd62c5730e7d7",
+  "f27284edd5a3ea22"
+ ],
+ "beir_fiqa_622": [
+  "303f791a51cbbda4",
+  "dcb78c1139dde5c2"
+ ],
+ "beir_fiqa_6221": [
+  "0b21edabd4428cae",
+  "4c5de316507ee573",
+  "68a9134f182f3cc3",
+  "6b02abc21502d336",
+  "ad99d251958c6bfb",
+  "daac81ec1da3e2b7",
+  "ef0e2f482a4ea254",
+  "f08687e9cca78822"
+ ],
+ "beir_fiqa_6252": [
+  "02cdd6a7235b5334",
+  "2934778f79d4602e",
+  "36459e0167fe8a49",
+  "38f1c270004f5d64",
+  "6a3b41843f5cd520",
+  "72fc6a0cd61dcd20",
+  "9c58c070a958e96c"
+ ],
+ "beir_fiqa_6262": [
+  "a0d3d8c9d4361694",
+  "a96920889b2bf445",
+  "e4006d29214934ec"
+ ],
+ "beir_fiqa_6278": [
+  "241a8704c796ec8b",
+  "b063d2fda8dc14a5"
+ ],
+ "beir_fiqa_6395": [
+  "a44116cfdf3be45d"
+ ],
+ "beir_fiqa_6410": [
+  "dcb2a3ed43637084"
+ ],
+ "beir_fiqa_6420": [
+  "3d4f41893aec52a4",
+  "61191a8eda8bcf85"
+ ],
+ "beir_fiqa_6441": [
+  "2ae672d668c58ffa"
+ ],
+ "beir_fiqa_6467": [
+  "05e66f335dbe1d02",
+  "7118e5afe32a0a7f",
+  "728a0d2dc9b1be0e",
+  "aefec4aa90cd9796",
+  "eb1957811ebf09ab"
+ ],
+ "beir_fiqa_6468": [
+  "283cb361d4cccf64",
+  "e5f7a08eb21aa565"
+ ],
+ "beir_fiqa_6479": [
+  "ca12dbedd252be3b",
+  "d693907f59594701"
+ ],
+ "beir_fiqa_6525": [
+  "5c534b87e61b0f40",
+  "8862ce4bc8eef479",
+  "a739fc7bb59a0bbb",
+  "b879ab2d209b61d1"
+ ],
+ "beir_fiqa_6554": [
+  "82319b971576453d",
+  "84acf3c6751f6361"
+ ],
+ "beir_fiqa_6562": [
+  "6daa678a2dc89b5a",
+  "825bcf0e088e291e",
+  "d35f4602bbb6143c",
+  "eee71f6a4f1cf8db"
+ ],
+ "beir_fiqa_659": [
+  "188ec92e75c33086",
+  "230b87178bab22a2",
+  "5cc3970b4999984b",
+  "5e2a40a33450950b",
+  "8b8d2fac91d06034",
+  "9c31d1a1732699d8",
+  "a1e2932ed200f386",
+  "b0b0f5772fd0db97",
+  "c38541b53e327124",
+  "d08311fd91d9561c",
+  "e8805485ae73441f"
+ ],
+ "beir_fiqa_6611": [
+  "58ca8bb291a5087e",
+  "f6be3f0d85ce2624"
+ ],
+ "beir_fiqa_6612": [
+  "3c80d939e40ef473",
+  "5f5e69ddd0a19adf",
+  "64fa5df01f3dc115"
+ ],
+ "beir_fiqa_6625": [
+  "25046dde15bd6704"
+ ],
+ "beir_fiqa_6629": [
+  "eabceda73bdeeb09"
+ ],
+ "beir_fiqa_6635": [
+  "23b4c47aa951a652",
+  "92b3e2f50aab4c67",
+  "ab4b7d3b5616dcf1",
+  "bd94a14d89980b12"
+ ],
+ "beir_fiqa_6644": [
+  "12c5e8119cba1ea6"
+ ],
+ "beir_fiqa_6647": [
+  "59aee25eab82b2c2",
+  "eef17c240b09d91c",
+  "fbe0031c95d69390"
+ ],
+ "beir_fiqa_6668": [
+  "909a83d6ceaa4b34",
+  "c3a707023b203406"
+ ],
+ "beir_fiqa_6679": [
+  "3cda696678f8aa57",
+  "931816e369c9ea26",
+  "f3fdc0755d3c7963"
+ ],
+ "beir_fiqa_6683": [
+  "3b16881ad6e880e2",
+  "3de8f7f6f8343982"
+ ],
+ "beir_fiqa_6713": [
+  "5a1dd1c057c1c919",
+  "b9e42a17c91aa505"
+ ],
+ "beir_fiqa_6715": [
+  "2ea8d1efa1a2fe43",
+  "ba97c81708544bb6"
+ ],
+ "beir_fiqa_672": [
+  "d0062dadd9269e63",
+  "e59591706dc9495f"
+ ],
+ "beir_fiqa_6746": [
+  "976c911df54763a3",
+  "99d28011571c83ff"
+ ],
+ "beir_fiqa_6787": [
+  "f2f1a92b3447ba81"
+ ],
+ "beir_fiqa_6792": [
+  "ed8dea8b7cf8e3f6"
+ ],
+ "beir_fiqa_68": [
+  "40852ef046905efa"
+ ],
+ "beir_fiqa_6800": [
+  "38f3ed78dd6b582e"
+ ],
+ "beir_fiqa_6803": [
+  "2e9e11f25c686d45",
+  "75a894c015ad0d86",
+  "cdb417db804865be",
+  "e534a93aaee0c6d7"
+ ],
+ "beir_fiqa_6807": [
+  "4a6e48ef23c2e64e"
+ ],
+ "beir_fiqa_6814": [
+  "1d46990ad952da4a",
+  "ec44016e3f7d3370"
+ ],
+ "beir_fiqa_6832": [
+  "647e2d5e7806023c",
+  "847b8315c2e9d0b7"
+ ],
+ "beir_fiqa_6835": [
+  "8137daef42899aa5"
+ ],
+ "beir_fiqa_684": [
+  "10fd719eaac3ca06"
+ ],
+ "beir_fiqa_6849": [
+  "1c303a4f2fec3b24"
+ ],
+ "beir_fiqa_6862": [
+  "bc043886821183a5"
+ ],
+ "beir_fiqa_6867": [
+  "1748387bb423e720",
+  "415359223fc60d8b",
+  "86ce32497386dc9a",
+  "89173e5c27d47af6",
+  "a48839c50fa141a4",
+  "a853ace2c8181bfe",
+  "ff2d9ee27dc1b1f4"
+ ],
+ "beir_fiqa_687": [
+  "04b1e1f87f78d7c4",
+  "0b597876c8b26dc0"
+ ],
+ "beir_fiqa_6875": [
+  "333765b183235b4a"
+ ],
+ "beir_fiqa_689": [
+  "0d53f924c6ece360"
+ ],
+ "beir_fiqa_6890": [
+  "927c1cd0c581e59a",
+  "aff03f9ed6115f99"
+ ],
+ "beir_fiqa_6891": [
+  "c0b69cbe40321cac",
+  "c913d8de625495e6",
+  "c993e0343aa6a911"
+ ],
+ "beir_fiqa_6896": [
+  "b968aa4ed0e2d1b3"
+ ],
+ "beir_fiqa_6901": [
+  "69f08616cbc6979d",
+  "cc25050bf8cf1cea"
+ ],
+ "beir_fiqa_6907": [
+  "a5a7b9387f2f2148"
+ ],
+ "beir_fiqa_6909": [
+  "0f547cd3d98d4ac4"
+ ],
+ "beir_fiqa_691": [
+  "8ebd2a82463944ba"
+ ],
+ "beir_fiqa_6959": [
+  "03e72f7fd9a411b7",
+  "237230e08925973a"
+ ],
+ "beir_fiqa_6985": [
+  "92b882a4f7512d6b"
+ ],
+ "beir_fiqa_699": [
+  "896411c69d1a3af9"
+ ],
+ "beir_fiqa_701": [
+  "2787ef3fb4a8e2c4",
+  "54e65a6e90edd97d",
+  "7fa29c65ccb2ccda"
+ ],
+ "beir_fiqa_7017": [
+  "e341214acd1bb69d"
+ ],
+ "beir_fiqa_7068": [
+  "cb6e2386e8d07fba",
+  "e8d36d0048648352"
+ ],
+ "beir_fiqa_7071": [
+  "2a8612540778badf",
+  "8df2270e109f6bbc"
+ ],
+ "beir_fiqa_7080": [
+  "9a7f27b05b975cb8",
+  "b99c9174dbc858ef"
+ ],
+ "beir_fiqa_7096": [
+  "2ab2d7dd8a23cf9f"
+ ],
+ "beir_fiqa_7098": [
+  "b83aeb5d56f8594c",
+  "bf341a143067a189"
+ ],
+ "beir_fiqa_7105": [
+  "21483ebe77887da0"
+ ],
+ "beir_fiqa_7109": [
+  "33258f92de992da0",
+  "91fd1d5fb8ec820d",
+  "c95f49b29f56f75b"
+ ],
+ "beir_fiqa_7124": [
+  "1c96ba2335132ec9",
+  "4f23c17c2f97b3b6",
+  "53fcfc1bbbb50b49",
+  "5d3b5ca439a53268"
+ ],
+ "beir_fiqa_7141": [
+  "532dfdc4a9d84994",
+  "c11c7e989d64b5ec"
+ ],
+ "beir_fiqa_7145": [
+  "6a3d8c65106debd4",
+  "8b9aebde8ebcac2a",
+  "f7c319108aba520a"
+ ],
+ "beir_fiqa_715": [
+  "41b71cb0082b06f1",
+  "6d7b5cbd3e3d6417",
+  "a5838904cde5eee8"
+ ],
+ "beir_fiqa_7178": [
+  "283ea38cf17b09bb"
+ ],
+ "beir_fiqa_7188": [
+  "91607d3f0cf41ec5"
+ ],
+ "beir_fiqa_7205": [
+  "6c6514c0a7523471"
+ ],
+ "beir_fiqa_7206": [
+  "1e5572541c9fe4ce",
+  "79aaf808a70d932d",
+  "eb31a0b3214342e9"
+ ],
+ "beir_fiqa_721": [
+  "240844e046e12796"
+ ],
+ "beir_fiqa_7218": [
+  "2b2a733e0ad6ed6f"
+ ],
+ "beir_fiqa_7221": [
+  "a342eb9f18bd17d5"
+ ],
+ "beir_fiqa_7269": [
+  "67e3dfa578bc3660"
+ ],
+ "beir_fiqa_7279": [
+  "277f3c065d9bf266",
+  "c32023498af0c1ed",
+  "c3c527990221f4d0",
+  "dea21e14cf7761c1"
+ ],
+ "beir_fiqa_7295": [
+  "159e74ad27c1d112"
+ ],
+ "beir_fiqa_7311": [
+  "432e759e00925a6e"
+ ],
+ "beir_fiqa_7326": [
+  "21f51c0d745f51b7"
+ ],
+ "beir_fiqa_7329": [
+  "310e6b631733514b",
+  "bd0c88ad0816e7ab"
+ ],
+ "beir_fiqa_7344": [
+  "baf2f48b7b138b5c",
+  "e67776473aa9c937"
+ ],
+ "beir_fiqa_7345": [
+  "70293a9ab720de15",
+  "75cd24af679ba67f",
+  "a59ef76c7adf09c0"
+ ],
+ "beir_fiqa_7377": [
+  "170e7d62706015e8"
+ ],
+ "beir_fiqa_7431": [
+  "df429b8eda347dd5"
+ ],
+ "beir_fiqa_744": [
+  "078b151f70beec32",
+  "6d910e1ffec70a69",
+  "d48921baeaa85495"
+ ],
+ "beir_fiqa_7441": [
+  "54273d69a77e0a29",
+  "a01735ef1efc9521",
+  "e7aa13d3e176c4b3"
+ ],
+ "beir_fiqa_7445": [
+  "b85f8f618e9c997d",
+  "d6cd326296328a15",
+  "e063c50756277e46"
+ ],
+ "beir_fiqa_7448": [
+  "5092ca26592a7a86"
+ ],
+ "beir_fiqa_7456": [
+  "6c785245a2692094"
+ ],
+ "beir_fiqa_7463": [
+  "1c0abaf542af183b",
+  "224d04dbca7058f1",
+  "31f8cf6e03469868",
+  "811633b6f9dd42aa",
+  "b7cd1cdbeafc2a68"
+ ],
+ "beir_fiqa_7467": [
+  "e467387a961df394"
+ ],
+ "beir_fiqa_7484": [
+  "5908174aed3bb33a"
+ ],
+ "beir_fiqa_750": [
+  "4c023d82620adf5f",
+  "c0f0ef2c4ed436a8"
+ ],
+ "beir_fiqa_7509": [
+  "84b8e60a1d4450ce",
+  "d3b7285b8032332b"
+ ],
+ "beir_fiqa_7512": [
+  "3a79e10f3f60a5f8"
+ ],
+ "beir_fiqa_7513": [
+  "05f2dad6a721c65c",
+  "581d80b211437d52",
+  "b415ef20f950780f"
+ ],
+ "beir_fiqa_7529": [
+  "0e8ec011c76ccce3",
+  "c55df449c4aa62ba"
+ ],
+ "beir_fiqa_753": [
+  "ea911da5c1c6e4af",
+  "fc73ded2ddde11fc"
+ ],
+ "beir_fiqa_7533": [
+  "406a46eac89de6a3",
+  "ba10d4aa867fa2be"
+ ],
+ "beir_fiqa_7534": [
+  "5bf1bec87ddcfdf3",
+  "99898a53a5639f1e",
+  "9dfc39a8d76a34f2"
+ ],
+ "beir_fiqa_7590": [
+  "1fe3486f01553216",
+  "a5b1aa381a82c5d9"
+ ],
+ "beir_fiqa_7592": [
+  "370a5620848e3048"
+ ],
+ "beir_fiqa_7594": [
+  "39379616a514f594"
+ ],
+ "beir_fiqa_7622": [
+  "1f52f7ccc395edb6",
+  "9b7960cf4c72d0c4"
+ ],
+ "beir_fiqa_7633": [
+  "32d99322a968026d",
+  "55d567a045969609",
+  "8d51580c7bc0089f",
+  "d40b43cff9a16618"
+ ],
+ "beir_fiqa_766": [
+  "07213b5a9a1681fc",
+  "421e9f5b3e5284f3",
+  "c6eec7e8d6cf6dd5"
+ ],
+ "beir_fiqa_7674": [
+  "1a5006d2ca76240c",
+  "63112bf6750ffdc9",
+  "d482b35953212243"
+ ],
+ "beir_fiqa_7700": [
+  "18cde277d6719ab6",
+  "24fb394365032d58",
+  "26b7d1f0deb3a47c",
+  "3e714cf723b2ebe2"
+ ],
+ "beir_fiqa_7702": [
+  "9d0e06b2af70060f",
+  "b0d2af6b69e004f6"
+ ],
+ "beir_fiqa_7705": [
+  "62c0f5932f450876",
+  "f02340e06b145d08",
+  "f6410556bd4791c2"
+ ],
+ "beir_fiqa_7734": [
+  "4277f64daeb7209c",
+  "7b8afbc0eb178001"
+ ],
+ "beir_fiqa_7747": [
+  "164e79b96029a16d",
+  "b159b4add56718db"
+ ],
+ "beir_fiqa_7754": [
+  "46a864a358559730"
+ ],
+ "beir_fiqa_7758": [
+  "4598981e19d13da8"
+ ],
+ "beir_fiqa_776": [
+  "06c9bfed6febf81f",
+  "469b2a01d69c3e46",
+  "4cf7ffcc1647ba59",
+  "5c2a8373de913b30",
+  "6439319d9a8e880c",
+  "6ac5c4f5b469bcfe",
+  "7cf685fd15a2597a",
+  "9ce9b3c7b3a72dd6",
+  "a5222628db4d26a5",
+  "a73b1915012efac2",
+  "c65621c89fd76f56",
+  "cf502aaaaf019c5e"
+ ],
+ "beir_fiqa_7801": [
+  "0adfd2abbfef3eaa",
+  "107a689a24512cc7"
+ ],
+ "beir_fiqa_7803": [
+  "0ae50de72f771191",
+  "5b3eb3802efc4e30"
+ ],
+ "beir_fiqa_7823": [
+  "26c3f72e353c8bca",
+  "79029b24e506655a",
+  "8946d6aabb812b05"
+ ],
+ "beir_fiqa_7876": [
+  "a86186af24ed77f0"
+ ],
+ "beir_fiqa_7879": [
+  "194d25113e015f46",
+  "f24e564030a2c68a",
+  "fad870da3b35669d"
+ ],
+ "beir_fiqa_7880": [
+  "4c24c26b90ed322c",
+  "6cd09ca986cd8cc9"
+ ],
+ "beir_fiqa_7911": [
+  "36bb137c10f453fd",
+  "5ef8b89c94ba79be"
+ ],
+ "beir_fiqa_7925": [
+  "6720b1bc9f66908e",
+  "8089201c46820412",
+  "96b942679e02affe",
+  "9f39f56be0a68612",
+  "dbcb319287501ce5",
+  "f6b1318784047737"
+ ],
+ "beir_fiqa_7928": [
+  "6092251fe6bcd5dc",
+  "75a33b91253a483c",
+  "b624e53bad7d4cfd",
+  "fc7c58d212ef19ba"
+ ],
+ "beir_fiqa_7936": [
+  "4fd9cb329501c0d1",
+  "b1e1eac515ac223a",
+  "d39d1124f98aa01a"
+ ],
+ "beir_fiqa_7992": [
+  "3a8c669ff1fa73c5",
+  "908cfc6db735e281"
+ ],
+ "beir_fiqa_8": [
+  "0ac0ca341097cb71"
+ ],
+ "beir_fiqa_8002": [
+  "636372dc591e1b9a",
+  "b47f520e8ee2325e",
+  "c16f0ca26240feab"
+ ],
+ "beir_fiqa_8005": [
+  "61e85f583220bbd6"
+ ],
+ "beir_fiqa_8013": [
+  "64e5a7d4a499962d",
+  "fa3c70298489f80c"
+ ],
+ "beir_fiqa_8017": [
+  "0da29a3d37417126"
+ ],
+ "beir_fiqa_8034": [
+  "d1f628ed6d02beac"
+ ],
+ "beir_fiqa_8040": [
+  "b2c9af8f08c6aba8"
+ ],
+ "beir_fiqa_8072": [
+  "a98efc23bd8c5633",
+  "aec15347f1c85dd6",
+  "f6f9cab8ae5b0660"
+ ],
+ "beir_fiqa_8079": [
+  "0e1ad79dfb577c58",
+  "48407ac48f183e25",
+  "ac41ff2476044a16"
+ ],
+ "beir_fiqa_810": [
+  "27463e2de8ae89d7"
+ ],
+ "beir_fiqa_8102": [
+  "65f1c99f2d905e8f",
+  "7b82d0ad323c9161",
+  "807b911b7fcca6c6",
+  "d3f0b1af4cefa625"
+ ],
+ "beir_fiqa_8116": [
+  "3284709bdcc42710",
+  "c54b124d8957773b"
+ ],
+ "beir_fiqa_8121": [
+  "5c2512b354f1a3e3"
+ ],
+ "beir_fiqa_813": [
+  "5bb1eb69c8fe89f6",
+  "777c3acc3c4f679a"
+ ],
+ "beir_fiqa_8202": [
+  "0349691246e2bead",
+  "dc042386a91815c1"
+ ],
+ "beir_fiqa_8230": [
+  "1e9ab160f4b0869e",
+  "9a33c1dc902f8c90"
+ ],
+ "beir_fiqa_8247": [
+  "1908e905aff54e67",
+  "23d2a0d414634bfc",
+  "d9c0ff2b6c475944",
+  "f5ee09672ca4000a"
+ ],
+ "beir_fiqa_8271": [
+  "888a78b34eaf6ede",
+  "9eb6d64cc0a062cf"
+ ],
+ "beir_fiqa_8275": [
+  "2d58ae1322309ffc"
+ ],
+ "beir_fiqa_8296": [
+  "49e4b45a20754a4e",
+  "d3a24b22cb35f3ac"
+ ],
+ "beir_fiqa_8332": [
+  "50e88ecb543cc73c",
+  "89803e9dae787d18",
+  "ab4e6f61d4a5e415"
+ ],
+ "beir_fiqa_8351": [
+  "0300c73c5b34f327",
+  "53cd202c4b4b194b"
+ ],
+ "beir_fiqa_8378": [
+  "1adc577ad3e2e308",
+  "5d375502c578d5eb",
+  "ddb671828d0e7d94"
+ ],
+ "beir_fiqa_8456": [
+  "45a62702ae423f78",
+  "501ab46110ab3209",
+  "6ab370fd4cf8652e"
+ ],
+ "beir_fiqa_8475": [
+  "42a6e6e587f89a59",
+  "63a3df69bf012294",
+  "654d2cd3358e71b7",
+  "72e459168d7ad5ca",
+  "7d51807e11bcb416",
+  "85216e6d34e2385b",
+  "a5e303295b93b5e2"
+ ],
+ "beir_fiqa_849": [
+  "f20e5b194d3780f4"
+ ],
+ "beir_fiqa_8507": [
+  "6d989cd14fe127bf",
+  "874094e25a2f4938",
+  "bcbcc63c0aa4f4d1"
+ ],
+ "beir_fiqa_8512": [
+  "761b03a8aa3913c3"
+ ],
+ "beir_fiqa_8513": [
+  "9e756028e0d4967f"
+ ],
+ "beir_fiqa_852": [
+  "136dd52c736ff5ee",
+  "15e39973a8909d15",
+  "f46be206dc02907f"
+ ],
+ "beir_fiqa_853": [
+  "47f13e4a1afaea7a",
+  "ccc26ebc158f1c9c"
+ ],
+ "beir_fiqa_8532": [
+  "06d9dceae5adb523",
+  "813a6798b04b5472",
+  "b238b6732aed9fe1"
+ ],
+ "beir_fiqa_8537": [
+  "806006b7c7bd30c5"
+ ],
+ "beir_fiqa_8539": [
+  "1e98972f3a0fab48",
+  "49bb7e0727f71637",
+  "86a9e1a8ea309e31",
+  "be6e3e0e6c19de76"
+ ],
+ "beir_fiqa_8544": [
+  "678a1396ef7b7d44",
+  "a2f86f5fe76b3fd6"
+ ],
+ "beir_fiqa_858": [
+  "14ba184e0ca5dc74",
+  "7e4c6e7f46620b39",
+  "c257006031819b6c",
+  "c89f174ce92083d6",
+  "c8fce870c13d674f",
+  "e43c6c09778db93d",
+  "f0b5bf1e273f0455"
+ ],
+ "beir_fiqa_859": [
+  "c4af80aaaa104cdd",
+  "f2fc2edf432223b3"
+ ],
+ "beir_fiqa_8592": [
+  "37c1fe47c6b4fe9a",
+  "dc632817e043a14e",
+  "e53aa10d5f1d40e1"
+ ],
+ "beir_fiqa_8632": [
+  "452b9190f46f3b64",
+  "87d772fa417b5c89"
+ ],
+ "beir_fiqa_8635": [
+  "2efd18be268cea27",
+  "e3e721af71e9479a"
+ ],
+ "beir_fiqa_864": [
+  "5ac8e95955816730",
+  "b972be989bf052c5",
+  "bd202a05e7f8899a",
+  "cb4009e00fc05bca",
+  "dc7482823065baf7"
+ ],
+ "beir_fiqa_8702": [
+  "0407245711128f23",
+  "4d60aa76b626c733",
+  "9c9853777514b95e"
+ ],
+ "beir_fiqa_8779": [
+  "0ec92fde46805993",
+  "82b3d9249cfc5f7e"
+ ],
+ "beir_fiqa_8789": [
+  "449cbd6aec95336b",
+  "a0a3ef7c28d71ddd",
+  "ee01d16ad00231fa"
+ ],
+ "beir_fiqa_879": [
+  "2e9b87f5d7bc8e7f"
+ ],
+ "beir_fiqa_8795": [
+  "f9775a777a8841fa"
+ ],
+ "beir_fiqa_8832": [
+  "48407f0dfd3a67b3"
+ ],
+ "beir_fiqa_8834": [
+  "26ec1560592f6a7c",
+  "2ba6b60f0b8fbdbc",
+  "4623e373095a45bc",
+  "6fb5fe27ef72ffbd",
+  "8d49c58a952c1faf",
+  "e56ca5daff87b441"
+ ],
+ "beir_fiqa_885": [
+  "086cf2cc8bd82853",
+  "217eccbbe2b727e5"
+ ],
+ "beir_fiqa_8855": [
+  "9455c9f37065227c",
+  "98455745939efd07",
+  "fa63e9544fb1b412"
+ ],
+ "beir_fiqa_8874": [
+  "92cafc991ab0940e"
+ ],
+ "beir_fiqa_89": [
+  "0937fe6850a6bdbc",
+  "26157bd36851bd3c",
+  "5ee57efab4e7ffb0",
+  "93f40e407535b857",
+  "ba7be09ac8976f74",
+  "ecb91c4bec249c94"
+ ],
+ "beir_fiqa_8934": [
+  "759d05c1a086115f",
+  "b1a15a45b8b8eb28"
+ ],
+ "beir_fiqa_8937": [
+  "ce74a0501d83c3fd"
+ ],
+ "beir_fiqa_8947": [
+  "b727db7d5a7db088",
+  "d19ed6b586a3cf7a"
+ ],
+ "beir_fiqa_895": [
+  "81517d79712546b4"
+ ],
+ "beir_fiqa_8959": [
+  "dbecc705657fa152"
+ ],
+ "beir_fiqa_8970": [
+  "5dbad91f757c4fc3",
+  "e9e37f782645c42e"
+ ],
+ "beir_fiqa_8974": [
+  "10616e6d8e5da5ac",
+  "179425dfeb8c9265",
+  "19ed1338defd7bbf",
+  "21ab3a4b9b1dac53",
+  "3203d531e641d817",
+  "3d8bf3491039dfb8",
+  "4e807a2707579910",
+  "c29f085bf99372de"
+ ],
+ "beir_fiqa_8982": [
+  "2fcdad3de4b45fac",
+  "b8225b9417200692"
+ ],
+ "beir_fiqa_90": [
+  "f67f810b25d91603"
+ ],
+ "beir_fiqa_904": [
+  "e821480ce4d8a54d"
+ ],
+ "beir_fiqa_9060": [
+  "032cbfa14bd5cce0",
+  "34bfd23d58069030"
+ ],
+ "beir_fiqa_9088": [
+  "767d21a092aec08a",
+  "fe76961d58db28fc"
+ ],
+ "beir_fiqa_9108": [
+  "006a2dbd7885054f",
+  "a455b2ad5aba8bcc"
+ ],
+ "beir_fiqa_9115": [
+  "410e017f56c2e356",
+  "97819ca30aa1d3d7",
+  "d8761fa11c1dca47"
+ ],
+ "beir_fiqa_9126": [
+  "a7e7d7931d219e84"
+ ],
+ "beir_fiqa_9164": [
+  "7223aad310ae4eae",
+  "74395df6f7221006",
+  "80aa0369011c83bb"
+ ],
+ "beir_fiqa_9174": [
+  "3b9fb38b845bef99",
+  "464eeefad69f87d6",
+  "706276df242ddd0c",
+  "b5e3fcfc42cafda3",
+  "cecb04e06e5e024f"
+ ],
+ "beir_fiqa_9188": [
+  "62b69bbd74db3419",
+  "718a82f59dd8c55c"
+ ],
+ "beir_fiqa_9245": [
+  "9f91a4d955c6f9c3"
+ ],
+ "beir_fiqa_9275": [
+  "5486f7e1c474affb"
+ ],
+ "beir_fiqa_928": [
+  "6597f66fa695bb8b",
+  "d28c3d8d733c6d51"
+ ],
+ "beir_fiqa_929": [
+  "48858e8d7e2593ac"
+ ],
+ "beir_fiqa_9291": [
+  "26cbbce809d59b0c",
+  "a6f63f46c8f877d1"
+ ],
+ "beir_fiqa_9296": [
+  "c09d9440ce67adf5",
+  "c52e41536fa3214f"
+ ],
+ "beir_fiqa_932": [
+  "242c78e7843cec03",
+  "b29580cef3b62ff7"
+ ],
+ "beir_fiqa_9329": [
+  "6d95cb9dfeca4ec9",
+  "f28296cc727ce30a"
+ ],
+ "beir_fiqa_9332": [
+  "e08ab2ac4440b223"
+ ],
+ "beir_fiqa_9381": [
+  "57a428653dbde1f7",
+  "ee03409044fc2a81"
+ ],
+ "beir_fiqa_9385": [
+  "d9e46c1bb6d9577c"
+ ],
+ "beir_fiqa_939": [
+  "700fc48bedd27db6"
+ ],
+ "beir_fiqa_9391": [
+  "639de895e91a598e",
+  "9dc2b02eed8b61e7",
+  "bd31e9ef08959ad2",
+  "d6d27a7600694912"
+ ],
+ "beir_fiqa_94": [
+  "f0f257976f9489ca"
+ ],
+ "beir_fiqa_9403": [
+  "1aa34b225427e5b8",
+  "42096fdac61b9573",
+  "7f9cb1f29943e9c3"
+ ],
+ "beir_fiqa_945": [
+  "1a5ef8e89839b372"
+ ],
+ "beir_fiqa_9481": [
+  "c0b0cdc43618744e",
+  "df587df151a1f2f2"
+ ],
+ "beir_fiqa_9487": [
+  "5fde10a1dbc82b45"
+ ],
+ "beir_fiqa_9548": [
+  "ad782c9ee7280d86"
+ ],
+ "beir_fiqa_9556": [
+  "084f9a78d1420b11"
+ ],
+ "beir_fiqa_9565": [
+  "147ccd4f81e9e442",
+  "711366a4fe4fabfd"
+ ],
+ "beir_fiqa_957": [
+  "9635c25de90f1178",
+  "e01a67326e19c743",
+  "e2b83c64812ca2f7"
+ ],
+ "beir_fiqa_9598": [
+  "8a3a9116acc97dd0"
+ ],
+ "beir_fiqa_9617": [
+  "38ca9efb1e7caf1b",
+  "a7d8eaad29bff9f1",
+  "d3ed0e09b72012e4"
+ ],
+ "beir_fiqa_9633": [
+  "529fea968156974d",
+  "c3dce6cafbde306e"
+ ],
+ "beir_fiqa_9643": [
+  "fb1150b1a08fe4d1"
+ ],
+ "beir_fiqa_9644": [
+  "353108458f24576d"
+ ],
+ "beir_fiqa_9646": [
+  "51040e7d1c01704f",
+  "9e2f6537a50b1eea"
+ ],
+ "beir_fiqa_9668": [
+  "2588f5555171c38d",
+  "a219c2bdffa97a2f",
+  "b6100f5137d24045"
+ ],
+ "beir_fiqa_9701": [
+  "1d4817c5d002811c",
+  "77a21f0676360380"
+ ],
+ "beir_fiqa_9733": [
+  "4b13f3645c36c098",
+  "854424ff0c1d8cb3",
+  "b69fef370954d4af"
+ ],
+ "beir_fiqa_9735": [
+  "e0d861e013cc9dfe"
+ ],
+ "beir_fiqa_9737": [
+  "3c1069611a18f1ce",
+  "eac0a9a96a75789b",
+  "faa781c5d15df341"
+ ],
+ "beir_fiqa_9771": [
+  "6f5efccd57cef1d6",
+  "9f7c72590e80fa72"
+ ],
+ "beir_fiqa_98": [
+  "1ab52d09487173d4",
+  "6d435eb964cd4708"
+ ],
+ "beir_fiqa_9808": [
+  "03576b030dc2a51c",
+  "6e7ce9a9d9b1adf8",
+  "a3e55c5bd81a67bc"
+ ],
+ "beir_fiqa_9824": [
+  "330ea9ccfcbbb5a0"
+ ],
+ "beir_fiqa_9871": [
+  "3091e29e1489ebf3",
+  "7bd3d824fa7dffa8",
+  "c308ec89a64ba973",
+  "f19e685e0e66d0a3"
+ ],
+ "beir_fiqa_988": [
+  "afa012b39fe7b383",
+  "fe02327bd4438adc"
+ ],
+ "beir_fiqa_9882": [
+  "643faf347b54bf34"
+ ],
+ "beir_fiqa_9925": [
+  "016d838a4b524b5b",
+  "61e4d79f5ec567d8",
+  "82f8f2b6f03b2dbc"
+ ],
+ "beir_fiqa_9929": [
+  "85cdbbe94d7339f0",
+  "f33d62515b3b6a48"
+ ],
+ "beir_fiqa_9961": [
+  "2dab31bd2ef78ac5"
+ ],
+ "beir_fiqa_9979": [
+  "31a9cb778c8c3838",
+  "a12635d9cf967641",
+  "cd989cef4c20bbeb",
+  "ebbdabb0a57b078b"
+ ]
+}

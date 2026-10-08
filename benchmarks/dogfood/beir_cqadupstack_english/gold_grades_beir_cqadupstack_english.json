@@ -1,0 +1,6907 @@
+{
+ "beir_cqadupstack_english_100173": {
+  "10/147988.txt": 1
+ },
+ "beir_cqadupstack_english_100414": {
+  "62/60956.txt": 1
+ },
+ "beir_cqadupstack_english_100605": {
+  "1d/184738.txt": 1
+ },
+ "beir_cqadupstack_english_100664": {
+  "b7/25375.txt": 1,
+  "e7/8892.txt": 1
+ },
+ "beir_cqadupstack_english_100750": {
+  "14/78552.txt": 1,
+  "18/173809.txt": 1,
+  "52/5466.txt": 1,
+  "99/10297.txt": 1,
+  "b0/74962.txt": 1,
+  "e2/96562.txt": 1,
+  "e9/111817.txt": 1
+ },
+ "beir_cqadupstack_english_100870": {
+  "29/13142.txt": 1,
+  "d5/176823.txt": 1
+ },
+ "beir_cqadupstack_english_101125": {
+  "39/57037.txt": 1
+ },
+ "beir_cqadupstack_english_101130": {
+  "68/76870.txt": 1
+ },
+ "beir_cqadupstack_english_101161": {
+  "35/97806.txt": 1
+ },
+ "beir_cqadupstack_english_101245": {
+  "93/61419.txt": 1,
+  "ff/30939.txt": 1
+ },
+ "beir_cqadupstack_english_101332": {
+  "19/47383.txt": 1
+ },
+ "beir_cqadupstack_english_101444": {
+  "fa/93645.txt": 1
+ },
+ "beir_cqadupstack_english_101476": {
+  "01/91796.txt": 1
+ },
+ "beir_cqadupstack_english_101489": {
+  "0e/80880.txt": 1,
+  "31/4871.txt": 1,
+  "49/16797.txt": 1,
+  "59/128405.txt": 1,
+  "60/45517.txt": 1,
+  "69/66154.txt": 1,
+  "c1/16203.txt": 1,
+  "e6/127747.txt": 1
+ },
+ "beir_cqadupstack_english_101589": {
+  "72/194738.txt": 1
+ },
+ "beir_cqadupstack_english_101711": {
+  "9e/132709.txt": 1
+ },
+ "beir_cqadupstack_english_101775": {
+  "14/57927.txt": 1,
+  "8a/47584.txt": 1
+ },
+ "beir_cqadupstack_english_101796": {
+  "52/97129.txt": 1
+ },
+ "beir_cqadupstack_english_101972": {
+  "26/105252.txt": 1,
+  "75/22320.txt": 1,
+  "c6/74832.txt": 1,
+  "fb/140049.txt": 1
+ },
+ "beir_cqadupstack_english_102057": {
+  "e6/141937.txt": 1
+ },
+ "beir_cqadupstack_english_102316": {
+  "57/102198.txt": 1
+ },
+ "beir_cqadupstack_english_102345": {
+  "65/8281.txt": 1
+ },
+ "beir_cqadupstack_english_102364": {
+  "d6/30455.txt": 1
+ },
+ "beir_cqadupstack_english_102502": {
+  "04/9360.txt": 1,
+  "2d/56169.txt": 1,
+  "b7/74622.txt": 1,
+  "e3/69323.txt": 1
+ },
+ "beir_cqadupstack_english_102506": {
+  "52/120755.txt": 1
+ },
+ "beir_cqadupstack_english_102728": {
+  "a3/25685.txt": 1
+ },
+ "beir_cqadupstack_english_102863": {
+  "1f/102623.txt": 1
+ },
+ "beir_cqadupstack_english_102953": {
+  "89/42090.txt": 1
+ },
+ "beir_cqadupstack_english_1031": {
+  "4c/100163.txt": 1,
+  "65/79746.txt": 1,
+  "a7/88389.txt": 1,
+  "ad/6735.txt": 1
+ },
+ "beir_cqadupstack_english_103230": {
+  "3c/103658.txt": 1
+ },
+ "beir_cqadupstack_english_1035": {
+  "7f/73242.txt": 1,
+  "e4/117731.txt": 1
+ },
+ "beir_cqadupstack_english_10364": {
+  "b6/65188.txt": 1
+ },
+ "beir_cqadupstack_english_103656": {
+  "5a/3824.txt": 1
+ },
+ "beir_cqadupstack_english_103741": {
+  "7a/178521.txt": 1
+ },
+ "beir_cqadupstack_english_103866": {
+  "91/71255.txt": 1
+ },
+ "beir_cqadupstack_english_103930": {
+  "4a/77058.txt": 1
+ },
+ "beir_cqadupstack_english_103946": {
+  "7a/7382.txt": 1
+ },
+ "beir_cqadupstack_english_103961": {
+  "2b/168332.txt": 1,
+  "67/68713.txt": 1,
+  "8a/152022.txt": 1,
+  "92/40412.txt": 1,
+  "a4/70933.txt": 1,
+  "cc/33885.txt": 1,
+  "f1/495.txt": 1
+ },
+ "beir_cqadupstack_english_104117": {
+  "12/131822.txt": 1
+ },
+ "beir_cqadupstack_english_104442": {
+  "0a/69815.txt": 1
+ },
+ "beir_cqadupstack_english_10458": {
+  "54/25492.txt": 1,
+  "57/34122.txt": 1,
+  "5a/21366.txt": 1
+ },
+ "beir_cqadupstack_english_104711": {
+  "08/22372.txt": 1
+ },
+ "beir_cqadupstack_english_104905": {
+  "1a/187316.txt": 1
+ },
+ "beir_cqadupstack_english_105026": {
+  "c3/104541.txt": 1
+ },
+ "beir_cqadupstack_english_105215": {
+  "f9/71491.txt": 1
+ },
+ "beir_cqadupstack_english_10527": {
+  "e5/154175.txt": 1
+ },
+ "beir_cqadupstack_english_105292": {
+  "71/194438.txt": 1,
+  "b6/59569.txt": 1
+ },
+ "beir_cqadupstack_english_105481": {
+  "16/30185.txt": 1
+ },
+ "beir_cqadupstack_english_105591": {
+  "07/56576.txt": 1
+ },
+ "beir_cqadupstack_english_10572": {
+  "4f/5390.txt": 1
+ },
+ "beir_cqadupstack_english_105869": {
+  "a0/18540.txt": 1
+ },
+ "beir_cqadupstack_english_105962": {
+  "6f/100818.txt": 1
+ },
+ "beir_cqadupstack_english_106052": {
+  "3a/55351.txt": 1
+ },
+ "beir_cqadupstack_english_106188": {
+  "2a/6039.txt": 1,
+  "41/122273.txt": 1,
+  "a7/1531.txt": 1
+ },
+ "beir_cqadupstack_english_106377": {
+  "1c/186496.txt": 1,
+  "88/4645.txt": 1,
+  "e4/94304.txt": 1
+ },
+ "beir_cqadupstack_english_10665": {
+  "ae/68429.txt": 1
+ },
+ "beir_cqadupstack_english_106711": {
+  "5d/140905.txt": 1
+ },
+ "beir_cqadupstack_english_106729": {
+  "4d/106694.txt": 1
+ },
+ "beir_cqadupstack_english_106770": {
+  "2b/68257.txt": 1,
+  "c7/148704.txt": 1,
+  "ef/60042.txt": 1
+ },
+ "beir_cqadupstack_english_106804": {
+  "b0/72103.txt": 1
+ },
+ "beir_cqadupstack_english_106932": {
+  "f4/8110.txt": 1
+ },
+ "beir_cqadupstack_english_10705": {
+  "c2/111277.txt": 1,
+  "ed/5475.txt": 1
+ },
+ "beir_cqadupstack_english_107228": {
+  "a6/2346.txt": 1,
+  "b9/181629.txt": 1
+ },
+ "beir_cqadupstack_english_107236": {
+  "88/107238.txt": 1
+ },
+ "beir_cqadupstack_english_107286": {
+  "fb/125607.txt": 1
+ },
+ "beir_cqadupstack_english_107391": {
+  "e2/134602.txt": 1
+ },
+ "beir_cqadupstack_english_107822": {
+  "b9/71001.txt": 1,
+  "ce/109777.txt": 1,
+  "f8/71532.txt": 1
+ },
+ "beir_cqadupstack_english_108094": {
+  "47/64584.txt": 1
+ },
+ "beir_cqadupstack_english_10812": {
+  "c6/114068.txt": 1
+ },
+ "beir_cqadupstack_english_108162": {
+  "6b/21413.txt": 1
+ },
+ "beir_cqadupstack_english_108299": {
+  "89/7378.txt": 1,
+  "98/84578.txt": 1,
+  "e9/2658.txt": 1
+ },
+ "beir_cqadupstack_english_108397": {
+  "1d/9096.txt": 1,
+  "e5/20275.txt": 1
+ },
+ "beir_cqadupstack_english_108431": {
+  "91/115856.txt": 1,
+  "9b/66126.txt": 1,
+  "f3/69990.txt": 1
+ },
+ "beir_cqadupstack_english_108457": {
+  "81/28508.txt": 1,
+  "cc/170934.txt": 1,
+  "fe/78886.txt": 1
+ },
+ "beir_cqadupstack_english_108677": {
+  "7c/194550.txt": 1
+ },
+ "beir_cqadupstack_english_109731": {
+  "1f/95031.txt": 1
+ },
+ "beir_cqadupstack_english_10999": {
+  "05/92962.txt": 1,
+  "2e/2002.txt": 1,
+  "49/5302.txt": 1,
+  "64/33845.txt": 1
+ },
+ "beir_cqadupstack_english_110074": {
+  "1b/139367.txt": 1
+ },
+ "beir_cqadupstack_english_110082": {
+  "3a/43111.txt": 1,
+  "53/43590.txt": 1
+ },
+ "beir_cqadupstack_english_110099": {
+  "1e/58282.txt": 1
+ },
+ "beir_cqadupstack_english_110231": {
+  "c8/61157.txt": 1
+ },
+ "beir_cqadupstack_english_110329": {
+  "15/1120.txt": 1
+ },
+ "beir_cqadupstack_english_110365": {
+  "59/87398.txt": 1,
+  "69/73342.txt": 1,
+  "81/85414.txt": 1,
+  "b7/143504.txt": 1,
+  "be/58285.txt": 1,
+  "c2/132637.txt": 1,
+  "f2/132441.txt": 1,
+  "fd/124935.txt": 1
+ },
+ "beir_cqadupstack_english_110515": {
+  "ba/38243.txt": 1
+ },
+ "beir_cqadupstack_english_11065": {
+  "8d/188658.txt": 1,
+  "df/1863.txt": 1
+ },
+ "beir_cqadupstack_english_110759": {
+  "6a/108520.txt": 1
+ },
+ "beir_cqadupstack_english_110799": {
+  "70/17540.txt": 1
+ },
+ "beir_cqadupstack_english_110990": {
+  "8f/180258.txt": 1,
+  "d4/149442.txt": 1
+ },
+ "beir_cqadupstack_english_110992": {
+  "17/159776.txt": 1,
+  "e5/154257.txt": 1
+ },
+ "beir_cqadupstack_english_111090": {
+  "4a/81717.txt": 1
+ },
+ "beir_cqadupstack_english_111208": {
+  "0d/165822.txt": 1
+ },
+ "beir_cqadupstack_english_111382": {
+  "c1/120595.txt": 1
+ },
+ "beir_cqadupstack_english_111495": {
+  "29/32447.txt": 1,
+  "f4/130273.txt": 1
+ },
+ "beir_cqadupstack_english_111581": {
+  "ee/93125.txt": 1
+ },
+ "beir_cqadupstack_english_111666": {
+  "9c/5539.txt": 1,
+  "bb/102988.txt": 1,
+  "dd/29843.txt": 1
+ },
+ "beir_cqadupstack_english_111709": {
+  "06/3178.txt": 1,
+  "a6/79065.txt": 1
+ },
+ "beir_cqadupstack_english_111788": {
+  "01/133479.txt": 1,
+  "98/92673.txt": 1
+ },
+ "beir_cqadupstack_english_112023": {
+  "76/41564.txt": 1
+ },
+ "beir_cqadupstack_english_112082": {
+  "1c/43926.txt": 1,
+  "44/178743.txt": 1,
+  "e7/189947.txt": 1
+ },
+ "beir_cqadupstack_english_112420": {
+  "3b/92362.txt": 1,
+  "cc/127283.txt": 1
+ },
+ "beir_cqadupstack_english_112717": {
+  "29/101511.txt": 1
+ },
+ "beir_cqadupstack_english_112956": {
+  "05/134607.txt": 1,
+  "15/16.txt": 1,
+  "16/60700.txt": 1,
+  "28/10224.txt": 1,
+  "2d/131355.txt": 1,
+  "5d/101531.txt": 1,
+  "63/104608.txt": 1,
+  "65/118809.txt": 1,
+  "7a/110793.txt": 1,
+  "82/131503.txt": 1,
+  "85/19020.txt": 1,
+  "8a/143478.txt": 1,
+  "b8/59307.txt": 1,
+  "bb/80570.txt": 1,
+  "c1/134604.txt": 1,
+  "cc/64421.txt": 1,
+  "ee/180488.txt": 1,
+  "fc/14629.txt": 1
+ },
+ "beir_cqadupstack_english_113026": {
+  "36/80777.txt": 1,
+  "f6/59271.txt": 1
+ },
+ "beir_cqadupstack_english_113209": {
+  "9e/10540.txt": 1,
+  "b2/406.txt": 1
+ },
+ "beir_cqadupstack_english_113243": {
+  "07/3557.txt": 1
+ },
+ "beir_cqadupstack_english_113551": {
+  "70/3098.txt": 1
+ },
+ "beir_cqadupstack_english_113583": {
+  "d8/64686.txt": 1
+ },
+ "beir_cqadupstack_english_113762": {
+  "ba/16791.txt": 1
+ },
+ "beir_cqadupstack_english_113776": {
+  "0f/2532.txt": 1,
+  "59/33903.txt": 1
+ },
+ "beir_cqadupstack_english_11380": {
+  "90/49048.txt": 1,
+  "df/33544.txt": 1
+ },
+ "beir_cqadupstack_english_11395": {
+  "2a/113077.txt": 1
+ },
+ "beir_cqadupstack_english_114017": {
+  "35/104059.txt": 1,
+  "8d/112560.txt": 1
+ },
+ "beir_cqadupstack_english_114077": {
+  "77/161860.txt": 1
+ },
+ "beir_cqadupstack_english_114123": {
+  "92/147876.txt": 1
+ },
+ "beir_cqadupstack_english_114224": {
+  "05/62147.txt": 1,
+  "14/96070.txt": 1,
+  "2d/55970.txt": 1,
+  "7f/94251.txt": 1,
+  "a6/121846.txt": 1,
+  "b8/25277.txt": 1,
+  "c7/119892.txt": 1,
+  "e3/194946.txt": 1
+ },
+ "beir_cqadupstack_english_114302": {
+  "6e/114304.txt": 1
+ },
+ "beir_cqadupstack_english_114649": {
+  "28/6183.txt": 1
+ },
+ "beir_cqadupstack_english_114707": {
+  "e5/114712.txt": 1
+ },
+ "beir_cqadupstack_english_115296": {
+  "0b/1389.txt": 1
+ },
+ "beir_cqadupstack_english_11538": {
+  "85/154488.txt": 1
+ },
+ "beir_cqadupstack_english_115642": {
+  "19/91887.txt": 1
+ },
+ "beir_cqadupstack_english_115701": {
+  "f6/54289.txt": 1
+ },
+ "beir_cqadupstack_english_115753": {
+  "46/195987.txt": 1
+ },
+ "beir_cqadupstack_english_115828": {
+  "52/84517.txt": 1
+ },
+ "beir_cqadupstack_english_115862": {
+  "bc/105098.txt": 1
+ },
+ "beir_cqadupstack_english_115865": {
+  "71/43597.txt": 1,
+  "f5/181312.txt": 1
+ },
+ "beir_cqadupstack_english_115866": {
+  "52/116828.txt": 1
+ },
+ "beir_cqadupstack_english_115922": {
+  "20/9702.txt": 1,
+  "2e/102244.txt": 1,
+  "3d/87393.txt": 1,
+  "62/55775.txt": 1,
+  "62/5721.txt": 1,
+  "88/152169.txt": 1,
+  "89/115511.txt": 1
+ },
+ "beir_cqadupstack_english_115928": {
+  "2c/60728.txt": 1
+ },
+ "beir_cqadupstack_english_115941": {
+  "34/95604.txt": 1
+ },
+ "beir_cqadupstack_english_115993": {
+  "a6/2429.txt": 1
+ },
+ "beir_cqadupstack_english_116328": {
+  "8b/5268.txt": 1
+ },
+ "beir_cqadupstack_english_116353": {
+  "d1/114375.txt": 1
+ },
+ "beir_cqadupstack_english_116384": {
+  "28/14556.txt": 1
+ },
+ "beir_cqadupstack_english_116587": {
+  "05/27333.txt": 1
+ },
+ "beir_cqadupstack_english_116590": {
+  "46/112850.txt": 1
+ },
+ "beir_cqadupstack_english_116838": {
+  "86/50615.txt": 1
+ },
+ "beir_cqadupstack_english_117036": {
+  "71/130294.txt": 1
+ },
+ "beir_cqadupstack_english_117194": {
+  "26/9479.txt": 1
+ },
+ "beir_cqadupstack_english_117239": {
+  "0b/20550.txt": 1
+ },
+ "beir_cqadupstack_english_117344": {
+  "54/58921.txt": 1
+ },
+ "beir_cqadupstack_english_117350": {
+  "ef/55722.txt": 1
+ },
+ "beir_cqadupstack_english_117485": {
+  "43/107710.txt": 1,
+  "ab/95121.txt": 1,
+  "b6/64646.txt": 1,
+  "d9/96745.txt": 1
+ },
+ "beir_cqadupstack_english_117589": {
+  "7a/144464.txt": 1
+ },
+ "beir_cqadupstack_english_117599": {
+  "4d/93243.txt": 1
+ },
+ "beir_cqadupstack_english_1176": {
+  "06/59357.txt": 1,
+  "08/188787.txt": 1,
+  "0e/67210.txt": 1,
+  "65/116349.txt": 1,
+  "75/89708.txt": 1,
+  "82/186511.txt": 1,
+  "86/185780.txt": 1,
+  "a0/69001.txt": 1,
+  "a4/184856.txt": 1,
+  "bf/118927.txt": 1,
+  "d6/73008.txt": 1,
+  "d7/62123.txt": 1
+ },
+ "beir_cqadupstack_english_117631": {
+  "26/196132.txt": 1,
+  "44/69082.txt": 1,
+  "d3/16762.txt": 1
+ },
+ "beir_cqadupstack_english_117833": {
+  "96/13711.txt": 1
+ },
+ "beir_cqadupstack_english_117871": {
+  "17/129541.txt": 1
+ },
+ "beir_cqadupstack_english_117899": {
+  "5a/58494.txt": 1
+ },
+ "beir_cqadupstack_english_1183": {
+  "14/160720.txt": 1
+ },
+ "beir_cqadupstack_english_118624": {
+  "56/105205.txt": 1,
+  "71/141645.txt": 1
+ },
+ "beir_cqadupstack_english_118702": {
+  "ff/131236.txt": 1
+ },
+ "beir_cqadupstack_english_11874": {
+  "4e/153411.txt": 1,
+  "a2/32789.txt": 1,
+  "e7/162171.txt": 1
+ },
+ "beir_cqadupstack_english_118797": {
+  "a8/36821.txt": 1
+ },
+ "beir_cqadupstack_english_11887": {
+  "dc/12964.txt": 1
+ },
+ "beir_cqadupstack_english_118871": {
+  "97/118683.txt": 1
+ },
+ "beir_cqadupstack_english_11906": {
+  "93/74947.txt": 1
+ },
+ "beir_cqadupstack_english_119077": {
+  "06/78496.txt": 1,
+  "18/57186.txt": 1,
+  "34/246.txt": 1,
+  "ad/113246.txt": 1
+ },
+ "beir_cqadupstack_english_119134": {
+  "c6/191960.txt": 1,
+  "fc/185482.txt": 1
+ },
+ "beir_cqadupstack_english_119416": {
+  "a7/71368.txt": 1
+ },
+ "beir_cqadupstack_english_119424": {
+  "19/85459.txt": 1
+ },
+ "beir_cqadupstack_english_119749": {
+  "6b/14127.txt": 1
+ },
+ "beir_cqadupstack_english_119877": {
+  "ec/37639.txt": 1
+ },
+ "beir_cqadupstack_english_120068": {
+  "96/188182.txt": 1
+ },
+ "beir_cqadupstack_english_120276": {
+  "e2/121942.txt": 1
+ },
+ "beir_cqadupstack_english_120326": {
+  "fd/123412.txt": 1
+ },
+ "beir_cqadupstack_english_12040": {
+  "5e/85134.txt": 1,
+  "61/125833.txt": 1
+ },
+ "beir_cqadupstack_english_120407": {
+  "b3/155528.txt": 1
+ },
+ "beir_cqadupstack_english_12044": {
+  "41/10113.txt": 1,
+  "e3/76944.txt": 1,
+  "f3/50912.txt": 1
+ },
+ "beir_cqadupstack_english_120577": {
+  "75/148097.txt": 1
+ },
+ "beir_cqadupstack_english_120721": {
+  "47/160350.txt": 1
+ },
+ "beir_cqadupstack_english_121073": {
+  "3f/6923.txt": 1
+ },
+ "beir_cqadupstack_english_121088": {
+  "06/4885.txt": 1,
+  "1e/6067.txt": 1,
+  "d1/53523.txt": 1
+ },
+ "beir_cqadupstack_english_121152": {
+  "49/109717.txt": 1
+ },
+ "beir_cqadupstack_english_12124": {
+  "76/182901.txt": 1
+ },
+ "beir_cqadupstack_english_121502": {
+  "cc/30855.txt": 1
+ },
+ "beir_cqadupstack_english_121518": {
+  "be/96880.txt": 1
+ },
+ "beir_cqadupstack_english_121805": {
+  "57/108515.txt": 1
+ },
+ "beir_cqadupstack_english_121880": {
+  "f0/78935.txt": 1
+ },
+ "beir_cqadupstack_english_121895": {
+  "02/122472.txt": 1
+ },
+ "beir_cqadupstack_english_121970": {
+  "7e/50885.txt": 1,
+  "f3/172680.txt": 1
+ },
+ "beir_cqadupstack_english_122168": {
+  "3e/16507.txt": 1,
+  "ca/90751.txt": 1
+ },
+ "beir_cqadupstack_english_122187": {
+  "12/146490.txt": 1,
+  "40/135.txt": 1,
+  "e7/87609.txt": 1
+ },
+ "beir_cqadupstack_english_122201": {
+  "96/122181.txt": 1
+ },
+ "beir_cqadupstack_english_122277": {
+  "08/104546.txt": 1,
+  "65/153493.txt": 1,
+  "6e/139872.txt": 1,
+  "d8/106058.txt": 1
+ },
+ "beir_cqadupstack_english_122473": {
+  "c1/114939.txt": 1
+ },
+ "beir_cqadupstack_english_122641": {
+  "c2/15771.txt": 1
+ },
+ "beir_cqadupstack_english_122652": {
+  "c0/97037.txt": 1
+ },
+ "beir_cqadupstack_english_122740": {
+  "b0/159964.txt": 1,
+  "b0/177962.txt": 1
+ },
+ "beir_cqadupstack_english_122815": {
+  "95/106857.txt": 1
+ },
+ "beir_cqadupstack_english_122853": {
+  "04/76756.txt": 1,
+  "08/167294.txt": 1,
+  "19/186365.txt": 1,
+  "3f/114464.txt": 1,
+  "43/31437.txt": 1,
+  "50/114089.txt": 1,
+  "5a/139660.txt": 1,
+  "76/195091.txt": 1,
+  "88/181074.txt": 1,
+  "97/147282.txt": 1,
+  "9b/94235.txt": 1,
+  "a9/110947.txt": 1,
+  "ae/182995.txt": 1,
+  "b1/181377.txt": 1,
+  "bf/70488.txt": 1,
+  "c2/75718.txt": 1,
+  "c7/77775.txt": 1,
+  "cc/2625.txt": 1,
+  "cf/127482.txt": 1,
+  "de/137239.txt": 1
+ },
+ "beir_cqadupstack_english_122934": {
+  "ed/67813.txt": 1
+ },
+ "beir_cqadupstack_english_122969": {
+  "cc/166419.txt": 1
+ },
+ "beir_cqadupstack_english_123022": {
+  "00/137886.txt": 1,
+  "13/106245.txt": 1,
+  "21/3413.txt": 1,
+  "58/167003.txt": 1,
+  "66/71211.txt": 1,
+  "dc/68334.txt": 1,
+  "ea/40317.txt": 1,
+  "fc/117801.txt": 1
+ },
+ "beir_cqadupstack_english_123116": {
+  "25/4661.txt": 1
+ },
+ "beir_cqadupstack_english_123139": {
+  "72/29323.txt": 1
+ },
+ "beir_cqadupstack_english_123642": {
+  "a5/30000.txt": 1
+ },
+ "beir_cqadupstack_english_123947": {
+  "17/102539.txt": 1,
+  "27/146302.txt": 1,
+  "3f/26224.txt": 1,
+  "67/127725.txt": 1,
+  "67/19701.txt": 1,
+  "67/66269.txt": 1,
+  "6c/146853.txt": 1,
+  "6d/138618.txt": 1,
+  "72/68627.txt": 1,
+  "75/4256.txt": 1,
+  "75/9448.txt": 1,
+  "87/62630.txt": 1,
+  "96/149495.txt": 1,
+  "a7/43691.txt": 1,
+  "bf/171250.txt": 1,
+  "cd/110763.txt": 1,
+  "dd/39729.txt": 1,
+  "fa/14.txt": 1
+ },
+ "beir_cqadupstack_english_12395": {
+  "af/146564.txt": 1
+ },
+ "beir_cqadupstack_english_123953": {
+  "27/119030.txt": 1
+ },
+ "beir_cqadupstack_english_124006": {
+  "16/6894.txt": 1
+ },
+ "beir_cqadupstack_english_12404": {
+  "30/50809.txt": 1,
+  "f4/2544.txt": 1
+ },
+ "beir_cqadupstack_english_124115": {
+  "06/53509.txt": 1
+ },
+ "beir_cqadupstack_english_124351": {
+  "77/173239.txt": 1
+ },
+ "beir_cqadupstack_english_124504": {
+  "c7/26879.txt": 1
+ },
+ "beir_cqadupstack_english_12458": {
+  "13/119117.txt": 1,
+  "4a/5902.txt": 1,
+  "8d/131092.txt": 1,
+  "c4/193539.txt": 1,
+  "cb/79142.txt": 1
+ },
+ "beir_cqadupstack_english_124629": {
+  "c3/5768.txt": 1
+ },
+ "beir_cqadupstack_english_12471": {
+  "3d/19574.txt": 1
+ },
+ "beir_cqadupstack_english_124768": {
+  "80/162811.txt": 1
+ },
+ "beir_cqadupstack_english_124812": {
+  "30/12736.txt": 1
+ },
+ "beir_cqadupstack_english_124853": {
+  "48/196091.txt": 1
+ },
+ "beir_cqadupstack_english_125065": {
+  "99/123621.txt": 1
+ },
+ "beir_cqadupstack_english_125066": {
+  "22/125219.txt": 1
+ },
+ "beir_cqadupstack_english_125070": {
+  "ae/128488.txt": 1
+ },
+ "beir_cqadupstack_english_12512": {
+  "b9/45039.txt": 1
+ },
+ "beir_cqadupstack_english_125375": {
+  "49/112206.txt": 1,
+  "59/123466.txt": 1,
+  "61/2112.txt": 1
+ },
+ "beir_cqadupstack_english_125405": {
+  "23/123300.txt": 1
+ },
+ "beir_cqadupstack_english_125481": {
+  "0a/4294.txt": 1,
+  "1e/133610.txt": 1,
+  "35/1.txt": 1,
+  "41/28858.txt": 1,
+  "8c/7414.txt": 1,
+  "f3/9249.txt": 1
+ },
+ "beir_cqadupstack_english_125487": {
+  "4d/125473.txt": 1
+ },
+ "beir_cqadupstack_english_12558": {
+  "55/24108.txt": 1
+ },
+ "beir_cqadupstack_english_125599": {
+  "0d/2596.txt": 1
+ },
+ "beir_cqadupstack_english_12580": {
+  "36/184984.txt": 1,
+  "38/11455.txt": 1,
+  "7a/34889.txt": 1,
+  "7e/15099.txt": 1,
+  "8d/149976.txt": 1,
+  "de/94662.txt": 1,
+  "e1/43211.txt": 1
+ },
+ "beir_cqadupstack_english_126032": {
+  "70/125910.txt": 1
+ },
+ "beir_cqadupstack_english_126099": {
+  "9c/133509.txt": 1
+ },
+ "beir_cqadupstack_english_126292": {
+  "7b/192198.txt": 1
+ },
+ "beir_cqadupstack_english_126344": {
+  "20/94135.txt": 1,
+  "24/50427.txt": 1,
+  "2d/172834.txt": 1,
+  "38/132754.txt": 1,
+  "4b/121796.txt": 1,
+  "70/169428.txt": 1,
+  "8a/6904.txt": 1,
+  "b1/81707.txt": 1,
+  "cc/56574.txt": 1
+ },
+ "beir_cqadupstack_english_12655": {
+  "07/63752.txt": 1
+ },
+ "beir_cqadupstack_english_126554": {
+  "13/69115.txt": 1
+ },
+ "beir_cqadupstack_english_126774": {
+  "16/51499.txt": 1,
+  "28/153977.txt": 1,
+  "59/72965.txt": 1,
+  "78/17699.txt": 1,
+  "a4/130146.txt": 1,
+  "c8/143389.txt": 1,
+  "ca/94940.txt": 1,
+  "d7/115508.txt": 1,
+  "ec/78882.txt": 1,
+  "f8/500.txt": 1
+ },
+ "beir_cqadupstack_english_12690": {
+  "36/79010.txt": 1
+ },
+ "beir_cqadupstack_english_127087": {
+  "04/27888.txt": 1
+ },
+ "beir_cqadupstack_english_127137": {
+  "23/83862.txt": 1,
+  "44/140030.txt": 1,
+  "51/102657.txt": 1,
+  "6b/15484.txt": 1,
+  "76/85601.txt": 1,
+  "c6/58735.txt": 1
+ },
+ "beir_cqadupstack_english_127227": {
+  "ee/110747.txt": 1
+ },
+ "beir_cqadupstack_english_127264": {
+  "ec/114.txt": 1
+ },
+ "beir_cqadupstack_english_127274": {
+  "21/95624.txt": 1,
+  "2d/164954.txt": 1,
+  "8f/13889.txt": 1
+ },
+ "beir_cqadupstack_english_127410": {
+  "38/83915.txt": 1
+ },
+ "beir_cqadupstack_english_127664": {
+  "95/52034.txt": 1,
+  "c7/48493.txt": 1
+ },
+ "beir_cqadupstack_english_12777": {
+  "44/107943.txt": 1,
+  "5c/97268.txt": 1,
+  "f3/177560.txt": 1
+ },
+ "beir_cqadupstack_english_128083": {
+  "1a/11204.txt": 1,
+  "4f/66422.txt": 1,
+  "6f/133382.txt": 1,
+  "77/96486.txt": 1,
+  "90/17221.txt": 1,
+  "91/47039.txt": 1,
+  "9f/145260.txt": 1,
+  "a0/166149.txt": 1,
+  "c8/173148.txt": 1,
+  "c9/146100.txt": 1,
+  "de/169808.txt": 1,
+  "fb/427.txt": 1
+ },
+ "beir_cqadupstack_english_128085": {
+  "dc/46696.txt": 1
+ },
+ "beir_cqadupstack_english_128514": {
+  "6c/128477.txt": 1
+ },
+ "beir_cqadupstack_english_128541": {
+  "1a/7307.txt": 1,
+  "5f/150644.txt": 1,
+  "fa/92326.txt": 1
+ },
+ "beir_cqadupstack_english_128703": {
+  "3f/66281.txt": 1
+ },
+ "beir_cqadupstack_english_129071": {
+  "fb/78476.txt": 1
+ },
+ "beir_cqadupstack_english_129607": {
+  "00/87925.txt": 1,
+  "3d/157761.txt": 1,
+  "4b/1144.txt": 1,
+  "55/55580.txt": 1,
+  "96/14658.txt": 1,
+  "9e/10304.txt": 1,
+  "e2/73765.txt": 1,
+  "f9/47999.txt": 1,
+  "fa/23569.txt": 1
+ },
+ "beir_cqadupstack_english_12980": {
+  "ff/31723.txt": 1
+ },
+ "beir_cqadupstack_english_129805": {
+  "55/80224.txt": 1
+ },
+ "beir_cqadupstack_english_129957": {
+  "70/165627.txt": 1,
+  "7f/95782.txt": 1,
+  "a0/178747.txt": 1,
+  "a6/8816.txt": 1
+ },
+ "beir_cqadupstack_english_130090": {
+  "98/142901.txt": 1,
+  "a4/59157.txt": 1
+ },
+ "beir_cqadupstack_english_130140": {
+  "18/172779.txt": 1,
+  "2c/186669.txt": 1,
+  "31/113422.txt": 1
+ },
+ "beir_cqadupstack_english_130448": {
+  "04/114924.txt": 1
+ },
+ "beir_cqadupstack_english_130476": {
+  "db/79038.txt": 1
+ },
+ "beir_cqadupstack_english_13056": {
+  "1c/117652.txt": 1,
+  "72/133136.txt": 1,
+  "76/91237.txt": 1,
+  "af/85510.txt": 1,
+  "cb/36683.txt": 1,
+  "f9/155952.txt": 1
+ },
+ "beir_cqadupstack_english_130587": {
+  "04/9627.txt": 1,
+  "39/2116.txt": 1,
+  "b0/33975.txt": 1,
+  "db/9067.txt": 1
+ },
+ "beir_cqadupstack_english_130673": {
+  "da/87355.txt": 1
+ },
+ "beir_cqadupstack_english_131042": {
+  "2d/115367.txt": 1
+ },
+ "beir_cqadupstack_english_131045": {
+  "bd/36722.txt": 1
+ },
+ "beir_cqadupstack_english_131298": {
+  "46/77297.txt": 1
+ },
+ "beir_cqadupstack_english_131457": {
+  "1a/7855.txt": 1,
+  "a5/140284.txt": 1
+ },
+ "beir_cqadupstack_english_131494": {
+  "d3/69742.txt": 1
+ },
+ "beir_cqadupstack_english_131500": {
+  "1e/192995.txt": 1,
+  "3b/87416.txt": 1,
+  "43/104851.txt": 1,
+  "57/80644.txt": 1,
+  "60/62208.txt": 1,
+  "7b/147528.txt": 1,
+  "81/160633.txt": 1,
+  "86/194389.txt": 1,
+  "86/68291.txt": 1,
+  "9c/107777.txt": 1,
+  "c8/149103.txt": 1,
+  "e3/188320.txt": 1,
+  "e8/79078.txt": 1
+ },
+ "beir_cqadupstack_english_131506": {
+  "ba/102438.txt": 1
+ },
+ "beir_cqadupstack_english_131560": {
+  "85/31649.txt": 1
+ },
+ "beir_cqadupstack_english_131699": {
+  "30/10526.txt": 1
+ },
+ "beir_cqadupstack_english_131741": {
+  "50/43070.txt": 1,
+  "5a/6038.txt": 1,
+  "77/114032.txt": 1,
+  "9c/159655.txt": 1,
+  "9d/155047.txt": 1,
+  "bc/1025.txt": 1,
+  "d8/74985.txt": 1
+ },
+ "beir_cqadupstack_english_13189": {
+  "67/28343.txt": 1,
+  "ca/189109.txt": 1
+ },
+ "beir_cqadupstack_english_131967": {
+  "2e/104968.txt": 1
+ },
+ "beir_cqadupstack_english_132102": {
+  "04/55948.txt": 1
+ },
+ "beir_cqadupstack_english_132189": {
+  "59/115136.txt": 1,
+  "88/186227.txt": 1
+ },
+ "beir_cqadupstack_english_132238": {
+  "18/102164.txt": 1
+ },
+ "beir_cqadupstack_english_132293": {
+  "0c/132149.txt": 1,
+  "18/130674.txt": 1,
+  "38/114997.txt": 1,
+  "45/81606.txt": 1,
+  "88/61714.txt": 1,
+  "96/93607.txt": 1,
+  "a5/114538.txt": 1,
+  "c7/1553.txt": 1
+ },
+ "beir_cqadupstack_english_132377": {
+  "fc/3780.txt": 1
+ },
+ "beir_cqadupstack_english_132437": {
+  "cd/159379.txt": 1
+ },
+ "beir_cqadupstack_english_132585": {
+  "38/62180.txt": 1,
+  "40/101683.txt": 1,
+  "74/180989.txt": 1,
+  "94/150917.txt": 1,
+  "95/115994.txt": 1,
+  "e6/167831.txt": 1,
+  "ec/619.txt": 1
+ },
+ "beir_cqadupstack_english_132600": {
+  "17/4620.txt": 1,
+  "24/4510.txt": 1,
+  "7a/26310.txt": 1
+ },
+ "beir_cqadupstack_english_132802": {
+  "b3/24948.txt": 1
+ },
+ "beir_cqadupstack_english_132863": {
+  "b4/56468.txt": 1
+ },
+ "beir_cqadupstack_english_132943": {
+  "19/66557.txt": 1,
+  "7e/185600.txt": 1,
+  "9a/18308.txt": 1,
+  "f0/137660.txt": 1
+ },
+ "beir_cqadupstack_english_13299": {
+  "18/24697.txt": 1,
+  "1f/113051.txt": 1,
+  "cb/2648.txt": 1
+ },
+ "beir_cqadupstack_english_133057": {
+  "d4/10172.txt": 1
+ },
+ "beir_cqadupstack_english_133248": {
+  "0d/131576.txt": 1,
+  "da/91122.txt": 1,
+  "e3/147601.txt": 1,
+  "ec/20178.txt": 1
+ },
+ "beir_cqadupstack_english_13327": {
+  "51/4165.txt": 1
+ },
+ "beir_cqadupstack_english_133291": {
+  "e8/145910.txt": 1
+ },
+ "beir_cqadupstack_english_13343": {
+  "ad/101992.txt": 1
+ },
+ "beir_cqadupstack_english_133608": {
+  "75/177129.txt": 1
+ },
+ "beir_cqadupstack_english_133651": {
+  "2f/161853.txt": 1,
+  "e6/71806.txt": 1
+ },
+ "beir_cqadupstack_english_133673": {
+  "02/3491.txt": 1,
+  "2d/82867.txt": 1,
+  "79/121660.txt": 1,
+  "b9/8226.txt": 1,
+  "ee/194111.txt": 1,
+  "f4/24800.txt": 1
+ },
+ "beir_cqadupstack_english_133726": {
+  "88/133785.txt": 1
+ },
+ "beir_cqadupstack_english_133855": {
+  "ac/144125.txt": 1
+ },
+ "beir_cqadupstack_english_1341": {
+  "46/84681.txt": 1
+ },
+ "beir_cqadupstack_english_134192": {
+  "3b/148061.txt": 1,
+  "4d/153078.txt": 1,
+  "ec/137032.txt": 1
+ },
+ "beir_cqadupstack_english_134284": {
+  "00/5531.txt": 1,
+  "65/144270.txt": 1,
+  "df/123515.txt": 1,
+  "f3/101882.txt": 1
+ },
+ "beir_cqadupstack_english_134434": {
+  "05/90765.txt": 1,
+  "23/66140.txt": 1,
+  "33/110399.txt": 1,
+  "33/112159.txt": 1,
+  "3b/25138.txt": 1,
+  "3c/92425.txt": 1,
+  "41/109901.txt": 1,
+  "4a/1482.txt": 1,
+  "56/151765.txt": 1,
+  "5a/462.txt": 1,
+  "6e/80006.txt": 1,
+  "70/152126.txt": 1,
+  "7b/118143.txt": 1,
+  "8b/93944.txt": 1,
+  "98/26197.txt": 1,
+  "c3/133604.txt": 1,
+  "c3/171203.txt": 1,
+  "c6/50880.txt": 1,
+  "de/105987.txt": 1,
+  "f2/28193.txt": 1,
+  "f7/90412.txt": 1,
+  "f8/101485.txt": 1
+ },
+ "beir_cqadupstack_english_134575": {
+  "b3/180087.txt": 1
+ },
+ "beir_cqadupstack_english_134706": {
+  "ef/148110.txt": 1
+ },
+ "beir_cqadupstack_english_134724": {
+  "ed/56338.txt": 1
+ },
+ "beir_cqadupstack_english_13484": {
+  "21/140984.txt": 1,
+  "88/195779.txt": 1
+ },
+ "beir_cqadupstack_english_13528": {
+  "96/129950.txt": 1,
+  "d1/103473.txt": 1
+ },
+ "beir_cqadupstack_english_13631": {
+  "0c/167336.txt": 1
+ },
+ "beir_cqadupstack_english_136947": {
+  "3a/77405.txt": 1
+ },
+ "beir_cqadupstack_english_137258": {
+  "10/9520.txt": 1,
+  "68/48771.txt": 1,
+  "70/54293.txt": 1,
+  "73/22379.txt": 1,
+  "85/144188.txt": 1,
+  "89/35839.txt": 1,
+  "94/65624.txt": 1
+ },
+ "beir_cqadupstack_english_13735": {
+  "42/570.txt": 1,
+  "f1/140883.txt": 1
+ },
+ "beir_cqadupstack_english_137435": {
+  "04/67537.txt": 1,
+  "c7/137422.txt": 1
+ },
+ "beir_cqadupstack_english_137526": {
+  "c0/107003.txt": 1
+ },
+ "beir_cqadupstack_english_13758": {
+  "b4/4481.txt": 1
+ },
+ "beir_cqadupstack_english_137698": {
+  "e1/18079.txt": 1
+ },
+ "beir_cqadupstack_english_137713": {
+  "df/44739.txt": 1,
+  "f1/76778.txt": 1
+ },
+ "beir_cqadupstack_english_137907": {
+  "35/4066.txt": 1
+ },
+ "beir_cqadupstack_english_137950": {
+  "9d/52873.txt": 1
+ },
+ "beir_cqadupstack_english_138110": {
+  "5f/68790.txt": 1
+ },
+ "beir_cqadupstack_english_138158": {
+  "a0/93442.txt": 1
+ },
+ "beir_cqadupstack_english_138216": {
+  "5a/30115.txt": 1
+ },
+ "beir_cqadupstack_english_138595": {
+  "2f/2166.txt": 1,
+  "7a/171615.txt": 1,
+  "8d/24517.txt": 1,
+  "aa/4081.txt": 1,
+  "b7/34761.txt": 1,
+  "d3/190516.txt": 1
+ },
+ "beir_cqadupstack_english_138717": {
+  "58/131805.txt": 1
+ },
+ "beir_cqadupstack_english_138811": {
+  "2b/148474.txt": 1
+ },
+ "beir_cqadupstack_english_138841": {
+  "6f/102937.txt": 1
+ },
+ "beir_cqadupstack_english_139295": {
+  "54/174555.txt": 1,
+  "62/75646.txt": 1
+ },
+ "beir_cqadupstack_english_139403": {
+  "7d/102269.txt": 1
+ },
+ "beir_cqadupstack_english_13942": {
+  "b2/5442.txt": 1
+ },
+ "beir_cqadupstack_english_139542": {
+  "1b/94339.txt": 1,
+  "d3/10906.txt": 1
+ },
+ "beir_cqadupstack_english_139738": {
+  "c3/3135.txt": 1
+ },
+ "beir_cqadupstack_english_140038": {
+  "02/93007.txt": 1,
+  "11/157293.txt": 1,
+  "63/170667.txt": 1,
+  "da/64575.txt": 1,
+  "e8/13284.txt": 1
+ },
+ "beir_cqadupstack_english_140455": {
+  "9e/140658.txt": 1
+ },
+ "beir_cqadupstack_english_140461": {
+  "0b/12126.txt": 1,
+  "0b/138889.txt": 1,
+  "15/103594.txt": 1,
+  "26/90063.txt": 1,
+  "2c/152436.txt": 1,
+  "35/152776.txt": 1,
+  "38/194624.txt": 1,
+  "5d/144286.txt": 1,
+  "64/1535.txt": 1,
+  "81/141875.txt": 1,
+  "8c/110720.txt": 1,
+  "8c/78762.txt": 1,
+  "8e/126249.txt": 1,
+  "af/50588.txt": 1,
+  "d6/187838.txt": 1,
+  "e2/14211.txt": 1,
+  "e5/189633.txt": 1
+ },
+ "beir_cqadupstack_english_140563": {
+  "d6/25555.txt": 1
+ },
+ "beir_cqadupstack_english_140648": {
+  "02/3638.txt": 1,
+  "8f/94123.txt": 1,
+  "c7/105530.txt": 1
+ },
+ "beir_cqadupstack_english_14078": {
+  "b5/105047.txt": 1
+ },
+ "beir_cqadupstack_english_140854": {
+  "00/28604.txt": 1,
+  "03/128960.txt": 1,
+  "04/127857.txt": 1,
+  "04/94987.txt": 1,
+  "05/180870.txt": 1,
+  "0c/139816.txt": 1,
+  "11/12865.txt": 1,
+  "14/115045.txt": 1,
+  "16/26402.txt": 1,
+  "20/104976.txt": 1,
+  "21/59808.txt": 1,
+  "21/91255.txt": 1,
+  "25/157017.txt": 1,
+  "26/184239.txt": 1,
+  "2f/149750.txt": 1,
+  "30/80128.txt": 1,
+  "34/90550.txt": 1,
+  "43/128832.txt": 1,
+  "47/110021.txt": 1,
+  "49/23170.txt": 1,
+  "4b/162764.txt": 1,
+  "56/151019.txt": 1,
+  "57/97459.txt": 1,
+  "5a/21917.txt": 1,
+  "5d/105258.txt": 1,
+  "64/166825.txt": 1,
+  "65/138085.txt": 1,
+  "69/15769.txt": 1,
+  "69/19656.txt": 1,
+  "6a/120487.txt": 1,
+  "6c/104764.txt": 1,
+  "6c/146308.txt": 1,
+  "6d/56842.txt": 1,
+  "6e/160015.txt": 1,
+  "6f/159154.txt": 1,
+  "6f/62241.txt": 1,
+  "76/124656.txt": 1,
+  "7c/177795.txt": 1,
+  "7e/17766.txt": 1,
+  "7f/165168.txt": 1,
+  "7f/195276.txt": 1,
+  "83/57325.txt": 1,
+  "88/57170.txt": 1,
+  "8c/96758.txt": 1,
+  "90/187869.txt": 1,
+  "91/193792.txt": 1,
+  "93/188694.txt": 1,
+  "94/54682.txt": 1,
+  "9b/96801.txt": 1,
+  "ad/60747.txt": 1,
+  "b1/146465.txt": 1,
+  "b1/185448.txt": 1,
+  "b3/90462.txt": 1,
+  "b5/119995.txt": 1,
+  "ba/164173.txt": 1,
+  "be/186224.txt": 1,
+  "c2/178414.txt": 1,
+  "c3/119954.txt": 1,
+  "c5/141192.txt": 1,
+  "c8/54752.txt": 1,
+  "c9/60888.txt": 1,
+  "ca/114570.txt": 1,
+  "ca/167652.txt": 1,
+  "ce/111051.txt": 1,
+  "d1/58676.txt": 1,
+  "dc/192071.txt": 1,
+  "e1/196094.txt": 1,
+  "e2/94054.txt": 1,
+  "eb/102350.txt": 1,
+  "f1/132686.txt": 1,
+  "f4/110901.txt": 1,
+  "f7/129894.txt": 1,
+  "f8/8854.txt": 1,
+  "fc/23685.txt": 1
+ },
+ "beir_cqadupstack_english_140992": {
+  "1c/71999.txt": 1,
+  "74/2119.txt": 1,
+  "ff/48193.txt": 1
+ },
+ "beir_cqadupstack_english_141484": {
+  "8c/43725.txt": 1
+ },
+ "beir_cqadupstack_english_141561": {
+  "83/141551.txt": 1
+ },
+ "beir_cqadupstack_english_141724": {
+  "d9/6588.txt": 1
+ },
+ "beir_cqadupstack_english_141898": {
+  "1b/115720.txt": 1,
+  "4d/122065.txt": 1,
+  "6a/19434.txt": 1,
+  "75/87112.txt": 1,
+  "79/711.txt": 1,
+  "8a/111182.txt": 1,
+  "be/148245.txt": 1,
+  "ca/145800.txt": 1,
+  "d4/28517.txt": 1
+ },
+ "beir_cqadupstack_english_142126": {
+  "0c/142167.txt": 1
+ },
+ "beir_cqadupstack_english_142514": {
+  "12/141350.txt": 1
+ },
+ "beir_cqadupstack_english_142522": {
+  "4b/142534.txt": 1
+ },
+ "beir_cqadupstack_english_14257": {
+  "db/129697.txt": 1
+ },
+ "beir_cqadupstack_english_142663": {
+  "c2/123571.txt": 1
+ },
+ "beir_cqadupstack_english_14287": {
+  "6a/60952.txt": 1
+ },
+ "beir_cqadupstack_english_143015": {
+  "8c/14414.txt": 1
+ },
+ "beir_cqadupstack_english_143056": {
+  "21/154496.txt": 1
+ },
+ "beir_cqadupstack_english_1431": {
+  "de/35904.txt": 1
+ },
+ "beir_cqadupstack_english_143339": {
+  "3e/17852.txt": 1
+ },
+ "beir_cqadupstack_english_143433": {
+  "76/2056.txt": 1
+ },
+ "beir_cqadupstack_english_14348": {
+  "b6/149329.txt": 1
+ },
+ "beir_cqadupstack_english_143712": {
+  "01/172871.txt": 1,
+  "4b/9780.txt": 1
+ },
+ "beir_cqadupstack_english_143904": {
+  "1c/57164.txt": 1,
+  "f5/85297.txt": 1
+ },
+ "beir_cqadupstack_english_143907": {
+  "de/7186.txt": 1
+ },
+ "beir_cqadupstack_english_143990": {
+  "56/143938.txt": 1
+ },
+ "beir_cqadupstack_english_144210": {
+  "30/70335.txt": 1
+ },
+ "beir_cqadupstack_english_144361": {
+  "2b/147430.txt": 1
+ },
+ "beir_cqadupstack_english_144550": {
+  "40/124787.txt": 1
+ },
+ "beir_cqadupstack_english_144622": {
+  "22/63998.txt": 1,
+  "99/12663.txt": 1,
+  "ce/1655.txt": 1,
+  "e5/121577.txt": 1
+ },
+ "beir_cqadupstack_english_144743": {
+  "05/108235.txt": 1
+ },
+ "beir_cqadupstack_english_144792": {
+  "5d/144537.txt": 1
+ },
+ "beir_cqadupstack_english_144883": {
+  "de/14781.txt": 1
+ },
+ "beir_cqadupstack_english_144927": {
+  "b3/156982.txt": 1
+ },
+ "beir_cqadupstack_english_145071": {
+  "44/185341.txt": 1
+ },
+ "beir_cqadupstack_english_145299": {
+  "5c/111213.txt": 1,
+  "73/75792.txt": 1
+ },
+ "beir_cqadupstack_english_145631": {
+  "1c/167819.txt": 1
+ },
+ "beir_cqadupstack_english_14565": {
+  "4f/139156.txt": 1
+ },
+ "beir_cqadupstack_english_145689": {
+  "ab/117100.txt": 1
+ },
+ "beir_cqadupstack_english_14603": {
+  "8c/166451.txt": 1
+ },
+ "beir_cqadupstack_english_146129": {
+  "05/106122.txt": 1,
+  "09/189026.txt": 1,
+  "0d/85308.txt": 1,
+  "10/43436.txt": 1,
+  "16/123120.txt": 1,
+  "1b/174561.txt": 1,
+  "20/1314.txt": 1,
+  "23/180559.txt": 1,
+  "2e/127998.txt": 1,
+  "2e/76593.txt": 1,
+  "30/84107.txt": 1,
+  "32/113395.txt": 1,
+  "32/20763.txt": 1,
+  "37/61891.txt": 1,
+  "44/92606.txt": 1,
+  "48/164714.txt": 1,
+  "4a/100326.txt": 1,
+  "4c/151182.txt": 1,
+  "4d/112028.txt": 1,
+  "4f/79429.txt": 1,
+  "50/93378.txt": 1,
+  "53/17329.txt": 1,
+  "55/75237.txt": 1,
+  "65/80040.txt": 1,
+  "75/11350.txt": 1,
+  "7a/133555.txt": 1,
+  "83/78021.txt": 1,
+  "91/87345.txt": 1,
+  "95/113435.txt": 1,
+  "97/143103.txt": 1,
+  "97/190430.txt": 1,
+  "98/14115.txt": 1,
+  "9c/36657.txt": 1,
+  "b3/72934.txt": 1,
+  "ba/59059.txt": 1,
+  "c2/166989.txt": 1,
+  "d2/127741.txt": 1,
+  "d6/66282.txt": 1,
+  "e9/119873.txt": 1,
+  "f4/53124.txt": 1
+ },
+ "beir_cqadupstack_english_14613": {
+  "16/72699.txt": 1
+ },
+ "beir_cqadupstack_english_146176": {
+  "17/195919.txt": 1,
+  "80/157957.txt": 1,
+  "ad/3211.txt": 1
+ },
+ "beir_cqadupstack_english_146204": {
+  "4d/16039.txt": 1
+ },
+ "beir_cqadupstack_english_14633": {
+  "ef/56705.txt": 1
+ },
+ "beir_cqadupstack_english_146671": {
+  "ee/152659.txt": 1
+ },
+ "beir_cqadupstack_english_14679": {
+  "42/122293.txt": 1,
+  "77/2246.txt": 1
+ },
+ "beir_cqadupstack_english_146795": {
+  "e6/150989.txt": 1
+ },
+ "beir_cqadupstack_english_146798": {
+  "67/65420.txt": 1,
+  "b2/42480.txt": 1
+ },
+ "beir_cqadupstack_english_147162": {
+  "f7/90036.txt": 1
+ },
+ "beir_cqadupstack_english_147477": {
+  "29/110582.txt": 1,
+  "2f/71186.txt": 1,
+  "33/110583.txt": 1,
+  "3e/2271.txt": 1,
+  "5f/100390.txt": 1,
+  "d0/95560.txt": 1,
+  "e8/88009.txt": 1
+ },
+ "beir_cqadupstack_english_14748": {
+  "32/47404.txt": 1
+ },
+ "beir_cqadupstack_english_147495": {
+  "66/147510.txt": 1
+ },
+ "beir_cqadupstack_english_147539": {
+  "49/43149.txt": 1
+ },
+ "beir_cqadupstack_english_147560": {
+  "40/60154.txt": 1
+ },
+ "beir_cqadupstack_english_147763": {
+  "a2/123937.txt": 1,
+  "a2/4425.txt": 1
+ },
+ "beir_cqadupstack_english_147827": {
+  "9c/154877.txt": 1
+ },
+ "beir_cqadupstack_english_147852": {
+  "57/184674.txt": 1
+ },
+ "beir_cqadupstack_english_147912": {
+  "92/64079.txt": 1,
+  "b7/37997.txt": 1
+ },
+ "beir_cqadupstack_english_148025": {
+  "ea/149009.txt": 1
+ },
+ "beir_cqadupstack_english_148228": {
+  "c6/125147.txt": 1
+ },
+ "beir_cqadupstack_english_148235": {
+  "47/173333.txt": 1
+ },
+ "beir_cqadupstack_english_148653": {
+  "4d/37411.txt": 1,
+  "54/20803.txt": 1
+ },
+ "beir_cqadupstack_english_14868": {
+  "25/60205.txt": 1
+ },
+ "beir_cqadupstack_english_148682": {
+  "9d/57268.txt": 1
+ },
+ "beir_cqadupstack_english_148949": {
+  "45/13388.txt": 1
+ },
+ "beir_cqadupstack_english_148995": {
+  "70/59528.txt": 1
+ },
+ "beir_cqadupstack_english_149432": {
+  "ca/56563.txt": 1
+ },
+ "beir_cqadupstack_english_14949": {
+  "92/68056.txt": 1,
+  "dd/66703.txt": 1
+ },
+ "beir_cqadupstack_english_149527": {
+  "11/149901.txt": 1
+ },
+ "beir_cqadupstack_english_149650": {
+  "42/123562.txt": 1,
+  "43/151281.txt": 1,
+  "b0/9331.txt": 1
+ },
+ "beir_cqadupstack_english_149726": {
+  "60/53794.txt": 1
+ },
+ "beir_cqadupstack_english_149920": {
+  "13/133324.txt": 1,
+  "73/6993.txt": 1,
+  "e5/11433.txt": 1
+ },
+ "beir_cqadupstack_english_149922": {
+  "13/186678.txt": 1
+ },
+ "beir_cqadupstack_english_150121": {
+  "97/59376.txt": 1
+ },
+ "beir_cqadupstack_english_150183": {
+  "59/58009.txt": 1,
+  "c2/185268.txt": 1
+ },
+ "beir_cqadupstack_english_150250": {
+  "9e/115013.txt": 1
+ },
+ "beir_cqadupstack_english_150286": {
+  "69/31814.txt": 1
+ },
+ "beir_cqadupstack_english_150405": {
+  "da/17661.txt": 1
+ },
+ "beir_cqadupstack_english_150427": {
+  "f0/151484.txt": 1
+ },
+ "beir_cqadupstack_english_150447": {
+  "cc/8059.txt": 1,
+  "f6/42138.txt": 1
+ },
+ "beir_cqadupstack_english_1505": {
+  "1e/48928.txt": 1,
+  "88/125041.txt": 1
+ },
+ "beir_cqadupstack_english_150500": {
+  "2d/90530.txt": 1,
+  "ec/137038.txt": 1
+ },
+ "beir_cqadupstack_english_150529": {
+  "0f/28085.txt": 1
+ },
+ "beir_cqadupstack_english_150601": {
+  "c1/154921.txt": 1
+ },
+ "beir_cqadupstack_english_150861": {
+  "9a/147419.txt": 1
+ },
+ "beir_cqadupstack_english_151022": {
+  "35/84390.txt": 1,
+  "71/21795.txt": 1,
+  "83/4953.txt": 1,
+  "8d/114889.txt": 1,
+  "a5/195238.txt": 1
+ },
+ "beir_cqadupstack_english_15107": {
+  "39/12618.txt": 1
+ },
+ "beir_cqadupstack_english_151119": {
+  "d1/150468.txt": 1
+ },
+ "beir_cqadupstack_english_151242": {
+  "ba/86838.txt": 1
+ },
+ "beir_cqadupstack_english_151285": {
+  "5b/105874.txt": 1
+ },
+ "beir_cqadupstack_english_151309": {
+  "98/174095.txt": 1
+ },
+ "beir_cqadupstack_english_151739": {
+  "a6/130003.txt": 1,
+  "dc/183.txt": 1,
+  "e0/16984.txt": 1
+ },
+ "beir_cqadupstack_english_15183": {
+  "02/192671.txt": 1,
+  "41/189646.txt": 1,
+  "fd/80696.txt": 1
+ },
+ "beir_cqadupstack_english_151856": {
+  "9d/151967.txt": 1
+ },
+ "beir_cqadupstack_english_151928": {
+  "60/112876.txt": 1,
+  "72/195375.txt": 1,
+  "bf/153917.txt": 1,
+  "f3/41901.txt": 1
+ },
+ "beir_cqadupstack_english_151980": {
+  "09/94150.txt": 1,
+  "11/142648.txt": 1,
+  "39/59374.txt": 1,
+  "ef/332.txt": 1
+ },
+ "beir_cqadupstack_english_152041": {
+  "f9/152093.txt": 1
+ },
+ "beir_cqadupstack_english_152043": {
+  "a0/182063.txt": 1
+ },
+ "beir_cqadupstack_english_152048": {
+  "54/153294.txt": 1,
+  "6f/154151.txt": 1
+ },
+ "beir_cqadupstack_english_152448": {
+  "3e/12326.txt": 1
+ },
+ "beir_cqadupstack_english_152584": {
+  "fd/134627.txt": 1
+ },
+ "beir_cqadupstack_english_15261": {
+  "02/14461.txt": 1,
+  "12/118.txt": 1,
+  "4a/12632.txt": 1
+ },
+ "beir_cqadupstack_english_152654": {
+  "20/49281.txt": 1
+ },
+ "beir_cqadupstack_english_152816": {
+  "2a/121727.txt": 1
+ },
+ "beir_cqadupstack_english_152983": {
+  "74/112887.txt": 1,
+  "b6/74182.txt": 1,
+  "ce/193234.txt": 1
+ },
+ "beir_cqadupstack_english_153114": {
+  "95/186599.txt": 1
+ },
+ "beir_cqadupstack_english_153149": {
+  "a9/131253.txt": 1
+ },
+ "beir_cqadupstack_english_153211": {
+  "c7/153459.txt": 1
+ },
+ "beir_cqadupstack_english_153285": {
+  "45/111100.txt": 1
+ },
+ "beir_cqadupstack_english_153315": {
+  "e7/153311.txt": 1
+ },
+ "beir_cqadupstack_english_153468": {
+  "5f/105107.txt": 1
+ },
+ "beir_cqadupstack_english_153603": {
+  "07/80393.txt": 1,
+  "08/28433.txt": 1,
+  "14/164723.txt": 1,
+  "1d/153987.txt": 1,
+  "22/138316.txt": 1,
+  "29/100771.txt": 1,
+  "2f/193313.txt": 1,
+  "38/2139.txt": 1,
+  "3f/19663.txt": 1,
+  "7b/103849.txt": 1,
+  "84/80064.txt": 1,
+  "86/71944.txt": 1,
+  "88/3400.txt": 1,
+  "93/193906.txt": 1,
+  "93/63246.txt": 1,
+  "a4/189166.txt": 1,
+  "b5/24134.txt": 1,
+  "b8/77452.txt": 1,
+  "ca/107525.txt": 1,
+  "cd/44489.txt": 1,
+  "d5/121628.txt": 1,
+  "f2/1366.txt": 1
+ },
+ "beir_cqadupstack_english_153677": {
+  "62/11326.txt": 1,
+  "67/36680.txt": 1,
+  "8c/34013.txt": 1
+ },
+ "beir_cqadupstack_english_153733": {
+  "2b/188499.txt": 1,
+  "52/100619.txt": 1,
+  "9f/83143.txt": 1,
+  "b6/167670.txt": 1,
+  "c4/153320.txt": 1,
+  "e1/105.txt": 1,
+  "e3/149834.txt": 1
+ },
+ "beir_cqadupstack_english_153832": {
+  "7c/112153.txt": 1
+ },
+ "beir_cqadupstack_english_153996": {
+  "d6/153570.txt": 1
+ },
+ "beir_cqadupstack_english_15400": {
+  "3a/4361.txt": 1
+ },
+ "beir_cqadupstack_english_154045": {
+  "84/44003.txt": 1
+ },
+ "beir_cqadupstack_english_154190": {
+  "2b/54864.txt": 1
+ },
+ "beir_cqadupstack_english_154355": {
+  "cc/4578.txt": 1
+ },
+ "beir_cqadupstack_english_154458": {
+  "45/59292.txt": 1,
+  "a2/68064.txt": 1
+ },
+ "beir_cqadupstack_english_154665": {
+  "61/138973.txt": 1
+ },
+ "beir_cqadupstack_english_154764": {
+  "68/1808.txt": 1,
+  "76/45917.txt": 1
+ },
+ "beir_cqadupstack_english_154815": {
+  "b4/53106.txt": 1
+ },
+ "beir_cqadupstack_english_15488": {
+  "bd/93290.txt": 1
+ },
+ "beir_cqadupstack_english_154964": {
+  "06/138136.txt": 1
+ },
+ "beir_cqadupstack_english_155459": {
+  "65/94679.txt": 1
+ },
+ "beir_cqadupstack_english_155511": {
+  "f1/40649.txt": 1
+ },
+ "beir_cqadupstack_english_155659": {
+  "ee/88309.txt": 1
+ },
+ "beir_cqadupstack_english_155712": {
+  "35/57358.txt": 1,
+  "4f/41508.txt": 1,
+  "65/43237.txt": 1,
+  "b1/70391.txt": 1
+ },
+ "beir_cqadupstack_english_156061": {
+  "26/133812.txt": 1,
+  "31/34704.txt": 1,
+  "d6/72813.txt": 1,
+  "f7/161504.txt": 1
+ },
+ "beir_cqadupstack_english_156653": {
+  "45/4407.txt": 1
+ },
+ "beir_cqadupstack_english_156780": {
+  "95/44251.txt": 1
+ },
+ "beir_cqadupstack_english_156784": {
+  "75/42319.txt": 1,
+  "7a/77570.txt": 1,
+  "98/59306.txt": 1,
+  "d7/44286.txt": 1,
+  "dd/76247.txt": 1
+ },
+ "beir_cqadupstack_english_156822": {
+  "4b/147838.txt": 1
+ },
+ "beir_cqadupstack_english_156986": {
+  "9a/59463.txt": 1
+ },
+ "beir_cqadupstack_english_15700": {
+  "23/24680.txt": 1
+ },
+ "beir_cqadupstack_english_15718": {
+  "e6/196019.txt": 1
+ },
+ "beir_cqadupstack_english_157241": {
+  "87/10684.txt": 1
+ },
+ "beir_cqadupstack_english_157498": {
+  "83/168671.txt": 1
+ },
+ "beir_cqadupstack_english_157592": {
+  "22/65919.txt": 1,
+  "2c/3368.txt": 1,
+  "4c/9559.txt": 1,
+  "59/49504.txt": 1,
+  "6d/18631.txt": 1,
+  "88/115193.txt": 1,
+  "8f/162904.txt": 1,
+  "a4/93664.txt": 1,
+  "ab/36323.txt": 1,
+  "c5/18378.txt": 1,
+  "cd/30753.txt": 1,
+  "d5/21072.txt": 1,
+  "d5/69494.txt": 1,
+  "e5/166260.txt": 1,
+  "ff/181141.txt": 1
+ },
+ "beir_cqadupstack_english_157703": {
+  "1c/48278.txt": 1
+ },
+ "beir_cqadupstack_english_1578": {
+  "0d/146809.txt": 1,
+  "fa/23448.txt": 1
+ },
+ "beir_cqadupstack_english_157879": {
+  "cf/5848.txt": 1
+ },
+ "beir_cqadupstack_english_157990": {
+  "4a/32822.txt": 1
+ },
+ "beir_cqadupstack_english_158190": {
+  "d3/3329.txt": 1
+ },
+ "beir_cqadupstack_english_158456": {
+  "57/24729.txt": 1,
+  "6e/146668.txt": 1,
+  "7e/45683.txt": 1
+ },
+ "beir_cqadupstack_english_158476": {
+  "97/158069.txt": 1
+ },
+ "beir_cqadupstack_english_15853": {
+  "9f/82892.txt": 1
+ },
+ "beir_cqadupstack_english_158716": {
+  "01/125964.txt": 1,
+  "08/78759.txt": 1,
+  "1d/56197.txt": 1,
+  "1e/187984.txt": 1,
+  "24/161996.txt": 1,
+  "2d/130212.txt": 1,
+  "3d/4899.txt": 1,
+  "5c/52045.txt": 1,
+  "6b/20871.txt": 1,
+  "79/17973.txt": 1,
+  "8a/35774.txt": 1,
+  "9f/73852.txt": 1,
+  "a3/59593.txt": 1,
+  "bc/159925.txt": 1,
+  "be/76312.txt": 1,
+  "c4/97510.txt": 1,
+  "d2/89536.txt": 1,
+  "de/69195.txt": 1,
+  "de/94164.txt": 1,
+  "f2/79906.txt": 1,
+  "f4/8777.txt": 1
+ },
+ "beir_cqadupstack_english_15874": {
+  "f1/152375.txt": 1
+ },
+ "beir_cqadupstack_english_15940": {
+  "25/130094.txt": 1
+ },
+ "beir_cqadupstack_english_159612": {
+  "1e/146343.txt": 1
+ },
+ "beir_cqadupstack_english_15966": {
+  "4a/144737.txt": 1
+ },
+ "beir_cqadupstack_english_159769": {
+  "31/8883.txt": 1
+ },
+ "beir_cqadupstack_english_159816": {
+  "a1/151795.txt": 1
+ },
+ "beir_cqadupstack_english_159849": {
+  "15/155711.txt": 1
+ },
+ "beir_cqadupstack_english_16000": {
+  "01/7636.txt": 1,
+  "b1/142525.txt": 1,
+  "f3/3004.txt": 1,
+  "fe/8.txt": 1
+ },
+ "beir_cqadupstack_english_16008": {
+  "9c/82764.txt": 1
+ },
+ "beir_cqadupstack_english_160277": {
+  "81/163116.txt": 1
+ },
+ "beir_cqadupstack_english_160488": {
+  "0c/160482.txt": 1
+ },
+ "beir_cqadupstack_english_1605": {
+  "6c/51127.txt": 1,
+  "f3/96932.txt": 1
+ },
+ "beir_cqadupstack_english_160544": {
+  "14/11768.txt": 1
+ },
+ "beir_cqadupstack_english_160616": {
+  "bc/184.txt": 1,
+  "c3/50467.txt": 1
+ },
+ "beir_cqadupstack_english_160893": {
+  "ea/167731.txt": 1
+ },
+ "beir_cqadupstack_english_160962": {
+  "a3/162095.txt": 1
+ },
+ "beir_cqadupstack_english_161117": {
+  "42/23022.txt": 1
+ },
+ "beir_cqadupstack_english_161194": {
+  "89/3915.txt": 1
+ },
+ "beir_cqadupstack_english_1613": {
+  "86/167453.txt": 1,
+  "cd/143910.txt": 1
+ },
+ "beir_cqadupstack_english_161302": {
+  "6c/178502.txt": 1
+ },
+ "beir_cqadupstack_english_161463": {
+  "a2/175505.txt": 1
+ },
+ "beir_cqadupstack_english_16172": {
+  "55/147728.txt": 1
+ },
+ "beir_cqadupstack_english_161967": {
+  "0a/40950.txt": 1,
+  "4e/166147.txt": 1,
+  "55/170409.txt": 1,
+  "9d/80374.txt": 1
+ },
+ "beir_cqadupstack_english_161975": {
+  "1e/180507.txt": 1
+ },
+ "beir_cqadupstack_english_162359": {
+  "f5/28001.txt": 1
+ },
+ "beir_cqadupstack_english_162372": {
+  "02/122044.txt": 1
+ },
+ "beir_cqadupstack_english_162573": {
+  "19/72061.txt": 1
+ },
+ "beir_cqadupstack_english_162794": {
+  "32/101591.txt": 1
+ },
+ "beir_cqadupstack_english_162824": {
+  "20/186913.txt": 1
+ },
+ "beir_cqadupstack_english_162939": {
+  "0b/162918.txt": 1
+ },
+ "beir_cqadupstack_english_16304": {
+  "4b/133033.txt": 1,
+  "6c/5418.txt": 1
+ },
+ "beir_cqadupstack_english_16312": {
+  "a8/172462.txt": 1
+ },
+ "beir_cqadupstack_english_163232": {
+  "ee/190352.txt": 1
+ },
+ "beir_cqadupstack_english_16356": {
+  "d7/36975.txt": 1
+ },
+ "beir_cqadupstack_english_163731": {
+  "ad/45019.txt": 1
+ },
+ "beir_cqadupstack_english_163994": {
+  "27/147575.txt": 1,
+  "ef/192745.txt": 1
+ },
+ "beir_cqadupstack_english_164111": {
+  "fb/164118.txt": 1
+ },
+ "beir_cqadupstack_english_164812": {
+  "62/78991.txt": 1
+ },
+ "beir_cqadupstack_english_164871": {
+  "e2/170792.txt": 1
+ },
+ "beir_cqadupstack_english_164878": {
+  "25/2933.txt": 1,
+  "25/57064.txt": 1,
+  "3a/12505.txt": 1,
+  "5c/91042.txt": 1,
+  "5d/149849.txt": 1,
+  "61/132093.txt": 1,
+  "78/14788.txt": 1,
+  "f2/68356.txt": 1
+ },
+ "beir_cqadupstack_english_164973": {
+  "46/39295.txt": 1
+ },
+ "beir_cqadupstack_english_164997": {
+  "91/182524.txt": 1
+ },
+ "beir_cqadupstack_english_165294": {
+  "b6/2132.txt": 1,
+  "ff/187318.txt": 1
+ },
+ "beir_cqadupstack_english_165633": {
+  "18/68502.txt": 1
+ },
+ "beir_cqadupstack_english_165893": {
+  "f5/165783.txt": 1
+ },
+ "beir_cqadupstack_english_16602": {
+  "3a/70341.txt": 1
+ },
+ "beir_cqadupstack_english_166093": {
+  "2e/29141.txt": 1
+ },
+ "beir_cqadupstack_english_166166": {
+  "12/180987.txt": 1
+ },
+ "beir_cqadupstack_english_166500": {
+  "b0/146348.txt": 1,
+  "bd/196260.txt": 1
+ },
+ "beir_cqadupstack_english_16654": {
+  "b4/20874.txt": 1,
+  "e6/105571.txt": 1
+ },
+ "beir_cqadupstack_english_16655": {
+  "60/866.txt": 1,
+  "68/1029.txt": 1,
+  "9c/20475.txt": 1
+ },
+ "beir_cqadupstack_english_167041": {
+  "fe/173738.txt": 1
+ },
+ "beir_cqadupstack_english_167321": {
+  "76/167274.txt": 1
+ },
+ "beir_cqadupstack_english_16750": {
+  "43/4187.txt": 1,
+  "8d/5803.txt": 1
+ },
+ "beir_cqadupstack_english_167545": {
+  "3f/31795.txt": 1,
+  "42/123685.txt": 1
+ },
+ "beir_cqadupstack_english_167620": {
+  "0b/177549.txt": 1,
+  "82/141717.txt": 1
+ },
+ "beir_cqadupstack_english_167685": {
+  "ae/13860.txt": 1
+ },
+ "beir_cqadupstack_english_167706": {
+  "ea/14216.txt": 1
+ },
+ "beir_cqadupstack_english_167900": {
+  "f3/73463.txt": 1
+ },
+ "beir_cqadupstack_english_167983": {
+  "e7/53319.txt": 1
+ },
+ "beir_cqadupstack_english_16813": {
+  "25/14796.txt": 1,
+  "4b/95321.txt": 1,
+  "59/90336.txt": 1,
+  "6e/55328.txt": 1,
+  "85/195184.txt": 1,
+  "b3/84031.txt": 1,
+  "de/55315.txt": 1,
+  "ea/123019.txt": 1
+ },
+ "beir_cqadupstack_english_168268": {
+  "d0/119316.txt": 1
+ },
+ "beir_cqadupstack_english_16831": {
+  "e5/4386.txt": 1
+ },
+ "beir_cqadupstack_english_168334": {
+  "79/31959.txt": 1,
+  "98/63362.txt": 1
+ },
+ "beir_cqadupstack_english_168367": {
+  "df/168934.txt": 1
+ },
+ "beir_cqadupstack_english_168417": {
+  "c3/77472.txt": 1
+ },
+ "beir_cqadupstack_english_168419": {
+  "4b/169394.txt": 1
+ },
+ "beir_cqadupstack_english_168543": {
+  "03/111550.txt": 1,
+  "11/31790.txt": 1,
+  "13/107727.txt": 1,
+  "14/159548.txt": 1,
+  "15/29464.txt": 1,
+  "1b/167708.txt": 1,
+  "1d/111458.txt": 1,
+  "21/182253.txt": 1,
+  "2e/127955.txt": 1,
+  "30/45371.txt": 1,
+  "31/11708.txt": 1,
+  "34/92506.txt": 1,
+  "37/181937.txt": 1,
+  "3f/176809.txt": 1,
+  "46/77283.txt": 1,
+  "4f/4626.txt": 1,
+  "5c/162590.txt": 1,
+  "5f/42575.txt": 1,
+  "67/108123.txt": 1,
+  "6f/4226.txt": 1,
+  "7d/94619.txt": 1,
+  "80/157322.txt": 1,
+  "89/169111.txt": 1,
+  "90/10606.txt": 1,
+  "95/25653.txt": 1,
+  "97/107737.txt": 1,
+  "99/86993.txt": 1,
+  "9c/40705.txt": 1,
+  "9d/113614.txt": 1,
+  "a3/120736.txt": 1,
+  "a4/191801.txt": 1,
+  "ae/96597.txt": 1,
+  "b0/8450.txt": 1,
+  "bc/125283.txt": 1,
+  "c0/114091.txt": 1,
+  "c0/60441.txt": 1,
+  "d7/37442.txt": 1,
+  "de/42968.txt": 1,
+  "ea/186197.txt": 1,
+  "ec/11849.txt": 1,
+  "fa/146058.txt": 1,
+  "fd/38847.txt": 1
+ },
+ "beir_cqadupstack_english_168579": {
+  "e7/117457.txt": 1
+ },
+ "beir_cqadupstack_english_168790": {
+  "82/89705.txt": 1
+ },
+ "beir_cqadupstack_english_16883": {
+  "9f/129398.txt": 1
+ },
+ "beir_cqadupstack_english_168928": {
+  "72/1308.txt": 1,
+  "b4/95943.txt": 1
+ },
+ "beir_cqadupstack_english_168959": {
+  "d5/42370.txt": 1
+ },
+ "beir_cqadupstack_english_169051": {
+  "98/30249.txt": 1
+ },
+ "beir_cqadupstack_english_169338": {
+  "99/11637.txt": 1
+ },
+ "beir_cqadupstack_english_169667": {
+  "c7/5904.txt": 1
+ },
+ "beir_cqadupstack_english_169679": {
+  "01/106597.txt": 1,
+  "33/163831.txt": 1,
+  "41/77291.txt": 1,
+  "9d/33119.txt": 1,
+  "c3/1327.txt": 1
+ },
+ "beir_cqadupstack_english_16983": {
+  "92/16462.txt": 1
+ },
+ "beir_cqadupstack_english_16999": {
+  "9c/185776.txt": 1
+ },
+ "beir_cqadupstack_english_170189": {
+  "15/6383.txt": 1
+ },
+ "beir_cqadupstack_english_170577": {
+  "33/61936.txt": 1
+ },
+ "beir_cqadupstack_english_170635": {
+  "56/129385.txt": 1
+ },
+ "beir_cqadupstack_english_170723": {
+  "cb/159908.txt": 1
+ },
+ "beir_cqadupstack_english_17081": {
+  "a2/125368.txt": 1
+ },
+ "beir_cqadupstack_english_170830": {
+  "7c/83399.txt": 1
+ },
+ "beir_cqadupstack_english_170911": {
+  "00/140578.txt": 1,
+  "04/92342.txt": 1,
+  "08/69453.txt": 1,
+  "09/17485.txt": 1,
+  "0a/21846.txt": 1,
+  "0b/55165.txt": 1,
+  "0f/16745.txt": 1,
+  "11/175699.txt": 1,
+  "17/123026.txt": 1,
+  "18/154636.txt": 1,
+  "1a/150649.txt": 1,
+  "1e/59555.txt": 1,
+  "20/4237.txt": 1,
+  "23/111366.txt": 1,
+  "29/142530.txt": 1,
+  "2a/105211.txt": 1,
+  "2c/55525.txt": 1,
+  "2d/166707.txt": 1,
+  "2e/131284.txt": 1,
+  "2f/91731.txt": 1,
+  "39/100171.txt": 1,
+  "42/79306.txt": 1,
+  "43/73143.txt": 1,
+  "48/152845.txt": 1,
+  "4b/134918.txt": 1,
+  "4e/189644.txt": 1,
+  "55/128172.txt": 1,
+  "5a/175262.txt": 1,
+  "62/180096.txt": 1,
+  "69/1357.txt": 1,
+  "6d/153608.txt": 1,
+  "74/192091.txt": 1,
+  "7d/70722.txt": 1,
+  "81/152171.txt": 1,
+  "88/186009.txt": 1,
+  "88/190553.txt": 1,
+  "8c/195018.txt": 1,
+  "95/103875.txt": 1,
+  "95/139550.txt": 1,
+  "99/18107.txt": 1,
+  "9a/196087.txt": 1,
+  "a1/152167.txt": 1,
+  "a3/182383.txt": 1,
+  "a7/3309.txt": 1,
+  "ae/118408.txt": 1,
+  "b2/188403.txt": 1,
+  "bd/118216.txt": 1,
+  "bd/122622.txt": 1,
+  "be/144133.txt": 1,
+  "bf/127908.txt": 1,
+  "c0/186857.txt": 1,
+  "c1/152537.txt": 1,
+  "c1/165385.txt": 1,
+  "c1/191917.txt": 1,
+  "c5/105234.txt": 1,
+  "c6/177841.txt": 1,
+  "ca/134794.txt": 1,
+  "cd/57053.txt": 1,
+  "d2/101350.txt": 1,
+  "d6/34196.txt": 1,
+  "d6/70668.txt": 1,
+  "d6/79457.txt": 1,
+  "d8/153704.txt": 1,
+  "d8/187881.txt": 1,
+  "db/144768.txt": 1,
+  "df/97533.txt": 1,
+  "ed/113028.txt": 1,
+  "ef/193188.txt": 1,
+  "f1/111308.txt": 1,
+  "f3/101237.txt": 1
+ },
+ "beir_cqadupstack_english_171029": {
+  "7b/171028.txt": 1
+ },
+ "beir_cqadupstack_english_171077": {
+  "03/87570.txt": 1,
+  "7f/143924.txt": 1
+ },
+ "beir_cqadupstack_english_171169": {
+  "2d/155509.txt": 1
+ },
+ "beir_cqadupstack_english_171365": {
+  "2c/62227.txt": 1,
+  "92/28248.txt": 1,
+  "b1/19195.txt": 1,
+  "c9/1820.txt": 1
+ },
+ "beir_cqadupstack_english_17143": {
+  "66/166052.txt": 1
+ },
+ "beir_cqadupstack_english_171733": {
+  "d7/14709.txt": 1
+ },
+ "beir_cqadupstack_english_171738": {
+  "b7/175694.txt": 1,
+  "f3/27707.txt": 1
+ },
+ "beir_cqadupstack_english_172": {
+  "fb/2847.txt": 1
+ },
+ "beir_cqadupstack_english_172031": {
+  "cb/51357.txt": 1
+ },
+ "beir_cqadupstack_english_172195": {
+  "54/155763.txt": 1
+ },
+ "beir_cqadupstack_english_1723": {
+  "13/122468.txt": 1,
+  "6f/100515.txt": 1
+ },
+ "beir_cqadupstack_english_172575": {
+  "a4/28498.txt": 1
+ },
+ "beir_cqadupstack_english_172880": {
+  "10/6581.txt": 1,
+  "12/53015.txt": 1,
+  "86/72914.txt": 1,
+  "a3/79493.txt": 1,
+  "b4/88491.txt": 1
+ },
+ "beir_cqadupstack_english_173006": {
+  "13/13537.txt": 1,
+  "24/9709.txt": 1,
+  "70/130759.txt": 1,
+  "7d/979.txt": 1,
+  "93/163564.txt": 1
+ },
+ "beir_cqadupstack_english_173118": {
+  "12/118679.txt": 1,
+  "bb/16480.txt": 1
+ },
+ "beir_cqadupstack_english_173341": {
+  "26/154009.txt": 1,
+  "91/128097.txt": 1,
+  "a9/176784.txt": 1,
+  "af/166956.txt": 1,
+  "b6/7385.txt": 1
+ },
+ "beir_cqadupstack_english_173349": {
+  "1d/86952.txt": 1,
+  "ea/130739.txt": 1,
+  "fc/187760.txt": 1
+ },
+ "beir_cqadupstack_english_173507": {
+  "93/11166.txt": 1
+ },
+ "beir_cqadupstack_english_173594": {
+  "a3/32684.txt": 1
+ },
+ "beir_cqadupstack_english_173641": {
+  "21/24614.txt": 1
+ },
+ "beir_cqadupstack_english_173772": {
+  "77/172456.txt": 1
+ },
+ "beir_cqadupstack_english_173979": {
+  "5d/8819.txt": 1
+ },
+ "beir_cqadupstack_english_174119": {
+  "00/150439.txt": 1,
+  "00/177150.txt": 1,
+  "09/194733.txt": 1,
+  "09/32283.txt": 1,
+  "0e/5146.txt": 1,
+  "0f/27564.txt": 1,
+  "12/184993.txt": 1,
+  "17/41561.txt": 1,
+  "1e/116551.txt": 1,
+  "24/79175.txt": 1,
+  "29/75523.txt": 1,
+  "2e/23256.txt": 1,
+  "34/128789.txt": 1,
+  "36/8181.txt": 1,
+  "38/152628.txt": 1,
+  "3b/11505.txt": 1,
+  "3d/5265.txt": 1,
+  "40/24092.txt": 1,
+  "43/4700.txt": 1,
+  "48/91289.txt": 1,
+  "49/1016.txt": 1,
+  "50/184604.txt": 1,
+  "50/192755.txt": 1,
+  "56/47933.txt": 1,
+  "5e/12801.txt": 1,
+  "5e/2736.txt": 1,
+  "60/4957.txt": 1,
+  "69/100276.txt": 1,
+  "6c/130499.txt": 1,
+  "6f/23744.txt": 1,
+  "75/167252.txt": 1,
+  "77/14772.txt": 1,
+  "78/25428.txt": 1,
+  "7c/148145.txt": 1,
+  "7d/19744.txt": 1,
+  "7f/4403.txt": 1,
+  "80/106173.txt": 1,
+  "8a/19627.txt": 1,
+  "8b/1019.txt": 1,
+  "8e/34385.txt": 1,
+  "97/43794.txt": 1,
+  "9c/76157.txt": 1,
+  "9e/138856.txt": 1,
+  "a3/171228.txt": 1,
+  "a7/185078.txt": 1,
+  "a8/105116.txt": 1,
+  "ab/69467.txt": 1,
+  "ac/152.txt": 1,
+  "ae/27577.txt": 1,
+  "b5/35343.txt": 1,
+  "b9/14429.txt": 1,
+  "bd/26127.txt": 1,
+  "bf/88232.txt": 1,
+  "c1/169906.txt": 1,
+  "d2/93901.txt": 1,
+  "d8/169017.txt": 1,
+  "d9/45745.txt": 1,
+  "df/35828.txt": 1,
+  "e0/57042.txt": 1,
+  "e2/131717.txt": 1,
+  "e4/33788.txt": 1,
+  "ee/158983.txt": 1,
+  "f0/111903.txt": 1,
+  "f2/25742.txt": 1,
+  "f7/161651.txt": 1,
+  "f9/162157.txt": 1,
+  "f9/50076.txt": 1,
+  "fd/28237.txt": 1
+ },
+ "beir_cqadupstack_english_174228": {
+  "8f/112254.txt": 1
+ },
+ "beir_cqadupstack_english_17428": {
+  "d8/42969.txt": 1
+ },
+ "beir_cqadupstack_english_174302": {
+  "c2/101061.txt": 1
+ },
+ "beir_cqadupstack_english_17436": {
+  "06/76728.txt": 1,
+  "78/157190.txt": 1,
+  "cd/66737.txt": 1
+ },
+ "beir_cqadupstack_english_174456": {
+  "05/42149.txt": 1
+ },
+ "beir_cqadupstack_english_174547": {
+  "0b/6635.txt": 1,
+  "7b/33089.txt": 1
+ },
+ "beir_cqadupstack_english_174605": {
+  "44/6802.txt": 1
+ },
+ "beir_cqadupstack_english_1749": {
+  "14/59362.txt": 1,
+  "5d/112750.txt": 1,
+  "88/174955.txt": 1,
+  "af/69621.txt": 1
+ },
+ "beir_cqadupstack_english_174938": {
+  "5e/90567.txt": 1
+ },
+ "beir_cqadupstack_english_174939": {
+  "53/117986.txt": 1
+ },
+ "beir_cqadupstack_english_175240": {
+  "97/102771.txt": 1
+ },
+ "beir_cqadupstack_english_175415": {
+  "da/6798.txt": 1,
+  "fb/190385.txt": 1
+ },
+ "beir_cqadupstack_english_17616": {
+  "19/4327.txt": 1
+ },
+ "beir_cqadupstack_english_176821": {
+  "17/32235.txt": 1,
+  "b1/31667.txt": 1
+ },
+ "beir_cqadupstack_english_176908": {
+  "50/42252.txt": 1
+ },
+ "beir_cqadupstack_english_177112": {
+  "4f/71540.txt": 1,
+  "9c/130381.txt": 1,
+  "b8/67553.txt": 1
+ },
+ "beir_cqadupstack_english_177268": {
+  "26/127196.txt": 1
+ },
+ "beir_cqadupstack_english_177784": {
+  "af/186790.txt": 1
+ },
+ "beir_cqadupstack_english_177912": {
+  "91/116742.txt": 1
+ },
+ "beir_cqadupstack_english_177943": {
+  "36/194381.txt": 1
+ },
+ "beir_cqadupstack_english_178012": {
+  "f8/144766.txt": 1
+ },
+ "beir_cqadupstack_english_178040": {
+  "4e/111606.txt": 1
+ },
+ "beir_cqadupstack_english_178191": {
+  "cc/5815.txt": 1
+ },
+ "beir_cqadupstack_english_178255": {
+  "4e/158232.txt": 1
+ },
+ "beir_cqadupstack_english_178259": {
+  "8e/177822.txt": 1
+ },
+ "beir_cqadupstack_english_178276": {
+  "22/9279.txt": 1,
+  "62/81424.txt": 1
+ },
+ "beir_cqadupstack_english_178471": {
+  "a5/30035.txt": 1,
+  "b1/173999.txt": 1
+ },
+ "beir_cqadupstack_english_178569": {
+  "12/64611.txt": 1,
+  "25/131259.txt": 1,
+  "8c/10991.txt": 1,
+  "a1/126043.txt": 1
+ },
+ "beir_cqadupstack_english_178577": {
+  "60/28076.txt": 1
+ },
+ "beir_cqadupstack_english_178734": {
+  "59/189253.txt": 1,
+  "96/9951.txt": 1
+ },
+ "beir_cqadupstack_english_178767": {
+  "3f/180237.txt": 1
+ },
+ "beir_cqadupstack_english_178956": {
+  "c6/102535.txt": 1
+ },
+ "beir_cqadupstack_english_178984": {
+  "71/10438.txt": 1
+ },
+ "beir_cqadupstack_english_178992": {
+  "9e/144001.txt": 1
+ },
+ "beir_cqadupstack_english_17943": {
+  "cc/83930.txt": 1
+ },
+ "beir_cqadupstack_english_180171": {
+  "30/182685.txt": 1
+ },
+ "beir_cqadupstack_english_18022": {
+  "41/59415.txt": 1,
+  "4b/12999.txt": 1,
+  "6b/73616.txt": 1,
+  "f7/85084.txt": 1
+ },
+ "beir_cqadupstack_english_180287": {
+  "5e/12277.txt": 1
+ },
+ "beir_cqadupstack_english_180338": {
+  "1a/180339.txt": 1,
+  "82/53376.txt": 1
+ },
+ "beir_cqadupstack_english_180365": {
+  "d3/57265.txt": 1
+ },
+ "beir_cqadupstack_english_180421": {
+  "8a/189410.txt": 1
+ },
+ "beir_cqadupstack_english_180422": {
+  "01/145683.txt": 1
+ },
+ "beir_cqadupstack_english_180542": {
+  "52/171202.txt": 1
+ },
+ "beir_cqadupstack_english_180705": {
+  "2a/8187.txt": 1,
+  "38/184800.txt": 1,
+  "6c/193490.txt": 1
+ },
+ "beir_cqadupstack_english_180785": {
+  "da/10094.txt": 1
+ },
+ "beir_cqadupstack_english_18085": {
+  "27/88465.txt": 1,
+  "ff/106824.txt": 1
+ },
+ "beir_cqadupstack_english_180929": {
+  "ec/5120.txt": 1
+ },
+ "beir_cqadupstack_english_180991": {
+  "14/132042.txt": 1
+ },
+ "beir_cqadupstack_english_181097": {
+  "d8/173962.txt": 1
+ },
+ "beir_cqadupstack_english_181269": {
+  "d8/67908.txt": 1
+ },
+ "beir_cqadupstack_english_181372": {
+  "1f/120449.txt": 1
+ },
+ "beir_cqadupstack_english_181379": {
+  "61/65542.txt": 1
+ },
+ "beir_cqadupstack_english_181501": {
+  "55/28624.txt": 1
+ },
+ "beir_cqadupstack_english_181642": {
+  "0a/56365.txt": 1,
+  "1e/32519.txt": 1,
+  "29/63178.txt": 1,
+  "92/67876.txt": 1
+ },
+ "beir_cqadupstack_english_181684": {
+  "2f/31688.txt": 1
+ },
+ "beir_cqadupstack_english_181705": {
+  "fb/101809.txt": 1
+ },
+ "beir_cqadupstack_english_181855": {
+  "ab/111058.txt": 1
+ },
+ "beir_cqadupstack_english_181864": {
+  "d5/143421.txt": 1
+ },
+ "beir_cqadupstack_english_181923": {
+  "76/193291.txt": 1,
+  "cf/62469.txt": 1
+ },
+ "beir_cqadupstack_english_181994": {
+  "89/105919.txt": 1
+ },
+ "beir_cqadupstack_english_182052": {
+  "44/30792.txt": 1
+ },
+ "beir_cqadupstack_english_182189": {
+  "62/185974.txt": 1
+ },
+ "beir_cqadupstack_english_182203": {
+  "5c/21532.txt": 1
+ },
+ "beir_cqadupstack_english_182304": {
+  "97/71095.txt": 1,
+  "a5/74357.txt": 1
+ },
+ "beir_cqadupstack_english_182328": {
+  "40/171557.txt": 1,
+  "eb/25086.txt": 1
+ },
+ "beir_cqadupstack_english_1824": {
+  "d6/175285.txt": 1
+ },
+ "beir_cqadupstack_english_182435": {
+  "97/56246.txt": 1
+ },
+ "beir_cqadupstack_english_182562": {
+  "b0/177009.txt": 1
+ },
+ "beir_cqadupstack_english_182567": {
+  "1e/103484.txt": 1,
+  "31/187317.txt": 1,
+  "d2/186099.txt": 1
+ },
+ "beir_cqadupstack_english_184241": {
+  "81/47013.txt": 1
+ },
+ "beir_cqadupstack_english_184518": {
+  "a8/7188.txt": 1
+ },
+ "beir_cqadupstack_english_184740": {
+  "4c/83110.txt": 1
+ },
+ "beir_cqadupstack_english_184788": {
+  "5d/44570.txt": 1
+ },
+ "beir_cqadupstack_english_184947": {
+  "6a/153963.txt": 1,
+  "b9/184346.txt": 1
+ },
+ "beir_cqadupstack_english_185182": {
+  "96/133179.txt": 1
+ },
+ "beir_cqadupstack_english_185218": {
+  "07/100299.txt": 1,
+  "6c/143148.txt": 1,
+  "74/118457.txt": 1,
+  "dc/143316.txt": 1,
+  "e7/188325.txt": 1
+ },
+ "beir_cqadupstack_english_185437": {
+  "9f/125897.txt": 1
+ },
+ "beir_cqadupstack_english_18568": {
+  "b4/163157.txt": 1
+ },
+ "beir_cqadupstack_english_1858": {
+  "c6/134398.txt": 1,
+  "d9/156587.txt": 1,
+  "da/193813.txt": 1
+ },
+ "beir_cqadupstack_english_185854": {
+  "b8/165952.txt": 1
+ },
+ "beir_cqadupstack_english_185998": {
+  "a1/19221.txt": 1
+ },
+ "beir_cqadupstack_english_18602": {
+  "b4/49526.txt": 1,
+  "d7/15001.txt": 1,
+  "d8/119763.txt": 1
+ },
+ "beir_cqadupstack_english_18609": {
+  "fa/106313.txt": 1
+ },
+ "beir_cqadupstack_english_186153": {
+  "15/12387.txt": 1,
+  "4c/70016.txt": 1,
+  "59/140047.txt": 1,
+  "e0/123758.txt": 1
+ },
+ "beir_cqadupstack_english_186255": {
+  "91/5656.txt": 1
+ },
+ "beir_cqadupstack_english_186262": {
+  "38/6075.txt": 1,
+  "b5/151940.txt": 1
+ },
+ "beir_cqadupstack_english_186457": {
+  "09/128937.txt": 1,
+  "0b/90269.txt": 1,
+  "23/84608.txt": 1,
+  "2e/64573.txt": 1,
+  "32/113406.txt": 1,
+  "3a/39273.txt": 1,
+  "49/166577.txt": 1,
+  "4d/889.txt": 1,
+  "4e/91203.txt": 1,
+  "51/183004.txt": 1,
+  "51/78275.txt": 1,
+  "52/115741.txt": 1,
+  "56/145554.txt": 1,
+  "58/184870.txt": 1,
+  "60/150129.txt": 1,
+  "64/84613.txt": 1,
+  "72/175438.txt": 1,
+  "83/95132.txt": 1,
+  "8b/11570.txt": 1,
+  "8d/33473.txt": 1,
+  "93/12494.txt": 1,
+  "97/71416.txt": 1,
+  "9e/105304.txt": 1,
+  "a4/185615.txt": 1,
+  "a5/59542.txt": 1,
+  "b0/102889.txt": 1,
+  "b2/106775.txt": 1,
+  "bf/56548.txt": 1,
+  "c0/49989.txt": 1,
+  "ca/150289.txt": 1,
+  "cb/79687.txt": 1,
+  "d4/151455.txt": 1,
+  "d5/190598.txt": 1,
+  "d6/68642.txt": 1,
+  "d6/78050.txt": 1,
+  "da/29333.txt": 1,
+  "e6/34516.txt": 1,
+  "f0/34170.txt": 1
+ },
+ "beir_cqadupstack_english_186468": {
+  "20/21067.txt": 1
+ },
+ "beir_cqadupstack_english_186523": {
+  "40/150070.txt": 1
+ },
+ "beir_cqadupstack_english_186720": {
+  "38/193230.txt": 1
+ },
+ "beir_cqadupstack_english_186805": {
+  "4d/127875.txt": 1
+ },
+ "beir_cqadupstack_english_186970": {
+  "c2/146741.txt": 1
+ },
+ "beir_cqadupstack_english_187037": {
+  "11/189182.txt": 1,
+  "de/706.txt": 1
+ },
+ "beir_cqadupstack_english_187161": {
+  "03/70735.txt": 1,
+  "31/106440.txt": 1,
+  "3d/177993.txt": 1,
+  "48/114560.txt": 1,
+  "48/9746.txt": 1,
+  "53/122951.txt": 1,
+  "54/144382.txt": 1,
+  "65/161603.txt": 1,
+  "93/94828.txt": 1,
+  "cd/28530.txt": 1,
+  "f4/83746.txt": 1
+ },
+ "beir_cqadupstack_english_187284": {
+  "1e/134804.txt": 1
+ },
+ "beir_cqadupstack_english_187329": {
+  "12/28301.txt": 1
+ },
+ "beir_cqadupstack_english_18739": {
+  "09/121728.txt": 1,
+  "15/8428.txt": 1,
+  "17/7290.txt": 1,
+  "1a/146962.txt": 1,
+  "28/8198.txt": 1,
+  "2a/5795.txt": 1,
+  "2e/24109.txt": 1,
+  "38/123908.txt": 1,
+  "3b/145346.txt": 1,
+  "3b/47090.txt": 1,
+  "58/142738.txt": 1,
+  "61/75554.txt": 1,
+  "66/1082.txt": 1,
+  "83/80081.txt": 1,
+  "92/113895.txt": 1,
+  "a2/180385.txt": 1,
+  "bd/629.txt": 1,
+  "be/187634.txt": 1,
+  "c4/154465.txt": 1,
+  "cf/20173.txt": 1,
+  "e0/182026.txt": 1,
+  "e9/95269.txt": 1,
+  "f8/3762.txt": 1
+ },
+ "beir_cqadupstack_english_187557": {
+  "97/50776.txt": 1
+ },
+ "beir_cqadupstack_english_187725": {
+  "e4/155742.txt": 1
+ },
+ "beir_cqadupstack_english_187789": {
+  "65/124978.txt": 1
+ },
+ "beir_cqadupstack_english_187988": {
+  "85/128558.txt": 1
+ },
+ "beir_cqadupstack_english_188076": {
+  "7a/95939.txt": 1
+ },
+ "beir_cqadupstack_english_188082": {
+  "35/39296.txt": 1
+ },
+ "beir_cqadupstack_english_18814": {
+  "84/125753.txt": 1
+ },
+ "beir_cqadupstack_english_188181": {
+  "c7/90226.txt": 1
+ },
+ "beir_cqadupstack_english_188316": {
+  "07/9439.txt": 1,
+  "5a/141564.txt": 1
+ },
+ "beir_cqadupstack_english_188334": {
+  "68/59610.txt": 1
+ },
+ "beir_cqadupstack_english_1884": {
+  "3f/152310.txt": 1
+ },
+ "beir_cqadupstack_english_18863": {
+  "2a/132192.txt": 1,
+  "77/3.txt": 1,
+  "7e/63086.txt": 1,
+  "93/166595.txt": 1,
+  "97/137686.txt": 1
+ },
+ "beir_cqadupstack_english_188632": {
+  "4c/96887.txt": 1,
+  "8c/9933.txt": 1,
+  "f9/61635.txt": 1
+ },
+ "beir_cqadupstack_english_188668": {
+  "8f/188286.txt": 1
+ },
+ "beir_cqadupstack_english_188731": {
+  "e0/106323.txt": 1
+ },
+ "beir_cqadupstack_english_188839": {
+  "eb/37153.txt": 1
+ },
+ "beir_cqadupstack_english_188982": {
+  "4b/36946.txt": 1
+ },
+ "beir_cqadupstack_english_18929": {
+  "c0/59690.txt": 1
+ },
+ "beir_cqadupstack_english_189622": {
+  "98/54452.txt": 1
+ },
+ "beir_cqadupstack_english_189671": {
+  "81/126860.txt": 1
+ },
+ "beir_cqadupstack_english_189751": {
+  "2a/96742.txt": 1,
+  "cc/173620.txt": 1
+ },
+ "beir_cqadupstack_english_189798": {
+  "0b/68549.txt": 1
+ },
+ "beir_cqadupstack_english_189920": {
+  "79/77587.txt": 1
+ },
+ "beir_cqadupstack_english_189936": {
+  "c8/48072.txt": 1
+ },
+ "beir_cqadupstack_english_189981": {
+  "5a/15208.txt": 1
+ },
+ "beir_cqadupstack_english_189996": {
+  "eb/6713.txt": 1
+ },
+ "beir_cqadupstack_english_19": {
+  "ba/92235.txt": 1
+ },
+ "beir_cqadupstack_english_190009": {
+  "2d/60069.txt": 1,
+  "47/44598.txt": 1
+ },
+ "beir_cqadupstack_english_190038": {
+  "07/21168.txt": 1
+ },
+ "beir_cqadupstack_english_190076": {
+  "ce/133399.txt": 1
+ },
+ "beir_cqadupstack_english_190104": {
+  "08/191774.txt": 1
+ },
+ "beir_cqadupstack_english_190218": {
+  "0c/150674.txt": 1
+ },
+ "beir_cqadupstack_english_191724": {
+  "c4/146424.txt": 1
+ },
+ "beir_cqadupstack_english_191792": {
+  "d4/164090.txt": 1
+ },
+ "beir_cqadupstack_english_191928": {
+  "fc/161026.txt": 1
+ },
+ "beir_cqadupstack_english_19196": {
+  "74/24699.txt": 1
+ },
+ "beir_cqadupstack_english_192013": {
+  "41/34528.txt": 1
+ },
+ "beir_cqadupstack_english_192051": {
+  "08/84376.txt": 1,
+  "09/38796.txt": 1,
+  "0b/174671.txt": 1,
+  "0d/80343.txt": 1,
+  "1b/194290.txt": 1,
+  "1d/145483.txt": 1,
+  "26/34442.txt": 1,
+  "2d/195318.txt": 1,
+  "3d/196261.txt": 1,
+  "44/194392.txt": 1,
+  "46/57458.txt": 1,
+  "54/56.txt": 1,
+  "59/181992.txt": 1,
+  "61/7932.txt": 1,
+  "63/193417.txt": 1,
+  "64/120696.txt": 1,
+  "6e/104306.txt": 1,
+  "6e/131009.txt": 1,
+  "7d/144748.txt": 1,
+  "7d/25982.txt": 1,
+  "7e/14182.txt": 1,
+  "8c/122330.txt": 1,
+  "a5/108636.txt": 1,
+  "aa/123764.txt": 1,
+  "ac/165794.txt": 1,
+  "b0/146824.txt": 1,
+  "b3/123799.txt": 1,
+  "b3/168463.txt": 1,
+  "b5/113905.txt": 1,
+  "b8/190570.txt": 1,
+  "bf/171379.txt": 1,
+  "c2/331.txt": 1,
+  "c4/111441.txt": 1,
+  "c4/166847.txt": 1,
+  "c8/130077.txt": 1,
+  "d2/115171.txt": 1,
+  "de/129089.txt": 1,
+  "de/59726.txt": 1,
+  "e2/165360.txt": 1,
+  "e2/40756.txt": 1,
+  "e4/14761.txt": 1,
+  "e5/43015.txt": 1,
+  "f2/121043.txt": 1,
+  "fb/181327.txt": 1,
+  "fb/4283.txt": 1,
+  "fc/118772.txt": 1,
+  "fe/190011.txt": 1
+ },
+ "beir_cqadupstack_english_192100": {
+  "69/19769.txt": 1
+ },
+ "beir_cqadupstack_english_192334": {
+  "5d/3127.txt": 1,
+  "f8/55364.txt": 1
+ },
+ "beir_cqadupstack_english_192357": {
+  "9f/21043.txt": 1
+ },
+ "beir_cqadupstack_english_192365": {
+  "1a/124104.txt": 1
+ },
+ "beir_cqadupstack_english_1925": {
+  "87/62035.txt": 1
+ },
+ "beir_cqadupstack_english_192516": {
+  "c2/134572.txt": 1
+ },
+ "beir_cqadupstack_english_192576": {
+  "7d/113573.txt": 1,
+  "fc/81357.txt": 1
+ },
+ "beir_cqadupstack_english_192727": {
+  "06/67780.txt": 1
+ },
+ "beir_cqadupstack_english_192879": {
+  "17/62688.txt": 1
+ },
+ "beir_cqadupstack_english_193035": {
+  "dc/91241.txt": 1
+ },
+ "beir_cqadupstack_english_193077": {
+  "a0/157866.txt": 1,
+  "a1/15780.txt": 1
+ },
+ "beir_cqadupstack_english_193152": {
+  "09/112248.txt": 1
+ },
+ "beir_cqadupstack_english_193255": {
+  "55/30106.txt": 1
+ },
+ "beir_cqadupstack_english_193308": {
+  "25/115873.txt": 1,
+  "3f/7281.txt": 1,
+  "46/138345.txt": 1,
+  "4b/60608.txt": 1,
+  "b6/192753.txt": 1
+ },
+ "beir_cqadupstack_english_193426": {
+  "45/62441.txt": 1,
+  "a1/810.txt": 1
+ },
+ "beir_cqadupstack_english_193565": {
+  "87/123330.txt": 1,
+  "cd/131448.txt": 1
+ },
+ "beir_cqadupstack_english_193642": {
+  "8c/33471.txt": 1
+ },
+ "beir_cqadupstack_english_193654": {
+  "1a/163139.txt": 1,
+  "54/139941.txt": 1,
+  "71/159453.txt": 1
+ },
+ "beir_cqadupstack_english_193749": {
+  "ec/27183.txt": 1
+ },
+ "beir_cqadupstack_english_193820": {
+  "22/163345.txt": 1
+ },
+ "beir_cqadupstack_english_193827": {
+  "0e/3755.txt": 1,
+  "56/50095.txt": 1,
+  "62/38133.txt": 1,
+  "ac/94514.txt": 1
+ },
+ "beir_cqadupstack_english_19399": {
+  "01/77835.txt": 1,
+  "03/76371.txt": 1,
+  "0f/192720.txt": 1,
+  "0f/43474.txt": 1,
+  "10/44459.txt": 1,
+  "19/166173.txt": 1,
+  "19/80798.txt": 1,
+  "1c/182056.txt": 1,
+  "1c/41583.txt": 1,
+  "24/152106.txt": 1,
+  "27/166773.txt": 1,
+  "2a/183003.txt": 1,
+  "35/22082.txt": 1,
+  "3c/17821.txt": 1,
+  "3c/79668.txt": 1,
+  "46/175150.txt": 1,
+  "4b/112990.txt": 1,
+  "51/133105.txt": 1,
+  "53/184525.txt": 1,
+  "57/113234.txt": 1,
+  "5d/4501.txt": 1,
+  "5f/5588.txt": 1,
+  "60/71266.txt": 1,
+  "64/177507.txt": 1,
+  "6c/119668.txt": 1,
+  "6d/56449.txt": 1,
+  "6f/167405.txt": 1,
+  "71/164832.txt": 1,
+  "7d/151807.txt": 1,
+  "7f/162608.txt": 1,
+  "7f/9053.txt": 1,
+  "86/39838.txt": 1,
+  "88/168653.txt": 1,
+  "8f/71259.txt": 1,
+  "92/81484.txt": 1,
+  "94/11589.txt": 1,
+  "98/130948.txt": 1,
+  "9c/167240.txt": 1,
+  "a0/3288.txt": 1,
+  "a1/130867.txt": 1,
+  "a8/190304.txt": 1,
+  "b0/132622.txt": 1,
+  "b0/46609.txt": 1,
+  "b2/134461.txt": 1,
+  "b3/11476.txt": 1,
+  "b6/91901.txt": 1,
+  "b9/11810.txt": 1,
+  "ba/175596.txt": 1,
+  "bf/11023.txt": 1,
+  "c2/164657.txt": 1,
+  "cd/190191.txt": 1,
+  "d7/8545.txt": 1,
+  "d8/181598.txt": 1,
+  "e3/163800.txt": 1,
+  "e8/102236.txt": 1,
+  "eb/147712.txt": 1,
+  "ee/120630.txt": 1,
+  "f0/74680.txt": 1,
+  "f3/172448.txt": 1,
+  "f4/166397.txt": 1,
+  "f8/1338.txt": 1,
+  "f9/71154.txt": 1,
+  "f9/97772.txt": 1,
+  "fa/144405.txt": 1,
+  "ff/128973.txt": 1
+ },
+ "beir_cqadupstack_english_194063": {
+  "b4/120654.txt": 1
+ },
+ "beir_cqadupstack_english_19407": {
+  "f9/11914.txt": 1
+ },
+ "beir_cqadupstack_english_194101": {
+  "ca/23014.txt": 1
+ },
+ "beir_cqadupstack_english_19418": {
+  "20/141579.txt": 1
+ },
+ "beir_cqadupstack_english_194220": {
+  "55/75678.txt": 1
+ },
+ "beir_cqadupstack_english_194244": {
+  "13/196081.txt": 1
+ },
+ "beir_cqadupstack_english_19427": {
+  "5d/11997.txt": 1
+ },
+ "beir_cqadupstack_english_194317": {
+  "1c/24521.txt": 1,
+  "1d/151267.txt": 1,
+  "2e/185713.txt": 1,
+  "61/125139.txt": 1,
+  "65/64487.txt": 1,
+  "78/103214.txt": 1,
+  "83/170917.txt": 1,
+  "8a/24237.txt": 1,
+  "9a/75179.txt": 1,
+  "ae/134814.txt": 1,
+  "bc/40875.txt": 1,
+  "cb/323.txt": 1,
+  "eb/90899.txt": 1,
+  "ec/66984.txt": 1
+ },
+ "beir_cqadupstack_english_194394": {
+  "79/82986.txt": 1,
+  "a8/17651.txt": 1,
+  "b3/140452.txt": 1
+ },
+ "beir_cqadupstack_english_194462": {
+  "39/90175.txt": 1
+ },
+ "beir_cqadupstack_english_19450": {
+  "63/990.txt": 1
+ },
+ "beir_cqadupstack_english_194605": {
+  "ce/49035.txt": 1
+ },
+ "beir_cqadupstack_english_19471": {
+  "4d/67773.txt": 1
+ },
+ "beir_cqadupstack_english_194838": {
+  "df/10191.txt": 1
+ },
+ "beir_cqadupstack_english_194852": {
+  "c2/56225.txt": 1
+ },
+ "beir_cqadupstack_english_194906": {
+  "f2/194932.txt": 1
+ },
+ "beir_cqadupstack_english_194983": {
+  "8c/124127.txt": 1
+ },
+ "beir_cqadupstack_english_195087": {
+  "e7/148497.txt": 1
+ },
+ "beir_cqadupstack_english_195099": {
+  "4f/153986.txt": 1
+ },
+ "beir_cqadupstack_english_19533": {
+  "ed/85262.txt": 1
+ },
+ "beir_cqadupstack_english_195337": {
+  "ca/25738.txt": 1,
+  "f2/876.txt": 1
+ },
+ "beir_cqadupstack_english_1954": {
+  "43/35370.txt": 1
+ },
+ "beir_cqadupstack_english_195514": {
+  "3b/162442.txt": 1
+ },
+ "beir_cqadupstack_english_195576": {
+  "30/184787.txt": 1
+ },
+ "beir_cqadupstack_english_195644": {
+  "c4/87381.txt": 1
+ },
+ "beir_cqadupstack_english_195647": {
+  "79/195631.txt": 1
+ },
+ "beir_cqadupstack_english_195792": {
+  "b5/42242.txt": 1
+ },
+ "beir_cqadupstack_english_195955": {
+  "4e/168164.txt": 1
+ },
+ "beir_cqadupstack_english_196025": {
+  "ec/148263.txt": 1
+ },
+ "beir_cqadupstack_english_196031": {
+  "56/28195.txt": 1,
+  "e0/91775.txt": 1,
+  "f1/11155.txt": 1
+ },
+ "beir_cqadupstack_english_1975": {
+  "3b/35423.txt": 1
+ },
+ "beir_cqadupstack_english_19772": {
+  "34/153261.txt": 1,
+  "6d/153023.txt": 1
+ },
+ "beir_cqadupstack_english_19779": {
+  "60/111431.txt": 1
+ },
+ "beir_cqadupstack_english_19790": {
+  "fc/15429.txt": 1
+ },
+ "beir_cqadupstack_english_1990": {
+  "c3/171102.txt": 1
+ },
+ "beir_cqadupstack_english_19967": {
+  "b7/3306.txt": 1
+ },
+ "beir_cqadupstack_english_20061": {
+  "32/5790.txt": 1
+ },
+ "beir_cqadupstack_english_20097": {
+  "f2/43288.txt": 1
+ },
+ "beir_cqadupstack_english_20129": {
+  "3a/63624.txt": 1
+ },
+ "beir_cqadupstack_english_20262": {
+  "aa/3738.txt": 1
+ },
+ "beir_cqadupstack_english_20424": {
+  "5d/8210.txt": 1,
+  "97/36207.txt": 1,
+  "fc/63179.txt": 1
+ },
+ "beir_cqadupstack_english_20492": {
+  "71/191780.txt": 1
+ },
+ "beir_cqadupstack_english_20708": {
+  "23/196179.txt": 1
+ },
+ "beir_cqadupstack_english_20908": {
+  "5f/29680.txt": 1
+ },
+ "beir_cqadupstack_english_21032": {
+  "dc/96843.txt": 1
+ },
+ "beir_cqadupstack_english_21078": {
+  "ee/3477.txt": 1
+ },
+ "beir_cqadupstack_english_21115": {
+  "36/59311.txt": 1
+ },
+ "beir_cqadupstack_english_21153": {
+  "85/153060.txt": 1,
+  "8a/122649.txt": 1
+ },
+ "beir_cqadupstack_english_21198": {
+  "b3/41767.txt": 1
+ },
+ "beir_cqadupstack_english_21295": {
+  "7b/53513.txt": 1
+ },
+ "beir_cqadupstack_english_21336": {
+  "47/181305.txt": 1
+ },
+ "beir_cqadupstack_english_21406": {
+  "14/61618.txt": 1,
+  "39/3392.txt": 1
+ },
+ "beir_cqadupstack_english_21408": {
+  "08/121615.txt": 1,
+  "0e/105594.txt": 1,
+  "1e/182409.txt": 1,
+  "1e/7964.txt": 1,
+  "1f/113416.txt": 1,
+  "21/172930.txt": 1,
+  "23/130770.txt": 1,
+  "27/134849.txt": 1,
+  "2b/187692.txt": 1,
+  "36/141161.txt": 1,
+  "3e/16388.txt": 1,
+  "42/178300.txt": 1,
+  "53/156374.txt": 1,
+  "5d/111109.txt": 1,
+  "68/164889.txt": 1,
+  "69/133224.txt": 1,
+  "6c/184384.txt": 1,
+  "74/167922.txt": 1,
+  "8d/168665.txt": 1,
+  "96/144459.txt": 1,
+  "9a/181138.txt": 1,
+  "ab/171309.txt": 1,
+  "ae/115874.txt": 1,
+  "ba/64347.txt": 1,
+  "ee/114043.txt": 1,
+  "f9/193236.txt": 1,
+  "fb/139946.txt": 1
+ },
+ "beir_cqadupstack_english_21556": {
+  "4d/155125.txt": 1
+ },
+ "beir_cqadupstack_english_21601": {
+  "b2/87752.txt": 1
+ },
+ "beir_cqadupstack_english_21612": {
+  "53/5697.txt": 1,
+  "d0/27683.txt": 1,
+  "e9/57216.txt": 1
+ },
+ "beir_cqadupstack_english_21616": {
+  "e9/165851.txt": 1,
+  "ee/182113.txt": 1
+ },
+ "beir_cqadupstack_english_21685": {
+  "0a/18254.txt": 1
+ },
+ "beir_cqadupstack_english_21706": {
+  "7e/22994.txt": 1
+ },
+ "beir_cqadupstack_english_2178": {
+  "5b/102972.txt": 1
+ },
+ "beir_cqadupstack_english_21935": {
+  "f8/81703.txt": 1
+ },
+ "beir_cqadupstack_english_22194": {
+  "33/146428.txt": 1,
+  "d4/8102.txt": 1,
+  "d7/83643.txt": 1
+ },
+ "beir_cqadupstack_english_2232": {
+  "00/104174.txt": 1
+ },
+ "beir_cqadupstack_english_22357": {
+  "cf/52910.txt": 1
+ },
+ "beir_cqadupstack_english_22446": {
+  "5e/94945.txt": 1,
+  "c1/96519.txt": 1
+ },
+ "beir_cqadupstack_english_22603": {
+  "6c/4416.txt": 1,
+  "93/190235.txt": 1,
+  "94/145448.txt": 1,
+  "d9/46398.txt": 1,
+  "e1/653.txt": 1
+ },
+ "beir_cqadupstack_english_22650": {
+  "ec/146994.txt": 1
+ },
+ "beir_cqadupstack_english_2288": {
+  "03/32256.txt": 1,
+  "22/70360.txt": 1
+ },
+ "beir_cqadupstack_english_2293": {
+  "06/40176.txt": 1,
+  "39/79641.txt": 1,
+  "b1/61502.txt": 1
+ },
+ "beir_cqadupstack_english_22955": {
+  "0c/130549.txt": 1,
+  "0f/139866.txt": 1,
+  "12/10020.txt": 1,
+  "23/14593.txt": 1,
+  "33/130619.txt": 1,
+  "5f/130731.txt": 1,
+  "c0/137903.txt": 1,
+  "e6/129651.txt": 1
+ },
+ "beir_cqadupstack_english_22984": {
+  "23/48734.txt": 1,
+  "7c/66653.txt": 1,
+  "8b/32118.txt": 1
+ },
+ "beir_cqadupstack_english_23482": {
+  "21/160688.txt": 1
+ },
+ "beir_cqadupstack_english_23509": {
+  "04/21498.txt": 1,
+  "2e/145963.txt": 1,
+  "45/171988.txt": 1,
+  "67/192662.txt": 1,
+  "7c/25075.txt": 1,
+  "8d/148339.txt": 1,
+  "b5/32591.txt": 1
+ },
+ "beir_cqadupstack_english_23648": {
+  "12/81451.txt": 1
+ },
+ "beir_cqadupstack_english_23690": {
+  "55/65010.txt": 1,
+  "b6/124505.txt": 1
+ },
+ "beir_cqadupstack_english_23824": {
+  "90/9164.txt": 1
+ },
+ "beir_cqadupstack_english_23936": {
+  "74/52683.txt": 1
+ },
+ "beir_cqadupstack_english_23970": {
+  "6e/178153.txt": 1,
+  "c1/35833.txt": 1
+ },
+ "beir_cqadupstack_english_2412": {
+  "4e/896.txt": 1
+ },
+ "beir_cqadupstack_english_24124": {
+  "e5/18966.txt": 1
+ },
+ "beir_cqadupstack_english_2423": {
+  "4c/126656.txt": 1,
+  "64/56915.txt": 1,
+  "9d/531.txt": 1
+ },
+ "beir_cqadupstack_english_2426": {
+  "6a/29603.txt": 1,
+  "9b/6639.txt": 1
+ },
+ "beir_cqadupstack_english_24413": {
+  "28/28770.txt": 1,
+  "33/70971.txt": 1
+ },
+ "beir_cqadupstack_english_24441": {
+  "99/25040.txt": 1
+ },
+ "beir_cqadupstack_english_24471": {
+  "e0/57965.txt": 1
+ },
+ "beir_cqadupstack_english_24525": {
+  "2f/138695.txt": 1,
+  "c1/192911.txt": 1
+ },
+ "beir_cqadupstack_english_24629": {
+  "8f/80493.txt": 1,
+  "97/62287.txt": 1,
+  "97/9986.txt": 1
+ },
+ "beir_cqadupstack_english_2466": {
+  "8e/92.txt": 1,
+  "c5/140755.txt": 1,
+  "e9/134148.txt": 1,
+  "f4/35577.txt": 1
+ },
+ "beir_cqadupstack_english_2470": {
+  "71/63300.txt": 1
+ },
+ "beir_cqadupstack_english_24768": {
+  "6b/84584.txt": 1
+ },
+ "beir_cqadupstack_english_24933": {
+  "cb/43231.txt": 1
+ },
+ "beir_cqadupstack_english_2502": {
+  "8d/187631.txt": 1,
+  "9d/187125.txt": 1
+ },
+ "beir_cqadupstack_english_25116": {
+  "36/15550.txt": 1,
+  "c6/190600.txt": 1
+ },
+ "beir_cqadupstack_english_25147": {
+  "bb/195371.txt": 1,
+  "e7/140295.txt": 1
+ },
+ "beir_cqadupstack_english_25182": {
+  "e9/1289.txt": 1
+ },
+ "beir_cqadupstack_english_25230": {
+  "02/18867.txt": 1,
+  "80/146770.txt": 1,
+  "ad/150180.txt": 1,
+  "ca/155177.txt": 1,
+  "cc/146173.txt": 1
+ },
+ "beir_cqadupstack_english_25232": {
+  "fe/90480.txt": 1
+ },
+ "beir_cqadupstack_english_25259": {
+  "7c/137045.txt": 1,
+  "e1/3903.txt": 1
+ },
+ "beir_cqadupstack_english_25380": {
+  "0d/187358.txt": 1,
+  "13/67148.txt": 1,
+  "1f/11816.txt": 1,
+  "39/145932.txt": 1,
+  "6f/19074.txt": 1,
+  "75/148580.txt": 1
+ },
+ "beir_cqadupstack_english_25400": {
+  "98/155260.txt": 1,
+  "d0/177415.txt": 1,
+  "e7/9700.txt": 1
+ },
+ "beir_cqadupstack_english_25464": {
+  "1d/148334.txt": 1
+ },
+ "beir_cqadupstack_english_2554": {
+  "10/95995.txt": 1
+ },
+ "beir_cqadupstack_english_25617": {
+  "bd/108213.txt": 1
+ },
+ "beir_cqadupstack_english_25724": {
+  "dc/50461.txt": 1
+ },
+ "beir_cqadupstack_english_258": {
+  "73/60765.txt": 1,
+  "7f/143488.txt": 1,
+  "8b/155873.txt": 1
+ },
+ "beir_cqadupstack_english_25873": {
+  "1e/10614.txt": 1,
+  "ef/92032.txt": 1
+ },
+ "beir_cqadupstack_english_25887": {
+  "03/141332.txt": 1
+ },
+ "beir_cqadupstack_english_25956": {
+  "36/112118.txt": 1
+ },
+ "beir_cqadupstack_english_26082": {
+  "4c/644.txt": 1
+ },
+ "beir_cqadupstack_english_26142": {
+  "b1/4075.txt": 1
+ },
+ "beir_cqadupstack_english_26158": {
+  "ff/30001.txt": 1
+ },
+ "beir_cqadupstack_english_26246": {
+  "06/116108.txt": 1
+ },
+ "beir_cqadupstack_english_26262": {
+  "1a/131515.txt": 1,
+  "8f/22459.txt": 1,
+  "b6/79780.txt": 1
+ },
+ "beir_cqadupstack_english_263": {
+  "e3/146657.txt": 1
+ },
+ "beir_cqadupstack_english_2631": {
+  "2e/106780.txt": 1,
+  "58/26450.txt": 1,
+  "a7/20479.txt": 1,
+  "f2/66113.txt": 1
+ },
+ "beir_cqadupstack_english_26327": {
+  "0b/123208.txt": 1
+ },
+ "beir_cqadupstack_english_2635": {
+  "2d/129648.txt": 1
+ },
+ "beir_cqadupstack_english_26385": {
+  "ff/186281.txt": 1
+ },
+ "beir_cqadupstack_english_26451": {
+  "b9/189788.txt": 1
+ },
+ "beir_cqadupstack_english_26491": {
+  "64/121915.txt": 1
+ },
+ "beir_cqadupstack_english_26498": {
+  "0a/190320.txt": 1
+ },
+ "beir_cqadupstack_english_26611": {
+  "00/1931.txt": 1,
+  "02/139956.txt": 1,
+  "0a/58248.txt": 1,
+  "1f/22723.txt": 1,
+  "29/181842.txt": 1,
+  "35/146255.txt": 1,
+  "63/80251.txt": 1,
+  "6b/144468.txt": 1,
+  "6c/9735.txt": 1,
+  "75/38293.txt": 1,
+  "c0/13073.txt": 1
+ },
+ "beir_cqadupstack_english_26621": {
+  "6f/32510.txt": 1
+ },
+ "beir_cqadupstack_english_270": {
+  "83/26168.txt": 1,
+  "b9/103914.txt": 1,
+  "e9/13135.txt": 1
+ },
+ "beir_cqadupstack_english_27021": {
+  "63/54076.txt": 1
+ },
+ "beir_cqadupstack_english_27113": {
+  "b1/104080.txt": 1
+ },
+ "beir_cqadupstack_english_27270": {
+  "f1/38942.txt": 1
+ },
+ "beir_cqadupstack_english_2743": {
+  "fc/65804.txt": 1
+ },
+ "beir_cqadupstack_english_27563": {
+  "d6/42847.txt": 1
+ },
+ "beir_cqadupstack_english_27640": {
+  "83/59630.txt": 1
+ },
+ "beir_cqadupstack_english_27674": {
+  "ca/154186.txt": 1
+ },
+ "beir_cqadupstack_english_27753": {
+  "ca/48838.txt": 1
+ },
+ "beir_cqadupstack_english_27918": {
+  "df/44163.txt": 1
+ },
+ "beir_cqadupstack_english_27947": {
+  "eb/46484.txt": 1,
+  "f6/15634.txt": 1,
+  "f6/81649.txt": 1
+ },
+ "beir_cqadupstack_english_28088": {
+  "d5/39687.txt": 1
+ },
+ "beir_cqadupstack_english_28171": {
+  "a2/165051.txt": 1,
+  "d5/4522.txt": 1
+ },
+ "beir_cqadupstack_english_28177": {
+  "e7/150837.txt": 1
+ },
+ "beir_cqadupstack_english_28309": {
+  "3b/121788.txt": 1
+ },
+ "beir_cqadupstack_english_2836": {
+  "78/106884.txt": 1
+ },
+ "beir_cqadupstack_english_286": {
+  "a7/59137.txt": 1
+ },
+ "beir_cqadupstack_english_28601": {
+  "fa/59314.txt": 1
+ },
+ "beir_cqadupstack_english_28661": {
+  "8e/114045.txt": 1
+ },
+ "beir_cqadupstack_english_28662": {
+  "1e/57954.txt": 1,
+  "5e/174628.txt": 1,
+  "7d/68919.txt": 1,
+  "b8/155253.txt": 1,
+  "cf/65023.txt": 1,
+  "e9/158114.txt": 1
+ },
+ "beir_cqadupstack_english_28671": {
+  "9d/93102.txt": 1
+ },
+ "beir_cqadupstack_english_28729": {
+  "63/25931.txt": 1
+ },
+ "beir_cqadupstack_english_28824": {
+  "f6/192991.txt": 1
+ },
+ "beir_cqadupstack_english_28866": {
+  "45/124926.txt": 1
+ },
+ "beir_cqadupstack_english_2903": {
+  "36/93127.txt": 1,
+  "4a/28383.txt": 1,
+  "53/90223.txt": 1,
+  "62/140594.txt": 1,
+  "6f/114387.txt": 1,
+  "85/68660.txt": 1,
+  "9c/16027.txt": 1,
+  "aa/9063.txt": 1,
+  "ba/89756.txt": 1,
+  "bc/55026.txt": 1,
+  "dd/54745.txt": 1
+ },
+ "beir_cqadupstack_english_29409": {
+  "47/187693.txt": 1,
+  "f3/92111.txt": 1
+ },
+ "beir_cqadupstack_english_29472": {
+  "f7/5392.txt": 1
+ },
+ "beir_cqadupstack_english_29475": {
+  "e0/16439.txt": 1
+ },
+ "beir_cqadupstack_english_29559": {
+  "cd/31271.txt": 1
+ },
+ "beir_cqadupstack_english_29593": {
+  "3e/114937.txt": 1
+ },
+ "beir_cqadupstack_english_29805": {
+  "6b/133731.txt": 1
+ },
+ "beir_cqadupstack_english_30011": {
+  "83/64605.txt": 1
+ },
+ "beir_cqadupstack_english_30321": {
+  "11/2321.txt": 1
+ },
+ "beir_cqadupstack_english_30336": {
+  "0c/102868.txt": 1,
+  "12/162229.txt": 1,
+  "1c/185352.txt": 1,
+  "1f/138478.txt": 1,
+  "24/96767.txt": 1,
+  "25/7611.txt": 1,
+  "29/5552.txt": 1,
+  "2b/16511.txt": 1,
+  "2b/3447.txt": 1,
+  "35/38635.txt": 1,
+  "3f/4120.txt": 1,
+  "40/33689.txt": 1,
+  "43/192024.txt": 1,
+  "46/71248.txt": 1,
+  "48/38593.txt": 1,
+  "4b/144486.txt": 1,
+  "51/36337.txt": 1,
+  "55/154869.txt": 1,
+  "58/29339.txt": 1,
+  "5d/125691.txt": 1,
+  "5f/156369.txt": 1,
+  "5f/194591.txt": 1,
+  "62/110601.txt": 1,
+  "63/36834.txt": 1,
+  "64/194155.txt": 1,
+  "69/47968.txt": 1,
+  "70/5359.txt": 1,
+  "71/152566.txt": 1,
+  "71/33024.txt": 1,
+  "78/62325.txt": 1,
+  "79/17636.txt": 1,
+  "7f/118881.txt": 1,
+  "80/96718.txt": 1,
+  "81/4556.txt": 1,
+  "81/79336.txt": 1,
+  "85/143363.txt": 1,
+  "8d/48397.txt": 1,
+  "91/1133.txt": 1,
+  "97/313.txt": 1,
+  "98/76412.txt": 1,
+  "99/10643.txt": 1,
+  "9a/59618.txt": 1,
+  "9b/121469.txt": 1,
+  "9d/43413.txt": 1,
+  "9f/157771.txt": 1,
+  "9f/4032.txt": 1,
+  "9f/81003.txt": 1,
+  "a2/137872.txt": 1,
+  "a3/95821.txt": 1,
+  "a5/120410.txt": 1,
+  "a5/68490.txt": 1,
+  "a7/189448.txt": 1,
+  "a9/103699.txt": 1,
+  "ae/100946.txt": 1,
+  "b1/90577.txt": 1,
+  "b2/17083.txt": 1,
+  "b3/189411.txt": 1,
+  "b6/146257.txt": 1,
+  "be/161977.txt": 1,
+  "be/45751.txt": 1,
+  "c1/121198.txt": 1,
+  "c4/14294.txt": 1,
+  "c5/2234.txt": 1,
+  "c8/26728.txt": 1,
+  "d0/125477.txt": 1,
+  "d1/126566.txt": 1,
+  "d5/188908.txt": 1,
+  "d7/131863.txt": 1,
+  "e2/8353.txt": 1,
+  "e4/84286.txt": 1,
+  "e9/90476.txt": 1,
+  "ea/77459.txt": 1,
+  "ee/32439.txt": 1,
+  "f0/116677.txt": 1,
+  "f2/14901.txt": 1,
+  "f7/53390.txt": 1,
+  "fb/25312.txt": 1,
+  "fb/85252.txt": 1,
+  "fd/1047.txt": 1
+ },
+ "beir_cqadupstack_english_30385": {
+  "33/63188.txt": 1,
+  "38/38716.txt": 1,
+  "52/160330.txt": 1,
+  "76/161813.txt": 1,
+  "7d/33095.txt": 1,
+  "99/116447.txt": 1,
+  "ae/145878.txt": 1,
+  "cd/66457.txt": 1,
+  "d4/23541.txt": 1,
+  "db/43085.txt": 1,
+  "ea/106985.txt": 1,
+  "ea/79803.txt": 1,
+  "eb/174729.txt": 1,
+  "f8/66198.txt": 1
+ },
+ "beir_cqadupstack_english_30422": {
+  "a2/29940.txt": 1,
+  "f2/111912.txt": 1
+ },
+ "beir_cqadupstack_english_30482": {
+  "99/9749.txt": 1
+ },
+ "beir_cqadupstack_english_30608": {
+  "31/29374.txt": 1
+ },
+ "beir_cqadupstack_english_30800": {
+  "66/133535.txt": 1,
+  "78/126089.txt": 1
+ },
+ "beir_cqadupstack_english_31033": {
+  "6f/60230.txt": 1,
+  "97/6414.txt": 1
+ },
+ "beir_cqadupstack_english_31060": {
+  "94/4316.txt": 1,
+  "ec/92248.txt": 1
+ },
+ "beir_cqadupstack_english_31142": {
+  "f2/63468.txt": 1
+ },
+ "beir_cqadupstack_english_31184": {
+  "2b/2516.txt": 1,
+  "77/42697.txt": 1
+ },
+ "beir_cqadupstack_english_3123": {
+  "9b/44102.txt": 1
+ },
+ "beir_cqadupstack_english_3139": {
+  "60/127507.txt": 1,
+  "72/14537.txt": 1,
+  "dc/131507.txt": 1
+ },
+ "beir_cqadupstack_english_31391": {
+  "c7/81189.txt": 1
+ },
+ "beir_cqadupstack_english_315": {
+  "16/193258.txt": 1,
+  "32/24337.txt": 1,
+  "85/24037.txt": 1,
+  "dc/188902.txt": 1
+ },
+ "beir_cqadupstack_english_31566": {
+  "8b/40259.txt": 1
+ },
+ "beir_cqadupstack_english_31644": {
+  "d5/93903.txt": 1
+ },
+ "beir_cqadupstack_english_31918": {
+  "ee/112830.txt": 1
+ },
+ "beir_cqadupstack_english_32058": {
+  "e2/190214.txt": 1
+ },
+ "beir_cqadupstack_english_32060": {
+  "d9/157768.txt": 1
+ },
+ "beir_cqadupstack_english_32123": {
+  "2f/64988.txt": 1,
+  "37/134411.txt": 1
+ },
+ "beir_cqadupstack_english_32291": {
+  "6b/27045.txt": 1
+ },
+ "beir_cqadupstack_english_3230": {
+  "09/150118.txt": 1,
+  "9a/73994.txt": 1
+ },
+ "beir_cqadupstack_english_32311": {
+  "36/131230.txt": 1,
+  "d9/2809.txt": 1
+ },
+ "beir_cqadupstack_english_3232": {
+  "21/67988.txt": 1
+ },
+ "beir_cqadupstack_english_32390": {
+  "f5/117627.txt": 1
+ },
+ "beir_cqadupstack_english_32438": {
+  "e1/130555.txt": 1
+ },
+ "beir_cqadupstack_english_3259": {
+  "c6/82903.txt": 1
+ },
+ "beir_cqadupstack_english_32716": {
+  "4b/106837.txt": 1
+ },
+ "beir_cqadupstack_english_32838": {
+  "17/110326.txt": 1
+ },
+ "beir_cqadupstack_english_32976": {
+  "3f/91807.txt": 1
+ },
+ "beir_cqadupstack_english_33036": {
+  "07/18144.txt": 1,
+  "0c/125.txt": 1,
+  "3c/194270.txt": 1,
+  "5d/31777.txt": 1,
+  "68/141216.txt": 1,
+  "80/42850.txt": 1,
+  "99/68621.txt": 1,
+  "a2/5653.txt": 1,
+  "af/5219.txt": 1
+ },
+ "beir_cqadupstack_english_33083": {
+  "7f/25858.txt": 1
+ },
+ "beir_cqadupstack_english_33114": {
+  "11/112063.txt": 1,
+  "8b/7986.txt": 1,
+  "96/16244.txt": 1,
+  "d6/111616.txt": 1,
+  "e6/42641.txt": 1
+ },
+ "beir_cqadupstack_english_33284": {
+  "06/31980.txt": 1
+ },
+ "beir_cqadupstack_english_3331": {
+  "f9/165512.txt": 1
+ },
+ "beir_cqadupstack_english_33652": {
+  "35/54214.txt": 1
+ },
+ "beir_cqadupstack_english_33786": {
+  "91/1819.txt": 1
+ },
+ "beir_cqadupstack_english_33866": {
+  "87/156560.txt": 1
+ },
+ "beir_cqadupstack_english_33910": {
+  "b9/181419.txt": 1
+ },
+ "beir_cqadupstack_english_33914": {
+  "33/184549.txt": 1,
+  "4f/86760.txt": 1
+ },
+ "beir_cqadupstack_english_33960": {
+  "fc/188278.txt": 1
+ },
+ "beir_cqadupstack_english_33988": {
+  "e9/172186.txt": 1
+ },
+ "beir_cqadupstack_english_3402": {
+  "5a/139054.txt": 1,
+  "f5/4080.txt": 1
+ },
+ "beir_cqadupstack_english_34037": {
+  "0c/47785.txt": 1,
+  "21/11891.txt": 1,
+  "2a/707.txt": 1,
+  "2c/2966.txt": 1,
+  "5e/23052.txt": 1,
+  "d8/4656.txt": 1,
+  "f8/11788.txt": 1
+ },
+ "beir_cqadupstack_english_34246": {
+  "57/29170.txt": 1
+ },
+ "beir_cqadupstack_english_34291": {
+  "3e/25662.txt": 1
+ },
+ "beir_cqadupstack_english_34356": {
+  "04/94356.txt": 1,
+  "15/156340.txt": 1,
+  "b5/177683.txt": 1
+ },
+ "beir_cqadupstack_english_34396": {
+  "be/129292.txt": 1
+ },
+ "beir_cqadupstack_english_3452": {
+  "ab/151049.txt": 1
+ },
+ "beir_cqadupstack_english_34712": {
+  "18/69913.txt": 1,
+  "76/113121.txt": 1
+ },
+ "beir_cqadupstack_english_3480": {
+  "78/122462.txt": 1
+ },
+ "beir_cqadupstack_english_34812": {
+  "b6/48268.txt": 1
+ },
+ "beir_cqadupstack_english_34816": {
+  "a7/10143.txt": 1
+ },
+ "beir_cqadupstack_english_35156": {
+  "28/48407.txt": 1
+ },
+ "beir_cqadupstack_english_35207": {
+  "93/8767.txt": 1,
+  "e1/69059.txt": 1
+ },
+ "beir_cqadupstack_english_35214": {
+  "dd/72135.txt": 1,
+  "ea/26423.txt": 1
+ },
+ "beir_cqadupstack_english_35359": {
+  "b3/27294.txt": 1
+ },
+ "beir_cqadupstack_english_35440": {
+  "13/43659.txt": 1
+ },
+ "beir_cqadupstack_english_35586": {
+  "47/189050.txt": 1
+ },
+ "beir_cqadupstack_english_35670": {
+  "09/117999.txt": 1
+ },
+ "beir_cqadupstack_english_35709": {
+  "ba/76126.txt": 1,
+  "d9/118205.txt": 1
+ },
+ "beir_cqadupstack_english_3572": {
+  "e3/88415.txt": 1
+ },
+ "beir_cqadupstack_english_3578": {
+  "29/137230.txt": 1,
+  "32/24219.txt": 1,
+  "4b/75923.txt": 1,
+  "51/174447.txt": 1,
+  "6f/123249.txt": 1,
+  "88/52582.txt": 1,
+  "95/96197.txt": 1,
+  "a6/32770.txt": 1,
+  "d1/106257.txt": 1,
+  "d7/111904.txt": 1,
+  "d9/131952.txt": 1,
+  "db/75186.txt": 1,
+  "e7/46928.txt": 1
+ },
+ "beir_cqadupstack_english_35806": {
+  "97/96996.txt": 1
+ },
+ "beir_cqadupstack_english_35923": {
+  "18/3700.txt": 1,
+  "22/70358.txt": 1,
+  "77/131414.txt": 1,
+  "85/292.txt": 1,
+  "8f/55352.txt": 1,
+  "ff/43346.txt": 1
+ },
+ "beir_cqadupstack_english_36027": {
+  "f2/79887.txt": 1
+ },
+ "beir_cqadupstack_english_36039": {
+  "4b/41143.txt": 1,
+  "b0/21673.txt": 1
+ },
+ "beir_cqadupstack_english_3623": {
+  "0c/34331.txt": 1,
+  "23/160379.txt": 1,
+  "3e/53728.txt": 1,
+  "52/164945.txt": 1,
+  "60/19340.txt": 1,
+  "84/186875.txt": 1,
+  "b5/30075.txt": 1,
+  "fd/82842.txt": 1
+ },
+ "beir_cqadupstack_english_36245": {
+  "c9/14753.txt": 1
+ },
+ "beir_cqadupstack_english_36263": {
+  "3f/33532.txt": 1
+ },
+ "beir_cqadupstack_english_36460": {
+  "63/35389.txt": 1
+ },
+ "beir_cqadupstack_english_36512": {
+  "3a/107520.txt": 1
+ },
+ "beir_cqadupstack_english_36670": {
+  "0c/11679.txt": 1
+ },
+ "beir_cqadupstack_english_36843": {
+  "1e/40040.txt": 1
+ },
+ "beir_cqadupstack_english_3694": {
+  "47/92400.txt": 1
+ },
+ "beir_cqadupstack_english_3713": {
+  "b5/76083.txt": 1
+ },
+ "beir_cqadupstack_english_37211": {
+  "cf/130059.txt": 1
+ },
+ "beir_cqadupstack_english_37270": {
+  "c5/10328.txt": 1,
+  "e3/174325.txt": 1
+ },
+ "beir_cqadupstack_english_37274": {
+  "f2/181601.txt": 1,
+  "f2/36885.txt": 1
+ },
+ "beir_cqadupstack_english_37394": {
+  "0d/54394.txt": 1,
+  "5f/85174.txt": 1,
+  "b6/95541.txt": 1
+ },
+ "beir_cqadupstack_english_37513": {
+  "41/142356.txt": 1,
+  "52/8917.txt": 1,
+  "ab/57633.txt": 1,
+  "d4/39126.txt": 1
+ },
+ "beir_cqadupstack_english_37703": {
+  "08/10316.txt": 1
+ },
+ "beir_cqadupstack_english_37856": {
+  "39/124139.txt": 1
+ },
+ "beir_cqadupstack_english_37958": {
+  "85/10687.txt": 1,
+  "86/144463.txt": 1
+ },
+ "beir_cqadupstack_english_3798": {
+  "e1/46273.txt": 1
+ },
+ "beir_cqadupstack_english_37982": {
+  "16/166544.txt": 1,
+  "bb/86774.txt": 1
+ },
+ "beir_cqadupstack_english_38161": {
+  "27/139733.txt": 1
+ },
+ "beir_cqadupstack_english_38260": {
+  "bf/88157.txt": 1
+ },
+ "beir_cqadupstack_english_38388": {
+  "ac/154914.txt": 1
+ },
+ "beir_cqadupstack_english_385": {
+  "74/85038.txt": 1
+ },
+ "beir_cqadupstack_english_38566": {
+  "17/7025.txt": 1
+ },
+ "beir_cqadupstack_english_38606": {
+  "27/22293.txt": 1,
+  "57/75017.txt": 1,
+  "e1/189071.txt": 1
+ },
+ "beir_cqadupstack_english_38730": {
+  "b6/113972.txt": 1
+ },
+ "beir_cqadupstack_english_389": {
+  "ba/78384.txt": 1
+ },
+ "beir_cqadupstack_english_39424": {
+  "26/3885.txt": 1,
+  "37/109924.txt": 1
+ },
+ "beir_cqadupstack_english_39551": {
+  "99/195535.txt": 1
+ },
+ "beir_cqadupstack_english_396": {
+  "89/19927.txt": 1
+ },
+ "beir_cqadupstack_english_3964": {
+  "ae/3962.txt": 1
+ },
+ "beir_cqadupstack_english_39755": {
+  "16/166193.txt": 1,
+  "53/689.txt": 1,
+  "5c/50390.txt": 1,
+  "94/112865.txt": 1,
+  "e1/50.txt": 1,
+  "ff/152295.txt": 1,
+  "ff/36690.txt": 1
+ },
+ "beir_cqadupstack_english_3977": {
+  "78/118198.txt": 1
+ },
+ "beir_cqadupstack_english_39886": {
+  "21/50057.txt": 1
+ },
+ "beir_cqadupstack_english_39995": {
+  "93/61811.txt": 1
+ },
+ "beir_cqadupstack_english_4009": {
+  "b1/100734.txt": 1
+ },
+ "beir_cqadupstack_english_40341": {
+  "e8/141387.txt": 1
+ },
+ "beir_cqadupstack_english_40418": {
+  "3a/191909.txt": 1
+ },
+ "beir_cqadupstack_english_40610": {
+  "12/194996.txt": 1
+ },
+ "beir_cqadupstack_english_40810": {
+  "3a/2640.txt": 1,
+  "5d/77623.txt": 1
+ },
+ "beir_cqadupstack_english_40968": {
+  "03/67963.txt": 1,
+  "78/6758.txt": 1
+ },
+ "beir_cqadupstack_english_41078": {
+  "2c/142745.txt": 1
+ },
+ "beir_cqadupstack_english_41147": {
+  "7d/187182.txt": 1
+ },
+ "beir_cqadupstack_english_4119": {
+  "6c/84397.txt": 1
+ },
+ "beir_cqadupstack_english_4146": {
+  "31/165320.txt": 1,
+  "9c/33297.txt": 1
+ },
+ "beir_cqadupstack_english_41695": {
+  "30/44210.txt": 1
+ },
+ "beir_cqadupstack_english_4184": {
+  "f6/181359.txt": 1
+ },
+ "beir_cqadupstack_english_41907": {
+  "1c/165661.txt": 1
+ },
+ "beir_cqadupstack_english_41972": {
+  "4c/185034.txt": 1
+ },
+ "beir_cqadupstack_english_41995": {
+  "6d/116822.txt": 1
+ },
+ "beir_cqadupstack_english_42097": {
+  "5d/62385.txt": 1
+ },
+ "beir_cqadupstack_english_42120": {
+  "13/13493.txt": 1,
+  "2b/42458.txt": 1,
+  "91/6114.txt": 1
+ },
+ "beir_cqadupstack_english_42141": {
+  "7a/22580.txt": 1
+ },
+ "beir_cqadupstack_english_42176": {
+  "b5/145065.txt": 1
+ },
+ "beir_cqadupstack_english_42358": {
+  "23/144972.txt": 1,
+  "92/70178.txt": 1
+ },
+ "beir_cqadupstack_english_42633": {
+  "0a/132612.txt": 1
+ },
+ "beir_cqadupstack_english_4274": {
+  "6e/102039.txt": 1
+ },
+ "beir_cqadupstack_english_42800": {
+  "01/128410.txt": 1,
+  "c2/60457.txt": 1,
+  "ff/8382.txt": 1
+ },
+ "beir_cqadupstack_english_42871": {
+  "07/77522.txt": 1
+ },
+ "beir_cqadupstack_english_42966": {
+  "55/33860.txt": 1
+ },
+ "beir_cqadupstack_english_43056": {
+  "25/78004.txt": 1
+ },
+ "beir_cqadupstack_english_43152": {
+  "5b/31163.txt": 1,
+  "61/5775.txt": 1,
+  "cd/2459.txt": 1,
+  "db/18556.txt": 1,
+  "f5/37827.txt": 1
+ },
+ "beir_cqadupstack_english_43771": {
+  "2d/48940.txt": 1
+ },
+ "beir_cqadupstack_english_43859": {
+  "11/174084.txt": 1,
+  "12/101927.txt": 1,
+  "1c/129554.txt": 1,
+  "1f/139913.txt": 1,
+  "1f/24163.txt": 1,
+  "23/56253.txt": 1,
+  "45/138029.txt": 1,
+  "4c/191966.txt": 1,
+  "59/130765.txt": 1,
+  "5e/5407.txt": 1,
+  "65/68365.txt": 1,
+  "6e/20420.txt": 1,
+  "82/120689.txt": 1,
+  "8d/329.txt": 1,
+  "92/101935.txt": 1,
+  "9f/27976.txt": 1,
+  "a9/79300.txt": 1,
+  "c5/140163.txt": 1,
+  "fd/79962.txt": 1
+ },
+ "beir_cqadupstack_english_43972": {
+  "14/69297.txt": 1,
+  "6b/52331.txt": 1
+ },
+ "beir_cqadupstack_english_4411": {
+  "d6/52094.txt": 1
+ },
+ "beir_cqadupstack_english_4419": {
+  "4b/14466.txt": 1,
+  "ed/134494.txt": 1
+ },
+ "beir_cqadupstack_english_44196": {
+  "f0/37698.txt": 1
+ },
+ "beir_cqadupstack_english_44223": {
+  "99/42666.txt": 1
+ },
+ "beir_cqadupstack_english_44227": {
+  "32/102273.txt": 1
+ },
+ "beir_cqadupstack_english_44328": {
+  "c6/43166.txt": 1
+ },
+ "beir_cqadupstack_english_44362": {
+  "18/122029.txt": 1,
+  "b4/166793.txt": 1,
+  "de/7893.txt": 1,
+  "ec/25310.txt": 1,
+  "f7/7594.txt": 1
+ },
+ "beir_cqadupstack_english_44452": {
+  "66/161388.txt": 1
+ },
+ "beir_cqadupstack_english_44588": {
+  "e8/164460.txt": 1
+ },
+ "beir_cqadupstack_english_44714": {
+  "c6/14396.txt": 1
+ },
+ "beir_cqadupstack_english_44736": {
+  "c4/196070.txt": 1
+ },
+ "beir_cqadupstack_english_44942": {
+  "98/103176.txt": 1
+ },
+ "beir_cqadupstack_english_44945": {
+  "45/44890.txt": 1
+ },
+ "beir_cqadupstack_english_45053": {
+  "07/133858.txt": 1
+ },
+ "beir_cqadupstack_english_45132": {
+  "f6/100204.txt": 1
+ },
+ "beir_cqadupstack_english_45225": {
+  "5f/66854.txt": 1,
+  "f3/65519.txt": 1
+ },
+ "beir_cqadupstack_english_45412": {
+  "98/51675.txt": 1
+ },
+ "beir_cqadupstack_english_45445": {
+  "03/52276.txt": 1,
+  "42/85370.txt": 1,
+  "83/37636.txt": 1,
+  "a4/79390.txt": 1,
+  "eb/69921.txt": 1
+ },
+ "beir_cqadupstack_english_456": {
+  "b7/119587.txt": 1
+ },
+ "beir_cqadupstack_english_4562": {
+  "3f/124723.txt": 1
+ },
+ "beir_cqadupstack_english_45630": {
+  "b9/24604.txt": 1
+ },
+ "beir_cqadupstack_english_4576": {
+  "8a/81242.txt": 1
+ },
+ "beir_cqadupstack_english_45886": {
+  "3e/153430.txt": 1,
+  "8b/196092.txt": 1,
+  "a5/57193.txt": 1
+ },
+ "beir_cqadupstack_english_46163": {
+  "4e/126187.txt": 1,
+  "ef/143195.txt": 1
+ },
+ "beir_cqadupstack_english_4618": {
+  "89/116336.txt": 1
+ },
+ "beir_cqadupstack_english_46235": {
+  "85/130081.txt": 1
+ },
+ "beir_cqadupstack_english_46306": {
+  "f9/6170.txt": 1
+ },
+ "beir_cqadupstack_english_46829": {
+  "8a/73233.txt": 1
+ },
+ "beir_cqadupstack_english_46842": {
+  "fd/185401.txt": 1
+ },
+ "beir_cqadupstack_english_46867": {
+  "6b/66546.txt": 1
+ },
+ "beir_cqadupstack_english_472": {
+  "c3/190307.txt": 1,
+  "fd/195383.txt": 1
+ },
+ "beir_cqadupstack_english_47399": {
+  "ee/166136.txt": 1
+ },
+ "beir_cqadupstack_english_47595": {
+  "84/177580.txt": 1
+ },
+ "beir_cqadupstack_english_4761": {
+  "49/100742.txt": 1,
+  "57/191911.txt": 1,
+  "62/89694.txt": 1,
+  "7c/134891.txt": 1,
+  "8e/2908.txt": 1,
+  "c9/64842.txt": 1,
+  "ca/2977.txt": 1,
+  "f3/23234.txt": 1,
+  "f8/29036.txt": 1,
+  "f9/15054.txt": 1
+ },
+ "beir_cqadupstack_english_4776": {
+  "0f/114311.txt": 1,
+  "e6/120332.txt": 1
+ },
+ "beir_cqadupstack_english_4781": {
+  "d8/141504.txt": 1
+ },
+ "beir_cqadupstack_english_47852": {
+  "e1/107116.txt": 1
+ },
+ "beir_cqadupstack_english_4823": {
+  "e4/91892.txt": 1
+ },
+ "beir_cqadupstack_english_48234": {
+  "e2/187398.txt": 1
+ },
+ "beir_cqadupstack_english_48352": {
+  "88/61515.txt": 1
+ },
+ "beir_cqadupstack_english_48383": {
+  "01/338.txt": 1,
+  "1f/170414.txt": 1,
+  "65/42745.txt": 1,
+  "98/3946.txt": 1,
+  "b9/85267.txt": 1
+ },
+ "beir_cqadupstack_english_48555": {
+  "28/48584.txt": 1
+ },
+ "beir_cqadupstack_english_4863": {
+  "5d/179017.txt": 1,
+  "7f/154864.txt": 1
+ },
+ "beir_cqadupstack_english_48704": {
+  "35/45663.txt": 1
+ },
+ "beir_cqadupstack_english_48872": {
+  "dd/60491.txt": 1
+ },
+ "beir_cqadupstack_english_4906": {
+  "3f/92701.txt": 1,
+  "66/119594.txt": 1
+ },
+ "beir_cqadupstack_english_49404": {
+  "73/85483.txt": 1
+ },
+ "beir_cqadupstack_english_49619": {
+  "2a/169383.txt": 1
+ },
+ "beir_cqadupstack_english_4965": {
+  "38/88490.txt": 1
+ },
+ "beir_cqadupstack_english_49666": {
+  "8e/114885.txt": 1
+ },
+ "beir_cqadupstack_english_4988": {
+  "1c/112016.txt": 1,
+  "6e/138508.txt": 1
+ },
+ "beir_cqadupstack_english_50117": {
+  "bc/68001.txt": 1
+ },
+ "beir_cqadupstack_english_5022": {
+  "e3/125335.txt": 1
+ },
+ "beir_cqadupstack_english_50266": {
+  "16/56869.txt": 1,
+  "59/35006.txt": 1
+ },
+ "beir_cqadupstack_english_50276": {
+  "29/193348.txt": 1
+ },
+ "beir_cqadupstack_english_50289": {
+  "66/50231.txt": 1
+ },
+ "beir_cqadupstack_english_50474": {
+  "69/161976.txt": 1
+ },
+ "beir_cqadupstack_english_5057": {
+  "11/134788.txt": 1,
+  "1c/178432.txt": 1,
+  "1d/9530.txt": 1,
+  "2a/57555.txt": 1,
+  "42/20168.txt": 1,
+  "44/15510.txt": 1,
+  "45/2705.txt": 1,
+  "55/13508.txt": 1,
+  "61/146361.txt": 1,
+  "67/660.txt": 1,
+  "71/114105.txt": 1,
+  "72/87354.txt": 1,
+  "7d/44706.txt": 1,
+  "7d/80723.txt": 1,
+  "7f/133365.txt": 1,
+  "83/19034.txt": 1,
+  "84/59848.txt": 1,
+  "99/57975.txt": 1,
+  "a2/75830.txt": 1,
+  "b2/68587.txt": 1,
+  "c8/30090.txt": 1,
+  "d0/111847.txt": 1,
+  "e0/131198.txt": 1,
+  "e2/93817.txt": 1,
+  "e8/46872.txt": 1,
+  "fa/132574.txt": 1
+ },
+ "beir_cqadupstack_english_50637": {
+  "61/49361.txt": 1
+ },
+ "beir_cqadupstack_english_50693": {
+  "9e/93717.txt": 1
+ },
+ "beir_cqadupstack_english_50740": {
+  "2c/186651.txt": 1
+ },
+ "beir_cqadupstack_english_50851": {
+  "27/66581.txt": 1
+ },
+ "beir_cqadupstack_english_5111": {
+  "0c/28425.txt": 1,
+  "12/155725.txt": 1,
+  "ca/87645.txt": 1
+ },
+ "beir_cqadupstack_english_51123": {
+  "6c/60445.txt": 1
+ },
+ "beir_cqadupstack_english_5128": {
+  "0f/28961.txt": 1
+ },
+ "beir_cqadupstack_english_51402": {
+  "50/22285.txt": 1,
+  "61/5804.txt": 1
+ },
+ "beir_cqadupstack_english_51480": {
+  "6c/65514.txt": 1
+ },
+ "beir_cqadupstack_english_51537": {
+  "10/66295.txt": 1,
+  "77/8656.txt": 1,
+  "7d/73673.txt": 1
+ },
+ "beir_cqadupstack_english_516": {
+  "a8/183169.txt": 1,
+  "e8/185243.txt": 1
+ },
+ "beir_cqadupstack_english_51637": {
+  "03/51686.txt": 1
+ },
+ "beir_cqadupstack_english_51652": {
+  "aa/53301.txt": 1
+ },
+ "beir_cqadupstack_english_51790": {
+  "5f/85286.txt": 1,
+  "75/44266.txt": 1,
+  "7c/193458.txt": 1,
+  "e3/63747.txt": 1
+ },
+ "beir_cqadupstack_english_51810": {
+  "08/117314.txt": 1
+ },
+ "beir_cqadupstack_english_51879": {
+  "00/44292.txt": 1
+ },
+ "beir_cqadupstack_english_51948": {
+  "d4/60860.txt": 1
+ },
+ "beir_cqadupstack_english_52057": {
+  "39/42597.txt": 1
+ },
+ "beir_cqadupstack_english_52112": {
+  "9d/100537.txt": 1
+ },
+ "beir_cqadupstack_english_52332": {
+  "07/132878.txt": 1
+ },
+ "beir_cqadupstack_english_52380": {
+  "a4/51930.txt": 1
+ },
+ "beir_cqadupstack_english_52408": {
+  "88/2075.txt": 1
+ },
+ "beir_cqadupstack_english_5248": {
+  "c1/39750.txt": 1,
+  "de/4604.txt": 1
+ },
+ "beir_cqadupstack_english_5252": {
+  "c9/141699.txt": 1
+ },
+ "beir_cqadupstack_english_52579": {
+  "6a/39482.txt": 1
+ },
+ "beir_cqadupstack_english_52750": {
+  "10/154200.txt": 1
+ },
+ "beir_cqadupstack_english_52901": {
+  "e3/10423.txt": 1
+ },
+ "beir_cqadupstack_english_53071": {
+  "05/983.txt": 1,
+  "17/181755.txt": 1,
+  "49/68433.txt": 1,
+  "6e/29564.txt": 1,
+  "b0/114250.txt": 1,
+  "bf/114998.txt": 1
+ },
+ "beir_cqadupstack_english_53546": {
+  "e5/19350.txt": 1
+ },
+ "beir_cqadupstack_english_53708": {
+  "6f/46544.txt": 1
+ },
+ "beir_cqadupstack_english_53730": {
+  "ec/29299.txt": 1
+ },
+ "beir_cqadupstack_english_53764": {
+  "56/158849.txt": 1,
+  "b9/158888.txt": 1,
+  "e4/158969.txt": 1
+ },
+ "beir_cqadupstack_english_53766": {
+  "a3/28317.txt": 1
+ },
+ "beir_cqadupstack_english_53826": {
+  "8e/32097.txt": 1
+ },
+ "beir_cqadupstack_english_53904": {
+  "01/146875.txt": 1
+ },
+ "beir_cqadupstack_english_53945": {
+  "4a/114315.txt": 1
+ },
+ "beir_cqadupstack_english_53950": {
+  "6a/5231.txt": 1,
+  "81/3131.txt": 1
+ },
+ "beir_cqadupstack_english_53955": {
+  "eb/31322.txt": 1
+ },
+ "beir_cqadupstack_english_54070": {
+  "1c/33155.txt": 1
+ },
+ "beir_cqadupstack_english_54166": {
+  "17/144290.txt": 1
+ },
+ "beir_cqadupstack_english_5419": {
+  "ae/143788.txt": 1
+ },
+ "beir_cqadupstack_english_54251": {
+  "3c/125894.txt": 1
+ },
+ "beir_cqadupstack_english_54309": {
+  "f2/36113.txt": 1
+ },
+ "beir_cqadupstack_english_54361": {
+  "7e/158165.txt": 1
+ },
+ "beir_cqadupstack_english_54373": {
+  "04/69610.txt": 1,
+  "17/27310.txt": 1,
+  "7d/36945.txt": 1
+ },
+ "beir_cqadupstack_english_54389": {
+  "03/39860.txt": 1
+ },
+ "beir_cqadupstack_english_54439": {
+  "6a/3382.txt": 1,
+  "de/95024.txt": 1
+ },
+ "beir_cqadupstack_english_54532": {
+  "d5/180813.txt": 1
+ },
+ "beir_cqadupstack_english_54819": {
+  "ea/88248.txt": 1
+ },
+ "beir_cqadupstack_english_54982": {
+  "0c/100221.txt": 1
+ },
+ "beir_cqadupstack_english_55052": {
+  "25/182481.txt": 1
+ },
+ "beir_cqadupstack_english_55245": {
+  "2c/57509.txt": 1,
+  "46/121753.txt": 1
+ },
+ "beir_cqadupstack_english_55404": {
+  "43/22429.txt": 1,
+  "5a/63363.txt": 1,
+  "8a/90706.txt": 1
+ },
+ "beir_cqadupstack_english_55420": {
+  "a5/115914.txt": 1,
+  "cf/63305.txt": 1
+ },
+ "beir_cqadupstack_english_55628": {
+  "a2/63552.txt": 1
+ },
+ "beir_cqadupstack_english_55702": {
+  "35/7610.txt": 1
+ },
+ "beir_cqadupstack_english_55711": {
+  "57/30605.txt": 1
+ },
+ "beir_cqadupstack_english_55762": {
+  "85/51037.txt": 1,
+  "9f/103717.txt": 1
+ },
+ "beir_cqadupstack_english_55968": {
+  "25/140525.txt": 1
+ },
+ "beir_cqadupstack_english_56019": {
+  "be/44528.txt": 1
+ },
+ "beir_cqadupstack_english_56095": {
+  "1b/146159.txt": 1
+ },
+ "beir_cqadupstack_english_56180": {
+  "16/44464.txt": 1
+ },
+ "beir_cqadupstack_english_5619": {
+  "75/23984.txt": 1,
+  "f6/91786.txt": 1
+ },
+ "beir_cqadupstack_english_56210": {
+  "a0/167525.txt": 1
+ },
+ "beir_cqadupstack_english_56350": {
+  "be/115773.txt": 1
+ },
+ "beir_cqadupstack_english_56471": {
+  "b0/103846.txt": 1
+ },
+ "beir_cqadupstack_english_5648": {
+  "45/71750.txt": 1,
+  "9e/145443.txt": 1
+ },
+ "beir_cqadupstack_english_56625": {
+  "4d/189228.txt": 1
+ },
+ "beir_cqadupstack_english_56639": {
+  "e3/78474.txt": 1
+ },
+ "beir_cqadupstack_english_57128": {
+  "65/58102.txt": 1,
+  "a5/27420.txt": 1,
+  "c0/90278.txt": 1,
+  "ee/52596.txt": 1
+ },
+ "beir_cqadupstack_english_57201": {
+  "89/57199.txt": 1
+ },
+ "beir_cqadupstack_english_57230": {
+  "0b/39383.txt": 1,
+  "c8/38964.txt": 1,
+  "fc/183117.txt": 1
+ },
+ "beir_cqadupstack_english_57241": {
+  "f3/24218.txt": 1
+ },
+ "beir_cqadupstack_english_57314": {
+  "af/70248.txt": 1
+ },
+ "beir_cqadupstack_english_5734": {
+  "76/16781.txt": 1,
+  "f0/80106.txt": 1
+ },
+ "beir_cqadupstack_english_57434": {
+  "02/36678.txt": 1,
+  "03/107571.txt": 1,
+  "08/52764.txt": 1,
+  "0e/103633.txt": 1,
+  "0e/84662.txt": 1,
+  "13/187348.txt": 1,
+  "19/107291.txt": 1,
+  "1b/7604.txt": 1,
+  "1c/22943.txt": 1,
+  "1d/121358.txt": 1,
+  "1d/143693.txt": 1,
+  "1f/1095.txt": 1,
+  "26/187216.txt": 1,
+  "2e/114126.txt": 1,
+  "30/132998.txt": 1,
+  "36/25027.txt": 1,
+  "38/21381.txt": 1,
+  "43/142792.txt": 1,
+  "49/88058.txt": 1,
+  "4d/192639.txt": 1,
+  "50/132338.txt": 1,
+  "55/15823.txt": 1,
+  "5e/132855.txt": 1,
+  "5f/195840.txt": 1,
+  "61/45551.txt": 1,
+  "65/39547.txt": 1,
+  "67/128100.txt": 1,
+  "6d/15212.txt": 1,
+  "75/3418.txt": 1,
+  "79/77895.txt": 1,
+  "79/8145.txt": 1,
+  "7a/169505.txt": 1,
+  "7b/169815.txt": 1,
+  "82/118619.txt": 1,
+  "83/143483.txt": 1,
+  "84/57235.txt": 1,
+  "91/35704.txt": 1,
+  "93/16776.txt": 1,
+  "94/186358.txt": 1,
+  "97/56977.txt": 1,
+  "9c/164078.txt": 1,
+  "a1/13274.txt": 1,
+  "b2/26028.txt": 1,
+  "b3/144227.txt": 1,
+  "b7/115270.txt": 1,
+  "b8/4595.txt": 1,
+  "ba/166615.txt": 1,
+  "c8/55435.txt": 1,
+  "ca/161880.txt": 1,
+  "d0/174511.txt": 1,
+  "db/68682.txt": 1,
+  "dd/143095.txt": 1,
+  "df/13269.txt": 1,
+  "df/187475.txt": 1,
+  "eb/78.txt": 1,
+  "f1/3215.txt": 1,
+  "f3/121648.txt": 1,
+  "f3/85572.txt": 1,
+  "f6/147122.txt": 1,
+  "f9/4916.txt": 1,
+  "fd/192295.txt": 1
+ },
+ "beir_cqadupstack_english_57488": {
+  "19/92203.txt": 1
+ },
+ "beir_cqadupstack_english_57613": {
+  "c9/160684.txt": 1
+ },
+ "beir_cqadupstack_english_57676": {
+  "6d/49102.txt": 1
+ },
+ "beir_cqadupstack_english_57747": {
+  "ce/63004.txt": 1
+ },
+ "beir_cqadupstack_english_57787": {
+  "00/130033.txt": 1,
+  "00/45274.txt": 1,
+  "02/35135.txt": 1,
+  "02/8150.txt": 1,
+  "08/177688.txt": 1,
+  "0b/30760.txt": 1,
+  "18/108455.txt": 1,
+  "19/192.txt": 1,
+  "1a/3485.txt": 1,
+  "1b/192098.txt": 1,
+  "22/26721.txt": 1,
+  "28/141951.txt": 1,
+  "2a/165316.txt": 1,
+  "33/158022.txt": 1,
+  "35/180478.txt": 1,
+  "37/74374.txt": 1,
+  "42/128994.txt": 1,
+  "44/14331.txt": 1,
+  "4b/148453.txt": 1,
+  "51/148636.txt": 1,
+  "54/103469.txt": 1,
+  "57/52431.txt": 1,
+  "5c/172528.txt": 1,
+  "5f/38250.txt": 1,
+  "64/48.txt": 1,
+  "67/161258.txt": 1,
+  "6c/4021.txt": 1,
+  "6f/24717.txt": 1,
+  "70/122291.txt": 1,
+  "84/122529.txt": 1,
+  "85/112814.txt": 1,
+  "85/117806.txt": 1,
+  "85/140566.txt": 1,
+  "88/97825.txt": 1,
+  "8a/117222.txt": 1,
+  "8a/162098.txt": 1,
+  "90/103776.txt": 1,
+  "90/188758.txt": 1,
+  "94/28890.txt": 1,
+  "94/57397.txt": 1,
+  "9d/93421.txt": 1,
+  "a4/43379.txt": 1,
+  "a7/22072.txt": 1,
+  "aa/11982.txt": 1,
+  "ae/180209.txt": 1,
+  "af/124449.txt": 1,
+  "bb/56567.txt": 1,
+  "bd/90509.txt": 1,
+  "bf/6854.txt": 1,
+  "c4/1425.txt": 1,
+  "cb/114263.txt": 1,
+  "cb/61391.txt": 1,
+  "d0/149671.txt": 1,
+  "d0/80583.txt": 1,
+  "d2/146848.txt": 1,
+  "d9/141894.txt": 1,
+  "df/90898.txt": 1,
+  "e4/68757.txt": 1,
+  "e9/142066.txt": 1,
+  "ec/5194.txt": 1,
+  "f5/176982.txt": 1,
+  "f8/61801.txt": 1,
+  "f9/59005.txt": 1
+ },
+ "beir_cqadupstack_english_57816": {
+  "12/189608.txt": 1,
+  "28/180459.txt": 1
+ },
+ "beir_cqadupstack_english_58100": {
+  "47/54580.txt": 1
+ },
+ "beir_cqadupstack_english_58103": {
+  "d0/19604.txt": 1,
+  "e1/156253.txt": 1
+ },
+ "beir_cqadupstack_english_58240": {
+  "a0/11397.txt": 1
+ },
+ "beir_cqadupstack_english_58344": {
+  "05/3072.txt": 1,
+  "6d/37900.txt": 1
+ },
+ "beir_cqadupstack_english_58413": {
+  "cc/10085.txt": 1
+ },
+ "beir_cqadupstack_english_58443": {
+  "bf/195262.txt": 1
+ },
+ "beir_cqadupstack_english_58692": {
+  "27/75844.txt": 1
+ },
+ "beir_cqadupstack_english_58756": {
+  "d4/8099.txt": 1
+ },
+ "beir_cqadupstack_english_58788": {
+  "42/13064.txt": 1
+ },
+ "beir_cqadupstack_english_58883": {
+  "7e/91389.txt": 1
+ },
+ "beir_cqadupstack_english_58907": {
+  "33/139133.txt": 1,
+  "a2/2825.txt": 1
+ },
+ "beir_cqadupstack_english_58931": {
+  "55/50658.txt": 1
+ },
+ "beir_cqadupstack_english_59098": {
+  "31/59151.txt": 1
+ },
+ "beir_cqadupstack_english_59167": {
+  "f4/10066.txt": 1
+ },
+ "beir_cqadupstack_english_59247": {
+  "e9/15723.txt": 1
+ },
+ "beir_cqadupstack_english_593": {
+  "09/144657.txt": 1,
+  "0b/152284.txt": 1,
+  "0e/16976.txt": 1,
+  "25/86981.txt": 1,
+  "2e/120790.txt": 1,
+  "54/157571.txt": 1,
+  "78/48974.txt": 1,
+  "94/51723.txt": 1,
+  "b1/50527.txt": 1,
+  "be/2765.txt": 1,
+  "e0/73309.txt": 1,
+  "e3/147146.txt": 1,
+  "e6/30516.txt": 1
+ },
+ "beir_cqadupstack_english_59496": {
+  "1f/7329.txt": 1
+ },
+ "beir_cqadupstack_english_59530": {
+  "3e/152183.txt": 1
+ },
+ "beir_cqadupstack_english_59586": {
+  "28/62397.txt": 1
+ },
+ "beir_cqadupstack_english_5968": {
+  "53/21333.txt": 1
+ },
+ "beir_cqadupstack_english_59748": {
+  "6d/180267.txt": 1
+ },
+ "beir_cqadupstack_english_5987": {
+  "51/24519.txt": 1
+ },
+ "beir_cqadupstack_english_60189": {
+  "83/1864.txt": 1
+ },
+ "beir_cqadupstack_english_60271": {
+  "b7/125476.txt": 1,
+  "ff/116959.txt": 1
+ },
+ "beir_cqadupstack_english_605": {
+  "06/157645.txt": 1,
+  "0e/110976.txt": 1,
+  "1c/137111.txt": 1,
+  "1d/10800.txt": 1,
+  "31/80834.txt": 1,
+  "3e/38343.txt": 1,
+  "5c/163951.txt": 1,
+  "5d/14036.txt": 1,
+  "8a/155395.txt": 1,
+  "98/5174.txt": 1,
+  "af/665.txt": 1,
+  "d0/92276.txt": 1,
+  "f1/122799.txt": 1,
+  "f5/159073.txt": 1
+ },
+ "beir_cqadupstack_english_6058": {
+  "ac/35304.txt": 1
+ },
+ "beir_cqadupstack_english_60898": {
+  "59/166301.txt": 1
+ },
+ "beir_cqadupstack_english_60905": {
+  "71/170.txt": 1,
+  "d5/861.txt": 1
+ },
+ "beir_cqadupstack_english_60927": {
+  "03/69670.txt": 1
+ },
+ "beir_cqadupstack_english_60991": {
+  "03/26021.txt": 1,
+  "83/180763.txt": 1,
+  "a1/21929.txt": 1,
+  "d1/7256.txt": 1
+ },
+ "beir_cqadupstack_english_61129": {
+  "96/61132.txt": 1
+ },
+ "beir_cqadupstack_english_61177": {
+  "54/26503.txt": 1
+ },
+ "beir_cqadupstack_english_61249": {
+  "2c/3442.txt": 1,
+  "3d/153690.txt": 1,
+  "c2/63950.txt": 1
+ },
+ "beir_cqadupstack_english_61299": {
+  "0c/105457.txt": 1,
+  "8f/56876.txt": 1
+ },
+ "beir_cqadupstack_english_61310": {
+  "9e/17669.txt": 1,
+  "b0/45310.txt": 1
+ },
+ "beir_cqadupstack_english_61359": {
+  "df/28762.txt": 1
+ },
+ "beir_cqadupstack_english_61371": {
+  "ba/60564.txt": 1
+ },
+ "beir_cqadupstack_english_61552": {
+  "23/60301.txt": 1,
+  "38/111825.txt": 1,
+  "45/116277.txt": 1,
+  "48/158303.txt": 1,
+  "7b/149429.txt": 1,
+  "83/159227.txt": 1,
+  "87/117345.txt": 1,
+  "8b/146130.txt": 1,
+  "9c/65526.txt": 1,
+  "9d/119063.txt": 1,
+  "a7/139571.txt": 1,
+  "b7/384.txt": 1,
+  "cf/141067.txt": 1,
+  "ec/155306.txt": 1
+ },
+ "beir_cqadupstack_english_61579": {
+  "9d/63572.txt": 1,
+  "bf/141080.txt": 1
+ },
+ "beir_cqadupstack_english_61627": {
+  "75/2120.txt": 1
+ },
+ "beir_cqadupstack_english_61628": {
+  "2d/39981.txt": 1
+ },
+ "beir_cqadupstack_english_61740": {
+  "89/54566.txt": 1,
+  "95/133443.txt": 1,
+  "f4/169261.txt": 1
+ },
+ "beir_cqadupstack_english_61765": {
+  "7a/182527.txt": 1
+ },
+ "beir_cqadupstack_english_61934": {
+  "e0/161933.txt": 1
+ },
+ "beir_cqadupstack_english_6195": {
+  "66/59575.txt": 1
+ },
+ "beir_cqadupstack_english_62014": {
+  "b4/49107.txt": 1
+ },
+ "beir_cqadupstack_english_62084": {
+  "06/2444.txt": 1,
+  "06/2677.txt": 1,
+  "5d/52738.txt": 1,
+  "83/47682.txt": 1,
+  "86/46294.txt": 1,
+  "bc/189495.txt": 1,
+  "fc/156301.txt": 1
+ },
+ "beir_cqadupstack_english_62159": {
+  "7d/25741.txt": 1
+ },
+ "beir_cqadupstack_english_62246": {
+  "59/60801.txt": 1
+ },
+ "beir_cqadupstack_english_62249": {
+  "49/133286.txt": 1,
+  "65/120819.txt": 1,
+  "67/114272.txt": 1,
+  "c3/44566.txt": 1,
+  "d1/191918.txt": 1,
+  "e2/139155.txt": 1
+ },
+ "beir_cqadupstack_english_62285": {
+  "71/6690.txt": 1
+ },
+ "beir_cqadupstack_english_62400": {
+  "3d/53222.txt": 1
+ },
+ "beir_cqadupstack_english_62482": {
+  "c5/87239.txt": 1
+ },
+ "beir_cqadupstack_english_62535": {
+  "51/53691.txt": 1,
+  "9b/189729.txt": 1
+ },
+ "beir_cqadupstack_english_62722": {
+  "ce/165018.txt": 1
+ },
+ "beir_cqadupstack_english_62742": {
+  "03/51529.txt": 1
+ },
+ "beir_cqadupstack_english_62973": {
+  "4e/117683.txt": 1
+ },
+ "beir_cqadupstack_english_63028": {
+  "86/193048.txt": 1
+ },
+ "beir_cqadupstack_english_63104": {
+  "11/72974.txt": 1,
+  "1b/57142.txt": 1
+ },
+ "beir_cqadupstack_english_63256": {
+  "2f/107026.txt": 1,
+  "99/15535.txt": 1,
+  "b3/123860.txt": 1,
+  "d6/107028.txt": 1
+ },
+ "beir_cqadupstack_english_63398": {
+  "b8/147934.txt": 1
+ },
+ "beir_cqadupstack_english_63523": {
+  "6f/21751.txt": 1,
+  "71/168442.txt": 1,
+  "a4/140516.txt": 1
+ },
+ "beir_cqadupstack_english_63787": {
+  "1a/7235.txt": 1,
+  "a0/32181.txt": 1
+ },
+ "beir_cqadupstack_english_63983": {
+  "61/187148.txt": 1
+ },
+ "beir_cqadupstack_english_64317": {
+  "f2/55869.txt": 1
+ },
+ "beir_cqadupstack_english_64326": {
+  "a2/50662.txt": 1,
+  "dd/153434.txt": 1
+ },
+ "beir_cqadupstack_english_64510": {
+  "37/64369.txt": 1
+ },
+ "beir_cqadupstack_english_64617": {
+  "e6/76747.txt": 1
+ },
+ "beir_cqadupstack_english_649": {
+  "6f/100943.txt": 1
+ },
+ "beir_cqadupstack_english_65028": {
+  "72/16939.txt": 1
+ },
+ "beir_cqadupstack_english_65046": {
+  "4b/51792.txt": 1
+ },
+ "beir_cqadupstack_english_65289": {
+  "72/70315.txt": 1
+ },
+ "beir_cqadupstack_english_65312": {
+  "bb/177538.txt": 1,
+  "c4/78709.txt": 1
+ },
+ "beir_cqadupstack_english_65472": {
+  "48/188877.txt": 1
+ },
+ "beir_cqadupstack_english_65604": {
+  "88/30166.txt": 1
+ },
+ "beir_cqadupstack_english_65676": {
+  "81/16319.txt": 1,
+  "a6/121669.txt": 1
+ },
+ "beir_cqadupstack_english_6582": {
+  "ad/43983.txt": 1
+ },
+ "beir_cqadupstack_english_65884": {
+  "03/73847.txt": 1,
+  "0b/11481.txt": 1,
+  "0e/104967.txt": 1,
+  "0f/57545.txt": 1,
+  "11/131683.txt": 1,
+  "21/51055.txt": 1,
+  "29/192835.txt": 1,
+  "2d/77222.txt": 1,
+  "3d/13662.txt": 1,
+  "3e/146118.txt": 1,
+  "3f/161924.txt": 1,
+  "3f/21876.txt": 1,
+  "44/196251.txt": 1,
+  "56/24673.txt": 1,
+  "59/15108.txt": 1,
+  "68/30879.txt": 1,
+  "6a/66659.txt": 1,
+  "6c/102618.txt": 1,
+  "71/47107.txt": 1,
+  "90/20773.txt": 1,
+  "b2/92443.txt": 1,
+  "b3/68412.txt": 1,
+  "b4/95184.txt": 1,
+  "bd/86869.txt": 1,
+  "c4/194744.txt": 1,
+  "c9/186994.txt": 1,
+  "e5/158099.txt": 1,
+  "fb/173049.txt": 1
+ },
+ "beir_cqadupstack_english_65892": {
+  "0f/174711.txt": 1,
+  "ff/195150.txt": 1
+ },
+ "beir_cqadupstack_english_6602": {
+  "72/178508.txt": 1,
+  "a6/172364.txt": 1,
+  "d6/107245.txt": 1
+ },
+ "beir_cqadupstack_english_66020": {
+  "37/163679.txt": 1,
+  "68/264.txt": 1,
+  "9a/115974.txt": 1
+ },
+ "beir_cqadupstack_english_66021": {
+  "0b/12996.txt": 1,
+  "bc/41018.txt": 1,
+  "f0/14747.txt": 1
+ },
+ "beir_cqadupstack_english_66088": {
+  "ee/103595.txt": 1
+ },
+ "beir_cqadupstack_english_6609": {
+  "8e/125289.txt": 1
+ },
+ "beir_cqadupstack_english_6618": {
+  "48/104477.txt": 1,
+  "4e/29606.txt": 1
+ },
+ "beir_cqadupstack_english_66224": {
+  "96/145021.txt": 1
+ },
+ "beir_cqadupstack_english_66335": {
+  "b8/68132.txt": 1
+ },
+ "beir_cqadupstack_english_66453": {
+  "de/119303.txt": 1
+ },
+ "beir_cqadupstack_english_66462": {
+  "53/69740.txt": 1
+ },
+ "beir_cqadupstack_english_66576": {
+  "0d/75223.txt": 1
+ },
+ "beir_cqadupstack_english_66633": {
+  "4d/137624.txt": 1
+ },
+ "beir_cqadupstack_english_66670": {
+  "3e/80322.txt": 1
+ },
+ "beir_cqadupstack_english_66847": {
+  "c6/14575.txt": 1,
+  "da/46618.txt": 1
+ },
+ "beir_cqadupstack_english_66972": {
+  "1d/72407.txt": 1
+ },
+ "beir_cqadupstack_english_67056": {
+  "25/106788.txt": 1,
+  "26/1866.txt": 1
+ },
+ "beir_cqadupstack_english_67080": {
+  "1b/58307.txt": 1
+ },
+ "beir_cqadupstack_english_67167": {
+  "0f/67277.txt": 1
+ },
+ "beir_cqadupstack_english_67365": {
+  "00/12547.txt": 1,
+  "e5/77253.txt": 1
+ },
+ "beir_cqadupstack_english_67476": {
+  "96/117078.txt": 1,
+  "c4/175743.txt": 1
+ },
+ "beir_cqadupstack_english_67509": {
+  "12/11149.txt": 1,
+  "24/94932.txt": 1,
+  "26/114963.txt": 1,
+  "3d/14852.txt": 1,
+  "41/13440.txt": 1,
+  "45/149479.txt": 1,
+  "59/151395.txt": 1,
+  "60/92041.txt": 1,
+  "6e/412.txt": 1,
+  "76/134482.txt": 1,
+  "83/35812.txt": 1,
+  "92/36397.txt": 1,
+  "9b/87559.txt": 1,
+  "a3/91872.txt": 1,
+  "a7/67642.txt": 1,
+  "b1/60297.txt": 1,
+  "b4/126911.txt": 1,
+  "c8/50857.txt": 1,
+  "d2/60602.txt": 1
+ },
+ "beir_cqadupstack_english_67619": {
+  "1c/137129.txt": 1,
+  "2e/156966.txt": 1,
+  "a8/78498.txt": 1,
+  "c0/79159.txt": 1
+ },
+ "beir_cqadupstack_english_67701": {
+  "2c/74632.txt": 1
+ },
+ "beir_cqadupstack_english_67703": {
+  "07/195843.txt": 1
+ },
+ "beir_cqadupstack_english_6776": {
+  "ce/53985.txt": 1
+ },
+ "beir_cqadupstack_english_67817": {
+  "3e/60655.txt": 1
+ },
+ "beir_cqadupstack_english_68098": {
+  "30/57308.txt": 1,
+  "6b/16749.txt": 1
+ },
+ "beir_cqadupstack_english_68183": {
+  "a4/55855.txt": 1,
+  "c4/139277.txt": 1
+ },
+ "beir_cqadupstack_english_68188": {
+  "31/53530.txt": 1
+ },
+ "beir_cqadupstack_english_68235": {
+  "b2/146183.txt": 1
+ },
+ "beir_cqadupstack_english_68556": {
+  "13/67680.txt": 1
+ },
+ "beir_cqadupstack_english_6857": {
+  "94/74654.txt": 1
+ },
+ "beir_cqadupstack_english_68615": {
+  "c1/35427.txt": 1
+ },
+ "beir_cqadupstack_english_68805": {
+  "1a/22837.txt": 1
+ },
+ "beir_cqadupstack_english_69018": {
+  "66/112416.txt": 1
+ },
+ "beir_cqadupstack_english_69129": {
+  "1d/133409.txt": 1,
+  "d6/189094.txt": 1
+ },
+ "beir_cqadupstack_english_69175": {
+  "e9/61008.txt": 1
+ },
+ "beir_cqadupstack_english_69547": {
+  "06/194169.txt": 1
+ },
+ "beir_cqadupstack_english_69662": {
+  "d2/78063.txt": 1
+ },
+ "beir_cqadupstack_english_69944": {
+  "ee/100780.txt": 1
+ },
+ "beir_cqadupstack_english_69974": {
+  "7e/52091.txt": 1,
+  "8a/39457.txt": 1,
+  "ec/150640.txt": 1
+ },
+ "beir_cqadupstack_english_7": {
+  "9e/69889.txt": 1
+ },
+ "beir_cqadupstack_english_70018": {
+  "80/90091.txt": 1
+ },
+ "beir_cqadupstack_english_70526": {
+  "ef/81346.txt": 1
+ },
+ "beir_cqadupstack_english_70728": {
+  "24/177134.txt": 1
+ },
+ "beir_cqadupstack_english_70756": {
+  "1f/5603.txt": 1,
+  "24/83294.txt": 1,
+  "26/177.txt": 1,
+  "28/12747.txt": 1,
+  "28/85620.txt": 1,
+  "7f/16959.txt": 1
+ },
+ "beir_cqadupstack_english_70771": {
+  "f8/62791.txt": 1
+ },
+ "beir_cqadupstack_english_70839": {
+  "cf/6459.txt": 1
+ },
+ "beir_cqadupstack_english_7125": {
+  "82/106453.txt": 1
+ },
+ "beir_cqadupstack_english_71270": {
+  "22/4543.txt": 1,
+  "fd/4521.txt": 1
+ },
+ "beir_cqadupstack_english_71760": {
+  "d8/177618.txt": 1
+ },
+ "beir_cqadupstack_english_7177": {
+  "99/181046.txt": 1
+ },
+ "beir_cqadupstack_english_71797": {
+  "25/103125.txt": 1
+ },
+ "beir_cqadupstack_english_71986": {
+  "ca/93938.txt": 1
+ },
+ "beir_cqadupstack_english_72175": {
+  "19/66850.txt": 1,
+  "20/133215.txt": 1,
+  "ae/175663.txt": 1,
+  "d5/131321.txt": 1,
+  "fc/176762.txt": 1
+ },
+ "beir_cqadupstack_english_72218": {
+  "a4/65490.txt": 1,
+  "f1/166916.txt": 1
+ },
+ "beir_cqadupstack_english_7228": {
+  "7d/2131.txt": 1
+ },
+ "beir_cqadupstack_english_72359": {
+  "66/63772.txt": 1,
+  "85/161222.txt": 1
+ },
+ "beir_cqadupstack_english_72384": {
+  "04/1115.txt": 1,
+  "0e/36807.txt": 1
+ },
+ "beir_cqadupstack_english_72462": {
+  "7b/113668.txt": 1
+ },
+ "beir_cqadupstack_english_7274": {
+  "57/43584.txt": 1
+ },
+ "beir_cqadupstack_english_72783": {
+  "81/54460.txt": 1
+ },
+ "beir_cqadupstack_english_72848": {
+  "83/128953.txt": 1,
+  "c2/74740.txt": 1
+ },
+ "beir_cqadupstack_english_7297": {
+  "7c/71700.txt": 1
+ },
+ "beir_cqadupstack_english_73224": {
+  "2e/23152.txt": 1,
+  "2f/97605.txt": 1,
+  "33/48508.txt": 1,
+  "56/85180.txt": 1,
+  "77/154403.txt": 1,
+  "86/26393.txt": 1,
+  "87/27756.txt": 1,
+  "8d/194253.txt": 1,
+  "91/113951.txt": 1,
+  "92/2117.txt": 1,
+  "b5/52849.txt": 1,
+  "bb/40471.txt": 1,
+  "d6/76366.txt": 1,
+  "d7/42729.txt": 1,
+  "f2/156276.txt": 1
+ },
+ "beir_cqadupstack_english_73515": {
+  "ce/31471.txt": 1
+ },
+ "beir_cqadupstack_english_73702": {
+  "10/174936.txt": 1,
+  "28/67306.txt": 1,
+  "44/53999.txt": 1,
+  "89/122662.txt": 1,
+  "c0/59753.txt": 1,
+  "cc/96674.txt": 1,
+  "cd/120940.txt": 1,
+  "d0/5378.txt": 1,
+  "d3/88190.txt": 1,
+  "f1/191824.txt": 1,
+  "fc/51729.txt": 1
+ },
+ "beir_cqadupstack_english_73737": {
+  "12/20733.txt": 1
+ },
+ "beir_cqadupstack_english_73822": {
+  "3d/73695.txt": 1
+ },
+ "beir_cqadupstack_english_73830": {
+  "19/48626.txt": 1,
+  "23/76187.txt": 1,
+  "26/42306.txt": 1,
+  "78/4325.txt": 1,
+  "83/125791.txt": 1,
+  "94/51096.txt": 1,
+  "b9/94225.txt": 1,
+  "ba/100817.txt": 1,
+  "cc/43110.txt": 1,
+  "df/122530.txt": 1
+ },
+ "beir_cqadupstack_english_74016": {
+  "0f/4795.txt": 1,
+  "7d/18236.txt": 1
+ },
+ "beir_cqadupstack_english_74127": {
+  "00/2025.txt": 1
+ },
+ "beir_cqadupstack_english_74161": {
+  "0e/144876.txt": 1,
+  "2c/43415.txt": 1,
+  "80/5758.txt": 1,
+  "c2/17992.txt": 1
+ },
+ "beir_cqadupstack_english_74169": {
+  "a8/171191.txt": 1
+ },
+ "beir_cqadupstack_english_74247": {
+  "db/20768.txt": 1
+ },
+ "beir_cqadupstack_english_74272": {
+  "5e/40625.txt": 1,
+  "65/41448.txt": 1
+ },
+ "beir_cqadupstack_english_74450": {
+  "1c/65531.txt": 1,
+  "20/173849.txt": 1,
+  "64/56335.txt": 1,
+  "89/96097.txt": 1,
+  "af/107558.txt": 1,
+  "cc/193777.txt": 1,
+  "e8/67802.txt": 1
+ },
+ "beir_cqadupstack_english_74502": {
+  "e8/116874.txt": 1
+ },
+ "beir_cqadupstack_english_74553": {
+  "22/23360.txt": 1,
+  "8f/159594.txt": 1
+ },
+ "beir_cqadupstack_english_74576": {
+  "07/80083.txt": 1
+ },
+ "beir_cqadupstack_english_7469": {
+  "90/81522.txt": 1,
+  "97/19441.txt": 1,
+  "fe/48037.txt": 1
+ },
+ "beir_cqadupstack_english_74765": {
+  "17/105440.txt": 1
+ },
+ "beir_cqadupstack_english_74951": {
+  "0b/235.txt": 1,
+  "25/54164.txt": 1,
+  "36/129172.txt": 1,
+  "b3/59691.txt": 1
+ },
+ "beir_cqadupstack_english_75096": {
+  "0e/43671.txt": 1
+ },
+ "beir_cqadupstack_english_75097": {
+  "0d/126001.txt": 1
+ },
+ "beir_cqadupstack_english_75103": {
+  "cc/195012.txt": 1
+ },
+ "beir_cqadupstack_english_75147": {
+  "3b/36972.txt": 1
+ },
+ "beir_cqadupstack_english_75252": {
+  "8c/154029.txt": 1
+ },
+ "beir_cqadupstack_english_75355": {
+  "1e/27584.txt": 1,
+  "f4/29274.txt": 1
+ },
+ "beir_cqadupstack_english_7548": {
+  "06/1560.txt": 1,
+  "17/90198.txt": 1,
+  "21/151126.txt": 1,
+  "37/137825.txt": 1,
+  "69/166.txt": 1,
+  "74/91015.txt": 1,
+  "7d/133388.txt": 1,
+  "87/65708.txt": 1,
+  "8a/153822.txt": 1,
+  "8a/3917.txt": 1,
+  "95/51679.txt": 1,
+  "9a/151263.txt": 1,
+  "a3/150703.txt": 1,
+  "a4/10940.txt": 1,
+  "b0/104552.txt": 1,
+  "bc/62064.txt": 1,
+  "bf/148485.txt": 1,
+  "c4/46675.txt": 1,
+  "cd/44843.txt": 1,
+  "d4/23.txt": 1,
+  "da/5490.txt": 1,
+  "e2/107220.txt": 1,
+  "e7/53394.txt": 1,
+  "ec/127618.txt": 1,
+  "ee/95379.txt": 1,
+  "f2/78545.txt": 1,
+  "f2/78647.txt": 1,
+  "f2/93563.txt": 1,
+  "f4/145414.txt": 1,
+  "fb/65966.txt": 1,
+  "fc/56432.txt": 1
+ },
+ "beir_cqadupstack_english_75491": {
+  "27/87379.txt": 1,
+  "e1/113452.txt": 1
+ },
+ "beir_cqadupstack_english_7567": {
+  "45/17446.txt": 1
+ },
+ "beir_cqadupstack_english_75847": {
+  "b2/16150.txt": 1
+ },
+ "beir_cqadupstack_english_75860": {
+  "89/7793.txt": 1
+ },
+ "beir_cqadupstack_english_75870": {
+  "60/11422.txt": 1
+ },
+ "beir_cqadupstack_english_75931": {
+  "45/4643.txt": 1
+ },
+ "beir_cqadupstack_english_76043": {
+  "5c/55193.txt": 1
+ },
+ "beir_cqadupstack_english_76048": {
+  "59/66.txt": 1
+ },
+ "beir_cqadupstack_english_76103": {
+  "1e/57619.txt": 1
+ },
+ "beir_cqadupstack_english_76120": {
+  "5e/40511.txt": 1
+ },
+ "beir_cqadupstack_english_76209": {
+  "01/110241.txt": 1,
+  "13/77544.txt": 1,
+  "3f/69798.txt": 1,
+  "b6/143263.txt": 1
+ },
+ "beir_cqadupstack_english_76299": {
+  "ac/15953.txt": 1,
+  "c2/2794.txt": 1
+ },
+ "beir_cqadupstack_english_76345": {
+  "38/57869.txt": 1
+ },
+ "beir_cqadupstack_english_76420": {
+  "85/123460.txt": 1
+ },
+ "beir_cqadupstack_english_76471": {
+  "19/1155.txt": 1,
+  "26/14690.txt": 1,
+  "80/87930.txt": 1,
+  "84/91881.txt": 1,
+  "bb/60520.txt": 1,
+  "c5/94991.txt": 1,
+  "d4/93438.txt": 1
+ },
+ "beir_cqadupstack_english_768": {
+  "78/58587.txt": 1
+ },
+ "beir_cqadupstack_english_76823": {
+  "6c/31410.txt": 1
+ },
+ "beir_cqadupstack_english_76837": {
+  "3f/75042.txt": 1
+ },
+ "beir_cqadupstack_english_76850": {
+  "f0/105374.txt": 1
+ },
+ "beir_cqadupstack_english_7709": {
+  "13/62456.txt": 1
+ },
+ "beir_cqadupstack_english_77308": {
+  "17/115254.txt": 1
+ },
+ "beir_cqadupstack_english_77999": {
+  "f6/14327.txt": 1
+ },
+ "beir_cqadupstack_english_78030": {
+  "b2/129939.txt": 1
+ },
+ "beir_cqadupstack_english_78110": {
+  "59/84195.txt": 1
+ },
+ "beir_cqadupstack_english_78129": {
+  "cf/6656.txt": 1
+ },
+ "beir_cqadupstack_english_78191": {
+  "e4/56295.txt": 1
+ },
+ "beir_cqadupstack_english_78329": {
+  "95/19378.txt": 1
+ },
+ "beir_cqadupstack_english_78354": {
+  "10/153796.txt": 1
+ },
+ "beir_cqadupstack_english_78451": {
+  "2b/12357.txt": 1
+ },
+ "beir_cqadupstack_english_78529": {
+  "b0/7257.txt": 1
+ },
+ "beir_cqadupstack_english_78532": {
+  "37/81318.txt": 1
+ },
+ "beir_cqadupstack_english_78683": {
+  "13/73781.txt": 1,
+  "16/6632.txt": 1,
+  "30/11128.txt": 1,
+  "4e/82916.txt": 1
+ },
+ "beir_cqadupstack_english_7894": {
+  "bd/122397.txt": 1
+ },
+ "beir_cqadupstack_english_78985": {
+  "16/166152.txt": 1,
+  "31/184406.txt": 1,
+  "bd/10325.txt": 1
+ },
+ "beir_cqadupstack_english_79008": {
+  "9c/76907.txt": 1
+ },
+ "beir_cqadupstack_english_79084": {
+  "19/167477.txt": 1,
+  "cf/225.txt": 1,
+  "d4/103270.txt": 1
+ },
+ "beir_cqadupstack_english_79125": {
+  "dd/143387.txt": 1
+ },
+ "beir_cqadupstack_english_79188": {
+  "4c/47704.txt": 1,
+  "7a/1752.txt": 1
+ },
+ "beir_cqadupstack_english_79259": {
+  "08/37241.txt": 1,
+  "69/4733.txt": 1,
+  "db/60660.txt": 1,
+  "f6/93199.txt": 1
+ },
+ "beir_cqadupstack_english_79557": {
+  "ab/96356.txt": 1
+ },
+ "beir_cqadupstack_english_79626": {
+  "03/95165.txt": 1
+ },
+ "beir_cqadupstack_english_79724": {
+  "58/44752.txt": 1,
+  "82/192732.txt": 1,
+  "ad/80240.txt": 1,
+  "ad/9600.txt": 1,
+  "e4/121509.txt": 1,
+  "f1/118396.txt": 1
+ },
+ "beir_cqadupstack_english_79728": {
+  "11/107128.txt": 1,
+  "35/80822.txt": 1,
+  "3c/131960.txt": 1,
+  "e2/41155.txt": 1
+ },
+ "beir_cqadupstack_english_79766": {
+  "70/114991.txt": 1
+ },
+ "beir_cqadupstack_english_79838": {
+  "fc/93794.txt": 1
+ },
+ "beir_cqadupstack_english_80007": {
+  "c2/59974.txt": 1
+ },
+ "beir_cqadupstack_english_80412": {
+  "95/101234.txt": 1
+ },
+ "beir_cqadupstack_english_80547": {
+  "be/122279.txt": 1
+ },
+ "beir_cqadupstack_english_80599": {
+  "aa/106040.txt": 1,
+  "c0/84103.txt": 1
+ },
+ "beir_cqadupstack_english_80780": {
+  "05/152919.txt": 1,
+  "0b/6881.txt": 1,
+  "58/37552.txt": 1,
+  "75/95053.txt": 1,
+  "92/115145.txt": 1,
+  "94/157108.txt": 1,
+  "cd/15322.txt": 1,
+  "ed/116252.txt": 1
+ },
+ "beir_cqadupstack_english_80790": {
+  "2d/91859.txt": 1
+ },
+ "beir_cqadupstack_english_80876": {
+  "4b/82923.txt": 1
+ },
+ "beir_cqadupstack_english_80893": {
+  "5e/5894.txt": 1
+ },
+ "beir_cqadupstack_english_81019": {
+  "9f/84585.txt": 1
+ },
+ "beir_cqadupstack_english_81093": {
+  "37/88257.txt": 1,
+  "d3/10522.txt": 1
+ },
+ "beir_cqadupstack_english_81383": {
+  "6c/71003.txt": 1
+ },
+ "beir_cqadupstack_english_81708": {
+  "db/94806.txt": 1
+ },
+ "beir_cqadupstack_english_818": {
+  "8f/110653.txt": 1
+ },
+ "beir_cqadupstack_english_8186": {
+  "99/126994.txt": 1
+ },
+ "beir_cqadupstack_english_8218": {
+  "70/128102.txt": 1
+ },
+ "beir_cqadupstack_english_824": {
+  "e8/22235.txt": 1
+ },
+ "beir_cqadupstack_english_8257": {
+  "b5/182452.txt": 1
+ },
+ "beir_cqadupstack_english_82766": {
+  "a9/79547.txt": 1
+ },
+ "beir_cqadupstack_english_82823": {
+  "0d/76976.txt": 1,
+  "4a/2327.txt": 1,
+  "52/154519.txt": 1,
+  "f6/30596.txt": 1
+ },
+ "beir_cqadupstack_english_82854": {
+  "d6/67355.txt": 1
+ },
+ "beir_cqadupstack_english_82887": {
+  "23/70157.txt": 1
+ },
+ "beir_cqadupstack_english_82938": {
+  "7f/77089.txt": 1
+ },
+ "beir_cqadupstack_english_82939": {
+  "d6/757.txt": 1
+ },
+ "beir_cqadupstack_english_83002": {
+  "44/55655.txt": 1
+ },
+ "beir_cqadupstack_english_8328": {
+  "1b/78003.txt": 1,
+  "53/158027.txt": 1,
+  "df/126739.txt": 1,
+  "e2/95011.txt": 1
+ },
+ "beir_cqadupstack_english_83357": {
+  "6f/27163.txt": 1
+ },
+ "beir_cqadupstack_english_83383": {
+  "0b/83905.txt": 1,
+  "ae/93959.txt": 1,
+  "d6/251.txt": 1
+ },
+ "beir_cqadupstack_english_834": {
+  "d8/11709.txt": 1
+ },
+ "beir_cqadupstack_english_83424": {
+  "5d/160370.txt": 1
+ },
+ "beir_cqadupstack_english_83430": {
+  "af/119195.txt": 1
+ },
+ "beir_cqadupstack_english_83442": {
+  "0c/17440.txt": 1
+ },
+ "beir_cqadupstack_english_83463": {
+  "31/107687.txt": 1
+ },
+ "beir_cqadupstack_english_83597": {
+  "50/119482.txt": 1,
+  "b9/23545.txt": 1,
+  "ef/159118.txt": 1
+ },
+ "beir_cqadupstack_english_83631": {
+  "7b/30948.txt": 1
+ },
+ "beir_cqadupstack_english_83783": {
+  "41/110617.txt": 1,
+  "7a/420.txt": 1,
+  "f9/31946.txt": 1
+ },
+ "beir_cqadupstack_english_838": {
+  "ca/185189.txt": 1
+ },
+ "beir_cqadupstack_english_83897": {
+  "72/164849.txt": 1,
+  "a1/6989.txt": 1
+ },
+ "beir_cqadupstack_english_83940": {
+  "33/167381.txt": 1,
+  "76/15982.txt": 1
+ },
+ "beir_cqadupstack_english_84070": {
+  "11/84334.txt": 1
+ },
+ "beir_cqadupstack_english_84171": {
+  "a2/12549.txt": 1
+ },
+ "beir_cqadupstack_english_84177": {
+  "fb/127143.txt": 1
+ },
+ "beir_cqadupstack_english_84325": {
+  "b0/84327.txt": 1
+ },
+ "beir_cqadupstack_english_84427": {
+  "88/28467.txt": 1
+ },
+ "beir_cqadupstack_english_84540": {
+  "16/4934.txt": 1,
+  "16/85131.txt": 1,
+  "2c/77831.txt": 1,
+  "3b/17949.txt": 1,
+  "6b/170630.txt": 1
+ },
+ "beir_cqadupstack_english_84554": {
+  "88/185028.txt": 1,
+  "8c/185232.txt": 1
+ },
+ "beir_cqadupstack_english_84726": {
+  "9b/107575.txt": 1
+ },
+ "beir_cqadupstack_english_84836": {
+  "a2/10309.txt": 1
+ },
+ "beir_cqadupstack_english_84839": {
+  "20/50549.txt": 1
+ },
+ "beir_cqadupstack_english_84855": {
+  "21/87262.txt": 1
+ },
+ "beir_cqadupstack_english_85076": {
+  "03/9004.txt": 1,
+  "78/73878.txt": 1,
+  "92/4145.txt": 1,
+  "9a/29060.txt": 1,
+  "9b/21881.txt": 1,
+  "b6/186267.txt": 1,
+  "c4/188536.txt": 1,
+  "c5/185321.txt": 1
+ },
+ "beir_cqadupstack_english_8509": {
+  "fb/103108.txt": 1
+ },
+ "beir_cqadupstack_english_85119": {
+  "89/85234.txt": 1
+ },
+ "beir_cqadupstack_english_85166": {
+  "a8/12760.txt": 1
+ },
+ "beir_cqadupstack_english_8520": {
+  "aa/79494.txt": 1
+ },
+ "beir_cqadupstack_english_85320": {
+  "f1/33509.txt": 1
+ },
+ "beir_cqadupstack_english_8543": {
+  "e7/55964.txt": 1
+ },
+ "beir_cqadupstack_english_85496": {
+  "80/138202.txt": 1
+ },
+ "beir_cqadupstack_english_8554": {
+  "74/185271.txt": 1
+ },
+ "beir_cqadupstack_english_8557": {
+  "c1/133507.txt": 1
+ },
+ "beir_cqadupstack_english_85608": {
+  "d0/25964.txt": 1
+ },
+ "beir_cqadupstack_english_85663": {
+  "11/147324.txt": 1,
+  "64/43256.txt": 1,
+  "a7/48686.txt": 1
+ },
+ "beir_cqadupstack_english_85713": {
+  "e1/170749.txt": 1
+ },
+ "beir_cqadupstack_english_86751": {
+  "66/181357.txt": 1,
+  "d1/151324.txt": 1
+ },
+ "beir_cqadupstack_english_87114": {
+  "a1/2329.txt": 1,
+  "b6/62750.txt": 1
+ },
+ "beir_cqadupstack_english_87306": {
+  "50/130456.txt": 1,
+  "62/139276.txt": 1,
+  "7d/125983.txt": 1,
+  "94/110305.txt": 1,
+  "e2/168007.txt": 1
+ },
+ "beir_cqadupstack_english_87389": {
+  "db/45092.txt": 1
+ },
+ "beir_cqadupstack_english_87432": {
+  "97/87517.txt": 1
+ },
+ "beir_cqadupstack_english_87454": {
+  "6d/58376.txt": 1,
+  "af/34090.txt": 1
+ },
+ "beir_cqadupstack_english_87555": {
+  "e8/68801.txt": 1,
+  "ea/24167.txt": 1
+ },
+ "beir_cqadupstack_english_87745": {
+  "8b/23518.txt": 1
+ },
+ "beir_cqadupstack_english_87900": {
+  "6c/193833.txt": 1,
+  "75/129835.txt": 1
+ },
+ "beir_cqadupstack_english_87913": {
+  "2e/17982.txt": 1,
+  "cf/110771.txt": 1
+ },
+ "beir_cqadupstack_english_87924": {
+  "8b/49171.txt": 1,
+  "b1/1209.txt": 1,
+  "f1/49026.txt": 1
+ },
+ "beir_cqadupstack_english_87977": {
+  "18/96382.txt": 1,
+  "87/27568.txt": 1
+ },
+ "beir_cqadupstack_english_87979": {
+  "26/142852.txt": 1,
+  "2c/501.txt": 1
+ },
+ "beir_cqadupstack_english_88027": {
+  "03/180914.txt": 1,
+  "05/187332.txt": 1,
+  "0a/42255.txt": 1,
+  "0d/2031.txt": 1,
+  "0e/150991.txt": 1,
+  "31/6236.txt": 1,
+  "5a/71333.txt": 1,
+  "5c/120231.txt": 1,
+  "5d/83238.txt": 1,
+  "61/158105.txt": 1,
+  "6c/110792.txt": 1,
+  "78/134391.txt": 1,
+  "84/145098.txt": 1,
+  "85/177836.txt": 1,
+  "88/185546.txt": 1,
+  "96/140783.txt": 1,
+  "9d/96935.txt": 1,
+  "9e/187365.txt": 1,
+  "a5/147987.txt": 1,
+  "b9/189760.txt": 1,
+  "bc/55368.txt": 1,
+  "ca/114446.txt": 1,
+  "dc/147367.txt": 1,
+  "ec/133835.txt": 1,
+  "f5/155879.txt": 1,
+  "f9/65896.txt": 1
+ },
+ "beir_cqadupstack_english_88109": {
+  "03/115022.txt": 1,
+  "24/122982.txt": 1,
+  "3c/151250.txt": 1,
+  "41/26240.txt": 1,
+  "73/105060.txt": 1,
+  "9b/91917.txt": 1,
+  "ac/73216.txt": 1,
+  "e7/91653.txt": 1
+ },
+ "beir_cqadupstack_english_88115": {
+  "de/170328.txt": 1
+ },
+ "beir_cqadupstack_english_88221": {
+  "75/89660.txt": 1
+ },
+ "beir_cqadupstack_english_88367": {
+  "a1/87759.txt": 1
+ },
+ "beir_cqadupstack_english_88382": {
+  "f4/55279.txt": 1
+ },
+ "beir_cqadupstack_english_884": {
+  "7b/10847.txt": 1,
+  "d1/75242.txt": 1
+ },
+ "beir_cqadupstack_english_88411": {
+  "b9/51197.txt": 1
+ },
+ "beir_cqadupstack_english_8900": {
+  "42/54081.txt": 1
+ },
+ "beir_cqadupstack_english_8905": {
+  "2d/56793.txt": 1,
+  "60/16343.txt": 1,
+  "f3/35260.txt": 1
+ },
+ "beir_cqadupstack_english_89564": {
+  "cc/6395.txt": 1
+ },
+ "beir_cqadupstack_english_89571": {
+  "6f/158494.txt": 1
+ },
+ "beir_cqadupstack_english_89604": {
+  "aa/30069.txt": 1
+ },
+ "beir_cqadupstack_english_89661": {
+  "45/157118.txt": 1,
+  "61/76426.txt": 1,
+  "67/41391.txt": 1,
+  "c0/196200.txt": 1
+ },
+ "beir_cqadupstack_english_89698": {
+  "55/84296.txt": 1,
+  "7b/134202.txt": 1
+ },
+ "beir_cqadupstack_english_898": {
+  "4d/10854.txt": 1
+ },
+ "beir_cqadupstack_english_89892": {
+  "ba/5356.txt": 1
+ },
+ "beir_cqadupstack_english_90244": {
+  "53/33564.txt": 1
+ },
+ "beir_cqadupstack_english_90325": {
+  "db/124198.txt": 1
+ },
+ "beir_cqadupstack_english_90388": {
+  "4c/160712.txt": 1
+ },
+ "beir_cqadupstack_english_90642": {
+  "2a/14334.txt": 1,
+  "33/129925.txt": 1
+ },
+ "beir_cqadupstack_english_90666": {
+  "21/3986.txt": 1
+ },
+ "beir_cqadupstack_english_90703": {
+  "70/131849.txt": 1
+ },
+ "beir_cqadupstack_english_90874": {
+  "fa/84288.txt": 1
+ },
+ "beir_cqadupstack_english_90875": {
+  "b2/81317.txt": 1
+ },
+ "beir_cqadupstack_english_90892": {
+  "1f/155043.txt": 1,
+  "60/2503.txt": 1,
+  "99/57343.txt": 1,
+  "e5/90385.txt": 1
+ },
+ "beir_cqadupstack_english_90979": {
+  "e0/91116.txt": 1
+ },
+ "beir_cqadupstack_english_91056": {
+  "3f/139457.txt": 1,
+  "dc/83232.txt": 1
+ },
+ "beir_cqadupstack_english_91209": {
+  "f3/180715.txt": 1
+ },
+ "beir_cqadupstack_english_91230": {
+  "e2/51665.txt": 1
+ },
+ "beir_cqadupstack_english_91269": {
+  "6a/152342.txt": 1
+ },
+ "beir_cqadupstack_english_91343": {
+  "01/51593.txt": 1,
+  "bb/116378.txt": 1
+ },
+ "beir_cqadupstack_english_91664": {
+  "31/95952.txt": 1,
+  "b9/17366.txt": 1
+ },
+ "beir_cqadupstack_english_91676": {
+  "36/24582.txt": 1
+ },
+ "beir_cqadupstack_english_91727": {
+  "56/31420.txt": 1,
+  "94/24701.txt": 1,
+  "a4/3499.txt": 1,
+  "b0/3470.txt": 1,
+  "f5/92163.txt": 1,
+  "f7/25212.txt": 1
+ },
+ "beir_cqadupstack_english_91783": {
+  "c0/79526.txt": 1
+ },
+ "beir_cqadupstack_english_91929": {
+  "52/138898.txt": 1
+ },
+ "beir_cqadupstack_english_91949": {
+  "12/81001.txt": 1,
+  "1a/52418.txt": 1,
+  "b6/12990.txt": 1,
+  "d1/131885.txt": 1
+ },
+ "beir_cqadupstack_english_91973": {
+  "5c/132310.txt": 1
+ },
+ "beir_cqadupstack_english_9205": {
+  "0c/145258.txt": 1,
+  "3e/5808.txt": 1,
+  "49/159879.txt": 1,
+  "7b/61762.txt": 1,
+  "b2/25300.txt": 1,
+  "ef/3965.txt": 1
+ },
+ "beir_cqadupstack_english_92178": {
+  "3a/714.txt": 1,
+  "57/72896.txt": 1
+ },
+ "beir_cqadupstack_english_92266": {
+  "11/100666.txt": 1,
+  "18/36419.txt": 1,
+  "46/41531.txt": 1,
+  "5a/46939.txt": 1,
+  "5c/29104.txt": 1,
+  "63/55913.txt": 1,
+  "64/177469.txt": 1,
+  "6d/10431.txt": 1,
+  "7d/85047.txt": 1,
+  "95/87506.txt": 1,
+  "9c/3841.txt": 1,
+  "a4/57228.txt": 1,
+  "a6/177463.txt": 1,
+  "e4/40869.txt": 1
+ },
+ "beir_cqadupstack_english_92290": {
+  "10/105970.txt": 1,
+  "14/76550.txt": 1,
+  "1b/193800.txt": 1,
+  "2f/118172.txt": 1,
+  "69/89983.txt": 1,
+  "70/102695.txt": 1,
+  "98/96828.txt": 1,
+  "9e/36165.txt": 1,
+  "a5/181480.txt": 1,
+  "cc/35238.txt": 1,
+  "d9/110053.txt": 1,
+  "dc/1066.txt": 1
+ },
+ "beir_cqadupstack_english_92354": {
+  "3c/167147.txt": 1
+ },
+ "beir_cqadupstack_english_92389": {
+  "6b/5914.txt": 1,
+  "ac/55003.txt": 1
+ },
+ "beir_cqadupstack_english_9239": {
+  "41/184617.txt": 1
+ },
+ "beir_cqadupstack_english_92439": {
+  "24/91129.txt": 1
+ },
+ "beir_cqadupstack_english_92457": {
+  "6c/105719.txt": 1,
+  "9e/100452.txt": 1
+ },
+ "beir_cqadupstack_english_92762": {
+  "4c/19966.txt": 1,
+  "7c/67871.txt": 1,
+  "a2/36581.txt": 1,
+  "d0/2471.txt": 1
+ },
+ "beir_cqadupstack_english_92768": {
+  "74/8999.txt": 1
+ },
+ "beir_cqadupstack_english_92883": {
+  "48/125627.txt": 1,
+  "8b/166811.txt": 1
+ },
+ "beir_cqadupstack_english_92920": {
+  "02/18680.txt": 1
+ },
+ "beir_cqadupstack_english_93004": {
+  "f1/99871.txt": 1
+ },
+ "beir_cqadupstack_english_93137": {
+  "bd/65366.txt": 1
+ },
+ "beir_cqadupstack_english_9323": {
+  "0e/33411.txt": 1,
+  "14/167059.txt": 1,
+  "25/9967.txt": 1,
+  "b5/156855.txt": 1,
+  "bf/51597.txt": 1,
+  "e6/165250.txt": 1,
+  "e8/194750.txt": 1
+ },
+ "beir_cqadupstack_english_93455": {
+  "7b/27543.txt": 1
+ },
+ "beir_cqadupstack_english_9354": {
+  "28/175431.txt": 1
+ },
+ "beir_cqadupstack_english_93650": {
+  "e4/22294.txt": 1
+ },
+ "beir_cqadupstack_english_93685": {
+  "a2/103841.txt": 1
+ },
+ "beir_cqadupstack_english_9373": {
+  "f7/180246.txt": 1
+ },
+ "beir_cqadupstack_english_9404": {
+  "3f/106034.txt": 1
+ },
+ "beir_cqadupstack_english_941": {
+  "1e/145477.txt": 1,
+  "4a/997.txt": 1,
+  "5a/17119.txt": 1,
+  "80/165027.txt": 1,
+  "84/29263.txt": 1,
+  "8b/141112.txt": 1,
+  "9f/69226.txt": 1
+ },
+ "beir_cqadupstack_english_9427": {
+  "74/90536.txt": 1
+ },
+ "beir_cqadupstack_english_9434": {
+  "ca/96811.txt": 1
+ },
+ "beir_cqadupstack_english_94494": {
+  "70/174370.txt": 1,
+  "7d/80918.txt": 1
+ },
+ "beir_cqadupstack_english_94523": {
+  "28/120028.txt": 1,
+  "48/36489.txt": 1
+ },
+ "beir_cqadupstack_english_9467": {
+  "35/9865.txt": 1
+ },
+ "beir_cqadupstack_english_94744": {
+  "ae/193070.txt": 1
+ },
+ "beir_cqadupstack_english_94750": {
+  "53/6926.txt": 1
+ },
+ "beir_cqadupstack_english_94802": {
+  "95/188521.txt": 1,
+  "fb/71755.txt": 1
+ },
+ "beir_cqadupstack_english_94873": {
+  "40/750.txt": 1
+ },
+ "beir_cqadupstack_english_94882": {
+  "90/165692.txt": 1
+ },
+ "beir_cqadupstack_english_95062": {
+  "46/40759.txt": 1,
+  "c2/1358.txt": 1,
+  "df/122338.txt": 1
+ },
+ "beir_cqadupstack_english_95179": {
+  "15/27720.txt": 1
+ },
+ "beir_cqadupstack_english_95194": {
+  "d0/150525.txt": 1
+ },
+ "beir_cqadupstack_english_95261": {
+  "28/138016.txt": 1
+ },
+ "beir_cqadupstack_english_95316": {
+  "46/192644.txt": 1
+ },
+ "beir_cqadupstack_english_95409": {
+  "bb/88216.txt": 1
+ },
+ "beir_cqadupstack_english_95444": {
+  "f7/76706.txt": 1
+ },
+ "beir_cqadupstack_english_9549": {
+  "a3/72550.txt": 1
+ },
+ "beir_cqadupstack_english_95796": {
+  "e4/7998.txt": 1
+ },
+ "beir_cqadupstack_english_95844": {
+  "54/183063.txt": 1,
+  "cf/133885.txt": 1,
+  "e9/460.txt": 1
+ },
+ "beir_cqadupstack_english_9587": {
+  "cf/94805.txt": 1
+ },
+ "beir_cqadupstack_english_95956": {
+  "2f/5200.txt": 1,
+  "34/4791.txt": 1,
+  "45/67171.txt": 1,
+  "51/100197.txt": 1,
+  "cf/142918.txt": 1
+ },
+ "beir_cqadupstack_english_95958": {
+  "45/146478.txt": 1
+ },
+ "beir_cqadupstack_english_95980": {
+  "64/27165.txt": 1
+ },
+ "beir_cqadupstack_english_9599": {
+  "41/20026.txt": 1
+ },
+ "beir_cqadupstack_english_96014": {
+  "b1/5100.txt": 1
+ },
+ "beir_cqadupstack_english_96152": {
+  "82/56582.txt": 1
+ },
+ "beir_cqadupstack_english_96177": {
+  "32/44900.txt": 1,
+  "53/138468.txt": 1,
+  "67/9235.txt": 1,
+  "80/65780.txt": 1
+ },
+ "beir_cqadupstack_english_96217": {
+  "07/43034.txt": 1,
+  "22/29388.txt": 1,
+  "72/163167.txt": 1,
+  "e6/89715.txt": 1
+ },
+ "beir_cqadupstack_english_96300": {
+  "06/182023.txt": 1
+ },
+ "beir_cqadupstack_english_96389": {
+  "8f/95697.txt": 1
+ },
+ "beir_cqadupstack_english_9641": {
+  "b1/185128.txt": 1,
+  "ff/49751.txt": 1
+ },
+ "beir_cqadupstack_english_96460": {
+  "18/1944.txt": 1
+ },
+ "beir_cqadupstack_english_96499": {
+  "e9/44106.txt": 1
+ },
+ "beir_cqadupstack_english_9660": {
+  "ca/62919.txt": 1
+ },
+ "beir_cqadupstack_english_96671": {
+  "6b/69044.txt": 1
+ },
+ "beir_cqadupstack_english_96771": {
+  "8d/60805.txt": 1,
+  "94/97655.txt": 1
+ },
+ "beir_cqadupstack_english_96871": {
+  "bf/81588.txt": 1
+ },
+ "beir_cqadupstack_english_96904": {
+  "06/51378.txt": 1,
+  "1b/31450.txt": 1,
+  "1d/67121.txt": 1,
+  "24/11216.txt": 1,
+  "25/108237.txt": 1,
+  "29/89682.txt": 1,
+  "32/100918.txt": 1,
+  "38/103996.txt": 1,
+  "39/12872.txt": 1,
+  "6d/38434.txt": 1,
+  "71/503.txt": 1,
+  "72/139409.txt": 1,
+  "77/10286.txt": 1,
+  "94/42922.txt": 1,
+  "95/133648.txt": 1,
+  "95/58990.txt": 1,
+  "bc/53579.txt": 1,
+  "c5/20680.txt": 1,
+  "d2/20603.txt": 1,
+  "db/76557.txt": 1,
+  "e0/3348.txt": 1,
+  "e5/44810.txt": 1,
+  "e7/23589.txt": 1,
+  "e8/109925.txt": 1,
+  "e9/130577.txt": 1,
+  "f4/119310.txt": 1
+ },
+ "beir_cqadupstack_english_96961": {
+  "ae/16285.txt": 1
+ },
+ "beir_cqadupstack_english_96980": {
+  "90/189705.txt": 1,
+  "d6/65734.txt": 1,
+  "f6/133453.txt": 1,
+  "fe/20412.txt": 1
+ },
+ "beir_cqadupstack_english_97154": {
+  "0c/92267.txt": 1,
+  "17/127072.txt": 1,
+  "20/22978.txt": 1,
+  "22/76161.txt": 1,
+  "29/117544.txt": 1,
+  "2b/1073.txt": 1,
+  "30/186539.txt": 1,
+  "42/147063.txt": 1,
+  "43/15609.txt": 1,
+  "46/41889.txt": 1,
+  "46/62692.txt": 1,
+  "4b/191853.txt": 1,
+  "57/147905.txt": 1,
+  "61/35654.txt": 1,
+  "64/119530.txt": 1,
+  "64/13093.txt": 1,
+  "6b/118097.txt": 1,
+  "7b/52244.txt": 1,
+  "7e/120709.txt": 1,
+  "7e/98854.txt": 1,
+  "80/2964.txt": 1,
+  "83/108150.txt": 1,
+  "84/111169.txt": 1,
+  "88/19847.txt": 1,
+  "89/79081.txt": 1,
+  "90/132833.txt": 1,
+  "95/194528.txt": 1,
+  "99/192402.txt": 1,
+  "9a/145369.txt": 1,
+  "a4/85125.txt": 1,
+  "b6/174143.txt": 1,
+  "c5/44026.txt": 1,
+  "c5/5913.txt": 1,
+  "c7/129431.txt": 1,
+  "c8/180660.txt": 1,
+  "cd/161894.txt": 1,
+  "ea/29552.txt": 1,
+  "f3/50686.txt": 1,
+  "f5/186518.txt": 1,
+  "f8/7841.txt": 1,
+  "fb/62257.txt": 1,
+  "fc/174727.txt": 1,
+  "ff/23421.txt": 1
+ },
+ "beir_cqadupstack_english_97370": {
+  "5a/34250.txt": 1
+ },
+ "beir_cqadupstack_english_97431": {
+  "c4/113658.txt": 1
+ },
+ "beir_cqadupstack_english_9752": {
+  "1e/5241.txt": 1,
+  "85/42907.txt": 1,
+  "e0/15131.txt": 1,
+  "fe/55048.txt": 1
+ },
+ "beir_cqadupstack_english_97522": {
+  "ba/47527.txt": 1
+ },
+ "beir_cqadupstack_english_97660": {
+  "96/160174.txt": 1
+ },
+ "beir_cqadupstack_english_9816": {
+  "cf/133402.txt": 1
+ },
+ "beir_cqadupstack_english_9891": {
+  "ce/41608.txt": 1
+ },
+ "beir_cqadupstack_english_99957": {
+  "17/194937.txt": 1,
+  "34/54340.txt": 1,
+  "3a/102906.txt": 1,
+  "50/4919.txt": 1,
+  "6e/175125.txt": 1,
+  "7d/148782.txt": 1,
+  "87/96670.txt": 1,
+  "ac/192912.txt": 1
+ }
+}
