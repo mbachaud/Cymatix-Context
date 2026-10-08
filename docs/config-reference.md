@@ -1096,6 +1096,8 @@ produces the bench JSONL.
 | `model` | `str` | `"legacy"` | Issue #482: which formula produces know confidence. "legacy" = the betas above. "lanes" = dense-free logistic over what every query has (score shape, coordinate_confidence, lane agreement; scoring/know_lanes.py) using lanes_intercept + lanes_betas. The gates before confidence (abstain, freshness, supersession) are the same either way. |
 | `lanes_intercept` | `float` | `0.0` | Issue #482: intercept of the "lanes" model (written by scripts/fit_know_lanes.py). |
 | `lanes_betas` | `Dict[str, float]` | `{}` | Issue #482: {feature name: beta} for the "lanes" model; names from scoring/know_lanes.FEATURE_NAMES, absent names weigh 0 (written by scripts/fit_know_lanes.py). |
+| `lanes_platt_a` | `float` | `1.0` | Issue #482: per-store Platt rescale of the "lanes" logit, z' = a*z + b (written by scripts/calibrate_know_store.py from this store's own labelled queries). 1.0 / 0.0 = identity. |
+| `lanes_platt_b` | `float` | `0.0` | Issue #482: per-store Platt offset for the "lanes" logit (see lanes_platt_a). |
 <!-- END GENERATED -->
 
 `stale_after_days` (Stage 7, spec §9 / issue #63) is the age in days

@@ -501,7 +501,8 @@ def _compute_know_or_miss_block(
                 hit = reader.execute("SELECT content FROM genes WHERE gene_id = ?", (order[0],)).fetchone()
                 top1_text = hit[0] if hit and isinstance(hit[0], str) else None
             confidence_override = served_lanes_confidence(
-                LanesModel(_know_cfg.lanes_intercept, dict(_know_cfg.lanes_betas)),
+                LanesModel(_know_cfg.lanes_intercept, dict(_know_cfg.lanes_betas),
+                           _know_cfg.lanes_platt_a, _know_cfg.lanes_platt_b),
                 scores=raw_scores, tier_contributions=tier_contrib, query=query,
                 top1_text=top1_text, coordinate_confidence=coord_conf,
             )

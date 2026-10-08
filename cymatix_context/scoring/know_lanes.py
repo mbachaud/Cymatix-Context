@@ -141,12 +141,20 @@ def feature_values(row: Mapping) -> Dict[str, float]:
 
 @dataclass(frozen=True)
 class LanesModel:
-    """intercept + named betas over FEATURE_NAMES (absent names weigh 0)."""
+    """intercept + named betas over FEATURE_NAMES (absent names weigh 0).
+
+    ``platt_a``/``platt_b`` rescale the logit for one store (``z' = a*z + b``,
+    fit by ``scripts/calibrate_know_store.py``); the defaults are the identity.
+    """
     intercept: float = 0.0
     betas: Mapping[str, float] = field(default_factory=dict)
+    platt_a: float = 1.0
+    platt_b: float = 0.0
 
     def confidence(self, features: Mapping[str, float]) -> float:
         z = self.intercept + sum(float(b) * float(features.get(name, 0.0)) for name, b in self.betas.items())
+        if self.platt_a != 1.0 or self.platt_b != 0.0:
+            z = self.platt_a * z + self.platt_b
         if z >= 0:
             return 1.0 / (1.0 + math.exp(-z))
         e = math.exp(z)
@@ -168,7 +176,8 @@ def load_lanes_model(toml_path=None) -> Optional[LanesModel]:
         return None
     if getattr(know, "model", "legacy") != "lanes":
         return None
-    return LanesModel(float(know.lanes_intercept), dict(know.lanes_betas))
+    return LanesModel(float(know.lanes_intercept), dict(know.lanes_betas),
+                      float(know.lanes_platt_a), float(know.lanes_platt_b))
 
 
 def served_lanes_confidence(

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **feat(know): per-store calibration for the lanes model** (opt-in, #482).
+  New keys `[know] lanes_platt_a` / `lanes_platt_b` (default identity, so
+  #492's behaviour is unchanged). `scripts/calibrate_know_store.py` fits them,
+  plus an `emit_floor`, on one store's own labelled queries, using k-fold
+  cross-validation, and writes no floor when the held-out precision misses the
+  target. Measured: coderag_solutions reaches 0.80 held-out precision at 37%
+  coverage. ERB 947k and most text corpora cannot support a confident know
+  (about 0 coverage at precision ≥ 0.7), so the script refuses there.
+
 - **feat(freshness): `[context] freshness_basis = "source"`** (opt-in, #482;
   default `"clock"` unchanged). Freshness is checked against the source instead
   of the clock: unchanged on disk since verification = verified, changed =
