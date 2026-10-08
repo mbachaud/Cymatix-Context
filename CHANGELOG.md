@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **feat(freshness): `[context] freshness_basis = "source"`** (opt-in, #482;
+  default `"clock"` unchanged). Freshness is checked against the source instead
+  of the clock: unchanged on disk since verification = verified, changed =
+  needs refresh, not on this disk = unknown (`stale_risk` for ordinary tasks)
+  instead of stale. Under `"clock"` a static store goes all-stale about 15 days
+  after ingest, and `/context` treats a source this machine cannot find as
+  stale: on the ERB 947k bed that forced 470/470 queries to `miss(stale)`
+  before know confidence was read. No default change, so no receipt is required.
+
 ## 0.11.1 (2026-10-07)
 
 - **Release gate: 947k merged-stack witness, EXACT_REPRODUCE** (BASELINES row
