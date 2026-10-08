@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.11.1 (2026-10-07)
+
+- **Release gate: 947k merged-stack witness, EXACT_REPRODUCE** (BASELINES row
+  `2026-10-07-v0111-merged-stack-witness`). Beta `1f039993` delivered 314/470
+  (0.6681) with 0/470 per-needle differences from the v0.10.0 witness on all
+  11 rank and delivery fields; a v0.11.0 control on the same bed also
+  reproduced exactly. No shipped default changed in this release. Receipts:
+  `cymatix-receipts` `79b0e04`.
 - **feat(launcher): dashboard UX pass, part 1** (plan: `docs/design/2026-10-05-dashboard-ux-pass.md`).
   One Start/Stop button whose label names the next action (Starting… / Stopping…
   while pending), Restart kept beside it, and a header that wraps instead of
