@@ -267,6 +267,23 @@ redact_query = true                     # Hash query strings in spans; false = r
 logs_enabled = true                     # Ship Python logs to the collector -> Loki (CYMATIX_OTEL_LOGS_ENABLED)
 logs_level = "INFO"                     # Min level forwarded: DEBUG/INFO/WARNING/ERROR/CRITICAL (CYMATIX_OTEL_LOGS_LEVEL)
 
+# ----------------------------------------------------------------------
+# [trace] - OPT-IN PACKET TRACE (issue #493, schema v0; off by default).
+#
+# Append-only JSONL of what each /context call delivered, keyed by the
+# packet_id every response already carries. Precedence per knob:
+#     CYMATIX_TRACE_{ENABLED,LEVEL,PATH} env  >  this section  >  default
+# "metadata" holds keyed hashes, ids, ranks and timings only (no raw query
+# or chunk text); "full" adds both and is local-only.
+# ----------------------------------------------------------------------
+# [trace]
+# enabled = false
+# level = "metadata"              # "off" | "metadata" | "full"
+# path = ""                       # "" = <genome dir>/traces
+# hash_chain = false              # tamper-evident prev_hash chain
+# sampler_ratio = 1.0
+# rotate_bytes = 67108864
+
 # ──────────────────────────────────────────────────────────────────────
 # [headroom] — OPTIONAL PROXY LIFECYCLE (launcher only).
 #

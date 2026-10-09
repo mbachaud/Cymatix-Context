@@ -9,7 +9,7 @@ from __future__ import annotations
 import logging
 from typing import Optional
 
-from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response
 from fastapi.responses import JSONResponse, StreamingResponse
 
 from .helpers import (
@@ -148,11 +148,73 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
         # later rows in the same run.
         return bool(data.get("clean", False))
 
+    # -- Packet trace (opt-in, issue #493) -------------------------------
+
+    def _begin_packet(request: Request, fastapi_response: Response):
+        """Mint the packet_id (always, traced or not), expose it as a header
+        and on the active OTel span, and parse an inbound traceparent."""
+        from ..telemetry import trace as _trace
+        packet_id = _trace.new_packet_id()
+        fastapi_response.headers["X-Cymatix-Packet-Id"] = packet_id
+        _trace.stamp_span(packet_id)
+        return packet_id, _trace.parse_traceparent(request.headers.get("traceparent"))
+
+    def _verdict_of(kmblock) -> dict:
+        if isinstance(kmblock, KnowBlock):
+            return {"kind": "know", "confidence": kmblock.confidence}
+        if isinstance(kmblock, MissBlock):
+            return {"kind": "miss", "reason": kmblock.reason}
+        return {"kind": None}
+
+    def _window_chunks(window) -> list:
+        scores = getattr(window, "retrieval_scores", None) or {}
+        contribs = getattr(window, "tier_contributions", None) or {}
+        chunks = []
+        for rank, gid in enumerate(window.expressed_gene_ids or [], 1):
+            doc = cymatix.genome.get_doc(gid)
+            chunks.append({
+                "gene_id": gid,
+                "text": doc.content if doc is not None else None,
+                "rank": rank,
+                "score": scores.get(gid),
+                "source_kind": getattr(doc, "source_kind", None),
+                "lane_contribs": contribs.get(gid) or None,
+            })
+        return chunks
+
+    def _packet_chunks(packet) -> list:
+        items = [*packet.verified, *packet.stale_risk]
+        return [
+            {"gene_id": it.gene_id, "text": it.content, "rank": n,
+             "score": it.relevance_score, "source_kind": it.source_kind}
+            for n, it in enumerate(items, 1) if it.gene_id
+        ]
+
+    def _emit_trace(request: Request, *, packet_id, traceparent, query, session_id,
+                    chunks_fn, kmblock, t0, pipeline_request_id=None) -> None:
+        """Record the packet event; never raises into the request."""
+        import time as _time
+        try:
+            tracer = request.app.state.packet_tracer
+            if not tracer.sampled():
+                return
+            tracer.emit(
+                genome=cymatix.genome, config=config,
+                packet_id=packet_id, pipeline_request_id=pipeline_request_id,
+                session_id=session_id, query=str(query), chunks=chunks_fn(),
+                verdict=_verdict_of(kmblock),
+                timing_ms={"total": round((_time.time() - t0) * 1000, 1)},
+                traceparent=traceparent, ts=t0,
+            )
+        except Exception:
+            log.warning("packet trace emit failed", exc_info=True)
+
     @app.post("/context")
-    async def context_endpoint(request: Request):
+    async def context_endpoint(request: Request, fastapi_response: Response):
         import time as _time
         t0 = _time.time()
         cymatix._last_activity_ts = t0
+        packet_id, traceparent = _begin_packet(request, fastapi_response)
 
         data = await request.json()
         downstream_model = (
@@ -230,6 +292,13 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             )
             payload = packet.model_dump()
             payload["response_mode"] = "packet"
+            payload["packet_id"] = packet_id
+            _emit_trace(
+                request, packet_id=packet_id, traceparent=traceparent,
+                query=query, session_id=cwola_session_id,
+                chunks_fn=lambda: _packet_chunks(packet),
+                kmblock=packet.know or packet.miss, t0=t0,
+            )
             return payload
 
         # Per-request decoder mode override
@@ -316,6 +385,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             response["miss"] = kmblock.model_dump()
 
         response.update({
+            "packet_id": packet_id,
             "name": "Cymatix Genome Context",
             "description": (
                 f"{health.genes_expressed} genes expressed, "
@@ -611,15 +681,22 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
         except Exception:
             log.warning("OTel /context latency emit failed", exc_info=True)
 
+        _emit_trace(
+            request, packet_id=packet_id, traceparent=traceparent,
+            query=query, session_id=cwola_session_id,
+            chunks_fn=lambda: _window_chunks(window), kmblock=kmblock, t0=t0,
+            pipeline_request_id=(window.metadata or {}).get("pipeline_request_id"),
+        )
         return [response]
 
     @app.post("/context/packet")
-    async def context_packet_endpoint(request: Request):
+    async def context_packet_endpoint(request: Request, fastapi_response: Response):
         """Freshness-labeled evidence packet for agent-safe actions."""
         import time as _time
 
         t0 = _time.time()
         cymatix._last_activity_ts = t0
+        packet_id, traceparent = _begin_packet(request, fastapi_response)
 
         data = await request.json()
         query = data.get("query", "")
@@ -672,6 +749,13 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 continue
             payload[k] = v
         payload["response_mode"] = "packet"
+        payload["packet_id"] = packet_id
+        _emit_trace(
+            request, packet_id=packet_id, traceparent=traceparent,
+            query=query, session_id=data.get("session_id"),
+            chunks_fn=lambda: _packet_chunks(packet),
+            kmblock=packet.know or packet.miss, t0=t0,
+        )
 
         # PLR query-confidence head
         live_cfg = getattr(cymatix, "config", config)

@@ -364,6 +364,23 @@ class TelemetryConfig:
     logs_level: str = "INFO"            # Min level forwarded (CYMATIX_OTEL_LOGS_LEVEL)
 
 
+@dataclass
+class TraceConfig:
+    """[trace] — opt-in packet trace (issue #493, schema v0).
+
+    Like [telemetry], env > toml > default is resolved at use time in
+    ``telemetry/trace.py`` (``resolve_trace_settings``), so ``load_config``
+    stays env-free. Off by default: with ``enabled = false`` no file or
+    thread is created (``packet_id`` is still minted and returned).
+    """
+    enabled: bool = False               # Master switch (CYMATIX_TRACE_ENABLED)
+    level: str = "metadata"             # "off" | "metadata" | "full" (CYMATIX_TRACE_LEVEL)
+    path: str = ""                      # Trace dir (CYMATIX_TRACE_PATH). "" = <genome dir>/traces
+    hash_chain: bool = False            # Each record carries sha256 of the previous line
+    sampler_ratio: float = 1.0          # Fraction of requests traced, 0.0-1.0
+    rotate_bytes: int = 64 * 1024 * 1024  # Rotate packets.jsonl past this size
+
+
 # Issue #341 (rerank wiring): shared literal for the default cross-encoder
 # rerank model ID. Referenced by both the pre-existing Phase 3 ingest-time
 # knob (IngestionConfig.rerank_model, right below) and the new [retrieval]
@@ -1458,6 +1475,7 @@ class CymatixConfig:
     genome: GenomeConfig = field(default_factory=GenomeConfig)
     server: ServerConfig = field(default_factory=ServerConfig)
     telemetry: TelemetryConfig = field(default_factory=TelemetryConfig)
+    trace: TraceConfig = field(default_factory=TraceConfig)
     ingestion: IngestionConfig = field(default_factory=IngestionConfig)
     context: ContextConfig = field(default_factory=ContextConfig)
     cymatics: CymaticsConfig = field(default_factory=CymaticsConfig)
@@ -1922,6 +1940,20 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             redact_query=bool(t.get("redact_query", cfg.telemetry.redact_query)),
             logs_enabled=bool(t.get("logs_enabled", cfg.telemetry.logs_enabled)),
             logs_level=str(t.get("logs_level", cfg.telemetry.logs_level)),
+        )
+
+    # Packet trace — toml layer only; env (CYMATIX_TRACE_*) is resolved by
+    # telemetry/trace.py at use time, same split as [telemetry].
+    if "trace" in raw:
+        tc = raw["trace"]
+        _warn_unknown("trace", tc, TraceConfig)
+        cfg.trace = TraceConfig(
+            enabled=bool(tc.get("enabled", cfg.trace.enabled)),
+            level=str(tc.get("level", cfg.trace.level)),
+            path=str(tc.get("path", cfg.trace.path)),
+            hash_chain=bool(tc.get("hash_chain", cfg.trace.hash_chain)),
+            sampler_ratio=float(tc.get("sampler_ratio", cfg.trace.sampler_ratio)),
+            rotate_bytes=int(tc.get("rotate_bytes", cfg.trace.rotate_bytes)),
         )
 
     # Ingestion

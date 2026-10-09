@@ -207,6 +207,11 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         except Exception:
             log.warning("vault.stop failed", exc_info=True)
 
+        try:
+            app.state.packet_tracer.close()
+        except Exception:
+            log.warning("packet tracer close failed", exc_info=True)
+
         # Flush token counter so lifetime totals persist across restart.
         try:
             cymatix.token_counter.flush()
@@ -246,7 +251,16 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         log.debug("OTel setup failed", exc_info=True)
 
     # ---- Register all route modules ----
+    # Packet trace (opt-in, issue #493): the tracer is built here so the
+    # context routes (writer) and trace routes (reader) share it.
+    from ..telemetry.trace import PacketTracer
+    from .routes_trace import setup_trace_routes
+    app.state.packet_tracer = PacketTracer.from_config(
+        config, getattr(config.genome, "path", None),
+    )
+
     setup_context_routes(app, cymatix=cymatix, config=config, registry=registry)
+    setup_trace_routes(app)
     setup_ingest_routes(app, cymatix=cymatix, config=config, registry=registry)
     setup_registry_routes(app, cymatix=cymatix, config=config, registry=registry)
     setup_admin_routes(app, cymatix=cymatix, config=config, registry=registry, bridge=bridge)
