@@ -84,6 +84,11 @@ from ablation_ladder import (  # noqa: E402  (path-inserted sibling module)
     set_dotted,
 )
 
+_KNOW_DIR = _HERE.parent / "know"
+if str(_KNOW_DIR) not in sys.path:
+    sys.path.insert(0, str(_KNOW_DIR))
+from lane_signals import lane_signals as _lane_signals  # noqa: E402  (#482 sibling module)
+
 # ── Arm table ────────────────────────────────────────────────────────────
 # Dotted-knob overrides applied to a FRESH load_config() per arm. Empty =
 # shipped config untouched.
@@ -171,6 +176,7 @@ def run_arm(
     needles: Sequence[Mapping[str, str]],
     gold_by_needle: Mapping[str, set],
     k: int,
+    ce_model: Optional[str] = None,
 ) -> Dict[str, Any]:
     from cymatix_context.config import load_config
     from cymatix_context.context_manager import CymatixContextManager
@@ -180,7 +186,7 @@ def run_arm(
         calibration_from_config,
         compute_confidence,
     )
-    from cymatix_context.scoring.know_decision import _agree_from_tier_contributions
+    from cymatix_context.scoring.know_decision import _agree_or_unknown
     from cymatix_context.server.helpers import _compute_know_or_miss_block
 
     cfg = load_config(config_path) if config_path else load_config()
@@ -301,11 +307,13 @@ def run_arm(
             confidence_raw = None
             lex_agree = None
             coord_conf = None
+            freshness_min = None
             try:
                 tier_contrib = getattr(window, "tier_contributions", None)
                 if tier_contrib is None:
                     tier_contrib = getattr(manager.genome, "last_tier_contributions", {}) or {}
-                lex_agree = _agree_from_tier_contributions(tier_contrib, k=3)
+                # Mirrors the served route (#482): None when no dense lane ran.
+                lex_agree = _agree_or_unknown(tier_contrib, k=3)
                 genes_proxy: List[Any] = []
                 if delivered:
                     try:
@@ -324,18 +332,54 @@ def run_arm(
                                 genes_proxy.append(_P(gid, r["source_id"]))
                     except Exception:  # noqa: BLE001
                         genes_proxy = []
-                coord_conf = _coordinate_confidence(needle["query"], genes_proxy) if genes_proxy else 0.0
+                coord_conf = _coordinate_confidence(needle["query"], genes_proxy) if genes_proxy else None
                 freshness_min = getattr(window.context_health, "freshness_min", None)
+                # #482: None inputs pass through as "unknown" (compute_confidence
+                # accepts them); coercing with bool()/float() would turn
+                # unknown back into negative evidence, or raise on None.
                 confidence_raw = float(compute_confidence(
                     top_score=top_score,
                     score_gap=score_gap,
-                    lexical_dense_agree=bool(lex_agree),
-                    coordinate_confidence=float(coord_conf),
+                    lexical_dense_agree=lex_agree,
+                    coordinate_confidence=coord_conf,
                     calibration=cal,
                     freshness_min=freshness_min,
                 ))
             except Exception as exc:  # noqa: BLE001
                 errors.append(f"{nm}: confidence_raw failed: {type(exc).__name__}: {exc}")
+
+            # #482: dense-free agreement + coverage signals (benchmarks/
+            # dogfood/know/lane_signals.py) for the know/miss feature probe.
+            lane_sig = None
+            try:
+                fused = [g for g, _ in sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))]
+                top1_text = None
+                if fused:
+                    hit = manager.genome.read_conn.execute(  # property: per-thread reader
+                        "SELECT content FROM genes WHERE gene_id = ?", (fused[0],)).fetchone()
+                    top1_text = hit[0] if hit and isinstance(hit[0], str) else None
+                lane_sig = _lane_signals(tier_contrib, fused, query=needle["query"], top1_text=top1_text)
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"{nm}: lane_signals failed: {type(exc).__name__}: {exc}")
+
+            # #482 (opt-in --ce-model): cross-encoder score of the fused top-1
+            # and its margin over top-2, for the "ce" lanes feature set.
+            ce_sig = None
+            if ce_model:
+                try:
+                    from cymatix_context.backends.rerank_backend import score_pairs
+                    from cymatix_context.scoring.know_lanes import ce_signals
+
+                    def _text_of(gid):
+                        hit = manager.genome.read_conn.execute(
+                            "SELECT content FROM genes WHERE gene_id = ?", (gid,)).fetchone()
+                        return hit[0] if hit and isinstance(hit[0], str) else None
+
+                    ce_sig = ce_signals(needle["query"], fused, _text_of,
+                                        lambda q, texts: score_pairs(q, texts, model_name=ce_model))
+                    ce_sig["top1_gene_id"] = fused[0] if fused else None
+                except Exception as exc:  # noqa: BLE001
+                    errors.append(f"{nm}: ce_signals failed: {type(exc).__name__}: {exc}")
 
             ranked_ids = list(getattr(manager.genome, "last_ranked_ids", None) or ())
             classifier_meta = meta.get("classifier") or {}
@@ -368,6 +412,11 @@ def run_arm(
                 "soft_stale": soft_stale,
                 "lexical_dense_agree": lex_agree,
                 "coordinate_confidence": round(coord_conf, 6) if coord_conf is not None else None,
+                # #482: the fifth [know] feature, recorded so a refit sees the
+                # same input compute_confidence used (None = no contribution).
+                "freshness_min": round(float(freshness_min), 6) if freshness_min is not None else None,
+                "lane_signals": lane_sig,
+                **({"ce": ce_sig} if ce_model else {}),
                 "confidence_raw": round(confidence_raw, 6) if confidence_raw is not None else None,
                 "empty_window_gold_rank1": 1 if (dg["delivered_count"] == 0 and first == 1) else 0,
             })
@@ -514,6 +563,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--config", default="cymatix.toml")
     ap.add_argument("--out", default="benchmarks/dogfood/erb/receipts/postflip_know_abstain_sanity_100k.json")
     ap.add_argument("--stamp", default="")
+    ap.add_argument("--ce-model", default="",
+                    help="#482 opt-in: record cross-encoder top-1 signals per needle with this HF "
+                         "cross-encoder (e.g. cross-encoder/ms-marco-MiniLM-L-6-v2); empty = off")
     ap.add_argument("--merge", nargs="*", default=None,
                     help="merge chunk receipts (paths, in needle order) into "
                          "--out; runs no queries. Chunks must agree on bed / "
@@ -581,6 +633,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             needles=needles,
             gold_by_needle=gold_by_needle,
             k=args.k,
+            ce_model=args.ce_model or None,
         )
         arm_rows.append(row)
         if row.get("skipped"):
@@ -602,6 +655,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "tool": "benchmarks/dogfood/erb/know_abstain_replay.py",
         "issue": "#377 re-measure: abstain + know sanity",
         "stamp": args.stamp,
+        "ce_model": args.ce_model or None,
         "bed": genome_path,
         "bed_bytes": Path(genome_path).stat().st_size,
         "config": config_path or "(auto-discovered)",

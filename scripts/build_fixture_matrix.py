@@ -253,6 +253,20 @@ def _profile_skip_dirs(profile: dict) -> set:
     return SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
 
 
+def _profile_min_file_bytes(profile: dict) -> int:
+    """Smallest file size (bytes) one profile ingests.
+
+    ``MIN_FILE_SIZE`` keeps stub files out of code corpora. Emitted corpora
+    whose real documents are short (BEIR Quora: 44% of documents and 55% of
+    gold under 50 bytes, issue #482) set ``min_file_bytes`` to lower it.
+    Profiles without the key keep the 50-byte floor unchanged.
+    """
+    value = profile.get("min_file_bytes", MIN_FILE_SIZE)
+    if type(value) is not int or value < 0:
+        raise ValueError(f"min_file_bytes must be a non-negative int, got {value!r}")
+    return value
+
+
 def _is_sqlite_sidecar(path: str) -> bool:
     """Picklable filter for SQLite sidecars in process-pool shard tasks."""
     return any(path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES)
@@ -395,10 +409,12 @@ def _iter_ingestable_files(
     skip_dirs: set[str],
     extra_filename_filters: list,
     stats: dict,
+    min_bytes: int = MIN_FILE_SIZE,
 ) -> list[tuple[str, str]]:
     """Walk ``roots`` and return [(fpath, ext)] passing all filters.
 
     Updates ``stats['missing_roots']`` and ``stats['skipped']`` in place.
+    ``min_bytes`` is the profile's size floor (``_profile_min_file_bytes``).
     """
     files: list[tuple[str, str]] = []
     for root in roots:
@@ -422,7 +438,7 @@ def _iter_ingestable_files(
                     size = os.path.getsize(fpath)
                 except OSError:
                     continue
-                if size < MIN_FILE_SIZE or size > MAX_FILE_SIZE:
+                if size < min_bytes or size > MAX_FILE_SIZE:
                     stats["skipped"] += 1
                     continue
                 files.append((fpath, ext))
@@ -1098,6 +1114,35 @@ PROFILES: dict[str, dict] = {
         "skip_dirs_override": set(),
         "extra_filename_filters": [],
     },
+    # ── BEIR round 1 (issue #482, user-approved 2026-10-03) ─────────────
+    # One .txt per document, emitted by scripts/build_beir_corpus.py into
+    # F:\Projects\beir\<tag>\corpus (sha1-prefix shard dirs); needles and
+    # graded gold under benchmarks/dogfood/<tag>. Same emitted-root ruling
+    # as the code benches: no internal artifacts, common skip list replaced.
+    # min_file_bytes 1 (user-approved 2026-10-03): BEIR documents are real
+    # even when short — Quora has 44% of documents under the 50-byte floor —
+    # so only empty files are dropped. Round-1 beds (scifact, nfcorpus,
+    # arguana, scidocs, fiqa) were built under the 50-byte floor before this
+    # key existed; their manifests carry no min_file_bytes.
+    **{
+        f"beir_{name}": {
+            "label": f"BEIR {name} corpus (issue #482 round 1)",
+            "active_roots": 1,
+            "roots": [rf"F:\Projects\beir\beir_{name}\corpus"],
+            "extra_skip_dirs": set(),
+            "skip_dirs_override": set(),
+            "extra_filename_filters": [],
+            "min_file_bytes": 1,
+        }
+        for name in ("arguana", "nfcorpus", "scifact", "fiqa", "scidocs",
+                     "trec_covid", "webis_touche2020", "quora",
+                     # CQADupStack: BEIR scores each StackExchange forum as
+                     # its own corpus and reports the mean over the 12.
+                     *(f"cqadupstack_{forum}" for forum in (
+                         "android", "english", "gaming", "gis", "mathematica",
+                         "physics", "programmers", "stats", "tex", "unix",
+                         "webmasters", "wordpress")))
+    },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
         "active_roots": 13,
@@ -1138,8 +1183,10 @@ def ingest_tree(
     stats: dict,
     skip_dirs: set[str],
     extra_filename_filters: list,
+    min_bytes: int = MIN_FILE_SIZE,
 ) -> None:
-    """Walk ``root`` and ingest matching files, respecting ``skip_dirs``."""
+    """Walk ``root`` and ingest matching files, respecting ``skip_dirs``
+    and the profile's ``min_bytes`` size floor."""
     if not os.path.exists(root):
         log.warning("root %s does not exist, skipping", root)
         stats["missing_roots"].append(root)
@@ -1168,7 +1215,7 @@ def ingest_tree(
             except OSError:
                 continue
 
-            if size < MIN_FILE_SIZE or size > MAX_FILE_SIZE:
+            if size < min_bytes or size > MAX_FILE_SIZE:
                 stats["skipped"] += 1
                 continue
 
@@ -1374,6 +1421,7 @@ def build_profile(
 
     skip_dirs = _profile_skip_dirs(profile)
     extra_filename_filters = profile["extra_filename_filters"]
+    min_bytes = _profile_min_file_bytes(profile)
 
     stats = {
         "profile": name,
@@ -1391,6 +1439,10 @@ def build_profile(
         "mode": "parallel" if parallel else "sequential",
         "entity_autolink": _env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
     }
+    if min_bytes != MIN_FILE_SIZE:
+        # Recorded only when overridden, so default-profile manifests keep
+        # their exact pre-#482 shape.
+        stats["min_file_bytes"] = min_bytes
 
     if parallel:
         from cymatix_context.parallel import auto_workers
@@ -1398,6 +1450,7 @@ def build_profile(
             n_workers = auto_workers()
         files = _iter_ingestable_files(
             profile["roots"], skip_dirs, extra_filename_filters, stats,
+            min_bytes=min_bytes,
         )
         stats["discovered_files"] = len(files)
         # Scale-test cap (2026-08-27): keep only the first N files of the
@@ -1433,6 +1486,7 @@ def build_profile(
                 stats=stats,
                 skip_dirs=skip_dirs,
                 extra_filename_filters=extra_filename_filters,
+                min_bytes=min_bytes,
             )
 
     elapsed = time.perf_counter() - stats["t0"]
@@ -2177,6 +2231,12 @@ def build_profile_sharded(
     to skip).
     """
     profile = PROFILES[name]
+    # Shard workers check the size floor in their own walks against the
+    # module constant; refuse an override instead of silently ignoring it.
+    if _profile_min_file_bytes(profile) != MIN_FILE_SIZE:
+        raise ValueError(
+            f"profile {name!r} sets min_file_bytes; sharded mode does not "
+            "support a per-profile size floor — build it with --mode blob")
     if shard_file_workers <= 0:
         from cymatix_context.parallel import auto_shard_file_workers
         shard_file_workers = auto_shard_file_workers(shard_workers)

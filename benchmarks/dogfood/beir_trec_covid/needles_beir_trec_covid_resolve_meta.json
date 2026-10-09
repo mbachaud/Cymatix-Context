@@ -1,0 +1,415 @@
+{
+ "date": "2026-10-04T12:09:52.073264+00:00",
+ "db": "F:\\tmp\\beir_trec_covid_bed\\beir_trec_covid.db",
+ "corpus_root": "F:\\Projects\\beir\\beir_trec_covid\\corpus",
+ "min_file_bytes": 1,
+ "needles_total": 50,
+ "needles_resolvable": 50,
+ "dropped": [],
+ "gold_files_wanted": 17537,
+ "gold_files_size_gated": 0,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 0,
+ "per_needle": {
+  "beir_trec_covid_1": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 637,
+   "gold_files_resolved": 637,
+   "gold_genes": 638,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_10": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 475,
+   "gold_files_resolved": 475,
+   "gold_genes": 490,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_11": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 415,
+   "gold_files_resolved": 415,
+   "gold_genes": 416,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_12": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 616,
+   "gold_files_resolved": 616,
+   "gold_genes": 628,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_13": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 867,
+   "gold_files_resolved": 867,
+   "gold_genes": 872,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_14": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 255,
+   "gold_files_resolved": 255,
+   "gold_genes": 257,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_15": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 423,
+   "gold_files_resolved": 423,
+   "gold_genes": 427,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_16": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 387,
+   "gold_files_resolved": 387,
+   "gold_genes": 389,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_17": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 668,
+   "gold_files_resolved": 668,
+   "gold_genes": 733,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_18": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 628,
+   "gold_files_resolved": 628,
+   "gold_genes": 632,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_19": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 111,
+   "gold_files_resolved": 111,
+   "gold_genes": 111,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_2": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 314,
+   "gold_files_resolved": 314,
+   "gold_genes": 320,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_20": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 702,
+   "gold_files_resolved": 702,
+   "gold_genes": 711,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_21": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 630,
+   "gold_files_resolved": 630,
+   "gold_genes": 634,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_22": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 546,
+   "gold_files_resolved": 546,
+   "gold_genes": 546,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_23": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 371,
+   "gold_files_resolved": 371,
+   "gold_genes": 373,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_24": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 404,
+   "gold_files_resolved": 404,
+   "gold_genes": 405,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_25": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 529,
+   "gold_files_resolved": 529,
+   "gold_genes": 533,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_26": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 778,
+   "gold_files_resolved": 778,
+   "gold_genes": 781,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_27": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 849,
+   "gold_files_resolved": 849,
+   "gold_genes": 863,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_28": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 551,
+   "gold_files_resolved": 551,
+   "gold_genes": 566,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_29": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 604,
+   "gold_files_resolved": 604,
+   "gold_genes": 611,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_3": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 628,
+   "gold_files_resolved": 628,
+   "gold_genes": 634,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_30": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 370,
+   "gold_files_resolved": 370,
+   "gold_genes": 372,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_31": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 353,
+   "gold_files_resolved": 353,
+   "gold_genes": 353,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_32": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 216,
+   "gold_files_resolved": 216,
+   "gold_genes": 216,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_33": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 281,
+   "gold_files_resolved": 281,
+   "gold_genes": 281,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_34": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 172,
+   "gold_files_resolved": 172,
+   "gold_genes": 174,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_35": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 218,
+   "gold_files_resolved": 218,
+   "gold_genes": 222,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_36": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 611,
+   "gold_files_resolved": 611,
+   "gold_genes": 611,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_37": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 450,
+   "gold_files_resolved": 450,
+   "gold_genes": 450,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_38": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 1266,
+   "gold_files_resolved": 1266,
+   "gold_genes": 1277,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_39": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 860,
+   "gold_files_resolved": 860,
+   "gold_genes": 870,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_4": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 529,
+   "gold_files_resolved": 529,
+   "gold_genes": 531,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_40": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 556,
+   "gold_files_resolved": 556,
+   "gold_genes": 563,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_41": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 311,
+   "gold_files_resolved": 311,
+   "gold_genes": 311,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_42": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 243,
+   "gold_files_resolved": 243,
+   "gold_genes": 245,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_43": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 253,
+   "gold_files_resolved": 253,
+   "gold_genes": 253,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_44": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 483,
+   "gold_files_resolved": 483,
+   "gold_genes": 489,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_45": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 806,
+   "gold_files_resolved": 806,
+   "gold_genes": 815,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_46": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 182,
+   "gold_files_resolved": 182,
+   "gold_genes": 188,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_47": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 420,
+   "gold_files_resolved": 420,
+   "gold_genes": 420,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_48": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 444,
+   "gold_files_resolved": 444,
+   "gold_genes": 454,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_49": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 247,
+   "gold_files_resolved": 247,
+   "gold_genes": 248,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_5": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 614,
+   "gold_files_resolved": 614,
+   "gold_genes": 616,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_50": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 137,
+   "gold_files_resolved": 137,
+   "gold_genes": 137,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_6": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 959,
+   "gold_files_resolved": 959,
+   "gold_genes": 966,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_7": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 481,
+   "gold_files_resolved": 481,
+   "gold_genes": 484,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_8": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 632,
+   "gold_files_resolved": 632,
+   "gold_genes": 643,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_trec_covid_9": {
+   "question_type": "beir_trec_covid",
+   "gold_files": 191,
+   "gold_files_resolved": 191,
+   "gold_genes": 193,
+   "gold_size_gated": [],
+   "via_twin": []
+  }
+ }
+}

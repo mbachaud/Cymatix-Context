@@ -172,5 +172,14 @@ benchmarks/dogfood/logs/
 benchmarks/dogfood/gene_ids_*/
 benchmarks/dogfood/baseline_tagger*.json
 
+# Benchmark receipt trees -- untracked 2026-10-04. They are archived in the
+# private repo mbachaud/cymatix-receipts: mirror/ is a byte-identical pinned
+# export of every receipt tracked here up to e3825e4b; receipts written after
+# that go to untracked/ via scripts/archive_working_receipts.py in that repo.
+# BASELINES.md and the docs keep citing benchmarks/dogfood/**/receipts*/ paths
+# on purpose -- the same relative path resolves in the archive. Harness .py,
+# configs .toml and needle/gold banks stay tracked.
+benchmarks/dogfood/**/receipts*/
+
 # Claude Code worktrees (session isolation)
 .claude/worktrees/

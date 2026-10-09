@@ -1,0 +1,65 @@
+{
+ "round": "round1-2026-10-03",
+ "receipts": [
+  {
+   "receipt": "benchmarks/dogfood/beir_arguana/receipts/ladder_beir_arguana_diag_tag_lanes_muted_seed0_2026-10-03.json",
+   "bytes": 8353575,
+   "sha256": "9a3c1359934c419a12a0ffca46c5259f6a1982a5f4abd622a66ea07e81a3bde4",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_arguana_diag_tag_lanes_muted_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_arguana/receipts/ladder_beir_arguana_seed0_2026-10-03.json",
+   "bytes": 8345787,
+   "sha256": "e6c3ab46d2d66a6149d59b65ea64fcbd3132a7ec78a48213ee5708217a7bc6f6",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_arguana_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_fiqa/receipts/ladder_beir_fiqa_diag_tag_lanes_muted_seed0_2026-10-03.json",
+   "bytes": 3765762,
+   "sha256": "8e30b275ca3a4c7103e5205f847999d5860cdab3c79cdac2f44b2920a1552b6a",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_fiqa_diag_tag_lanes_muted_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_fiqa/receipts/ladder_beir_fiqa_seed0_2026-10-03.json",
+   "bytes": 3765572,
+   "sha256": "7d558e6de506ea423bdb51b1923ab132d16d709ace43cc3eb549634b1d8f8c8a",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_fiqa_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_nfcorpus/receipts/ladder_beir_nfcorpus_diag_tag_lanes_muted_seed0_2026-10-03.json",
+   "bytes": 2107527,
+   "sha256": "eab4e406e24aabc8b23bca5236988a4133bc012989e44751e369ddd05cf9764a",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_nfcorpus_diag_tag_lanes_muted_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_nfcorpus/receipts/ladder_beir_nfcorpus_seed0_2026-10-03.json",
+   "bytes": 2107158,
+   "sha256": "30275924a8578c8cffe6f731c52322dd30dddc4b63c3d630b65d582d4563e7aa",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_nfcorpus_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_scidocs/receipts/ladder_beir_scidocs_diag_tag_lanes_muted_seed0_2026-10-03.json",
+   "bytes": 5973596,
+   "sha256": "64059b1b969c01f6b3fe2aff72d229352fda5b6bc1430986b041c65226f05c02",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_scidocs_diag_tag_lanes_muted_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_scidocs/receipts/ladder_beir_scidocs_seed0_2026-10-03.json",
+   "bytes": 5971204,
+   "sha256": "e8a5c7bf4d113af82119dea8df160239bb37f27e956aee4866eb1d2728d1e1e2",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_scidocs_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_scifact/receipts/ladder_beir_scifact_diag_tag_lanes_muted_seed0_2026-10-03.json",
+   "bytes": 1773902,
+   "sha256": "d6da03442c8c2a0ab13a1cf8dfb3b368384f1970cdbf80afb2223e6870e9fbbb",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_scifact_diag_tag_lanes_muted_seed0_2026-10-03.json"
+  },
+  {
+   "receipt": "benchmarks/dogfood/beir_scifact/receipts/ladder_beir_scifact_seed0_2026-10-03.json",
+   "bytes": 1772838,
+   "sha256": "352e406db8b004a20796af6f187f94a9d20ca52ef34a02b4d86e7a219b041a70",
+   "archived_at": "cymatix-receipts/captures/beir/round1-2026-10-03/ladder_beir_scifact_seed0_2026-10-03.json"
+  }
+ ]
+}

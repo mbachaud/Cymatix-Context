@@ -17,6 +17,14 @@
   const tabStorageKey = "cymatix-dashboard-tab";
   const agentTabStorageKey = "cymatix-dashboard-agent-tab";
   const agentOpenStorageKey = "cymatix-dashboard-agent-open";
+  // Set when a click asks for "start"/"stop"; cleared once the state arrives.
+  let pendingAction = null;
+  let pendingDeadlineMs = 0;
+  // The folded-away switchboard settings; the 2 s panel swap would reset it.
+  let switchboardOffOpen = false;
+
+  // Native-shell actions (Diagnostics "Open folder") show only with the bridge.
+  if (window.cymatix) document.body.classList.add("has-bridge");
   const pipelineDevStorageKey = "cymatix-pipeline-dev-view";
 
   // One poll drives everything. These bound that poll; they add no
@@ -154,7 +162,14 @@
     restoreAgentOpenState();
     restoreAgentTab();
     restorePipelineDevView();
+    restoreSwitchboardOff();
     markObservationAge();
+  }
+
+  function restoreSwitchboardOff() {
+    document.querySelectorAll("[data-keep-open='switchboard-off']").forEach((el) => {
+      el.open = switchboardOffOpen;
+    });
   }
 
   /* ── Pipeline panel: dev-view toggle (default ON) ──────────────── */
@@ -239,17 +254,36 @@
         }
       }
 
-      const btnStart = document.querySelector('[data-action="start"]');
+      const startPending = state?.cymatix?.start_pending === true;
+      // A click's "Starting…/Stopping…" holds until its POST resolves (see
+      // sendControl); the deadline is a backstop for a request that never does.
+      if (pendingAction !== null && monotonicMs() > pendingDeadlineMs) {
+        pendingAction = null;
+      }
       const btnRestart = document.querySelector('[data-action="restart"]');
-      const btnStop = document.querySelector('[data-action="stop"]');
-      if (btnStart) btnStart.disabled = running;
-      if (btnRestart) btnRestart.disabled = !running;
-      if (btnStop) btnStop.disabled = !running;
+      if (btnRestart) btnRestart.disabled = !running || pendingAction !== null;
+      renderToggle(running, startPending);
     } catch (err) {
       // The next poll will retry.
     } finally {
       controlsInFlight = false;
     }
+  }
+
+  /* The single Start/Stop control: its label always names the next action. */
+  function renderToggle(running, startPending) {
+    const btn = document.querySelector('[data-action="toggle"]');
+    if (!btn) return;
+    const label = btn.querySelector("[data-toggle-label]") || btn;
+    // startPending only relabels: the supervisor flag is sticky, so it must
+    // never disable the one control that can stop a hung start.
+    const starting = pendingAction === "start" || (running && startPending);
+    btn.dataset.running = running ? "true" : "false";
+    btn.dataset.pending = (pendingAction !== null || starting) ? "true" : "false";
+    btn.disabled = pendingAction !== null;
+    if (pendingAction === "stop") label.textContent = "Stopping…";
+    else if (starting) label.textContent = "Starting…";
+    else label.textContent = running ? "Stop" : "Start";
   }
 
   function startPolling() {
@@ -274,6 +308,11 @@
   }
 
   async function sendControl(action) {
+    if (action === "start" || action === "stop") {
+      pendingAction = action;
+      pendingDeadlineMs = monotonicMs() + 90000;
+      renderToggle(action === "stop", false);
+    }
     const btn = document.querySelector('[data-action="' + action + '"]');
     if (btn) btn.disabled = true;
 
@@ -284,11 +323,14 @@
       });
       if (!resp.ok) {
         const body = await resp.json().catch(() => ({}));
+        pendingAction = null;
         alert(action + " failed: " + (body.error || resp.statusText));
       }
     } catch (err) {
+      pendingAction = null;
       alert(action + " failed: " + err);
     } finally {
+      pendingAction = null;
       setTimeout(() => {
         fetchPanels();
         refreshControls();
@@ -315,8 +357,32 @@
     const actionButton = target.closest("[data-action]");
     if (!(actionButton instanceof HTMLElement)) return;
     const action = actionButton.dataset.action;
-    if (action === "start" || action === "stop" || action === "restart") {
+    if (action === "toggle") {
+      if (pendingAction !== null) return;
+      sendControl(actionButton.dataset.running === "true" ? "stop" : "start");
+      return;
+    }
+    if (action === "restart") {
       sendControl(action);
+      return;
+    }
+    if (action === "desktop-open-logs") {
+      // The rail's own button is handled by the rail's listener.
+      if (actionButton.closest("[data-desktop-rail]")) return;
+      if (window.cymatix && window.cymatix.openLogs) {
+        window.cymatix.openLogs().catch((err) => window.alert("Could not open the folder: " + err));
+      }
+      return;
+    }
+    if (action === "copy-path") {
+      const text = actionButton.dataset.copyText || "";
+      const label = actionButton.textContent;
+      if (text && navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          actionButton.textContent = "Copied";
+          setTimeout(() => { actionButton.textContent = label; }, 1500);
+        }).catch(() => {});
+      }
       return;
     }
     if (action === "lane-start" || action === "lane-stop" || action === "lane-restart" ||
@@ -386,6 +452,10 @@
   document.addEventListener("toggle", function (evt) {
     const target = evt.target;
     if (!(target instanceof HTMLDetailsElement)) return;
+    if (target.matches("[data-keep-open='switchboard-off']")) {
+      switchboardOffOpen = target.open;
+      return;
+    }
     if (!target.matches("[data-agent-panel]")) return;
     try {
       window.localStorage.setItem(agentOpenStorageKey, target.open ? "true" : "false");

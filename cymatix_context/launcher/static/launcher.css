@@ -300,8 +300,10 @@ body.rail-collapsed .desktop-rail__body {
 }
 
 .controls {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  /* Wraps instead of a fixed two-column grid: the buttons drop below the
+     metrics on a narrow window rather than overlapping the last tile. */
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   align-items: center;
   padding: 16px;
@@ -313,7 +315,9 @@ body.rail-collapsed .desktop-rail__body {
 }
 
 .controls-primary {
+  flex: 1 1 460px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
@@ -385,8 +389,75 @@ body.rail-collapsed .desktop-rail__body {
 .controls-buttons {
   display: flex;
   flex-wrap: wrap;
+  flex: 0 0 auto;
   justify-content: flex-end;
+  margin-left: auto;
   gap: 8px;
+}
+
+/* The one primary control: its label names the next action. */
+.btn--toggle {
+  min-width: 112px;
+}
+
+.btn--toggle[data-running="false"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #1a1008;
+}
+
+.btn--toggle[data-running="true"]:hover:not(:disabled) {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.btn--toggle[data-running="false"]:hover:not(:disabled) {
+  background: var(--color-accent-strong);
+  border-color: var(--color-accent-strong);
+  color: #1a1008;
+}
+
+.btn--toggle[data-pending="true"] {
+  cursor: progress;
+}
+
+/* Native-shell actions: only shown when the desktop bridge is present. */
+.needs-bridge {
+  display: none;
+}
+
+.has-bridge .needs-bridge {
+  display: inline-flex;
+  align-items: center;
+}
+
+.diagnostics-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.switchboard-off {
+  margin-top: 10px;
+}
+
+.switchboard-off summary {
+  cursor: pointer;
+  color: var(--color-accent-strong);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+
+.switchboard-grid--off {
+  opacity: 0.7;
+  margin-top: 8px;
+}
+
+.tool-tip {
+  cursor: help;
+  border-bottom: 1px dotted var(--color-dim);
 }
 
 .btn,
@@ -1148,10 +1219,6 @@ body.rail-collapsed .desktop-rail__body {
     flex-direction: column;
   }
 
-  .controls {
-    grid-template-columns: 1fr;
-  }
-
   .controls-primary {
     display: grid;
   }
@@ -1163,6 +1230,8 @@ body.rail-collapsed .desktop-rail__body {
 
   .controls-buttons {
     justify-content: stretch;
+    margin-left: 0;
+    width: 100%;
   }
 
   .btn {

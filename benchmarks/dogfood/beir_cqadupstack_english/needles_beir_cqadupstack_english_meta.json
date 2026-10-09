@@ -1,0 +1,19 @@
+{
+ "source": "BEIR cqadupstack/english (UKP mirror zip; corpus.jsonl, queries.jsonl, qrels/test.tsv)",
+ "corpus_root": "F:\\Projects\\beir\\beir_cqadupstack_english\\corpus",
+ "docs": 40221,
+ "docs_under_min_bytes": 1,
+ "docs_over_max_bytes": 0,
+ "path_collisions": 0,
+ "n_needles": 1570,
+ "qrels_positive_total": 3765,
+ "gold_per_needle_max": 79,
+ "graded": false,
+ "queries_that_are_corpus_docs": 0,
+ "drops": {
+  "no_positive_qrel": 0,
+  "gold_absent_from_corpus": 0,
+  "query_text_missing": 0
+ },
+ "drop_names": {}
+}

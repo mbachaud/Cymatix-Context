@@ -11,7 +11,7 @@
   <ul class="panel-list">
     {% for t in state.tools.entries %}
       <li class="panel-list__item">
-        <span class="chip chip--tool chip--{{ t.kind }}">{{ t.name }}</span>
+        <span class="chip chip--tool chip--{{ t.kind }}"{% if t.description %} title="{{ t.description }}" tabindex="0"{% endif %}>{{ t.name }}</span>
         <span class="muted">/ {{ t.kind }}</span>
         <span class="tool-status tool-status--{{ t.status }}">{{ t.status }}</span>
         {% if t.backend %}

@@ -1,0 +1,3429 @@
+{
+ "beir_cqadupstack_programmers_100095": [
+  "07/154733.txt",
+  "38/63174.txt",
+  "66/213963.txt",
+  "a1/242811.txt",
+  "fa/221498.txt"
+ ],
+ "beir_cqadupstack_programmers_100685": [
+  "87/100671.txt",
+  "d9/233470.txt"
+ ],
+ "beir_cqadupstack_programmers_100959": [
+  "d3/199309.txt"
+ ],
+ "beir_cqadupstack_programmers_101164": [
+  "71/10035.txt",
+  "76/109171.txt"
+ ],
+ "beir_cqadupstack_programmers_102008": [
+  "12/109436.txt"
+ ],
+ "beir_cqadupstack_programmers_102348": [
+  "d1/78547.txt"
+ ],
+ "beir_cqadupstack_programmers_102518": [
+  "7d/195081.txt",
+  "8c/236323.txt"
+ ],
+ "beir_cqadupstack_programmers_102679": [
+  "ea/51553.txt"
+ ],
+ "beir_cqadupstack_programmers_102999": [
+  "d6/123044.txt"
+ ],
+ "beir_cqadupstack_programmers_103089": [
+  "2c/131122.txt"
+ ],
+ "beir_cqadupstack_programmers_103133": [
+  "e7/53970.txt"
+ ],
+ "beir_cqadupstack_programmers_103263": [
+  "5f/130073.txt"
+ ],
+ "beir_cqadupstack_programmers_103471": [
+  "cc/206312.txt"
+ ],
+ "beir_cqadupstack_programmers_104096": [
+  "e4/100553.txt",
+  "e9/125712.txt"
+ ],
+ "beir_cqadupstack_programmers_104111": [
+  "8c/136163.txt",
+  "b1/14914.txt",
+  "cc/91196.txt",
+  "d2/25564.txt"
+ ],
+ "beir_cqadupstack_programmers_104122": [
+  "dd/96331.txt"
+ ],
+ "beir_cqadupstack_programmers_104517": [
+  "e2/94054.txt"
+ ],
+ "beir_cqadupstack_programmers_10495": [
+  "b1/132395.txt"
+ ],
+ "beir_cqadupstack_programmers_105380": [
+  "db/240877.txt"
+ ],
+ "beir_cqadupstack_programmers_106693": [
+  "2c/232652.txt"
+ ],
+ "beir_cqadupstack_programmers_107265": [
+  "c7/130186.txt",
+  "ce/201312.txt"
+ ],
+ "beir_cqadupstack_programmers_107326": [
+  "e2/38597.txt"
+ ],
+ "beir_cqadupstack_programmers_107774": [
+  "b5/54536.txt"
+ ],
+ "beir_cqadupstack_programmers_107986": [
+  "28/224307.txt"
+ ],
+ "beir_cqadupstack_programmers_108292": [
+  "d0/81718.txt"
+ ],
+ "beir_cqadupstack_programmers_108309": [
+  "c2/143629.txt"
+ ],
+ "beir_cqadupstack_programmers_108395": [
+  "14/194795.txt",
+  "55/45230.txt",
+  "dc/96729.txt"
+ ],
+ "beir_cqadupstack_programmers_10857": [
+  "cd/230398.txt"
+ ],
+ "beir_cqadupstack_programmers_108855": [
+  "cf/223236.txt"
+ ],
+ "beir_cqadupstack_programmers_109279": [
+  "48/230934.txt"
+ ],
+ "beir_cqadupstack_programmers_109818": [
+  "73/208713.txt"
+ ],
+ "beir_cqadupstack_programmers_10998": [
+  "2f/223634.txt"
+ ],
+ "beir_cqadupstack_programmers_110190": [
+  "26/205797.txt"
+ ],
+ "beir_cqadupstack_programmers_110270": [
+  "87/110274.txt",
+  "f2/39284.txt"
+ ],
+ "beir_cqadupstack_programmers_110471": [
+  "69/11257.txt",
+  "b7/22809.txt",
+  "f0/121798.txt"
+ ],
+ "beir_cqadupstack_programmers_110518": [
+  "4c/156877.txt"
+ ],
+ "beir_cqadupstack_programmers_110595": [
+  "09/209401.txt",
+  "17/206979.txt",
+  "77/136596.txt",
+  "90/210707.txt",
+  "94/74764.txt",
+  "cd/10793.txt",
+  "d0/83837.txt"
+ ],
+ "beir_cqadupstack_programmers_110730": [
+  "9c/110804.txt",
+  "d2/250337.txt",
+  "e1/244381.txt"
+ ],
+ "beir_cqadupstack_programmers_110788": [
+  "92/9099.txt"
+ ],
+ "beir_cqadupstack_programmers_111003": [
+  "16/14033.txt",
+  "4e/134984.txt",
+  "50/181837.txt",
+  "83/219747.txt",
+  "a3/73832.txt",
+  "a9/55536.txt"
+ ],
+ "beir_cqadupstack_programmers_111475": [
+  "96/104867.txt"
+ ],
+ "beir_cqadupstack_programmers_111633": [
+  "26/141592.txt"
+ ],
+ "beir_cqadupstack_programmers_111663": [
+  "2e/49.txt"
+ ],
+ "beir_cqadupstack_programmers_111757": [
+  "75/40845.txt"
+ ],
+ "beir_cqadupstack_programmers_111788": [
+  "4a/2682.txt",
+  "9d/130341.txt"
+ ],
+ "beir_cqadupstack_programmers_111802": [
+  "53/35594.txt",
+  "82/94643.txt",
+  "ef/210913.txt"
+ ],
+ "beir_cqadupstack_programmers_111846": [
+  "59/142632.txt"
+ ],
+ "beir_cqadupstack_programmers_111881": [
+  "65/111890.txt",
+  "96/58031.txt",
+  "b0/114303.txt",
+  "bf/26191.txt",
+  "e2/66389.txt",
+  "fe/108258.txt"
+ ],
+ "beir_cqadupstack_programmers_112485": [
+  "75/65384.txt",
+  "f6/211087.txt"
+ ],
+ "beir_cqadupstack_programmers_112974": [
+  "46/20204.txt"
+ ],
+ "beir_cqadupstack_programmers_113209": [
+  "2c/220822.txt",
+  "b0/30254.txt",
+  "e2/108546.txt"
+ ],
+ "beir_cqadupstack_programmers_113295": [
+  "86/126121.txt"
+ ],
+ "beir_cqadupstack_programmers_113726": [
+  "f4/83553.txt"
+ ],
+ "beir_cqadupstack_programmers_114258": [
+  "dd/199368.txt"
+ ],
+ "beir_cqadupstack_programmers_114286": [
+  "1a/172917.txt",
+  "4b/207296.txt"
+ ],
+ "beir_cqadupstack_programmers_114520": [
+  "2b/100480.txt",
+  "37/40172.txt",
+  "82/201457.txt",
+  "8e/114727.txt",
+  "c6/197983.txt",
+  "fe/137252.txt"
+ ],
+ "beir_cqadupstack_programmers_114629": [
+  "75/54568.txt"
+ ],
+ "beir_cqadupstack_programmers_114755": [
+  "6c/88714.txt",
+  "fe/102452.txt"
+ ],
+ "beir_cqadupstack_programmers_114819": [
+  "5a/26537.txt"
+ ],
+ "beir_cqadupstack_programmers_114958": [
+  "bf/139360.txt"
+ ],
+ "beir_cqadupstack_programmers_115425": [
+  "23/115359.txt"
+ ],
+ "beir_cqadupstack_programmers_115525": [
+  "09/170348.txt"
+ ],
+ "beir_cqadupstack_programmers_115769": [
+  "0f/202675.txt",
+  "c8/101282.txt"
+ ],
+ "beir_cqadupstack_programmers_115910": [
+  "21/232391.txt"
+ ],
+ "beir_cqadupstack_programmers_115920": [
+  "5e/160896.txt",
+  "c8/84278.txt"
+ ],
+ "beir_cqadupstack_programmers_116148": [
+  "cf/89092.txt"
+ ],
+ "beir_cqadupstack_programmers_116242": [
+  "04/152891.txt",
+  "93/147156.txt",
+  "a1/113936.txt",
+  "b3/1483.txt",
+  "b5/245455.txt"
+ ],
+ "beir_cqadupstack_programmers_116330": [
+  "1e/81072.txt"
+ ],
+ "beir_cqadupstack_programmers_116491": [
+  "44/35208.txt",
+  "c4/28139.txt"
+ ],
+ "beir_cqadupstack_programmers_116730": [
+  "c7/207057.txt"
+ ],
+ "beir_cqadupstack_programmers_116988": [
+  "c1/4319.txt"
+ ],
+ "beir_cqadupstack_programmers_117030": [
+  "76/173466.txt",
+  "8f/178154.txt"
+ ],
+ "beir_cqadupstack_programmers_117403": [
+  "70/52486.txt"
+ ],
+ "beir_cqadupstack_programmers_117766": [
+  "53/118404.txt",
+  "d1/48401.txt"
+ ],
+ "beir_cqadupstack_programmers_117825": [
+  "24/109409.txt",
+  "5c/220233.txt"
+ ],
+ "beir_cqadupstack_programmers_117852": [
+  "ec/200538.txt"
+ ],
+ "beir_cqadupstack_programmers_1180": [
+  "d5/114078.txt"
+ ],
+ "beir_cqadupstack_programmers_118064": [
+  "00/224934.txt",
+  "79/95718.txt",
+  "7d/70877.txt",
+  "98/219767.txt",
+  "9b/107834.txt",
+  "f7/49379.txt"
+ ],
+ "beir_cqadupstack_programmers_118108": [
+  "62/43329.txt"
+ ],
+ "beir_cqadupstack_programmers_118140": [
+  "8f/194922.txt"
+ ],
+ "beir_cqadupstack_programmers_118301": [
+  "1d/122026.txt"
+ ],
+ "beir_cqadupstack_programmers_118558": [
+  "35/54018.txt"
+ ],
+ "beir_cqadupstack_programmers_119367": [
+  "37/129675.txt",
+  "a0/42792.txt"
+ ],
+ "beir_cqadupstack_programmers_119466": [
+  "ba/95212.txt"
+ ],
+ "beir_cqadupstack_programmers_119513": [
+  "48/144385.txt"
+ ],
+ "beir_cqadupstack_programmers_119814": [
+  "96/188154.txt"
+ ],
+ "beir_cqadupstack_programmers_1200": [
+  "1b/55991.txt"
+ ],
+ "beir_cqadupstack_programmers_120477": [
+  "90/192113.txt"
+ ],
+ "beir_cqadupstack_programmers_120488": [
+  "75/119470.txt"
+ ],
+ "beir_cqadupstack_programmers_120541": [
+  "3a/102906.txt"
+ ],
+ "beir_cqadupstack_programmers_120628": [
+  "14/163062.txt"
+ ],
+ "beir_cqadupstack_programmers_121167": [
+  "5b/184376.txt"
+ ],
+ "beir_cqadupstack_programmers_121218": [
+  "b2/119488.txt",
+  "f5/225744.txt"
+ ],
+ "beir_cqadupstack_programmers_121887": [
+  "b1/57197.txt"
+ ],
+ "beir_cqadupstack_programmers_121998": [
+  "bc/196000.txt"
+ ],
+ "beir_cqadupstack_programmers_122071": [
+  "56/55284.txt"
+ ],
+ "beir_cqadupstack_programmers_122233": [
+  "ca/240763.txt",
+  "dc/237387.txt"
+ ],
+ "beir_cqadupstack_programmers_122244": [
+  "6c/140027.txt",
+  "d2/2715.txt"
+ ],
+ "beir_cqadupstack_programmers_122437": [
+  "7d/218558.txt",
+  "95/121830.txt",
+  "f3/9730.txt"
+ ],
+ "beir_cqadupstack_programmers_123270": [
+  "9a/221.txt",
+  "a9/69788.txt"
+ ],
+ "beir_cqadupstack_programmers_123456": [
+  "bd/132436.txt"
+ ],
+ "beir_cqadupstack_programmers_123834": [
+  "03/5153.txt"
+ ],
+ "beir_cqadupstack_programmers_123851": [
+  "4d/648.txt",
+  "c0/120281.txt",
+  "fb/22854.txt"
+ ],
+ "beir_cqadupstack_programmers_124533": [
+  "02/98123.txt",
+  "83/5267.txt"
+ ],
+ "beir_cqadupstack_programmers_12472": [
+  "59/11523.txt"
+ ],
+ "beir_cqadupstack_programmers_124817": [
+  "0a/121073.txt",
+  "11/21697.txt"
+ ],
+ "beir_cqadupstack_programmers_125108": [
+  "47/44842.txt",
+  "62/90057.txt",
+  "dd/213738.txt"
+ ],
+ "beir_cqadupstack_programmers_125252": [
+  "b4/247.txt"
+ ],
+ "beir_cqadupstack_programmers_125373": [
+  "24/119968.txt",
+  "95/12807.txt"
+ ],
+ "beir_cqadupstack_programmers_125715": [
+  "ce/566.txt"
+ ],
+ "beir_cqadupstack_programmers_126130": [
+  "29/96192.txt"
+ ],
+ "beir_cqadupstack_programmers_126965": [
+  "d4/83716.txt"
+ ],
+ "beir_cqadupstack_programmers_127201": [
+  "1d/127158.txt"
+ ],
+ "beir_cqadupstack_programmers_127535": [
+  "23/25969.txt",
+  "c9/193509.txt",
+  "e7/23535.txt"
+ ],
+ "beir_cqadupstack_programmers_12773": [
+  "9d/124109.txt"
+ ],
+ "beir_cqadupstack_programmers_127867": [
+  "47/96322.txt",
+  "c0/130070.txt"
+ ],
+ "beir_cqadupstack_programmers_128044": [
+  "11/10340.txt"
+ ],
+ "beir_cqadupstack_programmers_128548": [
+  "74/100656.txt",
+  "90/61678.txt",
+  "97/370.txt"
+ ],
+ "beir_cqadupstack_programmers_129141": [
+  "0e/28098.txt"
+ ],
+ "beir_cqadupstack_programmers_129520": [
+  "be/141485.txt"
+ ],
+ "beir_cqadupstack_programmers_129543": [
+  "f9/238362.txt"
+ ],
+ "beir_cqadupstack_programmers_129603": [
+  "11/224528.txt",
+  "1f/72806.txt",
+  "20/237245.txt",
+  "2a/195107.txt",
+  "3e/7559.txt",
+  "4a/136639.txt",
+  "4e/216347.txt",
+  "4f/1224.txt",
+  "6f/196648.txt",
+  "70/101528.txt",
+  "8d/251620.txt",
+  "aa/49202.txt",
+  "c0/39855.txt",
+  "c4/186217.txt",
+  "c8/18379.txt",
+  "f3/195045.txt",
+  "f4/128202.txt",
+  "fc/113593.txt",
+  "fd/193723.txt",
+  "fd/213763.txt"
+ ],
+ "beir_cqadupstack_programmers_130256": [
+  "22/27454.txt",
+  "75/132173.txt",
+  "c3/141654.txt"
+ ],
+ "beir_cqadupstack_programmers_130335": [
+  "ac/130173.txt"
+ ],
+ "beir_cqadupstack_programmers_130582": [
+  "17/60926.txt",
+  "e2/95823.txt"
+ ],
+ "beir_cqadupstack_programmers_130743": [
+  "11/150606.txt"
+ ],
+ "beir_cqadupstack_programmers_130948": [
+  "ee/251533.txt"
+ ],
+ "beir_cqadupstack_programmers_131314": [
+  "13/83079.txt",
+  "37/125222.txt",
+  "3f/107828.txt",
+  "4a/36920.txt",
+  "4e/99922.txt",
+  "58/204999.txt",
+  "5e/179004.txt",
+  "68/126830.txt",
+  "83/56742.txt",
+  "8d/39032.txt",
+  "98/44.txt",
+  "a4/178552.txt",
+  "b0/35521.txt",
+  "dd/184051.txt",
+  "fd/73148.txt"
+ ],
+ "beir_cqadupstack_programmers_131381": [
+  "09/7157.txt"
+ ],
+ "beir_cqadupstack_programmers_131408": [
+  "20/52534.txt",
+  "b5/199116.txt"
+ ],
+ "beir_cqadupstack_programmers_131451": [
+  "b3/131324.txt"
+ ],
+ "beir_cqadupstack_programmers_131701": [
+  "69/221662.txt"
+ ],
+ "beir_cqadupstack_programmers_1319": [
+  "16/85573.txt"
+ ],
+ "beir_cqadupstack_programmers_132074": [
+  "aa/34356.txt"
+ ],
+ "beir_cqadupstack_programmers_132281": [
+  "7c/213391.txt",
+  "c3/53624.txt"
+ ],
+ "beir_cqadupstack_programmers_132520": [
+  "c8/84866.txt"
+ ],
+ "beir_cqadupstack_programmers_132578": [
+  "7e/74020.txt"
+ ],
+ "beir_cqadupstack_programmers_133096": [
+  "62/134564.txt"
+ ],
+ "beir_cqadupstack_programmers_133330": [
+  "aa/68058.txt"
+ ],
+ "beir_cqadupstack_programmers_133424": [
+  "54/24681.txt"
+ ],
+ "beir_cqadupstack_programmers_133565": [
+  "54/221000.txt"
+ ],
+ "beir_cqadupstack_programmers_133664": [
+  "89/135873.txt"
+ ],
+ "beir_cqadupstack_programmers_133782": [
+  "b4/10791.txt"
+ ],
+ "beir_cqadupstack_programmers_133872": [
+  "20/35501.txt"
+ ],
+ "beir_cqadupstack_programmers_133937": [
+  "d7/27335.txt"
+ ],
+ "beir_cqadupstack_programmers_134037": [
+  "ac/97824.txt"
+ ],
+ "beir_cqadupstack_programmers_134244": [
+  "8b/155943.txt"
+ ],
+ "beir_cqadupstack_programmers_135047": [
+  "69/170740.txt"
+ ],
+ "beir_cqadupstack_programmers_135701": [
+  "19/135697.txt"
+ ],
+ "beir_cqadupstack_programmers_135970": [
+  "35/70919.txt"
+ ],
+ "beir_cqadupstack_programmers_135993": [
+  "2c/50819.txt",
+  "69/95310.txt",
+  "a6/167080.txt"
+ ],
+ "beir_cqadupstack_programmers_136195": [
+  "3d/76376.txt"
+ ],
+ "beir_cqadupstack_programmers_136382": [
+  "de/88784.txt"
+ ],
+ "beir_cqadupstack_programmers_136449": [
+  "4f/116678.txt"
+ ],
+ "beir_cqadupstack_programmers_136629": [
+  "57/139893.txt",
+  "66/182267.txt"
+ ],
+ "beir_cqadupstack_programmers_136634": [
+  "11/137088.txt",
+  "45/213267.txt",
+  "6e/136987.txt",
+  "85/205248.txt",
+  "8a/200960.txt",
+  "ba/55481.txt",
+  "c8/136994.txt",
+  "ea/89158.txt",
+  "ef/139821.txt"
+ ],
+ "beir_cqadupstack_programmers_13676": [
+  "ae/53302.txt"
+ ],
+ "beir_cqadupstack_programmers_136774": [
+  "70/136762.txt",
+  "b1/239036.txt"
+ ],
+ "beir_cqadupstack_programmers_136908": [
+  "20/226178.txt"
+ ],
+ "beir_cqadupstack_programmers_136993": [
+  "bf/157236.txt"
+ ],
+ "beir_cqadupstack_programmers_137344": [
+  "7d/232219.txt"
+ ],
+ "beir_cqadupstack_programmers_137439": [
+  "0a/64544.txt"
+ ],
+ "beir_cqadupstack_programmers_13786": [
+  "b8/65080.txt",
+  "cc/195012.txt"
+ ],
+ "beir_cqadupstack_programmers_137973": [
+  "58/19244.txt"
+ ],
+ "beir_cqadupstack_programmers_138026": [
+  "fc/28314.txt"
+ ],
+ "beir_cqadupstack_programmers_138182": [
+  "bd/237853.txt"
+ ],
+ "beir_cqadupstack_programmers_138396": [
+  "26/78028.txt",
+  "61/198592.txt"
+ ],
+ "beir_cqadupstack_programmers_138447": [
+  "8e/134028.txt"
+ ],
+ "beir_cqadupstack_programmers_138642": [
+  "70/103233.txt"
+ ],
+ "beir_cqadupstack_programmers_138643": [
+  "0a/190414.txt",
+  "c6/74832.txt"
+ ],
+ "beir_cqadupstack_programmers_138726": [
+  "36/138860.txt"
+ ],
+ "beir_cqadupstack_programmers_138908": [
+  "bb/140364.txt"
+ ],
+ "beir_cqadupstack_programmers_139037": [
+  "f8/251743.txt"
+ ],
+ "beir_cqadupstack_programmers_139171": [
+  "23/166039.txt",
+  "50/141522.txt"
+ ],
+ "beir_cqadupstack_programmers_139418": [
+  "14/133015.txt"
+ ],
+ "beir_cqadupstack_programmers_139442": [
+  "2d/6790.txt"
+ ],
+ "beir_cqadupstack_programmers_139663": [
+  "9e/208805.txt"
+ ],
+ "beir_cqadupstack_programmers_140004": [
+  "a1/198714.txt"
+ ],
+ "beir_cqadupstack_programmers_140264": [
+  "e3/233474.txt"
+ ],
+ "beir_cqadupstack_programmers_140266": [
+  "4b/48698.txt"
+ ],
+ "beir_cqadupstack_programmers_140561": [
+  "e5/38382.txt"
+ ],
+ "beir_cqadupstack_programmers_140876": [
+  "17/70822.txt",
+  "30/88707.txt",
+  "50/194979.txt"
+ ],
+ "beir_cqadupstack_programmers_141232": [
+  "9d/182077.txt"
+ ],
+ "beir_cqadupstack_programmers_141411": [
+  "f9/159870.txt"
+ ],
+ "beir_cqadupstack_programmers_141961": [
+  "c8/54397.txt"
+ ],
+ "beir_cqadupstack_programmers_141973": [
+  "f8/152486.txt"
+ ],
+ "beir_cqadupstack_programmers_142292": [
+  "9c/12087.txt"
+ ],
+ "beir_cqadupstack_programmers_142612": [
+  "ee/194111.txt"
+ ],
+ "beir_cqadupstack_programmers_142974": [
+  "d5/142970.txt"
+ ],
+ "beir_cqadupstack_programmers_143127": [
+  "c7/133134.txt"
+ ],
+ "beir_cqadupstack_programmers_143722": [
+  "4d/145989.txt"
+ ],
+ "beir_cqadupstack_programmers_144058": [
+  "b1/139482.txt"
+ ],
+ "beir_cqadupstack_programmers_144556": [
+  "37/77610.txt",
+  "ab/64592.txt"
+ ],
+ "beir_cqadupstack_programmers_144717": [
+  "4b/231062.txt"
+ ],
+ "beir_cqadupstack_programmers_144829": [
+  "92/120315.txt"
+ ],
+ "beir_cqadupstack_programmers_144892": [
+  "ab/67632.txt"
+ ],
+ "beir_cqadupstack_programmers_145055": [
+  "57/152999.txt"
+ ],
+ "beir_cqadupstack_programmers_145437": [
+  "06/41740.txt",
+  "27/245907.txt",
+  "2b/131332.txt",
+  "34/180001.txt",
+  "36/113313.txt",
+  "42/109602.txt",
+  "6f/207207.txt",
+  "bc/129075.txt",
+  "cc/229691.txt",
+  "ed/239189.txt",
+  "ee/108240.txt",
+  "fd/163459.txt"
+ ],
+ "beir_cqadupstack_programmers_145518": [
+  "9c/8968.txt"
+ ],
+ "beir_cqadupstack_programmers_145722": [
+  "9d/36367.txt"
+ ],
+ "beir_cqadupstack_programmers_14582": [
+  "b3/21336.txt"
+ ],
+ "beir_cqadupstack_programmers_146065": [
+  "d3/229897.txt",
+  "f4/10424.txt"
+ ],
+ "beir_cqadupstack_programmers_146272": [
+  "ca/27798.txt"
+ ],
+ "beir_cqadupstack_programmers_14645": [
+  "7c/131370.txt"
+ ],
+ "beir_cqadupstack_programmers_146810": [
+  "7e/212111.txt"
+ ],
+ "beir_cqadupstack_programmers_147134": [
+  "51/152407.txt",
+  "7a/161389.txt"
+ ],
+ "beir_cqadupstack_programmers_147185": [
+  "95/195015.txt",
+  "c6/124526.txt",
+  "f3/28651.txt"
+ ],
+ "beir_cqadupstack_programmers_147240": [
+  "51/113763.txt",
+  "bb/117276.txt",
+  "e4/76151.txt"
+ ],
+ "beir_cqadupstack_programmers_147273": [
+  "ba/234657.txt"
+ ],
+ "beir_cqadupstack_programmers_147977": [
+  "36/208224.txt"
+ ],
+ "beir_cqadupstack_programmers_14831": [
+  "f0/48895.txt"
+ ],
+ "beir_cqadupstack_programmers_148747": [
+  "45/38642.txt"
+ ],
+ "beir_cqadupstack_programmers_14975": [
+  "f6/187556.txt"
+ ],
+ "beir_cqadupstack_programmers_15004": [
+  "49/130412.txt",
+  "e4/3139.txt"
+ ],
+ "beir_cqadupstack_programmers_150479": [
+  "56/9885.txt"
+ ],
+ "beir_cqadupstack_programmers_150633": [
+  "cb/114331.txt",
+  "cd/246777.txt"
+ ],
+ "beir_cqadupstack_programmers_150888": [
+  "65/245621.txt",
+  "cf/179003.txt"
+ ],
+ "beir_cqadupstack_programmers_151103": [
+  "35/157096.txt"
+ ],
+ "beir_cqadupstack_programmers_152094": [
+  "32/228287.txt"
+ ],
+ "beir_cqadupstack_programmers_15239": [
+  "ed/52608.txt"
+ ],
+ "beir_cqadupstack_programmers_152678": [
+  "01/101893.txt"
+ ],
+ "beir_cqadupstack_programmers_15286": [
+  "90/160173.txt"
+ ],
+ "beir_cqadupstack_programmers_153581": [
+  "d0/23891.txt"
+ ],
+ "beir_cqadupstack_programmers_153631": [
+  "6c/105786.txt"
+ ],
+ "beir_cqadupstack_programmers_154155": [
+  "f7/201156.txt"
+ ],
+ "beir_cqadupstack_programmers_154339": [
+  "36/141818.txt",
+  "55/50658.txt",
+  "7f/222389.txt",
+  "f3/220.txt",
+  "f7/105917.txt"
+ ],
+ "beir_cqadupstack_programmers_154593": [
+  "a0/48634.txt"
+ ],
+ "beir_cqadupstack_programmers_154679": [
+  "b0/211448.txt"
+ ],
+ "beir_cqadupstack_programmers_154954": [
+  "97/220219.txt"
+ ],
+ "beir_cqadupstack_programmers_155469": [
+  "01/96246.txt",
+  "15/46637.txt",
+  "99/132214.txt"
+ ],
+ "beir_cqadupstack_programmers_155659": [
+  "28/187787.txt",
+  "72/141144.txt",
+  "7f/51115.txt",
+  "e8/106647.txt"
+ ],
+ "beir_cqadupstack_programmers_156771": [
+  "ee/204335.txt"
+ ],
+ "beir_cqadupstack_programmers_156794": [
+  "1f/156795.txt"
+ ],
+ "beir_cqadupstack_programmers_156848": [
+  "9b/156592.txt"
+ ],
+ "beir_cqadupstack_programmers_15829": [
+  "28/230462.txt"
+ ],
+ "beir_cqadupstack_programmers_158359": [
+  "60/139497.txt",
+  "ed/166171.txt"
+ ],
+ "beir_cqadupstack_programmers_158397": [
+  "47/194873.txt"
+ ],
+ "beir_cqadupstack_programmers_158534": [
+  "64/210393.txt",
+  "7c/170808.txt",
+  "82/103779.txt",
+  "cb/194446.txt"
+ ],
+ "beir_cqadupstack_programmers_158591": [
+  "e0/235623.txt"
+ ],
+ "beir_cqadupstack_programmers_159089": [
+  "02/159096.txt"
+ ],
+ "beir_cqadupstack_programmers_159373": [
+  "e6/255891.txt"
+ ],
+ "beir_cqadupstack_programmers_159626": [
+  "77/164991.txt"
+ ],
+ "beir_cqadupstack_programmers_159666": [
+  "9c/240294.txt",
+  "a1/159637.txt"
+ ],
+ "beir_cqadupstack_programmers_16010": [
+  "c7/231208.txt"
+ ],
+ "beir_cqadupstack_programmers_160628": [
+  "e7/240965.txt"
+ ],
+ "beir_cqadupstack_programmers_161303": [
+  "43/190181.txt",
+  "53/21802.txt",
+  "6c/38423.txt",
+  "94/120497.txt",
+  "a5/158631.txt",
+  "a5/202879.txt",
+  "b6/187886.txt",
+  "d8/120828.txt"
+ ],
+ "beir_cqadupstack_programmers_161711": [
+  "f0/74222.txt"
+ ],
+ "beir_cqadupstack_programmers_161809": [
+  "9a/237845.txt",
+  "ce/156883.txt"
+ ],
+ "beir_cqadupstack_programmers_162583": [
+  "d2/204488.txt"
+ ],
+ "beir_cqadupstack_programmers_162931": [
+  "19/145446.txt"
+ ],
+ "beir_cqadupstack_programmers_163408": [
+  "84/154022.txt"
+ ],
+ "beir_cqadupstack_programmers_163752": [
+  "0b/104009.txt",
+  "23/13279.txt",
+  "27/1386.txt",
+  "86/1985.txt",
+  "9c/84120.txt"
+ ],
+ "beir_cqadupstack_programmers_163822": [
+  "14/27686.txt"
+ ],
+ "beir_cqadupstack_programmers_163924": [
+  "7a/149491.txt"
+ ],
+ "beir_cqadupstack_programmers_163933": [
+  "52/200739.txt",
+  "a2/166165.txt"
+ ],
+ "beir_cqadupstack_programmers_164599": [
+  "29/175824.txt"
+ ],
+ "beir_cqadupstack_programmers_164665": [
+  "88/166640.txt",
+  "bc/215013.txt"
+ ],
+ "beir_cqadupstack_programmers_164799": [
+  "7d/42181.txt",
+  "8e/210503.txt"
+ ],
+ "beir_cqadupstack_programmers_16528": [
+  "e0/177979.txt"
+ ],
+ "beir_cqadupstack_programmers_165668": [
+  "0b/77637.txt",
+  "33/166215.txt",
+  "6a/23019.txt",
+  "79/3199.txt",
+  "ad/77206.txt"
+ ],
+ "beir_cqadupstack_programmers_165725": [
+  "26/199345.txt"
+ ],
+ "beir_cqadupstack_programmers_165735": [
+  "ff/194792.txt"
+ ],
+ "beir_cqadupstack_programmers_166136": [
+  "cd/193565.txt"
+ ],
+ "beir_cqadupstack_programmers_166314": [
+  "b7/214018.txt"
+ ],
+ "beir_cqadupstack_programmers_166798": [
+  "b0/166374.txt"
+ ],
+ "beir_cqadupstack_programmers_166884": [
+  "02/205803.txt",
+  "05/198337.txt",
+  "15/206366.txt",
+  "22/211363.txt",
+  "2b/201804.txt",
+  "37/213284.txt",
+  "43/255817.txt",
+  "45/201636.txt",
+  "53/214327.txt",
+  "5f/252568.txt",
+  "69/187478.txt",
+  "77/254235.txt",
+  "78/210372.txt",
+  "7f/209822.txt",
+  "85/220888.txt",
+  "8e/148849.txt",
+  "9f/47789.txt",
+  "b5/205425.txt",
+  "bf/137941.txt",
+  "c8/191208.txt",
+  "ca/198565.txt",
+  "cd/107669.txt",
+  "d7/218429.txt",
+  "eb/195989.txt",
+  "ec/243331.txt",
+  "f2/94429.txt"
+ ],
+ "beir_cqadupstack_programmers_166895": [
+  "11/220479.txt"
+ ],
+ "beir_cqadupstack_programmers_16708": [
+  "51/29852.txt",
+  "b8/239180.txt",
+  "ea/66393.txt"
+ ],
+ "beir_cqadupstack_programmers_167277": [
+  "84/201971.txt",
+  "8c/105313.txt",
+  "e1/141554.txt"
+ ],
+ "beir_cqadupstack_programmers_16732": [
+  "3e/250078.txt"
+ ],
+ "beir_cqadupstack_programmers_167890": [
+  "b3/133506.txt"
+ ],
+ "beir_cqadupstack_programmers_168685": [
+  "80/255866.txt"
+ ],
+ "beir_cqadupstack_programmers_169962": [
+  "52/180371.txt"
+ ],
+ "beir_cqadupstack_programmers_170138": [
+  "0a/132612.txt",
+  "29/254398.txt",
+  "66/229549.txt",
+  "6d/107723.txt",
+  "7a/189222.txt",
+  "8c/237843.txt",
+  "8e/224350.txt",
+  "ad/231300.txt",
+  "e5/145941.txt",
+  "ed/177831.txt",
+  "f6/82682.txt"
+ ],
+ "beir_cqadupstack_programmers_170966": [
+  "1a/249701.txt",
+  "25/176876.txt",
+  "a4/57491.txt",
+  "bc/143736.txt"
+ ],
+ "beir_cqadupstack_programmers_171701": [
+  "e8/194354.txt"
+ ],
+ "beir_cqadupstack_programmers_173320": [
+  "1b/213411.txt",
+  "73/80045.txt"
+ ],
+ "beir_cqadupstack_programmers_17341": [
+  "7e/246584.txt"
+ ],
+ "beir_cqadupstack_programmers_174762": [
+  "27/225705.txt"
+ ],
+ "beir_cqadupstack_programmers_175014": [
+  "75/170981.txt"
+ ],
+ "beir_cqadupstack_programmers_175309": [
+  "b1/228043.txt"
+ ],
+ "beir_cqadupstack_programmers_175561": [
+  "f8/171066.txt"
+ ],
+ "beir_cqadupstack_programmers_175583": [
+  "51/12439.txt",
+  "5e/234881.txt",
+  "af/65179.txt",
+  "b1/187876.txt"
+ ],
+ "beir_cqadupstack_programmers_175594": [
+  "8f/66858.txt"
+ ],
+ "beir_cqadupstack_programmers_17568": [
+  "5d/220129.txt"
+ ],
+ "beir_cqadupstack_programmers_176102": [
+  "81/151229.txt"
+ ],
+ "beir_cqadupstack_programmers_176471": [
+  "87/158848.txt"
+ ],
+ "beir_cqadupstack_programmers_17696": [
+  "2b/133186.txt",
+  "36/49741.txt"
+ ],
+ "beir_cqadupstack_programmers_177907": [
+  "3e/9351.txt"
+ ],
+ "beir_cqadupstack_programmers_178018": [
+  "fa/180552.txt"
+ ],
+ "beir_cqadupstack_programmers_17826": [
+  "73/116369.txt"
+ ],
+ "beir_cqadupstack_programmers_178916": [
+  "e8/105191.txt"
+ ],
+ "beir_cqadupstack_programmers_17898": [
+  "5c/209408.txt"
+ ],
+ "beir_cqadupstack_programmers_179002": [
+  "13/66035.txt"
+ ],
+ "beir_cqadupstack_programmers_179162": [
+  "5d/234851.txt",
+  "98/236362.txt"
+ ],
+ "beir_cqadupstack_programmers_179554": [
+  "55/199657.txt"
+ ],
+ "beir_cqadupstack_programmers_179618": [
+  "46/202639.txt",
+  "ec/49550.txt"
+ ],
+ "beir_cqadupstack_programmers_179763": [
+  "be/190978.txt"
+ ],
+ "beir_cqadupstack_programmers_180012": [
+  "bb/86461.txt"
+ ],
+ "beir_cqadupstack_programmers_180165": [
+  "dc/206878.txt"
+ ],
+ "beir_cqadupstack_programmers_18059": [
+  "13/201396.txt",
+  "30/182105.txt",
+  "e9/157928.txt"
+ ],
+ "beir_cqadupstack_programmers_180904": [
+  "81/233484.txt"
+ ],
+ "beir_cqadupstack_programmers_181527": [
+  "c7/195140.txt"
+ ],
+ "beir_cqadupstack_programmers_181780": [
+  "83/207423.txt",
+  "df/183836.txt",
+  "e2/151541.txt"
+ ],
+ "beir_cqadupstack_programmers_182009": [
+  "86/256181.txt"
+ ],
+ "beir_cqadupstack_programmers_182207": [
+  "9e/162853.txt"
+ ],
+ "beir_cqadupstack_programmers_182229": [
+  "b7/77897.txt"
+ ],
+ "beir_cqadupstack_programmers_18371": [
+  "1f/98688.txt",
+  "32/54375.txt",
+  "5c/186372.txt",
+  "79/1947.txt",
+  "aa/74650.txt",
+  "d7/80065.txt",
+  "db/196865.txt",
+  "e5/109418.txt",
+  "f4/93384.txt"
+ ],
+ "beir_cqadupstack_programmers_18444": [
+  "65/216296.txt",
+  "7e/13439.txt"
+ ],
+ "beir_cqadupstack_programmers_184874": [
+  "67/194746.txt"
+ ],
+ "beir_cqadupstack_programmers_185671": [
+  "32/18454.txt",
+  "3d/77530.txt",
+  "4a/118703.txt",
+  "81/198587.txt",
+  "81/233410.txt",
+  "89/104551.txt",
+  "c2/201320.txt",
+  "e1/250653.txt"
+ ],
+ "beir_cqadupstack_programmers_185712": [
+  "ea/121326.txt"
+ ],
+ "beir_cqadupstack_programmers_186377": [
+  "30/170246.txt",
+  "50/205162.txt",
+  "8e/118740.txt",
+  "e8/10736.txt"
+ ],
+ "beir_cqadupstack_programmers_186438": [
+  "13/184654.txt",
+  "18/220252.txt",
+  "9f/237492.txt"
+ ],
+ "beir_cqadupstack_programmers_186465": [
+  "76/215253.txt"
+ ],
+ "beir_cqadupstack_programmers_186690": [
+  "0c/238270.txt"
+ ],
+ "beir_cqadupstack_programmers_18679": [
+  "50/104945.txt"
+ ],
+ "beir_cqadupstack_programmers_186932": [
+  "69/1376.txt"
+ ],
+ "beir_cqadupstack_programmers_187026": [
+  "47/11726.txt"
+ ],
+ "beir_cqadupstack_programmers_188381": [
+  "92/119168.txt"
+ ],
+ "beir_cqadupstack_programmers_189096": [
+  "0d/195373.txt",
+  "3a/246648.txt",
+  "3f/251592.txt",
+  "83/33851.txt",
+  "9b/16365.txt",
+  "a8/26349.txt",
+  "be/97758.txt",
+  "d2/140125.txt"
+ ],
+ "beir_cqadupstack_programmers_189426": [
+  "10/182171.txt",
+  "28/138951.txt",
+  "36/100214.txt",
+  "41/196882.txt",
+  "5d/15515.txt",
+  "b2/235702.txt",
+  "c9/238896.txt"
+ ],
+ "beir_cqadupstack_programmers_189824": [
+  "e5/21148.txt"
+ ],
+ "beir_cqadupstack_programmers_189983": [
+  "9e/167752.txt"
+ ],
+ "beir_cqadupstack_programmers_190542": [
+  "84/76528.txt"
+ ],
+ "beir_cqadupstack_programmers_190649": [
+  "60/253678.txt"
+ ],
+ "beir_cqadupstack_programmers_190758": [
+  "65/10581.txt"
+ ],
+ "beir_cqadupstack_programmers_190853": [
+  "53/58237.txt",
+  "fc/250706.txt"
+ ],
+ "beir_cqadupstack_programmers_190955": [
+  "95/250540.txt"
+ ],
+ "beir_cqadupstack_programmers_191191": [
+  "32/191867.txt"
+ ],
+ "beir_cqadupstack_programmers_191358": [
+  "0f/235206.txt",
+  "cb/197996.txt"
+ ],
+ "beir_cqadupstack_programmers_191539": [
+  "6b/121328.txt",
+  "bd/210331.txt"
+ ],
+ "beir_cqadupstack_programmers_191759": [
+  "07/154796.txt",
+  "26/150432.txt",
+  "a4/102507.txt",
+  "b9/100637.txt",
+  "c1/188208.txt",
+  "dd/173624.txt"
+ ],
+ "beir_cqadupstack_programmers_191961": [
+  "10/71148.txt"
+ ],
+ "beir_cqadupstack_programmers_192": [
+  "91/236051.txt"
+ ],
+ "beir_cqadupstack_programmers_192037": [
+  "9d/114782.txt"
+ ],
+ "beir_cqadupstack_programmers_193269": [
+  "1a/177539.txt"
+ ],
+ "beir_cqadupstack_programmers_193415": [
+  "33/204871.txt",
+  "45/224769.txt",
+  "cb/236489.txt",
+  "d2/196811.txt",
+  "f9/198852.txt"
+ ],
+ "beir_cqadupstack_programmers_193496": [
+  "cc/112458.txt"
+ ],
+ "beir_cqadupstack_programmers_193586": [
+  "af/88145.txt"
+ ],
+ "beir_cqadupstack_programmers_193895": [
+  "e8/241223.txt"
+ ],
+ "beir_cqadupstack_programmers_193929": [
+  "3f/238749.txt",
+  "b5/194765.txt"
+ ],
+ "beir_cqadupstack_programmers_193996": [
+  "25/207004.txt",
+  "64/5597.txt",
+  "81/65085.txt"
+ ],
+ "beir_cqadupstack_programmers_194106": [
+  "a9/138561.txt"
+ ],
+ "beir_cqadupstack_programmers_194321": [
+  "6a/170003.txt"
+ ],
+ "beir_cqadupstack_programmers_194373": [
+  "6c/3519.txt",
+  "d5/78175.txt",
+  "fe/119155.txt"
+ ],
+ "beir_cqadupstack_programmers_194395": [
+  "6e/193778.txt",
+  "d8/39798.txt"
+ ],
+ "beir_cqadupstack_programmers_194646": [
+  "56/215260.txt"
+ ],
+ "beir_cqadupstack_programmers_194679": [
+  "8c/153507.txt"
+ ],
+ "beir_cqadupstack_programmers_194958": [
+  "19/163203.txt"
+ ],
+ "beir_cqadupstack_programmers_194975": [
+  "31/75905.txt"
+ ],
+ "beir_cqadupstack_programmers_195073": [
+  "d9/149868.txt"
+ ],
+ "beir_cqadupstack_programmers_195094": [
+  "cb/19007.txt"
+ ],
+ "beir_cqadupstack_programmers_195337": [
+  "3a/223471.txt",
+  "6c/207196.txt",
+  "8b/141834.txt",
+  "8e/228095.txt"
+ ],
+ "beir_cqadupstack_programmers_195416": [
+  "bf/171024.txt"
+ ],
+ "beir_cqadupstack_programmers_19558": [
+  "16/69215.txt",
+  "18/128911.txt",
+  "32/106284.txt",
+  "9f/39499.txt",
+  "b8/199085.txt",
+  "d6/115282.txt",
+  "e3/23604.txt"
+ ],
+ "beir_cqadupstack_programmers_195656": [
+  "cb/127215.txt"
+ ],
+ "beir_cqadupstack_programmers_195719": [
+  "51/195718.txt"
+ ],
+ "beir_cqadupstack_programmers_196139": [
+  "14/200936.txt"
+ ],
+ "beir_cqadupstack_programmers_196260": [
+  "0d/180824.txt"
+ ],
+ "beir_cqadupstack_programmers_196356": [
+  "4e/103318.txt",
+  "c7/139377.txt"
+ ],
+ "beir_cqadupstack_programmers_196366": [
+  "49/128023.txt",
+  "82/60231.txt",
+  "c2/72611.txt",
+  "c6/7927.txt"
+ ],
+ "beir_cqadupstack_programmers_196546": [
+  "f6/124146.txt"
+ ],
+ "beir_cqadupstack_programmers_196615": [
+  "0e/154510.txt"
+ ],
+ "beir_cqadupstack_programmers_196700": [
+  "62/119477.txt",
+  "d9/75072.txt"
+ ],
+ "beir_cqadupstack_programmers_196876": [
+  "22/45202.txt",
+  "ab/191998.txt",
+  "b8/41990.txt"
+ ],
+ "beir_cqadupstack_programmers_196913": [
+  "b0/159964.txt"
+ ],
+ "beir_cqadupstack_programmers_196930": [
+  "a5/194353.txt"
+ ],
+ "beir_cqadupstack_programmers_196990": [
+  "9a/206256.txt"
+ ],
+ "beir_cqadupstack_programmers_197056": [
+  "5c/159813.txt",
+  "9c/150045.txt",
+  "d2/170009.txt"
+ ],
+ "beir_cqadupstack_programmers_197251": [
+  "1b/45259.txt",
+  "32/119094.txt",
+  "74/99445.txt",
+  "76/79938.txt",
+  "8d/33020.txt"
+ ],
+ "beir_cqadupstack_programmers_197443": [
+  "d7/114846.txt"
+ ],
+ "beir_cqadupstack_programmers_19750": [
+  "05/234889.txt"
+ ],
+ "beir_cqadupstack_programmers_197746": [
+  "ba/229095.txt"
+ ],
+ "beir_cqadupstack_programmers_197838": [
+  "48/114560.txt",
+  "91/57.txt"
+ ],
+ "beir_cqadupstack_programmers_198240": [
+  "fd/101273.txt"
+ ],
+ "beir_cqadupstack_programmers_19842": [
+  "a9/22073.txt"
+ ],
+ "beir_cqadupstack_programmers_198549": [
+  "b4/198539.txt"
+ ],
+ "beir_cqadupstack_programmers_198936": [
+  "2b/134241.txt"
+ ],
+ "beir_cqadupstack_programmers_198995": [
+  "02/137696.txt",
+  "22/117103.txt",
+  "2f/119253.txt",
+  "31/179060.txt",
+  "38/43528.txt",
+  "69/151317.txt",
+  "76/216197.txt",
+  "83/9598.txt",
+  "87/200730.txt",
+  "91/119415.txt",
+  "91/212499.txt",
+  "c1/129918.txt",
+  "c9/8721.txt",
+  "cc/124536.txt",
+  "e2/113947.txt",
+  "ed/15742.txt"
+ ],
+ "beir_cqadupstack_programmers_199162": [
+  "46/185925.txt"
+ ],
+ "beir_cqadupstack_programmers_199303": [
+  "82/154283.txt"
+ ],
+ "beir_cqadupstack_programmers_199698": [
+  "12/132343.txt"
+ ],
+ "beir_cqadupstack_programmers_199803": [
+  "c8/213826.txt"
+ ],
+ "beir_cqadupstack_programmers_199827": [
+  "32/117692.txt"
+ ],
+ "beir_cqadupstack_programmers_199838": [
+  "f3/229311.txt"
+ ],
+ "beir_cqadupstack_programmers_199873": [
+  "d5/4107.txt"
+ ],
+ "beir_cqadupstack_programmers_200031": [
+  "2e/205716.txt"
+ ],
+ "beir_cqadupstack_programmers_200064": [
+  "ef/147689.txt"
+ ],
+ "beir_cqadupstack_programmers_20023": [
+  "7a/14673.txt",
+  "83/255531.txt"
+ ],
+ "beir_cqadupstack_programmers_200360": [
+  "73/240565.txt"
+ ],
+ "beir_cqadupstack_programmers_200362": [
+  "5a/108085.txt",
+  "89/161384.txt",
+  "91/128691.txt",
+  "98/113306.txt",
+  "a3/101785.txt"
+ ],
+ "beir_cqadupstack_programmers_200497": [
+  "d3/195571.txt"
+ ],
+ "beir_cqadupstack_programmers_200545": [
+  "f6/97985.txt"
+ ],
+ "beir_cqadupstack_programmers_200709": [
+  "a2/253995.txt"
+ ],
+ "beir_cqadupstack_programmers_200861": [
+  "04/82432.txt"
+ ],
+ "beir_cqadupstack_programmers_20092": [
+  "1d/242742.txt"
+ ],
+ "beir_cqadupstack_programmers_201041": [
+  "fc/228516.txt"
+ ],
+ "beir_cqadupstack_programmers_201119": [
+  "0a/201108.txt"
+ ],
+ "beir_cqadupstack_programmers_201130": [
+  "dc/206610.txt"
+ ],
+ "beir_cqadupstack_programmers_201237": [
+  "bb/66614.txt"
+ ],
+ "beir_cqadupstack_programmers_201844": [
+  "a7/84822.txt"
+ ],
+ "beir_cqadupstack_programmers_201894": [
+  "71/137165.txt"
+ ],
+ "beir_cqadupstack_programmers_202273": [
+  "1d/111932.txt",
+  "f6/99389.txt"
+ ],
+ "beir_cqadupstack_programmers_202770": [
+  "92/105352.txt"
+ ],
+ "beir_cqadupstack_programmers_202804": [
+  "39/155565.txt"
+ ],
+ "beir_cqadupstack_programmers_202889": [
+  "0a/9.txt",
+  "53/38055.txt"
+ ],
+ "beir_cqadupstack_programmers_202903": [
+  "4a/14968.txt"
+ ],
+ "beir_cqadupstack_programmers_203362": [
+  "1a/255390.txt"
+ ],
+ "beir_cqadupstack_programmers_203469": [
+  "0c/6662.txt",
+  "a0/214528.txt"
+ ],
+ "beir_cqadupstack_programmers_203483": [
+  "84/118376.txt"
+ ],
+ "beir_cqadupstack_programmers_203776": [
+  "7a/132331.txt"
+ ],
+ "beir_cqadupstack_programmers_203970": [
+  "7f/240379.txt"
+ ],
+ "beir_cqadupstack_programmers_204206": [
+  "3c/51997.txt"
+ ],
+ "beir_cqadupstack_programmers_204410": [
+  "24/206734.txt"
+ ],
+ "beir_cqadupstack_programmers_204443": [
+  "3e/227654.txt"
+ ],
+ "beir_cqadupstack_programmers_204521": [
+  "90/233548.txt"
+ ],
+ "beir_cqadupstack_programmers_204580": [
+  "41/196628.txt"
+ ],
+ "beir_cqadupstack_programmers_204840": [
+  "f9/200885.txt"
+ ],
+ "beir_cqadupstack_programmers_204938": [
+  "35/61091.txt",
+  "a6/152654.txt"
+ ],
+ "beir_cqadupstack_programmers_205279": [
+  "6a/1015.txt"
+ ],
+ "beir_cqadupstack_programmers_205359": [
+  "6d/241506.txt"
+ ],
+ "beir_cqadupstack_programmers_205562": [
+  "71/176078.txt"
+ ],
+ "beir_cqadupstack_programmers_205638": [
+  "11/220365.txt",
+  "7f/16807.txt"
+ ],
+ "beir_cqadupstack_programmers_206199": [
+  "10/145784.txt"
+ ],
+ "beir_cqadupstack_programmers_206254": [
+  "07/34440.txt",
+  "52/188561.txt",
+  "c3/171203.txt",
+  "f8/245895.txt"
+ ],
+ "beir_cqadupstack_programmers_20653": [
+  "32/37317.txt",
+  "97/126359.txt",
+  "b4/19987.txt",
+  "da/81160.txt"
+ ],
+ "beir_cqadupstack_programmers_206754": [
+  "63/12186.txt",
+  "64/99255.txt",
+  "a3/218988.txt",
+  "ac/206102.txt",
+  "c1/29488.txt",
+  "d1/53714.txt",
+  "ef/143161.txt",
+  "f8/41539.txt"
+ ],
+ "beir_cqadupstack_programmers_206755": [
+  "2d/61738.txt",
+  "33/20950.txt",
+  "9e/83688.txt",
+  "a0/69050.txt",
+  "b6/195226.txt"
+ ],
+ "beir_cqadupstack_programmers_206816": [
+  "2a/122485.txt",
+  "98/230451.txt",
+  "a0/220461.txt",
+  "b6/127128.txt"
+ ],
+ "beir_cqadupstack_programmers_20684": [
+  "bf/124831.txt"
+ ],
+ "beir_cqadupstack_programmers_207815": [
+  "42/172879.txt",
+  "8e/207111.txt"
+ ],
+ "beir_cqadupstack_programmers_208698": [
+  "0d/213368.txt",
+  "15/115520.txt"
+ ],
+ "beir_cqadupstack_programmers_208815": [
+  "5d/147423.txt"
+ ],
+ "beir_cqadupstack_programmers_208867": [
+  "46/17675.txt"
+ ],
+ "beir_cqadupstack_programmers_208976": [
+  "a4/186581.txt"
+ ],
+ "beir_cqadupstack_programmers_209070": [
+  "6e/5435.txt",
+  "be/10644.txt"
+ ],
+ "beir_cqadupstack_programmers_209129": [
+  "92/118295.txt",
+  "cd/240767.txt"
+ ],
+ "beir_cqadupstack_programmers_209479": [
+  "0d/31753.txt",
+  "f3/117114.txt"
+ ],
+ "beir_cqadupstack_programmers_209609": [
+  "55/203408.txt"
+ ],
+ "beir_cqadupstack_programmers_209764": [
+  "33/164256.txt"
+ ],
+ "beir_cqadupstack_programmers_209857": [
+  "fc/39027.txt"
+ ],
+ "beir_cqadupstack_programmers_210049": [
+  "c9/10675.txt"
+ ],
+ "beir_cqadupstack_programmers_210327": [
+  "cd/204711.txt",
+  "e2/231194.txt"
+ ],
+ "beir_cqadupstack_programmers_210346": [
+  "f3/176153.txt"
+ ],
+ "beir_cqadupstack_programmers_210360": [
+  "d2/244912.txt"
+ ],
+ "beir_cqadupstack_programmers_210472": [
+  "07/227812.txt",
+  "64/198485.txt"
+ ],
+ "beir_cqadupstack_programmers_210496": [
+  "a6/66708.txt"
+ ],
+ "beir_cqadupstack_programmers_210532": [
+  "94/209967.txt"
+ ],
+ "beir_cqadupstack_programmers_210623": [
+  "78/132485.txt",
+  "a1/213076.txt",
+  "a4/210212.txt",
+  "bc/93269.txt",
+  "cf/131264.txt"
+ ],
+ "beir_cqadupstack_programmers_210635": [
+  "f2/148875.txt"
+ ],
+ "beir_cqadupstack_programmers_210637": [
+  "49/210645.txt"
+ ],
+ "beir_cqadupstack_programmers_210693": [
+  "21/118479.txt"
+ ],
+ "beir_cqadupstack_programmers_210864": [
+  "4c/183645.txt"
+ ],
+ "beir_cqadupstack_programmers_211276": [
+  "b0/53037.txt"
+ ],
+ "beir_cqadupstack_programmers_211319": [
+  "19/113430.txt"
+ ],
+ "beir_cqadupstack_programmers_211477": [
+  "39/53585.txt",
+  "54/135218.txt",
+  "77/111837.txt",
+  "fe/164756.txt"
+ ],
+ "beir_cqadupstack_programmers_211610": [
+  "49/178317.txt",
+  "5c/186549.txt"
+ ],
+ "beir_cqadupstack_programmers_211640": [
+  "99/211647.txt"
+ ],
+ "beir_cqadupstack_programmers_211678": [
+  "18/39368.txt",
+  "47/106568.txt",
+  "4f/78478.txt",
+  "c3/238452.txt",
+  "c9/203320.txt"
+ ],
+ "beir_cqadupstack_programmers_21230": [
+  "86/120094.txt"
+ ],
+ "beir_cqadupstack_programmers_212300": [
+  "af/216107.txt"
+ ],
+ "beir_cqadupstack_programmers_21256": [
+  "51/108601.txt"
+ ],
+ "beir_cqadupstack_programmers_212575": [
+  "b8/163240.txt"
+ ],
+ "beir_cqadupstack_programmers_212932": [
+  "e2/152965.txt"
+ ],
+ "beir_cqadupstack_programmers_213070": [
+  "28/190528.txt"
+ ],
+ "beir_cqadupstack_programmers_213173": [
+  "e8/49067.txt"
+ ],
+ "beir_cqadupstack_programmers_213449": [
+  "f7/246278.txt"
+ ],
+ "beir_cqadupstack_programmers_213452": [
+  "59/198284.txt"
+ ],
+ "beir_cqadupstack_programmers_213603": [
+  "ba/213135.txt"
+ ],
+ "beir_cqadupstack_programmers_21397": [
+  "0e/224869.txt",
+  "6d/134213.txt"
+ ],
+ "beir_cqadupstack_programmers_21403": [
+  "cc/48117.txt"
+ ],
+ "beir_cqadupstack_programmers_214494": [
+  "0b/16646.txt"
+ ],
+ "beir_cqadupstack_programmers_214734": [
+  "38/198783.txt",
+  "3e/255687.txt"
+ ],
+ "beir_cqadupstack_programmers_214784": [
+  "0d/214787.txt",
+  "79/214721.txt"
+ ],
+ "beir_cqadupstack_programmers_215042": [
+  "b3/14596.txt"
+ ],
+ "beir_cqadupstack_programmers_215235": [
+  "1e/224829.txt",
+  "25/232084.txt",
+  "34/225323.txt",
+  "9e/204786.txt",
+  "be/236492.txt",
+  "d7/235045.txt",
+  "dd/224365.txt",
+  "ee/221766.txt"
+ ],
+ "beir_cqadupstack_programmers_215248": [
+  "b6/164050.txt"
+ ],
+ "beir_cqadupstack_programmers_215427": [
+  "8e/218487.txt"
+ ],
+ "beir_cqadupstack_programmers_215474": [
+  "82/237597.txt",
+  "c1/138089.txt",
+  "ee/165543.txt"
+ ],
+ "beir_cqadupstack_programmers_215703": [
+  "71/2776.txt"
+ ],
+ "beir_cqadupstack_programmers_215727": [
+  "6f/165532.txt"
+ ],
+ "beir_cqadupstack_programmers_215826": [
+  "9d/253442.txt"
+ ],
+ "beir_cqadupstack_programmers_216195": [
+  "97/219531.txt"
+ ],
+ "beir_cqadupstack_programmers_216301": [
+  "be/78675.txt"
+ ],
+ "beir_cqadupstack_programmers_216639": [
+  "ef/174733.txt"
+ ],
+ "beir_cqadupstack_programmers_218121": [
+  "13/99980.txt",
+  "1e/238413.txt",
+  "2a/237894.txt",
+  "4a/233040.txt",
+  "54/204944.txt",
+  "73/208650.txt",
+  "77/230966.txt",
+  "7f/81083.txt",
+  "8e/206802.txt",
+  "93/210572.txt",
+  "94/196441.txt",
+  "9c/83167.txt",
+  "aa/209311.txt",
+  "b1/7217.txt",
+  "b7/178352.txt",
+  "b9/99794.txt",
+  "ba/228258.txt",
+  "c4/50387.txt",
+  "d8/135845.txt",
+  "de/82159.txt",
+  "e4/242700.txt",
+  "e7/157251.txt"
+ ],
+ "beir_cqadupstack_programmers_218184": [
+  "03/99306.txt"
+ ],
+ "beir_cqadupstack_programmers_218447": [
+  "f9/213768.txt"
+ ],
+ "beir_cqadupstack_programmers_218869": [
+  "77/87965.txt"
+ ],
+ "beir_cqadupstack_programmers_219028": [
+  "d7/220080.txt"
+ ],
+ "beir_cqadupstack_programmers_21907": [
+  "b7/105089.txt"
+ ],
+ "beir_cqadupstack_programmers_219198": [
+  "7c/126924.txt"
+ ],
+ "beir_cqadupstack_programmers_220023": [
+  "d0/24987.txt"
+ ],
+ "beir_cqadupstack_programmers_220049": [
+  "3a/37294.txt"
+ ],
+ "beir_cqadupstack_programmers_220343": [
+  "bc/124821.txt"
+ ],
+ "beir_cqadupstack_programmers_220444": [
+  "91/147480.txt",
+  "95/64926.txt"
+ ],
+ "beir_cqadupstack_programmers_220872": [
+  "03/193807.txt",
+  "0c/149539.txt",
+  "21/59810.txt",
+  "3c/127118.txt",
+  "e5/225093.txt"
+ ],
+ "beir_cqadupstack_programmers_220890": [
+  "0f/184695.txt"
+ ],
+ "beir_cqadupstack_programmers_221009": [
+  "9c/146070.txt"
+ ],
+ "beir_cqadupstack_programmers_221030": [
+  "ea/34959.txt"
+ ],
+ "beir_cqadupstack_programmers_221234": [
+  "0c/79585.txt"
+ ],
+ "beir_cqadupstack_programmers_221365": [
+  "3b/229003.txt"
+ ],
+ "beir_cqadupstack_programmers_22146": [
+  "40/143390.txt"
+ ],
+ "beir_cqadupstack_programmers_221615": [
+  "18/209376.txt"
+ ],
+ "beir_cqadupstack_programmers_221619": [
+  "fb/104442.txt"
+ ],
+ "beir_cqadupstack_programmers_222362": [
+  "70/232321.txt",
+  "f6/188712.txt"
+ ],
+ "beir_cqadupstack_programmers_222464": [
+  "a3/222465.txt"
+ ],
+ "beir_cqadupstack_programmers_222508": [
+  "14/156722.txt",
+  "36/195155.txt"
+ ],
+ "beir_cqadupstack_programmers_223027": [
+  "0c/85612.txt",
+  "3a/110452.txt",
+  "5e/42200.txt",
+  "62/145583.txt",
+  "75/209015.txt",
+  "a9/108476.txt",
+  "d7/27147.txt"
+ ],
+ "beir_cqadupstack_programmers_223148": [
+  "43/145034.txt"
+ ],
+ "beir_cqadupstack_programmers_223250": [
+  "23/238250.txt"
+ ],
+ "beir_cqadupstack_programmers_223596": [
+  "42/223624.txt"
+ ],
+ "beir_cqadupstack_programmers_223718": [
+  "07/222145.txt",
+  "2d/15820.txt",
+  "34/229688.txt",
+  "43/165754.txt",
+  "c5/154500.txt"
+ ],
+ "beir_cqadupstack_programmers_223815": [
+  "4c/223767.txt"
+ ],
+ "beir_cqadupstack_programmers_224036": [
+  "2c/184464.txt"
+ ],
+ "beir_cqadupstack_programmers_224434": [
+  "8c/87457.txt"
+ ],
+ "beir_cqadupstack_programmers_224752": [
+  "7e/19649.txt"
+ ],
+ "beir_cqadupstack_programmers_224835": [
+  "02/139321.txt"
+ ],
+ "beir_cqadupstack_programmers_225153": [
+  "be/225145.txt"
+ ],
+ "beir_cqadupstack_programmers_225354": [
+  "29/126721.txt"
+ ],
+ "beir_cqadupstack_programmers_225387": [
+  "a4/225375.txt"
+ ],
+ "beir_cqadupstack_programmers_225504": [
+  "14/247084.txt",
+  "1c/191524.txt",
+  "30/97879.txt",
+  "66/206863.txt",
+  "86/152020.txt",
+  "a7/32840.txt",
+  "e1/43211.txt"
+ ],
+ "beir_cqadupstack_programmers_225870": [
+  "71/125182.txt"
+ ],
+ "beir_cqadupstack_programmers_225931": [
+  "38/242724.txt"
+ ],
+ "beir_cqadupstack_programmers_226233": [
+  "9e/205925.txt"
+ ],
+ "beir_cqadupstack_programmers_226357": [
+  "38/64306.txt"
+ ],
+ "beir_cqadupstack_programmers_227720": [
+  "d7/147214.txt",
+  "f2/187009.txt"
+ ],
+ "beir_cqadupstack_programmers_227818": [
+  "cf/225893.txt"
+ ],
+ "beir_cqadupstack_programmers_227993": [
+  "1c/7629.txt",
+  "43/76392.txt"
+ ],
+ "beir_cqadupstack_programmers_228187": [
+  "91/69254.txt"
+ ],
+ "beir_cqadupstack_programmers_228584": [
+  "42/62948.txt",
+  "5e/224859.txt"
+ ],
+ "beir_cqadupstack_programmers_228848": [
+  "04/151055.txt"
+ ],
+ "beir_cqadupstack_programmers_228973": [
+  "16/68455.txt"
+ ],
+ "beir_cqadupstack_programmers_229170": [
+  "38/149871.txt"
+ ],
+ "beir_cqadupstack_programmers_229657": [
+  "09/238335.txt",
+  "54/167938.txt",
+  "6e/56585.txt",
+  "7a/233695.txt",
+  "c3/233399.txt",
+  "dd/252419.txt"
+ ],
+ "beir_cqadupstack_programmers_230145": [
+  "e0/111920.txt"
+ ],
+ "beir_cqadupstack_programmers_230199": [
+  "6d/207819.txt"
+ ],
+ "beir_cqadupstack_programmers_230206": [
+  "68/72259.txt"
+ ],
+ "beir_cqadupstack_programmers_23021": [
+  "e3/253301.txt"
+ ],
+ "beir_cqadupstack_programmers_230250": [
+  "6b/152753.txt"
+ ],
+ "beir_cqadupstack_programmers_230280": [
+  "97/85235.txt"
+ ],
+ "beir_cqadupstack_programmers_230534": [
+  "4e/78083.txt",
+  "91/230634.txt",
+  "fc/165380.txt"
+ ],
+ "beir_cqadupstack_programmers_230604": [
+  "f0/231577.txt"
+ ],
+ "beir_cqadupstack_programmers_230778": [
+  "64/181567.txt",
+  "f2/78334.txt"
+ ],
+ "beir_cqadupstack_programmers_231491": [
+  "e4/158640.txt"
+ ],
+ "beir_cqadupstack_programmers_23276": [
+  "1f/137285.txt",
+  "8d/191103.txt"
+ ],
+ "beir_cqadupstack_programmers_232812": [
+  "a5/150760.txt",
+  "cd/232145.txt",
+  "f6/154723.txt"
+ ],
+ "beir_cqadupstack_programmers_232843": [
+  "7e/65477.txt",
+  "b9/254717.txt",
+  "f4/198691.txt"
+ ],
+ "beir_cqadupstack_programmers_233038": [
+  "38/32526.txt"
+ ],
+ "beir_cqadupstack_programmers_23313": [
+  "46/175150.txt",
+  "d7/95213.txt"
+ ],
+ "beir_cqadupstack_programmers_233342": [
+  "00/166530.txt",
+  "23/149782.txt",
+  "54/40439.txt"
+ ],
+ "beir_cqadupstack_programmers_233503": [
+  "7a/233515.txt"
+ ],
+ "beir_cqadupstack_programmers_233592": [
+  "c7/188609.txt"
+ ],
+ "beir_cqadupstack_programmers_233615": [
+  "01/196257.txt",
+  "13/132952.txt"
+ ],
+ "beir_cqadupstack_programmers_233981": [
+  "fb/176497.txt"
+ ],
+ "beir_cqadupstack_programmers_234001": [
+  "72/42795.txt",
+  "cc/196996.txt"
+ ],
+ "beir_cqadupstack_programmers_234066": [
+  "2e/109295.txt"
+ ],
+ "beir_cqadupstack_programmers_234449": [
+  "55/180777.txt",
+  "e3/34354.txt"
+ ],
+ "beir_cqadupstack_programmers_234511": [
+  "cb/125836.txt",
+  "df/233495.txt"
+ ],
+ "beir_cqadupstack_programmers_234620": [
+  "01/33379.txt",
+  "75/210788.txt",
+  "de/102856.txt"
+ ],
+ "beir_cqadupstack_programmers_234820": [
+  "10/198228.txt",
+  "71/202443.txt",
+  "b1/24485.txt",
+  "df/158373.txt",
+  "df/180585.txt",
+  "ff/215586.txt"
+ ],
+ "beir_cqadupstack_programmers_234962": [
+  "17/182314.txt",
+  "51/89841.txt",
+  "7c/242889.txt",
+  "a5/243090.txt"
+ ],
+ "beir_cqadupstack_programmers_23507": [
+  "e8/194398.txt"
+ ],
+ "beir_cqadupstack_programmers_235283": [
+  "24/235361.txt"
+ ],
+ "beir_cqadupstack_programmers_235468": [
+  "a0/112402.txt"
+ ],
+ "beir_cqadupstack_programmers_235645": [
+  "42/148108.txt",
+  "8c/192000.txt",
+  "c7/246225.txt"
+ ],
+ "beir_cqadupstack_programmers_236370": [
+  "bd/117572.txt"
+ ],
+ "beir_cqadupstack_programmers_236415": [
+  "14/132691.txt"
+ ],
+ "beir_cqadupstack_programmers_236473": [
+  "80/109629.txt"
+ ],
+ "beir_cqadupstack_programmers_23652": [
+  "34/175066.txt"
+ ],
+ "beir_cqadupstack_programmers_236571": [
+  "48/120019.txt",
+  "57/198675.txt"
+ ],
+ "beir_cqadupstack_programmers_236853": [
+  "e8/59880.txt"
+ ],
+ "beir_cqadupstack_programmers_236903": [
+  "d4/89453.txt"
+ ],
+ "beir_cqadupstack_programmers_237065": [
+  "4a/206.txt"
+ ],
+ "beir_cqadupstack_programmers_237157": [
+  "8d/101157.txt"
+ ],
+ "beir_cqadupstack_programmers_237226": [
+  "b1/255486.txt"
+ ],
+ "beir_cqadupstack_programmers_237431": [
+  "a4/236668.txt"
+ ],
+ "beir_cqadupstack_programmers_237577": [
+  "8b/7823.txt"
+ ],
+ "beir_cqadupstack_programmers_237584": [
+  "0b/79755.txt"
+ ],
+ "beir_cqadupstack_programmers_237593": [
+  "79/237543.txt"
+ ],
+ "beir_cqadupstack_programmers_237738": [
+  "53/226229.txt"
+ ],
+ "beir_cqadupstack_programmers_237935": [
+  "51/195252.txt"
+ ],
+ "beir_cqadupstack_programmers_238057": [
+  "70/231199.txt"
+ ],
+ "beir_cqadupstack_programmers_238325": [
+  "5c/122477.txt",
+  "b3/87696.txt"
+ ],
+ "beir_cqadupstack_programmers_238386": [
+  "99/187613.txt"
+ ],
+ "beir_cqadupstack_programmers_238546": [
+  "5e/170791.txt"
+ ],
+ "beir_cqadupstack_programmers_239016": [
+  "f4/202950.txt"
+ ],
+ "beir_cqadupstack_programmers_239210": [
+  "0a/242768.txt"
+ ],
+ "beir_cqadupstack_programmers_240454": [
+  "8c/180216.txt"
+ ],
+ "beir_cqadupstack_programmers_240612": [
+  "9d/75436.txt"
+ ],
+ "beir_cqadupstack_programmers_240734": [
+  "74/222403.txt"
+ ],
+ "beir_cqadupstack_programmers_241389": [
+  "cd/214340.txt"
+ ],
+ "beir_cqadupstack_programmers_241411": [
+  "76/216765.txt"
+ ],
+ "beir_cqadupstack_programmers_24170": [
+  "a4/207436.txt"
+ ],
+ "beir_cqadupstack_programmers_242610": [
+  "a6/164353.txt",
+  "c3/135313.txt"
+ ],
+ "beir_cqadupstack_programmers_243347": [
+  "03/245693.txt"
+ ],
+ "beir_cqadupstack_programmers_244705": [
+  "30/147055.txt",
+  "43/234753.txt",
+  "4c/157155.txt",
+  "64/66480.txt",
+  "a6/221536.txt",
+  "c2/5560.txt"
+ ],
+ "beir_cqadupstack_programmers_244866": [
+  "b1/178886.txt"
+ ],
+ "beir_cqadupstack_programmers_245115": [
+  "03/199735.txt",
+  "c4/234412.txt"
+ ],
+ "beir_cqadupstack_programmers_245274": [
+  "2d/243154.txt"
+ ],
+ "beir_cqadupstack_programmers_24542": [
+  "8e/114885.txt"
+ ],
+ "beir_cqadupstack_programmers_246066": [
+  "cb/47032.txt"
+ ],
+ "beir_cqadupstack_programmers_246354": [
+  "61/123088.txt",
+  "80/136133.txt",
+  "a5/115783.txt",
+  "ae/170704.txt",
+  "bf/30974.txt",
+  "dc/14744.txt"
+ ],
+ "beir_cqadupstack_programmers_246532": [
+  "a6/135718.txt"
+ ],
+ "beir_cqadupstack_programmers_246568": [
+  "3e/110380.txt",
+  "4d/234057.txt"
+ ],
+ "beir_cqadupstack_programmers_246634": [
+  "87/246627.txt"
+ ],
+ "beir_cqadupstack_programmers_246813": [
+  "11/183865.txt"
+ ],
+ "beir_cqadupstack_programmers_247103": [
+  "38/232627.txt",
+  "6d/59713.txt",
+  "96/87152.txt",
+  "cb/63048.txt"
+ ],
+ "beir_cqadupstack_programmers_247135": [
+  "b1/219438.txt"
+ ],
+ "beir_cqadupstack_programmers_247382": [
+  "74/229968.txt"
+ ],
+ "beir_cqadupstack_programmers_24804": [
+  "77/243279.txt"
+ ],
+ "beir_cqadupstack_programmers_249892": [
+  "07/54591.txt"
+ ],
+ "beir_cqadupstack_programmers_250164": [
+  "5d/127624.txt"
+ ],
+ "beir_cqadupstack_programmers_250203": [
+  "2a/185130.txt"
+ ],
+ "beir_cqadupstack_programmers_250291": [
+  "02/84514.txt"
+ ],
+ "beir_cqadupstack_programmers_25063": [
+  "6c/141860.txt"
+ ],
+ "beir_cqadupstack_programmers_250707": [
+  "4b/215874.txt"
+ ],
+ "beir_cqadupstack_programmers_250953": [
+  "46/233401.txt"
+ ],
+ "beir_cqadupstack_programmers_251126": [
+  "ca/237237.txt"
+ ],
+ "beir_cqadupstack_programmers_251222": [
+  "0d/177651.txt"
+ ],
+ "beir_cqadupstack_programmers_251643": [
+  "c6/233492.txt"
+ ],
+ "beir_cqadupstack_programmers_251707": [
+  "33/255903.txt"
+ ],
+ "beir_cqadupstack_programmers_251756": [
+  "a2/9810.txt",
+  "c4/231891.txt",
+  "dc/132248.txt",
+  "ff/236016.txt"
+ ],
+ "beir_cqadupstack_programmers_25234": [
+  "ed/9991.txt"
+ ],
+ "beir_cqadupstack_programmers_252495": [
+  "11/230933.txt"
+ ],
+ "beir_cqadupstack_programmers_252532": [
+  "be/252938.txt"
+ ],
+ "beir_cqadupstack_programmers_252595": [
+  "57/233461.txt"
+ ],
+ "beir_cqadupstack_programmers_253026": [
+  "e6/142144.txt"
+ ],
+ "beir_cqadupstack_programmers_253042": [
+  "11/213959.txt",
+  "47/243205.txt",
+  "6e/246826.txt",
+  "90/252712.txt",
+  "91/183819.txt",
+  "9e/107884.txt"
+ ],
+ "beir_cqadupstack_programmers_253267": [
+  "15/133404.txt"
+ ],
+ "beir_cqadupstack_programmers_253453": [
+  "60/76123.txt"
+ ],
+ "beir_cqadupstack_programmers_253496": [
+  "58/81624.txt"
+ ],
+ "beir_cqadupstack_programmers_253650": [
+  "2d/137096.txt",
+  "68/127522.txt"
+ ],
+ "beir_cqadupstack_programmers_254008": [
+  "bb/195104.txt"
+ ],
+ "beir_cqadupstack_programmers_254083": [
+  "30/179624.txt"
+ ],
+ "beir_cqadupstack_programmers_254339": [
+  "b5/228711.txt",
+  "ef/173518.txt"
+ ],
+ "beir_cqadupstack_programmers_254424": [
+  "15/83797.txt"
+ ],
+ "beir_cqadupstack_programmers_254936": [
+  "36/142065.txt",
+  "d4/231001.txt"
+ ],
+ "beir_cqadupstack_programmers_255031": [
+  "6d/220296.txt"
+ ],
+ "beir_cqadupstack_programmers_255912": [
+  "cc/135234.txt"
+ ],
+ "beir_cqadupstack_programmers_25600": [
+  "00/103102.txt"
+ ],
+ "beir_cqadupstack_programmers_257": [
+  "c5/39594.txt"
+ ],
+ "beir_cqadupstack_programmers_26030": [
+  "3d/88158.txt"
+ ],
+ "beir_cqadupstack_programmers_26371": [
+  "d9/51586.txt"
+ ],
+ "beir_cqadupstack_programmers_2654": [
+  "ae/15636.txt"
+ ],
+ "beir_cqadupstack_programmers_26642": [
+  "e0/117684.txt"
+ ],
+ "beir_cqadupstack_programmers_26901": [
+  "7f/178384.txt"
+ ],
+ "beir_cqadupstack_programmers_27022": [
+  "96/29149.txt"
+ ],
+ "beir_cqadupstack_programmers_27410": [
+  "19/117061.txt",
+  "c5/87182.txt",
+  "e8/141292.txt",
+  "fc/67354.txt"
+ ],
+ "beir_cqadupstack_programmers_2757": [
+  "0a/50545.txt",
+  "0c/104346.txt",
+  "f4/9403.txt"
+ ],
+ "beir_cqadupstack_programmers_28050": [
+  "86/42142.txt"
+ ],
+ "beir_cqadupstack_programmers_28379": [
+  "33/105862.txt",
+  "49/77466.txt",
+  "68/104975.txt"
+ ],
+ "beir_cqadupstack_programmers_28825": [
+  "53/79561.txt"
+ ],
+ "beir_cqadupstack_programmers_29109": [
+  "37/137011.txt"
+ ],
+ "beir_cqadupstack_programmers_29513": [
+  "98/200303.txt",
+  "dc/55653.txt"
+ ],
+ "beir_cqadupstack_programmers_29534": [
+  "69/135383.txt",
+  "95/228686.txt"
+ ],
+ "beir_cqadupstack_programmers_31558": [
+  "50/89025.txt",
+  "b2/255248.txt"
+ ],
+ "beir_cqadupstack_programmers_32425": [
+  "2c/67295.txt"
+ ],
+ "beir_cqadupstack_programmers_32482": [
+  "38/247251.txt"
+ ],
+ "beir_cqadupstack_programmers_32571": [
+  "63/63970.txt"
+ ],
+ "beir_cqadupstack_programmers_32617": [
+  "1f/96809.txt"
+ ],
+ "beir_cqadupstack_programmers_32956": [
+  "61/213942.txt"
+ ],
+ "beir_cqadupstack_programmers_34173": [
+  "24/222285.txt",
+  "3a/7482.txt",
+  "65/193161.txt"
+ ],
+ "beir_cqadupstack_programmers_34485": [
+  "74/56674.txt",
+  "93/141147.txt"
+ ],
+ "beir_cqadupstack_programmers_34559": [
+  "86/126230.txt",
+  "b6/101762.txt"
+ ],
+ "beir_cqadupstack_programmers_35074": [
+  "a2/142652.txt",
+  "e7/74815.txt"
+ ],
+ "beir_cqadupstack_programmers_35610": [
+  "0a/206673.txt"
+ ],
+ "beir_cqadupstack_programmers_35925": [
+  "9a/38165.txt",
+  "b6/211173.txt",
+  "db/194820.txt"
+ ],
+ "beir_cqadupstack_programmers_36175": [
+  "94/182306.txt"
+ ],
+ "beir_cqadupstack_programmers_36297": [
+  "5f/55493.txt"
+ ],
+ "beir_cqadupstack_programmers_36561": [
+  "02/71593.txt"
+ ],
+ "beir_cqadupstack_programmers_36731": [
+  "2e/170731.txt"
+ ],
+ "beir_cqadupstack_programmers_36925": [
+  "88/105283.txt"
+ ],
+ "beir_cqadupstack_programmers_36961": [
+  "91/80587.txt"
+ ],
+ "beir_cqadupstack_programmers_37029": [
+  "11/184412.txt",
+  "8b/215687.txt"
+ ],
+ "beir_cqadupstack_programmers_37249": [
+  "1d/190801.txt",
+  "27/235527.txt",
+  "57/159003.txt",
+  "98/252.txt",
+  "c8/107698.txt"
+ ],
+ "beir_cqadupstack_programmers_3747": [
+  "05/209124.txt",
+  "07/14492.txt",
+  "08/252392.txt",
+  "09/40676.txt",
+  "0d/233169.txt",
+  "10/174770.txt",
+  "11/66438.txt",
+  "19/41409.txt",
+  "1a/199975.txt",
+  "1c/61655.txt",
+  "1d/127658.txt",
+  "1d/225052.txt",
+  "1d/255311.txt",
+  "1e/135311.txt",
+  "23/226534.txt",
+  "24/167209.txt",
+  "24/197842.txt",
+  "24/201350.txt",
+  "25/188933.txt",
+  "25/202107.txt",
+  "2b/245426.txt",
+  "2c/223869.txt",
+  "2d/109262.txt",
+  "2d/80625.txt",
+  "2e/28551.txt",
+  "2e/34227.txt",
+  "2f/125435.txt",
+  "30/177058.txt",
+  "32/98930.txt",
+  "34/106168.txt",
+  "35/114835.txt",
+  "35/211755.txt",
+  "35/237891.txt",
+  "37/39468.txt",
+  "3b/146471.txt",
+  "3d/202757.txt",
+  "3f/210248.txt",
+  "42/114316.txt",
+  "49/196414.txt",
+  "49/228468.txt",
+  "49/239018.txt",
+  "4a/194347.txt",
+  "4d/139683.txt",
+  "4d/193990.txt",
+  "4d/238007.txt",
+  "4f/213973.txt",
+  "4f/75866.txt",
+  "50/170894.txt",
+  "50/171652.txt",
+  "52/221144.txt",
+  "55/199870.txt",
+  "5a/210078.txt",
+  "5b/198244.txt",
+  "5b/205786.txt",
+  "60/181044.txt",
+  "62/171295.txt",
+  "65/159662.txt",
+  "65/46272.txt",
+  "67/134470.txt",
+  "67/205515.txt",
+  "6a/183851.txt",
+  "6a/205760.txt",
+  "6f/246688.txt",
+  "70/193553.txt",
+  "70/234266.txt",
+  "74/234763.txt",
+  "75/238597.txt",
+  "76/67166.txt",
+  "78/204872.txt",
+  "7a/29671.txt",
+  "7d/188292.txt",
+  "7d/87757.txt",
+  "7e/206404.txt",
+  "7e/252588.txt",
+  "80/196449.txt",
+  "81/220235.txt",
+  "85/236482.txt",
+  "86/87114.txt",
+  "8d/228702.txt",
+  "8d/247034.txt",
+  "92/215935.txt",
+  "95/102649.txt",
+  "96/222641.txt",
+  "98/178856.txt",
+  "99/115839.txt",
+  "9e/228371.txt",
+  "9f/141005.txt",
+  "a1/155488.txt",
+  "a1/170109.txt",
+  "a3/229690.txt",
+  "a4/100680.txt",
+  "a4/162923.txt",
+  "a7/211470.txt",
+  "a8/198124.txt",
+  "a8/78881.txt",
+  "aa/68399.txt",
+  "af/132977.txt",
+  "af/254915.txt",
+  "af/39411.txt",
+  "b0/180186.txt",
+  "b4/225860.txt",
+  "b6/186021.txt",
+  "bb/235678.txt",
+  "bf/253273.txt",
+  "c0/253622.txt",
+  "c1/87460.txt",
+  "c3/132926.txt",
+  "c6/206475.txt",
+  "c7/225955.txt",
+  "c7/43948.txt",
+  "cc/6395.txt",
+  "cf/219834.txt",
+  "cf/225341.txt",
+  "d3/250746.txt",
+  "d4/253834.txt",
+  "d9/141968.txt",
+  "db/129951.txt",
+  "dd/95589.txt",
+  "df/254360.txt",
+  "e1/246223.txt",
+  "e4/177624.txt",
+  "e4/230521.txt",
+  "e4/238734.txt",
+  "e5/254643.txt",
+  "e5/86454.txt",
+  "e7/222544.txt",
+  "e8/219467.txt",
+  "e9/16326.txt",
+  "ed/196847.txt",
+  "ee/167492.txt",
+  "ee/6268.txt",
+  "ef/50576.txt",
+  "f0/192089.txt",
+  "f2/37091.txt",
+  "f4/126224.txt",
+  "f4/21538.txt",
+  "f5/163455.txt",
+  "f6/39386.txt",
+  "f7/204639.txt",
+  "f8/121844.txt",
+  "f8/211528.txt",
+  "f9/47416.txt",
+  "fb/101391.txt",
+  "fb/105018.txt",
+  "fb/190048.txt",
+  "fc/131052.txt",
+  "fe/29788.txt",
+  "ff/134855.txt",
+  "ff/199144.txt"
+ ],
+ "beir_cqadupstack_programmers_3766": [
+  "50/71619.txt"
+ ],
+ "beir_cqadupstack_programmers_37677": [
+  "ad/214059.txt"
+ ],
+ "beir_cqadupstack_programmers_37987": [
+  "4e/186269.txt"
+ ],
+ "beir_cqadupstack_programmers_38087": [
+  "eb/198405.txt"
+ ],
+ "beir_cqadupstack_programmers_38265": [
+  "09/96238.txt",
+  "be/39353.txt",
+  "d8/117179.txt"
+ ],
+ "beir_cqadupstack_programmers_38566": [
+  "01/58824.txt",
+  "36/96421.txt"
+ ],
+ "beir_cqadupstack_programmers_39282": [
+  "51/199852.txt"
+ ],
+ "beir_cqadupstack_programmers_39378": [
+  "00/253165.txt"
+ ],
+ "beir_cqadupstack_programmers_3997": [
+  "21/46920.txt"
+ ],
+ "beir_cqadupstack_programmers_40063": [
+  "6a/234273.txt",
+  "90/235566.txt"
+ ],
+ "beir_cqadupstack_programmers_40297": [
+  "98/163321.txt"
+ ],
+ "beir_cqadupstack_programmers_41545": [
+  "87/108435.txt",
+  "ff/103501.txt"
+ ],
+ "beir_cqadupstack_programmers_41981": [
+  "e1/113079.txt"
+ ],
+ "beir_cqadupstack_programmers_42817": [
+  "6a/155055.txt"
+ ],
+ "beir_cqadupstack_programmers_42938": [
+  "14/119228.txt"
+ ],
+ "beir_cqadupstack_programmers_43086": [
+  "40/118342.txt"
+ ],
+ "beir_cqadupstack_programmers_43729": [
+  "13/196391.txt",
+  "58/22153.txt",
+  "8e/205877.txt"
+ ],
+ "beir_cqadupstack_programmers_43796": [
+  "2d/181933.txt"
+ ],
+ "beir_cqadupstack_programmers_44959": [
+  "b6/203375.txt"
+ ],
+ "beir_cqadupstack_programmers_45378": [
+  "13/53669.txt",
+  "5b/190096.txt",
+  "da/213684.txt"
+ ],
+ "beir_cqadupstack_programmers_46252": [
+  "9c/105891.txt"
+ ],
+ "beir_cqadupstack_programmers_46434": [
+  "4b/221075.txt"
+ ],
+ "beir_cqadupstack_programmers_46513": [
+  "6f/47558.txt"
+ ],
+ "beir_cqadupstack_programmers_46685": [
+  "85/198741.txt"
+ ],
+ "beir_cqadupstack_programmers_47370": [
+  "ec/142186.txt"
+ ],
+ "beir_cqadupstack_programmers_4765": [
+  "aa/86502.txt",
+  "bc/10313.txt"
+ ],
+ "beir_cqadupstack_programmers_492": [
+  "56/95355.txt",
+  "58/201529.txt"
+ ],
+ "beir_cqadupstack_programmers_49836": [
+  "55/20262.txt"
+ ],
+ "beir_cqadupstack_programmers_49959": [
+  "9d/126950.txt"
+ ],
+ "beir_cqadupstack_programmers_50755": [
+  "32/122689.txt",
+  "6a/237809.txt",
+  "93/53123.txt"
+ ],
+ "beir_cqadupstack_programmers_51268": [
+  "de/114484.txt"
+ ],
+ "beir_cqadupstack_programmers_51465": [
+  "5c/244941.txt"
+ ],
+ "beir_cqadupstack_programmers_51987": [
+  "6e/232245.txt"
+ ],
+ "beir_cqadupstack_programmers_52158": [
+  "4a/65316.txt"
+ ],
+ "beir_cqadupstack_programmers_52833": [
+  "35/1.txt",
+  "9e/119600.txt",
+  "ab/173118.txt",
+  "c3/201657.txt",
+  "ea/121775.txt"
+ ],
+ "beir_cqadupstack_programmers_52961": [
+  "05/49488.txt"
+ ],
+ "beir_cqadupstack_programmers_53517": [
+  "b9/200930.txt"
+ ],
+ "beir_cqadupstack_programmers_53572": [
+  "f1/128725.txt"
+ ],
+ "beir_cqadupstack_programmers_53612": [
+  "2e/110242.txt"
+ ],
+ "beir_cqadupstack_programmers_54373": [
+  "42/109192.txt",
+  "44/194340.txt"
+ ],
+ "beir_cqadupstack_programmers_54451": [
+  "ea/136860.txt"
+ ],
+ "beir_cqadupstack_programmers_54959": [
+  "0e/209055.txt",
+  "17/116028.txt",
+  "18/25707.txt",
+  "38/83706.txt",
+  "4d/173244.txt",
+  "78/223692.txt",
+  "af/41473.txt",
+  "b5/96946.txt",
+  "c1/129349.txt",
+  "e2/50818.txt"
+ ],
+ "beir_cqadupstack_programmers_55065": [
+  "40/96934.txt"
+ ],
+ "beir_cqadupstack_programmers_55267": [
+  "6c/162786.txt"
+ ],
+ "beir_cqadupstack_programmers_55334": [
+  "cc/109087.txt"
+ ],
+ "beir_cqadupstack_programmers_55697": [
+  "0c/103285.txt",
+  "42/33816.txt"
+ ],
+ "beir_cqadupstack_programmers_56031": [
+  "eb/157590.txt"
+ ],
+ "beir_cqadupstack_programmers_56848": [
+  "0a/202642.txt",
+  "12/194497.txt",
+  "17/10656.txt",
+  "1b/24737.txt",
+  "1c/35890.txt",
+  "48/55238.txt",
+  "58/211511.txt",
+  "5d/78234.txt",
+  "5f/63386.txt",
+  "60/46716.txt",
+  "63/115951.txt",
+  "69/111531.txt",
+  "6a/54796.txt",
+  "72/255542.txt",
+  "7c/92337.txt",
+  "7f/113688.txt",
+  "93/45803.txt",
+  "a1/15449.txt",
+  "a3/221031.txt",
+  "a9/140423.txt",
+  "c7/202606.txt",
+  "c9/143271.txt",
+  "c9/70117.txt",
+  "e2/29396.txt",
+  "e3/125746.txt",
+  "e4/176302.txt",
+  "e8/109719.txt",
+  "eb/202508.txt",
+  "f1/166540.txt",
+  "fb/110638.txt",
+  "fb/131051.txt",
+  "fd/94822.txt"
+ ],
+ "beir_cqadupstack_programmers_57047": [
+  "92/207030.txt"
+ ],
+ "beir_cqadupstack_programmers_57068": [
+  "47/155210.txt"
+ ],
+ "beir_cqadupstack_programmers_57243": [
+  "7a/158936.txt"
+ ],
+ "beir_cqadupstack_programmers_57405": [
+  "94/186605.txt"
+ ],
+ "beir_cqadupstack_programmers_57435": [
+  "1e/62817.txt",
+  "1f/194582.txt",
+  "32/142098.txt",
+  "40/29062.txt",
+  "57/34122.txt",
+  "79/203896.txt",
+  "9a/177167.txt",
+  "9f/45641.txt",
+  "c6/26596.txt",
+  "f2/193282.txt"
+ ],
+ "beir_cqadupstack_programmers_57576": [
+  "ef/80167.txt"
+ ],
+ "beir_cqadupstack_programmers_58887": [
+  "51/205557.txt"
+ ],
+ "beir_cqadupstack_programmers_59091": [
+  "de/98786.txt"
+ ],
+ "beir_cqadupstack_programmers_59496": [
+  "37/73667.txt"
+ ],
+ "beir_cqadupstack_programmers_59520": [
+  "8d/143069.txt"
+ ],
+ "beir_cqadupstack_programmers_59606": [
+  "1a/198085.txt"
+ ],
+ "beir_cqadupstack_programmers_60216": [
+  "df/55373.txt"
+ ],
+ "beir_cqadupstack_programmers_604": [
+  "4d/170573.txt"
+ ],
+ "beir_cqadupstack_programmers_60409": [
+  "2f/198836.txt"
+ ],
+ "beir_cqadupstack_programmers_60994": [
+  "00/34843.txt"
+ ],
+ "beir_cqadupstack_programmers_61558": [
+  "d8/102819.txt"
+ ],
+ "beir_cqadupstack_programmers_61745": [
+  "3a/55351.txt"
+ ],
+ "beir_cqadupstack_programmers_61798": [
+  "8f/207987.txt",
+  "91/251418.txt",
+  "e0/246618.txt"
+ ],
+ "beir_cqadupstack_programmers_61980": [
+  "78/137896.txt"
+ ],
+ "beir_cqadupstack_programmers_62060": [
+  "07/224104.txt"
+ ],
+ "beir_cqadupstack_programmers_62765": [
+  "e8/83117.txt"
+ ],
+ "beir_cqadupstack_programmers_64671": [
+  "5f/203618.txt"
+ ],
+ "beir_cqadupstack_programmers_64722": [
+  "f4/141427.txt"
+ ],
+ "beir_cqadupstack_programmers_6476": [
+  "d8/19718.txt"
+ ],
+ "beir_cqadupstack_programmers_65918": [
+  "b5/114002.txt"
+ ],
+ "beir_cqadupstack_programmers_6625": [
+  "58/56508.txt"
+ ],
+ "beir_cqadupstack_programmers_663": [
+  "8e/10920.txt"
+ ],
+ "beir_cqadupstack_programmers_66735": [
+  "19/194146.txt"
+ ],
+ "beir_cqadupstack_programmers_66764": [
+  "2c/125689.txt",
+  "3d/85506.txt"
+ ],
+ "beir_cqadupstack_programmers_66834": [
+  "09/216915.txt",
+  "7d/874.txt"
+ ],
+ "beir_cqadupstack_programmers_67707": [
+  "39/99051.txt"
+ ],
+ "beir_cqadupstack_programmers_67750": [
+  "c3/53948.txt"
+ ],
+ "beir_cqadupstack_programmers_67931": [
+  "22/202541.txt",
+  "a4/232940.txt"
+ ],
+ "beir_cqadupstack_programmers_67960": [
+  "6e/106909.txt"
+ ],
+ "beir_cqadupstack_programmers_68867": [
+  "c3/95719.txt"
+ ],
+ "beir_cqadupstack_programmers_69242": [
+  "02/134697.txt",
+  "3a/294.txt",
+  "5e/113175.txt",
+  "6b/64958.txt",
+  "ec/150853.txt"
+ ],
+ "beir_cqadupstack_programmers_70755": [
+  "05/39940.txt"
+ ],
+ "beir_cqadupstack_programmers_7126": [
+  "27/196673.txt"
+ ],
+ "beir_cqadupstack_programmers_71904": [
+  "f9/72079.txt"
+ ],
+ "beir_cqadupstack_programmers_71917": [
+  "70/39247.txt",
+  "fd/61530.txt"
+ ],
+ "beir_cqadupstack_programmers_7242": [
+  "85/119652.txt"
+ ],
+ "beir_cqadupstack_programmers_72768": [
+  "b9/184202.txt"
+ ],
+ "beir_cqadupstack_programmers_73304": [
+  "a6/125414.txt"
+ ],
+ "beir_cqadupstack_programmers_73541": [
+  "54/71358.txt",
+  "d3/211636.txt"
+ ],
+ "beir_cqadupstack_programmers_73934": [
+  "c9/19006.txt"
+ ],
+ "beir_cqadupstack_programmers_74086": [
+  "31/190152.txt",
+  "46/188384.txt",
+  "4a/212781.txt",
+  "f4/236501.txt"
+ ],
+ "beir_cqadupstack_programmers_74386": [
+  "4c/58432.txt"
+ ],
+ "beir_cqadupstack_programmers_74493": [
+  "8c/20466.txt",
+  "b3/201716.txt"
+ ],
+ "beir_cqadupstack_programmers_74580": [
+  "06/224520.txt"
+ ],
+ "beir_cqadupstack_programmers_750": [
+  "60/246058.txt"
+ ],
+ "beir_cqadupstack_programmers_7536": [
+  "7d/7305.txt"
+ ],
+ "beir_cqadupstack_programmers_7565": [
+  "01/135175.txt",
+  "30/7859.txt",
+  "94/83507.txt"
+ ],
+ "beir_cqadupstack_programmers_76182": [
+  "4b/134523.txt"
+ ],
+ "beir_cqadupstack_programmers_76801": [
+  "95/51712.txt"
+ ],
+ "beir_cqadupstack_programmers_77146": [
+  "6c/103095.txt"
+ ],
+ "beir_cqadupstack_programmers_7747": [
+  "99/127932.txt"
+ ],
+ "beir_cqadupstack_programmers_77731": [
+  "97/14706.txt"
+ ],
+ "beir_cqadupstack_programmers_78176": [
+  "ce/88416.txt"
+ ],
+ "beir_cqadupstack_programmers_78431": [
+  "b4/72271.txt"
+ ],
+ "beir_cqadupstack_programmers_78903": [
+  "54/64818.txt",
+  "df/79189.txt"
+ ],
+ "beir_cqadupstack_programmers_78956": [
+  "d9/115257.txt"
+ ],
+ "beir_cqadupstack_programmers_79624": [
+  "62/41999.txt"
+ ],
+ "beir_cqadupstack_programmers_79765": [
+  "ad/94651.txt"
+ ],
+ "beir_cqadupstack_programmers_80694": [
+  "9f/106705.txt"
+ ],
+ "beir_cqadupstack_programmers_80826": [
+  "01/10580.txt",
+  "9a/66040.txt"
+ ],
+ "beir_cqadupstack_programmers_81062": [
+  "6d/121864.txt",
+  "a1/101496.txt"
+ ],
+ "beir_cqadupstack_programmers_81131": [
+  "6d/81875.txt"
+ ],
+ "beir_cqadupstack_programmers_81478": [
+  "7d/44623.txt"
+ ],
+ "beir_cqadupstack_programmers_81591": [
+  "4d/191549.txt"
+ ],
+ "beir_cqadupstack_programmers_81674": [
+  "1f/1095.txt"
+ ],
+ "beir_cqadupstack_programmers_81705": [
+  "a8/205180.txt",
+  "e3/253552.txt"
+ ],
+ "beir_cqadupstack_programmers_81838": [
+  "22/233044.txt",
+  "a4/231963.txt"
+ ],
+ "beir_cqadupstack_programmers_82227": [
+  "55/131969.txt",
+  "89/756.txt",
+  "9e/90228.txt",
+  "b0/132806.txt",
+  "b2/191990.txt",
+  "b8/113273.txt"
+ ],
+ "beir_cqadupstack_programmers_82286": [
+  "92/82035.txt"
+ ],
+ "beir_cqadupstack_programmers_84001": [
+  "2b/18303.txt"
+ ],
+ "beir_cqadupstack_programmers_84638": [
+  "a4/140156.txt"
+ ],
+ "beir_cqadupstack_programmers_84778": [
+  "8a/198241.txt"
+ ],
+ "beir_cqadupstack_programmers_84909": [
+  "cb/138905.txt"
+ ],
+ "beir_cqadupstack_programmers_84966": [
+  "ea/231201.txt"
+ ],
+ "beir_cqadupstack_programmers_85019": [
+  "1a/84939.txt",
+  "24/119249.txt"
+ ],
+ "beir_cqadupstack_programmers_8544": [
+  "71/99935.txt"
+ ],
+ "beir_cqadupstack_programmers_85691": [
+  "ca/168315.txt"
+ ],
+ "beir_cqadupstack_programmers_8588": [
+  "2f/108518.txt"
+ ],
+ "beir_cqadupstack_programmers_86656": [
+  "67/59928.txt",
+  "8b/99735.txt"
+ ],
+ "beir_cqadupstack_programmers_86904": [
+  "49/127934.txt",
+  "b7/102353.txt"
+ ],
+ "beir_cqadupstack_programmers_87082": [
+  "da/35276.txt"
+ ],
+ "beir_cqadupstack_programmers_87321": [
+  "27/129478.txt"
+ ],
+ "beir_cqadupstack_programmers_87452": [
+  "34/95202.txt",
+  "4b/231434.txt"
+ ],
+ "beir_cqadupstack_programmers_88028": [
+  "81/48697.txt"
+ ],
+ "beir_cqadupstack_programmers_88392": [
+  "97/203507.txt"
+ ],
+ "beir_cqadupstack_programmers_8886": [
+  "d3/122763.txt"
+ ],
+ "beir_cqadupstack_programmers_89491": [
+  "7c/103850.txt",
+  "fa/194939.txt"
+ ],
+ "beir_cqadupstack_programmers_89554": [
+  "15/96524.txt"
+ ],
+ "beir_cqadupstack_programmers_8958": [
+  "fd/1371.txt"
+ ],
+ "beir_cqadupstack_programmers_89819": [
+  "3a/65081.txt",
+  "5c/225296.txt"
+ ],
+ "beir_cqadupstack_programmers_89944": [
+  "87/121829.txt"
+ ],
+ "beir_cqadupstack_programmers_89947": [
+  "42/196946.txt"
+ ],
+ "beir_cqadupstack_programmers_90217": [
+  "63/204455.txt"
+ ],
+ "beir_cqadupstack_programmers_90438": [
+  "82/105137.txt"
+ ],
+ "beir_cqadupstack_programmers_91064": [
+  "6d/198384.txt"
+ ],
+ "beir_cqadupstack_programmers_91629": [
+  "26/114963.txt",
+  "6c/111215.txt",
+  "8a/73233.txt"
+ ],
+ "beir_cqadupstack_programmers_91816": [
+  "64/188875.txt"
+ ],
+ "beir_cqadupstack_programmers_91945": [
+  "40/197131.txt"
+ ],
+ "beir_cqadupstack_programmers_91976": [
+  "96/5232.txt"
+ ],
+ "beir_cqadupstack_programmers_92339": [
+  "0c/178512.txt"
+ ],
+ "beir_cqadupstack_programmers_92393": [
+  "8a/213811.txt"
+ ],
+ "beir_cqadupstack_programmers_92465": [
+  "8d/191293.txt",
+  "d2/115958.txt"
+ ],
+ "beir_cqadupstack_programmers_93016": [
+  "4e/26454.txt"
+ ],
+ "beir_cqadupstack_programmers_93124": [
+  "b2/214970.txt"
+ ],
+ "beir_cqadupstack_programmers_9320": [
+  "d1/126410.txt"
+ ],
+ "beir_cqadupstack_programmers_93245": [
+  "a5/101300.txt"
+ ],
+ "beir_cqadupstack_programmers_93462": [
+  "7a/5780.txt"
+ ],
+ "beir_cqadupstack_programmers_93826": [
+  "af/206745.txt",
+  "b4/25052.txt"
+ ],
+ "beir_cqadupstack_programmers_93848": [
+  "f9/219091.txt"
+ ],
+ "beir_cqadupstack_programmers_940": [
+  "7d/74258.txt"
+ ],
+ "beir_cqadupstack_programmers_94024": [
+  "62/86636.txt"
+ ],
+ "beir_cqadupstack_programmers_94780": [
+  "79/126205.txt"
+ ],
+ "beir_cqadupstack_programmers_94932": [
+  "40/56772.txt",
+  "68/254077.txt"
+ ],
+ "beir_cqadupstack_programmers_95335": [
+  "18/95491.txt"
+ ],
+ "beir_cqadupstack_programmers_95363": [
+  "f1/92385.txt"
+ ],
+ "beir_cqadupstack_programmers_95373": [
+  "e3/4183.txt"
+ ],
+ "beir_cqadupstack_programmers_95465": [
+  "03/196043.txt"
+ ],
+ "beir_cqadupstack_programmers_95626": [
+  "73/123495.txt"
+ ],
+ "beir_cqadupstack_programmers_95637": [
+  "81/209615.txt",
+  "c6/58515.txt"
+ ],
+ "beir_cqadupstack_programmers_95786": [
+  "d9/40350.txt"
+ ],
+ "beir_cqadupstack_programmers_95933": [
+  "ac/75476.txt"
+ ],
+ "beir_cqadupstack_programmers_95942": [
+  "c4/95946.txt"
+ ],
+ "beir_cqadupstack_programmers_96504": [
+  "4f/136005.txt",
+  "c9/140691.txt"
+ ],
+ "beir_cqadupstack_programmers_96638": [
+  "11/105196.txt"
+ ],
+ "beir_cqadupstack_programmers_97269": [
+  "08/129069.txt"
+ ],
+ "beir_cqadupstack_programmers_97338": [
+  "db/165625.txt"
+ ],
+ "beir_cqadupstack_programmers_97357": [
+  "78/4325.txt"
+ ],
+ "beir_cqadupstack_programmers_97446": [
+  "64/240708.txt"
+ ],
+ "beir_cqadupstack_programmers_97511": [
+  "f8/118571.txt"
+ ],
+ "beir_cqadupstack_programmers_97660": [
+  "5d/103418.txt",
+  "76/9161.txt",
+  "87/209017.txt"
+ ],
+ "beir_cqadupstack_programmers_97785": [
+  "c6/146160.txt"
+ ],
+ "beir_cqadupstack_programmers_97832": [
+  "5d/13006.txt"
+ ],
+ "beir_cqadupstack_programmers_97912": [
+  "58/17443.txt"
+ ],
+ "beir_cqadupstack_programmers_9813": [
+  "11/98999.txt"
+ ],
+ "beir_cqadupstack_programmers_98324": [
+  "ef/98485.txt"
+ ],
+ "beir_cqadupstack_programmers_98509": [
+  "25/51307.txt",
+  "4c/198458.txt",
+  "d3/137177.txt",
+  "f0/226488.txt"
+ ],
+ "beir_cqadupstack_programmers_98651": [
+  "a6/151375.txt"
+ ],
+ "beir_cqadupstack_programmers_98691": [
+  "68/48413.txt",
+  "ee/115690.txt"
+ ],
+ "beir_cqadupstack_programmers_98749": [
+  "af/7686.txt"
+ ],
+ "beir_cqadupstack_programmers_98758": [
+  "b7/23270.txt"
+ ],
+ "beir_cqadupstack_programmers_98905": [
+  "92/196987.txt"
+ ],
+ "beir_cqadupstack_programmers_9944": [
+  "08/237868.txt",
+  "32/200620.txt",
+  "38/106365.txt",
+  "49/174815.txt",
+  "57/198433.txt",
+  "91/87573.txt",
+  "c5/13892.txt",
+  "c7/127545.txt",
+  "d4/4951.txt",
+  "dd/3317.txt"
+ ],
+ "beir_cqadupstack_programmers_9948": [
+  "5e/4180.txt",
+  "89/20949.txt",
+  "e0/20407.txt"
+ ],
+ "beir_cqadupstack_programmers_99499": [
+  "f2/131545.txt"
+ ],
+ "beir_cqadupstack_programmers_99647": [
+  "f9/99487.txt"
+ ]
+}

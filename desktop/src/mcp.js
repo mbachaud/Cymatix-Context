@@ -1,14 +1,16 @@
 'use strict';
 
-// "Connect a chat": run `cymatix mcp install` for a host + lane. The
-// renderer only picks from fixed choices; this module re-validates them
-// before anything reaches a command line.
+// "Connect a chat": run `cymatix mcp install` for a host + lane. The host
+// list comes from the CLI's own install table (the dashboard offers exactly
+// those ids), so no host names live here. This module only checks the
+// *shape* of the choices before they reach a command line; the CLI rejects
+// any host it does not support.
 
-const HOSTS = new Set(['claude-code', 'claude-desktop', 'cursor', 'gemini-cli']);
+const HOST_RE = /^[a-z0-9][a-z0-9-]{0,31}$/;
 const LANE_RE = /^[a-z0-9][a-z0-9_-]{0,31}$/;
 
 function validateInstall(req) {
-  if (!req || !HOSTS.has(req.host)) return `unknown host ${JSON.stringify(req && req.host)}`;
+  if (!req || !HOST_RE.test(req.host || '')) return `invalid host ${JSON.stringify(req && req.host)}`;
   if (!LANE_RE.test(req.lane || '')) return `invalid lane name ${JSON.stringify(req.lane)}`;
   return null;
 }
@@ -32,4 +34,4 @@ function buildInstallCommand({ host, lane }, { packaged, python, repoRoot, engin
   };
 }
 
-module.exports = { HOSTS, buildInstallCommand, validateInstall };
+module.exports = { HOST_RE, buildInstallCommand, validateInstall };

@@ -1,0 +1,2812 @@
+{
+ "date": "2026-10-04T00:39:54.647705+00:00",
+ "db": "F:\\tmp\\beir_nfcorpus_bed\\beir_nfcorpus.db",
+ "corpus_root": "F:\\Projects\\beir\\beir_nfcorpus\\corpus",
+ "needles_total": 323,
+ "needles_resolvable": 323,
+ "dropped": [],
+ "gold_files_wanted": 3128,
+ "gold_files_size_gated": 0,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 37,
+ "per_needle": {
+  "beir_nfcorpus_PLAIN-1008": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1018": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 60,
+   "gold_files_resolved": 60,
+   "gold_genes": 56,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\07\\MED-5342.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4b\\MED-3029.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3a\\MED-306.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\c4\\MED-3019.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\a7\\MED-2904.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d7\\MED-2905.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-102": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1028": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1039": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1050": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 94,
+   "gold_files_resolved": 94,
+   "gold_genes": 92,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\db\\MED-2526.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\44\\MED-1874.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\97\\MED-4613.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\fe\\MED-3787.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\db\\MED-4247.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1066": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1088": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\97\\MED-4613.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1098": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1109": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 98,
+   "gold_files_resolved": 98,
+   "gold_genes": 99,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1119": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-112": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 56,
+   "gold_files_resolved": 56,
+   "gold_genes": 56,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1130": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1141": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\97\\MED-4613.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1151": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 153,
+   "gold_files_resolved": 153,
+   "gold_genes": 153,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\67\\MED-5359.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1161": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1172": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 19,
+   "gold_files_resolved": 19,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1183": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 25,
+   "gold_files_resolved": 25,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1193": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-12": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 30,
+   "gold_files_resolved": 30,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1203": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1214": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1225": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 27,
+   "gold_files_resolved": 27,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-123": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 51,
+   "gold_files_resolved": 51,
+   "gold_genes": 51,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\c6\\MED-4393.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1236": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1249": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1262": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1275": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 55,
+   "gold_files_resolved": 55,
+   "gold_genes": 55,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1288": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 196,
+   "gold_files_resolved": 196,
+   "gold_genes": 196,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\dc\\MED-4689.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1299": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 61,
+   "gold_files_resolved": 61,
+   "gold_genes": 61,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\67\\MED-5359.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1309": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1320": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-133": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 36,
+   "gold_files_resolved": 36,
+   "gold_genes": 36,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1331": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1342": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1353": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1363": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1374": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1387": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1398": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 103,
+   "gold_files_resolved": 103,
+   "gold_genes": 103,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1409": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 253,
+   "gold_files_resolved": 253,
+   "gold_genes": 254,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4b\\MED-3029.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3a\\MED-306.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\c4\\MED-3019.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1419": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 65,
+   "gold_files_resolved": 65,
+   "gold_genes": 65,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\98\\MED-4687.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1429": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-143": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 51,
+   "gold_files_resolved": 51,
+   "gold_genes": 51,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1441": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 186,
+   "gold_files_resolved": 186,
+   "gold_genes": 185,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\67\\MED-5359.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\96\\MED-1229.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\f2\\MED-4885.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1453": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 245,
+   "gold_files_resolved": 245,
+   "gold_genes": 244,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\98\\MED-4687.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\96\\MED-1229.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1463": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1473": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1485": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 54,
+   "gold_files_resolved": 54,
+   "gold_genes": 53,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1496": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1506": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1516": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1527": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 202,
+   "gold_files_resolved": 202,
+   "gold_genes": 201,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\70\\MED-5244.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4e\\MED-4416.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-153": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 47,
+   "gold_files_resolved": 47,
+   "gold_genes": 47,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1537": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 45,
+   "gold_files_resolved": 45,
+   "gold_genes": 45,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\44\\MED-1874.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1547": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1557": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1568": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1579": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1590": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1601": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 74,
+   "gold_files_resolved": 74,
+   "gold_genes": 73,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1611": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1621": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1635": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 431,
+   "gold_files_resolved": 431,
+   "gold_genes": 429,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\67\\MED-5359.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\96\\MED-1229.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\fe\\MED-3787.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1645": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-165": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 36,
+   "gold_files_resolved": 36,
+   "gold_genes": 36,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1656": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 28,
+   "gold_files_resolved": 28,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1667": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 159,
+   "gold_files_resolved": 159,
+   "gold_genes": 161,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1679": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1690": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1700": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1710": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1721": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 31,
+   "gold_files_resolved": 31,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1731": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1741": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 420,
+   "gold_files_resolved": 420,
+   "gold_genes": 423,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d2\\MED-3833.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\98\\MED-4687.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\42\\MED-3907.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\84\\MED-4620.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\44\\MED-1874.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\94\\MED-5225.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-175": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 37,
+   "gold_files_resolved": 37,
+   "gold_genes": 37,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\94\\MED-5225.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1752": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1762": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1772": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1784": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1794": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1805": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 116,
+   "gold_files_resolved": 116,
+   "gold_genes": 116,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1817": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 27,
+   "gold_files_resolved": 27,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1827": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1837": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 196,
+   "gold_files_resolved": 196,
+   "gold_genes": 196,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1847": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1857": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 33,
+   "gold_files_resolved": 33,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-186": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1867": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1877": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 36,
+   "gold_files_resolved": 36,
+   "gold_genes": 36,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4e\\MED-4416.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1887": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1897": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1909": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 463,
+   "gold_files_resolved": 463,
+   "gold_genes": 462,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\44\\MED-1874.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\ed\\MED-4617.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\cb\\MED-3220.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1919": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 27,
+   "gold_files_resolved": 27,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3e\\MED-3309.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-1929": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1940": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1950": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\42\\MED-3907.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\da\\MED-5301.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-196": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 69,
+   "gold_files_resolved": 69,
+   "gold_genes": 69,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1962": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1972": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1983": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 32,
+   "gold_files_resolved": 32,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-1995": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\44\\MED-1874.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2009": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2019": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2030": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2040": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 132,
+   "gold_files_resolved": 132,
+   "gold_genes": 131,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\a7\\MED-2904.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d7\\MED-2905.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2051": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 355,
+   "gold_files_resolved": 355,
+   "gold_genes": 359,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\fe\\MED-3787.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2061": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 410,
+   "gold_files_resolved": 410,
+   "gold_genes": 403,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4b\\MED-3029.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3a\\MED-306.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\dc\\MED-4689.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\fe\\MED-3787.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\ed\\MED-4617.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\c4\\MED-3019.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\a7\\MED-2904.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d7\\MED-2905.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-207": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 55,
+   "gold_files_resolved": 55,
+   "gold_genes": 55,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2071": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 45,
+   "gold_files_resolved": 45,
+   "gold_genes": 45,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2081": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2092": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2102": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 421,
+   "gold_files_resolved": 421,
+   "gold_genes": 425,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\dc\\MED-4689.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2113": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2124": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2134": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2145": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2156": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2167": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-217": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 36,
+   "gold_files_resolved": 36,
+   "gold_genes": 36,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2177": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e3\\MED-719.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2187": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2197": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 58,
+   "gold_files_resolved": 58,
+   "gold_genes": 58,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2209": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2220": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2230": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2240": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2250": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2261": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 60,
+   "gold_files_resolved": 60,
+   "gold_genes": 63,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\44\\MED-1874.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-227": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 40,
+   "gold_files_resolved": 40,
+   "gold_genes": 40,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2271": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2281": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2291": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-23": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 90,
+   "gold_files_resolved": 90,
+   "gold_genes": 89,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4b\\MED-3029.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3a\\MED-306.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e6\\MED-2651.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\c4\\MED-3019.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2301": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2311": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2321": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2332": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 97,
+   "gold_files_resolved": 97,
+   "gold_genes": 96,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3e\\MED-3309.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2343": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2354": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2364": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2375": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-238": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 54,
+   "gold_files_resolved": 54,
+   "gold_genes": 54,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2386": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 19,
+   "gold_files_resolved": 19,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2396": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2408": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2430": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 46,
+   "gold_files_resolved": 46,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2440": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2450": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 38,
+   "gold_files_resolved": 38,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2460": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 31,
+   "gold_files_resolved": 31,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2470": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 73,
+   "gold_files_resolved": 73,
+   "gold_genes": 73,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\67\\MED-5359.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\cb\\MED-3220.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-248": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 31,
+   "gold_files_resolved": 31,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2480": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2490": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 23,
+   "gold_files_resolved": 23,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\97\\MED-4613.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2500": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2510": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 46,
+   "gold_files_resolved": 46,
+   "gold_genes": 46,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\70\\MED-5244.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2520": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 73,
+   "gold_files_resolved": 73,
+   "gold_genes": 73,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\96\\MED-1229.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2530": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 72,
+   "gold_files_resolved": 72,
+   "gold_genes": 73,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2540": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2550": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 25,
+   "gold_files_resolved": 25,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\9d\\MED-4674.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\44\\MED-1874.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d3\\MED-4673.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2560": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2570": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 40,
+   "gold_files_resolved": 40,
+   "gold_genes": 40,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4e\\MED-4416.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2580": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 23,
+   "gold_files_resolved": 23,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-259": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\bd\\MED-2100.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2590": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 63,
+   "gold_files_resolved": 63,
+   "gold_genes": 63,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2600": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2610": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 61,
+   "gold_files_resolved": 61,
+   "gold_genes": 61,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2620": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 55,
+   "gold_files_resolved": 55,
+   "gold_genes": 55,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2630": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 48,
+   "gold_files_resolved": 48,
+   "gold_genes": 48,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2640": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 48,
+   "gold_files_resolved": 48,
+   "gold_genes": 48,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2650": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\db\\MED-2526.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2660": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 27,
+   "gold_files_resolved": 27,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4b\\MED-3029.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3a\\MED-306.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\c4\\MED-3019.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2670": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 35,
+   "gold_files_resolved": 35,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2680": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2690": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 43,
+   "gold_files_resolved": 43,
+   "gold_genes": 43,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3e\\MED-3309.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-270": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 52,
+   "gold_files_resolved": 52,
+   "gold_genes": 52,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2700": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\db\\MED-2526.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\db\\MED-4247.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2710": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2720": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 36,
+   "gold_files_resolved": 36,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\c6\\MED-4393.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2730": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\fb\\MED-3830.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2740": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 50,
+   "gold_files_resolved": 50,
+   "gold_genes": 50,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\db\\MED-2526.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\db\\MED-4247.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2750": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 59,
+   "gold_files_resolved": 59,
+   "gold_genes": 59,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2760": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2770": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 41,
+   "gold_files_resolved": 41,
+   "gold_genes": 39,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d2\\MED-3833.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\f2\\MED-4885.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\fb\\MED-3830.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2780": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 22,
+   "gold_files_resolved": 22,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\42\\MED-3907.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2790": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 59,
+   "gold_files_resolved": 59,
+   "gold_genes": 59,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-280": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 20,
+   "gold_files_resolved": 20,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2800": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2810": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2820": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2830": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2840": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4e\\MED-4416.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2850": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2860": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2870": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2880": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\97\\MED-4613.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2890": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\da\\MED-5301.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2900": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-291": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\bd\\MED-2100.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\cd\\MED-4639.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2910": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2920": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\07\\MED-5342.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2930": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\cd\\MED-4639.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-2940": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 22,
+   "gold_files_resolved": 22,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2950": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2960": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2970": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2981": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-2991": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3001": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3014": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3026": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3037": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3053": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3063": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-307": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3074": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3085": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3097": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3116": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3131": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3141": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 34,
+   "gold_files_resolved": 34,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d2\\MED-3833.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-3151": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3161": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 43,
+   "gold_files_resolved": 43,
+   "gold_genes": 43,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3171": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 34,
+   "gold_files_resolved": 34,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3181": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 27,
+   "gold_files_resolved": 27,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3191": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-320": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 42,
+   "gold_files_resolved": 42,
+   "gold_genes": 42,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3201": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 32,
+   "gold_files_resolved": 32,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3211": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3221": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 24,
+   "gold_files_resolved": 24,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3231": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3241": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\67\\MED-5359.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-3251": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3261": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3271": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 49,
+   "gold_files_resolved": 49,
+   "gold_genes": 49,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3281": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3292": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-33": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 32,
+   "gold_files_resolved": 32,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3302": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 37,
+   "gold_files_resolved": 37,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4b\\MED-3029.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3a\\MED-306.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\c4\\MED-3019.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\a7\\MED-2904.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d7\\MED-2905.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-3312": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-332": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3322": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 79,
+   "gold_files_resolved": 79,
+   "gold_genes": 79,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d2\\MED-3833.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-3332": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3342": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3352": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 39,
+   "gold_files_resolved": 39,
+   "gold_genes": 39,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3362": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3372": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3382": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3392": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 23,
+   "gold_files_resolved": 23,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3402": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3412": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 49,
+   "gold_files_resolved": 49,
+   "gold_genes": 49,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\cb\\MED-3220.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-3422": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 31,
+   "gold_files_resolved": 31,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3432": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 42,
+   "gold_files_resolved": 42,
+   "gold_genes": 42,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-344": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 61,
+   "gold_files_resolved": 61,
+   "gold_genes": 61,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3442": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3452": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\bd\\MED-2100.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-3462": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 64,
+   "gold_files_resolved": 64,
+   "gold_genes": 64,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-3472": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-358": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-371": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-383": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\98\\MED-4687.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-395": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-407": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-418": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-430": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-44": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 58,
+   "gold_files_resolved": 58,
+   "gold_genes": 58,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-441": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-457": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-468": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-478": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-488": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-499": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 34,
+   "gold_files_resolved": 34,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\f2\\MED-4885.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-510": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-520": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-531": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 308,
+   "gold_files_resolved": 308,
+   "gold_genes": 313,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\f2\\MED-4885.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-541": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-551": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-56": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 50,
+   "gold_files_resolved": 50,
+   "gold_genes": 50,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-561": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 25,
+   "gold_files_resolved": 25,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-571": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-583": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 44,
+   "gold_files_resolved": 44,
+   "gold_genes": 44,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-593": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-603": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-613": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-623": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 41,
+   "gold_files_resolved": 41,
+   "gold_genes": 41,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\fe\\MED-3787.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-634": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-645": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-660": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 475,
+   "gold_files_resolved": 475,
+   "gold_genes": 478,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e3\\MED-719.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\94\\MED-5225.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\97\\MED-4613.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\cb\\MED-3220.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-671": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-68": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 55,
+   "gold_files_resolved": 55,
+   "gold_genes": 55,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-681": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-691": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 21,
+   "gold_files_resolved": 21,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\9f\\MED-2205.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-701": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-711": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 57,
+   "gold_files_resolved": 57,
+   "gold_genes": 59,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\d2\\MED-3833.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\f3\\MED-398.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-721": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 25,
+   "gold_files_resolved": 25,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-731": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 54,
+   "gold_files_resolved": 54,
+   "gold_genes": 54,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\cb\\MED-3220.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-741": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 19,
+   "gold_files_resolved": 19,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\f2\\MED-4885.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-751": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-761": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-771": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-78": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 62,
+   "gold_files_resolved": 62,
+   "gold_genes": 62,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-782": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-792": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-806": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 96,
+   "gold_files_resolved": 96,
+   "gold_genes": 96,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-817": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-827": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 244,
+   "gold_files_resolved": 244,
+   "gold_genes": 244,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\9f\\MED-2205.txt",
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\b2\\MED-2170.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-838": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-850": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 57,
+   "gold_files_resolved": 57,
+   "gold_genes": 56,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\e3\\MED-719.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-872": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-882": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-892": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 92,
+   "gold_files_resolved": 92,
+   "gold_genes": 92,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-902": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-91": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 64,
+   "gold_files_resolved": 64,
+   "gold_genes": 64,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3e\\MED-3309.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-913": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 34,
+   "gold_files_resolved": 34,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\4e\\MED-4416.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-924": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 32,
+   "gold_files_resolved": 32,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-934": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 101,
+   "gold_files_resolved": 101,
+   "gold_genes": 101,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\70\\MED-5244.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-946": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 31,
+   "gold_files_resolved": 31,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\3e\\MED-3309.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-956": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 206,
+   "gold_files_resolved": 206,
+   "gold_genes": 206,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_nfcorpus\\corpus\\9f\\MED-2205.txt"
+   ]
+  },
+  "beir_nfcorpus_PLAIN-966": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-977": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-987": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_nfcorpus_PLAIN-997": {
+   "question_type": "beir_nfcorpus",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  }
+ }
+}

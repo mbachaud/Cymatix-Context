@@ -19,10 +19,10 @@
       <h2 class="desktop-rail__title">Connect a chat</h2>
       <label class="desktop-rail__label">Host
         <select data-desktop-mcp-host>
-          <option value="claude-code">Claude Code</option>
-          <option value="claude-desktop">Claude Desktop</option>
-          <option value="cursor">Cursor</option>
-          <option value="gemini-cli">Gemini CLI</option>
+          {# Host ids come from the CLI's own install table, shown as-is. #}
+          {% for host in (mcp_hosts or []) %}
+            <option value="{{ host }}">{{ host }}</option>
+          {% endfor %}
         </select>
       </label>
       <label class="desktop-rail__label">Lane
