@@ -19,7 +19,7 @@ import pytest
 from cymatix_context.config import ServerConfig, TraceConfig, load_config
 from cymatix_context.telemetry import trace as tr
 
-from tests.conftest import make_client, make_cymatix_config
+from tests.conftest import make_client, make_cymatix_config, make_gene
 
 QUERY = "zebracrossing authentication flamingo"
 DOC_TEXT = "Zebracrossing authentication flamingo tokens are rotated nightly."
@@ -245,7 +245,9 @@ def test_reader_get_and_recent(tmp_path):
 def _client(tmp_path, **trace_kw):
     cfg = make_cymatix_config(trace=TraceConfig(path=str(tmp_path / "traces"), **trace_kw))
     c = make_client(cfg)
-    c.post("/ingest", json={"content": DOC_TEXT, "content_type": "text"})
+    # Seed the store directly: /ingest runs the CPU tagger, which needs the
+    # spaCy pipeline the CI full-suite runner does not install.
+    c.app.state.cymatix.genome.upsert_gene(make_gene(DOC_TEXT, gene_id="tracegene00000001"))
     return c
 
 
@@ -312,10 +314,9 @@ def test_metadata_level_records_without_raw_content(tmp_path):
 def _force_delivery(c, level_dir):
     """Make the pipeline 'deliver' the ingested doc so chunk rows exist
     regardless of the tiny test corpus tripping the abstain gate."""
-    ing = c.post("/ingest", json={"content": DOC_TEXT + " second copy variant.",
-                                  "content_type": "text"}).json()
-    gid = (ing.get("gene_ids") or [None])[0]
-    assert gid
+    gid = "tracegene00000002"
+    c.app.state.cymatix.genome.upsert_gene(
+        make_gene(DOC_TEXT + " second copy variant.", gene_id=gid))
     mgr = c.app.state.cymatix
     orig = mgr.build_context_async
 
