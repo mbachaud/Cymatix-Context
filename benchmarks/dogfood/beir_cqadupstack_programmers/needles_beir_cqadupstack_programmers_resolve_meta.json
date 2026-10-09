@@ -1,0 +1,7025 @@
+{
+ "date": "2026-10-04T09:28:14.335568+00:00",
+ "db": "F:\\tmp\\beir_cqadupstack_programmers_bed\\beir_cqadupstack_programmers.db",
+ "corpus_root": "F:\\Projects\\beir\\beir_cqadupstack_programmers\\corpus",
+ "min_file_bytes": 1,
+ "needles_total": 876,
+ "needles_resolvable": 876,
+ "dropped": [],
+ "gold_files_wanted": 1675,
+ "gold_files_size_gated": 0,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 1,
+ "per_needle": {
+  "beir_cqadupstack_programmers_100095": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_100685": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_100959": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_101164": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_102008": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_102348": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_102518": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_102679": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_102999": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_103089": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_103133": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_103263": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_103471": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_104096": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_104111": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_104122": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_104517": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_10495": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_105380": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_106693": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_107265": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_107326": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_107774": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_107986": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_108292": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_108309": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_108395": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_10857": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_108855": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_109279": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_109818": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_10998": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_110190": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_110270": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_110471": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_110518": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_110595": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_110730": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_110788": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111003": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111475": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111633": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111663": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111757": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111788": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111802": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111846": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_111881": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_112485": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_112974": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_113209": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_113295": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_113726": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_114258": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_114286": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_114520": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_114629": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_114755": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_114819": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_114958": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_115425": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_115525": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_115769": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_115910": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_115920": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_116148": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_116242": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_116330": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_116491": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_116730": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_116988": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_117030": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_117403": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_117766": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_117825": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_117852": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_1180": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_118064": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_118108": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_118140": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_118301": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_118558": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_119367": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_119466": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_119513": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_119814": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_1200": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_120477": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_120488": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_120541": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_120628": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_121167": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_121218": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_121887": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_121998": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_122071": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_122233": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_122244": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_122437": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_123270": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_123456": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_123834": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_123851": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_124533": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_12472": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_124817": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_125108": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_125252": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_125373": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_125715": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_126130": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_126965": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_127201": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_127535": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_12773": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_127867": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_128044": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_128548": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_129141": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_129520": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_129543": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_129603": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 20,
+   "gold_files_resolved": 20,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_130256": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_130335": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_130582": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_130743": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_130948": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_131314": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 15,
+   "gold_files_resolved": 15,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_131381": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_131408": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_131451": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_131701": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_1319": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_132074": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_132281": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_132520": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_132578": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_133096": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_133330": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_133424": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_133565": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_133664": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_133782": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_133872": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_133937": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_134037": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_134244": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_135047": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_135701": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_135970": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_135993": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_136195": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_136382": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_136449": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_136629": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_136634": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_13676": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_136774": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_136908": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_136993": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_137344": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_137439": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_13786": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_137973": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_138026": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_138182": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_138396": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_138447": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_138642": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_138643": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_138726": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_138908": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_139037": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_139171": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_139418": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_139442": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_139663": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_140004": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_140264": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_140266": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_140561": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_140876": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_141232": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_141411": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_141961": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_141973": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_142292": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_142612": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_142974": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_143127": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_143722": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_144058": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_144556": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_144717": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_144829": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_144892": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_145055": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_145437": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_145518": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_145722": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_14582": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_146065": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_146272": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_14645": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_146810": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_147134": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_147185": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_147240": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_147273": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_147977": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_14831": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_148747": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_14975": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_15004": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_150479": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_150633": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_150888": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_151103": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_152094": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_15239": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_152678": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_15286": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_153581": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_153631": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_154155": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_154339": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_154593": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_154679": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_154954": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_155469": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_155659": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_156771": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_156794": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_156848": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_15829": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_158359": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_158397": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_158534": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_158591": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_159089": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_159373": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_159626": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_159666": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_16010": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_160628": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_161303": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_161711": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_161809": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_162583": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_162931": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_163408": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_163752": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_163822": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_163924": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_163933": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_164599": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_164665": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_164799": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_16528": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_165668": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_165725": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_165735": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_166136": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_166314": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_166798": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_166884": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 26,
+   "gold_files_resolved": 26,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_166895": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_16708": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_167277": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_16732": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_167890": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_168685": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_169962": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_170138": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_170966": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_171701": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_173320": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_17341": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_174762": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_175014": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_175309": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_175561": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_175583": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_175594": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_17568": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_176102": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_176471": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_17696": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_177907": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_178018": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_17826": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_178916": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_17898": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_179002": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_179162": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_179554": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_179618": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_179763": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_180012": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_180165": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_18059": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_180904": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_181527": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_181780": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_182009": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_182207": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_182229": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_18371": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_18444": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_184874": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_185671": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_185712": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_186377": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_186438": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_186465": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_186690": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_18679": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_186932": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_187026": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_188381": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_189096": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_189426": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_189824": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_189983": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_190542": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_190649": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_190758": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_190853": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_190955": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_191191": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_191358": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_191539": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_191759": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_191961": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_192": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_192037": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_193269": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_193415": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_193496": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_193586": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_193895": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_193929": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_193996": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_194106": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_194321": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_194373": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_194395": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_194646": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_194679": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_194958": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_194975": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_195073": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_195094": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_195337": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_195416": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_19558": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_195656": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_195719": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196139": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196260": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196356": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196366": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196546": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196615": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196700": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196876": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196913": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196930": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_196990": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_197056": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_197251": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_197443": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_19750": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_197746": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_197838": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_198240": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_19842": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_198549": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_198936": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_198995": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_199162": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_199303": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_199698": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_199803": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_199827": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_199838": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_199873": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_200031": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_200064": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_20023": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_200360": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_200362": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_200497": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_200545": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_200709": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_200861": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_20092": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_201041": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_201119": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_201130": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_201237": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_201844": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_201894": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_202273": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_202770": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_202804": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_202889": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_202903": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_203362": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_203469": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_203483": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_203776": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_203970": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_204206": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_204410": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_204443": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_204521": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_204580": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_204840": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_204938": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_205279": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_205359": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_205562": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_205638": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_206199": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_206254": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_20653": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_206754": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_206755": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_206816": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_20684": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_207815": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_208698": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_208815": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_208867": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_208976": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_209070": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_209129": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_209479": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_209609": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_209764": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_209857": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210049": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210327": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210346": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210360": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210472": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210496": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210532": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210623": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210635": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210637": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210693": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_210864": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_211276": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_211319": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_211477": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_211610": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_211640": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_211678": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_21230": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_212300": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_21256": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_212575": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_212932": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_213070": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_213173": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_213449": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_213452": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_213603": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_21397": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_21403": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_214494": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_214734": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_214784": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_215042": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_215235": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_215248": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_215427": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_215474": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_215703": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_215727": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_215826": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_216195": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_216301": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_216639": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_218121": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 22,
+   "gold_files_resolved": 22,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_218184": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_218447": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_218869": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_219028": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_21907": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_219198": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_220023": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_220049": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_220343": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_220444": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_220872": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_220890": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_221009": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_221030": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_221234": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_221365": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_22146": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_221615": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_221619": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_222362": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_222464": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_222508": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_223027": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_223148": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_223250": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_223596": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_223718": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_223815": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_224036": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_224434": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_224752": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_224835": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_225153": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_225354": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_225387": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_225504": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_225870": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_225931": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_226233": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_226357": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_227720": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_227818": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_227993": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_228187": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_228584": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_228848": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_228973": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_229170": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_229657": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_230145": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_230199": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_230206": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_23021": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_230250": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_230280": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_230534": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_230604": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_230778": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_231491": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_23276": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_232812": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_232843": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_233038": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_23313": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_233342": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_233503": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_233592": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_233615": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_233981": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_234001": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_234066": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_234449": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_234511": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_234620": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_234820": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_234962": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_23507": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_235283": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_235468": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_235645": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_236370": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_236415": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_236473": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_23652": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_236571": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_236853": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_236903": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237065": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237157": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237226": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237431": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237577": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237584": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237593": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237738": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_237935": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_238057": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_238325": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_238386": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_238546": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_239016": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_239210": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_240454": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_240612": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_240734": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_241389": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_241411": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_24170": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_242610": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_243347": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_244705": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_244866": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_245115": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_245274": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_24542": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_246066": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_246354": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_246532": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_246568": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_246634": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_246813": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_247103": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_247135": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_247382": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_24804": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_249892": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_250164": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_250203": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_250291": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_25063": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_250707": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_250953": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_251126": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_251222": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_251643": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_251707": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_251756": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_25234": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_252495": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_252532": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_252595": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_253026": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_253042": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_253267": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_253453": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_253496": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_253650": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_254008": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_254083": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_254339": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_254424": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_254936": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_255031": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_255912": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_25600": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_257": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_26030": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_26371": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_2654": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_26642": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_26901": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_27022": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_27410": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_2757": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_28050": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_28379": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_28825": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_29109": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_29513": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_29534": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_31558": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_32425": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_32482": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_32571": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_32617": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_32956": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_34173": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_34485": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_34559": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_35074": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_35610": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_35925": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_36175": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_36297": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_36561": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_36731": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_36925": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_36961": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_37029": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_37249": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_3747": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 149,
+   "gold_files_resolved": 149,
+   "gold_genes": 150,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\beir\\beir_cqadupstack_programmers\\corpus\\f8\\211528.txt"
+   ]
+  },
+  "beir_cqadupstack_programmers_3766": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_37677": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_37987": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_38087": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_38265": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_38566": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_39282": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_39378": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_3997": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_40063": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_40297": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_41545": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_41981": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_42817": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_42938": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_43086": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_43729": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_43796": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_44959": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_45378": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_46252": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_46434": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_46513": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_46685": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_47370": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_4765": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_492": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_49836": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_49959": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_50755": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_51268": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_51465": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_51987": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_52158": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_52833": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_52961": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_53517": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_53572": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_53612": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_54373": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_54451": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_54959": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_55065": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_55267": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_55334": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_55697": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_56031": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_56848": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 32,
+   "gold_files_resolved": 32,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_57047": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_57068": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_57243": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_57405": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_57435": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_57576": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_58887": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_59091": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_59496": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_59520": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_59606": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_60216": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_604": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_60409": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_60994": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_61558": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_61745": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_61798": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_61980": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_62060": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_62765": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_64671": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_64722": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_6476": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_65918": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_6625": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_663": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_66735": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_66764": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_66834": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_67707": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_67750": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_67931": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_67960": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_68867": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_69242": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_70755": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_7126": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_71904": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_71917": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_7242": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_72768": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_73304": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_73541": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_73934": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_74086": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_74386": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_74493": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_74580": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_750": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_7536": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_7565": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_76182": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_76801": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_77146": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_7747": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_77731": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_78176": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_78431": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_78903": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_78956": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_79624": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_79765": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_80694": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_80826": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_81062": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_81131": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_81478": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_81591": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_81674": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_81705": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_81838": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_82227": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_82286": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_84001": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_84638": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_84778": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_84909": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_84966": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_85019": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_8544": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_85691": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_8588": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_86656": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_86904": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_87082": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_87321": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_87452": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_88028": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_88392": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_8886": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_89491": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_89554": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_8958": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_89819": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_89944": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_89947": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_90217": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_90438": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_91064": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_91629": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_91816": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_91945": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_91976": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_92339": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_92393": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_92465": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_93016": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_93124": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_9320": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_93245": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_93462": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_93826": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_93848": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_940": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_94024": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_94780": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_94932": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95335": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95363": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95373": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95465": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95626": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95637": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95786": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95933": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_95942": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_96504": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_96638": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97269": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97338": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97357": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97446": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97511": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97660": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97785": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97832": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_97912": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_9813": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_98324": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_98509": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_98651": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_98691": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_98749": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_98758": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_98905": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_9944": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_9948": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_99499": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "beir_cqadupstack_programmers_99647": {
+   "question_type": "beir_cqadupstack_programmers",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  }
+ }
+}

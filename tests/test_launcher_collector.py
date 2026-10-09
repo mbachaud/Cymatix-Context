@@ -439,7 +439,7 @@ class TestHostLabelWiring:
         collector = StateCollector(supervisor=_make_label_supervisor())
         p = _make_participant(agent_kind="claude-code", mcp_host="vscode")
         panel = collector._all_agents_panel([p])
-        assert panel["entries"][0]["host_label"] == "Claude Code + VS Code"
+        assert panel["entries"][0]["host_label"] == "claude-code + vscode"
 
     def test_all_agents_panel_omits_host_label_when_neither_set(self):
         collector = StateCollector(supervisor=_make_label_supervisor())
@@ -457,27 +457,15 @@ class TestHostLabelWiring:
         )
         panel = collector._disconnected_agents_panel([p])
         assert panel is not None
-        assert panel["entries"][0]["host_label"] == "Claude Code + Antigravity"
+        assert panel["entries"][0]["host_label"] == "claude-code + antigravity"
 
 
 class TestTooltipWiring:
     """Tooltip field wiring (model_label/ide_label/agent_kind_label/
     ide_detection_via) on the agent panel builders.
 
-    Trimmed vs. the original file:
-    - `model_label == "Claude Opus 4.7"` was dropped from the
-      "when_announced" test below — it only re-verified
-      model_pretty("claude-opus-4-7") -> "Claude Opus 4.7", unit-tested
-      directly in test_host_labels.py::TestModelLabels::test_known_anthropic_models.
-      `ide_label` stays as the one wire-connected pretty-form canary for
-      this panel, alongside `agent_kind_label` and the always-unique
-      `ide_detection_via` passthrough.
-    - `test_all_agents_panel_emits_unknown_model_id_verbatim` was dropped
-      entirely — its sole assertion (`model_label ==
-      "acme-experimental-7b"`) duplicates
-      test_host_labels.py::TestModelLabels::test_unknown_model_id_echoes_verbatim
-      (`model_pretty("acme-experimental-7b") == "acme-experimental-7b"`)
-      verbatim, with no additional wiring value over the tests below.
+    Labels echo what the agent announced (agent_kind, ide, model_id), so
+    these assert the announced strings come through unchanged.
     """
 
     def test_all_agents_panel_emits_tooltip_fields_when_announced(self):
@@ -492,8 +480,8 @@ class TestTooltipWiring:
         panel = collector._all_agents_panel([p])
         entry = panel["entries"][0]
         tooltip = entry["tooltip"]
-        assert tooltip["ide_label"] == "VS Code"
-        assert tooltip["agent_kind_label"] == "Claude Code"
+        assert tooltip["ide_label"] == "vscode"
+        assert tooltip["agent_kind_label"] == "claude-code"
         assert tooltip["ide_detection_via"] == "env:VSCODE_PID"
 
     def test_all_agents_panel_emits_placeholders_when_missing(self):
@@ -518,8 +506,8 @@ class TestTooltipWiring:
         panel = collector._disconnected_agents_panel([p])
         assert panel is not None
         tooltip = panel["entries"][0]["tooltip"]
-        assert tooltip["model_label"] == "Claude Opus 4.7"
-        assert tooltip["ide_label"] == "VS Code"
+        assert tooltip["model_label"] == "claude-opus-4-7"
+        assert tooltip["ide_label"] == "vscode"
 
     def test_participants_panel_also_emits_tooltip(self):
         collector = StateCollector(supervisor=_make_label_supervisor())
@@ -530,8 +518,8 @@ class TestTooltipWiring:
         )
         panel = collector._participants_panel([p])
         tooltip = panel["entries"][0]["tooltip"]
-        assert tooltip["model_label"] == "GPT-5"
-        assert tooltip["ide_label"] == "VS Code"
+        assert tooltip["model_label"] == "gpt-5"
+        assert tooltip["ide_label"] == "vscode"
 
 
 # --- Slice A: the additive `host_status` key -------------------------------

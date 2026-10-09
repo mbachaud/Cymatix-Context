@@ -17,8 +17,10 @@
       <span class="muted">{{ state.switchboard.error }}</span>
     </div>
   {% else %}
+    {% set on_settings = state.switchboard.settings | selectattr("active") | list %}
+    {% set off_settings = state.switchboard.settings | rejectattr("active") | list %}
     <dl class="panel-kv switchboard-grid">
-      {% for setting in state.switchboard.settings %}
+      {% for setting in on_settings %}
         <dt>
           <span class="switchboard-label">{{ setting.label }}</span>
           {% if setting.description %}
@@ -32,5 +34,23 @@
         </dd>
       {% endfor %}
     </dl>
+    {% if off_settings %}
+      <details class="switchboard-off" data-keep-open="switchboard-off">
+        <summary>{{ off_settings | length }} switched off</summary>
+        <dl class="panel-kv switchboard-grid switchboard-grid--off">
+          {% for setting in off_settings %}
+            <dt>
+              <span class="switchboard-label">{{ setting.label }}</span>
+              {% if setting.description %}
+                <span class="muted switchboard-desc">{{ setting.description }}</span>
+              {% endif %}
+            </dt>
+            <dd>
+              <span class="switchboard-value switchboard-value--{{ setting.value }}">{{ setting.value }}</span>
+            </dd>
+          {% endfor %}
+        </dl>
+      </details>
+    {% endif %}
   {% endif %}
 </section>

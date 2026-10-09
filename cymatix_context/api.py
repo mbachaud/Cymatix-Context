@@ -413,6 +413,7 @@ class CymatixSession:
             read_only=True,
             include_raw=include_raw,
             budget_config=self._manager.config.budget,
+            freshness_basis=self._manager.config.context.freshness_basis,
         )
 
     def refresh_targets(

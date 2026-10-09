@@ -1,0 +1,941 @@
+{
+ "beir_scifact_1": {
+  "d6/31715818.txt": 1
+ },
+ "beir_scifact_100": {
+  "63/4381486.txt": 1
+ },
+ "beir_scifact_1012": {
+  "b9/9745001.txt": 1
+ },
+ "beir_scifact_1014": {
+  "2d/6277638.txt": 1
+ },
+ "beir_scifact_1019": {
+  "a8/11603066.txt": 1
+ },
+ "beir_scifact_1020": {
+  "e0/9433958.txt": 1
+ },
+ "beir_scifact_1021": {
+  "e0/9433958.txt": 1
+ },
+ "beir_scifact_1024": {
+  "04/5373138.txt": 1
+ },
+ "beir_scifact_1029": {
+  "6a/13940200.txt": 1,
+  "74/11899391.txt": 1,
+  "b3/13923140.txt": 1
+ },
+ "beir_scifact_1041": {
+  "64/16626264.txt": 1,
+  "a0/25254425.txt": 1
+ },
+ "beir_scifact_1049": {
+  "c7/12486491.txt": 1
+ },
+ "beir_scifact_1062": {
+  "26/20381484.txt": 1
+ },
+ "beir_scifact_1086": {
+  "84/39281140.txt": 1
+ },
+ "beir_scifact_1088": {
+  "f3/37549932.txt": 1
+ },
+ "beir_scifact_1089": {
+  "c3/17628888.txt": 1
+ },
+ "beir_scifact_1099": {
+  "bc/7662206.txt": 1
+ },
+ "beir_scifact_1100": {
+  "bc/7662206.txt": 1
+ },
+ "beir_scifact_1104": {
+  "4f/3898784.txt": 1
+ },
+ "beir_scifact_1107": {
+  "1b/20532591.txt": 1
+ },
+ "beir_scifact_1110": {
+  "8b/13770184.txt": 1
+ },
+ "beir_scifact_1121": {
+  "5d/4456756.txt": 1
+ },
+ "beir_scifact_113": {
+  "68/6157837.txt": 1
+ },
+ "beir_scifact_1130": {
+  "cd/17997584.txt": 1
+ },
+ "beir_scifact_1132": {
+  "84/9283422.txt": 1,
+  "90/33499189.txt": 1
+ },
+ "beir_scifact_1137": {
+  "18/33370.txt": 1
+ },
+ "beir_scifact_1140": {
+  "b2/12009265.txt": 1
+ },
+ "beir_scifact_1144": {
+  "28/10071552.txt": 1
+ },
+ "beir_scifact_1146": {
+  "0f/13906581.txt": 1
+ },
+ "beir_scifact_115": {
+  "7e/33872649.txt": 1
+ },
+ "beir_scifact_1150": {
+  "3f/11369420.txt": 1
+ },
+ "beir_scifact_1163": {
+  "a4/15305881.txt": 1
+ },
+ "beir_scifact_1175": {
+  "6b/31272411.txt": 1
+ },
+ "beir_scifact_1179": {
+  "6b/31272411.txt": 1
+ },
+ "beir_scifact_118": {
+  "df/6372244.txt": 1
+ },
+ "beir_scifact_1180": {
+  "6b/31272411.txt": 1
+ },
+ "beir_scifact_1185": {
+  "e7/16737210.txt": 1
+ },
+ "beir_scifact_1187": {
+  "84/52873726.txt": 1
+ },
+ "beir_scifact_1191": {
+  "b0/30655442.txt": 1
+ },
+ "beir_scifact_1194": {
+  "a1/11419230.txt": 1
+ },
+ "beir_scifact_1196": {
+  "34/25649714.txt": 1
+ },
+ "beir_scifact_1197": {
+  "34/25649714.txt": 1
+ },
+ "beir_scifact_1199": {
+  "2f/16760369.txt": 1
+ },
+ "beir_scifact_1200": {
+  "eb/3441524.txt": 1
+ },
+ "beir_scifact_1202": {
+  "c8/3475317.txt": 1
+ },
+ "beir_scifact_1204": {
+  "f9/31141365.txt": 1
+ },
+ "beir_scifact_1207": {
+  "2d/18909530.txt": 1
+ },
+ "beir_scifact_1213": {
+  "a8/14407673.txt": 1
+ },
+ "beir_scifact_1216": {
+  "0e/24142891.txt": 1
+ },
+ "beir_scifact_1221": {
+  "a1/19736671.txt": 1
+ },
+ "beir_scifact_1225": {
+  "37/9650982.txt": 1
+ },
+ "beir_scifact_1226": {
+  "98/13777138.txt": 1
+ },
+ "beir_scifact_1232": {
+  "c7/13905670.txt": 1
+ },
+ "beir_scifact_124": {
+  "9c/4883040.txt": 1
+ },
+ "beir_scifact_1241": {
+  "af/4427392.txt": 1
+ },
+ "beir_scifact_1245": {
+  "24/7662395.txt": 1
+ },
+ "beir_scifact_1259": {
+  "84/24341590.txt": 1
+ },
+ "beir_scifact_1262": {
+  "87/44172171.txt": 1
+ },
+ "beir_scifact_1266": {
+  "e0/37480103.txt": 1
+ },
+ "beir_scifact_127": {
+  "a9/21598000.txt": 1
+ },
+ "beir_scifact_1270": {
+  "ce/13900610.txt": 1
+ },
+ "beir_scifact_1271": {
+  "ff/13768432.txt": 1
+ },
+ "beir_scifact_1272": {
+  "57/17081238.txt": 1
+ },
+ "beir_scifact_1273": {
+  "9e/11041152.txt": 1
+ },
+ "beir_scifact_1274": {
+  "52/27731651.txt": 1,
+  "57/12428814.txt": 1,
+  "7e/4406819.txt": 1
+ },
+ "beir_scifact_1278": {
+  "f5/11335781.txt": 1
+ },
+ "beir_scifact_1279": {
+  "f5/11335781.txt": 1
+ },
+ "beir_scifact_128": {
+  "16/8290953.txt": 1
+ },
+ "beir_scifact_1280": {
+  "a7/4387784.txt": 1
+ },
+ "beir_scifact_1281": {
+  "a7/4387784.txt": 1
+ },
+ "beir_scifact_1282": {
+  "87/23649163.txt": 1
+ },
+ "beir_scifact_129": {
+  "9f/27768226.txt": 1
+ },
+ "beir_scifact_1290": {
+  "da/4687948.txt": 1
+ },
+ "beir_scifact_1292": {
+  "ef/56893404.txt": 1
+ },
+ "beir_scifact_1298": {
+  "8c/11718220.txt": 1
+ },
+ "beir_scifact_13": {
+  "b4/1606628.txt": 1
+ },
+ "beir_scifact_130": {
+  "9f/27768226.txt": 1
+ },
+ "beir_scifact_1303": {
+  "cb/12631697.txt": 1
+ },
+ "beir_scifact_1316": {
+  "6a/27910499.txt": 1
+ },
+ "beir_scifact_1319": {
+  "65/16284655.txt": 1
+ },
+ "beir_scifact_132": {
+  "cd/7975937.txt": 1
+ },
+ "beir_scifact_1320": {
+  "65/16284655.txt": 1
+ },
+ "beir_scifact_133": {
+  "4e/6969753.txt": 1,
+  "71/12640810.txt": 1,
+  "a0/16280642.txt": 1,
+  "f1/38485364.txt": 1,
+  "fb/17934082.txt": 1
+ },
+ "beir_scifact_1332": {
+  "03/5304891.txt": 1
+ },
+ "beir_scifact_1335": {
+  "6a/27910499.txt": 1
+ },
+ "beir_scifact_1336": {
+  "6a/27910499.txt": 1
+ },
+ "beir_scifact_1337": {
+  "7f/20231138.txt": 1
+ },
+ "beir_scifact_1339": {
+  "f1/15482274.txt": 1
+ },
+ "beir_scifact_1344": {
+  "bd/9559146.txt": 1
+ },
+ "beir_scifact_1352": {
+  "1c/12885341.txt": 1
+ },
+ "beir_scifact_1359": {
+  "df/11614737.txt": 1
+ },
+ "beir_scifact_1362": {
+  "16/8290953.txt": 1
+ },
+ "beir_scifact_1363": {
+  "16/8290953.txt": 1
+ },
+ "beir_scifact_1368": {
+  "ea/2425364.txt": 1
+ },
+ "beir_scifact_137": {
+  "f5/26016929.txt": 1
+ },
+ "beir_scifact_1370": {
+  "ea/2425364.txt": 1
+ },
+ "beir_scifact_1379": {
+  "25/27123743.txt": 1,
+  "63/16322674.txt": 1,
+  "6b/23557241.txt": 1,
+  "9d/17450673.txt": 1
+ },
+ "beir_scifact_1382": {
+  "b7/17755060.txt": 1
+ },
+ "beir_scifact_1385": {
+  "ff/306006.txt": 1
+ },
+ "beir_scifact_1389": {
+  "c5/23895668.txt": 1
+ },
+ "beir_scifact_1395": {
+  "98/17717391.txt": 1
+ },
+ "beir_scifact_141": {
+  "09/6955746.txt": 1,
+  "39/14437255.txt": 1
+ },
+ "beir_scifact_142": {
+  "e7/10582939.txt": 1
+ },
+ "beir_scifact_143": {
+  "e7/10582939.txt": 1
+ },
+ "beir_scifact_146": {
+  "e7/10582939.txt": 1
+ },
+ "beir_scifact_148": {
+  "0a/1084345.txt": 1
+ },
+ "beir_scifact_163": {
+  "f6/18872233.txt": 1
+ },
+ "beir_scifact_171": {
+  "e0/12670680.txt": 1
+ },
+ "beir_scifact_179": {
+  "25/27123743.txt": 1,
+  "63/16322674.txt": 1,
+  "6b/23557241.txt": 1,
+  "9d/17450673.txt": 1
+ },
+ "beir_scifact_180": {
+  "12/16966326.txt": 1
+ },
+ "beir_scifact_183": {
+  "25/12827098.txt": 1
+ },
+ "beir_scifact_185": {
+  "d3/18340282.txt": 1
+ },
+ "beir_scifact_198": {
+  "49/2177022.txt": 1
+ },
+ "beir_scifact_208": {
+  "98/13519661.txt": 1
+ },
+ "beir_scifact_212": {
+  "43/22038539.txt": 1
+ },
+ "beir_scifact_213": {
+  "85/13625993.txt": 1
+ },
+ "beir_scifact_216": {
+  "78/21366394.txt": 1
+ },
+ "beir_scifact_217": {
+  "78/21366394.txt": 1
+ },
+ "beir_scifact_218": {
+  "78/21366394.txt": 1
+ },
+ "beir_scifact_219": {
+  "78/21366394.txt": 1
+ },
+ "beir_scifact_230": {
+  "f4/3067015.txt": 1
+ },
+ "beir_scifact_232": {
+  "5c/10536636.txt": 1
+ },
+ "beir_scifact_233": {
+  "56/4388470.txt": 1
+ },
+ "beir_scifact_236": {
+  "56/4388470.txt": 1
+ },
+ "beir_scifact_237": {
+  "0f/4942718.txt": 1
+ },
+ "beir_scifact_238": {
+  "e0/2251426.txt": 1
+ },
+ "beir_scifact_239": {
+  "26/14079881.txt": 1
+ },
+ "beir_scifact_248": {
+  "c7/1568684.txt": 1
+ },
+ "beir_scifact_249": {
+  "c7/1568684.txt": 1
+ },
+ "beir_scifact_261": {
+  "1d/1122279.txt": 1,
+  "ce/10697096.txt": 1
+ },
+ "beir_scifact_268": {
+  "32/970012.txt": 1
+ },
+ "beir_scifact_269": {
+  "32/970012.txt": 1
+ },
+ "beir_scifact_274": {
+  "df/11614737.txt": 1
+ },
+ "beir_scifact_275": {
+  "6d/14819804.txt": 1,
+  "d8/14241418.txt": 1,
+  "fe/4961038.txt": 1
+ },
+ "beir_scifact_279": {
+  "8f/14376683.txt": 1
+ },
+ "beir_scifact_294": {
+  "ec/10874408.txt": 1
+ },
+ "beir_scifact_295": {
+  "bf/20310709.txt": 1
+ },
+ "beir_scifact_298": {
+  "b4/39381118.txt": 1
+ },
+ "beir_scifact_3": {
+  "bc/14717500.txt": 1
+ },
+ "beir_scifact_300": {
+  "84/3553087.txt": 1
+ },
+ "beir_scifact_303": {
+  "56/4388470.txt": 1
+ },
+ "beir_scifact_312": {
+  "89/6173523.txt": 1
+ },
+ "beir_scifact_314": {
+  "82/4347374.txt": 1
+ },
+ "beir_scifact_324": {
+  "f8/2014909.txt": 1
+ },
+ "beir_scifact_327": {
+  "cd/17997584.txt": 1
+ },
+ "beir_scifact_338": {
+  "1b/23349986.txt": 1
+ },
+ "beir_scifact_343": {
+  "9d/5884524.txt": 1,
+  "a4/7873737.txt": 1
+ },
+ "beir_scifact_350": {
+  "1f/16927286.txt": 1
+ },
+ "beir_scifact_354": {
+  "5d/8774475.txt": 1
+ },
+ "beir_scifact_36": {
+  "05/11705328.txt": 1,
+  "27/5152028.txt": 1
+ },
+ "beir_scifact_362": {
+  "5b/38587347.txt": 1
+ },
+ "beir_scifact_380": {
+  "72/19005293.txt": 1
+ },
+ "beir_scifact_384": {
+  "8b/13770184.txt": 1
+ },
+ "beir_scifact_385": {
+  "07/9767444.txt": 1,
+  "78/9955779.txt": 1
+ },
+ "beir_scifact_386": {
+  "0c/16495649.txt": 1
+ },
+ "beir_scifact_388": {
+  "cf/1148122.txt": 1
+ },
+ "beir_scifact_399": {
+  "7b/791050.txt": 1
+ },
+ "beir_scifact_410": {
+  "12/14924526.txt": 1
+ },
+ "beir_scifact_411": {
+  "12/14924526.txt": 1
+ },
+ "beir_scifact_415": {
+  "66/6309659.txt": 1
+ },
+ "beir_scifact_42": {
+  "00/18174210.txt": 1
+ },
+ "beir_scifact_421": {
+  "e1/11172205.txt": 1
+ },
+ "beir_scifact_431": {
+  "f9/28937856.txt": 1
+ },
+ "beir_scifact_436": {
+  "ed/14637235.txt": 1
+ },
+ "beir_scifact_437": {
+  "db/18399038.txt": 1
+ },
+ "beir_scifact_439": {
+  "fb/4423559.txt": 1
+ },
+ "beir_scifact_440": {
+  "fb/4423559.txt": 1
+ },
+ "beir_scifact_443": {
+  "3a/10165258.txt": 1
+ },
+ "beir_scifact_452": {
+  "8e/12804937.txt": 1,
+  "e2/464511.txt": 1
+ },
+ "beir_scifact_475": {
+  "fc/18678095.txt": 1
+ },
+ "beir_scifact_478": {
+  "20/14767844.txt": 1
+ },
+ "beir_scifact_48": {
+  "bf/13734012.txt": 1
+ },
+ "beir_scifact_49": {
+  "ac/5953485.txt": 1
+ },
+ "beir_scifact_491": {
+  "ef/56893404.txt": 1
+ },
+ "beir_scifact_5": {
+  "bf/13734012.txt": 1
+ },
+ "beir_scifact_50": {
+  "c0/12580014.txt": 1
+ },
+ "beir_scifact_501": {
+  "65/17930286.txt": 1
+ },
+ "beir_scifact_502": {
+  "10/13071728.txt": 1
+ },
+ "beir_scifact_507": {
+  "15/30774694.txt": 1
+ },
+ "beir_scifact_508": {
+  "cb/13980338.txt": 1
+ },
+ "beir_scifact_51": {
+  "8e/45638119.txt": 1
+ },
+ "beir_scifact_513": {
+  "7e/13230773.txt": 1
+ },
+ "beir_scifact_514": {
+  "31/16256507.txt": 1
+ },
+ "beir_scifact_516": {
+  "7e/29564505.txt": 1
+ },
+ "beir_scifact_517": {
+  "9e/15663829.txt": 1
+ },
+ "beir_scifact_521": {
+  "2a/34873974.txt": 1
+ },
+ "beir_scifact_525": {
+  "1e/13639330.txt": 1
+ },
+ "beir_scifact_527": {
+  "02/3863543.txt": 1
+ },
+ "beir_scifact_528": {
+  "03/5476778.txt": 1
+ },
+ "beir_scifact_53": {
+  "8e/45638119.txt": 1
+ },
+ "beir_scifact_532": {
+  "7a/12991445.txt": 1
+ },
+ "beir_scifact_533": {
+  "7a/12991445.txt": 1
+ },
+ "beir_scifact_535": {
+  "3d/39368721.txt": 1
+ },
+ "beir_scifact_536": {
+  "79/16056514.txt": 1
+ },
+ "beir_scifact_539": {
+  "50/13282296.txt": 1
+ },
+ "beir_scifact_54": {
+  "03/49556906.txt": 1
+ },
+ "beir_scifact_540": {
+  "49/25007443.txt": 1,
+  "a3/11886686.txt": 1
+ },
+ "beir_scifact_544": {
+  "6b/24221369.txt": 1
+ },
+ "beir_scifact_549": {
+  "e0/9433958.txt": 1
+ },
+ "beir_scifact_551": {
+  "90/33499189.txt": 1
+ },
+ "beir_scifact_552": {
+  "bf/1471041.txt": 1
+ },
+ "beir_scifact_554": {
+  "96/1049501.txt": 1
+ },
+ "beir_scifact_56": {
+  "df/4709641.txt": 1
+ },
+ "beir_scifact_560": {
+  "e7/40096222.txt": 1
+ },
+ "beir_scifact_569": {
+  "f4/23460562.txt": 1
+ },
+ "beir_scifact_57": {
+  "df/4709641.txt": 1
+ },
+ "beir_scifact_575": {
+  "b9/10300888.txt": 1
+ },
+ "beir_scifact_577": {
+  "9d/5289038.txt": 1
+ },
+ "beir_scifact_578": {
+  "eb/8764879.txt": 1
+ },
+ "beir_scifact_587": {
+  "85/16999023.txt": 1
+ },
+ "beir_scifact_589": {
+  "fd/10984005.txt": 1
+ },
+ "beir_scifact_593": {
+  "bc/19675911.txt": 1
+ },
+ "beir_scifact_597": {
+  "19/12779444.txt": 1,
+  "36/25742130.txt": 1,
+  "98/36355784.txt": 1
+ },
+ "beir_scifact_598": {
+  "36/25742130.txt": 1
+ },
+ "beir_scifact_613": {
+  "b7/9638032.txt": 1
+ },
+ "beir_scifact_619": {
+  "a2/20888849.txt": 1,
+  "d0/2565138.txt": 1
+ },
+ "beir_scifact_623": {
+  "9f/17000834.txt": 1
+ },
+ "beir_scifact_628": {
+  "05/24512064.txt": 1
+ },
+ "beir_scifact_636": {
+  "8b/24294572.txt": 1
+ },
+ "beir_scifact_637": {
+  "34/25649714.txt": 1
+ },
+ "beir_scifact_641": {
+  "de/5912283.txt": 1,
+  "eb/31554917.txt": 1
+ },
+ "beir_scifact_644": {
+  "42/13619127.txt": 1
+ },
+ "beir_scifact_649": {
+  "b9/12789595.txt": 1
+ },
+ "beir_scifact_659": {
+  "ca/1215116.txt": 1
+ },
+ "beir_scifact_660": {
+  "ca/1215116.txt": 1
+ },
+ "beir_scifact_674": {
+  "74/2095573.txt": 1
+ },
+ "beir_scifact_684": {
+  "0f/4942718.txt": 1
+ },
+ "beir_scifact_690": {
+  "5b/18750453.txt": 1
+ },
+ "beir_scifact_691": {
+  "2a/10991183.txt": 1
+ },
+ "beir_scifact_692": {
+  "b6/24088502.txt": 1
+ },
+ "beir_scifact_693": {
+  "b6/24088502.txt": 1
+ },
+ "beir_scifact_70": {
+  "36/4414547.txt": 1,
+  "7c/5956380.txt": 1
+ },
+ "beir_scifact_700": {
+  "53/4350400.txt": 1
+ },
+ "beir_scifact_702": {
+  "53/4350400.txt": 1
+ },
+ "beir_scifact_715": {
+  "d3/18421962.txt": 1
+ },
+ "beir_scifact_716": {
+  "d3/18421962.txt": 1
+ },
+ "beir_scifact_718": {
+  "97/17587795.txt": 1
+ },
+ "beir_scifact_72": {
+  "75/6076903.txt": 1
+ },
+ "beir_scifact_721": {
+  "bc/1834762.txt": 1
+ },
+ "beir_scifact_723": {
+  "e7/5531479.txt": 1
+ },
+ "beir_scifact_727": {
+  "b8/7521113.txt": 1
+ },
+ "beir_scifact_728": {
+  "b8/7521113.txt": 1,
+  "db/36444198.txt": 1
+ },
+ "beir_scifact_729": {
+  "0f/26851674.txt": 1
+ },
+ "beir_scifact_742": {
+  "98/32159283.txt": 1
+ },
+ "beir_scifact_743": {
+  "98/32159283.txt": 1
+ },
+ "beir_scifact_744": {
+  "0c/8460275.txt": 1
+ },
+ "beir_scifact_75": {
+  "a7/4387784.txt": 1
+ },
+ "beir_scifact_756": {
+  "f8/2831620.txt": 1
+ },
+ "beir_scifact_759": {
+  "5d/1805641.txt": 1
+ },
+ "beir_scifact_768": {
+  "ac/6421792.txt": 1
+ },
+ "beir_scifact_770": {
+  "ae/15476777.txt": 1
+ },
+ "beir_scifact_775": {
+  "f2/32275758.txt": 1
+ },
+ "beir_scifact_781": {
+  "c3/24338780.txt": 1
+ },
+ "beir_scifact_783": {
+  "9d/40632104.txt": 1
+ },
+ "beir_scifact_784": {
+  "74/2356950.txt": 1
+ },
+ "beir_scifact_785": {
+  "07/12471115.txt": 1
+ },
+ "beir_scifact_793": {
+  "ba/8551160.txt": 1
+ },
+ "beir_scifact_800": {
+  "56/22543403.txt": 1
+ },
+ "beir_scifact_805": {
+  "d7/22180793.txt": 1
+ },
+ "beir_scifact_808": {
+  "40/36606083.txt": 1
+ },
+ "beir_scifact_811": {
+  "73/19799455.txt": 1
+ },
+ "beir_scifact_814": {
+  "1d/33387953.txt": 1
+ },
+ "beir_scifact_820": {
+  "e6/8646760.txt": 1
+ },
+ "beir_scifact_821": {
+  "e6/8646760.txt": 1
+ },
+ "beir_scifact_823": {
+  "96/15319019.txt": 1
+ },
+ "beir_scifact_830": {
+  "1a/1897324.txt": 1
+ },
+ "beir_scifact_831": {
+  "1a/1897324.txt": 1
+ },
+ "beir_scifact_832": {
+  "ac/30303335.txt": 1
+ },
+ "beir_scifact_834": {
+  "f7/5483793.txt": 1
+ },
+ "beir_scifact_837": {
+  "ff/15928989.txt": 1
+ },
+ "beir_scifact_839": {
+  "5c/1469751.txt": 1
+ },
+ "beir_scifact_845": {
+  "2e/17741440.txt": 1
+ },
+ "beir_scifact_847": {
+  "ca/16787954.txt": 1
+ },
+ "beir_scifact_852": {
+  "c3/13843341.txt": 1
+ },
+ "beir_scifact_859": {
+  "d6/1982286.txt": 1
+ },
+ "beir_scifact_870": {
+  "af/195689316.txt": 1
+ },
+ "beir_scifact_873": {
+  "35/19307912.txt": 1,
+  "48/27393799.txt": 1,
+  "76/3315558.txt": 1,
+  "7b/1180972.txt": 1,
+  "fe/29025270.txt": 1
+ },
+ "beir_scifact_879": {
+  "8b/8426046.txt": 1
+ },
+ "beir_scifact_880": {
+  "8b/8426046.txt": 1
+ },
+ "beir_scifact_882": {
+  "58/14803797.txt": 1
+ },
+ "beir_scifact_887": {
+  "fd/18855191.txt": 1
+ },
+ "beir_scifact_903": {
+  "21/10648422.txt": 1
+ },
+ "beir_scifact_904": {
+  "da/7370282.txt": 1
+ },
+ "beir_scifact_907": {
+  "33/6923961.txt": 1
+ },
+ "beir_scifact_911": {
+  "c1/11254556.txt": 1
+ },
+ "beir_scifact_913": {
+  "ad/3203590.txt": 1
+ },
+ "beir_scifact_914": {
+  "ad/3203590.txt": 1
+ },
+ "beir_scifact_921": {
+  "17/1642727.txt": 1
+ },
+ "beir_scifact_922": {
+  "1c/17077004.txt": 1
+ },
+ "beir_scifact_936": {
+  "f7/5483793.txt": 1
+ },
+ "beir_scifact_94": {
+  "ca/1215116.txt": 1
+ },
+ "beir_scifact_956": {
+  "58/12956194.txt": 1
+ },
+ "beir_scifact_957": {
+  "e8/123859.txt": 1
+ },
+ "beir_scifact_960": {
+  "b1/8780599.txt": 1
+ },
+ "beir_scifact_967": {
+  "af/8997410.txt": 1,
+  "f1/2119889.txt": 1
+ },
+ "beir_scifact_971": {
+  "5e/27873158.txt": 1,
+  "96/9764256.txt": 1,
+  "bc/28617573.txt": 1,
+  "e7/46695481.txt": 1
+ },
+ "beir_scifact_975": {
+  "03/5304891.txt": 1
+ },
+ "beir_scifact_982": {
+  "65/2988714.txt": 1
+ },
+ "beir_scifact_985": {
+  "66/6828370.txt": 1
+ },
+ "beir_scifact_99": {
+  "8f/18810195.txt": 1
+ },
+ "beir_scifact_993": {
+  "c8/16472469.txt": 1
+ }
+}

@@ -85,9 +85,13 @@ different points:
    `benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29.json`
    (BASELINES row `2026-09-29-v0100-merged-stack-witness`). It is paired
    against the committed 0.9.2 witness ladder, not the older frozen reference.
+   The 0.11.1 witness (BASELINES row `2026-10-07-v0111-merged-stack-witness`)
+   is paired against the 0.10.0 ladder.
    The final witness receipt is
    committed to `beta` before the release branch is cut, so the release cut
-   carries it.
+   carries it. Since #484 untracked the receipt trees (0.11.1 onward), the
+   receipt files go to `cymatix-receipts` (`untracked/`, same relative path)
+   and the BASELINES row is what gets committed to `beta`.
 
 A pre-release does not need the witness ladder; that is what makes it a
 pre-release. It does need every per-PR receipt already in place, because it

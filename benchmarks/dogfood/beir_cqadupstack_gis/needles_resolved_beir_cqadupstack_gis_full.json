@@ -1,0 +1,4429 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_gis_100061",
+   "query": "what is the math behind rasterization? Doubt",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_100114",
+   "query": "QGIS DBmanager import file append not working",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_100116",
+   "query": "How to split a line at a vertex in QGIS 2.2?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_100280",
+   "query": "flatten / collapse one-to-many table and keep the 'many' attributes separate",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_10046",
+   "query": "How to develop a map with layers in Geoserver?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_10053",
+   "query": "Geonames querying for parks in Puerto Rico or US Virgin Islands",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_101403",
+   "query": "How to limit zoom level in OpenLayers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_101706",
+   "query": "QGIS 2.2 Print Composer - pointer will not select or move items",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_101869",
+   "query": "dividing a line vector road in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_101874",
+   "query": "Find coordinate of point on the boundary of a circle given a latitude/longitude and radius",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_101969",
+   "query": "How to: create a table containing point values (continuous) within polygons (continuous)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_101995",
+   "query": "Plugin of Multiple buffers in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_101998",
+   "query": "What is a better idea for modelling a fault plane than as TIN?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102080",
+   "query": "How to create surface by 3d building with different vertices",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102106",
+   "query": "How can i get Population Density as a polygon layer?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102156",
+   "query": "Pont to Point and Point to Line Calculations",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102288",
+   "query": "Copy queried attributes of a shapefile to a new shapefile",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102301",
+   "query": "XY to Line tool 'Failure to execute'",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102346",
+   "query": "How do I use a server data store with a Python toolbox?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102641",
+   "query": "Couldn't load PyQGIS in QGIS 2.2 on Ubuntu 14.04",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102682",
+   "query": "Import CSV limited to 20 records",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102713",
+   "query": "Create shapefile from data postgis / kml using java",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102819",
+   "query": "QGIS - View bathymetry info in the status bar",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_102820",
+   "query": "QGIS - Obtain elevation profile",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_103157",
+   "query": "Styling of label on a line in Tilemill",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_103514",
+   "query": ".tif and .tfw to GeoTIFF",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_10352",
+   "query": "How to create a circle in PostGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_103641",
+   "query": "Low quality legend symbols in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_103703",
+   "query": "Georeferencing system of rivers using XY To Line tool?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_103709",
+   "query": "How to learn arcobject vba?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_103797",
+   "query": "unwanted pixel removal in the image",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_103892",
+   "query": "Day and night zone layer for Leaflet",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104005",
+   "query": "Which projected coordinate system should be used for mapping the US?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104133",
+   "query": "OpenStreetMap data quality",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104165",
+   "query": "How can i find shortest point on edge of a polygon from a point to that polygon (not it's distance )",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104243",
+   "query": "QGIS --> ArcGIS server by WMS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104332",
+   "query": "MODIS MOD13Q1 extract ndvi value",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104344",
+   "query": "Formatting label expression with newline using Python parser?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104370",
+   "query": "Auto-Increment Integer Field in a Feature Class",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104497",
+   "query": "How to debug a QGis C++ plugin with Visual Studio 2008",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104538",
+   "query": "Why doesn't SLD validate?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_104562",
+   "query": "Thiessen polygons of sub-districts to lie within district boundaries",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_106808",
+   "query": "ssf to .shp conversion, field name changing from Pahtfinder data dictionary",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_10703",
+   "query": "Looking for a tool to convert DD to DMS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_107062",
+   "query": "Converting file geodatabase with coded domains to PostgreSQL / PostGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_107227",
+   "query": "Calculate distance between point and linestring and how to represent that on QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_107474",
+   "query": "Merging vector layers using QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_107521",
+   "query": "GetFeatureInfo Popup not getting popup",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_107562",
+   "query": "How can I Georeference a column of multiple zip codes?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_107800",
+   "query": "How can I find a Douglas-Peucker algorithm for simplification?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_108154",
+   "query": "Calculating average raster values around set of points using ArcGIS for Desktop (or R)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_108380",
+   "query": "Availability of MXD file for OpenStreetMap data in Esri Geodatabase?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_108397",
+   "query": "Importing a Shapefile in SpaceStat with GeoTools",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_108635",
+   "query": "In which way is height information stored in a DEM?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_108752",
+   "query": "Problem with Geoserver's start process",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_108971",
+   "query": "How do i add online GeoServer layers on android mobile app",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109024",
+   "query": "kriging interpolation of many z",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109049",
+   "query": "Projecting INEGI shapefiles from Mexico - not lining up",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109173",
+   "query": "Converting *.kml file to *.lyr file so Google Earth can create spatial data to use in ArcGIS for Desktop?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109190",
+   "query": "correlation between distance from volcano and point features",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109197",
+   "query": "How to smooth raster data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109234",
+   "query": "Assigning values to new field using field calculator?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109262",
+   "query": "GeographyFromText and ST_SetSRID+ST_MakePoint different results?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109290",
+   "query": "Adding an excel database to an existing shapefile",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_10932",
+   "query": "Overlaying GPX data on rasters in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109392",
+   "query": "Shapefile not projecting correctly",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109853",
+   "query": "QGIS, Multiple lines and wrap on character?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_109967",
+   "query": "Qgis server on Ubuntu Server 14.04: Permission denied",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_110161",
+   "query": "Graphical Modeler Equivalent in Arcmap?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_110394",
+   "query": "How to get Subtype name in Field using field calculator",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_110409",
+   "query": "Can't run SAGA or GRASS commands from QGIS processing toolbox",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_110543",
+   "query": "How to set up proxy for Geoserver GetFeatureInfo call?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_110551",
+   "query": "Scaling Items in the Legend",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_110829",
+   "query": "How to get link of wms layer in Geoserver",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111374",
+   "query": "Holes in Rasterized DEM from QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111438",
+   "query": "European Rail Freight Map (shapefile or other ArcGIS format)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111471",
+   "query": "Map Scale Bar Grossly Incorrect",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111596",
+   "query": "Box cropping shapefile based on particular latitude and longitude using QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111659",
+   "query": "Copy Parallel editor tool - python script / modelbuilder",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111685",
+   "query": "Free And Open Source Software Tools to orthorectify Pleiades imagery",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111715",
+   "query": "Generating a map from a shapefile using ms4w mapserver",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111781",
+   "query": "FWTools Python ImportError: DLL load failed:parameter is incorrect",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111838",
+   "query": "How to convert LAS file to ASCII for DSM in SAGA GIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_111850",
+   "query": "How to extract elevation data from ASTER/SRTM?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_11204",
+   "query": "GeoJSON/GeoCouch questions from a newb",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_11216",
+   "query": "Is there a way to access QGIS plugins in Python?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112166",
+   "query": "JTS \"points must form a closed linestring\"",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112238",
+   "query": "What is the radius of earth",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112298",
+   "query": "Generic Question about Union tool in Arcmap",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112391",
+   "query": "Hardware requirements for a modern GIS workstation",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112519",
+   "query": "Problems with joining a table to an existing layer",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112534",
+   "query": "Detecting Runtime Errors in Arcpy Loops",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112600",
+   "query": "How do I map points on a 2D map to a 3D illustration of the same area?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112654",
+   "query": "How to clip a raster with a mask in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_112933",
+   "query": "What type of data is available at the \"census block\" level?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_113003",
+   "query": "How to derive stream order from vector network",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_113052",
+   "query": "European Address Locator on ArcGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_113405",
+   "query": "Polygon Shape Data for North America",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_11431",
+   "query": "How can I create a parallel lines in a MULTILINESTRING table using Postgis?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_11705",
+   "query": "Using Field Calculator in QGIS to update columns with centroid coordinates",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_11761",
+   "query": "What's the best way to author SLD files from ArcGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_12446",
+   "query": "How to create a checkbox parameter in a ArcGIS custom Python tool?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_12459",
+   "query": "Geoserver 2.1.1 with ECW support",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_12493",
+   "query": "List of Map Service Software",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_12630",
+   "query": "How to convert Mapinfo \".Map\" file into an ArcGIS format?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_12833",
+   "query": "How to smooth a DEM?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_13029",
+   "query": "How to convert ArcGIS Server JSON to GeoJSON?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_13107",
+   "query": "How to join data in a spreadsheet to a shapefile ?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_13484",
+   "query": "How to convert Distance, Azimuth, Dip to XYZ?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_13691",
+   "query": "How to cast SDE table to IFeatureClassLoad",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_13891",
+   "query": "Reordering polygon shapefile permanently?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_14066",
+   "query": "How to find the area of raster values within polygon zones?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_14142",
+   "query": "Is there a tool to retrieve the projection system used to create a shapefile when the prj file is missing?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_14455",
+   "query": "Illinois Legislative Zip to District Match Data Set",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_1449",
+   "query": "Getting a GIS Position",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_14650",
+   "query": "Shapefiles for real world places",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_147",
+   "query": "How to connect to PostGIS database from ArcMap?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_14750",
+   "query": "How to use SRTM Global DEM for Slope calculation?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_14849",
+   "query": "Automated correction of parcel geometry based on area measure",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_14972",
+   "query": "Where to store (premade) styles?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_14993",
+   "query": "What open source solution would work best for auto extracting features from satellite images?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_15168",
+   "query": "Device for Logging GPS and Accelerometer Data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_15185",
+   "query": "How to create a style file for QGIS from a plain text file?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_15287",
+   "query": "Can you use arcpy.RasterToNumPyArray() to Graph a Raster with matplotlib?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_1551",
+   "query": "How to calculate average slope in a grid?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_15565",
+   "query": "Why do ArcToolbox tools give ActiveX error?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_15607",
+   "query": "How to generate schemas of GIS hardware / software / workflows?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_15755",
+   "query": "Training courses in geostatistics and spatial modelling",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_16073",
+   "query": "Choosing Shapefile attribute data type to use?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_16656",
+   "query": "Finding two locations with H elevation difference on a DEM",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_16741",
+   "query": "How to calculate the size of a particular area below a buffer in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_16752",
+   "query": "How to sort a feature class and then calculate a sequential ID field?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_16990",
+   "query": "What is the best approach to using IQueryFilter.WhereClause in ArcObjects?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_16992",
+   "query": "How can the pixel values of a raster image be extracted under a polygon fishnet?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_17003",
+   "query": "Map projection in OpenLayers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_17035",
+   "query": "How to display geoJSON from an URL in a layer?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_17129",
+   "query": "Are folders always part of ArcGIS Server REST API service name?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_17184",
+   "query": "Method to shade or overlay a raster map to reflect time of day and ambient light",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_17299",
+   "query": "Standard SLDs for OpenStreetMaps?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_17478",
+   "query": "Multiple Conditional Reclassification - ArcGIS ",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_17503",
+   "query": "How can I identify the pixel with the maximum value in a grid?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_17550",
+   "query": "Superimpose grid on points, then aggregate points within each grid cell",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_18057",
+   "query": "Efficiently find points within a great circle corridor",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_18103",
+   "query": "How much RAM can ArcMap use?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_1811",
+   "query": "How to prevent automatic new line when labeling point feature class?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_18473",
+   "query": "WFS Query Failing when using Logical OR",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_18874",
+   "query": "How to generate shape file from Excel or CSV files?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_1892",
+   "query": "Quantum GIS and ECW images?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19033",
+   "query": "How to add a simple WFS layer from GeoServer to OpenLayers map?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19047",
+   "query": "How to convert coverage (.adf) to shapefile?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19064",
+   "query": "How to open a Shapefile in R?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19221",
+   "query": "Find tangent point on circle furthest east or west",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19256",
+   "query": "find out those points which are intersecting each other using spatial filter in C# arcobjects",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19257",
+   "query": "Python :ImportError: DLL load failed: The specified module could not be found",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19437",
+   "query": "How to calculate polygon area considering slopes?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19522",
+   "query": "Which spatial statistics tools to use in examining autocorrelation in two layers?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19580",
+   "query": "GetFeatureInfo Request with GeoServer and OpenLayers.loadURL Not Working",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_19794",
+   "query": "How to implement Google Map to WordPress site?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_1987",
+   "query": "ArcGIS Desktop 10 Tips and Tricks",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2",
+   "query": "How do I find the distance between two coordinates in an ellipsoid?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20018",
+   "query": "How can I convert data in the form of lat, lon, value into a raster file using R?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20095",
+   "query": "Simple field calculator equation in ArcGIS 10 not working",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_202",
+   "query": "What books, journals, and electronic resources are most valuable for expanding knowledge of GIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20279",
+   "query": "How can I calculate the average width of a polygon?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20286",
+   "query": "Is it possible to export GeoPDF from QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2039",
+   "query": "How can I switch baselayers as a user zooms in to the map in OpenLayers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20420",
+   "query": "Resources for python scripting",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20521",
+   "query": "How can I ignore NoData values in map algebra?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20566",
+   "query": "How to define new custom projections in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20594",
+   "query": "Moving an Annotation Layer inside a Group Layer Crashes ArcMap",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20604",
+   "query": "Google Maps layer copyright popup every time map updated / user input",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2071",
+   "query": "How to catch when scale is changed in ArcGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20793",
+   "query": "Is Shooting Star broken in PGRouting 1.05?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_20870",
+   "query": "How to create regular soil sampling grids?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_21118",
+   "query": "postgis minimum distance among many points",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_21296",
+   "query": "List of GIS applications for Android OS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_21566",
+   "query": "GIS, R and shapefiles",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_21575",
+   "query": "Calculating distance to points in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_21616",
+   "query": "Select maximum number of points more than x meters apart",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2170",
+   "query": "Access-Control-Allow-Origin error in web map",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_21722",
+   "query": "How do I calculate ECEF X,Y,Z velocities for GPS if I have no satellites",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_21937",
+   "query": "Unproject Radius with Openlayers with CRS:84 Projection",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_21985",
+   "query": "Re-projection in Geoserver",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22114",
+   "query": "How to add Quick Export (Data Interoperability) to Model Builder in ArcGIS 10.0",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22201",
+   "query": "How to access file geodatabase in Qgis?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22255",
+   "query": "are there any methods can choose all field and make the SUM for each fields or I must do it one by one?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22545",
+   "query": "How to Intersect a layer with custom CRS with NED data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22560",
+   "query": "How to get the coordinates in Lat/long from a point layer?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22751",
+   "query": "Iterative position within Field Calculator/Python",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22755",
+   "query": "how to create a heatmap in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22818",
+   "query": "QGIS GDAL integration of new version",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22895",
+   "query": "How to find the minimum-area-rectangle for given points?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_22952",
+   "query": "Creating bulk field aliases for several layers within same ArcSDE feature class using ArcPy?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2312",
+   "query": "How can I transform a georeferenced JPG to a georeferenced TIF?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23129",
+   "query": "shapefile and multiple lines of census data QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23300",
+   "query": "Specifications for GIS desktop hardware",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23614",
+   "query": "Get Raster Values from a Polygon Overlay in Opensource GIS Solutions",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23688",
+   "query": "How to split a vector in equal smaller parts in QGIS or similar?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23717",
+   "query": "How to convert ArcGIS .mxd file to QGIS .qgs file?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23735",
+   "query": "How to move labels in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23763",
+   "query": "Why does Select Feature give nonsensical results?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23919",
+   "query": "Install PostGIS from beginning",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_23993",
+   "query": "Web-based user editable routing application",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24001",
+   "query": "Merge polygons into a single polygon",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24127",
+   "query": "Reprojecting in OpenLayers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24258",
+   "query": "How to delete a column of a shape file in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24300",
+   "query": "Adding Layerfiles (.lyr) to QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24486",
+   "query": "How to insert a point into postgis?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24590",
+   "query": "Recalculating full extent of File Geodatabase feature class?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24628",
+   "query": "MapCanvas : Mouse-wheel event filtering/overriding",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24646",
+   "query": "How to close watermarks window in QGIS Openlayers plugin?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24735",
+   "query": "Determine the Closest road to a GPS point",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24878",
+   "query": "Historic country borders in GIS format?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_24933",
+   "query": "Raster generalization - buffers in rasters, expand pixels?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2498",
+   "query": "The Geometry is not M-Aware",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_25117",
+   "query": "How to move SHP to gdb with ArcView license?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_25177",
+   "query": "Which hardware configuration is necessary for QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_25353",
+   "query": "Installation problem with XY Tools",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_25361",
+   "query": "How to install \"1-band color raster color table\"?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_25522",
+   "query": "Advantage of using WMS over WFS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_256",
+   "query": "How to build effective heat-maps?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_25709",
+   "query": "Splitting shapefile into separate shapefiles for each feature?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2587",
+   "query": "How do you decide what interpolation method to use for resampling raster data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26050",
+   "query": "Write out a WKT file from a loaded shapefile",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26262",
+   "query": "How to run GDAL command in php page?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26452",
+   "query": "How to use cql_filter in OpenLayers.Control.WMSGetFeatureInfo?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26484",
+   "query": "Issues while plotting the results of pgRouting shortest path",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26523",
+   "query": "QGIS DBManager error when selecting a feature",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26676",
+   "query": "QGIS installation error",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26707",
+   "query": "How to create a Digital Elevation Model",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26725",
+   "query": "split multi line by use of distance field",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2682",
+   "query": "Most Up-To-Date Source for US Zip Code Boundaries",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26846",
+   "query": "How to style a layer from console?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2685",
+   "query": "Are there any general rules of thumb for selecting a transformation for Georeferencing?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26979",
+   "query": "How to install a QGIS plugin when offline?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_26996",
+   "query": "routing using openlayers and pgrouting",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27070",
+   "query": "Cloudmade Web Maps API Geocoding Issue",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27073",
+   "query": "Length in meters arcobjects",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27094",
+   "query": "How to get 2010 Census Block Housing Unit Data for the entire US for 15-digit FIPS blocks",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27171",
+   "query": "Why are start and end segment not partially skipped?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27190",
+   "query": "ERROR 999998: Unexpected Error",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27235",
+   "query": "Direct connecting to PostgreSQL from ArcGIS Desktop?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27381",
+   "query": "How to install GDAL for python on windows and use for spatial purpose?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27434",
+   "query": "Problems with Google layers plugins",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27623",
+   "query": "How can I create form with controls using QGIS(python)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27676",
+   "query": "Setting up tile map server",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27683",
+   "query": "Programmatically determine if a local geodatabase is File or Personal",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2777",
+   "query": "What's the value of being GISP certified?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27806",
+   "query": "Cartographic techniques for symbolizing routing data",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27822",
+   "query": "How to identify duplicate attributes in a field?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_27905",
+   "query": "MySQL SQL command to find points within a rectangle with spatial extension and index",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28031",
+   "query": "Projections appropriate for global analysis that preserve area and that preserve distance (but not necessarily in the same projection)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28105",
+   "query": "How do I load a .dbf file into QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28260",
+   "query": "Storing Image data to spatialite",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28406",
+   "query": "ESRI Shapefile to ARCGIS Javascript JSON format",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28521",
+   "query": "How to rotate multiple polygons about their respective anchor points",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28566",
+   "query": "Program to create EMF that conserves transparency",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28567",
+   "query": "I want to georeference jpg map without any digitizing data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28568",
+   "query": "Looking for web-based mapping software recommendation",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28667",
+   "query": "Qgis polygonize problem - DLL load fail",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28757",
+   "query": "Comparison components open source GIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28881",
+   "query": "Convert an arbitrary meta-data-free map image into QGIS project",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_28888",
+   "query": "Does ArcMap/ArcPy support creation of textElements using Python?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29084",
+   "query": "Colors standard in Arc GIS 10",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29257",
+   "query": "Leaflet Layers Control - Z-Index?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29305",
+   "query": "qgis.core error",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29470",
+   "query": "How to create a circle with specific radius?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29501",
+   "query": "How to get \".GDB\" Esri File Geodatabase in QGIS for MAC OSX 10.6?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29734",
+   "query": "How to calculate area of 1 x 1 degree cells in a raster",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_2976",
+   "query": "Best practices for organization and tidiness - How do you deal with multiple copies of layers?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29777",
+   "query": "Qgis - Running SDA4PP",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29825",
+   "query": "Merging Two or More Layers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29863",
+   "query": "Creating Centrelines from Road Polygons/Casings?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_29888",
+   "query": "Growing a PostGIS geometry by a percentage",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30018",
+   "query": "How to draw a cross section in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30053",
+   "query": "Set buffer radius in metric units in qGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30183",
+   "query": "How to get started with pgRouting and OSM?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30230",
+   "query": "Formatting label styles using arcpy",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30250",
+   "query": "How to fill gaps in SLC-Off Landsat 7 ETM+ Images with QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_305",
+   "query": "Consuming Google Maps as background map through ArcGIS Server?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30624",
+   "query": "How to connect the Postgres database table to MapGuide?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30670",
+   "query": "How to force ArcGIS to recognize a text field in a CSV file?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_3083",
+   "query": "What Makes a Map Beautiful?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30895",
+   "query": "Solutions for fast operations on large GIS datasets",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30920",
+   "query": "Animate feature in openlayers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_30970",
+   "query": "How are the edges of a polygon defined?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31129",
+   "query": "How to display DMS in QGIS print composer?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31147",
+   "query": "exporting a featureclass to shapefile with selected fields only",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31154",
+   "query": "Which of these is the proper convention?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31235",
+   "query": "How to skip drag event to stop a feature being dragged",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31236",
+   "query": "How can I generate irregular grid containing minimum n points?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31261",
+   "query": "Where can I find shapefiles of pipeline data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31341",
+   "query": "QGIS scalebar shows a wrong scale",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31402",
+   "query": "add 3rd party repositories",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_31900",
+   "query": "World country borders in polygon geometry format",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32082",
+   "query": "Can QGIS open KMZ files?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32269",
+   "query": "Split Polyline at Set Intervals",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32310",
+   "query": "How to re-order fields permanently using ArcGIS Make Query Table tool?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32321",
+   "query": "Postcode Shape Files for the UK",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32407",
+   "query": "How to add Cross Origin Filter for Jetty in GeoServer on Mac",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32468",
+   "query": "Permanently replace/update server/service in each ArcSDE Layer in MXD?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32514",
+   "query": "How can I add a loop in gdal_translate?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32723",
+   "query": "How to open popup on mouseover in Leaflet?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_32877",
+   "query": "How to create curved labels in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33018",
+   "query": "Is there a (better) way to debug Visual Basic Code Block in calculate field using ArcGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33033",
+   "query": "Desktop tool to batch convert Shapefils to CSV with polygon outline coordinates",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33208",
+   "query": "How to georeference a vector layer with control points?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33251",
+   "query": "What is the best practice for data management?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33291",
+   "query": "Print Composer Problems with Export as PDF",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33310",
+   "query": "Generating TIN from DEM using MacOSX/Unix tools?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33364",
+   "query": "Modifying shape extents in qgis",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33402",
+   "query": "What is Change Detection and how I can perform such analysis with open source tools?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33629",
+   "query": "FWTools ogr2ogr in Python",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33700",
+   "query": "How to convert a regular point grid to raster?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33756",
+   "query": "How to get back closed panes in QGIS 1.8?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33826",
+   "query": "How to convert KML to shapefile without losing attributes?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33852",
+   "query": "How to find the proper coordinate reference system with two sets of data using different measurements or too convert one system into another",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33887",
+   "query": "Finding centrelines from polygons?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_33945",
+   "query": "Lat/long grid in QGIS using WGS84 projected layers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_34204",
+   "query": "How do I create point features with exact coordinates?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_34237",
+   "query": "Do any know another application like pgrouting?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_34406",
+   "query": "How to densify a polyline according to a specific length?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_34532",
+   "query": "Identify the latitudinal and longitudinal point directly beneath an object in space",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_34612",
+   "query": "How to change the SRID of exisisting data in PostGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_34929",
+   "query": "How to calculate polyline azimuth or polyline direction?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_34985",
+   "query": "How to Open a File Geodatabase with ogr?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35106",
+   "query": "Where can I get zip code shapefiles for years 2000 to 2010?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35183",
+   "query": "overlay a county shapefiles for 2 different years",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35187",
+   "query": "How to detect duplicate attribute values in a table using ArcPy",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35369",
+   "query": "Is it possible to edit layers from a FGDB - File Geodatabse in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35540",
+   "query": "How to do Math within ArcMap Dynamic Text?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35591",
+   "query": "Why are two incompatible projections used together in OpenLayers?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35593",
+   "query": "Using the python shape library: pyshp - how to convert .csv file to .shp",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35624",
+   "query": "How to fix The procedure entry point squlites3_open_v2 could not be located in the dynamic link library squlite3.dll?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_35670",
+   "query": "Remove Illegal Characters in Model Builder",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_3574",
+   "query": "GIS Day function ideas?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_36774",
+   "query": "OpenLayers and Google Maps when panning tiles not in sync",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_36891",
+   "query": "Does Calculate Value (Model Only Tool) work correctly in tools run in Batch?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_37125",
+   "query": "Is ArcSDE no longer needed at ArcGIS 10.1?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_37252",
+   "query": "Solving a route in a multimodal network dataset does not use all forms of transport available",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_37304",
+   "query": "Python scripts that run inside ArcMap vs ones that run outside?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_37474",
+   "query": "How to set different label content for different scales?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_37518",
+   "query": "How can I set python path and version for QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_37543",
+   "query": "How do I configure GeoWebCache to read a TMS (GoogleMaps or OSM)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_37622",
+   "query": "strange misplaced markers on the map",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_37656",
+   "query": "Reclassifying a field in vector files in ArcGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_38855",
+   "query": "XMLHttpRequest cannot load http://localhost: /geoserver/wfs. Origin http://localhost is not allowed by Access-Control-Allow-Origin",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_3887",
+   "query": "Using R with ArcGIS for Desktop (without using GME)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_39028",
+   "query": "Projection Transformations",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_39151",
+   "query": "Can I burn stream network into DEM using DEM layer only?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_39168",
+   "query": "Elseif Conditional Statement in QGIS Field Calculator",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_3945",
+   "query": "Distance between lat/long points",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_4011",
+   "query": "Where can I find China data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40536",
+   "query": "Extract Raster Value into Polygon Attribute",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40624",
+   "query": "Qgis printing bug",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40650",
+   "query": "Problems with CRS in Qgis",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40697",
+   "query": "How to properly Drape vectors over a DEM?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40728",
+   "query": "How can I make segmented roads appear as one line?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40813",
+   "query": "Sextante QGIS configuration issues",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_4086",
+   "query": "I am struggling to convert .dwg to .shp, ideas?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40919",
+   "query": "QGIS exporting huge SVG",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40943",
+   "query": "How to digitize 90 degree angles?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_40991",
+   "query": "How can I add KML to OpenLayers from remote server",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41135",
+   "query": "How do I draw a square on a vector layer from PostGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41251",
+   "query": "3d terrain from data in postgres",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41307",
+   "query": "How to create a point file along a line (trail) at regular distances (0.20 miles)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41423",
+   "query": "How do I export neighbourhoods in wikimapia to KML file",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41491",
+   "query": "OpenLayers 2.12 and http basic authentication woes",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41498",
+   "query": "How do you change units from meters to kilometres?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41608",
+   "query": "How to find self-intersecting polylines using ArcObjects?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41725",
+   "query": "How to add shapefile name as attribute during merge?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41829",
+   "query": "Is there any way to set polygon features fill color and outline programmatically?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41880",
+   "query": "ModelBuilder Run Time Errors Using ArcGIS 10.0",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_41985",
+   "query": "Create new polygon layers from postcodes latitude & longitude",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_420",
+   "query": "How to get pre-change Object state from a Class Extension change event in ArcObjects?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42019",
+   "query": "QGIS 1.8.0 does not launch",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42044",
+   "query": "Why do OpenLayers layers appear shifted in map composer?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_4230",
+   "query": "Rubber sheeting in GRASS or QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42358",
+   "query": "updatation query along a point",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42434",
+   "query": "How to make labels appear in Geoserver? (WMS)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42500",
+   "query": "How to generate all possible routes between two points?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42516",
+   "query": "qgis projections from Michigan's CGI data",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42580",
+   "query": "\"Select by Location\" in ArcGIS with numerous polygons",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42584",
+   "query": "How to call gdal_translate from Python code?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42598",
+   "query": "How to install PostgreSQL 9.2 with PostGIS 2.0 on Ubuntu 11.10 (or higher)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42661",
+   "query": "Using a map offline",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42682",
+   "query": "How to trigger registered events in Openlayers?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42689",
+   "query": "blank preview image for ImageMosaicJDBC (postgis raster) layer",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42776",
+   "query": "Is it possible to postprocess Trimble .ssf files without Trimble Pathfinder Office?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_42947",
+   "query": "How can you join attributes from polygons to points which are within the polygon feature using PostgreSQL and PostGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_43037",
+   "query": "Are there QGIS tools that will allow users to get tabular statistics from their table?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_43129",
+   "query": "Create a csv with geometry as WKT in QGIS (and choosing the field delimiter)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_43238",
+   "query": "How to perform a join on simultaneous spatial and attribute criteria in ArcGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_43290",
+   "query": "How can I save the label style as SLD in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_43400",
+   "query": "Joining tables without losing original field names in ArcGIS for Desktop?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_43617",
+   "query": "What is the maximum Theoretical accuracy of GPS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_43796",
+   "query": "SQLite and joins",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_43920",
+   "query": "Where is my attribute table in ArcGIS 10.1? It is not visible",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44009",
+   "query": "How to read Greek fonts (ISO-8859-7) in shapefile attributes within QGIS 1.8.0?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44018",
+   "query": "area weighted average for overlapping polygons",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44035",
+   "query": "Real time GPS data sources",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44063",
+   "query": "How to find and delete identical points?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44098",
+   "query": "Exporting shp into a GPS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44116",
+   "query": "How to convert ArcMap *.shp to MapInfo *.tab file?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44205",
+   "query": "Is there a way to run the spatial query plugin from QGIS python console?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44208",
+   "query": "How to calculate te area between contour lines on a DEM with Qgis 1.8?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44334",
+   "query": "Reduce level of detail for vector contour lines",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44393",
+   "query": "How to install the QGIS Statist plugin in Mac OS X?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44410",
+   "query": "Splitting feature class by attribute in ArcGIS for Desktop?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44411",
+   "query": "How can I programmatically get the path of \"Python.exe\" used by ArcMap",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44426",
+   "query": "Is there an comparison of the various mapping libraries for Android?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44502",
+   "query": "Openlayers on Android and chrome browser - white lines when using viewport meta tag",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44536",
+   "query": "What can I use to read MapInfo files in Java?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44671",
+   "query": "Open source database of world locations",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44926",
+   "query": "how do you sort points so that they are geographically near each other",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44948",
+   "query": "Converting .dwg to .shp using QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_44998",
+   "query": "Easiest way to create measured intervals between shape points",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_45159",
+   "query": "Finding minimum bounding extent of given pixel value within raster?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_45195",
+   "query": "Is QGIS 1.8 available for Ubuntu?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_4531",
+   "query": "Ordnance Survey Grids",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_45334",
+   "query": "Detailed Bathymetric/Bathymetry contour data (0-200M)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_45365",
+   "query": "How to create vertical labels in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_45449",
+   "query": "How to Digitize Free Satellite Imagery in QGIS - Alignment issues with Openlayers Plugin",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_45469",
+   "query": "How do you open shapefiles with ogr2ogr",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_45619",
+   "query": "How to export attribute tables to Excel?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_46634",
+   "query": "How to define Subroutines and functions?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_46716",
+   "query": "Setting rendering order of line layers in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_46741",
+   "query": "How to Convert labels to DWG Cad file?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_46842",
+   "query": "Creating points along lines?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_46862",
+   "query": "How to Split Features in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_46866",
+   "query": "Looking for complicated representations of an urban areas",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_47991",
+   "query": "How to re-project the EASE (Equal Area Scalable Earth) grid with a ~25 km cylindrical projection to WGS84 0.25 degree?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48142",
+   "query": "Which area measurement to trust? - The same polygon in GoogleEarth v. ArcGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48151",
+   "query": "VBA Dialog box! Code for Create Map command button after form is initiated",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48192",
+   "query": "Interpolation of Values in ArcGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48265",
+   "query": "How to find dead-ends in a road network",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_4828",
+   "query": "algorithm to place maximum number of points within constrained area at a minimum spacing",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48352",
+   "query": "Leaflet Call to GeoServer for GeoJson",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48364",
+   "query": "Couldn't load plugin fTools due an error when calling its classFactory() method",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48392",
+   "query": "Programatically reorder layers in qgis?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48549",
+   "query": "Open source vs Proprietary",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48552",
+   "query": "Polygonize function doesn't overlay the shape file over the raster file",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48799",
+   "query": "How to create layer from shapefile in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48872",
+   "query": "Integrating geolocated Twitter posts in ArcGIS for Desktop?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_48899",
+   "query": "Iterating a model to create 3 buffers around three points and find their intersection (trilateration) in arcgis 10",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_49001",
+   "query": "How to interprete ArcGIS kernel density units when a population parameter is specified?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_4901",
+   "query": "OpenLayers/proj4js and the EPSG:27700 (UK) Projection",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_4906",
+   "query": "Why is law of cosines more preferable than haversine when calculating distance between two latitude-longitude points?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_49477",
+   "query": "Arc 10.0 Running Python function CADToGeodatabase() crashes ArcMap/Catalog contd",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_49728",
+   "query": "Import functions in python Add-In logic script",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_49729",
+   "query": "pgRouting Dijkstra returns wrong",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_49802",
+   "query": "Is there a way to permanently rearrange attribute fields in arc10.1 advanced?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_49844",
+   "query": "Script for populating field in ArcGIS 10 with consecutive numbers (where start numbers is decided by me)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_49869",
+   "query": "How to open popup menu on right click in Leaflet",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_49904",
+   "query": "How to clip Raster using multiple polygons and Python?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50010",
+   "query": "Is it possible to display 3-D maps in ArcGIS Java Script API?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50046",
+   "query": "assign and move centroids to their polygons",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50108",
+   "query": "Elevation profile 10 km each side of a line",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50165",
+   "query": "DXF created by QGIS crashes Autocad",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50169",
+   "query": "How to standardize raster output from 0 to 100 using raster algebra?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50208",
+   "query": "McDonalds GIS data",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50217",
+   "query": "How do results from a Python script get added to an ArcGIS map?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50325",
+   "query": "Connecting to ArcGIS Desktop PostgreSQL database (running locally)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5041",
+   "query": "How should I use GDAL to perform a transformation?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50415",
+   "query": "How to create a dbf field with length > 254?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50537",
+   "query": "Is there an inbuilt arcpy method to insert a new line?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50754",
+   "query": "Why does \"save\" overwrite the \"capture point\" function?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50769",
+   "query": "Where to report QGIS and QGIS-Plugin bugs?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50825",
+   "query": "esri ArcObjects slow performance accessing features",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_50844",
+   "query": "\"TypeError: this.options is null\" in OpenLayers.Protocol.HTTP‏",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5086",
+   "query": "Interpolation of Three Data Points",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5132",
+   "query": "Lines to Polygons",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_51929",
+   "query": "How to count and rasterize polygon overlaps in ArcGIS Desktop?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_51986",
+   "query": "Is there a way to get correctly aligned print export with openlayers plugin?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_51989",
+   "query": "Split a shapefile into multiple shapefiles based on a particular Field",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_52292",
+   "query": "Why does my QGIS want to create so many icons?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_52409",
+   "query": "How to setup QGIS Master and Stable in parallel on one Linux system?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_52462",
+   "query": "Calculating mean upslope aspect from each cell in DEM using Python?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_52483",
+   "query": "Best method to re-compile a Python Addin after editing script?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_52818",
+   "query": "How to connect OpenLayers to PostGIS data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_52847",
+   "query": "How to find features within a distance?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_52975",
+   "query": "Adding a new attribute to shapefile from Excel sheet",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53039",
+   "query": "Can you reduce the number of contour lines?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53081",
+   "query": "How to add attributes in proportion to intersecting area from another layer",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53091",
+   "query": "Markers > 50000 Overlays on Openlayers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53262",
+   "query": "ESRI Javascript API: How to hide infoWindow while using measure tool?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53265",
+   "query": "Removing rows in shapefile in R",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53348",
+   "query": "How to extract elevation data from DEM along a polyline",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53402",
+   "query": "How to mask out features outside of the Coverage Layer for Atlas plugin?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53528",
+   "query": "How to customize label color in QGIS: Data defined label settings? Expressions? Both? What are the steps?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53569",
+   "query": "How to sum or even perform more complex mathematical operations (multiply, add a constant, ...) two GDAL grids?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53620",
+   "query": "Using Collect Values Tool with Union in ModelBuilder?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_53785",
+   "query": "When should I use recycling = true with IFeatureClass.Update?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_54065",
+   "query": "leaflet geojson coordinate problem",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_54094",
+   "query": "Python Code: Help with Printing a Message from an AddMessage Result?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_54244",
+   "query": "Is there a way to clip the Google Satellite Layer from open layers plugin?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_54266",
+   "query": "Obtaining lat/long values",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_54481",
+   "query": "How to work out sqft/m of land coverage?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_54803",
+   "query": "PostGIS Manager Load Error",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_54949",
+   "query": "How to evaluate raster calculator expressions from the console?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_55119",
+   "query": "Alternatives to ArcGIS Online?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_55129",
+   "query": "How a PHP script can perform point, line and polygon operation on Geoserver and PostGIS (+wkt)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_55196",
+   "query": "How can I get the proj4 string or EPSG code from a shapefile .prj file?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_55549",
+   "query": "How to generate a shapefile with UTM Grid precision level 100 m",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5568",
+   "query": "Drawing circles on map using openlayers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5579",
+   "query": "What is the right solution (and map projection) to compute distances between points located all over the World?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5583",
+   "query": "How to convert image of map into vector format?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5640",
+   "query": "Restrict CQL filter to an specific BBOX",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_56774",
+   "query": "matching a border of one polygon to another",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_56843",
+   "query": "Multiple reclassification using RasterCalc in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5686",
+   "query": "How can I secure an WMS against unauthorized access?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_56862",
+   "query": "What Spatial Reference System do I store Google Map's Lat/Lng in",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_56953",
+   "query": "Obtaining NDVI value from NDVI image",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_56957",
+   "query": "What are these Google Maps glowing spots?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57028",
+   "query": "Replace Null Values Field Calculator",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57151",
+   "query": "Why does Google satellite layer change the project CRS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57210",
+   "query": "Field calculator error",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57331",
+   "query": "How to split multiple overlapping points in ArcMap 9.2?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57394",
+   "query": "How to enumerate join values with ArcGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57438",
+   "query": "Correlation and terrain databases",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57477",
+   "query": "Arcpy Update Cursor error",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57521",
+   "query": "Why are areas of raster and polygon after digitization not matching?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_5761",
+   "query": "Different approaches for map matching : links / ideas?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57784",
+   "query": "Image classification random forest",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_57796",
+   "query": "Print Composer doesn't display my map!",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58054",
+   "query": "Convert time field",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58127",
+   "query": "Purge Layers from QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58224",
+   "query": "How do I select only those contours who heights are Integers?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58262",
+   "query": "How to dissolve polygons and aggregate their data in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58321",
+   "query": "upgrade from 1.3 to 3.3 javascript api for arcgis with jsviewer",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58377",
+   "query": "Transfer OpenLayers map from one pc to another",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58640",
+   "query": "Why is osm road data showing up with lines radiating from a point?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58660",
+   "query": "Polygon Nodes do not have separate coordinates",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58757",
+   "query": "Showing snapping error in ArcGIS Online",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58783",
+   "query": "QGIS Plugin Windows",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58787",
+   "query": "Raster as Attribute Field Error",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_58845",
+   "query": "What is the main benefit and drawback of: GeoServer, MapServer, Mapnik?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59083",
+   "query": "Elevation Drop Along a Stream",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59091",
+   "query": "Basic traffic volume map",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59170",
+   "query": "QGIS Map Composer, right hand pane has gone!",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59173",
+   "query": "How to find the nearest line to a point in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59203",
+   "query": "Wrong projection on WFS layer with OSM baselayer",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59339",
+   "query": "generate random world point geometries",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59356",
+   "query": "how to stretch GMT raster with gdal to work with google",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59580",
+   "query": "Displaying PDF files associated to feature objects location.",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59582",
+   "query": "Maintain 8-bit pixel depth in Raster Calculator",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59604",
+   "query": "Getting a \"java.lang.OutOfMemoryError\" error while importing raster files from PostGIS to Geoserver",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59610",
+   "query": "De facto QGIS projection for EPSG4326 / 'unprojected' reference systems?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59740",
+   "query": "How to exclude some parts of raster classes based on size of area?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59858",
+   "query": "Can anyone recommend an Arcpy GUI?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59865",
+   "query": "How can a 3D model of a building be displayed in a web-browser?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59869",
+   "query": "Google Earth Enterprise vs. ArcGIS Server",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_59902",
+   "query": "Watershed Analysis using DEM",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_60210",
+   "query": "How do I fill in serial letters (AA, AB,AC...,BA,BB,BC...ZZ) to a shape?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_60398",
+   "query": "Cannot fix QGIS after upgrade to Ubuntu 13.04 Raring",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_60710",
+   "query": "Calculating Volume of Reservoir using python and ArcMap10?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_60712",
+   "query": "How to combine two rasters, preferring the values of one over the other?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_60848",
+   "query": "At the northpole, which way is east?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_60905",
+   "query": "QGis non blocking notifications with pyqgis",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_60928",
+   "query": "How to insert a GeoJSON polygon into a PostGIS table?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61044",
+   "query": "Can the OpenGeo Community Edition be used in a commercial project?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61142",
+   "query": "Converting Mapserver default URL to a more user friendly version",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_613",
+   "query": "psycopg2 error with QGIS 1.5",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61301",
+   "query": "How to Join Attributes by Location in QGIS 1.8.0",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61326",
+   "query": "ArcGIS javascript API Extent formats",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61393",
+   "query": "Change ArcGIS License using Script",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61411",
+   "query": "drawing line from points",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6148",
+   "query": "Remove feature layer using ArcPy script?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61482",
+   "query": "How to convert Rotated Polar grid raster to Non Rotated Polar Raster?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61499",
+   "query": "Errors using SelectLayerByAttribute in ArcPy",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61862",
+   "query": "Simple thematic mapping of shapefile using Python?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61909",
+   "query": "Knowing the polygon id and getting the extent",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_61945",
+   "query": "How to replace data in parts of raster A with the equivalent data in raster B?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62026",
+   "query": "How to import GeoTIFF via postGIS into GeoServer?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62103",
+   "query": "How do you convert to degrees and minutes from 8/9-digit lat/lon DMS code?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62121",
+   "query": "How to adjust online basemap to Arcmap",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62390",
+   "query": "Database Diagrammer for PostGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62406",
+   "query": "How to transfer absolute node position to latitude and longitude?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62627",
+   "query": "How does changing the kernel density search radius affect the units expressed in the map legend?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62837",
+   "query": "How to understand GeoTIFF tags?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62908",
+   "query": "How can i join the count of points into polygon",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_62949",
+   "query": "Is there a QGIS equivalent of the erase tool in ArcGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_630",
+   "query": "How to improve upon ArcGIS Buffer/Dissolve performance?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_63022",
+   "query": "ArcToolBox input layer and SDE default database connection",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_63024",
+   "query": "GDAL2Tiles: MapTiles from BSB/KAP are Switched",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_63235",
+   "query": "Long range Trilateration from 3 lat, long, range",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_63240",
+   "query": "Geocoding - get lat/long from 11000 address",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_63394",
+   "query": "Create dynamic table in layout view (Arcmap)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_63395",
+   "query": "Getting polygon shapefile node coordinates and point order",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_63868",
+   "query": "How to rotate North oriented Map",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_63931",
+   "query": "Need to teach myself Python, looking for some suggestions",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_64065",
+   "query": "Where to find and share Python geoprocessing scripts?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_64227",
+   "query": "Creating parallel polylines with a constant distance",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_64392",
+   "query": "Find clusters of points based distance rule",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6440",
+   "query": "What are the consequences of setting the SupportedImageReturnTypes to MIME in ArcGIS Server",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_64644",
+   "query": "Arcpy - loop through subfolders and change mxd settings",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6470",
+   "query": "Arcpy and arcobject",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_64714",
+   "query": "Import attribute data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_64876",
+   "query": "How to set parameters for Describe() function?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_64950",
+   "query": "Which is the best way of working with PostGIS data in R?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6508",
+   "query": "A problem with Network Analyst C# code after upgrading to ArcGIS 10",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_65190",
+   "query": "Can ArcGIS 10.1 use SQL on Definition Query to select minimum value?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_65366",
+   "query": "Representing population variables in a map",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_65403",
+   "query": "OpenLayers Rendering Error",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_65794",
+   "query": "What resources are there for PostGIS maintenance?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_66113",
+   "query": "How to measure area of polygons generated from gps data in qgis?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_66259",
+   "query": "Specifying a bounding rectangle using Google's S2 package for spherical geometry",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_66477",
+   "query": "How to find area of Digital Elevation Model above/below a reference plane?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_66563",
+   "query": "PostGis functions vs. EWKT",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_66824",
+   "query": "Estimation of Net Primary production (NPP)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_66888",
+   "query": "How to set linear units for Buffer distance from arcpy.GetParametersAsText()?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67025",
+   "query": "How to quantify projection distortion using ArcGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67035",
+   "query": "How to remove duplicate features with the same geometry in ArcMap?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6704",
+   "query": "How can I effectively debug arcpy Python scripts?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67103",
+   "query": "postgres on bash command line and conversion to python with parameter substitution",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6720",
+   "query": "Mobile Data collection options",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67312",
+   "query": "Are there any COGO tools in QGIS 1.9+?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67474",
+   "query": "How to select areas from a target layer which do not intersect source layer?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67581",
+   "query": "how to build a reverse geocoding service",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67588",
+   "query": "Can I use Openlayers Plugin with a different Datum/Projection?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67804",
+   "query": "setting model workspace from script (and saving the setting)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67825",
+   "query": "ESRI Error lookup COM Exceptions",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_67887",
+   "query": "What is the MS SQL Spatial syntax for counting points within polygons?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6790",
+   "query": "How to digitize directional drilholes from scanned vertical sections?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6804",
+   "query": "How to add GeoServer wfs layer on OpenLayers?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68168",
+   "query": "ArcGIS 10.1 Python script to snap points to lines",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68175",
+   "query": "GeoJson to ESRI Shapefile using ogr2ogr",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68233",
+   "query": "Large Dataset Buffer Help",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68273",
+   "query": "How do I get the coordinates of my data frame always in long/lat?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68389",
+   "query": "Batch convert xy to shapefile",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68545",
+   "query": "Using ArcPy to run Report Layout File (RLF) report and add to layout (for Data Driven Pages)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68546",
+   "query": "How to count record points within a given area (electoral district)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68566",
+   "query": "How to know the real size of grid?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68624",
+   "query": "Invert Color Ramp in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68843",
+   "query": "Finding points in extent using VBA",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68897",
+   "query": "Updating a Field in the Current Selection",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_68956",
+   "query": "How to do a Point to Polygon analysis with multiple variables?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_69137",
+   "query": "Is there a Raster Equivalent of the Split tool?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_69294",
+   "query": "Labeling contour lines in ArcMap",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6933",
+   "query": "Downloading OpenStreetMap Data",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6948",
+   "query": "If/then VBScript/Python code equivalent to SQL IN ('x','y',z') expression in ArcGIS Field Calculator?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_69722",
+   "query": "Why is any pgr_* routing function taking forever based on OSM data in an pgrouting enabled DB",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_69857",
+   "query": "How to change field formats in ArcGIS 10.1 geodatabase?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_6995",
+   "query": "Understanding OpenLayers documentation",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_70185",
+   "query": "How to Keep Database and Server Connections active",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_70301",
+   "query": "How to get average polygon?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_70411",
+   "query": "QGIS display world country shape files centered on pacific ocean using Robinson, Miller Cylindrical or other projection",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_70591",
+   "query": "Creating Shapely MultiPolygons from shape file MultiPolygons",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_70645",
+   "query": "How to import sextante(processing) for QGIS 1.9 (2.0)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_70758",
+   "query": "Problem with postgres/quantum converting long/lat to suitable projection/SRID",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_7077",
+   "query": "What are Raster and Vector data in GIS and when to use?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_7078",
+   "query": "Can QGIS preserve layers when exporting to PDF?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_70921",
+   "query": "Possible to automate Buffer Wizard in ArcGis 10.x by working in the Shell?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_70922",
+   "query": "Extracting \"derived\" data",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_71105",
+   "query": "How to convert all shapefiles in folder into KML using ArcPy?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_7147",
+   "query": "How to Batch export MXD to PDF files?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_71504",
+   "query": "How to average a set of n rasters using gdal or other GRASS module?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_71719",
+   "query": "Style file to QML or SLD",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_71872",
+   "query": "Attribute table in Map Composer has no content QGIS 2.0",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_71926",
+   "query": "How to detect duplicates and keep only one?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72051",
+   "query": "QGIS 2.0.1 Runtime error and crash at Add Delimited Text Layer plugin",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72059",
+   "query": "QGIS 2 Python error on Mac OSX",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72193",
+   "query": "Difference between Make Feature Layer (Data Management) and using in_memory workspace?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72244",
+   "query": "How to delete points which are close to each other?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72260",
+   "query": "How can I install QGIS 2.0 on Fedora 19?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72298",
+   "query": "simplilfy geojson file",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72392",
+   "query": "How to apply the same style to different columns?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72393",
+   "query": "Calculating a field based on two other fields, if they exist",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72448",
+   "query": "How can I fix a geoTiff with an incorrect CRS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72506",
+   "query": "How to fix Runtime Error R6034: An application has made an attempt to load th C runtime library incorrectly?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72575",
+   "query": "ArcPy: Distortion towards edges when exporting to TIFF",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72851",
+   "query": "Is it possible to get all features from mapserver within BBox by clicking external button not on map using WMS GetFetureInfo.",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_7297",
+   "query": "How to configure Proxy.cgi with IIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_72985",
+   "query": "how to find angle between two points in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73307",
+   "query": "Are there any icons for GIS mapping?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_7339",
+   "query": "Shapefiles to Text",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73394",
+   "query": "Dissolving overlapping polygons - issue in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73397",
+   "query": "ImportError: No module named arcpy - ArcGIS 10.1 and Python 2.7",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73458",
+   "query": "How practical is this workflow, tiling from a complex, multi-step GDAL VRT?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73476",
+   "query": "How to find out which layer had a Selection made on it?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73524",
+   "query": "Where I can download QGIS 1.8 for Mountain Lion?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73542",
+   "query": "QGIS 2.0 - 2.4: Color Ramps Missing?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73649",
+   "query": "LiDAR Feature extraction specifications/standards",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_73736",
+   "query": "OpenLayers from behind a proxy",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74079",
+   "query": "Where did XYTools go",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74120",
+   "query": "Buffer polygon inward by percentage of area",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74244",
+   "query": "Google Earth multiselect points to delete or drag & drop",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74301",
+   "query": "Can anybody give me some advice that why when I am moving or dragging the map,it occurs \"jump around\"?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74453",
+   "query": "ArcGIS 10.1 Python Script tool wont read string variable in SQL statement",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74480",
+   "query": "Draw cirlcle on Equirectangular projection",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74543",
+   "query": "How to get QGIS Server GetCapabilities working on Windows?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74554",
+   "query": "accuracy of classification in qgis",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74658",
+   "query": "Conditional Calculation of a text Field Value Based on antoher text field value ArcGIS10.1",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_74692",
+   "query": "Programmatically download NED, Landcover, etc. data from USGS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75092",
+   "query": "Maximimum length of text fields in shapefile and geodatabase formats?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75104",
+   "query": "Export Qgis settings",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75119",
+   "query": "Having trouble connecting QGIS with postgres database with postgis extension",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75155",
+   "query": "Coordinate conversion",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75212",
+   "query": "How to reproduce the gdal utility programs in Java by GDAL Java bindings",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75289",
+   "query": "Classifying raster pixels using polygons",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75324",
+   "query": "How can I dynamically trim the informational border off of FAA sectional raster charts?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75525",
+   "query": "Qgis: where it uses in world company, cities and other?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75588",
+   "query": "NOAA Nautical Charts .bsb format",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75602",
+   "query": "GeoReference use wordfile in arcgis",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75685",
+   "query": "QGIS display does not reflect projection",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75859",
+   "query": "Scalebar unit different from project unit (QGIS)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75876",
+   "query": "How do I create a shapefile of polygons from points in a spreadsheet?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75899",
+   "query": "problem in loading outputs from processing tool (sextante)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75928",
+   "query": "how to interpolate river bathymetry/heights in qgis/grass",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_75951",
+   "query": "Near Analysis takes much longer in ArcPy?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_76181",
+   "query": "World Land Cover data",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_7651",
+   "query": "How to calculate visible sky percentage",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_76606",
+   "query": "How to create an animated map in QGIS which cycles through column values",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_76655",
+   "query": "How to Iterate through Bands of Raster using ArcGIS 10.1 ModelBuilder?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_76880",
+   "query": "can wms from geoserver serve as utfgrid data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_76962",
+   "query": "Installing qgis server and qgis web client on windows 7 64bit",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_77184",
+   "query": "Geographic Coordinate system and Projected coordinate system",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_77288",
+   "query": "How to perform Visibility Analysis using QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_77425",
+   "query": "How to calculate centroid of a polygon defined by a list of longitude/latitude points?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_77463",
+   "query": "How to read shapefile of road segments into Python data structure to get begin and end point coordinates?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_77958",
+   "query": "Is there no editmode for CSV files?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_7803",
+   "query": "Bulk load multiple shapefiles into PostGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_78120",
+   "query": "use google maps to map as a base map in arcgis 10.1",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_78330",
+   "query": "OpenLayers Allow Further Zoom Out?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_78439",
+   "query": "QGIS 1.8 or 2.01 select entries in .shp file that match a field entry",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_78651",
+   "query": "Variation of algorithms to find point from another point with bearing and distance",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_78794",
+   "query": "How to determine longest length of segmented polylines representing rivers?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_78865",
+   "query": "tablejoin in qgis 2.x adds name of table to columnheader attributetable",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_78923",
+   "query": "How to change the aspect ratio of a map without the scale changing?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_79078",
+   "query": "How to calculate the distance of sites to riverways",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_79328",
+   "query": "Can we use bounding box with Mysql?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_79339",
+   "query": "Creating a point buffer along a road network",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_79730",
+   "query": "Grid-like lines appearing after using Curvature tool",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_79803",
+   "query": "qgis2 slope analysis from NED data gives crazy histogram",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80006",
+   "query": "Comparing 2 polygon shapefiles for differences",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80037",
+   "query": "How to create gaussian blur in ArcGIS for Desktop Advanced with Spatial Analyst?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80094",
+   "query": ".shx files disappeared/deleted",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80127",
+   "query": "Multiple viewparams in openlayer",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8032",
+   "query": "How do various JavaScript mapping libraries compare?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80454",
+   "query": "How do I read SBET file in python?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80543",
+   "query": "ArcGIS For Professional difference between ArcGIS For Destkop",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80662",
+   "query": "What are good out of the box alternative geocoding solutions to Esri's services?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80674",
+   "query": "Metadata Manager for MapInfo",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80885",
+   "query": "how to add arcgis 10.1 rest service in openlayers",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_80960",
+   "query": "Geoserver with MapFish printing issue",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_81110",
+   "query": "Similar paths to Compare",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_81121",
+   "query": "How to move an existing point object to a coordinate?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_81212",
+   "query": "How to draw a simple bus network that works with pgRouting?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_81324",
+   "query": "How to remove trailing zeros from QGIS Graduated Style Class labels?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_81621",
+   "query": "Save input in plugin as pdf format file",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8178",
+   "query": "Batch convert lat longs to UTM?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8191",
+   "query": "Advice on geocoding IP addresses",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_81928",
+   "query": "Help gathering large amounts block group data using factfinder2.census.gov?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82121",
+   "query": "Convert shapefile to MIF programmally",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82134",
+   "query": "How to get the subbasin area of each specified river segment？",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82175",
+   "query": "QGIS Street graph using from and to coordinates from a table(excel)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82242",
+   "query": "Reproject GeoJSON from EPSG:3857 to EPSG:4326",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82271",
+   "query": "how to assign unique attribute value per neighborhood?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_823",
+   "query": "How to emulate Google Maps driving directions using pgRouting?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82415",
+   "query": "What tools or opensource library could I use to deal with LIDAR data(mobile laser scan data)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82476",
+   "query": "online free tutorial in Introduction to GIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82598",
+   "query": "Reducing field length",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82618",
+   "query": "compatible version of sextante for dufour",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82718",
+   "query": "generate subcatchment starting from a DTM",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8277",
+   "query": "Recomputing footprints on old satellite imagery",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82873",
+   "query": "What is QGIS equivalent to ArcGIS Identity tool?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82905",
+   "query": "Geocentric Coordinate Transformations",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_82931",
+   "query": "Is there an online GIS with postgis connections enabled?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_83212",
+   "query": "Import a .las-file into QGIS 2.0.1?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_83229",
+   "query": "Labeling mulitple interests stacking problem",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_83316",
+   "query": "How do you embed iFrame content into a CartoDB infoWindow?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_83359",
+   "query": "How to speed up redrawing of layers (from shapefiles) in MXD?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_83372",
+   "query": "Can I have more than 4 layers on my map in Cartodb?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_83509",
+   "query": "How to save complex expressions in QGIS Field Calculator?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_83977",
+   "query": "Iterate Through All Combinations of Features by Selection in ArcGIS Python Script",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8401",
+   "query": "Install ArcView 3.2 and extensions from original disks",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_84063",
+   "query": "How to Split Polyline into Equal Segments using ArcGIS Desktop?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_84141",
+   "query": "Taudem one of the most important tool series doesn't work",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8449",
+   "query": "saving .xls as .dbf...at a dead end",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8453",
+   "query": "Can I store an ArcObject inside a BLOB or XML field?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_84552",
+   "query": "Is there a way of converting polygon vertices to points using GDAL python?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_84786",
+   "query": "Closed source plugins",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_84956",
+   "query": "Converting from Vector to Raster",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85031",
+   "query": "How to load sample points or coordinates on GPSMAP 62s?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85111",
+   "query": "How to Create Consistent Grids using different Projections",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85147",
+   "query": "How to learn basics of ArcObjects?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85393",
+   "query": "OpenGeo Hosting requirements",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85540",
+   "query": "Is it possible to create a functioning executable from a python script that uses geoprocessing tools?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85592",
+   "query": "How to add Table to Layout View using ArcPy?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85596",
+   "query": "Geoserver GeoTiff Raster Layer Turns Shade Pink (Not Pink Error Tiles)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8571",
+   "query": "How to hide \"internal\" polygon boundaries?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85825",
+   "query": "ArcGIS Python Add in: Pass Entry from Combo Box (in Toolbar) to mdb",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85897",
+   "query": "How can I crop an area from openstreetmap in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_85993",
+   "query": "Are ArcObjects SDKs for .NET free to download?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_86075",
+   "query": "How to clip LAS data using shapefile polygons and open source software?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_86106",
+   "query": "How to get feature data by passing lat/long value to FeatureServer in ArcGIS Online?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_86300",
+   "query": "How to find & send alert SMS for next bus stop in a GPS tracking system (PostGIS DB)?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_86333",
+   "query": "Which districts are on the coast?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_86383",
+   "query": "OpenLayers.Request.GET returning xmlHttpRequest erroe",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_86444",
+   "query": "How to spatially join polygon fields onto a point layer in QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_86754",
+   "query": "Why cant i buffer vector points imported from csv?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_86847",
+   "query": "How to know the date when an image has been capturing on Google Hybrid QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_87004",
+   "query": "Qgis creating point within complex shapes (with holes)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_87031",
+   "query": "What does it entail to move Qgis to Qt 5.0",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_87248",
+   "query": "How to produce a CSV file from .tif file with elevation data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_87401",
+   "query": "Can I automatically save datetime for every entry in my spatialite tabel?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_87432",
+   "query": "What is an easy to use web GIS stack to use for making fictional maps?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_87478",
+   "query": "pgrouting - possible to find route through points rather than links?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_87720",
+   "query": "United States City/State comprehensive database",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8794",
+   "query": "Post Processing GPS Data with open source software",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88104",
+   "query": "Postgis and osm2pgsql: find all cities that belong to selected state",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88220",
+   "query": "Adding a Z Unit",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88236",
+   "query": "ArcGIS 000210 error copy to feature class",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88252",
+   "query": "How to link city/postal code with geo data",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88301",
+   "query": "How to replace accented strings in attribute tables using Python or VBA ArcGIS 10.2",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88371",
+   "query": "Career Advice for a GIS Graduate with 1 Year Experience",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88477",
+   "query": "Legend only to display what is shown in Print Composer QGIS 1.8.4",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88715",
+   "query": "How to update attribute table of a shapefile on display automatically?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88723",
+   "query": "QGIS 2.2 rendering problems",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_88792",
+   "query": "Can a shapefile store several geometry types?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89038",
+   "query": "pgrouting unexpected output",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89103",
+   "query": "I want to reproject data from 0-360 to -180 - 180",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89114",
+   "query": "PostGIS: ST_Transform() couldn't project point (lon, lat) exceeded the limits",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89165",
+   "query": "Differences between PostGis and SpatiaLite",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89177",
+   "query": "how to use distance matrix results in table joins?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89221",
+   "query": "Simple solution for escaping the QGIS locked into fullscreen mode on Ubuntu 12.04",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89232",
+   "query": "Viewshed Analysis ArcGIS 10.2.1",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_8929",
+   "query": "Open access repository of general GIS spatial data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89326",
+   "query": "Can I hide a sublayer with a toggle button using the LayerActions?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89468",
+   "query": "Calculating distance between coordinates",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89760",
+   "query": "How to publish a table in Geoserver 2.4.x, so that only specific users can access it",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_898",
+   "query": "Convert XY points to a line?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89898",
+   "query": "naturalearth sqlite db not loading into qgis 2.2",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_89922",
+   "query": "Using PostGIS to find airplanes flying on the same routes over the sea",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_90084",
+   "query": "Reconcile projections between .dxf and ESRI shapefile",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_91102",
+   "query": "Can't select layer in the Road Graph plugin QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_91477",
+   "query": "How to measure Fracture in area using ArcGIS Cut and Fill?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_9157",
+   "query": "Label points at regular intervals using ArcGIS for Desktop?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_91707",
+   "query": "Geoserver Map Rendering",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_91790",
+   "query": "Why some lines do not have Junctions in Network Analyst?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_91886",
+   "query": "Openlayers and Geoserver: Google Maps and WMS Overlay",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_91949",
+   "query": "Extract coordinates from polyline in QGIS",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_9210",
+   "query": "How to recalc WGS84 Shape_Area field to square miles in ArcGIS 10",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_92312",
+   "query": "Converting a CSV to shapefile",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_92396",
+   "query": "Point-sampling rasters using R?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_92645",
+   "query": "Are there are shortcuts for exporting polygon vertex location as a table",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_92748",
+   "query": "overlay google maps to openlayers in geoserver",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_92772",
+   "query": "Problems with projections in QGIS 2.2 on a Windows Vista?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_92820",
+   "query": "Arcgis 10 assign values to field based on values in other field",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_92941",
+   "query": "How to identify in googlemaps with below data",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_93093",
+   "query": "How to split a polygon by a polygon and apportion attributes - postgis",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_93519",
+   "query": "Street index to CSV/Excel file",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_93696",
+   "query": "How to limit the number of decimal digits in ARCGIS to have the exported file in CAD with the same format?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_93697",
+   "query": "How to access annotation feature classes in ArcPy?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_93936",
+   "query": "Searching planet_osm_point by longitude and latitude",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_93950",
+   "query": "Add georeferenced png layer to map automatically",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_94148",
+   "query": "How do I use 'model builder' in QGIS 2.2?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_94191",
+   "query": "How to determine distances of points from closest line? (Mapinfo or QGIS)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_94280",
+   "query": "distance surface with qgis on a binary raster map",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_94446",
+   "query": "Removing features whose labels are not displayed?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_9462",
+   "query": "Can QGIS read an ODBC connection?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_94643",
+   "query": "QGIS how to calculate areas of intercepted polygons?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_94706",
+   "query": "How do you determine how straight a LineString is?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_94874",
+   "query": "how to get a style of openstreet map",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_95035",
+   "query": "GeoServer - set declared SRS using curl",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_95249",
+   "query": "How to auto increment a field in a feature class?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_95568",
+   "query": "Getting timestamps from gpx files into QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_957",
+   "query": "Is it possible to define a No SQL model for spatial data?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_9614",
+   "query": "Change Symbology of layers from within ArcMap",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_96153",
+   "query": "ArcGIS Attribute Subdomain?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_9659",
+   "query": "Convert GeoPDF to a vector format",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_97303",
+   "query": "Performing Moran Test using R?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_97741",
+   "query": "Problem with projection in meters with ArcGIS 10.1",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_97771",
+   "query": "How to georeference a map - which is in projected coordinate system - using geographic lat long?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_97776",
+   "query": "what are the other main components of GeoServer based system?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_97814",
+   "query": "When symbolising by category can I make the transparency different for each category?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_97845",
+   "query": "Integrating polygons into geometric networks",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_97939",
+   "query": "ArcGIS symmetrical difference in arcgis desktop standard",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_98028",
+   "query": "Dividing large polygon into smaller ones of equal area?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_98053",
+   "query": "Batch geocoding of 45000 Addresses",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_98076",
+   "query": "Min - Max within a zip code (statistics by area)",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_9894",
+   "query": "How to overcome field truncation when converting OSM to shapefile with QGIS?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_99711",
+   "query": "Decimal degree coordinates: how many decimal places to use for ...?",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_99850",
+   "query": "Get Coordinates of Voronoi Polygon Vertices",
+   "question_type": "beir_cqadupstack_gis"
+  },
+  {
+   "name": "beir_cqadupstack_gis_99993",
+   "query": "Overlay Shapefile and Raster layer in R",
+   "question_type": "beir_cqadupstack_gis"
+  }
+ ]
+}

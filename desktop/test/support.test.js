@@ -34,8 +34,9 @@ test('diagnostics redact secrets', () => {
   assert.match(text, /all good/);
 });
 
-test('validateInstall only allows known hosts and lane names', () => {
+test('validateInstall checks host and lane shape; the CLI owns the host list', () => {
   assert.equal(validateInstall({ host: 'claude-code', lane: 'staging' }), null);
+  assert.equal(validateInstall({ host: 'a-host-added-later', lane: 'stable' }), null);
   assert.match(validateInstall({ host: 'evil; rm -rf', lane: 'stable' }), /host/);
   assert.match(validateInstall({ host: 'cursor', lane: '../x' }), /lane/);
   assert.match(validateInstall({}), /host/);

@@ -1,0 +1,3459 @@
+{
+ "beir_cqadupstack_programmers_100095": [
+  "0721667dd38681ee",
+  "1a540c6482d22bed",
+  "cf24237e5d95a057",
+  "e1c3c1ed6f9eff0c",
+  "f2aba22bff9ac0e5"
+ ],
+ "beir_cqadupstack_programmers_100685": [
+  "459f69df03bdf5ae",
+  "4efa69951f29ac3c"
+ ],
+ "beir_cqadupstack_programmers_100959": [
+  "a48eb2e0f0853a31"
+ ],
+ "beir_cqadupstack_programmers_101164": [
+  "463a26e913dab970",
+  "798073f33e082ccf"
+ ],
+ "beir_cqadupstack_programmers_102008": [
+  "3f84a64de4d7286b"
+ ],
+ "beir_cqadupstack_programmers_102348": [
+  "49b7f3f81bbe0994"
+ ],
+ "beir_cqadupstack_programmers_102518": [
+  "29385f9b427393d1",
+  "9ff902878ad75464"
+ ],
+ "beir_cqadupstack_programmers_102679": [
+  "6dadd9dfc0af77f5"
+ ],
+ "beir_cqadupstack_programmers_102999": [
+  "0736d34e60d41d85"
+ ],
+ "beir_cqadupstack_programmers_103089": [
+  "2aa3a1865a8fb69e"
+ ],
+ "beir_cqadupstack_programmers_103133": [
+  "d60b04b6a526eaee"
+ ],
+ "beir_cqadupstack_programmers_103263": [
+  "f742bd8e32247e38"
+ ],
+ "beir_cqadupstack_programmers_103471": [
+  "357520326181f2cf"
+ ],
+ "beir_cqadupstack_programmers_104096": [
+  "9ecf02060d02faac",
+  "d66874cccc772b9a"
+ ],
+ "beir_cqadupstack_programmers_104111": [
+  "2fce3edae7cb9770",
+  "42ce464bb5c33f8f",
+  "4e2b7c0c8b92cc79",
+  "bff8503ca98369b8"
+ ],
+ "beir_cqadupstack_programmers_104122": [
+  "e6da71e70f3c59d6"
+ ],
+ "beir_cqadupstack_programmers_104517": [
+  "5a47235678e42b5a"
+ ],
+ "beir_cqadupstack_programmers_10495": [
+  "9132f7f41bbedb3d"
+ ],
+ "beir_cqadupstack_programmers_105380": [
+  "f61ae2cf1ebe7bcd"
+ ],
+ "beir_cqadupstack_programmers_106693": [
+  "5be03cfc40cf3add"
+ ],
+ "beir_cqadupstack_programmers_107265": [
+  "04a02194bd5626bc",
+  "2f7f9221f2621d58"
+ ],
+ "beir_cqadupstack_programmers_107326": [
+  "c6e796130e9a9153"
+ ],
+ "beir_cqadupstack_programmers_107774": [
+  "20c7e227830c4558"
+ ],
+ "beir_cqadupstack_programmers_107986": [
+  "109bfcfdd222e4d5"
+ ],
+ "beir_cqadupstack_programmers_108292": [
+  "46103bcd9e91f9f9"
+ ],
+ "beir_cqadupstack_programmers_108309": [
+  "9fa846a694f82ccc"
+ ],
+ "beir_cqadupstack_programmers_108395": [
+  "0cd43d42017ada01",
+  "311ef7980a96b6c5",
+  "31988831adf80737"
+ ],
+ "beir_cqadupstack_programmers_10857": [
+  "c2ee36c66033a514"
+ ],
+ "beir_cqadupstack_programmers_108855": [
+  "c752998c5a52f68f"
+ ],
+ "beir_cqadupstack_programmers_109279": [
+  "0cea3bbdc8f949c9"
+ ],
+ "beir_cqadupstack_programmers_109818": [
+  "916713a9a4c51a08"
+ ],
+ "beir_cqadupstack_programmers_10998": [
+  "07ba00bab7ad18bb"
+ ],
+ "beir_cqadupstack_programmers_110190": [
+  "793e42f8030f0b5a"
+ ],
+ "beir_cqadupstack_programmers_110270": [
+  "3cc13d6b156a851f",
+  "6b01cfdda5858456"
+ ],
+ "beir_cqadupstack_programmers_110471": [
+  "3d4ea4334a90a174",
+  "8c815c38fb4ba4e5",
+  "9b77b1178c9cb584"
+ ],
+ "beir_cqadupstack_programmers_110518": [
+  "1033f925178279aa"
+ ],
+ "beir_cqadupstack_programmers_110595": [
+  "06c6e42229e7106f",
+  "080a318984f8e543",
+  "337642b69915f45d",
+  "69bc2ba669bcac76",
+  "6bafb510a28132c1",
+  "8de8b6fc73b11419",
+  "a838d8fc9432f1f0",
+  "bcfeed0fdf257019",
+  "dc8e46b225ab3daf"
+ ],
+ "beir_cqadupstack_programmers_110730": [
+  "3dca6d65e7fd9cb4",
+  "7e68398dd356c141",
+  "c3787c167f7331e9"
+ ],
+ "beir_cqadupstack_programmers_110788": [
+  "3d7b8b27c87fb844"
+ ],
+ "beir_cqadupstack_programmers_111003": [
+  "0c235785d2207e93",
+  "4e33b630a8796e51",
+  "5abcced27ae10d95",
+  "68619d1350352702",
+  "bc5de593969a6211",
+  "cccc1be94cc22770"
+ ],
+ "beir_cqadupstack_programmers_111475": [
+  "c7271485e25cfde5"
+ ],
+ "beir_cqadupstack_programmers_111633": [
+  "b1287d80df9a8145"
+ ],
+ "beir_cqadupstack_programmers_111663": [
+  "6230d2e1ba1137f3"
+ ],
+ "beir_cqadupstack_programmers_111757": [
+  "0c03dc8fce98ec5e"
+ ],
+ "beir_cqadupstack_programmers_111788": [
+  "0def7b0a07a252aa",
+  "fd071ff6980731ab"
+ ],
+ "beir_cqadupstack_programmers_111802": [
+  "0e8bad1b3e2a3801",
+  "4a5c5d93907d4a63",
+  "fb5239dff972e159"
+ ],
+ "beir_cqadupstack_programmers_111846": [
+  "4249b275ed3df4da"
+ ],
+ "beir_cqadupstack_programmers_111881": [
+  "094df5631aa9408a",
+  "2793191d271a3da4",
+  "2bd43acde03f2273",
+  "8af70c65be92a77e",
+  "d92f6ebb34071bea",
+  "df2f88f0c691360d"
+ ],
+ "beir_cqadupstack_programmers_112485": [
+  "193251f1b30f258a",
+  "79b52622fa9ae90a"
+ ],
+ "beir_cqadupstack_programmers_112974": [
+  "c113fed1af990b90"
+ ],
+ "beir_cqadupstack_programmers_113209": [
+  "694afdaa97f91d84",
+  "7a1fb9bee413c758",
+  "d4a7bc21beb05d75"
+ ],
+ "beir_cqadupstack_programmers_113295": [
+  "c75c7c35cb7ed3e2"
+ ],
+ "beir_cqadupstack_programmers_113726": [
+  "af7650f164a9d953"
+ ],
+ "beir_cqadupstack_programmers_114258": [
+  "d47182a60ece5ca6"
+ ],
+ "beir_cqadupstack_programmers_114286": [
+  "7e58b95e2f734530",
+  "db472fa77fe606c2"
+ ],
+ "beir_cqadupstack_programmers_114520": [
+  "014af695196477bd",
+  "238ef8ff5e980e88",
+  "79717e6e6d057945",
+  "aab9b2ad04196082",
+  "ab0408948d752bdd",
+  "d3093e9faa2a4283"
+ ],
+ "beir_cqadupstack_programmers_114629": [
+  "fbbf8283db3d8e2d"
+ ],
+ "beir_cqadupstack_programmers_114755": [
+  "483eedd1e2d0a919",
+  "ce90aec48307244b"
+ ],
+ "beir_cqadupstack_programmers_114819": [
+  "7e2b25f885fa2586"
+ ],
+ "beir_cqadupstack_programmers_114958": [
+  "7ce55585e3eeb1c8"
+ ],
+ "beir_cqadupstack_programmers_115425": [
+  "3dbe3dd5a15f39ab"
+ ],
+ "beir_cqadupstack_programmers_115525": [
+  "8da14969f22f93b7"
+ ],
+ "beir_cqadupstack_programmers_115769": [
+  "04557a5566080718",
+  "ada6bae4f73dd32b"
+ ],
+ "beir_cqadupstack_programmers_115910": [
+  "499ba082c27a011a"
+ ],
+ "beir_cqadupstack_programmers_115920": [
+  "76d99a5f8cc99416",
+  "9f1276fcec9c6a7a"
+ ],
+ "beir_cqadupstack_programmers_116148": [
+  "06c96ec5cd1c766e"
+ ],
+ "beir_cqadupstack_programmers_116242": [
+  "2628fa08072b20da",
+  "4baf4c8bcd8ee8d7",
+  "c8967eb7909bf8fb",
+  "d6bbc19a03abbec9",
+  "ea889673f80db40f"
+ ],
+ "beir_cqadupstack_programmers_116330": [
+  "aecb3ae56f9c6c2d"
+ ],
+ "beir_cqadupstack_programmers_116491": [
+  "05b70de07991324d",
+  "101fbe3789bba552",
+  "21c8de40d78e9e88",
+  "577df60d8585b9b9"
+ ],
+ "beir_cqadupstack_programmers_116730": [
+  "390b951f4d7bf270"
+ ],
+ "beir_cqadupstack_programmers_116988": [
+  "18f020dea0f3e288"
+ ],
+ "beir_cqadupstack_programmers_117030": [
+  "0d14e2345356e326",
+  "f0d9c22c78dc11b6"
+ ],
+ "beir_cqadupstack_programmers_117403": [
+  "1eeadb453094da33"
+ ],
+ "beir_cqadupstack_programmers_117766": [
+  "05b63f4071075d29",
+  "e112088d6697e23a"
+ ],
+ "beir_cqadupstack_programmers_117825": [
+  "4100226df8b317dd",
+  "652f0150b3c994c7"
+ ],
+ "beir_cqadupstack_programmers_117852": [
+  "2a669d2911e727a3"
+ ],
+ "beir_cqadupstack_programmers_1180": [
+  "b479563333e1376e"
+ ],
+ "beir_cqadupstack_programmers_118064": [
+  "0e03028d0dda6c7e",
+  "16752a4a8a880fe8",
+  "1a91bc956d28ec9f",
+  "7432672eb460aa04",
+  "af2d8b660ba4ff2e",
+  "b6abe00a62d8fa08"
+ ],
+ "beir_cqadupstack_programmers_118108": [
+  "17f3c82a8b8b73f6"
+ ],
+ "beir_cqadupstack_programmers_118140": [
+  "c26eb36e24876467"
+ ],
+ "beir_cqadupstack_programmers_118301": [
+  "f5a48b7a7169ac18"
+ ],
+ "beir_cqadupstack_programmers_118558": [
+  "08e7443f75878ac1"
+ ],
+ "beir_cqadupstack_programmers_119367": [
+  "8087afae6ff558ee",
+  "c9946a555733edb2"
+ ],
+ "beir_cqadupstack_programmers_119466": [
+  "52358795cd5f44a7"
+ ],
+ "beir_cqadupstack_programmers_119513": [
+  "965d106f217e90e8"
+ ],
+ "beir_cqadupstack_programmers_119814": [
+  "54f7d356e5082409"
+ ],
+ "beir_cqadupstack_programmers_1200": [
+  "efd482b56c0f07ba"
+ ],
+ "beir_cqadupstack_programmers_120477": [
+  "b16af9f507640488"
+ ],
+ "beir_cqadupstack_programmers_120488": [
+  "eba39ad5c384c2f4"
+ ],
+ "beir_cqadupstack_programmers_120541": [
+  "6045379c13059d74"
+ ],
+ "beir_cqadupstack_programmers_120628": [
+  "0d2f8dceb70ed3b7"
+ ],
+ "beir_cqadupstack_programmers_121167": [
+  "7a85f445f476325e"
+ ],
+ "beir_cqadupstack_programmers_121218": [
+  "9138b1ca67781df8",
+  "d9c6b01c6595bd73"
+ ],
+ "beir_cqadupstack_programmers_121887": [
+  "872eee23cc195c8c"
+ ],
+ "beir_cqadupstack_programmers_121998": [
+  "396edc02ac5b9005"
+ ],
+ "beir_cqadupstack_programmers_122071": [
+  "df9dca47f0a48efe"
+ ],
+ "beir_cqadupstack_programmers_122233": [
+  "8c15c2833fcb3d9b",
+  "9ce1fcb8499dce59"
+ ],
+ "beir_cqadupstack_programmers_122244": [
+  "bd7bd3859f3a4f7f",
+  "f75d9f4ceffa2f98"
+ ],
+ "beir_cqadupstack_programmers_122437": [
+  "083463e9865ece74",
+  "49e487ca538c94ed",
+  "edf53b8845286384"
+ ],
+ "beir_cqadupstack_programmers_123270": [
+  "4f501efc3de62a16",
+  "dfcaefde5c25cd78"
+ ],
+ "beir_cqadupstack_programmers_123456": [
+  "7af1214bc73d2047"
+ ],
+ "beir_cqadupstack_programmers_123834": [
+  "64d2d57f46a03e84"
+ ],
+ "beir_cqadupstack_programmers_123851": [
+  "1ec66f31e9fd5026",
+  "713348a38a5d5e54",
+  "89386367bb0cb6b2"
+ ],
+ "beir_cqadupstack_programmers_124533": [
+  "421b2387af3c5d57",
+  "a1e9df5495a2f8bc"
+ ],
+ "beir_cqadupstack_programmers_12472": [
+  "22df7df1d96d7ea9"
+ ],
+ "beir_cqadupstack_programmers_124817": [
+  "78146769409f29c7",
+  "841a37019596fb75"
+ ],
+ "beir_cqadupstack_programmers_125108": [
+  "70d731fc3e677aae",
+  "c423d07b80d618a0",
+  "e8192472d761e47e"
+ ],
+ "beir_cqadupstack_programmers_125252": [
+  "b8d437c7d8e5e7fa"
+ ],
+ "beir_cqadupstack_programmers_125373": [
+  "6c9910e5218d2fc1",
+  "9a1f01e052e5b6a6"
+ ],
+ "beir_cqadupstack_programmers_125715": [
+  "643a1cf0327909f6"
+ ],
+ "beir_cqadupstack_programmers_126130": [
+  "e875f9cac563857c"
+ ],
+ "beir_cqadupstack_programmers_126965": [
+  "b4a8b092211f5178"
+ ],
+ "beir_cqadupstack_programmers_127201": [
+  "5f62f2efe69c96c6"
+ ],
+ "beir_cqadupstack_programmers_127535": [
+  "087f14432d2cf7b2",
+  "81e30d4b4f0cc09b",
+  "be7a02f9a363013a"
+ ],
+ "beir_cqadupstack_programmers_12773": [
+  "a3cea08e3b21187b"
+ ],
+ "beir_cqadupstack_programmers_127867": [
+  "4e831775ead111cd",
+  "a7d68366a70fd606"
+ ],
+ "beir_cqadupstack_programmers_128044": [
+  "0e189e7a24ee4f41"
+ ],
+ "beir_cqadupstack_programmers_128548": [
+  "283ee72dba506c0a",
+  "e7fcd5dc52fcce41",
+  "fb095a02487995d5"
+ ],
+ "beir_cqadupstack_programmers_129141": [
+  "e553b1476bf2a4cc"
+ ],
+ "beir_cqadupstack_programmers_129520": [
+  "fa7598657d266978"
+ ],
+ "beir_cqadupstack_programmers_129543": [
+  "83aee165402cfc96"
+ ],
+ "beir_cqadupstack_programmers_129603": [
+  "057229fce5a9be02",
+  "2107792b94b2c0cd",
+  "2351402d0f4a9b8f",
+  "28a87e7a9d9f6e25",
+  "28c655a5d566c4ba",
+  "3bf7be108733d272",
+  "469af3fbc694e224",
+  "4c110a5945899796",
+  "50c558274144b980",
+  "5e73fae4bcff744c",
+  "73895f17e1402fa1",
+  "73a36990d0bae3d0",
+  "7b5d9e2b2d8136a6",
+  "8180dc9efed4ec82",
+  "871b7a9701592c6a",
+  "93e8582f134c3d06",
+  "95975a45d26b412f",
+  "95c85099d00c5bbf",
+  "ae88bd2d6de8c557",
+  "c9a93778a6a57a1b",
+  "d847c228aaa78351",
+  "f81efa55c150260c"
+ ],
+ "beir_cqadupstack_programmers_130256": [
+  "1e71a80bb1416f64",
+  "63ecf14d945de14d",
+  "d49102ba6f942dc7"
+ ],
+ "beir_cqadupstack_programmers_130335": [
+  "be346bdff2d1f9a7"
+ ],
+ "beir_cqadupstack_programmers_130582": [
+  "4e5f32d062ffed24",
+  "73b9b38ffafa2fb5"
+ ],
+ "beir_cqadupstack_programmers_130743": [
+  "bdcb5eee9db46a29"
+ ],
+ "beir_cqadupstack_programmers_130948": [
+  "2e8cbde8f55f0e4f"
+ ],
+ "beir_cqadupstack_programmers_131314": [
+  "0e4a30610554ae68",
+  "1926d3d4be6929a2",
+  "1a194718a696572e",
+  "1c70faebfde68626",
+  "1e0608b493bddaf0",
+  "30c104129445aeaa",
+  "3c10a15a95da7ae1",
+  "428c3c7cb9ba2d14",
+  "570261e35ebb9434",
+  "7725c8de53469b7d",
+  "8c2e5054cca7bd2a",
+  "968c752464e96de2",
+  "b77fa22c5df97f3f",
+  "c304d0f41c2d0c63",
+  "d395498551940010"
+ ],
+ "beir_cqadupstack_programmers_131381": [
+  "c49d847423118848"
+ ],
+ "beir_cqadupstack_programmers_131408": [
+  "1a21323090bcddbc",
+  "1f769234568ac165"
+ ],
+ "beir_cqadupstack_programmers_131451": [
+  "9d8f0b5de00d4f11"
+ ],
+ "beir_cqadupstack_programmers_131701": [
+  "3597f176a6e95f26"
+ ],
+ "beir_cqadupstack_programmers_1319": [
+  "fb1fdd231ae0dc63"
+ ],
+ "beir_cqadupstack_programmers_132074": [
+  "a6f67858d9bca58b"
+ ],
+ "beir_cqadupstack_programmers_132281": [
+  "211981be991110c2",
+  "d35150daa3c73ea8"
+ ],
+ "beir_cqadupstack_programmers_132520": [
+  "8d0576a61d19d045"
+ ],
+ "beir_cqadupstack_programmers_132578": [
+  "6c4e7bb1912584f1"
+ ],
+ "beir_cqadupstack_programmers_133096": [
+  "846d053abbd49edb"
+ ],
+ "beir_cqadupstack_programmers_133330": [
+  "4dc4aa58ca4d76db"
+ ],
+ "beir_cqadupstack_programmers_133424": [
+  "80368a9de2903660"
+ ],
+ "beir_cqadupstack_programmers_133565": [
+  "87de235116e3591c"
+ ],
+ "beir_cqadupstack_programmers_133664": [
+  "711fad23985ef6b7"
+ ],
+ "beir_cqadupstack_programmers_133782": [
+  "e6976c1f1f0f19cc"
+ ],
+ "beir_cqadupstack_programmers_133872": [
+  "1d8d14f8bff09123"
+ ],
+ "beir_cqadupstack_programmers_133937": [
+  "180025ed0ffbd4d3"
+ ],
+ "beir_cqadupstack_programmers_134037": [
+  "2f281a5824a231ef"
+ ],
+ "beir_cqadupstack_programmers_134244": [
+  "d49c3828b9a9dbdc"
+ ],
+ "beir_cqadupstack_programmers_135047": [
+  "7f11c18f8ea633ef"
+ ],
+ "beir_cqadupstack_programmers_135701": [
+  "0828ee4a4522acbe"
+ ],
+ "beir_cqadupstack_programmers_135970": [
+  "800819f640fed49f"
+ ],
+ "beir_cqadupstack_programmers_135993": [
+  "103e52c237036816",
+  "1058be1d6cfbac2f",
+  "883a03e93297125a"
+ ],
+ "beir_cqadupstack_programmers_136195": [
+  "ca92937fd7e97daa"
+ ],
+ "beir_cqadupstack_programmers_136382": [
+  "b73fbf618ded72ba"
+ ],
+ "beir_cqadupstack_programmers_136449": [
+  "7ce49549da287682"
+ ],
+ "beir_cqadupstack_programmers_136629": [
+  "408a9a51271e179b",
+  "6c449592a0784b1c"
+ ],
+ "beir_cqadupstack_programmers_136634": [
+  "02d141ae2915363c",
+  "09a5e65af3050cbf",
+  "0f77f5efa95bf69c",
+  "36c1af89ecc14c02",
+  "5c2cf9be08b21020",
+  "9ec8a0d435158b24",
+  "d1f0f029029f9b7c",
+  "f5b00411fddb2f71",
+  "fd275d567b1c5bd0"
+ ],
+ "beir_cqadupstack_programmers_13676": [
+  "6c2d8d9ea35a09f7"
+ ],
+ "beir_cqadupstack_programmers_136774": [
+  "7b421599d3d07035",
+  "fe848cac79604bf7"
+ ],
+ "beir_cqadupstack_programmers_136908": [
+  "80d6e14cd33dfd16"
+ ],
+ "beir_cqadupstack_programmers_136993": [
+  "3940ba709043cd56"
+ ],
+ "beir_cqadupstack_programmers_137344": [
+  "3f1d4bee3e422076"
+ ],
+ "beir_cqadupstack_programmers_137439": [
+  "87a1ff24d5067f28"
+ ],
+ "beir_cqadupstack_programmers_13786": [
+  "2475336ec562a736",
+  "e0798a371dfc88ae"
+ ],
+ "beir_cqadupstack_programmers_137973": [
+  "fc8307655488dd61"
+ ],
+ "beir_cqadupstack_programmers_138026": [
+  "e7b91a4afea7c451"
+ ],
+ "beir_cqadupstack_programmers_138182": [
+  "05a01f9fca08b86f"
+ ],
+ "beir_cqadupstack_programmers_138396": [
+  "c5ad00749444c9e9",
+  "c6280e7ea7fb815c"
+ ],
+ "beir_cqadupstack_programmers_138447": [
+  "87f917c0b0aea81b"
+ ],
+ "beir_cqadupstack_programmers_138642": [
+  "ffd6904f87336c20"
+ ],
+ "beir_cqadupstack_programmers_138643": [
+  "59806dc4a11c9246",
+  "cb4b4d19abbb9362"
+ ],
+ "beir_cqadupstack_programmers_138726": [
+  "4475b89c9fb2bf4f"
+ ],
+ "beir_cqadupstack_programmers_138908": [
+  "5bbff28138799c6f"
+ ],
+ "beir_cqadupstack_programmers_139037": [
+  "dcca74ecc0ff61b7"
+ ],
+ "beir_cqadupstack_programmers_139171": [
+  "2904e9a79705c10a",
+  "4f337a4dac548ce9"
+ ],
+ "beir_cqadupstack_programmers_139418": [
+  "41212170beb06f9e"
+ ],
+ "beir_cqadupstack_programmers_139442": [
+  "dde51cc691656b4d"
+ ],
+ "beir_cqadupstack_programmers_139663": [
+  "95bc000f96050bbb"
+ ],
+ "beir_cqadupstack_programmers_140004": [
+  "62cffce4ec81b445"
+ ],
+ "beir_cqadupstack_programmers_140264": [
+  "9f184a2e5d12fac0"
+ ],
+ "beir_cqadupstack_programmers_140266": [
+  "ac43dfac09c6a0d9"
+ ],
+ "beir_cqadupstack_programmers_140561": [
+  "97b985cee5891a85"
+ ],
+ "beir_cqadupstack_programmers_140876": [
+  "4390ecd33b12288f",
+  "7cd3213238350587",
+  "b80c6b26e16bff45"
+ ],
+ "beir_cqadupstack_programmers_141232": [
+  "b113b911d0f47596"
+ ],
+ "beir_cqadupstack_programmers_141411": [
+  "14be2d7cadf9c616"
+ ],
+ "beir_cqadupstack_programmers_141961": [
+  "c8af254606a04cfe"
+ ],
+ "beir_cqadupstack_programmers_141973": [
+  "3c3dfcddee1e83ef"
+ ],
+ "beir_cqadupstack_programmers_142292": [
+  "972cea00fd821204"
+ ],
+ "beir_cqadupstack_programmers_142612": [
+  "d7d874e0cd05cfda"
+ ],
+ "beir_cqadupstack_programmers_142974": [
+  "2440d04e2244092d"
+ ],
+ "beir_cqadupstack_programmers_143127": [
+  "06d4b183cb7b854b"
+ ],
+ "beir_cqadupstack_programmers_143722": [
+  "b50e6f6b856932f0"
+ ],
+ "beir_cqadupstack_programmers_144058": [
+  "91feff03ed5b3057"
+ ],
+ "beir_cqadupstack_programmers_144556": [
+  "112fb3227cbadbdf",
+  "26440b23cf767cd6",
+  "5bbc4ad578f9c17a",
+  "696bd939a84387b4"
+ ],
+ "beir_cqadupstack_programmers_144717": [
+  "e609de4c2bd5c897"
+ ],
+ "beir_cqadupstack_programmers_144829": [
+  "f209f8e0c2290c69"
+ ],
+ "beir_cqadupstack_programmers_144892": [
+  "c0efcca5dcce2c85"
+ ],
+ "beir_cqadupstack_programmers_145055": [
+  "e15d2f630b96ec77"
+ ],
+ "beir_cqadupstack_programmers_145437": [
+  "0e6891bc2b2276df",
+  "188b420b47d3fc6d",
+  "1a303334a4490f9f",
+  "4d65fa5452ae606f",
+  "5c240c5e676dff8a",
+  "5eb449dccd815faa",
+  "8e8e32a1f8f547fc",
+  "9dd4fb7ad7735a51",
+  "a947e2eecf0696f2",
+  "aaf7414099f4a565",
+  "c095f8634f9552aa",
+  "e6b22c45278702bc"
+ ],
+ "beir_cqadupstack_programmers_145518": [
+  "45b08fe299a887f1"
+ ],
+ "beir_cqadupstack_programmers_145722": [
+  "009795eb132f76d2"
+ ],
+ "beir_cqadupstack_programmers_14582": [
+  "84466eaddadc05b4"
+ ],
+ "beir_cqadupstack_programmers_146065": [
+  "4475ca24218e41cc",
+  "66795162ce046bfe"
+ ],
+ "beir_cqadupstack_programmers_146272": [
+  "18c57135023a4ff9"
+ ],
+ "beir_cqadupstack_programmers_14645": [
+  "37ce34052374f6eb"
+ ],
+ "beir_cqadupstack_programmers_146810": [
+  "9bb5ceadbefcdc6e"
+ ],
+ "beir_cqadupstack_programmers_147134": [
+  "1cc19004331106bb",
+  "389f303513aefc6f"
+ ],
+ "beir_cqadupstack_programmers_147185": [
+  "04d92f4a89a25885",
+  "38e503914c36f9ba",
+  "f32605bc92675984"
+ ],
+ "beir_cqadupstack_programmers_147240": [
+  "0df9dc8808b143ca",
+  "186f9f8fd36828bb",
+  "6c79bfb85c95bce4"
+ ],
+ "beir_cqadupstack_programmers_147273": [
+  "837413383aa1fdc3"
+ ],
+ "beir_cqadupstack_programmers_147977": [
+  "ed0ae955ac396755"
+ ],
+ "beir_cqadupstack_programmers_14831": [
+  "0ee4eed88af9e9aa"
+ ],
+ "beir_cqadupstack_programmers_148747": [
+  "e134468513fe2cdf"
+ ],
+ "beir_cqadupstack_programmers_14975": [
+  "b7a6b22cbe2b103f"
+ ],
+ "beir_cqadupstack_programmers_15004": [
+  "7f7042223d387d0f",
+  "e0adee763af3c403"
+ ],
+ "beir_cqadupstack_programmers_150479": [
+  "9443ce8af8a33b92"
+ ],
+ "beir_cqadupstack_programmers_150633": [
+  "27024bf07b438ec4",
+  "742caf8f6de80a65"
+ ],
+ "beir_cqadupstack_programmers_150888": [
+  "6b654bbb86ee8260",
+  "d1a5d393f9675df7"
+ ],
+ "beir_cqadupstack_programmers_151103": [
+  "bdb8ff35723c5557"
+ ],
+ "beir_cqadupstack_programmers_152094": [
+  "6611637a5cce7022"
+ ],
+ "beir_cqadupstack_programmers_15239": [
+  "12cefd7b9930d62e"
+ ],
+ "beir_cqadupstack_programmers_152678": [
+  "4720d750524e2d97"
+ ],
+ "beir_cqadupstack_programmers_15286": [
+  "2ffbed932bca9974"
+ ],
+ "beir_cqadupstack_programmers_153581": [
+  "82151d9716d217e7"
+ ],
+ "beir_cqadupstack_programmers_153631": [
+  "ad7e8e3618134307"
+ ],
+ "beir_cqadupstack_programmers_154155": [
+  "bec41308ca5b1332"
+ ],
+ "beir_cqadupstack_programmers_154339": [
+  "25fd18d644d600d4",
+  "5c5fea219e3481bb",
+  "6ad4458ec245bdfd",
+  "b843ac26df64c081",
+  "e72b6eaf0f789fad"
+ ],
+ "beir_cqadupstack_programmers_154593": [
+  "09fd4c498bcdaf05"
+ ],
+ "beir_cqadupstack_programmers_154679": [
+  "3575ede7c44c22b4"
+ ],
+ "beir_cqadupstack_programmers_154954": [
+  "e396fb40125a9444"
+ ],
+ "beir_cqadupstack_programmers_155469": [
+  "1cc8d92742b2a692",
+  "1f8704c0d36e1d49",
+  "5c0c461b244481c8"
+ ],
+ "beir_cqadupstack_programmers_155659": [
+  "00dc2e4c59d50382",
+  "4691d30beeac5448",
+  "ca744dc8fa24c9b0",
+  "cec707de7d747628"
+ ],
+ "beir_cqadupstack_programmers_156771": [
+  "eb1f3deb1e71ed7f"
+ ],
+ "beir_cqadupstack_programmers_156794": [
+  "da29a933f427fbaf"
+ ],
+ "beir_cqadupstack_programmers_156848": [
+  "6d617f3b441c11a6",
+  "bfa5fdce43840d00",
+  "eccc548d8fdc5aae"
+ ],
+ "beir_cqadupstack_programmers_15829": [
+  "5824927e2c6aee1f"
+ ],
+ "beir_cqadupstack_programmers_158359": [
+  "2059142b9863cd45",
+  "51fafa6bfd200712"
+ ],
+ "beir_cqadupstack_programmers_158397": [
+  "65e309bbdf69ba85"
+ ],
+ "beir_cqadupstack_programmers_158534": [
+  "06088e45e04fc387",
+  "483071f2b83885d3",
+  "5ed8e03c93c8f354",
+  "da47341c9c0c44b2"
+ ],
+ "beir_cqadupstack_programmers_158591": [
+  "4021e4fc67ebc2d8"
+ ],
+ "beir_cqadupstack_programmers_159089": [
+  "0333bd4fa2c4578e"
+ ],
+ "beir_cqadupstack_programmers_159373": [
+  "7aece2f7f968375b"
+ ],
+ "beir_cqadupstack_programmers_159626": [
+  "7ff1623bd4e1dbd9"
+ ],
+ "beir_cqadupstack_programmers_159666": [
+  "460f8f2b07b09855",
+  "f1b1f873e6ac7982"
+ ],
+ "beir_cqadupstack_programmers_16010": [
+  "f78b53a129c00f30"
+ ],
+ "beir_cqadupstack_programmers_160628": [
+  "5cd2b3eb0a59f633"
+ ],
+ "beir_cqadupstack_programmers_161303": [
+  "0cc0f020950fdd78",
+  "45ef4a1a46270cfb",
+  "6881de2c7e8a1784",
+  "6a36ec8301959818",
+  "79de49b3f7d4de53",
+  "a519f42cc8fcee6b",
+  "b0f430b03b65d0fb",
+  "b9ca6cf7c621ac54"
+ ],
+ "beir_cqadupstack_programmers_161711": [
+  "d94649165bdab9e1"
+ ],
+ "beir_cqadupstack_programmers_161809": [
+  "4ba21801e5541e11",
+  "fc22eef67c6526e5"
+ ],
+ "beir_cqadupstack_programmers_162583": [
+  "31881375c2757eb0"
+ ],
+ "beir_cqadupstack_programmers_162931": [
+  "32c8c3721256fead"
+ ],
+ "beir_cqadupstack_programmers_163408": [
+  "4a5ad7975037e631"
+ ],
+ "beir_cqadupstack_programmers_163752": [
+  "00eeae710d719279",
+  "2d0e2efe1146ae83",
+  "b2c67c57c042649b",
+  "cc28bfc06b8af007",
+  "dc31d61e7c0ac60e"
+ ],
+ "beir_cqadupstack_programmers_163822": [
+  "37d2a492bc99f77d"
+ ],
+ "beir_cqadupstack_programmers_163924": [
+  "430f438a182131c8"
+ ],
+ "beir_cqadupstack_programmers_163933": [
+  "1c4419f35b721310",
+  "dc9a8b6757d95c38"
+ ],
+ "beir_cqadupstack_programmers_164599": [
+  "ab219b63281eb7cf"
+ ],
+ "beir_cqadupstack_programmers_164665": [
+  "38c034bf383ed9c5",
+  "56aed84b729ca911"
+ ],
+ "beir_cqadupstack_programmers_164799": [
+  "36074acf792a8666",
+  "b7cf760a19949cfc"
+ ],
+ "beir_cqadupstack_programmers_16528": [
+  "7e4a023c309c48e8"
+ ],
+ "beir_cqadupstack_programmers_165668": [
+  "65cb30e97e6e4150",
+  "8acf6ad67b03c4c8",
+  "9d4ea7da52ef02ef",
+  "c970a2cbf5fc50f3",
+  "ebbaa662282603e9"
+ ],
+ "beir_cqadupstack_programmers_165725": [
+  "1e9981797c3c231f"
+ ],
+ "beir_cqadupstack_programmers_165735": [
+  "b4f8ff6b98e57a92"
+ ],
+ "beir_cqadupstack_programmers_166136": [
+  "a690a8ffa5bb28e9"
+ ],
+ "beir_cqadupstack_programmers_166314": [
+  "237f86caa3c62205"
+ ],
+ "beir_cqadupstack_programmers_166798": [
+  "1f4066512fdbaf6c"
+ ],
+ "beir_cqadupstack_programmers_166884": [
+  "01121afda6736a7f",
+  "17f55949a006903a",
+  "19927daa7dc5d65a",
+  "200b29c141dcb48b",
+  "3d914d822eb8a89f",
+  "56fc1d397b853d36",
+  "59c242b5f1e35ec7",
+  "6a35784e07701a56",
+  "6d283c8e31bdf717",
+  "96d2ff0dd9d6e6b1",
+  "98e85af85021ef3d",
+  "9fee6a488e1a98a1",
+  "a15d761cbce125ed",
+  "a1bca0cfc7f55a71",
+  "a569c9831fb611af",
+  "acb62ce5c38c0044",
+  "c7a8106fdfb8a470",
+  "cc03752086548474",
+  "dcc66d69dc686e5e",
+  "e05434f886e42aa3",
+  "e43f76ca72543f99",
+  "e7f9ba87620f673d",
+  "eae97f90dd4e6c75",
+  "f789e155aa1cd4bd",
+  "f8b854c4edcf2d98",
+  "fa01ab3c953b7a8e"
+ ],
+ "beir_cqadupstack_programmers_166895": [
+  "063fc1094b25f6ef"
+ ],
+ "beir_cqadupstack_programmers_16708": [
+  "369fc0decd686848",
+  "6abb19fe50f924e5",
+  "f22d47d9c02acc2d"
+ ],
+ "beir_cqadupstack_programmers_167277": [
+  "2965f240e942607c",
+  "3d40056bb8ecbde7",
+  "7691fea7089e0cbc"
+ ],
+ "beir_cqadupstack_programmers_16732": [
+  "e863b55e0e0faa14"
+ ],
+ "beir_cqadupstack_programmers_167890": [
+  "4ea7b8522226cea5"
+ ],
+ "beir_cqadupstack_programmers_168685": [
+  "826b5b2277f1b6cf"
+ ],
+ "beir_cqadupstack_programmers_169962": [
+  "77de3ffaaaa3b44a"
+ ],
+ "beir_cqadupstack_programmers_170138": [
+  "1dc7537c3c5af10f",
+  "24230cd6fe75c5bc",
+  "2c17506633db9aa8",
+  "47b069ea86262f4d",
+  "5a649dc06f2ce4a9",
+  "701d5a3d0fbaf660",
+  "cc812782cf5cf2f9",
+  "dc811229f3f38def",
+  "efa58c1b7b657741",
+  "f4299df2c1a505c4",
+  "f6a28fb018ce4200"
+ ],
+ "beir_cqadupstack_programmers_170966": [
+  "a28dffa9af95f1d1",
+  "ca168d420333985d",
+  "e024203ce3e77488",
+  "f8aadee91c92880d"
+ ],
+ "beir_cqadupstack_programmers_171701": [
+  "a0b3ef04919fd242"
+ ],
+ "beir_cqadupstack_programmers_173320": [
+  "c0ffedef4290d465",
+  "d5ee13f62e969250"
+ ],
+ "beir_cqadupstack_programmers_17341": [
+  "a7fd38f33c5831cf"
+ ],
+ "beir_cqadupstack_programmers_174762": [
+  "402f9cc18d772ec2"
+ ],
+ "beir_cqadupstack_programmers_175014": [
+  "c1d1db1553d82b07"
+ ],
+ "beir_cqadupstack_programmers_175309": [
+  "3c1c3278710eedab"
+ ],
+ "beir_cqadupstack_programmers_175561": [
+  "5211f8bf96ab213c"
+ ],
+ "beir_cqadupstack_programmers_175583": [
+  "3adfa5a2d52e426b",
+  "4cdfb88de904d266",
+  "bbf36a7c56ce5197",
+  "e9d54e6f91f3d6ea"
+ ],
+ "beir_cqadupstack_programmers_175594": [
+  "44cf0bbc497141f1"
+ ],
+ "beir_cqadupstack_programmers_17568": [
+  "2a40cde45d3e7318"
+ ],
+ "beir_cqadupstack_programmers_176102": [
+  "e4cfbc161925fb0c"
+ ],
+ "beir_cqadupstack_programmers_176471": [
+  "aa48c3a3e1cb859b"
+ ],
+ "beir_cqadupstack_programmers_17696": [
+  "9f354de1be6ad7bd",
+  "e935d2483f6a7a6e"
+ ],
+ "beir_cqadupstack_programmers_177907": [
+  "ef4927ceb106b401"
+ ],
+ "beir_cqadupstack_programmers_178018": [
+  "0a800f7ee9bd1e8c"
+ ],
+ "beir_cqadupstack_programmers_17826": [
+  "5fcd3e0fdec4d2fd"
+ ],
+ "beir_cqadupstack_programmers_178916": [
+  "3fc78f4401d67a2e"
+ ],
+ "beir_cqadupstack_programmers_17898": [
+  "9b9705e6d159df2d"
+ ],
+ "beir_cqadupstack_programmers_179002": [
+  "796aa9f35034a9af"
+ ],
+ "beir_cqadupstack_programmers_179162": [
+  "41930f9bfb5efc1e",
+  "cd09b3e70d7708c3"
+ ],
+ "beir_cqadupstack_programmers_179554": [
+  "26b5070a99064108"
+ ],
+ "beir_cqadupstack_programmers_179618": [
+  "624103a129b30dae",
+  "738f0af387250dfe"
+ ],
+ "beir_cqadupstack_programmers_179763": [
+  "03259a41112c9c5c"
+ ],
+ "beir_cqadupstack_programmers_180012": [
+  "b8d1118280238330"
+ ],
+ "beir_cqadupstack_programmers_180165": [
+  "15c082a6ad0790af"
+ ],
+ "beir_cqadupstack_programmers_18059": [
+  "7975202c456d51c5",
+  "c54ef8c871e0ee46",
+  "de7df4c7c8399ace"
+ ],
+ "beir_cqadupstack_programmers_180904": [
+  "557e1de9b845b1a4"
+ ],
+ "beir_cqadupstack_programmers_181527": [
+  "a6769f2ee0727eb7"
+ ],
+ "beir_cqadupstack_programmers_181780": [
+  "8326d84f3f328bbd",
+  "c9784223fc95bcb1",
+  "f600e89167608e6b"
+ ],
+ "beir_cqadupstack_programmers_182009": [
+  "67c8a54cda4c0a71"
+ ],
+ "beir_cqadupstack_programmers_182207": [
+  "c06454ad6844412e"
+ ],
+ "beir_cqadupstack_programmers_182229": [
+  "c897ab27b9d4ed86"
+ ],
+ "beir_cqadupstack_programmers_18371": [
+  "14f29f5257c42ddc",
+  "411d2dcd40ce4020",
+  "60ad9522d09060bd",
+  "77a39ac7ee838094",
+  "87eb1715f50f178b",
+  "b95898064fad8a64",
+  "c8364ace6e6a06b2",
+  "d86c0f0bf97a6419",
+  "dccdb7f78869dc56"
+ ],
+ "beir_cqadupstack_programmers_18444": [
+  "2e677dc292b2b8bc",
+  "72c46591c550ff92"
+ ],
+ "beir_cqadupstack_programmers_184874": [
+  "2f01a013d3ceb97e"
+ ],
+ "beir_cqadupstack_programmers_185671": [
+  "2724abb8a8021346",
+  "2c1dfecbc7b68653",
+  "57ec36a802323a51",
+  "79198aad04beb5fc",
+  "96347884952fecf9",
+  "ae9fdf7e9ad802e7",
+  "b23a093687cb07b4",
+  "c79296c34639d407"
+ ],
+ "beir_cqadupstack_programmers_185712": [
+  "36c3a6423e55e92e"
+ ],
+ "beir_cqadupstack_programmers_186377": [
+  "109e23e77d3c4705",
+  "1b0480d273c732c6",
+  "74999bc925aad0a6",
+  "7605eccf19441e6f"
+ ],
+ "beir_cqadupstack_programmers_186438": [
+  "188afdb4749c3576",
+  "98d1d6eac7daaa6f",
+  "bb11cbfba3233678"
+ ],
+ "beir_cqadupstack_programmers_186465": [
+  "2b577c5058bf225a"
+ ],
+ "beir_cqadupstack_programmers_186690": [
+  "7f2f21a8c59a8a5b"
+ ],
+ "beir_cqadupstack_programmers_18679": [
+  "48f21611fd681bf6"
+ ],
+ "beir_cqadupstack_programmers_186932": [
+  "96ed74b13d23bff8"
+ ],
+ "beir_cqadupstack_programmers_187026": [
+  "d03663197175dbb9"
+ ],
+ "beir_cqadupstack_programmers_188381": [
+  "5918f90788e8b240"
+ ],
+ "beir_cqadupstack_programmers_189096": [
+  "0b495cb11987e5c6",
+  "225369b086831160",
+  "a949f06f1db53633",
+  "ba37ccd412566a92",
+  "c282d749ac40df5b",
+  "c730f5743a58017a",
+  "cba8f8c459f6490e",
+  "e7d8a601b3c1aead"
+ ],
+ "beir_cqadupstack_programmers_189426": [
+  "5cfeaf7cd05a2efb",
+  "5db6e0195390ddb1",
+  "61e7799fee93f7b0",
+  "74b33374489ed6e4",
+  "94ae1ee4458a1425",
+  "a4cc8300d156dbc7",
+  "ebf04a66f0890872"
+ ],
+ "beir_cqadupstack_programmers_189824": [
+  "6dc16b8500e39afa"
+ ],
+ "beir_cqadupstack_programmers_189983": [
+  "920345e23ca17734"
+ ],
+ "beir_cqadupstack_programmers_190542": [
+  "9b4d2d70357534ba"
+ ],
+ "beir_cqadupstack_programmers_190649": [
+  "f7ae9b6d5004bd34"
+ ],
+ "beir_cqadupstack_programmers_190758": [
+  "53f131a4d3b04d43"
+ ],
+ "beir_cqadupstack_programmers_190853": [
+  "606c2d666cc630b1",
+  "a78bec60e6edf178"
+ ],
+ "beir_cqadupstack_programmers_190955": [
+  "2e4804987c3c3aba"
+ ],
+ "beir_cqadupstack_programmers_191191": [
+  "a8f5bba4f10d991b"
+ ],
+ "beir_cqadupstack_programmers_191358": [
+  "566d0b476c97cd87",
+  "cebb9a150eabe35a"
+ ],
+ "beir_cqadupstack_programmers_191539": [
+  "ebb238c4accdfa72",
+  "f7d46555cd4767aa"
+ ],
+ "beir_cqadupstack_programmers_191759": [
+  "0a0f8ce12f29ab50",
+  "31c7a64443f382c2",
+  "3306ea87b5417deb",
+  "549d0a5d32817afa",
+  "cf8ddb0d1f7114c1",
+  "ea88efb7e549616c"
+ ],
+ "beir_cqadupstack_programmers_191961": [
+  "ebe8ea27ef7e53b4"
+ ],
+ "beir_cqadupstack_programmers_192": [
+  "0cb8c5c77a919a06",
+  "c4dc3dcc6d0dcbd4",
+  "cc661f81becc73dc"
+ ],
+ "beir_cqadupstack_programmers_192037": [
+  "2ef934538b4552cb"
+ ],
+ "beir_cqadupstack_programmers_193269": [
+  "80b4496cb9389b61"
+ ],
+ "beir_cqadupstack_programmers_193415": [
+  "389516ca12ad66f2",
+  "6c8903261b2ddd1e",
+  "73a67bc33d5d835f",
+  "ab3c57a9f2f31cb3",
+  "c0a6ed48410b2070"
+ ],
+ "beir_cqadupstack_programmers_193496": [
+  "0d8ad6ccb34614ea"
+ ],
+ "beir_cqadupstack_programmers_193586": [
+  "d2ea60e20949e52e"
+ ],
+ "beir_cqadupstack_programmers_193895": [
+  "e0a466a9542b22e3"
+ ],
+ "beir_cqadupstack_programmers_193929": [
+  "163c12e9fec84d0b",
+  "4a4dd8803189a023"
+ ],
+ "beir_cqadupstack_programmers_193996": [
+  "004d4aace7d750c2",
+  "2340513deb94e585",
+  "e607b1bcad352ece"
+ ],
+ "beir_cqadupstack_programmers_194106": [
+  "b9ea8d11a0595a2a"
+ ],
+ "beir_cqadupstack_programmers_194321": [
+  "bfe423fa73e6d983"
+ ],
+ "beir_cqadupstack_programmers_194373": [
+  "183790d66920b748",
+  "9c9369ffcfdc3d67",
+  "d33c9915f6be01ff"
+ ],
+ "beir_cqadupstack_programmers_194395": [
+  "c61ed5fc8ce95da3",
+  "d12766c540d7aa0c"
+ ],
+ "beir_cqadupstack_programmers_194646": [
+  "d38d8d6ddff8261f"
+ ],
+ "beir_cqadupstack_programmers_194679": [
+  "f0e8524437868a91"
+ ],
+ "beir_cqadupstack_programmers_194958": [
+  "b366b5d1cb81768b"
+ ],
+ "beir_cqadupstack_programmers_194975": [
+  "1dffcaa692c4afec"
+ ],
+ "beir_cqadupstack_programmers_195073": [
+  "a3805ec020b6cbc5"
+ ],
+ "beir_cqadupstack_programmers_195094": [
+  "9136ded42046a017"
+ ],
+ "beir_cqadupstack_programmers_195337": [
+  "12d06b3994626693",
+  "3b694c2761d9a017",
+  "6d2ebd68606f2424",
+  "98f1afe34ff86404"
+ ],
+ "beir_cqadupstack_programmers_195416": [
+  "a993839358632aea"
+ ],
+ "beir_cqadupstack_programmers_19558": [
+  "1749e36a48f49341",
+  "299b719584b7fcbe",
+  "d1ad074a53d2d111",
+  "d67e0c8fc0f5317d",
+  "db6029ce1dcb11df",
+  "e368ae3e8b669e2b",
+  "f08a46ef4e06b9f0"
+ ],
+ "beir_cqadupstack_programmers_195656": [
+  "12ab4afcfd7f353b"
+ ],
+ "beir_cqadupstack_programmers_195719": [
+  "93080427f450d2ee"
+ ],
+ "beir_cqadupstack_programmers_196139": [
+  "9307e968ca63381d"
+ ],
+ "beir_cqadupstack_programmers_196260": [
+  "e835f93e21bcdee6"
+ ],
+ "beir_cqadupstack_programmers_196356": [
+  "8a98418fd56b6f74",
+  "9b771f7f525f84c2"
+ ],
+ "beir_cqadupstack_programmers_196366": [
+  "89f8c7accc6e7ff2",
+  "a41daaba5ed49795",
+  "b1853aa2974a5f92",
+  "cab3f1e81b0670d1"
+ ],
+ "beir_cqadupstack_programmers_196546": [
+  "39a897ad291f7f25"
+ ],
+ "beir_cqadupstack_programmers_196615": [
+  "d3c9feec8234e284"
+ ],
+ "beir_cqadupstack_programmers_196700": [
+  "81627f18b9b597de",
+  "825599583f9a339a"
+ ],
+ "beir_cqadupstack_programmers_196876": [
+  "c6e7a2c82b2dc251",
+  "d3a9356c3ce9197e",
+  "eefbfa91f8990b39"
+ ],
+ "beir_cqadupstack_programmers_196913": [
+  "8afa4b16138d95a6"
+ ],
+ "beir_cqadupstack_programmers_196930": [
+  "24ef5bf7b54a7b5b"
+ ],
+ "beir_cqadupstack_programmers_196990": [
+  "494c92e02d285b63"
+ ],
+ "beir_cqadupstack_programmers_197056": [
+  "6f0ee804ea16a728",
+  "a38ba40d3bfbf8cb",
+  "b2b8b1fbde5af8ca"
+ ],
+ "beir_cqadupstack_programmers_197251": [
+  "59744d34ce0f5d30",
+  "a1588efbcc516c26",
+  "a7ec73a455d5e593",
+  "be01c719345bbc6b",
+  "c9435051e493bd72"
+ ],
+ "beir_cqadupstack_programmers_197443": [
+  "cdd6153a6f4f6691"
+ ],
+ "beir_cqadupstack_programmers_19750": [
+  "1746b2d923f5ced4"
+ ],
+ "beir_cqadupstack_programmers_197746": [
+  "9062414a1adb68d4"
+ ],
+ "beir_cqadupstack_programmers_197838": [
+  "a1e666573275e57e",
+  "e5587770ed7a7788"
+ ],
+ "beir_cqadupstack_programmers_198240": [
+  "9017ee17f2bff919"
+ ],
+ "beir_cqadupstack_programmers_19842": [
+  "19decda715eb7e72"
+ ],
+ "beir_cqadupstack_programmers_198549": [
+  "de78a2156d539df2"
+ ],
+ "beir_cqadupstack_programmers_198936": [
+  "11e13780834bde14"
+ ],
+ "beir_cqadupstack_programmers_198995": [
+  "0ee459a42b21fe3b",
+  "3cd6704b67235491",
+  "421b2550179f4cb6",
+  "4222d31a74641e93",
+  "474f1ee9064c0ec1",
+  "5352700af40252f0",
+  "73f6ac4b5d20a92f",
+  "7724b30bd55f8911",
+  "84b07ff8ed93dcee",
+  "8fce13817b53d9b3",
+  "97d522fc4f737d15",
+  "a474580a9d8b8beb",
+  "a77e0d8db87825b0",
+  "b66d55098cc1859f",
+  "e9587f27407e3006",
+  "f11197588f3034c9"
+ ],
+ "beir_cqadupstack_programmers_199162": [
+  "68de3c8161e4c168"
+ ],
+ "beir_cqadupstack_programmers_199303": [
+  "24c7f99ec3a861d0"
+ ],
+ "beir_cqadupstack_programmers_199698": [
+  "b91c5e546dc41ba5"
+ ],
+ "beir_cqadupstack_programmers_199803": [
+  "6e0789bc367e384b"
+ ],
+ "beir_cqadupstack_programmers_199827": [
+  "66a30f465336d771"
+ ],
+ "beir_cqadupstack_programmers_199838": [
+  "165d8478f336b39f"
+ ],
+ "beir_cqadupstack_programmers_199873": [
+  "c7602050a56b722a"
+ ],
+ "beir_cqadupstack_programmers_200031": [
+  "58b5bb5624ccc644"
+ ],
+ "beir_cqadupstack_programmers_200064": [
+  "989b3e7a682eb53c"
+ ],
+ "beir_cqadupstack_programmers_20023": [
+  "5c316331a62c051b",
+  "a0f137a8f789c490"
+ ],
+ "beir_cqadupstack_programmers_200360": [
+  "437dcb7549f5d27c"
+ ],
+ "beir_cqadupstack_programmers_200362": [
+  "1179b7e468689a7b",
+  "196fa77e4146d93f",
+  "2f39a995a329cdf6",
+  "617057fdfb52e7c4",
+  "ee21015e7a550a9e"
+ ],
+ "beir_cqadupstack_programmers_200497": [
+  "62d5c07fae5fb116"
+ ],
+ "beir_cqadupstack_programmers_200545": [
+  "8e4c05ca878866cb"
+ ],
+ "beir_cqadupstack_programmers_200709": [
+  "6ed5b35695211cd5"
+ ],
+ "beir_cqadupstack_programmers_200861": [
+  "c8d03d53804d3cf2"
+ ],
+ "beir_cqadupstack_programmers_20092": [
+  "f8c86d644d7d7db0"
+ ],
+ "beir_cqadupstack_programmers_201041": [
+  "2cda7c2bf23bcb18"
+ ],
+ "beir_cqadupstack_programmers_201119": [
+  "ba9d4facb95425bc"
+ ],
+ "beir_cqadupstack_programmers_201130": [
+  "ec2c2abfa143ce12"
+ ],
+ "beir_cqadupstack_programmers_201237": [
+  "75e565475d573806"
+ ],
+ "beir_cqadupstack_programmers_201844": [
+  "5fd18df8fd6fcaba"
+ ],
+ "beir_cqadupstack_programmers_201894": [
+  "0fe710b5d2113cea"
+ ],
+ "beir_cqadupstack_programmers_202273": [
+  "1d4efd7e8cc29368",
+  "c7bb3cd0e9970ef2"
+ ],
+ "beir_cqadupstack_programmers_202770": [
+  "63c881b7ea3b773a"
+ ],
+ "beir_cqadupstack_programmers_202804": [
+  "2eee00f1e1ca9ff9"
+ ],
+ "beir_cqadupstack_programmers_202889": [
+  "8c6bfdfc2ec1b44e",
+  "d455bc603d23a689"
+ ],
+ "beir_cqadupstack_programmers_202903": [
+  "2541f018cd7709fd"
+ ],
+ "beir_cqadupstack_programmers_203362": [
+  "1c1db90c6d3169b2"
+ ],
+ "beir_cqadupstack_programmers_203469": [
+  "4b6e9598aba1a1d9",
+  "e84c17732df369a0"
+ ],
+ "beir_cqadupstack_programmers_203483": [
+  "cd6dd9b9c9a2d703"
+ ],
+ "beir_cqadupstack_programmers_203776": [
+  "1e1ee8ca3157a5a6"
+ ],
+ "beir_cqadupstack_programmers_203970": [
+  "b3cc54d6fda2b810"
+ ],
+ "beir_cqadupstack_programmers_204206": [
+  "3615cbaea58e541d"
+ ],
+ "beir_cqadupstack_programmers_204410": [
+  "c95eba6fc1814dae"
+ ],
+ "beir_cqadupstack_programmers_204443": [
+  "282b4ece0e694707"
+ ],
+ "beir_cqadupstack_programmers_204521": [
+  "e1b5100f0e8ed8e5"
+ ],
+ "beir_cqadupstack_programmers_204580": [
+  "2461aca3dcb25092"
+ ],
+ "beir_cqadupstack_programmers_204840": [
+  "a6774576acf3bf7d"
+ ],
+ "beir_cqadupstack_programmers_204938": [
+  "7b3a8c6a7c864950",
+  "bf9fcb77573c9e39"
+ ],
+ "beir_cqadupstack_programmers_205279": [
+  "489d287935b85599"
+ ],
+ "beir_cqadupstack_programmers_205359": [
+  "6926df5bcf24dc9b"
+ ],
+ "beir_cqadupstack_programmers_205562": [
+  "b2cead3ce7f540db"
+ ],
+ "beir_cqadupstack_programmers_205638": [
+  "0d1bfe584705976c",
+  "62cd1cbc5c8d07eb"
+ ],
+ "beir_cqadupstack_programmers_206199": [
+  "05c479d0a96f4bfa",
+  "b66e19a097276d09",
+  "ddda452036129809"
+ ],
+ "beir_cqadupstack_programmers_206254": [
+  "0946c19d007a9b7c",
+  "0bd6f0f621bde140",
+  "bd0e1881c59fe962",
+  "cacaf4e8910e8335"
+ ],
+ "beir_cqadupstack_programmers_20653": [
+  "576fd24099331460",
+  "5bc04a8a8b22fc49",
+  "80eeb63be1432503",
+  "e9de80b8c82471a1"
+ ],
+ "beir_cqadupstack_programmers_206754": [
+  "04cdbcdee8fc8916",
+  "4d247788e189768f",
+  "5b69e01de8f191a7",
+  "6c2356cf196baadf",
+  "8ce4a3b3b681ffef",
+  "c1d6854905252db0",
+  "c708e3a711318c43",
+  "e0c54ee1a73e0663"
+ ],
+ "beir_cqadupstack_programmers_206755": [
+  "1218182d9e818738",
+  "3756546fdffbb49e",
+  "62b592af527aa727",
+  "8178ebb6849f0c16",
+  "896095ae820fb6a1"
+ ],
+ "beir_cqadupstack_programmers_206816": [
+  "1391e0db2db95df8",
+  "7e6c50ebdccea654",
+  "b6b85567a0f53f12",
+  "c5aa9cd299722b0c"
+ ],
+ "beir_cqadupstack_programmers_20684": [
+  "6434c6a2589b01f8"
+ ],
+ "beir_cqadupstack_programmers_207815": [
+  "2515d8e500ef34aa",
+  "e170a43c7adb2017"
+ ],
+ "beir_cqadupstack_programmers_208698": [
+  "00ce707d8faa084c",
+  "18d1192b3d920eb4"
+ ],
+ "beir_cqadupstack_programmers_208815": [
+  "a103bea7972ac8f6"
+ ],
+ "beir_cqadupstack_programmers_208867": [
+  "659b55a4110f7c47"
+ ],
+ "beir_cqadupstack_programmers_208976": [
+  "787a2024b52e82ff"
+ ],
+ "beir_cqadupstack_programmers_209070": [
+  "6096b38ee9adf11b",
+  "c5ec180bc86b2675"
+ ],
+ "beir_cqadupstack_programmers_209129": [
+  "0e98a9f7ac95ed4f",
+  "931d17c95356b8bb"
+ ],
+ "beir_cqadupstack_programmers_209479": [
+  "71c326f5a7160748",
+  "f27eabeb0560c51b"
+ ],
+ "beir_cqadupstack_programmers_209609": [
+  "14544521379e9845"
+ ],
+ "beir_cqadupstack_programmers_209764": [
+  "e630371952a9df53"
+ ],
+ "beir_cqadupstack_programmers_209857": [
+  "deb490a8a42b2019"
+ ],
+ "beir_cqadupstack_programmers_210049": [
+  "f0aadddbb4b7d1a8"
+ ],
+ "beir_cqadupstack_programmers_210327": [
+  "5e00996438dbc34b",
+  "6ce46ffab9d47c95"
+ ],
+ "beir_cqadupstack_programmers_210346": [
+  "851bf068290c5f40"
+ ],
+ "beir_cqadupstack_programmers_210360": [
+  "bebc43234b3f24a6"
+ ],
+ "beir_cqadupstack_programmers_210472": [
+  "35a57ddac8048ef4",
+  "f40d5fbe987a8f53"
+ ],
+ "beir_cqadupstack_programmers_210496": [
+  "faa42dcdebe9cabc"
+ ],
+ "beir_cqadupstack_programmers_210532": [
+  "68e5bf79f50e6419"
+ ],
+ "beir_cqadupstack_programmers_210623": [
+  "32e10a989ffd1e45",
+  "429bdc132549f156",
+  "92f8fdf94427e4c1",
+  "9d64a7e2fedb8c71",
+  "bf73ed63ffc6a1b4"
+ ],
+ "beir_cqadupstack_programmers_210635": [
+  "02ae1d76b04476c0"
+ ],
+ "beir_cqadupstack_programmers_210637": [
+  "2e6e65fa2cad632e"
+ ],
+ "beir_cqadupstack_programmers_210693": [
+  "21b57c97a8782b74"
+ ],
+ "beir_cqadupstack_programmers_210864": [
+  "bf41ebb0189018b5"
+ ],
+ "beir_cqadupstack_programmers_211276": [
+  "afe8708904b3c098"
+ ],
+ "beir_cqadupstack_programmers_211319": [
+  "8cda31d0c7e95518"
+ ],
+ "beir_cqadupstack_programmers_211477": [
+  "0fc04adc0f0a33ad",
+  "981e54bf8b83e893",
+  "a6408d35c80af3c5",
+  "cbc9ba256c807f2a"
+ ],
+ "beir_cqadupstack_programmers_211610": [
+  "216617a97b2603cb",
+  "796d8f73f669c5b7",
+  "7ef675a3f9a157d4",
+  "9453db0f6ff755b1"
+ ],
+ "beir_cqadupstack_programmers_211640": [
+  "e9477e8588f1cfa2"
+ ],
+ "beir_cqadupstack_programmers_211678": [
+  "08132786ce1c6e10",
+  "8c6dc61a307a8d85",
+  "b19c7983456709ef",
+  "e268d1841882c301",
+  "faebf88c5f01e2e5"
+ ],
+ "beir_cqadupstack_programmers_21230": [
+  "4c48d81bdb71e6c5"
+ ],
+ "beir_cqadupstack_programmers_212300": [
+  "38f2c276ead52f07"
+ ],
+ "beir_cqadupstack_programmers_21256": [
+  "3ff4397f7d4c3fc9"
+ ],
+ "beir_cqadupstack_programmers_212575": [
+  "42c9e15c7c065d15"
+ ],
+ "beir_cqadupstack_programmers_212932": [
+  "dcfd08b43154e6e3"
+ ],
+ "beir_cqadupstack_programmers_213070": [
+  "ddc8a4e60fc70262"
+ ],
+ "beir_cqadupstack_programmers_213173": [
+  "072108bc0b990869"
+ ],
+ "beir_cqadupstack_programmers_213449": [
+  "05f2c2c2fad8e6fe"
+ ],
+ "beir_cqadupstack_programmers_213452": [
+  "3943d20649801efc",
+  "65a7c91019a9cc7e",
+  "b2e61e2f201cd700"
+ ],
+ "beir_cqadupstack_programmers_213603": [
+  "b971217233501972"
+ ],
+ "beir_cqadupstack_programmers_21397": [
+  "74299ccdfc37db94",
+  "e86723e47c1b673b"
+ ],
+ "beir_cqadupstack_programmers_21403": [
+  "29af385e2fced0b1"
+ ],
+ "beir_cqadupstack_programmers_214494": [
+  "4698a9edc7d438e5"
+ ],
+ "beir_cqadupstack_programmers_214734": [
+  "46c3cbfab9c74fe0",
+  "529ba21ea39e7ce1"
+ ],
+ "beir_cqadupstack_programmers_214784": [
+  "1af51456b4d3c937",
+  "d60fe94683290581"
+ ],
+ "beir_cqadupstack_programmers_215042": [
+  "67e38dd99aedf134"
+ ],
+ "beir_cqadupstack_programmers_215235": [
+  "077fa5d9bbc1c554",
+  "14cc15738f3ff6a8",
+  "195e71e1d75813f7",
+  "1ec42f7d0d4a89f8",
+  "a4b4077aae6c130f",
+  "b1d9202aa5035b81",
+  "c34a6e1ac16ce98e",
+  "fba20dffc08d7489"
+ ],
+ "beir_cqadupstack_programmers_215248": [
+  "ffa8b48337c6e00a"
+ ],
+ "beir_cqadupstack_programmers_215427": [
+  "1836be3059fc36e2"
+ ],
+ "beir_cqadupstack_programmers_215474": [
+  "6c884acb13a6a58c",
+  "8e3f6e30ca73a0f4",
+  "e5df47173d62901d"
+ ],
+ "beir_cqadupstack_programmers_215703": [
+  "2e9d4bc4d293340a"
+ ],
+ "beir_cqadupstack_programmers_215727": [
+  "c8502bb1cfd6ab7d"
+ ],
+ "beir_cqadupstack_programmers_215826": [
+  "74c23de07e0833a6"
+ ],
+ "beir_cqadupstack_programmers_216195": [
+  "a09aa5b57ee752f0"
+ ],
+ "beir_cqadupstack_programmers_216301": [
+  "b3f7da873c3b532c"
+ ],
+ "beir_cqadupstack_programmers_216639": [
+  "dfdf02e010c71317"
+ ],
+ "beir_cqadupstack_programmers_218121": [
+  "035cefe1e7f9864d",
+  "04d146b40bce0b37",
+  "100f4764051b8db6",
+  "11565c3c8c9d5d5f",
+  "1c58a2fc1e75dd48",
+  "36d73946b3d23449",
+  "44ec8b1d5084c90e",
+  "4a99193d240eef38",
+  "5639d43c608f2554",
+  "62b91e80734cfef3",
+  "70a533aefc6d2507",
+  "9c6f5517b9e8a16c",
+  "a50ceb93e5f83614",
+  "a9f4a3796e63a02e",
+  "ad2103bb309c90dd",
+  "ae0f4c3b4dfba62e",
+  "cdf89c46b0486ac1",
+  "d8dfd0c2065f63f9",
+  "f17c87038568cf8a",
+  "f507e3966a5ab211",
+  "ff9f43281016d3e3",
+  "ffb737f828ae09c6"
+ ],
+ "beir_cqadupstack_programmers_218184": [
+  "b5f1652f84955aec"
+ ],
+ "beir_cqadupstack_programmers_218447": [
+  "6b78d8db65e058f2"
+ ],
+ "beir_cqadupstack_programmers_218869": [
+  "e7b55e67c8ecf428"
+ ],
+ "beir_cqadupstack_programmers_219028": [
+  "0ef3cd38afc61f9c"
+ ],
+ "beir_cqadupstack_programmers_21907": [
+  "f7045b5bc4172825"
+ ],
+ "beir_cqadupstack_programmers_219198": [
+  "3f68348d09f4a641"
+ ],
+ "beir_cqadupstack_programmers_220023": [
+  "5bbbe18efa9e75d4"
+ ],
+ "beir_cqadupstack_programmers_220049": [
+  "9425c9558d6bb23a"
+ ],
+ "beir_cqadupstack_programmers_220343": [
+  "061cec7f94755436"
+ ],
+ "beir_cqadupstack_programmers_220444": [
+  "35c1a260ee1bfb18",
+  "aee02ea9a43e4f27"
+ ],
+ "beir_cqadupstack_programmers_220872": [
+  "4d83e079c98115c0",
+  "7bcbd3cb0fdb555f",
+  "93a15fb925459900",
+  "9a4d8c00675ea7bc",
+  "e2e88b4c68bb849a"
+ ],
+ "beir_cqadupstack_programmers_220890": [
+  "02a8d98cac5c1444"
+ ],
+ "beir_cqadupstack_programmers_221009": [
+  "f8a837d01dba6e73"
+ ],
+ "beir_cqadupstack_programmers_221030": [
+  "a1d1fd6399b2b037"
+ ],
+ "beir_cqadupstack_programmers_221234": [
+  "eb2fad1f95e67201"
+ ],
+ "beir_cqadupstack_programmers_221365": [
+  "a9f4952920ed70c9"
+ ],
+ "beir_cqadupstack_programmers_22146": [
+  "82c0606891784498"
+ ],
+ "beir_cqadupstack_programmers_221615": [
+  "d5b2e07ccf9d978b"
+ ],
+ "beir_cqadupstack_programmers_221619": [
+  "f0c2ec13fbf2e681"
+ ],
+ "beir_cqadupstack_programmers_222362": [
+  "3a7662b32d42606e",
+  "78de2ba2b6da7e83"
+ ],
+ "beir_cqadupstack_programmers_222464": [
+  "9adaa4c9b39d239c"
+ ],
+ "beir_cqadupstack_programmers_222508": [
+  "5fc12162fe3486f1",
+  "ab274cbb598b32b8"
+ ],
+ "beir_cqadupstack_programmers_223027": [
+  "1e022f1315f8d8a1",
+  "4aea8b85e193979c",
+  "4d385c8f0a28c2cb",
+  "55b43b3705c6df24",
+  "6f487d6f08f3d158",
+  "a5943b7a217246a5",
+  "edf029de2f8ef331"
+ ],
+ "beir_cqadupstack_programmers_223148": [
+  "670f73c6bc66b831"
+ ],
+ "beir_cqadupstack_programmers_223250": [
+  "6b5101be0552397b"
+ ],
+ "beir_cqadupstack_programmers_223596": [
+  "cc39ece737920930"
+ ],
+ "beir_cqadupstack_programmers_223718": [
+  "02c9ff407fea23b1",
+  "474a8825bf0e9100",
+  "96b85ae94454e36b",
+  "b8cc1e38da572d5a",
+  "e1cc96c59092caa8"
+ ],
+ "beir_cqadupstack_programmers_223815": [
+  "f2bbaa6e511ef05b"
+ ],
+ "beir_cqadupstack_programmers_224036": [
+  "52b3af091d668f1c"
+ ],
+ "beir_cqadupstack_programmers_224434": [
+  "2bccb89a705aac84"
+ ],
+ "beir_cqadupstack_programmers_224752": [
+  "5a9fabe5df6682f7"
+ ],
+ "beir_cqadupstack_programmers_224835": [
+  "9e3ade64148b85d0"
+ ],
+ "beir_cqadupstack_programmers_225153": [
+  "aa46557246c289b7"
+ ],
+ "beir_cqadupstack_programmers_225354": [
+  "41e32390a178e9bc"
+ ],
+ "beir_cqadupstack_programmers_225387": [
+  "aebaef670fdc24a7"
+ ],
+ "beir_cqadupstack_programmers_225504": [
+  "08fad159017a4ded",
+  "6a5d76c3b5a2748d",
+  "7fe5f58ed87e4ff9",
+  "b90702c9c191e653",
+  "c4739f3e08792e08",
+  "cfd715f16ec76ffa",
+  "ff4d67c7ad55083d"
+ ],
+ "beir_cqadupstack_programmers_225870": [
+  "ae74e94940eb92ef"
+ ],
+ "beir_cqadupstack_programmers_225931": [
+  "4883090b23fd8201"
+ ],
+ "beir_cqadupstack_programmers_226233": [
+  "c157b25d53b44ca4"
+ ],
+ "beir_cqadupstack_programmers_226357": [
+  "f299a38156a1d66c"
+ ],
+ "beir_cqadupstack_programmers_227720": [
+  "40808ede17057226",
+  "889ea8c7474ba316"
+ ],
+ "beir_cqadupstack_programmers_227818": [
+  "ab3f7586aa7fe135"
+ ],
+ "beir_cqadupstack_programmers_227993": [
+  "3e53e884bf7d81f8",
+  "cdf576857a309583"
+ ],
+ "beir_cqadupstack_programmers_228187": [
+  "534c6027e4396ff4"
+ ],
+ "beir_cqadupstack_programmers_228584": [
+  "07b48e27a9e737ae",
+  "672fbc6bf5f7a747"
+ ],
+ "beir_cqadupstack_programmers_228848": [
+  "97fb405196d79a22"
+ ],
+ "beir_cqadupstack_programmers_228973": [
+  "562928ffd59c581e"
+ ],
+ "beir_cqadupstack_programmers_229170": [
+  "a6238a41e159e2a0"
+ ],
+ "beir_cqadupstack_programmers_229657": [
+  "5618391693fecdd1",
+  "85aee2ba39b7f419",
+  "9548801dba770589",
+  "9f54d9f6ab13683b",
+  "b52b4dccbd43110e",
+  "c642355404edd0e9"
+ ],
+ "beir_cqadupstack_programmers_230145": [
+  "5268cc6f9042af62"
+ ],
+ "beir_cqadupstack_programmers_230199": [
+  "78ae87bb6fff4ccf"
+ ],
+ "beir_cqadupstack_programmers_230206": [
+  "826895ffaa916f2f"
+ ],
+ "beir_cqadupstack_programmers_23021": [
+  "1ccd5d47ac34ea31"
+ ],
+ "beir_cqadupstack_programmers_230250": [
+  "0ffa384ae9d51474"
+ ],
+ "beir_cqadupstack_programmers_230280": [
+  "6363636f7bb520a2",
+  "aae3181bfba457fe",
+  "e2dc7d5b4870f5b0"
+ ],
+ "beir_cqadupstack_programmers_230534": [
+  "653e14b73d0875fc",
+  "bcc3b48d98f792f7",
+  "e38b20d6d47b3ba0"
+ ],
+ "beir_cqadupstack_programmers_230604": [
+  "ee752aa7f4dfc28d"
+ ],
+ "beir_cqadupstack_programmers_230778": [
+  "2fffe70f6777e50e",
+  "3850da4c6de9b809"
+ ],
+ "beir_cqadupstack_programmers_231491": [
+  "d6badc4404b22686"
+ ],
+ "beir_cqadupstack_programmers_23276": [
+  "3ec56335aadf8a4b",
+  "52c92c45a96d4dfc"
+ ],
+ "beir_cqadupstack_programmers_232812": [
+  "2f5a859eb0fa247f",
+  "805bc240ffde89d7",
+  "fb096221be6c626b"
+ ],
+ "beir_cqadupstack_programmers_232843": [
+  "40a0ef3a7e85200c",
+  "7e68dd1f78a4f763",
+  "f4e2ed229c80735e"
+ ],
+ "beir_cqadupstack_programmers_233038": [
+  "aa34eee388a0d78a"
+ ],
+ "beir_cqadupstack_programmers_23313": [
+  "3db8aee2687ad601",
+  "403bb3a111a947d5"
+ ],
+ "beir_cqadupstack_programmers_233342": [
+  "564b7388aaae622c",
+  "699c2ffb57e928e2",
+  "d3410096f1bb7c37"
+ ],
+ "beir_cqadupstack_programmers_233503": [
+  "a13886465ce399aa"
+ ],
+ "beir_cqadupstack_programmers_233592": [
+  "7e133d074abb36df"
+ ],
+ "beir_cqadupstack_programmers_233615": [
+  "e3d59425ebbe11bb",
+  "f6623f407caaad2e"
+ ],
+ "beir_cqadupstack_programmers_233981": [
+  "6c5e28aed3fb89a4"
+ ],
+ "beir_cqadupstack_programmers_234001": [
+  "de23b6c89a55df9e",
+  "f9382b1364e282eb"
+ ],
+ "beir_cqadupstack_programmers_234066": [
+  "a9e3dda4e4a51c49"
+ ],
+ "beir_cqadupstack_programmers_234449": [
+  "3a2a4eb634bcc4d9",
+  "6d4abd84ff21a50a"
+ ],
+ "beir_cqadupstack_programmers_234511": [
+  "4c87f3fb2d4a2e61",
+  "7c66795532392238"
+ ],
+ "beir_cqadupstack_programmers_234620": [
+  "0472f63bca59e795",
+  "1562edf0345a7f49",
+  "7bb56a4a1dae8bd5"
+ ],
+ "beir_cqadupstack_programmers_234820": [
+  "085cecce4176358a",
+  "424b6b76fcd93ecb",
+  "80801f9bbcd776bd",
+  "995ec7b4c41f9b76",
+  "dca3d7ce2fbdc5a2",
+  "f5f7b839827a3a6a"
+ ],
+ "beir_cqadupstack_programmers_234962": [
+  "1943c3b9f8f064b3",
+  "a09ec0dbf980ef80",
+  "bfebea0768bb1d18",
+  "dcae51c6371ef780"
+ ],
+ "beir_cqadupstack_programmers_23507": [
+  "e4eb3c9778d7f9e7"
+ ],
+ "beir_cqadupstack_programmers_235283": [
+  "b5c166063a9c628b"
+ ],
+ "beir_cqadupstack_programmers_235468": [
+  "54a703d724ae268d"
+ ],
+ "beir_cqadupstack_programmers_235645": [
+  "5828e3068f8ee8b6",
+  "65a437dedd113759",
+  "e918ec6fc2d02e74"
+ ],
+ "beir_cqadupstack_programmers_236370": [
+  "68525b24c8b80599"
+ ],
+ "beir_cqadupstack_programmers_236415": [
+  "52abaaf8612a36af"
+ ],
+ "beir_cqadupstack_programmers_236473": [
+  "675aafb78a004a5f"
+ ],
+ "beir_cqadupstack_programmers_23652": [
+  "58071fd4c4f9d3be"
+ ],
+ "beir_cqadupstack_programmers_236571": [
+  "0f87005ead349975",
+  "b24d74cc617e7800"
+ ],
+ "beir_cqadupstack_programmers_236853": [
+  "65cf022f0a6c735a"
+ ],
+ "beir_cqadupstack_programmers_236903": [
+  "40b44fd6a3575a8d"
+ ],
+ "beir_cqadupstack_programmers_237065": [
+  "aafaa8b48d8d4c4c"
+ ],
+ "beir_cqadupstack_programmers_237157": [
+  "095b134fc40a100d"
+ ],
+ "beir_cqadupstack_programmers_237226": [
+  "96f0697a3646d6a5"
+ ],
+ "beir_cqadupstack_programmers_237431": [
+  "ced0ca16a21bda3c"
+ ],
+ "beir_cqadupstack_programmers_237577": [
+  "b0815956ff0c7654"
+ ],
+ "beir_cqadupstack_programmers_237584": [
+  "9eaedbfdd9cb4d7a"
+ ],
+ "beir_cqadupstack_programmers_237593": [
+  "ce725ba9fc26c3dc"
+ ],
+ "beir_cqadupstack_programmers_237738": [
+  "5e7660ad894f6dde"
+ ],
+ "beir_cqadupstack_programmers_237935": [
+  "cd03d51ce047b04e"
+ ],
+ "beir_cqadupstack_programmers_238057": [
+  "2360b647b105ccea"
+ ],
+ "beir_cqadupstack_programmers_238325": [
+  "4e0c803947419903",
+  "ccee44ae68df2bd7"
+ ],
+ "beir_cqadupstack_programmers_238386": [
+  "7fdeaea435c2bcf9"
+ ],
+ "beir_cqadupstack_programmers_238546": [
+  "d955e522466d3d8a"
+ ],
+ "beir_cqadupstack_programmers_239016": [
+  "545ed16a844c097e"
+ ],
+ "beir_cqadupstack_programmers_239210": [
+  "db4a07b4a4e623a3"
+ ],
+ "beir_cqadupstack_programmers_240454": [
+  "9e6548862587a8df"
+ ],
+ "beir_cqadupstack_programmers_240612": [
+  "40f6267bdb505278"
+ ],
+ "beir_cqadupstack_programmers_240734": [
+  "55445106096b96d8"
+ ],
+ "beir_cqadupstack_programmers_241389": [
+  "9614536bc22624ad"
+ ],
+ "beir_cqadupstack_programmers_241411": [
+  "3d7cc74e3209ed44"
+ ],
+ "beir_cqadupstack_programmers_24170": [
+  "c982140142aadc37"
+ ],
+ "beir_cqadupstack_programmers_242610": [
+  "201467676453b8fd",
+  "d6bfed9a08a8f943"
+ ],
+ "beir_cqadupstack_programmers_243347": [
+  "7b3ffb2e4e74e1fa"
+ ],
+ "beir_cqadupstack_programmers_244705": [
+  "255adf94b48cf0e5",
+  "29cf1e733590031f",
+  "ab82156f4e2101c9",
+  "d019e92ed7541460",
+  "dadb9c2c1b2eab4f",
+  "e11eab49ce6f2ebf"
+ ],
+ "beir_cqadupstack_programmers_244866": [
+  "9bced7565bcfa689"
+ ],
+ "beir_cqadupstack_programmers_245115": [
+  "7bdfc2752ab2a6fb",
+  "c245d431f95d3c5c"
+ ],
+ "beir_cqadupstack_programmers_245274": [
+  "1dc06142b8af3319"
+ ],
+ "beir_cqadupstack_programmers_24542": [
+  "16c64dc506efda3b"
+ ],
+ "beir_cqadupstack_programmers_246066": [
+  "a2fbdddfe0550e7e"
+ ],
+ "beir_cqadupstack_programmers_246354": [
+  "7b5ba1b0bfd31b44",
+  "b762fba0ed9159f6",
+  "c5ccdaaf340e61c3",
+  "df6ff9bdf0d07e92",
+  "e7f756469d656b5d",
+  "f86ba1d871021eaf"
+ ],
+ "beir_cqadupstack_programmers_246532": [
+  "8dfafdfdddab4bec"
+ ],
+ "beir_cqadupstack_programmers_246568": [
+  "39230d14168446dd",
+  "538269107f4001e4"
+ ],
+ "beir_cqadupstack_programmers_246634": [
+  "9c30ef8fbefc0bce"
+ ],
+ "beir_cqadupstack_programmers_246813": [
+  "2ddc4a2fcc87d5cb"
+ ],
+ "beir_cqadupstack_programmers_247103": [
+  "1de0ac5e28bd7ed9",
+  "8fcbbcb2eca92c5b",
+  "9d76ee60b14c5011",
+  "b5a47b9a878697f4"
+ ],
+ "beir_cqadupstack_programmers_247135": [
+  "d17515d82ed0ba5e"
+ ],
+ "beir_cqadupstack_programmers_247382": [
+  "0d9a6e00b8812db2"
+ ],
+ "beir_cqadupstack_programmers_24804": [
+  "eb792607e983ca3f"
+ ],
+ "beir_cqadupstack_programmers_249892": [
+  "73e3c170c028911b"
+ ],
+ "beir_cqadupstack_programmers_250164": [
+  "75b90b9f4fc8b3de"
+ ],
+ "beir_cqadupstack_programmers_250203": [
+  "c8f75c4c59556501"
+ ],
+ "beir_cqadupstack_programmers_250291": [
+  "d8bfb4f12cb5137f"
+ ],
+ "beir_cqadupstack_programmers_25063": [
+  "0f550ea410b023f8"
+ ],
+ "beir_cqadupstack_programmers_250707": [
+  "ba67b72794d4c25f"
+ ],
+ "beir_cqadupstack_programmers_250953": [
+  "a52c456b33538f7b"
+ ],
+ "beir_cqadupstack_programmers_251126": [
+  "f4ebd16f18a63153"
+ ],
+ "beir_cqadupstack_programmers_251222": [
+  "70218c03acf4d2fa"
+ ],
+ "beir_cqadupstack_programmers_251643": [
+  "f3b40de895492a13"
+ ],
+ "beir_cqadupstack_programmers_251707": [
+  "80c53570511c6e38"
+ ],
+ "beir_cqadupstack_programmers_251756": [
+  "5b3664b475e896aa",
+  "609dd512957b3c5c",
+  "66cadefe9a9ccf34",
+  "8f86da9e556e792a"
+ ],
+ "beir_cqadupstack_programmers_25234": [
+  "2675953190f1a8af"
+ ],
+ "beir_cqadupstack_programmers_252495": [
+  "f9c1e7bc6655bef0"
+ ],
+ "beir_cqadupstack_programmers_252532": [
+  "5dd251c52f8a211b"
+ ],
+ "beir_cqadupstack_programmers_252595": [
+  "c5ea5b1c2defa929"
+ ],
+ "beir_cqadupstack_programmers_253026": [
+  "f6b233dec2049d67"
+ ],
+ "beir_cqadupstack_programmers_253042": [
+  "1202c4d298691fed",
+  "6416301fc6ac82a5",
+  "9049c90c331fea2b",
+  "b652ced754170ced",
+  "e493ea6aa7789127",
+  "fa703ac515a89292"
+ ],
+ "beir_cqadupstack_programmers_253267": [
+  "3806440b099a5731"
+ ],
+ "beir_cqadupstack_programmers_253453": [
+  "8bdf112575a7547f"
+ ],
+ "beir_cqadupstack_programmers_253496": [
+  "ed556590a77d4207"
+ ],
+ "beir_cqadupstack_programmers_253650": [
+  "d221611fb65442e1",
+  "fb84de29ef85c0de"
+ ],
+ "beir_cqadupstack_programmers_254008": [
+  "efc5aff203b31b27"
+ ],
+ "beir_cqadupstack_programmers_254083": [
+  "8b1103d865be6eaf"
+ ],
+ "beir_cqadupstack_programmers_254339": [
+  "332f790e2e60aeef",
+  "3af132ba18b3b830"
+ ],
+ "beir_cqadupstack_programmers_254424": [
+  "271201a36b6717bf"
+ ],
+ "beir_cqadupstack_programmers_254936": [
+  "20d7f873964ca655",
+  "239b1fc42a8849ae"
+ ],
+ "beir_cqadupstack_programmers_255031": [
+  "f95c0020e797e486"
+ ],
+ "beir_cqadupstack_programmers_255912": [
+  "3c7b8dea7eed3970"
+ ],
+ "beir_cqadupstack_programmers_25600": [
+  "da708d2899e6e9d2"
+ ],
+ "beir_cqadupstack_programmers_257": [
+  "5aa68e2dfac3a83b"
+ ],
+ "beir_cqadupstack_programmers_26030": [
+  "8a41af311553ed8f"
+ ],
+ "beir_cqadupstack_programmers_26371": [
+  "2de9be151f49b759"
+ ],
+ "beir_cqadupstack_programmers_2654": [
+  "417ad76b583da2bc"
+ ],
+ "beir_cqadupstack_programmers_26642": [
+  "2f6ee686ebf74df3"
+ ],
+ "beir_cqadupstack_programmers_26901": [
+  "8340dce26e13faa0"
+ ],
+ "beir_cqadupstack_programmers_27022": [
+  "e2e3fc3f55a13465"
+ ],
+ "beir_cqadupstack_programmers_27410": [
+  "3eea78ae1789b51e",
+  "4a69dabaafb5ca47",
+  "c177539fc4496e63",
+  "ff986b5d1f6f1985"
+ ],
+ "beir_cqadupstack_programmers_2757": [
+  "1fb6a078491d2570",
+  "563fa05156929bfc",
+  "7ca8d52cef43dac0"
+ ],
+ "beir_cqadupstack_programmers_28050": [
+  "12182509a4ad3fa0"
+ ],
+ "beir_cqadupstack_programmers_28379": [
+  "5554c459a11e8778",
+  "c8e9de8e7779db57",
+  "e23658ac6c925fca"
+ ],
+ "beir_cqadupstack_programmers_28825": [
+  "14d1860084fed098"
+ ],
+ "beir_cqadupstack_programmers_29109": [
+  "fffdbe78cb902988"
+ ],
+ "beir_cqadupstack_programmers_29513": [
+  "1a1fff281014c4c7",
+  "b084735d4b4eae9f"
+ ],
+ "beir_cqadupstack_programmers_29534": [
+  "69f0a6a58d4c02df",
+  "e4b9955a0acf3629"
+ ],
+ "beir_cqadupstack_programmers_31558": [
+  "b9b48eb9031d5fe0",
+  "f46a86ec09487c5e"
+ ],
+ "beir_cqadupstack_programmers_32425": [
+  "747c83dd6b690ed5"
+ ],
+ "beir_cqadupstack_programmers_32482": [
+  "e07b8f5df3616d83"
+ ],
+ "beir_cqadupstack_programmers_32571": [
+  "91ee3413cacbc013"
+ ],
+ "beir_cqadupstack_programmers_32617": [
+  "38fd826f99bfaa77"
+ ],
+ "beir_cqadupstack_programmers_32956": [
+  "1d90460b951a14e0"
+ ],
+ "beir_cqadupstack_programmers_34173": [
+  "6ae60c23d47ab56c",
+  "d95099e664b43884",
+  "e6fd533b3b383932"
+ ],
+ "beir_cqadupstack_programmers_34485": [
+  "72d93b1c72e548e7",
+  "d325f0cc38d3ca5f"
+ ],
+ "beir_cqadupstack_programmers_34559": [
+  "28e41d1375d3fef0",
+  "d74b01696c0ead91"
+ ],
+ "beir_cqadupstack_programmers_35074": [
+  "5516be0d7a883e00",
+  "ef854a08f2de066e"
+ ],
+ "beir_cqadupstack_programmers_35610": [
+  "b678f028a97d6f45"
+ ],
+ "beir_cqadupstack_programmers_35925": [
+  "30cf7b046d854ab7",
+  "a7ddfbf45123bdb7",
+  "b7ad0c826598cb05",
+  "ec63411a8aecb5d8"
+ ],
+ "beir_cqadupstack_programmers_36175": [
+  "572c09a59cb7f26c"
+ ],
+ "beir_cqadupstack_programmers_36297": [
+  "54c304bd0864323f"
+ ],
+ "beir_cqadupstack_programmers_36561": [
+  "e598d085cf50092e"
+ ],
+ "beir_cqadupstack_programmers_36731": [
+  "4212a08b567c6db4"
+ ],
+ "beir_cqadupstack_programmers_36925": [
+  "375215f7b4f4b5c5"
+ ],
+ "beir_cqadupstack_programmers_36961": [
+  "f93a8011d371ae38"
+ ],
+ "beir_cqadupstack_programmers_37029": [
+  "0d8325f554ace5f7",
+  "3def47e53107f465"
+ ],
+ "beir_cqadupstack_programmers_37249": [
+  "005e70b0066642d2",
+  "3c1f9674323f8786",
+  "4c019b62b2e67bb9",
+  "7290150503f74474",
+  "9256d5fdc09a0681"
+ ],
+ "beir_cqadupstack_programmers_3747": [
+  "0166f6a99a00082d",
+  "032997a73be2892a",
+  "04bb81d8118bd4b9",
+  "0657970ecade262a",
+  "0b96b695b873b681",
+  "0d4cd659a4a1d9ab",
+  "0fffeaad6e500678",
+  "103e71fe1d35db3f",
+  "11887d932c8fb3ae",
+  "1219b676ffadb510",
+  "12f68ab01e2cbb64",
+  "1390fd0a78125a22",
+  "15374eb703b17c1b",
+  "1720871d86541bab",
+  "1778584ebf06cb39",
+  "17d70ad544765ec4",
+  "194565d0c4694f1e",
+  "1a117c5aa0aee930",
+  "1b42ed8dad6ea186",
+  "1f695b4f9de2f8bc",
+  "235aaaf6323596aa",
+  "2a30e0b468827088",
+  "2a5636fbcfd8d5a6",
+  "2c1aee828794412c",
+  "2fd81b70e88192f4",
+  "3428b3d516d76845",
+  "361462706c2a041e",
+  "37819d0726413ae3",
+  "38d939897810b484",
+  "391e011e91a1323a",
+  "3a1c677b09c637fb",
+  "3b559866de5377d6",
+  "3c08f21311020f41",
+  "3cafc0d27f6e40dc",
+  "4031d4696253a43b",
+  "43a0bb69f95a330c",
+  "43ee919d198dcea2",
+  "46f450373242444d",
+  "4b5552bb01fdf7b1",
+  "4ffd7937251c4639",
+  "509ef2aff744b374",
+  "5116f3dd2745cd18",
+  "55f605f566e97294",
+  "562ca4e9621fa5d8",
+  "5668d61a4adb5a4f",
+  "59c60b89ace60c52",
+  "5a883c4c1aaa71bc",
+  "5d3d263e082c4c74",
+  "5ee4acecdbcaebd7",
+  "5ef7f381b0edd271",
+  "5fdaaf27d91458a1",
+  "6388d081ea709c59",
+  "63e32c2a294c8256",
+  "66906087739b9752",
+  "698badc62ccd4a7e",
+  "6aaabbd3c3e24c49",
+  "6de04ad73c3972de",
+  "73319ec7f8ee016b",
+  "73bd96b281472663",
+  "755378c3c0d41131",
+  "77120c8173035265",
+  "786f5beb246d6d2e",
+  "790cfc6f36650f9f",
+  "7927a8705c26e4fc",
+  "7a71d82d06287c1c",
+  "7c9b25c1a38ea2bf",
+  "815e511536011b1e",
+  "818f2d2e9f99368f",
+  "819fc3b8c3effef0",
+  "82aae3865b06d649",
+  "83164a287b767ed9",
+  "872f8dd5a1d17167",
+  "8b82b23bb3de4d20",
+  "8e1f17df52d5ed3f",
+  "8f2e13a39e28d470",
+  "8fa0b12b93962f55",
+  "909e0ed425f24916",
+  "90d396669ca12f82",
+  "948283f68a016865",
+  "976f0ea7b70366fd",
+  "98d1c097ba91f83b",
+  "9a997f30862225a2",
+  "9dd9f62136e0299f",
+  "a1b561e654aad019",
+  "a2afdb8f37361fab",
+  "a3cdfaeb6d4293bd",
+  "a4e4c8c96d14bb19",
+  "a96138dc39f8c425",
+  "a962189343f2d997",
+  "aba1ad17c0ad1ac2",
+  "ac7527a4158c0d62",
+  "ad6aba183abdd192",
+  "ad8dbefe20d2ef44",
+  "b05e426a0383d1fd",
+  "b393576ab1b2d932",
+  "b40f769890679527",
+  "b77f4d479bd5e98e",
+  "b8a08f49dddfbc2f",
+  "b930a62fa573f6bd",
+  "b956b9cfa35ab706",
+  "baa09cb026a27929",
+  "bce9dc90b9cbf92e",
+  "bd96968f5914e142",
+  "beca1724f44e1f07",
+  "befe947dbc2b48ac",
+  "bfe12d9eb40b4dc5",
+  "c01c93cead066a1e",
+  "c09f97db4a908b0a",
+  "c0f9c8d2f9f51185",
+  "c266498f7eb3c18c",
+  "c3e5cd9e6d86999c",
+  "c44638f606f3c212",
+  "c57fbb8137a1f90f",
+  "c5ae79eb1af61c12",
+  "c65b4e3e4eab4bd4",
+  "c6f3e752b1a43a7d",
+  "c8d6728a332f384c",
+  "c91945f6efc57a41",
+  "c96941ecc91e7922",
+  "cbbd59073c18df16",
+  "cbf5fda0d21077ca",
+  "cc6ddc56e68dc046",
+  "cced27dd370a8264",
+  "cfa1852d93c9b1ff",
+  "d0317cb3381315cd",
+  "d0b932dca7997989",
+  "d32410a84d034e8d",
+  "d38a7aa048d6fcad",
+  "d4fb37912d232194",
+  "d5d08c81164210a7",
+  "d66da8c101375a1a",
+  "d69b3c27823bd327",
+  "d85196e741d60f32",
+  "dc0083f0e9c473cd",
+  "dd417971e000bc83",
+  "de7caae30d98ed20",
+  "e474f5943e3474e1",
+  "e52aff0dddf65998",
+  "e540acf468974a72",
+  "e78df68aebda118d",
+  "e7daa0a709646e81",
+  "e92ad507ca40b4fc",
+  "ec3611119936a691",
+  "ed9c11f3260224f7",
+  "ee8f7f4f685f7796",
+  "f106bdb38193ccd8",
+  "f1096716267f997a",
+  "f866721e4a6c0b6c",
+  "f8c4cb26a30b2173",
+  "fa7a7121904aacbf"
+ ],
+ "beir_cqadupstack_programmers_3766": [
+  "1f9d14837abe2eaa"
+ ],
+ "beir_cqadupstack_programmers_37677": [
+  "96fb9771f88d6528"
+ ],
+ "beir_cqadupstack_programmers_37987": [
+  "31c43869de9a5f65"
+ ],
+ "beir_cqadupstack_programmers_38087": [
+  "b3e23c018550f0f2"
+ ],
+ "beir_cqadupstack_programmers_38265": [
+  "3e4159300a800dc1",
+  "d44a6051ec7b3bc1",
+  "e1b941824352a68c"
+ ],
+ "beir_cqadupstack_programmers_38566": [
+  "2f8247c7b122aab0",
+  "f5e59e14346722f3"
+ ],
+ "beir_cqadupstack_programmers_39282": [
+  "7174ea3594e4dfb1"
+ ],
+ "beir_cqadupstack_programmers_39378": [
+  "3077694a5f5b051f"
+ ],
+ "beir_cqadupstack_programmers_3997": [
+  "f335eaf8478e390e"
+ ],
+ "beir_cqadupstack_programmers_40063": [
+  "064fbec826509b16",
+  "f50f33406ba14791"
+ ],
+ "beir_cqadupstack_programmers_40297": [
+  "f8d9c65c76fbc675"
+ ],
+ "beir_cqadupstack_programmers_41545": [
+  "105c3f50f6838d0a",
+  "2f88c058b0da15ee"
+ ],
+ "beir_cqadupstack_programmers_41981": [
+  "24cf402c9adbee7e"
+ ],
+ "beir_cqadupstack_programmers_42817": [
+  "708c239acade9a32"
+ ],
+ "beir_cqadupstack_programmers_42938": [
+  "d1a9332b71a3bcec"
+ ],
+ "beir_cqadupstack_programmers_43086": [
+  "76c071597d48a807"
+ ],
+ "beir_cqadupstack_programmers_43729": [
+  "b6f672342ac4e95f",
+  "b7d130806673d7be",
+  "cdaf5c0e19698e48"
+ ],
+ "beir_cqadupstack_programmers_43796": [
+  "2fe4ced40bffa268"
+ ],
+ "beir_cqadupstack_programmers_44959": [
+  "99abd63f5eedad1f"
+ ],
+ "beir_cqadupstack_programmers_45378": [
+  "17381d004b889824",
+  "42dd25df87aa03f2",
+  "9190aacdcb85b0ab"
+ ],
+ "beir_cqadupstack_programmers_46252": [
+  "2f88f2320a39605e"
+ ],
+ "beir_cqadupstack_programmers_46434": [
+  "521aeb3105b166fa"
+ ],
+ "beir_cqadupstack_programmers_46513": [
+  "119040ed4e1760b1"
+ ],
+ "beir_cqadupstack_programmers_46685": [
+  "567c439e41a80786"
+ ],
+ "beir_cqadupstack_programmers_47370": [
+  "381e7259ea0af8cd"
+ ],
+ "beir_cqadupstack_programmers_4765": [
+  "5fc89b32927f973b",
+  "821ab43b25aec023",
+  "9174631d8d603b28",
+  "eb260b76bbc90645"
+ ],
+ "beir_cqadupstack_programmers_492": [
+  "0b456a8c2b04488a",
+  "f872272eb1fa6df6"
+ ],
+ "beir_cqadupstack_programmers_49836": [
+  "f9127a75affae96d"
+ ],
+ "beir_cqadupstack_programmers_49959": [
+  "05875a52dfcb20f3"
+ ],
+ "beir_cqadupstack_programmers_50755": [
+  "076740f4f0005c5a",
+  "85e70b3cba8b01f6",
+  "bb167605c6ce3505"
+ ],
+ "beir_cqadupstack_programmers_51268": [
+  "c5d0c3d4d0fd49b6"
+ ],
+ "beir_cqadupstack_programmers_51465": [
+  "0b4e6546f31c33d4"
+ ],
+ "beir_cqadupstack_programmers_51987": [
+  "148deda9f4ae6d0f"
+ ],
+ "beir_cqadupstack_programmers_52158": [
+  "b1a8103f1f05df3a"
+ ],
+ "beir_cqadupstack_programmers_52833": [
+  "24de47015e16cd17",
+  "57c53e898ebb3a7c",
+  "5c1747eb41da12a7",
+  "7197ab989d16c56f",
+  "90057c28d05ef625"
+ ],
+ "beir_cqadupstack_programmers_52961": [
+  "c42996ecba1b3855"
+ ],
+ "beir_cqadupstack_programmers_53517": [
+  "7aa4b609b9b12302"
+ ],
+ "beir_cqadupstack_programmers_53572": [
+  "36a90fc014d3e8d5"
+ ],
+ "beir_cqadupstack_programmers_53612": [
+  "84d9a9c606203bc5"
+ ],
+ "beir_cqadupstack_programmers_54373": [
+  "15a296535c9b826c",
+  "4357a51889e005d9"
+ ],
+ "beir_cqadupstack_programmers_54451": [
+  "aa7682960a86dcfa"
+ ],
+ "beir_cqadupstack_programmers_54959": [
+  "4c12010be7593181",
+  "6a09f5a1f0194e9c",
+  "8602ac167c57bc7b",
+  "923023a581c806d8",
+  "94ee402bce6e5e5c",
+  "b08cd76efe2ddd48",
+  "b6dec66c81a7953c",
+  "ce3b6d7bcd375075",
+  "e7351cfa2dcb83f1",
+  "f3e88804824335b4"
+ ],
+ "beir_cqadupstack_programmers_55065": [
+  "ed2ca8fb285ea148"
+ ],
+ "beir_cqadupstack_programmers_55267": [
+  "9b5812f6fdc6ad3c"
+ ],
+ "beir_cqadupstack_programmers_55334": [
+  "552d4303e40baec9"
+ ],
+ "beir_cqadupstack_programmers_55697": [
+  "23e17897d6878c4b",
+  "8c81b087ca0f045b"
+ ],
+ "beir_cqadupstack_programmers_56031": [
+  "44fd0e3ed762cb36"
+ ],
+ "beir_cqadupstack_programmers_56848": [
+  "063fbffbe9be7fa7",
+  "0dde6e2d4af12b55",
+  "14db5889743c196f",
+  "18b5227e06dc51d5",
+  "1c2e17e4016ab46f",
+  "1ff31f207894acce",
+  "22f108cbf11b7cca",
+  "2cea31ddf2511eab",
+  "356a408d167aaec0",
+  "36d3ebeeb6786042",
+  "3fd5504f69bd4e9f",
+  "460898b69f000f9c",
+  "483fbd73469691a0",
+  "5bc1f5e7e6b28eeb",
+  "6408c39fe1129d39",
+  "6490a079bc018de1",
+  "7204039e98b7f101",
+  "8089be89102e0fea",
+  "83758a535743b45f",
+  "9077d730fc49ce8a",
+  "90abb09d461d677e",
+  "a768588c0207a5b5",
+  "a7bf2a2c485dcd38",
+  "a94c87b248d80f82",
+  "abd493dc32fb66a7",
+  "bc61bc8a7b183627",
+  "bcf74fa87186b652",
+  "c300e9a855348a55",
+  "c6fe544131c26976",
+  "cc4ec25baa152e07",
+  "cca1b20db1fcbbd6",
+  "f3d3ad00fc6f8138"
+ ],
+ "beir_cqadupstack_programmers_57047": [
+  "006ced6621882df9"
+ ],
+ "beir_cqadupstack_programmers_57068": [
+  "38b9b1442327d2f8"
+ ],
+ "beir_cqadupstack_programmers_57243": [
+  "3a8c357a61fddca9"
+ ],
+ "beir_cqadupstack_programmers_57405": [
+  "3bcad45ac7f3003a"
+ ],
+ "beir_cqadupstack_programmers_57435": [
+  "03616424f398758a",
+  "0cc876c028a840f4",
+  "0fe4f49011bb55a0",
+  "26a9ee40f3fc3d78",
+  "3d76354e96ab9013",
+  "3e5d32effc0efbb7",
+  "40292ea4391b96d9",
+  "551f4ac5b8f71005",
+  "6ff72d71289fab22",
+  "8b4f6c47f834cbeb",
+  "98d5e08b7529eefc",
+  "fa71e8cc858f726d"
+ ],
+ "beir_cqadupstack_programmers_57576": [
+  "0d90e33e21f9fedb"
+ ],
+ "beir_cqadupstack_programmers_58887": [
+  "17dbe7720f02e9ac"
+ ],
+ "beir_cqadupstack_programmers_59091": [
+  "dc61a8c1400cd23a"
+ ],
+ "beir_cqadupstack_programmers_59496": [
+  "d964a3f688fdf8e4"
+ ],
+ "beir_cqadupstack_programmers_59520": [
+  "b50e148746659b18"
+ ],
+ "beir_cqadupstack_programmers_59606": [
+  "c1a7bb89a5e6e31b"
+ ],
+ "beir_cqadupstack_programmers_60216": [
+  "766e3535c592bd26"
+ ],
+ "beir_cqadupstack_programmers_604": [
+  "54a52ab7f5372a95"
+ ],
+ "beir_cqadupstack_programmers_60409": [
+  "b939121e46a75b01"
+ ],
+ "beir_cqadupstack_programmers_60994": [
+  "390231ab2e026b2a"
+ ],
+ "beir_cqadupstack_programmers_61558": [
+  "fa4818190b59c5db"
+ ],
+ "beir_cqadupstack_programmers_61745": [
+  "0807c4e79755915d"
+ ],
+ "beir_cqadupstack_programmers_61798": [
+  "a76010f39e872adf",
+  "fb66d53ac5ff07ee",
+  "fc21b1536782e0bf"
+ ],
+ "beir_cqadupstack_programmers_61980": [
+  "9c32ca928e8045a8"
+ ],
+ "beir_cqadupstack_programmers_62060": [
+  "8ce91226b877ee58"
+ ],
+ "beir_cqadupstack_programmers_62765": [
+  "9d4c38e648a7badb"
+ ],
+ "beir_cqadupstack_programmers_64671": [
+  "c405afb23924f1e4"
+ ],
+ "beir_cqadupstack_programmers_64722": [
+  "dd39602cffe87156"
+ ],
+ "beir_cqadupstack_programmers_6476": [
+  "3be853fb7a9800d0"
+ ],
+ "beir_cqadupstack_programmers_65918": [
+  "72bc330f10bef3a4"
+ ],
+ "beir_cqadupstack_programmers_6625": [
+  "6c69150aceafe824"
+ ],
+ "beir_cqadupstack_programmers_663": [
+  "a950d7df7cd20b93"
+ ],
+ "beir_cqadupstack_programmers_66735": [
+  "35e0bf5c85cbbd6b"
+ ],
+ "beir_cqadupstack_programmers_66764": [
+  "cc865b6c65d5a9e4",
+  "d865022dd0f87a11"
+ ],
+ "beir_cqadupstack_programmers_66834": [
+  "203a7c17cd55a6d3",
+  "d15baf7f5ce92656"
+ ],
+ "beir_cqadupstack_programmers_67707": [
+  "c7b9c25d4bde39f2"
+ ],
+ "beir_cqadupstack_programmers_67750": [
+  "9a049764fb49d46e"
+ ],
+ "beir_cqadupstack_programmers_67931": [
+  "4badabcc252d2fa5",
+  "607ff9ff4ee716bd"
+ ],
+ "beir_cqadupstack_programmers_67960": [
+  "e44e2176048d1efc"
+ ],
+ "beir_cqadupstack_programmers_68867": [
+  "9d1f56e2a21e7803"
+ ],
+ "beir_cqadupstack_programmers_69242": [
+  "0b855665deaacd4f",
+  "1f12bd170b002e31",
+  "241dfb33705abd62",
+  "e8af2231da12b431",
+  "ef7775416948638e"
+ ],
+ "beir_cqadupstack_programmers_70755": [
+  "826b2bd39ecb36a9"
+ ],
+ "beir_cqadupstack_programmers_7126": [
+  "315fd85f9eecc7cb"
+ ],
+ "beir_cqadupstack_programmers_71904": [
+  "a579e4251e79d39f"
+ ],
+ "beir_cqadupstack_programmers_71917": [
+  "217cafbc9050768b",
+  "6468bd7e34bf6d46"
+ ],
+ "beir_cqadupstack_programmers_7242": [
+  "c98f9482e2b3bcc4"
+ ],
+ "beir_cqadupstack_programmers_72768": [
+  "c1093ced15249972"
+ ],
+ "beir_cqadupstack_programmers_73304": [
+  "f0c821e7868bedf3"
+ ],
+ "beir_cqadupstack_programmers_73541": [
+  "383b7f9f28273d77",
+  "f37a6a369f57236f"
+ ],
+ "beir_cqadupstack_programmers_73934": [
+  "10ee3099013dae88"
+ ],
+ "beir_cqadupstack_programmers_74086": [
+  "38eb5a882d7cacf4",
+  "a1a8ddbc6b64c218",
+  "e15034306a32d0a5",
+  "ffacdcc080001986"
+ ],
+ "beir_cqadupstack_programmers_74386": [
+  "ddb4abc3ad0cc82e"
+ ],
+ "beir_cqadupstack_programmers_74493": [
+  "8924643346d81eb6",
+  "ac214fab703a7dd3"
+ ],
+ "beir_cqadupstack_programmers_74580": [
+  "b224900d887c729a"
+ ],
+ "beir_cqadupstack_programmers_750": [
+  "543b344b9f5bc0db"
+ ],
+ "beir_cqadupstack_programmers_7536": [
+  "6c85acab7f1ce0da"
+ ],
+ "beir_cqadupstack_programmers_7565": [
+  "610c1dbfcec05456",
+  "c16719b5d96deae2",
+  "c636bdf112e950f7"
+ ],
+ "beir_cqadupstack_programmers_76182": [
+  "b9ca163e7d4c06fc"
+ ],
+ "beir_cqadupstack_programmers_76801": [
+  "7b808ebbe0ce728e"
+ ],
+ "beir_cqadupstack_programmers_77146": [
+  "256c3cf550dc1d09"
+ ],
+ "beir_cqadupstack_programmers_7747": [
+  "e93d42af8e982cf1"
+ ],
+ "beir_cqadupstack_programmers_77731": [
+  "98d3d9b1968abbc1"
+ ],
+ "beir_cqadupstack_programmers_78176": [
+  "28015bf66529a81e"
+ ],
+ "beir_cqadupstack_programmers_78431": [
+  "81d5a386343ba225"
+ ],
+ "beir_cqadupstack_programmers_78903": [
+  "04526be80c7f9b94",
+  "ec62e2142d75a3a4"
+ ],
+ "beir_cqadupstack_programmers_78956": [
+  "37a2137a561bc860",
+  "9147e01fd3bea3b3",
+  "c04fea50175b9245"
+ ],
+ "beir_cqadupstack_programmers_79624": [
+  "b549c072cc8a7031"
+ ],
+ "beir_cqadupstack_programmers_79765": [
+  "03381a839b36f21b"
+ ],
+ "beir_cqadupstack_programmers_80694": [
+  "6141efe3d2245311"
+ ],
+ "beir_cqadupstack_programmers_80826": [
+  "8d04d1223092c35b",
+  "bc311f8a57ae123e"
+ ],
+ "beir_cqadupstack_programmers_81062": [
+  "1d328938edbebda6",
+  "6775146e7456281c"
+ ],
+ "beir_cqadupstack_programmers_81131": [
+  "c4b2ec2b7b4ba225"
+ ],
+ "beir_cqadupstack_programmers_81478": [
+  "8a5d321f3c50ada8"
+ ],
+ "beir_cqadupstack_programmers_81591": [
+  "cfc7bb87c5b62c4b"
+ ],
+ "beir_cqadupstack_programmers_81674": [
+  "e66678ac8dbe1c7d"
+ ],
+ "beir_cqadupstack_programmers_81705": [
+  "404eb0934c420e06",
+  "f1b2ed8c8b1cb293"
+ ],
+ "beir_cqadupstack_programmers_81838": [
+  "1085252fc98cbde1",
+  "d4a1f2e3c04e2baa"
+ ],
+ "beir_cqadupstack_programmers_82227": [
+  "9dc49297eb81b81a",
+  "af1018855b8b8bb4",
+  "b8ac5899e6a1f7a8",
+  "b8c94c8daca9e68e",
+  "dda2c002855d46e6",
+  "f31b03f2ece29cb7"
+ ],
+ "beir_cqadupstack_programmers_82286": [
+  "f1acf5f4f2b44538"
+ ],
+ "beir_cqadupstack_programmers_84001": [
+  "7f02d9276fcb0c89"
+ ],
+ "beir_cqadupstack_programmers_84638": [
+  "193d361b47025cb3"
+ ],
+ "beir_cqadupstack_programmers_84778": [
+  "c182e6af5e7ade26"
+ ],
+ "beir_cqadupstack_programmers_84909": [
+  "bd72dda16da3bdc9"
+ ],
+ "beir_cqadupstack_programmers_84966": [
+  "cdecc785483c6b93"
+ ],
+ "beir_cqadupstack_programmers_85019": [
+  "b813589a19835d7f",
+  "fba72547806cadde"
+ ],
+ "beir_cqadupstack_programmers_8544": [
+  "021e6de8a0f1fe2c"
+ ],
+ "beir_cqadupstack_programmers_85691": [
+  "a80e05bfadea677b"
+ ],
+ "beir_cqadupstack_programmers_8588": [
+  "c446e8dc662ba3d3"
+ ],
+ "beir_cqadupstack_programmers_86656": [
+  "2b9d1ac247e98d18",
+  "efc23f070de4bad2"
+ ],
+ "beir_cqadupstack_programmers_86904": [
+  "8a8958b52b31b48f",
+  "c2bf12d9ab90f9a2"
+ ],
+ "beir_cqadupstack_programmers_87082": [
+  "9f3f392a04a4eafa"
+ ],
+ "beir_cqadupstack_programmers_87321": [
+  "feca8f66b258b579"
+ ],
+ "beir_cqadupstack_programmers_87452": [
+  "245c569b0b8e3351",
+  "cd3da51171e1563b"
+ ],
+ "beir_cqadupstack_programmers_88028": [
+  "ffc26f4969abc027"
+ ],
+ "beir_cqadupstack_programmers_88392": [
+  "c2339d483c48068f"
+ ],
+ "beir_cqadupstack_programmers_8886": [
+  "4e19bc3f15aa29cf"
+ ],
+ "beir_cqadupstack_programmers_89491": [
+  "64671a6fee4c3952",
+  "fd794c5323d320e2"
+ ],
+ "beir_cqadupstack_programmers_89554": [
+  "5b7e44509950eadd"
+ ],
+ "beir_cqadupstack_programmers_8958": [
+  "5fe9cf4883db56e2"
+ ],
+ "beir_cqadupstack_programmers_89819": [
+  "001fc6207b5f428b",
+  "ee8fa42bd4b98513"
+ ],
+ "beir_cqadupstack_programmers_89944": [
+  "bbdfda89f9fa7ec7"
+ ],
+ "beir_cqadupstack_programmers_89947": [
+  "2f7d083fb444e079"
+ ],
+ "beir_cqadupstack_programmers_90217": [
+  "0a837a934ea9c3af"
+ ],
+ "beir_cqadupstack_programmers_90438": [
+  "78429654ce0e2208"
+ ],
+ "beir_cqadupstack_programmers_91064": [
+  "b5f7f415010850f0"
+ ],
+ "beir_cqadupstack_programmers_91629": [
+  "7c355c68de2b1ebc",
+  "81ed8b858c9af9a1",
+  "c616f7e7405f5086"
+ ],
+ "beir_cqadupstack_programmers_91816": [
+  "dcac7e221a4b5340"
+ ],
+ "beir_cqadupstack_programmers_91945": [
+  "c4c00151ef34db98"
+ ],
+ "beir_cqadupstack_programmers_91976": [
+  "f9836938091a91bb"
+ ],
+ "beir_cqadupstack_programmers_92339": [
+  "666c2fabd5886788"
+ ],
+ "beir_cqadupstack_programmers_92393": [
+  "3505331ef090cf54"
+ ],
+ "beir_cqadupstack_programmers_92465": [
+  "4aa1d6e772168730",
+  "5bf85762d82cbf7f"
+ ],
+ "beir_cqadupstack_programmers_93016": [
+  "b579e6ec9a70691a"
+ ],
+ "beir_cqadupstack_programmers_93124": [
+  "7f99dd1679b5241f"
+ ],
+ "beir_cqadupstack_programmers_9320": [
+  "21d573f2a9c71d14"
+ ],
+ "beir_cqadupstack_programmers_93245": [
+  "1b7018bb09da66e6"
+ ],
+ "beir_cqadupstack_programmers_93462": [
+  "b07fcdebc5f4d5c1"
+ ],
+ "beir_cqadupstack_programmers_93826": [
+  "653585707c14bbf3",
+  "f40245c23b46d488"
+ ],
+ "beir_cqadupstack_programmers_93848": [
+  "6c465aa30b3f5455"
+ ],
+ "beir_cqadupstack_programmers_940": [
+  "fd910952aa68b69b"
+ ],
+ "beir_cqadupstack_programmers_94024": [
+  "abc3db7e13582572"
+ ],
+ "beir_cqadupstack_programmers_94780": [
+  "2275b7fe527dae8e"
+ ],
+ "beir_cqadupstack_programmers_94932": [
+  "6df0ce16165b3884",
+  "b9f93905eda7f65b"
+ ],
+ "beir_cqadupstack_programmers_95335": [
+  "681e4f841ff2d729"
+ ],
+ "beir_cqadupstack_programmers_95363": [
+  "6a06e1958e347ab9"
+ ],
+ "beir_cqadupstack_programmers_95373": [
+  "26122c6d5831551f"
+ ],
+ "beir_cqadupstack_programmers_95465": [
+  "3e6dfe7baef91dcc"
+ ],
+ "beir_cqadupstack_programmers_95626": [
+  "8d0b5661ead0255e"
+ ],
+ "beir_cqadupstack_programmers_95637": [
+  "191beb2e35733451",
+  "256b3cba67bb4674"
+ ],
+ "beir_cqadupstack_programmers_95786": [
+  "f78b6074e49f7b30"
+ ],
+ "beir_cqadupstack_programmers_95933": [
+  "08a475b1425d914f"
+ ],
+ "beir_cqadupstack_programmers_95942": [
+  "7e4583dc62bd41c4"
+ ],
+ "beir_cqadupstack_programmers_96504": [
+  "5c858fb764e93bcd",
+  "8f2efdb56b12b3c1"
+ ],
+ "beir_cqadupstack_programmers_96638": [
+  "24c3c4ff1819732f"
+ ],
+ "beir_cqadupstack_programmers_97269": [
+  "8f5ade58b4deab65"
+ ],
+ "beir_cqadupstack_programmers_97338": [
+  "db2562c5a0e5bee8"
+ ],
+ "beir_cqadupstack_programmers_97357": [
+  "fa3fc0c9bb57c722"
+ ],
+ "beir_cqadupstack_programmers_97446": [
+  "ec0083b15beac54d"
+ ],
+ "beir_cqadupstack_programmers_97511": [
+  "1d04af07359bcc84"
+ ],
+ "beir_cqadupstack_programmers_97660": [
+  "674cdf602ff60e1e",
+  "9030d25f194fbbdc",
+  "c74346b9e90d4377"
+ ],
+ "beir_cqadupstack_programmers_97785": [
+  "4f397ae24928cce6"
+ ],
+ "beir_cqadupstack_programmers_97832": [
+  "597230baf0ec9f12"
+ ],
+ "beir_cqadupstack_programmers_97912": [
+  "579954b6da06ae42"
+ ],
+ "beir_cqadupstack_programmers_9813": [
+  "bfdb3373d0335c1a"
+ ],
+ "beir_cqadupstack_programmers_98324": [
+  "5389bf69b36cfd4d"
+ ],
+ "beir_cqadupstack_programmers_98509": [
+  "3a826198edfd73b1",
+  "5d15a3d788bd7db2",
+  "7750271c7d6e9d9c",
+  "a003feb36323eddb",
+  "a81ec09bc4aaba8c",
+  "f58f28e484285f56"
+ ],
+ "beir_cqadupstack_programmers_98651": [
+  "0f8c26c8ef31611e"
+ ],
+ "beir_cqadupstack_programmers_98691": [
+  "5cf23492da46db6a",
+  "843aab7837f0c60f"
+ ],
+ "beir_cqadupstack_programmers_98749": [
+  "a90a2da6d3d709bd"
+ ],
+ "beir_cqadupstack_programmers_98758": [
+  "a7d088842fe5ecf3"
+ ],
+ "beir_cqadupstack_programmers_98905": [
+  "395287f5ed58088f"
+ ],
+ "beir_cqadupstack_programmers_9944": [
+  "1dac71f458e60a82",
+  "1dbe2ccb62b9c81b",
+  "28ca91f4d7798e60",
+  "430796a18ba2cbe2",
+  "970e5129641838be",
+  "9da7266802948780",
+  "a24c0cefc3245409",
+  "d7efcd42a72b4d03",
+  "e55755e78df55cee",
+  "ed9c36943147c707"
+ ],
+ "beir_cqadupstack_programmers_9948": [
+  "2b811f52be9ee69e",
+  "41ae21e585a261d5",
+  "f5345e7241333ace"
+ ],
+ "beir_cqadupstack_programmers_99499": [
+  "ffb6a5f197eb27ca"
+ ],
+ "beir_cqadupstack_programmers_99647": [
+  "bd93beca78e9c127"
+ ]
+}

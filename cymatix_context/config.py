@@ -544,6 +544,8 @@ class ContextConfig:
     cold_tier_k: int = 3                    # Max cold-tier documents to retrieve per query
     cold_tier_min_cosine: float = 0.15      # SEMA cosine floor (sparse 20-dim — see Genome.query_cold_tier)
     fingerprint_mode_profile: str = "balanced"  # "fast" | "balanced" | "quality"
+    # Issue #482: what decides an item's freshness. "clock" = age since last verification (legacy; a static store goes stale ~15 days after ingest). "source" = ask the source: unchanged on disk = verified, changed = needs refresh, not on this disk = unknown (not stale).
+    freshness_basis: str = "clock"
 
 
 @dataclass
@@ -1247,6 +1249,12 @@ _KNOW_DEFAULT_S_REF: float = 1.0
 _KNOW_DEFAULT_G_REF: float = 0.5
 _KNOW_DEFAULT_EMIT_FLOOR: float = 0.55
 _KNOW_DEFAULT_STALE_AFTER_DAYS: int = 30
+# Feature count of the [know] logistic (betas = intercept + one per feature).
+_KNOW_N_FEATURES: int = len(_KNOW_DEFAULT_BETAS) - 1
+# Input names in beta order (== scoring.know_calibration.FEATURE_NAMES).
+_KNOW_FEATURE_NAMES: tuple = (
+    "top_score", "score_gap", "lexical_dense_agree", "coordinate_confidence", "freshness_min",
+)
 
 
 @dataclass
@@ -1281,6 +1289,22 @@ class KnowConfig:
     # Stage 4 (spec §9, issue #63): age in days after which the /context
     # response flags ``calibration_stale``.
     stale_after_days: int = _KNOW_DEFAULT_STALE_AFTER_DAYS
+    # Issue #482: per-feature value (b1..b5 order, feature space) used when an input is unavailable — no dense lane, nothing delivered, freshness unknown; normally the calibration-set means. None = legacy: unavailable inputs contribute nothing.
+    neutral: Optional[List[float]] = None
+    # Issue #482: the inputs available when the betas were fit (names from top_score, score_gap, lexical_dense_agree, coordinate_confidence, freshness_min). Inputs outside it, or that the enabled lanes cannot produce, count as unavailable, and /context warns calibration_profile_mismatch. None = fit profile not recorded.
+    fitted_inputs: Optional[List[str]] = None
+    # Issue #482: which formula produces know confidence. "legacy" = the betas above. "lanes" = dense-free logistic over what every query has (score shape, coordinate_confidence, lane agreement; scoring/know_lanes.py) using lanes_intercept + lanes_betas. The gates before confidence (abstain, freshness, supersession) are the same either way.
+    model: str = "legacy"
+    # Issue #482: intercept of the "lanes" model (written by scripts/fit_know_lanes.py).
+    lanes_intercept: float = 0.0
+    # Issue #482: {feature name: beta} for the "lanes" model; names from scoring/know_lanes.FEATURE_NAMES, absent names weigh 0 (written by scripts/fit_know_lanes.py).
+    lanes_betas: Dict[str, float] = field(default_factory=dict)
+    # Issue #482: per-store Platt rescale of the "lanes" logit, z' = a*z + b (written by scripts/calibrate_know_store.py from this store's own labelled queries). 1.0 / 0.0 = identity.
+    lanes_platt_a: float = 1.0
+    # Issue #482: per-store Platt offset for the "lanes" logit (see lanes_platt_a).
+    lanes_platt_b: float = 0.0
+    # Issue #482: HF cross-encoder whose fused top-1/top-2 scores feed the "lanes" model's ce_top1/ce_margin features (e.g. "cross-encoder/ms-marco-MiniLM-L-6-v2", scored through the shared rerank backend). "" = off: no CE call per query. Needs betas fit with scripts/fit_know_lanes.py --features ce.
+    lanes_ce_model: str = ""
 
 
 @dataclass
@@ -1953,7 +1977,13 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
     if "context" in raw:
         c = raw["context"]
         _warn_unknown("context", c, ContextConfig)
+        basis = str(c.get("freshness_basis", cfg.context.freshness_basis)).strip().lower()
+        if basis not in ("clock", "source"):
+            log.warning("[context] freshness_basis must be 'clock' or 'source', got %r; using 'clock'",
+                        c.get("freshness_basis"))
+            basis = "clock"
         cfg.context = ContextConfig(
+            freshness_basis=basis,
             cold_tier_enabled=bool(c.get("cold_tier_enabled", cfg.context.cold_tier_enabled)),
             cold_tier_min_hot_genes=int(c.get("cold_tier_min_hot_genes", cfg.context.cold_tier_min_hot_genes)),
             cold_tier_k=int(c.get("cold_tier_k", cfg.context.cold_tier_k)),
@@ -2251,7 +2281,63 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
                 log.warning("[know] %s is malformed; using default %s", key, default)
                 return default
 
+        neutral: Optional[List[float]] = None
+        if k.get("neutral") is not None:
+            try:
+                parsed = [float(v) for v in k["neutral"]]
+            except (TypeError, ValueError):
+                parsed = []
+            if len(parsed) == _KNOW_N_FEATURES:
+                neutral = parsed
+            else:
+                log.warning(
+                    "[know] neutral must be a list of %d numbers; ignoring it "
+                    "(unavailable inputs contribute nothing)", _KNOW_N_FEATURES,
+                )
+
+        fitted_inputs: Optional[List[str]] = None
+        if k.get("fitted_inputs") is not None:
+            raw_fit = k["fitted_inputs"]
+            names = [str(v) for v in raw_fit] if isinstance(raw_fit, list) else []
+            if names and set(names) <= set(_KNOW_FEATURE_NAMES):
+                fitted_inputs = names
+            else:
+                log.warning(
+                    "[know] fitted_inputs must list names from %s; ignoring it "
+                    "(fit profile not recorded)", ", ".join(_KNOW_FEATURE_NAMES),
+                )
+
+        model = str(k.get("model", "legacy")).strip().lower()
+        if model not in ("legacy", "lanes"):
+            log.warning("[know] model must be 'legacy' or 'lanes', got %r; using 'legacy'", k.get("model"))
+            model = "legacy"
+        from .scoring.know_lanes import CE_FEATURES as _CE_FEATURES
+        from .scoring.know_lanes import FEATURE_NAMES as _BASE_LANE_FEATURES
+        _LANE_FEATURES = _BASE_LANE_FEATURES + _CE_FEATURES
+        lanes_betas: Dict[str, float] = {}
+        raw_lb = k.get("lanes_betas") or {}
+        if isinstance(raw_lb, dict):
+            for name, val in raw_lb.items():
+                if name not in _LANE_FEATURES:
+                    log.warning("[know] lanes_betas: unknown feature %r ignored (known: %s)",
+                                name, ", ".join(_LANE_FEATURES))
+                    continue
+                try:
+                    lanes_betas[str(name)] = float(val)
+                except (TypeError, ValueError):
+                    log.warning("[know] lanes_betas: %r is not a number; ignored", name)
+        else:
+            log.warning("[know] lanes_betas must be a table of {feature = beta}; ignoring it")
+
         cfg.know = KnowConfig(
+            model=model,
+            lanes_intercept=_know_float("lanes_intercept", 0.0),
+            lanes_betas=lanes_betas,
+            lanes_platt_a=_know_float("lanes_platt_a", 1.0),
+            lanes_platt_b=_know_float("lanes_platt_b", 0.0),
+            lanes_ce_model=str(k.get("lanes_ce_model", "") or "").strip(),
+            neutral=neutral,
+            fitted_inputs=fitted_inputs,
             emit_floor=_know_float("emit_floor", _KNOW_DEFAULT_EMIT_FLOOR),
             s_ref=_know_float("s_ref", _KNOW_DEFAULT_S_REF),
             g_ref=_know_float("g_ref", _KNOW_DEFAULT_G_REF),

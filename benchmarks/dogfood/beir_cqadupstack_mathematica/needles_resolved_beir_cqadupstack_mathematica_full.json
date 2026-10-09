@@ -1,0 +1,4024 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_mathematica_1",
+   "query": "Usage of \\[InvisibleApplication] and other related invisible characters",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10086",
+   "query": "Nested definition: How can I define a function with a passed-in expression?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10391",
+   "query": "Is Mathematica matrix multiplication with its inverse wrong?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1041",
+   "query": "How to pipe a stream to another notebook?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10432",
+   "query": "How to avoid nested With[]?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10501",
+   "query": "Plotting discontinuous functions without spurious vertical segments",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10619",
+   "query": "Sort strings by natural ordering",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10669",
+   "query": "How to make a Line[] with no end?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10838",
+   "query": "Why does mathematica crash when I rotate a 3D graph?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10934",
+   "query": "Plotting Complex Roots of Unity",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10956",
+   "query": "Can the toolbar be moved to the code window?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1096",
+   "query": "List of compilable functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_10990",
+   "query": "How to join two Style[]d strings",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11024",
+   "query": "Combine DistributionChart and ListPlot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11059",
+   "query": "Combining lists with common elements efficiently",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11192",
+   "query": "How do I efficiently navigate the command line interface to Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11195",
+   "query": "Is my expression too complicated for FullSimplify or am I doing something wrong?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11196",
+   "query": "Determine page count programmatically",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11247",
+   "query": "How to combine ArrayPlots?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11271",
+   "query": "how to read in a file in the same directory?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11298",
+   "query": "Map-Thread-Through-Apply a list of functions onto a list of (lists of) values",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1137",
+   "query": "How to \"Copy as Unicode\" from a Notebook?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11403",
+   "query": "Can the banner in the Home Edition be removed?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11460",
+   "query": "Download binary file bypassing Import/Export?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11608",
+   "query": "Why do Arrowheads interfere with ImagePadding?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11698",
+   "query": "Customizing FrameTicks in DistributionChart",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11705",
+   "query": "saving Manipulate data inside a notebook",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1172",
+   "query": "Discrete Convolution",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11725",
+   "query": "How to find circular objects in an image?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11794",
+   "query": "Get polynomial interpolation formula",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_11950",
+   "query": "Stategies to avoid NIntegrate::slwcon error",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1283",
+   "query": "Permutations[Range[12]] produces an error instead of a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1300",
+   "query": "ListPlot with each point a different color and a legend bar",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13054",
+   "query": "Estimate error on slope of linear regression given data with associated uncertainty",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13055",
+   "query": "How to run a Mathematica program using command line on windows?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13090",
+   "query": "Getting imaginary data from known real data using Kramers-Kronig relations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1315",
+   "query": "Customizing syntax highlighting for private cell styles",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13179",
+   "query": "Plot with Legends and Markers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13197",
+   "query": "Custom Magnification Setting",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13210",
+   "query": "No result from DSolve",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13406",
+   "query": "Annoyance: Plot Markers disappear when ListPlot options are set in SetOptions instead of in ListPlot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13420",
+   "query": "Composition of mappings not working as expected",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13426",
+   "query": "Why doesn't Mathematica solve $x=\\cos\\,x$ properly?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13440",
+   "query": "Wrapping EventHandler by Table",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13513",
+   "query": "Plot Even Piecewise function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13520",
+   "query": "Evaluate while external command is being run",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13538",
+   "query": "How to make 3d solid volume from set of images",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13652",
+   "query": "Can an Interpolation function be 'saved'?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13657",
+   "query": "Plot showing discontinuity where it shouldn't",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13754",
+   "query": "Time varying equation plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13757",
+   "query": "How to make a function that evaluates an expression?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13961",
+   "query": "Plotting graphics as ASCII plots",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_13981",
+   "query": "How to generate a RandomVariate of a custom distribution?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1400",
+   "query": "Removing unwanted appearance of underlying mesh",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14063",
+   "query": "What is the correct way to conditionally add elements to lists?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14083",
+   "query": "How to Plot an Infinite Series",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14122",
+   "query": "DeleteCases messing with my mind",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14185",
+   "query": "Solve an equation in $\\mathbb{R}^+$",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14189",
+   "query": "How do I Export through a standard system file save dialog activated by a Button?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14193",
+   "query": "Good way to discriminate between Mathematica/PlayerPro/CDFPlayer",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14282",
+   "query": "Width of two plots",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14340",
+   "query": "How can I define an option \"packet\" for plots so I can only alter the definition and all plots with that \"packet\" will change appearance?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14405",
+   "query": "Determining the local extrema of discrete data",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14435",
+   "query": "How can I focus cursor at specific position?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1446",
+   "query": "Syntax highlighting for your own functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_145",
+   "query": "How to find out which method Mathematica selected?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14523",
+   "query": "Can we teach Mathematica about functional differentiation?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14525",
+   "query": "Reading a specified line number from a text file",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14534",
+   "query": "How can I get information about properties of a style?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14543",
+   "query": "Antialiasing of horizontal lines",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14611",
+   "query": "Function behaves differently inside a package than outside",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14645",
+   "query": "Prevent Part[] from trying to extract parts of symbolic expressions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14661",
+   "query": "Why isn't the matrix product computed?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_14987",
+   "query": "Machine learning. SVM algorithm",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15021",
+   "query": "Insert $+$, $-$, $\\times$, $/$, $($, $)$ into $123456789$ to make it equal to $100$",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15023",
+   "query": "Multivariable Taylor expansion does not work as expected",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15153",
+   "query": "Simplify function notation",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15176",
+   "query": "Problem to connect remote Mathematica Kernel using J/Link",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15184",
+   "query": "Precise Timing for nested functions, how to?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15311",
+   "query": "Square both sides of an equation?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15351",
+   "query": "Is there an equivalent of MATLAB's Workspace window in Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15381",
+   "query": "Removing an ordered pair from a list of ordered pairs if the second element in the list is Less than a Value",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1542",
+   "query": "Exporting graphics to PDF - huge file",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15516",
+   "query": "How to get an adaptive frame which fits auto-wrapped text?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15634",
+   "query": "Inputting abbreviated units",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15649",
+   "query": "Setting the default font for PlotLegends",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15655",
+   "query": "Preserving labels when using graph functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15679",
+   "query": "Difference between function definitions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1571",
+   "query": "How to distribute proprietary Mathematica code",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15718",
+   "query": "Can I make a default for an optional argument the value of another argument?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15734",
+   "query": "Streaming Data into Mathematica from a serial port",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1584",
+   "query": "How to convert between various ItemSize/ImageSize units?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15858",
+   "query": "Bifurcation diagrams for multiple equation systems",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15885",
+   "query": "Combining two lists of different dimensions into a list of all combinations of points?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15929",
+   "query": "Graphics exported from Mathematica 9 are very large because even standard fonts are embedded",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_15945",
+   "query": "How to implement FittedModel like objects",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1602",
+   "query": "Resource management in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16194",
+   "query": "Movable text on a curve",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16233",
+   "query": "How to create functions of arbitrary number of variables?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16252",
+   "query": "Plotting complex numbers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16258",
+   "query": "Dynamic Chart Elements in Bar Chart",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16259",
+   "query": "Importing .zip file",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16324",
+   "query": "Is there a Mathematica equivalent to MATLAB's logspace?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16398",
+   "query": "Loops and subroutines",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16404",
+   "query": "How to prepare data for ListVectorPlot[]?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16429",
+   "query": "How to partition a list and leave in the last sublist which is of different length?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_16562",
+   "query": "Is it possible to customize the Suggestions Bar?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1679",
+   "query": "Dimensions of the results of Text[] within Graphics[]",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17093",
+   "query": "Exp[I θ] + b Exp[-I θ], Part II",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17154",
+   "query": "How do I use RSolve to solve a system of recurrence relations?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17196",
+   "query": "Order of integration changes output of indefinite multiple integral in Mathematica 7",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17250",
+   "query": "Is it possible to change the color of plot in Show?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17324",
+   "query": "How to search for initialization cells?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17342",
+   "query": "How do I get the equivalent of the $\\LaTeX$ \\tag{} in Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17357",
+   "query": "Do you really want to quit the kernel? Yes!",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17370",
+   "query": "How do I expand a sum (again)?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17381",
+   "query": "Distributing elements across a list of lists",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17617",
+   "query": "Using the symbol I for electrical current",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17622",
+   "query": "Sort date list in format DD/MM/YYYY",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17633",
+   "query": "How to set a TraditionalForm output for a symbol",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17736",
+   "query": "How can I get Mathematica to produce better Fortran code?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17811",
+   "query": "How to import data from Blender or 3DS max file?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17826",
+   "query": "How to automate generation of image files?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_17857",
+   "query": "How do I troubleshoot when I get a Part::partd or a Part::partw error?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18025",
+   "query": "How do I remove the flat parts that are not part of the function in Plot3D?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18081",
+   "query": "How to interpret the FullForm of a SparseArray?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18090",
+   "query": "sliding a tangent line along a curve",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18091",
+   "query": "Adding three integer sparse matrices is very slow. Adding only two is fast",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18142",
+   "query": "How can I seperate specific elements from the list?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18183",
+   "query": "How to install the Wolfram Workbench plugin into Eclipse Kepler?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18193",
+   "query": "balanced Shortest[] and string-patterns",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18210",
+   "query": "Interpolating 2D data with missing values",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18258",
+   "query": "Plotting Inverse Functions using ParametricPlot gives error message",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18310",
+   "query": "Mathematica and Python integration?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1835",
+   "query": "Using a PatternTest versus a Condition for pattern matching",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18419",
+   "query": "How can I improve Mathematica's resolution on a macbook retina display?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18460",
+   "query": "Import Excel sheet into 3D array?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18526",
+   "query": "Built-in unit strings recognized by Quantity?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18549",
+   "query": "Strange ::usage behavior in v9",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18643",
+   "query": "Packages problems on version 9 under OS X",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18647",
+   "query": "How to check if an expression is a real-valued number",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18655",
+   "query": "How can I transpose x and y axis on a Plot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18707",
+   "query": "Programming Mathematica - Introduction by Paul Wellin",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_18889",
+   "query": "How to change brackets in TraditionalForm output",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19027",
+   "query": "Is there a way to ask Mathematica for the RAM installed?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19035",
+   "query": "What does # mean in Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1911",
+   "query": "What is the fastest way to locate an image inside a larger image?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19127",
+   "query": "Can you fill in a closed curve?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19165",
+   "query": "How to generate a 3-d simple cubic lattice of length 4 in each dimension?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19174",
+   "query": "How to Initiate a queued evaluation from a Dynamic GUI without using a Button",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19201",
+   "query": "Embedding Mathematica Console into a Java/.NET Application",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19253",
+   "query": "Plotting a 3D list causes kernel to crash if x and y axes have vastly different scales",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19264",
+   "query": "Converting a list of replacement rules into a list of real values",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19392",
+   "query": "Integration over region given by inequality",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_1945",
+   "query": "Using implicit differentiation to find a line that is tangent to a curve at a point",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19457",
+   "query": "Finding the likeliest path in a Markov process",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_197",
+   "query": "How can I test properties of a symbol from the string name without the symbol completely evaluating",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19705",
+   "query": "DensityPlot on spherical surface?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19867",
+   "query": "Trying to plot a velocity profile in x-y plane",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_19902",
+   "query": "Copying one symbol into another",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20023",
+   "query": "Plot 4D data with color as 4th dimension",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20051",
+   "query": "How do I get my equation to have the form $(x-a)^2 + (y-b)^2 + (z-c)^2-d = 0$?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20074",
+   "query": "Why does the syntax highlighter color a local symbol red inside DynamicModule?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20079",
+   "query": "Controlling Bar Color in BarChart precisely",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20105",
+   "query": "Efficiently determining if 3D points are within a surface composed of polygons",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20228",
+   "query": "How to use \"Drop\" function to drop matrix' rows and columns in an arbitrary way?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20243",
+   "query": "TabView resets to default when selecting data using Control object",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20272",
+   "query": "How to work with the symbol EndOfFile?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20277",
+   "query": "How to define a vector of arbitary length",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20334",
+   "query": "Numerical integration of a numeric data available as a nested list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20355",
+   "query": "Export plot data in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20468",
+   "query": "Collapse matching brackets",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2047",
+   "query": "Automated testing for compatibility with older Mathematica versions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20470",
+   "query": "Function with custom Options and modified Options for built-in Symbols",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2051",
+   "query": "Kernel Management",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20718",
+   "query": "Keep function range as a variable",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2073",
+   "query": "Remove tick labels, but retain tick marks in RegionPlot (and related functions)",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2076",
+   "query": "How do I plot coordinates (latitude and longitude pairs) on a geographic map?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20766",
+   "query": "Enforcing correct variable bindings and avoiding renamings for conflicting variables in nested scoping constructs",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20823",
+   "query": "Where to find a summary for Q functions?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20841",
+   "query": "Correspondence between eigenvectors and eigenvalues",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_20873",
+   "query": "Graphing the amount of time a function takes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21075",
+   "query": "How do I read a CSV file and remove comments from it",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21150",
+   "query": "How can I compile a ColorFunction with Blend?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21161",
+   "query": "Plotting an array of data onto a sphere",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21238",
+   "query": "How to force Pane to always scroll to end of content?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21284",
+   "query": "AxesLabel in Histogram3D unreadable",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21328",
+   "query": "how can i convert data into string format?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21374",
+   "query": "Show doesn't show all the plots",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21410",
+   "query": "Construct file names using a number and a string prefix",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21421",
+   "query": "Plot3D has a break in the center of the plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21444",
+   "query": "Can't see updating performed by NMinimize[...,StepMonitor->(...)] outside of Button in which it's called",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21558",
+   "query": "Confusing efficiency and evaluation when returning pure functions?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2157",
+   "query": "Customize front end to add notifications when evaluation finishes?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21655",
+   "query": "Tick marks shrinking with ImageResolution",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21672",
+   "query": "Exporting large numbers to a text file",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21701",
+   "query": "Find closed form expression for series expansion coefficients",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21742",
+   "query": "Extracting Facebook Managed accounts (pages) in Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21764",
+   "query": "Define a Plot3D function with custom options",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21870",
+   "query": "Why are there two separate MathKernel processes running when I start up Mathematica 9?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21898",
+   "query": "Mathematica: How to apply a function to a list of tuples",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_21993",
+   "query": "Equidistant points on a polyline",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22019",
+   "query": "Changing default range for x- and y-axis in ListPlot3D",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22032",
+   "query": "Is there a convenient way to localize all variables in a new notebook?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2214",
+   "query": "Point Renderings Slightly Off in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22193",
+   "query": "Can anyone identify these plots?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2230",
+   "query": "Mathematica Debuggability",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22349",
+   "query": "Mathematica for teaching orthographic projection",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22419",
+   "query": "Benchmarking expressions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22611",
+   "query": "Autocomplete short symbol names in non-global context",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22651",
+   "query": "Applying a transformation rule on an Image",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22705",
+   "query": "Simplify expressions with Log",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22828",
+   "query": "Factorize and find the null space of a polynomial in several variables",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22876",
+   "query": "Symbolic Calculations with formal matrices",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22917",
+   "query": "Unexpected behavior of rule matching a pattern",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22948",
+   "query": "Why is ReplaceAll behaving like this?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_22956",
+   "query": "DeleteCases and Inequalities",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23014",
+   "query": "Defining a function that completes the square given a quadratic polynomial expression",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23034",
+   "query": "StreamPlot in Polar Coordinates",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23074",
+   "query": "Finding Maximum Root",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23125",
+   "query": "Getting poles of a Gamma functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23221",
+   "query": "Help bogged down at first query",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23280",
+   "query": "Calculating Taylor polynomial of an implicit function given by an equation",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23398",
+   "query": "How to implement a set method?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23454",
+   "query": "I can't use PatternSequence with Cases",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23470",
+   "query": "Conflict among Permutations and Graph utilities once Combinatorica is loaded",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23517",
+   "query": "Question about rendering axes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23656",
+   "query": "Contour3Dplot more graphs in one picture",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23659",
+   "query": "How to make traditional output for derivatives",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23692",
+   "query": "How to import sound file from computer?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23734",
+   "query": "Manipulate a Plot that contains a variable that contains symbol",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23751",
+   "query": "Passing an iterator",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_23880",
+   "query": "Teaching Plan for High School Students",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24036",
+   "query": "Put local variables for Block in a variable",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24156",
+   "query": "How can I place gui controls inside Grid?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24167",
+   "query": "Select performance",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24291",
+   "query": "Import large amount of data with time stamps",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24373",
+   "query": "How to monitor the progress of Importing files?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24556",
+   "query": "Open-source IntelliJIDEA plugin to support Mathematica development",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24581",
+   "query": "Plotting heat equation in a Manipulate expression",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_246",
+   "query": "How to combine images with the same dimensions in a grid?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24623",
+   "query": "question about Inner",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24807",
+   "query": "Dynamically labeling a family of curves",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24882",
+   "query": "What causes strange line artifacts to appear in plots with certain PlotRanges?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24892",
+   "query": "Outputting a set of graphics 3D objects with positions defined by one array and colors by another?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_24988",
+   "query": "Can one identify the design patterns of Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25031",
+   "query": "How to draw some 2D curves in a 3D plot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25061",
+   "query": "LogLinearPlot analog for Plot3D?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25134",
+   "query": "Making large tables easy to read with frozen headings and scrollbars",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25185",
+   "query": "Add a sub-matrix of zeros in big matrix",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25255",
+   "query": "How to crop graphics outside PlotRange with Show?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25257",
+   "query": "How can I assign EdgeCost for the graph edges?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25260",
+   "query": "NDSolve with vector function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25277",
+   "query": "Visualize Plot of a function of 3 Variables using color and contours",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25282",
+   "query": "Preventing cell height adjustment when rotating 3D graphics",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25285",
+   "query": "Generating partitions of a set with a specified size of the parts",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25324",
+   "query": "List of Tribonacci Polynomials with Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25325",
+   "query": "How to estimate system recource usage of a SparseArray?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25340",
+   "query": "Distribution above pointplot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25343",
+   "query": "How to tell Mathematica to make assumptions?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2537",
+   "query": "Plotting Partial Sums of Fourier Series",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25394",
+   "query": "Anti-aliasing won't work when there is PlotStyle command",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25502",
+   "query": "How to type a capital 'E' in Mathematica 9 using 'ToExpression' and 'TeXForm'?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25549",
+   "query": "Does resizing plots produce new data?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25562",
+   "query": "Solar System Orbital Parameters",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25587",
+   "query": "How do I automatically \"trim\" the bounding box for a Graphics3D output?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25610",
+   "query": "Question regarding function definition overloading / argument passing test",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25673",
+   "query": "How safe is the use of Block and Internal`InheritedBlock",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25775",
+   "query": "Can I use GoogleMap or other GPS data in creation of the Graphs?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25798",
+   "query": "Using anonymous functions instead of module or block. Bad idea?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_25885",
+   "query": "Numerical solution of Schrödinger-type equation in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26282",
+   "query": "Combined NonlinearModelFit",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26355",
+   "query": "How to add something like a shadow to my resulting figure?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26370",
+   "query": "Exporting HTML code to file.html",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2639",
+   "query": "What does the construct f[x_] := f[x] = ... mean?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26425",
+   "query": "How do I generate a table of data points from a function and add random noise?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2651",
+   "query": "How to pass a symbol name to a function with any of the Hold attributes?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26519",
+   "query": "Making a ListVectorPlot3D from data in an external file",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2652",
+   "query": "Labeling a bar chart, changing how rotated labels are centered",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26527",
+   "query": "How to decompose a complex expression containing repeated subexpressions?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26644",
+   "query": "valuation to a function using a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26776",
+   "query": "Keeping memory to reduce the running time of recursion",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26837",
+   "query": "\"Go back\" and \"Go forward\" in help?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26857",
+   "query": "Is there a way to add arrows along a parametric curve inside a manipulate function (Mathematica)?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26879",
+   "query": "How to get all possible Rules and Elements of Functions like ExportString",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2688",
+   "query": "How to efficiently Append a result of an operation on each element of a list to itself",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26917",
+   "query": "Why are my plots displaying behind the axes?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26939",
+   "query": "How can I control the controlplacement of Manipulate?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26983",
+   "query": "How to apply a free-form input Function using InputField",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_26995",
+   "query": "message about string expected in pattern",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27023",
+   "query": "Animated 3D graphics is low resolution",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27038",
+   "query": "Simple Macro or Meta Programming for Data Analysis",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27049",
+   "query": "InputField with Scrollbars",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27091",
+   "query": "Unresolved differential equation",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2712",
+   "query": "Filling global arrays in parallel calculations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2715",
+   "query": "Generating graphs interactively (GUI)",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27178",
+   "query": "How to simulate with a user specified bivariate continuous probability distribution",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27274",
+   "query": "Sort+Union on a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2729",
+   "query": "Ordering problem",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2752",
+   "query": "Listing subgraphs of G isomorphic to SubG",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27645",
+   "query": "Calculating volume between two surfaces of revolution",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2769",
+   "query": "NDSolve Problem",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27700",
+   "query": "Looking for an elegant way to construct this tensor-product-ish list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27748",
+   "query": "Elegant way of obtaining the envelope of oscillating function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27801",
+   "query": "Ignoring Indeterminate Results",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27868",
+   "query": "Combining the items with common available dates from two lists",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27883",
+   "query": "Understanding the coordinate system for ImageTake",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2789",
+   "query": "Aborting evaluation when the memory exceeds a certain limit",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_27921",
+   "query": "Problem with ListVectorPlot3D",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28014",
+   "query": "Importing specific columns of a .txt file",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28028",
+   "query": "How can I generate a generalized product to two lists in a special way?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28056",
+   "query": "Using Through to evaluate complex expressions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28103",
+   "query": "Extracting function variables from a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2821",
+   "query": "Does Mathematica have advanced indexing?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28258",
+   "query": "Are FEM methods integrated in NDSolve yet?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28283",
+   "query": "Unwrapping a list when invoking a function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28300",
+   "query": "Using Dynamic to import the chronologically newest file in a directory",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28541",
+   "query": "Embedding text on an opaque plane in 3D",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28553",
+   "query": "List elements and iterator name collision",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28611",
+   "query": "Phase portraits and StreamPlot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28805",
+   "query": "How to make a list of the roots of a polynomial equation without the ``x ==\" s in each entry?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28829",
+   "query": "How can I make ArrayPlot use one pixel per plot point?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28925",
+   "query": "Can I make the subsection CounterBox continue counting across section boundaries?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28946",
+   "query": "Fastest way to add a constant column into a array",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_28977",
+   "query": "Split dataset based on the first column",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29016",
+   "query": "Short circuit logical operators",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29085",
+   "query": "MathKernel doesn't return all Messages",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29098",
+   "query": "How to create a ListPlot containing two lists?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29129",
+   "query": "Button evaluation inside DynamicModule",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29254",
+   "query": "Defining a polygon by clicking on an image",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29358",
+   "query": "Using Select on list of vectors",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29545",
+   "query": "How can I suppress rotation of 3D graphics?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29590",
+   "query": "How can I convert a list to an expression?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_296",
+   "query": "How to export large graphics?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29609",
+   "query": "Where is my memory? -- LibraryLink never returns the memory",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29696",
+   "query": "Making a C++ callable .lib or .dll file from a Mathematica notebook",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29700",
+   "query": "Why is my funtion is wrong?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29708",
+   "query": "Use of $Assumptions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29808",
+   "query": "Detecting a more general pattern",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_29822",
+   "query": "Plotting list-valued interpolating function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_2988",
+   "query": "Can I make a plot with gradient filling?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30014",
+   "query": "How to create a simple cross eyed 3d plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30038",
+   "query": "Is there an analogue of the Variables command for general expressions?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30085",
+   "query": "The order of the result $x^2 \\left(b-\\frac{a}{2}\\right)+(a-2) x^3+\\left(2-\\frac{b}{2}\\right) x+4 x^4-1$",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30090",
+   "query": "Use the same scale for two ListContour plots",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30290",
+   "query": "Checking for duplicates in sublists",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30302",
+   "query": "Create a new window from CDF, such that it contains a Manipulate. Force this Manipulate work.",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30381",
+   "query": "NonLinearModelFit not generating a model without the use of \"BestFit\", not sure why",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30417",
+   "query": "Partitioning a list of 2D points into sublists that fit into non-overlapping equal-sized squares",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30429",
+   "query": "Complement on pre-sorted lists",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30432",
+   "query": "RevolutionPlot3D: revolving around a line NOT an axis",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30508",
+   "query": "Blend code for built-in ColorData schemes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30836",
+   "query": "Encrypt the password used for SendMail",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_30984",
+   "query": "How can I manipulate a circular part of an image?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31063",
+   "query": "Writing to file as it goes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31244",
+   "query": "How to divide all rows of a matrix by their row sums",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31299",
+   "query": "Why is a function I defined in a package not visible when I load the package?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_313",
+   "query": "How to collect result continuously (interruptible calculation) when running parallel calculations?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31302",
+   "query": "How do I create a package from an existing notebook?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31402",
+   "query": "How to implement this simple product rule in mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31501",
+   "query": "Conditional printed output",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3152",
+   "query": "Funny behaviour when plotting a polynomial of high degree and large coefficients",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31566",
+   "query": "How to keep front and back colors of Polygon in Graphics3D same all the time",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31636",
+   "query": "Using a variable in Get",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31829",
+   "query": "Exp of big negative numbers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_31902",
+   "query": "Do any users know of methods to capture Twitter feeds and subject them to analysis?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32119",
+   "query": "How to join held Lists?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32168",
+   "query": "Method -> {\"AxesInFront\" -> False} for Graphics3D",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32223",
+   "query": "Obtaining the name of a variable as a string",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32293",
+   "query": "Find eigen energies of time-independent Schrödinger equation",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32346",
+   "query": "How to plot crossing lines shown by one function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32447",
+   "query": "How to take the log of an equation?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32569",
+   "query": "Mapping function onto two lists, simultaneously",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32601",
+   "query": "Simplify vector expression - is there something like \"Factor\" for vectors, dot products etc.?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32658",
+   "query": "Combine 2D images perpendicular to each other",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32715",
+   "query": "Function to subdivide interval into n evenly-spaced points",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32727",
+   "query": "Can TreeForm be displayed \"sideways\"?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32878",
+   "query": "Finding hidden treasure (aka finding undocumented functions)",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32938",
+   "query": "Obtain the coordinates of a point by clicking on it",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_32983",
+   "query": "How do I remove \"->\" in output so that I can ListPlot it?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33",
+   "query": "How to run mathlink external commands in parallel?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33039",
+   "query": "Extract matrix from a system of linear equations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33051",
+   "query": "How do I generate arbitrarily many integration bounds?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3306",
+   "query": "Extract real part of a complex expression better than Re does",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33067",
+   "query": "What is the syntax to combine conditions and options?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33176",
+   "query": "Plotting a piecewise parametric curve",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3319",
+   "query": "Handling failed FindRoot calls",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33293",
+   "query": "Why does AbsoluteOptions give the wrong answer for ListPlot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33314",
+   "query": "How to improve the quality of 3D rendering?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33373",
+   "query": "How to get a list of pairs into the form $(x,y)$?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_334",
+   "query": "How do I evaluate only one step of an expression?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33405",
+   "query": "find the number of integral solutions a+b+c+d+e+f = 18",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33513",
+   "query": "How to remove the background noise from a single sound file?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33561",
+   "query": "Classification of a linear system of equations with a parameter",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33574",
+   "query": "What's the correct way to shift zero frequency to the center of a Fourier Transform?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33690",
+   "query": "Plotting a defined function gives different results from plotting the function directly",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33721",
+   "query": "While loop not breaking when condition is met",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33724",
+   "query": "How do I include both text and variables in Input[ ]?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3394",
+   "query": "Arguments to If[] are not evaluated",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33966",
+   "query": "How to \"explode\" a list inside a function call argument list?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_33992",
+   "query": "Double sum over primes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34073",
+   "query": "How to calculate contour integrals with Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3412",
+   "query": "Conditional Gathering of lists",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34291",
+   "query": "Get pattern from rising numbers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34321",
+   "query": "Where are the functional programming constructs: `every` and `some`?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34526",
+   "query": "DialogInput inside ButtonBar freezes Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34535",
+   "query": "ContourPlot of implicit function doesn't work when I square the equation",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34554",
+   "query": "NIntegrate receiving a function with NumericQ which returns a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34565",
+   "query": "Pattern matching list elements in pure functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34682",
+   "query": "Esc-esc for special characters and autocomplete in Mathematica 9",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34710",
+   "query": "map rational number",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34727",
+   "query": "how to plot 3d graph with its projection on the plane?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_34916",
+   "query": "System Modeler can't find g++ in Mac OS X Mavericks",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3510",
+   "query": "How to replace the style of the inline cell in a StyleSheet",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_35139",
+   "query": "Monitoring progress of long calculations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3518",
+   "query": "Using PlotLegends with Show messes up the graphics",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_35294",
+   "query": "Comparing large numbers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_353",
+   "query": "Functions with Options",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3541",
+   "query": "Why does Assuming[x > 0, TrueQ[x > 0]] return False?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_35544",
+   "query": "How to use Automorphisms[] on a graph?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_35553",
+   "query": "Mathematica's ArcTan function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_35603",
+   "query": "Executing several input cell simultaneously with parallelization",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3561",
+   "query": "How to add a vertical line to a plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_35683",
+   "query": "Finding the volume of a sphere using the Monte Carlo algorithm",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3646",
+   "query": "How to make a 3D globe?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_36995",
+   "query": "Code to give center of circle given three points in 2D?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37048",
+   "query": "Not getting the range I want when plotting a function with Show",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37093",
+   "query": "mathematica function autocomplete issue",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3723",
+   "query": "Filling a polygon with a pattern of insets",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37242",
+   "query": "is there a way to speed up rule replace?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37247",
+   "query": "Convert separate digits of a number into an array",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37346",
+   "query": "How can I get Manipulator control elements to appear on one line?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37414",
+   "query": "limit calculation step by step",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37416",
+   "query": "Annoying errors in sections of plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3747",
+   "query": "How to change the axes' origin and direction?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37557",
+   "query": "Is Mathematica an Implementation of the Wolfram Language?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37602",
+   "query": "Best method to do a List Plot of two series with the same x-Axes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37656",
+   "query": "How can I remove the singleton dimensions of an array?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37755",
+   "query": "How to Clear variables represented as a list of strings?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37792",
+   "query": "How to make use of an interpolating function outside of Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3780",
+   "query": "How to determine the convex hull of some text?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37860",
+   "query": "Unable to solve the expontial equations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_37894",
+   "query": "Treat all variables as local in a module",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38012",
+   "query": "Exporting SmoothHistogram plot data",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38126",
+   "query": "Arrowed circular arc",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38152",
+   "query": "How to make a control array of buttons or togglers?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38166",
+   "query": "Pulling constants out of integrations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38196",
+   "query": "Importing and running a notebook",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38242",
+   "query": "How to solve initial value problem using Runge-Kutta method?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38265",
+   "query": "How to exit from the innermost enclosing pure function?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38388",
+   "query": "How to get back name of the number from Max function?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38498",
+   "query": "Reduce of a table",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38604",
+   "query": "Define an operator without Built-in Meanings containing a Power function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38622",
+   "query": "Using the actual subscript as a variable within thecontext of definitions using the Notation package and Symbolize",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3871",
+   "query": "Plotting contours of a function for different values of a parameter",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38792",
+   "query": "Save an indexed function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38819",
+   "query": "What are the limits of the Prime-functions?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38846",
+   "query": "Mathematica how to plot objects with labels in 3D plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_38931",
+   "query": "Can Mathematica identify formulae or sequences of numbers?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3897",
+   "query": "Plotting Error Bars on a Log Scale",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39019",
+   "query": "Exporting images in a Mathematica array to a PDF s.t. each image is precisely $n \\times m$ millimeter in dimension",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39026",
+   "query": "Loop function over list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39076",
+   "query": "Keep data in memory inside a notebook without having to evaluate it again",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39078",
+   "query": "Return \"true\" if point is in Convex Hull",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39089",
+   "query": "How to do subtraction with sets in which the elements have multiplicity indicators?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39106",
+   "query": "Define new 3D graphics primitives in Mathematica 9",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3912",
+   "query": "Using several anonymous functions mixed together",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39137",
+   "query": "Finding a 3d curve from torsion and curvature with NDSolve",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39361",
+   "query": "How to generate a random snowflake",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3943",
+   "query": "Usage displays properly only after second call",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39511",
+   "query": "One fill color for a curve when it is above the x-axis and another when it is below",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39604",
+   "query": "Interrupting FactorInteger automatically when it takes a very long time",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39654",
+   "query": "How to exclude numbers in a series and still plot the graph?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39696",
+   "query": "Create a new infix operator",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39731",
+   "query": "How to use relative paths in a notebook?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39904",
+   "query": "To put a plot inside of a plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_3991",
+   "query": "Saving high-quality graphics through commands",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_39980",
+   "query": "Evaluating a String that is a Variable",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4001",
+   "query": "FindFit returns Infinity::indet error when data contains {0,0}",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4002",
+   "query": "Minimizing a function of many coordinates",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40029",
+   "query": "Is it possible to modify the options for a particular cell from another cell?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40146",
+   "query": "Filling only part of a plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4017",
+   "query": "Computing and plotting a spectrogram in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4019",
+   "query": "Map and Apply a function on a nested list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40201",
+   "query": "How to write a variable in terms of the other",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40204",
+   "query": "Reflecting the Polya-Aeppli distribution",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40320",
+   "query": "How to get the Mathematica output in Python?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40422",
+   "query": "Prevent Mathematica from \"romanizing\" a string of letters?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40640",
+   "query": "Compiling Visual Studio C++ to Run on Computers without Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40748",
+   "query": "Order of operations, precedence in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40763",
+   "query": "Gram Schmidt Process for functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4081",
+   "query": "Using the Graphics command, how do I limit the output to a specified region, say a disk?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40837",
+   "query": "How do I switch between two notebooks in Mathematica 9 interface?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4084",
+   "query": "Finding a \"not-shortest\" path between two vertices",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_40919",
+   "query": "Coloring the points in a ListPlot with the value of another function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41077",
+   "query": "How do I extend (prepend or append to) an existing TagSetDelayed rule?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41141",
+   "query": "Sorting lists element by element",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41170",
+   "query": "Plotting: Basic Question",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41215",
+   "query": "Exporting Animated gif",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41291",
+   "query": "Plot and Parametric plot give different results",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41350",
+   "query": "Mathematica Semilog (LogLinearPlot) using x,y points from table",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41517",
+   "query": "densityplot + world map overlay",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41521",
+   "query": "Return only one numeric solution to equation",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41523",
+   "query": "How to vary thickness of line on the plot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41569",
+   "query": "Optimizing a bubble art code",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41774",
+   "query": "Drawing a shape on the mesh of a Plot3D",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41813",
+   "query": "Remove list elements that contain NaN Symbol",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41872",
+   "query": "Coloring selected elements of a list created with Table",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41920",
+   "query": "Typesetting - entering derivative in traditional form",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_41966",
+   "query": "How to generate closed-form stiff matrix of triangular prism element by mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42035",
+   "query": "Problem with With",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42097",
+   "query": "Defining Piecewise Functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42209",
+   "query": "Tick labels above axis",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42330",
+   "query": "Make output be to a certain number of places after the decimal point",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42334",
+   "query": "Restoring a Mathematica session without notebook interface",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42366",
+   "query": "How do I define a tensor from another tensor with summations?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42403",
+   "query": "How to do Inverse formulas/Rearrange formulas in Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42411",
+   "query": "Use Map with OptionValue",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4244",
+   "query": "Visualizing a Complex Vector Field near Poles",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42483",
+   "query": "Join matrix based on conditions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42512",
+   "query": "N[number, 100] does not give 100 decimal places",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42628",
+   "query": "Question about a ParametricPlot with a shading grey family of lines and/or different sizes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42712",
+   "query": "Extract coordinates from a polygon",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42717",
+   "query": "Explicit multiplication * sign in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42763",
+   "query": "Why isn't my Stream code plotting multiple solution curves?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42778",
+   "query": "Plot periodic function from Dirac delta function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42889",
+   "query": "save data in parallel table",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42951",
+   "query": "3D Point in Epilog of Plot3D",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_42964",
+   "query": "Contracting with Levi-Civita (totally antisymmetric) tensor",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43204",
+   "query": "Dot shading a.k.a. Stippling effect",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43350",
+   "query": "Working with symmetric polynomials",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4338",
+   "query": "Graph relationships between functions and variables",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43415",
+   "query": "Set Image Size and Page Orientation When Exporting to PDF",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43449",
+   "query": "Extracting second value of each sublist",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43485",
+   "query": "Plot parametric solutions using Manipulate",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43619",
+   "query": "The introduction for Context in Wagner's book is out of date?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43638",
+   "query": "$H_{\\infty}$ optimization of transfer function matrix",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4368",
+   "query": "How to insert graphics primitives into a plot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43683",
+   "query": "Accumulate 2D points that have the same first component",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43813",
+   "query": "Is there any way to define a new binary operator?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_43874",
+   "query": "Hide MathKernel Tab on Taskbar when using C++",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4390",
+   "query": "Threading behavior of SameQ vs Equals",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4406",
+   "query": "How can I connect to a database using the 32 Bit ODBC on a Windows 7 (64 Bit) machine?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44126",
+   "query": "Make ConditionalExpression go away",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4413",
+   "query": "How can I influence the spaces between labels on a BarChart",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44154",
+   "query": "Integration of any interpolation generates invalid comparison errors",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44200",
+   "query": "How to modify the file \"KeyEventTranslations.tr\" to use Enter to evaluate the current cell?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44289",
+   "query": "Writing equations from Mathematica in Matlab",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44421",
+   "query": "Use of N@ with Table",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44428",
+   "query": "The precision of the number",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44439",
+   "query": "How to change default font?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44507",
+   "query": "About making a fraction \"taller\"",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44533",
+   "query": "How to avoid malicious code when opening & executing notebooks",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44709",
+   "query": "adding vectors of unequal length",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44744",
+   "query": "Chopping pure Imaginary numbers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44751",
+   "query": "Points on circle equally spaced",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44756",
+   "query": "Intersection of surface with parallel planes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44812",
+   "query": "Convert epoch seconds to date",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44955",
+   "query": "How to find the local maximum of a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_44987",
+   "query": "Needs, Get and <<",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45010",
+   "query": "Set Standard Plot Thickness",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45040",
+   "query": "Notification when evaluation completes",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_451",
+   "query": "Saving a notebook as PDF, preserving syntax highlighting",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45181",
+   "query": "Index of iteration inside NestList",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4537",
+   "query": "Rotating 3DPlot into animated gif",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45371",
+   "query": "Import LaTeX from Wikipedia to Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45398",
+   "query": "How to read long numbers?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45424",
+   "query": "Why does the filling on my ListPlot not reach the axis for some values?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45447",
+   "query": "How can I compute the real part of $zeta^2$ numerically?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45450",
+   "query": "Why does evaluating an integral within a Plot expression take so long?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45475",
+   "query": "How do I get all possible solutions in an underdetermined system?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45476",
+   "query": "Is it possible to obtain vector differentiation results in terms of vectors rather than components?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45528",
+   "query": "How to get a number from a dynamic variable in \"manipulate\"",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45551",
+   "query": "How to reduce notebook or CDF file size with many images in it?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45574",
+   "query": "Generate polyhedron from coordinates",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45662",
+   "query": "Always the same problem with Conjugate",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45693",
+   "query": "relative directory paths within a mathematica package/what directory does a mathematica package see as local?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45725",
+   "query": "How to simplify a polynomial and get the results in the order that I want?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45878",
+   "query": "Creating If statements programmatically",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_45994",
+   "query": "iterative programming",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46053",
+   "query": "Sectional averages of a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46064",
+   "query": "Vector-calculus",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4608",
+   "query": "Why does the Front End group backslashes into pairs?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4612",
+   "query": "Mathematica slope fields",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46136",
+   "query": "Ordering the Terms in an Expression",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46284",
+   "query": "How do I plus these values in a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46315",
+   "query": "Bizarre behavior of With, Compile and Break",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46336",
+   "query": "How to get integer/rational and real eigenvectors to be the same?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46350",
+   "query": "Automatic method for NDSolve",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46459",
+   "query": "Little triangles appearing in a Mathematica region plot with \"opacity\" saved in a PDF file",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46581",
+   "query": "Visualizing Dynamic Time Warping",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46595",
+   "query": "Append subscript to variable name",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46662",
+   "query": "Scope of variables within a Manipulate expression",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46702",
+   "query": "Simple subtraction question",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4679",
+   "query": "Is there a simple way to plot complex numbers satisfying a given criteria",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46866",
+   "query": "Is it possible to auto-load documentation for current function?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46893",
+   "query": "How to Plot a function that returns multiple values?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46920",
+   "query": "Import .dat table but losing decimals",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46927",
+   "query": "How to put x-Label below the x-Axis?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46945",
+   "query": "Plot two functions of two variables against each other",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46950",
+   "query": "Meaning of backtick in conjunction with units",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_46986",
+   "query": "How to change $n$ variables with $n$ Buttons automatically",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47019",
+   "query": "appending element to sub list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47028",
+   "query": "If statements with a Boolean",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47030",
+   "query": "Filter sublists that contain a certain value",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47154",
+   "query": "How to put the values/points in a loop into a plot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47161",
+   "query": "In a list having triplet elements, how can I change the third element of a triplet when it has a given value?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47175",
+   "query": "SmoothHistogram with sharp boundary",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4720",
+   "query": "Labelling ArrayPlot Charts",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47207",
+   "query": "Prevent trigonometric simplification",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4727",
+   "query": "Does Mathematica support variable frame rate for any video format, in analogue of GIF-style \"DisplayDurations\"?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4729",
+   "query": "How to format numbers with at least one figure after the decimal point",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47352",
+   "query": "Voronoi diagram for line segments in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4744",
+   "query": "GridBox/packed array behaviour",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47475",
+   "query": "Drop last element of parts of a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_4764",
+   "query": "Non-commutative symbolic linear algebra",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47656",
+   "query": "How to take single item out of List?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47749",
+   "query": "ListDensityPlot with discrete bins",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_47881",
+   "query": "Matrix exponential via Cayley-Hamilton Theorem",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48026",
+   "query": "How to view code of CDF demonstration?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48030",
+   "query": "Question about plotting one function with different colors",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48208",
+   "query": "Why evaluation doesn't fail if arguments are invalid?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48307",
+   "query": "How to find the maximum values and the place of the max value in the list?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48386",
+   "query": "How to eliminate the margin between figure and frame in DensityPlot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48387",
+   "query": "Convert Tube[BSplineCurve[...]] Graphics3D object to polygons",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48672",
+   "query": "How to use results of Dsolve and get derivative of that?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48681",
+   "query": "Works in mathematica but not as cdf preview or web embedded cdf",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48690",
+   "query": "How do I fit NDSolve result to experimental data?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48696",
+   "query": "How would I take a variable from a string and reassign its value?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48802",
+   "query": "My \"N\" turned red randomly",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_48941",
+   "query": "How do I perform the riffle function backward?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_49190",
+   "query": "$IterationLimit and parallel computing",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_49230",
+   "query": "Exporting pictures in their correct size when using Grid",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_49289",
+   "query": "Converting strings of the form \"1.34e5\" to real numbers?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_49311",
+   "query": "Create a matrix of matrices using Band and ArrayFlatten",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_50418",
+   "query": "Select duplicate values from a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_50507",
+   "query": "plot data with small differences",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_50519",
+   "query": "Why PlotRange doesn't work for this set of values?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_50548",
+   "query": "Put a rounded parentheses in a label",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_50713",
+   "query": "Hide your controls inside Manipulate",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_50738",
+   "query": "Grabbing columns from a matrix",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_50831",
+   "query": "RK4 Gravity Simulator",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51042",
+   "query": "Find the values of 3 variables that best fit 6 equations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51049",
+   "query": "ListDensityPlot and ListPlot3D with big data",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51188",
+   "query": "Timing of ParallelDo versus Do: simple example",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51440",
+   "query": "How to calculate this derivative?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51560",
+   "query": "How to joint symbolic expressions together",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51597",
+   "query": "How to check the decimal accuracy of result?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51711",
+   "query": "Understanding Mathematica: How to write fast code?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51732",
+   "query": "How to use Fold with 3 variables",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51776",
+   "query": "How get eigenvectors without phase jump?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51783",
+   "query": "How to find these two intersections?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51880",
+   "query": "How to add PlotLegends in a Show function?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_51885",
+   "query": "Saving many plots in files",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_52043",
+   "query": "Stopping Mathematica from reordering expressions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_52207",
+   "query": "Get names of all folders in a directory",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_52308",
+   "query": "Customizing the distance of plot frame tick labels to frame",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5235",
+   "query": "Why doesn't Evaluate appear to work in this RegionPlot example with MatchQ?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_52358",
+   "query": "What is wrong with combining two programs with event handlers?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_52381",
+   "query": "Integral over geometric region",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_52414",
+   "query": "Error changing Dataset using Part",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5242",
+   "query": "How to import all files of a folder at once?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5314",
+   "query": "Solving complex equations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_533",
+   "query": "Placement of Condition /; expressions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5375",
+   "query": "Extract current viewing parameters from a 3D view?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5409",
+   "query": "Interdependent controls in Manipulate",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5434",
+   "query": "Using D to find a symbolic derivative",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_54464",
+   "query": "Bug in NDSolve (Mathematica 9.0.1)?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_54486",
+   "query": "How to access new colour schemes in version 10?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5454",
+   "query": "Implementing bookmarks in the front end when editing a package",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_54607",
+   "query": "Mathematica 10 Dataset doesn't format more than 4 columns?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_54645",
+   "query": "Simplifying (A+B)* C doesn't work",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_54781",
+   "query": "Where is the \"Function Navigator\" and \"Virtual Book\" gone?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_54899",
+   "query": "Addition of all elements of two sets with each other",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_54993",
+   "query": "intersection between two curves in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55056",
+   "query": "How can I name and manipulate several Input Fields?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55086",
+   "query": "Mathematica 10 doesn't support path containing Chinese characters",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_552",
+   "query": "How do I replace a variable in a polynomial?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55292",
+   "query": "A problem about function N",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55294",
+   "query": "DeleteDuplicatesBy is not performing as I'd hoped. Am I missing something?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55308",
+   "query": "LegendLayout not working as asked",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55309",
+   "query": "Marking certain detected points on an image",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55517",
+   "query": "Generating a Table with a certian Density",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55568",
+   "query": "Why isn't Refresh working as expected?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55600",
+   "query": "How to solve an integral equation by iteration method?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55663",
+   "query": "What is wrong with ContourPlot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55716",
+   "query": "Can't get Append to append a record (association) to a dataset",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5575",
+   "query": "How to find all the local minima/maxima in a range",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5580",
+   "query": "Dr. StrangeNumbers or: How I Learned to Stop Worrying and Love Floating Point Arithmetic",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_55972",
+   "query": "Which function definition is used to evaluate an expression that matches the lefthand side of more than one definition?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5619",
+   "query": "How to create a floating image with no window background",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_56213",
+   "query": "Possible bug involving Dataset/Query and RightComposition",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_56296",
+   "query": "How to modify a Dataset?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5644",
+   "query": "Partition string into chunks",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_56565",
+   "query": "Behaviour of Plot3D with large numbers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_56785",
+   "query": "Generate all strings of fixed length from an alphabet",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_56984",
+   "query": "File-name completion for custom functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57242",
+   "query": "Remove curly brackets _completely_ to map a function to the elements of a list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57366",
+   "query": "Test a wooden board's vibration mode",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5740",
+   "query": "Using MapAt to map at a particular depth (levelspec)",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57430",
+   "query": "How to prevent function from substituting the part of the parameter name if it has a subscript?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57434",
+   "query": "Plotting Semi-hollow spheres",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57470",
+   "query": "Values of an algebraic curve",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57588",
+   "query": "How can I plot weather data?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57632",
+   "query": "Does Dataset round?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5782",
+   "query": "Implementing continuous phase/Arg function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57878",
+   "query": "Disable Input Assistant Mathematica 10",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5790",
+   "query": "How to make Jacobian automatically in Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_57975",
+   "query": "ToExpression from commandline",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5799",
+   "query": "Delete duplicates in a list, depending on the sequence of numbers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_58228",
+   "query": "How to do a region plot with many functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_58229",
+   "query": "Transformation of Derivatives under change of coordinates",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_58465",
+   "query": "How to display movie without controls",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_58475",
+   "query": "Adding Text to a ListLogLinearPlot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_58502",
+   "query": "DelaunayTriangulation in Mathematica V 7.01.0",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_58690",
+   "query": "How to build a game board",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_58918",
+   "query": "Mathematica 10 loads too long time",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_58992",
+   "query": "How do you turn off the Dashed graphics directive?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59013",
+   "query": "DSolve not returning \"trivial\" solutions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59043",
+   "query": "Is there a reliable way to compute the Hurst Dimension of a time series",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59113",
+   "query": "Graph embedding and edge weights",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59140",
+   "query": "Solve equations within range and plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5919",
+   "query": "Finding the area, algebraic curve and jaggedness of an arbitrary shape",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59206",
+   "query": "How to plot the result of this singular integral?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59253",
+   "query": "How to get a multiple line plot from a list of lists",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_5930",
+   "query": "Is it possible to change the colors of the highlighted code in the Mathematica frontend?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59596",
+   "query": "Removing the unit \"pm\" from atomic positions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59613",
+   "query": "Binning of listplot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_59646",
+   "query": "How to pattern match an association?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6043",
+   "query": "Is there a way to make the tick marks larger?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6055",
+   "query": "How to get rid of warnings when using Solve on an equation with inexact coefficients?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6081",
+   "query": "How to create a heatmap from list of coordinates?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6102",
+   "query": "MapThread with non-rectangular lists",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6164",
+   "query": "Formula Formatting is Small and Chunky?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6210",
+   "query": "Memory leak in FE?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6236",
+   "query": "ShowLegend values",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6338",
+   "query": "Prefix operator with low precedence",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6350",
+   "query": "How to estimate time series from a plot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6397",
+   "query": "Is it possible to set a variable as a positive one in the whole notebook?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6472",
+   "query": "Intermediate display similar to PrintTemporary",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6497",
+   "query": "How can I implement object oriented programming in Mathematica?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6562",
+   "query": "How can I create a rectangular graphic with curved edges?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6796",
+   "query": "Using the result of Solve in subsequent calculations",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6862",
+   "query": "Plotting complex Sine",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6923",
+   "query": "Edit a Mathematica plot in Illustrator, missing font problem",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_6955",
+   "query": "Is it possible to insert arguments into functions when they're used like Function@ or //Function?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_702",
+   "query": "Undocumented form for FilledCurve[]",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7173",
+   "query": "SetOptions for every new notebook",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7174",
+   "query": "(Non-Convex) Polygon Union and Intersection Functions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7214",
+   "query": "How to Set parts of indexed lists?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7235",
+   "query": "Exchange axes in ListLinePlot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7366",
+   "query": "Evaluate continued fraction",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7408",
+   "query": "ListPlot with plotmarkers determined by point",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_745",
+   "query": "Fontsize is too small",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7463",
+   "query": "Is this the most efficient way to round approximate integers to integers while leaving other Reals untouched?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7531",
+   "query": "How can I label a ListDensityPlot with a color bar?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_761",
+   "query": "How to enter matrices in block matrix format?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7668",
+   "query": "Why won't Mathematica Solve a set of two equations for one variable?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7679",
+   "query": "Sort lists according to the order of another",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7756",
+   "query": "Using pure functions in Table",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7772",
+   "query": "More on combining 2d and 3d plots",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7779",
+   "query": "How can I easily eliminate the dependency of a stylesheet on a non-built-in stylesheet?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7804",
+   "query": "Evaluation inside Button stops after some seconds",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7926",
+   "query": "Randomly selecting elements without repetition",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_7941",
+   "query": "How to nest my own \"times\" function to get powers",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8215",
+   "query": "Prepend Information to Warning Messages",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8295",
+   "query": "Local variables in Module leak into the Global context",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8310",
+   "query": "Using the Mathematica front-end efficiently for editing notebooks",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8353",
+   "query": "Why aren't these additions of integrals and summations equal?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8390",
+   "query": "Plot not plotting entire range of function",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8438",
+   "query": "Minimal effort method for integrating C++ functions into Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_850",
+   "query": "How do I clear all user defined symbols?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8544",
+   "query": "How to plot Fit functions?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8576",
+   "query": "Managing Exclusions in Plot[]",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8619",
+   "query": "How is pattern specificity decided?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8646",
+   "query": "How to insert guide-lines in graphics without specifying range?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8661",
+   "query": "How can I load packages automatically after reopening Mathematica",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8695",
+   "query": "Is there an easy way to put time ticks on a parametric plot?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8748",
+   "query": "AbsoluteOptions of a Histogram with PlotRange",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8829",
+   "query": "What is the difference between Set and SetDelayed?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8841",
+   "query": "How can I plot the direction field for a differential equation?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8865",
+   "query": "Pass function or formula as function parameter",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8922",
+   "query": "position of sequence of elements in list",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_8943",
+   "query": "Formatting Framed - some FrameStyle graphic directives don't work?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9035",
+   "query": "How Can I use Solve/Reduce Output",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9171",
+   "query": "Controlling the 2D $x–y$ aspect ratio of a 3D plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9288",
+   "query": "Sum or Product with Exclusions",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9322",
+   "query": "Omit part of a 2D plot",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_938",
+   "query": "How to make a drop-shadow for Graphics3D objects",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9406",
+   "query": "How to ensure that Polygon[list] plots a simple polygon?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9440",
+   "query": "How to get the list of defined values for an indexed variable?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9483",
+   "query": "How to put terms in lexicographic order?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9523",
+   "query": "How to provide your own example data for a custom package?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9540",
+   "query": "Problem with Financial Data",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9544",
+   "query": "Integro-differential equation",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9558",
+   "query": "How to express ticks in scientific form?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_96",
+   "query": "What is the distinction between DownValues, UpValues, SubValues, and OwnValues?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9623",
+   "query": "How to make hollow polyhedra?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9631",
+   "query": "find subsequences of constant increase",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9719",
+   "query": "Replace values which obey certain criteria",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9772",
+   "query": "Determine whether some expression contains a given symbol",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9801",
+   "query": "How can I tell mathematica to generate an histogram from nominal data?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9926",
+   "query": "How to find palindromic numbers (Project Euler #4)?",
+   "question_type": "beir_cqadupstack_mathematica"
+  },
+  {
+   "name": "beir_cqadupstack_mathematica_9942",
+   "query": "How to change the style definitions for Default.nb?",
+   "question_type": "beir_cqadupstack_mathematica"
+  }
+ ]
+}
