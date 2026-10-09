@@ -113,6 +113,28 @@ def _lanes_toml(tmp_path):
     return p
 
 
+@pytest.mark.parametrize("center,spread,true_a,true_b,seed", [
+    (-3.6, 0.9, 0.85, 2.0, 7),    # ERB-like: low-confidence scores far from the identity start
+    (0.0, 1.5, 1.3, -0.4, 8),
+    (2.5, 0.5, 2.0, -5.5, 9),
+])
+def test_fit_platt_converges_like_a_reference_logistic(center, spread, true_a, true_b, seed):
+    """Regression (2026-10-09): undamped Newton from (1, 0) diverged to a~8e8 on
+    ERB's CE-lanes logits (z ~ -3.6), collapsing every probability to 0 so the
+    script reported no_usable_floor where a usable floor exists."""
+    mod = _script()
+    rng = random.Random(seed)
+    z = [rng.gauss(center, spread) for _ in range(470)]
+    y = [1 if rng.random() < 1 / (1 + math.exp(-(true_a * v + true_b))) else 0 for v in z]
+    a, b = mod.fit_platt(z, y)
+    assert math.isfinite(a) and math.isfinite(b) and abs(a) < 50
+    # Same maximum-likelihood optimum as an unregularised reference fit.
+    nll = lambda aa, bb: -sum(math.log(max(1e-15, (1 / (1 + math.exp(-(aa * v + bb)))) if t
+                                           else 1 - 1 / (1 + math.exp(-(aa * v + bb))))) for v, t in zip(z, y))
+    ref = min(((aa / 20, bb / 10) for aa in range(-20, 100) for bb in range(-80, 60)), key=lambda p: nll(*p))
+    assert nll(a, b) <= nll(*ref) + 1e-6
+
+
 def test_calibrate_writes_a_floor_that_holds_out_of_sample(tmp_path):
     mod = _script()
     rep, out = tmp_path / "rep.json", tmp_path / "store.toml"

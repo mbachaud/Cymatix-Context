@@ -54,9 +54,25 @@ def _logit(p: float) -> float:
     return math.log(p / (1 - p))
 
 
+def _nll(a: float, b: float, z: Sequence[float], y: Sequence[int], l2: float) -> float:
+    total = 0.5 * l2 * (a * a + b * b)
+    for zi, yi in zip(z, y):
+        t = a * zi + b
+        # log(1 + e^t) - y*t, computed stably
+        total += (t if t > 0 else 0.0) + math.log1p(math.exp(-abs(t))) - yi * t
+    return total
+
+
 def fit_platt(z: Sequence[float], y: Sequence[int], iters: int = 100, l2: float = 1e-6) -> Tuple[float, float]:
-    """Newton-Raphson logistic fit of y ~ sigmoid(a*z + b) (tiny ridge for stability)."""
-    a, b = 1.0, 0.0
+    """Logistic fit of y ~ sigmoid(a*z + b): Newton steps with a backtracking line search.
+
+    Undamped Newton from (1, 0) diverged (a ~ 8e8) on ERB's CE-lanes logits
+    (z ~ -3.6); every step here must lower the negative log-likelihood. Starts
+    at the base-rate intercept.
+    """
+    base = min(max(sum(y) / len(y), 1e-6), 1 - 1e-6) if y else 0.5
+    a, b = 1.0, math.log(base / (1 - base)) - (sum(z) / len(z) if z else 0.0)
+    f = _nll(a, b, z, y, l2)
     for _ in range(iters):
         ga = gb = haa = hab = hbb = 0.0
         for zi, yi in zip(z, y):
@@ -76,8 +92,18 @@ def fit_platt(z: Sequence[float], y: Sequence[int], iters: int = 100, l2: float 
             break
         da = (hbb * ga - hab * gb) / det
         db = (haa * gb - hab * ga) / det
-        a, b = a - da, b - db
-        if abs(da) < 1e-10 and abs(db) < 1e-10:
+        step = 1.0
+        while step > 1e-10:
+            na, nb = a - step * da, b - step * db
+            nf = _nll(na, nb, z, y, l2)
+            if nf <= f:
+                break
+            step /= 2.0
+        else:
+            break
+        moved = abs(na - a) + abs(nb - b)
+        a, b, f = na, nb, nf
+        if moved < 1e-10:
             break
     return a, b
 
@@ -123,8 +149,12 @@ def main(argv=None) -> int:
     if know.model != "lanes":
         raise SystemExit(f"{a.config}: [know] model is {know.model!r}, not 'lanes'")
     base = LanesModel(know.lanes_intercept, dict(know.lanes_betas))  # uncalibrated: identity Platt
+    with_ce = bool(know.lanes_ce_model)
     rows = load_rows(a.receipt, a.arm)
-    z = [_logit(base.confidence(feature_values(r))) for r in rows]
+    if with_ce and not any("ce" in r for r in rows):
+        raise SystemExit("[know] lanes_ce_model is set but the rows carry no ce signals; "
+                         "re-run know_abstain_replay with --ce-model")
+    z = [_logit(base.confidence(feature_values(r, with_ce=with_ce))) for r in rows]
     y = [1 if r.get("rank_of_first_gold") == 1 else 0 for r in rows]
 
     idx = list(range(len(rows)))
@@ -171,7 +201,8 @@ def main(argv=None) -> int:
             f"lanes_intercept = {know.lanes_intercept!r}\n"
             f"lanes_betas = {{ {betas} }}\n"
             f"lanes_platt_a = {pa!r}\n"
-            f"lanes_platt_b = {pb!r}\n",
+            f"lanes_platt_b = {pb!r}\n"
+            + (f"lanes_ce_model = {json.dumps(know.lanes_ce_model)}\n" if with_ce else ""),
             encoding="utf-8",
         )
     Path(a.out).write_text(json.dumps(report, indent=1), encoding="utf-8")

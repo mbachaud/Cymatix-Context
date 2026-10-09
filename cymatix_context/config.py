@@ -1303,6 +1303,8 @@ class KnowConfig:
     lanes_platt_a: float = 1.0
     # Issue #482: per-store Platt offset for the "lanes" logit (see lanes_platt_a).
     lanes_platt_b: float = 0.0
+    # Issue #482: HF cross-encoder whose fused top-1/top-2 scores feed the "lanes" model's ce_top1/ce_margin features (e.g. "cross-encoder/ms-marco-MiniLM-L-6-v2", scored through the shared rerank backend). "" = off: no CE call per query. Needs betas fit with scripts/fit_know_lanes.py --features ce.
+    lanes_ce_model: str = ""
 
 
 @dataclass
@@ -2309,7 +2311,9 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
         if model not in ("legacy", "lanes"):
             log.warning("[know] model must be 'legacy' or 'lanes', got %r; using 'legacy'", k.get("model"))
             model = "legacy"
-        from .scoring.know_lanes import FEATURE_NAMES as _LANE_FEATURES
+        from .scoring.know_lanes import CE_FEATURES as _CE_FEATURES
+        from .scoring.know_lanes import FEATURE_NAMES as _BASE_LANE_FEATURES
+        _LANE_FEATURES = _BASE_LANE_FEATURES + _CE_FEATURES
         lanes_betas: Dict[str, float] = {}
         raw_lb = k.get("lanes_betas") or {}
         if isinstance(raw_lb, dict):
@@ -2331,6 +2335,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             lanes_betas=lanes_betas,
             lanes_platt_a=_know_float("lanes_platt_a", 1.0),
             lanes_platt_b=_know_float("lanes_platt_b", 0.0),
+            lanes_ce_model=str(k.get("lanes_ce_model", "") or "").strip(),
             neutral=neutral,
             fitted_inputs=fitted_inputs,
             emit_floor=_know_float("emit_floor", _KNOW_DEFAULT_EMIT_FLOOR),

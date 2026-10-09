@@ -905,6 +905,7 @@ def _attach_know_or_miss(
                 confidence_override = _kl.served_lanes_confidence(
                     lanes_model, scores=score_map, tier_contributions=tier_contrib, query=query,
                     top1_text=getattr(top1, "content", None), coordinate_confidence=coordinate_confidence,
+                    text_of=lambda gid: getattr(by_id.get(gid), "content", None),
                 )
             except Exception:  # noqa: BLE001 -- intentional recovery boundary
                 import logging

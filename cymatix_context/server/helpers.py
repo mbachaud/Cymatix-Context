@@ -492,19 +492,22 @@ def _compute_know_or_miss_block(
     _know_cfg = getattr(_live_cfg, "know", None)
     if getattr(_know_cfg, "model", "legacy") == "lanes" and raw_scores:
         try:
-            from ..scoring.know_lanes import LanesModel, fused_order, served_lanes_confidence
+            from ..scoring.know_lanes import fused_order, model_from_know, served_lanes_confidence
 
-            top1_text = None
-            order = fused_order(raw_scores)
             reader = getattr(cymatix.genome, "read_conn", None)
-            if order and reader is not None:
-                hit = reader.execute("SELECT content FROM genes WHERE gene_id = ?", (order[0],)).fetchone()
-                top1_text = hit[0] if hit and isinstance(hit[0], str) else None
+
+            def _text_of(gid):
+                if reader is None:
+                    return None
+                hit = reader.execute("SELECT content FROM genes WHERE gene_id = ?", (gid,)).fetchone()
+                return hit[0] if hit and isinstance(hit[0], str) else None
+
+            order = fused_order(raw_scores)
             confidence_override = served_lanes_confidence(
-                LanesModel(_know_cfg.lanes_intercept, dict(_know_cfg.lanes_betas),
-                           _know_cfg.lanes_platt_a, _know_cfg.lanes_platt_b),
+                model_from_know(_know_cfg),
                 scores=raw_scores, tier_contributions=tier_contrib, query=query,
-                top1_text=top1_text, coordinate_confidence=coord_conf,
+                top1_text=_text_of(order[0]) if order else None, coordinate_confidence=coord_conf,
+                text_of=_text_of,
             )
         except Exception:  # noqa: BLE001 -- intentional recovery boundary
             log.warning("know lanes model failed; using the legacy logistic", exc_info=True)

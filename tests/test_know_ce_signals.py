@@ -68,7 +68,8 @@ def test_fit_script_ce_feature_set(tmp_path):
                          "pool_size": 30, "rank_of_first_gold": 1 if ce > 0.5 else 4,
                          "lane_signals": {"lanes_fired": 2}, "ce": {"ce_top1": ce, "ce_margin": abs(ce) / 2}})
         p = tmp_path / f"know_replay_{c}_2026-10-08.json"
-        p.write_text(json.dumps({"arms": [{"arm": "postflip_default", "per_query": rows}]}), encoding="utf-8")
+        p.write_text(json.dumps({"ce_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+                                 "arms": [{"arm": "postflip_default", "per_query": rows}]}), encoding="utf-8")
         paths += ["--receipt", f"{c}={p}"]
     rep, tom = tmp_path / "r.json", tmp_path / "t.toml"
     assert mod.main([*paths, "--features", "ce", "--out", str(rep), "--toml-out", str(tom)]) == 0
