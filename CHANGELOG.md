@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **feat(know): served cross-encoder input for the lanes model** (opt-in,
+  #482). New key `[know] lanes_ce_model` (empty = off; no CE call is made). When
+  it is set, the server scores the fused top-1 and top-2 through the shared
+  rerank backend and feeds `ce_top1` / `ce_margin` (plus missing flags) to the
+  lanes model. A failed or absent model reads as missing, never as an error.
+  `fit_know_lanes --features ce` now writes a loadable `[know]` block,
+  including `lanes_ce_model`, and `calibrate_know_store` honours it.
+  Measured on 30-bed CE replays: pooled leave-one-corpus-out AUC 0.743 →
+  0.823. ERB 947k, with the model fit without ERB and the floor calibrated on
+  held-out ERB folds, reaches 0.766 precision at 16.4% coverage (target 0.75).
+- **fix(know): `calibrate_know_store` Platt fit diverged.** Undamped Newton
+  started at (1, 0) and reached a ≈ 8e8 on ERB's lanes logits, collapsing every
+  probability to 0, so the script wrongly reported `no_usable_floor`. It now
+  uses Newton with a backtracking line search from the base-rate intercept.
+
 - **feat(know): per-store calibration for the lanes model** (opt-in, #482).
   New keys `[know] lanes_platt_a` / `lanes_platt_b` (default identity, so
   #492's behaviour is unchanged). `scripts/calibrate_know_store.py` fits them,

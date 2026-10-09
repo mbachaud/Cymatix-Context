@@ -103,8 +103,8 @@ def main(argv=None) -> int:
     ap.add_argument("--emit-floor", type=float, default=0.45)
     ap.add_argument("--C", type=float, default=1.0)
     ap.add_argument("--features", choices=("base", "ce"), default="base",
-                    help="ce adds the cross-encoder top-1 signals (bench-only: no [know] TOML is written, "
-                         "the server cannot compute them yet)")
+                    help="ce adds the cross-encoder top-1 signals; the TOML then sets [know] lanes_ce_model from "
+                         "the receipts' ce_model header so the server computes the same features")
     ap.add_argument("--out", required=True)
     ap.add_argument("--toml-out", required=True)
     a = ap.parse_args(argv)
@@ -152,10 +152,14 @@ def main(argv=None) -> int:
     Path(a.out).write_text(json.dumps(report, indent=1), encoding="utf-8")
 
     pooled = report["leave_one_corpus_out"]["pooled_auc"]
+    ce_line = ""
     if with_ce:
-        print(f"{len(rows)} rows, {len(corpora)} corpora, LOCO pooled AUC {pooled} (ce features, report only) "
-              f"-> {a.out}")
-        return 0
+        ce_models = {json.loads(Path(s.partition("=")[2]).read_text(encoding="utf-8")).get("ce_model")
+                     for s in a.receipt}
+        ce_models.discard(None)
+        if len(ce_models) != 1:
+            raise SystemExit(f"--features ce: receipts must share one ce_model header, got {sorted(ce_models)}")
+        ce_line = f"lanes_ce_model = {json.dumps(ce_models.pop())}\n"
     betas = ", ".join(f"{k} = {v:.6g}" for k, v in folded["betas"].items())
     Path(a.toml_out).write_text(
         "# [know] model = \"lanes\", fit by scripts/fit_know_lanes.py (#482).\n"
@@ -165,7 +169,8 @@ def main(argv=None) -> int:
         "model = \"lanes\"\n"
         f"emit_floor = {a.emit_floor}\n"
         f"lanes_intercept = {folded['intercept']:.6g}\n"
-        f"lanes_betas = {{ {betas} }}\n",
+        f"lanes_betas = {{ {betas} }}\n"
+        f"{ce_line}",
         encoding="utf-8",
     )
     print(f"{len(rows)} rows, {len(corpora)} corpora, LOCO pooled AUC {pooled}; -> {a.out}, {a.toml_out}")

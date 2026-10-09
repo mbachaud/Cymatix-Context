@@ -192,6 +192,9 @@ class LanesModel:
     betas: Mapping[str, float] = field(default_factory=dict)
     platt_a: float = 1.0
     platt_b: float = 0.0
+    # Cross-encoder model whose top-1/top-2 scores feed the CE features
+    # ([know] lanes_ce_model); "" = no CE input (no scorer is ever called).
+    ce_model: str = ""
 
     def confidence(self, features: Mapping[str, float]) -> float:
         z = self.intercept + sum(float(b) * float(features.get(name, 0.0)) for name, b in self.betas.items())
@@ -218,8 +221,14 @@ def load_lanes_model(toml_path=None) -> Optional[LanesModel]:
         return None
     if getattr(know, "model", "legacy") != "lanes":
         return None
+    return model_from_know(know)
+
+
+def model_from_know(know) -> LanesModel:
+    """LanesModel from a loaded ``[know]`` section."""
     return LanesModel(float(know.lanes_intercept), dict(know.lanes_betas),
-                      float(know.lanes_platt_a), float(know.lanes_platt_b))
+                      float(know.lanes_platt_a), float(know.lanes_platt_b),
+                      str(getattr(know, "lanes_ce_model", "") or ""))
 
 
 def served_lanes_confidence(
@@ -230,18 +239,35 @@ def served_lanes_confidence(
     query: str,
     top1_text: Optional[str],
     coordinate_confidence: Optional[float],
+    text_of=None,
+    ce_scorer=None,
 ) -> float:
-    """The confidence the lanes model gives one served query."""
+    """The confidence the lanes model gives one served query.
+
+    With ``model.ce_model`` set, the fused top-1/top-2 are scored by that
+    cross-encoder (``ce_scorer(query, texts)``; default the shared rerank
+    backend) and the CE features join the input. ``text_of(gene_id)`` supplies
+    document text; a failed or unavailable scorer leaves the CE features
+    missing (their ``_missing`` indicators), never raises.
+    """
     shape = score_shape(scores)
     order = fused_order(scores)
     row = dict(shape, coordinate_confidence=coordinate_confidence,
                lane_signals=lane_signals(tier_contributions, order, query=query, top1_text=top1_text))
-    return model.confidence(feature_values(row))
+    if not model.ce_model:
+        return model.confidence(feature_values(row))
+    if ce_scorer is None:
+        def ce_scorer(q, texts):
+            from ..backends.rerank_backend import score_pairs
+            return score_pairs(q, texts, model_name=model.ce_model)
+    lookup = text_of or (lambda gid: top1_text if order and gid == order[0] else None)
+    row["ce"] = ce_signals(query, order, lookup, ce_scorer)
+    return model.confidence(feature_values(row, with_ce=True))
 
 
 __all__ = [
     "BASE_FEATURES", "CE_FEATURES", "CE_KEYS", "EVIDENCE_LANES", "FEATURE_NAMES", "LANE_KEYS", "LanesModel",
     "ce_signals",
-    "feature_values", "fused_order", "lane_signals", "load_lanes_model", "score_shape",
+    "feature_values", "fused_order", "lane_signals", "load_lanes_model", "model_from_know", "score_shape",
     "served_lanes_confidence",
 ]
