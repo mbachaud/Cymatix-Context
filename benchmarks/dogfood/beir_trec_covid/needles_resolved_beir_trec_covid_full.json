@@ -1,0 +1,254 @@
+{
+ "needles": [
+  {
+   "name": "beir_trec_covid_1",
+   "query": "what is the origin of COVID-19",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_10",
+   "query": "has social distancing had an impact on slowing the spread of COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_11",
+   "query": "what are the guidelines for triaging patients infected with coronavirus?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_12",
+   "query": "what are best practices in hospitals and at home in maintaining quarantine?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_13",
+   "query": "what are the transmission routes of coronavirus?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_14",
+   "query": "what evidence is there related to COVID-19 super spreaders",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_15",
+   "query": "how long can the coronavirus live outside the body",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_16",
+   "query": "how long does coronavirus remain stable  on surfaces?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_17",
+   "query": "are there any clinical trials available for the coronavirus",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_18",
+   "query": "what are the best masks for preventing infection by Covid-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_19",
+   "query": "what type of hand sanitizer is needed to destroy Covid-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_2",
+   "query": "how does the coronavirus respond to changes in the weather",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_20",
+   "query": "are patients taking Angiotensin-converting enzyme inhibitors (ACE) at increased risk for COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_21",
+   "query": "what are the mortality rates overall and in specific populations",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_22",
+   "query": "are cardiac complications likely in patients with COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_23",
+   "query": "what kinds of complications related to COVID-19 are associated with hypertension?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_24",
+   "query": "what kinds of complications related to COVID-19 are associated with diabetes",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_25",
+   "query": "which biomarkers predict the severe clinical course of 2019-nCOV infection?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_26",
+   "query": "what are the initial symptoms of Covid-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_27",
+   "query": "what is known about those infected with Covid-19 but are asymptomatic?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_28",
+   "query": "what evidence is there for the value of hydroxychloroquine in treating Covid-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_29",
+   "query": "which SARS-CoV-2 proteins-human proteins interactions indicate potential for drug targets. Are there approved drugs that can be repurposed based on this information?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_3",
+   "query": "will SARS-CoV2 infected people develop immunity? Is cross protection possible?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_30",
+   "query": "is remdesivir an effective treatment for COVID-19",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_31",
+   "query": "How does the coronavirus differ from seasonal flu?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_32",
+   "query": "Does SARS-CoV-2 have any subtypes, and if so what are they?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_33",
+   "query": "What vaccine candidates are being tested for Covid-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_34",
+   "query": "What are the longer-term complications of those who recover from COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_35",
+   "query": "What new public datasets are available related to COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_36",
+   "query": "What is the protein structure of the SARS-CoV-2 spike?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_37",
+   "query": "What is the result of phylogenetic analysis of SARS-CoV-2 genome sequence?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_38",
+   "query": "What is the mechanism of inflammatory response and pathogenesis of COVID-19 cases?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_39",
+   "query": "What is the mechanism of cytokine storm syndrome on the COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_4",
+   "query": "what causes death from Covid-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_40",
+   "query": "What are the observed mutations in the SARS-CoV-2 genome and how often do the mutations occur?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_41",
+   "query": "What are the impacts of COVID-19 among African-Americans that differ from the rest of the U.S. population?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_42",
+   "query": "Does Vitamin D impact COVID-19 prevention and treatment?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_43",
+   "query": "How has the COVID-19 pandemic impacted violence in society, including violent crimes?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_44",
+   "query": "How much impact do masks have on preventing the spread of the COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_45",
+   "query": "How has the COVID-19 pandemic impacted mental health?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_46",
+   "query": "what evidence is there for dexamethasone as a treatment for COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_47",
+   "query": "what are the health outcomes for children who contract COVID-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_48",
+   "query": "what are the benefits and risks of re-opening schools in the midst of the COVID-19 pandemic?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_49",
+   "query": "do individuals who recover from COVID-19 show sufficient immune response, including antibody levels and T-cell mediated immunity, to prevent re-infection?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_5",
+   "query": "what drugs have been active against SARS-CoV or SARS-CoV-2 in animal studies?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_50",
+   "query": "what is known about an mRNA vaccine for the SARS-CoV-2 virus?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_6",
+   "query": "what types of rapid testing for Covid-19 have been developed?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_7",
+   "query": "are there serological tests that detect antibodies to coronavirus?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_8",
+   "query": "how has lack of testing availability led to underreporting of true incidence of Covid-19?",
+   "question_type": "beir_trec_covid"
+  },
+  {
+   "name": "beir_trec_covid_9",
+   "query": "how has COVID-19 affected Canada",
+   "question_type": "beir_trec_covid"
+  }
+ ]
+}

@@ -1,0 +1,2997 @@
+{
+ "beir_cqadupstack_mathematica_1": [
+  "4483ab1610fa2c6f"
+ ],
+ "beir_cqadupstack_mathematica_10086": [
+  "680434eb79b7aebe"
+ ],
+ "beir_cqadupstack_mathematica_10391": [
+  "fa752d296cfa50c5"
+ ],
+ "beir_cqadupstack_mathematica_1041": [
+  "be6a468a61bd9f87"
+ ],
+ "beir_cqadupstack_mathematica_10432": [
+  "034a9a7044a5abe3",
+  "3b8aff02f6393978",
+  "64209dd59c1edbfc"
+ ],
+ "beir_cqadupstack_mathematica_10501": [
+  "05e0e675f16fd751"
+ ],
+ "beir_cqadupstack_mathematica_10619": [
+  "c5ba7046a7485bcd"
+ ],
+ "beir_cqadupstack_mathematica_10669": [
+  "2df05a307b12f7fc",
+  "c5ebe1518a00c855"
+ ],
+ "beir_cqadupstack_mathematica_10838": [
+  "7821b1a071afdbf6"
+ ],
+ "beir_cqadupstack_mathematica_10934": [
+  "4208b09e44f6224c",
+  "470a6919069ca3fa",
+  "a9894527ba8c3f28",
+  "e99a2a7c2ec617c3"
+ ],
+ "beir_cqadupstack_mathematica_10956": [
+  "6536337a104594af"
+ ],
+ "beir_cqadupstack_mathematica_1096": [
+  "b543e50d4596ffef",
+  "bc35b44d17587e6d"
+ ],
+ "beir_cqadupstack_mathematica_10990": [
+  "9b2f40c2bd081f05",
+  "cb998b99500bee07"
+ ],
+ "beir_cqadupstack_mathematica_11024": [
+  "a8815992d2dedbf0"
+ ],
+ "beir_cqadupstack_mathematica_11059": [
+  "b377602651b4560d"
+ ],
+ "beir_cqadupstack_mathematica_11192": [
+  "515d6c128aa59eff"
+ ],
+ "beir_cqadupstack_mathematica_11195": [
+  "99a2a05fbbebbafa"
+ ],
+ "beir_cqadupstack_mathematica_11196": [
+  "4bd93eed73ee6b7e",
+  "641d98f0f2b5fcb5"
+ ],
+ "beir_cqadupstack_mathematica_11247": [
+  "3c5cb94e812ce2c6"
+ ],
+ "beir_cqadupstack_mathematica_11271": [
+  "14e8a5ac7f02a77e"
+ ],
+ "beir_cqadupstack_mathematica_11298": [
+  "d3a719031c207c41"
+ ],
+ "beir_cqadupstack_mathematica_1137": [
+  "d7bfa661f4a11629"
+ ],
+ "beir_cqadupstack_mathematica_11403": [
+  "7af51962d2409ae9"
+ ],
+ "beir_cqadupstack_mathematica_11460": [
+  "3632d561090f4c32"
+ ],
+ "beir_cqadupstack_mathematica_11608": [
+  "6ce2476f14f6c3e6"
+ ],
+ "beir_cqadupstack_mathematica_11698": [
+  "af5b81ece0400ae1"
+ ],
+ "beir_cqadupstack_mathematica_11705": [
+  "28f7e803cd76dc48"
+ ],
+ "beir_cqadupstack_mathematica_1172": [
+  "22bec77a3ac739b9"
+ ],
+ "beir_cqadupstack_mathematica_11725": [
+  "9924cfae97605941"
+ ],
+ "beir_cqadupstack_mathematica_11794": [
+  "86756eccae28c5d7"
+ ],
+ "beir_cqadupstack_mathematica_11950": [
+  "816a08d9fa407ebd"
+ ],
+ "beir_cqadupstack_mathematica_1283": [
+  "7adf8d1c0fd2dac9",
+  "802938e294fc820d"
+ ],
+ "beir_cqadupstack_mathematica_1300": [
+  "2c56ef50c84e8d28",
+  "75300a4482528512",
+  "e0bb21224974011d"
+ ],
+ "beir_cqadupstack_mathematica_13054": [
+  "9c174b45f76493e6",
+  "f7454e452d8ebfe0"
+ ],
+ "beir_cqadupstack_mathematica_13055": [
+  "d9a51da7ea7c438f"
+ ],
+ "beir_cqadupstack_mathematica_13090": [
+  "78de6b1a09aaab64"
+ ],
+ "beir_cqadupstack_mathematica_1315": [
+  "3949c2b768beef06"
+ ],
+ "beir_cqadupstack_mathematica_13179": [
+  "4de2974737c69f21",
+  "8e500aff89f20175",
+  "91bb2981d6e46d4d",
+  "ae3d037ac7f1ce02"
+ ],
+ "beir_cqadupstack_mathematica_13197": [
+  "368ecec850af63d2",
+  "55be401a8d9fe22b"
+ ],
+ "beir_cqadupstack_mathematica_13210": [
+  "3c87c93296c06a41",
+  "5d0731e083e42636"
+ ],
+ "beir_cqadupstack_mathematica_13406": [
+  "265a5556330662b4"
+ ],
+ "beir_cqadupstack_mathematica_13420": [
+  "c57d6009da9b20a9"
+ ],
+ "beir_cqadupstack_mathematica_13426": [
+  "3623dc490747287c",
+  "9a5b4e83ceac2f19"
+ ],
+ "beir_cqadupstack_mathematica_13440": [
+  "cdf83889e7ed83c3"
+ ],
+ "beir_cqadupstack_mathematica_13513": [
+  "56c5dc214ca158f4"
+ ],
+ "beir_cqadupstack_mathematica_13520": [
+  "5b3b33d3dc496b01"
+ ],
+ "beir_cqadupstack_mathematica_13538": [
+  "c143d4f345acc380"
+ ],
+ "beir_cqadupstack_mathematica_13652": [
+  "154b4bf6a5988bc7",
+  "3c6479e456afbe01",
+  "3ca242680d8afec0",
+  "5a654bd922e9126c",
+  "7b419ee8bf4ef04f",
+  "7c842e89abe3af1a",
+  "8a3ce510e2e0e7b9",
+  "a030a15b78c630cd",
+  "aa8d08db55f30e57",
+  "c620b8e177ad460e"
+ ],
+ "beir_cqadupstack_mathematica_13657": [
+  "7cf944bff779194e",
+  "859c35d006d114ad",
+  "9a215680c5034576"
+ ],
+ "beir_cqadupstack_mathematica_13754": [
+  "36a4d847d40edcf7",
+  "6a46d36334f93fb1",
+  "dd1eb6eb9d520844"
+ ],
+ "beir_cqadupstack_mathematica_13757": [
+  "3637404505897813"
+ ],
+ "beir_cqadupstack_mathematica_13961": [
+  "29e0c75e3c2ee6bd"
+ ],
+ "beir_cqadupstack_mathematica_13981": [
+  "88f817c86f8f714d",
+  "a53962158ba1e163",
+  "abb51186a13f57f7"
+ ],
+ "beir_cqadupstack_mathematica_1400": [
+  "4e7f212b5ab1079c",
+  "7c481aaa61fa370c"
+ ],
+ "beir_cqadupstack_mathematica_14063": [
+  "3d5bf89cea285c2c",
+  "ae90b4604ebf3777",
+  "c6cb0b28a6f67624",
+  "f004f7ab0e744861"
+ ],
+ "beir_cqadupstack_mathematica_14083": [
+  "80142fa2adee9840",
+  "968b62bce4210495",
+  "f626a08e89694865"
+ ],
+ "beir_cqadupstack_mathematica_14122": [
+  "cb9fc66e608733de"
+ ],
+ "beir_cqadupstack_mathematica_14185": [
+  "b187ec3e0cc3a1ff"
+ ],
+ "beir_cqadupstack_mathematica_14189": [
+  "0759a75f241bdc7e",
+  "4c5e25141fc9c1ea"
+ ],
+ "beir_cqadupstack_mathematica_14193": [
+  "e3d1f29b8f5b4859"
+ ],
+ "beir_cqadupstack_mathematica_14282": [
+  "2dbe6e9fd6140a7d",
+  "589277a3d87aab57",
+  "86ec53b3752fd5db",
+  "b6e89a1cda3a3d4f"
+ ],
+ "beir_cqadupstack_mathematica_14340": [
+  "04051be25b7c99da"
+ ],
+ "beir_cqadupstack_mathematica_14405": [
+  "0fda97cc3bd95fc9"
+ ],
+ "beir_cqadupstack_mathematica_14435": [
+  "59e7a2651fdcb26e"
+ ],
+ "beir_cqadupstack_mathematica_1446": [
+  "4092a28b29f60ebc",
+  "f3b32b508381eeb6"
+ ],
+ "beir_cqadupstack_mathematica_145": [
+  "50e9f04a306feab1"
+ ],
+ "beir_cqadupstack_mathematica_14523": [
+  "3f14b80f8259e870"
+ ],
+ "beir_cqadupstack_mathematica_14525": [
+  "25b6e842184553fa"
+ ],
+ "beir_cqadupstack_mathematica_14534": [
+  "c7e8a81d77669120"
+ ],
+ "beir_cqadupstack_mathematica_14543": [
+  "7e5c0f9875ce2cc4"
+ ],
+ "beir_cqadupstack_mathematica_14611": [
+  "a639897262b06dd5"
+ ],
+ "beir_cqadupstack_mathematica_14645": [
+  "8d1ee0a21722b2d7"
+ ],
+ "beir_cqadupstack_mathematica_14661": [
+  "07fea4beecd75e5e",
+  "0e77085406b339ab",
+  "14358bdecc8b3b9c",
+  "4aba8c5b1e8e988f",
+  "86b3b569cb2b82d4",
+  "e6759972a583cbb5",
+  "f0f4137d5b26ac7b"
+ ],
+ "beir_cqadupstack_mathematica_14987": [
+  "da31f34b09eb9a50"
+ ],
+ "beir_cqadupstack_mathematica_15021": [
+  "9442f1412a16f28f"
+ ],
+ "beir_cqadupstack_mathematica_15023": [
+  "835ced2016c8a17a",
+  "dd6a54e51ea7ee33"
+ ],
+ "beir_cqadupstack_mathematica_15153": [
+  "76d07dc7cb2f86c7"
+ ],
+ "beir_cqadupstack_mathematica_15176": [
+  "3fa6f3462a64670c"
+ ],
+ "beir_cqadupstack_mathematica_15184": [
+  "b3ada0d1091a37f2"
+ ],
+ "beir_cqadupstack_mathematica_15311": [
+  "e9ac781c709238cc"
+ ],
+ "beir_cqadupstack_mathematica_15351": [
+  "af45f34f5c3c6b31"
+ ],
+ "beir_cqadupstack_mathematica_15381": [
+  "8c6b4174fd837143"
+ ],
+ "beir_cqadupstack_mathematica_1542": [
+  "b8a0d6f21e505df2",
+  "d378afaeb0ffa6b1"
+ ],
+ "beir_cqadupstack_mathematica_15516": [
+  "d99bbd5fc73379ea"
+ ],
+ "beir_cqadupstack_mathematica_15634": [
+  "1fd5e67672d263d1",
+  "6749711b23204af0",
+  "e260d611bb687338"
+ ],
+ "beir_cqadupstack_mathematica_15649": [
+  "8ef7d83006f117b1"
+ ],
+ "beir_cqadupstack_mathematica_15655": [
+  "976984798ec48a52"
+ ],
+ "beir_cqadupstack_mathematica_15679": [
+  "1d7b4fdedf5e170a"
+ ],
+ "beir_cqadupstack_mathematica_1571": [
+  "1bdd8efeb35a4b0c",
+  "361a7567455a4ca8"
+ ],
+ "beir_cqadupstack_mathematica_15718": [
+  "869bd36b8f262867"
+ ],
+ "beir_cqadupstack_mathematica_15734": [
+  "e14a927a0960fa28"
+ ],
+ "beir_cqadupstack_mathematica_1584": [
+  "cbe9e580e3af8d7f"
+ ],
+ "beir_cqadupstack_mathematica_15858": [
+  "f91d401b36948b20"
+ ],
+ "beir_cqadupstack_mathematica_15885": [
+  "f5b5cf98b7d57cb4"
+ ],
+ "beir_cqadupstack_mathematica_15929": [
+  "d51833abf7d2c91b"
+ ],
+ "beir_cqadupstack_mathematica_15945": [
+  "c70caaee80ce7eb8"
+ ],
+ "beir_cqadupstack_mathematica_1602": [
+  "3d6e899650dab231"
+ ],
+ "beir_cqadupstack_mathematica_16194": [
+  "b73c665c3dbaf790"
+ ],
+ "beir_cqadupstack_mathematica_16233": [
+  "0227f10930833ce7",
+  "07b925cf10890366",
+  "237d2a41b184733c",
+  "4bc6bd962084728c",
+  "4e1605537b975d1b",
+  "536c18c7c41ace2a",
+  "6b5b68a66441ef5a",
+  "6cf3fd8a5ef9698c"
+ ],
+ "beir_cqadupstack_mathematica_16252": [
+  "1b767097c1416836",
+  "2046d6ef8939403f",
+  "21ec1fca8685695f",
+  "7f51c4a267dc384a"
+ ],
+ "beir_cqadupstack_mathematica_16258": [
+  "35ae4db6632a07c6"
+ ],
+ "beir_cqadupstack_mathematica_16259": [
+  "3d2c7a7eccde8a52"
+ ],
+ "beir_cqadupstack_mathematica_16324": [
+  "10f2f23a491bd50c",
+  "b27e99ea3c3358c7"
+ ],
+ "beir_cqadupstack_mathematica_16398": [
+  "1ca14db6540dad6a",
+  "2705a6a2f1907e16",
+  "5f76707b0fcd6c82",
+  "d158b5e012d82edd",
+  "e0b86e4bda5b8cc7",
+  "f9272dd37ca61752"
+ ],
+ "beir_cqadupstack_mathematica_16404": [
+  "1686ed98d5a97609",
+  "1cc29dc168b753d3",
+  "27278071da57c9f8",
+  "4d958e69e986e95e",
+  "6e7a2323d0f7ab20",
+  "c278f39d1b8edcb5",
+  "c5469c40e8ab37b9",
+  "e03a521173240196"
+ ],
+ "beir_cqadupstack_mathematica_16429": [
+  "27613ea1ff530663"
+ ],
+ "beir_cqadupstack_mathematica_16562": [
+  "c7525f5f2fa838a9"
+ ],
+ "beir_cqadupstack_mathematica_1679": [
+  "c51b9a4cf81f787d"
+ ],
+ "beir_cqadupstack_mathematica_17093": [
+  "85ef8d0c2846901c"
+ ],
+ "beir_cqadupstack_mathematica_17154": [
+  "8c4d818f4c9723ff"
+ ],
+ "beir_cqadupstack_mathematica_17196": [
+  "e2262aca4bb43943"
+ ],
+ "beir_cqadupstack_mathematica_17250": [
+  "68f30ce242b477c5",
+  "b24c159a1bf6f20e"
+ ],
+ "beir_cqadupstack_mathematica_17324": [
+  "b022febf365b0434"
+ ],
+ "beir_cqadupstack_mathematica_17342": [
+  "76730303d4a452c5"
+ ],
+ "beir_cqadupstack_mathematica_17357": [
+  "375665b093b11539"
+ ],
+ "beir_cqadupstack_mathematica_17370": [
+  "9be2566e1c0202a0"
+ ],
+ "beir_cqadupstack_mathematica_17381": [
+  "058ae297f4b7cf08"
+ ],
+ "beir_cqadupstack_mathematica_17617": [
+  "94b5a17613dc1228"
+ ],
+ "beir_cqadupstack_mathematica_17622": [
+  "3bfe9260b8c3303a"
+ ],
+ "beir_cqadupstack_mathematica_17633": [
+  "52d3fafe912a1cbb"
+ ],
+ "beir_cqadupstack_mathematica_17736": [
+  "5c3f34d3d06a9710"
+ ],
+ "beir_cqadupstack_mathematica_17811": [
+  "c728ecddd0d91e34"
+ ],
+ "beir_cqadupstack_mathematica_17826": [
+  "0056f910d27c1f13",
+  "85db79a303b7f9f3",
+  "aa2fb917d06ed0b7"
+ ],
+ "beir_cqadupstack_mathematica_17857": [
+  "e0c11caf89b70d1f"
+ ],
+ "beir_cqadupstack_mathematica_18025": [
+  "a3256e6aa6482b4d"
+ ],
+ "beir_cqadupstack_mathematica_18081": [
+  "976edb24e642b9f6"
+ ],
+ "beir_cqadupstack_mathematica_18090": [
+  "1377fbd1b7fbae97",
+  "b506b238ecf2f694"
+ ],
+ "beir_cqadupstack_mathematica_18091": [
+  "3ba7e5384e252182"
+ ],
+ "beir_cqadupstack_mathematica_18142": [
+  "930ccefb574c88c7",
+  "9c638135b9e98103",
+  "d0e7db4ba0d4c8e6",
+  "d1a5484c00ee86e0",
+  "d4b832132908132e"
+ ],
+ "beir_cqadupstack_mathematica_18183": [
+  "8ca952234188cf4f"
+ ],
+ "beir_cqadupstack_mathematica_18193": [
+  "81f9c87a3be7cd5d"
+ ],
+ "beir_cqadupstack_mathematica_18210": [
+  "ac75427c4ee48b5d"
+ ],
+ "beir_cqadupstack_mathematica_18258": [
+  "75a68b4643f0c90c"
+ ],
+ "beir_cqadupstack_mathematica_18310": [
+  "3bae7ebef6c0dd87"
+ ],
+ "beir_cqadupstack_mathematica_1835": [
+  "c9a87a1cafd2bfb2"
+ ],
+ "beir_cqadupstack_mathematica_18419": [
+  "3280fa86e3284b84"
+ ],
+ "beir_cqadupstack_mathematica_18460": [
+  "3751c48cb0dc295f"
+ ],
+ "beir_cqadupstack_mathematica_18526": [
+  "07c0ebe9a9af0d81",
+  "97385f4348aabcfa"
+ ],
+ "beir_cqadupstack_mathematica_18549": [
+  "24195e31423438fd",
+  "27d4d16ca6023e79"
+ ],
+ "beir_cqadupstack_mathematica_18643": [
+  "16dd62ffa298a890"
+ ],
+ "beir_cqadupstack_mathematica_18647": [
+  "51c92e705b1c8c6b"
+ ],
+ "beir_cqadupstack_mathematica_18655": [
+  "fcd0499fcc5c0ccb"
+ ],
+ "beir_cqadupstack_mathematica_18707": [
+  "38a80524aa40d09b",
+  "7be2b564bb451371",
+  "a8d2e3b378e4474c",
+  "cf07edb8d019ee1a",
+  "dd373373199ae139",
+  "ed4ff0b61de3a138"
+ ],
+ "beir_cqadupstack_mathematica_18889": [
+  "93c786765aba5685"
+ ],
+ "beir_cqadupstack_mathematica_19027": [
+  "4004738578f3e02a"
+ ],
+ "beir_cqadupstack_mathematica_19035": [
+  "038c679c249079c9",
+  "264c9144e88f6e88",
+  "3edea7413178fc69",
+  "5337aaffc11f192e",
+  "6ed229fcc1d6921c",
+  "7e9afcc444301449",
+  "a7dc21150383a1cd",
+  "b26da42b706387fb",
+  "b609254439bd944e",
+  "bd018fb1c7e6f0a1",
+  "d8405a2bd75ebb16",
+  "e170240089c474af"
+ ],
+ "beir_cqadupstack_mathematica_1911": [
+  "bb047e322660b07c"
+ ],
+ "beir_cqadupstack_mathematica_19127": [
+  "f4c7f9086de7e687"
+ ],
+ "beir_cqadupstack_mathematica_19165": [
+  "67a4287823901939",
+  "a209b2c1e1337f96"
+ ],
+ "beir_cqadupstack_mathematica_19174": [
+  "152a5a8a3f460f5e"
+ ],
+ "beir_cqadupstack_mathematica_19201": [
+  "32b5b150b41f415d"
+ ],
+ "beir_cqadupstack_mathematica_19253": [
+  "b553a143ddd20f35"
+ ],
+ "beir_cqadupstack_mathematica_19264": [
+  "a5b94af7c0c3487f"
+ ],
+ "beir_cqadupstack_mathematica_19392": [
+  "c2561c6aa21b92fc"
+ ],
+ "beir_cqadupstack_mathematica_1945": [
+  "b0c632890d53615f"
+ ],
+ "beir_cqadupstack_mathematica_19457": [
+  "2949f9c65e0c7600"
+ ],
+ "beir_cqadupstack_mathematica_197": [
+  "4a18024efa9687e3"
+ ],
+ "beir_cqadupstack_mathematica_19705": [
+  "0261294d13d6c51a",
+  "24aba9b4e8d533b4"
+ ],
+ "beir_cqadupstack_mathematica_19867": [
+  "344ad0873b5b8455"
+ ],
+ "beir_cqadupstack_mathematica_19902": [
+  "e83299703643caf7"
+ ],
+ "beir_cqadupstack_mathematica_20023": [
+  "0cc819e3875db54c"
+ ],
+ "beir_cqadupstack_mathematica_20051": [
+  "4a61954f4f2ac9bd"
+ ],
+ "beir_cqadupstack_mathematica_20074": [
+  "553feb4d23e94a94"
+ ],
+ "beir_cqadupstack_mathematica_20079": [
+  "f00f0d48f9e496fb"
+ ],
+ "beir_cqadupstack_mathematica_20105": [
+  "702e40a1673369ff"
+ ],
+ "beir_cqadupstack_mathematica_20228": [
+  "2c9ffcf8cd2ffbb2"
+ ],
+ "beir_cqadupstack_mathematica_20243": [
+  "9c632b15a75e55d4"
+ ],
+ "beir_cqadupstack_mathematica_20272": [
+  "261293827995e666",
+  "635c6c0357fc3468",
+  "890e4ad98d13d975",
+  "da23b0033fdc7dcb"
+ ],
+ "beir_cqadupstack_mathematica_20277": [
+  "3c5f8f041d885b7d",
+  "88983a8663c47185",
+  "cf9365850a89d2d4"
+ ],
+ "beir_cqadupstack_mathematica_20334": [
+  "b118d2f96c6ca092"
+ ],
+ "beir_cqadupstack_mathematica_20355": [
+  "c37215865573dc90",
+  "ff359db02766a862"
+ ],
+ "beir_cqadupstack_mathematica_20468": [
+  "a5afefa21caccc1e",
+  "df684faa4e8db757"
+ ],
+ "beir_cqadupstack_mathematica_2047": [
+  "65cf9bf92cb8b79b"
+ ],
+ "beir_cqadupstack_mathematica_20470": [
+  "562d247cb4ea2033"
+ ],
+ "beir_cqadupstack_mathematica_2051": [
+  "44a93553e6290d23"
+ ],
+ "beir_cqadupstack_mathematica_20718": [
+  "f5d1272997835a69"
+ ],
+ "beir_cqadupstack_mathematica_2073": [
+  "ac6e1f5252de7fcc"
+ ],
+ "beir_cqadupstack_mathematica_2076": [
+  "c3bc7d179f79a478"
+ ],
+ "beir_cqadupstack_mathematica_20766": [
+  "39590b208e23aae8"
+ ],
+ "beir_cqadupstack_mathematica_20823": [
+  "36d90130a8e3c75d"
+ ],
+ "beir_cqadupstack_mathematica_20841": [
+  "3dc18b9f05c9abd9",
+  "835a8e256ebde87e"
+ ],
+ "beir_cqadupstack_mathematica_20873": [
+  "ff25e9e5f5ed744a"
+ ],
+ "beir_cqadupstack_mathematica_21075": [
+  "26d821c6ab3f0527"
+ ],
+ "beir_cqadupstack_mathematica_21150": [
+  "4b73f4aff245e4b1"
+ ],
+ "beir_cqadupstack_mathematica_21161": [
+  "721ec7308f3bc894"
+ ],
+ "beir_cqadupstack_mathematica_21238": [
+  "ce1a282c25c240a5"
+ ],
+ "beir_cqadupstack_mathematica_21284": [
+  "06073039483618a6",
+  "3efda4d8369c4c94"
+ ],
+ "beir_cqadupstack_mathematica_21328": [
+  "46dc840c5601c190"
+ ],
+ "beir_cqadupstack_mathematica_21374": [
+  "1708ab38e8f81673"
+ ],
+ "beir_cqadupstack_mathematica_21410": [
+  "2f0cfd98c7c9e70f",
+  "bcd7fc35296d699c"
+ ],
+ "beir_cqadupstack_mathematica_21421": [
+  "ade87bcb78b6f559",
+  "ee7896ceaf402e56"
+ ],
+ "beir_cqadupstack_mathematica_21444": [
+  "25471eaf42412f09",
+  "2c6609fa41864dce",
+  "88a8d43081e3e203",
+  "d93c0adc0813e2b5",
+  "ed27467541318fed"
+ ],
+ "beir_cqadupstack_mathematica_21558": [
+  "2fc23511f6ea1e18"
+ ],
+ "beir_cqadupstack_mathematica_2157": [
+  "98a2982f480d2c70"
+ ],
+ "beir_cqadupstack_mathematica_21655": [
+  "23209b54caf1b1d6",
+  "7cc1f04518656a61"
+ ],
+ "beir_cqadupstack_mathematica_21672": [
+  "bc82279f5e7a320d"
+ ],
+ "beir_cqadupstack_mathematica_21701": [
+  "0a9c3df01833bfc3",
+  "c75c2c5c48e43ac8"
+ ],
+ "beir_cqadupstack_mathematica_21742": [
+  "1eb03334196edc14"
+ ],
+ "beir_cqadupstack_mathematica_21764": [
+  "042d9c22d3f86666",
+  "b95051909063c08a"
+ ],
+ "beir_cqadupstack_mathematica_21870": [
+  "a7a8a9e89d6d4390"
+ ],
+ "beir_cqadupstack_mathematica_21898": [
+  "e30f9fc5b5e864b8"
+ ],
+ "beir_cqadupstack_mathematica_21993": [
+  "4218df96eb36dfa7",
+  "a902cf68deafd32f"
+ ],
+ "beir_cqadupstack_mathematica_22019": [
+  "4bf5b91092b8bc2a"
+ ],
+ "beir_cqadupstack_mathematica_22032": [
+  "2821826f9e033be2",
+  "46a999d380837915"
+ ],
+ "beir_cqadupstack_mathematica_2214": [
+  "879dd93fed56e570"
+ ],
+ "beir_cqadupstack_mathematica_22193": [
+  "c72eeaebe41bd7ef"
+ ],
+ "beir_cqadupstack_mathematica_2230": [
+  "a9117b9265b73efb",
+  "ccf92fcd591a010a"
+ ],
+ "beir_cqadupstack_mathematica_22349": [
+  "62c751e875412254"
+ ],
+ "beir_cqadupstack_mathematica_22419": [
+  "26bf89de484aec2d"
+ ],
+ "beir_cqadupstack_mathematica_22611": [
+  "17c45783b1d6523c"
+ ],
+ "beir_cqadupstack_mathematica_22651": [
+  "df91bed8a5a94f8c"
+ ],
+ "beir_cqadupstack_mathematica_22705": [
+  "9bad7c8a9b0830cc"
+ ],
+ "beir_cqadupstack_mathematica_22828": [
+  "441c24eaf80543a9"
+ ],
+ "beir_cqadupstack_mathematica_22876": [
+  "5a3de8fbe5aabc54"
+ ],
+ "beir_cqadupstack_mathematica_22917": [
+  "79a3b1174a4a624b",
+  "7bc43832ac877aea",
+  "80861cbc22b3760c",
+  "af9a784c93c4b4a8"
+ ],
+ "beir_cqadupstack_mathematica_22948": [
+  "89ed21da2083d4c1"
+ ],
+ "beir_cqadupstack_mathematica_22956": [
+  "4a8cee93dbf5d380"
+ ],
+ "beir_cqadupstack_mathematica_23014": [
+  "3707186084107bf8"
+ ],
+ "beir_cqadupstack_mathematica_23034": [
+  "9466b4a79a8f55e8"
+ ],
+ "beir_cqadupstack_mathematica_23074": [
+  "1f76ff5a88f43b4e"
+ ],
+ "beir_cqadupstack_mathematica_23125": [
+  "65bec645ffb2ca5f"
+ ],
+ "beir_cqadupstack_mathematica_23221": [
+  "112abe8f9c52833d"
+ ],
+ "beir_cqadupstack_mathematica_23280": [
+  "32a3655e2f2eb821"
+ ],
+ "beir_cqadupstack_mathematica_23398": [
+  "bc8130ad62a4ce77"
+ ],
+ "beir_cqadupstack_mathematica_23454": [
+  "9ccbcc6210569693"
+ ],
+ "beir_cqadupstack_mathematica_23470": [
+  "08292fb7cf017c25"
+ ],
+ "beir_cqadupstack_mathematica_23517": [
+  "218d820325f4b4db",
+  "488c84081ce40d72",
+  "6b3fd00052c642a8",
+  "85a3ee06eee8a894",
+  "b7c5771195f10d46",
+  "b8ca087f906683e1",
+  "c2e097cadb6b8eac",
+  "cde734a208e12d32",
+  "f5cc4474a9192802"
+ ],
+ "beir_cqadupstack_mathematica_23656": [
+  "442c8961d0a5ef68",
+  "5f40b55f7cc9b1a5"
+ ],
+ "beir_cqadupstack_mathematica_23659": [
+  "6f6ed07a799b096b"
+ ],
+ "beir_cqadupstack_mathematica_23692": [
+  "3976a6d190ce1944"
+ ],
+ "beir_cqadupstack_mathematica_23734": [
+  "159fc5d6fa1df4bb",
+  "31ae23c3ff0280c1",
+  "3689b5290f41db04",
+  "565f4c9f1a85d747",
+  "b675b81d9f9e927a",
+  "b7a3f7529387471c",
+  "d1bb8ff8f094820c",
+  "ec50e787f0c842dc"
+ ],
+ "beir_cqadupstack_mathematica_23751": [
+  "0ed6b425334ebfba",
+  "b2abfa4c54856ed2"
+ ],
+ "beir_cqadupstack_mathematica_23880": [
+  "9fdced4b420ef4fa"
+ ],
+ "beir_cqadupstack_mathematica_24036": [
+  "abb783665c597632"
+ ],
+ "beir_cqadupstack_mathematica_24156": [
+  "ff98dd2f7a7dfedc"
+ ],
+ "beir_cqadupstack_mathematica_24167": [
+  "dea728422059d44c"
+ ],
+ "beir_cqadupstack_mathematica_24291": [
+  "48b86c0cf8f071b1"
+ ],
+ "beir_cqadupstack_mathematica_24373": [
+  "8d2541404fab7fd9"
+ ],
+ "beir_cqadupstack_mathematica_24556": [
+  "69edd240923c2a62"
+ ],
+ "beir_cqadupstack_mathematica_24581": [
+  "182095400cea3bb6"
+ ],
+ "beir_cqadupstack_mathematica_246": [
+  "3ed9b27f20e58cb3"
+ ],
+ "beir_cqadupstack_mathematica_24623": [
+  "5df95d455f2c3761"
+ ],
+ "beir_cqadupstack_mathematica_24807": [
+  "b3c4f8a950dca348",
+  "c1a500ffc1acb448",
+  "c2f3e8805917cce8",
+  "e463e9a5f6286009"
+ ],
+ "beir_cqadupstack_mathematica_24882": [
+  "d545535306f96178"
+ ],
+ "beir_cqadupstack_mathematica_24892": [
+  "45c8dce970123110"
+ ],
+ "beir_cqadupstack_mathematica_24988": [
+  "cea6924b140245b2"
+ ],
+ "beir_cqadupstack_mathematica_25031": [
+  "8296032390e4e5b2",
+  "e61351af8676f083"
+ ],
+ "beir_cqadupstack_mathematica_25061": [
+  "3d97c4f717c023d0"
+ ],
+ "beir_cqadupstack_mathematica_25134": [
+  "49fd24320ee6cdbf"
+ ],
+ "beir_cqadupstack_mathematica_25185": [
+  "699b8d6f5c8cc12e"
+ ],
+ "beir_cqadupstack_mathematica_25255": [
+  "3881728a7e04ad54"
+ ],
+ "beir_cqadupstack_mathematica_25257": [
+  "ffe064f324e1315f"
+ ],
+ "beir_cqadupstack_mathematica_25260": [
+  "48008d93742ba034"
+ ],
+ "beir_cqadupstack_mathematica_25277": [
+  "babdb4146ae1a56a"
+ ],
+ "beir_cqadupstack_mathematica_25282": [
+  "e96a85f53703aff6"
+ ],
+ "beir_cqadupstack_mathematica_25285": [
+  "1a6ed17a666e2926",
+  "6c672a1105f6450d"
+ ],
+ "beir_cqadupstack_mathematica_25324": [
+  "8b093124c89e1472"
+ ],
+ "beir_cqadupstack_mathematica_25325": [
+  "6c63af3921e1c614"
+ ],
+ "beir_cqadupstack_mathematica_25340": [
+  "fd30ea74c748a004"
+ ],
+ "beir_cqadupstack_mathematica_25343": [
+  "3bbbce5bce67fd37",
+  "54969d3b12e091b4",
+  "58b850715e217a54",
+  "7ab6895eed991dfd",
+  "cc4cd18cf4e6c3c2"
+ ],
+ "beir_cqadupstack_mathematica_2537": [
+  "81407335e637f5c9"
+ ],
+ "beir_cqadupstack_mathematica_25394": [
+  "a3d7dffb7182c791"
+ ],
+ "beir_cqadupstack_mathematica_25502": [
+  "c18506ecfd882c96"
+ ],
+ "beir_cqadupstack_mathematica_25549": [
+  "4fc4713f0d62a6ec",
+  "6adb8923fe87865c"
+ ],
+ "beir_cqadupstack_mathematica_25562": [
+  "6048a1ac75e55ae0",
+  "ee84e937eedc72f0"
+ ],
+ "beir_cqadupstack_mathematica_25587": [
+  "f48809a23a7b1b07"
+ ],
+ "beir_cqadupstack_mathematica_25610": [
+  "2cca18c0f78a4b31",
+  "3503d61848571d11",
+  "7fb94780c5371f6d",
+  "9aaad927a4d29db3",
+  "a54d3169fde0d6a4"
+ ],
+ "beir_cqadupstack_mathematica_25673": [
+  "70cc0aae2a6454d6"
+ ],
+ "beir_cqadupstack_mathematica_25775": [
+  "aa0040d80a4299d5"
+ ],
+ "beir_cqadupstack_mathematica_25798": [
+  "a7cbb845320b3111"
+ ],
+ "beir_cqadupstack_mathematica_25885": [
+  "7623a7d6f1d1504b"
+ ],
+ "beir_cqadupstack_mathematica_26282": [
+  "20546900b23f51e2",
+  "c3eaa1ee3a425477"
+ ],
+ "beir_cqadupstack_mathematica_26355": [
+  "00d7b95f4be78ac8"
+ ],
+ "beir_cqadupstack_mathematica_26370": [
+  "ab9219454919d93a"
+ ],
+ "beir_cqadupstack_mathematica_2639": [
+  "f8d82d109a8730b0"
+ ],
+ "beir_cqadupstack_mathematica_26425": [
+  "a6107fc48fdefbc0"
+ ],
+ "beir_cqadupstack_mathematica_2651": [
+  "5de694da9cefb55f"
+ ],
+ "beir_cqadupstack_mathematica_26519": [
+  "6c5119566139753b"
+ ],
+ "beir_cqadupstack_mathematica_2652": [
+  "55e4e0b0c7d3b3d8"
+ ],
+ "beir_cqadupstack_mathematica_26527": [
+  "a5f17ccdb9bf1d35",
+  "c18657afe64012c8",
+  "cd3c9d54f3d2fa52",
+  "fd570bc81fa9a509"
+ ],
+ "beir_cqadupstack_mathematica_26644": [
+  "eb591b5870b26080"
+ ],
+ "beir_cqadupstack_mathematica_26776": [
+  "299771a3f7dc1472"
+ ],
+ "beir_cqadupstack_mathematica_26837": [
+  "fff8904dcac36b6a"
+ ],
+ "beir_cqadupstack_mathematica_26857": [
+  "445acda60a1764ab",
+  "71c499997d201226",
+  "74f6e4474048aa20",
+  "7a3326ab778276e0",
+  "b08d44aa0f9e5287",
+  "d284f305d6222f2c",
+  "dfcfec2935ec1673",
+  "f6af841c7f2feee4"
+ ],
+ "beir_cqadupstack_mathematica_26879": [
+  "fb424f780e25f14a"
+ ],
+ "beir_cqadupstack_mathematica_2688": [
+  "1265f35ad802fdd4"
+ ],
+ "beir_cqadupstack_mathematica_26917": [
+  "c361926de5c63b7a",
+  "dcfbbf0a35213309"
+ ],
+ "beir_cqadupstack_mathematica_26939": [
+  "42109bc4c1db01c3"
+ ],
+ "beir_cqadupstack_mathematica_26983": [
+  "3214e2331550d69b"
+ ],
+ "beir_cqadupstack_mathematica_26995": [
+  "a8ebe24e5c75ebdb"
+ ],
+ "beir_cqadupstack_mathematica_27023": [
+  "302d2d4a0b263f28",
+  "a8ea359a858f410c",
+  "b90e3821b7e49c4b"
+ ],
+ "beir_cqadupstack_mathematica_27038": [
+  "d3bd0d5def4bc8fc"
+ ],
+ "beir_cqadupstack_mathematica_27049": [
+  "1d491990193c4e0c",
+  "74e711b74e3a3c01",
+  "80455cbbd228000b"
+ ],
+ "beir_cqadupstack_mathematica_27091": [
+  "63b152ca0e8bd43e"
+ ],
+ "beir_cqadupstack_mathematica_2712": [
+  "52b0f6cedfa6c603"
+ ],
+ "beir_cqadupstack_mathematica_2715": [
+  "c707e673a417d38b"
+ ],
+ "beir_cqadupstack_mathematica_27178": [
+  "3cf8ba347c8d1e67",
+  "f89c3da15144f879"
+ ],
+ "beir_cqadupstack_mathematica_27274": [
+  "2f54363578cf3131",
+  "4834bc1ac76e134d"
+ ],
+ "beir_cqadupstack_mathematica_2729": [
+  "e4e2767d6e897886"
+ ],
+ "beir_cqadupstack_mathematica_2752": [
+  "1bc8259eed1f4768"
+ ],
+ "beir_cqadupstack_mathematica_27645": [
+  "f56f8ef9cef3a1f5"
+ ],
+ "beir_cqadupstack_mathematica_2769": [
+  "0f88ed6813ede20b"
+ ],
+ "beir_cqadupstack_mathematica_27700": [
+  "23c68a6f37a49681"
+ ],
+ "beir_cqadupstack_mathematica_27748": [
+  "8942354f8b50a59b"
+ ],
+ "beir_cqadupstack_mathematica_27801": [
+  "46b6077290b7f133"
+ ],
+ "beir_cqadupstack_mathematica_27868": [
+  "5870c3d5d0935f99",
+  "9729fc1c7b723971"
+ ],
+ "beir_cqadupstack_mathematica_27883": [
+  "25102c12f6ff99eb"
+ ],
+ "beir_cqadupstack_mathematica_2789": [
+  "b3f33197708a1ab7"
+ ],
+ "beir_cqadupstack_mathematica_27921": [
+  "1aafb1e94042bd31"
+ ],
+ "beir_cqadupstack_mathematica_28014": [
+  "ab27ece62ea02117"
+ ],
+ "beir_cqadupstack_mathematica_28028": [
+  "be3371ae1785c824"
+ ],
+ "beir_cqadupstack_mathematica_28056": [
+  "8565e360d4da90e9"
+ ],
+ "beir_cqadupstack_mathematica_28103": [
+  "b5fd0cd0303f9004"
+ ],
+ "beir_cqadupstack_mathematica_2821": [
+  "18fbdaf22094e5f6",
+  "38ffcf1282bc3f47",
+  "699fb4b69ae75a04"
+ ],
+ "beir_cqadupstack_mathematica_28258": [
+  "8803d8d4830396d8"
+ ],
+ "beir_cqadupstack_mathematica_28283": [
+  "368687cc9da0a6d5"
+ ],
+ "beir_cqadupstack_mathematica_28300": [
+  "3c2a2bb870d8cab9"
+ ],
+ "beir_cqadupstack_mathematica_28541": [
+  "94d6791fe30afbe9"
+ ],
+ "beir_cqadupstack_mathematica_28553": [
+  "021b7cf37e5ed177"
+ ],
+ "beir_cqadupstack_mathematica_28611": [
+  "577b856143d2c966",
+  "62bfc57e825fb16e",
+  "84e24322b0ffdbef",
+  "8a98eee44bd22cfc",
+  "9997b0d673cd54b0"
+ ],
+ "beir_cqadupstack_mathematica_28805": [
+  "e3b59865773a45b5"
+ ],
+ "beir_cqadupstack_mathematica_28829": [
+  "43fc77c34918a92e"
+ ],
+ "beir_cqadupstack_mathematica_28925": [
+  "52e3ef61002ac866"
+ ],
+ "beir_cqadupstack_mathematica_28946": [
+  "146e54edc8756bbc",
+  "812130e959358182"
+ ],
+ "beir_cqadupstack_mathematica_28977": [
+  "8b8d7ad7b0e384d8"
+ ],
+ "beir_cqadupstack_mathematica_29016": [
+  "ac60b23fdc275e9a"
+ ],
+ "beir_cqadupstack_mathematica_29085": [
+  "1f06f46c9b35c6d5",
+  "62cf5cfb8c7f6a4e"
+ ],
+ "beir_cqadupstack_mathematica_29098": [
+  "c81ec8e7310f24d8"
+ ],
+ "beir_cqadupstack_mathematica_29129": [
+  "e4f78df891f07d84"
+ ],
+ "beir_cqadupstack_mathematica_29254": [
+  "2277dc0e03047d4b",
+  "63b4656ad2118187",
+  "87fc61d64d40fbdb"
+ ],
+ "beir_cqadupstack_mathematica_29358": [
+  "2c619b7bf1c73157",
+  "40cfbd754b5e265d",
+  "7f63c4d42f6440ba",
+  "a41e65896a52a0ef",
+  "fa5a55ada14590c7"
+ ],
+ "beir_cqadupstack_mathematica_29545": [
+  "5cf2ee67ba600dfb"
+ ],
+ "beir_cqadupstack_mathematica_29590": [
+  "47f50d843f0748a0"
+ ],
+ "beir_cqadupstack_mathematica_296": [
+  "171469d042d3139a"
+ ],
+ "beir_cqadupstack_mathematica_29609": [
+  "00a88e375785c2f2",
+  "4751e5953897a792"
+ ],
+ "beir_cqadupstack_mathematica_29696": [
+  "562bcdcb18202f17",
+  "ab3c302d9e75480f"
+ ],
+ "beir_cqadupstack_mathematica_29700": [
+  "d828f78eefaf869f"
+ ],
+ "beir_cqadupstack_mathematica_29708": [
+  "3c2ce7342e194224",
+  "8ac5544a12e9377b",
+  "9a73cdb71bcd8db4",
+  "b68a9dd6002b1bf2",
+  "e0a51a60bd1e5584"
+ ],
+ "beir_cqadupstack_mathematica_29808": [
+  "e9a84d7cf5d3fdb4"
+ ],
+ "beir_cqadupstack_mathematica_29822": [
+  "3a3ed314a75e37cb"
+ ],
+ "beir_cqadupstack_mathematica_2988": [
+  "c898a67e021032d2"
+ ],
+ "beir_cqadupstack_mathematica_30014": [
+  "89f4e6e4c47eb73d"
+ ],
+ "beir_cqadupstack_mathematica_30038": [
+  "329a4822fdcd022d"
+ ],
+ "beir_cqadupstack_mathematica_30085": [
+  "0647d418858dcd73"
+ ],
+ "beir_cqadupstack_mathematica_30090": [
+  "03842389b41e1d3a",
+  "481630116b5ef049",
+  "89d823384afed44e",
+  "c0df6e8348e7883f",
+  "d22641c9554e58bd",
+  "dea11cde0a57dfa5"
+ ],
+ "beir_cqadupstack_mathematica_30290": [
+  "00c077402fe77519"
+ ],
+ "beir_cqadupstack_mathematica_30302": [
+  "bdcb328561d8d3a8"
+ ],
+ "beir_cqadupstack_mathematica_30381": [
+  "66d7b0d4a3936660",
+  "f0e41a04d65e68bb"
+ ],
+ "beir_cqadupstack_mathematica_30417": [
+  "a1b8095dea42a295",
+  "e2ba27e7dfae6ee8",
+  "f0f42b244fd7261a"
+ ],
+ "beir_cqadupstack_mathematica_30429": [
+  "14f1e144f8d06e00",
+  "5e2d4282066367d2"
+ ],
+ "beir_cqadupstack_mathematica_30432": [
+  "2844fa1d6b5fd0f7",
+  "4a1cfa73b65fd421",
+  "c7c5b3fa8bd923d3",
+  "ca41f551653e4601"
+ ],
+ "beir_cqadupstack_mathematica_30508": [
+  "c321f02fbb45d08e",
+  "e0cc34dcd4ab4de1"
+ ],
+ "beir_cqadupstack_mathematica_30836": [
+  "0fa28d2f28cb6e92"
+ ],
+ "beir_cqadupstack_mathematica_30984": [
+  "9c3a743e37692885"
+ ],
+ "beir_cqadupstack_mathematica_31063": [
+  "55bae87009f12fc0",
+  "fafa58203d01e985"
+ ],
+ "beir_cqadupstack_mathematica_31244": [
+  "c9d9b027ba9ec616"
+ ],
+ "beir_cqadupstack_mathematica_31299": [
+  "7f202b7989053ef4",
+  "ea3a3fbd8a08f77c"
+ ],
+ "beir_cqadupstack_mathematica_313": [
+  "ba71f9be1682cc2d"
+ ],
+ "beir_cqadupstack_mathematica_31302": [
+  "fdbe6854b0fbb99a"
+ ],
+ "beir_cqadupstack_mathematica_31402": [
+  "75d66e931af9e477"
+ ],
+ "beir_cqadupstack_mathematica_31501": [
+  "0d0c537b62f8a714"
+ ],
+ "beir_cqadupstack_mathematica_3152": [
+  "0f2045d36feff707",
+  "132098a2fbc5a340",
+  "30f295adb37bce93",
+  "393ddff062036305",
+  "3ccd68ef2d2a837f",
+  "775298fd08ff807b",
+  "e37151f3d5bedf55"
+ ],
+ "beir_cqadupstack_mathematica_31566": [
+  "21e0f66899e59592"
+ ],
+ "beir_cqadupstack_mathematica_31636": [
+  "35cd7c04f069068d"
+ ],
+ "beir_cqadupstack_mathematica_31829": [
+  "05d911f3a299cbad",
+  "7046cb7489ec5125",
+  "799581bb3c342dea",
+  "87c2158f25e774b4",
+  "feccba8e01cf8748"
+ ],
+ "beir_cqadupstack_mathematica_31902": [
+  "357d3da51ca204f7",
+  "4375d601fbcc8fe4"
+ ],
+ "beir_cqadupstack_mathematica_32119": [
+  "5fcc7df94478e387"
+ ],
+ "beir_cqadupstack_mathematica_32168": [
+  "aa9f8328c9eaffe6"
+ ],
+ "beir_cqadupstack_mathematica_32223": [
+  "27a868673902bb12",
+  "4e852379164b81af"
+ ],
+ "beir_cqadupstack_mathematica_32293": [
+  "47757f3ecf09ba07"
+ ],
+ "beir_cqadupstack_mathematica_32346": [
+  "50f38ad6039b17c2"
+ ],
+ "beir_cqadupstack_mathematica_32447": [
+  "0e31ec3346cd34f7"
+ ],
+ "beir_cqadupstack_mathematica_32569": [
+  "11b8f39eaec1cb5d",
+  "7a4782da07289325",
+  "8ded7bf58f6af423"
+ ],
+ "beir_cqadupstack_mathematica_32601": [
+  "79d1be7cac9ee274"
+ ],
+ "beir_cqadupstack_mathematica_32658": [
+  "a098368a6b597b4a"
+ ],
+ "beir_cqadupstack_mathematica_32715": [
+  "d8ff0e6026b0ba5b"
+ ],
+ "beir_cqadupstack_mathematica_32727": [
+  "2e1b9c77a0e434cc"
+ ],
+ "beir_cqadupstack_mathematica_32878": [
+  "ac4571e32ce0d81f",
+  "d187c471663412d8"
+ ],
+ "beir_cqadupstack_mathematica_32938": [
+  "48f553036716b867"
+ ],
+ "beir_cqadupstack_mathematica_32983": [
+  "0d494932dc18c2a6",
+  "6219c3c8988041d5"
+ ],
+ "beir_cqadupstack_mathematica_33": [
+  "bdeb88201c8a9574"
+ ],
+ "beir_cqadupstack_mathematica_33039": [
+  "70785e27d93089c1",
+  "9812e28527cae4b7"
+ ],
+ "beir_cqadupstack_mathematica_33051": [
+  "50cad55439a86672",
+  "c96e1081dd9ef663"
+ ],
+ "beir_cqadupstack_mathematica_3306": [
+  "586daa2905ed62b8",
+  "66a76edae9ba275b"
+ ],
+ "beir_cqadupstack_mathematica_33067": [
+  "991632779668fd98",
+  "a84c24ffb710f9ea"
+ ],
+ "beir_cqadupstack_mathematica_33176": [
+  "e73ec711b26f578a"
+ ],
+ "beir_cqadupstack_mathematica_3319": [
+  "d1e9502c6229a4ac"
+ ],
+ "beir_cqadupstack_mathematica_33293": [
+  "2f93cb839e4cd0bc"
+ ],
+ "beir_cqadupstack_mathematica_33314": [
+  "9ddee2fe9f7a46ba"
+ ],
+ "beir_cqadupstack_mathematica_33373": [
+  "b9d9be2d5bd2fa8e"
+ ],
+ "beir_cqadupstack_mathematica_334": [
+  "6c5d7ecd376fb81e",
+  "a7cd2061af7dbd65",
+  "ac6dee2e6cded15e",
+  "c1e6766a281e5f1d"
+ ],
+ "beir_cqadupstack_mathematica_33405": [
+  "5f01f7d571ac9b4d"
+ ],
+ "beir_cqadupstack_mathematica_33513": [
+  "5b5729d3a0ddfa8d"
+ ],
+ "beir_cqadupstack_mathematica_33561": [
+  "75b976c5f709959e"
+ ],
+ "beir_cqadupstack_mathematica_33574": [
+  "bcee36484356019b"
+ ],
+ "beir_cqadupstack_mathematica_33690": [
+  "cf667d56b8f43068"
+ ],
+ "beir_cqadupstack_mathematica_33721": [
+  "54d7ddf0e62e1197"
+ ],
+ "beir_cqadupstack_mathematica_33724": [
+  "30fea0260b214d6e",
+  "e5a7c3fd94b1a5e6"
+ ],
+ "beir_cqadupstack_mathematica_3394": [
+  "041be687b7b7c53c"
+ ],
+ "beir_cqadupstack_mathematica_33966": [
+  "891c690307ab5ce3"
+ ],
+ "beir_cqadupstack_mathematica_33992": [
+  "27b75014a3a14a86",
+  "a502894499f88a32"
+ ],
+ "beir_cqadupstack_mathematica_34073": [
+  "d8ed808c52792d22"
+ ],
+ "beir_cqadupstack_mathematica_3412": [
+  "e68a7ed6dacbfe77"
+ ],
+ "beir_cqadupstack_mathematica_34291": [
+  "5e895ad7c25fc25b"
+ ],
+ "beir_cqadupstack_mathematica_34321": [
+  "a92dc8b825a5699b"
+ ],
+ "beir_cqadupstack_mathematica_34526": [
+  "f5801cd9b79d5e6d"
+ ],
+ "beir_cqadupstack_mathematica_34535": [
+  "2e6d64d05018d6ce",
+  "2ffd7dcfffa6acd2",
+  "32c9686852fc7565",
+  "55df78477370d0da",
+  "8883eb5c1d2da68e",
+  "af68d3250a63b8e3",
+  "b80cff346645d57e"
+ ],
+ "beir_cqadupstack_mathematica_34554": [
+  "1d58a92c73ed7b7a"
+ ],
+ "beir_cqadupstack_mathematica_34565": [
+  "97ad3be54eeaa0a6"
+ ],
+ "beir_cqadupstack_mathematica_34682": [
+  "018e440f54a7cb36"
+ ],
+ "beir_cqadupstack_mathematica_34710": [
+  "fb111b164fe42fbf"
+ ],
+ "beir_cqadupstack_mathematica_34727": [
+  "6c9e0ffe1581ead8"
+ ],
+ "beir_cqadupstack_mathematica_34916": [
+  "66ebf29f52e62e7d"
+ ],
+ "beir_cqadupstack_mathematica_3510": [
+  "3ecf750eacdbda09",
+  "e0ec847a84776653"
+ ],
+ "beir_cqadupstack_mathematica_35139": [
+  "90704f0ee0e83247"
+ ],
+ "beir_cqadupstack_mathematica_3518": [
+  "a01dc93993e584e8"
+ ],
+ "beir_cqadupstack_mathematica_35294": [
+  "a05d44b8ddf77521"
+ ],
+ "beir_cqadupstack_mathematica_353": [
+  "76f2f25f9af6e67f",
+  "7b6d121c942a5af9",
+  "ac547cc93357b55e"
+ ],
+ "beir_cqadupstack_mathematica_3541": [
+  "66cdbc2d9eef174e",
+  "b4ca72d62ed68fdc"
+ ],
+ "beir_cqadupstack_mathematica_35544": [
+  "de93a3c7b960a487"
+ ],
+ "beir_cqadupstack_mathematica_35553": [
+  "3846c4afcfc3de26"
+ ],
+ "beir_cqadupstack_mathematica_35603": [
+  "ad5b89574113b0a3"
+ ],
+ "beir_cqadupstack_mathematica_3561": [
+  "22ec5fe9c237c195",
+  "d7f22e7ed0918477"
+ ],
+ "beir_cqadupstack_mathematica_35683": [
+  "17126e3718d1b344"
+ ],
+ "beir_cqadupstack_mathematica_3646": [
+  "abceae17cf96aaac"
+ ],
+ "beir_cqadupstack_mathematica_36995": [
+  "cc5222c9f3d92f48"
+ ],
+ "beir_cqadupstack_mathematica_37048": [
+  "06401d7ab08e31d5"
+ ],
+ "beir_cqadupstack_mathematica_37093": [
+  "740b4ce83269de2a"
+ ],
+ "beir_cqadupstack_mathematica_3723": [
+  "bbbe9fb4e6297b98",
+  "ed4bd4cde15de5b0"
+ ],
+ "beir_cqadupstack_mathematica_37242": [
+  "d1579b9e63065e5e"
+ ],
+ "beir_cqadupstack_mathematica_37247": [
+  "a65d937770c8c1bb"
+ ],
+ "beir_cqadupstack_mathematica_37346": [
+  "a7c065e584597556"
+ ],
+ "beir_cqadupstack_mathematica_37414": [
+  "1e5ab4b05d775433",
+  "1ee73c271785cc50",
+  "2ad53ddb877dbe15",
+  "3d020caf98925101",
+  "632bcd98a8f9cfbf",
+  "68784223b71cb037",
+  "7098914b94372810",
+  "8bb7d2109a1031ce",
+  "a41971a1e73f91ba",
+  "bb611971cc9d5777",
+  "c1747a788a4844fb",
+  "d5cfbec23a8a82dc"
+ ],
+ "beir_cqadupstack_mathematica_37416": [
+  "5e520b4138858024"
+ ],
+ "beir_cqadupstack_mathematica_3747": [
+  "a5ae61fde33dd07e"
+ ],
+ "beir_cqadupstack_mathematica_37557": [
+  "044952164fc71329",
+  "458da6497d923c52"
+ ],
+ "beir_cqadupstack_mathematica_37602": [
+  "15c201d3499c5e72"
+ ],
+ "beir_cqadupstack_mathematica_37656": [
+  "fc7a8ffb6a47f3c1"
+ ],
+ "beir_cqadupstack_mathematica_37755": [
+  "f79859330ba7339a"
+ ],
+ "beir_cqadupstack_mathematica_37792": [
+  "10ef137113a97e35"
+ ],
+ "beir_cqadupstack_mathematica_3780": [
+  "755ef6a20a7d9ee8"
+ ],
+ "beir_cqadupstack_mathematica_37860": [
+  "aa57ddf8c62a9e02"
+ ],
+ "beir_cqadupstack_mathematica_37894": [
+  "5115790f77ca8a6e"
+ ],
+ "beir_cqadupstack_mathematica_38012": [
+  "5cb1791e412530c1"
+ ],
+ "beir_cqadupstack_mathematica_38126": [
+  "247f8709f9138ae9"
+ ],
+ "beir_cqadupstack_mathematica_38152": [
+  "e9e3924f4ca00a03"
+ ],
+ "beir_cqadupstack_mathematica_38166": [
+  "ac46ed89c0333e5c"
+ ],
+ "beir_cqadupstack_mathematica_38196": [
+  "210a636ec1427e2a"
+ ],
+ "beir_cqadupstack_mathematica_38242": [
+  "202219066b98b489"
+ ],
+ "beir_cqadupstack_mathematica_38265": [
+  "938f87ca8d1f1491",
+  "941d0ecfb2fbc638"
+ ],
+ "beir_cqadupstack_mathematica_38388": [
+  "9703f8a2d8ff417e",
+  "b2f42f93dc32be81"
+ ],
+ "beir_cqadupstack_mathematica_38498": [
+  "8beaabcee96bdc02"
+ ],
+ "beir_cqadupstack_mathematica_38604": [
+  "c8427e1758e5dcf5"
+ ],
+ "beir_cqadupstack_mathematica_38622": [
+  "1fd7715d3e9de8e0"
+ ],
+ "beir_cqadupstack_mathematica_3871": [
+  "da2b40191e8e0202"
+ ],
+ "beir_cqadupstack_mathematica_38792": [
+  "63154f50acb6daa4"
+ ],
+ "beir_cqadupstack_mathematica_38819": [
+  "9dfe68ff8bc5bd45",
+  "a57ff7909d844be6",
+  "fab1aea389815769"
+ ],
+ "beir_cqadupstack_mathematica_38846": [
+  "13cb75e026b36f37"
+ ],
+ "beir_cqadupstack_mathematica_38931": [
+  "a009f4c062d385b8"
+ ],
+ "beir_cqadupstack_mathematica_3897": [
+  "5610b2b0cd8ecbfd"
+ ],
+ "beir_cqadupstack_mathematica_39019": [
+  "96fbd9bd661a866c",
+  "b78ca52bdf6dccc7"
+ ],
+ "beir_cqadupstack_mathematica_39026": [
+  "3bd900fa0d55c024",
+  "7e54ab4add3a1689",
+  "7f86493a559a1cfe"
+ ],
+ "beir_cqadupstack_mathematica_39076": [
+  "ea61a7eb2a096504"
+ ],
+ "beir_cqadupstack_mathematica_39078": [
+  "3270f2739018e4b0",
+  "43ea8abde943520e"
+ ],
+ "beir_cqadupstack_mathematica_39089": [
+  "f41f4dc29888c51d"
+ ],
+ "beir_cqadupstack_mathematica_39106": [
+  "324915ce220c71ce"
+ ],
+ "beir_cqadupstack_mathematica_3912": [
+  "48ca023a6e07134e",
+  "8b3d4f94d2830ce7",
+  "9294bc6512d31c33"
+ ],
+ "beir_cqadupstack_mathematica_39137": [
+  "7d6bdd450fb8a52a"
+ ],
+ "beir_cqadupstack_mathematica_39361": [
+  "11cb302f120d5364"
+ ],
+ "beir_cqadupstack_mathematica_3943": [
+  "65f91df9529b7c82"
+ ],
+ "beir_cqadupstack_mathematica_39511": [
+  "5b9773c4a9b47c24",
+  "7a98fbde76e8082d",
+  "b08e4708bf707217"
+ ],
+ "beir_cqadupstack_mathematica_39604": [
+  "b94fd6c341f1b718"
+ ],
+ "beir_cqadupstack_mathematica_39654": [
+  "3a2364f54c1175d0",
+  "7c5bf74b4e7fda63"
+ ],
+ "beir_cqadupstack_mathematica_39696": [
+  "1eb093a11485c808"
+ ],
+ "beir_cqadupstack_mathematica_39731": [
+  "5cb955926b4bc077",
+  "81cd4914c8118737"
+ ],
+ "beir_cqadupstack_mathematica_39904": [
+  "5b4925ba4e24672a",
+  "7785390a5bd5fca4",
+  "daf7f2d423c418d3",
+  "f20cf7ef6daa8629"
+ ],
+ "beir_cqadupstack_mathematica_3991": [
+  "fd7da50cfe4de2d2"
+ ],
+ "beir_cqadupstack_mathematica_39980": [
+  "0ea5262bbaa1f110",
+  "74d1859db00acce7"
+ ],
+ "beir_cqadupstack_mathematica_4001": [
+  "fa2e7cea9e5cc37a"
+ ],
+ "beir_cqadupstack_mathematica_4002": [
+  "98a2dae6692a0329"
+ ],
+ "beir_cqadupstack_mathematica_40029": [
+  "901480b548a487a1"
+ ],
+ "beir_cqadupstack_mathematica_40146": [
+  "25dc2da5029e3e62"
+ ],
+ "beir_cqadupstack_mathematica_4017": [
+  "735ebf05414e31d1"
+ ],
+ "beir_cqadupstack_mathematica_4019": [
+  "ed9faefb74bae7db"
+ ],
+ "beir_cqadupstack_mathematica_40201": [
+  "00e57999f2186055",
+  "22d6a5b883798d82",
+  "5f2f4185ba4d7d0b",
+  "80f4ab4ab247c7b6",
+  "a631ca2836809d80",
+  "cf13110a6a8d995f",
+  "ee2a4cb1837cd0a4"
+ ],
+ "beir_cqadupstack_mathematica_40204": [
+  "8f81f4b3c398fd5c"
+ ],
+ "beir_cqadupstack_mathematica_40320": [
+  "18ee31c3ab517297",
+  "22d9a349508006d0"
+ ],
+ "beir_cqadupstack_mathematica_40422": [
+  "2abd3d97470575c1"
+ ],
+ "beir_cqadupstack_mathematica_40640": [
+  "14e5b4d3c4426629"
+ ],
+ "beir_cqadupstack_mathematica_40748": [
+  "2183fa5185a36fe6"
+ ],
+ "beir_cqadupstack_mathematica_40763": [
+  "08722b45ca5caa90"
+ ],
+ "beir_cqadupstack_mathematica_4081": [
+  "c124445a32e7636d"
+ ],
+ "beir_cqadupstack_mathematica_40837": [
+  "806e877c1e4a5a12"
+ ],
+ "beir_cqadupstack_mathematica_4084": [
+  "57b39ec5c6575da0"
+ ],
+ "beir_cqadupstack_mathematica_40919": [
+  "df3c20b415303ca2"
+ ],
+ "beir_cqadupstack_mathematica_41077": [
+  "9cfd1e5dd233331b"
+ ],
+ "beir_cqadupstack_mathematica_41141": [
+  "d7998867234e51ae"
+ ],
+ "beir_cqadupstack_mathematica_41170": [
+  "8d781def27c5dc35",
+  "a840ae700cd019bd",
+  "e0bd260ba8ef62bd"
+ ],
+ "beir_cqadupstack_mathematica_41215": [
+  "ba081b9654b0fe0a"
+ ],
+ "beir_cqadupstack_mathematica_41291": [
+  "3cbedd099a91f7d0"
+ ],
+ "beir_cqadupstack_mathematica_41350": [
+  "1c5f0ac9db42aa0e"
+ ],
+ "beir_cqadupstack_mathematica_41517": [
+  "e437c21e37c955ea"
+ ],
+ "beir_cqadupstack_mathematica_41521": [
+  "823de74dcd5610ec"
+ ],
+ "beir_cqadupstack_mathematica_41523": [
+  "82d648d00b2ead66"
+ ],
+ "beir_cqadupstack_mathematica_41569": [
+  "5b3e151039654522"
+ ],
+ "beir_cqadupstack_mathematica_41774": [
+  "884e0247ca8b5394"
+ ],
+ "beir_cqadupstack_mathematica_41813": [
+  "5e3c9246361b1cff"
+ ],
+ "beir_cqadupstack_mathematica_41872": [
+  "8316f7c7888c0c3f"
+ ],
+ "beir_cqadupstack_mathematica_41920": [
+  "ba9e51807428f208"
+ ],
+ "beir_cqadupstack_mathematica_41966": [
+  "27bc06b465c35b0b"
+ ],
+ "beir_cqadupstack_mathematica_42035": [
+  "02250419d8c42b2f",
+  "0cb97f9d4933db28",
+  "0f0e583b621c1e6d",
+  "1caf241a4b5bb78b",
+  "9eef0360c5f9fe5d",
+  "d2546a17048a127a"
+ ],
+ "beir_cqadupstack_mathematica_42097": [
+  "c24df6325b054664"
+ ],
+ "beir_cqadupstack_mathematica_42209": [
+  "653a463404417a88",
+  "aa1f4d8f2dddf545"
+ ],
+ "beir_cqadupstack_mathematica_42330": [
+  "2ef34c57fe54a219",
+  "3a865d5499c1bf7e",
+  "8cb3121b0c4a76e0",
+  "dc1f077772df71e0",
+  "e75309c7d6dafee2",
+  "f0cfc8c3dcc54a19"
+ ],
+ "beir_cqadupstack_mathematica_42334": [
+  "273aa58c9b5fd093",
+  "3304de2a36775557",
+  "3312e95a48ec239b",
+  "8899920e3d3aa2f9",
+  "8c7d91c9eb8152b6",
+  "d891bcc445f57192",
+  "d98907f8563da08a",
+  "e3aa883c2981e52a"
+ ],
+ "beir_cqadupstack_mathematica_42366": [
+  "7c364ea77316385c"
+ ],
+ "beir_cqadupstack_mathematica_42403": [
+  "1e1243526bc21bc0",
+  "bf2bc21ce745d5b4"
+ ],
+ "beir_cqadupstack_mathematica_42411": [
+  "1e65e2bdcf30c00e"
+ ],
+ "beir_cqadupstack_mathematica_4244": [
+  "d1cab115c97d4279"
+ ],
+ "beir_cqadupstack_mathematica_42483": [
+  "0892dd539ecbd309"
+ ],
+ "beir_cqadupstack_mathematica_42512": [
+  "07aa1aa0781a90bb",
+  "49b7cd084114fe62"
+ ],
+ "beir_cqadupstack_mathematica_42628": [
+  "0c4233af40b2faf9",
+  "112fff3d27d3e09f",
+  "116019c535b80ad6",
+  "28ecfaf84002b3ee",
+  "2a266611684570fb",
+  "2bb62293695103ba",
+  "2cd95dcb93a0eb49",
+  "355450380ef5e27b",
+  "3df7508f5d534e1f",
+  "47bf9363f54d60fa",
+  "57e35693a64e2d16",
+  "5d1aa78010c76759",
+  "74686bfdfa6c2f49",
+  "888b50ea115704eb",
+  "8a466ad97c15c567",
+  "8ae7435129937486",
+  "a3a347452e07b3c4",
+  "b26101cca0fe6b90",
+  "b745aa7959d2a9a8",
+  "b8c00d7b9893d40f",
+  "bc74f06fbc827806",
+  "d330615818b72976",
+  "ee9998def6b4684f",
+  "f22f8d2ce5a7ca77",
+  "f24794f7083b8ce1",
+  "f462aca61828636a"
+ ],
+ "beir_cqadupstack_mathematica_42712": [
+  "286213f887adbc02"
+ ],
+ "beir_cqadupstack_mathematica_42717": [
+  "62c78019d2f096ec",
+  "a22a778b78a12e3e"
+ ],
+ "beir_cqadupstack_mathematica_42763": [
+  "51f592bd9e6e2bb7"
+ ],
+ "beir_cqadupstack_mathematica_42778": [
+  "38ef6529c04703f1",
+  "8b1863920e2fd13c"
+ ],
+ "beir_cqadupstack_mathematica_42889": [
+  "c10ceffa44c38086",
+  "ddb437fe40cfaeb9"
+ ],
+ "beir_cqadupstack_mathematica_42951": [
+  "b6d7dded95804609"
+ ],
+ "beir_cqadupstack_mathematica_42964": [
+  "3e15cbe56fb29c42",
+  "402dfd87e4951f31"
+ ],
+ "beir_cqadupstack_mathematica_43204": [
+  "bcc881b729ea01e6"
+ ],
+ "beir_cqadupstack_mathematica_43350": [
+  "bd6a74d13285157a"
+ ],
+ "beir_cqadupstack_mathematica_4338": [
+  "71537bdf9b2986bd"
+ ],
+ "beir_cqadupstack_mathematica_43415": [
+  "5c4fe53c285c7b59"
+ ],
+ "beir_cqadupstack_mathematica_43449": [
+  "06687539f8d841f1",
+  "09b7f8155f915aa1",
+  "178c5f71ec619242",
+  "30d528e7ebe11cd0",
+  "5eb705cb3c42ee02",
+  "83010c9945d593d8",
+  "87ac7753b78d28d0",
+  "afce716ee2189abc",
+  "cf7e7a3602117abc",
+  "d7935640391dda20",
+  "f195b9893c1a8e12"
+ ],
+ "beir_cqadupstack_mathematica_43485": [
+  "a11c6400ff5d044c"
+ ],
+ "beir_cqadupstack_mathematica_43619": [
+  "f11c774d4a156c80"
+ ],
+ "beir_cqadupstack_mathematica_43638": [
+  "a86ea6c1ca78d0db"
+ ],
+ "beir_cqadupstack_mathematica_4368": [
+  "7f25959c475abb54"
+ ],
+ "beir_cqadupstack_mathematica_43683": [
+  "121b1097e3476523",
+  "2335cb0f3f4e9728",
+  "361077d4c0e02942",
+  "7151e546abf81280",
+  "8f84e9375606ddd7",
+  "96df75105b8091b8",
+  "ab6795c3d98ab714",
+  "c567647a2adf4a09",
+  "e54bd5c393a84099",
+  "fda6ca6f4f0b1d1b"
+ ],
+ "beir_cqadupstack_mathematica_43813": [
+  "10b8dde0a27c045e"
+ ],
+ "beir_cqadupstack_mathematica_43874": [
+  "5813bbc7762dd16f"
+ ],
+ "beir_cqadupstack_mathematica_4390": [
+  "3ae3c07535d052af"
+ ],
+ "beir_cqadupstack_mathematica_4406": [
+  "f2c27184edda6bcd"
+ ],
+ "beir_cqadupstack_mathematica_44126": [
+  "257ec7d7be580eb0"
+ ],
+ "beir_cqadupstack_mathematica_4413": [
+  "87ac76a7bd8a5236"
+ ],
+ "beir_cqadupstack_mathematica_44154": [
+  "656150d127af8d08"
+ ],
+ "beir_cqadupstack_mathematica_44200": [
+  "ad16735c8655a295"
+ ],
+ "beir_cqadupstack_mathematica_44289": [
+  "37c2ce6362eaf600",
+  "81705f8adc840ced",
+  "9ad12b9f408235c0"
+ ],
+ "beir_cqadupstack_mathematica_44421": [
+  "0278f5b86ebf6045",
+  "0344a96ef7373116",
+  "0427d3fe9c137bad",
+  "0d2ee615ae0ed1b6",
+  "1336465fcafa60ba",
+  "135e97b7334af813",
+  "144d5e98335b33c9",
+  "18ce0160c86f6a14",
+  "23997c9b37e5c839",
+  "25b2e290a1c81c01",
+  "276227236e96de54",
+  "30001ad063f68a78",
+  "39c8ef55110208a1",
+  "3c6f4a0bfa69938b",
+  "3ca1ce5247f61e4c",
+  "3fa303a1d34aa345",
+  "431f6745d82bd240",
+  "4a603ede4d2778a6",
+  "4be78f7cccf0dfa5",
+  "54d71b037addfa8f",
+  "5619a86f46b6b6f4",
+  "5758c92964ce15a1",
+  "5f090baebdb4b5d9",
+  "5fb07e3c2a889a07",
+  "603fbf14abe96d5a",
+  "666e9104e2b410bc",
+  "67337e46f6c3dde2",
+  "69fa0dda9244dc03",
+  "81a078463027f802",
+  "8452a228f4d363f9",
+  "8b637c13aa47e33e",
+  "8e78a56badb85f5f",
+  "8f7cd2f0f5b7836e",
+  "9d337d14a275a968",
+  "a0c15e29a94d655b",
+  "a5cb6966431b727a",
+  "aec3c3b4709898af",
+  "b6c25e82b058f9d1",
+  "bd3f094a62c390c7",
+  "c092999bc13bb07d",
+  "c17f06275700c75e",
+  "c40b52380fb7b5d2",
+  "c6051d6d132c2693",
+  "d0ba444044baf1c7",
+  "d54f7ba4459cdf36",
+  "e07b63d7f9605210",
+  "e227707852a50b79",
+  "e41a716c0134f986",
+  "e90d1facc2c8f968",
+  "ec9cc4bb5ed783a3",
+  "ecc3373b11222d69",
+  "ef699b929787436a",
+  "f3d45f96e7cd7f4b",
+  "f5dc6c369e517537",
+  "fe674ef38e123ed6",
+  "fed5e088b22cd71f"
+ ],
+ "beir_cqadupstack_mathematica_44428": [
+  "7eea51d4f27a2a7a"
+ ],
+ "beir_cqadupstack_mathematica_44439": [
+  "d763a796ad4c6576"
+ ],
+ "beir_cqadupstack_mathematica_44507": [
+  "41cc95f04f608b42",
+  "6a27e6da06d03a2c",
+  "7b4b40fe8733d546",
+  "c79d01820e972e08"
+ ],
+ "beir_cqadupstack_mathematica_44533": [
+  "d172428e753dfaf9"
+ ],
+ "beir_cqadupstack_mathematica_44709": [
+  "3c16117f4fd31a2e"
+ ],
+ "beir_cqadupstack_mathematica_44744": [
+  "1f95307738fed67a"
+ ],
+ "beir_cqadupstack_mathematica_44751": [
+  "89c607006977785e"
+ ],
+ "beir_cqadupstack_mathematica_44756": [
+  "a098e1093c4146b5"
+ ],
+ "beir_cqadupstack_mathematica_44812": [
+  "e0c8ff3a8af8b850"
+ ],
+ "beir_cqadupstack_mathematica_44955": [
+  "15975d25fb804506",
+  "28a44c4a706b0dcc",
+  "3204ecf14923c5cc",
+  "9f9d4120b10b13a2",
+  "f8994dff8e264cd5"
+ ],
+ "beir_cqadupstack_mathematica_44987": [
+  "fa7d5478f7658046"
+ ],
+ "beir_cqadupstack_mathematica_45010": [
+  "d3e7c1b0a022b474"
+ ],
+ "beir_cqadupstack_mathematica_45040": [
+  "c700ccef026d88fe"
+ ],
+ "beir_cqadupstack_mathematica_451": [
+  "b3955aa6cff2cefe"
+ ],
+ "beir_cqadupstack_mathematica_45181": [
+  "08b496fc5df51a08"
+ ],
+ "beir_cqadupstack_mathematica_4537": [
+  "75924022baec28d5"
+ ],
+ "beir_cqadupstack_mathematica_45371": [
+  "7650b431491115ad"
+ ],
+ "beir_cqadupstack_mathematica_45398": [
+  "e9b7814d10012926"
+ ],
+ "beir_cqadupstack_mathematica_45424": [
+  "bcdb1f5c13f2e4b1"
+ ],
+ "beir_cqadupstack_mathematica_45447": [
+  "95a64211941a002c",
+  "d514f1940327940d",
+  "e4b36eea233e9281",
+  "e64637c501cec786",
+  "f924f432e1f233c8",
+  "fcd43f3ee7e8a75d"
+ ],
+ "beir_cqadupstack_mathematica_45450": [
+  "751e147d4045006c"
+ ],
+ "beir_cqadupstack_mathematica_45475": [
+  "854fed93156f1213",
+  "cf7e6a51b9931621"
+ ],
+ "beir_cqadupstack_mathematica_45476": [
+  "916d4d53e9485517",
+  "ff340562c259b7c1"
+ ],
+ "beir_cqadupstack_mathematica_45528": [
+  "3ab15660bc02cec1",
+  "69f97d294cb0ed2a",
+  "7729841aeadd1bae",
+  "c0257f88b60785ee"
+ ],
+ "beir_cqadupstack_mathematica_45551": [
+  "ce209ec25ae7cbf1"
+ ],
+ "beir_cqadupstack_mathematica_45574": [
+  "2d505c2d654f6ce3",
+  "822f51b584af88d2",
+  "beda20e14c495c8f"
+ ],
+ "beir_cqadupstack_mathematica_45662": [
+  "fbb831c08325841c"
+ ],
+ "beir_cqadupstack_mathematica_45693": [
+  "eb59cdbaf4861e55"
+ ],
+ "beir_cqadupstack_mathematica_45725": [
+  "579641582063c695"
+ ],
+ "beir_cqadupstack_mathematica_45878": [
+  "7b6cf0ee2524c1c2"
+ ],
+ "beir_cqadupstack_mathematica_45994": [
+  "4e40655bbdf121b4"
+ ],
+ "beir_cqadupstack_mathematica_46053": [
+  "b9773bb434e93efa"
+ ],
+ "beir_cqadupstack_mathematica_46064": [
+  "f9ebbb1512fe9142"
+ ],
+ "beir_cqadupstack_mathematica_4608": [
+  "6e4214635dd91abe"
+ ],
+ "beir_cqadupstack_mathematica_4612": [
+  "ffe7f3ed40c27e05"
+ ],
+ "beir_cqadupstack_mathematica_46136": [
+  "81325c619ba36832",
+  "87dd85176630ab95",
+  "990553a72845dda6"
+ ],
+ "beir_cqadupstack_mathematica_46284": [
+  "371e9704bf15d498"
+ ],
+ "beir_cqadupstack_mathematica_46315": [
+  "8fc149710a678d9d"
+ ],
+ "beir_cqadupstack_mathematica_46336": [
+  "1fd9824fc9dcdca6"
+ ],
+ "beir_cqadupstack_mathematica_46350": [
+  "d407f45414b3b461"
+ ],
+ "beir_cqadupstack_mathematica_46459": [
+  "2ba2eea51e161e9e"
+ ],
+ "beir_cqadupstack_mathematica_46581": [
+  "34d69bd9b5e60427",
+  "6d31cdb45c5578cc",
+  "c5bfc9b52e1a9ab4"
+ ],
+ "beir_cqadupstack_mathematica_46595": [
+  "b4145bd29a2fa4db"
+ ],
+ "beir_cqadupstack_mathematica_46662": [
+  "d1c54b8444999549",
+  "f2c2e2b8be9df263"
+ ],
+ "beir_cqadupstack_mathematica_46702": [
+  "12c63c9d54bb94fa",
+  "842d194d907c0261",
+  "8fb90188dc6fe947"
+ ],
+ "beir_cqadupstack_mathematica_4679": [
+  "3218652d88971b21"
+ ],
+ "beir_cqadupstack_mathematica_46866": [
+  "b7ab9f9c794a0c55"
+ ],
+ "beir_cqadupstack_mathematica_46893": [
+  "1e9b907630ab1297"
+ ],
+ "beir_cqadupstack_mathematica_46920": [
+  "d7a5925d85176d96"
+ ],
+ "beir_cqadupstack_mathematica_46927": [
+  "6ef56c96785193db"
+ ],
+ "beir_cqadupstack_mathematica_46945": [
+  "a8c2c937d4137b66",
+  "c6163812d2acfa3e"
+ ],
+ "beir_cqadupstack_mathematica_46950": [
+  "30ad14bb38a7c620",
+  "74e09fad004432d9",
+  "bf595e961d04c268",
+  "c53d5c80ae94bc18"
+ ],
+ "beir_cqadupstack_mathematica_46986": [
+  "88d98bcc6c738332"
+ ],
+ "beir_cqadupstack_mathematica_47019": [
+  "8c6cf1948cd9f884",
+  "9d5c213ebdcfe0e3",
+  "b4ea939c358c8d90",
+  "e4682e15a61c0f3b"
+ ],
+ "beir_cqadupstack_mathematica_47028": [
+  "36f0260b22c71ba0"
+ ],
+ "beir_cqadupstack_mathematica_47030": [
+  "db74fa0d0c2f7ebb",
+  "e586a7be4b891ce1"
+ ],
+ "beir_cqadupstack_mathematica_47154": [
+  "146a99db7e176119",
+  "53c0ef985889a0eb",
+  "81e82a6f7459350c",
+  "8d7c048b152325bc",
+  "95dbfbbaa13ed4ee"
+ ],
+ "beir_cqadupstack_mathematica_47161": [
+  "0c1a995fe3af5c78"
+ ],
+ "beir_cqadupstack_mathematica_47175": [
+  "c79c939904a39200"
+ ],
+ "beir_cqadupstack_mathematica_4720": [
+  "109f0b170bfb36c6",
+  "bea895870e7365ef"
+ ],
+ "beir_cqadupstack_mathematica_47207": [
+  "5f40f122c8a9484d"
+ ],
+ "beir_cqadupstack_mathematica_4727": [
+  "66e1f7bdc0d71cb5",
+  "67a1de9451bd1f95",
+  "708d4c1e1c83b763",
+  "b4e6790854d71546",
+  "b8a5c01f20258f3b",
+  "c4180f54a8826fae",
+  "e152b444d82100aa"
+ ],
+ "beir_cqadupstack_mathematica_4729": [
+  "0790d4d1449bab77",
+  "3e931a53d504cc2d",
+  "4b91569e8a85b8ab",
+  "ee2cb997e381255b",
+  "f1963841c0c0f44a"
+ ],
+ "beir_cqadupstack_mathematica_47352": [
+  "ac60d94883eed606"
+ ],
+ "beir_cqadupstack_mathematica_4744": [
+  "d419c19f609ace95"
+ ],
+ "beir_cqadupstack_mathematica_47475": [
+  "6f1f516a642e45d8"
+ ],
+ "beir_cqadupstack_mathematica_4764": [
+  "9c85a763f204cd23"
+ ],
+ "beir_cqadupstack_mathematica_47656": [
+  "2f1b4571662cbab5"
+ ],
+ "beir_cqadupstack_mathematica_47749": [
+  "bd2fe2c420af9d9d"
+ ],
+ "beir_cqadupstack_mathematica_47881": [
+  "f571c4a89f8406c6"
+ ],
+ "beir_cqadupstack_mathematica_48026": [
+  "0fb36ffea1f1cdfe",
+  "4ba5b7a276804448"
+ ],
+ "beir_cqadupstack_mathematica_48030": [
+  "202753ffd859fb8f",
+  "9b301eb0d17cf4ce"
+ ],
+ "beir_cqadupstack_mathematica_48208": [
+  "0f76dfa6791322d3"
+ ],
+ "beir_cqadupstack_mathematica_48307": [
+  "1c48bca46ed77f33",
+  "2fe75192a367ee05",
+  "887656d8877a70c6"
+ ],
+ "beir_cqadupstack_mathematica_48386": [
+  "5138d53ee74f6a0e"
+ ],
+ "beir_cqadupstack_mathematica_48387": [
+  "a58f83243aa0419c"
+ ],
+ "beir_cqadupstack_mathematica_48672": [
+  "93ed778250dacb25"
+ ],
+ "beir_cqadupstack_mathematica_48681": [
+  "6079b42d5ae594b8",
+  "a0b83e31ff3866a6"
+ ],
+ "beir_cqadupstack_mathematica_48690": [
+  "7aafef3616e098a8",
+  "806509367dfea352",
+  "80a1dfdff9bc7489",
+  "c16fe01099cdaf04"
+ ],
+ "beir_cqadupstack_mathematica_48696": [
+  "cb19f06a88f31456"
+ ],
+ "beir_cqadupstack_mathematica_48802": [
+  "3b7a554392740a78"
+ ],
+ "beir_cqadupstack_mathematica_48941": [
+  "752f0d4b5b137899"
+ ],
+ "beir_cqadupstack_mathematica_49190": [
+  "50b9be4f2e978ac9"
+ ],
+ "beir_cqadupstack_mathematica_49230": [
+  "049d285c617b4829"
+ ],
+ "beir_cqadupstack_mathematica_49289": [
+  "8a3915cfc21fe990",
+  "91061bb7bdaed4a9",
+  "9f8ecb2dbf0ad7c8"
+ ],
+ "beir_cqadupstack_mathematica_49311": [
+  "429e672d146a974f",
+  "4c10e9cebe8dde8e"
+ ],
+ "beir_cqadupstack_mathematica_50418": [
+  "9c5f0a1ee73f7c9e"
+ ],
+ "beir_cqadupstack_mathematica_50507": [
+  "41a4cd9bc1dd4143"
+ ],
+ "beir_cqadupstack_mathematica_50519": [
+  "1da6eb23b9310ffd"
+ ],
+ "beir_cqadupstack_mathematica_50548": [
+  "0e1f4adce733af63",
+  "1130afabd3682571",
+  "f5465dd85120004b"
+ ],
+ "beir_cqadupstack_mathematica_50713": [
+  "f8ec8027e70273ae"
+ ],
+ "beir_cqadupstack_mathematica_50738": [
+  "3aaff20024b66b8f"
+ ],
+ "beir_cqadupstack_mathematica_50831": [
+  "377ee9a0da891a1b"
+ ],
+ "beir_cqadupstack_mathematica_51042": [
+  "5843388b9182754c"
+ ],
+ "beir_cqadupstack_mathematica_51049": [
+  "0c15a2f601023931",
+  "b6d9ef9c7cde794d"
+ ],
+ "beir_cqadupstack_mathematica_51188": [
+  "446465c2e90d9d7e",
+  "c87b4bec936850c7",
+  "ec6abe512c0a6718"
+ ],
+ "beir_cqadupstack_mathematica_51440": [
+  "e2fa25594a06ad34"
+ ],
+ "beir_cqadupstack_mathematica_51560": [
+  "3698a8f4cf474ca7"
+ ],
+ "beir_cqadupstack_mathematica_51597": [
+  "3f68641694563c17"
+ ],
+ "beir_cqadupstack_mathematica_51711": [
+  "12586e39f35240d3",
+  "d060749a402bb581",
+  "e86f1b8dc7510f8d"
+ ],
+ "beir_cqadupstack_mathematica_51732": [
+  "dd7d8dff17b00b59"
+ ],
+ "beir_cqadupstack_mathematica_51776": [
+  "393c597affa01da4",
+  "7414cd0977999101",
+  "bad299e76b76df8c",
+  "df85c2430263e0ad"
+ ],
+ "beir_cqadupstack_mathematica_51783": [
+  "cfd205173a71e465"
+ ],
+ "beir_cqadupstack_mathematica_51880": [
+  "24a32f6a0b5d004c"
+ ],
+ "beir_cqadupstack_mathematica_51885": [
+  "434ca923b1bc514a"
+ ],
+ "beir_cqadupstack_mathematica_52043": [
+  "445172f58b3bf8a8"
+ ],
+ "beir_cqadupstack_mathematica_52207": [
+  "75b4e23151ea9cfa"
+ ],
+ "beir_cqadupstack_mathematica_52308": [
+  "5bd1600e22472ec1",
+  "8104d1d6c7cc5cf9",
+  "c7cf0a7aa4633d58"
+ ],
+ "beir_cqadupstack_mathematica_5235": [
+  "044a3547d32b58b1"
+ ],
+ "beir_cqadupstack_mathematica_52358": [
+  "2cfe853401b39b5f",
+  "33f0a4aabe972608",
+  "3bbd712f3921ec13",
+  "a34892f14d3fc7dc",
+  "ce260b6c7a4c641f",
+  "d4204327ea676fd5"
+ ],
+ "beir_cqadupstack_mathematica_52381": [
+  "2cf47a8f82f6bd20"
+ ],
+ "beir_cqadupstack_mathematica_52414": [
+  "3dc4828c0fbd16b3"
+ ],
+ "beir_cqadupstack_mathematica_5242": [
+  "42f4b7ac8c0975e5",
+  "90900eb85c83bb2f"
+ ],
+ "beir_cqadupstack_mathematica_5314": [
+  "b4e66b82552cbd9d"
+ ],
+ "beir_cqadupstack_mathematica_533": [
+  "b3cbb950ab4a2515"
+ ],
+ "beir_cqadupstack_mathematica_5375": [
+  "486c0ad81971f464",
+  "a834ac6c99755abe"
+ ],
+ "beir_cqadupstack_mathematica_5409": [
+  "3b8499d04025cb6b"
+ ],
+ "beir_cqadupstack_mathematica_5434": [
+  "02320eb4e01a5fb0",
+  "04070b33c9dd79ce",
+  "15877f192beae0d3",
+  "40fc688ef05b3fdb",
+  "4f10a88719940073",
+  "90ef23aacc91df2d"
+ ],
+ "beir_cqadupstack_mathematica_54464": [
+  "f024995a27ed359b",
+  "fdaf770fcbd06b32"
+ ],
+ "beir_cqadupstack_mathematica_54486": [
+  "38b86d7a9bf08be7"
+ ],
+ "beir_cqadupstack_mathematica_5454": [
+  "9196ef30d6ddfedb"
+ ],
+ "beir_cqadupstack_mathematica_54607": [
+  "e9f88e7702f41d98"
+ ],
+ "beir_cqadupstack_mathematica_54645": [
+  "bfcd644ee3842485"
+ ],
+ "beir_cqadupstack_mathematica_54781": [
+  "a31dd8926b4fd2a4"
+ ],
+ "beir_cqadupstack_mathematica_54899": [
+  "b9c260e87ac4d715"
+ ],
+ "beir_cqadupstack_mathematica_54993": [
+  "88fa24d090925d26",
+  "c7d96d0b80d77cda",
+  "cca0745ec4189272"
+ ],
+ "beir_cqadupstack_mathematica_55056": [
+  "a4c9c17a98fb721f"
+ ],
+ "beir_cqadupstack_mathematica_55086": [
+  "19c485493a3d0afd"
+ ],
+ "beir_cqadupstack_mathematica_552": [
+  "328338dff50c3401",
+  "5293c3361969f7fc"
+ ],
+ "beir_cqadupstack_mathematica_55292": [
+  "18c88f206001df5f",
+  "945af9da9a1cb910"
+ ],
+ "beir_cqadupstack_mathematica_55294": [
+  "22fa9421a815f23b",
+  "76dca69f88d8ad1b",
+  "964054a0c6aa66a9",
+  "9d9e6bdc7b7e00e0",
+  "bf57edf87132d644"
+ ],
+ "beir_cqadupstack_mathematica_55308": [
+  "a759fb5f71d934e0"
+ ],
+ "beir_cqadupstack_mathematica_55309": [
+  "039df9cdc966b6d6"
+ ],
+ "beir_cqadupstack_mathematica_55517": [
+  "5201262fdab06aa4"
+ ],
+ "beir_cqadupstack_mathematica_55568": [
+  "6d6a06558aad59db",
+  "dd850ce3c0535fc5"
+ ],
+ "beir_cqadupstack_mathematica_55600": [
+  "73f6183d12e59e3d"
+ ],
+ "beir_cqadupstack_mathematica_55663": [
+  "a8def430f99b8d74",
+  "c569648ede473909"
+ ],
+ "beir_cqadupstack_mathematica_55716": [
+  "c379836d573deb44"
+ ],
+ "beir_cqadupstack_mathematica_5575": [
+  "7ab10b0bd45e9aa9",
+  "e4f59574fae775d1",
+  "f59f2ac81af5d897"
+ ],
+ "beir_cqadupstack_mathematica_5580": [
+  "23af9438271e258f"
+ ],
+ "beir_cqadupstack_mathematica_55972": [
+  "07c997a217ab9466",
+  "ecf5ec158b959da0"
+ ],
+ "beir_cqadupstack_mathematica_5619": [
+  "8eb36dd83b056b0a"
+ ],
+ "beir_cqadupstack_mathematica_56213": [
+  "7576468503767ff4",
+  "bcff8de4be37488f"
+ ],
+ "beir_cqadupstack_mathematica_56296": [
+  "734cee5cb3c14fe8"
+ ],
+ "beir_cqadupstack_mathematica_5644": [
+  "67da5467a963c734",
+  "70f1a3bc9633285b"
+ ],
+ "beir_cqadupstack_mathematica_56565": [
+  "7316833cad234981"
+ ],
+ "beir_cqadupstack_mathematica_56785": [
+  "15f5b8fadff2b8c4",
+  "9a86a841d4ee1c3d"
+ ],
+ "beir_cqadupstack_mathematica_56984": [
+  "69c6a3fa3c862f40"
+ ],
+ "beir_cqadupstack_mathematica_57242": [
+  "21cd7a5e53ab9dd7"
+ ],
+ "beir_cqadupstack_mathematica_57366": [
+  "8251dd6451fa05e9"
+ ],
+ "beir_cqadupstack_mathematica_5740": [
+  "bf83d872dcab1d63"
+ ],
+ "beir_cqadupstack_mathematica_57430": [
+  "0e45e2e1be56010d",
+  "6a8521beb15ccd10",
+  "756104d7c0a3c0e1",
+  "787e160088203a78",
+  "9dcfd6424330baa7",
+  "f15c4029434fb71a",
+  "f3ac90b19c3627f2",
+  "ff78687e742c27ee"
+ ],
+ "beir_cqadupstack_mathematica_57434": [
+  "9f53839e9843e2d2",
+  "f5e14e1de15a7b06"
+ ],
+ "beir_cqadupstack_mathematica_57470": [
+  "62ae4538e7a2e5c5"
+ ],
+ "beir_cqadupstack_mathematica_57588": [
+  "5721e2d0a33eda18"
+ ],
+ "beir_cqadupstack_mathematica_57632": [
+  "a625d38e4e785575"
+ ],
+ "beir_cqadupstack_mathematica_5782": [
+  "8679a187c2fd1e4e"
+ ],
+ "beir_cqadupstack_mathematica_57878": [
+  "100280892233577c",
+  "867b1135659b1f2b"
+ ],
+ "beir_cqadupstack_mathematica_5790": [
+  "204e6e0e5998e992"
+ ],
+ "beir_cqadupstack_mathematica_57975": [
+  "89fb00ff2273b062"
+ ],
+ "beir_cqadupstack_mathematica_5799": [
+  "f51b6dd87aecf0af"
+ ],
+ "beir_cqadupstack_mathematica_58228": [
+  "4d55cdaf74673fc1",
+  "ef273e299dec3277"
+ ],
+ "beir_cqadupstack_mathematica_58229": [
+  "2bb331baaf171578"
+ ],
+ "beir_cqadupstack_mathematica_58465": [
+  "dfc46077d823e473"
+ ],
+ "beir_cqadupstack_mathematica_58475": [
+  "e6b12c2bd4e4a70a"
+ ],
+ "beir_cqadupstack_mathematica_58502": [
+  "44649ad41ff5ff1e"
+ ],
+ "beir_cqadupstack_mathematica_58690": [
+  "1d13342e986ca14a"
+ ],
+ "beir_cqadupstack_mathematica_58918": [
+  "e50df13f2e474cf6"
+ ],
+ "beir_cqadupstack_mathematica_58992": [
+  "9d8d444c8025e992"
+ ],
+ "beir_cqadupstack_mathematica_59013": [
+  "bed60421c3ed31cc"
+ ],
+ "beir_cqadupstack_mathematica_59043": [
+  "d2253ad8d63d6ff3"
+ ],
+ "beir_cqadupstack_mathematica_59113": [
+  "6b28195883cbd6fa",
+  "9227c38b4055d5c1"
+ ],
+ "beir_cqadupstack_mathematica_59140": [
+  "7d227b3b26ffdd32"
+ ],
+ "beir_cqadupstack_mathematica_5919": [
+  "1a27052850efd3d4",
+  "4086e5fcf14c5394",
+  "83c45bac90151f12",
+  "a9b13559c0946d86"
+ ],
+ "beir_cqadupstack_mathematica_59206": [
+  "4a5d6c89e2a728bb"
+ ],
+ "beir_cqadupstack_mathematica_59253": [
+  "e3e01feebd3a891b"
+ ],
+ "beir_cqadupstack_mathematica_5930": [
+  "c1f091f9e8491ca6"
+ ],
+ "beir_cqadupstack_mathematica_59596": [
+  "2a8612614f4265f7"
+ ],
+ "beir_cqadupstack_mathematica_59613": [
+  "80e04ed2b877fba6",
+  "8c2043905ee5fe83"
+ ],
+ "beir_cqadupstack_mathematica_59646": [
+  "8bccbaea761bc245",
+  "d40f81dcb1a0cef2"
+ ],
+ "beir_cqadupstack_mathematica_6043": [
+  "58b7fc17d1951036"
+ ],
+ "beir_cqadupstack_mathematica_6055": [
+  "f55c4b5042e2be55"
+ ],
+ "beir_cqadupstack_mathematica_6081": [
+  "661f93e5c7e851c7"
+ ],
+ "beir_cqadupstack_mathematica_6102": [
+  "0f8994c49905feca",
+  "14dde6b438eedd41"
+ ],
+ "beir_cqadupstack_mathematica_6164": [
+  "8890e86b098ff3fb"
+ ],
+ "beir_cqadupstack_mathematica_6210": [
+  "4f13cb7ebce05258"
+ ],
+ "beir_cqadupstack_mathematica_6236": [
+  "5c44047cee395aae"
+ ],
+ "beir_cqadupstack_mathematica_6338": [
+  "d960e1c0fed9c8d7",
+  "dc3b2f17ad8809d0"
+ ],
+ "beir_cqadupstack_mathematica_6350": [
+  "83403af512c33b2c"
+ ],
+ "beir_cqadupstack_mathematica_6397": [
+  "76e00899acba4324",
+  "dbe606f90ba18625"
+ ],
+ "beir_cqadupstack_mathematica_6472": [
+  "aa9fe258d9cc26cb"
+ ],
+ "beir_cqadupstack_mathematica_6497": [
+  "28dc65974e561de3"
+ ],
+ "beir_cqadupstack_mathematica_6562": [
+  "acc3bdd6e2b478a4"
+ ],
+ "beir_cqadupstack_mathematica_6796": [
+  "124a68f10ba95c94"
+ ],
+ "beir_cqadupstack_mathematica_6862": [
+  "34fe2129353b8882"
+ ],
+ "beir_cqadupstack_mathematica_6923": [
+  "e7c165ba634c4bdc"
+ ],
+ "beir_cqadupstack_mathematica_6955": [
+  "8108cc6b642a3366"
+ ],
+ "beir_cqadupstack_mathematica_702": [
+  "78d0223baf3fdd97",
+  "c73983b867a08a8b"
+ ],
+ "beir_cqadupstack_mathematica_7173": [
+  "48e8a4d32b86aa3f"
+ ],
+ "beir_cqadupstack_mathematica_7174": [
+  "3a10e4f38cef3f2b"
+ ],
+ "beir_cqadupstack_mathematica_7214": [
+  "b79b0e39e309c8c3"
+ ],
+ "beir_cqadupstack_mathematica_7235": [
+  "868e70336b276f59"
+ ],
+ "beir_cqadupstack_mathematica_7366": [
+  "84d44b487f966151"
+ ],
+ "beir_cqadupstack_mathematica_7408": [
+  "f932ffff37f50502"
+ ],
+ "beir_cqadupstack_mathematica_745": [
+  "01d9b4d214de44ab",
+  "0219472bec1503e7",
+  "0d941de32a49cd10",
+  "4728016b2b4a185c",
+  "86b4fdad66eda5e6",
+  "deff56d7f0ed2570"
+ ],
+ "beir_cqadupstack_mathematica_7463": [
+  "e74bd340d80bcef2"
+ ],
+ "beir_cqadupstack_mathematica_7531": [
+  "030e8d807d038eb2"
+ ],
+ "beir_cqadupstack_mathematica_761": [
+  "329dfb434876ff2f",
+  "6850de19164f1f5c",
+  "c59b195a86b46074"
+ ],
+ "beir_cqadupstack_mathematica_7668": [
+  "dd41aed0a4dfb08c"
+ ],
+ "beir_cqadupstack_mathematica_7679": [
+  "aa11b4d97b1ddc42"
+ ],
+ "beir_cqadupstack_mathematica_7756": [
+  "2117a03d19e7fc52",
+  "88602c6e599e23fd",
+  "cf2bbe5ac086af74",
+  "dae07b4b034faa94"
+ ],
+ "beir_cqadupstack_mathematica_7772": [
+  "1b6495a44222f820",
+  "f264edf519eadd0e"
+ ],
+ "beir_cqadupstack_mathematica_7779": [
+  "bc2013ca79851eaf"
+ ],
+ "beir_cqadupstack_mathematica_7804": [
+  "2937dd91d31514b3",
+  "2a5d676d0b4b7983",
+  "e72c1f9b74f6d420",
+  "e98030b3923dcbe4"
+ ],
+ "beir_cqadupstack_mathematica_7926": [
+  "5b37ad44deb657fa"
+ ],
+ "beir_cqadupstack_mathematica_7941": [
+  "480a9848adde7c42",
+  "9e160a22ac8439ea"
+ ],
+ "beir_cqadupstack_mathematica_8215": [
+  "07cab880ccb89b48"
+ ],
+ "beir_cqadupstack_mathematica_8295": [
+  "0d61771700577db6"
+ ],
+ "beir_cqadupstack_mathematica_8310": [
+  "13dc8078859c0d09",
+  "c1032343b2370393"
+ ],
+ "beir_cqadupstack_mathematica_8353": [
+  "90cf3d1cb535668c",
+  "d489ccd5c382dbbd"
+ ],
+ "beir_cqadupstack_mathematica_8390": [
+  "f9fd118a9b7db91e"
+ ],
+ "beir_cqadupstack_mathematica_8438": [
+  "2d124fc20c28d7c5"
+ ],
+ "beir_cqadupstack_mathematica_850": [
+  "064192075fcfbba5",
+  "3627fb40a6c57b16",
+  "4ae0c02b69844f16"
+ ],
+ "beir_cqadupstack_mathematica_8544": [
+  "4e4a93dc9cc6cf2d"
+ ],
+ "beir_cqadupstack_mathematica_8576": [
+  "1afc6b0301febd3e",
+  "9516cc92e58ae101"
+ ],
+ "beir_cqadupstack_mathematica_8619": [
+  "f9763991114c8c6c"
+ ],
+ "beir_cqadupstack_mathematica_8646": [
+  "0741cc6a35610a1d",
+  "749be5246da45f79"
+ ],
+ "beir_cqadupstack_mathematica_8661": [
+  "009fb23b83ac52d9",
+  "b2f9142646ee0a31",
+  "d5792ea55d97e7b4"
+ ],
+ "beir_cqadupstack_mathematica_8695": [
+  "4e1bb661101c212c"
+ ],
+ "beir_cqadupstack_mathematica_8748": [
+  "b0341602f97f86d1"
+ ],
+ "beir_cqadupstack_mathematica_8829": [
+  "482e90429cc8aab6"
+ ],
+ "beir_cqadupstack_mathematica_8841": [
+  "5e5a664f6403a1cc"
+ ],
+ "beir_cqadupstack_mathematica_8865": [
+  "fdcbea80e0015460"
+ ],
+ "beir_cqadupstack_mathematica_8922": [
+  "3a13ae15e895f7e8"
+ ],
+ "beir_cqadupstack_mathematica_8943": [
+  "6ae0fae5a7839100"
+ ],
+ "beir_cqadupstack_mathematica_9035": [
+  "c45a57deedf595d9"
+ ],
+ "beir_cqadupstack_mathematica_9171": [
+  "32dd273f0c1e4295",
+  "80f7aad684d2b190",
+  "8ddaa70cefb26012"
+ ],
+ "beir_cqadupstack_mathematica_9288": [
+  "9e444cf051b74694"
+ ],
+ "beir_cqadupstack_mathematica_9322": [
+  "0ceabe6294619b92",
+  "10d7dfd9e93713e4",
+  "1172ff2e7add1934",
+  "1f626dc29e7cb944",
+  "3d45fe62637c2c15",
+  "40b7fe5cbda01909",
+  "64170a41b4bd6594",
+  "728efb0f0354e5c6",
+  "de3b2d8d08022912",
+  "e3a28324c64b053b",
+  "edb23f548764c7ce",
+  "ef57be393622bf3e"
+ ],
+ "beir_cqadupstack_mathematica_938": [
+  "1a89a0a8cfd6690e"
+ ],
+ "beir_cqadupstack_mathematica_9406": [
+  "d8c926a0bf3d8614"
+ ],
+ "beir_cqadupstack_mathematica_9440": [
+  "6895da962515b05f"
+ ],
+ "beir_cqadupstack_mathematica_9483": [
+  "ff0aff29db960b9f"
+ ],
+ "beir_cqadupstack_mathematica_9523": [
+  "b169ce8a7f3dc99d"
+ ],
+ "beir_cqadupstack_mathematica_9540": [
+  "6f1775693caf1a07"
+ ],
+ "beir_cqadupstack_mathematica_9544": [
+  "65c3b18a5ed912dd"
+ ],
+ "beir_cqadupstack_mathematica_9558": [
+  "33fff7782a6ff575",
+  "5d93c59d505ce47d",
+  "9abd0ad2913a988e"
+ ],
+ "beir_cqadupstack_mathematica_96": [
+  "669f0158ec19287a",
+  "b19186b2e7347331"
+ ],
+ "beir_cqadupstack_mathematica_9623": [
+  "2810b4bd5597e01c"
+ ],
+ "beir_cqadupstack_mathematica_9631": [
+  "3d0d7ec99d011301"
+ ],
+ "beir_cqadupstack_mathematica_9719": [
+  "3570fff4c20c1477",
+  "373af3288143a986",
+  "583a837f6cec928a",
+  "c95ba0dcb2fa2744"
+ ],
+ "beir_cqadupstack_mathematica_9772": [
+  "bb9b3bdabe503697"
+ ],
+ "beir_cqadupstack_mathematica_9801": [
+  "0d9cba500793dbfd"
+ ],
+ "beir_cqadupstack_mathematica_9926": [
+  "e3b1404b44079be2"
+ ],
+ "beir_cqadupstack_mathematica_9942": [
+  "470819fa2ebe4821",
+  "812dc965569e1a8d",
+  "9fb7d411f21a6b4b"
+ ]
+}

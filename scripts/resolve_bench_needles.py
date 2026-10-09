@@ -73,6 +73,9 @@ def main(argv=None) -> int:
     ap.add_argument("--db", required=True)
     ap.add_argument("--bench-dir", required=True)
     ap.add_argument("--corpus-root", required=True)
+    ap.add_argument("--min-file-bytes", type=int, default=MIN_FILE_SIZE,
+                    help="the bed profile's size floor (build_fixture_matrix "
+                         "min_file_bytes); only labels gold as size-gated")
     args = ap.parse_args(argv)
 
     bench = Path(args.bench_dir)
@@ -93,7 +96,7 @@ def main(argv=None) -> int:
             missing_on_disk.append(p)
             continue
         sz = fp.stat().st_size
-        if sz < MIN_FILE_SIZE or sz > MAX_FILE_SIZE:
+        if sz < args.min_file_bytes or sz > MAX_FILE_SIZE:
             size_gated[p] = sz
     log.info("gold files: %d wanted, %d size-gated, %d missing on disk",
              len(wanted), len(size_gated), len(missing_on_disk))
@@ -153,6 +156,7 @@ def main(argv=None) -> int:
             "date": datetime.now(timezone.utc).isoformat(),
             "db": args.db,
             "corpus_root": str(corpus_root),
+            "min_file_bytes": args.min_file_bytes,
             "needles_total": len(needles_in),
             "needles_resolvable": len(needles_full),
             "dropped": dropped,

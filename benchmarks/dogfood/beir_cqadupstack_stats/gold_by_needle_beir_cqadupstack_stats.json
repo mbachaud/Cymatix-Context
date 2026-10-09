@@ -1,0 +1,2237 @@
+{
+ "beir_cqadupstack_stats_101074": [
+  "7de64e1b3677df46"
+ ],
+ "beir_cqadupstack_stats_101102": [
+  "aeacba7f573e2388"
+ ],
+ "beir_cqadupstack_stats_101455": [
+  "20bc46950168f77d"
+ ],
+ "beir_cqadupstack_stats_10234": [
+  "47258207abcea882",
+  "623a8b6129729298",
+  "fbabf7ed36e86d66"
+ ],
+ "beir_cqadupstack_stats_102744": [
+  "1393b0483eb3d383"
+ ],
+ "beir_cqadupstack_stats_102791": [
+  "d119167d9e6fe858"
+ ],
+ "beir_cqadupstack_stats_103164": [
+  "72ba415bbd00ca38"
+ ],
+ "beir_cqadupstack_stats_103345": [
+  "00c48616fba03c4d"
+ ],
+ "beir_cqadupstack_stats_103684": [
+  "7e5ed4b6d6d48393"
+ ],
+ "beir_cqadupstack_stats_103801": [
+  "656a9a23a2bacc42"
+ ],
+ "beir_cqadupstack_stats_103863": [
+  "fda052b5598e219d"
+ ],
+ "beir_cqadupstack_stats_104029": [
+  "68abd3352340553d",
+  "bd20b71051276442",
+  "cc28721f2c644b1b"
+ ],
+ "beir_cqadupstack_stats_104110": [
+  "b63f7ee705ca2510"
+ ],
+ "beir_cqadupstack_stats_104117": [
+  "7a353d714ed0a94f"
+ ],
+ "beir_cqadupstack_stats_104250": [
+  "93f6f092de56e153"
+ ],
+ "beir_cqadupstack_stats_104444": [
+  "70ca5f87df29224a"
+ ],
+ "beir_cqadupstack_stats_104496": [
+  "8e2da755d1706604"
+ ],
+ "beir_cqadupstack_stats_104567": [
+  "8809f37095fd69b0"
+ ],
+ "beir_cqadupstack_stats_104970": [
+  "b28a6c925cde3281"
+ ],
+ "beir_cqadupstack_stats_105037": [
+  "00f8b9970bd8afe9"
+ ],
+ "beir_cqadupstack_stats_10510": [
+  "87a9d5d4894b0058"
+ ],
+ "beir_cqadupstack_stats_10517": [
+  "23dddf486666d7af"
+ ],
+ "beir_cqadupstack_stats_105277": [
+  "bf0b10632a1fc3cd"
+ ],
+ "beir_cqadupstack_stats_105309": [
+  "7cb2a7bf0f5eb21c"
+ ],
+ "beir_cqadupstack_stats_105382": [
+  "2b5edf1804ba3530"
+ ],
+ "beir_cqadupstack_stats_105488": [
+  "698e5cc34841e9e0"
+ ],
+ "beir_cqadupstack_stats_105489": [
+  "8f430cf79d0e430b"
+ ],
+ "beir_cqadupstack_stats_105545": [
+  "a52a032379d0411b",
+  "bfcb8c7a13396dd6",
+  "d2cad8bcf8838d4f"
+ ],
+ "beir_cqadupstack_stats_105657": [
+  "a1aeb497b4688895"
+ ],
+ "beir_cqadupstack_stats_106063": [
+  "d6765228a485a264"
+ ],
+ "beir_cqadupstack_stats_10613": [
+  "6e4b2ba16dd49c62",
+  "f711a8befc663bfd"
+ ],
+ "beir_cqadupstack_stats_106381": [
+  "6fa8f9a9a428656c",
+  "8d568de51a9b02ac",
+  "9bf4f45e7fff7638",
+  "a04b712e8d126f67",
+  "aeef59fdc4f5bb9d"
+ ],
+ "beir_cqadupstack_stats_107898": [
+  "28d5ff78f4461226"
+ ],
+ "beir_cqadupstack_stats_108085": [
+  "71a64f7ee989372f"
+ ],
+ "beir_cqadupstack_stats_108211": [
+  "ba8b65ad267aa61f"
+ ],
+ "beir_cqadupstack_stats_108297": [
+  "8794db0c313a859a"
+ ],
+ "beir_cqadupstack_stats_108697": [
+  "67646b68dad0dde4"
+ ],
+ "beir_cqadupstack_stats_108817": [
+  "51688d6ee5f7ecb3"
+ ],
+ "beir_cqadupstack_stats_109063": [
+  "f8044a7bd0a9d718"
+ ],
+ "beir_cqadupstack_stats_109735": [
+  "6ee48c72339a0fce"
+ ],
+ "beir_cqadupstack_stats_110707": [
+  "27a3f676b7af3840",
+  "3addb3afd08f419a",
+  "6287cdb94966c7c8",
+  "6e85d48c00860bac",
+  "da072794f2f93fed"
+ ],
+ "beir_cqadupstack_stats_110997": [
+  "e19aad666dc16fd9"
+ ],
+ "beir_cqadupstack_stats_111002": [
+  "01c9c617dc896ac3"
+ ],
+ "beir_cqadupstack_stats_11113": [
+  "3196d0c19c339f38"
+ ],
+ "beir_cqadupstack_stats_111170": [
+  "22a65c4a183aecbe",
+  "26b032865d161338",
+  "2b6eb9d499b5163f",
+  "90639ad6ea497793",
+  "a25689b1fc331c98",
+  "d02d257a81fce244",
+  "d5988d131bf2ce16"
+ ],
+ "beir_cqadupstack_stats_111419": [
+  "25027bff2de13a87"
+ ],
+ "beir_cqadupstack_stats_111440": [
+  "0bde730177069d9a",
+  "35f3d61ce555afa7",
+  "c96a166e8e2d211a"
+ ],
+ "beir_cqadupstack_stats_111526": [
+  "9a7386e03b96e8ed"
+ ],
+ "beir_cqadupstack_stats_111835": [
+  "7fed826ede445d4e"
+ ],
+ "beir_cqadupstack_stats_112055": [
+  "501c77afc0a85589"
+ ],
+ "beir_cqadupstack_stats_112204": [
+  "14c8809e4d28137f"
+ ],
+ "beir_cqadupstack_stats_112626": [
+  "13e106609d322a95"
+ ],
+ "beir_cqadupstack_stats_112779": [
+  "35e0b557c163b182",
+  "51e595afa19ae3f7",
+  "88b714a0b1c2698a"
+ ],
+ "beir_cqadupstack_stats_112941": [
+  "1fcab09f82802e85"
+ ],
+ "beir_cqadupstack_stats_113023": [
+  "0cd1951a6dd097db",
+  "1361fe94fa02b599",
+  "3ad7caeadc6ee2ea",
+  "414238b780c8ecdd",
+  "5167f8f3b6c66fef",
+  "52bb8f9b26ab37b8",
+  "ab1a3450076bfeb0",
+  "bcccccb005f0f84b",
+  "c00fcc861a393161",
+  "cab247a4e97a4e42",
+  "f93ab62d996a3e31"
+ ],
+ "beir_cqadupstack_stats_113194": [
+  "eea3f63b50e94052"
+ ],
+ "beir_cqadupstack_stats_113334": [
+  "e62d6f6bb70566d4"
+ ],
+ "beir_cqadupstack_stats_11337": [
+  "8310e285ebe77d11"
+ ],
+ "beir_cqadupstack_stats_113442": [
+  "02217be26b76e4d8"
+ ],
+ "beir_cqadupstack_stats_113680": [
+  "48a9f5632af82cd7",
+  "4f3c915b5c18ac7e",
+  "d2855ba4479eefc0"
+ ],
+ "beir_cqadupstack_stats_113781": [
+  "121819e15c603349"
+ ],
+ "beir_cqadupstack_stats_113831": [
+  "899887257fdd480b"
+ ],
+ "beir_cqadupstack_stats_113877": [
+  "63d595f16c771626"
+ ],
+ "beir_cqadupstack_stats_114043": [
+  "a2eb1f77978a1a4e"
+ ],
+ "beir_cqadupstack_stats_114123": [
+  "4a2dcbec02daa4ac",
+  "d852fd040b1b27e6"
+ ],
+ "beir_cqadupstack_stats_114149": [
+  "9af9ac15f752589b"
+ ],
+ "beir_cqadupstack_stats_114203": [
+  "ca0cd84b15495e08"
+ ],
+ "beir_cqadupstack_stats_114516": [
+  "bac8ad3e934fb893"
+ ],
+ "beir_cqadupstack_stats_114674": [
+  "0316e0a6202093b3"
+ ],
+ "beir_cqadupstack_stats_114926": [
+  "f07f51066adbd7b8"
+ ],
+ "beir_cqadupstack_stats_115192": [
+  "526f9158c0005304"
+ ],
+ "beir_cqadupstack_stats_11546": [
+  "5ecba4eddb44f632"
+ ],
+ "beir_cqadupstack_stats_11602": [
+  "263604471398da0a"
+ ],
+ "beir_cqadupstack_stats_11691": [
+  "7a7f6e6f0d455f79",
+  "89343b1fc2e9f790"
+ ],
+ "beir_cqadupstack_stats_12174": [
+  "6e7f29947f1937f8"
+ ],
+ "beir_cqadupstack_stats_12200": [
+  "4d806cb2a0bb8398"
+ ],
+ "beir_cqadupstack_stats_12469": [
+  "e80cc4638c0a9067"
+ ],
+ "beir_cqadupstack_stats_125": [
+  "07d5c2eb1662046b",
+  "1f2505cfa57d8428"
+ ],
+ "beir_cqadupstack_stats_1266": [
+  "3eea8df2e19b330a"
+ ],
+ "beir_cqadupstack_stats_12884": [
+  "2357ed8f37d503bf"
+ ],
+ "beir_cqadupstack_stats_13166": [
+  "04ef71980e95b2cc"
+ ],
+ "beir_cqadupstack_stats_13314": [
+  "9c0150a4912445ab"
+ ],
+ "beir_cqadupstack_stats_13399": [
+  "92d74687d0144c92"
+ ],
+ "beir_cqadupstack_stats_13475": [
+  "fcf369091b5e2ca0"
+ ],
+ "beir_cqadupstack_stats_13550": [
+  "f75b7678f89b87c8"
+ ],
+ "beir_cqadupstack_stats_13676": [
+  "eed78fe43abfde30"
+ ],
+ "beir_cqadupstack_stats_13810": [
+  "1f61a5e4ed82b9b8"
+ ],
+ "beir_cqadupstack_stats_13875": [
+  "27643e66bf973fff"
+ ],
+ "beir_cqadupstack_stats_14140": [
+  "edb0a3f91db8af4b"
+ ],
+ "beir_cqadupstack_stats_14168": [
+  "18507a099365801a"
+ ],
+ "beir_cqadupstack_stats_14226": [
+  "b30a7b316b5a4ba6"
+ ],
+ "beir_cqadupstack_stats_1444": [
+  "3b4fa4523aa9f2c3",
+  "44b2344340c7ec8f",
+  "578a3376e8ecab94",
+  "61931c67ef53b195",
+  "8a470808eece477e",
+  "ee3ef30d38fbcf97",
+  "f46fa0d10b62ae62",
+  "f64e4615494eb104"
+ ],
+ "beir_cqadupstack_stats_14686": [
+  "5708428338d498b4"
+ ],
+ "beir_cqadupstack_stats_14757": [
+  "2247f3914dfb7c48"
+ ],
+ "beir_cqadupstack_stats_14812": [
+  "2206769ed66670f4"
+ ],
+ "beir_cqadupstack_stats_15164": [
+  "1049502bcdbc7a8a"
+ ],
+ "beir_cqadupstack_stats_15285": [
+  "131eb90f7850c269"
+ ],
+ "beir_cqadupstack_stats_15323": [
+  "1769b748e6e637d9"
+ ],
+ "beir_cqadupstack_stats_15427": [
+  "b49cf37714f31a99"
+ ],
+ "beir_cqadupstack_stats_15505": [
+  "6aa91be0d8bd6615"
+ ],
+ "beir_cqadupstack_stats_15606": [
+  "92a53a2608bf3290"
+ ],
+ "beir_cqadupstack_stats_15662": [
+  "669495f206a624aa"
+ ],
+ "beir_cqadupstack_stats_15740": [
+  "205f8d3507e291e3"
+ ],
+ "beir_cqadupstack_stats_16008": [
+  "ed70142af4718a3c"
+ ],
+ "beir_cqadupstack_stats_16230": [
+  "96a905e3a7375b18"
+ ],
+ "beir_cqadupstack_stats_16287": [
+  "7b22401f40c1a6ad"
+ ],
+ "beir_cqadupstack_stats_16552": [
+  "71028415b8a635dd",
+  "a47dce90fc5f1fa1"
+ ],
+ "beir_cqadupstack_stats_16574": [
+  "c4dd3d115dcf7a78"
+ ],
+ "beir_cqadupstack_stats_16613": [
+  "43dd96fcb73aa44b"
+ ],
+ "beir_cqadupstack_stats_16658": [
+  "46259ce552c74b43"
+ ],
+ "beir_cqadupstack_stats_16907": [
+  "f9acc0efff9c1b8d"
+ ],
+ "beir_cqadupstack_stats_17076": [
+  "e975101de6746191"
+ ],
+ "beir_cqadupstack_stats_17890": [
+  "74a5d876bbe928b4"
+ ],
+ "beir_cqadupstack_stats_18241": [
+  "dff43406bdb47d2c"
+ ],
+ "beir_cqadupstack_stats_18391": [
+  "7ea2b35da4f652c1"
+ ],
+ "beir_cqadupstack_stats_18434": [
+  "791409b90b8209a5"
+ ],
+ "beir_cqadupstack_stats_1850": [
+  "ef5602ccef60368f"
+ ],
+ "beir_cqadupstack_stats_18738": [
+  "bbd33633c2078ae4",
+  "bcced35ecfe3f441"
+ ],
+ "beir_cqadupstack_stats_18750": [
+  "281fff6b71ec6903"
+ ],
+ "beir_cqadupstack_stats_18844": [
+  "36eea057b2045701"
+ ],
+ "beir_cqadupstack_stats_18896": [
+  "499c66ee35a77271",
+  "5f482afee965ac71"
+ ],
+ "beir_cqadupstack_stats_18905": [
+  "01794d5a000c9b41"
+ ],
+ "beir_cqadupstack_stats_19103": [
+  "cffe1a7adeefb3d5"
+ ],
+ "beir_cqadupstack_stats_19120": [
+  "e51f9320a10876b5"
+ ],
+ "beir_cqadupstack_stats_19195": [
+  "9bf6466609a5198b"
+ ],
+ "beir_cqadupstack_stats_192": [
+  "193ecdb306e07ce7"
+ ],
+ "beir_cqadupstack_stats_19583": [
+  "43ec385c179b35d7"
+ ],
+ "beir_cqadupstack_stats_1963": [
+  "194fefcb34229825"
+ ],
+ "beir_cqadupstack_stats_19771": [
+  "9660a895c38265ec"
+ ],
+ "beir_cqadupstack_stats_19874": [
+  "37a9dcb8c55023ac"
+ ],
+ "beir_cqadupstack_stats_19891": [
+  "443c7ba43cb7cdb7",
+  "deec0f0ad49fd38d"
+ ],
+ "beir_cqadupstack_stats_1995": [
+  "36201e8fe40e270b"
+ ],
+ "beir_cqadupstack_stats_19971": [
+  "a73d3ae5892ef12d"
+ ],
+ "beir_cqadupstack_stats_20010": [
+  "5360691c023e8502"
+ ],
+ "beir_cqadupstack_stats_20039": [
+  "9705449658856a8d"
+ ],
+ "beir_cqadupstack_stats_203": [
+  "130aee83425fe18e"
+ ],
+ "beir_cqadupstack_stats_20425": [
+  "045b348b21a53d20",
+  "0cf4a2d756f4d32e",
+  "da10902f31ff4fd3",
+  "f98b4aea660740a8"
+ ],
+ "beir_cqadupstack_stats_20514": [
+  "3f9b5194cd0daeb5"
+ ],
+ "beir_cqadupstack_stats_20583": [
+  "a1befb6766c1019d"
+ ],
+ "beir_cqadupstack_stats_20701": [
+  "bcad92dd34ba67da"
+ ],
+ "beir_cqadupstack_stats_20720": [
+  "71264837eefe6659"
+ ],
+ "beir_cqadupstack_stats_20725": [
+  "d72059bf0a2840b4"
+ ],
+ "beir_cqadupstack_stats_20836": [
+  "80580ba9a3f04f19"
+ ],
+ "beir_cqadupstack_stats_20862": [
+  "13dc50449c14c9e6",
+  "7cc9ff53af9bc8f2"
+ ],
+ "beir_cqadupstack_stats_20881": [
+  "6f4c9c501f082d74"
+ ],
+ "beir_cqadupstack_stats_21151": [
+  "103f0fda2722684d",
+  "c41c087716591d7b",
+  "ded44a805e8acc8c"
+ ],
+ "beir_cqadupstack_stats_21463": [
+  "a1c38b16f2a3ed9e"
+ ],
+ "beir_cqadupstack_stats_2151": [
+  "0034b9de07dbc97b",
+  "17476aa0e8f6cdb3"
+ ],
+ "beir_cqadupstack_stats_21592": [
+  "9e3e670f5b2a27fe"
+ ],
+ "beir_cqadupstack_stats_21822": [
+  "2dc7fb141cbde182"
+ ],
+ "beir_cqadupstack_stats_21939": [
+  "9228ebba52ee3661"
+ ],
+ "beir_cqadupstack_stats_22009": [
+  "9edf0f4544482aa4"
+ ],
+ "beir_cqadupstack_stats_22036": [
+  "600446f92540a486"
+ ],
+ "beir_cqadupstack_stats_22346": [
+  "016cb98c0701bb97"
+ ],
+ "beir_cqadupstack_stats_22439": [
+  "f0bec2a15dcd922f"
+ ],
+ "beir_cqadupstack_stats_22774": [
+  "b30780fe74fe3a7d"
+ ],
+ "beir_cqadupstack_stats_2291": [
+  "9262a8ccdc1173c3"
+ ],
+ "beir_cqadupstack_stats_23005": [
+  "6607c6db2d73654c"
+ ],
+ "beir_cqadupstack_stats_23060": [
+  "b3e7d56e3489d59b"
+ ],
+ "beir_cqadupstack_stats_23068": [
+  "f0f74b28efea503a"
+ ],
+ "beir_cqadupstack_stats_23417": [
+  "c991ee4e027aafa5"
+ ],
+ "beir_cqadupstack_stats_23501": [
+  "9be1a3b7b49a46bb"
+ ],
+ "beir_cqadupstack_stats_23938": [
+  "4403f5d66c7f9472"
+ ],
+ "beir_cqadupstack_stats_24416": [
+  "47db448446b6d7d9"
+ ],
+ "beir_cqadupstack_stats_24676": [
+  "8e2a6c8c9c48638e"
+ ],
+ "beir_cqadupstack_stats_24878": [
+  "0d6fd779c1cdda92"
+ ],
+ "beir_cqadupstack_stats_24911": [
+  "9fc058352d2d2e3b"
+ ],
+ "beir_cqadupstack_stats_2493": [
+  "4e4398590aab2e5d"
+ ],
+ "beir_cqadupstack_stats_25094": [
+  "82fde204bc84efcc"
+ ],
+ "beir_cqadupstack_stats_25181": [
+  "443e89c9848acf4a"
+ ],
+ "beir_cqadupstack_stats_25190": [
+  "ba69e45b7846e62b"
+ ],
+ "beir_cqadupstack_stats_25211": [
+  "6c89bbc6052f902d"
+ ],
+ "beir_cqadupstack_stats_25235": [
+  "4c08f24d4b9ca3dc"
+ ],
+ "beir_cqadupstack_stats_25389": [
+  "c7d2c78c2d368840"
+ ],
+ "beir_cqadupstack_stats_25651": [
+  "86f0c4d227e9084e"
+ ],
+ "beir_cqadupstack_stats_25708": [
+  "f130f983b6665c2a"
+ ],
+ "beir_cqadupstack_stats_25811": [
+  "929af8de49e830dc"
+ ],
+ "beir_cqadupstack_stats_26024": [
+  "89a594abf88bf69c"
+ ],
+ "beir_cqadupstack_stats_26060": [
+  "34e8cd15b70da702"
+ ],
+ "beir_cqadupstack_stats_26073": [
+  "293049b8606c612b"
+ ],
+ "beir_cqadupstack_stats_26218": [
+  "e4dbcff3f06430e1"
+ ],
+ "beir_cqadupstack_stats_26271": [
+  "f00d7727d4156aa4"
+ ],
+ "beir_cqadupstack_stats_26352": [
+  "5065c6a6ead6f015"
+ ],
+ "beir_cqadupstack_stats_26383": [
+  "603d59ec144971df"
+ ],
+ "beir_cqadupstack_stats_26454": [
+  "eb7bf5b59999324f"
+ ],
+ "beir_cqadupstack_stats_26465": [
+  "13aa5cdc48114f6c"
+ ],
+ "beir_cqadupstack_stats_26650": [
+  "6cc15d084af524f0"
+ ],
+ "beir_cqadupstack_stats_26712": [
+  "07ed4ca6f2cc10e9"
+ ],
+ "beir_cqadupstack_stats_26719": [
+  "821e9cd6f4700f73",
+  "c2693bbecd4e0ecf"
+ ],
+ "beir_cqadupstack_stats_26828": [
+  "6d7a9dec5f70b8dc",
+  "d5141d5a5d4b7373"
+ ],
+ "beir_cqadupstack_stats_26970": [
+  "3940238be494fcb8"
+ ],
+ "beir_cqadupstack_stats_27626": [
+  "6d13312b26c9e9dd"
+ ],
+ "beir_cqadupstack_stats_27786": [
+  "3d0837487639af2e"
+ ],
+ "beir_cqadupstack_stats_27916": [
+  "09b95237cbf49da6"
+ ],
+ "beir_cqadupstack_stats_27951": [
+  "3cc5c843b6bfafd4"
+ ],
+ "beir_cqadupstack_stats_28443": [
+  "afbe47ed5c05ccc1",
+  "f874192ada66c80d"
+ ],
+ "beir_cqadupstack_stats_28515": [
+  "7751be3336381a6d"
+ ],
+ "beir_cqadupstack_stats_28653": [
+  "a4000a006336ab25"
+ ],
+ "beir_cqadupstack_stats_28745": [
+  "d213163ddb2947c8"
+ ],
+ "beir_cqadupstack_stats_28842": [
+  "2492118f9a712f0c",
+  "253d9a26d17c9389",
+  "3fc5d77109c02b00",
+  "52844075e7badacb",
+  "7869b5c9403257ec",
+  "960905f1b39176cd",
+  "b332a01ccbd01800",
+  "e9127ba15c54c9c9"
+ ],
+ "beir_cqadupstack_stats_28873": [
+  "eda775e9a6c3366f"
+ ],
+ "beir_cqadupstack_stats_28934": [
+  "89859e563233c4be"
+ ],
+ "beir_cqadupstack_stats_28942": [
+  "352d452c1a964974"
+ ],
+ "beir_cqadupstack_stats_29126": [
+  "386c430567df8584"
+ ],
+ "beir_cqadupstack_stats_2915": [
+  "4eb768f84c377bab"
+ ],
+ "beir_cqadupstack_stats_29364": [
+  "c2d317ed4523e6f8"
+ ],
+ "beir_cqadupstack_stats_29713": [
+  "9e8d5ad0f04c25bf"
+ ],
+ "beir_cqadupstack_stats_29726": [
+  "59f7954ac86a3a03"
+ ],
+ "beir_cqadupstack_stats_29731": [
+  "fde1a7b5994f021f"
+ ],
+ "beir_cqadupstack_stats_29815": [
+  "84bc1f7965568d0a"
+ ],
+ "beir_cqadupstack_stats_29824": [
+  "0bc8373db17b16e4",
+  "43d3a09d425ef48d",
+  "bf04b5b56ddd87bb",
+  "d2c85236c023f9bc"
+ ],
+ "beir_cqadupstack_stats_29889": [
+  "61b4305dfe8510ea"
+ ],
+ "beir_cqadupstack_stats_30275": [
+  "624ec41c1df113ad"
+ ],
+ "beir_cqadupstack_stats_30303": [
+  "d4363ba5355338d5"
+ ],
+ "beir_cqadupstack_stats_3038": [
+  "510812cd02772be6"
+ ],
+ "beir_cqadupstack_stats_30402": [
+  "704701218371b5ac"
+ ],
+ "beir_cqadupstack_stats_30428": [
+  "d03c816c5e1cc503"
+ ],
+ "beir_cqadupstack_stats_30514": [
+  "875c4fc3991737c6",
+  "aa61b6220914bb33"
+ ],
+ "beir_cqadupstack_stats_31150": [
+  "35598d729bc6dd16"
+ ],
+ "beir_cqadupstack_stats_31326": [
+  "ed7e1e9d52b4d29d"
+ ],
+ "beir_cqadupstack_stats_31327": [
+  "9802abd653633fc9"
+ ],
+ "beir_cqadupstack_stats_3136": [
+  "5ae0975f97dc23f6"
+ ],
+ "beir_cqadupstack_stats_31450": [
+  "03a5e3264a31f72f"
+ ],
+ "beir_cqadupstack_stats_31598": [
+  "af4444e53b5fb918"
+ ],
+ "beir_cqadupstack_stats_31958": [
+  "74311a89ce1dc9d7",
+  "90d489f301ca42c6"
+ ],
+ "beir_cqadupstack_stats_32000": [
+  "22f2a8795873d3ee",
+  "4f17cfb356133e76",
+  "7d60c789e3b5d7f8",
+  "f4efff54ef9a9a46"
+ ],
+ "beir_cqadupstack_stats_32094": [
+  "78378832394c25b5"
+ ],
+ "beir_cqadupstack_stats_3215": [
+  "a95c53bcc6c14f26"
+ ],
+ "beir_cqadupstack_stats_32169": [
+  "65b4007e6c25869a"
+ ],
+ "beir_cqadupstack_stats_32248": [
+  "fc0a7a6e9f060c1a"
+ ],
+ "beir_cqadupstack_stats_32318": [
+  "6eb56fb4076fe617",
+  "74be7618cb38c633",
+  "8e22df8388f1b45c",
+  "a08f644c132fb6fb",
+  "ae90ba4de6b2d62b"
+ ],
+ "beir_cqadupstack_stats_32405": [
+  "45a734bea8af5986"
+ ],
+ "beir_cqadupstack_stats_32520": [
+  "21a89ef2f8cd5eb2"
+ ],
+ "beir_cqadupstack_stats_32600": [
+  "ba12f519a1d066f3"
+ ],
+ "beir_cqadupstack_stats_32808": [
+  "89a52cd6eef1e4ec"
+ ],
+ "beir_cqadupstack_stats_32864": [
+  "76940e73cb966c1c"
+ ],
+ "beir_cqadupstack_stats_33165": [
+  "cac342664505f1be"
+ ],
+ "beir_cqadupstack_stats_33240": [
+  "514f4f0857181bc4"
+ ],
+ "beir_cqadupstack_stats_33315": [
+  "d8412a911e301723"
+ ],
+ "beir_cqadupstack_stats_33354": [
+  "29ed603703eca7cd",
+  "4f2dcf6c3bcbd6c3",
+  "e809542c07fd8336"
+ ],
+ "beir_cqadupstack_stats_33413": [
+  "29df3f2ac4b460c5"
+ ],
+ "beir_cqadupstack_stats_33519": [
+  "5db885984598536b"
+ ],
+ "beir_cqadupstack_stats_3369": [
+  "2a98de94e5e73832",
+  "6a34943fa072033a",
+  "c639d90d3702f698"
+ ],
+ "beir_cqadupstack_stats_3402": [
+  "4371e5c2d62b0488"
+ ],
+ "beir_cqadupstack_stats_34325": [
+  "d4c804f0b4928d9d"
+ ],
+ "beir_cqadupstack_stats_3438": [
+  "d93a246cc4d3a814"
+ ],
+ "beir_cqadupstack_stats_34587": [
+  "35e2b25285e85e1a"
+ ],
+ "beir_cqadupstack_stats_346": [
+  "5cdba6fc6f69f5c3"
+ ],
+ "beir_cqadupstack_stats_35185": [
+  "281d33e4068fe147",
+  "a34b60b0b678620c"
+ ],
+ "beir_cqadupstack_stats_3549": [
+  "2c277fa287ced75f"
+ ],
+ "beir_cqadupstack_stats_35510": [
+  "1e57f03732d11776"
+ ],
+ "beir_cqadupstack_stats_35535": [
+  "03c9a9a35dcfbb71",
+  "235be11b19d5f9d6",
+  "5b4feb1c04e211ec",
+  "70f414326f37f594",
+  "c015462202d1361a",
+  "d0c5fbf6ec08a30f"
+ ],
+ "beir_cqadupstack_stats_35544": [
+  "7c7ad4faefe0757e"
+ ],
+ "beir_cqadupstack_stats_35566": [
+  "1adec4d81a6e9f4f",
+  "8f228023904abf06"
+ ],
+ "beir_cqadupstack_stats_35608": [
+  "262ecc97163531dd",
+  "5d495557821b543d",
+  "82046ad9b98ab2f9",
+  "89bdd6ae25aafc45",
+  "8e879142f4b91fb5",
+  "dc2f7fe480d410c5"
+ ],
+ "beir_cqadupstack_stats_35719": [
+  "1e5ac3a12f0e7d23"
+ ],
+ "beir_cqadupstack_stats_35929": [
+  "f5d7284c48370b06"
+ ],
+ "beir_cqadupstack_stats_35982": [
+  "a7893661d18901ae",
+  "c90767a021653d52"
+ ],
+ "beir_cqadupstack_stats_36": [
+  "279f1608e030b954"
+ ],
+ "beir_cqadupstack_stats_36036": [
+  "5fef36576d205d50"
+ ],
+ "beir_cqadupstack_stats_36054": [
+  "725a700b3629844e"
+ ],
+ "beir_cqadupstack_stats_3614": [
+  "156204a93b8af1b0"
+ ],
+ "beir_cqadupstack_stats_36305": [
+  "72fdbe99d1b4eea4",
+  "b6cc73fd79c49c44"
+ ],
+ "beir_cqadupstack_stats_37399": [
+  "77ef3930cdc448d4"
+ ],
+ "beir_cqadupstack_stats_37845": [
+  "00f5d12b8ce36ed6"
+ ],
+ "beir_cqadupstack_stats_37866": [
+  "c83e7cceac35f262"
+ ],
+ "beir_cqadupstack_stats_38053": [
+  "2ec72a7e24a32008",
+  "67f130c4900cf162",
+  "c67acea7a76145cf",
+  "d246db25966de6ac"
+ ],
+ "beir_cqadupstack_stats_38290": [
+  "8f0c3828c5c970be"
+ ],
+ "beir_cqadupstack_stats_38446": [
+  "8e9993962192cb85"
+ ],
+ "beir_cqadupstack_stats_38511": [
+  "1d94796ec8b35d24",
+  "fc6c248f43381b0d"
+ ],
+ "beir_cqadupstack_stats_38856": [
+  "522befe2691fdc15",
+  "5c1539f6d237197a",
+  "72026ca9c191eccc"
+ ],
+ "beir_cqadupstack_stats_38870": [
+  "ece826c5f730ddef"
+ ],
+ "beir_cqadupstack_stats_39044": [
+  "3ef616a0114d15e0"
+ ],
+ "beir_cqadupstack_stats_3958": [
+  "ee69354362d8db0f"
+ ],
+ "beir_cqadupstack_stats_3961": [
+  "4682724f24e7706b"
+ ],
+ "beir_cqadupstack_stats_4040": [
+  "7df5cd960e80831b"
+ ],
+ "beir_cqadupstack_stats_40454": [
+  "73ec88ec99752f8a"
+ ],
+ "beir_cqadupstack_stats_4059": [
+  "6c5243e7a42737f3"
+ ],
+ "beir_cqadupstack_stats_40876": [
+  "4251cc9da975565c"
+ ],
+ "beir_cqadupstack_stats_40976": [
+  "c39f0f9392256770"
+ ],
+ "beir_cqadupstack_stats_40977": [
+  "3956703acbc41e84"
+ ],
+ "beir_cqadupstack_stats_41038": [
+  "c2297b6330385020"
+ ],
+ "beir_cqadupstack_stats_41048": [
+  "93448ded8bc67459"
+ ],
+ "beir_cqadupstack_stats_41247": [
+  "da378219537210aa"
+ ],
+ "beir_cqadupstack_stats_41379": [
+  "c5aefa01377c5b4d"
+ ],
+ "beir_cqadupstack_stats_41540": [
+  "39aa612e089fcb8e"
+ ],
+ "beir_cqadupstack_stats_41685": [
+  "ccc6f9cc225ae5df"
+ ],
+ "beir_cqadupstack_stats_41934": [
+  "6e51958061f8a0de"
+ ],
+ "beir_cqadupstack_stats_4298": [
+  "4197c8be3777b8a1"
+ ],
+ "beir_cqadupstack_stats_43020": [
+  "3825635083205bd2",
+  "e5026cdd004c66cd"
+ ],
+ "beir_cqadupstack_stats_43228": [
+  "a6c53953e1aa8bcf"
+ ],
+ "beir_cqadupstack_stats_43339": [
+  "139c93f45de450f4"
+ ],
+ "beir_cqadupstack_stats_43529": [
+  "8c483acf12072e60"
+ ],
+ "beir_cqadupstack_stats_4354": [
+  "92d7915b38a33cd9"
+ ],
+ "beir_cqadupstack_stats_43698": [
+  "5a1f541fcc77512e",
+  "ae4322437cd93d25"
+ ],
+ "beir_cqadupstack_stats_43748": [
+  "3e3691b55b8eb064",
+  "7245fe4fc1e81e3a",
+  "c3921883d9faefb2"
+ ],
+ "beir_cqadupstack_stats_44139": [
+  "587e3be8bf1dc7f2"
+ ],
+ "beir_cqadupstack_stats_44201": [
+  "dd8b3e21bfd4cc5f"
+ ],
+ "beir_cqadupstack_stats_4451": [
+  "498fe9a1475f33b6"
+ ],
+ "beir_cqadupstack_stats_44838": [
+  "da5f3ae968474f50"
+ ],
+ "beir_cqadupstack_stats_44888": [
+  "0fc34eea6a50908d"
+ ],
+ "beir_cqadupstack_stats_44928": [
+  "9bd9e57f72c942c7"
+ ],
+ "beir_cqadupstack_stats_44992": [
+  "9bc8327a8883f199"
+ ],
+ "beir_cqadupstack_stats_45050": [
+  "6d98968b860cdfc9"
+ ],
+ "beir_cqadupstack_stats_45124": [
+  "4a773eae4c62bd98"
+ ],
+ "beir_cqadupstack_stats_45165": [
+  "348a44807948b007",
+  "7255aec7ca08266f"
+ ],
+ "beir_cqadupstack_stats_45660": [
+  "54b18ddf529ddf36"
+ ],
+ "beir_cqadupstack_stats_45671": [
+  "f9eb0c96a0c895af"
+ ],
+ "beir_cqadupstack_stats_45807": [
+  "2d9b629580e286d9"
+ ],
+ "beir_cqadupstack_stats_45825": [
+  "3ad01e9179d57b00"
+ ],
+ "beir_cqadupstack_stats_45961": [
+  "e123dbd5e1a4b096"
+ ],
+ "beir_cqadupstack_stats_46053": [
+  "442640f613acc42d",
+  "7806c3eedc5164b2",
+  "a5ea675791eae15b"
+ ],
+ "beir_cqadupstack_stats_4612": [
+  "09dbcf61939900e2"
+ ],
+ "beir_cqadupstack_stats_46217": [
+  "5555e35519c7a9e1",
+  "8fde6e36a1c3c59d"
+ ],
+ "beir_cqadupstack_stats_46322": [
+  "91b2c662f9e149a5"
+ ],
+ "beir_cqadupstack_stats_46523": [
+  "310c0f34fd4ac2c9"
+ ],
+ "beir_cqadupstack_stats_46558": [
+  "d6673c636bdf6121"
+ ],
+ "beir_cqadupstack_stats_46608": [
+  "02637041dcf439fc"
+ ],
+ "beir_cqadupstack_stats_46720": [
+  "6ff9292f7200f41c",
+  "dc71b6593f8f5fb3"
+ ],
+ "beir_cqadupstack_stats_46903": [
+  "44b69a9f9920c46b",
+  "8789af8fc888f8ab"
+ ],
+ "beir_cqadupstack_stats_46908": [
+  "1731dd47a68376e2",
+  "ca71e6b80f911efb"
+ ],
+ "beir_cqadupstack_stats_4700": [
+  "190107c19187a561",
+  "8842b81712fd9d51"
+ ],
+ "beir_cqadupstack_stats_47074": [
+  "d60984649698ac83"
+ ],
+ "beir_cqadupstack_stats_47279": [
+  "32458d34e8edfd66",
+  "486346ce8a5521e8",
+  "56289ed0a6db188f"
+ ],
+ "beir_cqadupstack_stats_47746": [
+  "7b632ef7f84512de",
+  "82852f1c02f9ed69"
+ ],
+ "beir_cqadupstack_stats_47769": [
+  "43a6718f55bc1b2a"
+ ],
+ "beir_cqadupstack_stats_47951": [
+  "06b339a0f9b9f8ed"
+ ],
+ "beir_cqadupstack_stats_4810": [
+  "aa7cdb6aef356ec5"
+ ],
+ "beir_cqadupstack_stats_48145": [
+  "66f51b8f859da5ed",
+  "84ed4d5219416723",
+  "f4cee82d9fe3a2b1"
+ ],
+ "beir_cqadupstack_stats_48199": [
+  "0eadc1c351b1e269",
+  "5507eccc7d775356"
+ ],
+ "beir_cqadupstack_stats_48261": [
+  "452f05d58a63a21d"
+ ],
+ "beir_cqadupstack_stats_48302": [
+  "a2c03be77e7a4929"
+ ],
+ "beir_cqadupstack_stats_48396": [
+  "864b415abff5a10c"
+ ],
+ "beir_cqadupstack_stats_48582": [
+  "13e83d5bdaa1d455",
+  "8fd341c7c2c237d0",
+  "d6e9305208d215dd"
+ ],
+ "beir_cqadupstack_stats_48714": [
+  "2d696451723abe50"
+ ],
+ "beir_cqadupstack_stats_48781": [
+  "d7850708c650e226"
+ ],
+ "beir_cqadupstack_stats_49421": [
+  "0d1a3f480f42306e",
+  "9a0f193fa3e55cef",
+  "dd0cd11f0c8ea6c1",
+  "e46b9f3cac70d0de"
+ ],
+ "beir_cqadupstack_stats_49510": [
+  "0d931aeadd51e29c"
+ ],
+ "beir_cqadupstack_stats_4964": [
+  "9dc424d57377e4ad"
+ ],
+ "beir_cqadupstack_stats_49666": [
+  "2db9289d59d36566"
+ ],
+ "beir_cqadupstack_stats_49942": [
+  "b4466804ada9db19"
+ ],
+ "beir_cqadupstack_stats_50095": [
+  "e4482fc25b9d8fc1"
+ ],
+ "beir_cqadupstack_stats_50267": [
+  "0bbc4ebf33d0ed77"
+ ],
+ "beir_cqadupstack_stats_51086": [
+  "1a459fdb4be06efe",
+  "1f45d43045cec1a5",
+  "35412c8a01a89282"
+ ],
+ "beir_cqadupstack_stats_51456": [
+  "40e760944619b77b"
+ ],
+ "beir_cqadupstack_stats_51473": [
+  "7a088520b70e9d85"
+ ],
+ "beir_cqadupstack_stats_51699": [
+  "3d2b09b469c92ee5"
+ ],
+ "beir_cqadupstack_stats_51718": [
+  "df36283c1c7b5de3"
+ ],
+ "beir_cqadupstack_stats_51835": [
+  "27db67789c51f466"
+ ],
+ "beir_cqadupstack_stats_51907": [
+  "3aa03e3ac148755d",
+  "754da353bf2c3f35",
+  "e21ab4701923c231"
+ ],
+ "beir_cqadupstack_stats_51946": [
+  "6fafb4656536643f"
+ ],
+ "beir_cqadupstack_stats_52063": [
+  "4f91ec10d4697d5e"
+ ],
+ "beir_cqadupstack_stats_5235": [
+  "c27391d4abc3802f"
+ ],
+ "beir_cqadupstack_stats_52423": [
+  "0b07bc44af14c50d"
+ ],
+ "beir_cqadupstack_stats_53000": [
+  "23743ab690634f4e",
+  "9fd48761b5185012"
+ ],
+ "beir_cqadupstack_stats_53135": [
+  "4c3d25997c2bc4ca",
+  "fc83a24211696e49"
+ ],
+ "beir_cqadupstack_stats_5347": [
+  "d6e727aab1e8faac"
+ ],
+ "beir_cqadupstack_stats_54645": [
+  "8e493219f128e053"
+ ],
+ "beir_cqadupstack_stats_54728": [
+  "0abafe313bcfe7a9"
+ ],
+ "beir_cqadupstack_stats_54954": [
+  "34a2eedc9a51cab7"
+ ],
+ "beir_cqadupstack_stats_5504": [
+  "96d729635ab1e388"
+ ],
+ "beir_cqadupstack_stats_55131": [
+  "1bc646bbe1656d70",
+  "d7b28c0e9ea74269",
+  "eba3360cb5d20451"
+ ],
+ "beir_cqadupstack_stats_55316": [
+  "f44d119c232dde6b"
+ ],
+ "beir_cqadupstack_stats_55446": [
+  "4f60c5c5c7979d6e"
+ ],
+ "beir_cqadupstack_stats_55691": [
+  "a23c8b88718aa743"
+ ],
+ "beir_cqadupstack_stats_56018": [
+  "8c2e1ad607e0bcf9"
+ ],
+ "beir_cqadupstack_stats_56124": [
+  "69e5cefce59c49e0",
+  "72034bdf26969a49"
+ ],
+ "beir_cqadupstack_stats_56350": [
+  "8bd6ba4091015a7d"
+ ],
+ "beir_cqadupstack_stats_56461": [
+  "34b3975adb814e53"
+ ],
+ "beir_cqadupstack_stats_56515": [
+  "66ce50b5d999db19"
+ ],
+ "beir_cqadupstack_stats_56852": [
+  "e51f049a7501b736"
+ ],
+ "beir_cqadupstack_stats_57074": [
+  "5dbe630accfa0356",
+  "81498156ef5c2e79",
+  "bfd98f4b41241523",
+  "ede41edb35eff2de"
+ ],
+ "beir_cqadupstack_stats_57083": [
+  "c50f976b7cbe6626",
+  "f954caa54f111d7a"
+ ],
+ "beir_cqadupstack_stats_57214": [
+  "2c10fc85d57228ee"
+ ],
+ "beir_cqadupstack_stats_57240": [
+  "bc5c274a34a05f09"
+ ],
+ "beir_cqadupstack_stats_57259": [
+  "acbc4284028bb5f8"
+ ],
+ "beir_cqadupstack_stats_5747": [
+  "0a7dbe044278f88e",
+  "c10e275f34a37dad",
+  "fa07e2f7069add69"
+ ],
+ "beir_cqadupstack_stats_57662": [
+  "1841291644fb811e",
+  "7c529c156aabe72b"
+ ],
+ "beir_cqadupstack_stats_577": [
+  "41d2737a932ed340",
+  "757aaacae4455ca2"
+ ],
+ "beir_cqadupstack_stats_57705": [
+  "48f1d6011822bb5c"
+ ],
+ "beir_cqadupstack_stats_57840": [
+  "e2bade725484e75e"
+ ],
+ "beir_cqadupstack_stats_58220": [
+  "a86b655c7050bdc5"
+ ],
+ "beir_cqadupstack_stats_58242": [
+  "218dd48bc29615e1"
+ ],
+ "beir_cqadupstack_stats_58486": [
+  "8e21e1be23ce60e7"
+ ],
+ "beir_cqadupstack_stats_5853": [
+  "374172386abeb298"
+ ],
+ "beir_cqadupstack_stats_58564": [
+  "4eb8580ceff860ac"
+ ],
+ "beir_cqadupstack_stats_59174": [
+  "c755c087e8a7b8da"
+ ],
+ "beir_cqadupstack_stats_59434": [
+  "f545f3349db30aaa"
+ ],
+ "beir_cqadupstack_stats_59526": [
+  "52fc62176de55dd7"
+ ],
+ "beir_cqadupstack_stats_59851": [
+  "d782b55bc98225b7"
+ ],
+ "beir_cqadupstack_stats_59882": [
+  "30f6502e5a68d603"
+ ],
+ "beir_cqadupstack_stats_59955": [
+  "052be8195ede4469",
+  "26c51d9ec00853b1",
+  "ae6bad8d0abd3cae"
+ ],
+ "beir_cqadupstack_stats_6": [
+  "d40eecc8814fc793"
+ ],
+ "beir_cqadupstack_stats_60076": [
+  "87370ab917a39823"
+ ],
+ "beir_cqadupstack_stats_60256": [
+  "54109bba0b18cc76",
+  "b30166a00497a2df",
+  "ba6deb318225b60a"
+ ],
+ "beir_cqadupstack_stats_60257": [
+  "313d3d0db74fb604"
+ ],
+ "beir_cqadupstack_stats_60383": [
+  "1f3f906d2276ccb0"
+ ],
+ "beir_cqadupstack_stats_60558": [
+  "d9bf2ab56a11135e"
+ ],
+ "beir_cqadupstack_stats_60670": [
+  "884b91494649dfad",
+  "d089b92d584826d4",
+  "eb0edfd76474821d"
+ ],
+ "beir_cqadupstack_stats_60766": [
+  "97e661bb591a70f6"
+ ],
+ "beir_cqadupstack_stats_60785": [
+  "455fc88de63dd5cb"
+ ],
+ "beir_cqadupstack_stats_6093": [
+  "1978c918fa0ceb38",
+  "fb8aa69d4447b8a9"
+ ],
+ "beir_cqadupstack_stats_61002": [
+  "78804010a430b840"
+ ],
+ "beir_cqadupstack_stats_61080": [
+  "0a9a91df6df3c6a9",
+  "f6f8d111e77188b7"
+ ],
+ "beir_cqadupstack_stats_61179": [
+  "57f5b932fe9442bf"
+ ],
+ "beir_cqadupstack_stats_61510": [
+  "74199dd89f07e3fd"
+ ],
+ "beir_cqadupstack_stats_61666": [
+  "0e3bab818a16f7c2"
+ ],
+ "beir_cqadupstack_stats_61798": [
+  "dac0d43632d90116"
+ ],
+ "beir_cqadupstack_stats_61906": [
+  "4b2e77593cdc2090"
+ ],
+ "beir_cqadupstack_stats_61944": [
+  "8a234604ce27254a"
+ ],
+ "beir_cqadupstack_stats_62092": [
+  "5b8878c551cf71a3"
+ ],
+ "beir_cqadupstack_stats_62640": [
+  "e9c232d05f31969e"
+ ],
+ "beir_cqadupstack_stats_62741": [
+  "010d79a1741b35aa"
+ ],
+ "beir_cqadupstack_stats_62880": [
+  "811e67f97451b94e",
+  "ad8de34757c2d0b0"
+ ],
+ "beir_cqadupstack_stats_62916": [
+  "385b3fa6528073a2"
+ ],
+ "beir_cqadupstack_stats_63099": [
+  "740e6df71c74c8ec",
+  "c2f9917341e238f5"
+ ],
+ "beir_cqadupstack_stats_63177": [
+  "4842360534cfb9d5"
+ ],
+ "beir_cqadupstack_stats_63256": [
+  "f66972ba98910e92"
+ ],
+ "beir_cqadupstack_stats_63260": [
+  "71c143d79c1486f8"
+ ],
+ "beir_cqadupstack_stats_6350": [
+  "9d8fc22d24fe0c1d"
+ ],
+ "beir_cqadupstack_stats_64156": [
+  "75eeed35e57d8773",
+  "8150d3e65e03f949",
+  "a0feb098f219f82e"
+ ],
+ "beir_cqadupstack_stats_64343": [
+  "f764c030a8bcdfb7"
+ ],
+ "beir_cqadupstack_stats_64370": [
+  "d8886a0914c676b4"
+ ],
+ "beir_cqadupstack_stats_64652": [
+  "973292916dfd241f"
+ ],
+ "beir_cqadupstack_stats_64739": [
+  "54bbb0a4a32eb6ef"
+ ],
+ "beir_cqadupstack_stats_64831": [
+  "75a8a5330a48e36e"
+ ],
+ "beir_cqadupstack_stats_64924": [
+  "6235b3303d119351",
+  "9ad92be2a3a01cc9"
+ ],
+ "beir_cqadupstack_stats_6498": [
+  "c75fb5d868b1a8b6"
+ ],
+ "beir_cqadupstack_stats_65446": [
+  "227a05adfd4043b6",
+  "a2da3299413f6011"
+ ],
+ "beir_cqadupstack_stats_6563": [
+  "7f36be04b5512fa9"
+ ],
+ "beir_cqadupstack_stats_65637": [
+  "e95246c932375188"
+ ],
+ "beir_cqadupstack_stats_65779": [
+  "772d94b7c1b6ea05"
+ ],
+ "beir_cqadupstack_stats_6581": [
+  "9bed57c782727824"
+ ],
+ "beir_cqadupstack_stats_65811": [
+  "7e041658652b6e10"
+ ],
+ "beir_cqadupstack_stats_65866": [
+  "a55917dd4c48dff3"
+ ],
+ "beir_cqadupstack_stats_66094": [
+  "178dcce4d098dee3",
+  "cdcb9853257e890d"
+ ],
+ "beir_cqadupstack_stats_6619": [
+  "d1f941807fbd96c9"
+ ],
+ "beir_cqadupstack_stats_66215": [
+  "b6a546f83350b796"
+ ],
+ "beir_cqadupstack_stats_66273": [
+  "d6a4db4573d094e6"
+ ],
+ "beir_cqadupstack_stats_66448": [
+  "06076b6d4d32cc61",
+  "5614ac4a00551a89",
+  "5c4f032d0ed42d0f"
+ ],
+ "beir_cqadupstack_stats_665": [
+  "ec8674def13a4f9b"
+ ],
+ "beir_cqadupstack_stats_6652": [
+  "32acfe73e9092de0",
+  "7660b937de473f4d",
+  "7f00fe47d9302f01",
+  "865400e9df3e09a3",
+  "a2bb3ffb71498318"
+ ],
+ "beir_cqadupstack_stats_66670": [
+  "3cf3ff8cff376ac7"
+ ],
+ "beir_cqadupstack_stats_66709": [
+  "7eab3310c9fbed0a"
+ ],
+ "beir_cqadupstack_stats_66868": [
+  "5dd1e662d020d7db"
+ ],
+ "beir_cqadupstack_stats_67243": [
+  "4074016a3548c7b8"
+ ],
+ "beir_cqadupstack_stats_67502": [
+  "58e82bce249aa082"
+ ],
+ "beir_cqadupstack_stats_67533": [
+  "316956597c7da0ef",
+  "4d02d6b6476a12f0"
+ ],
+ "beir_cqadupstack_stats_67571": [
+  "1de4afb512925f3e",
+  "f72c00831777ed87"
+ ],
+ "beir_cqadupstack_stats_67676": [
+  "9753fa3a69a2c826",
+  "9ab5322a872c57d2",
+  "e8b97904669774bb"
+ ],
+ "beir_cqadupstack_stats_67782": [
+  "2197643edde26461",
+  "c2960fadf98c421a"
+ ],
+ "beir_cqadupstack_stats_67800": [
+  "12ddb3db32be3289",
+  "d07a517c9acaed31"
+ ],
+ "beir_cqadupstack_stats_67958": [
+  "3f07ddc23dacba2c"
+ ],
+ "beir_cqadupstack_stats_68069": [
+  "d84d6e19a63c3a6a"
+ ],
+ "beir_cqadupstack_stats_68243": [
+  "d09227bdcd90f9e0"
+ ],
+ "beir_cqadupstack_stats_68261": [
+  "6ab9210850cec457"
+ ],
+ "beir_cqadupstack_stats_68377": [
+  "0eae321e25373ac2"
+ ],
+ "beir_cqadupstack_stats_68421": [
+  "e77d4481b04d5184"
+ ],
+ "beir_cqadupstack_stats_68431": [
+  "c6859e2b2333f6e9"
+ ],
+ "beir_cqadupstack_stats_68528": [
+  "c171ff9c01b549dc"
+ ],
+ "beir_cqadupstack_stats_68834": [
+  "fd34a8a15aeea33c"
+ ],
+ "beir_cqadupstack_stats_69407": [
+  "fb5d0152b316e0d9"
+ ],
+ "beir_cqadupstack_stats_6966": [
+  "5ec5e1c713e051cf"
+ ],
+ "beir_cqadupstack_stats_69939": [
+  "09bc027a31fa7d7e"
+ ],
+ "beir_cqadupstack_stats_7": [
+  "6e6b0cb5c8c1e878",
+  "c68e962d78c8aecd",
+  "dcc46c7b4932af25"
+ ],
+ "beir_cqadupstack_stats_7004": [
+  "fcf49bd5c0e22363"
+ ],
+ "beir_cqadupstack_stats_70133": [
+  "5604da790550e0fd"
+ ],
+ "beir_cqadupstack_stats_70307": [
+  "4330ab557e32d81b"
+ ],
+ "beir_cqadupstack_stats_70605": [
+  "f3a1be631baf9d2c"
+ ],
+ "beir_cqadupstack_stats_70846": [
+  "1ed3dbbc336d085b"
+ ],
+ "beir_cqadupstack_stats_70899": [
+  "2b9db25619790a26"
+ ],
+ "beir_cqadupstack_stats_71064": [
+  "e052f4b6627e11a8"
+ ],
+ "beir_cqadupstack_stats_71260": [
+  "7aa36246b4c51f17"
+ ],
+ "beir_cqadupstack_stats_71269": [
+  "59d0e1c82f599ac9",
+  "c8bac5662dc8d2e7"
+ ],
+ "beir_cqadupstack_stats_71771": [
+  "00f158cb6e7a9a20",
+  "04c9380bc98c11f8",
+  "2f4b2f1900c25e80",
+  "31222bb34ef19d4d",
+  "36f6d5af2c2431bd",
+  "478b48123a0fe9d4",
+  "4e3bfddc934c777f",
+  "53aa66782b81cb4b",
+  "5728487594f26457",
+  "5d1be82e449591f8",
+  "7222b8ec60414001",
+  "9d698bb9c27d67ef",
+  "a1cd1ed1cf079a07",
+  "ba69f846ba452e05",
+  "c598aa94f564987b",
+  "d2ae3ab11417ebba",
+  "d9700a16ef02f066"
+ ],
+ "beir_cqadupstack_stats_71999": [
+  "0e029133fc7d49bb",
+  "5d048a52550804cf",
+  "aa22be2204d76cc0"
+ ],
+ "beir_cqadupstack_stats_7200": [
+  "ffd752e5956ee70c"
+ ],
+ "beir_cqadupstack_stats_72212": [
+  "45c79bf3df0f0694"
+ ],
+ "beir_cqadupstack_stats_72297": [
+  "3cf5d0f2a1932f66"
+ ],
+ "beir_cqadupstack_stats_72370": [
+  "34766b12260b201c"
+ ],
+ "beir_cqadupstack_stats_72623": [
+  "fe629e329879ceb3"
+ ],
+ "beir_cqadupstack_stats_72646": [
+  "43940c044aeb4cec",
+  "615c808af98e3f62",
+  "effbe8d03a778c69"
+ ],
+ "beir_cqadupstack_stats_72648": [
+  "75ee196e16330d46",
+  "8a06b1512b63e05b",
+  "d9880b0c2e37c695"
+ ],
+ "beir_cqadupstack_stats_72940": [
+  "82f42cf456bda1a4"
+ ],
+ "beir_cqadupstack_stats_73077": [
+  "1eaf07fd93f2af34"
+ ],
+ "beir_cqadupstack_stats_7308": [
+  "830cced980180e58"
+ ],
+ "beir_cqadupstack_stats_73412": [
+  "caba6853896e07a2"
+ ],
+ "beir_cqadupstack_stats_73416": [
+  "f95f1966b4fc0e44"
+ ],
+ "beir_cqadupstack_stats_74174": [
+  "7d28b0b5d31f3a40",
+  "b4519a1e660250d5",
+  "f6485fb628f021d4"
+ ],
+ "beir_cqadupstack_stats_74537": [
+  "ac9dc07db193ef76"
+ ],
+ "beir_cqadupstack_stats_74542": [
+  "003f061745989b98",
+  "d6221d67f6b9572d"
+ ],
+ "beir_cqadupstack_stats_74622": [
+  "0843a234502e6eba"
+ ],
+ "beir_cqadupstack_stats_7535": [
+  "f906ca6f93eca61e"
+ ],
+ "beir_cqadupstack_stats_7542": [
+  "d31b00b6b5b92054"
+ ],
+ "beir_cqadupstack_stats_76248": [
+  "5ea2135ab4e1fd25",
+  "6736281fb1d6874c"
+ ],
+ "beir_cqadupstack_stats_76398": [
+  "08897ffc37fd91d7",
+  "110cda42232df2a9",
+  "9c504f5fc3f094f9"
+ ],
+ "beir_cqadupstack_stats_76484": [
+  "e06df280fd5b0be9"
+ ],
+ "beir_cqadupstack_stats_77038": [
+  "6f2ca687f0244e41"
+ ],
+ "beir_cqadupstack_stats_77099": [
+  "099d4cf36d66eeaf"
+ ],
+ "beir_cqadupstack_stats_77349": [
+  "d26f5d34356f8e72"
+ ],
+ "beir_cqadupstack_stats_77542": [
+  "bcf1dd5a09c7c62d"
+ ],
+ "beir_cqadupstack_stats_78000": [
+  "99ce6be9f2093494"
+ ],
+ "beir_cqadupstack_stats_78285": [
+  "dd75d5610eb62493"
+ ],
+ "beir_cqadupstack_stats_78329": [
+  "8c687592aacec5a6"
+ ],
+ "beir_cqadupstack_stats_78374": [
+  "4c22bfea27e33a8c",
+  "51b06fd597e542bd"
+ ],
+ "beir_cqadupstack_stats_78795": [
+  "a6cd217bbfdc936b"
+ ],
+ "beir_cqadupstack_stats_78928": [
+  "013185049a410f38"
+ ],
+ "beir_cqadupstack_stats_79043": [
+  "fcc2c77856503880"
+ ],
+ "beir_cqadupstack_stats_79289": [
+  "995dbe4bc6f6c0a0"
+ ],
+ "beir_cqadupstack_stats_79292": [
+  "0e658e5bee05c8ba"
+ ],
+ "beir_cqadupstack_stats_7948": [
+  "28f8ce8de6b1667f",
+  "5ea405e7e9f52697",
+  "850672115c609a56",
+  "cbe2684057b75dd6"
+ ],
+ "beir_cqadupstack_stats_79755": [
+  "20fdf89af08e983d"
+ ],
+ "beir_cqadupstack_stats_79843": [
+  "08a9ab72c76311e0",
+  "2cade16408836452"
+ ],
+ "beir_cqadupstack_stats_79932": [
+  "b15c05cb7182ca84"
+ ],
+ "beir_cqadupstack_stats_80157": [
+  "182dad234d303dd5"
+ ],
+ "beir_cqadupstack_stats_8033": [
+  "a03bf88da92df8a9"
+ ],
+ "beir_cqadupstack_stats_80500": [
+  "29eba11093e2c0d1"
+ ],
+ "beir_cqadupstack_stats_80555": [
+  "7ce826d152a9d8a8"
+ ],
+ "beir_cqadupstack_stats_80791": [
+  "be754bc38f4231c1"
+ ],
+ "beir_cqadupstack_stats_80885": [
+  "1db09703cc8f6cca"
+ ],
+ "beir_cqadupstack_stats_8107": [
+  "decf547da5a74199"
+ ],
+ "beir_cqadupstack_stats_81815": [
+  "bd073860383bdb35"
+ ],
+ "beir_cqadupstack_stats_81880": [
+  "830c895ad4d67f22"
+ ],
+ "beir_cqadupstack_stats_82142": [
+  "9770dab87aafac6e"
+ ],
+ "beir_cqadupstack_stats_82624": [
+  "b9047f0d7424040c"
+ ],
+ "beir_cqadupstack_stats_82682": [
+  "3bb91c5168505258"
+ ],
+ "beir_cqadupstack_stats_82947": [
+  "638f0204f5414c80"
+ ],
+ "beir_cqadupstack_stats_82992": [
+  "9fe019077d596984",
+  "dcddf6406eab2809"
+ ],
+ "beir_cqadupstack_stats_82996": [
+  "1a9a7219aea0369f"
+ ],
+ "beir_cqadupstack_stats_83022": [
+  "f72e37cb29697c12"
+ ],
+ "beir_cqadupstack_stats_8318": [
+  "2287072e2e9a6b6f",
+  "b0aad4da7f57fba8"
+ ],
+ "beir_cqadupstack_stats_83193": [
+  "f25dcf054c008daf"
+ ],
+ "beir_cqadupstack_stats_83296": [
+  "5f532b2155e8e2a5"
+ ],
+ "beir_cqadupstack_stats_83352": [
+  "15493074e07201f0"
+ ],
+ "beir_cqadupstack_stats_83538": [
+  "69ca9e0db7035a76"
+ ],
+ "beir_cqadupstack_stats_83554": [
+  "a7c701988d07551e"
+ ],
+ "beir_cqadupstack_stats_83583": [
+  "e3fe7e6ea8e82e7d"
+ ],
+ "beir_cqadupstack_stats_83865": [
+  "068c8b7af2d06f92"
+ ],
+ "beir_cqadupstack_stats_83900": [
+  "1c6d29c8b8a3813e"
+ ],
+ "beir_cqadupstack_stats_84115": [
+  "65acda1522840a7f",
+  "6aff4804ede8eabc"
+ ],
+ "beir_cqadupstack_stats_84116": [
+  "d0e0020660530d1c"
+ ],
+ "beir_cqadupstack_stats_84175": [
+  "6ebe5413f84d7589"
+ ],
+ "beir_cqadupstack_stats_84197": [
+  "d616ebddf9c818ef"
+ ],
+ "beir_cqadupstack_stats_84334": [
+  "5f234ebdd68975f8"
+ ],
+ "beir_cqadupstack_stats_85363": [
+  "b63541369cee01c8"
+ ],
+ "beir_cqadupstack_stats_85436": [
+  "10bf7b130b03323a"
+ ],
+ "beir_cqadupstack_stats_8557": [
+  "db1a7f2eabbc1ba5"
+ ],
+ "beir_cqadupstack_stats_85702": [
+  "463216953d4f9249"
+ ],
+ "beir_cqadupstack_stats_86040": [
+  "95d185ab3f37d51f"
+ ],
+ "beir_cqadupstack_stats_86149": [
+  "b3a09f82fb921080"
+ ],
+ "beir_cqadupstack_stats_86258": [
+  "d8340aebbfee629c"
+ ],
+ "beir_cqadupstack_stats_86353": [
+  "5564ff2d43b1c502"
+ ],
+ "beir_cqadupstack_stats_86357": [
+  "f36b0e0cc98baa18"
+ ],
+ "beir_cqadupstack_stats_86546": [
+  "452d4e582bb0df66"
+ ],
+ "beir_cqadupstack_stats_86597": [
+  "21d06847ba24397f"
+ ],
+ "beir_cqadupstack_stats_8661": [
+  "22ceda41459fece6",
+  "6ef5905ab6f80d33",
+  "def0a3e9bcf6ff9a"
+ ],
+ "beir_cqadupstack_stats_86881": [
+  "c96b0a2b0ac402e1"
+ ],
+ "beir_cqadupstack_stats_87003": [
+  "e09c1ebe3b0f8ac6"
+ ],
+ "beir_cqadupstack_stats_87110": [
+  "71a0141e69f5ec6b"
+ ],
+ "beir_cqadupstack_stats_87168": [
+  "4f885062f4ba7ceb"
+ ],
+ "beir_cqadupstack_stats_87601": [
+  "9d4ce2453b850ef7"
+ ],
+ "beir_cqadupstack_stats_87805": [
+  "bcb1b483812c5ebd",
+  "ebc43b9cee1f353d"
+ ],
+ "beir_cqadupstack_stats_87866": [
+  "d7dce62f6f72ea7a"
+ ],
+ "beir_cqadupstack_stats_87908": [
+  "8343c3964fd1fd25",
+  "ec71e99caa590911"
+ ],
+ "beir_cqadupstack_stats_87909": [
+  "a27cc502ff066498"
+ ],
+ "beir_cqadupstack_stats_87963": [
+  "b0a9259af6211ce3"
+ ],
+ "beir_cqadupstack_stats_88097": [
+  "5097552fe0178ed0",
+  "79fcfc7deea5474a"
+ ],
+ "beir_cqadupstack_stats_88228": [
+  "8cf21e854eba4a15"
+ ],
+ "beir_cqadupstack_stats_88388": [
+  "5cc5f4ec8abf8335"
+ ],
+ "beir_cqadupstack_stats_88461": [
+  "cf8fc4e8c72b9875"
+ ],
+ "beir_cqadupstack_stats_88588": [
+  "32639360c07e1ec4"
+ ],
+ "beir_cqadupstack_stats_88711": [
+  "789734cb4e79a454",
+  "baccb6e6da2953c1"
+ ],
+ "beir_cqadupstack_stats_8881": [
+  "1b608f8e7b1a607c"
+ ],
+ "beir_cqadupstack_stats_88880": [
+  "8aed318e611e34dc"
+ ],
+ "beir_cqadupstack_stats_88980": [
+  "2284757a1f4e2066"
+ ],
+ "beir_cqadupstack_stats_89038": [
+  "52152ac2dc590158",
+  "61e92862ceb2587c",
+  "67edb241fad68004",
+  "6ea399fce82167ec",
+  "d48fb17a4a9a1b46"
+ ],
+ "beir_cqadupstack_stats_89295": [
+  "3784baa78695e88f"
+ ],
+ "beir_cqadupstack_stats_89472": [
+  "ac7012f6895ce79e"
+ ],
+ "beir_cqadupstack_stats_89633": [
+  "d50ed5d213124b42"
+ ],
+ "beir_cqadupstack_stats_899": [
+  "ab3c16f8c39a2ce0"
+ ],
+ "beir_cqadupstack_stats_89926": [
+  "960b73862be84c8a"
+ ],
+ "beir_cqadupstack_stats_89949": [
+  "7b755a28179fbd71"
+ ],
+ "beir_cqadupstack_stats_90098": [
+  "0a8db1f3dc95cc3e"
+ ],
+ "beir_cqadupstack_stats_90113": [
+  "586009eeeb0c6a61",
+  "7c31c4ac09fafff9"
+ ],
+ "beir_cqadupstack_stats_90129": [
+  "a6fc98a92758c3c5",
+  "cff00aa3556abcd6"
+ ],
+ "beir_cqadupstack_stats_90130": [
+  "5c6fd856156cfc8b"
+ ],
+ "beir_cqadupstack_stats_90171": [
+  "a0c30de425025531"
+ ],
+ "beir_cqadupstack_stats_90243": [
+  "31fddd831a5d0be7"
+ ],
+ "beir_cqadupstack_stats_90380": [
+  "986a53742b267541"
+ ],
+ "beir_cqadupstack_stats_90407": [
+  "84721750d88a7499"
+ ],
+ "beir_cqadupstack_stats_90499": [
+  "aaba65f1e2eeaa80"
+ ],
+ "beir_cqadupstack_stats_90828": [
+  "f36bab8eb09ef9c1"
+ ],
+ "beir_cqadupstack_stats_91286": [
+  "930aae40933cdc17"
+ ],
+ "beir_cqadupstack_stats_91389": [
+  "81c5f181f6a4e4ca"
+ ],
+ "beir_cqadupstack_stats_91467": [
+  "9b3b9810a18ca92e"
+ ],
+ "beir_cqadupstack_stats_91493": [
+  "5915bb74579770e8"
+ ],
+ "beir_cqadupstack_stats_91510": [
+  "5fe120a06a283d2d"
+ ],
+ "beir_cqadupstack_stats_91744": [
+  "3a011c41aa02e08b",
+  "f6fd771097c37290"
+ ],
+ "beir_cqadupstack_stats_91981": [
+  "b0d5907536ae7906"
+ ],
+ "beir_cqadupstack_stats_91982": [
+  "d671a07e7b9cc4b2"
+ ],
+ "beir_cqadupstack_stats_92052": [
+  "aae13f3cf7e4ed60"
+ ],
+ "beir_cqadupstack_stats_92210": [
+  "476896c400c7cae8"
+ ],
+ "beir_cqadupstack_stats_92212": [
+  "07925e5f1454cea3",
+  "07a96273e354842b",
+  "6ba4bdb7ee3aafe0",
+  "875d83a78c8d99eb"
+ ],
+ "beir_cqadupstack_stats_92284": [
+  "fcecfa3f83134fad"
+ ],
+ "beir_cqadupstack_stats_92661": [
+  "58106e0f14a5ea1f"
+ ],
+ "beir_cqadupstack_stats_92751": [
+  "cae44f40051f764a"
+ ],
+ "beir_cqadupstack_stats_92788": [
+  "91acef394672804d"
+ ],
+ "beir_cqadupstack_stats_92794": [
+  "74ce3e4827f9375b"
+ ],
+ "beir_cqadupstack_stats_92895": [
+  "11d8c19e8f008460"
+ ],
+ "beir_cqadupstack_stats_93042": [
+  "1749111173dd3053",
+  "1d866635fc3a396e",
+  "4eff171fa406840f",
+  "64e9a67b43e6ec3d",
+  "69bb2027f864f0cb",
+  "8d40bfef21080f24",
+  "ad2d9b2db12e8b23",
+  "b2b3e88362898352",
+  "b6a5339275ceef81",
+  "c37abd701b7ad04a",
+  "c39900e7df973442",
+  "e8368342ee4e6aaf",
+  "f7160d80597d3531",
+  "fbfa940d94c6712f",
+  "fd45c015468d9619"
+ ],
+ "beir_cqadupstack_stats_93067": [
+  "fdfa54c8e8975665"
+ ],
+ "beir_cqadupstack_stats_93370": [
+  "6c7d07d22203a484"
+ ],
+ "beir_cqadupstack_stats_93436": [
+  "4743e0c92ddebe5a"
+ ],
+ "beir_cqadupstack_stats_93768": [
+  "4be859b6707bf493"
+ ],
+ "beir_cqadupstack_stats_9398": [
+  "aaf6f2ed8acecf48"
+ ],
+ "beir_cqadupstack_stats_94033": [
+  "3c58f5b9b4e07323"
+ ],
+ "beir_cqadupstack_stats_94061": [
+  "1478b45281be8446",
+  "2672f193d4a2e76e",
+  "3e32fd0cfffecf35",
+  "44f23ddc334f0ee9",
+  "65779e94de14ef23",
+  "6627d53e933aef39",
+  "7461ace28cebdf96",
+  "af183628498cbdf3",
+  "e0f4af474013ff15"
+ ],
+ "beir_cqadupstack_stats_94103": [
+  "9345bb0610941ffa"
+ ],
+ "beir_cqadupstack_stats_94201": [
+  "10cf430317d995de"
+ ],
+ "beir_cqadupstack_stats_94208": [
+  "b3bf08162a1205eb"
+ ],
+ "beir_cqadupstack_stats_9427": [
+  "05c6ca3c77d7d79a",
+  "14e048f63d0a4c9e",
+  "298e28d53f530b57",
+  "2b377f5519f56a02",
+  "554c4918bc8631d1",
+  "56ed6d4405afb134",
+  "68774002f15cd17c",
+  "7377741d3a40984c",
+  "899e987409e251fe",
+  "967c08d7d7f23a3a",
+  "98fc7ad9ac275405",
+  "9fc2d7b7a132755c",
+  "a60b8c27d9dd281b",
+  "a98312f18b9aca59",
+  "b297dc0ad61b6efe",
+  "c248c680d504737e",
+  "c46e2fceabfa9cfc",
+  "c8503828b5910578"
+ ],
+ "beir_cqadupstack_stats_94271": [
+  "b04540c51847ab8d"
+ ],
+ "beir_cqadupstack_stats_94272": [
+  "f0998d6102c5cf38"
+ ],
+ "beir_cqadupstack_stats_94360": [
+  "127e72ce6c07d5a2",
+  "403ab2bf3f050cd7",
+  "5cfa1548a184be38",
+  "67f634868b76ec66",
+  "7dd4beb26b43f1d2",
+  "c0e71084e20900eb",
+  "ce9bfc8e6e9c547b"
+ ],
+ "beir_cqadupstack_stats_94747": [
+  "c9cfb6c0923d869a",
+  "dedb1d0aafa07367"
+ ],
+ "beir_cqadupstack_stats_94872": [
+  "539d1b635e04b1c9"
+ ],
+ "beir_cqadupstack_stats_949": [
+  "6035465d1bbc9aee",
+  "d61840d97c7035ae"
+ ],
+ "beir_cqadupstack_stats_9510": [
+  "d0a8676ff716a709"
+ ],
+ "beir_cqadupstack_stats_95235": [
+  "d65dacca7786e848"
+ ],
+ "beir_cqadupstack_stats_95440": [
+  "2e782063cde72731"
+ ],
+ "beir_cqadupstack_stats_95667": [
+  "588fd29786eb6f9d"
+ ],
+ "beir_cqadupstack_stats_9573": [
+  "4fded83f9f902201"
+ ],
+ "beir_cqadupstack_stats_95891": [
+  "2f4da64fa52fa044"
+ ],
+ "beir_cqadupstack_stats_9590": [
+  "f80a484b72fd7137"
+ ],
+ "beir_cqadupstack_stats_96005": [
+  "1a62f34b4f8073c0"
+ ],
+ "beir_cqadupstack_stats_96278": [
+  "fb8393cc83c024b6"
+ ],
+ "beir_cqadupstack_stats_96543": [
+  "074d744b70ec7895"
+ ],
+ "beir_cqadupstack_stats_9664": [
+  "eb17b2ef5a4df289"
+ ],
+ "beir_cqadupstack_stats_96722": [
+  "09c7eb3a8e6c0050",
+  "89e5fa3804345026"
+ ],
+ "beir_cqadupstack_stats_96751": [
+  "739c89eaf1f99238",
+  "9971a67c7d7a1a12",
+  "9f58c2b4d406de1d",
+  "f9b4827cdba9d3ca"
+ ],
+ "beir_cqadupstack_stats_96835": [
+  "f09b510c4e9b80d8"
+ ],
+ "beir_cqadupstack_stats_97075": [
+  "d9a1f45a92726a31"
+ ],
+ "beir_cqadupstack_stats_97257": [
+  "6350386807a8b881"
+ ],
+ "beir_cqadupstack_stats_9751": [
+  "68df8d458bfdeeec"
+ ],
+ "beir_cqadupstack_stats_97515": [
+  "3dc6407d7b39e96b"
+ ],
+ "beir_cqadupstack_stats_97659": [
+  "314e87530d26557f",
+  "5bcbfc3d01c20ac2"
+ ],
+ "beir_cqadupstack_stats_97777": [
+  "928fcc70a7455937"
+ ],
+ "beir_cqadupstack_stats_97912": [
+  "8ce31ba4939811c1"
+ ],
+ "beir_cqadupstack_stats_99099": [
+  "059eab93528ebe9a"
+ ],
+ "beir_cqadupstack_stats_99192": [
+  "fdf858ebf7f39fa9"
+ ],
+ "beir_cqadupstack_stats_9926": [
+  "10ef67a4dd82c95f"
+ ],
+ "beir_cqadupstack_stats_99416": [
+  "47d37817bf7b7781",
+  "95eef2a311d7a9d6"
+ ]
+}

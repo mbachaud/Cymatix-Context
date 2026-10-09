@@ -1,0 +1,5199 @@
+{
+ "needles": [
+  {
+   "name": "beir_cqadupstack_physics_100037",
+   "query": "Do ideal gases at zero Kelvin have potential energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_100041",
+   "query": "Caldeira-Leggett Dissipation: cannot get it",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_100056",
+   "query": "Why do electrons and protons attract each other?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_100197",
+   "query": "Finding charge (electromagnetism course)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_100251",
+   "query": "Linear Algebra For Physicists (Book Recommendations)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_100572",
+   "query": "Different formulas for calculating power",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1008",
+   "query": "Why isn't dark matter just matter?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101150",
+   "query": "Ascertain the height an object has fallen from given force exerted and mass",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101188",
+   "query": "How to model a rising helium balloon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101291",
+   "query": "Density operators in a Hilbert Space",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10130",
+   "query": "Physics breakthroughs in the last two decades",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10139",
+   "query": "Determining a radio signal's range",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101398",
+   "query": "electric charge is a intrinsic property how is there a prpoer way to explain electric charge?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101404",
+   "query": "Positive Mass Theorem",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101443",
+   "query": "Does gravity have any effect on sound waves?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10154",
+   "query": "Does the Standard model allow for radioactive decay prediction?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10161",
+   "query": "Is there a good chance that gravitational waves will be detected in the next years?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101624",
+   "query": "Can someone be too late for being a great physicist?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10163",
+   "query": "Special Relativity and time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101649",
+   "query": "What is the physical significane of Complex Time Evolution in EM Waves?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101674",
+   "query": "Gaussian Integral by Substitution",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101725",
+   "query": "The nature of the gravity force: Is it attractive or repulsive between positive and negative mass?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_101727",
+   "query": "How does displacement current come about?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102076",
+   "query": "Capacitance of bodies with different charge",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102222",
+   "query": "How does a half-life work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102363",
+   "query": "General relativity, gravity and spacetime curvature",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102366",
+   "query": "gravitational lensing",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102370",
+   "query": "Why do particular materials allow particular light waves to pass through them?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102423",
+   "query": "Rolling disk in inclined plane and flat plane?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102477",
+   "query": "Physical interpretation of Fermi golden rule?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102517",
+   "query": "Are continuous mathematical models of discrete physical phenomena messy because of a disconnect between “continuous” and “discontinuous”?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10252",
+   "query": "Why is travelling around the speed of light a problem?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102627",
+   "query": "Second Rank Tensors",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102680",
+   "query": "How can you use magnets to rotate a shaft, which in turn powers a generator?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102719",
+   "query": "What is the formula for determining time dilation (as the object in motion)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102760",
+   "query": "Man on a rope task",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102791",
+   "query": "Quarks are now considered to be fundamentals, but so were atoms some time ago. So the way we see is only limited by our technological advances?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_102941",
+   "query": "How many physical degrees of freedom does the $\\mathrm{SU(N)}$ Yang-Mills theory have?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10308",
+   "query": "The \"Nerd Sniping\" problem. Generalizations?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10311",
+   "query": "Does it exist a free good molecule / atom simulation software?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_103110",
+   "query": "A black torch to darken everything",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_103160",
+   "query": "It's commonly said that the existence of antiparticles \"saves causality\". How?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_103448",
+   "query": "Red color has largest wavelenght and violet minimum (in the range of visible light). then why does violet light appears reddish? RED + BLUE = VIOLET",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10362",
+   "query": "How does non-commutativity lead to uncertainty?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_103641",
+   "query": "Very specific type of GR paper hunt",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_103670",
+   "query": "Do black holes exist?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_103931",
+   "query": "Does light color change when refracting?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104019",
+   "query": "Special Relativity Textbooks Request",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104144",
+   "query": "Why is the camera not the culprit?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104196",
+   "query": "The sound when boiling water",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104237",
+   "query": "Why do the planets orbit the Sun?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104301",
+   "query": "Gravity propagation speed",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104302",
+   "query": "Size of Universe after inflation",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104423",
+   "query": "Calculating impact velocity and time with non-uniform acceleration",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104468",
+   "query": "How does atmospheric pressure work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_104513",
+   "query": "Derivation of Euler's equations for rigid body rotation",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10470",
+   "query": "How does water evaporate if it doesn't boil?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10496",
+   "query": "What can the D-Wave quantum computer do?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105013",
+   "query": "Could a super conductor actually be used to repel gravity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105071",
+   "query": "Can a gravitational field be diluted or shielded?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1051",
+   "query": "conversion of information to energy",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105183",
+   "query": "Question about two masses connected by a spring",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105239",
+   "query": "How does a black hole slow time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105316",
+   "query": "Why color of dress changes when water falls?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105398",
+   "query": "What will change if we have another Earth in the space near Earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105483",
+   "query": "Reducing the Tsunami impact using Nuclear bombs",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105681",
+   "query": "Integrating for speed",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105735",
+   "query": "Rutherfords alpha scattering conclutions?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105833",
+   "query": "Is rigorous functional analysis useful for theoretical physics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_105875",
+   "query": "Blackbody radiation and Spectral Lines",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_106065",
+   "query": "Relativity's effects on centripetal motion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_106078",
+   "query": "How does a simple weighing balance actually work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_106287",
+   "query": "Is the universe flat?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_106378",
+   "query": "Centrifugal force when there is no friction",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_106484",
+   "query": "If you shoot a light beam behind the event horizon of a black hole, what happens to the light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_106501",
+   "query": "Is Dark Energy Pushing Us Or Pulling Us?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_106543",
+   "query": "Why earth looks always flat when it is round",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_106652",
+   "query": "Does the Sun produce audible sound?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107023",
+   "query": "Sum of independent errors",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107113",
+   "query": "Calculate the average temperature needed for hydrogen fusion reaction",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107546",
+   "query": "Why doesn't our body gets crushed due to the atmospheric pressure?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107561",
+   "query": "Dependence of Force as a function of Distance?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107563",
+   "query": "What's the proof that the polarization occur s to the electric field of the light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107614",
+   "query": "Why \"Dark Energy\" is called energy instead of force?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107671",
+   "query": "If 'pure energy' is photons, and energy is conserved, how can matter and antimatter (electrons and positrons) annihilate into photons and vice-versa?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107746",
+   "query": "Spinning of the Earth",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_107919",
+   "query": "galaxies fading away after time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1080",
+   "query": "Why isn't Higgs coupling considered a fifth fundamental force?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_108212",
+   "query": "What's the relationship between $SL(2,\\mathbb{C})$, $SU(2)\\times SU(2)$ and $SO(1,3)$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_108214",
+   "query": "Applications of low-dimensional topology to physics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_108569",
+   "query": "Does the unit of Inertia include radians?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_108661",
+   "query": "Movement with non-constant acceleration",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10870",
+   "query": "Calculating position in space assuming general relativity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_108924",
+   "query": "Chemical potential of photons",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_10895",
+   "query": "What is the energy conversion efficiency of a computation device like a modern CPU?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_109060",
+   "query": "Is cosmic background radiation absolute",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_109332",
+   "query": "Calculate analytically the time until two spheres meet due to gravitation",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_109364",
+   "query": "Can 'Backradiation' warm its own source?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_109636",
+   "query": "Why are people weightless whilst in orbit around the Earth? ISS? Satellites?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_109850",
+   "query": "Was the mass of the universe the same when it first began as it is now?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_109957",
+   "query": "How does Einstein got equivalent mass - energy equation E=mc2?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_109982",
+   "query": "How is a vacuum able to propagate light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_109992",
+   "query": "Heat energy in special theory of relativity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110077",
+   "query": "Gauge Higgs Unification",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11014",
+   "query": "Will the night sky eventually be bright?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110207",
+   "query": "While Space-man lives for 1 day, then how long does Earth-man live ? 1000 years or 1 second?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110330",
+   "query": "Do oceans produce the cosmic microwave background?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110395",
+   "query": "upwind vehicle exceeding the wind speed",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110401",
+   "query": "Number of planks required to stop the bullet",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110543",
+   "query": "Open-source up-to-date cosmological datasets",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110554",
+   "query": "Magnetic field resistance material: are there any?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110581",
+   "query": "Do COBE, WMAP, or Planck data show time-variance of the CMB's anisotropies?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110615",
+   "query": "What does 1/k represent regarding Newtons Law of Cooling?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110669",
+   "query": "Is gravitational time dilation different from other forms of time dilation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_110736",
+   "query": "About the speed of light and gravity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111172",
+   "query": "What is the difference between light and visible light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111213",
+   "query": "How did WMAP measure the flatness of space?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111236",
+   "query": "About Hilbert and Physics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111382",
+   "query": "Is light electromagnetic waves or quantumn particle waves?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111530",
+   "query": "Would atmosphere of Jupiter blow up if I launched a atomic bomb there?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111546",
+   "query": "Can I measure a journey time < 100 years on a 100 light year voyage?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111696",
+   "query": "Hydrostatic pressure at the center of a water planet",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111784",
+   "query": "Is there any relationship between gauge field and spin connection?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111866",
+   "query": "Intuitive meaning of Dot Product",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11188",
+   "query": "Can a particle be *physically* observed inside a quantum barrier?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11194",
+   "query": "Wind generators - why so few blades?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_111959",
+   "query": "How can we know that a black hole exists?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_112011",
+   "query": "Nonzero ground state energy of the quantum harmonic oscillator",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_112270",
+   "query": "Thermo-Emf variation with temperature",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_112406",
+   "query": "Why the orbital angular momentum equal zero for electron in s state? does it mean that the electron doesn't orbiting in s",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_112476",
+   "query": "Water Displacement in the Oceans As a result of Global Warming",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_112629",
+   "query": "Amateur's question on Black Holes",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_112799",
+   "query": "Why can't light waves bend?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_112820",
+   "query": "Archimedes' principle: innacurate terminology?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_112866",
+   "query": "If I'm floating in space and I turn on a flashlight, will I accelerate?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11299",
+   "query": "Do spacelike singularities really exist in quantum gravity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113267",
+   "query": "Is temperature discrete",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113523",
+   "query": "Sign convention for mirror and lens formulas",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113527",
+   "query": "Is the Lorentz force conservative?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113548",
+   "query": "Active noise cancellation technology measurements",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113647",
+   "query": "The relationship between the Hubble Constant and cosmological time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113660",
+   "query": "Infinities in Newtons law of gravity (for point particles)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113722",
+   "query": "Can nuclear transmutation be observed in real time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113749",
+   "query": "Is there experimental evidence that massless particles such as photons attract massive objects?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113830",
+   "query": "Two explanations of non-zero atomic radius",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11396",
+   "query": "Can one do the maths of physics without using $\\sqrt{-1}$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113973",
+   "query": "Is it possible to create matter?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_113982",
+   "query": "Why $\\vec F=m\\vec a$ instead of $\\vec F=m\\vec v$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_114483",
+   "query": "Smolin on Cosmological selection and neutron stars",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_114887",
+   "query": "Hubble time and its derivation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_115204",
+   "query": "Visualization of electromagnetic field",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11527",
+   "query": "The Higgs field a new Luminiferous aether?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11542",
+   "query": "Why is gravitation force always attractive?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11588",
+   "query": "Work of Marie Curie?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_116230",
+   "query": "Why fundamentally does classical mechanics lead to second order dynamics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_116281",
+   "query": "Dark Energy / Accelerating universe: naive question",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_116657",
+   "query": "Force applied on the ground",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11673",
+   "query": "Algorithm of Lightning Strikes?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_116842",
+   "query": "What would happen if I was in the centre of the Earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_116851",
+   "query": "Why are the 'color-neutral' gluons confined?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11686",
+   "query": "finding angular velocity and regular velocity when bouncing off a surface with friction",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_116921",
+   "query": "Can there be Electron and/or Proton Stars?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_117120",
+   "query": "Prerequisites for Griffiths electrodynamics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_117205",
+   "query": "How does the evolution of a solar system not break the second law of thermodynamics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_117223",
+   "query": "Photon speed going from $0$ to $c$ initially?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_118717",
+   "query": "Newton and the change of mass with time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_11878",
+   "query": "A No-Nonsense Introduction to Quantum Field Theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_118807",
+   "query": "In quantum mechanics, why position and momentum are related by Fourier Transformation(only)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_118900",
+   "query": "Question about Hubble's Law - expansion vs receding velocity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_118988",
+   "query": "If lead's electron configuration ends with 6p$^2$, shouldn't it be paramagnetic?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_119083",
+   "query": "Exeeding the speed of light by adding velocities",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_119103",
+   "query": "How does heat actually stay kept in the carbon molecules in the atmosphere?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_119176",
+   "query": "How does gamma ray emission make an atom more stable?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_119284",
+   "query": "Experimental proof of the principle of superposition in QM",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_119441",
+   "query": "Time dilation at the Big Bang",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_119673",
+   "query": "Can we use quantum entanglement as a way to send information or data?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_119935",
+   "query": "Maximum helicopter height",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_120107",
+   "query": "What keeps objects made of gold apart?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12012",
+   "query": "Is spacetime simply connected?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_120124",
+   "query": "Why is the earth shaped like a sphere and not any other shape: cube, prism?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_120191",
+   "query": "How much wind does it take to tip a sign over?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12046",
+   "query": "Colors from a computer vs. colors from visible spectrum of sunlight",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_121476",
+   "query": "What happens if the earth stops rotating?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_121536",
+   "query": "Is it possible to have a perfectly black material?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12169",
+   "query": "Detection of the Electric Charge of a Black Hole",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1217",
+   "query": "What's the difference between inclusive and exclusive decays?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_121717",
+   "query": "Are gravitational waves transverse or longitudinal waves, or do they have unique/unknown properties?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_121911",
+   "query": "How to find equation of motion for this trajectory? - object leaves curved ramp at a given velocity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_122413",
+   "query": "Help explain how direction change relates to acceleration",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_122564",
+   "query": "Alternating Current Inquires",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_122635",
+   "query": "How can ice cubes contain gas bubbles?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_122841",
+   "query": "Leg Press & Actual Lifted Weight",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_122941",
+   "query": "Why must a singularity form inside a black hole?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123055",
+   "query": "Electromagnetic Field VS Photons",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123173",
+   "query": "Kinematics question - Newton's Law of Motion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123210",
+   "query": "Renormalization of diagrams in QFT",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123267",
+   "query": "Is there an upper limit to a rocket's size/payload?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123513",
+   "query": "Doughnut magnet",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123610",
+   "query": "Current in a strip - Scalar or vector",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123743",
+   "query": "Problem about entropy",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123803",
+   "query": "Different factors of $4\\pi$ and $\\epsilon_0$ in Poisson equation",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_123857",
+   "query": "Mathematical calculation of probability of existence of planet similar to earth",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12463",
+   "query": "Einstein's postulates <==> Minkowski space. In layman's terms",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12557",
+   "query": "Is apparent horizon curvature lesser due to refraction of light in the atmosphere?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12559",
+   "query": "What conservation law corresponds to Lorentz boosts?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12560",
+   "query": "Software for simulating 3D Newtonian dynamics of simple geometric objects (with force fields)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12589",
+   "query": "Are there formulae for calculating stellar luminosity and effective temperature as a function of age?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_125938",
+   "query": "I still don't understand how a gas with an equation of state f(T,p,V)=0 can change if 2 state functions are fixed?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126264",
+   "query": "On becoming theoretical physicist",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126296",
+   "query": "What is the current state of research about the Hayden-Preskill circuit?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126504",
+   "query": "When they say that the universe cooled after the big bang, where did the heat go?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126610",
+   "query": "Why does Newton's Third Law not preclude any motion at all?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126619",
+   "query": "Why do we say that light travels at a speed?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12664",
+   "query": "Proving that interval preserving transformations are linear",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126691",
+   "query": "What would the properties of a particle be that would allow light to orbit it?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126694",
+   "query": "Is the Speed of Light an universal spacetime constant, the velocity of electromagnetic waves, or of photons?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126766",
+   "query": "What point of application of force ensures more acceleration in a rod?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126769",
+   "query": "Which Optics textbooks are good?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_126921",
+   "query": "Magnet motor free energy generator",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12717",
+   "query": "Charging 12V 150Ah battery",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_127408",
+   "query": "Features used in quantum mechanics but not used in classical mechanics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_127461",
+   "query": "Could space itself be made out of particles?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_127538",
+   "query": "Are there any applications of elementary number theory to science?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12756",
+   "query": "A flying fly inside a sealed box on a scale",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_127616",
+   "query": "How should a math undergrad student prepare himself to study GR and QM?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_127940",
+   "query": "Jump from a falling object",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_128161",
+   "query": "Why does light travel at the same speed when measured by a moving observer?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_128196",
+   "query": "Can statistical mechanics explain the second law completely?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_128389",
+   "query": "Physical reason why (hot) objects glow?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_128702",
+   "query": "Woodwind instruments overtones",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_128875",
+   "query": "How to find the potential energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_128891",
+   "query": "Airplane on a treadmill",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129030",
+   "query": "Is gravitational acceleration less affected by relativistic mass increase?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129137",
+   "query": "Black Hole gravity pull",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129206",
+   "query": "Why do physical bodies in the universe follow the law of physics ( or any rule/pattern ) ?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129314",
+   "query": "Calculating Hubble's constant at earlier times",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129340",
+   "query": "The role of SO(3) and SU(2) in quantum mechanics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129350",
+   "query": "Does the order of variables matter for a quantum Lagrangian in the path integral formula for quantum mechanics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129378",
+   "query": "The universe could have created itself?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129408",
+   "query": "Can pressure in bars be equated to flow in litres per second?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129593",
+   "query": "minimum possible absolute temperature in the universe?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129654",
+   "query": "Antiparticles as \"holes\" of the quantum fields?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129715",
+   "query": "Quantum Mechanics and Direction of time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_12995",
+   "query": "Virtual particle production in space-time.",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_129991",
+   "query": "Is \"now\" the bounding edge of the universe in the time dimension?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130116",
+   "query": "How do photons know they can or can't excite electrons?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130171",
+   "query": "At what speed will objects hit a singularity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13020",
+   "query": "Books that every layman should read",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13030",
+   "query": "Why does the air flow faster over the top of an airfoil?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130509",
+   "query": "Angular Momentum Conservation Definition",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130676",
+   "query": "What do we mean by electromagnetic charge?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130686",
+   "query": "Why magnetic field generates around current carrying wire?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130767",
+   "query": "Beginner question: timelessness of massless particles",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130773",
+   "query": "Why does coke fizz more when you add ice",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130936",
+   "query": "Why do the electron in Bohr's principal quantum levels or ground state do not emit radiation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130985",
+   "query": "Can you run away from your shadow?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_130999",
+   "query": "Why do we observe opposite motion of trees (nearer) and trees (distant) when seen from a moving frame?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_131352",
+   "query": "Why does a motor draw more current stopped or under load?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_131364",
+   "query": "Why can microwave (in microwave oven) heat the food but wifi can't?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_131505",
+   "query": "Universal speed limit",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13157",
+   "query": "What is a field, really?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1317",
+   "query": "Which is easier, pushing or pulling?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_131758",
+   "query": "Visualisation of formation of electromagnetic waves",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_132043",
+   "query": "Why doesn't the light from galaxies appear stretched?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_132058",
+   "query": "Speed greater than light in circular motion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13220",
+   "query": "Physics needed to build a top down billiards game",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_132440",
+   "query": "If atoms have specific energy levels, why do opaque solids absorb all visible light, not just some?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_132449",
+   "query": "Why do we fall down when the bicycle slows down?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_132602",
+   "query": "The relationship between angular and linear momentum",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_132788",
+   "query": "What moves an object? Momentum or Kinetic Energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_132988",
+   "query": "Energy & Mass of a Photon",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133093",
+   "query": "What formula connects the moment of inertia and angular velocity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133096",
+   "query": "Expanding universe and the speed of light",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133230",
+   "query": "Resistors in para and series circuit, finding volt",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13325",
+   "query": "What is the minimum amount of fissile mass required to acheive criticality?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133431",
+   "query": "Can expansion of space create energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133488",
+   "query": "Would days be longer as the polar ice caps melt?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13349",
+   "query": "Online lecture videos on QCD?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133564",
+   "query": "Why photon has a wave nature?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133703",
+   "query": "Relating Quantum Mechanics to Classic Electromagnetism",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133707",
+   "query": "How can you calculate how fast a spinning ring/cylinder will accelerate a mass via gravitomagnetism?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133714",
+   "query": "Derivation of formula of potential energy by a conservative force",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133820",
+   "query": "If sound travels through matter what medium does light travel through?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133829",
+   "query": "Doppler Shift when Light Travels Through Two Different Mediums",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133876",
+   "query": "Maximum voltage on metal sphere?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13388",
+   "query": "At what speed does our universe expand?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133924",
+   "query": "What if there was a hole between earth poles",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_133942",
+   "query": "Time, distance perception",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134081",
+   "query": "Why graviton is spin 2 instead of spin 1?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134127",
+   "query": "The Equivalence Principle approaching the speed of light",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134157",
+   "query": "Can mass be totally converted into energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134199",
+   "query": "Why is uncertainty $\\geq {\\hbar}/{2} $",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1343",
+   "query": "Why does dust stick to rotating fan propeller?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134356",
+   "query": "Special Relativity, 2nd Postulate -- Why?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134370",
+   "query": "Expanding universe space through matter or matter through space?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134378",
+   "query": "Do we weigh less in the morning?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134559",
+   "query": "Don't Inertial forces obey Newton's third law?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134809",
+   "query": "Projectile with air resistance",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134979",
+   "query": "Does gravity weaken by the square of the distance because the energy is dispersed over the square of the distance",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_134987",
+   "query": "Basic understanding of stress tensors in a fluid",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_135007",
+   "query": "Constants of infinity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_135096",
+   "query": "How a fan moves air?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_135115",
+   "query": "Has NASA confirmed that Roger Shawyer's EmDrive thruster works?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_135145",
+   "query": "Change in momentum",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_135377",
+   "query": "A question on quantum computing?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_135382",
+   "query": "Is $V= V_1 + V_2$? horrible question but im confused",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13557",
+   "query": "History of interpretation of Newton's first law",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13624",
+   "query": "Why are higher order Lagrangians called 'non-local'?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1372",
+   "query": "Is rotational motion relative to space?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13851",
+   "query": "Can you split a photon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_13917",
+   "query": "Reflection At Speed of Light",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_14044",
+   "query": "Can superconducting magnets fly (or repel the earth's core)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_14142",
+   "query": "Maximum limit on the number of paper-folds possible after tearing into halves",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_14255",
+   "query": "Experimental evidence for parallel universes",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_14362",
+   "query": "Help Me Gain an Intuitive Understanding of Lorentz Contraction",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1442",
+   "query": "If time standard clocks and any memories about the time standard are destroyed, can we recover the time standard again?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_14436",
+   "query": "How do you prove $S=-\\sum p\\ln p$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_147",
+   "query": "What are some useful ways to imagine the concept of spin as it relates to subatomic particles?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_14760",
+   "query": "What is the variable plotted on the y-axis on these Higgs exclusion graphs?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_14791",
+   "query": "Why are the even and odd Regge trajectories degenerate?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_14865",
+   "query": "What do physicists mean when they say \"speed of light\"?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_15055",
+   "query": "What is the cause of the normal force?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_15263",
+   "query": "Neutrino unaffected by gravity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_156",
+   "query": "How are the northern lights produced?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_15640",
+   "query": "What are \"electron holes\" in semiconductors?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_15684",
+   "query": "What are the mechanics by which Time Dilation and Length Contraction occur?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_15855",
+   "query": "How does quantum trapping with diamagnets work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1601",
+   "query": "Classical mechanics without coordinates book",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16020",
+   "query": "Air flow coming out of a fan feels much stronger than air flow coming in. Why?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16082",
+   "query": "How do I find the frictional force using a free body diagram?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16206",
+   "query": "Why you need a graviton when you have the higgs boson?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16305",
+   "query": "If Earth Were Filled with a Compressible Fluid and Spun Really Fast, What Hollow Would Form?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16415",
+   "query": "Conveyor scales modeling",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16596",
+   "query": "About the Ether Theory acceptance",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16620",
+   "query": "Force on rope with accelerating mass on pulley",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16626",
+   "query": "Are there any good audio recordings of educational physics material?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16708",
+   "query": "Why does it seem like a broken magnet's poles flip?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16725",
+   "query": "Intuitively, what is the source term of the Einstein field equation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16755",
+   "query": "Why is energy in a wave proportional to amplitude squared",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1683",
+   "query": "Mechanics around a rail tank wagon",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1686",
+   "query": "Why does the (relativistic) mass of an object increase when its speed approaches that of light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_16885",
+   "query": "Inertial frames of reference",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_17034",
+   "query": "How can we be sure that nature isn't \"faking\" quantum statistics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_17259",
+   "query": "How fast does force propagate through matter?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_17408",
+   "query": "Do atmospheric physics prevent hot air balloons from ascending over 60,000ft?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1775",
+   "query": "Why is there no absolute maximum temperature?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_17944",
+   "query": "How does the Higgs mechanism work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18028",
+   "query": "How can I modify the bullet trajectory based on the ballistic coefficient?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18148",
+   "query": "Current against the inverse of resistance graph, $I = V/R +c$",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18170",
+   "query": "Measurement of Tangential Momentum Accomodation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18473",
+   "query": "Where do electrons get their ever-lasting circulating energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18563",
+   "query": "What exactly is a quantum of light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18602",
+   "query": "What exactly is the 'observer' in physics and/or quantum mechanics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18662",
+   "query": "Why can't airplanes just keep going up?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18670",
+   "query": "ALL \"forces\" as manifestations of properties of space-time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18691",
+   "query": "Topics in particle cosmology",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_18793",
+   "query": "Why do the planets' orbital distances fall on an exponential curve?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1888",
+   "query": "Balloons and lifting gases",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19043",
+   "query": "Is one way glass possible?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1915",
+   "query": "What does it mean that the universe is \"infinite\"?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19262",
+   "query": "What's the standard \"roadmap\" to learning quantum physics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_193",
+   "query": "Best books for mathematical background?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19370",
+   "query": "What would an observer see if he/she flew toward a clock at relativistic speeds?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19417",
+   "query": "Path integral formulation of quantum mechanics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19536",
+   "query": "Is there a Non-perturbative renormalization algorithm?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19548",
+   "query": "Does mass affects accelleration of an object in a sloapy movement?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1957",
+   "query": "What is the difference between a white object and a mirror?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19632",
+   "query": "How much electric charge do electromagnetic waves carry?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_198",
+   "query": "Do current models of particle physics explain the chemical properties of elements/compounds?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19802",
+   "query": "Has the concept of non-integer $(n+m)$-dimensional spacetime ever been investigated by theoretical physicists?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19816",
+   "query": "What is the meaning of speed of light $c$ in $E=mc^2$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1982",
+   "query": "Is colour, as represented using primary colours, accurate only to humans?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_1984",
+   "query": "Why does holding something up cost energy while no work is being done?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_19970",
+   "query": "Does the scientific community consider the Loschmidt paradox resolved? If so what is the resolution?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_20056",
+   "query": "Superluminal expansion of the early universe how is this possible?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_20303",
+   "query": "Negative chemical potential",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_20333",
+   "query": "Speed of a fly inside a car",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2041",
+   "query": "How are classical optics phenomena explained in QED (Snell's law)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_20460",
+   "query": "Gauge pressure vs. absolute pressure?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2051",
+   "query": "Why do we think there are only three generations of fundamental particles?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2056",
+   "query": "Why is it that using cell phone can invite lighting strike?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_20637",
+   "query": "How could this damped oscillator ever go to infinity? Or negative infinity for that matter?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2066",
+   "query": "Why does adding solutes to pure water lower the the specific heat?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_20675",
+   "query": "What does Peter Parkers formula represent?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_20744",
+   "query": "Stability of neutron",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21051",
+   "query": "Why are continuum fluid mechanics accurate when constituents are discrete objects of finite size?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21194",
+   "query": "Problem on nuclear physics radioactivity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21301",
+   "query": "What longest time ever was achieved at holding light in a closed volume?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21319",
+   "query": "How can anything ever fall into a black hole as seen from an outside observer?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21384",
+   "query": "How can I figure out how many kWh's are in a battery using the mAh's and voltage.",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21487",
+   "query": "Train crash: are these situations alike?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21654",
+   "query": "How to find the value of the parameter $a$ in this transfer function?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21721",
+   "query": "What is the proof that the universal constants ($G$, $\\hbar$, $\\ldots$) are really constant in time and space?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_21771",
+   "query": "Explanation about black color, and hence color",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22010",
+   "query": "The square in the Newton's law of universal gravitation is really a square?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22046",
+   "query": "Books for Condensed Matter Physics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22252",
+   "query": "Resistor circuit that isn't parallel or series",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22404",
+   "query": "Will the hole on a metal disc expand or contract upon heating?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2254",
+   "query": "When water climbs up a piece of paper, where is the energy coming from?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22542",
+   "query": "Measuring extra-dimensions",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22566",
+   "query": "Question Based On Units And Measurements Involving Lengths",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22713",
+   "query": "Jumping in an elevator?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22803",
+   "query": "Is acceleration relative?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2281",
+   "query": "Maximum theoretical data density",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2289",
+   "query": "Why does Guillotine have of 45 degreed blade rather than the one parallel to the ground?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22923",
+   "query": "Slit screen and wave-particle duality",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_22960",
+   "query": "Flying a toy helicopter inside an accelerating train",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23007",
+   "query": "How much oxygen would be consumed on a 1 cm squared surface which is on fire?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23038",
+   "query": "Why does the sound pitch increase on every consecutive tick at the bottom of a filled cup of coffee?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23118",
+   "query": "Are we inside a black hole?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23358",
+   "query": "Hubble time, the age of the Universe and expansion rate",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23487",
+   "query": "3d holograms - How are they created?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23625",
+   "query": "How to deduce the theorem of addition of velocities?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23753",
+   "query": "Information conservation during quantum measurement",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23879",
+   "query": "Why do non-Newtonian fluids go hard when having a sudden force exerted on them?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_23930",
+   "query": "What happens to the energy when waves perfectly cancel each other?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_24131",
+   "query": "What is the support for the suggestion that reality is a computer simulation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_24231",
+   "query": "When Physicists thought neutrinos were faster than the speed of light",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_24359",
+   "query": "Why do objects follow geodesics in spacetime?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_24540",
+   "query": "Why do Calabi-Yau manifolds crop up in string theory, and what their most useful and suggestive form?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_24588",
+   "query": "Why don't we see solar and lunar eclipses often?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_24596",
+   "query": "Is the converse of Noether's first theorem true: Every conservation law has a symmetry?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_24827",
+   "query": "If space is being doubled, how fast is it doubling?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_24841",
+   "query": "Geocentric Model in General Relativity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_25110",
+   "query": "Why are orbits elliptical?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_25145",
+   "query": "Observing lunar lander and footprints on the moon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_252",
+   "query": "The Many Body problem",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_25378",
+   "query": "How vacuous is intergalactic space?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_25437",
+   "query": "Why do we always see the same side of the Moon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2554",
+   "query": "How is the classical twin paradox resolved?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_25637",
+   "query": "How to correct flares and sharply focus on my telescope when viewing planets.",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_25883",
+   "query": "Why is there still radiation left from the Big Bang now?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_26066",
+   "query": "Why is there a limit to the intensity of cosmic rays at low energies?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_26307",
+   "query": "The collision of Phobos",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_26478",
+   "query": "Can black holes actually merge?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2684",
+   "query": "How do I calculate the (apparent) gravitational pull with General Relativity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_26845",
+   "query": "Lorentz force in Dirac theory and its classical limit",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2687",
+   "query": "Modern references for continuum mechanics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_26992",
+   "query": "Spectrum of Free Strings",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_27041",
+   "query": "Linearizing Quantum Operators",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_27078",
+   "query": "Choice and identification of vacuums in AdS/CFT",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_271",
+   "query": "Why don't spinning tops fall over?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2721",
+   "query": "What is the symmetry which is responsible for preservation/conservation of electrical charges?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_27326",
+   "query": "Uniqueness of eigenvector representation in a complete set of compatible observables",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_27423",
+   "query": "Matlab package: graphical calculus for quantum operations (esp. linear optics)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_27496",
+   "query": "Is the universe a quantum computer - is light speed barrier a computational constraint",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_27641",
+   "query": "Entanglement in time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_27753",
+   "query": "Baryon asymmetry",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_27847",
+   "query": "Why is there a $\\frac 1 2$ in $\\frac 1 2 mv^2$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28093",
+   "query": "Relation between water flow and pressure",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28094",
+   "query": "Time for two objects to gravitationally attract each other",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28174",
+   "query": "Are gravitomagnetic monopoles hypothesized?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28417",
+   "query": "Why does the light bulb's brightness decrease?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28527",
+   "query": "Two particles interacting by a inverse-square-law force, find their positions in function of time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2860",
+   "query": "How does electron move around nucleus?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28647",
+   "query": "Why is matter drawn into a black hole condensed into a single point within the singularity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28699",
+   "query": "Superconductivity reasons (Intutitive)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28720",
+   "query": "How to get Planck length",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28781",
+   "query": "Why, when one opens 1 car window, does that noise occur?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28895",
+   "query": "Why is the sky not purple?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_28929",
+   "query": "How to find orbital radius of star in a binary system using redshift and orbital period data?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29176",
+   "query": "Where can I find beginner's information about quantum mechanics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29200",
+   "query": "What experiments prove the greenhouse effect?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29208",
+   "query": "When would the proposed black hole at the centre of Milky Way gulp in our solar system?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29355",
+   "query": "Reading the Feynman lectures in 2012",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29477",
+   "query": "Richtmyer Meshkov instability in MHD",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29523",
+   "query": "Pressure of sealed in liquid nitrogen",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29642",
+   "query": "In a neutron star - what force keeps the neutrons from getting closer and closer?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_2974",
+   "query": "If the earth left the solar system for interstellar space. How long would it take for atmosphere to freeze",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29766",
+   "query": "Why does photon have only two possible eigenvalues of helicity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29794",
+   "query": "Why are coordinates and velocities sufficient to completely determine the state and determine the subsequent motion of a mechanical system?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29901",
+   "query": "How is traveling back in time possible in theory according to some scientists?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29903",
+   "query": "Why do people recommend wider tyres in car for better road grip?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_29956",
+   "query": "Book covering Topology required for physics and applications",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_3009",
+   "query": "How exactly does curved space-time describe the force of gravity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_30134",
+   "query": "Intrinsic structure of electron",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_30198",
+   "query": "How to bend light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_30353",
+   "query": "Supersymmetry in Quantum Field Theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_30597",
+   "query": "Black holes and positive/negative-energy particles",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_30616",
+   "query": "Energy efficiency of antimatter producion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_30732",
+   "query": "How does the Higgs Boson gain mass itself?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_30909",
+   "query": "Simulator for electrostatics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_30922",
+   "query": "What's the difference between Fermi Energy and Fermi Level?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_31029",
+   "query": "How can a wooden spoon be used to prevent water from over boiling?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_31039",
+   "query": "What is gravitational speed for a black hole?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_312",
+   "query": "Particle physics getting started",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_31326",
+   "query": "Is a hard drive heavier when it is full?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_31387",
+   "query": "How do you find spin of a particle from experimental data?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_31395",
+   "query": "What happens to matter in a standard model with zero Higgs VEV?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_31827",
+   "query": "How does Annihilation work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_31869",
+   "query": "Designing a plausible faster than light drive: the Space Skip Drive",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_31950",
+   "query": "Higgs boson and other properties of particles.",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_32096",
+   "query": "What exactly is a kilogram-meter?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_32120",
+   "query": "Why do we still not have an exact definition for a kilogram?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_32122",
+   "query": "Phase shift of 180 degrees on reflection from optically denser medium",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_3244",
+   "query": "Vortex in liquid collects particles in center",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_32501",
+   "query": "Many-worlds: how often is the split how many are the universes? (And how do you model this mathematically.)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_3264",
+   "query": "Thermal radiation spectrum of a blackbody",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_32699",
+   "query": "How to explain $E=mc^2$ mass defect in fission/fusion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_33258",
+   "query": "What is invisible to x-rays?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_335",
+   "query": "Is electricity instantaneous?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_33507",
+   "query": "Quantum mechanic newbie: why complex amplitudes, why Hilbert space?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_33621",
+   "query": "How do electrons know which path to take in a circuit?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_33822",
+   "query": "Variational Calculus or Tensor Calculus?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_33998",
+   "query": "Why is it that protons and electrons have exactly the same but opposite charge?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_34130",
+   "query": "How to make a monopole magnet?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_34352",
+   "query": "How is light affected by gravity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_34364",
+   "query": "Why does a cuboid spin stably around two axes but not the third?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_34366",
+   "query": "Time taken for object in space to fall to earth",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_34500",
+   "query": "How can black holes have gravity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_34689",
+   "query": "What were the intention/conclusions for Michelson-Morley experiment?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_34834",
+   "query": "An example of non-Hamiltonian systems",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_35139",
+   "query": "What is the possibility of a railgun assisted orbital launch?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_3521",
+   "query": "Has the black hole information loss paradox been settled?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_35218",
+   "query": "Why do some physicists believe that scalable quantum computing is possible?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_35313",
+   "query": "How does a treadmill incline mechanism work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_35645",
+   "query": "How does the curiosity rover get it's power?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_35660",
+   "query": "Is there a difference between a postulate and a principle in physics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_357",
+   "query": "Home experiments to derive the speed of light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_35781",
+   "query": "Why are atoms particles?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_36146",
+   "query": "atomic friction",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_36167",
+   "query": "Does juggling balls reduce the total weight of the juggler and balls?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_36303",
+   "query": "Introduction to AdS/CFT",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_36412",
+   "query": "What gives matter Gravitational Mass?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_36440",
+   "query": "What causes an electric shock - Current or Voltage?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_36498",
+   "query": "How does the Hubble Redshift work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_3656",
+   "query": "Can spacetime be non-orientable?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_37702",
+   "query": "How do you change Planck's law from frequency to wavelength?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_37730",
+   "query": "Conservation of Energy in a magnet",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_37772",
+   "query": "Why doesn't a fly fall off the wall?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_37881",
+   "query": "Why is torque not measured in Joules?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_3795",
+   "query": "Why are snowflakes symmetrical?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_37966",
+   "query": "Reaching the speed of light, rockets",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_37981",
+   "query": "Is there a way to save electricity from lightning?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_3799",
+   "query": "Why is cold fusion considered bogus?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38236",
+   "query": "Does the sign of $\\Delta x$ matter in this time dilation calculation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38246",
+   "query": "Formulas for compressibility of solids (physics)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38313",
+   "query": "What's the difference between electron movement and charge movement in electricity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_3833",
+   "query": "Age of the Earth and the star that preceded the Sun",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38397",
+   "query": "How to make something charged using electricity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38399",
+   "query": "What is a good non-technical introduction to theories of everything?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38404",
+   "query": "How is Gauss' Law (integral form) arrived at from Coulomb's Law, and how is the differential form arrived at from that?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38561",
+   "query": "Magnetic field lines",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38961",
+   "query": "Why there is no negative temperature",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_38963",
+   "query": "Study Quantum Physics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_391",
+   "query": "Is anti-matter matter going backwards in time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_39131",
+   "query": "Light orbiting a massive body",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_39161",
+   "query": "What happens to an embedded magnetic field when a black hole is formed from rotating charged dust?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_39170",
+   "query": "Good Magnetic Simulation Software?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_39253",
+   "query": "Is it possible for one black hole to pull an object out of another black hole?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_39263",
+   "query": "Science behind the singing wine glass",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_39344",
+   "query": "Helpful tutorials on force",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_39428",
+   "query": "Is this a good explanation of the Higgs mechanism?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_39654",
+   "query": "Paradox with Gauss' law when space is uniformly charged everywhere",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_401",
+   "query": "What software programs are used to draw physics diagrams, and what are their relative merits?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_409",
+   "query": "What methods can astronomers use to find a black hole?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41211",
+   "query": "What is the difference between a spinor and a vector or a tensor?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41245",
+   "query": "What is the present state of Mach's Principle amongst physicists?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41386",
+   "query": "Energy can't be created or destoryed?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41424",
+   "query": "What does \"the ${\\bf N}$ of a group\" mean?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41494",
+   "query": "Physical meaning of force times area",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41573",
+   "query": "From how deep into space can a human \"skydive\" back to earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41717",
+   "query": "How is it possible to come to a conclusion that Universe is a result of the Big Bang while we aren't able to observe the entire Universe?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41741",
+   "query": "Linear motion with variable acceleration",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_41937",
+   "query": "Non-linear dynamics of classical hydrogen atom",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_4289",
+   "query": "Is Gravity an entropic force after all?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43023",
+   "query": "Why does the moon look bigger at the horizon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43232",
+   "query": "Force applied off center on an object",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43322",
+   "query": "Intuition for multiple temporal dimensions",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43406",
+   "query": "What constitutes an observation/measurement in QM?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43491",
+   "query": "Is the geometric formulation of Hamiltonian mechanics really necessary?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43665",
+   "query": "Logical requirement of newton's third law",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43768",
+   "query": "After what speed air friction starts to heat up an object?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43859",
+   "query": "Would it be possible to transmit information through gravitational waves?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43919",
+   "query": "Dark Energy saving the world",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_43986",
+   "query": "Meaning of the direction of the cross product",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_44130",
+   "query": "What are the properties and characteristics of a single Quantum?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_44193",
+   "query": "What would happen to a person that was inside the Large Hadron Collider when it is turned on?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_44351",
+   "query": "Why are we not using thorium for energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_44509",
+   "query": "Photon energy - momentum in matter",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_4453",
+   "query": "How could spacetime become discretised at the Planck scale?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_44586",
+   "query": "How does an inflationary universe solve the Flatness Problem, Horizon Problem and Monopole Problem?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_44718",
+   "query": "Elastic Collision Between Two Objects",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_44882",
+   "query": "What are good books for graduates/undergraduates in Astrophysics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_44974",
+   "query": "Calculating restorative force with Hooke's Law",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_4506",
+   "query": "Homework about spinning top",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45067",
+   "query": "Momentum as Generator of Translations",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45105",
+   "query": "Does Fire Conduct Electricity? Why?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45108",
+   "query": "Half-Life Question",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45247",
+   "query": "Trying to understand the tension in a spring with two weights attached",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45495",
+   "query": "Why does the universe exhibit three large-scale spatial dimensions?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45545",
+   "query": "Relativistic Hamiltonian Formulations",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45634",
+   "query": "Impurity scattering temperature dependence",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45743",
+   "query": "Ice skater increase of energy",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_45849",
+   "query": "Origin of lepton/quark generations?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46089",
+   "query": "Elastic collision in two dimensions",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_4617",
+   "query": "Why two objects get charged by rubbing?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46180",
+   "query": "Can a deformable object \"swim\" in curved space-time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46324",
+   "query": "To which extent is general relativity a gauge theory?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46327",
+   "query": "Flames with no gravity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_4635",
+   "query": "Understanding weight on an inclined plane",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46639",
+   "query": "Non-Degeneracy of Eigenvalues of Number Operator for Simple Harmonic Oscillator",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46743",
+   "query": "Are galactic stars spiraling inwards?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46798",
+   "query": "The meaning of imaginary time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46824",
+   "query": "A thought experiment with Heisenberg's Uncertainty Principle",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46863",
+   "query": "Why is a cycloid path the fastest way to roll a ball downward?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_46933",
+   "query": "What's the most efficient way to study physics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_4704",
+   "query": "Black hole analog experiment?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47104",
+   "query": "What evidence is there for the Big Bang Theory?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47105",
+   "query": "Amplitude of an electromagnetic wave containing a single photon",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47128",
+   "query": "exponential potential $ \\exp(|x|) $",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47135",
+   "query": "Displacement of a Rock Thrown Overboard",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47136",
+   "query": "Cubic symmetry and a stiffness tensor",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47224",
+   "query": "What does a sphere moving close to the speed of light look like?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47259",
+   "query": "If everything in the universe doubled in size overnight, would it be noticeable?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47284",
+   "query": "Rolling (without slipping) ball on a moving surface 2",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47291",
+   "query": "How could the relative zero gravity of the International Space Station be canceled?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_4731",
+   "query": "Significance of the second focus in elliptical orbits",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47379",
+   "query": "What is the weight equation through general relativity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47389",
+   "query": "Does Bernoulli's principle hold in moving reference frames?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_47941",
+   "query": "Dumbed-down explanation how scientists know the number of atoms in the universe?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_48196",
+   "query": "Good Books on Gauge Theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_48435",
+   "query": "Quick introduction to electromagnetism / Maxwell's equations",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_48469",
+   "query": "Intuitive meaning of Hilbert Space formalism",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_48534",
+   "query": "Does kinetic friction increase as speed increases?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_48548",
+   "query": "Apparent paradox in equation of continuity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_49837",
+   "query": "How do stars look like from space?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_49940",
+   "query": "What exists in the Space between atoms",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_49956",
+   "query": "Any new texts directly on second law of thermodynamics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_50015",
+   "query": "confusion on quantum field theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_5057",
+   "query": "Does string theory provide quantitative experimental predictions?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51213",
+   "query": "How would it be to look at the sky if the earth were near the edge of the universe?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51295",
+   "query": "Different perspective in Quantum mechanics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51711",
+   "query": "Why shouldn't the uncertainty principle be interpreted as an observer effect?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51723",
+   "query": "How were the crystal lattices of elements determined to perfection ? (Ex:- That of a copper is a cubic lattice )",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51776",
+   "query": "How are current and voltage out of phase in capacitive circuit?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51838",
+   "query": "Why do tuning forks have two prongs?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51908",
+   "query": "Why aren't gas planets and stars fuzzy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51990",
+   "query": "do quantum fields exist in superposition?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_51995",
+   "query": "Speed of light in a given direction based on frame of reference",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52008",
+   "query": "Does light accelerate or slow down during reflection?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52024",
+   "query": "Is there any case in physics where the equations of motion depend on high time derivatives of the position?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52062",
+   "query": "Is it possible to speed up radioactive decay rates?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52155",
+   "query": "Why lagrangian is negative number?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52195",
+   "query": "Ultrasonic wave through air",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52273",
+   "query": "Is it possible for a physical object to have a irrational length?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52306",
+   "query": "Calculation of torque for motor used in 4 wheel robot",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52391",
+   "query": "Is the Pauli exclusion principle as Brian Cox described it?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52396",
+   "query": "Why not an Electric Theory of Everything?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52487",
+   "query": "Photometer: measured Irradiance L converted to photon rate",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52515",
+   "query": "What is a natural movement of a ball on a upward curve (the two arrow lines pointing upward) given no external force?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52555",
+   "query": "Does light reflect if incident at exactly the critical angle?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52837",
+   "query": "When do I apply Significant figures in physics calculations?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_52845",
+   "query": "Nuclear structure",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_53168",
+   "query": "Does photon have size measurement because of its particle nature",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_53356",
+   "query": "Reference on Chern-Simons theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_53519",
+   "query": "Physics textbook for mathematicians",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_53602",
+   "query": "What is movement through time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_53663",
+   "query": "Learning roadmap for solid state physics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_53708",
+   "query": "How can I understand work conceptually?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_53734",
+   "query": "How do we make symmetry assumptions rigorous?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_53790",
+   "query": "What happens if an atom absorbs a photon of energy higher than first excited state but lower than second excited state?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_542",
+   "query": "Chance of objects going against greater entropy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_54317",
+   "query": "In what limit does string theory reproduce general relativity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_54431",
+   "query": "Can we make images of single atoms?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_54437",
+   "query": "Learning more about String theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_54480",
+   "query": "Suggestions for a physics oriented book on Variational Calculus",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_54656",
+   "query": "When can one write $a=v \\cdot dv/dx$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55091",
+   "query": "How small are the smallest black holes?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55143",
+   "query": "What would the effect be of a small black hole colliding with the earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55190",
+   "query": "Flushing water-Is it related to Coriolis force?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55195",
+   "query": "Calculating a 2D collision between two perfectly circular disks",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55340",
+   "query": "How does lightning \"know\" where to go?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55458",
+   "query": "Why is the Lagrangian quadratic in $\\dot{q}$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55698",
+   "query": "What is the role of center-tapping in a full wave rectifier?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55719",
+   "query": "Schrodinger's cat experiment",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55760",
+   "query": "What are the implications if Supersting theory is discredited?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_5587",
+   "query": "A pendulum clock problem",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_55965",
+   "query": "Understanding on quantum entanglement",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_5613",
+   "query": "Dark matter and dark energy references",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_5615",
+   "query": "What happens when a black hole and an \"anti-black-hole\" collide?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_56355",
+   "query": "Antimatter in the universe",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_56470",
+   "query": "What is the formula for calculating the length of any given day (sunrise to sunset)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_56657",
+   "query": "How is the equation of motion on an ellipse derived?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_56851",
+   "query": "Noether's current expression in Peskin and Schroeder",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_56888",
+   "query": "rephrasing my question on QFT and path intergrals?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_56966",
+   "query": "Why do fields decrease with distance?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_56973",
+   "query": "Why does the speed of light $c$ have the value it does?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_56983",
+   "query": "Electric field outside nonconducting sphere",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_57137",
+   "query": "How soon that a force affect another object?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_57181",
+   "query": "What are the potential technological advances that the discovery of the Higgs boson may unlock?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_57312",
+   "query": "What will be the shape of liquid if there is no gravitational force",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_57317",
+   "query": "Multiple measurements of the same quantity - combining uncertainties",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_57333",
+   "query": "Is quantum mechanics similar newtons laws of gravity? In a way",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_57390",
+   "query": "Validity of naively computing the de Broglie wavelength of a macroscopic object",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_57643",
+   "query": "Dark energy and dark matter",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_57975",
+   "query": "Force with zero acceleration",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_58122",
+   "query": "Why work to change velocity from 0 to 20 km/h is less then from 20 to 40?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_5839",
+   "query": "Does magnetic propagation follow the speed of light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_5851",
+   "query": "When lasers are used to cool atoms or ions, etc where does the heat go?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_59438",
+   "query": "How do you calculate power at the focal point of a mirror?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_59617",
+   "query": "Hurdles in creating (close to) infinite images",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_59635",
+   "query": "Magnifying Glass-How does it work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_59815",
+   "query": "Is a heavier skier faster?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_60016",
+   "query": "exercise books for Feynman diagrams",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_60336",
+   "query": "Facts About Quarks Electric Charge",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_60476",
+   "query": "Exact Solutions to the Navier-Stokes Equations",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_60699",
+   "query": "High Frequency Active Auroral Research Program (HAARP) And Earthquake Myth or Reality?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_60763",
+   "query": "Can a dot of light travel faster than the speed of light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_60830",
+   "query": "Why isn't temperature measured in Joules?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_60899",
+   "query": "The paradoxical nature of Hawking radiation",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_60900",
+   "query": "About hubble observatory and distant galaxies",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61000",
+   "query": "Phase shift of resonance",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61031",
+   "query": "If photons can be absorbed by electrons, wouldn't that mean light has a charge?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61086",
+   "query": "How do we know that light is massless?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61455",
+   "query": "How can a single slit diffraction produce an interference pattern?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6147",
+   "query": "Time Dilation - How does it know which Frame of Reference to age slower?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61592",
+   "query": "Naked singularity and extendable geodesics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61643",
+   "query": "Does more rain strike a vehicle while moving or while stopped (or neither)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61699",
+   "query": "Why are alpha particles such a prominent form of radiation and not other types of nucleon arrangement?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61845",
+   "query": "Some basic questions about electric field & nucleus",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61936",
+   "query": "Why does the Boltzmann factor $e^{-E/kT}$ seem to imply that lower energies are more likely?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_61948",
+   "query": "Did space and time exist before the Big Bang?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6197",
+   "query": "Do two beams of light attract each other in general theory of relativity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_62099",
+   "query": "Functions of Time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_62222",
+   "query": "Cancelling special & general relativistic effects",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_62474",
+   "query": "Does friction depend on the area between bodies thats in contact?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_62637",
+   "query": "The potential and the intensity of the gravitational field in the axis of a circular plate",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_62653",
+   "query": "Attraction and repulsion of Magnetic materials",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6271",
+   "query": "Laws and theories",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_62711",
+   "query": "What happens to things when things get crushed in a blackhole",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63023",
+   "query": "I read a book saying bernoulli's flight equations didn't have as much impact on lift as most people think",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63138",
+   "query": "Capacitors discharging in series",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63278",
+   "query": "What counts as \"observation\" in Schrödinger's Cat, and why are superpositions possible?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63424",
+   "query": "Energy needed to raise energy level of an atom?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63456",
+   "query": "Does the slinky base stay perfectly level during the initial free fall",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63590",
+   "query": "Integrating radial free fall in Newtonian gravity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63626",
+   "query": "How can I understand a Vortex Tube and its efficiency?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63811",
+   "query": "Is the universe fundamentally deterministic?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6384",
+   "query": "Why does dilation invariance often imply proper conformal invariance?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_63987",
+   "query": "Why don't electric workers get electrocuted when only touching one wire?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6400",
+   "query": "Are tidal power plants slowing down Earth's rotation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_64253",
+   "query": "Distance away from earth to see it as a full disk",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_64647",
+   "query": "Why doesn't a bus blow due to internal pressure?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_64670",
+   "query": "Is it possible (theoretically) to divide Black Hole into two parts?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_64751",
+   "query": "Derivation of the Biot-Savart Law",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_64834",
+   "query": "Does quantum mechanics depend solely on electromagnetic waves?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6533",
+   "query": "What allows the modified Urca process to work at lower density than direct Urca in neutron star cooling?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_65339",
+   "query": "How & Why does accelerating charges radiate electromagnetic radiation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_65584",
+   "query": "What happens when non-equal voltages are put in parallel?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_65688",
+   "query": "Group Theory in General Relativity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6582",
+   "query": "What sort of jobs do physics graduates with B.Sc/M.Sc get?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66044",
+   "query": "Why is light produced when an underwater bubble is collapsed with a sound wave?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_661",
+   "query": "Is it possible to blur an image in such way that a person with sight problems could see it sharp?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66220",
+   "query": "Proof of Spin-statistics theorem",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66363",
+   "query": "Estimating the present state of stars",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66476",
+   "query": "What is the Earth truly rotating about/revolving around?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66527",
+   "query": "Why didn't a black hole form right after the Big Bang?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66538",
+   "query": "Time dilation at a black hole",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66658",
+   "query": "Atmospheric pressure experiment using a cup with a fluid to hold a glass plate",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6682",
+   "query": "Software for geometrical optics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66922",
+   "query": "Quarks and anti-quarks forming particles",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_66980",
+   "query": "Measurements and simultaneity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_67186",
+   "query": "Why do Lagrangians and Hamiltonians give the equations of motion?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_67188",
+   "query": "What is the \"Event Horizon\" of a black hole",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6725",
+   "query": "If both radio waves and gamma rays can travel through walls",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_67571",
+   "query": "Is time slowing down and disappearing from the universe instead of the expansion of universe?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_67616",
+   "query": "Spin - where does it come from?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_67712",
+   "query": "reflection at speed of light when both mirror and viewer is travelling at the speed of light",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_67746",
+   "query": "Why two balls of different mass dropped from the same height falls the ground at the same time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_67880",
+   "query": "Why do metal objects in microwaves spark?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68112",
+   "query": "Formula for Symmetry Factor",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68198",
+   "query": "Why can't some light ever reach earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68223",
+   "query": "The secret behind the spinning, asymmetrically weighted, 2D disk-shaped top?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68233",
+   "query": "Electricity directly from heating a material",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68234",
+   "query": "Experimental study of the Photoelectric effect",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68289",
+   "query": "Is there anything smaller than a quark?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68302",
+   "query": "Best way to chill a cup of coffee with cold water and 5 minutes",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68512",
+   "query": "Evidence for expansion of space",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68573",
+   "query": "Two balls falling one above the other",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68599",
+   "query": "What sets a \"Law\" apart from a \"Rule\" or a \"Principle\"?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_6863",
+   "query": "Why does Fukushima pressure rise?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68639",
+   "query": "Why are eigenfunctions which correspond to discrete/continuous eigenvalue spectra guaranteed to be normalizable/non-normalizable?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68684",
+   "query": "does matter radiate energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68757",
+   "query": "Why do neutrinos propagate in a mass eigenstate?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68898",
+   "query": "Is it possible to generate usable electricity from the motion or magnetic field of the Earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68911",
+   "query": "Why do current and electrons flow in opposite directions?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68940",
+   "query": "Virtual photons, what makes them virtual?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_68955",
+   "query": "How does dark matter halo outside a galaxy help to explain galaxy rotation curve?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_69281",
+   "query": "The interaction picture doesn't exist?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_69350",
+   "query": "Drag force at high speeds",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_69657",
+   "query": "How could vacuum energy cause the expansion of the universe?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_69679",
+   "query": "Can solar furnace achieve higher temperature than sun surface?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_69726",
+   "query": "Does trade affect Earth's rotation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_69778",
+   "query": "Accelerating electrons via microwaves",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_69855",
+   "query": "Planck length implies lattice structure of space?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70123",
+   "query": "Can a submerged place in the sea have huge air pockets?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70147",
+   "query": "Why do cosmic bodies revolve?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70186",
+   "query": "Are Newton's \"laws\" of motion laws or definitions of force and mass?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70200",
+   "query": "Why electrons can't radiate in their atoms' orbits?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70439",
+   "query": "How occurs the enantiomorph of the mirror?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70463",
+   "query": "Exchange particles-real or just mathetical constructs?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70541",
+   "query": "Canonical everyday-life example of a technology that could not work without humans mastering QM in analogy to the application of GR in GPS?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70597",
+   "query": "What is the required prerequisite knowledge of QM, for starting QFT?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7063",
+   "query": "What actually happens when an anti-matter projectile collides with matter?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70651",
+   "query": "Why is the Ampere a base unit and not the Coulomb?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_70747",
+   "query": "Can inertial mass affect gravity of the object?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7112",
+   "query": "Why do people still talk about bohmian mechanics/hidden variables",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71126",
+   "query": "Why does the refractive index depend on wavelength?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71292",
+   "query": "Why does a cork float to the side of a glass?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71309",
+   "query": "Is there an EMF in a conductor moving at constant speed across the uniform magnetic field",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71503",
+   "query": "What causes a blackbody radiation curve to be continuous?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71576",
+   "query": "Static friction greater than kinetic friction",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71589",
+   "query": "Is it possible for a planet to be made entirely of water (even it's core)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71620",
+   "query": "On a hot day, when it's cooler outside than in; is it better to put a fan in an open window pointing inwards or outwards?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71639",
+   "query": "Is it possible for a photon to be at rest?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71649",
+   "query": "Evidence that the Solar System is expanding like the Universe?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71772",
+   "query": "How can we deduce the relation $m = \\frac{m_0}{\\sqrt{1-\\frac{v^2}{c^2}}}$ between relativistic mass and rest mass in special relativity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71823",
+   "query": "Is there a proof of existence of time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_71901",
+   "query": "Why aren't superconductors shiny?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_72447",
+   "query": "Why this perpetuum mobile can't be possible?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_72510",
+   "query": "Pendulum period of different masses",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_72535",
+   "query": "Are there any naturally occurring perfect circles?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_72549",
+   "query": "Where does mass come from?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7276",
+   "query": "What combinations of realism, non-locality, and contextuality are ruled out in quantum theory?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_72788",
+   "query": "Uncertainty and wave-trains",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_72983",
+   "query": "Optics of a rotated spectacle lens",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73051",
+   "query": "Do cosmologically redshifted photons violate energy conservation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73114",
+   "query": "Space expanding, or light slowing down?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73162",
+   "query": "Should we necessarily express the dimensions of a physical quantity within square brackets?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73209",
+   "query": "Is the total angular momentum of the universe zero?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73234",
+   "query": "Nuclear Fission and Fusion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73275",
+   "query": "Why stars twinkle but planets don't?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73279",
+   "query": "Gravitational slingshot of light using a black hole/massive object",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73299",
+   "query": "General Relativity and the effect of mass on time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73329",
+   "query": "Born's Rule, What is the Reason?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73393",
+   "query": "A question about the higher-order Weyl variation for the geodesic distance",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73528",
+   "query": "Singularity in a black hole",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73813",
+   "query": "Wave theory limit of geometric optics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73825",
+   "query": "The future of supersymmetry",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_73945",
+   "query": "Work done by magnetic field",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_74020",
+   "query": "Why did the Earth cool down?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_74087",
+   "query": "Resource for nonphysicists about QM/GR incompatibility",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7421",
+   "query": "Brachistochrone Problem for Inhomogeneous Potential",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_743",
+   "query": "Suggested reading for renormalization (not only in QFT)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_74333",
+   "query": "Can the laws of classical mechanics be derived from quantum mechanics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_74517",
+   "query": "Does a 27 hp engine output the same amount of energy as lifting a 1 ton stone block almost 3 meters per second?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_74788",
+   "query": "Can someone give an intuitive way of understanding why Gauss's law holds?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7479",
+   "query": "A Basic Question about Gravity, Inertia or Momentum or something along those lines",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75002",
+   "query": "Travel duration from Earth to a star at 9.8 m/s² acceleration",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75108",
+   "query": "Is it possible to have a magnet which looks like a hollow cylinder and who's north is interior and south is exterior?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75286",
+   "query": "does time exist in space or does space exist in time",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75352",
+   "query": "Atoms: boson or fermion?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75363",
+   "query": "How is the Schroedinger equation a wave equation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75385",
+   "query": "What is Mathematical formulation of entropic Gravitational force?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75715",
+   "query": "Elastic potential energy of compressed spring?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75756",
+   "query": "On the atomic level how do permanent magnets work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75876",
+   "query": "Effects of magnetic fields on our bodies",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_75977",
+   "query": "Is Veneziano amplitude able to explain the physical properties of strongly interacting hadrons (such as proton and neutron)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_76100",
+   "query": "Disk spinning at the speed of light",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7633",
+   "query": "Direction of Magnetic force from a current running through a coil of wire",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_76367",
+   "query": "Water coolso object by heat absorption",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7668",
+   "query": "Fundamental question about dimensional analysis",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_76726",
+   "query": "If I travel close to the speed of light and come back, why is everyone else dead, and not me?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_77020",
+   "query": "Are Lorentz force and maxwell's equations independent?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_77143",
+   "query": "What does it mean for a QFT to not be well-defined?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_77282",
+   "query": "Gauss's (Divergence) theorem in Classical Electrodynamics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7732",
+   "query": "If the Sun were to suddenly become a black hole of the same mass, what would the orbital periods of the planets be?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_77373",
+   "query": "Proof of conservation of energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_77525",
+   "query": "Is spacetime all that exists?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_77741",
+   "query": "Why don't photons crash into each other occasionally? Or do they?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_77867",
+   "query": "Extra dimensions and the big bang",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_78095",
+   "query": "As the earth rotates around itself, does this have any effect on the dynamics of flights?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_78222",
+   "query": "Prove $[A,B^n] = nB^{n-1}[A,B]$",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_78500",
+   "query": "Linearized equations",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_78508",
+   "query": "Why does Quantum Field Theory use Lagrangians rather than Hamiltonains?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_78732",
+   "query": "Chemistry from a physical perspective",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_78741",
+   "query": "What state is fire? Solid, Liquid or Gas or Plasma?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7877",
+   "query": "Pendulum with water dripping out",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_78827",
+   "query": "What are those characteristics by which every sound can be identified uniquely?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_78965",
+   "query": "General Relativity and Time Dilation",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_7905",
+   "query": "Massless charged particles",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_79085",
+   "query": "Way to become a physicist",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_79136",
+   "query": "Buzzing/Vibration in body under power lines",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_79568",
+   "query": "Angular Momentum Conservation in Gravitational Interaction",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_79685",
+   "query": "If the source of sound is vibration, why can't we \"hear\" a object whose molecules are vibrating?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_80433",
+   "query": "Derivation of Newton-Euler equations of motion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_80467",
+   "query": "Why does time reversibility imply equilibrium in a thermodynamic system?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_80777",
+   "query": "Shifting the energy reference level",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_8081",
+   "query": "What happens to chemical compunds that include radioactive nuclei, when those decay?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_80872",
+   "query": "Newtons Cradle, Collision Theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_80932",
+   "query": "Are free electrons in a metal really free",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_80966",
+   "query": "Why current through all the resistors in series is considered to be same?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_81414",
+   "query": "Why are all force particles bosons?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_81480",
+   "query": "Why is the wave function complex?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_81536",
+   "query": "electric field inside a conductor?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_81561",
+   "query": "Why can we skate on ice?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_81779",
+   "query": "how does an electric field comes inside a conducting wire inside the circuit?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_81787",
+   "query": "Identification of particles and anti-particles",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_82125",
+   "query": "Is the universe immediately dependent upon the past?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_82417",
+   "query": "Is the trajectory of the Moon around the Earth stable?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_82418",
+   "query": "Analytic solution for angle of minimum deviation?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_8248",
+   "query": "Did the researchers at Fermilab find a fifth force?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_82599",
+   "query": "quantum mechanics and canonical conjugate",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_82821",
+   "query": "current in wire + special relativity = magnetism",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_82874",
+   "query": "Torque direction meaning",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_83070",
+   "query": "What's the shear rate in a turbulent flow?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_83101",
+   "query": "Expansion of a function",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_83265",
+   "query": "Explanation of photon reflection",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_8347",
+   "query": "Trapping a lightray",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_83524",
+   "query": "Harmonic Motion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_83701",
+   "query": "What are the Time Operators in Quantum Mechanics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_83735",
+   "query": "Why do we seek to preserve gauge symmetries after quantization?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_8379",
+   "query": "Do Hydrinos Exist?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_83845",
+   "query": "Can air bubbles sink at extreme depths?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_83866",
+   "query": "Bathroom photons from the edge at the universe",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_8420",
+   "query": "Strongest force in nature",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_85975",
+   "query": "How much extra distance to an event horizon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_86270",
+   "query": "Dual nature of Matter at gross level",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_86345",
+   "query": "Intuitive understanding of centripetal vs. centrifugal force",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_86367",
+   "query": "Is there a way I can prevent static electricty buildup from shocking me?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_86424",
+   "query": "How did Newton find the relationship between force, mass and acceleration?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_86517",
+   "query": "Are there anti entropic agents",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_86528",
+   "query": "How functions become operators in quantum mechanics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_86597",
+   "query": "QFT as a rigorous mathematical theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_86989",
+   "query": "What \"time\" is it for or on Voyager 1? If you could be \"still\" in the Universe who fast would time be?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_8701",
+   "query": "Is microcausality *necessary* for no-signaling?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_8709",
+   "query": "Does mass affect speed of orbit at a certain distance?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87140",
+   "query": "In an absence of gravity, does time flow faster or slower than on Earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87260",
+   "query": "Time Slowing Down",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87376",
+   "query": "Good and simple reference for studying about ADM mass",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87476",
+   "query": "Could two different bases of a Hilbert space have different cardinality?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87686",
+   "query": "Will the moon really escape the Earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87715",
+   "query": "Voltage in a short circuit system",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87725",
+   "query": "Triboluminescence, how does it work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87829",
+   "query": "How Can There Be Magnetic Force Without Velocity",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_8784",
+   "query": "\"Troll physics\": Buoyancy for infinite power",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87880",
+   "query": "Isn't Dark Matter just an Indication that Relativity breaks down when describing large masses?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_87976",
+   "query": "Direction of friction when a car turns",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_88026",
+   "query": "Will an object resting on a rotating platform move in a frictionless world?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_88077",
+   "query": "Is the Higgs particle the final one predicted by the Standard Model?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_885",
+   "query": "Why does calculus of variations work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_88537",
+   "query": "Steps involved in photon emission",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_88545",
+   "query": "Spring constant",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_88606",
+   "query": "Within the context of string theory, is matter nothing more than a vibration on a membrane of space-time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_89002",
+   "query": "Why treat complex scalar field and its complex conjugate as two different fields?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_89335",
+   "query": "Self-contained book about complex systems and nonlinear dynamics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_89360",
+   "query": "Simple pendulum and perpetual motion",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_89377",
+   "query": "What actually is meant by wave nature of electron or any other material particles?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_89378",
+   "query": "de Broglie relations: calculate wavelength using two different approaches",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_89787",
+   "query": "Centrifugal force acting on ring",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_89914",
+   "query": "Proof of conservation of information",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_89988",
+   "query": "Can we actually prove with 100% accuracy that there is more than 3 dimensions plus time (t,x,y,z)?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9",
+   "query": "Hamilton's Principle",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_90034",
+   "query": "How are the definitions of a coherent state equivalent?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_90044",
+   "query": "Halliday resnick physics book",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_90128",
+   "query": "String Theory- Are strings the end? What are they made of?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9045",
+   "query": "Why do they store gold bars with the narrow side down?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_90469",
+   "query": "Do all massless particles (e.g. photon, graviton, gluon) necessarily have the same speed $c$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9049",
+   "query": "Why doesn't the Moon fall upon Earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_90635",
+   "query": "Freezing water in a closed container",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_90646",
+   "query": "What is the relation between electromagnetic wave and photon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_90715",
+   "query": "How do gravitons and curved space time work together?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_90908",
+   "query": "Could Dark Matter form black hole?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_91181",
+   "query": "Angular Momentum of a rigid, extended object",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9122",
+   "query": "What is the difference between implicit and explicit time dependence e.g. $\\frac{\\partial \\rho}{\\partial t}$ and $\\frac{d \\rho} {dt}$?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_91286",
+   "query": "Diffraction by a lens",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_91392",
+   "query": "Is temperature of a single molecule defined?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_91534",
+   "query": "Lecture Notes to Learn Quantum Field Theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_91797",
+   "query": "Why would an electron in an orbit be accelerating continuously and would thus radiate away its energy and fall into the nucleus in a classical model?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_91803",
+   "query": "Why will an accelerated electron emit a photon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9194",
+   "query": "What is the Physical Meaning of Commutation of Two Operators?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_91972",
+   "query": "Stationary action with maximized action",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92051",
+   "query": "How can momentum but not energy be conserved in an inelastic collision?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92245",
+   "query": "Electromagnet emitting light",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92293",
+   "query": "Gravity from energy",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92301",
+   "query": "What color would you see if you place 2 mirrors in opposit when one is a one way mirror",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92313",
+   "query": "The definition of Lagrangian",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92454",
+   "query": "Guinier regime for form factor",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92571",
+   "query": "Would Beetee's electrocution plan work and kill the tributes in the lake?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92662",
+   "query": "Is everyone seeing the same color as I see?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92739",
+   "query": "How does the sum of the series “1 + 2 + 3 + 4 + 5 + 6…” to infinity = “-1/12”?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92747",
+   "query": "How can a proton be converted to a neutron via positron emission and yet gain mass?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_92990",
+   "query": "Finding the Schwarzchild radius of a star of solar mass 30",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_93130",
+   "query": "Is it wasteful to use a heating element, instead of doing useful work?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9340",
+   "query": "Does the renormalization group apply to string theory?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_93530",
+   "query": "Why is pressure always non directional?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9371",
+   "query": "Why would Antimatter behave differently via Gravity?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_93771",
+   "query": "Understanding field representation of force",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_93874",
+   "query": "Is there any way to read the Feynman Lectures for free?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9389",
+   "query": "Good book about elementary particles for high school students?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_94040",
+   "query": "Why aren't quarks free?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_94132",
+   "query": "Geodesic for Electromagnetic forces",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_94133",
+   "query": "Acceleration reaches speed of light?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_944",
+   "query": "Noticing that Newtonian gravity and electrostatics are equivalent, is there also a relationship between the general relativity and electrodynamics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9449",
+   "query": "Video lectures on graduate level Classical Electrodynamics",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_94567",
+   "query": "Statistical Entropy and Information theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9468",
+   "query": "In what order should the subjects be studied in order to get to String Theory",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_94812",
+   "query": "How are the triangular Lagrange points in a Three body Problem stable, yet having a higher effective potential?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_94819",
+   "query": "Because position is relative, is it possible to see a star orbiting a planet?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_94901",
+   "query": "Contracting Indices",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9495",
+   "query": "What is the fastest process or shortest time in nature?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95053",
+   "query": "Radiation– white vs black house, hot or cool?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95193",
+   "query": "Countable Matrix Representation",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9526",
+   "query": "Helicopter in an Elevator",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95361",
+   "query": "Can we calculate the frame dragging force of the Earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95366",
+   "query": "Why does Stephen Hawking say black holes don't exist?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95411",
+   "query": "Photoelectric Effect, Why can't two quanta interact with an electron at the same time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95460",
+   "query": "Why do springs have helical shapes? Why do we not use a cylindrical rod as a spring?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95705",
+   "query": "Why does ice form on bridges even if the temperature is above freezing?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95756",
+   "query": "Why does a floating balloon in an accelerated train moves forward but the pendulum moves backward?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95864",
+   "query": "What is the entropy of the universe today?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_95889",
+   "query": "Why do surfaces act like barriers for electrons?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_96010",
+   "query": "What is difference between Inertial mass and gravitational mass",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_96081",
+   "query": "Is the second law of thermodynamics a fundamental law, or does it emerge from other laws?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_96335",
+   "query": "Can light be launched outwards from an event horizon?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_96562",
+   "query": "interaction of mathematical structures (rephrased)",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9663",
+   "query": "Is it pions or gluons that mediate the strong force between nucleons?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9708",
+   "query": "Is fire matter or energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9751",
+   "query": "Why don't we consider centrifugal force on a mass placed on earth?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_97812",
+   "query": "Is the system of equations of electrostatics underdetermined or overdetermined?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_97886",
+   "query": "Is powered delivered to an Incandescent light bulb changing with time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98000",
+   "query": "Does the time for communication between moving objects solely account for each object to perceive the other object's clock to more slowly tick?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98027",
+   "query": "What is the universe 'expanding' into?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98157",
+   "query": "Speed and Velocity Worksheet",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98437",
+   "query": "Why absence of electron is called hole?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98459",
+   "query": "The Achilles Paradox",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98516",
+   "query": "What is the nature of energy?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9864",
+   "query": "How to define angular momentum in other than three dimensions?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98714",
+   "query": "How are symmetries precisely defined?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98758",
+   "query": "Does a black hole singularity last essentially no intrinsic time?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_9898",
+   "query": "The Density of Clouds",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_98980",
+   "query": "The speed of light as it approaches a massive body",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_99338",
+   "query": "Transportation using disintegration",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_99505",
+   "query": "What is the conclusion from Aharonov-Bohm Effect?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_99535",
+   "query": "how does the temperature of a gas increase when compressed by an external agent during sound production?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_99754",
+   "query": "What jobs can you get in the field of physics?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_99779",
+   "query": "Can a value of \"length, in meters\" be attributed to a pair of ends which are rigid (but not at rest) to each other?",
+   "question_type": "beir_cqadupstack_physics"
+  },
+  {
+   "name": "beir_cqadupstack_physics_99865",
+   "query": "What are direction ratios?",
+   "question_type": "beir_cqadupstack_physics"
+  }
+ ]
+}

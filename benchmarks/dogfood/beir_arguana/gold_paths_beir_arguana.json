@@ -1,0 +1,4205 @@
+{
+ "beir_arguana_test-culture-ahrtsdlgra-con01a": [
+  "58/test-culture-ahrtsdlgra-con01b.txt"
+ ],
+ "beir_arguana_test-culture-ahrtsdlgra-con02a": [
+  "c7/test-culture-ahrtsdlgra-con02b.txt"
+ ],
+ "beir_arguana_test-culture-ahrtsdlgra-con03a": [
+  "7e/test-culture-ahrtsdlgra-con03b.txt"
+ ],
+ "beir_arguana_test-culture-ahrtsdlgra-pro01a": [
+  "22/test-culture-ahrtsdlgra-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-ahrtsdlgra-pro02a": [
+  "5e/test-culture-ahrtsdlgra-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-ahrtsdlgra-pro03a": [
+  "ce/test-culture-ahrtsdlgra-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-ascidfakhba-con01a": [
+  "38/test-culture-ascidfakhba-con01b.txt"
+ ],
+ "beir_arguana_test-culture-ascidfakhba-con02a": [
+  "72/test-culture-ascidfakhba-con02b.txt"
+ ],
+ "beir_arguana_test-culture-ascidfakhba-con03a": [
+  "ae/test-culture-ascidfakhba-con03b.txt"
+ ],
+ "beir_arguana_test-culture-ascidfakhba-con04a": [
+  "ce/test-culture-ascidfakhba-con04b.txt"
+ ],
+ "beir_arguana_test-culture-ascidfakhba-pro01a": [
+  "4c/test-culture-ascidfakhba-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-ascidfakhba-pro02a": [
+  "cf/test-culture-ascidfakhba-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-ascidfakhba-pro03a": [
+  "fb/test-culture-ascidfakhba-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-ascidfakhba-pro04a": [
+  "72/test-culture-ascidfakhba-pro04b.txt"
+ ],
+ "beir_arguana_test-culture-cgeeghwmeo-con01a": [
+  "71/test-culture-cgeeghwmeo-con01b.txt"
+ ],
+ "beir_arguana_test-culture-cgeeghwmeo-con02a": [
+  "01/test-culture-cgeeghwmeo-con02b.txt"
+ ],
+ "beir_arguana_test-culture-cgeeghwmeo-con03a": [
+  "1c/test-culture-cgeeghwmeo-con03b.txt"
+ ],
+ "beir_arguana_test-culture-cgeeghwmeo-con04a": [
+  "b5/test-culture-cgeeghwmeo-con04b.txt"
+ ],
+ "beir_arguana_test-culture-cgeeghwmeo-pro01a": [
+  "28/test-culture-cgeeghwmeo-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-cgeeghwmeo-pro02a": [
+  "b2/test-culture-cgeeghwmeo-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-cgeeghwmeo-pro03a": [
+  "19/test-culture-cgeeghwmeo-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-cgeeghwmeo-pro04a": [
+  "61/test-culture-cgeeghwmeo-pro04b.txt"
+ ],
+ "beir_arguana_test-culture-mmciahbans-con01a": [
+  "ed/test-culture-mmciahbans-con01b.txt"
+ ],
+ "beir_arguana_test-culture-mmciahbans-con02a": [
+  "41/test-culture-mmciahbans-con02b.txt"
+ ],
+ "beir_arguana_test-culture-mmciahbans-con03a": [
+  "1f/test-culture-mmciahbans-con03b.txt"
+ ],
+ "beir_arguana_test-culture-mmciahbans-con04a": [
+  "55/test-culture-mmciahbans-con04b.txt"
+ ],
+ "beir_arguana_test-culture-mmciahbans-pro01a": [
+  "f4/test-culture-mmciahbans-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-mmciahbans-pro02a": [
+  "7c/test-culture-mmciahbans-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-mmciahbans-pro03a": [
+  "7e/test-culture-mmciahbans-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-mmctghwbsa-con01a": [
+  "28/test-culture-mmctghwbsa-con01b.txt"
+ ],
+ "beir_arguana_test-culture-mmctghwbsa-con02a": [
+  "c7/test-culture-mmctghwbsa-con02b.txt"
+ ],
+ "beir_arguana_test-culture-mmctghwbsa-con03a": [
+  "b7/test-culture-mmctghwbsa-con03b.txt"
+ ],
+ "beir_arguana_test-culture-mmctghwbsa-con04a": [
+  "23/test-culture-mmctghwbsa-con04b.txt"
+ ],
+ "beir_arguana_test-culture-mmctghwbsa-pro01a": [
+  "a2/test-culture-mmctghwbsa-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-mmctghwbsa-pro02a": [
+  "ae/test-culture-mmctghwbsa-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-mmctghwbsa-pro03a": [
+  "26/test-culture-mmctghwbsa-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-mmctghwbsa-pro04a": [
+  "e5/test-culture-mmctghwbsa-pro04b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-con01a": [
+  "bf/test-culture-mmctyshwbcp-con01b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-con02a": [
+  "52/test-culture-mmctyshwbcp-con02b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-con03a": [
+  "b9/test-culture-mmctyshwbcp-con03b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-pro01a": [
+  "0b/test-culture-mmctyshwbcp-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-pro02a": [
+  "8a/test-culture-mmctyshwbcp-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-pro03a": [
+  "46/test-culture-mmctyshwbcp-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-pro04a": [
+  "1a/test-culture-mmctyshwbcp-pro04b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-pro05a": [
+  "6a/test-culture-mmctyshwbcp-pro05b.txt"
+ ],
+ "beir_arguana_test-culture-mmctyshwbcp-pro06a": [
+  "37/test-culture-mmctyshwbcp-pro06b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-con01a": [
+  "21/test-culture-mthbah-con01b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-con02a": [
+  "d9/test-culture-mthbah-con02b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-con03a": [
+  "a6/test-culture-mthbah-con03b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-con04a": [
+  "19/test-culture-mthbah-con04b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-pro01a": [
+  "e7/test-culture-mthbah-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-pro02a": [
+  "db/test-culture-mthbah-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-pro03a": [
+  "7e/test-culture-mthbah-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-pro04a": [
+  "14/test-culture-mthbah-pro04b.txt"
+ ],
+ "beir_arguana_test-culture-mthbah-pro05a": [
+  "f0/test-culture-mthbah-pro05b.txt"
+ ],
+ "beir_arguana_test-culture-thbcsbptwhht-con01a": [
+  "2b/test-culture-thbcsbptwhht-con01b.txt"
+ ],
+ "beir_arguana_test-culture-thbcsbptwhht-con02a": [
+  "b3/test-culture-thbcsbptwhht-con02b.txt"
+ ],
+ "beir_arguana_test-culture-thbcsbptwhht-con03a": [
+  "b0/test-culture-thbcsbptwhht-con03b.txt"
+ ],
+ "beir_arguana_test-culture-thbcsbptwhht-pro01a": [
+  "59/test-culture-thbcsbptwhht-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-thbcsbptwhht-pro02a": [
+  "f2/test-culture-thbcsbptwhht-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-thbcsbptwhht-pro03a": [
+  "6e/test-culture-thbcsbptwhht-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-thbcsbptwhht-pro04a": [
+  "3f/test-culture-thbcsbptwhht-pro04b.txt"
+ ],
+ "beir_arguana_test-culture-tlhrilsfhwr-con01a": [
+  "2e/test-culture-tlhrilsfhwr-con01b.txt"
+ ],
+ "beir_arguana_test-culture-tlhrilsfhwr-con02a": [
+  "7e/test-culture-tlhrilsfhwr-con02b.txt"
+ ],
+ "beir_arguana_test-culture-tlhrilsfhwr-con03a": [
+  "30/test-culture-tlhrilsfhwr-con03b.txt"
+ ],
+ "beir_arguana_test-culture-tlhrilsfhwr-pro01a": [
+  "78/test-culture-tlhrilsfhwr-pro01b.txt"
+ ],
+ "beir_arguana_test-culture-tlhrilsfhwr-pro02a": [
+  "f1/test-culture-tlhrilsfhwr-pro02b.txt"
+ ],
+ "beir_arguana_test-culture-tlhrilsfhwr-pro03a": [
+  "4d/test-culture-tlhrilsfhwr-pro03b.txt"
+ ],
+ "beir_arguana_test-culture-tlhrilsfhwr-pro04a": [
+  "26/test-culture-tlhrilsfhwr-pro04b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihbiahr-con01a": [
+  "f9/test-digital-freedoms-aihbiahr-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihbiahr-con02a": [
+  "94/test-digital-freedoms-aihbiahr-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihbiahr-con03a": [
+  "37/test-digital-freedoms-aihbiahr-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihbiahr-con04a": [
+  "b7/test-digital-freedoms-aihbiahr-con04b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihbiahr-pro01a": [
+  "46/test-digital-freedoms-aihbiahr-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihbiahr-pro02a": [
+  "15/test-digital-freedoms-aihbiahr-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihbiahr-pro03a": [
+  "e6/test-digital-freedoms-aihbiahr-pro03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-con01a": [
+  "77/test-digital-freedoms-aihwbasmn-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-con02a": [
+  "de/test-digital-freedoms-aihwbasmn-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-con03a": [
+  "a4/test-digital-freedoms-aihwbasmn-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-con04a": [
+  "8a/test-digital-freedoms-aihwbasmn-con04b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-con05a": [
+  "98/test-digital-freedoms-aihwbasmn-con05b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-pro01a": [
+  "27/test-digital-freedoms-aihwbasmn-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-pro02a": [
+  "50/test-digital-freedoms-aihwbasmn-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-pro03a": [
+  "27/test-digital-freedoms-aihwbasmn-pro03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-aihwbasmn-pro04a": [
+  "2b/test-digital-freedoms-aihwbasmn-pro04b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-dfiphbgs-con01a": [
+  "92/test-digital-freedoms-dfiphbgs-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-dfiphbgs-con02a": [
+  "c3/test-digital-freedoms-dfiphbgs-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-dfiphbgs-con03a": [
+  "c3/test-digital-freedoms-dfiphbgs-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-dfiphbgs-pro01a": [
+  "35/test-digital-freedoms-dfiphbgs-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-dfiphbgs-pro02a": [
+  "ac/test-digital-freedoms-dfiphbgs-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-dfiphbgs-pro03a": [
+  "c8/test-digital-freedoms-dfiphbgs-pro03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-con01a": [
+  "5a/test-digital-freedoms-efsappgdfp-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-con02a": [
+  "b5/test-digital-freedoms-efsappgdfp-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-con03a": [
+  "b7/test-digital-freedoms-efsappgdfp-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-con04a": [
+  "98/test-digital-freedoms-efsappgdfp-con04b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-con05a": [
+  "d5/test-digital-freedoms-efsappgdfp-con05b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-pro01a": [
+  "6d/test-digital-freedoms-efsappgdfp-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-pro02a": [
+  "23/test-digital-freedoms-efsappgdfp-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-pro03a": [
+  "a8/test-digital-freedoms-efsappgdfp-pro03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-efsappgdfp-pro04a": [
+  "c1/test-digital-freedoms-efsappgdfp-pro04b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifdfaihs-con01a": [
+  "5e/test-digital-freedoms-eifdfaihs-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifdfaihs-con02a": [
+  "7c/test-digital-freedoms-eifdfaihs-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifdfaihs-con03a": [
+  "a0/test-digital-freedoms-eifdfaihs-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifdfaihs-pro01a": [
+  "a2/test-digital-freedoms-eifdfaihs-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifdfaihs-pro02a": [
+  "0c/test-digital-freedoms-eifdfaihs-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifdfaihs-pro03a": [
+  "c2/test-digital-freedoms-eifdfaihs-pro03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifpgdff-con01a": [
+  "5e/test-digital-freedoms-eifpgdff-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifpgdff-con02a": [
+  "76/test-digital-freedoms-eifpgdff-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifpgdff-con03a": [
+  "aa/test-digital-freedoms-eifpgdff-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifpgdff-pro01a": [
+  "6d/test-digital-freedoms-eifpgdff-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifpgdff-pro02a": [
+  "c0/test-digital-freedoms-eifpgdff-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-eifpgdff-pro03a": [
+  "f1/test-digital-freedoms-eifpgdff-pro03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-phwnaccpdt-con01a": [
+  "cf/test-digital-freedoms-phwnaccpdt-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-phwnaccpdt-con02a": [
+  "76/test-digital-freedoms-phwnaccpdt-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-phwnaccpdt-con03a": [
+  "f5/test-digital-freedoms-phwnaccpdt-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-phwnaccpdt-pro01a": [
+  "4f/test-digital-freedoms-phwnaccpdt-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-phwnaccpdt-pro02a": [
+  "53/test-digital-freedoms-phwnaccpdt-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-phwnaccpdt-pro03a": [
+  "b1/test-digital-freedoms-phwnaccpdt-pro03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfaihbg-con01a": [
+  "4e/test-digital-freedoms-piidfaihbg-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfaihbg-con02a": [
+  "03/test-digital-freedoms-piidfaihbg-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfaihbg-con03a": [
+  "f1/test-digital-freedoms-piidfaihbg-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfaihbg-pro01a": [
+  "e3/test-digital-freedoms-piidfaihbg-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfaihbg-pro02a": [
+  "23/test-digital-freedoms-piidfaihbg-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfaihbg-pro03a": [
+  "7a/test-digital-freedoms-piidfaihbg-pro03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfiphwu-con01a": [
+  "fc/test-digital-freedoms-piidfiphwu-con01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfiphwu-con02a": [
+  "f7/test-digital-freedoms-piidfiphwu-con02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfiphwu-con03a": [
+  "55/test-digital-freedoms-piidfiphwu-con03b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfiphwu-pro01a": [
+  "ea/test-digital-freedoms-piidfiphwu-pro01b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfiphwu-pro02a": [
+  "f9/test-digital-freedoms-piidfiphwu-pro02b.txt"
+ ],
+ "beir_arguana_test-digital-freedoms-piidfiphwu-pro03a": [
+  "bb/test-digital-freedoms-piidfiphwu-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-beghwbh-con01a": [
+  "8d/test-economy-beghwbh-con01b.txt"
+ ],
+ "beir_arguana_test-economy-beghwbh-con02a": [
+  "21/test-economy-beghwbh-con02b.txt"
+ ],
+ "beir_arguana_test-economy-beghwbh-con03a": [
+  "d9/test-economy-beghwbh-con03b.txt"
+ ],
+ "beir_arguana_test-economy-beghwbh-con04a": [
+  "5a/test-economy-beghwbh-con04b.txt"
+ ],
+ "beir_arguana_test-economy-beghwbh-pro01a": [
+  "1d/test-economy-beghwbh-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-beghwbh-pro02a": [
+  "2d/test-economy-beghwbh-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-beghwbh-pro03a": [
+  "26/test-economy-beghwbh-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-bepahbtsnrt-con01a": [
+  "72/test-economy-bepahbtsnrt-con01b.txt"
+ ],
+ "beir_arguana_test-economy-bepahbtsnrt-con02a": [
+  "e2/test-economy-bepahbtsnrt-con02b.txt"
+ ],
+ "beir_arguana_test-economy-bepahbtsnrt-con03a": [
+  "94/test-economy-bepahbtsnrt-con03b.txt"
+ ],
+ "beir_arguana_test-economy-bepahbtsnrt-pro01a": [
+  "a9/test-economy-bepahbtsnrt-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-bepahbtsnrt-pro02a": [
+  "70/test-economy-bepahbtsnrt-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-bepahbtsnrt-pro03a": [
+  "59/test-economy-bepahbtsnrt-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-bepahbtsnrt-pro04a": [
+  "e1/test-economy-bepahbtsnrt-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-bepiehbesa-con01a": [
+  "10/test-economy-bepiehbesa-con01b.txt"
+ ],
+ "beir_arguana_test-economy-bepiehbesa-con02a": [
+  "da/test-economy-bepiehbesa-con02b.txt"
+ ],
+ "beir_arguana_test-economy-bepiehbesa-con03a": [
+  "91/test-economy-bepiehbesa-con03b.txt"
+ ],
+ "beir_arguana_test-economy-bepiehbesa-pro01a": [
+  "e4/test-economy-bepiehbesa-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-bepiehbesa-pro02a": [
+  "8a/test-economy-bepiehbesa-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-bepiehbesa-pro03a": [
+  "b2/test-economy-bepiehbesa-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-bepiehbesa-pro04a": [
+  "4d/test-economy-bepiehbesa-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-bepighbdb-con01a": [
+  "f3/test-economy-bepighbdb-con01b.txt"
+ ],
+ "beir_arguana_test-economy-bepighbdb-con02a": [
+  "61/test-economy-bepighbdb-con02b.txt"
+ ],
+ "beir_arguana_test-economy-bepighbdb-con03a": [
+  "3a/test-economy-bepighbdb-con03b.txt"
+ ],
+ "beir_arguana_test-economy-bepighbdb-con04a": [
+  "de/test-economy-bepighbdb-con04b.txt"
+ ],
+ "beir_arguana_test-economy-bepighbdb-pro01a": [
+  "27/test-economy-bepighbdb-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-bepighbdb-pro02a": [
+  "ab/test-economy-bepighbdb-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-bepighbdb-pro03a": [
+  "e0/test-economy-bepighbdb-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-con01a": [
+  "6d/test-economy-beplcpdffe-con01b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-con02a": [
+  "d6/test-economy-beplcpdffe-con02b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-con03a": [
+  "86/test-economy-beplcpdffe-con03b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-con04a": [
+  "41/test-economy-beplcpdffe-con04b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-con05a": [
+  "59/test-economy-beplcpdffe-con05b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-pro01a": [
+  "87/test-economy-beplcpdffe-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-pro02a": [
+  "10/test-economy-beplcpdffe-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-pro03a": [
+  "e5/test-economy-beplcpdffe-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-beplcpdffe-pro04a": [
+  "bf/test-economy-beplcpdffe-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-bhahwbsps-con01a": [
+  "b5/test-economy-bhahwbsps-con01b.txt"
+ ],
+ "beir_arguana_test-economy-bhahwbsps-con02a": [
+  "5e/test-economy-bhahwbsps-con02b.txt"
+ ],
+ "beir_arguana_test-economy-bhahwbsps-con03a": [
+  "19/test-economy-bhahwbsps-con03b.txt"
+ ],
+ "beir_arguana_test-economy-bhahwbsps-pro01a": [
+  "fb/test-economy-bhahwbsps-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-bhahwbsps-pro02a": [
+  "55/test-economy-bhahwbsps-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-bhahwbsps-pro03a": [
+  "c5/test-economy-bhahwbsps-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-bhahwbsps-pro04a": [
+  "a9/test-economy-bhahwbsps-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-egecegphw-con01a": [
+  "38/test-economy-egecegphw-con01b.txt"
+ ],
+ "beir_arguana_test-economy-egecegphw-con02a": [
+  "95/test-economy-egecegphw-con02b.txt"
+ ],
+ "beir_arguana_test-economy-egecegphw-con03a": [
+  "e6/test-economy-egecegphw-con03b.txt"
+ ],
+ "beir_arguana_test-economy-egecegphw-pro01a": [
+  "4c/test-economy-egecegphw-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-egecegphw-pro02a": [
+  "b6/test-economy-egecegphw-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-egecegphw-pro03a": [
+  "a9/test-economy-egecegphw-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-egiahbwaka-con01a": [
+  "84/test-economy-egiahbwaka-con01b.txt"
+ ],
+ "beir_arguana_test-economy-egiahbwaka-con02a": [
+  "d2/test-economy-egiahbwaka-con02b.txt"
+ ],
+ "beir_arguana_test-economy-egiahbwaka-con03a": [
+  "41/test-economy-egiahbwaka-con03b.txt"
+ ],
+ "beir_arguana_test-economy-egiahbwaka-pro01a": [
+  "e0/test-economy-egiahbwaka-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-egiahbwaka-pro02a": [
+  "57/test-economy-egiahbwaka-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-egiahbwaka-pro03a": [
+  "53/test-economy-egiahbwaka-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-egppphbcb-con01a": [
+  "34/test-economy-egppphbcb-con01b.txt"
+ ],
+ "beir_arguana_test-economy-egppphbcb-con02a": [
+  "60/test-economy-egppphbcb-con02b.txt"
+ ],
+ "beir_arguana_test-economy-egppphbcb-con03a": [
+  "8c/test-economy-egppphbcb-con03b.txt"
+ ],
+ "beir_arguana_test-economy-egppphbcb-pro01a": [
+  "58/test-economy-egppphbcb-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-egppphbcb-pro02a": [
+  "7c/test-economy-egppphbcb-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-egppphbcb-pro03a": [
+  "b0/test-economy-egppphbcb-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-egppphbcb-pro04a": [
+  "47/test-economy-egppphbcb-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-epegiahsc-con01a": [
+  "96/test-economy-epegiahsc-con01b.txt"
+ ],
+ "beir_arguana_test-economy-epegiahsc-con02a": [
+  "93/test-economy-epegiahsc-con02b.txt"
+ ],
+ "beir_arguana_test-economy-epegiahsc-con03a": [
+  "be/test-economy-epegiahsc-con03b.txt"
+ ],
+ "beir_arguana_test-economy-epegiahsc-con04a": [
+  "f3/test-economy-epegiahsc-con04b.txt"
+ ],
+ "beir_arguana_test-economy-epegiahsc-pro01a": [
+  "a8/test-economy-epegiahsc-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-epegiahsc-pro02a": [
+  "ab/test-economy-epegiahsc-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-epegiahsc-pro03a": [
+  "34/test-economy-epegiahsc-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-con01a": [
+  "c8/test-economy-epehwmrbals-con01b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-con02a": [
+  "8d/test-economy-epehwmrbals-con02b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-con03a": [
+  "5d/test-economy-epehwmrbals-con03b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-con04a": [
+  "ed/test-economy-epehwmrbals-con04b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-pro01a": [
+  "80/test-economy-epehwmrbals-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-pro02a": [
+  "79/test-economy-epehwmrbals-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-pro03a": [
+  "63/test-economy-epehwmrbals-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-pro04a": [
+  "e7/test-economy-epehwmrbals-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-epehwmrbals-pro05a": [
+  "e3/test-economy-epehwmrbals-pro05b.txt"
+ ],
+ "beir_arguana_test-economy-epiasghbf-con01a": [
+  "4d/test-economy-epiasghbf-con01b.txt"
+ ],
+ "beir_arguana_test-economy-epiasghbf-con02a": [
+  "19/test-economy-epiasghbf-con02b.txt"
+ ],
+ "beir_arguana_test-economy-epiasghbf-con03a": [
+  "a0/test-economy-epiasghbf-con03b.txt"
+ ],
+ "beir_arguana_test-economy-epiasghbf-con04a": [
+  "7c/test-economy-epiasghbf-con04b.txt"
+ ],
+ "beir_arguana_test-economy-epiasghbf-pro01a": [
+  "89/test-economy-epiasghbf-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-epiasghbf-pro02a": [
+  "d8/test-economy-epiasghbf-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-epiasghbf-pro03a": [
+  "83/test-economy-epiasghbf-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-epsihbdns-con01a": [
+  "84/test-economy-epsihbdns-con01b.txt"
+ ],
+ "beir_arguana_test-economy-epsihbdns-con02a": [
+  "1f/test-economy-epsihbdns-con02b.txt"
+ ],
+ "beir_arguana_test-economy-epsihbdns-con03a": [
+  "39/test-economy-epsihbdns-con03b.txt"
+ ],
+ "beir_arguana_test-economy-epsihbdns-con04a": [
+  "d0/test-economy-epsihbdns-con04b.txt"
+ ],
+ "beir_arguana_test-economy-epsihbdns-pro01a": [
+  "25/test-economy-epsihbdns-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-epsihbdns-pro02a": [
+  "02/test-economy-epsihbdns-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-epsihbdns-pro03a": [
+  "94/test-economy-epsihbdns-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-epsihbdns-pro04a": [
+  "52/test-economy-epsihbdns-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-eptpghdtre-con01a": [
+  "b9/test-economy-eptpghdtre-con01b.txt"
+ ],
+ "beir_arguana_test-economy-eptpghdtre-con02a": [
+  "38/test-economy-eptpghdtre-con02b.txt"
+ ],
+ "beir_arguana_test-economy-eptpghdtre-con03a": [
+  "2e/test-economy-eptpghdtre-con03b.txt"
+ ],
+ "beir_arguana_test-economy-eptpghdtre-pro01a": [
+  "d2/test-economy-eptpghdtre-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-eptpghdtre-pro02a": [
+  "d1/test-economy-eptpghdtre-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-eptpghdtre-pro03a": [
+  "da/test-economy-eptpghdtre-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-eptpghdtre-pro04a": [
+  "83/test-economy-eptpghdtre-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-fiahwpamu-con01a": [
+  "af/test-economy-fiahwpamu-con01b.txt"
+ ],
+ "beir_arguana_test-economy-fiahwpamu-con02a": [
+  "2e/test-economy-fiahwpamu-con02b.txt"
+ ],
+ "beir_arguana_test-economy-fiahwpamu-con03a": [
+  "85/test-economy-fiahwpamu-con03b.txt"
+ ],
+ "beir_arguana_test-economy-fiahwpamu-pro01a": [
+  "53/test-economy-fiahwpamu-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-fiahwpamu-pro02a": [
+  "94/test-economy-fiahwpamu-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-fiahwpamu-pro03a": [
+  "43/test-economy-fiahwpamu-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-fiahwpamu-pro04a": [
+  "30/test-economy-fiahwpamu-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-fiahwpamu-pro05a": [
+  "9a/test-economy-fiahwpamu-pro05b.txt"
+ ],
+ "beir_arguana_test-economy-thhghwhwift-con01a": [
+  "07/test-economy-thhghwhwift-con01b.txt"
+ ],
+ "beir_arguana_test-economy-thhghwhwift-con02a": [
+  "10/test-economy-thhghwhwift-con02b.txt"
+ ],
+ "beir_arguana_test-economy-thhghwhwift-con03a": [
+  "94/test-economy-thhghwhwift-con03b.txt"
+ ],
+ "beir_arguana_test-economy-thhghwhwift-pro01a": [
+  "fa/test-economy-thhghwhwift-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-thhghwhwift-pro02a": [
+  "80/test-economy-thhghwhwift-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-thhghwhwift-pro03a": [
+  "bd/test-economy-thhghwhwift-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-con01a": [
+  "af/test-economy-thsptr-con01b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-con02a": [
+  "a4/test-economy-thsptr-con02b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-con03a": [
+  "ab/test-economy-thsptr-con03b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-con04a": [
+  "08/test-economy-thsptr-con04b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-con05a": [
+  "ee/test-economy-thsptr-con05b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-pro01a": [
+  "00/test-economy-thsptr-pro01b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-pro02a": [
+  "a7/test-economy-thsptr-pro02b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-pro03a": [
+  "da/test-economy-thsptr-pro03b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-pro04a": [
+  "0f/test-economy-thsptr-pro04b.txt"
+ ],
+ "beir_arguana_test-economy-thsptr-pro05a": [
+  "a4/test-economy-thsptr-pro05b.txt"
+ ],
+ "beir_arguana_test-education-egscphsrdt-con01a": [
+  "24/test-education-egscphsrdt-con01b.txt"
+ ],
+ "beir_arguana_test-education-egscphsrdt-con02a": [
+  "02/test-education-egscphsrdt-con02b.txt"
+ ],
+ "beir_arguana_test-education-egscphsrdt-con03a": [
+  "90/test-education-egscphsrdt-con03b.txt"
+ ],
+ "beir_arguana_test-education-egscphsrdt-pro01a": [
+  "12/test-education-egscphsrdt-pro01b.txt"
+ ],
+ "beir_arguana_test-education-egscphsrdt-pro02a": [
+  "15/test-education-egscphsrdt-pro02b.txt"
+ ],
+ "beir_arguana_test-education-egscphsrdt-pro03a": [
+  "d6/test-education-egscphsrdt-pro03b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-con01a": [
+  "c4/test-education-egtuscpih-con01b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-con02a": [
+  "f1/test-education-egtuscpih-con02b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-con03a": [
+  "8b/test-education-egtuscpih-con03b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-con04a": [
+  "1e/test-education-egtuscpih-con04b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-con05a": [
+  "76/test-education-egtuscpih-con05b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-pro01a": [
+  "b5/test-education-egtuscpih-pro01b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-pro02a": [
+  "09/test-education-egtuscpih-pro02b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-pro03a": [
+  "e7/test-education-egtuscpih-pro03b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-pro04a": [
+  "97/test-education-egtuscpih-pro04b.txt"
+ ],
+ "beir_arguana_test-education-egtuscpih-pro05a": [
+  "0c/test-education-egtuscpih-pro05b.txt"
+ ],
+ "beir_arguana_test-education-pshhghwpba0-con01a": [
+  "57/test-education-pshhghwpba0-con01b.txt"
+ ],
+ "beir_arguana_test-education-pshhghwpba0-con02a": [
+  "96/test-education-pshhghwpba0-con02b.txt"
+ ],
+ "beir_arguana_test-education-pshhghwpba0-con03a": [
+  "17/test-education-pshhghwpba0-con03b.txt"
+ ],
+ "beir_arguana_test-education-pshhghwpba0-con04a": [
+  "3f/test-education-pshhghwpba0-con04b.txt"
+ ],
+ "beir_arguana_test-education-pshhghwpba0-pro01a": [
+  "88/test-education-pshhghwpba0-pro01b.txt"
+ ],
+ "beir_arguana_test-education-pshhghwpba0-pro02a": [
+  "07/test-education-pshhghwpba0-pro02b.txt"
+ ],
+ "beir_arguana_test-education-pshhghwpba0-pro03a": [
+  "35/test-education-pshhghwpba0-pro03b.txt"
+ ],
+ "beir_arguana_test-education-pshhghwpba0-pro04a": [
+  "48/test-education-pshhghwpba0-pro04b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-con01a": [
+  "fa/test-education-pstrgsehwt-con01b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-con02a": [
+  "d9/test-education-pstrgsehwt-con02b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-con03a": [
+  "f0/test-education-pstrgsehwt-con03b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-con04a": [
+  "1b/test-education-pstrgsehwt-con04b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-pro01a": [
+  "60/test-education-pstrgsehwt-pro01b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-pro02a": [
+  "c4/test-education-pstrgsehwt-pro02b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-pro03a": [
+  "6f/test-education-pstrgsehwt-pro03b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-pro04a": [
+  "fb/test-education-pstrgsehwt-pro04b.txt"
+ ],
+ "beir_arguana_test-education-pstrgsehwt-pro05a": [
+  "2f/test-education-pstrgsehwt-pro05b.txt"
+ ],
+ "beir_arguana_test-education-pteuhwfphe-con01a": [
+  "aa/test-education-pteuhwfphe-con01b.txt"
+ ],
+ "beir_arguana_test-education-pteuhwfphe-con02a": [
+  "ee/test-education-pteuhwfphe-con02b.txt"
+ ],
+ "beir_arguana_test-education-pteuhwfphe-con03a": [
+  "cf/test-education-pteuhwfphe-con03b.txt"
+ ],
+ "beir_arguana_test-education-pteuhwfphe-con04a": [
+  "36/test-education-pteuhwfphe-con04b.txt"
+ ],
+ "beir_arguana_test-education-pteuhwfphe-pro01a": [
+  "26/test-education-pteuhwfphe-pro01b.txt"
+ ],
+ "beir_arguana_test-education-pteuhwfphe-pro02a": [
+  "6e/test-education-pteuhwfphe-pro02b.txt"
+ ],
+ "beir_arguana_test-education-pteuhwfphe-pro03a": [
+  "ce/test-education-pteuhwfphe-pro03b.txt"
+ ],
+ "beir_arguana_test-education-tuhwastua-con01a": [
+  "c0/test-education-tuhwastua-con01b.txt"
+ ],
+ "beir_arguana_test-education-tuhwastua-con02a": [
+  "0b/test-education-tuhwastua-con02b.txt"
+ ],
+ "beir_arguana_test-education-tuhwastua-pro01a": [
+  "ba/test-education-tuhwastua-pro01b.txt"
+ ],
+ "beir_arguana_test-education-tuhwastua-pro02a": [
+  "2a/test-education-tuhwastua-pro02b.txt"
+ ],
+ "beir_arguana_test-education-tuhwastua-pro03a": [
+  "e6/test-education-tuhwastua-pro03b.txt"
+ ],
+ "beir_arguana_test-education-tuhwastua-pro04a": [
+  "c6/test-education-tuhwastua-pro04b.txt"
+ ],
+ "beir_arguana_test-education-tuhwastua-pro05a": [
+  "ac/test-education-tuhwastua-pro05b.txt"
+ ],
+ "beir_arguana_test-education-udfakusma-con01a": [
+  "ca/test-education-udfakusma-con01b.txt"
+ ],
+ "beir_arguana_test-education-udfakusma-con02a": [
+  "a2/test-education-udfakusma-con02b.txt"
+ ],
+ "beir_arguana_test-education-udfakusma-con03a": [
+  "19/test-education-udfakusma-con03b.txt"
+ ],
+ "beir_arguana_test-education-udfakusma-con04a": [
+  "c3/test-education-udfakusma-con04b.txt"
+ ],
+ "beir_arguana_test-education-udfakusma-pro01a": [
+  "a5/test-education-udfakusma-pro01b.txt"
+ ],
+ "beir_arguana_test-education-udfakusma-pro02a": [
+  "98/test-education-udfakusma-pro02b.txt"
+ ],
+ "beir_arguana_test-education-udfakusma-pro03a": [
+  "4a/test-education-udfakusma-pro03b.txt"
+ ],
+ "beir_arguana_test-education-udfakusma-pro04a": [
+  "50/test-education-udfakusma-pro04b.txt"
+ ],
+ "beir_arguana_test-education-ufsdfkhbwu-con01a": [
+  "57/test-education-ufsdfkhbwu-con01b.txt"
+ ],
+ "beir_arguana_test-education-ufsdfkhbwu-con02a": [
+  "01/test-education-ufsdfkhbwu-con02b.txt"
+ ],
+ "beir_arguana_test-education-ufsdfkhbwu-pro01a": [
+  "7a/test-education-ufsdfkhbwu-pro01b.txt"
+ ],
+ "beir_arguana_test-education-ufsdfkhbwu-pro02a": [
+  "7d/test-education-ufsdfkhbwu-pro02b.txt"
+ ],
+ "beir_arguana_test-education-ufsdfkhbwu-pro03a": [
+  "5e/test-education-ufsdfkhbwu-pro03b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-con01a": [
+  "36/test-education-ughbuesbf-con01b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-con02a": [
+  "69/test-education-ughbuesbf-con02b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-con03a": [
+  "0d/test-education-ughbuesbf-con03b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-con04a": [
+  "15/test-education-ughbuesbf-con04b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-con05a": [
+  "e1/test-education-ughbuesbf-con05b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-pro01a": [
+  "a9/test-education-ughbuesbf-pro01b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-pro02a": [
+  "ea/test-education-ughbuesbf-pro02b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-pro03a": [
+  "ae/test-education-ughbuesbf-pro03b.txt"
+ ],
+ "beir_arguana_test-education-ughbuesbf-pro04a": [
+  "b3/test-education-ughbuesbf-pro04b.txt"
+ ],
+ "beir_arguana_test-education-usuprmhbu-con01a": [
+  "25/test-education-usuprmhbu-con01b.txt"
+ ],
+ "beir_arguana_test-education-usuprmhbu-con02a": [
+  "e5/test-education-usuprmhbu-con02b.txt"
+ ],
+ "beir_arguana_test-education-usuprmhbu-con03a": [
+  "0d/test-education-usuprmhbu-con03b.txt"
+ ],
+ "beir_arguana_test-education-usuprmhbu-pro01a": [
+  "86/test-education-usuprmhbu-pro01b.txt"
+ ],
+ "beir_arguana_test-education-usuprmhbu-pro02a": [
+  "c2/test-education-usuprmhbu-pro02b.txt"
+ ],
+ "beir_arguana_test-education-usuprmhbu-pro03a": [
+  "f5/test-education-usuprmhbu-pro03b.txt"
+ ],
+ "beir_arguana_test-education-xeegshwfeu-con01a": [
+  "55/test-education-xeegshwfeu-con01b.txt"
+ ],
+ "beir_arguana_test-education-xeegshwfeu-con02a": [
+  "08/test-education-xeegshwfeu-con02b.txt"
+ ],
+ "beir_arguana_test-education-xeegshwfeu-con03a": [
+  "3f/test-education-xeegshwfeu-con03b.txt"
+ ],
+ "beir_arguana_test-education-xeegshwfeu-pro01a": [
+  "a9/test-education-xeegshwfeu-pro01b.txt"
+ ],
+ "beir_arguana_test-education-xeegshwfeu-pro02a": [
+  "d3/test-education-xeegshwfeu-pro02b.txt"
+ ],
+ "beir_arguana_test-education-xeegshwfeu-pro03a": [
+  "bb/test-education-xeegshwfeu-pro03b.txt"
+ ],
+ "beir_arguana_test-environment-aeghhgwpe-con01a": [
+  "cb/test-environment-aeghhgwpe-con01b.txt"
+ ],
+ "beir_arguana_test-environment-aeghhgwpe-con02a": [
+  "b8/test-environment-aeghhgwpe-con02b.txt"
+ ],
+ "beir_arguana_test-environment-aeghhgwpe-con03a": [
+  "2c/test-environment-aeghhgwpe-con03b.txt"
+ ],
+ "beir_arguana_test-environment-aeghhgwpe-pro01a": [
+  "e3/test-environment-aeghhgwpe-pro01b.txt"
+ ],
+ "beir_arguana_test-environment-aeghhgwpe-pro02a": [
+  "92/test-environment-aeghhgwpe-pro02b.txt"
+ ],
+ "beir_arguana_test-environment-aeghhgwpe-pro03a": [
+  "4b/test-environment-aeghhgwpe-pro03b.txt"
+ ],
+ "beir_arguana_test-environment-aeghhgwpe-pro04a": [
+  "40/test-environment-aeghhgwpe-pro04b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-con01a": [
+  "66/test-environment-aiahwagit-con01b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-con02a": [
+  "97/test-environment-aiahwagit-con02b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-con03a": [
+  "18/test-environment-aiahwagit-con03b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-con04a": [
+  "9c/test-environment-aiahwagit-con04b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-pro01a": [
+  "07/test-environment-aiahwagit-pro01b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-pro02a": [
+  "8a/test-environment-aiahwagit-pro02b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-pro03a": [
+  "66/test-environment-aiahwagit-pro03b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-pro04a": [
+  "ee/test-environment-aiahwagit-pro04b.txt"
+ ],
+ "beir_arguana_test-environment-aiahwagit-pro05a": [
+  "a0/test-environment-aiahwagit-pro05b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-con01a": [
+  "f9/test-environment-assgbatj-con01b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-con02a": [
+  "05/test-environment-assgbatj-con02b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-con03a": [
+  "cc/test-environment-assgbatj-con03b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-con04a": [
+  "03/test-environment-assgbatj-con04b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-con05a": [
+  "c0/test-environment-assgbatj-con05b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-pro01a": [
+  "d6/test-environment-assgbatj-pro01b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-pro02a": [
+  "e9/test-environment-assgbatj-pro02b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-pro03a": [
+  "4f/test-environment-assgbatj-pro03b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-pro04a": [
+  "4f/test-environment-assgbatj-pro04b.txt"
+ ],
+ "beir_arguana_test-environment-assgbatj-pro05a": [
+  "15/test-environment-assgbatj-pro05b.txt"
+ ],
+ "beir_arguana_test-environment-chbwtlgcc-con01a": [
+  "1f/test-environment-chbwtlgcc-con01b.txt"
+ ],
+ "beir_arguana_test-environment-chbwtlgcc-con02a": [
+  "36/test-environment-chbwtlgcc-con02b.txt"
+ ],
+ "beir_arguana_test-environment-chbwtlgcc-con03a": [
+  "32/test-environment-chbwtlgcc-con03b.txt"
+ ],
+ "beir_arguana_test-environment-chbwtlgcc-pro01a": [
+  "0d/test-environment-chbwtlgcc-pro01b.txt"
+ ],
+ "beir_arguana_test-environment-chbwtlgcc-pro02a": [
+  "9b/test-environment-chbwtlgcc-pro02b.txt"
+ ],
+ "beir_arguana_test-environment-chbwtlgcc-pro03a": [
+  "7c/test-environment-chbwtlgcc-pro03b.txt"
+ ],
+ "beir_arguana_test-environment-chbwtlgcc-pro04a": [
+  "43/test-environment-chbwtlgcc-pro04b.txt"
+ ],
+ "beir_arguana_test-environment-ehwsnwu-con01a": [
+  "03/test-environment-ehwsnwu-con01b.txt"
+ ],
+ "beir_arguana_test-environment-ehwsnwu-con02a": [
+  "6c/test-environment-ehwsnwu-con02b.txt"
+ ],
+ "beir_arguana_test-environment-ehwsnwu-con03a": [
+  "f9/test-environment-ehwsnwu-con03b.txt"
+ ],
+ "beir_arguana_test-environment-ehwsnwu-pro01a": [
+  "30/test-environment-ehwsnwu-pro01b.txt"
+ ],
+ "beir_arguana_test-environment-ehwsnwu-pro02a": [
+  "91/test-environment-ehwsnwu-pro02b.txt"
+ ],
+ "beir_arguana_test-environment-opecewiahw-con01a": [
+  "2a/test-environment-opecewiahw-con01b.txt"
+ ],
+ "beir_arguana_test-environment-opecewiahw-con02a": [
+  "cb/test-environment-opecewiahw-con02b.txt"
+ ],
+ "beir_arguana_test-environment-opecewiahw-con03a": [
+  "8a/test-environment-opecewiahw-con03b.txt"
+ ],
+ "beir_arguana_test-environment-opecewiahw-con04a": [
+  "69/test-environment-opecewiahw-con04b.txt"
+ ],
+ "beir_arguana_test-environment-opecewiahw-pro01a": [
+  "7f/test-environment-opecewiahw-pro01b.txt"
+ ],
+ "beir_arguana_test-environment-opecewiahw-pro02a": [
+  "5f/test-environment-opecewiahw-pro02b.txt"
+ ],
+ "beir_arguana_test-environment-opecewiahw-pro03a": [
+  "75/test-environment-opecewiahw-pro03b.txt"
+ ],
+ "beir_arguana_test-environment-opecewiahw-pro04a": [
+  "93/test-environment-opecewiahw-pro04b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fchbjaj-con01a": [
+  "4b/test-free-speech-debate-fchbjaj-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fchbjaj-con02a": [
+  "c2/test-free-speech-debate-fchbjaj-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fchbjaj-con03a": [
+  "06/test-free-speech-debate-fchbjaj-con03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fchbjaj-pro01a": [
+  "57/test-free-speech-debate-fchbjaj-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fchbjaj-pro02a": [
+  "bd/test-free-speech-debate-fchbjaj-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fchbjaj-pro03a": [
+  "ae/test-free-speech-debate-fchbjaj-pro03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fsaphgiap-con01a": [
+  "e2/test-free-speech-debate-fsaphgiap-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fsaphgiap-con02a": [
+  "23/test-free-speech-debate-fsaphgiap-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fsaphgiap-con03a": [
+  "c8/test-free-speech-debate-fsaphgiap-con03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fsaphgiap-con04a": [
+  "b9/test-free-speech-debate-fsaphgiap-con04b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fsaphgiap-pro01a": [
+  "27/test-free-speech-debate-fsaphgiap-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fsaphgiap-pro02a": [
+  "e0/test-free-speech-debate-fsaphgiap-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fsaphgiap-pro03a": [
+  "7e/test-free-speech-debate-fsaphgiap-pro03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-fsaphgiap-pro04a": [
+  "0a/test-free-speech-debate-fsaphgiap-pro04b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwbmclg-con01a": [
+  "36/test-free-speech-debate-ldhwbmclg-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwbmclg-con02a": [
+  "19/test-free-speech-debate-ldhwbmclg-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwbmclg-con03a": [
+  "97/test-free-speech-debate-ldhwbmclg-con03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwbmclg-pro01a": [
+  "3b/test-free-speech-debate-ldhwbmclg-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwbmclg-pro02a": [
+  "bf/test-free-speech-debate-ldhwbmclg-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwbmclg-pro03a": [
+  "08/test-free-speech-debate-ldhwbmclg-pro03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwprhs-con01a": [
+  "b6/test-free-speech-debate-ldhwprhs-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwprhs-con02a": [
+  "30/test-free-speech-debate-ldhwprhs-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwprhs-con03a": [
+  "34/test-free-speech-debate-ldhwprhs-con03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwprhs-pro01a": [
+  "79/test-free-speech-debate-ldhwprhs-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwprhs-pro02a": [
+  "55/test-free-speech-debate-ldhwprhs-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-ldhwprhs-pro03a": [
+  "58/test-free-speech-debate-ldhwprhs-pro03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-magghbcrg-con01a": [
+  "a1/test-free-speech-debate-magghbcrg-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-magghbcrg-con02a": [
+  "d8/test-free-speech-debate-magghbcrg-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-magghbcrg-con03a": [
+  "51/test-free-speech-debate-magghbcrg-con03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-magghbcrg-pro01a": [
+  "1a/test-free-speech-debate-magghbcrg-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-magghbcrg-pro02a": [
+  "a8/test-free-speech-debate-magghbcrg-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-magghbcrg-pro03a": [
+  "d6/test-free-speech-debate-magghbcrg-pro03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbbsbfb-con01a": [
+  "f7/test-free-speech-debate-nshbbsbfb-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbbsbfb-con02a": [
+  "80/test-free-speech-debate-nshbbsbfb-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbbsbfb-con03a": [
+  "c5/test-free-speech-debate-nshbbsbfb-con03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbbsbfb-pro01a": [
+  "96/test-free-speech-debate-nshbbsbfb-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbbsbfb-pro02a": [
+  "09/test-free-speech-debate-nshbbsbfb-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbbsbfb-pro03a": [
+  "a0/test-free-speech-debate-nshbbsbfb-pro03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbbsbfb-pro04a": [
+  "92/test-free-speech-debate-nshbbsbfb-pro04b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbcsbawc-con01a": [
+  "b2/test-free-speech-debate-nshbcsbawc-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbcsbawc-con02a": [
+  "89/test-free-speech-debate-nshbcsbawc-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbcsbawc-con03a": [
+  "85/test-free-speech-debate-nshbcsbawc-con03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbcsbawc-pro01a": [
+  "87/test-free-speech-debate-nshbcsbawc-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbcsbawc-pro02a": [
+  "e4/test-free-speech-debate-nshbcsbawc-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbcsbawc-pro03a": [
+  "e6/test-free-speech-debate-nshbcsbawc-pro03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-nshbcsbawc-pro04a": [
+  "a4/test-free-speech-debate-nshbcsbawc-pro04b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-radhbsshr-con01a": [
+  "96/test-free-speech-debate-radhbsshr-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-radhbsshr-con02a": [
+  "cb/test-free-speech-debate-radhbsshr-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-radhbsshr-con03a": [
+  "46/test-free-speech-debate-radhbsshr-con03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-radhbsshr-con04a": [
+  "4b/test-free-speech-debate-radhbsshr-con04b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-radhbsshr-pro01a": [
+  "2a/test-free-speech-debate-radhbsshr-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-radhbsshr-pro02a": [
+  "fe/test-free-speech-debate-radhbsshr-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-radhbsshr-pro03a": [
+  "a0/test-free-speech-debate-radhbsshr-pro03b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-yfsdfkhbwu-con01a": [
+  "2e/test-free-speech-debate-yfsdfkhbwu-con01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-yfsdfkhbwu-con02a": [
+  "1c/test-free-speech-debate-yfsdfkhbwu-con02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-yfsdfkhbwu-pro01a": [
+  "7f/test-free-speech-debate-yfsdfkhbwu-pro01b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-yfsdfkhbwu-pro02a": [
+  "04/test-free-speech-debate-yfsdfkhbwu-pro02b.txt"
+ ],
+ "beir_arguana_test-free-speech-debate-yfsdfkhbwu-pro03a": [
+  "a9/test-free-speech-debate-yfsdfkhbwu-pro03b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-con01a": [
+  "1d/test-health-ahiahbgbsp-con01b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-con02a": [
+  "49/test-health-ahiahbgbsp-con02b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-con03a": [
+  "51/test-health-ahiahbgbsp-con03b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-con04a": [
+  "ab/test-health-ahiahbgbsp-con04b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-pro01a": [
+  "69/test-health-ahiahbgbsp-pro01b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-pro02a": [
+  "c7/test-health-ahiahbgbsp-pro02b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-pro03a": [
+  "b0/test-health-ahiahbgbsp-pro03b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-pro04a": [
+  "dd/test-health-ahiahbgbsp-pro04b.txt"
+ ],
+ "beir_arguana_test-health-ahiahbgbsp-pro05a": [
+  "90/test-health-ahiahbgbsp-pro05b.txt"
+ ],
+ "beir_arguana_test-health-dhghhbampt-con01a": [
+  "57/test-health-dhghhbampt-con01b.txt"
+ ],
+ "beir_arguana_test-health-dhghhbampt-con02a": [
+  "83/test-health-dhghhbampt-con02b.txt"
+ ],
+ "beir_arguana_test-health-dhghhbampt-con03a": [
+  "e0/test-health-dhghhbampt-con03b.txt"
+ ],
+ "beir_arguana_test-health-dhghhbampt-pro01a": [
+  "a4/test-health-dhghhbampt-pro01b.txt"
+ ],
+ "beir_arguana_test-health-dhghhbampt-pro02a": [
+  "77/test-health-dhghhbampt-pro02b.txt"
+ ],
+ "beir_arguana_test-health-dhghhbampt-pro03a": [
+  "95/test-health-dhghhbampt-pro03b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-con01a": [
+  "d1/test-health-dhghwapgd-con01b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-con02a": [
+  "b9/test-health-dhghwapgd-con02b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-con03a": [
+  "98/test-health-dhghwapgd-con03b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-con04a": [
+  "de/test-health-dhghwapgd-con04b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-pro01a": [
+  "d4/test-health-dhghwapgd-pro01b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-pro02a": [
+  "46/test-health-dhghwapgd-pro02b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-pro03a": [
+  "80/test-health-dhghwapgd-pro03b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-pro04a": [
+  "a7/test-health-dhghwapgd-pro04b.txt"
+ ],
+ "beir_arguana_test-health-dhghwapgd-pro05a": [
+  "95/test-health-dhghwapgd-pro05b.txt"
+ ],
+ "beir_arguana_test-health-dhgsshbesbc-con01a": [
+  "92/test-health-dhgsshbesbc-con01b.txt"
+ ],
+ "beir_arguana_test-health-dhgsshbesbc-con02a": [
+  "2f/test-health-dhgsshbesbc-con02b.txt"
+ ],
+ "beir_arguana_test-health-dhgsshbesbc-con03a": [
+  "66/test-health-dhgsshbesbc-con03b.txt"
+ ],
+ "beir_arguana_test-health-dhgsshbesbc-pro01a": [
+  "06/test-health-dhgsshbesbc-pro01b.txt"
+ ],
+ "beir_arguana_test-health-dhgsshbesbc-pro02a": [
+  "73/test-health-dhgsshbesbc-pro02b.txt"
+ ],
+ "beir_arguana_test-health-dhgsshbesbc-pro03a": [
+  "79/test-health-dhgsshbesbc-pro03b.txt"
+ ],
+ "beir_arguana_test-health-dhgsshbesbc-pro04a": [
+  "24/test-health-dhgsshbesbc-pro04b.txt"
+ ],
+ "beir_arguana_test-health-dhiacihwph-con01a": [
+  "0f/test-health-dhiacihwph-con01b.txt"
+ ],
+ "beir_arguana_test-health-dhiacihwph-con02a": [
+  "f9/test-health-dhiacihwph-con02b.txt"
+ ],
+ "beir_arguana_test-health-dhiacihwph-con03a": [
+  "1b/test-health-dhiacihwph-con03b.txt"
+ ],
+ "beir_arguana_test-health-dhiacihwph-pro01a": [
+  "a8/test-health-dhiacihwph-pro01b.txt"
+ ],
+ "beir_arguana_test-health-dhiacihwph-pro02a": [
+  "30/test-health-dhiacihwph-pro02b.txt"
+ ],
+ "beir_arguana_test-health-dhiacihwph-pro03a": [
+  "c1/test-health-dhiacihwph-pro03b.txt"
+ ],
+ "beir_arguana_test-health-dhiacihwph-pro04a": [
+  "35/test-health-dhiacihwph-pro04b.txt"
+ ],
+ "beir_arguana_test-health-dhpelhbass-con01a": [
+  "f1/test-health-dhpelhbass-con01b.txt"
+ ],
+ "beir_arguana_test-health-dhpelhbass-con02a": [
+  "ce/test-health-dhpelhbass-con02b.txt"
+ ],
+ "beir_arguana_test-health-dhpelhbass-con03a": [
+  "21/test-health-dhpelhbass-con03b.txt"
+ ],
+ "beir_arguana_test-health-dhpelhbass-con04a": [
+  "ea/test-health-dhpelhbass-con04b.txt"
+ ],
+ "beir_arguana_test-health-dhpelhbass-pro01a": [
+  "3c/test-health-dhpelhbass-pro01b.txt"
+ ],
+ "beir_arguana_test-health-dhpelhbass-pro02a": [
+  "78/test-health-dhpelhbass-pro02b.txt"
+ ],
+ "beir_arguana_test-health-dhpelhbass-pro03a": [
+  "bd/test-health-dhpelhbass-pro03b.txt"
+ ],
+ "beir_arguana_test-health-hdond-con01a": [
+  "cb/test-health-hdond-con01b.txt"
+ ],
+ "beir_arguana_test-health-hdond-con02a": [
+  "b9/test-health-hdond-con02b.txt"
+ ],
+ "beir_arguana_test-health-hdond-con03a": [
+  "65/test-health-hdond-con03b.txt"
+ ],
+ "beir_arguana_test-health-hdond-con04a": [
+  "cd/test-health-hdond-con04b.txt"
+ ],
+ "beir_arguana_test-health-hdond-pro01a": [
+  "ef/test-health-hdond-pro01b.txt"
+ ],
+ "beir_arguana_test-health-hdond-pro02a": [
+  "b1/test-health-hdond-pro02b.txt"
+ ],
+ "beir_arguana_test-health-hdond-pro03a": [
+  "e8/test-health-hdond-pro03b.txt"
+ ],
+ "beir_arguana_test-health-hdond-pro04a": [
+  "c3/test-health-hdond-pro04b.txt"
+ ],
+ "beir_arguana_test-health-hgwhwbjfs-con01a": [
+  "dd/test-health-hgwhwbjfs-con01b.txt"
+ ],
+ "beir_arguana_test-health-hgwhwbjfs-con02a": [
+  "50/test-health-hgwhwbjfs-con02b.txt"
+ ],
+ "beir_arguana_test-health-hgwhwbjfs-con03a": [
+  "63/test-health-hgwhwbjfs-con03b.txt"
+ ],
+ "beir_arguana_test-health-hgwhwbjfs-con04a": [
+  "0f/test-health-hgwhwbjfs-con04b.txt"
+ ],
+ "beir_arguana_test-health-hgwhwbjfs-pro01a": [
+  "76/test-health-hgwhwbjfs-pro01b.txt"
+ ],
+ "beir_arguana_test-health-hgwhwbjfs-pro02a": [
+  "ee/test-health-hgwhwbjfs-pro02b.txt"
+ ],
+ "beir_arguana_test-health-hgwhwbjfs-pro03a": [
+  "7b/test-health-hgwhwbjfs-pro03b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-con01a": [
+  "87/test-health-hpehwadvoee-con01b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-con02a": [
+  "0e/test-health-hpehwadvoee-con02b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-con03a": [
+  "78/test-health-hpehwadvoee-con03b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-con04a": [
+  "8e/test-health-hpehwadvoee-con04b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-con05a": [
+  "2a/test-health-hpehwadvoee-con05b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-pro01a": [
+  "04/test-health-hpehwadvoee-pro01b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-pro02a": [
+  "0b/test-health-hpehwadvoee-pro02b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-pro03a": [
+  "02/test-health-hpehwadvoee-pro03b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-pro04a": [
+  "7a/test-health-hpehwadvoee-pro04b.txt"
+ ],
+ "beir_arguana_test-health-hpehwadvoee-pro05a": [
+  "51/test-health-hpehwadvoee-pro05b.txt"
+ ],
+ "beir_arguana_test-health-ppelfhwbpba-con01a": [
+  "37/test-health-ppelfhwbpba-con01b.txt"
+ ],
+ "beir_arguana_test-health-ppelfhwbpba-con02a": [
+  "f8/test-health-ppelfhwbpba-con02b.txt"
+ ],
+ "beir_arguana_test-health-ppelfhwbpba-con03a": [
+  "cd/test-health-ppelfhwbpba-con03b.txt"
+ ],
+ "beir_arguana_test-health-ppelfhwbpba-pro01a": [
+  "d3/test-health-ppelfhwbpba-pro01b.txt"
+ ],
+ "beir_arguana_test-health-ppelfhwbpba-pro02a": [
+  "9a/test-health-ppelfhwbpba-pro02b.txt"
+ ],
+ "beir_arguana_test-health-ppelfhwbpba-pro03a": [
+  "45/test-health-ppelfhwbpba-pro03b.txt"
+ ],
+ "beir_arguana_test-health-ppelfhwbpba-pro04a": [
+  "86/test-health-ppelfhwbpba-pro04b.txt"
+ ],
+ "beir_arguana_test-international-aahwstdrtfm-con01a": [
+  "68/test-international-aahwstdrtfm-con01b.txt"
+ ],
+ "beir_arguana_test-international-aahwstdrtfm-con02a": [
+  "d6/test-international-aahwstdrtfm-con02b.txt"
+ ],
+ "beir_arguana_test-international-aahwstdrtfm-con03a": [
+  "c8/test-international-aahwstdrtfm-con03b.txt"
+ ],
+ "beir_arguana_test-international-aahwstdrtfm-pro01a": [
+  "58/test-international-aahwstdrtfm-pro01b.txt"
+ ],
+ "beir_arguana_test-international-aahwstdrtfm-pro02a": [
+  "fb/test-international-aahwstdrtfm-pro02b.txt"
+ ],
+ "beir_arguana_test-international-aahwstdrtfm-pro03a": [
+  "d3/test-international-aahwstdrtfm-pro03b.txt"
+ ],
+ "beir_arguana_test-international-aahwstdrtfm-pro04a": [
+  "36/test-international-aahwstdrtfm-pro04b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-con01a": [
+  "f5/test-international-aegmeppghw-con01b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-con02a": [
+  "f6/test-international-aegmeppghw-con02b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-con03a": [
+  "5d/test-international-aegmeppghw-con03b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-con04a": [
+  "9b/test-international-aegmeppghw-con04b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-con05a": [
+  "34/test-international-aegmeppghw-con05b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-pro01a": [
+  "89/test-international-aegmeppghw-pro01b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-pro02a": [
+  "e9/test-international-aegmeppghw-pro02b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-pro03a": [
+  "c9/test-international-aegmeppghw-pro03b.txt"
+ ],
+ "beir_arguana_test-international-aegmeppghw-pro04a": [
+  "78/test-international-aegmeppghw-pro04b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-con01a": [
+  "5e/test-international-aghbfcpspr-con01b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-con02a": [
+  "38/test-international-aghbfcpspr-con02b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-con03a": [
+  "ff/test-international-aghbfcpspr-con03b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-con04a": [
+  "94/test-international-aghbfcpspr-con04b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-pro01a": [
+  "a9/test-international-aghbfcpspr-pro01b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-pro02a": [
+  "90/test-international-aghbfcpspr-pro02b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-pro03a": [
+  "e5/test-international-aghbfcpspr-pro03b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-pro04a": [
+  "49/test-international-aghbfcpspr-pro04b.txt"
+ ],
+ "beir_arguana_test-international-aghbfcpspr-pro05a": [
+  "83/test-international-aghbfcpspr-pro05b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-con01a": [
+  "cb/test-international-aghwrem-con01b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-con02a": [
+  "76/test-international-aghwrem-con02b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-con03a": [
+  "01/test-international-aghwrem-con03b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-con04a": [
+  "69/test-international-aghwrem-con04b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-pro01a": [
+  "2b/test-international-aghwrem-pro01b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-pro02a": [
+  "aa/test-international-aghwrem-pro02b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-pro03a": [
+  "75/test-international-aghwrem-pro03b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-pro04a": [
+  "43/test-international-aghwrem-pro04b.txt"
+ ],
+ "beir_arguana_test-international-aghwrem-pro05a": [
+  "af/test-international-aghwrem-pro05b.txt"
+ ],
+ "beir_arguana_test-international-aglhrilhb-con01a": [
+  "da/test-international-aglhrilhb-con01b.txt"
+ ],
+ "beir_arguana_test-international-aglhrilhb-con02a": [
+  "f4/test-international-aglhrilhb-con02b.txt"
+ ],
+ "beir_arguana_test-international-aglhrilhb-con03a": [
+  "68/test-international-aglhrilhb-con03b.txt"
+ ],
+ "beir_arguana_test-international-aglhrilhb-pro01a": [
+  "17/test-international-aglhrilhb-pro01b.txt"
+ ],
+ "beir_arguana_test-international-aglhrilhb-pro02a": [
+  "9e/test-international-aglhrilhb-pro02b.txt"
+ ],
+ "beir_arguana_test-international-aglhrilhb-pro03a": [
+  "ed/test-international-aglhrilhb-pro03b.txt"
+ ],
+ "beir_arguana_test-international-aglhrilhb-pro04a": [
+  "05/test-international-aglhrilhb-pro04b.txt"
+ ],
+ "beir_arguana_test-international-amehbuaisji-con01a": [
+  "68/test-international-amehbuaisji-con01b.txt"
+ ],
+ "beir_arguana_test-international-amehbuaisji-con02a": [
+  "97/test-international-amehbuaisji-con02b.txt"
+ ],
+ "beir_arguana_test-international-amehbuaisji-con03a": [
+  "a6/test-international-amehbuaisji-con03b.txt"
+ ],
+ "beir_arguana_test-international-amehbuaisji-con04a": [
+  "18/test-international-amehbuaisji-con04b.txt"
+ ],
+ "beir_arguana_test-international-amehbuaisji-pro01a": [
+  "09/test-international-amehbuaisji-pro01b.txt"
+ ],
+ "beir_arguana_test-international-amehbuaisji-pro02a": [
+  "1b/test-international-amehbuaisji-pro02b.txt"
+ ],
+ "beir_arguana_test-international-amehbuaisji-pro03a": [
+  "6f/test-international-amehbuaisji-pro03b.txt"
+ ],
+ "beir_arguana_test-international-appghblsba-con01a": [
+  "35/test-international-appghblsba-con01b.txt"
+ ],
+ "beir_arguana_test-international-appghblsba-con02a": [
+  "1d/test-international-appghblsba-con02b.txt"
+ ],
+ "beir_arguana_test-international-appghblsba-con03a": [
+  "25/test-international-appghblsba-con03b.txt"
+ ],
+ "beir_arguana_test-international-appghblsba-pro01a": [
+  "ba/test-international-appghblsba-pro01b.txt"
+ ],
+ "beir_arguana_test-international-appghblsba-pro02a": [
+  "6f/test-international-appghblsba-pro02b.txt"
+ ],
+ "beir_arguana_test-international-appghblsba-pro03a": [
+  "a6/test-international-appghblsba-pro03b.txt"
+ ],
+ "beir_arguana_test-international-appghblsba-pro04a": [
+  "01/test-international-appghblsba-pro04b.txt"
+ ],
+ "beir_arguana_test-international-apwhbaucmip-con01a": [
+  "93/test-international-apwhbaucmip-con01b.txt"
+ ],
+ "beir_arguana_test-international-apwhbaucmip-con02a": [
+  "ce/test-international-apwhbaucmip-con02b.txt"
+ ],
+ "beir_arguana_test-international-apwhbaucmip-con03a": [
+  "e1/test-international-apwhbaucmip-con03b.txt"
+ ],
+ "beir_arguana_test-international-apwhbaucmip-con04a": [
+  "a3/test-international-apwhbaucmip-con04b.txt"
+ ],
+ "beir_arguana_test-international-apwhbaucmip-pro01a": [
+  "b0/test-international-apwhbaucmip-pro01b.txt"
+ ],
+ "beir_arguana_test-international-apwhbaucmip-pro02a": [
+  "3f/test-international-apwhbaucmip-pro02b.txt"
+ ],
+ "beir_arguana_test-international-apwhbaucmip-pro03a": [
+  "c1/test-international-apwhbaucmip-pro03b.txt"
+ ],
+ "beir_arguana_test-international-apwhbaucmip-pro04a": [
+  "d8/test-international-apwhbaucmip-pro04b.txt"
+ ],
+ "beir_arguana_test-international-atiahblit-con01a": [
+  "8a/test-international-atiahblit-con01b.txt"
+ ],
+ "beir_arguana_test-international-atiahblit-con02a": [
+  "7a/test-international-atiahblit-con02b.txt"
+ ],
+ "beir_arguana_test-international-atiahblit-con03a": [
+  "ca/test-international-atiahblit-con03b.txt"
+ ],
+ "beir_arguana_test-international-atiahblit-con04a": [
+  "f1/test-international-atiahblit-con04b.txt"
+ ],
+ "beir_arguana_test-international-atiahblit-pro01a": [
+  "62/test-international-atiahblit-pro01b.txt"
+ ],
+ "beir_arguana_test-international-atiahblit-pro02a": [
+  "eb/test-international-atiahblit-pro02b.txt"
+ ],
+ "beir_arguana_test-international-atiahblit-pro03a": [
+  "66/test-international-atiahblit-pro03b.txt"
+ ],
+ "beir_arguana_test-international-atiahblit-pro04a": [
+  "6a/test-international-atiahblit-pro04b.txt"
+ ],
+ "beir_arguana_test-international-bldimehbn-con01a": [
+  "bf/test-international-bldimehbn-con01b.txt"
+ ],
+ "beir_arguana_test-international-bldimehbn-con02a": [
+  "20/test-international-bldimehbn-con02b.txt"
+ ],
+ "beir_arguana_test-international-bldimehbn-con03a": [
+  "fa/test-international-bldimehbn-con03b.txt"
+ ],
+ "beir_arguana_test-international-bldimehbn-pro01a": [
+  "5b/test-international-bldimehbn-pro01b.txt"
+ ],
+ "beir_arguana_test-international-bldimehbn-pro02a": [
+  "21/test-international-bldimehbn-pro02b.txt"
+ ],
+ "beir_arguana_test-international-bldimehbn-pro03a": [
+  "4e/test-international-bldimehbn-pro03b.txt"
+ ],
+ "beir_arguana_test-international-bmaggiahbl-con01a": [
+  "7c/test-international-bmaggiahbl-con01b.txt"
+ ],
+ "beir_arguana_test-international-bmaggiahbl-con02a": [
+  "3f/test-international-bmaggiahbl-con02b.txt"
+ ],
+ "beir_arguana_test-international-bmaggiahbl-con03a": [
+  "0b/test-international-bmaggiahbl-con03b.txt"
+ ],
+ "beir_arguana_test-international-bmaggiahbl-pro01a": [
+  "5b/test-international-bmaggiahbl-pro01b.txt"
+ ],
+ "beir_arguana_test-international-bmaggiahbl-pro02a": [
+  "3d/test-international-bmaggiahbl-pro02b.txt"
+ ],
+ "beir_arguana_test-international-bmaggiahbl-pro03a": [
+  "75/test-international-bmaggiahbl-pro03b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-con01a": [
+  "40/test-international-eghrhbeusli-con01b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-con02a": [
+  "c1/test-international-eghrhbeusli-con02b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-con03a": [
+  "fa/test-international-eghrhbeusli-con03b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-con04a": [
+  "49/test-international-eghrhbeusli-con04b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-con05a": [
+  "41/test-international-eghrhbeusli-con05b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-pro01a": [
+  "15/test-international-eghrhbeusli-pro01b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-pro02a": [
+  "4b/test-international-eghrhbeusli-pro02b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-pro03a": [
+  "52/test-international-eghrhbeusli-pro03b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-pro04a": [
+  "f9/test-international-eghrhbeusli-pro04b.txt"
+ ],
+ "beir_arguana_test-international-eghrhbeusli-pro05a": [
+  "68/test-international-eghrhbeusli-pro05b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-con01a": [
+  "2e/test-international-ehbfe-con01b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-con02a": [
+  "68/test-international-ehbfe-con02b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-con03a": [
+  "f1/test-international-ehbfe-con03b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-con04a": [
+  "49/test-international-ehbfe-con04b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-pro01a": [
+  "1c/test-international-ehbfe-pro01b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-pro02a": [
+  "f2/test-international-ehbfe-pro02b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-pro03a": [
+  "2c/test-international-ehbfe-pro03b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-pro04a": [
+  "33/test-international-ehbfe-pro04b.txt"
+ ],
+ "beir_arguana_test-international-ehbfe-pro05a": [
+  "66/test-international-ehbfe-pro05b.txt"
+ ],
+ "beir_arguana_test-international-eiahwpamu-con01a": [
+  "af/test-international-eiahwpamu-con01b.txt"
+ ],
+ "beir_arguana_test-international-eiahwpamu-con02a": [
+  "e7/test-international-eiahwpamu-con02b.txt"
+ ],
+ "beir_arguana_test-international-eiahwpamu-con03a": [
+  "1a/test-international-eiahwpamu-con03b.txt"
+ ],
+ "beir_arguana_test-international-eiahwpamu-pro01a": [
+  "e7/test-international-eiahwpamu-pro01b.txt"
+ ],
+ "beir_arguana_test-international-eiahwpamu-pro02a": [
+  "36/test-international-eiahwpamu-pro02b.txt"
+ ],
+ "beir_arguana_test-international-eiahwpamu-pro03a": [
+  "bb/test-international-eiahwpamu-pro03b.txt"
+ ],
+ "beir_arguana_test-international-eiahwpamu-pro04a": [
+  "d2/test-international-eiahwpamu-pro04b.txt"
+ ],
+ "beir_arguana_test-international-eiahwpamu-pro05a": [
+  "f1/test-international-eiahwpamu-pro05b.txt"
+ ],
+ "beir_arguana_test-international-emephsate-con01a": [
+  "8b/test-international-emephsate-con01b.txt"
+ ],
+ "beir_arguana_test-international-emephsate-con02a": [
+  "1c/test-international-emephsate-con02b.txt"
+ ],
+ "beir_arguana_test-international-emephsate-con03a": [
+  "9c/test-international-emephsate-con03b.txt"
+ ],
+ "beir_arguana_test-international-emephsate-pro01a": [
+  "06/test-international-emephsate-pro01b.txt"
+ ],
+ "beir_arguana_test-international-emephsate-pro02a": [
+  "cb/test-international-emephsate-pro02b.txt"
+ ],
+ "beir_arguana_test-international-emephsate-pro03a": [
+  "dc/test-international-emephsate-pro03b.txt"
+ ],
+ "beir_arguana_test-international-epdlhfcefp-con01a": [
+  "78/test-international-epdlhfcefp-con01b.txt"
+ ],
+ "beir_arguana_test-international-epdlhfcefp-con02a": [
+  "74/test-international-epdlhfcefp-con02b.txt"
+ ],
+ "beir_arguana_test-international-epdlhfcefp-con03a": [
+  "ff/test-international-epdlhfcefp-con03b.txt"
+ ],
+ "beir_arguana_test-international-epdlhfcefp-pro01a": [
+  "64/test-international-epdlhfcefp-pro01b.txt"
+ ],
+ "beir_arguana_test-international-epdlhfcefp-pro02a": [
+  "25/test-international-epdlhfcefp-pro02b.txt"
+ ],
+ "beir_arguana_test-international-epdlhfcefp-pro03a": [
+  "d7/test-international-epdlhfcefp-pro03b.txt"
+ ],
+ "beir_arguana_test-international-epdlhfcefp-pro04a": [
+  "09/test-international-epdlhfcefp-pro04b.txt"
+ ],
+ "beir_arguana_test-international-epglghbni-con01a": [
+  "12/test-international-epglghbni-con01b.txt"
+ ],
+ "beir_arguana_test-international-epglghbni-con02a": [
+  "18/test-international-epglghbni-con02b.txt"
+ ],
+ "beir_arguana_test-international-epglghbni-con03a": [
+  "51/test-international-epglghbni-con03b.txt"
+ ],
+ "beir_arguana_test-international-epglghbni-pro01a": [
+  "f2/test-international-epglghbni-pro01b.txt"
+ ],
+ "beir_arguana_test-international-epglghbni-pro02a": [
+  "a6/test-international-epglghbni-pro02b.txt"
+ ],
+ "beir_arguana_test-international-epglghbni-pro03a": [
+  "88/test-international-epglghbni-pro03b.txt"
+ ],
+ "beir_arguana_test-international-epglghbni-pro04a": [
+  "9e/test-international-epglghbni-pro04b.txt"
+ ],
+ "beir_arguana_test-international-epglghbni-pro05a": [
+  "42/test-international-epglghbni-pro05b.txt"
+ ],
+ "beir_arguana_test-international-epvhwhranet-con01a": [
+  "b4/test-international-epvhwhranet-con01b.txt"
+ ],
+ "beir_arguana_test-international-epvhwhranet-con02a": [
+  "fc/test-international-epvhwhranet-con02b.txt"
+ ],
+ "beir_arguana_test-international-epvhwhranet-con03a": [
+  "7a/test-international-epvhwhranet-con03b.txt"
+ ],
+ "beir_arguana_test-international-epvhwhranet-con04a": [
+  "c4/test-international-epvhwhranet-con04b.txt"
+ ],
+ "beir_arguana_test-international-epvhwhranet-pro01a": [
+  "2c/test-international-epvhwhranet-pro01b.txt"
+ ],
+ "beir_arguana_test-international-epvhwhranet-pro02a": [
+  "9c/test-international-epvhwhranet-pro02b.txt"
+ ],
+ "beir_arguana_test-international-epvhwhranet-pro03a": [
+  "09/test-international-epvhwhranet-pro03b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-con01a": [
+  "72/test-international-ghbunhf-con01b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-con02a": [
+  "15/test-international-ghbunhf-con02b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-con03a": [
+  "db/test-international-ghbunhf-con03b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-con04a": [
+  "e9/test-international-ghbunhf-con04b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-con05a": [
+  "82/test-international-ghbunhf-con05b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-pro01a": [
+  "32/test-international-ghbunhf-pro01b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-pro02a": [
+  "cb/test-international-ghbunhf-pro02b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-pro03a": [
+  "fd/test-international-ghbunhf-pro03b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-pro04a": [
+  "f0/test-international-ghbunhf-pro04b.txt"
+ ],
+ "beir_arguana_test-international-ghbunhf-pro05a": [
+  "e4/test-international-ghbunhf-pro05b.txt"
+ ],
+ "beir_arguana_test-international-ghwcitca-con01a": [
+  "7b/test-international-ghwcitca-con01b.txt"
+ ],
+ "beir_arguana_test-international-ghwcitca-con02a": [
+  "d4/test-international-ghwcitca-con02b.txt"
+ ],
+ "beir_arguana_test-international-ghwcitca-con03a": [
+  "59/test-international-ghwcitca-con03b.txt"
+ ],
+ "beir_arguana_test-international-ghwcitca-pro01a": [
+  "62/test-international-ghwcitca-pro01b.txt"
+ ],
+ "beir_arguana_test-international-ghwcitca-pro02a": [
+  "88/test-international-ghwcitca-pro02b.txt"
+ ],
+ "beir_arguana_test-international-ghwcitca-pro03a": [
+  "88/test-international-ghwcitca-pro03b.txt"
+ ],
+ "beir_arguana_test-international-ghwcitca-pro04a": [
+  "95/test-international-ghwcitca-pro04b.txt"
+ ],
+ "beir_arguana_test-international-glilpdwhsn-con01a": [
+  "10/test-international-glilpdwhsn-con01b.txt"
+ ],
+ "beir_arguana_test-international-glilpdwhsn-con02a": [
+  "40/test-international-glilpdwhsn-con02b.txt"
+ ],
+ "beir_arguana_test-international-glilpdwhsn-con03a": [
+  "28/test-international-glilpdwhsn-con03b.txt"
+ ],
+ "beir_arguana_test-international-glilpdwhsn-con04a": [
+  "6c/test-international-glilpdwhsn-con04b.txt"
+ ],
+ "beir_arguana_test-international-glilpdwhsn-pro01a": [
+  "5d/test-international-glilpdwhsn-pro01b.txt"
+ ],
+ "beir_arguana_test-international-glilpdwhsn-pro02a": [
+  "ef/test-international-glilpdwhsn-pro02b.txt"
+ ],
+ "beir_arguana_test-international-glilpdwhsn-pro03a": [
+  "ef/test-international-glilpdwhsn-pro03b.txt"
+ ],
+ "beir_arguana_test-international-gmehbisrip1b-con01a": [
+  "f0/test-international-gmehbisrip1b-con01b.txt"
+ ],
+ "beir_arguana_test-international-gmehbisrip1b-con02a": [
+  "f1/test-international-gmehbisrip1b-con02b.txt"
+ ],
+ "beir_arguana_test-international-gmehbisrip1b-con03a": [
+  "86/test-international-gmehbisrip1b-con03b.txt"
+ ],
+ "beir_arguana_test-international-gmehbisrip1b-pro01a": [
+  "b8/test-international-gmehbisrip1b-pro01b.txt"
+ ],
+ "beir_arguana_test-international-gmehbisrip1b-pro02a": [
+  "53/test-international-gmehbisrip1b-pro02b.txt"
+ ],
+ "beir_arguana_test-international-gmehbisrip1b-pro03a": [
+  "d6/test-international-gmehbisrip1b-pro03b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-con01a": [
+  "4b/test-international-gmehwasr-con01b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-con02a": [
+  "a0/test-international-gmehwasr-con02b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-con03a": [
+  "b3/test-international-gmehwasr-con03b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-con04a": [
+  "d4/test-international-gmehwasr-con04b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-con05a": [
+  "f3/test-international-gmehwasr-con05b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-pro01a": [
+  "1f/test-international-gmehwasr-pro01b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-pro02a": [
+  "f5/test-international-gmehwasr-pro02b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-pro03a": [
+  "d9/test-international-gmehwasr-pro03b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-pro04a": [
+  "35/test-international-gmehwasr-pro04b.txt"
+ ],
+ "beir_arguana_test-international-gmehwasr-pro05a": [
+  "17/test-international-gmehwasr-pro05b.txt"
+ ],
+ "beir_arguana_test-international-gpdwhwcusa-con01a": [
+  "36/test-international-gpdwhwcusa-con01b.txt"
+ ],
+ "beir_arguana_test-international-gpdwhwcusa-con02a": [
+  "b1/test-international-gpdwhwcusa-con02b.txt"
+ ],
+ "beir_arguana_test-international-gpdwhwcusa-con03a": [
+  "1d/test-international-gpdwhwcusa-con03b.txt"
+ ],
+ "beir_arguana_test-international-gpdwhwcusa-con04a": [
+  "11/test-international-gpdwhwcusa-con04b.txt"
+ ],
+ "beir_arguana_test-international-gpdwhwcusa-con05a": [
+  "22/test-international-gpdwhwcusa-con05b.txt"
+ ],
+ "beir_arguana_test-international-gpdwhwcusa-pro01a": [
+  "9d/test-international-gpdwhwcusa-pro01b.txt"
+ ],
+ "beir_arguana_test-international-gpdwhwcusa-pro02a": [
+  "eb/test-international-gpdwhwcusa-pro02b.txt"
+ ],
+ "beir_arguana_test-international-gpdwhwcusa-pro03a": [
+  "a1/test-international-gpdwhwcusa-pro03b.txt"
+ ],
+ "beir_arguana_test-international-gpsmhbsosb-con01a": [
+  "ae/test-international-gpsmhbsosb-con01b.txt"
+ ],
+ "beir_arguana_test-international-gpsmhbsosb-con02a": [
+  "48/test-international-gpsmhbsosb-con02b.txt"
+ ],
+ "beir_arguana_test-international-gpsmhbsosb-con03a": [
+  "ed/test-international-gpsmhbsosb-con03b.txt"
+ ],
+ "beir_arguana_test-international-gpsmhbsosb-pro01a": [
+  "9d/test-international-gpsmhbsosb-pro01b.txt"
+ ],
+ "beir_arguana_test-international-gpsmhbsosb-pro02a": [
+  "ce/test-international-gpsmhbsosb-pro02b.txt"
+ ],
+ "beir_arguana_test-international-gpsmhbsosb-pro03a": [
+  "6a/test-international-gpsmhbsosb-pro03b.txt"
+ ],
+ "beir_arguana_test-international-gsciidffe-con01a": [
+  "c1/test-international-gsciidffe-con01b.txt"
+ ],
+ "beir_arguana_test-international-gsciidffe-con02a": [
+  "4e/test-international-gsciidffe-con02b.txt"
+ ],
+ "beir_arguana_test-international-gsciidffe-con03a": [
+  "1c/test-international-gsciidffe-con03b.txt"
+ ],
+ "beir_arguana_test-international-gsciidffe-con04a": [
+  "76/test-international-gsciidffe-con04b.txt"
+ ],
+ "beir_arguana_test-international-gsciidffe-pro01a": [
+  "1b/test-international-gsciidffe-pro01b.txt"
+ ],
+ "beir_arguana_test-international-gsciidffe-pro02a": [
+  "ed/test-international-gsciidffe-pro02b.txt"
+ ],
+ "beir_arguana_test-international-gsciidffe-pro03a": [
+  "41/test-international-gsciidffe-pro03b.txt"
+ ],
+ "beir_arguana_test-international-gsciidffe-pro04a": [
+  "f1/test-international-gsciidffe-pro04b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-con01a": [
+  "b8/test-international-iiahwagit-con01b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-con02a": [
+  "c7/test-international-iiahwagit-con02b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-con03a": [
+  "98/test-international-iiahwagit-con03b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-con04a": [
+  "2c/test-international-iiahwagit-con04b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-pro01a": [
+  "81/test-international-iiahwagit-pro01b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-pro02a": [
+  "40/test-international-iiahwagit-pro02b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-pro03a": [
+  "a1/test-international-iiahwagit-pro03b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-pro04a": [
+  "0f/test-international-iiahwagit-pro04b.txt"
+ ],
+ "beir_arguana_test-international-iiahwagit-pro05a": [
+  "83/test-international-iiahwagit-pro05b.txt"
+ ],
+ "beir_arguana_test-international-iighbopcc-con01a": [
+  "e5/test-international-iighbopcc-con01b.txt"
+ ],
+ "beir_arguana_test-international-iighbopcc-con02a": [
+  "4c/test-international-iighbopcc-con02b.txt"
+ ],
+ "beir_arguana_test-international-iighbopcc-con03a": [
+  "1f/test-international-iighbopcc-con03b.txt"
+ ],
+ "beir_arguana_test-international-iighbopcc-pro01a": [
+  "9c/test-international-iighbopcc-pro01b.txt"
+ ],
+ "beir_arguana_test-international-iighbopcc-pro02a": [
+  "d7/test-international-iighbopcc-pro02b.txt"
+ ],
+ "beir_arguana_test-international-iighbopcc-pro03a": [
+  "1e/test-international-iighbopcc-pro03b.txt"
+ ],
+ "beir_arguana_test-international-ipecfiepg-con01a": [
+  "f5/test-international-ipecfiepg-con01b.txt"
+ ],
+ "beir_arguana_test-international-ipecfiepg-con02a": [
+  "38/test-international-ipecfiepg-con02b.txt"
+ ],
+ "beir_arguana_test-international-ipecfiepg-con03a": [
+  "00/test-international-ipecfiepg-con03b.txt"
+ ],
+ "beir_arguana_test-international-ipecfiepg-con04a": [
+  "0b/test-international-ipecfiepg-con04b.txt"
+ ],
+ "beir_arguana_test-international-ipecfiepg-pro01a": [
+  "dd/test-international-ipecfiepg-pro01b.txt"
+ ],
+ "beir_arguana_test-international-ipecfiepg-pro02a": [
+  "a7/test-international-ipecfiepg-pro02b.txt"
+ ],
+ "beir_arguana_test-international-ipecfiepg-pro03a": [
+  "1c/test-international-ipecfiepg-pro03b.txt"
+ ],
+ "beir_arguana_test-international-iwiaghbss-con01a": [
+  "e6/test-international-iwiaghbss-con01b.txt"
+ ],
+ "beir_arguana_test-international-iwiaghbss-con02a": [
+  "fd/test-international-iwiaghbss-con02b.txt"
+ ],
+ "beir_arguana_test-international-iwiaghbss-con03a": [
+  "df/test-international-iwiaghbss-con03b.txt"
+ ],
+ "beir_arguana_test-international-iwiaghbss-pro01a": [
+  "62/test-international-iwiaghbss-pro01b.txt"
+ ],
+ "beir_arguana_test-international-iwiaghbss-pro02a": [
+  "ae/test-international-iwiaghbss-pro02b.txt"
+ ],
+ "beir_arguana_test-international-iwiaghbss-pro03a": [
+  "e2/test-international-iwiaghbss-pro03b.txt"
+ ],
+ "beir_arguana_test-international-iwiaghbss-pro04a": [
+  "42/test-international-iwiaghbss-pro04b.txt"
+ ],
+ "beir_arguana_test-international-miasimyhw-con01a": [
+  "20/test-international-miasimyhw-con01b.txt"
+ ],
+ "beir_arguana_test-international-miasimyhw-con02a": [
+  "f8/test-international-miasimyhw-con02b.txt"
+ ],
+ "beir_arguana_test-international-miasimyhw-con03a": [
+  "ab/test-international-miasimyhw-con03b.txt"
+ ],
+ "beir_arguana_test-international-miasimyhw-pro01a": [
+  "e5/test-international-miasimyhw-pro01b.txt"
+ ],
+ "beir_arguana_test-international-miasimyhw-pro02a": [
+  "a9/test-international-miasimyhw-pro02b.txt"
+ ],
+ "beir_arguana_test-international-miasimyhw-pro03a": [
+  "46/test-international-miasimyhw-pro03b.txt"
+ ],
+ "beir_arguana_test-international-miasimyhw-pro04a": [
+  "d7/test-international-miasimyhw-pro04b.txt"
+ ],
+ "beir_arguana_test-international-miasimyhw-pro05a": [
+  "8c/test-international-miasimyhw-pro05b.txt"
+ ],
+ "beir_arguana_test-international-segiahbarr-con01a": [
+  "c4/test-international-segiahbarr-con01b.txt"
+ ],
+ "beir_arguana_test-international-segiahbarr-con02a": [
+  "53/test-international-segiahbarr-con02b.txt"
+ ],
+ "beir_arguana_test-international-segiahbarr-con03a": [
+  "e2/test-international-segiahbarr-con03b.txt"
+ ],
+ "beir_arguana_test-international-segiahbarr-con04a": [
+  "f3/test-international-segiahbarr-con04b.txt"
+ ],
+ "beir_arguana_test-international-segiahbarr-pro01a": [
+  "b8/test-international-segiahbarr-pro01b.txt"
+ ],
+ "beir_arguana_test-international-segiahbarr-pro02a": [
+  "8e/test-international-segiahbarr-pro02b.txt"
+ ],
+ "beir_arguana_test-international-segiahbarr-pro03a": [
+  "22/test-international-segiahbarr-pro03b.txt"
+ ],
+ "beir_arguana_test-international-segiahbarr-pro04a": [
+  "19/test-international-segiahbarr-pro04b.txt"
+ ],
+ "beir_arguana_test-international-sepiahbaaw-con01a": [
+  "7f/test-international-sepiahbaaw-con01b.txt"
+ ],
+ "beir_arguana_test-international-sepiahbaaw-con02a": [
+  "7e/test-international-sepiahbaaw-con02b.txt"
+ ],
+ "beir_arguana_test-international-sepiahbaaw-con03a": [
+  "ce/test-international-sepiahbaaw-con03b.txt"
+ ],
+ "beir_arguana_test-international-sepiahbaaw-pro01a": [
+  "57/test-international-sepiahbaaw-pro01b.txt"
+ ],
+ "beir_arguana_test-international-sepiahbaaw-pro02a": [
+  "48/test-international-sepiahbaaw-pro02b.txt"
+ ],
+ "beir_arguana_test-international-sepiahbaaw-pro03a": [
+  "7a/test-international-sepiahbaaw-pro03b.txt"
+ ],
+ "beir_arguana_test-international-sepiahbaaw-pro04a": [
+  "2b/test-international-sepiahbaaw-pro04b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-con01a": [
+  "7d/test-international-siacphbnt-con01b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-con02a": [
+  "3d/test-international-siacphbnt-con02b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-con03a": [
+  "56/test-international-siacphbnt-con03b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-con04a": [
+  "a3/test-international-siacphbnt-con04b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-pro01a": [
+  "92/test-international-siacphbnt-pro01b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-pro02a": [
+  "77/test-international-siacphbnt-pro02b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-pro03a": [
+  "96/test-international-siacphbnt-pro03b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-pro04a": [
+  "36/test-international-siacphbnt-pro04b.txt"
+ ],
+ "beir_arguana_test-international-siacphbnt-pro05a": [
+  "fc/test-international-siacphbnt-pro05b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-con01a": [
+  "ec/test-international-ssiarcmhb-con01b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-con02a": [
+  "dd/test-international-ssiarcmhb-con02b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-con03a": [
+  "25/test-international-ssiarcmhb-con03b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-con04a": [
+  "98/test-international-ssiarcmhb-con04b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-con05a": [
+  "1f/test-international-ssiarcmhb-con05b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-pro01a": [
+  "d5/test-international-ssiarcmhb-pro01b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-pro02a": [
+  "d7/test-international-ssiarcmhb-pro02b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-pro03a": [
+  "00/test-international-ssiarcmhb-pro03b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-pro04a": [
+  "87/test-international-ssiarcmhb-pro04b.txt"
+ ],
+ "beir_arguana_test-international-ssiarcmhb-pro05a": [
+  "e2/test-international-ssiarcmhb-pro05b.txt"
+ ],
+ "beir_arguana_test-law-cpilhbishioe-con01a": [
+  "7a/test-law-cpilhbishioe-con01b.txt"
+ ],
+ "beir_arguana_test-law-cpilhbishioe-con02a": [
+  "30/test-law-cpilhbishioe-con02b.txt"
+ ],
+ "beir_arguana_test-law-cpilhbishioe-con03a": [
+  "b7/test-law-cpilhbishioe-con03b.txt"
+ ],
+ "beir_arguana_test-law-cpilhbishioe-con04a": [
+  "b3/test-law-cpilhbishioe-con04b.txt"
+ ],
+ "beir_arguana_test-law-cpilhbishioe-pro01a": [
+  "b0/test-law-cpilhbishioe-pro01b.txt"
+ ],
+ "beir_arguana_test-law-cpilhbishioe-pro02a": [
+  "2d/test-law-cpilhbishioe-pro02b.txt"
+ ],
+ "beir_arguana_test-law-cpilhbishioe-pro03a": [
+  "27/test-law-cpilhbishioe-pro03b.txt"
+ ],
+ "beir_arguana_test-law-cpilhbishioe-pro04a": [
+  "0c/test-law-cpilhbishioe-pro04b.txt"
+ ],
+ "beir_arguana_test-law-cplglghwbhwd-con01a": [
+  "9d/test-law-cplglghwbhwd-con01b.txt"
+ ],
+ "beir_arguana_test-law-cplglghwbhwd-con02a": [
+  "00/test-law-cplglghwbhwd-con02b.txt"
+ ],
+ "beir_arguana_test-law-cplglghwbhwd-con03a": [
+  "f6/test-law-cplglghwbhwd-con03b.txt"
+ ],
+ "beir_arguana_test-law-cplglghwbhwd-pro01a": [
+  "ff/test-law-cplglghwbhwd-pro01b.txt"
+ ],
+ "beir_arguana_test-law-cplglghwbhwd-pro02a": [
+  "b3/test-law-cplglghwbhwd-pro02b.txt"
+ ],
+ "beir_arguana_test-law-cplglghwbhwd-pro03a": [
+  "2c/test-law-cplglghwbhwd-pro03b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-con01a": [
+  "2c/test-law-cplgpshwdp-con01b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-con02a": [
+  "76/test-law-cplgpshwdp-con02b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-con03a": [
+  "a2/test-law-cplgpshwdp-con03b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-con04a": [
+  "01/test-law-cplgpshwdp-con04b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-pro01a": [
+  "6d/test-law-cplgpshwdp-pro01b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-pro02a": [
+  "2d/test-law-cplgpshwdp-pro02b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-pro03a": [
+  "d4/test-law-cplgpshwdp-pro03b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-pro04a": [
+  "0c/test-law-cplgpshwdp-pro04b.txt"
+ ],
+ "beir_arguana_test-law-cplgpshwdp-pro05a": [
+  "90/test-law-cplgpshwdp-pro05b.txt"
+ ],
+ "beir_arguana_test-law-cppshbcjsfm-con01a": [
+  "2c/test-law-cppshbcjsfm-con01b.txt"
+ ],
+ "beir_arguana_test-law-cppshbcjsfm-con02a": [
+  "68/test-law-cppshbcjsfm-con02b.txt"
+ ],
+ "beir_arguana_test-law-cppshbcjsfm-con03a": [
+  "be/test-law-cppshbcjsfm-con03b.txt"
+ ],
+ "beir_arguana_test-law-cppshbcjsfm-con04a": [
+  "2b/test-law-cppshbcjsfm-con04b.txt"
+ ],
+ "beir_arguana_test-law-cppshbcjsfm-pro01a": [
+  "c2/test-law-cppshbcjsfm-pro01b.txt"
+ ],
+ "beir_arguana_test-law-cppshbcjsfm-pro02a": [
+  "1a/test-law-cppshbcjsfm-pro02b.txt"
+ ],
+ "beir_arguana_test-law-hrilpgwhwr-con01a": [
+  "b5/test-law-hrilpgwhwr-con01b.txt"
+ ],
+ "beir_arguana_test-law-hrilpgwhwr-con02a": [
+  "1a/test-law-hrilpgwhwr-con02b.txt"
+ ],
+ "beir_arguana_test-law-hrilpgwhwr-con03a": [
+  "36/test-law-hrilpgwhwr-con03b.txt"
+ ],
+ "beir_arguana_test-law-hrilpgwhwr-con04a": [
+  "83/test-law-hrilpgwhwr-con04b.txt"
+ ],
+ "beir_arguana_test-law-hrilpgwhwr-con05a": [
+  "b1/test-law-hrilpgwhwr-con05b.txt"
+ ],
+ "beir_arguana_test-law-hrilpgwhwr-pro01a": [
+  "8f/test-law-hrilpgwhwr-pro01b.txt"
+ ],
+ "beir_arguana_test-law-hrilpgwhwr-pro02a": [
+  "68/test-law-hrilpgwhwr-pro02b.txt"
+ ],
+ "beir_arguana_test-law-hrilpgwhwr-pro03a": [
+  "ae/test-law-hrilpgwhwr-pro03b.txt"
+ ],
+ "beir_arguana_test-law-hrpepthwuto-con01a": [
+  "5a/test-law-hrpepthwuto-con01b.txt"
+ ],
+ "beir_arguana_test-law-hrpepthwuto-con02a": [
+  "a7/test-law-hrpepthwuto-con02b.txt"
+ ],
+ "beir_arguana_test-law-hrpepthwuto-con03a": [
+  "30/test-law-hrpepthwuto-con03b.txt"
+ ],
+ "beir_arguana_test-law-hrpepthwuto-pro01a": [
+  "bd/test-law-hrpepthwuto-pro01b.txt"
+ ],
+ "beir_arguana_test-law-hrpepthwuto-pro02a": [
+  "db/test-law-hrpepthwuto-pro02b.txt"
+ ],
+ "beir_arguana_test-law-hrpepthwuto-pro03a": [
+  "b5/test-law-hrpepthwuto-pro03b.txt"
+ ],
+ "beir_arguana_test-law-ilppppghb-con01a": [
+  "37/test-law-ilppppghb-con01b.txt"
+ ],
+ "beir_arguana_test-law-ilppppghb-con02a": [
+  "1d/test-law-ilppppghb-con02b.txt"
+ ],
+ "beir_arguana_test-law-ilppppghb-con03a": [
+  "b7/test-law-ilppppghb-con03b.txt"
+ ],
+ "beir_arguana_test-law-ilppppghb-pro01a": [
+  "05/test-law-ilppppghb-pro01b.txt"
+ ],
+ "beir_arguana_test-law-ilppppghb-pro02a": [
+  "72/test-law-ilppppghb-pro02b.txt"
+ ],
+ "beir_arguana_test-law-ilppppghb-pro03a": [
+  "c7/test-law-ilppppghb-pro03b.txt"
+ ],
+ "beir_arguana_test-law-ilppppghb-pro04a": [
+  "0c/test-law-ilppppghb-pro04b.txt"
+ ],
+ "beir_arguana_test-law-lghbacpsba-con01a": [
+  "0b/test-law-lghbacpsba-con01b.txt"
+ ],
+ "beir_arguana_test-law-lghbacpsba-con02a": [
+  "06/test-law-lghbacpsba-con02b.txt"
+ ],
+ "beir_arguana_test-law-lghbacpsba-con03a": [
+  "ab/test-law-lghbacpsba-con03b.txt"
+ ],
+ "beir_arguana_test-law-lghbacpsba-pro01a": [
+  "26/test-law-lghbacpsba-pro01b.txt"
+ ],
+ "beir_arguana_test-law-lghbacpsba-pro02a": [
+  "83/test-law-lghbacpsba-pro02b.txt"
+ ],
+ "beir_arguana_test-law-lghbacpsba-pro03a": [
+  "a2/test-law-lghbacpsba-pro03b.txt"
+ ],
+ "beir_arguana_test-law-lghbacpsba-pro04a": [
+  "21/test-law-lghbacpsba-pro04b.txt"
+ ],
+ "beir_arguana_test-law-lghbacpsba-pro05a": [
+  "53/test-law-lghbacpsba-pro05b.txt"
+ ],
+ "beir_arguana_test-law-lghwpcctcc-con01a": [
+  "a7/test-law-lghwpcctcc-con01b.txt"
+ ],
+ "beir_arguana_test-law-lghwpcctcc-con02a": [
+  "bc/test-law-lghwpcctcc-con02b.txt"
+ ],
+ "beir_arguana_test-law-lghwpcctcc-con03a": [
+  "70/test-law-lghwpcctcc-con03b.txt"
+ ],
+ "beir_arguana_test-law-lghwpcctcc-con04a": [
+  "01/test-law-lghwpcctcc-con04b.txt"
+ ],
+ "beir_arguana_test-law-lghwpcctcc-pro01a": [
+  "3b/test-law-lghwpcctcc-pro01b.txt"
+ ],
+ "beir_arguana_test-law-lghwpcctcc-pro02a": [
+  "69/test-law-lghwpcctcc-pro02b.txt"
+ ],
+ "beir_arguana_test-law-lghwpcctcc-pro03a": [
+  "05/test-law-lghwpcctcc-pro03b.txt"
+ ],
+ "beir_arguana_test-law-lgplhbssbco-con01a": [
+  "0a/test-law-lgplhbssbco-con01b.txt"
+ ],
+ "beir_arguana_test-law-lgplhbssbco-con02a": [
+  "54/test-law-lgplhbssbco-con02b.txt"
+ ],
+ "beir_arguana_test-law-lgplhbssbco-con03a": [
+  "c3/test-law-lgplhbssbco-con03b.txt"
+ ],
+ "beir_arguana_test-law-lgplhbssbco-pro01a": [
+  "15/test-law-lgplhbssbco-pro01b.txt"
+ ],
+ "beir_arguana_test-law-lgplhbssbco-pro02a": [
+  "5f/test-law-lgplhbssbco-pro02b.txt"
+ ],
+ "beir_arguana_test-law-lgplhbssbco-pro03a": [
+  "6d/test-law-lgplhbssbco-pro03b.txt"
+ ],
+ "beir_arguana_test-law-lgplhbssbco-pro04a": [
+  "ba/test-law-lgplhbssbco-pro04b.txt"
+ ],
+ "beir_arguana_test-law-phwmfri-con01a": [
+  "e7/test-law-phwmfri-con01b.txt"
+ ],
+ "beir_arguana_test-law-phwmfri-con02a": [
+  "ef/test-law-phwmfri-con02b.txt"
+ ],
+ "beir_arguana_test-law-phwmfri-con03a": [
+  "04/test-law-phwmfri-con03b.txt"
+ ],
+ "beir_arguana_test-law-phwmfri-pro01a": [
+  "ad/test-law-phwmfri-pro01b.txt"
+ ],
+ "beir_arguana_test-law-phwmfri-pro02a": [
+  "c5/test-law-phwmfri-pro02b.txt"
+ ],
+ "beir_arguana_test-law-phwmfri-pro03a": [
+  "2e/test-law-phwmfri-pro03b.txt"
+ ],
+ "beir_arguana_test-law-ralhrilglv-con01a": [
+  "8f/test-law-ralhrilglv-con01b.txt"
+ ],
+ "beir_arguana_test-law-ralhrilglv-con02a": [
+  "55/test-law-ralhrilglv-con02b.txt"
+ ],
+ "beir_arguana_test-law-ralhrilglv-con03a": [
+  "c5/test-law-ralhrilglv-con03b.txt"
+ ],
+ "beir_arguana_test-law-ralhrilglv-con04a": [
+  "27/test-law-ralhrilglv-con04b.txt"
+ ],
+ "beir_arguana_test-law-ralhrilglv-pro01a": [
+  "3c/test-law-ralhrilglv-pro01b.txt"
+ ],
+ "beir_arguana_test-law-ralhrilglv-pro02a": [
+  "08/test-law-ralhrilglv-pro02b.txt"
+ ],
+ "beir_arguana_test-law-ralhrilglv-pro03a": [
+  "98/test-law-ralhrilglv-pro03b.txt"
+ ],
+ "beir_arguana_test-law-rmelhrilhbiw-con01a": [
+  "50/test-law-rmelhrilhbiw-con01b.txt"
+ ],
+ "beir_arguana_test-law-rmelhrilhbiw-con02a": [
+  "57/test-law-rmelhrilhbiw-con02b.txt"
+ ],
+ "beir_arguana_test-law-rmelhrilhbiw-con03a": [
+  "45/test-law-rmelhrilhbiw-con03b.txt"
+ ],
+ "beir_arguana_test-law-rmelhrilhbiw-con04a": [
+  "24/test-law-rmelhrilhbiw-con04b.txt"
+ ],
+ "beir_arguana_test-law-rmelhrilhbiw-pro01a": [
+  "56/test-law-rmelhrilhbiw-pro01b.txt"
+ ],
+ "beir_arguana_test-law-rmelhrilhbiw-pro02a": [
+  "8b/test-law-rmelhrilhbiw-pro02b.txt"
+ ],
+ "beir_arguana_test-law-rmelhrilhbiw-pro03a": [
+  "2a/test-law-rmelhrilhbiw-pro03b.txt"
+ ],
+ "beir_arguana_test-law-rmelhrilhbiw-pro04a": [
+  "26/test-law-rmelhrilhbiw-pro04b.txt"
+ ],
+ "beir_arguana_test-law-sdfclhrppph-con01a": [
+  "66/test-law-sdfclhrppph-con01b.txt"
+ ],
+ "beir_arguana_test-law-sdfclhrppph-con02a": [
+  "a9/test-law-sdfclhrppph-con02b.txt"
+ ],
+ "beir_arguana_test-law-sdfclhrppph-pro01a": [
+  "49/test-law-sdfclhrppph-pro01b.txt"
+ ],
+ "beir_arguana_test-law-sdfclhrppph-pro02a": [
+  "f7/test-law-sdfclhrppph-pro02b.txt"
+ ],
+ "beir_arguana_test-law-sdfclhrppph-pro03a": [
+  "e9/test-law-sdfclhrppph-pro03b.txt"
+ ],
+ "beir_arguana_test-law-sdfclhrppph-pro04a": [
+  "1a/test-law-sdfclhrppph-pro04b.txt"
+ ],
+ "beir_arguana_test-law-sdiflhrdffe-con01a": [
+  "de/test-law-sdiflhrdffe-con01b.txt"
+ ],
+ "beir_arguana_test-law-sdiflhrdffe-con02a": [
+  "e9/test-law-sdiflhrdffe-con02b.txt"
+ ],
+ "beir_arguana_test-law-sdiflhrdffe-con03a": [
+  "da/test-law-sdiflhrdffe-con03b.txt"
+ ],
+ "beir_arguana_test-law-sdiflhrdffe-con04a": [
+  "26/test-law-sdiflhrdffe-con04b.txt"
+ ],
+ "beir_arguana_test-law-sdiflhrdffe-pro01a": [
+  "85/test-law-sdiflhrdffe-pro01b.txt"
+ ],
+ "beir_arguana_test-law-sdiflhrdffe-pro02a": [
+  "b4/test-law-sdiflhrdffe-pro02b.txt"
+ ],
+ "beir_arguana_test-law-sdiflhrdffe-pro03a": [
+  "80/test-law-sdiflhrdffe-pro03b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-con01a": [
+  "70/test-law-tahglcphsld-con01b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-con02a": [
+  "12/test-law-tahglcphsld-con02b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-con03a": [
+  "28/test-law-tahglcphsld-con03b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-pro01a": [
+  "86/test-law-tahglcphsld-pro01b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-pro02a": [
+  "b9/test-law-tahglcphsld-pro02b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-pro03a": [
+  "39/test-law-tahglcphsld-pro03b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-pro04a": [
+  "4a/test-law-tahglcphsld-pro04b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-pro05a": [
+  "b6/test-law-tahglcphsld-pro05b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-pro06a": [
+  "15/test-law-tahglcphsld-pro06b.txt"
+ ],
+ "beir_arguana_test-law-tahglcphsld-pro07a": [
+  "65/test-law-tahglcphsld-pro07b.txt"
+ ],
+ "beir_arguana_test-law-thgglcplgphw-con01a": [
+  "2f/test-law-thgglcplgphw-con01b.txt"
+ ],
+ "beir_arguana_test-law-thgglcplgphw-con02a": [
+  "b6/test-law-thgglcplgphw-con02b.txt"
+ ],
+ "beir_arguana_test-law-thgglcplgphw-con03a": [
+  "b2/test-law-thgglcplgphw-con03b.txt"
+ ],
+ "beir_arguana_test-law-thgglcplgphw-pro01a": [
+  "74/test-law-thgglcplgphw-pro01b.txt"
+ ],
+ "beir_arguana_test-law-thgglcplgphw-pro02a": [
+  "63/test-law-thgglcplgphw-pro02b.txt"
+ ],
+ "beir_arguana_test-law-thgglcplgphw-pro03a": [
+  "e7/test-law-thgglcplgphw-pro03b.txt"
+ ],
+ "beir_arguana_test-law-tlcplghwfne-con01a": [
+  "2f/test-law-tlcplghwfne-con01b.txt"
+ ],
+ "beir_arguana_test-law-tlcplghwfne-con02a": [
+  "9d/test-law-tlcplghwfne-con02b.txt"
+ ],
+ "beir_arguana_test-law-tlcplghwfne-con03a": [
+  "87/test-law-tlcplghwfne-con03b.txt"
+ ],
+ "beir_arguana_test-law-tlcplghwfne-pro01a": [
+  "6d/test-law-tlcplghwfne-pro01b.txt"
+ ],
+ "beir_arguana_test-law-tlcplghwfne-pro02a": [
+  "01/test-law-tlcplghwfne-pro02b.txt"
+ ],
+ "beir_arguana_test-law-tlcplghwfne-pro03a": [
+  "b8/test-law-tlcplghwfne-pro03b.txt"
+ ],
+ "beir_arguana_test-law-umtlilhotac-con01a": [
+  "0f/test-law-umtlilhotac-con01b.txt"
+ ],
+ "beir_arguana_test-law-umtlilhotac-con02a": [
+  "11/test-law-umtlilhotac-con02b.txt"
+ ],
+ "beir_arguana_test-law-umtlilhotac-con03a": [
+  "d0/test-law-umtlilhotac-con03b.txt"
+ ],
+ "beir_arguana_test-law-umtlilhotac-pro01a": [
+  "9d/test-law-umtlilhotac-pro01b.txt"
+ ],
+ "beir_arguana_test-law-umtlilhotac-pro02a": [
+  "0b/test-law-umtlilhotac-pro02b.txt"
+ ],
+ "beir_arguana_test-law-umtlilhotac-pro03a": [
+  "f7/test-law-umtlilhotac-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-con01a": [
+  "de/test-philosophy-apessghwba-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-con02a": [
+  "8d/test-philosophy-apessghwba-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-con03a": [
+  "eb/test-philosophy-apessghwba-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-con04a": [
+  "02/test-philosophy-apessghwba-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-con05a": [
+  "5a/test-philosophy-apessghwba-con05b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-pro01a": [
+  "44/test-philosophy-apessghwba-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-pro02a": [
+  "e5/test-philosophy-apessghwba-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-pro03a": [
+  "0e/test-philosophy-apessghwba-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-pro04a": [
+  "29/test-philosophy-apessghwba-pro04b.txt"
+ ],
+ "beir_arguana_test-philosophy-apessghwba-pro05a": [
+  "2c/test-philosophy-apessghwba-pro05b.txt"
+ ],
+ "beir_arguana_test-philosophy-elhbrd-con01a": [
+  "35/test-philosophy-elhbrd-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-elhbrd-con02a": [
+  "bb/test-philosophy-elhbrd-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-elhbrd-con03a": [
+  "73/test-philosophy-elhbrd-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-elhbrd-con04a": [
+  "5b/test-philosophy-elhbrd-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-elhbrd-pro01a": [
+  "39/test-philosophy-elhbrd-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-elhbrd-pro02a": [
+  "3b/test-philosophy-elhbrd-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-elhbrd-pro03a": [
+  "13/test-philosophy-elhbrd-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-con01a": [
+  "83/test-philosophy-elkosmj-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-con02a": [
+  "40/test-philosophy-elkosmj-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-con03a": [
+  "1d/test-philosophy-elkosmj-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-con04a": [
+  "d2/test-philosophy-elkosmj-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-con05a": [
+  "b1/test-philosophy-elkosmj-con05b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-con06a": [
+  "c4/test-philosophy-elkosmj-con06b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-pro01a": [
+  "29/test-philosophy-elkosmj-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-pro02a": [
+  "73/test-philosophy-elkosmj-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-elkosmj-pro03a": [
+  "f2/test-philosophy-elkosmj-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-con01a": [
+  "c8/test-philosophy-eppphwlrtjs-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-con02a": [
+  "d1/test-philosophy-eppphwlrtjs-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-con03a": [
+  "e0/test-philosophy-eppphwlrtjs-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-con04a": [
+  "8f/test-philosophy-eppphwlrtjs-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-pro01a": [
+  "95/test-philosophy-eppphwlrtjs-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-pro02a": [
+  "f4/test-philosophy-eppphwlrtjs-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-pro03a": [
+  "46/test-philosophy-eppphwlrtjs-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-pro04a": [
+  "bb/test-philosophy-eppphwlrtjs-pro04b.txt"
+ ],
+ "beir_arguana_test-philosophy-eppphwlrtjs-pro05a": [
+  "9a/test-philosophy-eppphwlrtjs-pro05b.txt"
+ ],
+ "beir_arguana_test-philosophy-ippelhbcp-con01a": [
+  "a9/test-philosophy-ippelhbcp-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-ippelhbcp-con02a": [
+  "1b/test-philosophy-ippelhbcp-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-ippelhbcp-con03a": [
+  "03/test-philosophy-ippelhbcp-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-ippelhbcp-con04a": [
+  "12/test-philosophy-ippelhbcp-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-ippelhbcp-pro01a": [
+  "3d/test-philosophy-ippelhbcp-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-ippelhbcp-pro02a": [
+  "8c/test-philosophy-ippelhbcp-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-ippelhbcp-pro03a": [
+  "0f/test-philosophy-ippelhbcp-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-con01a": [
+  "ee/test-philosophy-npegiepp-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-con02a": [
+  "5f/test-philosophy-npegiepp-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-con03a": [
+  "c9/test-philosophy-npegiepp-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-con04a": [
+  "43/test-philosophy-npegiepp-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-pro01a": [
+  "bd/test-philosophy-npegiepp-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-pro02a": [
+  "61/test-philosophy-npegiepp-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-pro03a": [
+  "dc/test-philosophy-npegiepp-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-pro04a": [
+  "a2/test-philosophy-npegiepp-pro04b.txt"
+ ],
+ "beir_arguana_test-philosophy-npegiepp-pro05a": [
+  "b9/test-philosophy-npegiepp-pro05b.txt"
+ ],
+ "beir_arguana_test-philosophy-npppmhwup-con01a": [
+  "2c/test-philosophy-npppmhwup-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-npppmhwup-con02a": [
+  "f1/test-philosophy-npppmhwup-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-npppmhwup-con03a": [
+  "c4/test-philosophy-npppmhwup-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-npppmhwup-pro01a": [
+  "52/test-philosophy-npppmhwup-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-npppmhwup-pro02a": [
+  "55/test-philosophy-npppmhwup-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-npppmhwup-pro03a": [
+  "97/test-philosophy-npppmhwup-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-npppmhwup-pro04a": [
+  "e0/test-philosophy-npppmhwup-pro04b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-con01a": [
+  "a5/test-philosophy-pphbclsbs-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-con02a": [
+  "4a/test-philosophy-pphbclsbs-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-con03a": [
+  "82/test-philosophy-pphbclsbs-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-con04a": [
+  "64/test-philosophy-pphbclsbs-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-con05a": [
+  "a9/test-philosophy-pphbclsbs-con05b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-pro01a": [
+  "fe/test-philosophy-pphbclsbs-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-pro02a": [
+  "b0/test-philosophy-pphbclsbs-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-pro03a": [
+  "8c/test-philosophy-pphbclsbs-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-pro04a": [
+  "4a/test-philosophy-pphbclsbs-pro04b.txt"
+ ],
+ "beir_arguana_test-philosophy-pphbclsbs-pro05a": [
+  "02/test-philosophy-pphbclsbs-pro05b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppgshbsd-con01a": [
+  "c2/test-philosophy-pppgshbsd-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppgshbsd-con02a": [
+  "4b/test-philosophy-pppgshbsd-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppgshbsd-con03a": [
+  "67/test-philosophy-pppgshbsd-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppgshbsd-con04a": [
+  "99/test-philosophy-pppgshbsd-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppgshbsd-con05a": [
+  "d4/test-philosophy-pppgshbsd-con05b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppgshbsd-pro01a": [
+  "65/test-philosophy-pppgshbsd-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppgshbsd-pro02a": [
+  "e0/test-philosophy-pppgshbsd-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppgshbsd-pro03a": [
+  "f0/test-philosophy-pppgshbsd-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-con01a": [
+  "33/test-philosophy-pppthbtcb-con01b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-con02a": [
+  "11/test-philosophy-pppthbtcb-con02b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-con03a": [
+  "b5/test-philosophy-pppthbtcb-con03b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-con04a": [
+  "5c/test-philosophy-pppthbtcb-con04b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-pro01a": [
+  "95/test-philosophy-pppthbtcb-pro01b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-pro02a": [
+  "f1/test-philosophy-pppthbtcb-pro02b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-pro03a": [
+  "99/test-philosophy-pppthbtcb-pro03b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-pro04a": [
+  "c6/test-philosophy-pppthbtcb-pro04b.txt"
+ ],
+ "beir_arguana_test-philosophy-pppthbtcb-pro05a": [
+  "34/test-philosophy-pppthbtcb-pro05b.txt"
+ ],
+ "beir_arguana_test-politics-cdfsaphgiap-con01a": [
+  "e1/test-politics-cdfsaphgiap-con01b.txt"
+ ],
+ "beir_arguana_test-politics-cdfsaphgiap-con02a": [
+  "73/test-politics-cdfsaphgiap-con02b.txt"
+ ],
+ "beir_arguana_test-politics-cdfsaphgiap-con03a": [
+  "0b/test-politics-cdfsaphgiap-con03b.txt"
+ ],
+ "beir_arguana_test-politics-cdfsaphgiap-con04a": [
+  "c3/test-politics-cdfsaphgiap-con04b.txt"
+ ],
+ "beir_arguana_test-politics-cdfsaphgiap-pro01a": [
+  "50/test-politics-cdfsaphgiap-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-cdfsaphgiap-pro02a": [
+  "34/test-politics-cdfsaphgiap-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-cdfsaphgiap-pro03a": [
+  "53/test-politics-cdfsaphgiap-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-cdfsaphgiap-pro04a": [
+  "3c/test-politics-cdfsaphgiap-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-con01a": [
+  "88/test-politics-cdmaggpdgdf-con01b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-con02a": [
+  "e1/test-politics-cdmaggpdgdf-con02b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-con03a": [
+  "e5/test-politics-cdmaggpdgdf-con03b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-con04a": [
+  "70/test-politics-cdmaggpdgdf-con04b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-con05a": [
+  "bd/test-politics-cdmaggpdgdf-con05b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-pro01a": [
+  "63/test-politics-cdmaggpdgdf-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-pro02a": [
+  "04/test-politics-cdmaggpdgdf-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-pro03a": [
+  "62/test-politics-cdmaggpdgdf-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-pro04a": [
+  "16/test-politics-cdmaggpdgdf-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-cdmaggpdgdf-pro05a": [
+  "f3/test-politics-cdmaggpdgdf-pro05b.txt"
+ ],
+ "beir_arguana_test-politics-cpecfiepg-con01a": [
+  "bd/test-politics-cpecfiepg-con01b.txt"
+ ],
+ "beir_arguana_test-politics-cpecfiepg-con02a": [
+  "02/test-politics-cpecfiepg-con02b.txt"
+ ],
+ "beir_arguana_test-politics-cpecfiepg-con03a": [
+  "98/test-politics-cpecfiepg-con03b.txt"
+ ],
+ "beir_arguana_test-politics-cpecfiepg-con04a": [
+  "8f/test-politics-cpecfiepg-con04b.txt"
+ ],
+ "beir_arguana_test-politics-cpecfiepg-pro01a": [
+  "3d/test-politics-cpecfiepg-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-cpecfiepg-pro02a": [
+  "88/test-politics-cpecfiepg-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-cpecfiepg-pro03a": [
+  "00/test-politics-cpecfiepg-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-cpegiepgh-con01a": [
+  "43/test-politics-cpegiepgh-con01b.txt"
+ ],
+ "beir_arguana_test-politics-cpegiepgh-con02a": [
+  "6b/test-politics-cpegiepgh-con02b.txt"
+ ],
+ "beir_arguana_test-politics-cpegiepgh-con03a": [
+  "0a/test-politics-cpegiepgh-con03b.txt"
+ ],
+ "beir_arguana_test-politics-cpegiepgh-pro01a": [
+  "ce/test-politics-cpegiepgh-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-cpegiepgh-pro02a": [
+  "0e/test-politics-cpegiepgh-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-cpegiepgh-pro03a": [
+  "55/test-politics-cpegiepgh-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-cpegiepgh-pro04a": [
+  "37/test-politics-cpegiepgh-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-con01a": [
+  "8c/test-politics-dhbanhrnw-con01b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-con02a": [
+  "34/test-politics-dhbanhrnw-con02b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-con03a": [
+  "3b/test-politics-dhbanhrnw-con03b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-con04a": [
+  "8f/test-politics-dhbanhrnw-con04b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-con05a": [
+  "a0/test-politics-dhbanhrnw-con05b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-pro01a": [
+  "86/test-politics-dhbanhrnw-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-pro02a": [
+  "79/test-politics-dhbanhrnw-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-pro03a": [
+  "34/test-politics-dhbanhrnw-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-pro04a": [
+  "c7/test-politics-dhbanhrnw-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-dhbanhrnw-pro05a": [
+  "ee/test-politics-dhbanhrnw-pro05b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-con01a": [
+  "f1/test-politics-dhwem-con01b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-con02a": [
+  "60/test-politics-dhwem-con02b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-con03a": [
+  "05/test-politics-dhwem-con03b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-con04a": [
+  "30/test-politics-dhwem-con04b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-pro01a": [
+  "c8/test-politics-dhwem-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-pro02a": [
+  "8c/test-politics-dhwem-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-pro03a": [
+  "a1/test-politics-dhwem-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-pro04a": [
+  "4e/test-politics-dhwem-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-dhwem-pro05a": [
+  "28/test-politics-dhwem-pro05b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-con01a": [
+  "ef/test-politics-eppghwgpi-con01b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-con02a": [
+  "3c/test-politics-eppghwgpi-con02b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-con03a": [
+  "45/test-politics-eppghwgpi-con03b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-con04a": [
+  "32/test-politics-eppghwgpi-con04b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-con05a": [
+  "7a/test-politics-eppghwgpi-con05b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-pro01a": [
+  "69/test-politics-eppghwgpi-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-pro02a": [
+  "2e/test-politics-eppghwgpi-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-pro03a": [
+  "06/test-politics-eppghwgpi-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-pro04a": [
+  "15/test-politics-eppghwgpi-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwgpi-pro05a": [
+  "d2/test-politics-eppghwgpi-pro05b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwlrba-con01a": [
+  "d5/test-politics-eppghwlrba-con01b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwlrba-con02a": [
+  "c0/test-politics-eppghwlrba-con02b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwlrba-con03a": [
+  "1f/test-politics-eppghwlrba-con03b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwlrba-con04a": [
+  "47/test-politics-eppghwlrba-con04b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwlrba-pro01a": [
+  "a9/test-politics-eppghwlrba-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwlrba-pro02a": [
+  "38/test-politics-eppghwlrba-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwlrba-pro03a": [
+  "40/test-politics-eppghwlrba-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-eppghwlrba-pro04a": [
+  "17/test-politics-eppghwlrba-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-epvhbfsmsaop-con01a": [
+  "6c/test-politics-epvhbfsmsaop-con01b.txt"
+ ],
+ "beir_arguana_test-politics-epvhbfsmsaop-con02a": [
+  "bc/test-politics-epvhbfsmsaop-con02b.txt"
+ ],
+ "beir_arguana_test-politics-epvhbfsmsaop-con03a": [
+  "bc/test-politics-epvhbfsmsaop-con03b.txt"
+ ],
+ "beir_arguana_test-politics-epvhbfsmsaop-pro01a": [
+  "c3/test-politics-epvhbfsmsaop-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-epvhbfsmsaop-pro02a": [
+  "ad/test-politics-epvhbfsmsaop-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-epvhbfsmsaop-pro03a": [
+  "40/test-politics-epvhbfsmsaop-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-ghbgussbsbt-con01a": [
+  "13/test-politics-ghbgussbsbt-con01b.txt"
+ ],
+ "beir_arguana_test-politics-ghbgussbsbt-con02a": [
+  "56/test-politics-ghbgussbsbt-con02b.txt"
+ ],
+ "beir_arguana_test-politics-ghbgussbsbt-con03a": [
+  "a3/test-politics-ghbgussbsbt-con03b.txt"
+ ],
+ "beir_arguana_test-politics-ghbgussbsbt-con04a": [
+  "36/test-politics-ghbgussbsbt-con04b.txt"
+ ],
+ "beir_arguana_test-politics-ghbgussbsbt-pro01a": [
+  "12/test-politics-ghbgussbsbt-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-ghbgussbsbt-pro02a": [
+  "3b/test-politics-ghbgussbsbt-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-ghbgussbsbt-pro03a": [
+  "01/test-politics-ghbgussbsbt-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-ghbgussbsbt-pro04a": [
+  "2f/test-politics-ghbgussbsbt-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-glghssi-con01a": [
+  "7b/test-politics-glghssi-con01b.txt"
+ ],
+ "beir_arguana_test-politics-glghssi-con02a": [
+  "02/test-politics-glghssi-con02b.txt"
+ ],
+ "beir_arguana_test-politics-glghssi-con03a": [
+  "ac/test-politics-glghssi-con03b.txt"
+ ],
+ "beir_arguana_test-politics-glghssi-pro01a": [
+  "b9/test-politics-glghssi-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-glghssi-pro02a": [
+  "0a/test-politics-glghssi-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-glghssi-pro03a": [
+  "db/test-politics-glghssi-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-glgvhbqssc-con01a": [
+  "0a/test-politics-glgvhbqssc-con01b.txt"
+ ],
+ "beir_arguana_test-politics-glgvhbqssc-con02a": [
+  "6e/test-politics-glgvhbqssc-con02b.txt"
+ ],
+ "beir_arguana_test-politics-glgvhbqssc-pro01a": [
+  "84/test-politics-glgvhbqssc-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-glgvhbqssc-pro02a": [
+  "99/test-politics-glgvhbqssc-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-glgvhbqssc-pro03a": [
+  "d9/test-politics-glgvhbqssc-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-con01a": [
+  "12/test-politics-grcrgshwbr-con01b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-con02a": [
+  "7b/test-politics-grcrgshwbr-con02b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-con03a": [
+  "03/test-politics-grcrgshwbr-con03b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-con04a": [
+  "7f/test-politics-grcrgshwbr-con04b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-pro01a": [
+  "26/test-politics-grcrgshwbr-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-pro02a": [
+  "fb/test-politics-grcrgshwbr-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-pro03a": [
+  "b9/test-politics-grcrgshwbr-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-pro04a": [
+  "b5/test-politics-grcrgshwbr-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-grcrgshwbr-pro05a": [
+  "79/test-politics-grcrgshwbr-pro05b.txt"
+ ],
+ "beir_arguana_test-politics-gvhbhlsbr-con01a": [
+  "5e/test-politics-gvhbhlsbr-con01b.txt"
+ ],
+ "beir_arguana_test-politics-gvhbhlsbr-con02a": [
+  "30/test-politics-gvhbhlsbr-con02b.txt"
+ ],
+ "beir_arguana_test-politics-gvhbhlsbr-con03a": [
+  "44/test-politics-gvhbhlsbr-con03b.txt"
+ ],
+ "beir_arguana_test-politics-gvhbhlsbr-con04a": [
+  "1a/test-politics-gvhbhlsbr-con04b.txt"
+ ],
+ "beir_arguana_test-politics-gvhbhlsbr-pro01a": [
+  "c9/test-politics-gvhbhlsbr-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-gvhbhlsbr-pro02a": [
+  "0f/test-politics-gvhbhlsbr-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-gvhbhlsbr-pro03a": [
+  "34/test-politics-gvhbhlsbr-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-gvhbhlsbr-pro04a": [
+  "2d/test-politics-gvhbhlsbr-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-gvhwhnerse-con01a": [
+  "2e/test-politics-gvhwhnerse-con01b.txt"
+ ],
+ "beir_arguana_test-politics-gvhwhnerse-con02a": [
+  "ee/test-politics-gvhwhnerse-con02b.txt"
+ ],
+ "beir_arguana_test-politics-gvhwhnerse-con03a": [
+  "be/test-politics-gvhwhnerse-con03b.txt"
+ ],
+ "beir_arguana_test-politics-gvhwhnerse-con04a": [
+  "7d/test-politics-gvhwhnerse-con04b.txt"
+ ],
+ "beir_arguana_test-politics-gvhwhnerse-pro01a": [
+  "fb/test-politics-gvhwhnerse-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-gvhwhnerse-pro02a": [
+  "d5/test-politics-gvhwhnerse-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-gvhwhnerse-pro03a": [
+  "52/test-politics-gvhwhnerse-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-gvhwhnerse-pro04a": [
+  "00/test-politics-gvhwhnerse-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-lghwdecm-con01a": [
+  "75/test-politics-lghwdecm-con01b.txt"
+ ],
+ "beir_arguana_test-politics-lghwdecm-con02a": [
+  "28/test-politics-lghwdecm-con02b.txt"
+ ],
+ "beir_arguana_test-politics-lghwdecm-con03a": [
+  "90/test-politics-lghwdecm-con03b.txt"
+ ],
+ "beir_arguana_test-politics-lghwdecm-con04a": [
+  "6e/test-politics-lghwdecm-con04b.txt"
+ ],
+ "beir_arguana_test-politics-lghwdecm-pro01a": [
+  "c6/test-politics-lghwdecm-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-lghwdecm-pro02a": [
+  "ff/test-politics-lghwdecm-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-lghwdecm-pro03a": [
+  "4f/test-politics-lghwdecm-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-lghwdecm-pro04a": [
+  "49/test-politics-lghwdecm-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-mtpghwaacb-con01a": [
+  "8f/test-politics-mtpghwaacb-con01b.txt"
+ ],
+ "beir_arguana_test-politics-mtpghwaacb-con02a": [
+  "a1/test-politics-mtpghwaacb-con02b.txt"
+ ],
+ "beir_arguana_test-politics-mtpghwaacb-con03a": [
+  "bd/test-politics-mtpghwaacb-con03b.txt"
+ ],
+ "beir_arguana_test-politics-mtpghwaacb-pro01a": [
+  "77/test-politics-mtpghwaacb-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-mtpghwaacb-pro02a": [
+  "a6/test-politics-mtpghwaacb-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-mtpghwaacb-pro03a": [
+  "5b/test-politics-mtpghwaacb-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-nlpdwhbusbuc-con01a": [
+  "9f/test-politics-nlpdwhbusbuc-con01b.txt"
+ ],
+ "beir_arguana_test-politics-nlpdwhbusbuc-con02a": [
+  "88/test-politics-nlpdwhbusbuc-con02b.txt"
+ ],
+ "beir_arguana_test-politics-nlpdwhbusbuc-con03a": [
+  "03/test-politics-nlpdwhbusbuc-con03b.txt"
+ ],
+ "beir_arguana_test-politics-nlpdwhbusbuc-pro01a": [
+  "d0/test-politics-nlpdwhbusbuc-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-nlpdwhbusbuc-pro02a": [
+  "9d/test-politics-nlpdwhbusbuc-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-nlpdwhbusbuc-pro03a": [
+  "50/test-politics-nlpdwhbusbuc-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-oapdhwinkp-con01a": [
+  "73/test-politics-oapdhwinkp-con01b.txt"
+ ],
+ "beir_arguana_test-politics-oapdhwinkp-con02a": [
+  "c2/test-politics-oapdhwinkp-con02b.txt"
+ ],
+ "beir_arguana_test-politics-oapdhwinkp-con03a": [
+  "e1/test-politics-oapdhwinkp-con03b.txt"
+ ],
+ "beir_arguana_test-politics-oapdhwinkp-pro01a": [
+  "64/test-politics-oapdhwinkp-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-oapdhwinkp-pro02a": [
+  "23/test-politics-oapdhwinkp-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-oapdhwinkp-pro03a": [
+  "d0/test-politics-oapdhwinkp-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-oapghwliva-con01a": [
+  "4a/test-politics-oapghwliva-con01b.txt"
+ ],
+ "beir_arguana_test-politics-oapghwliva-con02a": [
+  "4f/test-politics-oapghwliva-con02b.txt"
+ ],
+ "beir_arguana_test-politics-oapghwliva-con03a": [
+  "cc/test-politics-oapghwliva-con03b.txt"
+ ],
+ "beir_arguana_test-politics-oapghwliva-pro01a": [
+  "b0/test-politics-oapghwliva-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-oepdlhfcefp-con01a": [
+  "d3/test-politics-oepdlhfcefp-con01b.txt"
+ ],
+ "beir_arguana_test-politics-oepdlhfcefp-con02a": [
+  "bf/test-politics-oepdlhfcefp-con02b.txt"
+ ],
+ "beir_arguana_test-politics-oepdlhfcefp-con03a": [
+  "a8/test-politics-oepdlhfcefp-con03b.txt"
+ ],
+ "beir_arguana_test-politics-oepdlhfcefp-pro01a": [
+  "ac/test-politics-oepdlhfcefp-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-oepdlhfcefp-pro02a": [
+  "28/test-politics-oepdlhfcefp-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-oepdlhfcefp-pro03a": [
+  "4d/test-politics-oepdlhfcefp-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-oepdlhfcefp-pro04a": [
+  "7a/test-politics-oepdlhfcefp-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-oepghbrnsl-con01a": [
+  "29/test-politics-oepghbrnsl-con01b.txt"
+ ],
+ "beir_arguana_test-politics-oepghbrnsl-con02a": [
+  "b0/test-politics-oepghbrnsl-con02b.txt"
+ ],
+ "beir_arguana_test-politics-oepghbrnsl-con03a": [
+  "b7/test-politics-oepghbrnsl-con03b.txt"
+ ],
+ "beir_arguana_test-politics-oepghbrnsl-con04a": [
+  "83/test-politics-oepghbrnsl-con04b.txt"
+ ],
+ "beir_arguana_test-politics-oepghbrnsl-pro01a": [
+  "a4/test-politics-oepghbrnsl-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-oepghbrnsl-pro02a": [
+  "3f/test-politics-oepghbrnsl-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-oepghbrnsl-pro03a": [
+  "71/test-politics-oepghbrnsl-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-oepghbrnsl-pro04a": [
+  "41/test-politics-oepghbrnsl-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-oeplhbuwhmi-con01a": [
+  "64/test-politics-oeplhbuwhmi-con01b.txt"
+ ],
+ "beir_arguana_test-politics-oeplhbuwhmi-con02a": [
+  "b1/test-politics-oeplhbuwhmi-con02b.txt"
+ ],
+ "beir_arguana_test-politics-oeplhbuwhmi-con03a": [
+  "fc/test-politics-oeplhbuwhmi-con03b.txt"
+ ],
+ "beir_arguana_test-politics-oeplhbuwhmi-con04a": [
+  "47/test-politics-oeplhbuwhmi-con04b.txt"
+ ],
+ "beir_arguana_test-politics-oeplhbuwhmi-pro01a": [
+  "58/test-politics-oeplhbuwhmi-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-oeplhbuwhmi-pro02a": [
+  "a0/test-politics-oeplhbuwhmi-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-oeplhbuwhmi-pro03a": [
+  "18/test-politics-oeplhbuwhmi-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-oeplhbuwhmi-pro04a": [
+  "20/test-politics-oeplhbuwhmi-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-oglilpdwhsn-con01a": [
+  "d2/test-politics-oglilpdwhsn-con01b.txt"
+ ],
+ "beir_arguana_test-politics-oglilpdwhsn-con02a": [
+  "26/test-politics-oglilpdwhsn-con02b.txt"
+ ],
+ "beir_arguana_test-politics-oglilpdwhsn-con03a": [
+  "5d/test-politics-oglilpdwhsn-con03b.txt"
+ ],
+ "beir_arguana_test-politics-oglilpdwhsn-con04a": [
+  "b7/test-politics-oglilpdwhsn-con04b.txt"
+ ],
+ "beir_arguana_test-politics-oglilpdwhsn-pro01a": [
+  "2f/test-politics-oglilpdwhsn-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-oglilpdwhsn-pro02a": [
+  "f2/test-politics-oglilpdwhsn-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-oglilpdwhsn-pro03a": [
+  "b1/test-politics-oglilpdwhsn-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-pgsimhwoia-con01a": [
+  "dc/test-politics-pgsimhwoia-con01b.txt"
+ ],
+ "beir_arguana_test-politics-pgsimhwoia-con02a": [
+  "96/test-politics-pgsimhwoia-con02b.txt"
+ ],
+ "beir_arguana_test-politics-pgsimhwoia-con03a": [
+  "aa/test-politics-pgsimhwoia-con03b.txt"
+ ],
+ "beir_arguana_test-politics-pgsimhwoia-pro01a": [
+  "e5/test-politics-pgsimhwoia-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-pgsimhwoia-pro02a": [
+  "ac/test-politics-pgsimhwoia-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-pgsimhwoia-pro03a": [
+  "41/test-politics-pgsimhwoia-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-con01a": [
+  "b4/test-politics-ypppdghwid-con01b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-con02a": [
+  "86/test-politics-ypppdghwid-con02b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-con03a": [
+  "20/test-politics-ypppdghwid-con03b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-con04a": [
+  "03/test-politics-ypppdghwid-con04b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-con05a": [
+  "a7/test-politics-ypppdghwid-con05b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-pro01a": [
+  "29/test-politics-ypppdghwid-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-pro02a": [
+  "40/test-politics-ypppdghwid-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-pro03a": [
+  "94/test-politics-ypppdghwid-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-ypppdghwid-pro04a": [
+  "70/test-politics-ypppdghwid-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-ypppgvhwmv-con01a": [
+  "06/test-politics-ypppgvhwmv-con01b.txt"
+ ],
+ "beir_arguana_test-politics-ypppgvhwmv-con02a": [
+  "76/test-politics-ypppgvhwmv-con02b.txt"
+ ],
+ "beir_arguana_test-politics-ypppgvhwmv-con03a": [
+  "5a/test-politics-ypppgvhwmv-con03b.txt"
+ ],
+ "beir_arguana_test-politics-ypppgvhwmv-pro01a": [
+  "f4/test-politics-ypppgvhwmv-pro01b.txt"
+ ],
+ "beir_arguana_test-politics-ypppgvhwmv-pro02a": [
+  "27/test-politics-ypppgvhwmv-pro02b.txt"
+ ],
+ "beir_arguana_test-politics-ypppgvhwmv-pro03a": [
+  "3c/test-politics-ypppgvhwmv-pro03b.txt"
+ ],
+ "beir_arguana_test-politics-ypppgvhwmv-pro04a": [
+  "d5/test-politics-ypppgvhwmv-pro04b.txt"
+ ],
+ "beir_arguana_test-politics-ypppgvhwmv-pro05a": [
+  "e0/test-politics-ypppgvhwmv-pro05b.txt"
+ ],
+ "beir_arguana_test-religion-cmrsgfhbr-con01a": [
+  "45/test-religion-cmrsgfhbr-con01b.txt"
+ ],
+ "beir_arguana_test-religion-cmrsgfhbr-con02a": [
+  "69/test-religion-cmrsgfhbr-con02b.txt"
+ ],
+ "beir_arguana_test-religion-cmrsgfhbr-con03a": [
+  "2b/test-religion-cmrsgfhbr-con03b.txt"
+ ],
+ "beir_arguana_test-religion-cmrsgfhbr-pro01a": [
+  "98/test-religion-cmrsgfhbr-pro01b.txt"
+ ],
+ "beir_arguana_test-religion-cmrsgfhbr-pro02a": [
+  "74/test-religion-cmrsgfhbr-pro02b.txt"
+ ],
+ "beir_arguana_test-religion-cmrsgfhbr-pro03a": [
+  "ca/test-religion-cmrsgfhbr-pro03b.txt"
+ ],
+ "beir_arguana_test-religion-frghbbgi-con01a": [
+  "60/test-religion-frghbbgi-con01b.txt"
+ ],
+ "beir_arguana_test-religion-frghbbgi-con02a": [
+  "5c/test-religion-frghbbgi-con02b.txt"
+ ],
+ "beir_arguana_test-religion-frghbbgi-con03a": [
+  "5c/test-religion-frghbbgi-con03b.txt"
+ ],
+ "beir_arguana_test-religion-frghbbgi-pro01a": [
+  "83/test-religion-frghbbgi-pro01b.txt"
+ ],
+ "beir_arguana_test-religion-frghbbgi-pro02a": [
+  "2e/test-religion-frghbbgi-pro02b.txt"
+ ],
+ "beir_arguana_test-religion-frghbbgi-pro03a": [
+  "23/test-religion-frghbbgi-pro03b.txt"
+ ],
+ "beir_arguana_test-religion-frghbbgi-pro04a": [
+  "82/test-religion-frghbbgi-pro04b.txt"
+ ],
+ "beir_arguana_test-religion-frghbbgi-pro05a": [
+  "2b/test-religion-frghbbgi-pro05b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-con01a": [
+  "b1/test-religion-grcrgshwbr-con01b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-con02a": [
+  "74/test-religion-grcrgshwbr-con02b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-con03a": [
+  "d9/test-religion-grcrgshwbr-con03b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-con04a": [
+  "ae/test-religion-grcrgshwbr-con04b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-pro01a": [
+  "3a/test-religion-grcrgshwbr-pro01b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-pro02a": [
+  "42/test-religion-grcrgshwbr-pro02b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-pro03a": [
+  "75/test-religion-grcrgshwbr-pro03b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-pro04a": [
+  "c7/test-religion-grcrgshwbr-pro04b.txt"
+ ],
+ "beir_arguana_test-religion-grcrgshwbr-pro05a": [
+  "e8/test-religion-grcrgshwbr-pro05b.txt"
+ ],
+ "beir_arguana_test-religion-msgfhwbamec-con01a": [
+  "f0/test-religion-msgfhwbamec-con01b.txt"
+ ],
+ "beir_arguana_test-religion-msgfhwbamec-con02a": [
+  "e5/test-religion-msgfhwbamec-con02b.txt"
+ ],
+ "beir_arguana_test-religion-msgfhwbamec-con03a": [
+  "52/test-religion-msgfhwbamec-con03b.txt"
+ ],
+ "beir_arguana_test-religion-msgfhwbamec-pro01a": [
+  "b3/test-religion-msgfhwbamec-pro01b.txt"
+ ],
+ "beir_arguana_test-religion-msgfhwbamec-pro02a": [
+  "c1/test-religion-msgfhwbamec-pro02b.txt"
+ ],
+ "beir_arguana_test-religion-msgfhwbamec-pro03a": [
+  "93/test-religion-msgfhwbamec-pro03b.txt"
+ ],
+ "beir_arguana_test-religion-wcprrgrhbmi-con01a": [
+  "5d/test-religion-wcprrgrhbmi-con01b.txt"
+ ],
+ "beir_arguana_test-religion-wcprrgrhbmi-con02a": [
+  "ab/test-religion-wcprrgrhbmi-con02b.txt"
+ ],
+ "beir_arguana_test-religion-wcprrgrhbmi-con03a": [
+  "cb/test-religion-wcprrgrhbmi-con03b.txt"
+ ],
+ "beir_arguana_test-religion-wcprrgrhbmi-pro01a": [
+  "9d/test-religion-wcprrgrhbmi-pro01b.txt"
+ ],
+ "beir_arguana_test-religion-wcprrgrhbmi-pro02a": [
+  "95/test-religion-wcprrgrhbmi-pro02b.txt"
+ ],
+ "beir_arguana_test-religion-wcprrgrhbmi-pro03a": [
+  "95/test-religion-wcprrgrhbmi-pro03b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-con01a": [
+  "e6/test-religion-yercfrggms-con01b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-con02a": [
+  "b6/test-religion-yercfrggms-con02b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-con03a": [
+  "23/test-religion-yercfrggms-con03b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-pro01a": [
+  "3b/test-religion-yercfrggms-pro01b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-pro02a": [
+  "06/test-religion-yercfrggms-pro02b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-pro03a": [
+  "64/test-religion-yercfrggms-pro03b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-pro04a": [
+  "79/test-religion-yercfrggms-pro04b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-pro05a": [
+  "73/test-religion-yercfrggms-pro05b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-pro06a": [
+  "30/test-religion-yercfrggms-pro06b.txt"
+ ],
+ "beir_arguana_test-religion-yercfrggms-pro07a": [
+  "d6/test-religion-yercfrggms-pro07b.txt"
+ ],
+ "beir_arguana_test-science-ascidfakhba-con01a": [
+  "c1/test-science-ascidfakhba-con01b.txt"
+ ],
+ "beir_arguana_test-science-ascidfakhba-con02a": [
+  "61/test-science-ascidfakhba-con02b.txt"
+ ],
+ "beir_arguana_test-science-ascidfakhba-con03a": [
+  "8b/test-science-ascidfakhba-con03b.txt"
+ ],
+ "beir_arguana_test-science-ascidfakhba-con04a": [
+  "02/test-science-ascidfakhba-con04b.txt"
+ ],
+ "beir_arguana_test-science-ascidfakhba-pro01a": [
+  "cb/test-science-ascidfakhba-pro01b.txt"
+ ],
+ "beir_arguana_test-science-ascidfakhba-pro02a": [
+  "01/test-science-ascidfakhba-pro02b.txt"
+ ],
+ "beir_arguana_test-science-ascidfakhba-pro03a": [
+  "4a/test-science-ascidfakhba-pro03b.txt"
+ ],
+ "beir_arguana_test-science-ascidfakhba-pro04a": [
+  "ee/test-science-ascidfakhba-pro04b.txt"
+ ],
+ "beir_arguana_test-science-ciidfaihwc-con01a": [
+  "11/test-science-ciidfaihwc-con01b.txt"
+ ],
+ "beir_arguana_test-science-ciidfaihwc-con02a": [
+  "73/test-science-ciidfaihwc-con02b.txt"
+ ],
+ "beir_arguana_test-science-ciidfaihwc-con03a": [
+  "62/test-science-ciidfaihwc-con03b.txt"
+ ],
+ "beir_arguana_test-science-ciidfaihwc-pro01a": [
+  "2b/test-science-ciidfaihwc-pro01b.txt"
+ ],
+ "beir_arguana_test-science-ciidfaihwc-pro02a": [
+  "a8/test-science-ciidfaihwc-pro02b.txt"
+ ],
+ "beir_arguana_test-science-ciidfaihwc-pro03a": [
+  "18/test-science-ciidfaihwc-pro03b.txt"
+ ],
+ "beir_arguana_test-science-ciidfaihwc-pro04a": [
+  "33/test-science-ciidfaihwc-pro04b.txt"
+ ],
+ "beir_arguana_test-science-cpisydfphwj-con01a": [
+  "24/test-science-cpisydfphwj-con01b.txt"
+ ],
+ "beir_arguana_test-science-cpisydfphwj-con02a": [
+  "7b/test-science-cpisydfphwj-con02b.txt"
+ ],
+ "beir_arguana_test-science-cpisydfphwj-con03a": [
+  "0c/test-science-cpisydfphwj-con03b.txt"
+ ],
+ "beir_arguana_test-science-cpisydfphwj-pro01a": [
+  "eb/test-science-cpisydfphwj-pro01b.txt"
+ ],
+ "beir_arguana_test-science-cpisydfphwj-pro02a": [
+  "50/test-science-cpisydfphwj-pro02b.txt"
+ ],
+ "beir_arguana_test-science-cpisydfphwj-pro03a": [
+  "06/test-science-cpisydfphwj-pro03b.txt"
+ ],
+ "beir_arguana_test-science-dssghsdmd-con01a": [
+  "4a/test-science-dssghsdmd-con01b.txt"
+ ],
+ "beir_arguana_test-science-dssghsdmd-con02a": [
+  "78/test-science-dssghsdmd-con02b.txt"
+ ],
+ "beir_arguana_test-science-dssghsdmd-con03a": [
+  "f3/test-science-dssghsdmd-con03b.txt"
+ ],
+ "beir_arguana_test-science-dssghsdmd-pro01a": [
+  "59/test-science-dssghsdmd-pro01b.txt"
+ ],
+ "beir_arguana_test-science-dssghsdmd-pro02a": [
+  "07/test-science-dssghsdmd-pro02b.txt"
+ ],
+ "beir_arguana_test-science-dssghsdmd-pro03a": [
+  "7d/test-science-dssghsdmd-pro03b.txt"
+ ],
+ "beir_arguana_test-science-dssghsdmd-pro04a": [
+  "20/test-science-dssghsdmd-pro04b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-con01a": [
+  "5d/test-science-eassgbatj-con01b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-con02a": [
+  "61/test-science-eassgbatj-con02b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-con03a": [
+  "5a/test-science-eassgbatj-con03b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-con04a": [
+  "89/test-science-eassgbatj-con04b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-con05a": [
+  "d5/test-science-eassgbatj-con05b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-pro01a": [
+  "0b/test-science-eassgbatj-pro01b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-pro02a": [
+  "df/test-science-eassgbatj-pro02b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-pro03a": [
+  "49/test-science-eassgbatj-pro03b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-pro04a": [
+  "75/test-science-eassgbatj-pro04b.txt"
+ ],
+ "beir_arguana_test-science-eassgbatj-pro05a": [
+  "27/test-science-eassgbatj-pro05b.txt"
+ ],
+ "beir_arguana_test-science-nsihwbtiss-con01a": [
+  "ad/test-science-nsihwbtiss-con01b.txt"
+ ],
+ "beir_arguana_test-science-nsihwbtiss-con02a": [
+  "74/test-science-nsihwbtiss-con02b.txt"
+ ],
+ "beir_arguana_test-science-nsihwbtiss-con03a": [
+  "4e/test-science-nsihwbtiss-con03b.txt"
+ ],
+ "beir_arguana_test-science-nsihwbtiss-con04a": [
+  "44/test-science-nsihwbtiss-con04b.txt"
+ ],
+ "beir_arguana_test-science-nsihwbtiss-pro01a": [
+  "15/test-science-nsihwbtiss-pro01b.txt"
+ ],
+ "beir_arguana_test-science-nsihwbtiss-pro02a": [
+  "6d/test-science-nsihwbtiss-pro02b.txt"
+ ],
+ "beir_arguana_test-science-nsihwbtiss-pro03a": [
+  "85/test-science-nsihwbtiss-pro03b.txt"
+ ],
+ "beir_arguana_test-science-nsihwbtiss-pro04a": [
+  "ee/test-science-nsihwbtiss-pro04b.txt"
+ ],
+ "beir_arguana_test-science-sghwbdgmo-con01a": [
+  "a6/test-science-sghwbdgmo-con01b.txt"
+ ],
+ "beir_arguana_test-science-sghwbdgmo-con02a": [
+  "79/test-science-sghwbdgmo-con02b.txt"
+ ],
+ "beir_arguana_test-science-sghwbdgmo-pro01a": [
+  "0a/test-science-sghwbdgmo-pro01b.txt"
+ ],
+ "beir_arguana_test-science-sghwbdgmo-pro02a": [
+  "b8/test-science-sghwbdgmo-pro02b.txt"
+ ],
+ "beir_arguana_test-science-sghwbdgmo-pro03a": [
+  "42/test-science-sghwbdgmo-pro03b.txt"
+ ],
+ "beir_arguana_test-science-wsihwclscaaw-con01a": [
+  "4b/test-science-wsihwclscaaw-con01b.txt"
+ ],
+ "beir_arguana_test-science-wsihwclscaaw-con02a": [
+  "56/test-science-wsihwclscaaw-con02b.txt"
+ ],
+ "beir_arguana_test-science-wsihwclscaaw-con03a": [
+  "61/test-science-wsihwclscaaw-con03b.txt"
+ ],
+ "beir_arguana_test-science-wsihwclscaaw-pro01a": [
+  "e9/test-science-wsihwclscaaw-pro01b.txt"
+ ],
+ "beir_arguana_test-science-wsihwclscaaw-pro02a": [
+  "0b/test-science-wsihwclscaaw-pro02b.txt"
+ ],
+ "beir_arguana_test-science-wsihwclscaaw-pro03a": [
+  "cd/test-science-wsihwclscaaw-pro03b.txt"
+ ],
+ "beir_arguana_test-society-asfhwapg-con01a": [
+  "45/test-society-asfhwapg-con01b.txt"
+ ],
+ "beir_arguana_test-society-asfhwapg-con02a": [
+  "83/test-society-asfhwapg-con02b.txt"
+ ],
+ "beir_arguana_test-society-asfhwapg-con03a": [
+  "03/test-society-asfhwapg-con03b.txt"
+ ],
+ "beir_arguana_test-society-asfhwapg-pro01a": [
+  "6f/test-society-asfhwapg-pro01b.txt"
+ ],
+ "beir_arguana_test-society-asfhwapg-pro02a": [
+  "40/test-society-asfhwapg-pro02b.txt"
+ ],
+ "beir_arguana_test-society-cpisydfphwj-con01a": [
+  "e4/test-society-cpisydfphwj-con01b.txt"
+ ],
+ "beir_arguana_test-society-cpisydfphwj-con02a": [
+  "07/test-society-cpisydfphwj-con02b.txt"
+ ],
+ "beir_arguana_test-society-cpisydfphwj-con03a": [
+  "6a/test-society-cpisydfphwj-con03b.txt"
+ ],
+ "beir_arguana_test-society-cpisydfphwj-pro01a": [
+  "ff/test-society-cpisydfphwj-pro01b.txt"
+ ],
+ "beir_arguana_test-society-cpisydfphwj-pro02a": [
+  "f2/test-society-cpisydfphwj-pro02b.txt"
+ ],
+ "beir_arguana_test-society-cpisydfphwj-pro03a": [
+  "0e/test-society-cpisydfphwj-pro03b.txt"
+ ],
+ "beir_arguana_test-society-epiasghbf-con01a": [
+  "4b/test-society-epiasghbf-con01b.txt"
+ ],
+ "beir_arguana_test-society-epiasghbf-con02a": [
+  "0e/test-society-epiasghbf-con02b.txt"
+ ],
+ "beir_arguana_test-society-epiasghbf-con03a": [
+  "e9/test-society-epiasghbf-con03b.txt"
+ ],
+ "beir_arguana_test-society-epiasghbf-con04a": [
+  "6d/test-society-epiasghbf-con04b.txt"
+ ],
+ "beir_arguana_test-society-epiasghbf-pro01a": [
+  "d4/test-society-epiasghbf-pro01b.txt"
+ ],
+ "beir_arguana_test-society-epiasghbf-pro02a": [
+  "c9/test-society-epiasghbf-pro02b.txt"
+ ],
+ "beir_arguana_test-society-epiasghbf-pro03a": [
+  "a6/test-society-epiasghbf-pro03b.txt"
+ ],
+ "beir_arguana_test-society-epsihbdns-con01a": [
+  "21/test-society-epsihbdns-con01b.txt"
+ ],
+ "beir_arguana_test-society-epsihbdns-con02a": [
+  "0c/test-society-epsihbdns-con02b.txt"
+ ],
+ "beir_arguana_test-society-epsihbdns-con03a": [
+  "0c/test-society-epsihbdns-con03b.txt"
+ ],
+ "beir_arguana_test-society-epsihbdns-con04a": [
+  "83/test-society-epsihbdns-con04b.txt"
+ ],
+ "beir_arguana_test-society-epsihbdns-pro01a": [
+  "63/test-society-epsihbdns-pro01b.txt"
+ ],
+ "beir_arguana_test-society-epsihbdns-pro02a": [
+  "eb/test-society-epsihbdns-pro02b.txt"
+ ],
+ "beir_arguana_test-society-epsihbdns-pro03a": [
+  "32/test-society-epsihbdns-pro03b.txt"
+ ],
+ "beir_arguana_test-society-epsihbdns-pro04a": [
+  "2e/test-society-epsihbdns-pro04b.txt"
+ ],
+ "beir_arguana_test-society-ghbgqeaaems-con01a": [
+  "cf/test-society-ghbgqeaaems-con01b.txt"
+ ],
+ "beir_arguana_test-society-ghbgqeaaems-con02a": [
+  "e1/test-society-ghbgqeaaems-con02b.txt"
+ ],
+ "beir_arguana_test-society-ghbgqeaaems-con03a": [
+  "ec/test-society-ghbgqeaaems-con03b.txt"
+ ],
+ "beir_arguana_test-society-ghbgqeaaems-pro01a": [
+  "64/test-society-ghbgqeaaems-pro01b.txt"
+ ],
+ "beir_arguana_test-society-ghbgqeaaems-pro02a": [
+  "84/test-society-ghbgqeaaems-pro02b.txt"
+ ],
+ "beir_arguana_test-society-ghbgqeaaems-pro03a": [
+  "ed/test-society-ghbgqeaaems-pro03b.txt"
+ ],
+ "beir_arguana_test-society-ghbgqeaaems-pro04a": [
+  "71/test-society-ghbgqeaaems-pro04b.txt"
+ ],
+ "beir_arguana_test-society-mmcpsgfhbf-con01a": [
+  "8e/test-society-mmcpsgfhbf-con01b.txt"
+ ],
+ "beir_arguana_test-society-mmcpsgfhbf-con02a": [
+  "ae/test-society-mmcpsgfhbf-con02b.txt"
+ ],
+ "beir_arguana_test-society-mmcpsgfhbf-con03a": [
+  "1c/test-society-mmcpsgfhbf-con03b.txt"
+ ],
+ "beir_arguana_test-society-mmcpsgfhbf-con04a": [
+  "35/test-society-mmcpsgfhbf-con04b.txt"
+ ],
+ "beir_arguana_test-society-mmcpsgfhbf-pro01a": [
+  "56/test-society-mmcpsgfhbf-pro01b.txt"
+ ],
+ "beir_arguana_test-society-mmcpsgfhbf-pro02a": [
+  "10/test-society-mmcpsgfhbf-pro02b.txt"
+ ],
+ "beir_arguana_test-society-mmcpsgfhbf-pro03a": [
+  "1b/test-society-mmcpsgfhbf-pro03b.txt"
+ ],
+ "beir_arguana_test-society-mmcpsgfhbf-pro04a": [
+  "2b/test-society-mmcpsgfhbf-pro04b.txt"
+ ],
+ "beir_arguana_test-society-simhbrasnba-con01a": [
+  "b1/test-society-simhbrasnba-con01b.txt"
+ ],
+ "beir_arguana_test-society-simhbrasnba-con02a": [
+  "72/test-society-simhbrasnba-con02b.txt"
+ ],
+ "beir_arguana_test-society-simhbrasnba-con03a": [
+  "56/test-society-simhbrasnba-con03b.txt"
+ ],
+ "beir_arguana_test-society-simhbrasnba-pro01a": [
+  "91/test-society-simhbrasnba-pro01b.txt"
+ ],
+ "beir_arguana_test-society-simhbrasnba-pro02a": [
+  "27/test-society-simhbrasnba-pro02b.txt"
+ ],
+ "beir_arguana_test-society-simhbrasnba-pro03a": [
+  "fa/test-society-simhbrasnba-pro03b.txt"
+ ],
+ "beir_arguana_test-society-tlhrilsfhwr-con01a": [
+  "34/test-society-tlhrilsfhwr-con01b.txt"
+ ],
+ "beir_arguana_test-society-tlhrilsfhwr-con02a": [
+  "98/test-society-tlhrilsfhwr-con02b.txt"
+ ],
+ "beir_arguana_test-society-tlhrilsfhwr-con03a": [
+  "86/test-society-tlhrilsfhwr-con03b.txt"
+ ],
+ "beir_arguana_test-society-tlhrilsfhwr-pro01a": [
+  "b8/test-society-tlhrilsfhwr-pro01b.txt"
+ ],
+ "beir_arguana_test-society-tlhrilsfhwr-pro02a": [
+  "44/test-society-tlhrilsfhwr-pro02b.txt"
+ ],
+ "beir_arguana_test-society-tlhrilsfhwr-pro03a": [
+  "ac/test-society-tlhrilsfhwr-pro03b.txt"
+ ],
+ "beir_arguana_test-society-tlhrilsfhwr-pro04a": [
+  "a4/test-society-tlhrilsfhwr-pro04b.txt"
+ ],
+ "beir_arguana_test-society-tsmihwurpp-con01a": [
+  "00/test-society-tsmihwurpp-con01b.txt"
+ ],
+ "beir_arguana_test-society-tsmihwurpp-con02a": [
+  "17/test-society-tsmihwurpp-con02b.txt"
+ ],
+ "beir_arguana_test-society-tsmihwurpp-con03a": [
+  "5d/test-society-tsmihwurpp-con03b.txt"
+ ],
+ "beir_arguana_test-society-tsmihwurpp-pro01a": [
+  "22/test-society-tsmihwurpp-pro01b.txt"
+ ],
+ "beir_arguana_test-society-tsmihwurpp-pro02a": [
+  "9b/test-society-tsmihwurpp-pro02b.txt"
+ ],
+ "beir_arguana_test-society-tsmihwurpp-pro03a": [
+  "20/test-society-tsmihwurpp-pro03b.txt"
+ ],
+ "beir_arguana_test-sport-aastshsrqsar-con01a": [
+  "b2/test-sport-aastshsrqsar-con01b.txt"
+ ],
+ "beir_arguana_test-sport-aastshsrqsar-con02a": [
+  "b8/test-sport-aastshsrqsar-con02b.txt"
+ ],
+ "beir_arguana_test-sport-aastshsrqsar-con03a": [
+  "b1/test-sport-aastshsrqsar-con03b.txt"
+ ],
+ "beir_arguana_test-sport-aastshsrqsar-con04a": [
+  "e1/test-sport-aastshsrqsar-con04b.txt"
+ ],
+ "beir_arguana_test-sport-aastshsrqsar-pro01a": [
+  "5d/test-sport-aastshsrqsar-pro01b.txt"
+ ],
+ "beir_arguana_test-sport-aastshsrqsar-pro02a": [
+  "04/test-sport-aastshsrqsar-pro02b.txt"
+ ],
+ "beir_arguana_test-sport-aastshsrqsar-pro03a": [
+  "4a/test-sport-aastshsrqsar-pro03b.txt"
+ ],
+ "beir_arguana_test-sport-otshwbe2uuyt-con01a": [
+  "4e/test-sport-otshwbe2uuyt-con01b.txt"
+ ],
+ "beir_arguana_test-sport-otshwbe2uuyt-con02a": [
+  "d8/test-sport-otshwbe2uuyt-con02b.txt"
+ ],
+ "beir_arguana_test-sport-otshwbe2uuyt-con03a": [
+  "0a/test-sport-otshwbe2uuyt-con03b.txt"
+ ],
+ "beir_arguana_test-sport-otshwbe2uuyt-con04a": [
+  "68/test-sport-otshwbe2uuyt-con04b.txt"
+ ],
+ "beir_arguana_test-sport-otshwbe2uuyt-con05a": [
+  "f9/test-sport-otshwbe2uuyt-con05b.txt"
+ ],
+ "beir_arguana_test-sport-otshwbe2uuyt-pro01a": [
+  "5e/test-sport-otshwbe2uuyt-pro01b.txt"
+ ],
+ "beir_arguana_test-sport-otshwbe2uuyt-pro02a": [
+  "4f/test-sport-otshwbe2uuyt-pro02b.txt"
+ ],
+ "beir_arguana_test-sport-otshwbe2uuyt-pro03a": [
+  "4f/test-sport-otshwbe2uuyt-pro03b.txt"
+ ],
+ "beir_arguana_test-sport-tshbmlbscac-con01a": [
+  "69/test-sport-tshbmlbscac-con01b.txt"
+ ],
+ "beir_arguana_test-sport-tshbmlbscac-con02a": [
+  "27/test-sport-tshbmlbscac-con02b.txt"
+ ],
+ "beir_arguana_test-sport-tshbmlbscac-con03a": [
+  "0e/test-sport-tshbmlbscac-con03b.txt"
+ ],
+ "beir_arguana_test-sport-tshbmlbscac-con04a": [
+  "86/test-sport-tshbmlbscac-con04b.txt"
+ ],
+ "beir_arguana_test-sport-tshbmlbscac-pro01a": [
+  "8f/test-sport-tshbmlbscac-pro01b.txt"
+ ],
+ "beir_arguana_test-sport-tshbmlbscac-pro02a": [
+  "ba/test-sport-tshbmlbscac-pro02b.txt"
+ ],
+ "beir_arguana_test-sport-tshbmlbscac-pro03a": [
+  "fe/test-sport-tshbmlbscac-pro03b.txt"
+ ],
+ "beir_arguana_test-sport-tshbmlbscac-pro04a": [
+  "10/test-sport-tshbmlbscac-pro04b.txt"
+ ],
+ "beir_arguana_test-sport-ybfgsohbhog-con01a": [
+  "47/test-sport-ybfgsohbhog-con01b.txt"
+ ],
+ "beir_arguana_test-sport-ybfgsohbhog-con02a": [
+  "a8/test-sport-ybfgsohbhog-con02b.txt"
+ ],
+ "beir_arguana_test-sport-ybfgsohbhog-con03a": [
+  "05/test-sport-ybfgsohbhog-con03b.txt"
+ ],
+ "beir_arguana_test-sport-ybfgsohbhog-pro01a": [
+  "c4/test-sport-ybfgsohbhog-pro01b.txt"
+ ],
+ "beir_arguana_test-sport-ybfgsohbhog-pro02a": [
+  "71/test-sport-ybfgsohbhog-pro02b.txt"
+ ],
+ "beir_arguana_test-sport-ybfgsohbhog-pro03a": [
+  "5b/test-sport-ybfgsohbhog-pro03b.txt"
+ ],
+ "beir_arguana_test-sport-ybfgsohbhog-pro04a": [
+  "69/test-sport-ybfgsohbhog-pro04b.txt"
+ ]
+}

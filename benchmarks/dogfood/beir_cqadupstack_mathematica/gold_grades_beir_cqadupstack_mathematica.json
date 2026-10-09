@@ -1,0 +1,2968 @@
+{
+ "beir_cqadupstack_mathematica_1": {
+  "ab/43648.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10086": {
+  "a9/54677.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10391": {
+  "fa/574.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1041": {
+  "df/3761.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10432": {
+  "02/15714.txt": 1,
+  "3f/58295.txt": 1,
+  "b8/31204.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10501": {
+  "f8/52171.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10619": {
+  "a1/32484.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10669": {
+  "08/34251.txt": 1,
+  "8e/42756.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10838": {
+  "1a/3485.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10934": {
+  "34/3886.txt": 1,
+  "80/33009.txt": 1,
+  "9d/11233.txt": 1,
+  "ba/25296.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10956": {
+  "d6/10464.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1096": {
+  "a0/28328.txt": 1,
+  "c2/44362.txt": 1
+ },
+ "beir_cqadupstack_mathematica_10990": {
+  "59/24687.txt": 1,
+  "a4/24205.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11024": {
+  "94/8100.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11059": {
+  "4f/7620.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11192": {
+  "51/38330.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11195": {
+  "c4/28139.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11196": {
+  "12/13805.txt": 1,
+  "38/476.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11247": {
+  "11/11304.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11271": {
+  "d2/19477.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11298": {
+  "de/38741.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1137": {
+  "e8/6263.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11403": {
+  "f0/54504.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11460": {
+  "3a/1186.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11608": {
+  "a8/40158.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11698": {
+  "eb/48186.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11705": {
+  "4f/56232.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1172": {
+  "9c/18939.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11725": {
+  "46/39336.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11794": {
+  "62/50550.txt": 1
+ },
+ "beir_cqadupstack_mathematica_11950": {
+  "60/51618.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1283": {
+  "10/57843.txt": 1,
+  "b1/46123.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1300": {
+  "0c/35178.txt": 1,
+  "31/28016.txt": 1,
+  "5a/5185.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13054": {
+  "ec/28585.txt": 1,
+  "fe/48344.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13055": {
+  "27/38888.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13090": {
+  "ff/1750.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1315": {
+  "54/27942.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13179": {
+  "03/16695.txt": 1,
+  "57/11613.txt": 1,
+  "b3/4025.txt": 1,
+  "f7/13123.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13197": {
+  "35/8577.txt": 1,
+  "de/57525.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13210": {
+  "73/34882.txt": 1,
+  "ff/31918.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13406": {
+  "93/1268.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13420": {
+  "b5/17559.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13426": {
+  "48/4694.txt": 1,
+  "c8/16384.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13440": {
+  "10/18075.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13513": {
+  "41/17840.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13520": {
+  "00/2874.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13538": {
+  "f8/6247.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13652": {
+  "04/25445.txt": 1,
+  "13/19826.txt": 1,
+  "1f/1959.txt": 1,
+  "21/23172.txt": 1,
+  "70/31382.txt": 1,
+  "7b/55374.txt": 1,
+  "a1/20639.txt": 1,
+  "af/21361.txt": 1,
+  "b0/4615.txt": 1,
+  "e2/25174.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13657": {
+  "14/24400.txt": 1,
+  "c0/47131.txt": 1,
+  "d1/19877.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13754": {
+  "28/8147.txt": 1,
+  "9d/44307.txt": 1,
+  "e7/11803.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13757": {
+  "bc/57303.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13961": {
+  "c5/42049.txt": 1
+ },
+ "beir_cqadupstack_mathematica_13981": {
+  "6e/56176.txt": 1,
+  "87/34197.txt": 1,
+  "b0/34448.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1400": {
+  "89/20445.txt": 1,
+  "af/38098.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14063": {
+  "18/3700.txt": 1,
+  "51/45276.txt": 1,
+  "5a/16739.txt": 1,
+  "6f/35399.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14083": {
+  "08/14210.txt": 1,
+  "7c/17380.txt": 1,
+  "99/17391.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14122": {
+  "b1/18222.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14185": {
+  "8b/33316.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14189": {
+  "11/16073.txt": 1,
+  "5a/19471.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14193": {
+  "e8/21167.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14282": {
+  "af/13373.txt": 1,
+  "b1/26928.txt": 1,
+  "c1/45815.txt": 1,
+  "d9/33902.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14340": {
+  "cf/3247.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14405": {
+  "49/13557.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14435": {
+  "bf/9332.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1446": {
+  "94/54956.txt": 1,
+  "a1/56396.txt": 1
+ },
+ "beir_cqadupstack_mathematica_145": {
+  "1c/20138.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14523": {
+  "12/43782.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14525": {
+  "e6/5179.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14534": {
+  "08/57703.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14543": {
+  "75/34032.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14611": {
+  "30/41940.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14645": {
+  "fc/34355.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14661": {
+  "20/3422.txt": 1,
+  "49/18833.txt": 1,
+  "70/3098.txt": 1,
+  "7e/25991.txt": 1,
+  "b9/21266.txt": 1,
+  "c1/47152.txt": 1,
+  "cb/33050.txt": 1
+ },
+ "beir_cqadupstack_mathematica_14987": {
+  "74/34393.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15021": {
+  "01/29621.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15023": {
+  "28/51850.txt": 1,
+  "85/30807.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15153": {
+  "f4/40298.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15176": {
+  "d9/15097.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15184": {
+  "49/7768.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15311": {
+  "30/19662.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15351": {
+  "d4/17024.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15381": {
+  "05/27879.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1542": {
+  "3b/10411.txt": 1,
+  "e9/3614.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15516": {
+  "ff/20690.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15634": {
+  "43/15338.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15649": {
+  "52/15932.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15655": {
+  "29/15789.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15679": {
+  "a0/704.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1571": {
+  "2b/33704.txt": 1,
+  "f2/8578.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15718": {
+  "3e/27799.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15734": {
+  "3a/47935.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1584": {
+  "ba/32459.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15858": {
+  "9e/47197.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15885": {
+  "7b/20794.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15929": {
+  "ce/16242.txt": 1
+ },
+ "beir_cqadupstack_mathematica_15945": {
+  "e7/42708.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1602": {
+  "5e/50669.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16194": {
+  "48/17730.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16233": {
+  "20/41327.txt": 1,
+  "33/30587.txt": 1,
+  "50/46604.txt": 1,
+  "6e/314.txt": 1,
+  "7f/28727.txt": 1,
+  "9f/16603.txt": 1,
+  "b0/37916.txt": 1,
+  "d9/6588.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16252": {
+  "3f/30687.txt": 1,
+  "8e/30870.txt": 1,
+  "ef/43363.txt": 1,
+  "fa/15637.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16258": {
+  "bb/16171.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16259": {
+  "8a/2871.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16324": {
+  "67/13226.txt": 1,
+  "e6/40706.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16398": {
+  "05/39704.txt": 1,
+  "4f/38993.txt": 1,
+  "5b/7921.txt": 1,
+  "68/45048.txt": 1,
+  "8f/26811.txt": 1,
+  "bf/7924.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16404": {
+  "26/59070.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16429": {
+  "a3/7722.txt": 1
+ },
+ "beir_cqadupstack_mathematica_16562": {
+  "a1/18659.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1679": {
+  "fa/16353.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17093": {
+  "63/17064.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17154": {
+  "5c/45731.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17196": {
+  "8e/26420.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17250": {
+  "21/38971.txt": 1,
+  "47/51414.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17324": {
+  "6b/9217.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17342": {
+  "4f/18206.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17357": {
+  "93/37037.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17370": {
+  "81/16969.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17381": {
+  "10/31316.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17617": {
+  "13/7223.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17622": {
+  "04/34935.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17633": {
+  "63/18842.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17736": {
+  "43/36916.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17811": {
+  "21/17308.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17826": {
+  "c1/37143.txt": 1,
+  "cf/50937.txt": 1,
+  "d6/45028.txt": 1
+ },
+ "beir_cqadupstack_mathematica_17857": {
+  "53/33406.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18025": {
+  "60/22546.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18081": {
+  "0b/44893.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18090": {
+  "64/59296.txt": 1,
+  "78/19737.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18091": {
+  "d0/43757.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18142": {
+  "05/30846.txt": 1,
+  "0b/20691.txt": 1,
+  "b7/27664.txt": 1,
+  "cf/18278.txt": 1,
+  "f5/5817.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18183": {
+  "55/24108.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18193": {
+  "fb/21546.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18210": {
+  "85/18778.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18258": {
+  "f3/9891.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18310": {
+  "56/15647.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1835": {
+  "57/55908.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18419": {
+  "5a/37732.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18460": {
+  "2e/38578.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18526": {
+  "90/58793.txt": 1,
+  "fe/23634.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18549": {
+  "22/18217.txt": 1,
+  "d1/18738.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18643": {
+  "33/47150.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18647": {
+  "ca/43196.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18655": {
+  "61/25912.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18707": {
+  "6e/11530.txt": 1,
+  "90/51990.txt": 1,
+  "9e/18.txt": 1,
+  "b3/25072.txt": 1,
+  "de/26625.txt": 1,
+  "e9/5059.txt": 1
+ },
+ "beir_cqadupstack_mathematica_18889": {
+  "49/19161.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19027": {
+  "a9/164.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19035": {
+  "00/13767.txt": 1,
+  "06/39229.txt": 1,
+  "24/11498.txt": 1,
+  "5b/32909.txt": 1,
+  "76/46721.txt": 1,
+  "85/27092.txt": 1,
+  "b7/27673.txt": 1,
+  "db/56006.txt": 1,
+  "e0/32556.txt": 1,
+  "e1/32443.txt": 1,
+  "e9/41303.txt": 1,
+  "f7/17127.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1911": {
+  "60/18172.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19127": {
+  "df/1863.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19165": {
+  "3a/14632.txt": 1,
+  "af/39411.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19174": {
+  "67/22255.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19201": {
+  "33/5204.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19253": {
+  "5e/35063.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19264": {
+  "36/3175.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19392": {
+  "a9/2619.txt": 1
+ },
+ "beir_cqadupstack_mathematica_1945": {
+  "bb/22969.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19457": {
+  "d1/24300.txt": 1
+ },
+ "beir_cqadupstack_mathematica_197": {
+  "a6/47716.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19705": {
+  "47/9899.txt": 1,
+  "75/45217.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19867": {
+  "aa/24666.txt": 1
+ },
+ "beir_cqadupstack_mathematica_19902": {
+  "10/20060.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20023": {
+  "1a/32844.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20051": {
+  "85/30875.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20074": {
+  "ae/22751.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20079": {
+  "d8/19470.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20105": {
+  "cf/20423.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20228": {
+  "7a/54950.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20243": {
+  "a5/17442.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20272": {
+  "3d/14852.txt": 1,
+  "71/39763.txt": 1,
+  "bf/42564.txt": 1,
+  "cc/8796.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20277": {
+  "5d/21257.txt": 1,
+  "86/23000.txt": 1,
+  "bf/13146.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20334": {
+  "0c/26074.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20355": {
+  "71/19859.txt": 1,
+  "83/57325.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20468": {
+  "17/38309.txt": 1,
+  "ca/2977.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2047": {
+  "36/8246.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20470": {
+  "c9/43088.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2051": {
+  "92/30768.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20718": {
+  "f6/23255.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2073": {
+  "c9/13356.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2076": {
+  "b4/34458.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20766": {
+  "14/34585.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20823": {
+  "d8/3606.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20841": {
+  "65/1831.txt": 1,
+  "d3/58615.txt": 1
+ },
+ "beir_cqadupstack_mathematica_20873": {
+  "ff/52250.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21075": {
+  "f5/30784.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21150": {
+  "7d/4994.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21161": {
+  "a9/52.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21238": {
+  "f2/1745.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21284": {
+  "67/7488.txt": 1,
+  "78/28412.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21328": {
+  "f8/20349.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21374": {
+  "43/51521.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21410": {
+  "2a/5795.txt": 1,
+  "2e/57611.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21421": {
+  "1a/4797.txt": 1,
+  "29/19271.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21444": {
+  "28/10224.txt": 1,
+  "51/24075.txt": 1,
+  "b2/5350.txt": 1,
+  "ba/5356.txt": 1,
+  "bc/19360.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21558": {
+  "cb/21447.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2157": {
+  "e4/14761.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21655": {
+  "9d/14858.txt": 1,
+  "dc/32904.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21672": {
+  "16/17681.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21701": {
+  "74/24699.txt": 1,
+  "8c/16148.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21742": {
+  "eb/11673.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21764": {
+  "74/19416.txt": 1,
+  "dc/43966.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21870": {
+  "57/41637.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21898": {
+  "7b/21890.txt": 1
+ },
+ "beir_cqadupstack_mathematica_21993": {
+  "9a/8454.txt": 1,
+  "ef/56182.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22019": {
+  "cb/32564.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22032": {
+  "1c/8349.txt": 1,
+  "43/853.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2214": {
+  "41/2173.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22193": {
+  "3b/22143.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2230": {
+  "1b/34337.txt": 1,
+  "83/52102.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22349": {
+  "2b/22900.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22419": {
+  "1f/22457.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22611": {
+  "98/44834.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22651": {
+  "af/42347.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22705": {
+  "9a/24528.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22828": {
+  "9b/8255.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22876": {
+  "bb/3242.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22917": {
+  "08/48127.txt": 1,
+  "09/42410.txt": 1,
+  "39/28785.txt": 1,
+  "3b/23369.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22948": {
+  "1d/55431.txt": 1
+ },
+ "beir_cqadupstack_mathematica_22956": {
+  "5e/21206.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23014": {
+  "06/45032.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23034": {
+  "8a/18550.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23074": {
+  "29/16574.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23125": {
+  "4a/21756.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23221": {
+  "93/18960.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23280": {
+  "a1/27896.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23398": {
+  "b5/16869.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23454": {
+  "9a/55349.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23470": {
+  "a1/5563.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23517": {
+  "0d/26948.txt": 1,
+  "31/32262.txt": 1,
+  "35/57358.txt": 1,
+  "3c/5223.txt": 1,
+  "65/26895.txt": 1,
+  "aa/55672.txt": 1,
+  "de/54428.txt": 1,
+  "f4/20100.txt": 1,
+  "f4/44324.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23656": {
+  "7f/40624.txt": 1,
+  "e2/5968.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23659": {
+  "01/31605.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23692": {
+  "6d/3666.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23734": {
+  "31/32268.txt": 1,
+  "34/40863.txt": 1,
+  "3c/10604.txt": 1,
+  "73/48732.txt": 1,
+  "74/25699.txt": 1,
+  "cb/56097.txt": 1,
+  "ce/25521.txt": 1,
+  "eb/31322.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23751": {
+  "40/6949.txt": 1,
+  "61/38729.txt": 1
+ },
+ "beir_cqadupstack_mathematica_23880": {
+  "bc/733.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24036": {
+  "19/19758.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24156": {
+  "ee/18732.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24167": {
+  "9e/42256.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24291": {
+  "4e/27606.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24373": {
+  "c9/4640.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24556": {
+  "dd/35160.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24581": {
+  "ef/38874.txt": 1
+ },
+ "beir_cqadupstack_mathematica_246": {
+  "b7/752.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24623": {
+  "60/9219.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24807": {
+  "88/20799.txt": 1,
+  "92/4444.txt": 1,
+  "a9/28664.txt": 1,
+  "aa/28138.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24882": {
+  "64/25607.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24892": {
+  "71/7602.txt": 1
+ },
+ "beir_cqadupstack_mathematica_24988": {
+  "1b/32578.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25031": {
+  "60/44877.txt": 1,
+  "cf/1413.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25061": {
+  "66/21227.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25134": {
+  "55/3868.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25185": {
+  "31/3558.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25255": {
+  "4a/17700.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25257": {
+  "ae/25124.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25260": {
+  "d7/26583.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25277": {
+  "48/26636.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25282": {
+  "0b/26978.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25285": {
+  "97/3044.txt": 1,
+  "f2/27050.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25324": {
+  "d1/4652.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25325": {
+  "a0/25641.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25340": {
+  "b6/2984.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25343": {
+  "3a/2404.txt": 1,
+  "4b/42305.txt": 1,
+  "72/25672.txt": 1,
+  "e1/32027.txt": 1,
+  "e1/42749.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2537": {
+  "c3/37001.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25394": {
+  "d8/25081.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25502": {
+  "c2/2794.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25549": {
+  "4c/41348.txt": 1,
+  "bf/14222.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25562": {
+  "10/25231.txt": 1,
+  "5f/19268.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25587": {
+  "95/21031.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25610": {
+  "19/6974.txt": 1,
+  "35/16050.txt": 1,
+  "6f/2647.txt": 1,
+  "ba/1699.txt": 1,
+  "fc/25767.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25673": {
+  "6d/54683.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25775": {
+  "6f/26012.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25798": {
+  "79/711.txt": 1
+ },
+ "beir_cqadupstack_mathematica_25885": {
+  "6f/21751.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26282": {
+  "60/866.txt": 1,
+  "66/48179.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26355": {
+  "68/3058.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26370": {
+  "8e/31036.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2639": {
+  "b7/20899.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26425": {
+  "12/18132.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2651": {
+  "03/27077.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26519": {
+  "20/28488.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2652": {
+  "9d/26299.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26527": {
+  "04/35162.txt": 1,
+  "3a/32094.txt": 1,
+  "4d/25132.txt": 1,
+  "88/8787.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26644": {
+  "74/1825.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26776": {
+  "c5/53.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26837": {
+  "c0/1382.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26857": {
+  "23/31251.txt": 1,
+  "3b/27352.txt": 1,
+  "4b/26841.txt": 1,
+  "8e/30400.txt": 1,
+  "b0/2099.txt": 1,
+  "e8/42057.txt": 1,
+  "f9/18598.txt": 1,
+  "fe/20901.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26879": {
+  "d5/18918.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2688": {
+  "70/43566.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26917": {
+  "e1/51789.txt": 1,
+  "ed/47582.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26939": {
+  "de/14781.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26983": {
+  "6d/46373.txt": 1
+ },
+ "beir_cqadupstack_mathematica_26995": {
+  "ba/26619.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27023": {
+  "34/18130.txt": 1,
+  "41/26376.txt": 1,
+  "aa/8072.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27038": {
+  "ba/280.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27049": {
+  "40/42779.txt": 1,
+  "59/32894.txt": 1,
+  "92/6457.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27091": {
+  "71/27093.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2712": {
+  "ae/41066.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2715": {
+  "2d/4175.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27178": {
+  "32/41890.txt": 1,
+  "6a/2635.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27274": {
+  "cc/37932.txt": 1,
+  "e4/27581.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2729": {
+  "b4/39219.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2752": {
+  "bf/51203.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27645": {
+  "a7/58584.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2769": {
+  "e1/26203.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27700": {
+  "a7/29978.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27748": {
+  "27/2350.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27801": {
+  "b7/2373.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27868": {
+  "2c/16450.txt": 1,
+  "6a/16525.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27883": {
+  "ad/39965.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2789": {
+  "15/57905.txt": 1
+ },
+ "beir_cqadupstack_mathematica_27921": {
+  "3a/47899.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28014": {
+  "48/5910.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28028": {
+  "d5/18213.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28056": {
+  "01/33112.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28103": {
+  "d5/24939.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2821": {
+  "0f/21606.txt": 1,
+  "ac/33904.txt": 1,
+  "e8/32494.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28258": {
+  "59/3292.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28283": {
+  "dd/21174.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28300": {
+  "37/15935.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28541": {
+  "e7/27566.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28553": {
+  "e9/23529.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28611": {
+  "4f/42674.txt": 1,
+  "57/42675.txt": 1,
+  "58/22153.txt": 1,
+  "9e/14160.txt": 1,
+  "c8/48535.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28805": {
+  "5a/3781.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28829": {
+  "44/14940.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28925": {
+  "3c/30820.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28946": {
+  "51/59410.txt": 1,
+  "71/7996.txt": 1
+ },
+ "beir_cqadupstack_mathematica_28977": {
+  "0d/28971.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29016": {
+  "57/21584.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29085": {
+  "95/34105.txt": 1,
+  "f9/41381.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29098": {
+  "75/22737.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29129": {
+  "c3/42614.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29254": {
+  "50/3566.txt": 1,
+  "b5/23892.txt": 1,
+  "e0/20066.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29358": {
+  "26/16676.txt": 1,
+  "2a/24674.txt": 1,
+  "8c/51707.txt": 1,
+  "ba/2486.txt": 1,
+  "c1/39698.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29545": {
+  "42/40994.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29590": {
+  "fb/1352.txt": 1
+ },
+ "beir_cqadupstack_mathematica_296": {
+  "6c/25489.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29609": {
+  "64/29735.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29696": {
+  "5f/26208.txt": 1,
+  "8e/10920.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29700": {
+  "03/6745.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29708": {
+  "6b/23165.txt": 1,
+  "a4/42109.txt": 1,
+  "bd/19833.txt": 1,
+  "ec/51613.txt": 1,
+  "f0/42114.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29808": {
+  "c3/2918.txt": 1
+ },
+ "beir_cqadupstack_mathematica_29822": {
+  "e6/8637.txt": 1
+ },
+ "beir_cqadupstack_mathematica_2988": {
+  "69/39874.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30014": {
+  "0d/48265.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30038": {
+  "cc/49160.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30085": {
+  "09/15744.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30090": {
+  "1b/43179.txt": 1,
+  "2b/24756.txt": 1,
+  "72/38907.txt": 1,
+  "83/32595.txt": 1,
+  "a4/13046.txt": 1,
+  "e8/17247.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30290": {
+  "cc/55216.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30302": {
+  "ce/33984.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30381": {
+  "46/25148.txt": 1,
+  "6a/15188.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30417": {
+  "27/27308.txt": 1,
+  "79/29540.txt": 1,
+  "a2/17734.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30429": {
+  "4a/37197.txt": 1,
+  "a9/1290.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30432": {
+  "00/57964.txt": 1,
+  "61/44591.txt": 1,
+  "71/21795.txt": 1,
+  "98/8461.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30508": {
+  "08/39496.txt": 1,
+  "d3/11944.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30836": {
+  "e3/33957.txt": 1
+ },
+ "beir_cqadupstack_mathematica_30984": {
+  "62/8673.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31063": {
+  "89/20405.txt": 1,
+  "e2/42227.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31244": {
+  "8b/22288.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31299": {
+  "14/29324.txt": 1,
+  "bb/303.txt": 1
+ },
+ "beir_cqadupstack_mathematica_313": {
+  "62/33395.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31302": {
+  "30/57584.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31402": {
+  "eb/7519.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31501": {
+  "ba/11898.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3152": {
+  "0c/57626.txt": 1,
+  "48/28741.txt": 1,
+  "78/10820.txt": 1,
+  "ab/16014.txt": 1,
+  "cd/56937.txt": 1,
+  "ef/38769.txt": 1,
+  "f7/24776.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31566": {
+  "db/29918.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31636": {
+  "2a/30489.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31829": {
+  "0c/27476.txt": 1,
+  "0f/24857.txt": 1,
+  "22/21674.txt": 1,
+  "f0/39671.txt": 1,
+  "f2/27532.txt": 1
+ },
+ "beir_cqadupstack_mathematica_31902": {
+  "59/23425.txt": 1,
+  "cb/28816.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32119": {
+  "17/34818.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32168": {
+  "bc/33301.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32223": {
+  "2b/15687.txt": 1,
+  "ed/55748.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32293": {
+  "e6/50708.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32346": {
+  "12/22.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32447": {
+  "bb/22333.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32569": {
+  "6c/27718.txt": 1,
+  "aa/13646.txt": 1,
+  "dc/10211.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32601": {
+  "c8/48481.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32658": {
+  "e1/32378.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32715": {
+  "7e/38009.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32727": {
+  "8b/45781.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32878": {
+  "48/1742.txt": 1,
+  "fb/17206.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32938": {
+  "e9/27997.txt": 1
+ },
+ "beir_cqadupstack_mathematica_32983": {
+  "0c/10524.txt": 1,
+  "3f/18599.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33": {
+  "eb/8756.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33039": {
+  "18/23039.txt": 1,
+  "9a/56405.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33051": {
+  "95/134.txt": 1,
+  "c5/21622.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3306": {
+  "39/18829.txt": 1,
+  "d5/32337.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33067": {
+  "6f/17707.txt": 1,
+  "b1/4937.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33176": {
+  "2b/32158.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3319": {
+  "8e/54438.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33293": {
+  "33/18034.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33314": {
+  "c8/198.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33373": {
+  "08/39615.txt": 1
+ },
+ "beir_cqadupstack_mathematica_334": {
+  "0a/2678.txt": 1,
+  "3d/58388.txt": 1,
+  "a4/27099.txt": 1,
+  "dd/29317.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33405": {
+  "43/10562.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33513": {
+  "d2/15264.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33561": {
+  "ef/59119.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33574": {
+  "59/56703.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33690": {
+  "41/42976.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33721": {
+  "ac/33728.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33724": {
+  "c6/14517.txt": 1,
+  "e2/48341.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3394": {
+  "98/41417.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33966": {
+  "35/19277.txt": 1
+ },
+ "beir_cqadupstack_mathematica_33992": {
+  "12/40010.txt": 1,
+  "30/32513.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34073": {
+  "71/48712.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3412": {
+  "b2/11444.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34291": {
+  "9b/34147.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34321": {
+  "5a/916.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34526": {
+  "f2/7815.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34535": {
+  "42/32681.txt": 1,
+  "44/26684.txt": 1,
+  "80/41817.txt": 1,
+  "a2/23363.txt": 1,
+  "de/32734.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34554": {
+  "5b/57630.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34565": {
+  "69/17671.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34682": {
+  "bc/29776.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34710": {
+  "e9/34427.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34727": {
+  "6c/14863.txt": 1
+ },
+ "beir_cqadupstack_mathematica_34916": {
+  "a2/39564.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3510": {
+  "0b/14460.txt": 1,
+  "f0/13780.txt": 1
+ },
+ "beir_cqadupstack_mathematica_35139": {
+  "03/48198.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3518": {
+  "80/4040.txt": 1
+ },
+ "beir_cqadupstack_mathematica_35294": {
+  "ca/24815.txt": 1
+ },
+ "beir_cqadupstack_mathematica_353": {
+  "02/30999.txt": 1,
+  "42/26001.txt": 1,
+  "b6/17326.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3541": {
+  "03/33070.txt": 1,
+  "ef/28459.txt": 1
+ },
+ "beir_cqadupstack_mathematica_35544": {
+  "4b/14789.txt": 1
+ },
+ "beir_cqadupstack_mathematica_35553": {
+  "24/34617.txt": 1
+ },
+ "beir_cqadupstack_mathematica_35603": {
+  "cd/48152.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3561": {
+  "4a/25373.txt": 1,
+  "f1/32680.txt": 1
+ },
+ "beir_cqadupstack_mathematica_35683": {
+  "78/37074.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3646": {
+  "14/27493.txt": 1
+ },
+ "beir_cqadupstack_mathematica_36995": {
+  "d5/16209.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37048": {
+  "b4/128.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37093": {
+  "b0/19816.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3723": {
+  "6d/7728.txt": 1,
+  "7e/41501.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37242": {
+  "8e/25263.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37247": {
+  "89/15225.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37346": {
+  "9b/40501.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37414": {
+  "26/13905.txt": 1,
+  "29/29362.txt": 1,
+  "31/2239.txt": 1,
+  "3d/18114.txt": 1,
+  "53/148.txt": 1,
+  "83/56687.txt": 1,
+  "87/51121.txt": 1,
+  "c9/29435.txt": 1,
+  "cd/21433.txt": 1,
+  "d2/6811.txt": 1,
+  "e0/18798.txt": 1,
+  "fa/45208.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37416": {
+  "7f/37423.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3747": {
+  "10/27404.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37557": {
+  "04/50600.txt": 1,
+  "4e/43301.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37602": {
+  "6c/37127.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37656": {
+  "c0/33837.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37755": {
+  "1e/51765.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37792": {
+  "5a/9645.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3780": {
+  "b4/24377.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37860": {
+  "7f/24444.txt": 1
+ },
+ "beir_cqadupstack_mathematica_37894": {
+  "cf/31687.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38012": {
+  "4a/58843.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38126": {
+  "26/13547.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38152": {
+  "49/51201.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38166": {
+  "1a/14616.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38196": {
+  "8e/22068.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38242": {
+  "0a/23516.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38265": {
+  "9c/6815.txt": 1,
+  "aa/54480.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38388": {
+  "28/900.txt": 1,
+  "64/42286.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38498": {
+  "57/19421.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38604": {
+  "54/33672.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38622": {
+  "bf/42083.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3871": {
+  "05/25868.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38792": {
+  "28/21383.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38819": {
+  "2b/38962.txt": 1,
+  "39/39077.txt": 1,
+  "48/3327.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38846": {
+  "0e/4833.txt": 1
+ },
+ "beir_cqadupstack_mathematica_38931": {
+  "25/56358.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3897": {
+  "9c/55634.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39019": {
+  "52/20607.txt": 1,
+  "b2/5442.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39026": {
+  "28/34539.txt": 1,
+  "af/4061.txt": 1,
+  "ce/5463.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39076": {
+  "78/5959.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39078": {
+  "42/9405.txt": 1,
+  "86/23995.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39089": {
+  "c1/18100.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39106": {
+  "81/27184.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3912": {
+  "02/33953.txt": 1,
+  "c7/31378.txt": 1,
+  "d0/43452.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39137": {
+  "da/41456.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39361": {
+  "9d/48488.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3943": {
+  "6b/17728.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39511": {
+  "1d/33126.txt": 1,
+  "46/59076.txt": 1,
+  "f6/20721.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39604": {
+  "bb/23748.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39654": {
+  "21/39647.txt": 1,
+  "cd/38425.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39696": {
+  "3a/27081.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39731": {
+  "90/6013.txt": 1,
+  "b1/8778.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39904": {
+  "28/14556.txt": 1,
+  "2e/43567.txt": 1,
+  "43/37564.txt": 1,
+  "a0/47075.txt": 1
+ },
+ "beir_cqadupstack_mathematica_3991": {
+  "f9/42222.txt": 1
+ },
+ "beir_cqadupstack_mathematica_39980": {
+  "43/783.txt": 1,
+  "45/58380.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4001": {
+  "ab/44401.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4002": {
+  "49/17077.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40029": {
+  "78/31949.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40146": {
+  "59/9684.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4017": {
+  "d3/16578.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4019": {
+  "f2/33680.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40201": {
+  "1e/894.txt": 1,
+  "48/3822.txt": 1,
+  "5b/49192.txt": 1,
+  "60/56471.txt": 1,
+  "9d/56290.txt": 1,
+  "c4/31977.txt": 1,
+  "fd/35184.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40204": {
+  "ce/40230.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40320": {
+  "45/4643.txt": 1,
+  "c6/35569.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40422": {
+  "ff/41067.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40640": {
+  "a3/39169.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40748": {
+  "97/30425.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40763": {
+  "12/22040.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4081": {
+  "72/2009.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40837": {
+  "3c/1943.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4084": {
+  "83/23321.txt": 1
+ },
+ "beir_cqadupstack_mathematica_40919": {
+  "81/21717.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41077": {
+  "3c/21789.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41141": {
+  "88/30232.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41170": {
+  "cf/27845.txt": 1,
+  "d4/46559.txt": 1,
+  "e3/7142.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41215": {
+  "f2/41395.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41291": {
+  "c2/20854.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41350": {
+  "d0/14403.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41517": {
+  "03/31948.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41521": {
+  "e9/7796.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41523": {
+  "d0/28202.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41569": {
+  "a6/19843.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41774": {
+  "54/20565.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41813": {
+  "4c/27636.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41872": {
+  "c7/7700.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41920": {
+  "92/42883.txt": 1
+ },
+ "beir_cqadupstack_mathematica_41966": {
+  "82/41979.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42035": {
+  "02/21387.txt": 1,
+  "24/559.txt": 1,
+  "34/43078.txt": 1,
+  "82/18776.txt": 1,
+  "c5/20284.txt": 1,
+  "fc/45100.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42097": {
+  "20/31985.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42209": {
+  "c7/42063.txt": 1,
+  "cc/6395.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42330": {
+  "03/31597.txt": 1,
+  "47/6994.txt": 1,
+  "c1/44329.txt": 1,
+  "c8/43954.txt": 1,
+  "cf/3736.txt": 1,
+  "e2/51950.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42334": {
+  "0d/48714.txt": 1,
+  "3c/9484.txt": 1,
+  "41/59415.txt": 1,
+  "7e/38518.txt": 1,
+  "84/27933.txt": 1,
+  "8b/121.txt": 1,
+  "ac/7198.txt": 1,
+  "ed/19899.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42366": {
+  "fd/8895.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42403": {
+  "d1/2326.txt": 1,
+  "eb/41613.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42411": {
+  "da/18674.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4244": {
+  "10/37018.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42483": {
+  "12/47124.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42512": {
+  "53/10624.txt": 1,
+  "7a/59599.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42628": {
+  "05/1301.txt": 1,
+  "0e/26648.txt": 1,
+  "16/14033.txt": 1,
+  "16/6894.txt": 1,
+  "1a/1375.txt": 1,
+  "45/23357.txt": 1,
+  "4c/35355.txt": 1,
+  "5c/3270.txt": 1,
+  "65/18895.txt": 1,
+  "69/51717.txt": 1,
+  "6d/17299.txt": 1,
+  "6d/38279.txt": 1,
+  "6e/21021.txt": 1,
+  "76/33472.txt": 1,
+  "76/38573.txt": 1,
+  "78/1731.txt": 1,
+  "7b/20458.txt": 1,
+  "7c/17612.txt": 1,
+  "98/24221.txt": 1,
+  "a5/37069.txt": 1,
+  "b0/19453.txt": 1,
+  "bf/37648.txt": 1,
+  "cc/48420.txt": 1,
+  "d1/3935.txt": 1,
+  "e3/10008.txt": 1,
+  "ed/9696.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42712": {
+  "f5/30221.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42717": {
+  "88/25625.txt": 1,
+  "91/57030.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42763": {
+  "a3/46407.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42778": {
+  "4e/42393.txt": 1,
+  "a1/3506.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42889": {
+  "10/1770.txt": 1,
+  "72/42845.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42951": {
+  "52/41439.txt": 1
+ },
+ "beir_cqadupstack_mathematica_42964": {
+  "bd/56063.txt": 1,
+  "eb/52157.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43204": {
+  "41/21240.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43350": {
+  "49/43637.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4338": {
+  "22/4343.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43415": {
+  "0a/5925.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43449": {
+  "01/32778.txt": 1,
+  "09/46880.txt": 1,
+  "34/3069.txt": 1,
+  "40/54665.txt": 1,
+  "6b/22624.txt": 1,
+  "73/46395.txt": 1,
+  "90/22322.txt": 1,
+  "cc/42198.txt": 1,
+  "d4/46713.txt": 1,
+  "e1/48314.txt": 1,
+  "e9/59518.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43485": {
+  "03/9985.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43619": {
+  "3d/43381.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43638": {
+  "ad/36965.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4368": {
+  "c9/58178.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43683": {
+  "13/46219.txt": 1,
+  "1a/56638.txt": 1,
+  "3d/43217.txt": 1,
+  "64/47925.txt": 1,
+  "69/57161.txt": 1,
+  "92/4332.txt": 1,
+  "df/43841.txt": 1,
+  "ed/26574.txt": 1,
+  "f3/16115.txt": 1,
+  "fe/44096.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43813": {
+  "53/31375.txt": 1
+ },
+ "beir_cqadupstack_mathematica_43874": {
+  "49/1450.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4390": {
+  "70/48569.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4406": {
+  "91/29467.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44126": {
+  "8e/36796.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4413": {
+  "09/10412.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44154": {
+  "d7/18863.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44200": {
+  "9f/6224.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44289": {
+  "28/14035.txt": 1,
+  "52/15043.txt": 1,
+  "9c/35122.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44421": {
+  "00/14803.txt": 1,
+  "02/45707.txt": 1,
+  "08/20459.txt": 1,
+  "0d/16380.txt": 1,
+  "1f/27372.txt": 1,
+  "20/34483.txt": 1,
+  "26/50951.txt": 1,
+  "2f/42631.txt": 1,
+  "30/55065.txt": 1,
+  "31/38420.txt": 1,
+  "32/46579.txt": 1,
+  "36/29020.txt": 1,
+  "43/333.txt": 1,
+  "4b/19802.txt": 1,
+  "4b/44878.txt": 1,
+  "4e/40297.txt": 1,
+  "4e/47235.txt": 1,
+  "53/56616.txt": 1,
+  "61/21377.txt": 1,
+  "68/56865.txt": 1,
+  "6a/48054.txt": 1,
+  "6c/51893.txt": 1,
+  "6d/46963.txt": 1,
+  "72/47420.txt": 1,
+  "75/25977.txt": 1,
+  "75/33546.txt": 1,
+  "76/27634.txt": 1,
+  "85/59195.txt": 1,
+  "87/34191.txt": 1,
+  "88/31599.txt": 1,
+  "91/29310.txt": 1,
+  "a3/37879.txt": 1,
+  "a6/10918.txt": 1,
+  "a7/34752.txt": 1,
+  "a7/59445.txt": 1,
+  "ab/34470.txt": 1,
+  "ab/6669.txt": 1,
+  "ac/25161.txt": 1,
+  "b5/57276.txt": 1,
+  "bf/17767.txt": 1,
+  "c0/45223.txt": 1,
+  "c2/35435.txt": 1,
+  "c2/44626.txt": 1,
+  "cc/34188.txt": 1,
+  "d3/23153.txt": 1,
+  "d5/39686.txt": 1,
+  "d9/27211.txt": 1,
+  "dc/47516.txt": 1,
+  "e0/41737.txt": 1,
+  "e1/3616.txt": 1,
+  "f0/43658.txt": 1,
+  "f0/48463.txt": 1,
+  "f3/28271.txt": 1,
+  "f9/26821.txt": 1,
+  "fb/18393.txt": 1,
+  "fd/38566.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44428": {
+  "e7/44766.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44439": {
+  "52/10776.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44507": {
+  "36/40796.txt": 1,
+  "71/47746.txt": 1,
+  "ac/55811.txt": 1,
+  "cb/36697.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44533": {
+  "b9/29364.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44709": {
+  "2a/22437.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44744": {
+  "e8/17809.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44751": {
+  "07/44415.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44756": {
+  "2f/51533.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44812": {
+  "e5/31106.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44955": {
+  "ed/19829.txt": 1
+ },
+ "beir_cqadupstack_mathematica_44987": {
+  "dc/13473.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45010": {
+  "b4/31735.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45040": {
+  "e9/30167.txt": 1
+ },
+ "beir_cqadupstack_mathematica_451": {
+  "23/15444.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45181": {
+  "39/31417.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4537": {
+  "08/51035.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45371": {
+  "78/2128.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45398": {
+  "63/33498.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45424": {
+  "81/44541.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45447": {
+  "00/34604.txt": 1,
+  "3b/41825.txt": 1,
+  "59/38858.txt": 1,
+  "8d/41565.txt": 1,
+  "a5/3458.txt": 1,
+  "d6/23305.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45450": {
+  "2c/11772.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45475": {
+  "15/26147.txt": 1,
+  "2b/18821.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45476": {
+  "5d/19596.txt": 1,
+  "69/45165.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45528": {
+  "1f/42710.txt": 1,
+  "66/15090.txt": 1,
+  "7b/17665.txt": 1,
+  "f3/22914.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45551": {
+  "7d/6157.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45574": {
+  "0d/21841.txt": 1,
+  "ea/24266.txt": 1,
+  "f7/37828.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45662": {
+  "ad/28372.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45693": {
+  "ad/30084.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45725": {
+  "ac/9570.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45878": {
+  "f5/24497.txt": 1
+ },
+ "beir_cqadupstack_mathematica_45994": {
+  "ca/46754.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46053": {
+  "89/48787.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46064": {
+  "0a/19357.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4608": {
+  "b5/22707.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4612": {
+  "8f/55032.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46136": {
+  "23/43581.txt": 1,
+  "5a/43907.txt": 1,
+  "ac/45094.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46284": {
+  "c8/5692.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46315": {
+  "e4/37852.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46336": {
+  "eb/44494.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46350": {
+  "a6/3151.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46459": {
+  "f9/2629.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46581": {
+  "73/13479.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46595": {
+  "50/33184.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46662": {
+  "32/9550.txt": 1,
+  "3e/38372.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46702": {
+  "10/31894.txt": 1,
+  "94/23395.txt": 1,
+  "9a/32188.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4679": {
+  "4f/56334.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46866": {
+  "f5/15607.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46893": {
+  "ca/6442.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46920": {
+  "54/24896.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46927": {
+  "f9/17747.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46945": {
+  "48/4748.txt": 1,
+  "f3/40046.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46950": {
+  "37/6384.txt": 1,
+  "4d/2915.txt": 1,
+  "ac/26772.txt": 1,
+  "cf/22851.txt": 1
+ },
+ "beir_cqadupstack_mathematica_46986": {
+  "c6/15525.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47019": {
+  "4e/47920.txt": 1,
+  "51/20698.txt": 1,
+  "99/50728.txt": 1,
+  "e5/189.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47028": {
+  "fa/9784.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47030": {
+  "76/45429.txt": 1,
+  "b4/29334.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47154": {
+  "39/2930.txt": 1,
+  "43/41887.txt": 1,
+  "55/19349.txt": 1,
+  "66/18289.txt": 1,
+  "69/41012.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47161": {
+  "d4/42455.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47175": {
+  "0b/15547.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4720": {
+  "a6/6572.txt": 1,
+  "f0/32901.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47207": {
+  "5d/3290.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4727": {
+  "61/28558.txt": 1,
+  "65/17587.txt": 1,
+  "88/52051.txt": 1,
+  "a7/27202.txt": 1,
+  "b7/1428.txt": 1,
+  "e1/46915.txt": 1,
+  "f4/58369.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4729": {
+  "3b/24208.txt": 1,
+  "5b/10664.txt": 1,
+  "5d/771.txt": 1,
+  "6e/16149.txt": 1,
+  "dc/23931.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47352": {
+  "81/20696.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4744": {
+  "26/55771.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47475": {
+  "d7/41201.txt": 1
+ },
+ "beir_cqadupstack_mathematica_4764": {
+  "a6/14236.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47656": {
+  "87/20180.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47749": {
+  "94/46709.txt": 1
+ },
+ "beir_cqadupstack_mathematica_47881": {
+  "11/48495.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48026": {
+  "74/24245.txt": 1,
+  "d7/47994.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48030": {
+  "77/42368.txt": 1,
+  "f1/6826.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48208": {
+  "e6/29321.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48307": {
+  "01/40231.txt": 1,
+  "26/45645.txt": 1,
+  "70/40939.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48386": {
+  "77/18807.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48387": {
+  "0f/3051.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48672": {
+  "e1/8263.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48681": {
+  "ba/31770.txt": 1,
+  "fc/3964.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48690": {
+  "72/34807.txt": 1,
+  "a8/56318.txt": 1,
+  "d1/28461.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48696": {
+  "35/6511.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48802": {
+  "a5/3294.txt": 1
+ },
+ "beir_cqadupstack_mathematica_48941": {
+  "26/21468.txt": 1
+ },
+ "beir_cqadupstack_mathematica_49190": {
+  "16/50902.txt": 1
+ },
+ "beir_cqadupstack_mathematica_49230": {
+  "fb/8583.txt": 1
+ },
+ "beir_cqadupstack_mathematica_49289": {
+  "6e/19628.txt": 1,
+  "92/28642.txt": 1,
+  "ce/1737.txt": 1
+ },
+ "beir_cqadupstack_mathematica_49311": {
+  "93/32978.txt": 1,
+  "f1/19778.txt": 1
+ },
+ "beir_cqadupstack_mathematica_50418": {
+  "e4/37936.txt": 1
+ },
+ "beir_cqadupstack_mathematica_50507": {
+  "36/51025.txt": 1
+ },
+ "beir_cqadupstack_mathematica_50519": {
+  "eb/47393.txt": 1
+ },
+ "beir_cqadupstack_mathematica_50548": {
+  "1f/42902.txt": 1,
+  "76/19383.txt": 1,
+  "76/7002.txt": 1
+ },
+ "beir_cqadupstack_mathematica_50713": {
+  "b6/40037.txt": 1
+ },
+ "beir_cqadupstack_mathematica_50738": {
+  "83/17002.txt": 1
+ },
+ "beir_cqadupstack_mathematica_50831": {
+  "cc/59533.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51042": {
+  "b6/47799.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51049": {
+  "58/28293.txt": 1,
+  "bd/7552.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51188": {
+  "13/55148.txt": 1,
+  "2b/48295.txt": 1,
+  "a0/31560.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51440": {
+  "06/16375.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51560": {
+  "fe/20412.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51597": {
+  "0d/27505.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51711": {
+  "26/29349.txt": 1,
+  "8d/50903.txt": 1,
+  "e4/42298.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51732": {
+  "ff/39476.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51776": {
+  "69/56603.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51783": {
+  "88/51745.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51880": {
+  "44/56166.txt": 1
+ },
+ "beir_cqadupstack_mathematica_51885": {
+  "a5/48315.txt": 1
+ },
+ "beir_cqadupstack_mathematica_52043": {
+  "76/7880.txt": 1
+ },
+ "beir_cqadupstack_mathematica_52207": {
+  "16/2388.txt": 1
+ },
+ "beir_cqadupstack_mathematica_52308": {
+  "5d/29505.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5235": {
+  "9a/22439.txt": 1
+ },
+ "beir_cqadupstack_mathematica_52358": {
+  "9d/52388.txt": 1
+ },
+ "beir_cqadupstack_mathematica_52381": {
+  "3e/39161.txt": 1
+ },
+ "beir_cqadupstack_mathematica_52414": {
+  "7b/56701.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5242": {
+  "1d/44891.txt": 1,
+  "7c/43709.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5314": {
+  "16/41982.txt": 1
+ },
+ "beir_cqadupstack_mathematica_533": {
+  "4a/48900.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5375": {
+  "93/48485.txt": 1,
+  "f7/3528.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5409": {
+  "c1/1373.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5434": {
+  "38/48146.txt": 1,
+  "3f/55679.txt": 1,
+  "40/26909.txt": 1,
+  "80/20942.txt": 1,
+  "8e/43287.txt": 1,
+  "9d/20519.txt": 1
+ },
+ "beir_cqadupstack_mathematica_54464": {
+  "0a/52317.txt": 1,
+  "dc/30494.txt": 1
+ },
+ "beir_cqadupstack_mathematica_54486": {
+  "70/54629.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5454": {
+  "8f/22570.txt": 1
+ },
+ "beir_cqadupstack_mathematica_54607": {
+  "94/56193.txt": 1
+ },
+ "beir_cqadupstack_mathematica_54645": {
+  "e7/39351.txt": 1
+ },
+ "beir_cqadupstack_mathematica_54781": {
+  "46/55778.txt": 1
+ },
+ "beir_cqadupstack_mathematica_54899": {
+  "60/8538.txt": 1
+ },
+ "beir_cqadupstack_mathematica_54993": {
+  "28/42937.txt": 1,
+  "72/35107.txt": 1,
+  "d7/42304.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55056": {
+  "f3/9957.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55086": {
+  "1d/57147.txt": 1
+ },
+ "beir_cqadupstack_mathematica_552": {
+  "76/19883.txt": 1,
+  "ff/3463.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55292": {
+  "2d/7871.txt": 1,
+  "5d/32597.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55294": {
+  "06/7676.txt": 1,
+  "63/7525.txt": 1,
+  "8d/56341.txt": 1,
+  "9f/2419.txt": 1,
+  "e5/1302.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55308": {
+  "20/55305.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55309": {
+  "e5/41050.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55517": {
+  "cd/40724.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55568": {
+  "18/47134.txt": 1,
+  "80/9766.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55600": {
+  "be/4677.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55663": {
+  "7d/14260.txt": 1,
+  "f2/52121.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55716": {
+  "ad/56076.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5575": {
+  "15/17227.txt": 1,
+  "da/10694.txt": 1,
+  "e9/44689.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5580": {
+  "32/48122.txt": 1
+ },
+ "beir_cqadupstack_mathematica_55972": {
+  "0f/58306.txt": 1,
+  "b2/54772.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5619": {
+  "98/252.txt": 1
+ },
+ "beir_cqadupstack_mathematica_56213": {
+  "4f/58463.txt": 1,
+  "67/59595.txt": 1
+ },
+ "beir_cqadupstack_mathematica_56296": {
+  "3d/51472.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5644": {
+  "58/43398.txt": 1,
+  "fa/11502.txt": 1
+ },
+ "beir_cqadupstack_mathematica_56565": {
+  "3c/23687.txt": 1
+ },
+ "beir_cqadupstack_mathematica_56785": {
+  "37/32212.txt": 1,
+  "43/4486.txt": 1
+ },
+ "beir_cqadupstack_mathematica_56984": {
+  "92/58365.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57242": {
+  "63/56695.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57366": {
+  "89/57677.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5740": {
+  "34/8042.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57430": {
+  "11/40821.txt": 1,
+  "14/34062.txt": 1,
+  "1f/6621.txt": 1,
+  "70/1004.txt": 1,
+  "96/31974.txt": 1,
+  "a5/373.txt": 1,
+  "c5/2234.txt": 1,
+  "fe/20195.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57434": {
+  "03/41985.txt": 1,
+  "c1/47713.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57470": {
+  "f8/20281.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57588": {
+  "7f/57423.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57632": {
+  "90/55101.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5782": {
+  "cc/31749.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57878": {
+  "e6/52406.txt": 1,
+  "e8/54673.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5790": {
+  "1f/42037.txt": 1
+ },
+ "beir_cqadupstack_mathematica_57975": {
+  "b8/30866.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5799": {
+  "64/35604.txt": 1
+ },
+ "beir_cqadupstack_mathematica_58228": {
+  "8f/55352.txt": 1,
+  "bc/56600.txt": 1
+ },
+ "beir_cqadupstack_mathematica_58229": {
+  "3e/9351.txt": 1
+ },
+ "beir_cqadupstack_mathematica_58465": {
+  "c5/3037.txt": 1
+ },
+ "beir_cqadupstack_mathematica_58475": {
+  "22/54909.txt": 1
+ },
+ "beir_cqadupstack_mathematica_58502": {
+  "c8/22211.txt": 1
+ },
+ "beir_cqadupstack_mathematica_58690": {
+  "e7/47441.txt": 1
+ },
+ "beir_cqadupstack_mathematica_58918": {
+  "77/54593.txt": 1
+ },
+ "beir_cqadupstack_mathematica_58992": {
+  "cd/58808.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59013": {
+  "2d/57910.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59043": {
+  "71/59041.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59113": {
+  "54/59102.txt": 1,
+  "f2/58398.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59140": {
+  "b7/58786.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5919": {
+  "25/26089.txt": 1,
+  "34/17170.txt": 1,
+  "70/22543.txt": 1,
+  "78/27460.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59206": {
+  "cd/59166.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59253": {
+  "dd/59375.txt": 1
+ },
+ "beir_cqadupstack_mathematica_5930": {
+  "08/27014.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59596": {
+  "61/56575.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59613": {
+  "3a/3981.txt": 1,
+  "77/51627.txt": 1
+ },
+ "beir_cqadupstack_mathematica_59646": {
+  "30/55526.txt": 1,
+  "b3/55994.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6043": {
+  "29/50966.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6055": {
+  "5f/17340.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6081": {
+  "cc/26110.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6102": {
+  "41/29155.txt": 1,
+  "ee/17400.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6164": {
+  "12/47493.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6210": {
+  "68/33797.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6236": {
+  "c6/31146.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6338": {
+  "36/33363.txt": 1,
+  "ef/41416.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6350": {
+  "44/1524.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6397": {
+  "1b/21479.txt": 1,
+  "d7/54435.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6472": {
+  "bd/10254.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6497": {
+  "ea/47006.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6562": {
+  "87/22790.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6796": {
+  "94/18036.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6862": {
+  "12/47153.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6923": {
+  "4e/23289.txt": 1
+ },
+ "beir_cqadupstack_mathematica_6955": {
+  "c1/40054.txt": 1
+ },
+ "beir_cqadupstack_mathematica_702": {
+  "68/563.txt": 1,
+  "80/33972.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7173": {
+  "5b/6502.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7174": {
+  "1d/528.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7214": {
+  "cf/18065.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7235": {
+  "bc/23993.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7366": {
+  "87/25593.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7408": {
+  "04/46624.txt": 1
+ },
+ "beir_cqadupstack_mathematica_745": {
+  "91/1310.txt": 1,
+  "bc/46063.txt": 1,
+  "cf/50961.txt": 1,
+  "ea/1981.txt": 1,
+  "f5/31931.txt": 1,
+  "fb/19983.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7463": {
+  "d5/10910.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7531": {
+  "bb/30451.txt": 1
+ },
+ "beir_cqadupstack_mathematica_761": {
+  "1b/33632.txt": 1,
+  "35/34318.txt": 1,
+  "64/57304.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7668": {
+  "18/35524.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7679": {
+  "c2/25743.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7756": {
+  "20/46738.txt": 1,
+  "4c/14302.txt": 1,
+  "4f/30128.txt": 1,
+  "58/58348.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7772": {
+  "6b/3665.txt": 1,
+  "ae/19505.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7779": {
+  "03/11429.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7804": {
+  "09/47046.txt": 1,
+  "a1/19556.txt": 1,
+  "f6/30596.txt": 1,
+  "f7/22474.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7926": {
+  "eb/31665.txt": 1
+ },
+ "beir_cqadupstack_mathematica_7941": {
+  "51/16370.txt": 1,
+  "a8/43783.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8215": {
+  "b1/26896.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8295": {
+  "33/29236.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8310": {
+  "0e/44172.txt": 1,
+  "86/1953.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8353": {
+  "cc/58424.txt": 1,
+  "e1/14386.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8390": {
+  "7b/27527.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8438": {
+  "ad/20745.txt": 1
+ },
+ "beir_cqadupstack_mathematica_850": {
+  "44/11408.txt": 1,
+  "8c/7177.txt": 1,
+  "9c/51590.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8544": {
+  "ad/26257.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8576": {
+  "62/55895.txt": 1,
+  "cd/35010.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8619": {
+  "38/39638.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8646": {
+  "22/10042.txt": 1,
+  "dd/15892.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8661": {
+  "3e/25662.txt": 1,
+  "cc/56730.txt": 1,
+  "e8/8221.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8695": {
+  "31/49204.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8748": {
+  "a3/8754.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8829": {
+  "0c/20858.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8841": {
+  "ba/51933.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8865": {
+  "cd/14112.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8922": {
+  "f8/941.txt": 1
+ },
+ "beir_cqadupstack_mathematica_8943": {
+  "4a/49021.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9035": {
+  "cc/9077.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9171": {
+  "4a/46055.txt": 1,
+  "84/24664.txt": 1,
+  "fe/14844.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9288": {
+  "e2/33223.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9322": {
+  "02/28041.txt": 1,
+  "0a/23576.txt": 1,
+  "17/6304.txt": 1,
+  "25/6877.txt": 1,
+  "33/17027.txt": 1,
+  "36/43826.txt": 1,
+  "42/8241.txt": 1,
+  "46/15403.txt": 1,
+  "47/627.txt": 1,
+  "5e/47695.txt": 1,
+  "7a/42661.txt": 1,
+  "b5/17285.txt": 1
+ },
+ "beir_cqadupstack_mathematica_938": {
+  "2d/39981.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9406": {
+  "b9/44666.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9440": {
+  "cb/24537.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9483": {
+  "71/10438.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9523": {
+  "93/11238.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9540": {
+  "12/29975.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9544": {
+  "22/10500.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9558": {
+  "9c/33297.txt": 1,
+  "9d/38705.txt": 1,
+  "d8/5369.txt": 1
+ },
+ "beir_cqadupstack_mathematica_96": {
+  "66/28703.txt": 1,
+  "a6/7999.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9623": {
+  "b1/18196.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9631": {
+  "a6/15736.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9719": {
+  "22/29925.txt": 1,
+  "4b/41478.txt": 1,
+  "dc/10484.txt": 1,
+  "eb/28395.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9772": {
+  "f1/11155.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9801": {
+  "57/30859.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9926": {
+  "a3/26769.txt": 1
+ },
+ "beir_cqadupstack_mathematica_9942": {
+  "11/39463.txt": 1,
+  "3d/15918.txt": 1,
+  "f4/24043.txt": 1
+ }
+}

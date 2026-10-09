@@ -1,0 +1,5455 @@
+{
+ "beir_cqadupstack_gaming_100002": [
+  "79/167166.txt",
+  "89/126194.txt",
+  "bf/96370.txt"
+ ],
+ "beir_cqadupstack_gaming_100005": [
+  "08/89091.txt",
+  "50/87449.txt"
+ ],
+ "beir_cqadupstack_gaming_100092": [
+  "fc/158149.txt"
+ ],
+ "beir_cqadupstack_gaming_100221": [
+  "a1/137354.txt"
+ ],
+ "beir_cqadupstack_gaming_100281": [
+  "98/116181.txt"
+ ],
+ "beir_cqadupstack_gaming_100377": [
+  "ec/86900.txt"
+ ],
+ "beir_cqadupstack_gaming_100441": [
+  "a8/40158.txt"
+ ],
+ "beir_cqadupstack_gaming_10131": [
+  "53/178787.txt"
+ ],
+ "beir_cqadupstack_gaming_101728": [
+  "ac/61334.txt"
+ ],
+ "beir_cqadupstack_gaming_101810": [
+  "f9/74259.txt"
+ ],
+ "beir_cqadupstack_gaming_101893": [
+  "b2/19332.txt"
+ ],
+ "beir_cqadupstack_gaming_101931": [
+  "80/84603.txt"
+ ],
+ "beir_cqadupstack_gaming_101958": [
+  "c8/105975.txt"
+ ],
+ "beir_cqadupstack_gaming_102154": [
+  "1e/146343.txt",
+  "62/125914.txt",
+  "ca/120627.txt"
+ ],
+ "beir_cqadupstack_gaming_102177": [
+  "b2/78977.txt"
+ ],
+ "beir_cqadupstack_gaming_102361": [
+  "3b/67690.txt",
+  "62/66116.txt",
+  "dd/67628.txt",
+  "e0/66339.txt"
+ ],
+ "beir_cqadupstack_gaming_102438": [
+  "d1/164109.txt"
+ ],
+ "beir_cqadupstack_gaming_102583": [
+  "84/106936.txt"
+ ],
+ "beir_cqadupstack_gaming_102625": [
+  "98/105819.txt"
+ ],
+ "beir_cqadupstack_gaming_102754": [
+  "54/74337.txt"
+ ],
+ "beir_cqadupstack_gaming_102946": [
+  "22/126494.txt",
+  "7e/97880.txt",
+  "e4/81609.txt"
+ ],
+ "beir_cqadupstack_gaming_102996": [
+  "8c/135928.txt"
+ ],
+ "beir_cqadupstack_gaming_103042": [
+  "a5/86118.txt"
+ ],
+ "beir_cqadupstack_gaming_103334": [
+  "8c/151240.txt"
+ ],
+ "beir_cqadupstack_gaming_103423": [
+  "e0/95462.txt"
+ ],
+ "beir_cqadupstack_gaming_103488": [
+  "43/45951.txt"
+ ],
+ "beir_cqadupstack_gaming_10353": [
+  "c1/167204.txt"
+ ],
+ "beir_cqadupstack_gaming_103707": [
+  "87/102855.txt"
+ ],
+ "beir_cqadupstack_gaming_103806": [
+  "9b/102661.txt"
+ ],
+ "beir_cqadupstack_gaming_103919": [
+  "a7/176748.txt"
+ ],
+ "beir_cqadupstack_gaming_104019": [
+  "a9/103244.txt"
+ ],
+ "beir_cqadupstack_gaming_104037": [
+  "01/26246.txt",
+  "68/58479.txt",
+  "6e/77799.txt",
+  "c1/59786.txt",
+  "fe/58297.txt"
+ ],
+ "beir_cqadupstack_gaming_104173": [
+  "1a/175181.txt"
+ ],
+ "beir_cqadupstack_gaming_104244": [
+  "e2/103781.txt"
+ ],
+ "beir_cqadupstack_gaming_104362": [
+  "06/151882.txt",
+  "2c/43995.txt",
+  "44/49253.txt",
+  "5f/35895.txt",
+  "76/48449.txt",
+  "8b/35661.txt",
+  "a7/41782.txt"
+ ],
+ "beir_cqadupstack_gaming_104453": [
+  "a2/110177.txt"
+ ],
+ "beir_cqadupstack_gaming_104527": [
+  "1d/158583.txt"
+ ],
+ "beir_cqadupstack_gaming_104596": [
+  "26/29272.txt",
+  "67/100106.txt",
+  "ff/65524.txt"
+ ],
+ "beir_cqadupstack_gaming_106132": [
+  "fe/105974.txt"
+ ],
+ "beir_cqadupstack_gaming_106193": [
+  "cc/108571.txt"
+ ],
+ "beir_cqadupstack_gaming_106222": [
+  "0b/42747.txt"
+ ],
+ "beir_cqadupstack_gaming_106383": [
+  "15/108690.txt"
+ ],
+ "beir_cqadupstack_gaming_106408": [
+  "48/109246.txt"
+ ],
+ "beir_cqadupstack_gaming_106449": [
+  "11/49034.txt"
+ ],
+ "beir_cqadupstack_gaming_106490": [
+  "38/167012.txt"
+ ],
+ "beir_cqadupstack_gaming_106540": [
+  "0e/26812.txt"
+ ],
+ "beir_cqadupstack_gaming_106640": [
+  "b1/106473.txt"
+ ],
+ "beir_cqadupstack_gaming_106680": [
+  "dd/32110.txt"
+ ],
+ "beir_cqadupstack_gaming_107027": [
+  "6d/107443.txt"
+ ],
+ "beir_cqadupstack_gaming_107154": [
+  "02/144062.txt",
+  "a4/98201.txt"
+ ],
+ "beir_cqadupstack_gaming_107305": [
+  "44/149898.txt"
+ ],
+ "beir_cqadupstack_gaming_107500": [
+  "2b/125383.txt"
+ ],
+ "beir_cqadupstack_gaming_107539": [
+  "e4/73004.txt"
+ ],
+ "beir_cqadupstack_gaming_10756": [
+  "4b/10028.txt"
+ ],
+ "beir_cqadupstack_gaming_107645": [
+  "0d/86058.txt",
+  "a6/82361.txt"
+ ],
+ "beir_cqadupstack_gaming_107735": [
+  "19/109242.txt",
+  "83/108150.txt",
+  "b5/108232.txt"
+ ],
+ "beir_cqadupstack_gaming_107773": [
+  "ea/165191.txt"
+ ],
+ "beir_cqadupstack_gaming_107955": [
+  "93/107628.txt"
+ ],
+ "beir_cqadupstack_gaming_108049": [
+  "ed/108999.txt"
+ ],
+ "beir_cqadupstack_gaming_108110": [
+  "62/108115.txt"
+ ],
+ "beir_cqadupstack_gaming_108132": [
+  "77/107973.txt"
+ ],
+ "beir_cqadupstack_gaming_108212": [
+  "be/107299.txt"
+ ],
+ "beir_cqadupstack_gaming_108224": [
+  "f4/111987.txt"
+ ],
+ "beir_cqadupstack_gaming_108299": [
+  "4b/109324.txt",
+  "b1/113441.txt"
+ ],
+ "beir_cqadupstack_gaming_108387": [
+  "9f/113814.txt"
+ ],
+ "beir_cqadupstack_gaming_108396": [
+  "41/108600.txt",
+  "44/108818.txt",
+  "5d/108479.txt"
+ ],
+ "beir_cqadupstack_gaming_108399": [
+  "e2/109143.txt"
+ ],
+ "beir_cqadupstack_gaming_108472": [
+  "23/108429.txt"
+ ],
+ "beir_cqadupstack_gaming_108481": [
+  "80/108575.txt"
+ ],
+ "beir_cqadupstack_gaming_108504": [
+  "11/109513.txt"
+ ],
+ "beir_cqadupstack_gaming_108611": [
+  "fe/102569.txt"
+ ],
+ "beir_cqadupstack_gaming_108713": [
+  "ac/125172.txt"
+ ],
+ "beir_cqadupstack_gaming_10890": [
+  "8a/14070.txt"
+ ],
+ "beir_cqadupstack_gaming_109012": [
+  "d9/109022.txt"
+ ],
+ "beir_cqadupstack_gaming_109119": [
+  "ff/110346.txt"
+ ],
+ "beir_cqadupstack_gaming_109332": [
+  "51/108291.txt"
+ ],
+ "beir_cqadupstack_gaming_109388": [
+  "83/1194.txt"
+ ],
+ "beir_cqadupstack_gaming_109539": [
+  "d2/123751.txt"
+ ],
+ "beir_cqadupstack_gaming_109586": [
+  "ca/177623.txt"
+ ],
+ "beir_cqadupstack_gaming_109664": [
+  "70/108501.txt"
+ ],
+ "beir_cqadupstack_gaming_109905": [
+  "a8/108207.txt",
+  "ac/108028.txt"
+ ],
+ "beir_cqadupstack_gaming_109923": [
+  "9b/1497.txt"
+ ],
+ "beir_cqadupstack_gaming_110083": [
+  "27/60082.txt",
+  "4d/36200.txt"
+ ],
+ "beir_cqadupstack_gaming_110214": [
+  "1b/109638.txt"
+ ],
+ "beir_cqadupstack_gaming_110515": [
+  "47/108074.txt",
+  "58/108987.txt"
+ ],
+ "beir_cqadupstack_gaming_110615": [
+  "42/111722.txt"
+ ],
+ "beir_cqadupstack_gaming_110650": [
+  "40/112994.txt"
+ ],
+ "beir_cqadupstack_gaming_111757": [
+  "d4/107759.txt"
+ ],
+ "beir_cqadupstack_gaming_111815": [
+  "19/170506.txt"
+ ],
+ "beir_cqadupstack_gaming_111860": [
+  "96/113659.txt"
+ ],
+ "beir_cqadupstack_gaming_111879": [
+  "40/111880.txt",
+  "6d/121864.txt"
+ ],
+ "beir_cqadupstack_gaming_111894": [
+  "f8/65234.txt"
+ ],
+ "beir_cqadupstack_gaming_111948": [
+  "22/104474.txt"
+ ],
+ "beir_cqadupstack_gaming_112158": [
+  "e6/79640.txt"
+ ],
+ "beir_cqadupstack_gaming_112337": [
+  "1c/52585.txt",
+  "bb/35262.txt"
+ ],
+ "beir_cqadupstack_gaming_112796": [
+  "cd/112728.txt"
+ ],
+ "beir_cqadupstack_gaming_112810": [
+  "ff/169067.txt"
+ ],
+ "beir_cqadupstack_gaming_112875": [
+  "46/81911.txt",
+  "54/67914.txt"
+ ],
+ "beir_cqadupstack_gaming_112877": [
+  "15/124172.txt",
+  "3c/161298.txt",
+  "5d/96324.txt",
+  "93/89690.txt"
+ ],
+ "beir_cqadupstack_gaming_112920": [
+  "7f/9148.txt"
+ ],
+ "beir_cqadupstack_gaming_112987": [
+  "9b/15077.txt"
+ ],
+ "beir_cqadupstack_gaming_113173": [
+  "28/34936.txt",
+  "5a/35489.txt",
+  "ba/82577.txt"
+ ],
+ "beir_cqadupstack_gaming_113208": [
+  "8e/85034.txt"
+ ],
+ "beir_cqadupstack_gaming_113449": [
+  "46/9745.txt"
+ ],
+ "beir_cqadupstack_gaming_113673": [
+  "26/150956.txt"
+ ],
+ "beir_cqadupstack_gaming_113687": [
+  "4f/35544.txt"
+ ],
+ "beir_cqadupstack_gaming_113692": [
+  "6a/107118.txt"
+ ],
+ "beir_cqadupstack_gaming_113723": [
+  "81/156461.txt",
+  "e6/114289.txt"
+ ],
+ "beir_cqadupstack_gaming_113913": [
+  "89/79850.txt"
+ ],
+ "beir_cqadupstack_gaming_113962": [
+  "55/75240.txt",
+  "6b/74329.txt"
+ ],
+ "beir_cqadupstack_gaming_114370": [
+  "5d/116947.txt"
+ ],
+ "beir_cqadupstack_gaming_114416": [
+  "c4/30022.txt"
+ ],
+ "beir_cqadupstack_gaming_114459": [
+  "a9/79547.txt"
+ ],
+ "beir_cqadupstack_gaming_114471": [
+  "84/127567.txt",
+  "c8/149103.txt",
+  "f4/10465.txt"
+ ],
+ "beir_cqadupstack_gaming_114842": [
+  "9f/82463.txt"
+ ],
+ "beir_cqadupstack_gaming_114957": [
+  "88/112357.txt"
+ ],
+ "beir_cqadupstack_gaming_115059": [
+  "d1/53523.txt",
+  "d2/54419.txt"
+ ],
+ "beir_cqadupstack_gaming_115147": [
+  "b4/124882.txt"
+ ],
+ "beir_cqadupstack_gaming_115943": [
+  "1e/143072.txt",
+  "9d/151336.txt",
+  "bd/137371.txt"
+ ],
+ "beir_cqadupstack_gaming_116151": [
+  "26/116200.txt"
+ ],
+ "beir_cqadupstack_gaming_116301": [
+  "06/116108.txt"
+ ],
+ "beir_cqadupstack_gaming_116464": [
+  "96/89014.txt"
+ ],
+ "beir_cqadupstack_gaming_116598": [
+  "00/121646.txt",
+  "4a/47102.txt"
+ ],
+ "beir_cqadupstack_gaming_11667": [
+  "13/116421.txt"
+ ],
+ "beir_cqadupstack_gaming_116703": [
+  "b6/152811.txt",
+  "bb/41640.txt"
+ ],
+ "beir_cqadupstack_gaming_116707": [
+  "a5/116206.txt"
+ ],
+ "beir_cqadupstack_gaming_116772": [
+  "c6/84455.txt"
+ ],
+ "beir_cqadupstack_gaming_116802": [
+  "0a/1476.txt"
+ ],
+ "beir_cqadupstack_gaming_116844": [
+  "c1/66888.txt"
+ ],
+ "beir_cqadupstack_gaming_116950": [
+  "6c/112434.txt"
+ ],
+ "beir_cqadupstack_gaming_117123": [
+  "89/108991.txt"
+ ],
+ "beir_cqadupstack_gaming_117133": [
+  "4a/116255.txt"
+ ],
+ "beir_cqadupstack_gaming_117302": [
+  "a1/109443.txt"
+ ],
+ "beir_cqadupstack_gaming_117319": [
+  "48/95540.txt"
+ ],
+ "beir_cqadupstack_gaming_117519": [
+  "6a/113455.txt"
+ ],
+ "beir_cqadupstack_gaming_118090": [
+  "d9/40070.txt"
+ ],
+ "beir_cqadupstack_gaming_118107": [
+  "71/117734.txt",
+  "78/123195.txt"
+ ],
+ "beir_cqadupstack_gaming_118118": [
+  "d9/141715.txt"
+ ],
+ "beir_cqadupstack_gaming_118247": [
+  "3f/85097.txt",
+  "69/174344.txt"
+ ],
+ "beir_cqadupstack_gaming_118304": [
+  "1f/147182.txt",
+  "27/153114.txt",
+  "2b/155385.txt",
+  "2c/150150.txt",
+  "2d/143978.txt",
+  "65/173417.txt",
+  "6e/47267.txt",
+  "76/170786.txt",
+  "7f/79459.txt",
+  "87/79375.txt",
+  "95/158576.txt",
+  "96/149426.txt",
+  "9c/79252.txt",
+  "b1/116183.txt",
+  "d8/79589.txt",
+  "e9/121219.txt",
+  "ea/79803.txt",
+  "f0/157297.txt",
+  "fa/138650.txt"
+ ],
+ "beir_cqadupstack_gaming_11849": [
+  "3c/13182.txt"
+ ],
+ "beir_cqadupstack_gaming_118655": [
+  "08/56083.txt"
+ ],
+ "beir_cqadupstack_gaming_118740": [
+  "a6/117348.txt"
+ ],
+ "beir_cqadupstack_gaming_118962": [
+  "bf/159922.txt",
+  "e8/14783.txt"
+ ],
+ "beir_cqadupstack_gaming_11898": [
+  "22/3687.txt"
+ ],
+ "beir_cqadupstack_gaming_118999": [
+  "32/37085.txt"
+ ],
+ "beir_cqadupstack_gaming_119040": [
+  "9d/87723.txt"
+ ],
+ "beir_cqadupstack_gaming_119123": [
+  "36/10318.txt"
+ ],
+ "beir_cqadupstack_gaming_119187": [
+  "a9/96125.txt"
+ ],
+ "beir_cqadupstack_gaming_119204": [
+  "4a/130771.txt"
+ ],
+ "beir_cqadupstack_gaming_119266": [
+  "00/39458.txt"
+ ],
+ "beir_cqadupstack_gaming_11937": [
+  "46/15403.txt",
+  "4b/13851.txt"
+ ],
+ "beir_cqadupstack_gaming_119413": [
+  "92/124642.txt"
+ ],
+ "beir_cqadupstack_gaming_119533": [
+  "e7/127322.txt"
+ ],
+ "beir_cqadupstack_gaming_119846": [
+  "90/135969.txt"
+ ],
+ "beir_cqadupstack_gaming_119903": [
+  "40/96776.txt"
+ ],
+ "beir_cqadupstack_gaming_119966": [
+  "7f/122092.txt"
+ ],
+ "beir_cqadupstack_gaming_120032": [
+  "00/90479.txt",
+  "1a/160884.txt",
+  "50/113112.txt",
+  "8b/112564.txt",
+  "d0/85645.txt"
+ ],
+ "beir_cqadupstack_gaming_120062": [
+  "9b/127376.txt"
+ ],
+ "beir_cqadupstack_gaming_120073": [
+  "68/172823.txt"
+ ],
+ "beir_cqadupstack_gaming_120087": [
+  "4e/29606.txt",
+  "6a/18485.txt",
+  "6f/112565.txt",
+  "8e/23852.txt",
+  "f5/65754.txt"
+ ],
+ "beir_cqadupstack_gaming_120163": [
+  "be/52240.txt"
+ ],
+ "beir_cqadupstack_gaming_120190": [
+  "e9/122844.txt"
+ ],
+ "beir_cqadupstack_gaming_120198": [
+  "a0/125224.txt"
+ ],
+ "beir_cqadupstack_gaming_120218": [
+  "63/128997.txt"
+ ],
+ "beir_cqadupstack_gaming_120346": [
+  "e2/84689.txt"
+ ],
+ "beir_cqadupstack_gaming_120372": [
+  "12/125634.txt",
+  "57/128665.txt"
+ ],
+ "beir_cqadupstack_gaming_120444": [
+  "42/120606.txt"
+ ],
+ "beir_cqadupstack_gaming_120447": [
+  "fd/170810.txt"
+ ],
+ "beir_cqadupstack_gaming_120525": [
+  "f3/119166.txt"
+ ],
+ "beir_cqadupstack_gaming_120607": [
+  "9b/127844.txt"
+ ],
+ "beir_cqadupstack_gaming_120612": [
+  "1d/130321.txt"
+ ],
+ "beir_cqadupstack_gaming_120847": [
+  "94/124616.txt"
+ ],
+ "beir_cqadupstack_gaming_120935": [
+  "89/151524.txt",
+  "ee/34076.txt"
+ ],
+ "beir_cqadupstack_gaming_120960": [
+  "f7/36610.txt"
+ ],
+ "beir_cqadupstack_gaming_121071": [
+  "c3/86853.txt"
+ ],
+ "beir_cqadupstack_gaming_121254": [
+  "74/98332.txt"
+ ],
+ "beir_cqadupstack_gaming_121319": [
+  "f5/132475.txt"
+ ],
+ "beir_cqadupstack_gaming_121389": [
+  "0f/110277.txt"
+ ],
+ "beir_cqadupstack_gaming_121651": [
+  "a2/122523.txt"
+ ],
+ "beir_cqadupstack_gaming_121816": [
+  "a8/166205.txt"
+ ],
+ "beir_cqadupstack_gaming_121828": [
+  "5d/124568.txt"
+ ],
+ "beir_cqadupstack_gaming_121858": [
+  "1e/121750.txt"
+ ],
+ "beir_cqadupstack_gaming_121898": [
+  "94/30462.txt",
+  "da/30415.txt"
+ ],
+ "beir_cqadupstack_gaming_121960": [
+  "9d/90024.txt"
+ ],
+ "beir_cqadupstack_gaming_121987": [
+  "4b/147796.txt"
+ ],
+ "beir_cqadupstack_gaming_121993": [
+  "46/122741.txt"
+ ],
+ "beir_cqadupstack_gaming_122175": [
+  "50/131039.txt"
+ ],
+ "beir_cqadupstack_gaming_122201": [
+  "5d/141923.txt"
+ ],
+ "beir_cqadupstack_gaming_122227": [
+  "d3/116564.txt"
+ ],
+ "beir_cqadupstack_gaming_122372": [
+  "98/47774.txt"
+ ],
+ "beir_cqadupstack_gaming_122433": [
+  "b9/106098.txt"
+ ],
+ "beir_cqadupstack_gaming_122438": [
+  "d4/125788.txt"
+ ],
+ "beir_cqadupstack_gaming_122494": [
+  "d5/121195.txt"
+ ],
+ "beir_cqadupstack_gaming_122758": [
+  "f5/127571.txt"
+ ],
+ "beir_cqadupstack_gaming_122774": [
+  "32/127016.txt",
+  "8e/130637.txt"
+ ],
+ "beir_cqadupstack_gaming_122925": [
+  "f2/128734.txt"
+ ],
+ "beir_cqadupstack_gaming_122975": [
+  "5e/127381.txt",
+  "77/125006.txt",
+  "e5/120925.txt"
+ ],
+ "beir_cqadupstack_gaming_123179": [
+  "be/57205.txt"
+ ],
+ "beir_cqadupstack_gaming_123315": [
+  "4d/123321.txt",
+  "6c/172527.txt"
+ ],
+ "beir_cqadupstack_gaming_123382": [
+  "81/169198.txt"
+ ],
+ "beir_cqadupstack_gaming_123491": [
+  "55/67111.txt"
+ ],
+ "beir_cqadupstack_gaming_123558": [
+  "3f/88864.txt"
+ ],
+ "beir_cqadupstack_gaming_123647": [
+  "99/119333.txt"
+ ],
+ "beir_cqadupstack_gaming_123794": [
+  "23/136691.txt"
+ ],
+ "beir_cqadupstack_gaming_123970": [
+  "21/85179.txt",
+  "ca/85182.txt"
+ ],
+ "beir_cqadupstack_gaming_123983": [
+  "8e/65059.txt"
+ ],
+ "beir_cqadupstack_gaming_124046": [
+  "f1/3838.txt"
+ ],
+ "beir_cqadupstack_gaming_124093": [
+  "bc/123807.txt",
+  "e0/117440.txt"
+ ],
+ "beir_cqadupstack_gaming_124454": [
+  "2e/173840.txt",
+  "60/85093.txt"
+ ],
+ "beir_cqadupstack_gaming_124669": [
+  "03/128960.txt"
+ ],
+ "beir_cqadupstack_gaming_124823": [
+  "14/8111.txt"
+ ],
+ "beir_cqadupstack_gaming_124854": [
+  "99/80769.txt",
+  "d7/30311.txt"
+ ],
+ "beir_cqadupstack_gaming_124902": [
+  "41/10385.txt"
+ ],
+ "beir_cqadupstack_gaming_124936": [
+  "c4/127050.txt"
+ ],
+ "beir_cqadupstack_gaming_124945": [
+  "63/150549.txt"
+ ],
+ "beir_cqadupstack_gaming_125077": [
+  "30/48176.txt"
+ ],
+ "beir_cqadupstack_gaming_125102": [
+  "1e/178381.txt"
+ ],
+ "beir_cqadupstack_gaming_125129": [
+  "ff/29432.txt"
+ ],
+ "beir_cqadupstack_gaming_125209": [
+  "aa/1712.txt"
+ ],
+ "beir_cqadupstack_gaming_125260": [
+  "65/8281.txt",
+  "d4/9182.txt"
+ ],
+ "beir_cqadupstack_gaming_125577": [
+  "f3/125669.txt"
+ ],
+ "beir_cqadupstack_gaming_125736": [
+  "44/174288.txt"
+ ],
+ "beir_cqadupstack_gaming_125889": [
+  "40/43821.txt",
+  "a1/30340.txt",
+  "fd/130036.txt"
+ ],
+ "beir_cqadupstack_gaming_125925": [
+  "65/29666.txt"
+ ],
+ "beir_cqadupstack_gaming_126067": [
+  "b4/131113.txt"
+ ],
+ "beir_cqadupstack_gaming_126174": [
+  "de/50504.txt"
+ ],
+ "beir_cqadupstack_gaming_126250": [
+  "cd/173942.txt"
+ ],
+ "beir_cqadupstack_gaming_126315": [
+  "2d/149121.txt"
+ ],
+ "beir_cqadupstack_gaming_126332": [
+  "b5/52602.txt"
+ ],
+ "beir_cqadupstack_gaming_126479": [
+  "8d/125756.txt",
+  "a4/126449.txt"
+ ],
+ "beir_cqadupstack_gaming_126668": [
+  "76/126597.txt"
+ ],
+ "beir_cqadupstack_gaming_126819": [
+  "46/73634.txt"
+ ],
+ "beir_cqadupstack_gaming_127012": [
+  "19/123911.txt"
+ ],
+ "beir_cqadupstack_gaming_127170": [
+  "e3/52687.txt"
+ ],
+ "beir_cqadupstack_gaming_127183": [
+  "71/102102.txt"
+ ],
+ "beir_cqadupstack_gaming_127353": [
+  "02/178302.txt"
+ ],
+ "beir_cqadupstack_gaming_127591": [
+  "5d/127623.txt",
+  "b6/177741.txt"
+ ],
+ "beir_cqadupstack_gaming_128036": [
+  "84/40251.txt"
+ ],
+ "beir_cqadupstack_gaming_128142": [
+  "63/127823.txt"
+ ],
+ "beir_cqadupstack_gaming_128163": [
+  "4c/94232.txt"
+ ],
+ "beir_cqadupstack_gaming_128204": [
+  "37/23340.txt"
+ ],
+ "beir_cqadupstack_gaming_128255": [
+  "cd/125732.txt"
+ ],
+ "beir_cqadupstack_gaming_128428": [
+  "40/28286.txt"
+ ],
+ "beir_cqadupstack_gaming_128460": [
+  "a1/132907.txt"
+ ],
+ "beir_cqadupstack_gaming_128478": [
+  "0e/128480.txt"
+ ],
+ "beir_cqadupstack_gaming_128498": [
+  "2a/98318.txt"
+ ],
+ "beir_cqadupstack_gaming_128530": [
+  "dc/103448.txt"
+ ],
+ "beir_cqadupstack_gaming_128543": [
+  "ba/162211.txt"
+ ],
+ "beir_cqadupstack_gaming_12860": [
+  "b5/7492.txt"
+ ],
+ "beir_cqadupstack_gaming_128779": [
+  "e3/52938.txt"
+ ],
+ "beir_cqadupstack_gaming_129425": [
+  "ea/124124.txt"
+ ],
+ "beir_cqadupstack_gaming_129739": [
+  "03/130523.txt"
+ ],
+ "beir_cqadupstack_gaming_12982": [
+  "35/20771.txt"
+ ],
+ "beir_cqadupstack_gaming_129933": [
+  "10/132854.txt"
+ ],
+ "beir_cqadupstack_gaming_12996": [
+  "09/10774.txt"
+ ],
+ "beir_cqadupstack_gaming_130001": [
+  "ae/78183.txt"
+ ],
+ "beir_cqadupstack_gaming_130173": [
+  "bb/59052.txt"
+ ],
+ "beir_cqadupstack_gaming_130204": [
+  "dc/87242.txt"
+ ],
+ "beir_cqadupstack_gaming_130358": [
+  "61/20769.txt",
+  "83/22157.txt"
+ ],
+ "beir_cqadupstack_gaming_130580": [
+  "48/28057.txt"
+ ],
+ "beir_cqadupstack_gaming_130782": [
+  "d3/135599.txt"
+ ],
+ "beir_cqadupstack_gaming_130872": [
+  "12/138614.txt"
+ ],
+ "beir_cqadupstack_gaming_130955": [
+  "00/32813.txt",
+  "46/51843.txt"
+ ],
+ "beir_cqadupstack_gaming_130982": [
+  "31/61900.txt"
+ ],
+ "beir_cqadupstack_gaming_131095": [
+  "e9/59318.txt"
+ ],
+ "beir_cqadupstack_gaming_131426": [
+  "f0/131722.txt"
+ ],
+ "beir_cqadupstack_gaming_131475": [
+  "37/131250.txt"
+ ],
+ "beir_cqadupstack_gaming_131556": [
+  "3a/133792.txt",
+  "62/132726.txt",
+  "b5/131725.txt"
+ ],
+ "beir_cqadupstack_gaming_131693": [
+  "6f/131309.txt"
+ ],
+ "beir_cqadupstack_gaming_131708": [
+  "90/124442.txt"
+ ],
+ "beir_cqadupstack_gaming_131834": [
+  "aa/132028.txt"
+ ],
+ "beir_cqadupstack_gaming_131837": [
+  "ac/48171.txt"
+ ],
+ "beir_cqadupstack_gaming_132060": [
+  "35/115648.txt"
+ ],
+ "beir_cqadupstack_gaming_132399": [
+  "e8/163238.txt"
+ ],
+ "beir_cqadupstack_gaming_132412": [
+  "af/123739.txt"
+ ],
+ "beir_cqadupstack_gaming_132447": [
+  "d6/147213.txt"
+ ],
+ "beir_cqadupstack_gaming_132461": [
+  "62/118193.txt"
+ ],
+ "beir_cqadupstack_gaming_132464": [
+  "3e/131498.txt",
+  "7a/145217.txt",
+  "7c/138031.txt",
+  "f4/132639.txt"
+ ],
+ "beir_cqadupstack_gaming_132579": [
+  "70/141423.txt"
+ ],
+ "beir_cqadupstack_gaming_132586": [
+  "07/131709.txt"
+ ],
+ "beir_cqadupstack_gaming_132740": [
+  "86/106021.txt"
+ ],
+ "beir_cqadupstack_gaming_132883": [
+  "79/142552.txt"
+ ],
+ "beir_cqadupstack_gaming_132930": [
+  "1a/153610.txt"
+ ],
+ "beir_cqadupstack_gaming_133075": [
+  "19/151102.txt",
+  "3d/178259.txt",
+  "3f/182668.txt",
+  "42/25390.txt",
+  "60/22626.txt",
+  "66/152431.txt",
+  "b1/112015.txt",
+  "bc/167543.txt",
+  "cd/133599.txt",
+  "cf/180192.txt",
+  "de/141581.txt",
+  "e1/22408.txt",
+  "e3/145666.txt",
+  "e5/153392.txt",
+  "e9/158077.txt",
+  "f7/138423.txt"
+ ],
+ "beir_cqadupstack_gaming_133219": [
+  "f2/144067.txt"
+ ],
+ "beir_cqadupstack_gaming_13330": [
+  "86/155039.txt"
+ ],
+ "beir_cqadupstack_gaming_133475": [
+  "06/160222.txt",
+  "93/168127.txt",
+  "a6/135718.txt"
+ ],
+ "beir_cqadupstack_gaming_133500": [
+  "02/134162.txt"
+ ],
+ "beir_cqadupstack_gaming_133515": [
+  "3f/31689.txt"
+ ],
+ "beir_cqadupstack_gaming_133663": [
+  "55/131522.txt"
+ ],
+ "beir_cqadupstack_gaming_133789": [
+  "eb/136846.txt"
+ ],
+ "beir_cqadupstack_gaming_133802": [
+  "8d/40933.txt",
+  "b0/52272.txt"
+ ],
+ "beir_cqadupstack_gaming_133954": [
+  "86/132892.txt"
+ ],
+ "beir_cqadupstack_gaming_133980": [
+  "45/41839.txt",
+  "91/39565.txt"
+ ],
+ "beir_cqadupstack_gaming_134095": [
+  "e4/133145.txt"
+ ],
+ "beir_cqadupstack_gaming_134219": [
+  "88/132027.txt"
+ ],
+ "beir_cqadupstack_gaming_134311": [
+  "df/138385.txt"
+ ],
+ "beir_cqadupstack_gaming_134340": [
+  "54/132842.txt"
+ ],
+ "beir_cqadupstack_gaming_1345": [
+  "c8/19678.txt"
+ ],
+ "beir_cqadupstack_gaming_135380": [
+  "1c/182745.txt"
+ ],
+ "beir_cqadupstack_gaming_135463": [
+  "19/134315.txt"
+ ],
+ "beir_cqadupstack_gaming_135615": [
+  "d0/51786.txt"
+ ],
+ "beir_cqadupstack_gaming_135629": [
+  "5b/143395.txt"
+ ],
+ "beir_cqadupstack_gaming_135657": [
+  "59/139361.txt"
+ ],
+ "beir_cqadupstack_gaming_135720": [
+  "ff/149110.txt"
+ ],
+ "beir_cqadupstack_gaming_135816": [
+  "44/92758.txt",
+  "52/85978.txt",
+  "c0/89282.txt",
+  "c7/89281.txt",
+  "d7/162148.txt",
+  "f8/93613.txt"
+ ],
+ "beir_cqadupstack_gaming_135913": [
+  "10/155510.txt",
+  "fd/148527.txt"
+ ],
+ "beir_cqadupstack_gaming_135922": [
+  "fa/137621.txt"
+ ],
+ "beir_cqadupstack_gaming_136081": [
+  "2d/138590.txt"
+ ],
+ "beir_cqadupstack_gaming_136179": [
+  "e2/136171.txt"
+ ],
+ "beir_cqadupstack_gaming_136212": [
+  "2d/98909.txt"
+ ],
+ "beir_cqadupstack_gaming_13624": [
+  "80/26940.txt"
+ ],
+ "beir_cqadupstack_gaming_136325": [
+  "10/45826.txt",
+  "cb/120982.txt"
+ ],
+ "beir_cqadupstack_gaming_136551": [
+  "38/135560.txt"
+ ],
+ "beir_cqadupstack_gaming_136583": [
+  "37/153437.txt"
+ ],
+ "beir_cqadupstack_gaming_136700": [
+  "f2/78334.txt"
+ ],
+ "beir_cqadupstack_gaming_136721": [
+  "b6/162762.txt"
+ ],
+ "beir_cqadupstack_gaming_136912": [
+  "1c/166593.txt"
+ ],
+ "beir_cqadupstack_gaming_136978": [
+  "9a/141693.txt",
+  "e9/142066.txt"
+ ],
+ "beir_cqadupstack_gaming_136991": [
+  "47/138093.txt"
+ ],
+ "beir_cqadupstack_gaming_137006": [
+  "39/148364.txt"
+ ],
+ "beir_cqadupstack_gaming_137024": [
+  "b8/137051.txt"
+ ],
+ "beir_cqadupstack_gaming_137067": [
+  "db/157482.txt"
+ ],
+ "beir_cqadupstack_gaming_137124": [
+  "4a/137461.txt"
+ ],
+ "beir_cqadupstack_gaming_137159": [
+  "b3/138570.txt"
+ ],
+ "beir_cqadupstack_gaming_137170": [
+  "4a/137493.txt"
+ ],
+ "beir_cqadupstack_gaming_137211": [
+  "23/137446.txt",
+  "65/137169.txt",
+  "b0/137277.txt",
+  "c9/143271.txt",
+  "dc/142357.txt"
+ ],
+ "beir_cqadupstack_gaming_137220": [
+  "0e/137649.txt",
+  "3f/151233.txt",
+  "6b/144705.txt",
+  "c5/137573.txt"
+ ],
+ "beir_cqadupstack_gaming_137242": [
+  "66/138032.txt",
+  "fb/137019.txt"
+ ],
+ "beir_cqadupstack_gaming_137254": [
+  "2a/144435.txt",
+  "54/137074.txt",
+  "60/137416.txt"
+ ],
+ "beir_cqadupstack_gaming_137304": [
+  "ce/7852.txt"
+ ],
+ "beir_cqadupstack_gaming_13736": [
+  "ff/79924.txt"
+ ],
+ "beir_cqadupstack_gaming_137370": [
+  "b3/137587.txt"
+ ],
+ "beir_cqadupstack_gaming_137385": [
+  "87/137352.txt"
+ ],
+ "beir_cqadupstack_gaming_137425": [
+  "b8/131235.txt"
+ ],
+ "beir_cqadupstack_gaming_137473": [
+  "8e/135877.txt",
+  "cb/136545.txt"
+ ],
+ "beir_cqadupstack_gaming_137489": [
+  "15/137324.txt",
+  "4a/137279.txt",
+  "87/137535.txt",
+  "91/137396.txt",
+  "af/137264.txt",
+  "df/137172.txt"
+ ],
+ "beir_cqadupstack_gaming_137618": [
+  "b1/137700.txt"
+ ],
+ "beir_cqadupstack_gaming_138052": [
+  "fe/81287.txt"
+ ],
+ "beir_cqadupstack_gaming_138132": [
+  "1c/52074.txt"
+ ],
+ "beir_cqadupstack_gaming_138459": [
+  "c6/134200.txt"
+ ],
+ "beir_cqadupstack_gaming_138481": [
+  "63/137039.txt",
+  "9a/151263.txt",
+  "f3/137016.txt"
+ ],
+ "beir_cqadupstack_gaming_138500": [
+  "aa/36714.txt",
+  "bd/35351.txt"
+ ],
+ "beir_cqadupstack_gaming_138501": [
+  "46/114568.txt"
+ ],
+ "beir_cqadupstack_gaming_138616": [
+  "68/75291.txt"
+ ],
+ "beir_cqadupstack_gaming_138692": [
+  "0f/19426.txt",
+  "c1/154921.txt"
+ ],
+ "beir_cqadupstack_gaming_138733": [
+  "56/164904.txt"
+ ],
+ "beir_cqadupstack_gaming_138792": [
+  "80/86801.txt"
+ ],
+ "beir_cqadupstack_gaming_138845": [
+  "2a/135374.txt",
+  "e6/161094.txt",
+  "ef/147830.txt"
+ ],
+ "beir_cqadupstack_gaming_138891": [
+  "58/142423.txt"
+ ],
+ "beir_cqadupstack_gaming_138917": [
+  "b9/155103.txt"
+ ],
+ "beir_cqadupstack_gaming_138944": [
+  "94/137078.txt"
+ ],
+ "beir_cqadupstack_gaming_139098": [
+  "f3/102817.txt"
+ ],
+ "beir_cqadupstack_gaming_139168": [
+  "07/5457.txt",
+  "93/10056.txt",
+  "c3/132259.txt"
+ ],
+ "beir_cqadupstack_gaming_139251": [
+  "49/142382.txt"
+ ],
+ "beir_cqadupstack_gaming_14142": [
+  "30/149977.txt"
+ ],
+ "beir_cqadupstack_gaming_141451": [
+  "db/81897.txt"
+ ],
+ "beir_cqadupstack_gaming_141559": [
+  "5c/56734.txt"
+ ],
+ "beir_cqadupstack_gaming_141668": [
+  "60/143690.txt"
+ ],
+ "beir_cqadupstack_gaming_141707": [
+  "74/45921.txt",
+  "fc/100035.txt"
+ ],
+ "beir_cqadupstack_gaming_141723": [
+  "86/134049.txt"
+ ],
+ "beir_cqadupstack_gaming_141771": [
+  "1f/136532.txt"
+ ],
+ "beir_cqadupstack_gaming_141990": [
+  "fa/5674.txt"
+ ],
+ "beir_cqadupstack_gaming_14203": [
+  "66/43428.txt",
+  "b4/27400.txt"
+ ],
+ "beir_cqadupstack_gaming_142088": [
+  "a7/127748.txt"
+ ],
+ "beir_cqadupstack_gaming_142135": [
+  "00/98908.txt"
+ ],
+ "beir_cqadupstack_gaming_142218": [
+  "30/168262.txt"
+ ],
+ "beir_cqadupstack_gaming_142359": [
+  "76/142749.txt"
+ ],
+ "beir_cqadupstack_gaming_142388": [
+  "47/133986.txt"
+ ],
+ "beir_cqadupstack_gaming_142520": [
+  "22/137424.txt",
+  "9c/144120.txt"
+ ],
+ "beir_cqadupstack_gaming_142610": [
+  "8a/143622.txt"
+ ],
+ "beir_cqadupstack_gaming_142791": [
+  "da/64456.txt"
+ ],
+ "beir_cqadupstack_gaming_142845": [
+  "3e/142735.txt"
+ ],
+ "beir_cqadupstack_gaming_143058": [
+  "c8/142074.txt"
+ ],
+ "beir_cqadupstack_gaming_143085": [
+  "bb/178292.txt"
+ ],
+ "beir_cqadupstack_gaming_143188": [
+  "0e/144876.txt"
+ ],
+ "beir_cqadupstack_gaming_143267": [
+  "c8/122970.txt"
+ ],
+ "beir_cqadupstack_gaming_143383": [
+  "62/137077.txt"
+ ],
+ "beir_cqadupstack_gaming_143603": [
+  "6d/147056.txt"
+ ],
+ "beir_cqadupstack_gaming_143719": [
+  "87/144074.txt"
+ ],
+ "beir_cqadupstack_gaming_143795": [
+  "79/146970.txt",
+  "a8/141709.txt",
+  "f9/143285.txt"
+ ],
+ "beir_cqadupstack_gaming_143874": [
+  "e1/147040.txt"
+ ],
+ "beir_cqadupstack_gaming_143892": [
+  "8f/157642.txt"
+ ],
+ "beir_cqadupstack_gaming_143945": [
+  "e5/162265.txt"
+ ],
+ "beir_cqadupstack_gaming_144050": [
+  "71/150766.txt"
+ ],
+ "beir_cqadupstack_gaming_144203": [
+  "6c/107310.txt"
+ ],
+ "beir_cqadupstack_gaming_144282": [
+  "43/31448.txt",
+  "7e/21444.txt",
+  "88/35711.txt"
+ ],
+ "beir_cqadupstack_gaming_144372": [
+  "34/124438.txt"
+ ],
+ "beir_cqadupstack_gaming_144588": [
+  "17/147538.txt"
+ ],
+ "beir_cqadupstack_gaming_144623": [
+  "54/137041.txt",
+  "ba/137053.txt"
+ ],
+ "beir_cqadupstack_gaming_144718": [
+  "a5/162602.txt"
+ ],
+ "beir_cqadupstack_gaming_144824": [
+  "b5/149971.txt"
+ ],
+ "beir_cqadupstack_gaming_14500": [
+  "f7/73213.txt"
+ ],
+ "beir_cqadupstack_gaming_145019": [
+  "43/93703.txt"
+ ],
+ "beir_cqadupstack_gaming_145059": [
+  "96/142937.txt"
+ ],
+ "beir_cqadupstack_gaming_145096": [
+  "82/143912.txt"
+ ],
+ "beir_cqadupstack_gaming_145102": [
+  "0d/97330.txt",
+  "5c/115665.txt",
+  "d9/115212.txt"
+ ],
+ "beir_cqadupstack_gaming_145236": [
+  "a1/144116.txt"
+ ],
+ "beir_cqadupstack_gaming_145481": [
+  "66/105761.txt"
+ ],
+ "beir_cqadupstack_gaming_145643": [
+  "b3/144767.txt",
+  "e6/162360.txt"
+ ],
+ "beir_cqadupstack_gaming_14566": [
+  "7e/57180.txt"
+ ],
+ "beir_cqadupstack_gaming_145732": [
+  "5a/137379.txt",
+  "fc/137031.txt"
+ ],
+ "beir_cqadupstack_gaming_145772": [
+  "6a/12817.txt"
+ ],
+ "beir_cqadupstack_gaming_145776": [
+  "06/106916.txt"
+ ],
+ "beir_cqadupstack_gaming_145889": [
+  "2e/56531.txt"
+ ],
+ "beir_cqadupstack_gaming_145950": [
+  "d9/148251.txt"
+ ],
+ "beir_cqadupstack_gaming_146011": [
+  "43/63453.txt"
+ ],
+ "beir_cqadupstack_gaming_146037": [
+  "47/47071.txt",
+  "9a/178823.txt"
+ ],
+ "beir_cqadupstack_gaming_14604": [
+  "e6/78868.txt"
+ ],
+ "beir_cqadupstack_gaming_14605": [
+  "25/117890.txt"
+ ],
+ "beir_cqadupstack_gaming_146179": [
+  "89/144736.txt"
+ ],
+ "beir_cqadupstack_gaming_146254": [
+  "9a/142898.txt"
+ ],
+ "beir_cqadupstack_gaming_146315": [
+  "47/143006.txt"
+ ],
+ "beir_cqadupstack_gaming_146317": [
+  "a9/146846.txt",
+  "c2/142297.txt"
+ ],
+ "beir_cqadupstack_gaming_146540": [
+  "34/146098.txt",
+  "d2/146242.txt"
+ ],
+ "beir_cqadupstack_gaming_146551": [
+  "92/28158.txt"
+ ],
+ "beir_cqadupstack_gaming_146554": [
+  "0d/156290.txt",
+  "e5/142665.txt"
+ ],
+ "beir_cqadupstack_gaming_146593": [
+  "29/170368.txt"
+ ],
+ "beir_cqadupstack_gaming_146611": [
+  "9a/145696.txt",
+  "b4/147009.txt"
+ ],
+ "beir_cqadupstack_gaming_146626": [
+  "a2/85107.txt",
+  "e4/90153.txt"
+ ],
+ "beir_cqadupstack_gaming_146639": [
+  "20/148271.txt"
+ ],
+ "beir_cqadupstack_gaming_14666": [
+  "4e/28850.txt",
+  "76/124433.txt"
+ ],
+ "beir_cqadupstack_gaming_146722": [
+  "4e/136040.txt"
+ ],
+ "beir_cqadupstack_gaming_14695": [
+  "5f/15724.txt"
+ ],
+ "beir_cqadupstack_gaming_146973": [
+  "c2/133570.txt"
+ ],
+ "beir_cqadupstack_gaming_147003": [
+  "52/20326.txt"
+ ],
+ "beir_cqadupstack_gaming_147048": [
+  "d9/146550.txt"
+ ],
+ "beir_cqadupstack_gaming_147159": [
+  "41/26271.txt"
+ ],
+ "beir_cqadupstack_gaming_147658": [
+  "3c/164114.txt",
+  "64/150254.txt",
+  "70/159358.txt",
+  "92/142498.txt"
+ ],
+ "beir_cqadupstack_gaming_147878": [
+  "0d/160309.txt",
+  "11/39952.txt",
+  "18/92675.txt",
+  "38/38716.txt",
+  "3f/158281.txt",
+  "40/166363.txt",
+  "5d/36641.txt",
+  "6d/44331.txt",
+  "91/46225.txt",
+  "92/60896.txt",
+  "9c/35296.txt",
+  "a1/157151.txt",
+  "a6/63676.txt",
+  "ae/156259.txt",
+  "b5/45997.txt",
+  "bf/153435.txt",
+  "d2/133525.txt",
+  "e0/112432.txt",
+  "f7/50606.txt",
+  "fc/47953.txt"
+ ],
+ "beir_cqadupstack_gaming_147891": [
+  "a9/145011.txt"
+ ],
+ "beir_cqadupstack_gaming_147974": [
+  "5e/121997.txt",
+  "e0/123825.txt"
+ ],
+ "beir_cqadupstack_gaming_148022": [
+  "fa/183854.txt"
+ ],
+ "beir_cqadupstack_gaming_148073": [
+  "1d/34757.txt",
+  "a3/121622.txt"
+ ],
+ "beir_cqadupstack_gaming_14808": [
+  "5e/14779.txt"
+ ],
+ "beir_cqadupstack_gaming_148232": [
+  "4c/124006.txt"
+ ],
+ "beir_cqadupstack_gaming_148258": [
+  "e2/133765.txt"
+ ],
+ "beir_cqadupstack_gaming_148268": [
+  "c1/37520.txt"
+ ],
+ "beir_cqadupstack_gaming_14828": [
+  "62/26200.txt"
+ ],
+ "beir_cqadupstack_gaming_14832": [
+  "d6/14835.txt"
+ ],
+ "beir_cqadupstack_gaming_148382": [
+  "49/137658.txt"
+ ],
+ "beir_cqadupstack_gaming_148426": [
+  "3f/27258.txt"
+ ],
+ "beir_cqadupstack_gaming_148466": [
+  "04/96496.txt",
+  "1b/148259.txt",
+  "84/143083.txt",
+  "af/148005.txt"
+ ],
+ "beir_cqadupstack_gaming_148516": [
+  "47/40973.txt"
+ ],
+ "beir_cqadupstack_gaming_148519": [
+  "20/151991.txt"
+ ],
+ "beir_cqadupstack_gaming_148776": [
+  "26/151213.txt",
+  "c4/149181.txt"
+ ],
+ "beir_cqadupstack_gaming_148876": [
+  "db/137676.txt"
+ ],
+ "beir_cqadupstack_gaming_148895": [
+  "4f/150938.txt",
+  "7a/158685.txt",
+  "7e/126889.txt",
+  "cf/77807.txt"
+ ],
+ "beir_cqadupstack_gaming_149020": [
+  "c4/148739.txt"
+ ],
+ "beir_cqadupstack_gaming_149037": [
+  "21/160688.txt",
+  "91/46741.txt",
+  "99/182259.txt"
+ ],
+ "beir_cqadupstack_gaming_149569": [
+  "4d/31116.txt"
+ ],
+ "beir_cqadupstack_gaming_149620": [
+  "0c/150399.txt"
+ ],
+ "beir_cqadupstack_gaming_149849": [
+  "8f/143921.txt"
+ ],
+ "beir_cqadupstack_gaming_149857": [
+  "1d/161870.txt",
+  "4f/174830.txt"
+ ],
+ "beir_cqadupstack_gaming_15000": [
+  "8b/116865.txt",
+  "f7/102796.txt"
+ ],
+ "beir_cqadupstack_gaming_150021": [
+  "67/111753.txt"
+ ],
+ "beir_cqadupstack_gaming_150029": [
+  "80/156913.txt"
+ ],
+ "beir_cqadupstack_gaming_150072": [
+  "11/148840.txt",
+  "1a/155834.txt",
+  "26/169603.txt",
+  "2a/153369.txt",
+  "3a/164791.txt",
+  "45/125601.txt",
+  "45/130408.txt",
+  "52/120679.txt",
+  "58/130298.txt",
+  "5c/173488.txt",
+  "62/160291.txt",
+  "65/128502.txt",
+  "69/169966.txt",
+  "6b/122246.txt",
+  "6e/126406.txt",
+  "71/139107.txt",
+  "85/158185.txt",
+  "a1/130812.txt",
+  "a4/144893.txt",
+  "a4/176895.txt",
+  "ac/49104.txt",
+  "b7/155287.txt",
+  "c7/152592.txt",
+  "e5/122703.txt",
+  "e9/178543.txt",
+  "ed/117244.txt",
+  "f3/23440.txt",
+  "f4/114431.txt",
+  "fe/174425.txt",
+  "ff/146141.txt"
+ ],
+ "beir_cqadupstack_gaming_150276": [
+  "e9/15549.txt"
+ ],
+ "beir_cqadupstack_gaming_150564": [
+  "49/124268.txt",
+  "99/121778.txt",
+  "be/101763.txt"
+ ],
+ "beir_cqadupstack_gaming_150668": [
+  "7c/148223.txt",
+  "c0/147093.txt",
+  "f4/148152.txt"
+ ],
+ "beir_cqadupstack_gaming_150776": [
+  "2f/2262.txt"
+ ],
+ "beir_cqadupstack_gaming_150876": [
+  "a5/173810.txt"
+ ],
+ "beir_cqadupstack_gaming_151193": [
+  "e9/112819.txt"
+ ],
+ "beir_cqadupstack_gaming_151205": [
+  "70/108250.txt",
+  "b8/157546.txt"
+ ],
+ "beir_cqadupstack_gaming_151250": [
+  "11/45827.txt",
+  "5b/159830.txt",
+  "72/78907.txt"
+ ],
+ "beir_cqadupstack_gaming_151303": [
+  "6d/143661.txt"
+ ],
+ "beir_cqadupstack_gaming_151317": [
+  "d4/164090.txt"
+ ],
+ "beir_cqadupstack_gaming_151335": [
+  "66/174722.txt"
+ ],
+ "beir_cqadupstack_gaming_151465": [
+  "10/120311.txt"
+ ],
+ "beir_cqadupstack_gaming_15159": [
+  "8f/114838.txt"
+ ],
+ "beir_cqadupstack_gaming_15177": [
+  "a6/4480.txt"
+ ],
+ "beir_cqadupstack_gaming_151773": [
+  "9b/62332.txt"
+ ],
+ "beir_cqadupstack_gaming_151905": [
+  "d3/149043.txt"
+ ],
+ "beir_cqadupstack_gaming_152047": [
+  "33/164661.txt"
+ ],
+ "beir_cqadupstack_gaming_152057": [
+  "ec/175366.txt"
+ ],
+ "beir_cqadupstack_gaming_15207": [
+  "c1/129311.txt"
+ ],
+ "beir_cqadupstack_gaming_152184": [
+  "63/17469.txt",
+  "ad/20873.txt",
+  "f1/9801.txt"
+ ],
+ "beir_cqadupstack_gaming_152285": [
+  "c4/149860.txt"
+ ],
+ "beir_cqadupstack_gaming_152409": [
+  "07/36128.txt"
+ ],
+ "beir_cqadupstack_gaming_152444": [
+  "bf/139360.txt"
+ ],
+ "beir_cqadupstack_gaming_152462": [
+  "ae/151526.txt"
+ ],
+ "beir_cqadupstack_gaming_152672": [
+  "03/108767.txt"
+ ],
+ "beir_cqadupstack_gaming_152683": [
+  "14/161212.txt"
+ ],
+ "beir_cqadupstack_gaming_152954": [
+  "8c/136607.txt"
+ ],
+ "beir_cqadupstack_gaming_153102": [
+  "f6/146244.txt"
+ ],
+ "beir_cqadupstack_gaming_153109": [
+  "48/117121.txt"
+ ],
+ "beir_cqadupstack_gaming_153205": [
+  "67/162103.txt",
+  "e4/7968.txt"
+ ],
+ "beir_cqadupstack_gaming_153234": [
+  "af/145518.txt"
+ ],
+ "beir_cqadupstack_gaming_153332": [
+  "1a/144311.txt",
+  "76/149998.txt",
+  "ef/40925.txt"
+ ],
+ "beir_cqadupstack_gaming_153571": [
+  "59/135649.txt"
+ ],
+ "beir_cqadupstack_gaming_15402": [
+  "cd/826.txt"
+ ],
+ "beir_cqadupstack_gaming_154718": [
+  "c0/91866.txt"
+ ],
+ "beir_cqadupstack_gaming_154737": [
+  "9e/20842.txt"
+ ],
+ "beir_cqadupstack_gaming_154772": [
+  "39/117746.txt",
+  "8b/147577.txt"
+ ],
+ "beir_cqadupstack_gaming_154903": [
+  "d9/17280.txt"
+ ],
+ "beir_cqadupstack_gaming_155016": [
+  "81/155868.txt"
+ ],
+ "beir_cqadupstack_gaming_155074": [
+  "8d/147835.txt"
+ ],
+ "beir_cqadupstack_gaming_155236": [
+  "b3/15972.txt"
+ ],
+ "beir_cqadupstack_gaming_15537": [
+  "49/17827.txt"
+ ],
+ "beir_cqadupstack_gaming_155428": [
+  "0b/142305.txt"
+ ],
+ "beir_cqadupstack_gaming_155463": [
+  "6f/146458.txt",
+  "94/150917.txt"
+ ],
+ "beir_cqadupstack_gaming_155544": [
+  "70/131849.txt"
+ ],
+ "beir_cqadupstack_gaming_155600": [
+  "d7/146586.txt"
+ ],
+ "beir_cqadupstack_gaming_155609": [
+  "4a/155587.txt"
+ ],
+ "beir_cqadupstack_gaming_155779": [
+  "2d/145813.txt"
+ ],
+ "beir_cqadupstack_gaming_155818": [
+  "86/102707.txt"
+ ],
+ "beir_cqadupstack_gaming_155925": [
+  "39/162126.txt"
+ ],
+ "beir_cqadupstack_gaming_156009": [
+  "48/12695.txt",
+  "d0/31453.txt"
+ ],
+ "beir_cqadupstack_gaming_156100": [
+  "49/57737.txt"
+ ],
+ "beir_cqadupstack_gaming_156230": [
+  "e4/155649.txt"
+ ],
+ "beir_cqadupstack_gaming_156705": [
+  "6c/141857.txt"
+ ],
+ "beir_cqadupstack_gaming_156728": [
+  "01/150960.txt",
+  "12/151809.txt",
+  "25/144315.txt",
+  "62/136624.txt",
+  "7a/149591.txt",
+  "81/139225.txt",
+  "b9/160017.txt",
+  "c4/138598.txt"
+ ],
+ "beir_cqadupstack_gaming_157028": [
+  "e9/162489.txt"
+ ],
+ "beir_cqadupstack_gaming_157048": [
+  "37/75955.txt"
+ ],
+ "beir_cqadupstack_gaming_157278": [
+  "42/36137.txt"
+ ],
+ "beir_cqadupstack_gaming_157396": [
+  "5e/74811.txt",
+  "5e/75881.txt"
+ ],
+ "beir_cqadupstack_gaming_157597": [
+  "a7/130109.txt"
+ ],
+ "beir_cqadupstack_gaming_158017": [
+  "0f/118468.txt",
+  "e6/157980.txt"
+ ],
+ "beir_cqadupstack_gaming_158220": [
+  "4f/159481.txt"
+ ],
+ "beir_cqadupstack_gaming_158329": [
+  "ad/66244.txt"
+ ],
+ "beir_cqadupstack_gaming_158424": [
+  "30/133386.txt"
+ ],
+ "beir_cqadupstack_gaming_158717": [
+  "07/135850.txt"
+ ],
+ "beir_cqadupstack_gaming_159119": [
+  "11/166234.txt"
+ ],
+ "beir_cqadupstack_gaming_159231": [
+  "bc/159925.txt"
+ ],
+ "beir_cqadupstack_gaming_159293": [
+  "a9/166953.txt"
+ ],
+ "beir_cqadupstack_gaming_159431": [
+  "77/167851.txt"
+ ],
+ "beir_cqadupstack_gaming_159503": [
+  "ec/169365.txt"
+ ],
+ "beir_cqadupstack_gaming_159576": [
+  "9b/137366.txt"
+ ],
+ "beir_cqadupstack_gaming_15959": [
+  "4e/29832.txt"
+ ],
+ "beir_cqadupstack_gaming_159718": [
+  "e7/159553.txt"
+ ],
+ "beir_cqadupstack_gaming_159740": [
+  "9f/162812.txt"
+ ],
+ "beir_cqadupstack_gaming_159752": [
+  "ad/147958.txt"
+ ],
+ "beir_cqadupstack_gaming_159789": [
+  "26/177881.txt"
+ ],
+ "beir_cqadupstack_gaming_15981": [
+  "b3/58733.txt",
+  "ef/58018.txt"
+ ],
+ "beir_cqadupstack_gaming_160096": [
+  "c3/143408.txt"
+ ],
+ "beir_cqadupstack_gaming_160298": [
+  "5d/132160.txt"
+ ],
+ "beir_cqadupstack_gaming_160341": [
+  "67/158726.txt"
+ ],
+ "beir_cqadupstack_gaming_160463": [
+  "9b/152161.txt"
+ ],
+ "beir_cqadupstack_gaming_160488": [
+  "94/55251.txt"
+ ],
+ "beir_cqadupstack_gaming_160518": [
+  "78/163823.txt"
+ ],
+ "beir_cqadupstack_gaming_160548": [
+  "88/131320.txt",
+  "d8/119728.txt",
+  "ed/146702.txt",
+  "fd/141922.txt"
+ ],
+ "beir_cqadupstack_gaming_160560": [
+  "91/39923.txt"
+ ],
+ "beir_cqadupstack_gaming_160662": [
+  "64/162416.txt"
+ ],
+ "beir_cqadupstack_gaming_160707": [
+  "7c/36738.txt",
+  "9e/118588.txt",
+  "d3/35750.txt"
+ ],
+ "beir_cqadupstack_gaming_160774": [
+  "3a/65409.txt"
+ ],
+ "beir_cqadupstack_gaming_161000": [
+  "73/1355.txt"
+ ],
+ "beir_cqadupstack_gaming_161038": [
+  "47/5601.txt",
+  "55/60127.txt"
+ ],
+ "beir_cqadupstack_gaming_161153": [
+  "a4/34336.txt"
+ ],
+ "beir_cqadupstack_gaming_161496": [
+  "e4/107921.txt"
+ ],
+ "beir_cqadupstack_gaming_161568": [
+  "2c/164855.txt",
+  "79/167395.txt",
+  "d2/59731.txt",
+  "f1/158045.txt"
+ ],
+ "beir_cqadupstack_gaming_161591": [
+  "50/12069.txt"
+ ],
+ "beir_cqadupstack_gaming_161784": [
+  "f7/161651.txt"
+ ],
+ "beir_cqadupstack_gaming_161794": [
+  "6e/7405.txt"
+ ],
+ "beir_cqadupstack_gaming_161809": [
+  "67/162266.txt",
+  "8e/163258.txt",
+  "db/161863.txt"
+ ],
+ "beir_cqadupstack_gaming_161861": [
+  "8f/178316.txt"
+ ],
+ "beir_cqadupstack_gaming_161888": [
+  "0f/158004.txt"
+ ],
+ "beir_cqadupstack_gaming_161971": [
+  "9c/166379.txt"
+ ],
+ "beir_cqadupstack_gaming_162043": [
+  "76/162527.txt",
+  "b5/162260.txt"
+ ],
+ "beir_cqadupstack_gaming_16208": [
+  "c1/8842.txt"
+ ],
+ "beir_cqadupstack_gaming_162144": [
+  "44/163702.txt"
+ ],
+ "beir_cqadupstack_gaming_16215": [
+  "1a/15624.txt"
+ ],
+ "beir_cqadupstack_gaming_162158": [
+  "24/69000.txt"
+ ],
+ "beir_cqadupstack_gaming_162209": [
+  "29/40708.txt"
+ ],
+ "beir_cqadupstack_gaming_162246": [
+  "44/158709.txt",
+  "b4/162263.txt"
+ ],
+ "beir_cqadupstack_gaming_162283": [
+  "a1/78314.txt",
+  "fa/97988.txt"
+ ],
+ "beir_cqadupstack_gaming_162420": [
+  "ac/112496.txt"
+ ],
+ "beir_cqadupstack_gaming_162509": [
+  "6c/172633.txt"
+ ],
+ "beir_cqadupstack_gaming_162535": [
+  "97/161355.txt",
+  "98/161919.txt"
+ ],
+ "beir_cqadupstack_gaming_162619": [
+  "3c/158001.txt"
+ ],
+ "beir_cqadupstack_gaming_162798": [
+  "e3/162655.txt"
+ ],
+ "beir_cqadupstack_gaming_162838": [
+  "4a/74597.txt"
+ ],
+ "beir_cqadupstack_gaming_162866": [
+  "37/73964.txt"
+ ],
+ "beir_cqadupstack_gaming_163137": [
+  "53/168834.txt"
+ ],
+ "beir_cqadupstack_gaming_16380": [
+  "3b/7600.txt"
+ ],
+ "beir_cqadupstack_gaming_163803": [
+  "fd/164607.txt"
+ ],
+ "beir_cqadupstack_gaming_163818": [
+  "41/70404.txt"
+ ],
+ "beir_cqadupstack_gaming_163845": [
+  "4a/144499.txt"
+ ],
+ "beir_cqadupstack_gaming_163896": [
+  "12/70586.txt",
+  "27/77485.txt",
+  "4f/67598.txt",
+  "6e/67772.txt"
+ ],
+ "beir_cqadupstack_gaming_164167": [
+  "10/131624.txt",
+  "89/142367.txt",
+  "98/61970.txt"
+ ],
+ "beir_cqadupstack_gaming_164321": [
+  "1e/162297.txt"
+ ],
+ "beir_cqadupstack_gaming_164325": [
+  "d2/129672.txt"
+ ],
+ "beir_cqadupstack_gaming_164455": [
+  "7e/161937.txt"
+ ],
+ "beir_cqadupstack_gaming_164479": [
+  "53/163710.txt"
+ ],
+ "beir_cqadupstack_gaming_164704": [
+  "02/120506.txt",
+  "27/76543.txt"
+ ],
+ "beir_cqadupstack_gaming_164998": [
+  "9e/18.txt"
+ ],
+ "beir_cqadupstack_gaming_165392": [
+  "bc/167827.txt"
+ ],
+ "beir_cqadupstack_gaming_165418": [
+  "52/164205.txt"
+ ],
+ "beir_cqadupstack_gaming_165509": [
+  "84/122674.txt",
+  "f4/136785.txt"
+ ],
+ "beir_cqadupstack_gaming_165593": [
+  "20/75882.txt"
+ ],
+ "beir_cqadupstack_gaming_165832": [
+  "49/127439.txt",
+  "50/21541.txt",
+  "79/182142.txt",
+  "90/53962.txt"
+ ],
+ "beir_cqadupstack_gaming_166126": [
+  "7e/168730.txt"
+ ],
+ "beir_cqadupstack_gaming_16636": [
+  "1d/9717.txt"
+ ],
+ "beir_cqadupstack_gaming_166382": [
+  "91/102929.txt"
+ ],
+ "beir_cqadupstack_gaming_166407": [
+  "2f/27622.txt"
+ ],
+ "beir_cqadupstack_gaming_166547": [
+  "d8/175318.txt"
+ ],
+ "beir_cqadupstack_gaming_166799": [
+  "8a/120731.txt"
+ ],
+ "beir_cqadupstack_gaming_166801": [
+  "1a/150082.txt",
+  "df/142363.txt"
+ ],
+ "beir_cqadupstack_gaming_166806": [
+  "80/12924.txt",
+  "d7/11628.txt"
+ ],
+ "beir_cqadupstack_gaming_166821": [
+  "5c/144415.txt"
+ ],
+ "beir_cqadupstack_gaming_166864": [
+  "d3/30618.txt"
+ ],
+ "beir_cqadupstack_gaming_166894": [
+  "34/179327.txt"
+ ],
+ "beir_cqadupstack_gaming_167119": [
+  "33/172790.txt"
+ ],
+ "beir_cqadupstack_gaming_167163": [
+  "32/156267.txt",
+  "82/144351.txt"
+ ],
+ "beir_cqadupstack_gaming_167339": [
+  "d4/141724.txt"
+ ],
+ "beir_cqadupstack_gaming_16751": [
+  "c4/161207.txt"
+ ],
+ "beir_cqadupstack_gaming_167531": [
+  "45/84912.txt"
+ ],
+ "beir_cqadupstack_gaming_167615": [
+  "81/137288.txt"
+ ],
+ "beir_cqadupstack_gaming_167653": [
+  "17/148549.txt"
+ ],
+ "beir_cqadupstack_gaming_168192": [
+  "70/169258.txt"
+ ],
+ "beir_cqadupstack_gaming_168212": [
+  "d9/139370.txt"
+ ],
+ "beir_cqadupstack_gaming_168330": [
+  "ff/172360.txt"
+ ],
+ "beir_cqadupstack_gaming_168459": [
+  "38/62763.txt"
+ ],
+ "beir_cqadupstack_gaming_168695": [
+  "7b/179651.txt"
+ ],
+ "beir_cqadupstack_gaming_168768": [
+  "92/137730.txt"
+ ],
+ "beir_cqadupstack_gaming_168946": [
+  "df/118977.txt",
+  "e5/31337.txt"
+ ],
+ "beir_cqadupstack_gaming_168952": [
+  "ab/19780.txt",
+  "c8/117036.txt",
+  "eb/55599.txt"
+ ],
+ "beir_cqadupstack_gaming_168994": [
+  "b0/142415.txt"
+ ],
+ "beir_cqadupstack_gaming_169171": [
+  "09/164476.txt"
+ ],
+ "beir_cqadupstack_gaming_169522": [
+  "98/172560.txt"
+ ],
+ "beir_cqadupstack_gaming_169592": [
+  "38/174569.txt"
+ ],
+ "beir_cqadupstack_gaming_169611": [
+  "85/163488.txt"
+ ],
+ "beir_cqadupstack_gaming_169750": [
+  "7b/165254.txt"
+ ],
+ "beir_cqadupstack_gaming_169827": [
+  "72/170561.txt"
+ ],
+ "beir_cqadupstack_gaming_169889": [
+  "91/168418.txt",
+  "cb/97690.txt"
+ ],
+ "beir_cqadupstack_gaming_170059": [
+  "72/306.txt"
+ ],
+ "beir_cqadupstack_gaming_170174": [
+  "8f/174238.txt"
+ ],
+ "beir_cqadupstack_gaming_170406": [
+  "5a/117837.txt",
+  "eb/139261.txt"
+ ],
+ "beir_cqadupstack_gaming_170443": [
+  "b2/160185.txt"
+ ],
+ "beir_cqadupstack_gaming_170444": [
+  "99/164343.txt"
+ ],
+ "beir_cqadupstack_gaming_170756": [
+  "7b/10244.txt"
+ ],
+ "beir_cqadupstack_gaming_170866": [
+  "0f/940.txt"
+ ],
+ "beir_cqadupstack_gaming_170880": [
+  "e2/127358.txt"
+ ],
+ "beir_cqadupstack_gaming_170910": [
+  "c5/166613.txt"
+ ],
+ "beir_cqadupstack_gaming_170941": [
+  "02/22404.txt",
+  "37/27969.txt",
+  "60/148613.txt",
+  "83/719.txt",
+  "b4/51468.txt"
+ ],
+ "beir_cqadupstack_gaming_172050": [
+  "0d/65771.txt",
+  "90/79341.txt"
+ ],
+ "beir_cqadupstack_gaming_172349": [
+  "26/164997.txt"
+ ],
+ "beir_cqadupstack_gaming_1724": [
+  "2b/1691.txt",
+  "42/22919.txt"
+ ],
+ "beir_cqadupstack_gaming_172533": [
+  "1b/64714.txt"
+ ],
+ "beir_cqadupstack_gaming_172603": [
+  "06/150068.txt"
+ ],
+ "beir_cqadupstack_gaming_172681": [
+  "0d/47371.txt",
+  "13/67148.txt",
+  "43/34905.txt",
+  "4e/35816.txt",
+  "c5/45810.txt",
+  "de/47374.txt"
+ ],
+ "beir_cqadupstack_gaming_1727": [
+  "01/80196.txt"
+ ],
+ "beir_cqadupstack_gaming_173093": [
+  "0f/116258.txt",
+  "16/82358.txt",
+  "2d/97656.txt",
+  "3e/160248.txt",
+  "3f/147252.txt",
+  "46/129260.txt",
+  "5d/115465.txt",
+  "6b/151476.txt",
+  "72/175336.txt",
+  "79/87404.txt",
+  "7b/113630.txt",
+  "86/173013.txt",
+  "a3/118989.txt",
+  "a7/137519.txt",
+  "ba/126674.txt",
+  "bb/136300.txt",
+  "c3/177461.txt",
+  "db/150539.txt",
+  "dc/142303.txt",
+  "e6/115610.txt",
+  "ef/174932.txt",
+  "f0/89081.txt"
+ ],
+ "beir_cqadupstack_gaming_173395": [
+  "bf/137941.txt",
+  "e2/137075.txt"
+ ],
+ "beir_cqadupstack_gaming_173480": [
+  "ae/74509.txt"
+ ],
+ "beir_cqadupstack_gaming_17359": [
+  "ec/116006.txt"
+ ],
+ "beir_cqadupstack_gaming_173621": [
+  "3d/152579.txt"
+ ],
+ "beir_cqadupstack_gaming_174116": [
+  "5f/115096.txt"
+ ],
+ "beir_cqadupstack_gaming_174263": [
+  "a0/163385.txt"
+ ],
+ "beir_cqadupstack_gaming_174461": [
+  "96/174631.txt"
+ ],
+ "beir_cqadupstack_gaming_174493": [
+  "d7/151636.txt"
+ ],
+ "beir_cqadupstack_gaming_174881": [
+  "a8/163647.txt"
+ ],
+ "beir_cqadupstack_gaming_175094": [
+  "3c/169226.txt",
+  "58/169556.txt"
+ ],
+ "beir_cqadupstack_gaming_175228": [
+  "49/42979.txt"
+ ],
+ "beir_cqadupstack_gaming_175255": [
+  "e0/35592.txt"
+ ],
+ "beir_cqadupstack_gaming_175339": [
+  "0d/129513.txt"
+ ],
+ "beir_cqadupstack_gaming_176": [
+  "7b/12.txt",
+  "fb/45.txt"
+ ],
+ "beir_cqadupstack_gaming_176570": [
+  "86/106815.txt"
+ ],
+ "beir_cqadupstack_gaming_176652": [
+  "50/174994.txt"
+ ],
+ "beir_cqadupstack_gaming_176686": [
+  "83/170750.txt"
+ ],
+ "beir_cqadupstack_gaming_176782": [
+  "2b/77192.txt"
+ ],
+ "beir_cqadupstack_gaming_176828": [
+  "6e/150865.txt"
+ ],
+ "beir_cqadupstack_gaming_176898": [
+  "a6/67832.txt"
+ ],
+ "beir_cqadupstack_gaming_176911": [
+  "0d/66341.txt",
+  "98/70671.txt"
+ ],
+ "beir_cqadupstack_gaming_17701": [
+  "c4/8092.txt"
+ ],
+ "beir_cqadupstack_gaming_177030": [
+  "cf/466.txt"
+ ],
+ "beir_cqadupstack_gaming_177132": [
+  "25/33601.txt",
+  "57/174237.txt",
+  "d2/46030.txt"
+ ],
+ "beir_cqadupstack_gaming_177486": [
+  "9f/18192.txt",
+  "f3/98861.txt"
+ ],
+ "beir_cqadupstack_gaming_177595": [
+  "ad/18592.txt",
+  "d1/119386.txt"
+ ],
+ "beir_cqadupstack_gaming_178061": [
+  "0c/120663.txt"
+ ],
+ "beir_cqadupstack_gaming_178449": [
+  "fa/120357.txt"
+ ],
+ "beir_cqadupstack_gaming_178477": [
+  "50/133225.txt",
+  "d9/133741.txt"
+ ],
+ "beir_cqadupstack_gaming_178653": [
+  "fe/178660.txt"
+ ],
+ "beir_cqadupstack_gaming_178779": [
+  "03/103728.txt",
+  "a6/126890.txt"
+ ],
+ "beir_cqadupstack_gaming_178945": [
+  "d6/178949.txt"
+ ],
+ "beir_cqadupstack_gaming_179106": [
+  "c7/126856.txt"
+ ],
+ "beir_cqadupstack_gaming_17913": [
+  "64/10799.txt"
+ ],
+ "beir_cqadupstack_gaming_1793": [
+  "5a/29812.txt"
+ ],
+ "beir_cqadupstack_gaming_179314": [
+  "8d/177934.txt"
+ ],
+ "beir_cqadupstack_gaming_179368": [
+  "a1/52542.txt",
+  "d8/49972.txt"
+ ],
+ "beir_cqadupstack_gaming_17946": [
+  "0f/16294.txt"
+ ],
+ "beir_cqadupstack_gaming_179514": [
+  "61/158618.txt",
+  "bd/170034.txt"
+ ],
+ "beir_cqadupstack_gaming_180006": [
+  "3c/178726.txt",
+  "61/28558.txt"
+ ],
+ "beir_cqadupstack_gaming_180278": [
+  "41/42848.txt"
+ ],
+ "beir_cqadupstack_gaming_181468": [
+  "ea/179639.txt",
+  "fd/124265.txt"
+ ],
+ "beir_cqadupstack_gaming_181554": [
+  "35/168314.txt"
+ ],
+ "beir_cqadupstack_gaming_181994": [
+  "b3/37525.txt"
+ ],
+ "beir_cqadupstack_gaming_182381": [
+  "1f/183268.txt"
+ ],
+ "beir_cqadupstack_gaming_182465": [
+  "c7/36922.txt"
+ ],
+ "beir_cqadupstack_gaming_182860": [
+  "d1/182859.txt"
+ ],
+ "beir_cqadupstack_gaming_18292": [
+  "8c/117920.txt",
+  "fa/174736.txt"
+ ],
+ "beir_cqadupstack_gaming_183158": [
+  "3d/174599.txt"
+ ],
+ "beir_cqadupstack_gaming_183174": [
+  "0a/165101.txt",
+  "11/31363.txt",
+  "54/45024.txt",
+  "83/154977.txt",
+  "bd/78818.txt"
+ ],
+ "beir_cqadupstack_gaming_183210": [
+  "37/181937.txt"
+ ],
+ "beir_cqadupstack_gaming_183274": [
+  "0c/139223.txt"
+ ],
+ "beir_cqadupstack_gaming_183356": [
+  "0e/68283.txt"
+ ],
+ "beir_cqadupstack_gaming_183552": [
+  "ff/37937.txt"
+ ],
+ "beir_cqadupstack_gaming_183644": [
+  "e2/63071.txt"
+ ],
+ "beir_cqadupstack_gaming_183784": [
+  "fe/78084.txt"
+ ],
+ "beir_cqadupstack_gaming_183865": [
+  "36/10308.txt"
+ ],
+ "beir_cqadupstack_gaming_18442": [
+  "10/5727.txt"
+ ],
+ "beir_cqadupstack_gaming_18504": [
+  "38/131413.txt",
+  "6d/372.txt",
+  "b3/145016.txt",
+  "ee/35334.txt"
+ ],
+ "beir_cqadupstack_gaming_18737": [
+  "09/15518.txt"
+ ],
+ "beir_cqadupstack_gaming_1878": [
+  "f2/3682.txt"
+ ],
+ "beir_cqadupstack_gaming_18895": [
+  "c2/30197.txt"
+ ],
+ "beir_cqadupstack_gaming_18903": [
+  "94/164498.txt"
+ ],
+ "beir_cqadupstack_gaming_18908": [
+  "24/8710.txt",
+  "87/96625.txt"
+ ],
+ "beir_cqadupstack_gaming_19184": [
+  "a6/60649.txt"
+ ],
+ "beir_cqadupstack_gaming_19234": [
+  "4f/45926.txt"
+ ],
+ "beir_cqadupstack_gaming_19342": [
+  "4f/61095.txt",
+  "9f/60148.txt",
+  "b0/79830.txt"
+ ],
+ "beir_cqadupstack_gaming_19374": [
+  "53/60689.txt"
+ ],
+ "beir_cqadupstack_gaming_19427": [
+  "f2/9805.txt"
+ ],
+ "beir_cqadupstack_gaming_19546": [
+  "0f/39404.txt"
+ ],
+ "beir_cqadupstack_gaming_19894": [
+  "c6/3445.txt"
+ ],
+ "beir_cqadupstack_gaming_19926": [
+  "0b/7744.txt",
+  "7b/11010.txt",
+  "b7/18543.txt"
+ ],
+ "beir_cqadupstack_gaming_19975": [
+  "25/8711.txt"
+ ],
+ "beir_cqadupstack_gaming_19991": [
+  "32/12008.txt",
+  "46/126013.txt",
+  "5f/321.txt"
+ ],
+ "beir_cqadupstack_gaming_20397": [
+  "82/20456.txt"
+ ],
+ "beir_cqadupstack_gaming_20498": [
+  "98/25283.txt"
+ ],
+ "beir_cqadupstack_gaming_20519": [
+  "26/42746.txt"
+ ],
+ "beir_cqadupstack_gaming_20523": [
+  "5d/21257.txt"
+ ],
+ "beir_cqadupstack_gaming_20746": [
+  "b9/29878.txt"
+ ],
+ "beir_cqadupstack_gaming_20821": [
+  "92/74744.txt"
+ ],
+ "beir_cqadupstack_gaming_20826": [
+  "f5/11410.txt"
+ ],
+ "beir_cqadupstack_gaming_20831": [
+  "50/7568.txt"
+ ],
+ "beir_cqadupstack_gaming_21121": [
+  "e4/75884.txt"
+ ],
+ "beir_cqadupstack_gaming_21216": [
+  "08/20459.txt"
+ ],
+ "beir_cqadupstack_gaming_21293": [
+  "b7/23063.txt"
+ ],
+ "beir_cqadupstack_gaming_21311": [
+  "2f/79193.txt",
+  "94/14348.txt",
+  "9e/179267.txt",
+  "c2/122444.txt",
+  "db/20816.txt"
+ ],
+ "beir_cqadupstack_gaming_21469": [
+  "f8/109683.txt"
+ ],
+ "beir_cqadupstack_gaming_2151": [
+  "f1/36846.txt"
+ ],
+ "beir_cqadupstack_gaming_21806": [
+  "a4/179832.txt"
+ ],
+ "beir_cqadupstack_gaming_22133": [
+  "b3/151413.txt"
+ ],
+ "beir_cqadupstack_gaming_22154": [
+  "23/41904.txt"
+ ],
+ "beir_cqadupstack_gaming_22230": [
+  "55/132824.txt"
+ ],
+ "beir_cqadupstack_gaming_22308": [
+  "2a/176455.txt"
+ ],
+ "beir_cqadupstack_gaming_22396": [
+  "88/23464.txt"
+ ],
+ "beir_cqadupstack_gaming_22661": [
+  "b6/24276.txt"
+ ],
+ "beir_cqadupstack_gaming_22782": [
+  "fd/12020.txt"
+ ],
+ "beir_cqadupstack_gaming_22947": [
+  "d5/24564.txt"
+ ],
+ "beir_cqadupstack_gaming_23068": [
+  "29/11322.txt",
+  "e9/16664.txt"
+ ],
+ "beir_cqadupstack_gaming_23183": [
+  "93/22392.txt"
+ ],
+ "beir_cqadupstack_gaming_23224": [
+  "a8/28448.txt"
+ ],
+ "beir_cqadupstack_gaming_23248": [
+  "8f/125194.txt"
+ ],
+ "beir_cqadupstack_gaming_23309": [
+  "a2/154729.txt"
+ ],
+ "beir_cqadupstack_gaming_23364": [
+  "62/123430.txt"
+ ],
+ "beir_cqadupstack_gaming_23549": [
+  "97/60705.txt",
+  "f2/58332.txt"
+ ],
+ "beir_cqadupstack_gaming_236": [
+  "6c/105807.txt"
+ ],
+ "beir_cqadupstack_gaming_23618": [
+  "62/55804.txt"
+ ],
+ "beir_cqadupstack_gaming_23669": [
+  "3b/80067.txt"
+ ],
+ "beir_cqadupstack_gaming_23866": [
+  "80/24268.txt"
+ ],
+ "beir_cqadupstack_gaming_23966": [
+  "07/35550.txt",
+  "08/19220.txt",
+  "16/14022.txt",
+  "22/62953.txt",
+  "2b/69326.txt",
+  "36/54762.txt",
+  "37/53190.txt",
+  "3a/5004.txt",
+  "5f/115006.txt",
+  "6f/29375.txt",
+  "76/9492.txt",
+  "7c/18636.txt",
+  "91/182524.txt",
+  "92/23637.txt",
+  "ed/51800.txt",
+  "f4/41213.txt"
+ ],
+ "beir_cqadupstack_gaming_24080": [
+  "23/86985.txt"
+ ],
+ "beir_cqadupstack_gaming_24103": [
+  "21/5345.txt"
+ ],
+ "beir_cqadupstack_gaming_24148": [
+  "ad/48457.txt",
+  "db/21437.txt"
+ ],
+ "beir_cqadupstack_gaming_24252": [
+  "2a/136062.txt",
+  "2d/40182.txt"
+ ],
+ "beir_cqadupstack_gaming_24376": [
+  "40/24726.txt"
+ ],
+ "beir_cqadupstack_gaming_24493": [
+  "62/98213.txt",
+  "dd/17105.txt"
+ ],
+ "beir_cqadupstack_gaming_24543": [
+  "1f/25227.txt"
+ ],
+ "beir_cqadupstack_gaming_24575": [
+  "31/29771.txt",
+  "55/21874.txt",
+  "80/92837.txt",
+  "8c/17377.txt",
+  "c7/20567.txt"
+ ],
+ "beir_cqadupstack_gaming_24610": [
+  "40/24611.txt"
+ ],
+ "beir_cqadupstack_gaming_24880": [
+  "31/60989.txt"
+ ],
+ "beir_cqadupstack_gaming_24996": [
+  "10/25365.txt"
+ ],
+ "beir_cqadupstack_gaming_25015": [
+  "5c/20856.txt"
+ ],
+ "beir_cqadupstack_gaming_25173": [
+  "27/11137.txt"
+ ],
+ "beir_cqadupstack_gaming_25337": [
+  "b2/60038.txt"
+ ],
+ "beir_cqadupstack_gaming_25403": [
+  "71/64127.txt",
+  "c7/160728.txt",
+  "c8/157598.txt"
+ ],
+ "beir_cqadupstack_gaming_25471": [
+  "4f/165533.txt"
+ ],
+ "beir_cqadupstack_gaming_25670": [
+  "41/43206.txt"
+ ],
+ "beir_cqadupstack_gaming_25929": [
+  "37/22732.txt",
+  "bf/22391.txt",
+  "c5/89926.txt"
+ ],
+ "beir_cqadupstack_gaming_26321": [
+  "f5/8762.txt"
+ ],
+ "beir_cqadupstack_gaming_26513": [
+  "80/112547.txt"
+ ],
+ "beir_cqadupstack_gaming_26531": [
+  "1a/129957.txt"
+ ],
+ "beir_cqadupstack_gaming_26961": [
+  "f3/34308.txt"
+ ],
+ "beir_cqadupstack_gaming_26973": [
+  "c1/22593.txt"
+ ],
+ "beir_cqadupstack_gaming_27015": [
+  "13/159212.txt"
+ ],
+ "beir_cqadupstack_gaming_27073": [
+  "c6/26877.txt"
+ ],
+ "beir_cqadupstack_gaming_27358": [
+  "99/23755.txt"
+ ],
+ "beir_cqadupstack_gaming_27557": [
+  "41/41264.txt"
+ ],
+ "beir_cqadupstack_gaming_27617": [
+  "fa/10221.txt"
+ ],
+ "beir_cqadupstack_gaming_27642": [
+  "13/52570.txt"
+ ],
+ "beir_cqadupstack_gaming_28023": [
+  "3e/149054.txt"
+ ],
+ "beir_cqadupstack_gaming_28195": [
+  "a4/93664.txt"
+ ],
+ "beir_cqadupstack_gaming_28714": [
+  "39/4353.txt",
+  "55/4007.txt"
+ ],
+ "beir_cqadupstack_gaming_28717": [
+  "7f/174406.txt"
+ ],
+ "beir_cqadupstack_gaming_28920": [
+  "c3/30288.txt"
+ ],
+ "beir_cqadupstack_gaming_28975": [
+  "e7/33108.txt"
+ ],
+ "beir_cqadupstack_gaming_2900": [
+  "18/22974.txt",
+  "39/12618.txt"
+ ],
+ "beir_cqadupstack_gaming_2908": [
+  "7a/93150.txt"
+ ],
+ "beir_cqadupstack_gaming_29357": [
+  "18/125684.txt"
+ ],
+ "beir_cqadupstack_gaming_29401": [
+  "2f/182320.txt"
+ ],
+ "beir_cqadupstack_gaming_29415": [
+  "65/116349.txt"
+ ],
+ "beir_cqadupstack_gaming_29850": [
+  "74/65100.txt"
+ ],
+ "beir_cqadupstack_gaming_29907": [
+  "b9/91814.txt"
+ ],
+ "beir_cqadupstack_gaming_30052": [
+  "72/25672.txt"
+ ],
+ "beir_cqadupstack_gaming_30069": [
+  "3f/64041.txt"
+ ],
+ "beir_cqadupstack_gaming_30221": [
+  "0c/28626.txt"
+ ],
+ "beir_cqadupstack_gaming_30322": [
+  "38/183212.txt"
+ ],
+ "beir_cqadupstack_gaming_3040": [
+  "0c/16848.txt",
+  "61/96189.txt"
+ ],
+ "beir_cqadupstack_gaming_30409": [
+  "45/122454.txt",
+  "4b/86335.txt",
+  "c5/28801.txt",
+  "ce/163696.txt"
+ ],
+ "beir_cqadupstack_gaming_30550": [
+  "03/172952.txt"
+ ],
+ "beir_cqadupstack_gaming_30903": [
+  "0c/66033.txt"
+ ],
+ "beir_cqadupstack_gaming_31076": [
+  "d0/60375.txt"
+ ],
+ "beir_cqadupstack_gaming_31295": [
+  "ec/45422.txt"
+ ],
+ "beir_cqadupstack_gaming_31324": [
+  "9d/34155.txt"
+ ],
+ "beir_cqadupstack_gaming_31431": [
+  "9c/136453.txt"
+ ],
+ "beir_cqadupstack_gaming_31486": [
+  "0e/5841.txt"
+ ],
+ "beir_cqadupstack_gaming_31760": [
+  "ea/89194.txt"
+ ],
+ "beir_cqadupstack_gaming_31984": [
+  "97/19308.txt"
+ ],
+ "beir_cqadupstack_gaming_32139": [
+  "7e/34098.txt"
+ ],
+ "beir_cqadupstack_gaming_32265": [
+  "44/43316.txt"
+ ],
+ "beir_cqadupstack_gaming_32299": [
+  "28/114334.txt",
+  "65/167926.txt",
+  "a5/57920.txt",
+  "b1/109820.txt",
+  "b1/58190.txt",
+  "b5/58954.txt",
+  "e2/73866.txt"
+ ],
+ "beir_cqadupstack_gaming_32529": [
+  "b0/31697.txt"
+ ],
+ "beir_cqadupstack_gaming_32668": [
+  "60/112519.txt"
+ ],
+ "beir_cqadupstack_gaming_32709": [
+  "d5/51074.txt"
+ ],
+ "beir_cqadupstack_gaming_32739": [
+  "a8/82161.txt"
+ ],
+ "beir_cqadupstack_gaming_32935": [
+  "25/343.txt"
+ ],
+ "beir_cqadupstack_gaming_32939": [
+  "b5/160523.txt"
+ ],
+ "beir_cqadupstack_gaming_32948": [
+  "1b/42398.txt"
+ ],
+ "beir_cqadupstack_gaming_33044": [
+  "c1/48550.txt"
+ ],
+ "beir_cqadupstack_gaming_33070": [
+  "75/114877.txt"
+ ],
+ "beir_cqadupstack_gaming_33096": [
+  "2e/21169.txt",
+  "ca/22220.txt"
+ ],
+ "beir_cqadupstack_gaming_33098": [
+  "39/29367.txt",
+  "61/33293.txt",
+  "85/41365.txt",
+  "d3/20692.txt"
+ ],
+ "beir_cqadupstack_gaming_33204": [
+  "a9/48102.txt"
+ ],
+ "beir_cqadupstack_gaming_33226": [
+  "f5/159889.txt"
+ ],
+ "beir_cqadupstack_gaming_33289": [
+  "96/74956.txt"
+ ],
+ "beir_cqadupstack_gaming_33334": [
+  "cf/620.txt"
+ ],
+ "beir_cqadupstack_gaming_33402": [
+  "4d/38720.txt"
+ ],
+ "beir_cqadupstack_gaming_33406": [
+  "76/40492.txt"
+ ],
+ "beir_cqadupstack_gaming_33449": [
+  "1e/48840.txt"
+ ],
+ "beir_cqadupstack_gaming_33676": [
+  "27/40464.txt"
+ ],
+ "beir_cqadupstack_gaming_33968": [
+  "58/179085.txt",
+  "6c/60360.txt"
+ ],
+ "beir_cqadupstack_gaming_34047": [
+  "46/59252.txt",
+  "9b/60386.txt",
+  "e9/41303.txt",
+  "f3/58679.txt",
+  "f7/58981.txt"
+ ],
+ "beir_cqadupstack_gaming_34472": [
+  "64/143397.txt"
+ ],
+ "beir_cqadupstack_gaming_34502": [
+  "00/35090.txt"
+ ],
+ "beir_cqadupstack_gaming_34512": [
+  "ef/30825.txt"
+ ],
+ "beir_cqadupstack_gaming_34615": [
+  "17/37830.txt"
+ ],
+ "beir_cqadupstack_gaming_34848": [
+  "4b/33450.txt"
+ ],
+ "beir_cqadupstack_gaming_34894": [
+  "66/35507.txt",
+  "f9/127420.txt"
+ ],
+ "beir_cqadupstack_gaming_3492": [
+  "6d/64652.txt"
+ ],
+ "beir_cqadupstack_gaming_34981": [
+  "e7/35256.txt"
+ ],
+ "beir_cqadupstack_gaming_34982": [
+  "8f/35012.txt"
+ ],
+ "beir_cqadupstack_gaming_35024": [
+  "3c/36707.txt"
+ ],
+ "beir_cqadupstack_gaming_35029": [
+  "53/34964.txt"
+ ],
+ "beir_cqadupstack_gaming_35042": [
+  "32/101591.txt"
+ ],
+ "beir_cqadupstack_gaming_35086": [
+  "d9/34634.txt"
+ ],
+ "beir_cqadupstack_gaming_35112": [
+  "36/37115.txt"
+ ],
+ "beir_cqadupstack_gaming_35155": [
+  "df/37694.txt"
+ ],
+ "beir_cqadupstack_gaming_35211": [
+  "62/52282.txt"
+ ],
+ "beir_cqadupstack_gaming_35217": [
+  "0f/36404.txt",
+  "1c/115368.txt",
+  "60/35395.txt",
+  "b0/35866.txt",
+  "dc/124515.txt"
+ ],
+ "beir_cqadupstack_gaming_35219": [
+  "a6/167890.txt",
+  "f4/36786.txt"
+ ],
+ "beir_cqadupstack_gaming_35221": [
+  "01/44320.txt"
+ ],
+ "beir_cqadupstack_gaming_35297": [
+  "ac/44001.txt"
+ ],
+ "beir_cqadupstack_gaming_35317": [
+  "ee/150886.txt"
+ ],
+ "beir_cqadupstack_gaming_35348": [
+  "e7/35429.txt"
+ ],
+ "beir_cqadupstack_gaming_35405": [
+  "b3/41457.txt"
+ ],
+ "beir_cqadupstack_gaming_35437": [
+  "ad/34225.txt"
+ ],
+ "beir_cqadupstack_gaming_35443": [
+  "51/119656.txt",
+  "f8/45860.txt"
+ ],
+ "beir_cqadupstack_gaming_35453": [
+  "49/36572.txt"
+ ],
+ "beir_cqadupstack_gaming_35475": [
+  "0f/40776.txt"
+ ],
+ "beir_cqadupstack_gaming_35494": [
+  "ab/79161.txt"
+ ],
+ "beir_cqadupstack_gaming_35565": [
+  "c2/45532.txt"
+ ],
+ "beir_cqadupstack_gaming_35641": [
+  "3b/78044.txt",
+  "3e/127911.txt"
+ ],
+ "beir_cqadupstack_gaming_35743": [
+  "3e/80561.txt"
+ ],
+ "beir_cqadupstack_gaming_35752": [
+  "5c/42150.txt"
+ ],
+ "beir_cqadupstack_gaming_35761": [
+  "66/37104.txt"
+ ],
+ "beir_cqadupstack_gaming_35800": [
+  "4a/95992.txt",
+  "d7/159689.txt",
+  "f1/148415.txt"
+ ],
+ "beir_cqadupstack_gaming_35893": [
+  "7d/85150.txt"
+ ],
+ "beir_cqadupstack_gaming_35921": [
+  "3b/38378.txt"
+ ],
+ "beir_cqadupstack_gaming_3597": [
+  "3f/9959.txt",
+  "eb/11673.txt"
+ ],
+ "beir_cqadupstack_gaming_36011": [
+  "79/34968.txt",
+  "b1/38452.txt",
+  "ff/43096.txt"
+ ],
+ "beir_cqadupstack_gaming_36028": [
+  "8e/36796.txt"
+ ],
+ "beir_cqadupstack_gaming_36036": [
+  "0d/44585.txt",
+  "50/48462.txt",
+  "c3/40707.txt"
+ ],
+ "beir_cqadupstack_gaming_36037": [
+  "04/36602.txt",
+  "2a/35121.txt"
+ ],
+ "beir_cqadupstack_gaming_36079": [
+  "fa/36058.txt"
+ ],
+ "beir_cqadupstack_gaming_36146": [
+  "52/36044.txt"
+ ],
+ "beir_cqadupstack_gaming_36167": [
+  "6f/35285.txt",
+  "9c/34525.txt"
+ ],
+ "beir_cqadupstack_gaming_36198": [
+  "63/75169.txt"
+ ],
+ "beir_cqadupstack_gaming_36202": [
+  "ba/126651.txt"
+ ],
+ "beir_cqadupstack_gaming_36206": [
+  "54/169416.txt"
+ ],
+ "beir_cqadupstack_gaming_36304": [
+  "76/72442.txt"
+ ],
+ "beir_cqadupstack_gaming_36374": [
+  "58/63867.txt"
+ ],
+ "beir_cqadupstack_gaming_36384": [
+  "7b/48285.txt",
+  "dc/48025.txt"
+ ],
+ "beir_cqadupstack_gaming_36411": [
+  "19/36739.txt"
+ ],
+ "beir_cqadupstack_gaming_36467": [
+  "b3/44217.txt",
+  "e5/35274.txt"
+ ],
+ "beir_cqadupstack_gaming_36511": [
+  "fb/37118.txt"
+ ],
+ "beir_cqadupstack_gaming_36515": [
+  "91/39867.txt"
+ ],
+ "beir_cqadupstack_gaming_36593": [
+  "30/39307.txt"
+ ],
+ "beir_cqadupstack_gaming_36656": [
+  "dd/40587.txt"
+ ],
+ "beir_cqadupstack_gaming_36764": [
+  "ba/51464.txt"
+ ],
+ "beir_cqadupstack_gaming_36778": [
+  "18/40861.txt"
+ ],
+ "beir_cqadupstack_gaming_36845": [
+  "63/36256.txt"
+ ],
+ "beir_cqadupstack_gaming_36994": [
+  "ca/79779.txt"
+ ],
+ "beir_cqadupstack_gaming_37063": [
+  "68/36160.txt",
+  "88/36220.txt"
+ ],
+ "beir_cqadupstack_gaming_37090": [
+  "d4/35015.txt"
+ ],
+ "beir_cqadupstack_gaming_37138": [
+  "d6/61793.txt"
+ ],
+ "beir_cqadupstack_gaming_37247": [
+  "04/176603.txt",
+  "2f/45408.txt",
+  "b7/44084.txt"
+ ],
+ "beir_cqadupstack_gaming_37252": [
+  "9a/37490.txt"
+ ],
+ "beir_cqadupstack_gaming_37473": [
+  "5c/80831.txt"
+ ],
+ "beir_cqadupstack_gaming_37515": [
+  "a9/36621.txt"
+ ],
+ "beir_cqadupstack_gaming_37590": [
+  "1f/36623.txt"
+ ],
+ "beir_cqadupstack_gaming_37648": [
+  "e2/30018.txt",
+  "ec/30348.txt"
+ ],
+ "beir_cqadupstack_gaming_37660": [
+  "6e/176747.txt"
+ ],
+ "beir_cqadupstack_gaming_37662": [
+  "48/155456.txt",
+  "b5/45955.txt"
+ ],
+ "beir_cqadupstack_gaming_37679": [
+  "f5/39000.txt"
+ ],
+ "beir_cqadupstack_gaming_37697": [
+  "a2/109425.txt",
+  "ad/128580.txt"
+ ],
+ "beir_cqadupstack_gaming_37772": [
+  "a6/43932.txt"
+ ],
+ "beir_cqadupstack_gaming_37889": [
+  "65/125060.txt"
+ ],
+ "beir_cqadupstack_gaming_38037": [
+  "2f/18948.txt",
+  "d3/10226.txt"
+ ],
+ "beir_cqadupstack_gaming_38090": [
+  "17/98652.txt"
+ ],
+ "beir_cqadupstack_gaming_38141": [
+  "48/41219.txt"
+ ],
+ "beir_cqadupstack_gaming_38240": [
+  "6e/113846.txt",
+  "f4/51429.txt"
+ ],
+ "beir_cqadupstack_gaming_38299": [
+  "78/109126.txt"
+ ],
+ "beir_cqadupstack_gaming_38352": [
+  "71/43209.txt"
+ ],
+ "beir_cqadupstack_gaming_38410": [
+  "0b/53103.txt",
+  "5f/125750.txt"
+ ],
+ "beir_cqadupstack_gaming_38496": [
+  "06/36692.txt"
+ ],
+ "beir_cqadupstack_gaming_38554": [
+  "cb/177724.txt"
+ ],
+ "beir_cqadupstack_gaming_38565": [
+  "12/149017.txt"
+ ],
+ "beir_cqadupstack_gaming_38609": [
+  "79/38780.txt"
+ ],
+ "beir_cqadupstack_gaming_38630": [
+  "ab/155962.txt"
+ ],
+ "beir_cqadupstack_gaming_38783": [
+  "9c/35122.txt"
+ ],
+ "beir_cqadupstack_gaming_38818": [
+  "d2/36222.txt"
+ ],
+ "beir_cqadupstack_gaming_38899": [
+  "47/42053.txt"
+ ],
+ "beir_cqadupstack_gaming_38929": [
+  "5c/59695.txt"
+ ],
+ "beir_cqadupstack_gaming_38964": [
+  "9e/151124.txt"
+ ],
+ "beir_cqadupstack_gaming_39011": [
+  "65/45190.txt"
+ ],
+ "beir_cqadupstack_gaming_392": [
+  "08/21636.txt",
+  "2f/40327.txt",
+  "5a/20906.txt",
+  "5d/8274.txt",
+  "c3/19249.txt"
+ ],
+ "beir_cqadupstack_gaming_39257": [
+  "1e/78336.txt"
+ ],
+ "beir_cqadupstack_gaming_39285": [
+  "6a/34958.txt"
+ ],
+ "beir_cqadupstack_gaming_39288": [
+  "87/39826.txt"
+ ],
+ "beir_cqadupstack_gaming_39468": [
+  "1b/39409.txt"
+ ],
+ "beir_cqadupstack_gaming_39509": [
+  "e5/98778.txt"
+ ],
+ "beir_cqadupstack_gaming_39561": [
+  "ba/7470.txt"
+ ],
+ "beir_cqadupstack_gaming_39595": [
+  "48/41700.txt"
+ ],
+ "beir_cqadupstack_gaming_39646": [
+  "f5/7951.txt"
+ ],
+ "beir_cqadupstack_gaming_39758": [
+  "f4/39265.txt"
+ ],
+ "beir_cqadupstack_gaming_39967": [
+  "0d/37227.txt"
+ ],
+ "beir_cqadupstack_gaming_400": [
+  "e2/27474.txt"
+ ],
+ "beir_cqadupstack_gaming_40172": [
+  "4b/37343.txt"
+ ],
+ "beir_cqadupstack_gaming_40306": [
+  "49/36208.txt",
+  "72/160686.txt"
+ ],
+ "beir_cqadupstack_gaming_40493": [
+  "25/38985.txt"
+ ],
+ "beir_cqadupstack_gaming_40670": [
+  "06/146101.txt",
+  "45/69980.txt",
+  "a2/37913.txt",
+  "e3/39439.txt"
+ ],
+ "beir_cqadupstack_gaming_40718": [
+  "21/125535.txt"
+ ],
+ "beir_cqadupstack_gaming_40865": [
+  "c7/57279.txt"
+ ],
+ "beir_cqadupstack_gaming_41031": [
+  "cd/38759.txt"
+ ],
+ "beir_cqadupstack_gaming_41044": [
+  "6c/38893.txt"
+ ],
+ "beir_cqadupstack_gaming_41100": [
+  "82/34449.txt"
+ ],
+ "beir_cqadupstack_gaming_4116": [
+  "0f/82265.txt"
+ ],
+ "beir_cqadupstack_gaming_41301": [
+  "26/41000.txt",
+  "e8/39856.txt"
+ ],
+ "beir_cqadupstack_gaming_41320": [
+  "8e/25397.txt",
+  "d3/154778.txt"
+ ],
+ "beir_cqadupstack_gaming_41373": [
+  "19/176952.txt"
+ ],
+ "beir_cqadupstack_gaming_41636": [
+  "35/179439.txt"
+ ],
+ "beir_cqadupstack_gaming_41693": [
+  "6d/93484.txt"
+ ],
+ "beir_cqadupstack_gaming_41807": [
+  "bc/31527.txt",
+  "e0/15238.txt"
+ ],
+ "beir_cqadupstack_gaming_41828": [
+  "4d/31947.txt"
+ ],
+ "beir_cqadupstack_gaming_41856": [
+  "84/64188.txt"
+ ],
+ "beir_cqadupstack_gaming_42030": [
+  "01/40231.txt",
+  "11/182397.txt",
+  "39/138297.txt",
+  "4b/35003.txt",
+  "dc/66300.txt"
+ ],
+ "beir_cqadupstack_gaming_42044": [
+  "04/36017.txt"
+ ],
+ "beir_cqadupstack_gaming_42137": [
+  "af/172638.txt"
+ ],
+ "beir_cqadupstack_gaming_42149": [
+  "2c/73101.txt"
+ ],
+ "beir_cqadupstack_gaming_42164": [
+  "4b/35452.txt"
+ ],
+ "beir_cqadupstack_gaming_42307": [
+  "34/24836.txt",
+  "70/14876.txt"
+ ],
+ "beir_cqadupstack_gaming_4235": [
+  "ac/4867.txt"
+ ],
+ "beir_cqadupstack_gaming_42379": [
+  "22/42046.txt"
+ ],
+ "beir_cqadupstack_gaming_42436": [
+  "da/45595.txt"
+ ],
+ "beir_cqadupstack_gaming_42465": [
+  "b5/75752.txt"
+ ],
+ "beir_cqadupstack_gaming_42577": [
+  "e2/42227.txt"
+ ],
+ "beir_cqadupstack_gaming_42591": [
+  "df/34962.txt"
+ ],
+ "beir_cqadupstack_gaming_42722": [
+  "f8/46418.txt"
+ ],
+ "beir_cqadupstack_gaming_42736": [
+  "26/153428.txt"
+ ],
+ "beir_cqadupstack_gaming_428": [
+  "e7/64924.txt"
+ ],
+ "beir_cqadupstack_gaming_42889": [
+  "e2/35633.txt"
+ ],
+ "beir_cqadupstack_gaming_42910": [
+  "43/44416.txt",
+  "46/41440.txt",
+  "d7/64874.txt",
+  "dc/36594.txt"
+ ],
+ "beir_cqadupstack_gaming_42993": [
+  "c1/26249.txt"
+ ],
+ "beir_cqadupstack_gaming_42994": [
+  "a3/36555.txt"
+ ],
+ "beir_cqadupstack_gaming_4300": [
+  "ca/5126.txt"
+ ],
+ "beir_cqadupstack_gaming_43283": [
+  "c7/88839.txt"
+ ],
+ "beir_cqadupstack_gaming_43291": [
+  "ad/80240.txt"
+ ],
+ "beir_cqadupstack_gaming_43517": [
+  "70/181382.txt"
+ ],
+ "beir_cqadupstack_gaming_43555": [
+  "4e/43575.txt"
+ ],
+ "beir_cqadupstack_gaming_43559": [
+  "c3/42357.txt"
+ ],
+ "beir_cqadupstack_gaming_43713": [
+  "a7/97506.txt"
+ ],
+ "beir_cqadupstack_gaming_43717": [
+  "d7/35989.txt"
+ ],
+ "beir_cqadupstack_gaming_43878": [
+  "20/145540.txt"
+ ],
+ "beir_cqadupstack_gaming_43888": [
+  "da/42072.txt"
+ ],
+ "beir_cqadupstack_gaming_43994": [
+  "46/44633.txt"
+ ],
+ "beir_cqadupstack_gaming_44068": [
+  "e9/128791.txt"
+ ],
+ "beir_cqadupstack_gaming_44130": [
+  "b0/35521.txt"
+ ],
+ "beir_cqadupstack_gaming_44225": [
+  "70/36719.txt"
+ ],
+ "beir_cqadupstack_gaming_44283": [
+  "31/41351.txt",
+  "4f/44219.txt"
+ ],
+ "beir_cqadupstack_gaming_44287": [
+  "aa/167599.txt"
+ ],
+ "beir_cqadupstack_gaming_44334": [
+  "ec/41397.txt"
+ ],
+ "beir_cqadupstack_gaming_44418": [
+  "b8/59554.txt"
+ ],
+ "beir_cqadupstack_gaming_44422": [
+  "88/42962.txt"
+ ],
+ "beir_cqadupstack_gaming_44535": [
+  "03/1909.txt"
+ ],
+ "beir_cqadupstack_gaming_44581": [
+  "f7/125199.txt"
+ ],
+ "beir_cqadupstack_gaming_44713": [
+  "f8/6329.txt"
+ ],
+ "beir_cqadupstack_gaming_44901": [
+  "10/40205.txt"
+ ],
+ "beir_cqadupstack_gaming_4491": [
+  "6a/72618.txt"
+ ],
+ "beir_cqadupstack_gaming_44924": [
+  "63/183580.txt",
+  "65/96605.txt",
+  "87/415.txt"
+ ],
+ "beir_cqadupstack_gaming_44996": [
+  "7f/112271.txt"
+ ],
+ "beir_cqadupstack_gaming_45054": [
+  "f3/41060.txt"
+ ],
+ "beir_cqadupstack_gaming_45065": [
+  "23/45421.txt"
+ ],
+ "beir_cqadupstack_gaming_45080": [
+  "a6/44858.txt"
+ ],
+ "beir_cqadupstack_gaming_45263": [
+  "07/158217.txt",
+  "0a/165856.txt",
+  "0f/38928.txt",
+  "1f/126394.txt",
+  "2a/35193.txt",
+  "3c/35426.txt",
+  "7d/44726.txt"
+ ],
+ "beir_cqadupstack_gaming_45356": [
+  "de/96143.txt"
+ ],
+ "beir_cqadupstack_gaming_45380": [
+  "98/22393.txt"
+ ],
+ "beir_cqadupstack_gaming_45445": [
+  "1f/41370.txt"
+ ],
+ "beir_cqadupstack_gaming_4550": [
+  "22/108574.txt"
+ ],
+ "beir_cqadupstack_gaming_45563": [
+  "01/149398.txt"
+ ],
+ "beir_cqadupstack_gaming_45567": [
+  "fe/45785.txt"
+ ],
+ "beir_cqadupstack_gaming_45630": [
+  "23/44628.txt",
+  "50/42686.txt",
+  "78/53266.txt"
+ ],
+ "beir_cqadupstack_gaming_45631": [
+  "e4/38735.txt"
+ ],
+ "beir_cqadupstack_gaming_45638": [
+  "11/38360.txt"
+ ],
+ "beir_cqadupstack_gaming_45689": [
+  "e2/35126.txt"
+ ],
+ "beir_cqadupstack_gaming_45711": [
+  "74/82424.txt"
+ ],
+ "beir_cqadupstack_gaming_46087": [
+  "32/29630.txt"
+ ],
+ "beir_cqadupstack_gaming_46138": [
+  "02/37177.txt",
+  "09/72491.txt",
+  "0f/37365.txt",
+  "16/163195.txt",
+  "29/123669.txt",
+  "33/129925.txt",
+  "3a/176882.txt",
+  "41/38860.txt",
+  "4c/101844.txt",
+  "54/59549.txt",
+  "56/35314.txt",
+  "71/43807.txt",
+  "87/160357.txt",
+  "ad/163364.txt",
+  "af/114185.txt",
+  "d0/103524.txt",
+  "dd/94134.txt",
+  "de/42968.txt",
+  "fc/62508.txt",
+  "fe/35997.txt"
+ ],
+ "beir_cqadupstack_gaming_46519": [
+  "5b/53050.txt"
+ ],
+ "beir_cqadupstack_gaming_46528": [
+  "1b/53409.txt"
+ ],
+ "beir_cqadupstack_gaming_46657": [
+  "05/39323.txt",
+  "ea/35593.txt"
+ ],
+ "beir_cqadupstack_gaming_4666": [
+  "27/3730.txt"
+ ],
+ "beir_cqadupstack_gaming_46668": [
+  "74/59413.txt"
+ ],
+ "beir_cqadupstack_gaming_46755": [
+  "a1/129775.txt",
+  "b5/78652.txt"
+ ],
+ "beir_cqadupstack_gaming_46792": [
+  "2d/35026.txt"
+ ],
+ "beir_cqadupstack_gaming_46793": [
+  "f7/35871.txt"
+ ],
+ "beir_cqadupstack_gaming_4685": [
+  "20/5788.txt"
+ ],
+ "beir_cqadupstack_gaming_46861": [
+  "4d/44212.txt",
+  "9d/45147.txt",
+  "9f/44156.txt",
+  "b0/45133.txt"
+ ],
+ "beir_cqadupstack_gaming_46885": [
+  "89/91909.txt"
+ ],
+ "beir_cqadupstack_gaming_4695": [
+  "5a/6424.txt",
+  "83/6806.txt"
+ ],
+ "beir_cqadupstack_gaming_47106": [
+  "ff/37605.txt"
+ ],
+ "beir_cqadupstack_gaming_47251": [
+  "38/47263.txt"
+ ],
+ "beir_cqadupstack_gaming_47441": [
+  "c0/37462.txt"
+ ],
+ "beir_cqadupstack_gaming_4778": [
+  "52/6645.txt"
+ ],
+ "beir_cqadupstack_gaming_48106": [
+  "28/35281.txt",
+  "40/34719.txt",
+  "69/42546.txt"
+ ],
+ "beir_cqadupstack_gaming_4825": [
+  "df/126684.txt"
+ ],
+ "beir_cqadupstack_gaming_48360": [
+  "57/64235.txt"
+ ],
+ "beir_cqadupstack_gaming_48779": [
+  "32/98930.txt",
+  "b1/36316.txt"
+ ],
+ "beir_cqadupstack_gaming_4890": [
+  "5f/17822.txt"
+ ],
+ "beir_cqadupstack_gaming_48916": [
+  "3d/101607.txt"
+ ],
+ "beir_cqadupstack_gaming_48962": [
+  "71/42989.txt"
+ ],
+ "beir_cqadupstack_gaming_49006": [
+  "6c/75101.txt"
+ ],
+ "beir_cqadupstack_gaming_4909": [
+  "98/58540.txt"
+ ],
+ "beir_cqadupstack_gaming_4915": [
+  "e1/50.txt"
+ ],
+ "beir_cqadupstack_gaming_4919": [
+  "1a/34441.txt"
+ ],
+ "beir_cqadupstack_gaming_49273": [
+  "cf/40437.txt"
+ ],
+ "beir_cqadupstack_gaming_49377": [
+  "2a/167281.txt"
+ ],
+ "beir_cqadupstack_gaming_49417": [
+  "fa/36422.txt"
+ ],
+ "beir_cqadupstack_gaming_49427": [
+  "71/43515.txt"
+ ],
+ "beir_cqadupstack_gaming_49519": [
+  "e6/49520.txt"
+ ],
+ "beir_cqadupstack_gaming_49545": [
+  "76/63627.txt",
+  "d3/181493.txt"
+ ],
+ "beir_cqadupstack_gaming_49592": [
+  "9e/61887.txt"
+ ],
+ "beir_cqadupstack_gaming_49654": [
+  "4c/29516.txt",
+  "66/38585.txt",
+  "6b/76172.txt",
+  "6d/164137.txt",
+  "f1/130107.txt"
+ ],
+ "beir_cqadupstack_gaming_49881": [
+  "0f/50520.txt"
+ ],
+ "beir_cqadupstack_gaming_50016": [
+  "bf/50696.txt"
+ ],
+ "beir_cqadupstack_gaming_50206": [
+  "52/61750.txt"
+ ],
+ "beir_cqadupstack_gaming_50427": [
+  "6a/170943.txt"
+ ],
+ "beir_cqadupstack_gaming_50630": [
+  "78/24774.txt"
+ ],
+ "beir_cqadupstack_gaming_50648": [
+  "33/49969.txt"
+ ],
+ "beir_cqadupstack_gaming_50682": [
+  "1a/51306.txt"
+ ],
+ "beir_cqadupstack_gaming_50820": [
+  "33/143291.txt",
+  "66/143246.txt"
+ ],
+ "beir_cqadupstack_gaming_5087": [
+  "ea/231.txt"
+ ],
+ "beir_cqadupstack_gaming_50873": [
+  "89/86272.txt"
+ ],
+ "beir_cqadupstack_gaming_5097": [
+  "16/166193.txt"
+ ],
+ "beir_cqadupstack_gaming_51052": [
+  "3f/48769.txt"
+ ],
+ "beir_cqadupstack_gaming_51090": [
+  "41/51861.txt"
+ ],
+ "beir_cqadupstack_gaming_51129": [
+  "09/50227.txt"
+ ],
+ "beir_cqadupstack_gaming_51356": [
+  "88/166640.txt"
+ ],
+ "beir_cqadupstack_gaming_517": [
+  "70/178597.txt",
+  "ac/20266.txt"
+ ],
+ "beir_cqadupstack_gaming_51760": [
+  "b5/118145.txt"
+ ],
+ "beir_cqadupstack_gaming_51936": [
+  "95/172419.txt"
+ ],
+ "beir_cqadupstack_gaming_51966": [
+  "74/62323.txt"
+ ],
+ "beir_cqadupstack_gaming_51971": [
+  "08/43680.txt",
+  "c4/35141.txt"
+ ],
+ "beir_cqadupstack_gaming_52007": [
+  "c4/82832.txt"
+ ],
+ "beir_cqadupstack_gaming_52055": [
+  "db/35634.txt"
+ ],
+ "beir_cqadupstack_gaming_52064": [
+  "e9/35099.txt"
+ ],
+ "beir_cqadupstack_gaming_52148": [
+  "e1/149684.txt"
+ ],
+ "beir_cqadupstack_gaming_52189": [
+  "a1/112162.txt",
+  "cb/35541.txt"
+ ],
+ "beir_cqadupstack_gaming_52223": [
+  "f3/101882.txt"
+ ],
+ "beir_cqadupstack_gaming_52329": [
+  "ba/41831.txt"
+ ],
+ "beir_cqadupstack_gaming_52393": [
+  "3f/49932.txt"
+ ],
+ "beir_cqadupstack_gaming_52528": [
+  "57/79118.txt"
+ ],
+ "beir_cqadupstack_gaming_52531": [
+  "90/7931.txt"
+ ],
+ "beir_cqadupstack_gaming_53162": [
+  "d5/40246.txt"
+ ],
+ "beir_cqadupstack_gaming_53273": [
+  "0f/35077.txt",
+  "2f/43478.txt",
+  "3d/152032.txt",
+  "76/60149.txt",
+  "8e/57425.txt",
+  "a2/61605.txt",
+  "b8/35478.txt",
+  "c8/119956.txt"
+ ],
+ "beir_cqadupstack_gaming_5339": [
+  "2c/83365.txt",
+  "85/5777.txt"
+ ],
+ "beir_cqadupstack_gaming_53565": [
+  "6d/53839.txt",
+  "95/72634.txt",
+  "d7/54435.txt"
+ ],
+ "beir_cqadupstack_gaming_53568": [
+  "c6/53977.txt"
+ ],
+ "beir_cqadupstack_gaming_53596": [
+  "94/54882.txt"
+ ],
+ "beir_cqadupstack_gaming_53642": [
+  "9f/53527.txt",
+  "c4/56032.txt"
+ ],
+ "beir_cqadupstack_gaming_53688": [
+  "21/53826.txt",
+  "2d/53600.txt"
+ ],
+ "beir_cqadupstack_gaming_53690": [
+  "2d/55324.txt"
+ ],
+ "beir_cqadupstack_gaming_53762": [
+  "df/53759.txt"
+ ],
+ "beir_cqadupstack_gaming_53783": [
+  "1d/167495.txt"
+ ],
+ "beir_cqadupstack_gaming_53849": [
+  "72/54951.txt"
+ ],
+ "beir_cqadupstack_gaming_53900": [
+  "57/89752.txt",
+  "cc/53166.txt"
+ ],
+ "beir_cqadupstack_gaming_53904": [
+  "9e/54051.txt"
+ ],
+ "beir_cqadupstack_gaming_53966": [
+  "26/55771.txt"
+ ],
+ "beir_cqadupstack_gaming_53997": [
+  "4b/55995.txt"
+ ],
+ "beir_cqadupstack_gaming_54019": [
+  "bf/57755.txt"
+ ],
+ "beir_cqadupstack_gaming_54059": [
+  "43/55208.txt"
+ ],
+ "beir_cqadupstack_gaming_54068": [
+  "1b/53841.txt",
+  "24/54187.txt",
+  "39/54782.txt",
+  "9c/53542.txt"
+ ],
+ "beir_cqadupstack_gaming_54112": [
+  "1b/53213.txt"
+ ],
+ "beir_cqadupstack_gaming_5414": [
+  "7c/5412.txt"
+ ],
+ "beir_cqadupstack_gaming_54158": [
+  "c5/124062.txt"
+ ],
+ "beir_cqadupstack_gaming_5421": [
+  "5a/5185.txt"
+ ],
+ "beir_cqadupstack_gaming_54306": [
+  "bf/53809.txt"
+ ],
+ "beir_cqadupstack_gaming_54373": [
+  "28/63719.txt"
+ ],
+ "beir_cqadupstack_gaming_54386": [
+  "a6/56525.txt"
+ ],
+ "beir_cqadupstack_gaming_54482": [
+  "53/51883.txt"
+ ],
+ "beir_cqadupstack_gaming_54499": [
+  "84/86974.txt"
+ ],
+ "beir_cqadupstack_gaming_54510": [
+  "59/54732.txt"
+ ],
+ "beir_cqadupstack_gaming_54608": [
+  "b6/53676.txt"
+ ],
+ "beir_cqadupstack_gaming_54630": [
+  "bf/51203.txt"
+ ],
+ "beir_cqadupstack_gaming_54635": [
+  "7c/54547.txt"
+ ],
+ "beir_cqadupstack_gaming_54642": [
+  "9e/55021.txt",
+  "ef/53843.txt"
+ ],
+ "beir_cqadupstack_gaming_54662": [
+  "eb/53536.txt"
+ ],
+ "beir_cqadupstack_gaming_54741": [
+  "df/53804.txt"
+ ],
+ "beir_cqadupstack_gaming_54867": [
+  "58/134169.txt"
+ ],
+ "beir_cqadupstack_gaming_54940": [
+  "e8/54933.txt"
+ ],
+ "beir_cqadupstack_gaming_54992": [
+  "1d/57147.txt"
+ ],
+ "beir_cqadupstack_gaming_55027": [
+  "32/39430.txt"
+ ],
+ "beir_cqadupstack_gaming_55073": [
+  "29/54597.txt"
+ ],
+ "beir_cqadupstack_gaming_55091": [
+  "25/57603.txt",
+  "57/53964.txt",
+  "f7/55521.txt"
+ ],
+ "beir_cqadupstack_gaming_55124": [
+  "4a/123431.txt"
+ ],
+ "beir_cqadupstack_gaming_55146": [
+  "04/82546.txt",
+  "fe/57097.txt"
+ ],
+ "beir_cqadupstack_gaming_55163": [
+  "73/54473.txt"
+ ],
+ "beir_cqadupstack_gaming_55337": [
+  "45/55071.txt"
+ ],
+ "beir_cqadupstack_gaming_55381": [
+  "4f/53844.txt",
+  "d7/54040.txt"
+ ],
+ "beir_cqadupstack_gaming_55465": [
+  "0d/100223.txt"
+ ],
+ "beir_cqadupstack_gaming_55544": [
+  "f1/54445.txt"
+ ],
+ "beir_cqadupstack_gaming_55641": [
+  "21/53526.txt"
+ ],
+ "beir_cqadupstack_gaming_55677": [
+  "7e/55171.txt"
+ ],
+ "beir_cqadupstack_gaming_5573": [
+  "a2/155201.txt"
+ ],
+ "beir_cqadupstack_gaming_5580": [
+  "1d/5388.txt"
+ ],
+ "beir_cqadupstack_gaming_55938": [
+  "64/54211.txt"
+ ],
+ "beir_cqadupstack_gaming_55964": [
+  "8c/72713.txt"
+ ],
+ "beir_cqadupstack_gaming_56046": [
+  "2b/59783.txt"
+ ],
+ "beir_cqadupstack_gaming_56123": [
+  "11/53640.txt"
+ ],
+ "beir_cqadupstack_gaming_56370": [
+  "71/54354.txt"
+ ],
+ "beir_cqadupstack_gaming_56446": [
+  "0b/56142.txt"
+ ],
+ "beir_cqadupstack_gaming_56491": [
+  "b1/55509.txt"
+ ],
+ "beir_cqadupstack_gaming_56515": [
+  "49/172306.txt"
+ ],
+ "beir_cqadupstack_gaming_56548": [
+  "ae/57240.txt"
+ ],
+ "beir_cqadupstack_gaming_56677": [
+  "66/56533.txt"
+ ],
+ "beir_cqadupstack_gaming_56840": [
+  "40/58828.txt"
+ ],
+ "beir_cqadupstack_gaming_56852": [
+  "f0/55413.txt"
+ ],
+ "beir_cqadupstack_gaming_56872": [
+  "14/38710.txt"
+ ],
+ "beir_cqadupstack_gaming_5698": [
+  "ea/136860.txt"
+ ],
+ "beir_cqadupstack_gaming_56983": [
+  "2d/114366.txt"
+ ],
+ "beir_cqadupstack_gaming_57047": [
+  "0e/54055.txt",
+  "7c/53673.txt"
+ ],
+ "beir_cqadupstack_gaming_57152": [
+  "2a/60874.txt"
+ ],
+ "beir_cqadupstack_gaming_57409": [
+  "04/114722.txt",
+  "fa/114825.txt"
+ ],
+ "beir_cqadupstack_gaming_57473": [
+  "ea/53610.txt"
+ ],
+ "beir_cqadupstack_gaming_57601": [
+  "8b/56813.txt"
+ ],
+ "beir_cqadupstack_gaming_5761": [
+  "0b/89621.txt"
+ ],
+ "beir_cqadupstack_gaming_57638": [
+  "77/14092.txt"
+ ],
+ "beir_cqadupstack_gaming_57857": [
+  "38/57869.txt"
+ ],
+ "beir_cqadupstack_gaming_57871": [
+  "1e/56684.txt",
+  "45/55186.txt",
+  "96/61579.txt"
+ ],
+ "beir_cqadupstack_gaming_57914": [
+  "a6/58015.txt",
+  "e8/58179.txt"
+ ],
+ "beir_cqadupstack_gaming_58039": [
+  "da/56686.txt"
+ ],
+ "beir_cqadupstack_gaming_58188": [
+  "69/41003.txt"
+ ],
+ "beir_cqadupstack_gaming_58248": [
+  "e3/37095.txt"
+ ],
+ "beir_cqadupstack_gaming_58310": [
+  "18/57890.txt"
+ ],
+ "beir_cqadupstack_gaming_58319": [
+  "e0/59558.txt",
+  "e1/62330.txt"
+ ],
+ "beir_cqadupstack_gaming_58395": [
+  "1c/7629.txt",
+  "c0/58517.txt"
+ ],
+ "beir_cqadupstack_gaming_58406": [
+  "53/3191.txt",
+  "93/58905.txt"
+ ],
+ "beir_cqadupstack_gaming_58446": [
+  "aa/59467.txt"
+ ],
+ "beir_cqadupstack_gaming_58461": [
+  "c2/5670.txt"
+ ],
+ "beir_cqadupstack_gaming_58466": [
+  "80/58351.txt"
+ ],
+ "beir_cqadupstack_gaming_58521": [
+  "1a/60924.txt",
+  "b5/58982.txt"
+ ],
+ "beir_cqadupstack_gaming_58522": [
+  "74/77847.txt"
+ ],
+ "beir_cqadupstack_gaming_58554": [
+  "a1/50952.txt"
+ ],
+ "beir_cqadupstack_gaming_5862": [
+  "49/7285.txt",
+  "ec/15980.txt"
+ ],
+ "beir_cqadupstack_gaming_58773": [
+  "d1/26514.txt"
+ ],
+ "beir_cqadupstack_gaming_58831": [
+  "1d/58810.txt"
+ ],
+ "beir_cqadupstack_gaming_58921": [
+  "14/58807.txt",
+  "61/157527.txt",
+  "79/3199.txt"
+ ],
+ "beir_cqadupstack_gaming_5898": [
+  "c8/7806.txt"
+ ],
+ "beir_cqadupstack_gaming_59442": [
+  "9e/60998.txt"
+ ],
+ "beir_cqadupstack_gaming_60016": [
+  "fb/60443.txt"
+ ],
+ "beir_cqadupstack_gaming_60354": [
+  "8b/17014.txt",
+  "ad/58004.txt"
+ ],
+ "beir_cqadupstack_gaming_60619": [
+  "b1/77923.txt"
+ ],
+ "beir_cqadupstack_gaming_61280": [
+  "48/49522.txt"
+ ],
+ "beir_cqadupstack_gaming_61815": [
+  "8e/30744.txt"
+ ],
+ "beir_cqadupstack_gaming_61991": [
+  "8d/163053.txt"
+ ],
+ "beir_cqadupstack_gaming_62089": [
+  "05/36508.txt",
+  "50/152192.txt",
+  "d9/163594.txt"
+ ],
+ "beir_cqadupstack_gaming_62153": [
+  "d1/148017.txt"
+ ],
+ "beir_cqadupstack_gaming_62248": [
+  "6f/54401.txt",
+  "ff/53768.txt"
+ ],
+ "beir_cqadupstack_gaming_62471": [
+  "61/53623.txt"
+ ],
+ "beir_cqadupstack_gaming_62560": [
+  "a1/175364.txt"
+ ],
+ "beir_cqadupstack_gaming_62644": [
+  "51/68599.txt"
+ ],
+ "beir_cqadupstack_gaming_62674": [
+  "95/176636.txt"
+ ],
+ "beir_cqadupstack_gaming_62797": [
+  "0a/64422.txt"
+ ],
+ "beir_cqadupstack_gaming_62865": [
+  "2f/62428.txt"
+ ],
+ "beir_cqadupstack_gaming_63118": [
+  "27/183177.txt"
+ ],
+ "beir_cqadupstack_gaming_63265": [
+  "4c/86248.txt"
+ ],
+ "beir_cqadupstack_gaming_63323": [
+  "ac/98046.txt"
+ ],
+ "beir_cqadupstack_gaming_63413": [
+  "5a/68788.txt"
+ ],
+ "beir_cqadupstack_gaming_63492": [
+  "fe/35755.txt"
+ ],
+ "beir_cqadupstack_gaming_63502": [
+  "ea/31226.txt"
+ ],
+ "beir_cqadupstack_gaming_63546": [
+  "01/67301.txt"
+ ],
+ "beir_cqadupstack_gaming_63582": [
+  "e9/70996.txt"
+ ],
+ "beir_cqadupstack_gaming_63625": [
+  "e4/70749.txt"
+ ],
+ "beir_cqadupstack_gaming_63704": [
+  "e4/66971.txt"
+ ],
+ "beir_cqadupstack_gaming_63712": [
+  "8d/93457.txt"
+ ],
+ "beir_cqadupstack_gaming_63817": [
+  "f8/45950.txt"
+ ],
+ "beir_cqadupstack_gaming_63828": [
+  "00/66402.txt",
+  "a7/71813.txt",
+  "ec/69820.txt"
+ ],
+ "beir_cqadupstack_gaming_6406": [
+  "d3/5381.txt"
+ ],
+ "beir_cqadupstack_gaming_64065": [
+  "a9/54677.txt"
+ ],
+ "beir_cqadupstack_gaming_64219": [
+  "b4/54859.txt"
+ ],
+ "beir_cqadupstack_gaming_64356": [
+  "65/72180.txt",
+  "85/66774.txt",
+  "bf/67434.txt"
+ ],
+ "beir_cqadupstack_gaming_64451": [
+  "78/70319.txt"
+ ],
+ "beir_cqadupstack_gaming_64460": [
+  "0b/155409.txt"
+ ],
+ "beir_cqadupstack_gaming_64607": [
+  "9b/64621.txt"
+ ],
+ "beir_cqadupstack_gaming_64616": [
+  "06/2423.txt"
+ ],
+ "beir_cqadupstack_gaming_64630": [
+  "d5/2456.txt"
+ ],
+ "beir_cqadupstack_gaming_64695": [
+  "70/40939.txt"
+ ],
+ "beir_cqadupstack_gaming_648": [
+  "87/2735.txt"
+ ],
+ "beir_cqadupstack_gaming_6481": [
+  "89/1543.txt"
+ ],
+ "beir_cqadupstack_gaming_64827": [
+  "6a/43173.txt"
+ ],
+ "beir_cqadupstack_gaming_65010": [
+  "85/67864.txt"
+ ],
+ "beir_cqadupstack_gaming_65121": [
+  "d9/93610.txt"
+ ],
+ "beir_cqadupstack_gaming_65266": [
+  "aa/62421.txt"
+ ],
+ "beir_cqadupstack_gaming_65625": [
+  "22/66431.txt",
+  "8e/66801.txt",
+  "b8/63459.txt",
+  "d1/69491.txt",
+  "e0/68582.txt"
+ ],
+ "beir_cqadupstack_gaming_65731": [
+  "08/57333.txt"
+ ],
+ "beir_cqadupstack_gaming_65828": [
+  "87/143450.txt"
+ ],
+ "beir_cqadupstack_gaming_66024": [
+  "91/170277.txt"
+ ],
+ "beir_cqadupstack_gaming_66078": [
+  "4e/5384.txt"
+ ],
+ "beir_cqadupstack_gaming_66102": [
+  "e3/70536.txt"
+ ],
+ "beir_cqadupstack_gaming_66139": [
+  "1c/66350.txt",
+  "29/66942.txt"
+ ],
+ "beir_cqadupstack_gaming_66144": [
+  "60/75582.txt"
+ ],
+ "beir_cqadupstack_gaming_6615": [
+  "46/4732.txt"
+ ],
+ "beir_cqadupstack_gaming_66164": [
+  "29/68384.txt"
+ ],
+ "beir_cqadupstack_gaming_66166": [
+  "8f/66157.txt"
+ ],
+ "beir_cqadupstack_gaming_66173": [
+  "7e/68835.txt"
+ ],
+ "beir_cqadupstack_gaming_66205": [
+  "f4/67114.txt"
+ ],
+ "beir_cqadupstack_gaming_66214": [
+  "06/65218.txt"
+ ],
+ "beir_cqadupstack_gaming_66216": [
+  "04/157951.txt"
+ ],
+ "beir_cqadupstack_gaming_66267": [
+  "3e/118612.txt"
+ ],
+ "beir_cqadupstack_gaming_66275": [
+  "e5/70037.txt"
+ ],
+ "beir_cqadupstack_gaming_66315": [
+  "8e/66179.txt"
+ ],
+ "beir_cqadupstack_gaming_66332": [
+  "12/106361.txt"
+ ],
+ "beir_cqadupstack_gaming_66349": [
+  "3b/66940.txt",
+  "6e/67430.txt"
+ ],
+ "beir_cqadupstack_gaming_66418": [
+  "2f/69089.txt"
+ ],
+ "beir_cqadupstack_gaming_66475": [
+  "31/66238.txt"
+ ],
+ "beir_cqadupstack_gaming_66505": [
+  "47/66359.txt"
+ ],
+ "beir_cqadupstack_gaming_66516": [
+  "c8/70809.txt",
+  "de/69320.txt"
+ ],
+ "beir_cqadupstack_gaming_6656": [
+  "35/73379.txt"
+ ],
+ "beir_cqadupstack_gaming_66602": [
+  "14/69297.txt"
+ ],
+ "beir_cqadupstack_gaming_66621": [
+  "83/66112.txt",
+  "ab/69492.txt",
+  "c8/72100.txt"
+ ],
+ "beir_cqadupstack_gaming_66623": [
+  "8b/67321.txt",
+  "f2/70212.txt"
+ ],
+ "beir_cqadupstack_gaming_66627": [
+  "33/120849.txt"
+ ],
+ "beir_cqadupstack_gaming_66648": [
+  "b8/76066.txt"
+ ],
+ "beir_cqadupstack_gaming_66652": [
+  "98/63563.txt"
+ ],
+ "beir_cqadupstack_gaming_66659": [
+  "d6/67738.txt"
+ ],
+ "beir_cqadupstack_gaming_66663": [
+  "89/67990.txt"
+ ],
+ "beir_cqadupstack_gaming_66673": [
+  "91/70128.txt"
+ ],
+ "beir_cqadupstack_gaming_66707": [
+  "21/73251.txt"
+ ],
+ "beir_cqadupstack_gaming_66734": [
+  "05/84969.txt",
+  "13/69989.txt",
+  "55/81333.txt"
+ ],
+ "beir_cqadupstack_gaming_66757": [
+  "ee/68098.txt"
+ ],
+ "beir_cqadupstack_gaming_66788": [
+  "37/66952.txt",
+  "f4/66987.txt"
+ ],
+ "beir_cqadupstack_gaming_66810": [
+  "c4/73704.txt"
+ ],
+ "beir_cqadupstack_gaming_66811": [
+  "1c/71620.txt",
+  "6f/71026.txt",
+  "c9/63646.txt"
+ ],
+ "beir_cqadupstack_gaming_66911": [
+  "21/14625.txt"
+ ],
+ "beir_cqadupstack_gaming_66936": [
+  "8d/74598.txt",
+  "9d/73171.txt",
+  "b2/68498.txt"
+ ],
+ "beir_cqadupstack_gaming_66937": [
+  "c2/66676.txt"
+ ],
+ "beir_cqadupstack_gaming_66994": [
+  "0e/156600.txt",
+  "87/66096.txt"
+ ],
+ "beir_cqadupstack_gaming_67006": [
+  "53/86052.txt"
+ ],
+ "beir_cqadupstack_gaming_67007": [
+  "18/79644.txt",
+  "9e/85589.txt",
+  "c5/49461.txt"
+ ],
+ "beir_cqadupstack_gaming_67056": [
+  "10/68309.txt",
+  "f3/66632.txt"
+ ],
+ "beir_cqadupstack_gaming_67082": [
+  "43/72182.txt"
+ ],
+ "beir_cqadupstack_gaming_67084": [
+  "8e/71543.txt"
+ ],
+ "beir_cqadupstack_gaming_67141": [
+  "e3/68987.txt"
+ ],
+ "beir_cqadupstack_gaming_67154": [
+  "16/72557.txt"
+ ],
+ "beir_cqadupstack_gaming_67294": [
+  "09/169055.txt",
+  "e1/163241.txt"
+ ],
+ "beir_cqadupstack_gaming_67317": [
+  "d6/72207.txt"
+ ],
+ "beir_cqadupstack_gaming_67344": [
+  "c1/72695.txt"
+ ],
+ "beir_cqadupstack_gaming_67367": [
+  "b9/66792.txt"
+ ],
+ "beir_cqadupstack_gaming_67423": [
+  "db/69154.txt"
+ ],
+ "beir_cqadupstack_gaming_67564": [
+  "8b/73208.txt"
+ ],
+ "beir_cqadupstack_gaming_67695": [
+  "36/69129.txt"
+ ],
+ "beir_cqadupstack_gaming_67719": [
+  "ce/167587.txt",
+  "df/77132.txt",
+  "f6/69837.txt"
+ ],
+ "beir_cqadupstack_gaming_67782": [
+  "c3/66873.txt"
+ ],
+ "beir_cqadupstack_gaming_67851": [
+  "52/67674.txt",
+  "58/66831.txt",
+  "6b/86744.txt",
+  "b6/60281.txt",
+  "e5/72045.txt"
+ ],
+ "beir_cqadupstack_gaming_67852": [
+  "e9/66433.txt"
+ ],
+ "beir_cqadupstack_gaming_6797": [
+  "6a/65236.txt"
+ ],
+ "beir_cqadupstack_gaming_68041": [
+  "25/60442.txt"
+ ],
+ "beir_cqadupstack_gaming_68106": [
+  "8f/67346.txt"
+ ],
+ "beir_cqadupstack_gaming_68111": [
+  "80/68022.txt"
+ ],
+ "beir_cqadupstack_gaming_68204": [
+  "fa/68750.txt"
+ ],
+ "beir_cqadupstack_gaming_68220": [
+  "e3/69822.txt"
+ ],
+ "beir_cqadupstack_gaming_68254": [
+  "22/68977.txt"
+ ],
+ "beir_cqadupstack_gaming_68286": [
+  "46/68091.txt"
+ ],
+ "beir_cqadupstack_gaming_68422": [
+  "4d/67281.txt"
+ ],
+ "beir_cqadupstack_gaming_68493": [
+  "19/72018.txt"
+ ],
+ "beir_cqadupstack_gaming_68529": [
+  "58/71127.txt"
+ ],
+ "beir_cqadupstack_gaming_68593": [
+  "35/70063.txt",
+  "d4/70234.txt"
+ ],
+ "beir_cqadupstack_gaming_68623": [
+  "68/72259.txt",
+  "a5/82236.txt",
+  "cf/68909.txt",
+  "fc/95888.txt"
+ ],
+ "beir_cqadupstack_gaming_68633": [
+  "22/164575.txt"
+ ],
+ "beir_cqadupstack_gaming_68634": [
+  "35/73597.txt"
+ ],
+ "beir_cqadupstack_gaming_68638": [
+  "5c/67092.txt",
+  "aa/69597.txt"
+ ],
+ "beir_cqadupstack_gaming_68735": [
+  "58/70310.txt"
+ ],
+ "beir_cqadupstack_gaming_68743": [
+  "b0/66748.txt"
+ ],
+ "beir_cqadupstack_gaming_68805": [
+  "b3/90478.txt"
+ ],
+ "beir_cqadupstack_gaming_68828": [
+  "6e/66886.txt",
+  "bc/67651.txt"
+ ],
+ "beir_cqadupstack_gaming_68895": [
+  "5b/68008.txt"
+ ],
+ "beir_cqadupstack_gaming_68901": [
+  "6a/66323.txt"
+ ],
+ "beir_cqadupstack_gaming_68919": [
+  "fb/68889.txt"
+ ],
+ "beir_cqadupstack_gaming_68991": [
+  "b5/67304.txt",
+  "e7/67065.txt"
+ ],
+ "beir_cqadupstack_gaming_69016": [
+  "0e/70527.txt"
+ ],
+ "beir_cqadupstack_gaming_69033": [
+  "45/75731.txt",
+  "e8/70200.txt"
+ ],
+ "beir_cqadupstack_gaming_69047": [
+  "20/63433.txt",
+  "8f/161963.txt",
+  "ba/69567.txt"
+ ],
+ "beir_cqadupstack_gaming_69073": [
+  "b1/119882.txt"
+ ],
+ "beir_cqadupstack_gaming_69132": [
+  "42/77647.txt"
+ ],
+ "beir_cqadupstack_gaming_69166": [
+  "c0/70503.txt"
+ ],
+ "beir_cqadupstack_gaming_69176": [
+  "cd/128032.txt"
+ ],
+ "beir_cqadupstack_gaming_69231": [
+  "e4/64354.txt"
+ ],
+ "beir_cqadupstack_gaming_69241": [
+  "14/67985.txt",
+  "e9/67974.txt"
+ ],
+ "beir_cqadupstack_gaming_69244": [
+  "5e/69789.txt"
+ ],
+ "beir_cqadupstack_gaming_69253": [
+  "2c/75943.txt"
+ ],
+ "beir_cqadupstack_gaming_69286": [
+  "6b/78999.txt"
+ ],
+ "beir_cqadupstack_gaming_69337": [
+  "21/67131.txt"
+ ],
+ "beir_cqadupstack_gaming_69430": [
+  "75/63740.txt"
+ ],
+ "beir_cqadupstack_gaming_69521": [
+  "6e/67249.txt"
+ ],
+ "beir_cqadupstack_gaming_69522": [
+  "62/66822.txt"
+ ],
+ "beir_cqadupstack_gaming_69523": [
+  "57/71020.txt",
+  "8d/77228.txt"
+ ],
+ "beir_cqadupstack_gaming_69646": [
+  "02/74658.txt",
+  "27/77518.txt",
+  "d3/67319.txt"
+ ],
+ "beir_cqadupstack_gaming_69664": [
+  "1f/110422.txt"
+ ],
+ "beir_cqadupstack_gaming_69919": [
+  "7f/66380.txt"
+ ],
+ "beir_cqadupstack_gaming_69956": [
+  "15/69577.txt",
+  "58/66348.txt",
+  "f4/68905.txt"
+ ],
+ "beir_cqadupstack_gaming_70095": [
+  "b8/72757.txt"
+ ],
+ "beir_cqadupstack_gaming_70139": [
+  "2f/79246.txt",
+  "35/66298.txt",
+  "43/70790.txt",
+  "c6/30982.txt",
+  "f9/72079.txt"
+ ],
+ "beir_cqadupstack_gaming_70191": [
+  "dd/67089.txt"
+ ],
+ "beir_cqadupstack_gaming_70253": [
+  "79/80479.txt"
+ ],
+ "beir_cqadupstack_gaming_70323": [
+  "a4/67623.txt"
+ ],
+ "beir_cqadupstack_gaming_70370": [
+  "be/71220.txt"
+ ],
+ "beir_cqadupstack_gaming_70374": [
+  "38/83022.txt",
+  "56/77732.txt",
+  "b8/68699.txt",
+  "b8/85766.txt",
+  "e6/72270.txt",
+  "ee/66435.txt"
+ ],
+ "beir_cqadupstack_gaming_70529": [
+  "c6/74934.txt",
+  "fa/74513.txt"
+ ],
+ "beir_cqadupstack_gaming_70594": [
+  "4e/66635.txt",
+  "ee/66352.txt"
+ ],
+ "beir_cqadupstack_gaming_70755": [
+  "6d/66107.txt"
+ ],
+ "beir_cqadupstack_gaming_70921": [
+  "31/72829.txt"
+ ],
+ "beir_cqadupstack_gaming_71003": [
+  "d5/63635.txt"
+ ],
+ "beir_cqadupstack_gaming_71059": [
+  "ac/71042.txt"
+ ],
+ "beir_cqadupstack_gaming_71111": [
+  "5e/68156.txt"
+ ],
+ "beir_cqadupstack_gaming_71115": [
+  "62/72159.txt"
+ ],
+ "beir_cqadupstack_gaming_71183": [
+  "4e/67097.txt"
+ ],
+ "beir_cqadupstack_gaming_71215": [
+  "17/67732.txt"
+ ],
+ "beir_cqadupstack_gaming_71381": [
+  "bc/139102.txt"
+ ],
+ "beir_cqadupstack_gaming_71400": [
+  "3a/71689.txt"
+ ],
+ "beir_cqadupstack_gaming_71406": [
+  "6c/56946.txt",
+  "81/19817.txt"
+ ],
+ "beir_cqadupstack_gaming_71427": [
+  "1b/64047.txt",
+  "50/66195.txt",
+  "5a/63605.txt",
+  "a0/64685.txt"
+ ],
+ "beir_cqadupstack_gaming_71520": [
+  "17/113229.txt"
+ ],
+ "beir_cqadupstack_gaming_71565": [
+  "47/50213.txt",
+  "ca/68973.txt"
+ ],
+ "beir_cqadupstack_gaming_71571": [
+  "c8/84554.txt",
+  "f7/155235.txt"
+ ],
+ "beir_cqadupstack_gaming_71624": [
+  "aa/68692.txt",
+  "b5/80603.txt"
+ ],
+ "beir_cqadupstack_gaming_71718": [
+  "f6/76340.txt"
+ ],
+ "beir_cqadupstack_gaming_71729": [
+  "6d/153023.txt"
+ ],
+ "beir_cqadupstack_gaming_71821": [
+  "a0/70553.txt"
+ ],
+ "beir_cqadupstack_gaming_71859": [
+  "93/71069.txt"
+ ],
+ "beir_cqadupstack_gaming_72120": [
+  "fe/116691.txt"
+ ],
+ "beir_cqadupstack_gaming_72175": [
+  "a8/180284.txt"
+ ],
+ "beir_cqadupstack_gaming_72248": [
+  "93/167175.txt",
+  "dc/71974.txt"
+ ],
+ "beir_cqadupstack_gaming_72286": [
+  "52/73465.txt"
+ ],
+ "beir_cqadupstack_gaming_72325": [
+  "6a/69250.txt"
+ ],
+ "beir_cqadupstack_gaming_72705": [
+  "19/72845.txt",
+  "bf/74066.txt"
+ ],
+ "beir_cqadupstack_gaming_72763": [
+  "80/114795.txt"
+ ],
+ "beir_cqadupstack_gaming_72827": [
+  "72/68627.txt"
+ ],
+ "beir_cqadupstack_gaming_72909": [
+  "8c/64406.txt"
+ ],
+ "beir_cqadupstack_gaming_73132": [
+  "c9/34922.txt"
+ ],
+ "beir_cqadupstack_gaming_73373": [
+  "72/73403.txt"
+ ],
+ "beir_cqadupstack_gaming_73380": [
+  "96/160174.txt"
+ ],
+ "beir_cqadupstack_gaming_73494": [
+  "67/71741.txt"
+ ],
+ "beir_cqadupstack_gaming_74002": [
+  "20/73592.txt",
+  "e2/68900.txt"
+ ],
+ "beir_cqadupstack_gaming_74057": [
+  "9e/68874.txt"
+ ],
+ "beir_cqadupstack_gaming_74137": [
+  "63/72652.txt",
+  "c7/74839.txt"
+ ],
+ "beir_cqadupstack_gaming_74164": [
+  "ca/73729.txt"
+ ],
+ "beir_cqadupstack_gaming_74255": [
+  "39/68075.txt"
+ ],
+ "beir_cqadupstack_gaming_74279": [
+  "00/69197.txt"
+ ],
+ "beir_cqadupstack_gaming_74385": [
+  "f0/79384.txt"
+ ],
+ "beir_cqadupstack_gaming_74437": [
+  "95/69712.txt"
+ ],
+ "beir_cqadupstack_gaming_74517": [
+  "0f/67147.txt"
+ ],
+ "beir_cqadupstack_gaming_74547": [
+  "19/66125.txt"
+ ],
+ "beir_cqadupstack_gaming_74553": [
+  "dd/72781.txt"
+ ],
+ "beir_cqadupstack_gaming_74554": [
+  "b0/111976.txt"
+ ],
+ "beir_cqadupstack_gaming_74761": [
+  "f7/44880.txt"
+ ],
+ "beir_cqadupstack_gaming_74764": [
+  "5e/72063.txt",
+  "d5/71760.txt"
+ ],
+ "beir_cqadupstack_gaming_74853": [
+  "6b/150338.txt",
+  "d4/137533.txt"
+ ],
+ "beir_cqadupstack_gaming_74963": [
+  "08/75920.txt",
+  "45/150194.txt",
+  "ad/74524.txt"
+ ],
+ "beir_cqadupstack_gaming_75055": [
+  "3e/70926.txt",
+  "71/80469.txt",
+  "9f/71402.txt",
+  "ba/66176.txt"
+ ],
+ "beir_cqadupstack_gaming_75065": [
+  "bd/162880.txt"
+ ],
+ "beir_cqadupstack_gaming_75369": [
+  "e3/72913.txt"
+ ],
+ "beir_cqadupstack_gaming_75460": [
+  "49/55187.txt"
+ ],
+ "beir_cqadupstack_gaming_75492": [
+  "7d/105941.txt",
+  "ad/70083.txt"
+ ],
+ "beir_cqadupstack_gaming_75659": [
+  "42/69584.txt"
+ ],
+ "beir_cqadupstack_gaming_75750": [
+  "81/110169.txt"
+ ],
+ "beir_cqadupstack_gaming_75778": [
+  "36/108148.txt"
+ ],
+ "beir_cqadupstack_gaming_75817": [
+  "1f/63976.txt"
+ ],
+ "beir_cqadupstack_gaming_75931": [
+  "3c/81712.txt"
+ ],
+ "beir_cqadupstack_gaming_76069": [
+  "96/100043.txt"
+ ],
+ "beir_cqadupstack_gaming_76107": [
+  "1d/8459.txt"
+ ],
+ "beir_cqadupstack_gaming_76364": [
+  "64/68519.txt"
+ ],
+ "beir_cqadupstack_gaming_76389": [
+  "f5/134012.txt"
+ ],
+ "beir_cqadupstack_gaming_76472": [
+  "28/66171.txt"
+ ],
+ "beir_cqadupstack_gaming_76474": [
+  "6c/71915.txt",
+  "c8/69112.txt"
+ ],
+ "beir_cqadupstack_gaming_76475": [
+  "ef/72266.txt"
+ ],
+ "beir_cqadupstack_gaming_76541": [
+  "b8/95103.txt"
+ ],
+ "beir_cqadupstack_gaming_7668": [
+  "89/35380.txt",
+  "f8/1338.txt"
+ ],
+ "beir_cqadupstack_gaming_76941": [
+  "86/77112.txt",
+  "94/165366.txt"
+ ],
+ "beir_cqadupstack_gaming_77188": [
+  "30/22701.txt"
+ ],
+ "beir_cqadupstack_gaming_77471": [
+  "01/158318.txt"
+ ],
+ "beir_cqadupstack_gaming_77757": [
+  "1a/168701.txt"
+ ],
+ "beir_cqadupstack_gaming_77803": [
+  "41/20182.txt",
+  "a7/114566.txt"
+ ],
+ "beir_cqadupstack_gaming_7786": [
+  "0e/902.txt",
+  "ec/36103.txt"
+ ],
+ "beir_cqadupstack_gaming_78003": [
+  "a0/121025.txt"
+ ],
+ "beir_cqadupstack_gaming_78115": [
+  "fc/33263.txt"
+ ],
+ "beir_cqadupstack_gaming_78126": [
+  "6b/68663.txt"
+ ],
+ "beir_cqadupstack_gaming_78170": [
+  "11/68140.txt"
+ ],
+ "beir_cqadupstack_gaming_78246": [
+  "60/92041.txt"
+ ],
+ "beir_cqadupstack_gaming_78563": [
+  "80/65780.txt",
+  "f9/89415.txt"
+ ],
+ "beir_cqadupstack_gaming_78743": [
+  "52/93177.txt"
+ ],
+ "beir_cqadupstack_gaming_79046": [
+  "3e/58048.txt"
+ ],
+ "beir_cqadupstack_gaming_7928": [
+  "11/65851.txt"
+ ],
+ "beir_cqadupstack_gaming_79345": [
+  "de/79112.txt"
+ ],
+ "beir_cqadupstack_gaming_7936": [
+  "e7/8892.txt"
+ ],
+ "beir_cqadupstack_gaming_79628": [
+  "3c/42026.txt"
+ ],
+ "beir_cqadupstack_gaming_79874": [
+  "60/61541.txt"
+ ],
+ "beir_cqadupstack_gaming_80030": [
+  "26/61957.txt"
+ ],
+ "beir_cqadupstack_gaming_80040": [
+  "a6/146153.txt"
+ ],
+ "beir_cqadupstack_gaming_80057": [
+  "55/73395.txt"
+ ],
+ "beir_cqadupstack_gaming_8008": [
+  "50/30572.txt",
+  "62/47059.txt",
+  "b9/24604.txt"
+ ],
+ "beir_cqadupstack_gaming_8016": [
+  "07/8417.txt"
+ ],
+ "beir_cqadupstack_gaming_80322": [
+  "c0/80500.txt"
+ ],
+ "beir_cqadupstack_gaming_80543": [
+  "2b/80364.txt",
+  "c5/173090.txt",
+  "d5/80031.txt",
+  "d9/55773.txt"
+ ],
+ "beir_cqadupstack_gaming_80554": [
+  "7c/69275.txt"
+ ],
+ "beir_cqadupstack_gaming_81135": [
+  "53/159936.txt",
+  "75/97761.txt"
+ ],
+ "beir_cqadupstack_gaming_81176": [
+  "9a/269.txt"
+ ],
+ "beir_cqadupstack_gaming_81386": [
+  "81/67653.txt"
+ ],
+ "beir_cqadupstack_gaming_81435": [
+  "e5/72815.txt"
+ ],
+ "beir_cqadupstack_gaming_81519": [
+  "d7/164627.txt"
+ ],
+ "beir_cqadupstack_gaming_81523": [
+  "f1/80719.txt"
+ ],
+ "beir_cqadupstack_gaming_8176": [
+  "f5/60310.txt"
+ ],
+ "beir_cqadupstack_gaming_8192": [
+  "5d/47634.txt"
+ ],
+ "beir_cqadupstack_gaming_81923": [
+  "bc/84715.txt"
+ ],
+ "beir_cqadupstack_gaming_81929": [
+  "f0/101806.txt"
+ ],
+ "beir_cqadupstack_gaming_81973": [
+  "33/63220.txt"
+ ],
+ "beir_cqadupstack_gaming_82073": [
+  "c2/78049.txt"
+ ],
+ "beir_cqadupstack_gaming_82114": [
+  "2b/66745.txt"
+ ],
+ "beir_cqadupstack_gaming_82146": [
+  "e8/81100.txt"
+ ],
+ "beir_cqadupstack_gaming_82352": [
+  "cb/4954.txt"
+ ],
+ "beir_cqadupstack_gaming_8236": [
+  "c2/11961.txt"
+ ],
+ "beir_cqadupstack_gaming_82402": [
+  "a6/130329.txt"
+ ],
+ "beir_cqadupstack_gaming_82449": [
+  "21/53562.txt"
+ ],
+ "beir_cqadupstack_gaming_82536": [
+  "92/114508.txt"
+ ],
+ "beir_cqadupstack_gaming_82541": [
+  "13/27884.txt",
+  "2b/102548.txt",
+  "ab/147083.txt"
+ ],
+ "beir_cqadupstack_gaming_82543": [
+  "35/159443.txt"
+ ],
+ "beir_cqadupstack_gaming_82545": [
+  "5f/79709.txt",
+  "cd/162398.txt"
+ ],
+ "beir_cqadupstack_gaming_82589": [
+  "d2/36346.txt"
+ ],
+ "beir_cqadupstack_gaming_82596": [
+  "4a/48812.txt"
+ ],
+ "beir_cqadupstack_gaming_82623": [
+  "a9/82609.txt"
+ ],
+ "beir_cqadupstack_gaming_82634": [
+  "5f/82633.txt"
+ ],
+ "beir_cqadupstack_gaming_82706": [
+  "b3/72934.txt"
+ ],
+ "beir_cqadupstack_gaming_82758": [
+  "9e/71705.txt",
+  "c0/68506.txt"
+ ],
+ "beir_cqadupstack_gaming_82833": [
+  "5c/8169.txt"
+ ],
+ "beir_cqadupstack_gaming_82865": [
+  "ed/59933.txt"
+ ],
+ "beir_cqadupstack_gaming_83002": [
+  "87/35529.txt"
+ ],
+ "beir_cqadupstack_gaming_83030": [
+  "da/83346.txt"
+ ],
+ "beir_cqadupstack_gaming_8310": [
+  "59/20635.txt",
+  "b5/82488.txt"
+ ],
+ "beir_cqadupstack_gaming_8313": [
+  "8c/165352.txt",
+  "d8/17754.txt"
+ ],
+ "beir_cqadupstack_gaming_83359": [
+  "13/146541.txt",
+  "d5/84505.txt"
+ ],
+ "beir_cqadupstack_gaming_83387": [
+  "09/101622.txt"
+ ],
+ "beir_cqadupstack_gaming_84470": [
+  "68/101517.txt"
+ ],
+ "beir_cqadupstack_gaming_84560": [
+  "79/95718.txt"
+ ],
+ "beir_cqadupstack_gaming_84665": [
+  "48/84990.txt",
+  "db/85310.txt",
+  "eb/85658.txt"
+ ],
+ "beir_cqadupstack_gaming_84799": [
+  "46/105960.txt",
+  "62/91769.txt"
+ ],
+ "beir_cqadupstack_gaming_84813": [
+  "fa/62009.txt"
+ ],
+ "beir_cqadupstack_gaming_84838": [
+  "2a/87023.txt"
+ ],
+ "beir_cqadupstack_gaming_84851": [
+  "97/95353.txt"
+ ],
+ "beir_cqadupstack_gaming_85106": [
+  "34/85067.txt"
+ ],
+ "beir_cqadupstack_gaming_85149": [
+  "5e/102669.txt",
+  "98/83349.txt",
+  "be/145569.txt"
+ ],
+ "beir_cqadupstack_gaming_85244": [
+  "20/87601.txt",
+  "c0/121860.txt"
+ ],
+ "beir_cqadupstack_gaming_85257": [
+  "d0/85902.txt"
+ ],
+ "beir_cqadupstack_gaming_85308": [
+  "f0/86297.txt"
+ ],
+ "beir_cqadupstack_gaming_85381": [
+  "43/129330.txt"
+ ],
+ "beir_cqadupstack_gaming_8540": [
+  "62/86243.txt"
+ ],
+ "beir_cqadupstack_gaming_85570": [
+  "5d/92126.txt"
+ ],
+ "beir_cqadupstack_gaming_85577": [
+  "22/88817.txt"
+ ],
+ "beir_cqadupstack_gaming_85680": [
+  "7f/156516.txt"
+ ],
+ "beir_cqadupstack_gaming_85786": [
+  "6a/85158.txt"
+ ],
+ "beir_cqadupstack_gaming_85938": [
+  "20/98268.txt"
+ ],
+ "beir_cqadupstack_gaming_85944": [
+  "c9/86019.txt"
+ ],
+ "beir_cqadupstack_gaming_8616": [
+  "f4/8131.txt"
+ ],
+ "beir_cqadupstack_gaming_86295": [
+  "81/103032.txt"
+ ],
+ "beir_cqadupstack_gaming_86322": [
+  "3e/85294.txt"
+ ],
+ "beir_cqadupstack_gaming_86343": [
+  "00/93230.txt"
+ ],
+ "beir_cqadupstack_gaming_86401": [
+  "89/125247.txt"
+ ],
+ "beir_cqadupstack_gaming_86647": [
+  "01/84987.txt"
+ ],
+ "beir_cqadupstack_gaming_86704": [
+  "59/87398.txt"
+ ],
+ "beir_cqadupstack_gaming_86811": [
+  "75/89958.txt"
+ ],
+ "beir_cqadupstack_gaming_86874": [
+  "08/115962.txt",
+  "46/90410.txt"
+ ],
+ "beir_cqadupstack_gaming_87002": [
+  "ce/85514.txt"
+ ],
+ "beir_cqadupstack_gaming_87004": [
+  "16/67817.txt",
+  "25/67843.txt",
+  "3e/72613.txt",
+  "ae/78549.txt",
+  "e1/67906.txt"
+ ],
+ "beir_cqadupstack_gaming_87041": [
+  "0a/84680.txt"
+ ],
+ "beir_cqadupstack_gaming_87124": [
+  "60/64655.txt"
+ ],
+ "beir_cqadupstack_gaming_87293": [
+  "11/89001.txt"
+ ],
+ "beir_cqadupstack_gaming_87428": [
+  "58/87548.txt"
+ ],
+ "beir_cqadupstack_gaming_87482": [
+  "46/125198.txt",
+  "c9/97710.txt"
+ ],
+ "beir_cqadupstack_gaming_87519": [
+  "3e/130514.txt"
+ ],
+ "beir_cqadupstack_gaming_87524": [
+  "c1/92200.txt",
+  "ff/93216.txt"
+ ],
+ "beir_cqadupstack_gaming_87590": [
+  "49/38746.txt",
+  "f9/105768.txt"
+ ],
+ "beir_cqadupstack_gaming_87695": [
+  "5e/86347.txt"
+ ],
+ "beir_cqadupstack_gaming_87725": [
+  "9c/89006.txt"
+ ],
+ "beir_cqadupstack_gaming_87741": [
+  "38/95047.txt",
+  "7a/90406.txt"
+ ],
+ "beir_cqadupstack_gaming_88962": [
+  "65/87628.txt"
+ ],
+ "beir_cqadupstack_gaming_8900": [
+  "f9/7745.txt"
+ ],
+ "beir_cqadupstack_gaming_89187": [
+  "f7/37182.txt"
+ ],
+ "beir_cqadupstack_gaming_89213": [
+  "86/181369.txt",
+  "89/97720.txt"
+ ],
+ "beir_cqadupstack_gaming_89237": [
+  "45/89443.txt",
+  "da/71722.txt"
+ ],
+ "beir_cqadupstack_gaming_89243": [
+  "4d/89730.txt"
+ ],
+ "beir_cqadupstack_gaming_89315": [
+  "ba/93710.txt",
+  "e5/101807.txt"
+ ],
+ "beir_cqadupstack_gaming_89316": [
+  "26/117716.txt"
+ ],
+ "beir_cqadupstack_gaming_89432": [
+  "e2/89019.txt"
+ ],
+ "beir_cqadupstack_gaming_89433": [
+  "00/76915.txt",
+  "42/68469.txt"
+ ],
+ "beir_cqadupstack_gaming_8949": [
+  "d8/124818.txt"
+ ],
+ "beir_cqadupstack_gaming_89679": [
+  "ea/105663.txt"
+ ],
+ "beir_cqadupstack_gaming_89843": [
+  "df/87278.txt"
+ ],
+ "beir_cqadupstack_gaming_89873": [
+  "52/23976.txt"
+ ],
+ "beir_cqadupstack_gaming_90037": [
+  "12/89909.txt"
+ ],
+ "beir_cqadupstack_gaming_90308": [
+  "c1/150626.txt"
+ ],
+ "beir_cqadupstack_gaming_90314": [
+  "18/84761.txt",
+  "b3/86054.txt"
+ ],
+ "beir_cqadupstack_gaming_90387": [
+  "0b/35409.txt"
+ ],
+ "beir_cqadupstack_gaming_904": [
+  "8a/21504.txt"
+ ],
+ "beir_cqadupstack_gaming_90407": [
+  "f3/92111.txt"
+ ],
+ "beir_cqadupstack_gaming_90528": [
+  "4c/131819.txt"
+ ],
+ "beir_cqadupstack_gaming_91741": [
+  "0e/30628.txt",
+  "85/32566.txt"
+ ],
+ "beir_cqadupstack_gaming_91745": [
+  "66/173591.txt"
+ ],
+ "beir_cqadupstack_gaming_91886": [
+  "9e/28259.txt"
+ ],
+ "beir_cqadupstack_gaming_92101": [
+  "07/3173.txt"
+ ],
+ "beir_cqadupstack_gaming_92180": [
+  "66/92291.txt"
+ ],
+ "beir_cqadupstack_gaming_92235": [
+  "7c/22721.txt"
+ ],
+ "beir_cqadupstack_gaming_92282": [
+  "fa/82714.txt"
+ ],
+ "beir_cqadupstack_gaming_9234": [
+  "3d/3820.txt"
+ ],
+ "beir_cqadupstack_gaming_92389": [
+  "64/92357.txt"
+ ],
+ "beir_cqadupstack_gaming_92566": [
+  "48/38593.txt"
+ ],
+ "beir_cqadupstack_gaming_92601": [
+  "40/35257.txt",
+  "41/34896.txt",
+  "f2/119569.txt"
+ ],
+ "beir_cqadupstack_gaming_93137": [
+  "dc/114054.txt"
+ ],
+ "beir_cqadupstack_gaming_93275": [
+  "9d/149604.txt"
+ ],
+ "beir_cqadupstack_gaming_93441": [
+  "28/148292.txt"
+ ],
+ "beir_cqadupstack_gaming_93582": [
+  "10/8611.txt"
+ ],
+ "beir_cqadupstack_gaming_9373": [
+  "9b/15832.txt"
+ ],
+ "beir_cqadupstack_gaming_93742": [
+  "4d/149194.txt",
+  "c5/147850.txt"
+ ],
+ "beir_cqadupstack_gaming_93822": [
+  "e9/139009.txt"
+ ],
+ "beir_cqadupstack_gaming_93924": [
+  "2e/102502.txt"
+ ],
+ "beir_cqadupstack_gaming_94144": [
+  "e9/109773.txt"
+ ],
+ "beir_cqadupstack_gaming_94179": [
+  "89/156674.txt"
+ ],
+ "beir_cqadupstack_gaming_94189": [
+  "0d/127260.txt"
+ ],
+ "beir_cqadupstack_gaming_94211": [
+  "75/110573.txt"
+ ],
+ "beir_cqadupstack_gaming_94284": [
+  "de/89337.txt"
+ ],
+ "beir_cqadupstack_gaming_94285": [
+  "3e/84855.txt"
+ ],
+ "beir_cqadupstack_gaming_94511": [
+  "35/74367.txt"
+ ],
+ "beir_cqadupstack_gaming_94597": [
+  "45/85420.txt"
+ ],
+ "beir_cqadupstack_gaming_94706": [
+  "21/17272.txt",
+  "b4/10449.txt"
+ ],
+ "beir_cqadupstack_gaming_94817": [
+  "ab/173118.txt"
+ ],
+ "beir_cqadupstack_gaming_94878": [
+  "ea/26114.txt"
+ ],
+ "beir_cqadupstack_gaming_94896": [
+  "ff/119974.txt"
+ ],
+ "beir_cqadupstack_gaming_95073": [
+  "49/82523.txt"
+ ],
+ "beir_cqadupstack_gaming_95074": [
+  "80/133187.txt"
+ ],
+ "beir_cqadupstack_gaming_95410": [
+  "1a/84960.txt",
+  "60/103976.txt"
+ ],
+ "beir_cqadupstack_gaming_95446": [
+  "98/2857.txt"
+ ],
+ "beir_cqadupstack_gaming_95451": [
+  "83/95132.txt"
+ ],
+ "beir_cqadupstack_gaming_95558": [
+  "22/62233.txt"
+ ],
+ "beir_cqadupstack_gaming_95679": [
+  "30/66050.txt"
+ ],
+ "beir_cqadupstack_gaming_95784": [
+  "36/24029.txt"
+ ],
+ "beir_cqadupstack_gaming_95788": [
+  "87/106563.txt"
+ ],
+ "beir_cqadupstack_gaming_96103": [
+  "fb/64788.txt"
+ ],
+ "beir_cqadupstack_gaming_96330": [
+  "ce/101888.txt"
+ ],
+ "beir_cqadupstack_gaming_96385": [
+  "d2/96359.txt"
+ ],
+ "beir_cqadupstack_gaming_96407": [
+  "b1/8420.txt"
+ ],
+ "beir_cqadupstack_gaming_96463": [
+  "f2/97007.txt"
+ ],
+ "beir_cqadupstack_gaming_96549": [
+  "9c/114910.txt"
+ ],
+ "beir_cqadupstack_gaming_96661": [
+  "c0/8397.txt"
+ ],
+ "beir_cqadupstack_gaming_96668": [
+  "5a/130537.txt"
+ ],
+ "beir_cqadupstack_gaming_97057": [
+  "85/94656.txt"
+ ],
+ "beir_cqadupstack_gaming_97289": [
+  "70/141569.txt",
+  "8f/179420.txt"
+ ],
+ "beir_cqadupstack_gaming_97334": [
+  "37/125203.txt"
+ ],
+ "beir_cqadupstack_gaming_97343": [
+  "c5/70974.txt"
+ ],
+ "beir_cqadupstack_gaming_9750": [
+  "7c/103166.txt"
+ ],
+ "beir_cqadupstack_gaming_97565": [
+  "03/85313.txt",
+  "61/89426.txt"
+ ],
+ "beir_cqadupstack_gaming_97597": [
+  "71/97610.txt",
+  "bf/98034.txt"
+ ],
+ "beir_cqadupstack_gaming_97748": [
+  "3d/3633.txt"
+ ],
+ "beir_cqadupstack_gaming_97817": [
+  "6a/126135.txt",
+  "de/75999.txt"
+ ],
+ "beir_cqadupstack_gaming_9819": [
+  "7d/138687.txt"
+ ],
+ "beir_cqadupstack_gaming_98303": [
+  "48/107720.txt",
+  "a0/161595.txt"
+ ],
+ "beir_cqadupstack_gaming_98973": [
+  "1a/100115.txt"
+ ],
+ "beir_cqadupstack_gaming_98975": [
+  "bc/96374.txt"
+ ]
+}

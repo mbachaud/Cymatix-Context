@@ -527,11 +527,38 @@ def rank_gold(
     ``depth`` truncates the considered list; None considers the whole map.
     """
     gold_set = set(gold)
-    ordered = [gid for gid, _ in sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))]
-    if depth is not None:
-        ordered = ordered[:depth]
+    ordered = score_order(scores, depth)
     ranks = [i for i, gid in enumerate(ordered, 1) if gid in gold_set]
     return (ranks[0] if ranks else None, ranks)
+
+
+def score_order(scores: Mapping[str, float], depth: Optional[int] = None) -> List[str]:
+    """Gene ids of a ``{gene_id: score}`` map in the ladder's rank order.
+
+    Score descending, ``gene_id`` ascending as the tiebreak — the single
+    ordering ``rank_gold`` ranks against, so a dumped list and the receipt's
+    ``gold_ranks`` always agree. ``depth`` truncates; None keeps the whole map.
+    """
+    ordered = [gid for gid, _ in sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))]
+    return ordered if depth is None else ordered[:depth]
+
+
+def rank_dump_fields(
+    scores: Mapping[str, float], final_ranked_ids: Sequence[str], depth: int,
+) -> Dict[str, Any]:
+    """``--rank-dump`` block: the top-``depth`` gene ids on both rank bases.
+
+    Issue #482: BEIR-standard NDCG@10 needs the ranked list itself (graded
+    qrels, self-document exclusion, document-level collapse), which
+    ``gold_ranks`` alone cannot give. ``depth`` 0 returns ``{}`` so the record
+    shape is unchanged when the flag is off.
+    """
+    if depth <= 0:
+        return {}
+    return {
+        "score_ranked_ids": score_order(scores, depth),
+        "final_ranked_ids": list(final_ranked_ids)[:depth],
+    }
 
 
 def recall_at_k(first_ranks: Sequence[Optional[int]], k: int) -> float:
@@ -989,12 +1016,15 @@ def run_arm(
     gold_by_needle: Mapping[str, set],
     k: int,
     per_query: bool = False,
+    rank_dump: int = 0,
 ) -> Dict[str, Any]:
     """Build a manager for *arm*, run every needle, return the receipt row.
 
     ``per_query`` attaches the per-needle basis (see ``per_query_record``).
     Off by default: the row is byte-identical to the pre-flag shape when it is
     not set — the key is not emitted at all, not emitted empty.
+    ``rank_dump`` > 0 adds the top-N ranked gene ids to each per-needle record
+    (``rank_dump_fields``); 0 leaves the record shape unchanged.
     """
     from cymatix_context.backends import encoder_client
     from cymatix_context.config import load_config
@@ -1139,6 +1169,7 @@ def run_arm(
                     err_final = final_order_fields(err_ranked, set(gold), k, err_diag)
                     final_ranks.append(err_final["final_rank_of_first_gold"])
                     error_record.update(err_final)
+                    error_record.update(rank_dump_fields({}, err_ranked, rank_dump))
                     error_record["cover_walk"] = _read_cover_walk_diag(manager.genome)
                     # #341 splice-interaction receipt: still None on the usual
                     # failure (splice never reached), but a build_context that
@@ -1184,6 +1215,7 @@ def run_arm(
                 final_fields = final_order_fields(ranked_ids, set(gold), k, rerank_diag)
                 final_ranks.append(final_fields["final_rank_of_first_gold"])
                 record.update(final_fields)
+                record.update(rank_dump_fields(scores, ranked_ids, rank_dump))
                 # #341 splice-interaction receipt: mark-correlated drain
                 # (see ring_mark above) — only entries rung by THIS
                 # build_context call count, so a needle that never reaches
@@ -1295,6 +1327,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                          "ranks, recall contribution, wall ms, signal ms) so "
                          "paired arm-vs-arm tests are auditable from the "
                          "receipt alone; off = receipt shape unchanged")
+    ap.add_argument("--rank-dump", type=int, default=0, dest="rank_dump",
+                    help="with --per-query: also record the top-N gene ids per "
+                         "needle on the score-map and final-order bases (for "
+                         "BEIR-standard NDCG, issue #482); 0 = off")
     args = ap.parse_args(argv)
 
     resolved_path = _resolve(args.resolved)
@@ -1364,6 +1400,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             gold_by_needle=gold_by_needle,
             k=args.k,
             per_query=args.per_query,
+            rank_dump=args.rank_dump,
         )
         if row.get("skipped"):
             rows.append(row)
