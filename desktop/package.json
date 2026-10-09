@@ -9,6 +9,9 @@
   "repository": "github:mbachaud/Cymatix-Context",
   "main": "src/main.js",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "start": "electron .",
     "test": "node --test \"test/**/*.test.js\"",
