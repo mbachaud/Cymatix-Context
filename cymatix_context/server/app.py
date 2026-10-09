@@ -260,7 +260,7 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
     )
 
     setup_context_routes(app, cymatix=cymatix, config=config, registry=registry)
-    setup_trace_routes(app)
+    setup_trace_routes(app, config=config)
     setup_ingest_routes(app, cymatix=cymatix, config=config, registry=registry)
     setup_registry_routes(app, cymatix=cymatix, config=config, registry=registry)
     setup_admin_routes(app, cymatix=cymatix, config=config, registry=registry, bridge=bridge)

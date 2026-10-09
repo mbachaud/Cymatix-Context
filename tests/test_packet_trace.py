@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from cymatix_context.config import TraceConfig, load_config
+from cymatix_context.config import ServerConfig, TraceConfig, load_config
 from cymatix_context.telemetry import trace as tr
 
 from tests.conftest import make_client, make_cymatix_config
@@ -253,6 +253,21 @@ def _client(tmp_path, **trace_kw):
 def _clean_env(monkeypatch):
     for k in ("CYMATIX_TRACE_ENABLED", "CYMATIX_TRACE_LEVEL", "CYMATIX_TRACE_PATH"):
         monkeypatch.delenv(k, raising=False)
+
+
+def test_trace_read_endpoints_require_admin_token_when_set(tmp_path):
+    # full-level records carry raw query + chunk text, so the readers sit
+    # behind the same [server] admin_token guard as /admin/* and /ingest.
+    cfg = make_cymatix_config(
+        trace=TraceConfig(path=str(tmp_path / "traces"), enabled=True),
+        server=ServerConfig(admin_token="s3cret"),
+    )
+    c = make_client(cfg)
+    assert c.get("/trace/recent").status_code == 401
+    assert c.get("/trace/01ARZ3NDEKTSV4RRFFQ69G5FAV").status_code == 401
+    ok = {"Authorization": "Bearer s3cret"}
+    assert c.get("/trace/recent", headers=ok).status_code == 200
+    assert c.get("/trace/01ARZ3NDEKTSV4RRFFQ69G5FAV", headers=ok).status_code == 404
 
 
 def test_trace_off_writes_nothing_but_packet_id_present(tmp_path):
