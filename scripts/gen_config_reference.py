@@ -74,6 +74,7 @@ SECTION_TO_CLASS: Dict[str, Optional[str]] = {
     "genome": "GenomeConfig",
     "server": "ServerConfig",
     "telemetry": "TelemetryConfig",
+    "trace": "TraceConfig",
     "headroom": "HeadroomConfig",
     "ingestion": "IngestionConfig",
     "context": "ContextConfig",

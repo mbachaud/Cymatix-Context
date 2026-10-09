@@ -513,6 +513,46 @@ toml > default resolution), `cymatix_context/launcher/app.py`
 
 ---
 
+## `[trace]`
+
+**Purpose.** Opt-in packet trace (experimental, issue #493 Phase 1): an
+append-only JSONL record of what each `/context` call delivered, keyed by
+the `packet_id` every response carries. Precedence is
+**env > toml > default** (`CYMATIX_TRACE_ENABLED`, `CYMATIX_TRACE_LEVEL`,
+`CYMATIX_TRACE_PATH`), resolved in `telemetry/trace.py`, not in
+`load_config()`. Off by default: no file or thread is created. Schema and
+levels: `docs/specs/packet-trace-v0.md`.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:trace -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | `bool` | `false` | Master switch (CYMATIX_TRACE_ENABLED) |
+| `level` | `str` | `"metadata"` | "off" \| "metadata" \| "full" (CYMATIX_TRACE_LEVEL) |
+| `path` | `str` | `""` | Trace dir (CYMATIX_TRACE_PATH). "" = <genome dir>/traces |
+| `hash_chain` | `bool` | `false` | Each record carries sha256 of the previous line |
+| `sampler_ratio` | `float` | `1.0` | Fraction of requests traced, 0.0-1.0 |
+| `rotate_bytes` | `int` | `67108864` | Rotate packets.jsonl past this size |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[trace]
+enabled = false
+level = "metadata"
+path = ""
+hash_chain = false
+sampler_ratio = 1.0
+rotate_bytes = 67108864
+```
+
+**Cross-refs.** `cymatix_context/config.py` (`TraceConfig`),
+`cymatix_context/telemetry/trace.py`, `docs/specs/packet-trace-v0.md`.
+
+---
+
 ## `[headroom]`
 
 **Purpose.** Optional Headroom proxy lifecycle controls — launcher
