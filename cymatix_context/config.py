@@ -1299,6 +1299,10 @@ class KnowConfig:
     lanes_intercept: float = 0.0
     # Issue #482: {feature name: beta} for the "lanes" model; names from scoring/know_lanes.FEATURE_NAMES, absent names weigh 0 (written by scripts/fit_know_lanes.py).
     lanes_betas: Dict[str, float] = field(default_factory=dict)
+    # Issue #482: per-store Platt rescale of the "lanes" logit, z' = a*z + b (written by scripts/calibrate_know_store.py from this store's own labelled queries). 1.0 / 0.0 = identity.
+    lanes_platt_a: float = 1.0
+    # Issue #482: per-store Platt offset for the "lanes" logit (see lanes_platt_a).
+    lanes_platt_b: float = 0.0
 
 
 @dataclass
@@ -2325,6 +2329,8 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             model=model,
             lanes_intercept=_know_float("lanes_intercept", 0.0),
             lanes_betas=lanes_betas,
+            lanes_platt_a=_know_float("lanes_platt_a", 1.0),
+            lanes_platt_b=_know_float("lanes_platt_b", 0.0),
             neutral=neutral,
             fitted_inputs=fitted_inputs,
             emit_floor=_know_float("emit_floor", _KNOW_DEFAULT_EMIT_FLOOR),

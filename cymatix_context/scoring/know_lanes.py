@@ -42,6 +42,10 @@ LANE_KEYS = ("lanes_fired", "top1_lanes", "lanes_top3_agree", "frac_lanes_agree"
              "fts5_top1_is_fused_top1", "query_term_coverage")
 BASE_FEATURES = ("log_ratio_top2", "rel_gap", "coordinate_confidence", "log_pool_size")
 FEATURE_NAMES = BASE_FEATURES + tuple(n for k in LANE_KEYS for n in (k, f"{k}_missing"))
+# Cross-encoder top-1 signals (bench-first, #482): only in the "ce" feature set,
+# so FEATURE_NAMES and every model fit without them are unchanged.
+CE_KEYS = ("ce_top1", "ce_margin")
+CE_FEATURES = tuple(n for k in CE_KEYS for n in (k, f"{k}_missing"))
 
 _TERM = re.compile(r"[a-z0-9]+")
 _STOP = frozenset({
@@ -113,11 +117,43 @@ def fused_order(scores: Mapping[str, float]) -> List[str]:
     return [g for g, _ in sorted(scores.items(), key=lambda kv: (-float(kv[1]), kv[0]))]
 
 
-def feature_values(row: Mapping) -> Dict[str, float]:
+def ce_signals(
+    query: str,
+    fused: Sequence[str],
+    text_of,
+    scorer,
+) -> Dict[str, Optional[float]]:
+    """Cross-encoder score of the fused top-1 and its margin over top-2.
+
+    ``text_of(gene_id) -> str | None``; ``scorer(query, texts) -> [score]``
+    (e.g. ``backends.rerank_backend.score_pairs``). Anything unmeasurable,
+    including a scorer failure, is None, never 0.
+    """
+    out: Dict[str, Optional[float]] = {"ce_top1": None, "ce_margin": None}
+    ids = [g for g in list(fused)[:2]]
+    texts = [text_of(g) for g in ids]
+    if not ids or texts[0] is None:
+        return out
+    pair = [t for t in texts if t is not None]
+    try:
+        scores = [float(s) for s in scorer(query, pair)]
+    except Exception:  # noqa: BLE001 -- a missing model is "unmeasurable", not an error
+        log.warning("ce_signals: scorer failed", exc_info=True)
+        return out
+    if not scores:
+        return out
+    out["ce_top1"] = scores[0]
+    if len(scores) > 1 and len(pair) == 2:
+        out["ce_margin"] = scores[0] - scores[1]
+    return out
+
+
+def feature_values(row: Mapping, *, with_ce: bool = False) -> Dict[str, float]:
     """Model inputs from a replay row or served values.
 
     ``row`` keys: top_score, score_gap, ratio_top2, pool_size,
-    coordinate_confidence (None -> 0.0), lane_signals (dict, may be None).
+    coordinate_confidence (None -> 0.0), lane_signals (dict, may be None),
+    and, with ``with_ce``, ce (``ce_signals`` dict, may be None).
     """
     def f(key: str) -> float:
         v = row.get(key)
@@ -136,17 +172,31 @@ def feature_values(row: Mapping) -> Dict[str, float]:
         v = sig.get(key)
         out[key] = 0.0 if v is None else float(v)
         out[f"{key}_missing"] = 1.0 if v is None else 0.0
+    if with_ce:
+        ce = row.get("ce") or {}
+        for key in CE_KEYS:
+            v = ce.get(key)
+            out[key] = 0.0 if v is None else float(v)
+            out[f"{key}_missing"] = 1.0 if v is None else 0.0
     return out
 
 
 @dataclass(frozen=True)
 class LanesModel:
-    """intercept + named betas over FEATURE_NAMES (absent names weigh 0)."""
+    """intercept + named betas over FEATURE_NAMES (absent names weigh 0).
+
+    ``platt_a``/``platt_b`` rescale the logit for one store (``z' = a*z + b``,
+    fit by ``scripts/calibrate_know_store.py``); the defaults are the identity.
+    """
     intercept: float = 0.0
     betas: Mapping[str, float] = field(default_factory=dict)
+    platt_a: float = 1.0
+    platt_b: float = 0.0
 
     def confidence(self, features: Mapping[str, float]) -> float:
         z = self.intercept + sum(float(b) * float(features.get(name, 0.0)) for name, b in self.betas.items())
+        if self.platt_a != 1.0 or self.platt_b != 0.0:
+            z = self.platt_a * z + self.platt_b
         if z >= 0:
             return 1.0 / (1.0 + math.exp(-z))
         e = math.exp(z)
@@ -168,7 +218,8 @@ def load_lanes_model(toml_path=None) -> Optional[LanesModel]:
         return None
     if getattr(know, "model", "legacy") != "lanes":
         return None
-    return LanesModel(float(know.lanes_intercept), dict(know.lanes_betas))
+    return LanesModel(float(know.lanes_intercept), dict(know.lanes_betas),
+                      float(know.lanes_platt_a), float(know.lanes_platt_b))
 
 
 def served_lanes_confidence(
@@ -189,7 +240,8 @@ def served_lanes_confidence(
 
 
 __all__ = [
-    "BASE_FEATURES", "EVIDENCE_LANES", "FEATURE_NAMES", "LANE_KEYS", "LanesModel",
+    "BASE_FEATURES", "CE_FEATURES", "CE_KEYS", "EVIDENCE_LANES", "FEATURE_NAMES", "LANE_KEYS", "LanesModel",
+    "ce_signals",
     "feature_values", "fused_order", "lane_signals", "load_lanes_model", "score_shape",
     "served_lanes_confidence",
 ]

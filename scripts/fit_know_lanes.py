@@ -31,7 +31,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cymatix_context.scoring.know_lanes import FEATURE_NAMES, feature_values  # noqa: E402
+from cymatix_context.scoring.know_lanes import CE_FEATURES, FEATURE_NAMES, feature_values  # noqa: E402
 
 
 def label(row: Mapping) -> int:
@@ -55,26 +55,27 @@ def load_rows(specs: Sequence[str], arm: str) -> List[dict]:
     return rows
 
 
-def _matrix(feats: Sequence[Mapping[str, float]]) -> List[List[float]]:
-    return [[float(f[n]) for n in FEATURE_NAMES] for f in feats]
+def _matrix(feats: Sequence[Mapping[str, float]], names: Sequence[str] = FEATURE_NAMES) -> List[List[float]]:
+    return [[float(f[n]) for n in names] for f in feats]
 
 
-def fit_pipeline(feats: Sequence[Mapping[str, float]], labels: Sequence[int], C: float = 1.0):
+def fit_pipeline(feats: Sequence[Mapping[str, float]], labels: Sequence[int], C: float = 1.0,
+                 names: Sequence[str] = FEATURE_NAMES):
     from sklearn.linear_model import LogisticRegression
     from sklearn.pipeline import make_pipeline
     from sklearn.preprocessing import StandardScaler
 
     pipe = make_pipeline(StandardScaler(), LogisticRegression(C=C, max_iter=2000))
-    pipe.fit(_matrix(feats), list(labels))
+    pipe.fit(_matrix(feats, names), list(labels))
     return pipe
 
 
-def fold(pipe) -> Dict:
+def fold(pipe, names: Sequence[str] = FEATURE_NAMES) -> Dict:
     """Standardised coefficients -> raw-scale intercept + betas."""
     scaler, clf = pipe.steps[0][1], pipe.steps[1][1]
     coefs, means, scales = clf.coef_[0], scaler.mean_, scaler.scale_
     betas, intercept = {}, float(clf.intercept_[0])
-    for name, c, m, s in zip(FEATURE_NAMES, coefs, means, scales):
+    for name, c, m, s in zip(names, coefs, means, scales):
         s = s if s > 0 else 1.0
         betas[name] = float(c / s)
         intercept -= float(c * m / s)
@@ -101,12 +102,19 @@ def main(argv=None) -> int:
     ap.add_argument("--arm", default="postflip_default")
     ap.add_argument("--emit-floor", type=float, default=0.45)
     ap.add_argument("--C", type=float, default=1.0)
+    ap.add_argument("--features", choices=("base", "ce"), default="base",
+                    help="ce adds the cross-encoder top-1 signals (bench-only: no [know] TOML is written, "
+                         "the server cannot compute them yet)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--toml-out", required=True)
     a = ap.parse_args(argv)
 
+    with_ce = a.features == "ce"
+    names = FEATURE_NAMES + (CE_FEATURES if with_ce else ())
     rows = load_rows(a.receipt, a.arm)
-    feats = [feature_values(r) for r in rows]
+    if with_ce and not any("ce" in r for r in rows):
+        raise SystemExit("--features ce: rows carry no ce signals; re-run know_abstain_replay with --ce-model")
+    feats = [feature_values(r, with_ce=with_ce) for r in rows]
     labels = [label(r) for r in rows]
     corpora = sorted({r["corpus"] for r in rows})
     thresholds = sorted({0.3, 0.4, a.emit_floor, 0.5, 0.6, 0.7, 0.8})
@@ -117,8 +125,8 @@ def main(argv=None) -> int:
         te = [i for i, r in enumerate(rows) if r["corpus"] == held]
         if len({labels[i] for i in tr}) < 2 or not te:
             continue
-        pipe = fit_pipeline([feats[i] for i in tr], [labels[i] for i in tr], a.C)
-        p = [float(v) for v in pipe.predict_proba(_matrix([feats[i] for i in te]))[:, 1]]
+        pipe = fit_pipeline([feats[i] for i in tr], [labels[i] for i in tr], a.C, names)
+        p = [float(v) for v in pipe.predict_proba(_matrix([feats[i] for i in te], names))[:, 1]]
         yt = [labels[i] for i in te]
         at_floor = _curve(p, yt, [a.emit_floor])[0]
         folds.append({"held_out": held, "n": len(te), "base_rate": sum(yt) / len(yt), "auc": _auc(p, yt),
@@ -127,14 +135,14 @@ def main(argv=None) -> int:
         oof_p += p
         oof_y += yt
 
-    final = fit_pipeline(feats, labels, a.C)
-    folded = fold(final)
+    final = fit_pipeline(feats, labels, a.C, names)
+    folded = fold(final, names)
     report = {
         "tool": "scripts/fit_know_lanes.py", "issue": "#482",
         "fitted_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "arm": a.arm, "C": a.C,
         "label": "gold at score-map rank 1", "n_rows": len(rows),
         "corpora": {c: sum(1 for r in rows if r["corpus"] == c) for c in corpora},
-        "receipts": a.receipt, "feature_names": list(FEATURE_NAMES),
+        "receipts": a.receipt, "features": a.features, "feature_names": list(names),
         "leave_one_corpus_out": {
             "folds": folds, "pooled_auc": _auc(oof_p, oof_y) if oof_y else None,
             "precision_coverage": _curve(oof_p, oof_y, thresholds) if oof_y else [],
@@ -144,6 +152,10 @@ def main(argv=None) -> int:
     Path(a.out).write_text(json.dumps(report, indent=1), encoding="utf-8")
 
     pooled = report["leave_one_corpus_out"]["pooled_auc"]
+    if with_ce:
+        print(f"{len(rows)} rows, {len(corpora)} corpora, LOCO pooled AUC {pooled} (ce features, report only) "
+              f"-> {a.out}")
+        return 0
     betas = ", ".join(f"{k} = {v:.6g}" for k, v in folded["betas"].items())
     Path(a.toml_out).write_text(
         "# [know] model = \"lanes\", fit by scripts/fit_know_lanes.py (#482).\n"
