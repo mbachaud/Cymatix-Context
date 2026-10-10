@@ -98,6 +98,39 @@ The route returns `{packet_id, orphan}`. The session-to-latest-packet map
 is in memory (LRU, 10,000 sessions) and starts empty after a restart.
 Actions share the packet writer and hash chain.
 
+## `label` event (schema_version "0", Phase 4)
+
+Appended to `packets.jsonl` by `PacketTracer.emit_label(packet_id, label,
+label_source="trace_check", confidence=None, evidence=None)`. It refers to
+an existing packet by `packet_id` and shares the writer, hash chain and
+rotation of `packet` events. Labels are recorded only; no detector in
+Phase 4 emits them.
+
+```json
+{
+  "schema_version": "0", "event": "label",
+  "packet_id": "01M4...", "ts": 1791582325.294,
+  "labels": ["indirect_prompt_injection"], "label_source": "trace_check",
+  "confidence": 0.9, "evidence": {"reason": "instruction-like chunk"},
+  "prev_hash": null
+}
+```
+
+- `labels` holds one label from the vocabulary in
+  `cymatix_context/telemetry/taxonomy.py`: `indirect_prompt_injection`,
+  `control_tag_forgery`, `rbac_leak`, `corpus_poisoning`,
+  `data_exfiltration`, `benign`. An unknown label raises `ValueError`.
+- `label_source` is one of `trace_check`, `human`, `judge`. Any other value
+  raises `ValueError`.
+- Validation runs before the tracing-disabled check, so a bad argument
+  fails even when tracing is off. A valid call with tracing off is a no-op
+  that returns `None`.
+- `confidence` and `evidence` are optional. When not supplied they are
+  written as `null`.
+- The taxonomy maps each non-benign label to candidate OWASP LLM Top 10
+  (2025) and MITRE ATLAS ids. Every mapping is `verified: false` until a
+  human review. Do not cite the mapping as settled.
+
 ## Read endpoints
 
 - `GET /trace/{packet_id}`: the record, or 404 (also 404 when disabled).
@@ -143,7 +176,8 @@ same process, which this setup does include.
 ## Deferred
 
 Phase 2 eval checks and judge-agreement receipt, Phase 3 harness adapters
-and `action` events, Phase 4 security detections and labels, Phase 5
+and `action` events, Phase 4 security detectors (the `label` event and
+taxonomy schema are in place; nothing emits labels yet), Phase 5
 export, re-keying, replay tool and JSON Schema. Also not in Phase 1:
 `usurpers`, `ingested_at` (only emitted when supplied), `rbac_scope`,
 `ingest_source_hash`, instruction-like-text flags, per-stage `timing_ms`.
