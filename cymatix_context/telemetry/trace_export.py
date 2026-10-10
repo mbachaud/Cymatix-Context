@@ -49,6 +49,7 @@ REHASHED_FIELDS = [
     "query_hash", "chunks[].content_hash", "session_id",
     "chunks[].chunk_id", "chunks[].doc_id", "chunks[].gene_id",
     "chunks[].parent_id", "trace.trace_id", "trace.parent_span_id",
+    "replay.config_hash", "replay.index_fingerprint",
 ]
 # Per-field audit of build_packet_event output. packet_id is a random ULID
 # (trace.new_packet_id); pipeline_request_id is uuid4 hex (context_manager).
@@ -57,7 +58,9 @@ FIELD_DECISIONS = {
     "packet_id": "keep", "pipeline_request_id": "keep",
     "session_id": "rekey", "ts": "keep",
     "query_hash": "rekey", "query_len_terms": "keep", "query": "drop",
-    "replay": "keep",
+    "replay.config_hash": "rekey", "replay.index_fingerprint": "rekey",
+    "replay.doc_count": "keep", "replay.cymatix_version": "keep",
+    "replay.git_sha": "keep",
     "chunks[].chunk_id": "rekey", "chunks[].doc_id": "rekey",
     "chunks[].gene_id": "rekey", "chunks[].parent_id": "rekey",
     "chunks[].content_hash": "rekey", "chunks[].text": "drop",
@@ -145,6 +148,12 @@ def _transform(rec: Dict[str, Any], key: bytes) -> Dict[str, Any]:
                 c[f] = _rekey(key, c[f])
         chunks.append(c)
     out["chunks"] = chunks
+    if isinstance(out.get("replay"), dict):
+        rp = dict(out["replay"])
+        for f in ("config_hash", "index_fingerprint"):
+            if rp.get(f):
+                rp[f] = _rekey(key, rp[f])
+        out["replay"] = rp
     if isinstance(out.get("trace"), dict):
         t = dict(out["trace"])
         for f in ("trace_id", "parent_span_id"):

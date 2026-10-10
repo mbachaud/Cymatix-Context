@@ -214,6 +214,20 @@ def test_manifest_field_decisions(src, hasher, tmp_path):
     assert d["prev_hash"] == "drop"
 
 
+def test_replay_fingerprints_rekeyed(src, hasher, tmp_path):
+    _write(src, [_event(hasher, "a"), _event(hasher, "b")])
+    m = te.export_traces(src, tmp_path / "out")
+    blob = (tmp_path / "out" / "packets.jsonl").read_text("utf-8")
+    assert REPLAY["config_hash"] not in blob and REPLAY["index_fingerprint"] not in blob
+    r = _read(tmp_path / "out")
+    assert r[0]["replay"]["config_hash"] == r[1]["replay"]["config_hash"]
+    assert r[0]["replay"]["index_fingerprint"] == r[1]["replay"]["index_fingerprint"]
+    assert r[0]["replay"]["doc_count"] == 3
+    assert m["field_decisions"]["replay.config_hash"] == "rekey"
+    assert m["field_decisions"]["replay.index_fingerprint"] == "rekey"
+    assert "replay.config_hash" in m["rehashed_fields"]
+
+
 def test_cli_export(src, hasher, tmp_path, capsys):
     _write(src, [_event(hasher, "q")])
     out = tmp_path / "out"
