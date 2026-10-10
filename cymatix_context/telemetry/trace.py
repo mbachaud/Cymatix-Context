@@ -43,6 +43,8 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
+from .taxonomy import LABEL_SOURCES, LABELS
+
 log = logging.getLogger("cymatix.trace")
 
 SCHEMA_VERSION = "0"
@@ -443,6 +445,43 @@ class PacketTracer:
             self.writer.submit(ev)
         except Exception:
             log.warning("packet trace emit failed", exc_info=True)
+
+    def emit_label(
+        self,
+        packet_id: str,
+        label: str,
+        label_source: str = "trace_check",
+        confidence: Optional[float] = None,
+        evidence: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Enqueue a ``label`` event for an existing packet (Phase 4).
+
+        Arguments are validated before the disabled check, so a bad label
+        or source is a caller bug even when tracing is off. Labels are
+        recorded only; nothing here decides them.
+        """
+        if label not in LABELS:
+            raise ValueError(f"unknown label {label!r}; expected one of {sorted(LABELS)}")
+        if label_source not in LABEL_SOURCES:
+            raise ValueError(
+                f"unknown label_source {label_source!r}; expected one of {sorted(LABEL_SOURCES)}"
+            )
+        if not self.enabled or self.writer is None:
+            return
+        try:
+            ev: Dict[str, Any] = {
+                "schema_version": SCHEMA_VERSION,
+                "event": "label",
+                "packet_id": packet_id,
+                "ts": round(time.time(), 3),
+                "labels": [label],
+                "label_source": label_source,
+                "confidence": confidence,
+                "evidence": evidence,
+            }
+            self.writer.submit(ev)
+        except Exception:
+            log.warning("packet trace label emit failed", exc_info=True)
 
     # -- reader ----------------------------------------------------------
 
