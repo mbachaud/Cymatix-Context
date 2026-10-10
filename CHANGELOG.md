@@ -4,6 +4,11 @@
 
 ## 0.11.2 (2026-10-09)
 
+- **Release gate: 947k merged-stack witness, EXACT_REPRODUCE** (BASELINES row
+  `2026-10-09-v0112-merged-stack-witness`). Candidate `83188261` delivered
+  314/470 (0.6681) with 0/470 per-needle differences from the v0.10.0 witness
+  on all 11 rank and delivery fields. No shipped default changed in this
+  release. Receipts: `cymatix-receipts` `fecf47f`.
 - **feat(trace): opt-in packet trace, Phase 1** (#493, PR #497; `[trace]
   enabled = false` by default). Every `/context` and `/context/packet`
   response now carries a ULID `packet_id` (body field and
