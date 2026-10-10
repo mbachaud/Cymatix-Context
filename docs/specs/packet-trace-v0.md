@@ -74,10 +74,34 @@ cached for 60 s; it is a cheap change detector, not a content hash.
 `config_hash` is the sha256 of the loaded runtime config with secrets
 redacted. `timing_ms` carries only the total in Phase 1.
 
+## `action` event (schema_version "0")
+
+One record per agent tool call, joined to the packet that informed it.
+Adapters `POST /trace/action` with `{session_id, tool_name, args,
+packet_id?}` (same admin-token guard as the read endpoints; 404 when
+tracing is disabled). Hashing is server-side: the deployment key never
+leaves the server and raw args are never written at `metadata`.
+
+| field | notes |
+|---|---|
+| `event` | `"action"` |
+| `schema_version` | `"0"` |
+| `packet_id` | explicit if given, else the session's latest packet; `null` if none |
+| `orphan` | `true` iff `packet_id` is null (not an error) |
+| `session_id`, `ts`, `level`, `trace` | as for `packet` |
+| `tool_name` | as supplied |
+| `args_hash` | HMAC-SHA256 of canonical JSON (sorted keys, compact) of `args` |
+| `args_keys` | sorted top-level keys of `args` (empty if not an object) |
+| `args` | raw args, `full` level only |
+
+The route returns `{packet_id, orphan}`. The session-to-latest-packet map
+is in memory (LRU, 10,000 sessions) and starts empty after a restart.
+Actions share the packet writer and hash chain.
+
 ## Read endpoints
 
 - `GET /trace/{packet_id}`: the record, or 404 (also 404 when disabled).
-- `GET /trace/recent?session_id=&limit=`: newest first, `[]` when disabled.
+- `GET /trace/recent?session_id=&limit=&event=`: `event` filters to `packet` or `action`; newest first, `[]` when disabled.
 
 Both scan the local JSONL; they are for debugging and eval harnesses, not
 for high-volume use.
