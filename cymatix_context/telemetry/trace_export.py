@@ -40,7 +40,34 @@ EXPORT_FILE = "packets.jsonl"
 MANIFEST_FILE = "manifest.json"
 DEFAULT_CONSENT = "not_shareable"
 
-REHASHED_FIELDS = ["query_hash", "chunks[].content_hash", "session_id"]
+# Gene ids are sha256(content)[:16] (KnowledgeStore.make_gene_id) and parent
+# ids are sha256(source_path + "::parent")[:16]: unkeyed content/path
+# hashes, so they are re-keyed like every other hash.
+CHUNK_ID_FIELDS = ("chunk_id", "doc_id", "gene_id", "parent_id")
+
+REHASHED_FIELDS = [
+    "query_hash", "chunks[].content_hash", "session_id",
+    "chunks[].chunk_id", "chunks[].doc_id", "chunks[].gene_id",
+    "chunks[].parent_id", "trace.trace_id", "trace.parent_span_id",
+]
+# Per-field audit of build_packet_event output. packet_id is a random ULID
+# (trace.new_packet_id); pipeline_request_id is uuid4 hex (context_manager).
+FIELD_DECISIONS = {
+    "schema_version": "keep", "event": "keep", "level": "keep",
+    "packet_id": "keep", "pipeline_request_id": "keep",
+    "session_id": "rekey", "ts": "keep",
+    "query_hash": "rekey", "query_len_terms": "keep", "query": "drop",
+    "replay": "keep",
+    "chunks[].chunk_id": "rekey", "chunks[].doc_id": "rekey",
+    "chunks[].gene_id": "rekey", "chunks[].parent_id": "rekey",
+    "chunks[].content_hash": "rekey", "chunks[].text": "drop",
+    "chunks[].rank": "keep", "chunks[].score": "keep",
+    "chunks[].source_kind": "keep", "chunks[].lane_contribs": "keep",
+    "chunks[].ingested_at": "keep",
+    "verdict": "keep", "timing_ms": "keep",
+    "trace.trace_id": "rekey", "trace.parent_span_id": "rekey",
+    "trace.trace_flags": "keep", "prev_hash": "drop",
+}
 STRIPPED_FIELDS = ["query", "chunks[].text"]
 DROPPED_FIELDS = ["prev_hash"]
 
@@ -113,8 +140,17 @@ def _transform(rec: Dict[str, Any], key: bytes) -> Dict[str, Any]:
         c = {k: v for k, v in c.items() if k != "text"}
         if c.get("content_hash") is not None:
             c["content_hash"] = _rekey(key, c["content_hash"])
+        for f in CHUNK_ID_FIELDS:
+            if c.get(f) is not None:
+                c[f] = _rekey(key, c[f])
         chunks.append(c)
     out["chunks"] = chunks
+    if isinstance(out.get("trace"), dict):
+        t = dict(out["trace"])
+        for f in ("trace_id", "parent_span_id"):
+            if t.get(f) is not None:
+                t[f] = _rekey(key, t[f])
+        out["trace"] = t
     return out
 
 
@@ -174,6 +210,7 @@ def export_traces(src: Union[str, Path], out_dir: Union[str, Path]) -> Dict[str,
         "rehashed_fields": REHASHED_FIELDS,
         "stripped_fields": STRIPPED_FIELDS,
         "dropped_fields": DROPPED_FIELDS,
+        "field_decisions": FIELD_DECISIONS,
         "notes": ["hash chain dropped: not meaningful after re-keying",
                   "hashes re-keyed under a one-time export key that is not stored"],
         "outputs": [EXPORT_FILE] + ([parquet] if parquet else []),

@@ -175,6 +175,45 @@ def test_schema_validation(src, hasher, tmp_path):
         v.validate(r)
 
 
+def test_content_and_path_derived_ids_not_in_output(src, hasher, tmp_path):
+    text = "planted document text for gene id"
+    gid = hashlib.sha256(text.encode()).hexdigest()[:16]
+    pid = hashlib.sha256(b"/repo/src/a.py::parent").hexdigest()[:16]
+    ev = tr.build_packet_event(
+        packet_id="01M4ZZZZZZZZZZZZZZZZZZZZZZ", pipeline_request_id="ab12cd34ef56",
+        session_id="s", query="q",
+        chunks=[{"gene_id": gid, "text": text, "rank": 1, "score": 1.0},
+                {"gene_id": gid, "rank": 2, "score": 0.5}],
+        verdict={"kind": "know", "confidence": 0.5}, timing_ms={"total": 1.0},
+        replay=REPLAY, level="metadata", hasher=hasher)
+    ev["chunks"][0]["parent_id"] = pid
+    ev["chunks"][1]["gene_id"] = pid
+    _write(src, [ev])
+    te.export_traces(src, tmp_path / "out")
+    blob = (tmp_path / "out" / "packets.jsonl").read_text("utf-8")
+    assert gid not in blob and pid not in blob
+    c = _read(tmp_path / "out")[0]["chunks"]
+    assert c[0]["chunk_id"] == c[0]["doc_id"] == c[1]["chunk_id"]  # joins survive
+    assert c[0]["parent_id"] == c[1]["gene_id"]
+
+
+def test_normal_verdict_reasons_do_not_trip_scan(tmp_path):
+    from cymatix_context.schemas import MISS_REASONS
+    p = tmp_path / "f.jsonl"
+    p.write_text("\n".join(json.dumps({"verdict": {"kind": "miss", "reason": r}})
+                           for r in MISS_REASONS) + "\n", encoding="utf-8")
+    assert te.secret_scan(p) == []
+
+
+def test_manifest_field_decisions(src, hasher, tmp_path):
+    _write(src, [_event(hasher, "a")])
+    m = te.export_traces(src, tmp_path / "out")
+    d = m["field_decisions"]
+    assert d["chunks[].chunk_id"] == "rekey" and d["chunks[].doc_id"] == "rekey"
+    assert d["packet_id"] == "keep" and d["pipeline_request_id"] == "keep"
+    assert d["prev_hash"] == "drop"
+
+
 def test_cli_export(src, hasher, tmp_path, capsys):
     _write(src, [_event(hasher, "q")])
     out = tmp_path / "out"
