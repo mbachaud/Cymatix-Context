@@ -89,6 +89,33 @@ drops the new record with a warning. Any write failure is logged at warning
 level and never reaches the request. Overhead receipt:
 `scripts/bench_trace_overhead.py`.
 
+### End-to-end overhead on `POST /context`
+
+`scripts/bench_trace_e2e.py` drives four in-process apps (trace off, an
+off-vs-off control, `metadata`, `full`; `hash_chain = true` on both ON arms)
+over identical 200-doc stores through FastAPI `TestClient`, same queries,
+rotating-order interleave, n = 1000 after 60 warmup. Receipt:
+`benchmarks/receipts/trace_overhead_e2e_2026-10-10.json` (carries the commit
+SHA, the observed runtime `enabled`/`level`/`hash_chain` per arm, and 1060
+lines written per ON arm).
+
+| Arm | request p50 | p95 | p99 | paired delta p50 | paired delta mean |
+|---|---|---|---|---|---|
+| off | 9.28 ms | 13.04 ms | 16.11 ms | - | - |
+| off2 (control) | 9.24 ms | 13.14 ms | 15.33 ms | -0.02 ms | -0.05 ms |
+| metadata | 9.54 ms | 13.28 ms | 15.02 ms | +0.28 ms | +0.24 ms |
+| full | 9.63 ms | 13.35 ms | 15.51 ms | +0.34 ms | +0.30 ms |
+
+Reading: the median and mean added cost is about 0.3 ms per request (< 1 ms
+holds at p50 and mean). The paired-delta p95 (about 2.0 ms) is **not** a
+trace cost: the off-vs-off control shows the same 1.8 ms p95 from per-request
+jitter (the difference of two noisy ~9 ms measurements), so a paired p95 at
+this request latency cannot resolve a sub-millisecond effect. The unpaired
+p95/p99 of the ON arms sit inside the OFF arm's own spread. Caveats:
+`TestClient` adds its own per-request overhead (a floor shared by all arms),
+the store is small, and the writer thread competes for the GIL only on the
+same process, which this setup does include.
+
 ## Deferred
 
 Phase 2 eval checks and judge-agreement receipt, Phase 3 harness adapters

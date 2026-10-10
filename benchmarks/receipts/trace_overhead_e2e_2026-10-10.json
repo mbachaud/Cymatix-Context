@@ -1,0 +1,133 @@
+{
+  "bench": "trace_overhead_e2e_context",
+  "git_sha": "54e4e3da845c583f4fd2c18e2492469fcd9260d7",
+  "commits_behind_master": "0",
+  "python": "3.14.3",
+  "machine": "Windows-11-10.0.26200-SP0 / AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+  "n": 1000,
+  "warmup": 60,
+  "docs": 200,
+  "method": "FastAPI TestClient, 3 apps (off/metadata/full), identical seeded stores, same queries, rotating-order interleave, hash_chain=true on ON arms, ignore_delivered=true",
+  "config_dump": {
+    "budget.max_genes_per_turn": 4,
+    "genome.path": ":memory:",
+    "trace_arms": {
+      "off": {
+        "enabled": false,
+        "level": "metadata",
+        "hash_chain": false,
+        "sampler_ratio": 1.0
+      },
+      "off2": {
+        "enabled": false,
+        "level": "metadata",
+        "hash_chain": false,
+        "sampler_ratio": 1.0
+      },
+      "metadata": {
+        "enabled": true,
+        "level": "metadata",
+        "hash_chain": true,
+        "sampler_ratio": 1.0
+      },
+      "full": {
+        "enabled": true,
+        "level": "full",
+        "hash_chain": true,
+        "sampler_ratio": 1.0
+      }
+    }
+  },
+  "observed_runtime_knob": {
+    "off": {
+      "enabled": false,
+      "level": "metadata",
+      "hash_chain": false,
+      "writer_present": false
+    },
+    "off2": {
+      "enabled": false,
+      "level": "metadata",
+      "hash_chain": false,
+      "writer_present": false
+    },
+    "metadata": {
+      "enabled": true,
+      "level": "metadata",
+      "hash_chain": true,
+      "writer_present": true
+    },
+    "full": {
+      "enabled": true,
+      "level": "full",
+      "hash_chain": true,
+      "writer_present": true
+    }
+  },
+  "trace_lines_written": {
+    "off": 0,
+    "off2": 0,
+    "metadata": 1060,
+    "full": 1060
+  },
+  "latency_us": {
+    "off": {
+      "p50": 9283.9,
+      "p95": 13042.2,
+      "p99": 16113.8,
+      "mean": 9741.0
+    },
+    "off2": {
+      "p50": 9235.4,
+      "p95": 13138.5,
+      "p99": 15334.2,
+      "mean": 9692.5
+    },
+    "metadata": {
+      "p50": 9538.2,
+      "p95": 13284.1,
+      "p99": 15019.9,
+      "mean": 9983.5
+    },
+    "full": {
+      "p50": 9625.7,
+      "p95": 13350.4,
+      "p99": 15512.3,
+      "mean": 10041.6
+    }
+  },
+  "paired_delta_us": {
+    "off2": {
+      "p50": -21.7,
+      "p95": 1786.3,
+      "p99": 2861.3,
+      "mean": -48.5
+    },
+    "metadata": {
+      "p50": 281.6,
+      "p95": 2062.3,
+      "p99": 3470.0,
+      "mean": 242.5
+    },
+    "full": {
+      "p50": 342.7,
+      "p95": 2029.5,
+      "p99": 3233.4,
+      "mean": 300.6
+    }
+  },
+  "under_1ms": {
+    "off2": {
+      "p50": true,
+      "p95": false
+    },
+    "metadata": {
+      "p50": true,
+      "p95": false
+    },
+    "full": {
+      "p50": true,
+      "p95": false
+    }
+  }
+}
