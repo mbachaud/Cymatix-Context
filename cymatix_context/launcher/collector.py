@@ -548,11 +548,14 @@ class StateCollector:
             # that includes the launcher-companion code; an older cymatix
             # answers 404 and we skip the panel quietly.
             pipeline = self._safe_get_json(
-                client, "/debug/pipeline/recent", params={"limit": 64},
+                client, "/debug/pipeline/recent", params={"limit": 128},
             )
             if pipeline and pipeline.get("events") is not None:
                 endpoint_seen = True
                 state["pipeline"] = self._pipeline_panel(pipeline)
+                delivery = self._delivery_panel(pipeline)
+                if delivery is not None:
+                    state["delivery"] = delivery
         finally:
             client.close()
 
@@ -1006,10 +1009,31 @@ class StateCollector:
             log.warning("Database panel: discovery failed (%s)", exc, exc_info=True)
             return {"error": str(exc), "entries": []}
 
+        from dataclasses import asdict
+        from ..store_settings import load_settings
+        try:
+            from ..config import load_config
+            global_sync = load_config().sync
+        except Exception:
+            global_sync = None
+
         out_entries = []
         for info in entries:
             row = info.as_dict()
             row["is_active"] = is_active(info)
+            # Per-store sidecar, read fresh each poll (the registry cache
+            # is keyed on the .db file, which the sidecar does not touch).
+            settings = load_settings(info.path)
+            row["settings"] = asdict(settings)
+            # What the store actually runs with: its own sync block wins,
+            # else the global [sync] section.
+            if settings.sync_enabled is not None:
+                row["sync"] = {"enabled": settings.sync_enabled and not settings.frozen,
+                               "roots": settings.sync_roots, "source": "store"}
+            else:
+                row["sync"] = {"enabled": bool(global_sync and global_sync.enabled) and not settings.frozen,
+                               "roots": list(global_sync.roots) if global_sync else [],
+                               "source": "global"}
             out_entries.append(row)
 
         return {
@@ -1078,7 +1102,12 @@ class StateCollector:
                 "stages": {},
                 "ts": ts,
                 "total_ms": 0.0,
+                "delivered_chunks": None,
+                "delivered_chars": None,
             })
+            if stage == "assemble":
+                row["delivered_chunks"] = ev.get("delivered_chunks")
+                row["delivered_chars"] = ev.get("delivered_chars")
             row["stages"][stage] = round(row["stages"].get(stage, 0.0) + ms, 3)
             if stage not in StateCollector._NESTED_STAGES:
                 row["total_ms"] = round(row["total_ms"] + ms, 3)
@@ -1090,6 +1119,72 @@ class StateCollector:
             "runs": runs[:20],
             "event_count": len(events),
             "ring_max": int(payload.get("ring_max") or 0),
+        }
+
+    # Stages that make up the packet the caller waits for. tail_writes,
+    # cwola and persist run after the answer is built, so they are not
+    # packet latency.
+    _PACKET_STAGES = frozenset(
+        {"classify", "extract", "express", "rerank", "splice", "assemble"}
+    )
+
+    def _delivery_panel(self, payload: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """What recent packets delivered and how long they took.
+
+        Built from the pipeline ring: one sample per request that reached
+        the assemble stage. Latency is retrieval + assembly (the packet
+        stages). The delivered counts come from the assemble entry; an
+        older engine that does not send them leaves ``chunks`` / ``chars``
+        as None while latency still reports. None when no packet is in
+        the ring.
+        """
+        by_req: Dict[str, Dict[str, Any]] = {}
+        for ev in payload.get("events", []) or []:
+            rid = ev.get("request_id") or "?"
+            row = by_req.setdefault(rid, {"ts": 0.0, "ms": 0.0, "done": False,
+                                          "started": False,
+                                          "chunks": None, "chars": None})
+            stage = ev.get("stage")
+            row["ts"] = max(row["ts"], float(ev.get("ts") or 0.0))
+            if stage in StateCollector._PACKET_STAGES:
+                row["ms"] += float(ev.get("ms") or 0.0)
+            if stage == "classify":
+                row["started"] = True
+            if stage == "assemble":
+                row["done"] = True
+                row["chunks"] = ev.get("delivered_chunks")
+                row["chars"] = ev.get("delivered_chars")
+        # A packet counts once its first stage is in the ring (a request whose
+        # early stages rolled off would understate latency). One that never
+        # reached assemble was a miss or abstain: it delivered nothing. The
+        # newest such request may still be running, so it is held back.
+        ordered = sorted((r for r in by_req.values() if r["started"]), key=lambda r: r["ts"])
+        if ordered and not ordered[-1]["done"]:
+            ordered = ordered[:-1]
+        samples = ordered
+        if not samples:
+            return None
+        for r in samples:
+            if not r["done"]:
+                r["chunks"], r["chars"] = 0, 0
+
+        def _pair(key: str) -> Optional[Dict[str, Any]]:
+            vals = [r[key] for r in samples if isinstance(r[key], (int, float))]
+            if not vals:
+                return None
+            return {"last": vals[-1], "avg": round(sum(vals) / len(vals), 1)}
+
+        times = sorted(r["ms"] for r in samples)
+        rank = max(1, -(-95 * len(times) // 100))      # nearest rank, ceil(0.95 n)
+        return {
+            "samples": len(samples),
+            "chunks": _pair("chunks"),
+            "chars": _pair("chars"),
+            "latency_ms": {
+                "last": round(samples[-1]["ms"], 1),
+                "avg": round(sum(times) / len(times), 1),
+                "p95": round(times[rank - 1], 1),
+            },
         }
 
     # ── helpers ────────────────────────────────────────────────────

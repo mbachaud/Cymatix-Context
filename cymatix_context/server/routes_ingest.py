@@ -34,6 +34,15 @@ def setup_ingest_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None:
         import time as _time
         cymatix._last_activity_ts = _time.time()
 
+        # A frozen store is read-only: its upserts no-op, so accepting the
+        # request would report success for a write that never lands.
+        if getattr(cymatix.genome, "read_only", False):
+            return JSONResponse(
+                {"error": "This knowledge store is frozen (read-only). "
+                          "Unfreeze it from the dashboard to ingest."},
+                status_code=409,
+            )
+
         try:
             data = await request.json()
         except Exception:
@@ -156,6 +165,11 @@ def setup_ingest_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None:
     @app.post("/consolidate", dependencies=_admin_auth)
     async def consolidate_endpoint():
         """Trigger session memory consolidation."""
+        if getattr(cymatix.genome, "read_only", False):
+            return JSONResponse(
+                {"error": "This knowledge store is frozen (read-only)."},
+                status_code=409,
+            )
         try:
             gene_ids = await cymatix.consolidate_session_async()
             return {

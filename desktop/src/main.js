@@ -6,7 +6,7 @@
 // per-launch token set as a cookie; native actions go through preload.js.
 
 const {
-  app, BrowserWindow, Menu, Tray, clipboard, ipcMain, nativeImage, session, shell,
+  app, BrowserWindow, Menu, Tray, clipboard, dialog, ipcMain, nativeImage, session, shell,
 } = require('electron');
 const { execFile } = require('node:child_process');
 const os = require('node:os');
@@ -292,6 +292,15 @@ function registerIpc() {
     const err = await shell.openPath(LAUNCHER_LOGS);
     if (err) throw new Error(err);
     return { message: `Opened ${LAUNCHER_LOGS}` };
+  }));
+  // Native folder picker for per-store auto-sync. Returns the chosen path,
+  // or null when the dialog is cancelled; the launcher validates it again.
+  ipcMain.handle('cymatix:pick-folder', guard(async () => {
+    const res = await dialog.showOpenDialog(win, {
+      title: 'Choose a folder to keep in sync',
+      properties: ['openDirectory'],
+    });
+    return res.canceled || !res.filePaths.length ? null : res.filePaths[0];
   }));
   ipcMain.handle('cymatix:get-login', guard(() => app.getLoginItemSettings().openAtLogin));
   ipcMain.handle('cymatix:set-login', guard((enabled) => {

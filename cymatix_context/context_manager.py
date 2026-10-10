@@ -2413,7 +2413,15 @@ class CymatixContextManager:
         # Stage 5 §4: caller_model_class refines slate emission (small_moe
         # always-on, frontier always-off, generic preserves legacy).
         use_slate = self._should_use_slate(downstream_model, caller_model_class)
-        with _pipeline_stage_span("assemble"), _stage_timer("assemble"):
+        # The ring entry also carries what this packet delivered, for the
+        # launcher's Delivery panel (evaluated at exit, once `window` exists).
+        with _pipeline_stage_span("assemble"), _stage_timer(
+            "assemble",
+            extra=lambda: {
+                "delivered_chunks": len(window.expressed_gene_ids),
+                "delivered_chars": len(window.expressed_context),
+            },
+        ):
             window = self._assemble(
                 query, candidates, spliced_map, relation_graph,
                 query_signals=(domains, entities),

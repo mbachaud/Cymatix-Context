@@ -44,6 +44,8 @@
             <th scope="col">splice</th>
             <th scope="col">assemble</th>
             <th scope="col">total</th>
+            <th scope="col">chunks</th>
+            <th scope="col">chars</th>
           </tr>
         </thead>
         <tbody>
@@ -61,6 +63,12 @@
               {% endfor %}
               <td class="pipeline-cell pipeline-cell--total">
                 <strong>{{ "%.1f"|format(run.total_ms) }} ms</strong>
+              </td>
+              <td class="pipeline-cell">
+                {% if run.delivered_chunks is not none %}{{ run.delivered_chunks }}{% else %}<span class="muted">—</span>{% endif %}
+              </td>
+              <td class="pipeline-cell">
+                {% if run.delivered_chars is not none %}{{ "{:,}".format(run.delivered_chars) }}{% else %}<span class="muted">—</span>{% endif %}
               </td>
             </tr>
           {% endfor %}

@@ -5532,6 +5532,9 @@ class KnowledgeStore:
 
         Returns the number of documents marked as source-changed.
         """
+        if self.read_only:
+            log.debug("read_only: skipping compact")
+            return 0
         cur = self.conn.cursor()
         change_detected = 0
 
@@ -6186,6 +6189,9 @@ class KnowledgeStore:
         Keeps: everything (content, complement, fragments, SPLADE, FTS5)
         Flips: ``chromatin = 2``, ``compression_tier = 2``
         """
+        if self.read_only:
+            log.debug("read_only: skipping compress_to_heterochromatin")
+            return False
         # W2.3 Phase A: check-then-write + commit on the shared writer —
         # hold the write lock for the whole section. Cache/dense-matrix
         # invalidation stays OUTSIDE the lock (lock-ordering rule: never

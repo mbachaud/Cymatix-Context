@@ -67,6 +67,17 @@ def test_stale_start_pending_never_disables_the_toggle(running):
     assert label == ("Starting…" if running else "Start")
 
 
+def test_panel_swap_patches_changed_panels_and_keeps_focus():
+    """The 2 s refresh must not replace unchanged panels (it dropped keyboard
+    focus every tick) and must fall back to the full swap where the DOM lacks
+    outerHTML/replaceWith."""
+    with _client(RUNNING) as c:
+        js = c.get("/static/launcher.js").text
+    assert "function patchPanels" in js and "replaceWith" in js
+    assert "panels.replaceChildren(...newNodes)" in js       # the fallback
+    assert "restoreFocus(focus)" in js
+
+
 def test_toggle_is_only_disabled_by_its_own_click():
     with _client(RUNNING) as c:
         js = c.get("/static/launcher.js").text

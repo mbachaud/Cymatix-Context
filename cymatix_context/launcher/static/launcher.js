@@ -156,7 +156,9 @@
     const activeTab = panels.dataset.activeTab || "overview";
     const doc = domParser.parseFromString(htmlString, "text/html");
     const newNodes = Array.from(doc.body.childNodes);
-    panels.replaceChildren(...newNodes);
+    const focus = focusKey();
+    patchPanels(newNodes, doc);
+    restoreFocus(focus);
     panels.dataset.activeTab = activeTab;
     panelsRenderedAt = monotonicMs();
     restoreAgentOpenState();
@@ -164,6 +166,48 @@
     restorePipelineDevView();
     restoreSwitchboardOff();
     markObservationAge();
+  }
+
+  /* Replace only the panels whose HTML changed. A whole-block swap every
+     2 s dropped keyboard focus, hover and in-panel scroll even when nothing
+     had changed (measured: ~96 KB / ~1,460 nodes per swap on a loaded
+     store). Falls back to the full swap when the panel list changes shape
+     or the DOM lacks the APIs (the node test harness' stub). */
+  function patchPanels(newNodes, doc) {
+    const next = Array.from((doc.body && doc.body.children) || []);
+    const cur = Array.from(panels.children || []);
+    const canPatch = next.length > 0 && next.length === cur.length &&
+      next.every((n, i) => typeof n.outerHTML === "string" &&
+        typeof cur[i].outerHTML === "string" && typeof cur[i].replaceWith === "function");
+    if (!canPatch) {
+      panels.replaceChildren(...newNodes);
+      return;
+    }
+    next.forEach((n, i) => {
+      if (cur[i].outerHTML !== n.outerHTML) cur[i].replaceWith(n);
+    });
+  }
+
+  /* Which control had focus, so a replaced panel can hand it back. */
+  function focusKey() {
+    const el = document.activeElement;
+    if (!el || !el.dataset || !panels.contains || !panels.contains(el)) return null;
+    return { action: el.dataset.action || "", path: el.dataset.storePath || "",
+      folder: el.dataset.folder || "", tab: el.dataset.tab || "",
+      lane: el.dataset.lane || "", genome: el.dataset.genomePath || "" };
+  }
+
+  function restoreFocus(key) {
+    if (!key || (!key.action && !key.tab)) return;
+    const now = document.activeElement;
+    if (now && now !== document.body && panels.contains(now)) return;
+    const hits = Array.from(panels.querySelectorAll("[data-action]")).filter((el) =>
+      (el.dataset.action || "") === key.action && (el.dataset.storePath || "") === key.path &&
+      (el.dataset.folder || "") === key.folder && (el.dataset.lane || "") === key.lane &&
+      (el.dataset.genomePath || "") === key.genome);
+    // Only when exactly one control matches: focusing "the first Stop" could
+    // put Enter on the wrong lane.
+    if (hits.length === 1 && typeof hits[0].focus === "function") hits[0].focus();
   }
 
   function restoreSwitchboardOff() {
@@ -399,6 +443,21 @@
         {}, actionButton);
       return;
     }
+    if (action === "store-sync" || action === "store-freeze" ||
+        action === "store-add-folder" || action === "store-remove-folder") {
+      handleStoreAction(action, actionButton);
+      return;
+    }
+    if (action === "obs-enable" || action === "obs-disable") {
+      // Enabling starts the sidecar, then restarts the backend so it exports.
+      if (action === "obs-disable" && !window.confirm(
+          "Stop observability?\n\nCymatix will restart so it stops exporting.")) {
+        return;
+      }
+      postGenome("/api/control/observability/" + action.slice("obs-".length),
+        {}, actionButton);
+      return;
+    }
     if (action === "genome-select") {
       const path = actionButton.dataset.genomePath;
       if (!path) return;
@@ -431,6 +490,72 @@
         refreshControls();
       }, 750);
     }
+  }
+
+  /* Per-store settings: saved beside the .db by POST /api/genome/settings.
+     Changing the active store restarts the server, so that asks first. */
+  function storeRow(btn) {
+    // data-store-row marks the <li> only: every control also carries
+    // data-store-path, so matching on that would find the button itself.
+    return btn.closest("[data-store-row]");
+  }
+
+  function storeRoots(row) {
+    try {
+      const roots = JSON.parse(row.dataset.storeRoots || "[]");
+      return Array.isArray(roots) ? roots : [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  async function handleStoreAction(action, btn) {
+    const row = storeRow(btn);
+    if (!row) return;
+    const path = row.dataset.storePath;
+    const isActive = row.dataset.storeActive === "true";
+    const roots = storeRoots(row);
+    let payload = null;
+    let verb = "";
+
+    if (action === "store-freeze") {
+      const freeze = row.dataset.storeFrozen !== "true";
+      payload = { frozen: freeze };
+      verb = freeze ? "Freeze" : "Unfreeze";
+    } else if (action === "store-sync") {
+      const on = row.dataset.storeSync !== "true";
+      // Send the folders too: a store still following cymatix.toml adopts
+      // them, so switching on or off never loses the list.
+      payload = { sync_enabled: on, sync_roots: roots };
+      verb = on ? "Turn on auto-sync for" : "Turn off auto-sync for";
+    } else if (action === "store-remove-folder") {
+      const folder = btn.dataset.folder;
+      payload = { sync_roots: roots.filter((r) => r !== folder) };
+      verb = "Stop watching a folder in";
+    } else if (action === "store-add-folder") {
+      let folder = null;
+      if (window.cymatix && window.cymatix.pickFolder) {
+        try {
+          folder = await window.cymatix.pickFolder();
+        } catch (err) {
+          window.alert("Could not open the folder picker: " + err);
+          return;
+        }
+      } else {
+        folder = window.prompt("Folder to keep in sync (full path):");
+      }
+      if (!folder) return;
+      payload = { sync_enabled: true, sync_roots: roots.concat([folder]) };
+      verb = "Watch a new folder in";
+    }
+    if (!payload) return;
+
+    if (isActive && !window.confirm(
+        verb + " the active knowledge store?\n\nCymatix will restart to apply it.")) {
+      return;
+    }
+    payload.path = path;
+    postGenome("/api/genome/settings", payload, btn);
   }
 
   document.addEventListener("submit", function (evt) {
