@@ -114,6 +114,16 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
 
     cymatix = CymatixContextManager(config)
 
+    # Per-store settings (sidecar next to the .db): Freeze opens the store
+    # read-only and keeps sync off; a sync block overrides the global [sync]
+    # for this store only. No sidecar = nothing changes.
+    from ..store_settings import apply_to_sync_config, load_settings
+    _store_settings = load_settings(config.genome.path)
+    if _store_settings.frozen:
+        cymatix.genome.read_only = True
+        log.info("Store %s is frozen: read-only, sync off", config.genome.path)
+    config.sync = apply_to_sync_config(config.sync, _store_settings)
+
     # W2-B: emit the compressor info-metric for dashboard visibility.
     try:
         from ..telemetry import ribosome_info_gauge
@@ -207,6 +217,11 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         except Exception:
             log.warning("vault.stop failed", exc_info=True)
 
+        try:
+            app.state.packet_tracer.close()
+        except Exception:
+            log.warning("packet tracer close failed", exc_info=True)
+
         # Flush token counter so lifetime totals persist across restart.
         try:
             cymatix.token_counter.flush()
@@ -246,7 +261,16 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         log.debug("OTel setup failed", exc_info=True)
 
     # ---- Register all route modules ----
+    # Packet trace (opt-in, issue #493): the tracer is built here so the
+    # context routes (writer) and trace routes (reader) share it.
+    from ..telemetry.trace import PacketTracer
+    from .routes_trace import setup_trace_routes
+    app.state.packet_tracer = PacketTracer.from_config(
+        config, getattr(config.genome, "path", None),
+    )
+
     setup_context_routes(app, cymatix=cymatix, config=config, registry=registry)
+    setup_trace_routes(app, config=config)
     setup_ingest_routes(app, cymatix=cymatix, config=config, registry=registry)
     setup_registry_routes(app, cymatix=cymatix, config=config, registry=registry)
     setup_admin_routes(app, cymatix=cymatix, config=config, registry=registry, bridge=bridge)

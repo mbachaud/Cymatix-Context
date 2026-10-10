@@ -73,8 +73,8 @@
     {% include "components/genes_panel.html" %}
   {% endif %}
 
-  {% if state.tokens %}
-    {% include "components/tokens_panel.html" %}
+  {% if state.delivery or state.tokens %}
+    {% include "components/delivery_panel.html" %}
   {% endif %}
 
   {% if state.pipeline %}

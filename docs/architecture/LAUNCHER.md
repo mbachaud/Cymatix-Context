@@ -152,7 +152,7 @@ cymatix_context/
         models_panel.html
         tools_panel.html
         genes_panel.html
-        tokens_panel.html
+        delivery_panel.html        # chunks and latency per packet, lifetime tokens
         graph_summary_panel.html   # read-only graph layer counts
         host_status_panel.html     # read-only host readiness
     static/

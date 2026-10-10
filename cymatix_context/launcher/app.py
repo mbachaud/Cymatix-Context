@@ -66,6 +66,7 @@ DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/cymatix-overview/cymatix-overview
 DEFAULT_PROMETHEUS_URL = "http://127.0.0.1:9090/graph"
 
 if TYPE_CHECKING:
+    from .observability_control import ObservabilityControl
     from .observability_supervisor import ObservabilitySupervisor
 
 LAUNCHER_DIR = Path(__file__).resolve().parent
@@ -96,6 +97,7 @@ def create_app(
     collector: StateCollector,
     observability: Optional["ObservabilitySupervisor"] = None,
     observability_install_pending: bool = False,
+    observability_control: Optional["ObservabilityControl"] = None,
     grafana_url: str = DEFAULT_GRAFANA_URL,
     prometheus_url: str = DEFAULT_PROMETHEUS_URL,
     bench_supervisor: Optional[CymatixSupervisor] = None,
@@ -187,17 +189,26 @@ def create_app(
         state — service health from the supervisor plus the telemetry
         links the Monitoring tab renders. None when the operator opted
         out via CYMATIX_OBSERVABILITY=0 (panel hidden entirely)."""
-        if observability is None and not observability_install_pending:
+        control = observability_control.snapshot() if observability_control else None
+        if control is not None and control["status"] == "unavailable":
+            return None
+        if control is None and observability is None and not observability_install_pending:
             return None
         statuses = (
             observability.all_statuses() if observability is not None else {}
         )
+        services = (
+            control["services"] if control is not None
+            else [{"name": name, "status": status}
+                  for name, status in sorted(statuses.items())]
+        )
         return {
-            "install_pending": observability_install_pending,
-            "services": [
-                {"name": name, "status": status}
-                for name, status in sorted(statuses.items())
-            ],
+            "install_pending": (control["status"] == "not_installed")
+            if control is not None else observability_install_pending,
+            # Present only when the dashboard itself can start/stop the stack
+            # (the desktop app's headless launcher).
+            "control": control,
+            "services": services,
             "links": {
                 "grafana": grafana_url,
                 "grafana_base": _grafana_base,
@@ -485,6 +496,73 @@ def create_app(
             status_code=202,
         )
 
+    @app.post("/api/genome/settings")
+    async def api_genome_settings(request: Request):
+        """Per-store settings (sync folders, Freeze), saved beside the .db.
+
+        Only stores the registry knows about can be written. A change to the
+        active store restarts the server so it opens with the new settings.
+        """
+        from . import genome_registry
+        from ..store_settings import MIN_INTERVAL_S, load_settings, save_settings
+
+        body = await request.json()
+        if not isinstance(body, dict) or not body.get("path"):
+            return JSONResponse({"ok": False, "error": "missing 'path'"}, status_code=400)
+        target = Path(str(body["path"])).resolve()
+        known = {str(i.path).lower() for i in genome_registry.discover_genomes()}
+        if str(target).lower() not in known:
+            return JSONResponse({"ok": False, "error": "unknown knowledge store"}, status_code=404)
+
+        fields = ("frozen", "sync_enabled", "sync_roots", "sync_interval_s")
+        if not any(k in body for k in fields):
+            return JSONResponse({"ok": False, "error": "nothing to change"}, status_code=400)
+        settings = load_settings(target)
+        for key in ("frozen", "sync_enabled"):
+            if key in body:
+                if not isinstance(body[key], bool):
+                    return JSONResponse({"ok": False, "error": f"'{key}' must be true or false"}, status_code=400)
+                setattr(settings, key, body[key])
+        if "sync_roots" in body:
+            roots = body["sync_roots"]
+            if not isinstance(roots, list) or not all(isinstance(r, str) for r in roots):
+                return JSONResponse({"ok": False, "error": "'sync_roots' must be a list of paths"}, status_code=400)
+            resolved_roots: List[str] = []
+            # A folder already in the list may be offline (an unplugged
+            # drive); only a newly added one has to exist, so one missing
+            # root never blocks an unrelated change.
+            already = {str(Path(r).resolve()).lower() for r in settings.sync_roots}
+            for r in roots:
+                p = Path(r).expanduser().resolve()
+                if not p.is_dir() and str(p).lower() not in already:
+                    return JSONResponse({"ok": False, "error": f"not a folder: {r}"}, status_code=400)
+                if str(p) not in resolved_roots:
+                    resolved_roots.append(str(p))
+            settings.sync_roots = resolved_roots
+        if "sync_interval_s" in body:
+            iv = body["sync_interval_s"]
+            if isinstance(iv, bool) or not isinstance(iv, (int, float)):
+                return JSONResponse({"ok": False, "error": "'sync_interval_s' must be a number"}, status_code=400)
+            settings.sync_interval_s = max(MIN_INTERVAL_S, float(iv))
+        try:
+            save_settings(target, settings)
+        except OSError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+        genome_registry.clear_cache()
+
+        active = str(genome_registry.active_genome_path().resolve()).lower() == str(target).lower()
+        if not (active and supervisor.is_running()):
+            return JSONResponse({"ok": True, "restarting": False})
+
+        def _worker() -> None:
+            try:
+                supervisor.restart(reason=f"store settings changed for {target.name} (dashboard)")
+            except Exception:
+                log.error("Store-settings restart failed (%s)", target, exc_info=True)
+
+        threading.Thread(target=_worker, name="cymatix-store-settings", daemon=True).start()
+        return JSONResponse({"ok": True, "restarting": True}, status_code=202)
+
     @app.post("/api/genome/select")
     async def api_genome_select(request: Request):
         body = await request.json()
@@ -600,6 +678,29 @@ def create_app(
         except SupervisorError as exc:
             return JSONResponse({"error": str(exc)}, status_code=500)
 
+    @app.post("/api/control/observability/{action}")
+    def api_observability_control(action: str):
+        """Enable or stop the observability sidecar from the dashboard."""
+        from .observability_control import NotInstalled
+        if observability_control is None or action not in ("enable", "disable"):
+            return JSONResponse({"ok": False, "error": "unknown action"}, status_code=404)
+        if action == "disable":
+            observability_control.disable()
+        else:
+            try:
+                observability_control.enable()
+            except NotInstalled as exc:
+                return JSONResponse(
+                    {"ok": False, "status": str(exc),
+                     "error": "The observability sidecar is not installed on this "
+                              "machine. Run scripts/install-native-observability.ps1."},
+                    status_code=409,
+                )
+        return JSONResponse(
+            {"ok": True, "status": observability_control.snapshot()["status"]},
+            status_code=202,
+        )
+
     @app.post("/api/control/restart")
     def api_control_restart():
         try:
@@ -647,6 +748,8 @@ def create_app(
             except Exception:
                 log.warning("shutdown: stopping lane %s failed", name, exc_info=True)
                 left_running.append(name)
+        if observability_control is not None:
+            observability_control.shutdown()
         server = getattr(app.state, "uvicorn_server", None)
         if server is not None:
             server.should_exit = True
@@ -1114,6 +1217,44 @@ def _start_observability_stack(
         _export_otel_env_for_backend()
 
 
+def _start_observability_stack_strict(observability_sup: "ObservabilitySupervisor") -> None:
+    """Start the stack for the dashboard's Enable button.
+
+    Unlike the tray's boot-time helper this does not swallow failures: the
+    control reports them, and must not restart the backend toward a
+    collector that is not there.
+    """
+    observability_sup.start_all()
+    _export_otel_env_for_backend()
+    from .observability_health import SERVICE_PORTS, is_port_bound
+    otlp_port = SERVICE_PORTS["collector"][0]
+    if not is_port_bound("127.0.0.1", otlp_port):
+        raise RuntimeError(
+            f"the collector is not accepting connections on :{otlp_port}"
+        )
+
+
+def _build_observability_control(supervisor) -> "ObservabilityControl":
+    """The desktop launcher's Enable/Stop observability controller."""
+    from .observability_control import ObservabilityControl
+
+    def _restart_backend() -> None:
+        if supervisor.is_running():
+            supervisor.restart(reason="observability toggled (dashboard)")
+
+    def _build():
+        sup, _pending = _maybe_build_observability()
+        return sup
+
+    return ObservabilityControl(
+        build=_build,
+        start=_start_observability_stack_strict,
+        restart_backend=_restart_backend,
+        is_installed=_observability_install_complete,
+        is_opted_out=_should_skip_observability,
+    )
+
+
 def _handle_service_command(command: str, dry_run: bool, port: int = 11438) -> int:
     """Handle install-service / uninstall-service subcommands.
 
@@ -1373,6 +1514,12 @@ def main(argv: Optional[list] = None) -> int:
         # into the stack we just started. Explicit user env wins.
         _start_observability_stack(observability_sup)
 
+    # The desktop app's headless launcher does not start the sidecar at boot
+    # (the tray does); its dashboard gets an Enable button instead.
+    observability_control = None
+    if args.headless and not args.tray:
+        observability_control = _build_observability_control(supervisor)
+
     # Adopt or start cymatix before the UI comes up.
     if needs_db_selection:
         log.info(
@@ -1421,6 +1568,7 @@ def main(argv: Optional[list] = None) -> int:
         needs_db_selection=needs_db_selection,
         lanes=lane_runtimes,
         primary_lane=primary_lane,
+        observability_control=observability_control,
         token=headless_token,
         ready_info=(
             {"host": args.host, "port": headless_sock.getsockname()[1]}

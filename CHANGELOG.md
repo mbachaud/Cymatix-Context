@@ -2,6 +2,108 @@
 
 ## Unreleased
 
+## 0.11.2 (2026-10-09)
+
+- **Release gate: 947k merged-stack witness, EXACT_REPRODUCE** (BASELINES row
+  `2026-10-09-v0112-merged-stack-witness`). Candidate `83188261` delivered
+  314/470 (0.6681) with 0/470 per-needle differences from the v0.10.0 witness
+  on all 11 rank and delivery fields. No shipped default changed in this
+  release. Receipts: `cymatix-receipts` `fecf47f`.
+- **feat(trace): opt-in packet trace, Phase 1** (#493, PR #497; `[trace]
+  enabled = false` by default). Every `/context` and `/context/packet`
+  response now carries a ULID `packet_id` (body field and
+  `X-Cymatix-Packet-Id` header) whether tracing is on or not; a W3C
+  `traceparent` is parsed and recorded, and the OTel span gets
+  `cymatix.packet_id`. With tracing on, `metadata`-level packet events
+  (HMAC-keyed query/content hashes, ranks, scores, verdict, replay
+  fingerprint; no raw query or chunk text) go to an append-only JSONL file
+  through an async writer, with optional hash chaining and size rotation;
+  `full` adds raw text for local debugging. `GET /trace/{packet_id}` and
+  `GET /trace/recent` read it back behind the `[server] admin_token` guard.
+  Schema: `docs/specs/packet-trace-v0.md`. Microbench (event build + enqueue,
+  12 chunks): p95 215 us; end-to-end `/context` overhead is not yet receipted.
+  Phases 2-5 (eval checks, harness adapters, detections, export/replay)
+  remain open on #493.
+- **fix(retrieval): Tier-2 `tag_prefix` survives queries with more than 500
+  terms** (#482, PR #483). The per-term `UNION ALL` exceeded SQLite's
+  compound-SELECT limit and raised `too many terms in compound SELECT`, which
+  benchmarks scored as a miss (BEIR ArguAna 6/1,401, RepoBench-R cff-easy
+  1/200). Over the limit the branches are now nested in groups of at most 500;
+  at 500 terms or fewer the SQL is byte-identical to before, so ordinary
+  queries cannot change rank. Published numbers on those beds are slightly
+  low and need a rescore.
+- **desktop: declare Node >= 22.12 and document Electron's lazy binary
+  download** (PR #480). Electron 44 has no postinstall step; the binary is
+  fetched on first run, so launchers that start `dist/electron.exe` directly
+  need `npx install-electron --no` first. No code or dependency changes.
+- **feat(stores): per-store settings and Freeze.** Each knowledge store gets an
+  optional sidecar `<store>.db.cymatix.json` holding its auto-sync folders and
+  a Freeze flag (`cymatix_context/store_settings.py`). Freeze means the
+  knowledge content is read-only: the store opens `read_only` (documents,
+  tiers, links and health records are not written, including by queries,
+  compaction and tombstoning), its sync is off, and `/ingest` and
+  `/consolidate` answer 409. Session, delivery-log and query-log tables still
+  write, so the file is not byte-identical after use. A store's own sync block overrides the global
+  `[sync]` enabled/roots/interval for that store only; with no sidecar nothing
+  changes. The dashboard's Database panel shows Auto-sync, Freeze and folder
+  chips per store (`POST /api/genome/settings`, restarts only when the active
+  store changed), and the desktop app gets a native folder picker.
+- **feat(launcher): Delivery panel.** The assemble ring entry carries
+  `delivered_chunks` and `delivered_chars`; the dashboard shows chunks and
+  characters per packet and packet latency (retrieval + assembly, last / avg /
+  p95) in place of the Tokens panel, which keeps lifetime tokens as one line.
+- **feat(launcher): Enable/Stop observability in the desktop app.** The
+  headless launcher never started the OTel sidecar; the Monitoring panel now
+  has an Enable/Stop button (stack first, then the backend restarts to export;
+  a failed start never restarts the backend).
+- **fix(launcher): the 2 s refresh no longer drops keyboard focus.** Only
+  panels whose HTML changed are replaced, and focus is handed back to a
+  replaced control.
+
+- **feat(know): served cross-encoder input for the lanes model** (opt-in,
+  #482). New key `[know] lanes_ce_model` (empty = off; no CE call is made). When
+  it is set, the server scores the fused top-1 and top-2 through the shared
+  rerank backend and feeds `ce_top1` / `ce_margin` (plus missing flags) to the
+  lanes model. A failed or absent model reads as missing, never as an error.
+  `fit_know_lanes --features ce` now writes a loadable `[know]` block,
+  including `lanes_ce_model`, and `calibrate_know_store` honours it.
+  Measured on 30-bed CE replays: pooled leave-one-corpus-out AUC 0.743 →
+  0.823. ERB 947k, with the model fit without ERB and the floor calibrated on
+  held-out ERB folds, reaches 0.766 precision at 16.4% coverage (target 0.75).
+- **fix(know): `calibrate_know_store` Platt fit diverged.** Undamped Newton
+  started at (1, 0) and reached a ≈ 8e8 on ERB's lanes logits, collapsing every
+  probability to 0, so the script wrongly reported `no_usable_floor`. It now
+  uses Newton with a backtracking line search from the base-rate intercept.
+
+- **feat(know): per-store calibration for the lanes model** (opt-in, #482).
+  New keys `[know] lanes_platt_a` / `lanes_platt_b` (default identity, so
+  #492's behaviour is unchanged). `scripts/calibrate_know_store.py` fits them,
+  plus an `emit_floor`, on one store's own labelled queries, using k-fold
+  cross-validation, and writes no floor when the held-out precision misses the
+  target. Measured: coderag_solutions reaches 0.80 held-out precision at 37%
+  coverage. ERB 947k and most text corpora cannot support a confident know
+  (about 0 coverage at precision ≥ 0.7), so the script refuses there.
+
+- **feat(freshness): `[context] freshness_basis = "source"`** (opt-in, #482;
+  default `"clock"` unchanged). Freshness is checked against the source instead
+  of the clock: unchanged on disk since verification = verified, changed =
+  needs refresh, not on this disk = unknown (`stale_risk` for ordinary tasks)
+  instead of stale. Under `"clock"` a static store goes all-stale about 15 days
+  after ingest, and `/context` treats a source this machine cannot find as
+  stale: on the ERB 947k bed that forced 470/470 queries to `miss(stale)`
+  before know confidence was read. No default change, so no receipt is required.
+- **feat(know): `[know] model = "lanes"`** (opt-in, #482; default `"legacy"`
+  unchanged). A dense-free know confidence built from inputs every query has:
+  the scale-free score shape, `coordinate_confidence`, and lane agreement
+  (`scoring/know_lanes.py`). Each input enters with a missing indicator, so an
+  unmeasurable signal never counts as 0 evidence. The gates before confidence
+  are unchanged. `scripts/fit_know_lanes.py` fits it from `know_abstain_replay`
+  receipts and writes a `[know]` block; it never edits `cymatix.toml`. On the
+  first fit (27 corpora, 32,299 queries) the leave-one-corpus-out pooled AUC
+  is 0.751, against 0.413 for the shipped betas. Calibration does not yet
+  transfer (precision 0.33 at the 0.45 floor), so the model stays opt-in until
+  a per-store floor and the receipt-gated A/B exist.
+
 ## 0.11.1 (2026-10-07)
 
 - **Release gate: 947k merged-stack witness, EXACT_REPRODUCE** (BASELINES row

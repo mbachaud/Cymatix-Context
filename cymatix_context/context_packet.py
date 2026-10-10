@@ -8,8 +8,10 @@ decide whether to trust, reread, or refresh before acting.
 from __future__ import annotations
 
 import math
+import os
 import sqlite3
 from pathlib import PurePath
+from types import SimpleNamespace
 from typing import Optional
 
 from .accel import extract_query_signals
@@ -133,6 +135,37 @@ def _freshness_score(last_verified_at: float | None, volatility_class: str, now_
     half_life = _HALF_LIFE_SECONDS.get(volatility_class or "medium", _HALF_LIFE_SECONDS["medium"])
     age_seconds = max(0.0, now_ts - float(last_verified_at))
     return math.exp(-age_seconds / max(half_life, 1.0))
+
+
+# [context] freshness_basis="source": per-process mtime cache for
+# revalidate_source (in-memory, not a store write; same TTL as /context).
+_SOURCE_MTIME_CACHE: dict[str, tuple[float, float]] = {}
+
+
+def _source_freshness(meta: dict, now_ts: float) -> tuple[bool, float]:
+    """(freshness_known, freshness_score) from the source itself (#482).
+
+    Unchanged on disk since verification -> (True, 1.0); changed after it ->
+    (True, 0.0), i.e. needs_refresh; not on this disk, no path, a URL, or never
+    verified -> (False, 0.0): unknown, which _status_for treats as stale_risk
+    for ordinary tasks and needs_refresh for high-risk ones.
+    """
+    from .retrieval.freshness import revalidate_source
+
+    source = meta.get("source_id")
+    root = meta.get("repo_root")
+    if source and root and not os.path.isabs(source) and "://" not in source[:32]:
+        source = os.path.join(root, source)
+    verdict = revalidate_source(
+        SimpleNamespace(source_id=source, last_verified_at=meta.get("last_verified_at")),
+        mtime_cache=_SOURCE_MTIME_CACHE,
+        now_ts=now_ts,
+    )
+    if verdict == "fresh":
+        return True, 1.0
+    if verdict == "stale":
+        return True, 0.0
+    return False, 0.0
 
 
 def _authority_score(authority_class: str | None) -> float:
@@ -359,13 +392,17 @@ def _build_item(
     file_coverage: float = 1.0,
     max_item_chars: int = _DEFAULT_MAX_ITEM_CHARS,
     prefer_raw: bool = False,
+    freshness_basis: str = "clock",
 ) -> tuple[ContextItem, str]:
-    freshness_known = meta.get("last_verified_at") is not None
-    freshness_score = _freshness_score(
-        meta.get("last_verified_at"),
-        meta.get("volatility_class") or "medium",
-        now_ts,
-    )
+    if freshness_basis == "source":
+        freshness_known, freshness_score = _source_freshness(meta, now_ts)
+    else:
+        freshness_known = meta.get("last_verified_at") is not None
+        freshness_score = _freshness_score(
+            meta.get("last_verified_at"),
+            meta.get("volatility_class") or "medium",
+            now_ts,
+        )
     authority_score = _authority_score(meta.get("authority_class"))
     specificity_score = _specificity_score(meta)
     live_truth_score = freshness_score * authority_score * specificity_score
@@ -500,6 +537,7 @@ def build_context_packet(
     include_raw: bool = False,
     max_item_chars: int | None = None,
     budget_config=None,
+    freshness_basis: str = "clock",
 ) -> ContextPacket:
     """Return a freshness-labeled packet for the given query.
 
@@ -603,6 +641,7 @@ def build_context_packet(
             file_coverage=file_cov,
             max_item_chars=max(1, len(doc.content)) if full_text else effective_max_chars,
             prefer_raw=include_raw,
+            freshness_basis=freshness_basis,
         )
         if full_text:
             item.content = doc.content
@@ -636,7 +675,8 @@ def build_context_packet(
                     meta=_effective_meta(doc, _lookup_source_row(effective_main_conn, doc.gene_id)),
                     task_type=task_type, now_ts=now_ts,
                     coordinate_confidence=coordinate_confidence, file_coverage=file_cov,
-                    max_item_chars=max(1, len(doc.content)), prefer_raw=True)
+                    max_item_chars=max(1, len(doc.content)), prefer_raw=True,
+                    freshness_basis=freshness_basis)
                 item.content = doc.content
                 packet.companions.append(item)
                 target = _refresh_target(item, task_type)
@@ -851,6 +891,27 @@ def _attach_know_or_miss(
     # lanes can produce, so a lane toggle needs no calibration edit.
     cal, live_inputs = load_calibration_and_inputs()
     top_gene = genes[0] if genes else None
+    # #482: [know] model = "lanes" -- same dense-free confidence as /context.
+    confidence_override = None
+    if score_map:
+        from .scoring import know_lanes as _kl
+
+        lanes_model = _kl.load_lanes_model()
+        if lanes_model is not None:
+            try:
+                order = _kl.fused_order(score_map)
+                by_id = {g.gene_id: g for g in genes}
+                top1 = by_id.get(order[0]) if order else None
+                confidence_override = _kl.served_lanes_confidence(
+                    lanes_model, scores=score_map, tier_contributions=tier_contrib, query=query,
+                    top1_text=getattr(top1, "content", None), coordinate_confidence=coordinate_confidence,
+                    text_of=lambda gid: getattr(by_id.get(gid), "content", None),
+                )
+            except Exception:  # noqa: BLE001 -- intentional recovery boundary
+                import logging
+                logging.getLogger("cymatix.context_packet").warning(
+                    "know lanes model failed; using the legacy logistic", exc_info=True)
+                confidence_override = None
     block = decide_know_or_miss(
         window=shim_window,
         query=query,
@@ -863,6 +924,7 @@ def _attach_know_or_miss(
         calibration=cal,
         freshness_status="stale" if _all_needs_refresh else None,
         live_inputs=live_inputs,
+        confidence_override=confidence_override,
     )
     if isinstance(block, KnowBlock) and _items and not _has_verified:
         # Unverified-fresh evidence only (stale_risk / needs_refresh with

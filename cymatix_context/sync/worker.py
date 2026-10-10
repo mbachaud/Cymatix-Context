@@ -124,6 +124,10 @@ class SyncWorker:
 
     def _run_pass(self, allow_mass_delete: bool) -> PassReport:
         report = PassReport()
+        if getattr(self.cymatix.genome, "read_only", False):
+            # Frozen store (or one swapped to read-only after boot).
+            log.info("sync pass skipped: the store is read-only")
+            return report
         t0 = time.monotonic()
         stale_after = max(_MIN_LEASE_S, _LEASE_INTERVALS * self.config.interval_s)
         ok, holder = self.tracker.claim(self.holder, stale_after)

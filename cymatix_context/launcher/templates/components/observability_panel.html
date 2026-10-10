@@ -16,6 +16,31 @@
     </div>
   {% endif %}
 
+  {# Only the desktop app's launcher can start/stop the sidecar from here. #}
+  {% set ctl = state.observability.control %}
+  {% if ctl %}
+    <div class="obs-control">
+      <span class="muted">
+        {% if ctl.status == "running" %}Running. The backend is exporting traces, metrics and logs to it.
+        {% elif ctl.status == "starting" %}Starting. The backend restarts once the stack is up.
+        {% elif ctl.status == "error" %}Could not start.
+        {% elif ctl.status == "not_installed" %}Not installed on this machine.
+        {% else %}Not running. Charts use this launcher's recent packets only.{% endif %}
+      </span>
+      {% if ctl.status == "running" %}
+        <button type="button" class="btn btn--mini" data-action="obs-disable">Stop observability</button>
+      {% elif ctl.status == "starting" %}
+        <button type="button" class="btn btn--mini" disabled>Starting&hellip;</button>
+      {% elif ctl.status in ("stopped", "error") %}
+        <button type="button" class="btn btn--mini" data-action="obs-enable">Enable observability</button>
+      {% endif %}
+    </div>
+    {% if ctl.error %}
+      <div class="diagnostics-error"><strong>Observability error:</strong>
+        <span class="muted">{{ ctl.error }}</span></div>
+    {% endif %}
+  {% endif %}
+
   {% if state.observability.services %}
     <ul class="obs-grid">
       {% for svc in state.observability.services %}

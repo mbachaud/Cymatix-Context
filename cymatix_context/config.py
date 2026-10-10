@@ -364,6 +364,23 @@ class TelemetryConfig:
     logs_level: str = "INFO"            # Min level forwarded (CYMATIX_OTEL_LOGS_LEVEL)
 
 
+@dataclass
+class TraceConfig:
+    """[trace] — opt-in packet trace (issue #493, schema v0).
+
+    Like [telemetry], env > toml > default is resolved at use time in
+    ``telemetry/trace.py`` (``resolve_trace_settings``), so ``load_config``
+    stays env-free. Off by default: with ``enabled = false`` no file or
+    thread is created (``packet_id`` is still minted and returned).
+    """
+    enabled: bool = False               # Master switch (CYMATIX_TRACE_ENABLED)
+    level: str = "metadata"             # "off" | "metadata" | "full" (CYMATIX_TRACE_LEVEL)
+    path: str = ""                      # Trace dir (CYMATIX_TRACE_PATH). "" = <genome dir>/traces
+    hash_chain: bool = False            # Each record carries sha256 of the previous line
+    sampler_ratio: float = 1.0          # Fraction of requests traced, 0.0-1.0
+    rotate_bytes: int = 64 * 1024 * 1024  # Rotate packets.jsonl past this size
+
+
 # Issue #341 (rerank wiring): shared literal for the default cross-encoder
 # rerank model ID. Referenced by both the pre-existing Phase 3 ingest-time
 # knob (IngestionConfig.rerank_model, right below) and the new [retrieval]
@@ -544,6 +561,8 @@ class ContextConfig:
     cold_tier_k: int = 3                    # Max cold-tier documents to retrieve per query
     cold_tier_min_cosine: float = 0.15      # SEMA cosine floor (sparse 20-dim — see Genome.query_cold_tier)
     fingerprint_mode_profile: str = "balanced"  # "fast" | "balanced" | "quality"
+    # Issue #482: what decides an item's freshness. "clock" = age since last verification (legacy; a static store goes stale ~15 days after ingest). "source" = ask the source: unchanged on disk = verified, changed = needs refresh, not on this disk = unknown (not stale).
+    freshness_basis: str = "clock"
 
 
 @dataclass
@@ -1291,6 +1310,18 @@ class KnowConfig:
     neutral: Optional[List[float]] = None
     # Issue #482: the inputs available when the betas were fit (names from top_score, score_gap, lexical_dense_agree, coordinate_confidence, freshness_min). Inputs outside it, or that the enabled lanes cannot produce, count as unavailable, and /context warns calibration_profile_mismatch. None = fit profile not recorded.
     fitted_inputs: Optional[List[str]] = None
+    # Issue #482: which formula produces know confidence. "legacy" = the betas above. "lanes" = dense-free logistic over what every query has (score shape, coordinate_confidence, lane agreement; scoring/know_lanes.py) using lanes_intercept + lanes_betas. The gates before confidence (abstain, freshness, supersession) are the same either way.
+    model: str = "legacy"
+    # Issue #482: intercept of the "lanes" model (written by scripts/fit_know_lanes.py).
+    lanes_intercept: float = 0.0
+    # Issue #482: {feature name: beta} for the "lanes" model; names from scoring/know_lanes.FEATURE_NAMES, absent names weigh 0 (written by scripts/fit_know_lanes.py).
+    lanes_betas: Dict[str, float] = field(default_factory=dict)
+    # Issue #482: per-store Platt rescale of the "lanes" logit, z' = a*z + b (written by scripts/calibrate_know_store.py from this store's own labelled queries). 1.0 / 0.0 = identity.
+    lanes_platt_a: float = 1.0
+    # Issue #482: per-store Platt offset for the "lanes" logit (see lanes_platt_a).
+    lanes_platt_b: float = 0.0
+    # Issue #482: HF cross-encoder whose fused top-1/top-2 scores feed the "lanes" model's ce_top1/ce_margin features (e.g. "cross-encoder/ms-marco-MiniLM-L-6-v2", scored through the shared rerank backend). "" = off: no CE call per query. Needs betas fit with scripts/fit_know_lanes.py --features ce.
+    lanes_ce_model: str = ""
 
 
 @dataclass
@@ -1444,6 +1475,7 @@ class CymatixConfig:
     genome: GenomeConfig = field(default_factory=GenomeConfig)
     server: ServerConfig = field(default_factory=ServerConfig)
     telemetry: TelemetryConfig = field(default_factory=TelemetryConfig)
+    trace: TraceConfig = field(default_factory=TraceConfig)
     ingestion: IngestionConfig = field(default_factory=IngestionConfig)
     context: ContextConfig = field(default_factory=ContextConfig)
     cymatics: CymaticsConfig = field(default_factory=CymaticsConfig)
@@ -1910,6 +1942,20 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             logs_level=str(t.get("logs_level", cfg.telemetry.logs_level)),
         )
 
+    # Packet trace — toml layer only; env (CYMATIX_TRACE_*) is resolved by
+    # telemetry/trace.py at use time, same split as [telemetry].
+    if "trace" in raw:
+        tc = raw["trace"]
+        _warn_unknown("trace", tc, TraceConfig)
+        cfg.trace = TraceConfig(
+            enabled=bool(tc.get("enabled", cfg.trace.enabled)),
+            level=str(tc.get("level", cfg.trace.level)),
+            path=str(tc.get("path", cfg.trace.path)),
+            hash_chain=bool(tc.get("hash_chain", cfg.trace.hash_chain)),
+            sampler_ratio=float(tc.get("sampler_ratio", cfg.trace.sampler_ratio)),
+            rotate_bytes=int(tc.get("rotate_bytes", cfg.trace.rotate_bytes)),
+        )
+
     # Ingestion
     if "ingestion" in raw:
         i = raw["ingestion"]
@@ -1963,7 +2009,13 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
     if "context" in raw:
         c = raw["context"]
         _warn_unknown("context", c, ContextConfig)
+        basis = str(c.get("freshness_basis", cfg.context.freshness_basis)).strip().lower()
+        if basis not in ("clock", "source"):
+            log.warning("[context] freshness_basis must be 'clock' or 'source', got %r; using 'clock'",
+                        c.get("freshness_basis"))
+            basis = "clock"
         cfg.context = ContextConfig(
+            freshness_basis=basis,
             cold_tier_enabled=bool(c.get("cold_tier_enabled", cfg.context.cold_tier_enabled)),
             cold_tier_min_hot_genes=int(c.get("cold_tier_min_hot_genes", cfg.context.cold_tier_min_hot_genes)),
             cold_tier_k=int(c.get("cold_tier_k", cfg.context.cold_tier_k)),
@@ -2287,7 +2339,35 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
                     "(fit profile not recorded)", ", ".join(_KNOW_FEATURE_NAMES),
                 )
 
+        model = str(k.get("model", "legacy")).strip().lower()
+        if model not in ("legacy", "lanes"):
+            log.warning("[know] model must be 'legacy' or 'lanes', got %r; using 'legacy'", k.get("model"))
+            model = "legacy"
+        from .scoring.know_lanes import CE_FEATURES as _CE_FEATURES
+        from .scoring.know_lanes import FEATURE_NAMES as _BASE_LANE_FEATURES
+        _LANE_FEATURES = _BASE_LANE_FEATURES + _CE_FEATURES
+        lanes_betas: Dict[str, float] = {}
+        raw_lb = k.get("lanes_betas") or {}
+        if isinstance(raw_lb, dict):
+            for name, val in raw_lb.items():
+                if name not in _LANE_FEATURES:
+                    log.warning("[know] lanes_betas: unknown feature %r ignored (known: %s)",
+                                name, ", ".join(_LANE_FEATURES))
+                    continue
+                try:
+                    lanes_betas[str(name)] = float(val)
+                except (TypeError, ValueError):
+                    log.warning("[know] lanes_betas: %r is not a number; ignored", name)
+        else:
+            log.warning("[know] lanes_betas must be a table of {feature = beta}; ignoring it")
+
         cfg.know = KnowConfig(
+            model=model,
+            lanes_intercept=_know_float("lanes_intercept", 0.0),
+            lanes_betas=lanes_betas,
+            lanes_platt_a=_know_float("lanes_platt_a", 1.0),
+            lanes_platt_b=_know_float("lanes_platt_b", 0.0),
+            lanes_ce_model=str(k.get("lanes_ce_model", "") or "").strip(),
             neutral=neutral,
             fitted_inputs=fitted_inputs,
             emit_floor=_know_float("emit_floor", _KNOW_DEFAULT_EMIT_FLOOR),

@@ -398,6 +398,7 @@ def _compute_know_or_miss_block(
     if top_gene is not None and gene_ids:
         try:
             from ..retrieval.freshness import (
+                apply_freshness_basis,
                 check_superseded,
                 revalidate_and_mark,
             )
@@ -450,6 +451,13 @@ def _compute_know_or_miss_block(
                 except Exception:
                     log.debug("Stage-7 revalidate failed", exc_info=True)
                     freshness_status = None
+                # #482: [context] freshness_basis="source" reads a source
+                # this machine cannot find as unknown, not stale.
+                _ctx_cfg = getattr(_live_cfg, "context", None)
+                freshness_status = apply_freshness_basis(
+                    freshness_status,
+                    getattr(_ctx_cfg, "freshness_basis", "clock"),
+                )
 
                 try:
                     successor_source_id = check_superseded(
@@ -477,6 +485,34 @@ def _compute_know_or_miss_block(
         log.debug("Stage-7 cold-tier peek failed", exc_info=True)
         cold_targets = []
 
+    # #482: [know] model = "lanes" -- dense-free confidence over what this
+    # query actually produced (scoring/know_lanes.py). Any failure falls back
+    # to the legacy logistic rather than breaking the route.
+    confidence_override = None
+    _know_cfg = getattr(_live_cfg, "know", None)
+    if getattr(_know_cfg, "model", "legacy") == "lanes" and raw_scores:
+        try:
+            from ..scoring.know_lanes import fused_order, model_from_know, served_lanes_confidence
+
+            reader = getattr(cymatix.genome, "read_conn", None)
+
+            def _text_of(gid):
+                if reader is None:
+                    return None
+                hit = reader.execute("SELECT content FROM genes WHERE gene_id = ?", (gid,)).fetchone()
+                return hit[0] if hit and isinstance(hit[0], str) else None
+
+            order = fused_order(raw_scores)
+            confidence_override = served_lanes_confidence(
+                model_from_know(_know_cfg),
+                scores=raw_scores, tier_contributions=tier_contrib, query=query,
+                top1_text=_text_of(order[0]) if order else None, coordinate_confidence=coord_conf,
+                text_of=_text_of,
+            )
+        except Exception:  # noqa: BLE001 -- intentional recovery boundary
+            log.warning("know lanes model failed; using the legacy logistic", exc_info=True)
+            confidence_override = None
+
     return decide_know_or_miss(
         window=window,
         query=query,
@@ -492,6 +528,7 @@ def _compute_know_or_miss_block(
         successor_source_id=successor_source_id,
         cold_refresh_targets=cold_targets,
         live_inputs=live_inputs,
+        confidence_override=confidence_override,
     )
 
 

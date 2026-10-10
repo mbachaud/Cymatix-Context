@@ -129,7 +129,12 @@ def _context_response() -> dict:
         client.app.state.cymatix.genome, capture.SEEDED_GENE_COUNT)
     resp = client.post("/context", json={"query": capture.FACTUAL_QUERY})
     assert resp.status_code == 200
-    return resp.json()[0]
+    body = resp.json()[0]
+    # #493: every /context response carries a per-request packet_id (a fresh
+    # ULID). It is a deliberate additive top-level key, not a rank/hash key,
+    # so it is checked here and kept out of the v0.9.0 key-manifest golden.
+    assert len(body.pop("packet_id")) == 26
+    return body
 
 
 def _contains_key(node, needle: str) -> bool:

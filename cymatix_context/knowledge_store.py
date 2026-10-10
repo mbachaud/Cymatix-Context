@@ -62,6 +62,10 @@ COVERAGE_TIEBREAK_DEPTH = 60
 # accel.extract_query_signals so query terms and content tokens agree.
 _COVERAGE_TOKEN_RE = re.compile(r"[a-z0-9_/\-]+")
 
+# SQLite's default SQLITE_LIMIT_COMPOUND_SELECT: max members of one
+# compound SELECT. _tag_prefix_sql nests its per-term UNION ALL to stay under it.
+_COMPOUND_SELECT_LIMIT = 500
+
 
 # ── Struggle 1 fix: source-path deny list ───────────────────────────────
 #
@@ -2828,11 +2832,25 @@ class KnowledgeStore:
         # ingest-normalized to lowercase (verified 0 mixed-case rows on
         # dogfood and every ERB bed), so lowercasing the query term
         # preserves LIKE's case-insensitive matching.
-        sub = " UNION ALL ".join(
+        branches = [
             "SELECT gene_id, tag_value FROM promoter_index "
             "WHERE tag_value >= ? AND tag_value < ?"
             for _ in query_terms
-        )
+        ]
+        # SQLITE_LIMIT_COMPOUND_SELECT (500) caps the members of ONE
+        # compound SELECT; past it the whole query raised OperationalError
+        # (BEIR ArguAna / RepoBench-R long queries). Over the limit, wrap
+        # each run of <=500 branches in a subquery and UNION ALL those —
+        # same rows, same multiplicity, same param order. At or under the
+        # limit the SQL stays byte-identical to the flat form.
+        while len(branches) > _COMPOUND_SELECT_LIMIT:
+            branches = [
+                "SELECT gene_id, tag_value FROM ("
+                + " UNION ALL ".join(branches[i:i + _COMPOUND_SELECT_LIMIT])
+                + ")"
+                for i in range(0, len(branches), _COMPOUND_SELECT_LIMIT)
+            ]
+        sub = " UNION ALL ".join(branches)
         # CROSS JOIN is SQLite's documented ordering hint: it pins the
         # aggregated tag matches as the outer loop so genes is one PK
         # lookup per MATCHED id. A plain JOIN let the planner flatten and
@@ -5514,6 +5532,9 @@ class KnowledgeStore:
 
         Returns the number of documents marked as source-changed.
         """
+        if self.read_only:
+            log.debug("read_only: skipping compact")
+            return 0
         cur = self.conn.cursor()
         change_detected = 0
 
@@ -6168,6 +6189,9 @@ class KnowledgeStore:
         Keeps: everything (content, complement, fragments, SPLADE, FTS5)
         Flips: ``chromatin = 2``, ``compression_tier = 2``
         """
+        if self.read_only:
+            log.debug("read_only: skipping compress_to_heterochromatin")
+            return False
         # W2.3 Phase A: check-then-write + commit on the shared writer —
         # hold the write lock for the whole section. Cache/dense-matrix
         # invalidation stays OUTSIDE the lock (lock-ordering rule: never

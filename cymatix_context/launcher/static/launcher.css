@@ -596,7 +596,7 @@ body.rail-collapsed .desktop-rail__body {
 }
 
 .panel--genes,
-.panel--tokens,
+.panel--delivery,
 .panel--diagnostics,
 .panel--agents,
 .panel--all-agents,
@@ -931,7 +931,7 @@ body.rail-collapsed .desktop-rail__body {
 .panels[data-active-tab="agents"] .panel--participants,
 .panels[data-active-tab="agents"] .panel--agents,
 .panels[data-active-tab="genome"] .panel--genes,
-.panels[data-active-tab="genome"] .panel--tokens,
+.panels[data-active-tab="genome"] .panel--delivery,
 .panels[data-active-tab="genome"] .panel--models,
 .panels[data-active-tab="genome"] .panel--tools,
 .panels[data-active-tab="genome"] .panel--database,
@@ -1377,6 +1377,14 @@ body.rail-collapsed .desktop-rail__body {
   margin-top: 0.6rem;
 }
 
+.obs-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 .db-create__input {
   flex: 1;
   font: inherit;
@@ -1593,4 +1601,107 @@ body.rail-collapsed .desktop-rail__body {
     grid-template-columns: 1fr;
     gap: 2px;
   }
+}
+
+/* Per-store settings (Database panel) */
+.store-settings {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.store-settings__row,
+.store-settings__folders {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.store-settings__freeze {
+  margin-left: auto;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.switch__track {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--color-border);
+  flex: none;
+  transition: background var(--motion);
+}
+
+.switch__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left var(--motion);
+}
+
+.switch[aria-checked="true"] .switch__track {
+  background: var(--color-accent);
+}
+
+.switch[data-action="store-freeze"][aria-checked="true"] .switch__track {
+  background: var(--color-party);
+}
+
+.switch[aria-checked="true"] .switch__knob {
+  left: 19px;
+}
+
+.folder-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-elevated);
+}
+
+.folder-chip__remove {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.folder-chip__remove:hover:not(:disabled) {
+  color: var(--color-danger);
+}
+
+.database-entry--frozen {
+  border-color: var(--color-party);
+}
+
+.database-entry__tag--frozen {
+  color: var(--color-party);
 }

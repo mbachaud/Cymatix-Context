@@ -513,6 +513,46 @@ toml > default resolution), `cymatix_context/launcher/app.py`
 
 ---
 
+## `[trace]`
+
+**Purpose.** Opt-in packet trace (experimental, issue #493 Phase 1): an
+append-only JSONL record of what each `/context` call delivered, keyed by
+the `packet_id` every response carries. Precedence is
+**env > toml > default** (`CYMATIX_TRACE_ENABLED`, `CYMATIX_TRACE_LEVEL`,
+`CYMATIX_TRACE_PATH`), resolved in `telemetry/trace.py`, not in
+`load_config()`. Off by default: no file or thread is created. Schema and
+levels: `docs/specs/packet-trace-v0.md`.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:trace -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | `bool` | `false` | Master switch (CYMATIX_TRACE_ENABLED) |
+| `level` | `str` | `"metadata"` | "off" \| "metadata" \| "full" (CYMATIX_TRACE_LEVEL) |
+| `path` | `str` | `""` | Trace dir (CYMATIX_TRACE_PATH). "" = <genome dir>/traces |
+| `hash_chain` | `bool` | `false` | Each record carries sha256 of the previous line |
+| `sampler_ratio` | `float` | `1.0` | Fraction of requests traced, 0.0-1.0 |
+| `rotate_bytes` | `int` | `67108864` | Rotate packets.jsonl past this size |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[trace]
+enabled = false
+level = "metadata"
+path = ""
+hash_chain = false
+sampler_ratio = 1.0
+rotate_bytes = 67108864
+```
+
+**Cross-refs.** `cymatix_context/config.py` (`TraceConfig`),
+`cymatix_context/telemetry/trace.py`, `docs/specs/packet-trace-v0.md`.
+
+---
+
 ## `[headroom]`
 
 **Purpose.** Optional Headroom proxy lifecycle controls — launcher
@@ -655,6 +695,7 @@ returning their preserved content (only possible after C.1 made
 | `cold_tier_k` | `int` | `3` | Max cold-tier documents to retrieve per query |
 | `cold_tier_min_cosine` | `float` | `0.15` | SEMA cosine floor (sparse 20-dim — see Genome.query_cold_tier) |
 | `fingerprint_mode_profile` | `str` | `"balanced"` | "fast" \| "balanced" \| "quality" |
+| `freshness_basis` | `str` | `"clock"` | Issue #482: what decides an item's freshness. "clock" = age since last verification (legacy; a static store goes stale ~15 days after ingest). "source" = ask the source: unchanged on disk = verified, changed = needs refresh, not on this disk = unknown (not stale). |
 <!-- END GENERATED -->
 
 **Example.**
@@ -1092,6 +1133,12 @@ produces the bench JSONL.
 | `stale_after_days` | `int` | `30` | Stage 4 (spec §9, issue #63): age in days after which the /context response flags ``calibration_stale``. |
 | `neutral` | `Optional[List[float]]` | `None` | Issue #482: per-feature value (b1..b5 order, feature space) used when an input is unavailable — no dense lane, nothing delivered, freshness unknown; normally the calibration-set means. None = legacy: unavailable inputs contribute nothing. |
 | `fitted_inputs` | `Optional[List[str]]` | `None` | Issue #482: the inputs available when the betas were fit (names from top_score, score_gap, lexical_dense_agree, coordinate_confidence, freshness_min). Inputs outside it, or that the enabled lanes cannot produce, count as unavailable, and /context warns calibration_profile_mismatch. None = fit profile not recorded. |
+| `model` | `str` | `"legacy"` | Issue #482: which formula produces know confidence. "legacy" = the betas above. "lanes" = dense-free logistic over what every query has (score shape, coordinate_confidence, lane agreement; scoring/know_lanes.py) using lanes_intercept + lanes_betas. The gates before confidence (abstain, freshness, supersession) are the same either way. |
+| `lanes_intercept` | `float` | `0.0` | Issue #482: intercept of the "lanes" model (written by scripts/fit_know_lanes.py). |
+| `lanes_betas` | `Dict[str, float]` | `{}` | Issue #482: {feature name: beta} for the "lanes" model; names from scoring/know_lanes.FEATURE_NAMES, absent names weigh 0 (written by scripts/fit_know_lanes.py). |
+| `lanes_platt_a` | `float` | `1.0` | Issue #482: per-store Platt rescale of the "lanes" logit, z' = a*z + b (written by scripts/calibrate_know_store.py from this store's own labelled queries). 1.0 / 0.0 = identity. |
+| `lanes_platt_b` | `float` | `0.0` | Issue #482: per-store Platt offset for the "lanes" logit (see lanes_platt_a). |
+| `lanes_ce_model` | `str` | `""` | Issue #482: HF cross-encoder whose fused top-1/top-2 scores feed the "lanes" model's ce_top1/ce_margin features (e.g. "cross-encoder/ms-marco-MiniLM-L-6-v2", scored through the shared rerank backend). "" = off: no CE call per query. Needs betas fit with scripts/fit_know_lanes.py --features ce. |
 <!-- END GENERATED -->
 
 `stale_after_days` (Stage 7, spec §9 / issue #63) is the age in days
