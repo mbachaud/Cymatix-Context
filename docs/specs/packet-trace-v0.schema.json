@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cymatixcontext.com/schemas/packet-trace-v0.schema.json",
+  "title": "Cymatix packet trace event (schema_version 0, phase 1)",
+  "description": "One `packet` record as written by cymatix_context.telemetry.trace.build_packet_event. At level metadata no raw query or chunk text is present; level full adds `query` and chunk `text`. Exported records (trace_export) validate as level metadata with prev_hash removed.",
+  "type": "object",
+  "required": ["schema_version", "event", "packet_id", "ts", "level", "query_hash", "query_len_terms", "replay", "chunks", "verdict", "timing_ms"],
+  "properties": {
+    "schema_version": {"const": "0"},
+    "event": {"const": "packet"},
+    "packet_id": {"type": "string", "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"},
+    "pipeline_request_id": {"type": ["string", "null"]},
+    "session_id": {"type": ["string", "null"]},
+    "ts": {"type": "number"},
+    "level": {"enum": ["metadata", "full"]},
+    "query_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "query_len_terms": {"type": "integer", "minimum": 0},
+    "query": {"type": "string"},
+    "replay": {
+      "type": "object",
+      "properties": {
+        "index_fingerprint": {"type": "string"},
+        "doc_count": {"type": "integer", "minimum": 0},
+        "config_hash": {"type": "string"},
+        "cymatix_version": {"type": "string"},
+        "git_sha": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "chunks": {"type": "array", "items": {"$ref": "#/$defs/chunk"}},
+    "verdict": {
+      "type": "object",
+      "properties": {
+        "kind": {"enum": ["know", "miss", null]},
+        "confidence": {"type": ["number", "null"]},
+        "reason": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "timing_ms": {"type": "object", "additionalProperties": {"type": "number"}},
+    "trace": {
+      "type": "object",
+      "properties": {
+        "trace_id": {"type": "string"},
+        "parent_span_id": {"type": "string"},
+        "trace_flags": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "prev_hash": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false,
+  "if": {"properties": {"level": {"const": "metadata"}}},
+  "then": {
+    "not": {"required": ["query"]},
+    "properties": {"chunks": {"items": {"not": {"required": ["text"]}}}}
+  },
+  "$defs": {
+    "chunk": {
+      "type": "object",
+      "required": ["chunk_id", "doc_id"],
+      "properties": {
+        "chunk_id": {"type": ["string", "null"]},
+        "doc_id": {"type": ["string", "null"]},
+        "content_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "rank": {"type": "integer"},
+        "score": {"type": "number"},
+        "source_kind": {"type": "string"},
+        "lane_contribs": {"type": "object", "additionalProperties": {"type": "number"}},
+        "ingested_at": {"type": ["number", "string"]},
+        "text": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
