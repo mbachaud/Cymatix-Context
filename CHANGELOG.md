@@ -2,6 +2,59 @@
 
 ## Unreleased
 
+## 0.11.2 (2026-10-09)
+
+- **feat(trace): opt-in packet trace, Phase 1** (#493, PR #497; `[trace]
+  enabled = false` by default). Every `/context` and `/context/packet`
+  response now carries a ULID `packet_id` (body field and
+  `X-Cymatix-Packet-Id` header) whether tracing is on or not; a W3C
+  `traceparent` is parsed and recorded, and the OTel span gets
+  `cymatix.packet_id`. With tracing on, `metadata`-level packet events
+  (HMAC-keyed query/content hashes, ranks, scores, verdict, replay
+  fingerprint; no raw query or chunk text) go to an append-only JSONL file
+  through an async writer, with optional hash chaining and size rotation;
+  `full` adds raw text for local debugging. `GET /trace/{packet_id}` and
+  `GET /trace/recent` read it back behind the `[server] admin_token` guard.
+  Schema: `docs/specs/packet-trace-v0.md`. Microbench (event build + enqueue,
+  12 chunks): p95 215 us; end-to-end `/context` overhead is not yet receipted.
+  Phases 2-5 (eval checks, harness adapters, detections, export/replay)
+  remain open on #493.
+- **fix(retrieval): Tier-2 `tag_prefix` survives queries with more than 500
+  terms** (#482, PR #483). The per-term `UNION ALL` exceeded SQLite's
+  compound-SELECT limit and raised `too many terms in compound SELECT`, which
+  benchmarks scored as a miss (BEIR ArguAna 6/1,401, RepoBench-R cff-easy
+  1/200). Over the limit the branches are now nested in groups of at most 500;
+  at 500 terms or fewer the SQL is byte-identical to before, so ordinary
+  queries cannot change rank. Published numbers on those beds are slightly
+  low and need a rescore.
+- **desktop: declare Node >= 22.12 and document Electron's lazy binary
+  download** (PR #480). Electron 44 has no postinstall step; the binary is
+  fetched on first run, so launchers that start `dist/electron.exe` directly
+  need `npx install-electron --no` first. No code or dependency changes.
+- **feat(stores): per-store settings and Freeze.** Each knowledge store gets an
+  optional sidecar `<store>.db.cymatix.json` holding its auto-sync folders and
+  a Freeze flag (`cymatix_context/store_settings.py`). Freeze means the
+  knowledge content is read-only: the store opens `read_only` (documents,
+  tiers, links and health records are not written, including by queries,
+  compaction and tombstoning), its sync is off, and `/ingest` and
+  `/consolidate` answer 409. Session, delivery-log and query-log tables still
+  write, so the file is not byte-identical after use. A store's own sync block overrides the global
+  `[sync]` enabled/roots/interval for that store only; with no sidecar nothing
+  changes. The dashboard's Database panel shows Auto-sync, Freeze and folder
+  chips per store (`POST /api/genome/settings`, restarts only when the active
+  store changed), and the desktop app gets a native folder picker.
+- **feat(launcher): Delivery panel.** The assemble ring entry carries
+  `delivered_chunks` and `delivered_chars`; the dashboard shows chunks and
+  characters per packet and packet latency (retrieval + assembly, last / avg /
+  p95) in place of the Tokens panel, which keeps lifetime tokens as one line.
+- **feat(launcher): Enable/Stop observability in the desktop app.** The
+  headless launcher never started the OTel sidecar; the Monitoring panel now
+  has an Enable/Stop button (stack first, then the backend restarts to export;
+  a failed start never restarts the backend).
+- **fix(launcher): the 2 s refresh no longer drops keyboard focus.** Only
+  panels whose HTML changed are replaced, and focus is handed back to a
+  replaced control.
+
 - **feat(know): served cross-encoder input for the lanes model** (opt-in,
   #482). New key `[know] lanes_ce_model` (empty = off; no CE call is made). When
   it is set, the server scores the fused top-1 and top-2 through the shared
@@ -64,29 +117,6 @@
   exactly what the agent announced: the vendor, host and model name maps are
   gone (`model_labels.py` removed), and the Connect-a-chat host list comes from
   the CLI's install table instead of a template literal.
-- **feat(stores): per-store settings and Freeze.** Each knowledge store gets an
-  optional sidecar `<store>.db.cymatix.json` holding its auto-sync folders and
-  a Freeze flag (`cymatix_context/store_settings.py`). Freeze means the
-  knowledge content is read-only: the store opens `read_only` (documents,
-  tiers, links and health records are not written, including by queries,
-  compaction and tombstoning), its sync is off, and `/ingest` and
-  `/consolidate` answer 409. Session, delivery-log and query-log tables still
-  write, so the file is not byte-identical after use. A store's own sync block overrides the global
-  `[sync]` enabled/roots/interval for that store only; with no sidecar nothing
-  changes. The dashboard's Database panel shows Auto-sync, Freeze and folder
-  chips per store (`POST /api/genome/settings`, restarts only when the active
-  store changed), and the desktop app gets a native folder picker.
-- **feat(launcher): Delivery panel.** The assemble ring entry carries
-  `delivered_chunks` and `delivered_chars`; the dashboard shows chunks and
-  characters per packet and packet latency (retrieval + assembly, last / avg /
-  p95) in place of the Tokens panel, which keeps lifetime tokens as one line.
-- **feat(launcher): Enable/Stop observability in the desktop app.** The
-  headless launcher never started the OTel sidecar; the Monitoring panel now
-  has an Enable/Stop button (stack first, then the backend restarts to export;
-  a failed start never restarts the backend).
-- **fix(launcher): the 2 s refresh no longer drops keyboard focus.** Only
-  panels whose HTML changed are replaced, and focus is handed back to a
-  replaced control.
 - **fix(store): concurrent `/context` requests no longer deadlock the server.**
   `KnowledgeStore.get_doc` read through the shared writer connection, unlocked,
   from the event loop (via the know/miss block), while another request's
