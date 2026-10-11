@@ -1007,6 +1007,65 @@ def _read_cover_walk_diag(genome: Any) -> Optional[Dict[str, Any]]:
     return dict(d) if d else None
 
 
+def build_ladder_tracer(trace_dir: Any, level: str = "metadata") -> Any:
+    """PacketTracer writing to *trace_dir* (hash chain on, every query
+    sampled). Settings are forced, not env-resolved, so a stray
+    CYMATIX_TRACE_* var cannot silently turn the witness trace off."""
+    from cymatix_context.config import TraceConfig
+    from cymatix_context.telemetry.trace import PacketTracer, resolve_trace_settings
+
+    settings = resolve_trace_settings(TraceConfig())
+    settings.update({
+        "enabled": True, "level": level, "path": str(trace_dir),
+        "hash_chain": True, "sampler_ratio": 1.0,
+    })
+    return PacketTracer(settings)
+
+
+def emit_ladder_trace(
+    tracer: Any, genome: Any, config: Any, window: Any, query: str,
+    *, session_id: str, t0: Optional[float] = None,
+) -> None:
+    """Emit one packet event for a finished build_context call. Read-only on
+    the window and store; never raises into the run. Chunks and verdict come
+    from the same helpers the /context route uses."""
+    from cymatix_context.telemetry import trace as _trace
+    from cymatix_context.telemetry.trace_chunks import window_chunks
+
+    try:
+        start = time.time() if t0 is None else t0
+        tracer.emit(
+            genome=genome, config=config,
+            packet_id=_trace.new_packet_id(), pipeline_request_id=(
+                (getattr(window, "metadata", None) or {}).get("pipeline_request_id")),
+            session_id=session_id, query=str(query),
+            chunks=window_chunks(window, genome),
+            verdict={"kind": None},  # ladder computes no know/miss block
+            timing_ms={"total": round((time.time() - start) * 1000, 1)},
+            traceparent=None, ts=start,
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"warning: ladder trace emit failed: {exc}", file=sys.stderr)
+
+
+def finalize_ladder_trace(tracer: Any, trace_dir: Any, level: str) -> Dict[str, Any]:
+    """Close the tracer (flushes the writer) and report what landed."""
+    from cymatix_context.telemetry.trace import verify_chain
+
+    tracer.close()
+    files = sorted(Path(trace_dir).glob("packets*.jsonl"))
+    written = 0
+    for f in files:
+        with open(f, "r", encoding="utf-8") as fh:
+            written += sum(1 for line in fh if line.strip())
+    return {
+        "trace_dir": str(trace_dir),
+        "trace_level": level,
+        "packets_written": written,
+        "chain_verified": bool(files) and all(verify_chain(f) for f in files),
+    }
+
+
 def run_arm(
     arm: Arm,
     *,
@@ -1017,6 +1076,8 @@ def run_arm(
     k: int,
     per_query: bool = False,
     rank_dump: int = 0,
+    tracer: Any = None,
+    trace_session_id: str = "ladder",
 ) -> Dict[str, Any]:
     """Build a manager for *arm*, run every needle, return the receipt row.
 
@@ -1229,6 +1290,13 @@ def run_arm(
                     record["stage_provenance"] = stage_capture.report()
                 records.append(record)
 
+                # Trace AFTER every score/rank/ring capture for this needle:
+                # emit is read-only and cannot feed back into the record.
+                if tracer is not None:
+                    emit_ladder_trace(
+                        tracer, manager.genome, cfg, window, needle["query"],
+                        session_id=trace_session_id)
+
                 contribs = getattr(manager.genome, "last_tier_contributions", None) or {}
                 for per_gene in contribs.values():
                     tier_keys.update(per_gene.keys())
@@ -1331,6 +1399,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     help="with --per-query: also record the top-N gene ids per "
                          "needle on the score-map and final-order bases (for "
                          "BEIR-standard NDCG, issue #482); 0 = off")
+    ap.add_argument("--trace-dir", default="", dest="trace_dir",
+                    help="emit one packet trace per measured query into this "
+                         "directory (hash-chained packets.jsonl); empty = off, "
+                         "receipt and behavior unchanged")
+    ap.add_argument("--trace-level", default="metadata", dest="trace_level",
+                    choices=("metadata", "full"),
+                    help="with --trace-dir: trace level (default metadata)")
     args = ap.parse_args(argv)
 
     resolved_path = _resolve(args.resolved)
@@ -1391,6 +1466,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     rows: List[Dict[str, Any]] = []
     baseline_observables: Optional[Dict[str, Any]] = None
+    tracer = None
+    if args.trace_dir:
+        tracer = build_ladder_tracer(_resolve(args.trace_dir), args.trace_level)
     for arm in selected:
         row = run_arm(
             arm,
@@ -1401,6 +1479,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             k=args.k,
             per_query=args.per_query,
             rank_dump=args.rank_dump,
+            tracer=tracer,
+            trace_session_id=f"ladder-{args.stamp}" if args.stamp else "ladder",
         )
         if row.get("skipped"):
             rows.append(row)
@@ -1465,6 +1545,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "dropped_arms": dropped,
         "arms": rows,
     }
+    if tracer is not None:
+        payload.update(finalize_ladder_trace(
+            tracer, _resolve(args.trace_dir), args.trace_level))
+        print(f"trace: {payload['packets_written']} packets, "
+              f"chain_verified={payload['chain_verified']}", flush=True)
     if args.per_query:
         # Only emitted when asked for — the default receipt shape is unchanged.
         payload["per_query"] = True
