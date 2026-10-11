@@ -3892,6 +3892,7 @@ class CymatixContextManager:
             ribosome_prompt=decoder_prompt,
             expressed_context=expressed_wrapped,
             expressed_gene_ids=[g.gene_id for g in sorted_genes[:len(parts)]],
+            delivered_docs={g.gene_id: g for g in sorted_genes[:len(parts)]},
             total_estimated_tokens=est_tokens,
             compression_ratio=total_raw / max(compressed_chars, 1),
             context_health=health,
