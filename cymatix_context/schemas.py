@@ -244,6 +244,10 @@ class ContextWindow(BaseModel):
     # exclude=True: internal plumbing, never serialized into responses.
     retrieval_scores: Optional[dict] = Field(default=None, exclude=True, repr=False)
     tier_contributions: Optional[dict] = Field(default=None, exclude=True, repr=False)
+    # Issue #493: {gene_id: Gene} for the delivered set, references to the
+    # documents assembly already holds (no copy, no DB read). Lets the packet
+    # trace read full content / source_kind without re-fetching each doc.
+    delivered_docs: Optional[dict] = Field(default=None, exclude=True, repr=False)
 
 
 class ContextItem(BaseModel):
