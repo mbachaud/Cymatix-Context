@@ -2,6 +2,60 @@
 
 ## Unreleased
 
+## 0.11.3 (2026-10-11)
+
+- **Release gate: 947k merged-stack witness with packet tracing on,
+  EXACT_REPRODUCE** (BASELINES row
+  `2026-10-11-v0113-merged-stack-witness-trace`). Candidate `00358af5`
+  delivered 314/470 (0.6681), with 0/470 per-needle differences from the
+  v0.11.2 witness. 470 packet traces were written and the hash chain
+  verified. No shipped default changed. Receipts: `cymatix-receipts`
+  `b6e9285`.
+
+- **perf(trace): packet trace adds under 1 ms per `/context` request at
+  947k** (#493, PRs #501 and #502; `[trace]` stays off by default). On
+  v0.11.2 the per-request trace work cost 47 ms at p50 and 57 ms at p95 on
+  the 947k ERB store. Two causes:
+  - The replay fingerprint ran `SELECT COUNT(*)` over `genes` on the request
+    thread whenever its 60 s cache expired. It is now refreshed by a single
+    background thread, and requests read the cached value.
+  - Each delivered document was re-read with `get_doc` to hash its content.
+    Chunks are now built from the documents assembly already holds, with one
+    batched read for any that are missing.
+
+  Measured trace work per request, metadata level: 0.19 ms at p50 and 0.70 ms
+  at p95; full level: 0.20 / 0.64 ms. The run was 150 ERB queries on a copy of
+  the 947k store, timed directly on the request thread; the writer thread's
+  disk I/O is not included. Recorded field values are unchanged.
+- **feat(trace): packet trace phases 2-5, first wave** (#493, PR #500; all
+  opt-in):
+  - **Eval checks** (`telemetry/trace_checks.py`): delivery hit and rank,
+    know/miss compliance, over-delivery, judge-residue routing, a seeded judge
+    sample, and Cohen's kappa.
+  - **`action` events**: `POST /trace/action` records an agent tool call
+    joined to the session's latest packet. Arguments are HMAC-hashed on the
+    server, and raw args are written only at `full`. `GET /trace/recent`
+    takes an `event` filter.
+  - **`label` events** with a security taxonomy: indirect prompt injection,
+    control-tag forgery, RBAC leak, corpus poisoning, data exfiltration, and
+    benign. The OWASP and MITRE ATLAS mappings are marked unverified, and no
+    detectors ship yet.
+  - **`cymatix trace export`**: refuses `full`-level records. It re-keys every
+    hash and every content- or path-derived id under a fresh per-export key,
+    so document ids, which are `sha256(content)[:16]`, are never exported in
+    the clear. It drops raw text and the chain hash, aborts on a secret-scan
+    hit, and writes a per-field keep/rekey/drop manifest.
+  - **JSON Schema** for packet events: `docs/specs/packet-trace-v0.schema.json`.
+  - **`trace-export` extra**: `datasets`, `pyarrow`, `jsonschema`.
+
+  Still open on #493: harness adapters, grounding, detectors, replay.
+- **feat(bench): the ERB ablation ladder can emit packet traces** (PR #503).
+  - `--trace-dir` / `--trace-level` write one packet per measured query.
+  - The receipt records `packets_written` and `chain_verified`.
+  - The route and the ladder share a new `telemetry/trace_chunks.py` chunk
+    builder.
+  - Ladder packets carry no know/miss verdict.
+
 ## 0.11.2 (2026-10-09)
 
 - **Release gate: 947k merged-stack witness, EXACT_REPRODUCE** (BASELINES row

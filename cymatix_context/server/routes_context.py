@@ -7,6 +7,7 @@ Extracted from the monolithic server.py -- NO logic changes.
 from __future__ import annotations
 
 import logging
+import types
 from typing import Optional
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response
@@ -23,6 +24,7 @@ from .helpers import (
     _forward_and_replicate,
 )
 from ..schemas import KnowBlock, MissBlock
+from ..telemetry import trace_chunks as _trace_chunks
 
 log = logging.getLogger("cymatix.server")
 
@@ -160,27 +162,10 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
         return packet_id, _trace.parse_traceparent(request.headers.get("traceparent"))
 
     def _verdict_of(kmblock) -> dict:
-        if isinstance(kmblock, KnowBlock):
-            return {"kind": "know", "confidence": kmblock.confidence}
-        if isinstance(kmblock, MissBlock):
-            return {"kind": "miss", "reason": kmblock.reason}
-        return {"kind": None}
+        return _trace_chunks.verdict_of(kmblock)
 
     def _window_chunks(window) -> list:
-        scores = getattr(window, "retrieval_scores", None) or {}
-        contribs = getattr(window, "tier_contributions", None) or {}
-        chunks = []
-        for rank, gid in enumerate(window.expressed_gene_ids or [], 1):
-            doc = cymatix.genome.get_doc(gid)
-            chunks.append({
-                "gene_id": gid,
-                "text": doc.content if doc is not None else None,
-                "rank": rank,
-                "score": scores.get(gid),
-                "source_kind": getattr(doc, "source_kind", None),
-                "lane_contribs": contribs.get(gid) or None,
-            })
-        return chunks
+        return _trace_chunks.window_chunks(window, cymatix.genome)
 
     def _packet_chunks(packet) -> list:
         items = [*packet.verified, *packet.stale_risk]
