@@ -28,6 +28,7 @@ Design notes:
 
 from __future__ import annotations
 
+import collections
 import dataclasses
 import hashlib
 import hmac
@@ -42,6 +43,8 @@ import threading
 import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
+
+from .taxonomy import LABEL_SOURCES, LABELS
 
 log = logging.getLogger("cymatix.trace")
 
@@ -405,6 +408,10 @@ class PacketTracer:
         self._refresh_args: Any = None
         self._git_sha_cached: Optional[str] = None
         self._closed = False
+        # session_id -> latest packet_id (LRU, bounded) for action joins.
+        self._latest: "collections.OrderedDict[str, str]" = collections.OrderedDict()
+        self._latest_max = 10_000
+        self._latest_lock = threading.Lock()
         if self.enabled:
             self.hasher = KeyedHasher(self.dir)
             self.writer = TraceWriter(
@@ -514,8 +521,101 @@ class PacketTracer:
                 hasher=self.hasher, **event_kwargs,
             )
             self.writer.submit(ev)
+            self.note_packet(event_kwargs.get("session_id"), event_kwargs.get("packet_id"))
         except Exception:
             log.warning("packet trace emit failed", exc_info=True)
+
+    # -- actions (Phase 3) -----------------------------------------------
+
+    def note_packet(self, session_id: Optional[str], packet_id: Optional[str]) -> None:
+        if not session_id or not packet_id:
+            return
+        with self._latest_lock:
+            self._latest[session_id] = packet_id
+            self._latest.move_to_end(session_id)
+            while len(self._latest) > self._latest_max:
+                self._latest.popitem(last=False)
+
+    def latest_packet_id(self, session_id: Optional[str]) -> Optional[str]:
+        if not session_id:
+            return None
+        with self._latest_lock:
+            return self._latest.get(session_id)
+
+    def emit_action(
+        self, session_id: Optional[str], tool_name: str, args: Any,
+        packet_id: Optional[str] = None, traceparent: Optional[Dict[str, str]] = None,
+    ) -> Optional[Dict[str, Any]]:
+        """Record an ``action`` event joined to a packet. None when disabled.
+
+        Raw ``args`` are hashed here with the deployment key; they are
+        written only at ``full``. Never raises.
+        """
+        if not self.enabled or self.writer is None or self.hasher is None:
+            return None
+        try:
+            pid = packet_id or self.latest_packet_id(session_id)
+            canon = json.dumps(args, sort_keys=True, separators=(",", ":"), default=str)
+            ev: Dict[str, Any] = {
+                "schema_version": SCHEMA_VERSION,
+                "event": "action",
+                "packet_id": pid,
+                "orphan": pid is None,
+                "session_id": session_id,
+                "ts": round(time.time(), 3),
+                "level": self.level,
+                "tool_name": tool_name,
+                "args_hash": self.hasher.hash(canon),
+                "args_keys": sorted(args.keys()) if isinstance(args, dict) else [],
+            }
+            if traceparent:
+                ev["trace"] = dict(traceparent)
+            if self.level == "full":
+                ev["args"] = args
+            self.writer.submit(ev)
+            return ev
+        except Exception:
+            log.warning("action trace emit failed", exc_info=True)
+            return None
+
+    # -- labels (Phase 4) ------------------------------------------------
+
+    def emit_label(
+        self,
+        packet_id: str,
+        label: str,
+        label_source: str = "trace_check",
+        confidence: Optional[float] = None,
+        evidence: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Enqueue a ``label`` event for an existing packet (Phase 4).
+
+        Arguments are validated before the disabled check, so a bad label
+        or source is a caller bug even when tracing is off. Labels are
+        recorded only; nothing here decides them.
+        """
+        if label not in LABELS:
+            raise ValueError(f"unknown label {label!r}; expected one of {sorted(LABELS)}")
+        if label_source not in LABEL_SOURCES:
+            raise ValueError(
+                f"unknown label_source {label_source!r}; expected one of {sorted(LABEL_SOURCES)}"
+            )
+        if not self.enabled or self.writer is None:
+            return
+        try:
+            ev: Dict[str, Any] = {
+                "schema_version": SCHEMA_VERSION,
+                "event": "label",
+                "packet_id": packet_id,
+                "ts": round(time.time(), 3),
+                "labels": [label],
+                "label_source": label_source,
+                "confidence": confidence,
+                "evidence": evidence,
+            }
+            self.writer.submit(ev)
+        except Exception:
+            log.warning("packet trace label emit failed", exc_info=True)
 
     # -- reader ----------------------------------------------------------
 
@@ -547,11 +647,14 @@ class PacketTracer:
                 return rec
         return None
 
-    def recent(self, session_id: Optional[str] = None, limit: int = 20) -> List[Dict[str, Any]]:
+    def recent(self, session_id: Optional[str] = None, limit: int = 20,
+               event: Optional[str] = None) -> List[Dict[str, Any]]:
         limit = max(1, min(int(limit), 500))
         out: List[Dict[str, Any]] = []
         for rec in self._iter_newest_first():
             if session_id is not None and rec.get("session_id") != session_id:
+                continue
+            if event is not None and rec.get("event") != event:
                 continue
             out.append(rec)
             if len(out) >= limit:

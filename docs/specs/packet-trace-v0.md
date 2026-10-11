@@ -74,10 +74,67 @@ cached for 60 s; it is a cheap change detector, not a content hash.
 `config_hash` is the sha256 of the loaded runtime config with secrets
 redacted. `timing_ms` carries only the total in Phase 1.
 
+## `action` event (schema_version "0")
+
+One record per agent tool call, joined to the packet that informed it.
+Adapters `POST /trace/action` with `{session_id, tool_name, args,
+packet_id?}` (same admin-token guard as the read endpoints; 404 when
+tracing is disabled). Hashing is server-side: the deployment key never
+leaves the server and raw args are never written at `metadata`.
+
+| field | notes |
+|---|---|
+| `event` | `"action"` |
+| `schema_version` | `"0"` |
+| `packet_id` | explicit if given, else the session's latest packet; `null` if none |
+| `orphan` | `true` iff `packet_id` is null (not an error) |
+| `session_id`, `ts`, `level`, `trace` | as for `packet` |
+| `tool_name` | as supplied |
+| `args_hash` | HMAC-SHA256 of canonical JSON (sorted keys, compact) of `args` |
+| `args_keys` | sorted top-level keys of `args` (empty if not an object) |
+| `args` | raw args, `full` level only |
+
+The route returns `{packet_id, orphan}`. The session-to-latest-packet map
+is in memory (LRU, 10,000 sessions) and starts empty after a restart.
+Actions share the packet writer and hash chain.
+
+## `label` event (schema_version "0", Phase 4)
+
+Appended to `packets.jsonl` by `PacketTracer.emit_label(packet_id, label,
+label_source="trace_check", confidence=None, evidence=None)`. It refers to
+an existing packet by `packet_id` and shares the writer, hash chain and
+rotation of `packet` events. Labels are recorded only; no detector in
+Phase 4 emits them.
+
+```json
+{
+  "schema_version": "0", "event": "label",
+  "packet_id": "01M4...", "ts": 1791582325.294,
+  "labels": ["indirect_prompt_injection"], "label_source": "trace_check",
+  "confidence": 0.9, "evidence": {"reason": "instruction-like chunk"},
+  "prev_hash": null
+}
+```
+
+- `labels` holds one label from the vocabulary in
+  `cymatix_context/telemetry/taxonomy.py`: `indirect_prompt_injection`,
+  `control_tag_forgery`, `rbac_leak`, `corpus_poisoning`,
+  `data_exfiltration`, `benign`. An unknown label raises `ValueError`.
+- `label_source` is one of `trace_check`, `human`, `judge`. Any other value
+  raises `ValueError`.
+- Validation runs before the tracing-disabled check, so a bad argument
+  fails even when tracing is off. A valid call with tracing off is a no-op
+  that returns `None`.
+- `confidence` and `evidence` are optional. When not supplied they are
+  written as `null`.
+- The taxonomy maps each non-benign label to candidate OWASP LLM Top 10
+  (2025) and MITRE ATLAS ids. Every mapping is `verified: false` until a
+  human review. Do not cite the mapping as settled.
+
 ## Read endpoints
 
 - `GET /trace/{packet_id}`: the record, or 404 (also 404 when disabled).
-- `GET /trace/recent?session_id=&limit=`: newest first, `[]` when disabled.
+- `GET /trace/recent?session_id=&limit=&event=`: `event` filters to `packet` or `action`; newest first, `[]` when disabled.
 
 Both scan the local JSONL; they are for debugging and eval harnesses, not
 for high-volume use.
@@ -89,10 +146,38 @@ drops the new record with a warning. Any write failure is logged at warning
 level and never reaches the request. Overhead receipt:
 `scripts/bench_trace_overhead.py`.
 
+### End-to-end overhead on `POST /context`
+
+`scripts/bench_trace_e2e.py` drives four in-process apps (trace off, an
+off-vs-off control, `metadata`, `full`; `hash_chain = true` on both ON arms)
+over identical 200-doc stores through FastAPI `TestClient`, same queries,
+rotating-order interleave, n = 1000 after 60 warmup. Receipt:
+`benchmarks/receipts/trace_overhead_e2e_2026-10-10.json` (carries the commit
+SHA, the observed runtime `enabled`/`level`/`hash_chain` per arm, and 1060
+lines written per ON arm).
+
+| Arm | request p50 | p95 | p99 | paired delta p50 | paired delta mean |
+|---|---|---|---|---|---|
+| off | 9.28 ms | 13.04 ms | 16.11 ms | - | - |
+| off2 (control) | 9.24 ms | 13.14 ms | 15.33 ms | -0.02 ms | -0.05 ms |
+| metadata | 9.54 ms | 13.28 ms | 15.02 ms | +0.28 ms | +0.24 ms |
+| full | 9.63 ms | 13.35 ms | 15.51 ms | +0.34 ms | +0.30 ms |
+
+Reading: the median and mean added cost is about 0.3 ms per request (< 1 ms
+holds at p50 and mean). The paired-delta p95 (about 2.0 ms) is **not** a
+trace cost: the off-vs-off control shows the same 1.8 ms p95 from per-request
+jitter (the difference of two noisy ~9 ms measurements), so a paired p95 at
+this request latency cannot resolve a sub-millisecond effect. The unpaired
+p95/p99 of the ON arms sit inside the OFF arm's own spread. Caveats:
+`TestClient` adds its own per-request overhead (a floor shared by all arms),
+the store is small, and the writer thread competes for the GIL only on the
+same process, which this setup does include.
+
 ## Deferred
 
 Phase 2 eval checks and judge-agreement receipt, Phase 3 harness adapters
-and `action` events, Phase 4 security detections and labels, Phase 5
+and `action` events, Phase 4 security detectors (the `label` event and
+taxonomy schema are in place; nothing emits labels yet), Phase 5
 export, re-keying, replay tool and JSON Schema. Also not in Phase 1:
 `usurpers`, `ingested_at` (only emitted when supplied), `rbac_scope`,
 `ingest_source_hash`, instruction-like-text flags, per-stage `timing_ms`.
