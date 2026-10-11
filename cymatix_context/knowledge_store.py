@@ -390,6 +390,43 @@ _CORPUS_SIZE_TTL = 60.0
 # loops when callers pass huge candidate sets).
 _IN_BATCH_SIZE = 500
 
+# created_at as serialized by DocumentSignals.model_dump_json (first key,
+# compact form). Anything not in exactly this shape takes the model parse.
+_CREATED_AT_RE = re.compile(
+    r'\{"created_at":(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)[,}]'
+)
+# domains as serialized by DocumentTags.model_dump_json (first key).
+_DOMAINS_RE = re.compile(r'\{"domains":\[([^\]]*)\]')
+
+
+def _primary_domain_hit(raw_promoter: str, lower_terms: List[str]) -> bool:
+    """True when a query term equals one of the top-3 domains (lowercased).
+
+    Same answer as ``parse_promoter(raw).domains[:3]`` membership, without a
+    pydantic parse for the common case: compact model-serialized JSON whose
+    domains list is read directly (and rejected by substring before decoding).
+    Any other shape falls back to the model parse.
+    """
+    m = _DOMAINS_RE.match(raw_promoter)
+    if m is not None:
+        g = m.group(1)
+        if g.isascii() and "\\" not in g:
+            gl = g.lower()
+            if not any(t in gl for t in lower_terms):
+                return False
+        try:
+            doms = json_loads("[" + g + "]")
+        except ValueError:
+            doms = None  # e.g. a domain containing "]" truncated the match
+        if doms is not None and all(isinstance(d, str) for d in doms):
+            top = {d.lower() for d in doms[:3]}
+            return any(t in top for t in lower_terms)
+    prom = parse_promoter(raw_promoter)
+    if prom and prom.domains:
+        top = {d.lower() for d in prom.domains[:3]}
+        return any(t in top for t in lower_terms)
+    return False
+
 
 def _iter_in_batches(items, batch_size: int = _IN_BATCH_SIZE):
     """Yield (placeholder_string, batch_list) pairs for an IN-clause query.
@@ -2458,22 +2495,32 @@ class KnowledgeStore:
                         boost += 2.0
 
             # 2. Domain primacy: query term in top-3 tags domains
+            # Perf (perf/fusion-pool): a pydantic parse per candidate is the
+            # dominant post-tier cost on 100k+ pools; see _primary_domain_hit.
             try:
-                prom = parse_promoter(r["promoter"]) if r["promoter"] else None
-                if prom and prom.domains:
-                    primary_domains = {d.lower() for d in prom.domains[:3]}
-                    if any(t in primary_domains for t in lower_terms):
-                        boost += 1.5
+                raw_prom = r["promoter"]
+                if raw_prom and _primary_domain_hit(raw_prom, lower_terms):
+                    boost += 1.5
             except Exception:
                 pass
 
             # 3. Creation recency: document created in last 48h
+            # Read created_at straight from the serialized JSON (same float
+            # the model would parse); fall back to the model parse when the
+            # key is not found in the expected form.
             try:
-                epi = parse_epigenetics(r["epigenetics"]) if r["epigenetics"] else None
-                if epi and epi.created_at > 0:
-                    age = now - epi.created_at
-                    if 0 < age < recency_window:
-                        boost += 0.5
+                raw_epi = r["epigenetics"]
+                if raw_epi:
+                    _m = (_CREATED_AT_RE.match(raw_epi)
+                          if raw_epi.startswith('{"created_at"') else None)
+                    if _m is not None:
+                        created_at = float(_m.group(1))
+                    else:
+                        created_at = parse_epigenetics(raw_epi).created_at
+                    if created_at > 0:
+                        age = now - created_at
+                        if 0 < age < recency_window:
+                            boost += 0.5
             except Exception:
                 pass
 
@@ -3873,12 +3920,14 @@ class KnowledgeStore:
         # ── Authority boosts: distinguish "about X" from "mentions X" ──
         # Stage 3: thread rerank_additive + tier_contrib so RRF mode
         # can apply the authority bonus on top of the fused score.
+        _authority_t0 = time.monotonic()
         self._apply_authority_boosts(
             cur, gene_scores, query_terms,
             rerank_additive=rerank_additive,
             tier_contrib=tier_contrib,
             rerank_by_class=rerank_by_class,
         )
+        _sig("authority", _authority_t0)
 
         # ── Tier 5: harmonic co-activation boost ──────────────────
         # For each candidate, add a score bonus from documents that are
@@ -4035,15 +4084,21 @@ class KnowledgeStore:
         # ── Access-rate tiebreaker ────────────────────────────────
         # Small bonus: score += 0.05 * min(rate * 3600, 5). Max 0.25.
         # Only a tiebreaker — breaks ties for documents with equal scores.
+        _access_rate_t0 = time.monotonic()
         if gene_scores:
             try:
                 rate_ids = list(gene_scores.keys())
                 # Batched IN-clause — see _iter_in_batches.
                 epi_rows = []
+                # Perf (perf/fusion-pool): rows serialized with an empty
+                # ``recent_accesses`` have access_rate() == 0.0 and can never
+                # earn a bonus, so SQLite drops them before Python sees them.
+                # Differently formatted rows are kept and parsed as before.
                 for _ph, _batch in _iter_in_batches(rate_ids):
                     epi_rows.extend(cur.execute(
                         f"SELECT gene_id, epigenetics FROM genes "
-                        f"WHERE gene_id IN ({_ph}) AND epigenetics IS NOT NULL",
+                        f"WHERE gene_id IN ({_ph}) AND epigenetics IS NOT NULL "
+                        f"AND epigenetics NOT LIKE '%\"recent_accesses\":[]%'",
                         _batch,
                     ).fetchall())
                 for er in epi_rows:
@@ -4064,6 +4119,7 @@ class KnowledgeStore:
                         continue
             except Exception:
                 log.debug("Access-rate tiebreaker failed", exc_info=True)
+        _sig("access_rate", _access_rate_t0)
 
         # Layered fingerprints: inject parent-document aggregate scores when
         # ≥ 2 chunks of the same file surface in candidates. Opt-in via
@@ -4079,16 +4135,19 @@ class KnowledgeStore:
         # need to be under the same lock — concurrent /context calls
         # would otherwise read a (scores_from_call_A, tiers_from_call_B)
         # torn pair.
+        _publish_t0 = time.monotonic()
         with self._last_query_scores_lock:
             self.last_query_scores = dict(gene_scores)
             self.last_tier_contributions = tier_contrib
             self.last_pool_total = _pool_total
+        _sig("publish_scores", _publish_t0)
 
         # Emit per-tier contribution telemetry (OTel — no-op when off).
         # One histogram observation per (tier, document) pair; a single
         # counter tick per tier that fired at all, labelled by tier
         # name. Makes the bench_skill_activation heatmap live-observable
         # instead of a one-shot static file.
+        _tier_tel_t0 = time.monotonic()
         try:
             from .telemetry import tier_contribution_histogram, tier_fired_counter
             hist = tier_contribution_histogram()
@@ -4105,6 +4164,7 @@ class KnowledgeStore:
             # The tier-activation + per-tier-contribution panels go dark
             # when this swallows; matching the cwola/latency/gauges pattern.
             log.warning("tier telemetry emit failed", exc_info=True)
+        _sig("tier_telemetry", _tier_tel_t0)
 
         if _measurement is not None:
             _measurement.record("pre_shortlist", gene_scores)
@@ -4202,6 +4262,7 @@ class KnowledgeStore:
         # runs on the RRF path).
         _cover_mass: Dict[str, float] = {}
         _cover_diag: Dict[str, Any] = {}
+        _fusion_t0 = time.monotonic()
         if self._fusion_mode == "rrf":
             fused_scores = fuser.all_scores()
             # The bm25_shortlist filter mutated gene_scores above; honor
@@ -4300,6 +4361,8 @@ class KnowledgeStore:
                     )
                     _coverage_map = None
                 _sig("coverage_tiebreak", _cov_t0)
+            _sig("fusion_prep", _fusion_t0)
+            _combine_t0 = time.monotonic()
             from .retrieval.rerank_combinators import combine_rerank
             final_scores, ranked_ids = combine_rerank(
                 _effective_combinator,
@@ -4312,6 +4375,7 @@ class KnowledgeStore:
                 _fuse_limit,
                 coverage=_coverage_map,
             )
+            _sig("rerank_combine", _combine_t0)
             # last_query_scores semantics under RRF: the combined final
             # score, NOT the raw additive accumulator. This is what
             # context_manager reads for ratio gates. Also stash the
@@ -4327,6 +4391,7 @@ class KnowledgeStore:
             # set per document (unbounded on large genomes), and the
             # distribution panel aggregates across documents anyway.
             # No-op instrument when OTel is off.
+            _rrf_tel_t0 = time.monotonic()
             try:
                 from .telemetry import rrf_fused_score_histogram
                 hist = rrf_fused_score_histogram()
@@ -4334,6 +4399,7 @@ class KnowledgeStore:
                     hist.record(float(score))
             except Exception:
                 pass
+            _sig("rrf_telemetry", _rrf_tel_t0)
         else:
             # Additive mode — pre-Stage-3 behavior, byte-identical.
             ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:_fuse_limit]
