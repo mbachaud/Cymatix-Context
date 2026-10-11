@@ -100,6 +100,9 @@ ast = [
     "tree-sitter-typescript>=0.23",
 ]
 scorerift = ["scorerift"]
+# Packet trace export (#493 phase 5): optional Parquet output and schema
+# validation. `cymatix trace export` itself needs neither.
+trace-export = ["datasets", "pyarrow", "jsonschema>=4"]
 # CPU-resident semantic compression for gene content. Headroom by Tejas Chopra
 # (https://github.com/chopratejas/headroom, Apache-2.0). See NOTICE.
 codec = ["headroom-ai[proxy,code]>=0.5.21"]
@@ -112,6 +115,7 @@ dev = [
     "markdown>=3.4",  # scripts/build_wiki_site.py + its tests
     "rank-bm25>=0.2.2",  # offline RepoBench baseline tests
     "httpx2>=2.0.0",  # Starlette TestClient's supported HTTP client
+    "jsonschema>=4",  # packet-trace schema test
 ]
 # `all` covers the full feature surface minus contributor-only extras
 # (dev) and the LGPL launcher-tray variant. Dep bulk dominated by
