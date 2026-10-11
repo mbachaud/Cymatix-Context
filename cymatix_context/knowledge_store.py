@@ -1085,6 +1085,12 @@ class KnowledgeStore:
         # (same last-query contract and the same known cross-request-global
         # caveat — W1.6 scoops all of these into a request-scoped outcome).
         self.last_signal_timings: Dict[str, float] = {}
+        # #493: size of the candidate pool reaching Tier 5 on the last query
+        # (len(gene_scores) after Tiers 0-4), published under
+        # _last_query_scores_lock with last_query_scores. Same per-genome
+        # (not per-request) concurrency caveat; the manager snapshots it
+        # into the request's window right after retrieval.
+        self.last_pool_total: Optional[int] = None
         # Issue #341: the last query's final rank order, published under
         # _last_query_scores_lock on both retrieval paths and in BOTH rerank
         # arms — with rerank off it is the sim/fused order, so an A/B keeps an
@@ -3879,6 +3885,7 @@ class KnowledgeStore:
         # harmonically linked to OTHER candidates (mutual reinforcement).
         # Weight: harmonic_weight per link (default 1.0), capped at a
         # total bonus of 3.0 × harmonic_weight (default 3.0) — #202.
+        _pool_total = len(gene_scores)  # #493: pool reaching Tier 5
         if use_harmonic and gene_scores:
             try:
                 _has_harmonic = cur.execute(
@@ -4075,6 +4082,7 @@ class KnowledgeStore:
         with self._last_query_scores_lock:
             self.last_query_scores = dict(gene_scores)
             self.last_tier_contributions = tier_contrib
+            self.last_pool_total = _pool_total
 
         # Emit per-tier contribution telemetry (OTel — no-op when off).
         # One histogram observation per (tier, document) pair; a single

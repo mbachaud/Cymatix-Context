@@ -1030,11 +1030,12 @@ def emit_ladder_trace(
     the window and store; never raises into the run. Chunks and verdict come
     from the same helpers the /context route uses."""
     from cymatix_context.telemetry import trace as _trace
-    from cymatix_context.telemetry.trace_chunks import window_chunks
+    from cymatix_context.telemetry.trace_chunks import window_chunks, window_timing
 
     try:
         start = time.time() if t0 is None else t0
         tracer.emit(
+            **window_timing(window),
             genome=genome, config=config,
             packet_id=_trace.new_packet_id(), pipeline_request_id=(
                 (getattr(window, "metadata", None) or {}).get("pipeline_request_id")),

@@ -45,10 +45,19 @@ TEXTS = [
 ]
 
 
+DOMAINS = [
+    ["zebracrossing", "authentication", "flamingo"],
+    ["quasar", "telemetry", "pelican", "rotation"],
+    ["marmalade", "checkpoint", "walrus", "ledger"],
+]
+
+
 def _manager():
+    # Explicit domain tags: untagged genes never match (the CPU tagger needs
+    # spaCy), which made the on/off ranking comparison vacuous.
     mgr = CymatixContextManager(make_cymatix_config())
-    for i, t in enumerate(TEXTS):
-        mgr.genome.upsert_gene(make_gene(t, gene_id=f"lad{i:013d}"))
+    for i, (t, d) in enumerate(zip(TEXTS, DOMAINS)):
+        mgr.genome.upsert_gene(make_gene(t, domains=d, gene_id=f"lad{i:013d}"))
     return mgr
 
 
@@ -90,6 +99,7 @@ def test_ladder_cli_exposes_trace_flags_and_run_arm_param():
 
 def test_ladder_trace_does_not_change_retrieval_and_writes_one_packet_per_query(tmp_path):
     off = _run(_manager())
+    assert all(ids for ids, _ in off), "corpus must retrieve for every query"
 
     tracer = ladder.build_ladder_tracer(tmp_path / "tr", "metadata")
     on = _run(_manager(), tracer)
