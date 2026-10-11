@@ -4,6 +4,14 @@
 
 ## 0.11.3 (2026-10-11)
 
+- **Release gate: 947k merged-stack witness with packet tracing on,
+  EXACT_REPRODUCE** (BASELINES row
+  `2026-10-11-v0113-merged-stack-witness-trace`). Candidate `00358af5`
+  delivered 314/470 (0.6681), with 0/470 per-needle differences from the
+  v0.11.2 witness. 470 packet traces were written and the hash chain
+  verified. No shipped default changed. Receipts: `cymatix-receipts`
+  `b6e9285`.
+
 - **perf(trace): packet trace adds under 1 ms per `/context` request at
   947k** (#493, PRs #501 and #502; `[trace]` stays off by default). On
   v0.11.2 the per-request trace work cost 47 ms at p50 and 57 ms at p95 on
