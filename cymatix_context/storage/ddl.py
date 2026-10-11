@@ -144,6 +144,16 @@ def _migrate_genes_columns(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> Non
 
 def _create_genes_indexes(cur: sqlite3.Cursor) -> None:
     cur.execute("CREATE INDEX IF NOT EXISTS idx_genes_source ON genes(source_id)")
+    # perf/tier-sql: the tag tiers probe genes once per matched gene only to
+    # test ``chromatin < 2`` (+ existence). With gene_id TEXT PRIMARY KEY each
+    # probe is autoindex -> table-row hop into a multi-GB table; this covering
+    # index answers it from a small hot b-tree (4.5x on a cache-constrained
+    # synthetic store; no result change). One-time build on an existing
+    # store is a full genes leaf scan (est. 10-120 s at 947k, I/O bound).
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_genes_id_chromatin "
+        "ON genes(gene_id, chromatin)"
+    )
     # Stage 2: partial index over hot-tier rows with v2 vectors.
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot "
