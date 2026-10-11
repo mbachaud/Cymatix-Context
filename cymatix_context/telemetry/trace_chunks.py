@@ -43,6 +43,32 @@ def fetch_docs_batched(genome: Any, gene_ids: list) -> dict:
     return out
 
 
+def window_timing(window: Any) -> Dict[str, Any]:
+    """``build_packet_event`` kwargs (stage_ms / signal_ms / pool) for a
+    finished window. Pure reader over request-scoped data the pipeline
+    already captured (no new timing). ``pool`` = candidates scored per tier
+    (genes carrying a contribution from that tier in the request's
+    ``tier_contributions`` snapshot) plus ``pool_total`` (pool reaching
+    Tier 5). The per-tier count is computed here, i.e. only when tracing."""
+    out: Dict[str, Any] = {}
+    stage_ms = getattr(window, "stage_ms", None)
+    if stage_ms:
+        out["stage_ms"] = dict(stage_ms)
+    signal_ms = getattr(window, "signal_ms", None)
+    if signal_ms:
+        out["signal_ms"] = dict(signal_ms)
+    pool: Dict[str, int] = {}
+    for contribs in list((getattr(window, "tier_contributions", None) or {}).values()):
+        for tier in contribs:
+            pool[tier] = pool.get(tier, 0) + 1
+    total = getattr(window, "pool_total", None)
+    if total is not None:
+        pool["pool_total"] = int(total)
+    if pool:
+        out["pool"] = pool
+    return out
+
+
 def window_chunks(window: Any, genome: Any) -> List[Dict[str, Any]]:
     scores = getattr(window, "retrieval_scores", None) or {}
     contribs = getattr(window, "tier_contributions", None) or {}

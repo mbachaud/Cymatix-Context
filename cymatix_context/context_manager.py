@@ -85,6 +85,14 @@ _pipeline_request_id: "_contextvars.ContextVar[str]" = _contextvars.ContextVar(
     "_pipeline_request_id", default=""
 )
 
+# Issue #493: per-request timing sink. build_context installs a fresh dict
+# {"stages": {}, "signals": {}, "pool_total": None}; _stage_timer.__exit__
+# adds the elapsed ms it already computes. The window keeps the dict
+# reference. contextvar-scoped, so concurrent requests cannot interleave.
+_request_timing: "_contextvars.ContextVar[Optional[dict]]" = _contextvars.ContextVar(
+    "_request_timing", default=None
+)
+
 # Bounded ring of recent stage events. Each entry is
 #   {"request_id", "stage", "ms", "ts"}
 # (express also carries {"signals", "model_load_ms"}, tail_writes carries
@@ -98,6 +106,24 @@ _PIPELINE_RING_MAX = 128
 _pipeline_events: "_collections.deque[dict]" = _collections.deque(
     maxlen=_PIPELINE_RING_MAX
 )
+
+
+def _capture_request_signals(signals, pool_total) -> None:
+    """Copy the store's last-query signal ms + Tier-5 pool size into the
+    active request's timing sink (no-op outside build_context). Called with
+    the store lock held, right where the request snapshots its scores, so it
+    shares last_query_scores' concurrency semantics. Repeated calls (the
+    multi-sub-query path) sum signal ms and sum pool totals."""
+    sink = _request_timing.get()
+    if sink is None:
+        return
+    try:
+        for k, v in (signals or {}).items():
+            sink["signals"][k] = sink["signals"].get(k, 0.0) + float(v)
+        if pool_total is not None:
+            sink["pool_total"] = (sink["pool_total"] or 0) + int(pool_total)
+    except Exception:
+        pass
 
 
 def _apply_symbol_expansion_cap(genome, cap: int) -> None:
@@ -205,6 +231,13 @@ class _stage_timer:
             )
         except Exception:
             pass  # never let telemetry break the pipeline
+        try:
+            _sink = _request_timing.get()
+            if _sink is not None:
+                _st = _sink["stages"]
+                _st[self.stage] = _st.get(self.stage, 0.0) + elapsed * 1000.0
+        except Exception:
+            pass
         try:
             if _pipeline_ring_enabled():
                 rid = _pipeline_request_id.get()
@@ -1803,22 +1836,36 @@ class CymatixContextManager:
         # span open across every return path (normal, empty-genome,
         # abstain). Span-only — stage durations are recorded exactly once,
         # by _stage_timer.
-        with _pipeline_stage_span("build_context"):
-            return self._build_context_impl(
-                query,
-                downstream_model=downstream_model,
-                include_cold=include_cold,
-                session_context=session_context,
-                party_id=party_id,
-                prompt_tokens_hint=prompt_tokens_hint,
-                session_id=session_id,
-                ignore_delivered=ignore_delivered,
-                read_only=read_only,
-                decoder_override=decoder_override,
-                caller_model_class=caller_model_class,
-                query_type=query_type,
-                max_genes=max_genes,
-            )
+        _timing = {"stages": {}, "signals": {}, "pool_total": None}
+        _timing_tok = _request_timing.set(_timing)
+        try:
+            with _pipeline_stage_span("build_context"):
+                window = self._build_context_impl(
+                    query,
+                    downstream_model=downstream_model,
+                    include_cold=include_cold,
+                    session_context=session_context,
+                    party_id=party_id,
+                    prompt_tokens_hint=prompt_tokens_hint,
+                    session_id=session_id,
+                    ignore_delivered=ignore_delivered,
+                    read_only=read_only,
+                    decoder_override=decoder_override,
+                    caller_model_class=caller_model_class,
+                    query_type=query_type,
+                    max_genes=max_genes,
+                )
+        finally:
+            _request_timing.reset(_timing_tok)
+        # Issue #493: hand the request-scoped timings to the window (dict
+        # references only; formatting happens at trace-emit time).
+        try:
+            window.stage_ms = _timing["stages"]
+            window.signal_ms = _timing["signals"]
+            window.pool_total = _timing["pool_total"]
+        except Exception:
+            pass
+        return window
 
     def _build_context_impl(
         self,
@@ -2043,6 +2090,10 @@ class CymatixContextManager:
                         getattr(self.genome, "last_tier_contributions", None)
                         or {}
                     )
+                    _capture_request_signals(
+                        getattr(self.genome, "last_signal_timings", None),
+                        getattr(self.genome, "last_pool_total", None),
+                    )
             else:
                 import concurrent.futures
 
@@ -2063,19 +2114,27 @@ class CymatixContextManager:
                                 self.genome, "last_tier_contributions", None,
                             ) or {}
                         )
-                    return genes, scores, contribs
+                        _sub_sig = dict(
+                            getattr(self.genome, "last_signal_timings", None)
+                            or {}
+                        )
+                        _sub_pool = getattr(self.genome, "last_pool_total", None)
+                    return genes, scores, contribs, _sub_sig, _sub_pool
 
                 with concurrent.futures.ThreadPoolExecutor(
                     max_workers=len(_sub_queries)
                 ) as pool:
                     triples = list(pool.map(_run_sub, _sub_queries))
 
-                sub_results = [genes for genes, _, _ in triples]
+                sub_results = [t[0] for t in triples]
                 base_scores: dict = {}
                 tier_contribs = {}
-                for _, scores, contribs in triples:
+                for _, scores, contribs, _sub_sig, _sub_pool in triples:
                     base_scores.update(scores)
                     tier_contribs.update(contribs)
+                    # Sub-queries run concurrently on one store, so these
+                    # are best-effort (see _capture_request_signals).
+                    _capture_request_signals(_sub_sig, _sub_pool)
 
                 candidates = _merge_subquery_candidates(sub_results, base_scores)
                 candidates = candidates[: max_genes * 2]

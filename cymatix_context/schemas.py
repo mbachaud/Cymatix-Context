@@ -248,6 +248,14 @@ class ContextWindow(BaseModel):
     # documents assembly already holds (no copy, no DB read). Lets the packet
     # trace read full content / source_kind without re-fetching each doc.
     delivered_docs: Optional[dict] = Field(default=None, exclude=True, repr=False)
+    # Issue #493 (latency profiling): where this request's time went, reusing
+    # timers that already run. stage_ms = {stage: ms} from _stage_timer
+    # (per-request contextvar sink); signal_ms = the store's per-signal ms
+    # snapshot; pool_total = candidate pool size reaching Tier 5. Request
+    # scoped, never serialized into responses.
+    stage_ms: Optional[dict] = Field(default=None, exclude=True, repr=False)
+    signal_ms: Optional[dict] = Field(default=None, exclude=True, repr=False)
+    pool_total: Optional[int] = Field(default=None, exclude=True, repr=False)
 
 
 class ContextItem(BaseModel):
