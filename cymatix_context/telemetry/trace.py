@@ -266,9 +266,19 @@ def config_hash(config: Any) -> str:
 def _index_fingerprint(genome: Any) -> Dict[str, Any]:
     """doc count + max rowid, hashed. One COUNT(*) per refresh, cached by caller."""
     conn = getattr(genome, "read_conn", None) or genome.conn
-    count, max_rowid = conn.execute(
-        "SELECT COUNT(*), COALESCE(MAX(rowid), 0) FROM genes"
-    ).fetchone()
+    sql = "SELECT COUNT(*), COALESCE(MAX(rowid), 0) FROM genes"
+    if conn is getattr(genome, "conn", None):
+        # :memory: stores fall back to the shared write connection, which is
+        # not safe to interleave across threads; take the store's write lock.
+        lock = getattr(genome, "_write_lock", None)
+        if lock is not None:
+            with lock:
+                count, max_rowid = conn.execute(sql).fetchone()
+            return {
+                "index_fingerprint": hashlib.sha256(f"{count}:{max_rowid}".encode()).hexdigest()[:32],
+                "doc_count": int(count),
+            }
+    count, max_rowid = conn.execute(sql).fetchone()
     return {
         "index_fingerprint": hashlib.sha256(f"{count}:{max_rowid}".encode()).hexdigest()[:32],
         "doc_count": int(count),
@@ -391,6 +401,13 @@ class PacketTracer:
         self.hasher: Optional[KeyedHasher] = None
         self._replay_cache: Optional[Dict[str, Any]] = None
         self._replay_at = 0.0
+        self._replay_lock = threading.Lock()
+        self._refresh_evt = threading.Event()
+        self._refresh_thread: Optional[threading.Thread] = None
+        self._refresh_pending = False
+        self._refresh_args: Any = None
+        self._git_sha_cached: Optional[str] = None
+        self._closed = False
         # session_id -> latest packet_id (LRU, bounded) for action joins.
         self._latest: "collections.OrderedDict[str, str]" = collections.OrderedDict()
         self._latest_max = 10_000
@@ -417,26 +434,82 @@ class PacketTracer:
         return ratio >= 1.0 or random.random() < ratio
 
     def replay_info(self, genome: Any, config: Any, ttl_s: float = 60.0) -> Dict[str, Any]:
-        """Cached replay block; recomputed at most once per ``ttl_s``."""
+        """Replay block, stale-while-revalidate (issue #493).
+
+        Never runs the COUNT(*) or the git lookup on the caller's thread: it
+        returns the last cached block immediately and, when that is absent or
+        older than ``ttl_s``, wakes the single refresh worker. Before the
+        first refresh lands the block carries ``index_fingerprint``/
+        ``doc_count`` of None (plus version and config hash, both cheap).
+
+        Threading/connection design: one long-lived daemon worker thread owns
+        all refreshes, so at most one is ever in flight (single-flight by
+        construction). It reads through ``genome.read_conn``, which is a
+        per-thread read-only WAL connection (``check_same_thread=False``,
+        readers never block the writer), so this thread gets its own
+        connection exactly once and no connection is shared across threads
+        unsafely. A fresh thread per refresh would leak one reader per call,
+        hence the persistent worker.
+        """
         now = time.monotonic()
-        if self._replay_cache is None or now - self._replay_at > ttl_s:
-            info: Dict[str, Any] = {}
+        with self._replay_lock:
+            cache = self._replay_cache
+            stale = cache is None or now - self._replay_at > ttl_s
+            if cache is None:
+                cache = self._placeholder(config)
+            if stale and not self._closed and not self._refresh_pending:
+                self._refresh_pending = True
+                self._refresh_args = (genome, config)
+                self._ensure_worker()
+                self._refresh_evt.set()
+            return dict(cache)
+
+    prime = replay_info  # startup hook: kick the first refresh, ignore result
+
+    def _placeholder(self, config: Any) -> Dict[str, Any]:
+        try:
+            from .. import __version__
+        except Exception:
+            __version__ = None
+        return {
+            "index_fingerprint": None,
+            "doc_count": None,
+            "config_hash": config_hash(config),
+            "cymatix_version": __version__,
+            "git_sha": self._git_sha_cached,
+        }
+
+    def _ensure_worker(self) -> None:
+        if self._refresh_thread is None:
+            self._refresh_thread = threading.Thread(
+                target=self._refresh_loop, name="cymatix-trace-replay", daemon=True,
+            )
+            self._refresh_thread.start()
+
+    def _refresh_loop(self) -> None:
+        while True:
+            self._refresh_evt.wait()
+            self._refresh_evt.clear()
+            if self._closed:
+                return
+            with self._replay_lock:
+                genome, config = self._refresh_args
             try:
-                info.update(_index_fingerprint(genome))
+                info = self._placeholder(config)
+                if self._git_sha_cached is None:
+                    self._git_sha_cached = _git_sha()  # constant per process
+                    info["git_sha"] = self._git_sha_cached
+                try:
+                    info.update(_index_fingerprint(genome))
+                except Exception:
+                    log.debug("index fingerprint failed", exc_info=True)
+                with self._replay_lock:
+                    self._replay_cache, self._replay_at = info, time.monotonic()
             except Exception:
-                log.debug("index fingerprint failed", exc_info=True)
-                info.update({"index_fingerprint": None})
-            try:
-                from .. import __version__
-            except Exception:
-                __version__ = None
-            info.update({
-                "config_hash": config_hash(config),
-                "cymatix_version": __version__,
-                "git_sha": _git_sha(),
-            })
-            self._replay_cache, self._replay_at = info, now
-        return dict(self._replay_cache)
+                log.debug("replay refresh failed", exc_info=True)
+            finally:
+                with self._replay_lock:
+                    self._refresh_pending = False
 
     def emit(self, *, genome: Any, config: Any, **event_kwargs: Any) -> None:
         """Build + enqueue a packet event. Never raises."""
@@ -589,5 +662,10 @@ class PacketTracer:
         return out
 
     def close(self) -> None:
+        self._closed = True
+        self._refresh_evt.set()
+        t = self._refresh_thread
+        if t is not None:
+            t.join(0.2)  # daemon: a refresh stuck in SQLite must not hang shutdown
         if self.writer is not None:
             self.writer.close()

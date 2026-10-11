@@ -269,6 +269,12 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
         config, getattr(config.genome, "path", None),
     )
 
+    if app.state.packet_tracer.enabled:
+        try:  # background, non-blocking: primes the replay block
+            app.state.packet_tracer.prime(cymatix.genome, config)
+        except Exception:
+            log.debug("trace replay prime failed", exc_info=True)
+
     setup_context_routes(app, cymatix=cymatix, config=config, registry=registry)
     setup_trace_routes(app, config=config)
     setup_ingest_routes(app, cymatix=cymatix, config=config, registry=registry)
