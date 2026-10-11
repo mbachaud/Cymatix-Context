@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.11.3 (2026-10-11)
+
 - **perf(trace): packet trace adds under 1 ms per `/context` request at
   947k** (#493, PRs #501 and #502; `[trace]` stays off by default). On
   v0.11.2 the per-request trace work cost 47 ms at p50 and 57 ms at p95 on
