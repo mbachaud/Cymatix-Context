@@ -42,6 +42,7 @@ this module never re-derives eligibility.
 """
 from __future__ import annotations
 
+import heapq
 from typing import Dict, List, Optional, Tuple
 
 from .fusion import rank_by_score
@@ -182,7 +183,13 @@ def resolve_class_flag(
 
 def _sort_by_score(scores: Dict[str, float], limit: int) -> List[str]:
     """Sort ids by ``(-score, gene_id)`` — the Fuser's tie-break — and cut."""
-    ranked = sorted(scores, key=lambda g: (-scores[g], g))
+    key = lambda g: (-scores[g], g)  # noqa: E731 - unique total order
+    if 0 < limit < len(scores) // 4:
+        # Top-K only: the (-score, id) key is a strict total order (ids are
+        # unique), so nsmallest returns exactly sorted(...)[:limit] without
+        # sorting the whole 100k+ pool.
+        return heapq.nsmallest(limit, scores, key=key)
+    ranked = sorted(scores, key=key)
     return ranked if limit <= 0 else ranked[:limit]
 
 
@@ -208,9 +215,37 @@ def _eps_band(
     """
     cov = coverage or {}
     final = dict(fused)
-    # Base order: fused desc, gene_id asc (the Fuser tie-break).
-    base = sorted(fused, key=lambda g: (-fused[g], g))
+    total = len(fused)
+    key = lambda g: (-fused[g], g)  # noqa: E731 - unique total order
+    # Only the first ``limit`` emitted ids matter and bands are built from a
+    # prefix of the fused order, so a partial head suffices: take the
+    # smallest ``head_n`` by the (strict, total) key, walk bands that close
+    # inside it, and widen only if the head ran out first.
+    head_n = total if limit <= 0 else max(limit * 4, 256)
+    while True:
+        complete = head_n >= total
+        base = (sorted(fused, key=key) if complete
+                else heapq.nsmallest(head_n, fused, key=key))
+        ordered = _walk_bands(base, fused, rerank, delta, cov, complete)
+        if complete or (limit > 0 and len(ordered) >= limit):
+            break
+        head_n *= 4
+    return final, (ordered if limit <= 0 else ordered[:limit])
 
+
+def _walk_bands(
+    base: List[str],
+    fused: Dict[str, float],
+    rerank: Dict[str, float],
+    delta: float,
+    cov: Dict[str, float],
+    complete: bool,
+) -> List[str]:
+    """Band walk over a fused-descending prefix ``base``.
+
+    A band that touches the end of a partial (``complete=False``) prefix may
+    be missing members, so it is left unemitted for the caller to widen.
+    """
     ordered: List[str] = []
     i = 0
     n = len(base)
@@ -228,6 +263,8 @@ def _eps_band(
         j = i
         while j < n and fused[base[j]] >= threshold:
             j += 1
+        if j >= n and not complete:
+            break  # band may continue past the head; caller widens
         band = base[i:j]
         # Within the band: coverage (when supplied) decides first, then
         # rerank; ties fall back to fused then id.
@@ -236,4 +273,4 @@ def _eps_band(
         ordered.extend(band)
         i = j
 
-    return final, (ordered if limit <= 0 else ordered[:limit])
+    return ordered
