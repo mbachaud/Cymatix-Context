@@ -127,16 +127,16 @@ def test_posting_fetch_is_index_only_and_genes_probed_per_distinct_gene(tmp_path
     assert "DISTINCT" in sql[1]
 
 
-def test_genes_probe_uses_covering_index_and_migration_is_idempotent(tmp_path):
+def test_genes_probe_uses_covering_index_once_opt_in_migration_ran(tmp_path):
+    from scripts.migrate_genes_cover_index import migrate
+
     store = _make(tmp_path)
     names = {r[0] for r in store.conn.execute(
         "SELECT name FROM sqlite_master WHERE type='index'")}
-    assert "idx_genes_id_chromatin" in names
-    # existing store: drop it, reopen => recreated; reopen again => no error
-    store.conn.execute("DROP INDEX idx_genes_id_chromatin")
+    assert "idx_genes_id_chromatin" not in names  # never built on open
     store.conn.commit()
-    store.close() if hasattr(store, "close") else None
-    for _ in range(2):
+    for _ in range(2):  # opt-in migration is idempotent
+        migrate(tmp_path / "g.db")
         s2 = KnowledgeStore(str(tmp_path / "g.db"))
         assert s2.conn.execute(
             "SELECT 1 FROM sqlite_master WHERE name='idx_genes_id_chromatin'"

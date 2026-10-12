@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **perf(tier-sql): shared tag-posting fetch; covering index is an opt-in
+  migration** (PR #508). Tag tiers 1 and lex_anchor now share one posting
+  fetch and probe `genes` once per distinct gene (rank-identical, ties
+  included; no index needed). The covering index `idx_genes_id_chromatin` is
+  **not** built when a store opens (it blocked the first open of a 947k store
+  for ~38 s, +24.8 MB). Build it once on request with
+  `python scripts/migrate_genes_cover_index.py --db <store>` (idempotent;
+  holds the write lock while building; `--dry-run` available). Writable
+  stores of 50k+ rows without it log one info line naming the command.
+  Results are identical with or without the index.
+
 ## 0.11.3 (2026-10-11)
 
 - **Release gate: 947k merged-stack witness with packet tracing on,

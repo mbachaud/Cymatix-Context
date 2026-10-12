@@ -1265,6 +1265,9 @@ class KnowledgeStore:
     def _init_db(self) -> None:
         from .storage.ddl import fts5_is_external_content, init_db
         self._fts_available = init_db(self.conn)
+        if not self.read_only:
+            from .storage.ddl import maybe_hint_cover_index
+            maybe_hint_cover_index(self.conn)
         # Issue #338: which write discipline genes_fts needs. External-content
         # (new stores + migrated stores) has no shadow text of its own, so
         # deletes must re-supply the prior indexed values; legacy contentful

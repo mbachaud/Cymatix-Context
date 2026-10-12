@@ -142,18 +142,52 @@ def _migrate_genes_columns(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> Non
         existing_columns.add("live_truth_score")
 
 
+#: perf/tier-sql: the tag tiers probe genes once per matched gene only to test
+#: ``chromatin < 2``. This covering index answers it from a small hot b-tree
+#: (4.5x on a cache-constrained synthetic store; no result change). Opt-in.
+GENES_COVER_INDEX = "idx_genes_id_chromatin"
+GENES_COVER_INDEX_SQL = (
+    "CREATE INDEX IF NOT EXISTS idx_genes_id_chromatin "
+    "ON genes(gene_id, chromatin)"
+)
+#: Stores at least this large (by MAX(rowid)) get the one-line open hint.
+COVER_INDEX_HINT_MIN_ROWS = 50_000
+
+
+def maybe_hint_cover_index(conn: sqlite3.Connection) -> bool:
+    """Log ONE info line when a large store lacks the opt-in cover index.
+
+    Uses ``MAX(rowid)`` (O(log n)), never ``COUNT(*)``. Returns True if logged.
+    """
+    try:
+        if conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='index' AND name=?",
+            (GENES_COVER_INDEX,),
+        ).fetchone():
+            return False
+        rows = conn.execute("SELECT MAX(rowid) FROM genes").fetchone()[0] or 0
+    except sqlite3.Error:
+        return False
+    if rows < COVER_INDEX_HINT_MIN_ROWS:
+        return False
+    log.info(
+        "genes has ~%d rows and no %s index; run "
+        "`python scripts/migrate_genes_cover_index.py --db <store>` once "
+        "(holds the write lock while building, ~40 s at 947k, +~25 MB) to "
+        "speed up the tag tiers on cache-constrained hosts. Results are "
+        "identical without it.",
+        rows, GENES_COVER_INDEX,
+    )
+    return True
+
+
 def _create_genes_indexes(cur: sqlite3.Cursor) -> None:
     cur.execute("CREATE INDEX IF NOT EXISTS idx_genes_source ON genes(source_id)")
-    # perf/tier-sql: the tag tiers probe genes once per matched gene only to
-    # test ``chromatin < 2`` (+ existence). With gene_id TEXT PRIMARY KEY each
-    # probe is autoindex -> table-row hop into a multi-GB table; this covering
-    # index answers it from a small hot b-tree (4.5x on a cache-constrained
-    # synthetic store; no result change). One-time build on an existing
-    # store is a full genes leaf scan (est. 10-120 s at 947k, I/O bound).
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_genes_id_chromatin "
-        "ON genes(gene_id, chromatin)"
-    )
+    # NOTE: idx_genes_id_chromatin (GENES_COVER_INDEX_SQL) is deliberately NOT
+    # created here. Building it blocks the first writable open of a 947k store
+    # for ~38 s (+24.8 MB), so it is an opt-in migration:
+    # ``python scripts/migrate_genes_cover_index.py --db <store>``. Query code
+    # works identically without it; see ``maybe_hint_cover_index``.
     # Stage 2: partial index over hot-tier rows with v2 vectors.
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot "
