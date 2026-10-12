@@ -1892,12 +1892,18 @@ class KnowledgeStore:
         existing locks so savepoint lifetimes cannot interleave.
         """
         if not batched:
+            # Bind the pool once and filter the b endpoint in Python.
+            # ``a IN (P) AND b IN (P)`` makes SQLite probe the (a, b) key
+            # for every pair in P x P (12k pool ~ 13 s). ORDER BY a, b
+            # reproduces the order that nested-loop plan emitted.
             cid_ph = ",".join("?" * len(candidate_ids))
-            yield cur.execute(
+            members = frozenset(candidate_ids)
+            rows = cur.execute(
                 f"SELECT gene_id_a, gene_id_b, weight FROM harmonic_links "
-                f"WHERE gene_id_a IN ({cid_ph}) AND gene_id_b IN ({cid_ph})",
-                (*candidate_ids, *candidate_ids),
+                f"WHERE gene_id_a IN ({cid_ph}) ORDER BY gene_id_a, gene_id_b",
+                tuple(candidate_ids),
             )
+            yield (r for r in rows if r["gene_id_b"] in members)
             return
 
         conn = cur.connection
@@ -3935,6 +3941,7 @@ class KnowledgeStore:
         # Weight: harmonic_weight per link (default 1.0), capped at a
         # total bonus of 3.0 × harmonic_weight (default 3.0) — #202.
         _pool_total = len(gene_scores)  # #493: pool reaching Tier 5
+        _harmonic_t0 = time.monotonic()
         if use_harmonic and gene_scores:
             try:
                 _has_harmonic = cur.execute(
@@ -3989,6 +3996,7 @@ class KnowledgeStore:
                     # #431: was log.debug — a swallowed OperationalError hid
                     # the tier's absence on every large bed.
                     log.warning("Harmonic boost failed", exc_info=True)
+        _sig("harmonic", _harmonic_t0)
 
         # ── Tier 5.5: Successor Representation boost ──────────────
         # Discounted future-occupancy over the co-activation graph.
