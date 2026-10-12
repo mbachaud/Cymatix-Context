@@ -1265,6 +1265,9 @@ class KnowledgeStore:
     def _init_db(self) -> None:
         from .storage.ddl import fts5_is_external_content, init_db
         self._fts_available = init_db(self.conn)
+        if not self.read_only:
+            from .storage.ddl import maybe_hint_cover_index
+            maybe_hint_cover_index(self.conn)
         # Issue #338: which write discipline genes_fts needs. External-content
         # (new stores + migrated stores) has no shadow text of its own, so
         # deletes must re-supply the prior indexed values; legacy contentful
@@ -2858,6 +2861,73 @@ class KnowledgeStore:
         finally:
             cur.close()
 
+    def _tag_postings_sql(
+        self,
+        terms: List[str],
+        party_filter: str = "",
+        party_params: tuple = (),
+        prefilter_clause: str = "",
+        prefilter_params: tuple = (),
+    ) -> Tuple[Tuple[str, str], Tuple[tuple, tuple]]:
+        """SQL for the shared exact-tag posting fetch (perf/tier-sql).
+
+        Tier 1 (tag_exact) and the lexical-anchor boost both need the live
+        postings of the query terms. They used to JOIN ``genes`` once per
+        posting ROW (a random PK probe each: 82k-116k per query at 947k).
+        Here the postings come from the covering index alone, and ``genes``
+        (chromatin / party / prefilter) is probed once per DISTINCT gene.
+        Returns ((rows_sql, valid_sql), (rows_params, valid_params)).
+        """
+        ph = ",".join("?" * len(terms))
+        rows_sql = (
+            f"SELECT tag_value, gene_id FROM promoter_index "
+            f"WHERE tag_value IN ({ph})"
+        )
+        valid_sql = (
+            f"SELECT g.gene_id FROM "
+            f"(SELECT DISTINCT gene_id FROM promoter_index "
+            f" WHERE tag_value IN ({ph})) v "
+            f"CROSS JOIN genes g ON g.gene_id = v.gene_id "
+            f"WHERE g.chromatin < ? {party_filter} {prefilter_clause}"
+        )
+        valid_params = (
+            *terms, int(ChromatinState.HETEROCHROMATIN),
+            *party_params, *prefilter_params,
+        )
+        return (rows_sql, valid_sql), (tuple(terms), valid_params)
+
+    def _tag_postings(
+        self,
+        cur,
+        terms: List[str],
+        party_filter: str = "",
+        party_params: tuple = (),
+        prefilter_clause: str = "",
+        prefilter_params: tuple = (),
+    ) -> Dict[str, List[str]]:
+        """``{term: [gene_id, ...]}`` of live postings, gene_id ascending.
+
+        Identical (rows, order, per-gene duplicates) to the legacy per-term
+        ``promoter_index JOIN genes WHERE tag_value = ? AND chromatin < ?``
+        fetch it replaces; terms with no live posting are absent.
+        """
+        uniq = sorted(set(terms))
+        if not uniq:
+            return {}
+        (rows_sql, valid_sql), (rows_params, valid_params) = self._tag_postings_sql(
+            uniq, party_filter, party_params, prefilter_clause, prefilter_params,
+        )
+        valid = {r[0] for r in cur.execute(valid_sql, valid_params)}
+        out: Dict[str, List[str]] = {}
+        if not valid:
+            return out
+        for tag_value, gid in cur.execute(rows_sql, rows_params):
+            if gid in valid:
+                out.setdefault(tag_value, []).append(gid)
+        for lst in out.values():
+            lst.sort()
+        return out
+
     def _tag_prefix_sql(
         self,
         query_terms: List[str],
@@ -3342,6 +3412,12 @@ class KnowledgeStore:
         # ── Tier 1: exact tag match (weight: tag_exact_weight) ────
         _tag_exact_t0 = time.monotonic()
         placeholders = ",".join("?" * len(query_terms))
+        # perf/tier-sql: ONE posting fetch shared by Tier 1 and the lexical
+        # anchor (genes probed per distinct gene, not per posting row).
+        _postings = self._tag_postings(
+            cur, query_terms, _party_filter, tuple(_party_params),
+            _prefilter_aliased_clause, tuple(_prefilter_params),
+        )
         _effective_terms = list(query_terms)
         if self._tag_df_cap > 0.0:
             # #327 iteration 2: membership relief. Tags covering more than
@@ -3393,23 +3469,11 @@ class KnowledgeStore:
                 )
                 for r in _df_rows
             }
-            rows = cur.execute(
-                f"""
-                SELECT g.gene_id, pi.tag_value
-                FROM genes g
-                JOIN promoter_index pi ON g.gene_id = pi.gene_id
-                WHERE pi.tag_value IN ({_eff_placeholders})
-                  AND g.chromatin < ?
-                  {_party_filter}
-                  {_prefilter_aliased_clause}
-                """,
-                (*_effective_terms, int(ChromatinState.HETEROCHROMATIN),
-                 *_party_params, *_prefilter_params),
-            ).fetchall()
             _idf_scores: Dict[str, float] = {}
-            for r in rows:
-                _idf_scores[r["gene_id"]] = _idf_scores.get(r["gene_id"], 0.0) + \
-                    _idf.get(r["tag_value"], 1.0) * self._tag_exact_weight
+            for _t in sorted(set(_effective_terms)):
+                _w = _idf.get(_t, 1.0) * self._tag_exact_weight
+                for _gid in _postings.get(_t, ()):
+                    _idf_scores[_gid] = _idf_scores.get(_gid, 0.0) + _w
             _tag_exact_ranked = sorted(
                 _idf_scores.items(), key=lambda kv: kv[1], reverse=True
             )
@@ -3417,28 +3481,19 @@ class KnowledgeStore:
                 gene_scores[gid] = tag_score
                 tier_contrib.setdefault(gid, {})["tag_exact"] = tag_score
         else:
-            _eff_placeholders = ",".join("?" * len(_effective_terms))
-            rows = cur.execute(
-                f"""
-                SELECT g.gene_id, COUNT(pi.tag_value) AS match_count
-                FROM genes g
-                JOIN promoter_index pi ON g.gene_id = pi.gene_id
-                WHERE pi.tag_value IN ({_eff_placeholders})
-                  AND g.chromatin < ?
-                  {_party_filter}
-                  {_prefilter_aliased_clause}
-                GROUP BY g.gene_id
-                """,
-                (*_effective_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
-            ).fetchall()
+            _match_counts: Dict[str, int] = {}
+            for _t in set(_effective_terms):
+                for _gid in _postings.get(_t, ()):
+                    _match_counts[_gid] = _match_counts.get(_gid, 0) + 1
 
             _tag_exact_ranked = []  # Stage 3 RRF
-            for r in rows:
+            # gene_id ascending == the legacy GROUP BY g.gene_id order.
+            for _gid in sorted(_match_counts):
                 # #202: tag_exact_weight (default 3.0 == legacy literal).
-                tag_score = r["match_count"] * self._tag_exact_weight
-                gene_scores[r["gene_id"]] = tag_score
-                tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
-                _tag_exact_ranked.append((r["gene_id"], tag_score))
+                tag_score = _match_counts[_gid] * self._tag_exact_weight
+                gene_scores[_gid] = tag_score
+                tier_contrib.setdefault(_gid, {})["tag_exact"] = tag_score
+                _tag_exact_ranked.append((_gid, tag_score))
         # Stage 3: count tier — rank by raw score (= match_count ×
         # tag_exact_weight)
         # which is monotone in match_count, so the rank order matches
@@ -3890,16 +3945,7 @@ class KnowledgeStore:
             idf = _math.log(total_genes_est / term_freq) if term_freq > 0 else 0
             boost = min(idf * self._lex_anchor_weight, 2.0 * self._lex_anchor_weight)
             if boost > 1.0:
-                anchor_genes = cur.execute(
-                    f"SELECT pi.gene_id FROM promoter_index pi "
-                    f"JOIN genes g ON pi.gene_id = g.gene_id "
-                    f"WHERE pi.tag_value = ? AND g.chromatin < ?"
-                    f" {_party_filter}"
-                    f" {_prefilter_aliased_clause}",
-                    (term, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
-                ).fetchall()
-                for r in anchor_genes:
-                    gid = r["gene_id"]
+                for gid in _postings.get(term, ()):
                     gene_scores[gid] = gene_scores.get(gid, 0) + boost
                     # Anchor IDF can fire for multiple terms in same query; sum them.
                     tc = tier_contrib.setdefault(gid, {})

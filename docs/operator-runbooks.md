@@ -1017,3 +1017,25 @@ curl -s -X POST http://127.0.0.1:11437/context \
 
    Expected: `["arithmetic", "default", "factual", "multi_hop",
    "procedural"]`.
+
+---
+
+## Runbook 11: `idx_genes_id_chromatin` covering index (opt-in, PR #508)
+
+The tag tiers probe `genes` once per matched gene only to test
+`chromatin < 2`. A covering index answers that from a small hot b-tree, which
+helps on cache-constrained hosts. It is **never built on store open**: at 947k
+rows the build takes about 38 s and adds about 24.8 MB, holding the write lock
+throughout (WAL readers continue; writers wait). Results are identical with or
+without it.
+
+Writable stores of 50k+ rows without the index log one info line at open naming
+this command. To build it (stop other writers first; idempotent, safe to re-run):
+
+```bash
+python scripts/migrate_genes_cover_index.py --db genomes/main/genome.db --dry-run
+python scripts/migrate_genes_cover_index.py --db genomes/main/genome.db
+```
+
+The JSON report gives `status` (`created` / `already_present` / `dry_run`) and
+`elapsed_s`. Rollback: `DROP INDEX idx_genes_id_chromatin;` (no result change).
