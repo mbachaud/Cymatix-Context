@@ -168,7 +168,7 @@ def test_concurrent_writer_succeeds_during_build(tmp_path):
         while time.time() < deadline and not _has_index(db):
             try:
                 store.conn.execute(
-                    "UPDATE genes SET last_accessed = last_accessed WHERE rowid = 1"
+                    "UPDATE genes SET chromatin = chromatin WHERE rowid = 1"
                 )
                 store.conn.commit()
                 n += 1
@@ -220,3 +220,60 @@ def test_real_interrupt_rolls_back_index(tmp_path):
     # And a later normal build still works.
     assert ddl._run_cover_index_build(str(db), threading.Event()) is True
     assert _has_index(db)
+
+
+def _holding_build(started, release):
+    real = ddl._execute_cover_index_sql
+
+    def hold(conn):
+        conn.execute("BEGIN IMMEDIATE")  # take the write lock like CREATE INDEX
+        started.set()
+        release.wait(20)
+        real(conn)
+        conn.execute("COMMIT")
+
+    return hold
+
+
+def _busy_ms(conn):
+    return conn.execute("PRAGMA busy_timeout").fetchone()[0]
+
+
+def test_writer_busy_timeout_raised_while_building_then_restored(tmp_path):
+    db = _seed(tmp_path)
+    started, release = threading.Event(), threading.Event()
+    real = ddl._execute_cover_index_sql
+    ddl._execute_cover_index_sql = _holding_build(started, release)
+    try:
+        store = KnowledgeStore(str(db))
+        base = 30000
+        assert started.wait(5)
+        assert _busy_ms(store.conn) > base  # writers outwait the build
+        release.set()
+        assert _wait(lambda: _has_index(db))
+        assert _wait(lambda: _busy_ms(store.conn) == base)  # restored
+        store.close()
+    finally:
+        release.set()
+        ddl._execute_cover_index_sql = real
+
+
+def test_write_outlasting_base_timeout_succeeds_during_build(tmp_path, monkeypatch):
+    from cymatix_context import knowledge_store as ks
+    db = _seed(tmp_path)
+    monkeypatch.setattr(ks, "WRITER_BUSY_MS", 200, raising=False)
+    monkeypatch.setattr(ddl, "_WRITER_BUILD_BUSY_MS", 10_000, raising=False)
+    started, release = threading.Event(), threading.Event()
+    real = ddl._execute_cover_index_sql
+    ddl._execute_cover_index_sql = _holding_build(started, release)
+    try:
+        store = KnowledgeStore(str(db))
+        assert started.wait(5)
+        threading.Timer(1.0, release.set).start()  # hold >> 200 ms base
+        store.conn.execute("UPDATE genes SET chromatin = chromatin WHERE rowid = 1")
+        store.conn.commit()  # must wait out the build, not raise BUSY
+        assert _wait(lambda: _has_index(db))
+        store.close()
+    finally:
+        release.set()
+        ddl._execute_cover_index_sql = real

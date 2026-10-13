@@ -1030,9 +1030,13 @@ tag tiers p50 1.47 s vs 3.46 s). Results are identical with or without it.
 index, a daemon thread builds it on its own connection; open does not wait. Log
 lines: `cover index build started` / `cover index build finished in Ns`. At
 947k the build takes about 38 s and adds about 24.8 MB. `CREATE INDEX` holds the
-write lock throughout: WAL readers continue, but a writer that arrives during
-the build waits (busy_timeout 30 s), so a writer can see SQLITE_BUSY only if a
-build runs longer than 30 s (cold cache, ~947k+ rows). Measured on a synthetic
+write lock throughout: WAL readers continue, and a writer that arrives during
+the build waits. While a build runs, the store's own writer connection
+temporarily raises its busy_timeout from 30 s to 10 min (restored afterwards),
+so in-process writes never fail because of the build. Writers in OTHER
+processes keep their 30 s timeout and could see SQLITE_BUSY if a build runs
+longer than that (cold cache, ~947k+ rows); stop them or run the explicit
+migration offline first. Measured on a synthetic
 600k-row, 1.2 GB store (warm cache): build 1.7 s, a concurrent writer stalled
 for the same 1.7 s, no errors. Closing the store interrupts and rolls back an
 in-flight build; the next open retries. Two processes on one store: the second

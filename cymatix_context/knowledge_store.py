@@ -51,6 +51,10 @@ from .retrieval.measurement import current_capture, current_retrieval, trace_ret
 
 log = logging.getLogger(__name__)
 
+#: Writer connection busy_timeout (ms). The cover-index background build
+#: temporarily raises it (storage.ddl._WRITER_BUILD_BUSY_MS).
+WRITER_BUSY_MS = 30000
+
 # W2.2-narrow (eps_band_coverage): how deep into the fused head the
 # distinct-term coverage map is computed. The bands that can move delivery
 # live in the head; 60 covers the receipted 13-45 target range with margin
@@ -1066,7 +1070,7 @@ class KnowledgeStore:
         self.conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
-        self.conn.execute("PRAGMA busy_timeout=30000")  # 30s retry on lock
+        self.conn.execute(f"PRAGMA busy_timeout={WRITER_BUSY_MS}")  # retry on lock
         # Issue #372: default NORMAL — under WAL a per-commit fsync (FULL,
         # SQLite's own default) is not needed for corruption-safety, and
         # ingest currently commits per strand. Invalid values fall back

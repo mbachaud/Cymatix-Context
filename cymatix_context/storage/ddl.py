@@ -162,6 +162,12 @@ COVER_INDEX_AUTOBUILD_ENV = "CYMATIX_COVER_INDEX_AUTOBUILD"
 #: long foreground write); the next open retries.
 _COVER_BUILD_MAX_WAIT_S = 900.0
 
+#: While a build runs in this process the store's writer connection waits this
+#: long on the write lock (> worst observed build, 38 s at 947k cold; 10 min
+#: leaves >15x headroom). Restored to the prior value when the build ends.
+#: Writers in OTHER processes keep their own 30 s timeout.
+_WRITER_BUILD_BUSY_MS = 600_000
+
 _cover_lock = threading.Lock()
 _cover_builders: "dict[str, CoverIndexBuilder]" = {}
 
@@ -230,14 +236,37 @@ def _run_cover_index_build(
 class CoverIndexBuilder:
     """One daemon thread building the cover index for one store path."""
 
-    def __init__(self, key: str, path: str, rows: int):
+    def __init__(self, key: str, path: str, rows: int,
+                 writer_conn: Optional[sqlite3.Connection] = None):
         self.key = key
         self.path = path
         self.rows = rows
+        self._writer_conn = writer_conn
+        self._prior_busy_ms: Optional[int] = None
         self._stop = threading.Event()
         self._conn: Optional[sqlite3.Connection] = None
         self.thread = threading.Thread(
             target=self._main, name="cover-index-build", daemon=True)
+
+    def raise_writer_timeout(self) -> None:
+        """Make the store's writer outwait the build (called before start)."""
+        c = self._writer_conn
+        if c is None:
+            return
+        try:
+            self._prior_busy_ms = c.execute("PRAGMA busy_timeout").fetchone()[0]
+            c.execute(f"PRAGMA busy_timeout={int(_WRITER_BUILD_BUSY_MS)}")
+        except sqlite3.Error:
+            self._prior_busy_ms = None
+
+    def _restore_writer_timeout(self) -> None:
+        c, prior = self._writer_conn, self._prior_busy_ms
+        if c is None or prior is None:
+            return
+        try:
+            c.execute(f"PRAGMA busy_timeout={int(prior)}")
+        except sqlite3.Error:  # store closed meanwhile
+            pass
 
     def _main(self) -> None:
         t0 = time.monotonic()
@@ -254,6 +283,7 @@ class CoverIndexBuilder:
         except Exception:
             log.warning("cover index build crashed", exc_info=True)
         finally:
+            self._restore_writer_timeout()
             with _cover_lock:
                 if _cover_builders.get(self.key) is self:
                     del _cover_builders[self.key]
@@ -311,8 +341,9 @@ def maybe_start_cover_index_build(
     with _cover_lock:
         if key in _cover_builders:
             return None
-        builder = CoverIndexBuilder(key, path, rows)
+        builder = CoverIndexBuilder(key, path, rows, writer_conn=conn)
         _cover_builders[key] = builder
+    builder.raise_writer_timeout()
     builder.thread.start()
     return builder
 
