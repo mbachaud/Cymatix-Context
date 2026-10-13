@@ -85,7 +85,8 @@ def paths(tag: str, arm: str = "baseline") -> dict:
 def child_env(extra: dict | None = None) -> dict:
     env = dict(os.environ)
     env.update({"PYTHONHASHSEED": "0", "PYTHONUTF8": "1", "PYTHONPATH": str(ROOT),
-                "CYMATIX_DISABLE_LEARN": "1", "CYMATIX_SQLITE_CACHE_SIZE": "-12582912"})
+                "CYMATIX_DISABLE_LEARN": "1", "CYMATIX_SQLITE_CACHE_SIZE": "-12582912",
+                "CYMATIX_COVER_INDEX_AUTOBUILD": "0"})
     env.pop("CYMATIX_ENCODER_URL", None)
     env.pop("CYMATIX_CONFIG", None)
     env.update(extra or {})
@@ -144,7 +145,7 @@ def grade(tag: str, p: dict) -> bool:
             wait = COLD_GATE_S - age
             log.info("cold gate %s: sleeping %.0fs", tag, wait)
             time.sleep(wait)
-        cmd = [sys.executable, "-P", str(LADDER), "--genome", str(p["db"]),
+        cmd = [sys.executable, "-P", str(LADDER), "--cover-index", "off", "--genome", str(p["db"]),
                "--resolved", str(p["resolved"]), "--gold", str(p["gold"]),
                "--limit", "0", "--k", "12", "--arms", "baseline", "--config", str(p["config"]),
                "--per-query", "--rank-dump", str(RANK_DUMP), "--stamp", STAMP, "--out", str(p["ladder"])]
