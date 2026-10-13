@@ -220,6 +220,8 @@ def env_for_run(seed: int) -> dict:
     env["PYTHONPATH"] = str(ROOT)
     env["CYMATIX_DISABLE_LEARN"] = "1"
     env["CYMATIX_SQLITE_CACHE_SIZE"] = "-12582912"
+    # Deterministic bed state: no background covering-index build during timing.
+    env["CYMATIX_COVER_INDEX_AUTOBUILD"] = "0"
     env.pop("CYMATIX_ENCODER_URL", None)
     env.pop("CYMATIX_CONFIG", None)
     return env
@@ -345,6 +347,7 @@ def stage_ladder(name: str, spec: dict, pre: dict) -> dict:
     gap = cold_gate(spec["bed"], bed["db"])
     before = bed_mtimes(bed["db"])
     cmd = [sys.executable, "-P", str(LADDER),
+           "--cover-index", "off",
            "--genome", bed["db"],
            "--resolved", str(bed["resolved"]),
            "--gold", str(bed["gold"]),
