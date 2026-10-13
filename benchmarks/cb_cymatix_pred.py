@@ -18,6 +18,14 @@ plus a meta sidecar ..._meta.json = {iid: {injected_tokens, n_genes, n_match_fai
 Read-only on cymatix + contextbench source. No server / no ports touched (in-process).
 HARMLESS: torch "hardware candidate cuda failed" tracebacks on cymatix062 are CPU-fallback noise.
 """
+# bench-pin: cover-index autobuild
+# Bench drivers never let a background covering-index build start during a
+# measured run (it perturbs latency; results are unaffected). Set before any
+# store opens. Drivers with an explicit prebuild path set their own value.
+import os as _bench_os
+import sys as _bench_sys
+_bench_os.environ["CYMATIX_COVER_INDEX_AUTOBUILD"] = "0"
+print('cover-index autobuild pinned off (bench driver)', file=_bench_sys.stderr)
 import argparse
 import json
 import os

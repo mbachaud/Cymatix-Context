@@ -17,6 +17,14 @@ Egress: synthetic "Redwood Inference" facts only (same as the hand-context run).
 Read-only + CYMATIX_DISABLE_LEARN so the bench bed is never mutated.
 """
 from __future__ import annotations
+# bench-pin: cover-index autobuild
+# Bench drivers never let a background covering-index build start during a
+# measured run (it perturbs latency; results are unaffected). Set before any
+# store opens. Drivers with an explicit prebuild path set their own value.
+import os as _bench_os
+import sys as _bench_sys
+_bench_os.environ["CYMATIX_COVER_INDEX_AUTOBUILD"] = "0"
+print('cover-index autobuild pinned off (bench driver)', file=_bench_sys.stderr)
 
 import json
 import os

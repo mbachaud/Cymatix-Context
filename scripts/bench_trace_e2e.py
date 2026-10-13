@@ -28,6 +28,14 @@ Modes:
 """
 
 from __future__ import annotations
+# bench-pin: cover-index autobuild
+# Bench drivers never let a background covering-index build start during a
+# measured run (it perturbs latency; results are unaffected). Set before any
+# store opens. Drivers with an explicit prebuild path set their own value.
+import os as _bench_os
+import sys as _bench_sys
+_bench_os.environ["CYMATIX_COVER_INDEX_AUTOBUILD"] = "0"
+print('cover-index autobuild pinned off (bench driver)', file=_bench_sys.stderr)
 
 import argparse
 import json
@@ -305,6 +313,7 @@ def main() -> int:
         "machine": f"{platform.platform()} / {platform.processor()}",
         "n": args.n, "warmup": args.warmup,
         "mode": "genome" if args.genome else "synthetic",
+        "cover_index_autobuild": _bench_os.environ.get("CYMATIX_COVER_INDEX_AUTOBUILD"),
         "docs": args.docs if not args.genome else None,
         "genome": args.genome,
         "queries_file": qfile.name if qfile else "synthetic",
