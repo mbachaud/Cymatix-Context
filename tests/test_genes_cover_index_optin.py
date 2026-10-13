@@ -65,33 +65,16 @@ def test_migration_missing_db_raises(tmp_path):
         migrate(tmp_path / "nope.db")
 
 
-def test_hint_logs_once_above_threshold(tmp_path, monkeypatch, caplog):
-    monkeypatch.setattr(ddl, "COVER_INDEX_HINT_MIN_ROWS", 5)
+def test_no_old_hint_and_autobuild_skipped_below_default_threshold(
+        tmp_path, caplog):
+    # The "run the migration" hint was replaced by the background build
+    # (tests/test_cover_index_autobuild.py); a small store builds nothing.
     caplog.set_level(logging.INFO)
     _make(tmp_path).conn.commit()
     caplog.clear()
     KnowledgeStore(str(tmp_path / "g.db"))
-    hits = _hints(caplog)
-    assert len(hits) == 1 and hits[0].levelno == logging.INFO
-
-
-def test_no_hint_below_threshold_index_present_or_read_only(
-        tmp_path, monkeypatch, caplog):
-    from scripts.migrate_genes_cover_index import migrate
-
-    caplog.set_level(logging.INFO)
-    _make(tmp_path).conn.commit()
-    caplog.clear()
-    KnowledgeStore(str(tmp_path / "g.db"))  # default threshold 50k, ~21 rows
     assert not _hints(caplog)
-
-    monkeypatch.setattr(ddl, "COVER_INDEX_HINT_MIN_ROWS", 5)
-    KnowledgeStore(str(tmp_path / "g.db"), read_only=True)
-    assert not _hints(caplog)
-
-    migrate(tmp_path / "g.db")
-    KnowledgeStore(str(tmp_path / "g.db"))
-    assert not _hints(caplog)
+    assert not _has_index(tmp_path / "g.db")
 
 
 @pytest.mark.parametrize("with_index", [False, True])

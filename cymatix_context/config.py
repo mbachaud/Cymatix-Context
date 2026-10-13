@@ -276,6 +276,7 @@ class GenomeConfig:
     replicas: List[str] = field(default_factory=list)  # Read-only clone paths
     replica_sync_interval: int = 100    # Sync replicas every N inserts
     synchronous: str = "NORMAL"         # Writer PRAGMA synchronous (OFF|NORMAL|FULL|EXTRA). WAL-safe NORMAL skips the per-commit fsync SQLite's FULL default pays — #372
+    cover_index_autobuild: bool = True  # Build idx_genes_id_chromatin in a background thread after a writable open of a 50k+ row store (own connection; ~38 s at 947k, holds the write lock). false = never auto-build (operators can run scripts/migrate_genes_cover_index.py). Env CYMATIX_COVER_INDEX_AUTOBUILD=0 also disables.
 
 
 @dataclass
@@ -1876,6 +1877,8 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             replicas=g.get("replicas", cfg.genome.replicas),
             replica_sync_interval=int(g.get("replica_sync_interval", cfg.genome.replica_sync_interval)),
             synchronous=str(g.get("synchronous", cfg.genome.synchronous)),
+            cover_index_autobuild=bool(
+                g.get("cover_index_autobuild", cfg.genome.cover_index_autobuild)),
         )
 
     # Server

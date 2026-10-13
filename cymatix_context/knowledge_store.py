@@ -51,6 +51,10 @@ from .retrieval.measurement import current_capture, current_retrieval, trace_ret
 
 log = logging.getLogger(__name__)
 
+#: Writer connection busy_timeout (ms). The cover-index background build
+#: temporarily raises it (storage.ddl._WRITER_BUILD_BUSY_MS).
+WRITER_BUSY_MS = 30000
+
 # W2.2-narrow (eps_band_coverage): how deep into the fused head the
 # distinct-term coverage map is computed. The bands that can move delivery
 # live in the head; 60 covers the receipted 13-45 target range with margin
@@ -842,9 +846,14 @@ class KnowledgeStore:
         mem_plan: Optional[SqliteMemPlan] = None,
         # #431: opt-in full-pool harmonic staging above SQLite's bind cap.
         harmonic_batching_enabled: bool = False,
+        # perf: build idx_genes_id_chromatin in a background thread after a
+        # writable open of a large store ([genome] cover_index_autobuild).
+        cover_index_autobuild: bool = True,
     ):
         self.path = path
         self.read_only = read_only
+        self._cover_index_autobuild = cover_index_autobuild
+        self._cover_index_builder = None
         self._mem_plan = mem_plan
         self.synonym_map = synonym_map or {}
         self._sema_codec = sema_codec  # Optional SemaCodec for Tier 4 retrieval
@@ -1061,7 +1070,7 @@ class KnowledgeStore:
         self.conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
-        self.conn.execute("PRAGMA busy_timeout=30000")  # 30s retry on lock
+        self.conn.execute(f"PRAGMA busy_timeout={WRITER_BUSY_MS}")  # retry on lock
         # Issue #372: default NORMAL — under WAL a per-commit fsync (FULL,
         # SQLite's own default) is not needed for corruption-safety, and
         # ingest currently commits per strand. Invalid values fall back
@@ -1265,9 +1274,11 @@ class KnowledgeStore:
     def _init_db(self) -> None:
         from .storage.ddl import fts5_is_external_content, init_db
         self._fts_available = init_db(self.conn)
+        self._cover_index_builder = None
         if not self.read_only:
-            from .storage.ddl import maybe_hint_cover_index
-            maybe_hint_cover_index(self.conn)
+            from .storage.ddl import maybe_start_cover_index_build
+            self._cover_index_builder = maybe_start_cover_index_build(
+                self.conn, self.path, self._cover_index_autobuild)
         # Issue #338: which write discipline genes_fts needs. External-content
         # (new stores + migrated stores) has no shadow text of its own, so
         # deletes must re-supply the prior indexed values; legacy contentful
@@ -6658,6 +6669,11 @@ class KnowledgeStore:
             return None
 
     def close(self) -> None:
+        # Abort an in-flight background index build first (interrupt rolls the
+        # CREATE INDEX back); bounded join so close() never hangs on it.
+        _b = getattr(self, "_cover_index_builder", None)
+        if _b is not None:
+            _b.stop()
         self.checkpoint("TRUNCATE")  # Flush all WAL data before closing
         if self._reader is not None:
             try:

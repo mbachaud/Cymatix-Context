@@ -13,7 +13,9 @@ are the on-disk contract and remain untouched.
 from __future__ import annotations
 
 import logging
+import os
 import sqlite3
+import threading
 import time
 from typing import Optional
 
@@ -150,44 +152,209 @@ GENES_COVER_INDEX_SQL = (
     "CREATE INDEX IF NOT EXISTS idx_genes_id_chromatin "
     "ON genes(gene_id, chromatin)"
 )
-#: Stores at least this large (by MAX(rowid)) get the one-line open hint.
+#: Stores at least this large (by MAX(rowid)) get the background build. Smaller
+#: stores skip it: the index only pays off once ``genes`` outgrows the page
+#: cache, and skipping keeps small/test stores byte-identical on disk.
 COVER_INDEX_HINT_MIN_ROWS = 50_000
+#: Env kill switch (``0``/``false``/``off``/``no`` disables the autobuild).
+COVER_INDEX_AUTOBUILD_ENV = "CYMATIX_COVER_INDEX_AUTOBUILD"
+#: Give up retrying a locked database after this long (a rival build or a very
+#: long foreground write); the next open retries.
+_COVER_BUILD_MAX_WAIT_S = 900.0
+
+#: While a build runs in this process the store's writer connection waits this
+#: long on the write lock (> worst observed build, 38 s at 947k cold; 10 min
+#: leaves >15x headroom). Restored to the prior value when the build ends.
+#: Writers in OTHER processes keep their own 30 s timeout.
+_WRITER_BUILD_BUSY_MS = 600_000
+
+_cover_lock = threading.Lock()
+_cover_builders: "dict[str, CoverIndexBuilder]" = {}
 
 
-def maybe_hint_cover_index(conn: sqlite3.Connection) -> bool:
-    """Log ONE info line when a large store lacks the opt-in cover index.
+def _cover_index_exists(conn: sqlite3.Connection) -> bool:
+    return conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='index' AND name=?",
+        (GENES_COVER_INDEX,),
+    ).fetchone() is not None
 
-    Uses ``MAX(rowid)`` (O(log n)), never ``COUNT(*)``. Returns True if logged.
+
+def _execute_cover_index_sql(conn: sqlite3.Connection) -> None:
+    conn.execute(GENES_COVER_INDEX_SQL)
+
+
+def _run_cover_index_build(
+    path: str,
+    stop: threading.Event,
+    on_conn=None,
+) -> bool:
+    """Build the cover index on a private connection. True iff it now exists.
+
+    Idempotent and cross-process safe: ``IF NOT EXISTS`` makes a second
+    builder that waited on the write lock a no-op, and the existence check
+    before each attempt skips the lock entirely. SQLITE_BUSY is retried with
+    backoff. ``stop`` aborts via a progress handler (an interrupted CREATE
+    INDEX rolls back; nothing partial is left behind).
     """
+    if stop.is_set():
+        return False
+    conn = sqlite3.connect(path, timeout=30, check_same_thread=False,
+                           isolation_level=None)
     try:
-        if conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type='index' AND name=?",
-            (GENES_COVER_INDEX,),
-        ).fetchone():
-            return False
+        conn.execute("PRAGMA busy_timeout=30000")
+        conn.set_progress_handler(lambda: 1 if stop.is_set() else 0, 1000)
+        if on_conn is not None:
+            on_conn(conn)
+        deadline = time.monotonic() + _COVER_BUILD_MAX_WAIT_S
+        delay = 0.25
+        while not stop.is_set():
+            try:
+                if _cover_index_exists(conn):
+                    return True
+                _execute_cover_index_sql(conn)
+                return _cover_index_exists(conn)
+            except sqlite3.OperationalError as exc:
+                msg = str(exc).lower()
+                if "interrupt" in msg or stop.is_set():
+                    return False
+                if "locked" not in msg and "busy" not in msg:
+                    log.warning("cover index build failed: %s", exc)
+                    return False
+                if time.monotonic() > deadline:
+                    log.warning("cover index build gave up waiting for lock")
+                    return False
+                stop.wait(delay)
+                delay = min(delay * 2, 5.0)
+        return False
+    finally:
+        try:
+            conn.close()
+        except sqlite3.Error:
+            pass
+
+
+class CoverIndexBuilder:
+    """One daemon thread building the cover index for one store path."""
+
+    def __init__(self, key: str, path: str, rows: int,
+                 writer_conn: Optional[sqlite3.Connection] = None):
+        self.key = key
+        self.path = path
+        self.rows = rows
+        self._writer_conn = writer_conn
+        self._prior_busy_ms: Optional[int] = None
+        self._stop = threading.Event()
+        self._conn: Optional[sqlite3.Connection] = None
+        self.thread = threading.Thread(
+            target=self._main, name="cover-index-build", daemon=True)
+
+    def raise_writer_timeout(self) -> None:
+        """Make the store's writer outwait the build (called before start)."""
+        c = self._writer_conn
+        if c is None:
+            return
+        try:
+            self._prior_busy_ms = c.execute("PRAGMA busy_timeout").fetchone()[0]
+            c.execute(f"PRAGMA busy_timeout={int(_WRITER_BUILD_BUSY_MS)}")
+        except sqlite3.Error:
+            self._prior_busy_ms = None
+
+    def _restore_writer_timeout(self) -> None:
+        c, prior = self._writer_conn, self._prior_busy_ms
+        if c is None or prior is None:
+            return
+        try:
+            c.execute(f"PRAGMA busy_timeout={int(prior)}")
+        except sqlite3.Error:  # store closed meanwhile
+            pass
+
+    def _main(self) -> None:
+        t0 = time.monotonic()
+        log.info(
+            "cover index build started (background): ~%d genes rows, %s on %s; "
+            "writers wait on the lock while it runs (~40 s at 947k); "
+            "disable with [genome] cover_index_autobuild = false",
+            self.rows, GENES_COVER_INDEX, self.path,
+        )
+        ok = False
+        try:
+            ok = _run_cover_index_build(
+                self.path, self._stop, on_conn=self._set_conn)
+        except Exception:
+            log.warning("cover index build crashed", exc_info=True)
+        finally:
+            self._restore_writer_timeout()
+            with _cover_lock:
+                if _cover_builders.get(self.key) is self:
+                    del _cover_builders[self.key]
+        if ok:
+            log.info("cover index build finished in %.1fs (%s)",
+                     time.monotonic() - t0, GENES_COVER_INDEX)
+        else:
+            log.info("cover index build did not complete (%.1fs); "
+                     "will retry on next open", time.monotonic() - t0)
+
+    def _set_conn(self, conn: sqlite3.Connection) -> None:
+        self._conn = conn
+
+    def stop(self, timeout: float = 5.0) -> None:
+        self._stop.set()
+        conn = self._conn
+        if conn is not None:
+            try:
+                conn.interrupt()
+            except sqlite3.Error:
+                pass
+        if self.thread.is_alive() and self.thread is not threading.current_thread():
+            self.thread.join(timeout)
+
+
+def autobuild_enabled(flag: bool = True) -> bool:
+    env = os.environ.get(COVER_INDEX_AUTOBUILD_ENV, "").strip().lower()
+    if env in ("0", "false", "off", "no"):
+        return False
+    return bool(flag)
+
+
+def maybe_start_cover_index_build(
+    conn: sqlite3.Connection, path: str, enabled: bool = True,
+) -> "Optional[CoverIndexBuilder]":
+    """Start the background cover-index build for a large writable store.
+
+    Caller guarantees the store is writable. Returns the started builder, or
+    None (disabled, in-memory, small, index present, or a build for this path
+    is already running in this process).
+    """
+    if not autobuild_enabled(enabled):
+        return None
+    if path in ("", ":memory:") or path.startswith("file:"):
+        return None
+    try:
+        if _cover_index_exists(conn):
+            return None
         rows = conn.execute("SELECT MAX(rowid) FROM genes").fetchone()[0] or 0
     except sqlite3.Error:
-        return False
+        return None
     if rows < COVER_INDEX_HINT_MIN_ROWS:
-        return False
-    log.info(
-        "genes has ~%d rows and no %s index; run "
-        "`python scripts/migrate_genes_cover_index.py --db <store>` once "
-        "(holds the write lock while building, ~40 s at 947k, +~25 MB) to "
-        "speed up the tag tiers on cache-constrained hosts. Results are "
-        "identical without it.",
-        rows, GENES_COVER_INDEX,
-    )
-    return True
+        return None
+    key = os.path.normcase(os.path.realpath(path))
+    with _cover_lock:
+        if key in _cover_builders:
+            return None
+        builder = CoverIndexBuilder(key, path, rows, writer_conn=conn)
+        _cover_builders[key] = builder
+    builder.raise_writer_timeout()
+    builder.thread.start()
+    return builder
 
 
 def _create_genes_indexes(cur: sqlite3.Cursor) -> None:
     cur.execute("CREATE INDEX IF NOT EXISTS idx_genes_source ON genes(source_id)")
     # NOTE: idx_genes_id_chromatin (GENES_COVER_INDEX_SQL) is deliberately NOT
-    # created here. Building it blocks the first writable open of a 947k store
-    # for ~38 s (+24.8 MB), so it is an opt-in migration:
-    # ``python scripts/migrate_genes_cover_index.py --db <store>``. Query code
-    # works identically without it; see ``maybe_hint_cover_index``.
+    # created here (~38 s at 947k would block open). It is built in the
+    # background after open (``maybe_start_cover_index_build``) or explicitly
+    # via ``scripts/migrate_genes_cover_index.py``. Query code works
+    # identically without it.
     # Stage 2: partial index over hot-tier rows with v2 vectors.
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot "
