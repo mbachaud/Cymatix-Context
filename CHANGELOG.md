@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **perf(storage): `idx_genes_id_chromatin` is now built automatically in the
+  background.** After a writable open of a store with 50k+ `genes` rows and no
+  index, one daemon thread (own connection, 30 s busy_timeout with backoff
+  retry) runs `CREATE INDEX IF NOT EXISTS`; open never waits. Never for
+  read-only, `:memory:`, small stores, or when `[genome] cover_index_autobuild
+  = false` / `CYMATIX_COVER_INDEX_AUTOBUILD=0`. One build per store path per
+  process; across processes `IF NOT EXISTS` makes the loser a no-op. Writers
+  wait on the write lock for the duration of the build (WAL readers do not);
+  `close()` interrupts and rolls back an in-flight build. Replaces the
+  "run the migration" hint line; `scripts/migrate_genes_cover_index.py` still
+  works for explicit/offline builds (Runbook 11).
 - **perf(tier-sql): shared tag-posting fetch; covering index is an opt-in
   migration** (PR #508). Tag tiers 1 and lex_anchor now share one posting
   fetch and probe `genes` once per distinct gene (rank-identical, ties

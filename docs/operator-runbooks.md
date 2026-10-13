@@ -1020,17 +1020,27 @@ curl -s -X POST http://127.0.0.1:11437/context \
 
 ---
 
-## Runbook 11: `idx_genes_id_chromatin` covering index (opt-in, PR #508)
+## Runbook 11: `idx_genes_id_chromatin` covering index (background build)
 
 The tag tiers probe `genes` once per matched gene only to test
-`chromatin < 2`. A covering index answers that from a small hot b-tree, which
-helps on cache-constrained hosts. It is **never built on store open**: at 947k
-rows the build takes about 38 s and adds about 24.8 MB, holding the write lock
-throughout (WAL readers continue; writers wait). Results are identical with or
-without it.
+`chromatin < 2`. A covering index answers that from a small hot b-tree (947k:
+tag tiers p50 1.47 s vs 3.46 s). Results are identical with or without it.
 
-Writable stores of 50k+ rows without the index log one info line at open naming
-this command. To build it (stop other writers first; idempotent, safe to re-run):
+**Automatic.** After a writable open of a store with 50k+ `genes` rows and no
+index, a daemon thread builds it on its own connection; open does not wait. Log
+lines: `cover index build started` / `cover index build finished in Ns`. At
+947k the build takes about 38 s and adds about 24.8 MB. `CREATE INDEX` holds the
+write lock throughout: WAL readers continue, but a writer that arrives during
+the build waits (busy_timeout 30 s), so a writer can see SQLITE_BUSY only if a
+build runs longer than 30 s (cold cache, ~947k+ rows). Measured on a synthetic
+600k-row, 1.2 GB store (warm cache): build 1.7 s, a concurrent writer stalled
+for the same 1.7 s, no errors. Closing the store interrupts and rolls back an
+in-flight build; the next open retries. Two processes on one store: the second
+builder no-ops once the first finishes. Disable with `[genome]
+cover_index_autobuild = false` or `CYMATIX_COVER_INDEX_AUTOBUILD=0`.
+
+**Explicit/offline.** To build it yourself (stop other writers first; idempotent,
+safe to re-run):
 
 ```bash
 python scripts/migrate_genes_cover_index.py --db genomes/main/genome.db --dry-run
