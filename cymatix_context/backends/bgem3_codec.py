@@ -41,6 +41,35 @@ _GEMMA_SANCTIONED_DIMS = frozenset({768, 512, 256, 128})
 def is_embeddinggemma(model_name: str) -> bool:
     return "embeddinggemma" in (model_name or "").lower()
 
+
+# Floors for google/embeddinggemma-2: the checkpoint declares
+# sentence-transformers>=6.1.0, its model type (embedding_gemma2) is unknown to
+# older transformers releases, and its processor imports torchvision even for a
+# text-only load. Installed by the ``gemma`` extra.
+_GEMMA_FLOORS = {"sentence-transformers": "6.1.0", "transformers": "5.19.0", "torchvision": None}
+
+
+def check_embeddinggemma_stack() -> None:
+    """Raise a clear error when the installed stack cannot load EmbeddingGemma 2."""
+    from importlib.metadata import PackageNotFoundError, version
+
+    from packaging.version import Version
+
+    problems = []
+    for pkg, floor in _GEMMA_FLOORS.items():
+        try:
+            have = version(pkg)
+        except PackageNotFoundError:
+            problems.append(f"{pkg} is not installed")
+            continue
+        if floor and Version(have) < Version(floor):
+            problems.append(f"{pkg} {have} < {floor}")
+    if problems:
+        raise RuntimeError(
+            "EmbeddingGemma 2 needs a newer model stack (" + "; ".join(problems)
+            + '). Install it with: pip install "cymatix-context[gemma]"'
+        )
+
 # Passage encode length cap. BGE-M3 has max_length=512 tokens; ~2k chars is a
 # safe upper bound. Both the inline ingest path (knowledge_store.upsert_doc /
 # context_manager.ingest) and the offline backfill script bound passages to
@@ -112,6 +141,7 @@ class BGEM3Codec:
         # hit ``_load`` simultaneously on first use; without the lock both
         # would build a ~2 GB model. Double-checked locking keeps it to one.
         self._load_lock = threading.Lock()
+        self._load_error: Exception | None = None
         self._gemma = is_embeddinggemma(model_name)
         sanctioned = _GEMMA_SANCTIONED_DIMS if self._gemma else _SANCTIONED_DIMS
         if dim not in sanctioned and dim not in BGEM3Codec._UNSANCTIONED_DIM_WARNED:
@@ -126,35 +156,28 @@ class BGEM3Codec:
     def _load(self) -> None:
         if self._model is not None:
             return
+        self._raise_if_load_failed()
         # Double-checked locking: the fast path above is lock-free once loaded;
         # the slow path serializes concurrent first-loads so a shared codec
         # (A1 singleton) under fan-out builds the ~2 GB model exactly once.
         with self._load_lock:
             if self._model is not None:
                 return
+            self._raise_if_load_failed()
             import time as _time
             _load_t0 = _time.monotonic()
-            if self._gemma:
-                import torch
-                from sentence_transformers import SentenceTransformer
-                bf16 = self._device == "cuda" and torch.cuda.is_available() and torch.cuda.is_bf16_supported()
-                model = SentenceTransformer(
-                    self.model_name, device=self._device,
-                    model_kwargs={"torch_dtype": torch.bfloat16 if bf16 else torch.float32},
-                    config_kwargs={"vision_config": None, "audio_config": None},
-                )
-                self._backend = "sentence_transformers"
-                self._model = model
-                log.info("EmbeddingGemma loaded (text-only) dim=%d", self.dim)
-                return
             try:
-                from FlagEmbedding import BGEM3FlagModel
-                model = BGEM3FlagModel(self.model_name, use_fp16=False)
-                self._backend = "flagembedding"
-            except ImportError:
-                from sentence_transformers import SentenceTransformer
-                model = SentenceTransformer(self.model_name, device=self._device)
-                self._backend = "sentence_transformers"
+                model = self._build_model()
+            except Exception as exc:
+                # Remember the failure: without this every encode call (one per
+                # ingested document) re-ran model resolution and failed again.
+                self._load_error = exc
+                log.error(
+                    "dense model %s failed to load; dense encoding is disabled for "
+                    "this process (not retried, restart to try again): %s",
+                    self.model_name, exc,
+                )
+                raise
             # Publish self._model last so the lock-free fast path never sees a
             # half-initialized model (self._backend is set before this).
             self._model = model
@@ -166,7 +189,38 @@ class BGEM3Codec:
                 record_model_load("dense", _time.monotonic() - _load_t0)
             except Exception:
                 pass
-            log.info("BGE-M3 loaded (%s) dim=%d", self._backend, self.dim)
+            log.info("%s loaded (%s) dim=%d", self.model_name, self._backend, self.dim)
+
+    def _raise_if_load_failed(self) -> None:
+        if self._load_error is not None:
+            raise RuntimeError(
+                f"dense model {self.model_name} failed to load earlier in this process"
+            ) from self._load_error
+
+    def _build_model(self):
+        if self._gemma:
+            check_embeddinggemma_stack()
+            import torch
+            from sentence_transformers import SentenceTransformer
+            bf16 = (
+                self._device == "cuda"
+                and torch.cuda.is_available()
+                and torch.cuda.is_bf16_supported()
+            )
+            self._backend = "sentence_transformers"
+            return SentenceTransformer(
+                self.model_name, device=self._device,
+                model_kwargs={"torch_dtype": torch.bfloat16 if bf16 else torch.float32},
+                config_kwargs={"vision_config": None, "audio_config": None},
+            )
+        try:
+            from FlagEmbedding import BGEM3FlagModel
+            self._backend = "flagembedding"
+            return BGEM3FlagModel(self.model_name, use_fp16=False)
+        except ImportError:
+            from sentence_transformers import SentenceTransformer
+            self._backend = "sentence_transformers"
+            return SentenceTransformer(self.model_name, device=self._device)
 
     def encode(self, text: str, task: str = "passage") -> list[float]:
         """Encode text to a self.dim-dimensional float list.

@@ -7,7 +7,10 @@
   `dense_embedding_dim` 768 / 512 / 256 / 128 loads the model text-only
   (vision and audio encoders skipped), in fp32 on CPU or bf16 on capable CUDA
   (never fp16), and applies its query and document task prefixes. Defaults are
-  unchanged: dense stays off and BGE-M3 stays the default model.
+  unchanged: dense stays off and BGE-M3 stays the default model. Install the
+  model's dependencies with `pip install "cymatix-context[gemma]"`; an older
+  stack now fails once with an error naming the fix, and a failed dense model
+  load is remembered instead of being retried on every encode.
 
 - **perf(storage): `idx_genes_id_chromatin` is now built automatically in the
   background.** After a writable open of a store with 50k+ `genes` rows and no

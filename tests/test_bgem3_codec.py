@@ -183,3 +183,25 @@ def test_embeddinggemma_mrl_dims_do_not_warn(caplog):
     with caplog.at_level("WARNING"):
         BGEM3Codec(dim=256, model_name="google/embeddinggemma-2")
     assert "not a sanctioned" not in caplog.text
+
+
+def test_failed_load_is_not_retried():
+    codec = BGEM3Codec(dim=256, model_name="google/embeddinggemma-2")
+    with patch.object(BGEM3Codec, "_build_model", side_effect=RuntimeError("boom")) as build:
+        for _ in range(5):
+            with pytest.raises(RuntimeError):
+                codec.encode("doc", task="passage")
+    assert build.call_count == 1
+
+
+def test_embeddinggemma_stack_check_names_the_fix(monkeypatch):
+    from importlib import metadata
+
+    real = metadata.version
+    monkeypatch.setattr(
+        metadata, "version",
+        lambda pkg: "5.3.0" if pkg == "sentence-transformers" else real(pkg),
+    )
+    monkeypatch.setitem(_codec_mod._GEMMA_FLOORS, "torchvision", None)
+    with pytest.raises(RuntimeError, match=r"sentence-transformers 5\.3\.0 < 6\.1\.0.*cymatix-context\[gemma\]"):
+        _codec_mod.check_embeddinggemma_stack()
