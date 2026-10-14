@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **feat(dense): opt-in EmbeddingGemma 2 support in the dense codec.**
+  `[retrieval] dense_model = "google/embeddinggemma-2"` with
+  `dense_embedding_dim` 768 / 512 / 256 / 128 loads the model text-only
+  (vision and audio encoders skipped), in fp32 on CPU or bf16 on capable CUDA
+  (never fp16), and applies its query and document task prefixes. Defaults are
+  unchanged: dense stays off and BGE-M3 stays the default model.
+
 - **perf(storage): `idx_genes_id_chromatin` is now built automatically in the
   background.** After a writable open of a store with 50k+ `genes` rows and no
   index, one daemon thread (own connection, 30 s busy_timeout with backoff
