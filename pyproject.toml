@@ -59,6 +59,10 @@ Issues = "https://github.com/mbachaud/Cymatix-Context/issues"
 # on specific features.
 accel = ["orjson>=3.9"]
 embeddings = ["numpy", "sentence-transformers"]
+# EmbeddingGemma 2 as the dense model (`[retrieval] dense_model =
+# "google/embeddinggemma-2"`): its checkpoint needs these floors, and its
+# processor imports torchvision even for the text-only load.
+gemma = ["numpy", "sentence-transformers>=6.1.0", "transformers>=5.19.0", "torchvision"]
 # spacy floor tracks the en_core_web_sm pipeline build the docs and setup
 # script install (3.8.0, see docs/SETUP.md). The pipeline itself is a
 # separate artifact that pip never pulls in (#313).
