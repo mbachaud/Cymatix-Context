@@ -28,6 +28,19 @@ _QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
 # tries dim=256 again sees the calibration risk.
 _SANCTIONED_DIMS = frozenset({1024, 768, 512})
 
+# EmbeddingGemma 2 (google/embeddinggemma-2, opt-in via ``[retrieval]
+# dense_model``): 768-d native, MRL breakpoints 768 / 512 / 256 / 128. It is
+# trained with task prefixes on BOTH sides (query and document), loads its
+# vision/audio encoders unless told not to, and must not run in float16
+# (activations overflow to NaN), so it gets its own load and prompt path.
+_GEMMA_QUERY_PREFIX = "task: search result | query: "
+_GEMMA_DOC_PREFIX = "title: none | text: "
+_GEMMA_SANCTIONED_DIMS = frozenset({768, 512, 256, 128})
+
+
+def is_embeddinggemma(model_name: str) -> bool:
+    return "embeddinggemma" in (model_name or "").lower()
+
 # Passage encode length cap. BGE-M3 has max_length=512 tokens; ~2k chars is a
 # safe upper bound. Both the inline ingest path (knowledge_store.upsert_doc /
 # context_manager.ingest) and the offline backfill script bound passages to
@@ -99,7 +112,9 @@ class BGEM3Codec:
         # hit ``_load`` simultaneously on first use; without the lock both
         # would build a ~2 GB model. Double-checked locking keeps it to one.
         self._load_lock = threading.Lock()
-        if dim not in _SANCTIONED_DIMS and dim not in BGEM3Codec._UNSANCTIONED_DIM_WARNED:
+        self._gemma = is_embeddinggemma(model_name)
+        sanctioned = _GEMMA_SANCTIONED_DIMS if self._gemma else _SANCTIONED_DIMS
+        if dim not in sanctioned and dim not in BGEM3Codec._UNSANCTIONED_DIM_WARNED:
             log.warning(
                 "BGEM3Codec(dim=%d) is not a sanctioned BGE-M3 Matryoshka breakpoint "
                 "(supported: 1024 / 768 / 512). Random-pair cosine may not be near 0; "
@@ -119,6 +134,19 @@ class BGEM3Codec:
                 return
             import time as _time
             _load_t0 = _time.monotonic()
+            if self._gemma:
+                import torch
+                from sentence_transformers import SentenceTransformer
+                bf16 = self._device == "cuda" and torch.cuda.is_available() and torch.cuda.is_bf16_supported()
+                model = SentenceTransformer(
+                    self.model_name, device=self._device,
+                    model_kwargs={"torch_dtype": torch.bfloat16 if bf16 else torch.float32},
+                    config_kwargs={"vision_config": None, "audio_config": None},
+                )
+                self._backend = "sentence_transformers"
+                self._model = model
+                log.info("EmbeddingGemma loaded (text-only) dim=%d", self.dim)
+                return
             try:
                 from FlagEmbedding import BGEM3FlagModel
                 model = BGEM3FlagModel(self.model_name, use_fp16=False)
@@ -147,8 +175,7 @@ class BGEM3Codec:
         task='passage': bare (no prefix).
         """
         self._load()
-        if task == "query":
-            text = _QUERY_PREFIX + text
+        text = self._prepare([text], task)[0]
         if self._backend == "flagembedding":
             raw = self._model.encode([text], batch_size=1, max_length=512)["dense_vecs"]
             vec = np.array(raw[0], dtype=np.float32)
@@ -179,9 +206,7 @@ class BGEM3Codec:
         if not texts:
             return []
         self._load()
-        prepared = (
-            [_QUERY_PREFIX + t for t in texts] if task == "query" else list(texts)
-        )
+        prepared = self._prepare(texts, task)
         if self._backend == "flagembedding":
             raw = self._model.encode(prepared, max_length=512)["dense_vecs"]
             mat = np.asarray(raw, dtype=np.float32)
@@ -210,6 +235,15 @@ class BGEM3Codec:
         self._encode_batch_calls += 1
         self._maybe_release_vram()
         return mat.tolist()
+
+    def _prepare(self, texts: list[str], task: str) -> list[str]:
+        """Apply the model family's task prefix (BGE-M3: query only)."""
+        if self._gemma:
+            prefix = _GEMMA_QUERY_PREFIX if task == "query" else _GEMMA_DOC_PREFIX
+            return [prefix + t for t in texts]
+        if task == "query":
+            return [_QUERY_PREFIX + t for t in texts]
+        return list(texts)
 
     def _maybe_release_vram(self) -> None:
         """Periodically free torch's CUDA caching-allocator cache during batch ingest.
