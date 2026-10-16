@@ -2230,6 +2230,8 @@ class CymatixContextManager:
                 _budget_cfg.min_delivered_docs
                 if _budget_cfg.tier_seat_floor_enabled else 0
             ),
+            tight_chars=_budget_cfg.tier_tight_chars,
+            focused_chars=_budget_cfg.tier_focused_chars,
         )
         if _tier.abstain:
             _abstain_win = self._build_abstain_window(

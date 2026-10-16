@@ -298,7 +298,7 @@ def _init_worker():
     global _worker_chunker, _worker_tagger
     from cymatix_context.codons import CodonChunker
     from cymatix_context.tagger import CpuTagger
-    _worker_chunker = CodonChunker()
+    _worker_chunker = _make_chunker()
     _worker_tagger = CpuTagger()
 
 
@@ -1267,6 +1267,23 @@ def _env_hub_cutoff() -> int:
     return int(os.environ.get("CYMATIX_BFM_HUB_CUTOFF", "0") or 0)
 
 
+DEFAULT_CHUNK_CHARS = 4000
+
+
+def _env_chunk_chars() -> int:
+    """``CYMATIX_BFM_CHUNK_CHARS`` — max characters per chunk (strand) for
+    bench builds. Env-only for the same reason as the hub cutoff; spawn
+    workers inherit it. Default 4000 = the shipped CodonChunker size.
+    """
+    return int(os.environ.get("CYMATIX_BFM_CHUNK_CHARS", "0") or 0) or DEFAULT_CHUNK_CHARS
+
+
+def _make_chunker():
+    """CodonChunker at the env-selected chunk size (see _env_chunk_chars)."""
+    from cymatix_context.codons import CodonChunker
+    return CodonChunker(max_chars_per_strand=_env_chunk_chars())
+
+
 def _env_flag(name: str, default: str = "1") -> bool:
     """Read a boolean env toggle. Truthy unless set to 0/false/no/off.
 
@@ -1443,6 +1460,9 @@ def build_profile(
         # Recorded only when overridden, so default-profile manifests keep
         # their exact pre-#482 shape.
         stats["min_file_bytes"] = min_bytes
+    if _env_chunk_chars() != DEFAULT_CHUNK_CHARS:
+        # Bed identity: a non-default grain size makes a different bed.
+        stats["chunk_chars"] = _env_chunk_chars()
 
     if parallel:
         from cymatix_context.parallel import auto_workers
@@ -1476,7 +1496,7 @@ def build_profile(
         stats["workers"] = n_workers
     else:
         tagger = CpuTagger()
-        chunker = CodonChunker()
+        chunker = _make_chunker()
         for root in profile["roots"]:
             ingest_tree(
                 root=root,
@@ -1953,7 +1973,7 @@ def _build_one_shard(
                 )
         else:
             tagger = CpuTagger()
-            chunker = CodonChunker()
+            chunker = _make_chunker()
             ingest_tree(
                 root=root,
                 genome=shard,
