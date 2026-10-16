@@ -123,7 +123,10 @@ def build(tag: str, grain: int, p: dict) -> bool:
     if not (p["db"].exists() and (p["bed_dir"] / "manifest.json").exists()):
         cmd = [sys.executable, "-P", str(ROOT / "scripts" / "build_fixture_matrix.py"),
                "--profile", tag, "--out-dir", str(p["bed_dir"]), "--parallel", "--workers", "4"]
-        env = {"CYMATIX_BFM_HUB_CUTOFF": "200", "CYMATIX_BFM_DENSE_BACKFILL": "0",
+        # SPLADE off at query time, so its rows are dead weight (~80% of a
+        # 580-char scifact bed, verify_lean 2026-10-16); the builder writes
+        # them unless pinned. Beds from 2026-10-15 were built with them.
+        env = {"CYMATIX_BFM_HUB_CUTOFF": "200", "CYMATIX_BFM_DENSE_BACKFILL": "0", "CYMATIX_BFM_SPLADE": "0",
                "CYMATIX_BFM_CHUNK_CHARS": str(grain)}
         if run(f"build_{p['arm']}", cmd, env) != 0:
             return False

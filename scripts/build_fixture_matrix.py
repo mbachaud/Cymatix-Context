@@ -1432,6 +1432,8 @@ def build_profile(
         # digests are unchanged. Default on = byte-identical to prior builds.
         entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
+        # Lean beds: CYMATIX_BFM_PKI_WRITE=0 skips query-inert PKI rows.
+        pki_write=_env_flag("CYMATIX_BFM_PKI_WRITE"),
     )
     log.info("entity_autolink_hub_cutoff=%d (CYMATIX_BFM_HUB_CUTOFF)",
              _env_hub_cutoff())
@@ -1463,6 +1465,10 @@ def build_profile(
     if _env_chunk_chars() != DEFAULT_CHUNK_CHARS:
         # Bed identity: a non-default grain size makes a different bed.
         stats["chunk_chars"] = _env_chunk_chars()
+    if not _env_flag("CYMATIX_BFM_PKI_WRITE"):
+        stats["pki_write"] = False
+    if os.environ.get("CYMATIX_LEAN_INDEXES", "").strip().lower() in ("1", "true", "yes", "on"):
+        stats["lean_indexes"] = True
 
     if parallel:
         from cymatix_context.parallel import auto_workers
@@ -1931,6 +1937,8 @@ def _build_one_shard(
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"), entity_graph=True,
         entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
+        # Lean beds: CYMATIX_BFM_PKI_WRITE=0 skips query-inert PKI rows.
+        pki_write=_env_flag("CYMATIX_BFM_PKI_WRITE"),
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,
