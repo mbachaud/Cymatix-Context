@@ -1,0 +1,39 @@
+{
+  "witness_shipped": {
+    "receipt": "F:\\tmp\\release-witness-v0113\\ladder_v0113-merged-witness-trace-2026-10-11_947k.json",
+    "git_sha": "00358af5adb48a6dc0048cd2b7dc79e385270e1f",
+    "config": "F:\\Projects\\cymatix-context\\.worktrees\\release-witness-v0113-code\\cymatix.toml",
+    "n": 470,
+    "delivered_gold_rate": 0.6680851063829787,
+    "recall_at_k": 0.6809,
+    "final_recall_at_k": 0.683,
+    "chars_mean": null,
+    "misses": null
+  },
+  "c4000_charcap": {
+    "receipt": "F:\\tmp\\grain_erb_ref_c4000_2026-10-16\\ladder_erb947k_grain_c4000_charcap_2026-10-16.json",
+    "git_sha": "dcf98c9ec532c5eea3219a7c4d3fa73ce880d96a",
+    "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\v0-10-beta-master-release-d72499\\benchmarks\\dogfood\\grain_ladder\\configs\\grain_c4000_charcap.toml",
+    "n": 470,
+    "delivered_gold_rate": 0.5914893617021276,
+    "recall_at_k": 0.6809,
+    "final_recall_at_k": 0.683,
+    "chars_mean": 15049,
+    "misses": {
+      "delivered": 278,
+      "cut_by_packing": 43,
+      "ranked_below_cap": 21,
+      "never_ranked": 128,
+      "abstain": 0,
+      "util_mean": 0.836,
+      "util_p50": 1.028,
+      "pre_pack_rank_p50": 1.0,
+      "post_pack_rank_p50": 1.0
+    }
+  },
+  "paired_vs_witness": {
+    "wins": 0,
+    "losses": 36,
+    "missing_needles": []
+  }
+}
