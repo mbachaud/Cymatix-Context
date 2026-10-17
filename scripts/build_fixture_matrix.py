@@ -1467,6 +1467,8 @@ def build_profile(
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
         # Lean beds: CYMATIX_BFM_PKI_WRITE=0 skips query-inert PKI rows.
         pki_write=_env_flag("CYMATIX_BFM_PKI_WRITE"),
+        # Lean beds (opt-in): CYMATIX_BFM_FILE_TAGS=1 dedups tags per file.
+        file_tags=_env_flag("CYMATIX_BFM_FILE_TAGS", "0"),
     )
     log.info("entity_autolink_hub_cutoff=%d (CYMATIX_BFM_HUB_CUTOFF)",
              _env_hub_cutoff())
@@ -1500,6 +1502,8 @@ def build_profile(
         stats["chunk_chars"] = _env_chunk_chars()
     if not _env_flag("CYMATIX_BFM_PKI_WRITE"):
         stats["pki_write"] = False
+    if _env_flag("CYMATIX_BFM_FILE_TAGS", "0"):
+        stats["file_tags"] = True
     if os.environ.get("CYMATIX_LEAN_INDEXES", "").strip().lower() in ("1", "true", "yes", "on"):
         stats["lean_indexes"] = True
 
@@ -1978,6 +1982,7 @@ def _build_one_shard(
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
         # Lean beds: CYMATIX_BFM_PKI_WRITE=0 skips query-inert PKI rows.
         pki_write=_env_flag("CYMATIX_BFM_PKI_WRITE"),
+        file_tags=_env_flag("CYMATIX_BFM_FILE_TAGS", "0"),
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,

@@ -662,6 +662,11 @@ class KnowledgeStore:
         # 580-char chunks). True (default) = legacy writes. A bed built with
         # False cannot serve pki_enabled=true.
         pki_write: bool = True,
+        # Lean bench beds (opt-in): a (kind, tag) already indexed for an
+        # earlier chunk of the same source_id is not re-written to
+        # promoter_index; the file's first chunk is the representative.
+        # False (default) = legacy, byte-identical writes.
+        file_tags: bool = False,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
         sr_k_steps: int = 4,
@@ -888,6 +893,9 @@ class KnowledgeStore:
         self._entity_autolink_enabled = bool(entity_autolink)
         self._entity_autolink_hub_cutoff = int(entity_autolink_hub_cutoff)
         self._pki_write = bool(pki_write)
+        self._file_tags = bool(file_tags)
+        self._ft_source: Optional[str] = None
+        self._ft_seen: set = set()
         # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
         # Separate from _entity_graph_enabled (write-side) — this controls
         # whether entity_graph rows are consulted during query_genes().
@@ -2268,7 +2276,13 @@ class KnowledgeStore:
                     sync_splade_index,
                     resolve_splade_enabled,
                 )
-                rebuild_promoter_index(cur, gene_id, gene)
+                _ft_seen = None
+                if self._file_tags and gene.source_id:
+                    if self._ft_source != gene.source_id:
+                        self._ft_source = gene.source_id
+                        self._ft_seen = set()
+                    _ft_seen = self._ft_seen
+                rebuild_promoter_index(cur, gene_id, gene, seen=_ft_seen)
                 sync_fts5(
                     cur, gene_id, gene, self._fts_available,
                     delete_first=prior is not None,
