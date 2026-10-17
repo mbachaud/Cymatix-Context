@@ -298,7 +298,7 @@ def _init_worker():
     global _worker_chunker, _worker_tagger
     from cymatix_context.codons import CodonChunker
     from cymatix_context.tagger import CpuTagger
-    _worker_chunker = CodonChunker()
+    _worker_chunker = _make_chunker()
     _worker_tagger = CpuTagger()
 
 
@@ -1267,6 +1267,23 @@ def _env_hub_cutoff() -> int:
     return int(os.environ.get("CYMATIX_BFM_HUB_CUTOFF", "0") or 0)
 
 
+DEFAULT_CHUNK_CHARS = 4000
+
+
+def _env_chunk_chars() -> int:
+    """``CYMATIX_BFM_CHUNK_CHARS`` — max characters per chunk (strand) for
+    bench builds. Env-only for the same reason as the hub cutoff; spawn
+    workers inherit it. Default 4000 = the shipped CodonChunker size.
+    """
+    return int(os.environ.get("CYMATIX_BFM_CHUNK_CHARS", "0") or 0) or DEFAULT_CHUNK_CHARS
+
+
+def _make_chunker():
+    """CodonChunker at the env-selected chunk size (see _env_chunk_chars)."""
+    from cymatix_context.codons import CodonChunker
+    return CodonChunker(max_chars_per_strand=_env_chunk_chars())
+
+
 def _env_flag(name: str, default: str = "1") -> bool:
     """Read a boolean env toggle. Truthy unless set to 0/false/no/off.
 
@@ -1415,6 +1432,8 @@ def build_profile(
         # digests are unchanged. Default on = byte-identical to prior builds.
         entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
+        # Lean beds: CYMATIX_BFM_PKI_WRITE=0 skips query-inert PKI rows.
+        pki_write=_env_flag("CYMATIX_BFM_PKI_WRITE"),
     )
     log.info("entity_autolink_hub_cutoff=%d (CYMATIX_BFM_HUB_CUTOFF)",
              _env_hub_cutoff())
@@ -1443,6 +1462,13 @@ def build_profile(
         # Recorded only when overridden, so default-profile manifests keep
         # their exact pre-#482 shape.
         stats["min_file_bytes"] = min_bytes
+    if _env_chunk_chars() != DEFAULT_CHUNK_CHARS:
+        # Bed identity: a non-default grain size makes a different bed.
+        stats["chunk_chars"] = _env_chunk_chars()
+    if not _env_flag("CYMATIX_BFM_PKI_WRITE"):
+        stats["pki_write"] = False
+    if os.environ.get("CYMATIX_LEAN_INDEXES", "").strip().lower() in ("1", "true", "yes", "on"):
+        stats["lean_indexes"] = True
 
     if parallel:
         from cymatix_context.parallel import auto_workers
@@ -1476,7 +1502,7 @@ def build_profile(
         stats["workers"] = n_workers
     else:
         tagger = CpuTagger()
-        chunker = CodonChunker()
+        chunker = _make_chunker()
         for root in profile["roots"]:
             ingest_tree(
                 root=root,
@@ -1911,6 +1937,8 @@ def _build_one_shard(
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"), entity_graph=True,
         entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
+        # Lean beds: CYMATIX_BFM_PKI_WRITE=0 skips query-inert PKI rows.
+        pki_write=_env_flag("CYMATIX_BFM_PKI_WRITE"),
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,
@@ -1953,7 +1981,7 @@ def _build_one_shard(
                 )
         else:
             tagger = CpuTagger()
-            chunker = CodonChunker()
+            chunker = _make_chunker()
             ingest_tree(
                 root=root,
                 genome=shard,

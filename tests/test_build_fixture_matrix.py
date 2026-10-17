@@ -1849,3 +1849,26 @@ class TestInterruptedFileResume:
             assert bfm._filter_to_unseen(files, db) == []
         finally:
             genome.close()
+
+
+class TestChunkChars:
+    """``CYMATIX_BFM_CHUNK_CHARS`` sets the bench builder's chunk size.
+
+    The builder never loads cymatix.toml, so the grain-size ladder arm
+    (pi-scaled chunk sizes) must arrive via env, like the hub cutoff.
+    """
+
+    def test_default_is_4000(self, monkeypatch):
+        monkeypatch.delenv("CYMATIX_BFM_CHUNK_CHARS", raising=False)
+        assert bfm._make_chunker().max_chars == 4000
+
+    def test_env_overrides_chunk_size(self, monkeypatch):
+        monkeypatch.setenv("CYMATIX_BFM_CHUNK_CHARS", "580")
+        assert bfm._make_chunker().max_chars == 580
+
+    def test_env_size_bounds_text_strands(self, monkeypatch):
+        monkeypatch.setenv("CYMATIX_BFM_CHUNK_CHARS", "580")
+        text = "\n\n".join(f"paragraph {i} " + "word " * 60 for i in range(20))
+        strands = bfm._make_chunker().chunk(text, content_type="text")
+        assert len(strands) > 1
+        assert all(len(s.content) <= 580 for s in strands)
