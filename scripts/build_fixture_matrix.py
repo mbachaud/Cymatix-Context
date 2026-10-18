@@ -1299,6 +1299,39 @@ def _env_flag(name: str, default: str = "1") -> bool:
     )
 
 
+def _build_cover_index(db_path: str) -> dict:
+    """Post-build: create the shipped genes cover index on ``db_path``.
+
+    ``idx_genes_id_chromatin`` (storage.ddl.GENES_COVER_INDEX_SQL) is what
+    the store's background autobuild creates on a writable open of a 50k+
+    row store — bench builds and read-only ladders never trigger it, so
+    bench beds lacked it and the tag tiers' chromatin validity join read a
+    table row per candidate (ERB 5.1M-gene c580 bed, 'and'/'eng' postings:
+    39.7 s -> 4.6 s once built). Index only: no row changes, so retrieval
+    results are unchanged. ``CYMATIX_BFM_COVER_INDEX=0`` skips it.
+    """
+    if not _env_flag("CYMATIX_BFM_COVER_INDEX"):
+        log.info("cover index skipped (CYMATIX_BFM_COVER_INDEX=0): %s", db_path)
+        return {"cover_index": False}
+    import sqlite3
+    from cymatix_context.storage.ddl import GENES_COVER_INDEX_SQL
+    t0 = time.perf_counter()
+    con = sqlite3.connect(db_path, timeout=600)
+    try:
+        cols = {r[1] for r in con.execute("PRAGMA table_info(genes)")}
+        if not {"gene_id", "chromatin"} <= cols:
+            # Not a knowledge-store schema (stub/test DBs): nothing to index.
+            log.warning("cover index skipped: no genes(gene_id, chromatin) in %s", db_path)
+            return {"cover_index": False, "cover_index_skipped": "no genes.chromatin"}
+        con.execute(GENES_COVER_INDEX_SQL)
+        con.commit()
+    finally:
+        con.close()
+    secs = round(time.perf_counter() - t0, 1)
+    log.info("cover index built in %.1fs: %s", secs, db_path)
+    return {"cover_index": True, "cover_index_s": secs}
+
+
 def _backfill_dense(db_path: str) -> dict:
     """Post-build pass: populate ``genes.embedding_dense_v2`` on ``db_path``.
 
@@ -1546,6 +1579,12 @@ def build_profile(
         log.warning("  missing roots: %s", stats["missing_roots"])
 
     genome.close()
+
+    stats.update(_build_cover_index(db_path))
+    try:
+        stats["bytes"] = os.path.getsize(db_path)
+    except OSError:
+        pass
 
     # Tier-0 PR-2: post-build dense pass. The builder's per-gene write path
     # is lean (no inline BGE-M3 encode); populate ``embedding_dense_v2`` here
@@ -2108,6 +2147,7 @@ def _build_one_shard(
     # cross-shard ``main.genome.db`` routing DB is NOT backfilled here: it
     # carries no ``genes`` rows (only fingerprint_index / source_index), so
     # per-shard dense recall reads each shard's own ``embedding_dense_v2``.
+    result.update(_build_cover_index(str(p)))
     dense_report = _backfill_dense(str(p))
     result["dense_coverage"] = dense_report["dense_coverage"]
     result["dense_genes_populated"] = dense_report.get("populated_after", 0)
