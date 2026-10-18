@@ -20,6 +20,7 @@ BASE_CAP, BASE_GRAIN = 12, 4000
 GRAINS = (4000, 1824, 580)    # 4000 control, 18000/pi^2, 18000/pi^3
 TIGHT_CHARS, FOCUSED_CHARS = 4500, 9000
 WIDE_TIGHT_CHARS, WIDE_FOCUSED_CHARS = 12000, 18000
+CLASS_CAP_REF_CHARS = 2000
 
 
 def cap_for(grain: int) -> int:
@@ -69,6 +70,12 @@ def main() -> None:
         p = OUT / f"grain_c{g}_widecap.toml"
         p.write_text(tw, encoding="utf-8")
         print(p.name, "tight/focused chars", WIDE_TIGHT_CHARS, WIDE_FOCUSED_CHARS)
+        # classcap variant (2026-10-17): widecap + classifier per-class caps in
+        # chars (268/470 widecap needles stopped at the multi_hop 8-seat cap).
+        tc2 = set_key(tw, "budget", "classifier_cap_ref_chars", CLASS_CAP_REF_CHARS, add=True)
+        p = OUT / f"grain_c{g}_classcap.toml"
+        p.write_text(tc2, encoding="utf-8")
+        print(p.name, "classifier_cap_ref_chars", CLASS_CAP_REF_CHARS)
 
 
 if __name__ == "__main__":

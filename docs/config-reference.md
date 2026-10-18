@@ -225,6 +225,7 @@ the dataclass.
 | `tier_seat_floor_enabled` | `bool` | `false` | #430: extend min_delivered_docs to TIGHT/FOCUSED tier cuts while preserving tier labels. Off until the paired delivery gates pass. |
 | `tier_tight_chars` | `int` | `0` | Grain-size ladder: TIGHT / FOCUSED cuts in characters instead of documents (keep ranked candidates while their content fits). 0 = legacy 3 / 6 seats. 4500 / 9000 reproduce what the legacy cuts ship on 4000-char beds (2026-10-15 BEIR grain ladder); opt-in, unreceipted. |
 | `tier_focused_chars` | `int` | `0` |  |
+| `classifier_cap_ref_chars` | `int` | `0` | Grain-size ladder: the classifier's per-class assembly cap (2/5/6/8 seats) becomes seats x classifier_cap_ref_chars content chars, never fewer than the legacy seats. 0 = legacy seat cap. Opt-in, unreceipted (ERB c580 no-floor arms delivered exactly 8 chunks on 268/470 needles). |
 | `abstain_enabled` | `bool` | `true` | NEW — see docs/specs/2026-05-02-abstain-tier-design.md |
 | `foveated_enabled` | `bool` | `false` | Foveated-splice (BROAD tier only). Off by default for the measurement period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the phased α-sweep bench (§9) identifies a winning configuration. |
 | `foveated_alpha` | `float` | `1.0` | Power-law exponent for c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle decay, α=1.0 = harmonic-ish, α=2.0 = aggressive top-bias. |

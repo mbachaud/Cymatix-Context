@@ -49,6 +49,15 @@ def _seats_within_chars(candidates: List[Gene], cap: int) -> int:
     return len(candidates)
 
 
+def seats_for_char_cap(candidates: List[Gene], seats: int, ref_chars: int) -> int:
+    """Classifier cap of ``seats`` documents as ``seats * ref_chars`` chars.
+
+    Ranked candidates are kept while their content fits the char budget,
+    never fewer than ``seats`` (the legacy cap) nor more than are available.
+    """
+    return min(len(candidates), max(seats, _seats_within_chars(candidates, seats * ref_chars)))
+
+
 def apply_budget_tiers(
     candidates: List[Gene],
     all_scores: Optional[Dict[str, float]],
