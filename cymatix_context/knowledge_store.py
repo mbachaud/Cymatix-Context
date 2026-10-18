@@ -2282,7 +2282,12 @@ class KnowledgeStore:
                         self._ft_source = gene.source_id
                         self._ft_seen = set()
                     _ft_seen = self._ft_seen
-                rebuild_promoter_index(cur, gene_id, gene, seen=_ft_seen)
+                if _ft_seen is None:
+                    # Legacy call shape: file_tags off stays byte-identical
+                    # (callers/tests patch the 3-arg signature).
+                    rebuild_promoter_index(cur, gene_id, gene)
+                else:
+                    rebuild_promoter_index(cur, gene_id, gene, seen=_ft_seen)
                 sync_fts5(
                     cur, gene_id, gene, self._fts_available,
                     delete_first=prior is not None,
