@@ -1,3 +1,4 @@
 {"stage": "build", "rc": 0, "wall_s": 24141, "ts": "2026-10-16T22:36:18"}
 {"stage": "resolve", "rc": 0, "wall_s": 1, "ts": "2026-10-16T22:36:18"}
 {"stage": "ladder", "rc": 0, "wall_s": 38651, "ts": "2026-10-17T09:20:29"}
+{"stage": "ladder_widecap", "rc": 0, "wall_s": 46008, "ts": "2026-10-17T22:23:02"}

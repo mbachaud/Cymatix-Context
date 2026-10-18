@@ -130,6 +130,20 @@ def compare() -> None:
 
 
 def main() -> int:
+    global CONFIG, LADDER_OUT, COMPARE_OUT
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", default=str(CONFIG))
+    ap.add_argument("--suffix", default="", help='e.g. "widecap": separate ladder/compare outputs')
+    ap.add_argument("--trace-level", default="", choices=("", "metadata", "full"))
+    a = ap.parse_args()
+    CONFIG = Path(a.config)
+    if a.suffix:
+        LADDER_OUT = RUN / f"ladder_erb_full_c580_{a.suffix}_2026-10-17.json"
+        COMPARE_OUT = HERE / f"erb_full_c580_{a.suffix}_vs_c4000_reference_2026-10-17.json"
+    trace_args = (["--trace-dir", str(RUN / f"traces_{a.suffix or 'charcap'}"), "--trace-level", a.trace_level]
+                  if a.trace_level else [])
+    done = RUN / f"DONE{('_' + a.suffix) if a.suffix else ''}"
     claim()
     if sys.platform == "win32":
         import ctypes
@@ -153,11 +167,11 @@ def main() -> int:
                "--resolved", str(ERB / f"needles_resolved_{TAG}_full.json"),
                "--gold", str(ERB / f"gold_by_needle_{TAG}.json"), "--limit", "0", "--k", str(K),
                "--arms", "baseline", "--config", str(CONFIG), "--per-query", "--rank-dump", "200",
-               "--stamp", "2026-10-16", "--out", str(LADDER_OUT)]
-        if run("ladder", cmd, {"CYMATIX_SQLITE_CACHE_SIZE": "-12582912"}) != 0 or not LADDER_OUT.exists():
+               "--stamp", "2026-10-16", "--out", str(LADDER_OUT)] + trace_args
+        if run("ladder" + (f"_{a.suffix}" if a.suffix else ""), cmd, {"CYMATIX_SQLITE_CACHE_SIZE": "-12582912"}) != 0 or not LADDER_OUT.exists():
             return 1
     compare()
-    (RUN / "DONE").write_text("ok", encoding="utf-8")
+    done.write_text("ok", encoding="utf-8")
     log.info("DONE")
     return 0
 

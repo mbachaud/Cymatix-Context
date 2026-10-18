@@ -19,6 +19,7 @@ PACKET_TOKENS = 4500          # ~18,000 chars at 4 chars/token
 BASE_CAP, BASE_GRAIN = 12, 4000
 GRAINS = (4000, 1824, 580)    # 4000 control, 18000/pi^2, 18000/pi^3
 TIGHT_CHARS, FOCUSED_CHARS = 4500, 9000
+WIDE_TIGHT_CHARS, WIDE_FOCUSED_CHARS = 12000, 18000
 
 
 def cap_for(grain: int) -> int:
@@ -60,6 +61,14 @@ def main() -> None:
         p = OUT / f"grain_c{g}_charcap.toml"
         p.write_text(tc, encoding="utf-8")
         print(p.name, "tight/focused chars", TIGHT_CHARS, FOCUSED_CHARS)
+        # widecap variant (2026-10-17): the 4500/9000 caps bound every ERB c580
+        # packet (all 470 in TIGHT/FOCUSED, 38% budget use); 12k/18k lets
+        # confident tiers fill most of the ~18k-char packet.
+        tw = set_key(t, "budget", "tier_tight_chars", WIDE_TIGHT_CHARS, add=True)
+        tw = set_key(tw, "budget", "tier_focused_chars", WIDE_FOCUSED_CHARS, add=True)
+        p = OUT / f"grain_c{g}_widecap.toml"
+        p.write_text(tw, encoding="utf-8")
+        print(p.name, "tight/focused chars", WIDE_TIGHT_CHARS, WIDE_FOCUSED_CHARS)
 
 
 if __name__ == "__main__":
