@@ -1,6 +1,6 @@
 # Packet trace v0 (Phase 1)
 
-Status: experimental, opt-in, off by default. Tracks issue #493. This page
+Status: experimental, on by default at the `metadata` level since 2026-10-18 (set `enabled = false` or `CYMATIX_TRACE_ENABLED=0` to turn it off). Tracks issue #493. This page
 describes the Phase 1 subset; later phases are listed at the end.
 
 A packet trace records what Cymatix delivered for one query: ids, keyed
