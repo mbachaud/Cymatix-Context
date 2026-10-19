@@ -2461,8 +2461,8 @@ class KnowledgeStore:
         if not gene_scores:
             return
 
-        import time as _time
-        now = _time.time()
+        from .clock import scoring_now
+        now = scoring_now()  # CYMATIX_SCORING_EPOCH pins it for bench runs
         recency_window = 48 * 3600  # 48 hours in seconds
 
         gene_ids = list(gene_scores.keys())
