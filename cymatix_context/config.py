@@ -382,14 +382,17 @@ class TelemetryConfig:
 
 @dataclass
 class TraceConfig:
-    """[trace] — opt-in packet trace (issue #493, schema v0).
+    """[trace] — packet trace (issue #493, schema v0).
 
     Like [telemetry], env > toml > default is resolved at use time in
     ``telemetry/trace.py`` (``resolve_trace_settings``), so ``load_config``
-    stays env-free. Off by default: with ``enabled = false`` no file or
-    thread is created (``packet_id`` is still minted and returned).
+    stays env-free. ON by default since 2026-10-18 at the "metadata" level
+    (keyed HMAC hashes and ids only, no raw query or chunk text; measured
+    ~0.3 ms/request p50 in docs/specs/packet-trace-v0.md). Set
+    ``enabled = false`` or CYMATIX_TRACE_ENABLED=0 to write nothing
+    (``packet_id`` is still minted and returned).
     """
-    enabled: bool = False               # Master switch (CYMATIX_TRACE_ENABLED)
+    enabled: bool = True                # Master switch (CYMATIX_TRACE_ENABLED)
     level: str = "metadata"             # "off" | "metadata" | "full" (CYMATIX_TRACE_LEVEL)
     path: str = ""                      # Trace dir (CYMATIX_TRACE_PATH). "" = <genome dir>/traces
     hash_chain: bool = False            # Each record carries sha256 of the previous line

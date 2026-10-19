@@ -49,7 +49,7 @@ def test_ulid_timestamp_prefix_is_monotonic_ish():
 
 def test_trace_config_defaults():
     t = TraceConfig()
-    assert t.enabled is False
+    assert t.enabled is True  # default ON since 2026-10-18, metadata level
     assert t.level == "metadata"
     assert t.hash_chain is False
     assert t.sampler_ratio == 1.0
@@ -80,6 +80,16 @@ def test_env_beats_toml_both_directions(monkeypatch, tmp_path):
     # env 0 silences toml enabled=true
     monkeypatch.setenv("CYMATIX_TRACE_ENABLED", "0")
     assert tr.resolve_trace_settings(TraceConfig(enabled=True))["enabled"] is False
+
+
+def test_pure_defaults_trace_on_and_env_zero_turns_off(monkeypatch):
+    monkeypatch.delenv("CYMATIX_TRACE_ENABLED", raising=False)
+    monkeypatch.delenv("CYMATIX_TRACE_LEVEL", raising=False)
+    s = tr.resolve_trace_settings(None)
+    assert s["enabled"] is True and s["level"] == "metadata"
+    assert tr.resolve_trace_settings(TraceConfig())["enabled"] is True
+    monkeypatch.setenv("CYMATIX_TRACE_ENABLED", "0")
+    assert tr.resolve_trace_settings(None)["enabled"] is False
 
 
 def test_invalid_level_falls_back_to_metadata(monkeypatch):
@@ -273,7 +283,7 @@ def test_trace_read_endpoints_require_admin_token_when_set(tmp_path):
 
 
 def test_trace_off_writes_nothing_but_packet_id_present(tmp_path):
-    c = _client(tmp_path)           # enabled defaults False
+    c = _client(tmp_path, enabled=False)  # default is ON since 2026-10-18
     r = c.post("/context", json={"query": QUERY})
     assert r.status_code == 200
     pid = r.headers["X-Cymatix-Packet-Id"]

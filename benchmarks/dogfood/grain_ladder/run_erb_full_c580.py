@@ -35,19 +35,30 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from summarize import miss_breakdown  # noqa: E402
 
-RUN = Path(r"F:\tmp\grain_erb_full_c580_2026-10-16")
+# Bed selection (read at import, before any path is derived):
+#   GRAIN_LADDER_GRAIN    chunk chars, default 580 (4000 = matched control)
+#   GRAIN_LADDER_BED_TAG  extra bed variant, e.g. "w3w2" (adds BED_EXTRA_ENV)
+# The default (580, no tag) keeps the original 2026-10-16 paths exactly.
+GRAIN = int(os.environ.get("GRAIN_LADDER_GRAIN", "580"))
+BED_TAG = os.environ.get("GRAIN_LADDER_BED_TAG", "").strip()
+BED_EXTRA_ENV = {
+    "w3w2": {"CYMATIX_BFM_EPI_NULL": "1", "CYMATIX_BFM_FILE_TAGS": "1"},
+}.get(BED_TAG, {})
+_sfx = f"_c{GRAIN}" + (f"_{BED_TAG}" if BED_TAG else "")
+RUN = (Path(r"F:\tmp\grain_erb_full_c580_2026-10-16") if _sfx == "_c580"
+       else Path(rf"F:\tmp\grain_erb_full{_sfx}_2026-10-18"))
 BED_DIR = RUN / "bed"
 BUILT = BED_DIR / "enterprise_rag_500k.db"      # builder's working file
-FINAL = RUN / "erb_full_c580_lean.db"            # wrapper --out
+FINAL = RUN / f"erb_full{_sfx}_lean.db" if _sfx != "_c580" else RUN / "erb_full_c580_lean.db"
 ERB = ROOT / "benchmarks" / "dogfood" / "erb"
-TAG = "grain580"
-CONFIG = HERE / "configs" / "grain_c580_charcap.toml"
-K = 83
+TAG = "grain580" if _sfx == "_c580" else f"grain{GRAIN}{BED_TAG}"
+CONFIG = HERE / "configs" / f"grain_c{GRAIN}_charcap.toml"
+K = {580: 83, 1824: 26, 4000: 12}[GRAIN]
 GATE = Path(r"F:\Projects\cymatix-receipts\mirror\benchmarks\dogfood\receipts\ingest_equivalence_erb.json")
 REF = Path(r"F:\tmp\grain_erb_ref_c4000_2026-10-16\ladder_erb947k_grain_c4000_charcap_2026-10-16.json")
 WITNESS = Path(r"F:\tmp\release-witness-v0113\ladder_v0113-merged-witness-trace-2026-10-11_947k.json")
-LADDER_OUT = RUN / "ladder_erb_full_c580_charcap_2026-10-16.json"
-COMPARE_OUT = HERE / "erb_full_c580_vs_c4000_reference_2026-10-16.json"
+LADDER_OUT = RUN / f"ladder_erb_full{_sfx}_charcap_2026-10-16.json"
+COMPARE_OUT = HERE / f"erb_full{_sfx}_vs_c4000_reference_2026-10-16.json"
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 LEAN = {"CYMATIX_BFM_PKI_WRITE": "0", "CYMATIX_BFM_ENTITY_AUTOLINK": "0", "CYMATIX_LEAN_INDEXES": "1"}
 
@@ -77,6 +88,26 @@ def run(name: str, cmd: list, extra: dict | None = None) -> int:
         f.write(json.dumps({"stage": name, "rc": rc, "wall_s": round(time.time() - t0),
                             "ts": time.strftime("%Y-%m-%dT%H:%M:%S")}) + "\n")
     return rc
+
+
+def scoring_epoch(pin: bool) -> str | None:
+    """Pinned scoring clock: bed build finish + 1 h, persisted per run dir.
+
+    Keeps the authority 48 h recency boost in the same state for every needle
+    of every ladder on this bed (cymatix_context.clock).
+    """
+    if not pin:
+        return None
+    f = RUN / "scoring_epoch.txt"
+    if f.exists():
+        return f.read_text(encoding="utf-8").strip()
+    from datetime import datetime
+    man = json.loads((BED_DIR / "manifest.json").read_text(encoding="utf-8"))
+    fin = next(iter(man["targets"].values()))["finished_at"]
+    epoch = f"{datetime.fromisoformat(fin).timestamp() + 3600:.0f}"
+    f.write_text(epoch, encoding="utf-8")
+    log.info("scoring clock pinned: CYMATIX_SCORING_EPOCH=%s (build finished %s + 1 h)", epoch, fin)
+    return epoch
 
 
 def claim() -> None:
@@ -117,7 +148,7 @@ def compare() -> None:
 
     out = {
         "c580_receipt": str(LADDER_OUT), "c580_git_sha": lad.get("git_sha"), "c580_config": str(CONFIG),
-        "c580_bed": str(FINAL), "reference_receipt": str(REF), "witness_receipt": str(WITNESS),
+        "c580_bed": str(FINAL), "arm": _sfx, "scoring_epoch": os.environ.get("_GRAIN_SCORING_EPOCH"), "reference_receipt": str(REF), "witness_receipt": str(WITNESS),
         "join": "query text", "n_common": len(common),
         "n_c580_only": len(set(c580) - set(ref)), "n_ref_only": len(set(ref) - set(c580)),
         "c580_lean_charcap": cell(c580, K), "c4000_charcap_reference": cell(ref, 12),
@@ -136,11 +167,13 @@ def main() -> int:
     ap.add_argument("--config", default=str(CONFIG))
     ap.add_argument("--suffix", default="", help='e.g. "widecap": separate ladder/compare outputs')
     ap.add_argument("--trace-level", default="", choices=("", "metadata", "full"))
+    ap.add_argument("--pin-clock", action="store_true",
+                    help="pin CYMATIX_SCORING_EPOCH (always on for non-legacy beds)")
     a = ap.parse_args()
     CONFIG = Path(a.config)
     if a.suffix:
-        LADDER_OUT = RUN / f"ladder_erb_full_c580_{a.suffix}_2026-10-17.json"
-        COMPARE_OUT = HERE / f"erb_full_c580_{a.suffix}_vs_c4000_reference_2026-10-17.json"
+        LADDER_OUT = RUN / f"ladder_erb_full{_sfx}_{a.suffix}_2026-10-17.json"
+        COMPARE_OUT = HERE / f"erb_full{_sfx}_{a.suffix}_vs_c4000_reference_2026-10-17.json"
     trace_args = (["--trace-dir", str(RUN / f"traces_{a.suffix or 'charcap'}"), "--trace-level", a.trace_level]
                   if a.trace_level else [])
     done = RUN / f"DONE{('_' + a.suffix) if a.suffix else ''}"
@@ -152,10 +185,10 @@ def main() -> int:
         BED_DIR.mkdir(exist_ok=True)
         cmd = [sys.executable, str(ROOT / "scripts" / "build_erb_blob_v09x.py"), "--out", str(FINAL),
                "--out-dir", str(BED_DIR), "--workers", "6", "--equivalence-receipt", str(GATE),
-               "--notes", "grain ladder ERB full lean c580 (no PKI, no COVER autolink, lean indexes)"]
+               "--notes", f"grain ladder ERB full lean{_sfx} (no PKI, no COVER autolink, lean indexes) {BED_EXTRA_ENV}"]
         if BUILT.exists():
             cmd.append("--resume")
-        if run("build", cmd, {"CYMATIX_BFM_CHUNK_CHARS": "580"}) != 0 or not FINAL.exists():
+        if run("build", cmd, {"CYMATIX_BFM_CHUNK_CHARS": str(GRAIN), **BED_EXTRA_ENV}) != 0 or not FINAL.exists():
             log.error("build failed; rerun this script to resume")
             return 1
     if not (ERB / f"needles_resolved_{TAG}_full.json").exists():
@@ -168,7 +201,12 @@ def main() -> int:
                "--gold", str(ERB / f"gold_by_needle_{TAG}.json"), "--limit", "0", "--k", str(K),
                "--arms", "baseline", "--config", str(CONFIG), "--per-query", "--rank-dump", "200",
                "--stamp", "2026-10-16", "--out", str(LADDER_OUT)] + trace_args
-        if run("ladder" + (f"_{a.suffix}" if a.suffix else ""), cmd, {"CYMATIX_SQLITE_CACHE_SIZE": "-12582912"}) != 0 or not LADDER_OUT.exists():
+        lad_env = {"CYMATIX_SQLITE_CACHE_SIZE": "-12582912"}
+        epoch = scoring_epoch(pin=a.pin_clock or _sfx != "_c580")
+        if epoch:
+            lad_env["CYMATIX_SCORING_EPOCH"] = epoch
+            os.environ["_GRAIN_SCORING_EPOCH"] = epoch  # recorded by compare()
+        if run("ladder" + (f"_{a.suffix}" if a.suffix else ""), cmd, lad_env) != 0 or not LADDER_OUT.exists():
             return 1
     compare()
     done.write_text("ok", encoding="utf-8")

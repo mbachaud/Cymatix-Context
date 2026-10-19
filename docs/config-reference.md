@@ -532,7 +532,7 @@ levels: `docs/specs/packet-trace-v0.md`.
 <!-- BEGIN GENERATED: config-tables:trace -->
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | `bool` | `false` | Master switch (CYMATIX_TRACE_ENABLED) |
+| `enabled` | `bool` | `true` | Master switch (CYMATIX_TRACE_ENABLED) |
 | `level` | `str` | `"metadata"` | "off" \| "metadata" \| "full" (CYMATIX_TRACE_LEVEL) |
 | `path` | `str` | `""` | Trace dir (CYMATIX_TRACE_PATH). "" = <genome dir>/traces |
 | `hash_chain` | `bool` | `false` | Each record carries sha256 of the previous line |

@@ -1,0 +1,185 @@
+{
+  "n": 40,
+  "errors": 0,
+  "groups": {
+    "all": {
+      "n": 40,
+      "round0_gold_reproduced_miss": 40,
+      "gold_recovered": 13,
+      "recovery_rate": 0.325,
+      "first_gold_round": {
+        "1": 9,
+        "2": 4
+      },
+      "answered_without_gold": 18,
+      "said_not_found": 8,
+      "searches_mean": 2.48,
+      "packet_chars_per_search": 18698,
+      "context_chars_read_per_needle": 46278,
+      "model_in_tokens_per_needle": 4081,
+      "model_out_tokens_per_needle": 365,
+      "cost_usd_total": 15.24,
+      "cost_per_needle": 0.381,
+      "cost_per_recovered": 1.17
+    },
+    "basic": {
+      "n": 20,
+      "round0_gold_reproduced_miss": 20,
+      "gold_recovered": 5,
+      "recovery_rate": 0.25,
+      "first_gold_round": {
+        "1": 3,
+        "2": 2
+      },
+      "answered_without_gold": 11,
+      "said_not_found": 4,
+      "searches_mean": 2.4,
+      "packet_chars_per_search": 18725,
+      "context_chars_read_per_needle": 44941,
+      "model_in_tokens_per_needle": 3958,
+      "model_out_tokens_per_needle": 334,
+      "cost_usd_total": 7.33,
+      "cost_per_needle": 0.366,
+      "cost_per_recovered": 1.47
+    },
+    "basic/never_ranked": {
+      "n": 13,
+      "round0_gold_reproduced_miss": 13,
+      "gold_recovered": 4,
+      "recovery_rate": 0.308,
+      "first_gold_round": {
+        "1": 3,
+        "2": 1
+      },
+      "answered_without_gold": 7,
+      "said_not_found": 2,
+      "searches_mean": 2.46,
+      "packet_chars_per_search": 18554,
+      "context_chars_read_per_needle": 45672,
+      "model_in_tokens_per_needle": 4059,
+      "model_out_tokens_per_needle": 341,
+      "cost_usd_total": 4.95,
+      "cost_per_needle": 0.38,
+      "cost_per_recovered": 1.24
+    },
+    "basic/ranked_cut": {
+      "n": 7,
+      "round0_gold_reproduced_miss": 7,
+      "gold_recovered": 1,
+      "recovery_rate": 0.143,
+      "first_gold_round": {
+        "2": 1
+      },
+      "answered_without_gold": 4,
+      "said_not_found": 2,
+      "searches_mean": 2.29,
+      "packet_chars_per_search": 19067,
+      "context_chars_read_per_needle": 43582,
+      "model_in_tokens_per_needle": 3769,
+      "model_out_tokens_per_needle": 321,
+      "cost_usd_total": 2.38,
+      "cost_per_needle": 0.34,
+      "cost_per_recovered": 2.38
+    },
+    "never_ranked": {
+      "n": 29,
+      "round0_gold_reproduced_miss": 29,
+      "gold_recovered": 9,
+      "recovery_rate": 0.31,
+      "first_gold_round": {
+        "1": 7,
+        "2": 2
+      },
+      "answered_without_gold": 13,
+      "said_not_found": 6,
+      "searches_mean": 2.55,
+      "packet_chars_per_search": 18653,
+      "context_chars_read_per_needle": 47597,
+      "model_in_tokens_per_needle": 4208,
+      "model_out_tokens_per_needle": 349,
+      "cost_usd_total": 11.46,
+      "cost_per_needle": 0.395,
+      "cost_per_recovered": 1.27
+    },
+    "ranked_cut": {
+      "n": 11,
+      "round0_gold_reproduced_miss": 11,
+      "gold_recovered": 4,
+      "recovery_rate": 0.364,
+      "first_gold_round": {
+        "1": 2,
+        "2": 2
+      },
+      "answered_without_gold": 5,
+      "said_not_found": 2,
+      "searches_mean": 2.27,
+      "packet_chars_per_search": 18833,
+      "context_chars_read_per_needle": 42801,
+      "model_in_tokens_per_needle": 3748,
+      "model_out_tokens_per_needle": 405,
+      "cost_usd_total": 3.78,
+      "cost_per_needle": 0.343,
+      "cost_per_recovered": 0.94
+    },
+    "semantic": {
+      "n": 20,
+      "round0_gold_reproduced_miss": 20,
+      "gold_recovered": 8,
+      "recovery_rate": 0.4,
+      "first_gold_round": {
+        "1": 6,
+        "2": 2
+      },
+      "answered_without_gold": 7,
+      "said_not_found": 4,
+      "searches_mean": 2.55,
+      "packet_chars_per_search": 18673,
+      "context_chars_read_per_needle": 47616,
+      "model_in_tokens_per_needle": 4205,
+      "model_out_tokens_per_needle": 396,
+      "cost_usd_total": 7.91,
+      "cost_per_needle": 0.396,
+      "cost_per_recovered": 0.99
+    },
+    "semantic/never_ranked": {
+      "n": 16,
+      "round0_gold_reproduced_miss": 16,
+      "gold_recovered": 5,
+      "recovery_rate": 0.312,
+      "first_gold_round": {
+        "1": 4,
+        "2": 1
+      },
+      "answered_without_gold": 6,
+      "said_not_found": 4,
+      "searches_mean": 2.62,
+      "packet_chars_per_search": 18728,
+      "context_chars_read_per_needle": 49162,
+      "model_in_tokens_per_needle": 4329,
+      "model_out_tokens_per_needle": 356,
+      "cost_usd_total": 6.52,
+      "cost_per_needle": 0.407,
+      "cost_per_recovered": 1.3
+    },
+    "semantic/ranked_cut": {
+      "n": 4,
+      "round0_gold_reproduced_miss": 4,
+      "gold_recovered": 3,
+      "recovery_rate": 0.75,
+      "first_gold_round": {
+        "1": 2,
+        "2": 1
+      },
+      "answered_without_gold": 1,
+      "said_not_found": 0,
+      "searches_mean": 2.25,
+      "packet_chars_per_search": 18415,
+      "context_chars_read_per_needle": 41434,
+      "model_in_tokens_per_needle": 3710,
+      "model_out_tokens_per_needle": 553,
+      "cost_usd_total": 1.39,
+      "cost_per_needle": 0.349,
+      "cost_per_recovered": 0.46
+    }
+  }
+}
