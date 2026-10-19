@@ -1,0 +1,64 @@
+{
+  "unindexed": "F:\\tmp\\grain_erb_full_c580_2026-10-16\\ladder_erb_full_c580_classcap_2026-10-17.json",
+  "indexed": "F:\\tmp\\grain_erb_full_c580_2026-10-16\\ladder_erb_full_c580_classcap_idx_2026-10-17.json",
+  "git_sha": [
+    "cacff33138bf2eaedb00f3d6f9d8911145f146cb",
+    "4c9ef53d351b2d703febea5a436ec9223678baf9"
+  ],
+  "n": [
+    470,
+    470
+  ],
+  "field_diffs": {
+    "delivered_gene_ids": 0,
+    "delivered_chars": 15,
+    "delivered_gold": 0,
+    "delivered_count": 0,
+    "rank_of_first_gold": 0,
+    "final_rank_of_first_gold": 5,
+    "budget_tier": 0
+  },
+  "needles_with_any_diff": 20,
+  "delivered_gold_rate": [
+    0.6382978723404256,
+    0.6382978723404256
+  ],
+  "p50_ms_unindexed_vs_indexed": {
+    "wall_ms": [
+      46910.1,
+      43280.7
+    ],
+    "tag_exact": [
+      9135.0,
+      3186.3
+    ],
+    "tag_prefix": [
+      5849.4,
+      2955.0
+    ],
+    "authority": [
+      11863.9,
+      19030.5
+    ],
+    "fts5": [
+      6817.3,
+      6501.1
+    ],
+    "access_rate": [
+      1819.7,
+      1772.5
+    ],
+    "lex_anchor": [
+      1233.4,
+      1192.5
+    ],
+    "tier_telemetry": [
+      544.7,
+      513.9
+    ]
+  },
+  "wall_sum_s": [
+    31295,
+    29766
+  ]
+}
