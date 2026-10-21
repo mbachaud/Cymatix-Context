@@ -16,16 +16,16 @@
 
 ## The dimensions
 
-| Dimension | Signal | Cost | Default state (v0.9.1) |
+| Dimension | Signal | Cost | Default state (v0.11.3) |
 |---|---|---|---|
 | **D1** Semantic content | FTS5 BM25 over document text; SPLADE sparse term expansion; SEMA 20-dim cosine as a cold fallthrough | A primary query cost — the lexical backbone the best-scoring arms lean on | **FTS5 on.** SPLADE **off** since 2026-08-16. SEMA cold tier **off** (`[context] cold_tier_enabled`) |
-| **D2** Tagging | Exact and prefix lookup against the ingest-time tag index, with query terms expanded through `[synonyms]` | ms-scale at 100k; a substantial per-query cost at 829k in the dated ledger | **on** |
+| **D2** Tagging | Exact and prefix lookup against the ingest-time tag index, with query terms expanded through `[synonyms]` | ms-scale at 100k; a substantial per-query cost at 829k in the dated ledger | **on**; since 0.11.2 the prefix tier no longer errors on queries over 500 terms ([#483](https://github.com/mbachaud/Cymatix-Context/pull/483)) |
 | **D3** Source provenance | `source_id` deny-list gate at the storage boundary, plus a per-source authority weight in fusion | negligible | **on** — provenance fields auto-populate at ingest |
 | **D4** Working-set access rate | Sliding-window access-rate over a ring buffer of recent accesses, applied as a capped tiebreaker | negligible | **on** (tiebreaker only) |
 | **D5** Lifecycle tier | Three-tier accessibility — hot / warm / cold (legacy: open / euchromatin / heterochromatin) — filtering which documents are even queried | negligible (a filter) | **on**; hot + warm queried, cold excluded unless opted in |
 | **D6** Cymatics | MD5-hashed 256-bin term spectrum: resonance overlap, flux integral, harmonic-bin boost | microseconds, LRU-cached | **on** — blended as a capped bonus, not used to re-sort |
 | **D7** Document attribution | `party_id` scoping gate over attributed documents; citation enrichment with the authoring party and handle | negligible | **on** where identity is known; authorship-class scoring is **not** live |
-| **D8** Co-activation graph | Harmonic spectral edges (Tier 5); shared-entity edges (Tier 5b); SR graph expansion; seeded edges | harmonic small; the gated reads cost nothing while off | harmonic **on**; entity-graph *retrieval* **off**; SR **off**; seeded edges **off** |
+| **D8** Co-activation graph | Harmonic spectral edges (Tier 5); shared-entity edges (Tier 5b); SR graph expansion; seeded edges; COVER-edge walk | harmonic small; the gated reads cost nothing while off | harmonic **on**, but skipped on candidate pools over SQLite's bind limit unless `harmonic_batching_enabled` (opt-in, 0.10.0, [#431](https://github.com/mbachaud/Cymatix-Context/issues/431)); entity-graph *retrieval* **off**; SR **off**; seeded edges **off**; COVER walk **off** (`cover_walk_enabled`) |
 | **D9** Temporal context (TCM) | Per-session drift vector that lightly re-sorts already-retrieved candidates | negligible | **on** as a tiebreaker; theta-biased ray tracing **off** |
 
 Auxiliary tiers that fire but are not numbered dimensions:
@@ -116,7 +116,7 @@ of current shipped state**, and several defaults have moved since.
 | Path-key index | REMOVE-CANDIDATE — neutral-to-positive to remove at both 100k and 829k, zero delivery flips | Shipped default-off 2026-08-17 ([#370](https://github.com/mbachaud/Cymatix-Context/issues/370)) |
 | Tags (D2) | **SPLIT** — the delivered-gold gain at 100k did **not** replicate at 829k; the storage half is unmeasured | Still on; a `no_lex_anchor` arm ([#355](https://github.com/mbachaud/Cymatix-Context/issues/355)) is owed before any storage action |
 | Cymatics | KEEP-CHEAP, now measured — indistinguishable from random binning | Still on, still labelled experimental |
-| Co-activation / harmonic | TRIM-CANDIDATE — a post-rank pull-forward, invisible to rank-based recall@12 by construction | Still on; the delivered-basis metric it needs is now armed |
+| Co-activation / harmonic | TRIM-CANDIDATE — a post-rank pull-forward, invisible to rank-based recall@12 by construction | Still on; the delivered-basis metric it needs is now armed. On pools over SQLite's bind limit the tier is skipped unless the opt-in `harmonic_batching_enabled` is set |
 | Entity graph | REMOVE-CANDIDATE, plus a read-path flag leak the ledger found | Flag leak fixed; ingest-side edge building still ships **on** and has **never been ablated on the delivered basis** — deferred in the [#377](https://github.com/mbachaud/Cymatix-Context/issues/377) ledger |
 | SEMA (query-side) | REMOVE-CANDIDATE — null even after backfilling every vector | Ingest-side SEMA embedding default-off since 2026-08-19 |
 | Synonyms | TRIM-CANDIDATE — the shipped map netted zero-to-negative on that bed: one entry load-bearing, two pool-bloating | Feature kept, map retune still open |
