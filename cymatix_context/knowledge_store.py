@@ -656,6 +656,12 @@ class KnowledgeStore:
         # 89.5% of writer wall time). 0 = legacy behavior. Composition with
         # entity_autolink: off > cutoff > legacy.
         entity_autolink_hub_cutoff: int = 0,
+        # Lean bench beds: False skips path_key_index writes. The PKI read
+        # tier is off by default since #370 ([retrieval] pki_enabled), so
+        # the rows are query-inert at shipped defaults (~41 rows/gene on ERB
+        # 580-char chunks). True (default) = legacy writes. A bed built with
+        # False cannot serve pki_enabled=true.
+        pki_write: bool = True,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
         sr_k_steps: int = 4,
@@ -881,6 +887,7 @@ class KnowledgeStore:
         self._entity_graph_enabled = entity_graph
         self._entity_autolink_enabled = bool(entity_autolink)
         self._entity_autolink_hub_cutoff = int(entity_autolink_hub_cutoff)
+        self._pki_write = bool(pki_write)
         # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
         # Separate from _entity_graph_enabled (write-side) — this controls
         # whether entity_graph rows are consulted during query_genes().
@@ -2273,7 +2280,8 @@ class KnowledgeStore:
                     autolink_enabled=self._entity_autolink_enabled,
                     hub_cutoff=self._entity_autolink_hub_cutoff,
                 )
-                sync_path_key_index(cur, gene_id, gene)
+                if self._pki_write:
+                    sync_path_key_index(cur, gene_id, gene)
                 sync_filename_index(cur, gene_id, gene.source_id)
                 # Issue #164: size-aware SPLADE auto-toggle. Refresh the cached
                 # gene_count whenever EITHER threshold is opted in; otherwise

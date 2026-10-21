@@ -2230,6 +2230,8 @@ class CymatixContextManager:
                 _budget_cfg.min_delivered_docs
                 if _budget_cfg.tier_seat_floor_enabled else 0
             ),
+            tight_chars=_budget_cfg.tier_tight_chars,
+            focused_chars=_budget_cfg.tier_focused_chars,
         )
         if _tier.abstain:
             _abstain_win = self._build_abstain_window(
@@ -2290,6 +2292,11 @@ class CymatixContextManager:
         _seat_floor_cap = int(getattr(self.config.budget, "min_delivered_docs", 0) or 0)
         if _seat_floor_cap > 0 and _classifier_cap is not None:
             _classifier_cap = max(_classifier_cap, _seat_floor_cap)
+        _cap_ref_chars = int(getattr(self.config.budget, "classifier_cap_ref_chars", 0) or 0)
+        if _cap_ref_chars > 0 and _classifier_cap is not None:
+            # Grain-size ladder: seats -> seats x ref chars (never fewer seats).
+            from .pipeline.tier_logic import seats_for_char_cap
+            _classifier_cap = seats_for_char_cap(candidates, _classifier_cap, _cap_ref_chars)
         if _classifier_cap is not None and len(candidates) > _classifier_cap:
             log.debug(
                 "Classifier cap: assembled %d -> %d (class=%s)",

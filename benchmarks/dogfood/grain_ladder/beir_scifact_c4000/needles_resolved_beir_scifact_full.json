@@ -1,0 +1,1504 @@
+{
+ "needles": [
+  {
+   "name": "beir_scifact_1",
+   "query": "0-dimensional biomaterials show inductive properties.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_100",
+   "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1012",
+   "query": "Radioiodine treatment of non-toxic multinodular goitre reduces thyroid volume.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1014",
+   "query": "Rapamycin decreases the concentration of triacylglycerols in fruit flies.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1019",
+   "query": "Rapid phosphotransfer rates govern fidelity in two component systems",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1020",
+   "query": "Rapid up-regulation and higher basal expression of interferon-induced genes increase survival of granule cell neurons that are infected by West Nile virus.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1021",
+   "query": "Rapid up-regulation and higher basal expression of interferon-induced genes reduce survival of granule cell neurons that are infected by West Nile virus.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1024",
+   "query": "Recurrent mutations occur frequently within CTCF anchor sites adjacent to oncogenes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1029",
+   "query": "Reduced responsiveness to interleukin-2 in regulatory T cells is associated with greater resistance to autoimmune diseases such as Type 1 Diabetes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1041",
+   "query": "Replacement of histone H2A with H2A.Z slows gene activation in yeasts by stabilizing +1 nucleosomes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1049",
+   "query": "Ribosomopathies have a low degree of cell and tissue specific pathology.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1062",
+   "query": "S-nitrosylated GAPDH physiologically transnitrosylates histone deacetylases.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1086",
+   "query": "Sildenafil improves erectile function in men who experience sexual dysfunction as a result of the use of SSRI antidepressants.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1088",
+   "query": "Silencing of Bcl2 is important for the maintenance and progression of tumors.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1089",
+   "query": "Smc5/6 engagment drives the activation of SUMO E3 ligase Mms21 by ATP-dependent remolding.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1099",
+   "query": "Statins decrease blood cholesterol.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1100",
+   "query": "Statins increase blood cholesterol.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1104",
+   "query": "Stroke patients with prior use of direct oral anticoagulants have a lower risk of in-hospital mortality than stroke patients with prior use of warfarin.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1107",
+   "query": "Subcutaneous fat depots undergo extensive browning processes after cold exposure.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1110",
+   "query": "Suboptimal nutrition is not predictive of chronic disease",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1121",
+   "query": "Synaptic activity enhances local release of brain derived neurotrophic factor from postsynaptic dendrites.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_113",
+   "query": "Angiotensin converting enzyme inhibitors are associated with increased risk for functional renal insufficiency.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1130",
+   "query": "T regulatory cells (tTregs) lacking αvβ8 are more adept at suppressing pathogenic T-cell responses during active inflammation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1132",
+   "query": "TCR/CD3 microdomains are a required to induce the immunologic synapse to activate T cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1137",
+   "query": "TNFAIP3 is a tumor suppressor in glioblastoma.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1140",
+   "query": "Taking 400mg of α-tocopheryl acetate helps to prevent prostate cancer.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1144",
+   "query": "Taxation of sugar-sweetened beverages had no effect on the incidence rate of type II diabetes in India.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1146",
+   "query": "Teaching hospitals do not provide better care than non-teaching hospitals.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_115",
+   "query": "Anthrax spores can be disposed of easily after they are dispersed.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1150",
+   "query": "Tetraspanin-3 is a causative factor in the development of acute myelogenous leukemia",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1163",
+   "query": "The DdrB protein from Deinococcus radiodurans is an alternative SSB.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1175",
+   "query": "The PPR MDA5 has two N-terminal CARD domains.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1179",
+   "query": "The PRR MDA5 has a central DExD/H RNA helices domain.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_118",
+   "query": "Antibiotic induced alterations in the gut microbiome reduce resistance against Clostridium difficile",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1180",
+   "query": "The PRR MDA5 is a sensor of RNA virus infection.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1185",
+   "query": "The US health care system can save up to $750 million if 7% of patients waiting for kidney transplants participate in the optimized national kidney paired donation program.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1187",
+   "query": "The YAP1 and TEAD complex tanslocates into the nucleus where it interacts with transcription factors and DNA-binding proteins that modulate target gene transcription.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1191",
+   "query": "The amount of publicly available DNA data doubles every 10 years.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1194",
+   "query": "The arm density of TatAd complexes is due to structural rearrangements within Class1 TatAd complexes such as the 'charge zipper mechanism'.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1196",
+   "query": "The availability of safe places to study is effective at decreasing homelessness.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1197",
+   "query": "The availability of safe places to study is not effective at decreasing homelessness.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1199",
+   "query": "The benefits of colchicine were achieved with effective widespread use of secondary prevention strategies such as high-dose statins.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1200",
+   "query": "The binding orientation of the ML-SA1 activator at hTRPML2 is different from the binding orientation of the ML-SA1 activator at hTRPML1.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1202",
+   "query": "The center of the granuloma in an immune cell induces a pro-inflammatory immune response.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1204",
+   "query": "The combination of H3K4me3 and H3K79me2 is found in quiescent hair follicle stem cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1207",
+   "query": "The composition of myosin-II isoform switches from the polarizable B isoform to the more homogenous A isoform during hematopoietic differentiation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1213",
+   "query": "The deregulated and prolonged activation of monocytes has deleterious effects in inflammatory diseases.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1216",
+   "query": "The extracellular domain of TMEM27 is cleaved in human beta cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1221",
+   "query": "The genomic aberrations found in matasteses are very similar to those found in the primary tumor.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1225",
+   "query": "The locus rs647161 is associated with colorectal carcinoma.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1226",
+   "query": "The loss of the TET protein functions may have dire biological consequences, such as myeloid cancers.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1232",
+   "query": "The minor G allele of FOXO3 is related to more severe symptoms of Crohn's Disease.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_124",
+   "query": "Antiretroviral therapy reduces rates of tuberculosis across a broad range of CD4 strata.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1241",
+   "query": "The myocardial lineage develops from cardiac progenitors of mesodermal origin.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1245",
+   "query": "The one-child policy has been successful in lowering population growth.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1259",
+   "query": "The relationship between a breast cancer patient's capacity to metabolize tamoxifen and treatment outcome is dependent on the patient's genetic make-up.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1262",
+   "query": "The repair of Cas9-induced double strand breaks in human DNA is error-prone.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1266",
+   "query": "The risk of breast cancer among parous women increases with placental weight of pregnancies, and this association is strongest for premenopausal breast cancer.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_127",
+   "query": "Arginine 90 in p150n is important for interaction with EB1.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1270",
+   "query": "The risk of male prisoners harming themselves is ten times that of female prisoners.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1271",
+   "query": "The severity of cardiac involvement in amyloidosis can be described by the degree of transmurality of late gadolinium enhancement in MRI.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1272",
+   "query": "The single flash-evoked ERG b-wave is generated by activity of ON-bipolar cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1273",
+   "query": "The sliding activity of kinesin-8 protein Kip3 promotes bipolar spindle assembly.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1274",
+   "query": "The tip of the inner tube of the toxic type VI secretion system (T6SS) antibacterial effector in Escherichia coli (E. coli) carries toxic effector proteins.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1278",
+   "query": "The treatment of cancer patients with co-IR blockade does not cause any adverse autoimmune events.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1279",
+   "query": "The treatment of cancer patients with co-IR blockade precipitates adverse autoimmune events.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_128",
+   "query": "Arterioles have a larger lumen diameter than venules.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1280",
+   "query": "The ureABIEFGH gene cluster encodes urease maturation proteins : UreD/UreH, UreE, UreF, and UreG.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1281",
+   "query": "The ureABIEFGH gene cluster is induced by nickel (II) ion.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1282",
+   "query": "Therapeutic use of the drug Dapsone to treat pyoderma gangrenous is based on anecdotal evidence.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_129",
+   "query": "Articles published in open access format are less likely to be cited than traditional journals.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1290",
+   "query": "There is an inverse relationship between hip fractures and statin use.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1292",
+   "query": "There is no association between HNF4A mutations and diabetes risks.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1298",
+   "query": "Thigh-length graduated compression stockings (GCS) did not reduce deep vein thrombosis in patients admitted to hospital who are immobile because of acute stroke.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_13",
+   "query": "5% of perinatal mortality is due to low birth weight.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_130",
+   "query": "Articles published in open access format are more likely to be cited than traditional journals.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1303",
+   "query": "Tirasemtiv has no effect on fast-twitch muscle.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1316",
+   "query": "Transferred UCB T cells acquire a memory-like phenotype in recipients.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1319",
+   "query": "Transplanted human glial cells can differentiate within the host animal.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_132",
+   "query": "Aspirin inhibits the production of PGE2.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1320",
+   "query": "Transplanted human glial progenitor cells are incapable of forming a neural network with host animals' neurons.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_133",
+   "query": "Assembly of invadopodia is triggered by focal generation of phosphatidylinositol-3,4-biphosphate and the activation of the nonreceptor tyrosine kinase Src.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1332",
+   "query": "Tumor necrosis factor alpha (TNF-α) and interleukin-1 (IL-1) are pro-inflammatory cytokines that inhibit IL-6 and IL-10.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1335",
+   "query": "UCB T cells maintain high TCR diversity after transplantation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1336",
+   "query": "UCB T cells reduce TCR diversity after transplantation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1337",
+   "query": "Ubiquitin ligase UBC13 generates a K63-linked polyubiquitin moiety at PCNA K164.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1339",
+   "query": "Ultrasound guidance significantly raises the number of traumatic procedures when attempting needle insertion.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1344",
+   "query": "Up-regulation of the p53 pathway and related molecular events casues cancer resistance and results in a significantly shortened lifespan marked by senescent cells and accelerated organismal aging.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1352",
+   "query": "Upregulation of mosGCTL-1 is induced upon infection with West Nile virus.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1359",
+   "query": "Varenicline monotherapy is more effective after 12 weeks of treatment compared to combination nicotine replacement therapies with varenicline or bupropion.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1362",
+   "query": "Venules have a larger lumen diameter than arterioles.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1363",
+   "query": "Venules have a thinner or absent smooth layer compared to arterioles.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1368",
+   "query": "Vitamin D deficiency effects the term of delivery.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_137",
+   "query": "Asymptomatic visual impairment screening in elderly populations does not lead to improved vision.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1370",
+   "query": "Vitamin D deficiency is unrelated to birth weight.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1379",
+   "query": "Women with a higher birth weight are more likely to develop breast cancer later in life.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1382",
+   "query": "aPKCz causes tumour enhancement by affecting glutamine metabolism.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1385",
+   "query": "cSMAC formation enhances weak ligand signalling.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1389",
+   "query": "mTORC2 regulates intracellular cysteine levels through xCT inhibition.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_1395",
+   "query": "p16INK4A accumulation is  linked to an abnormal wound response caused by the microinvasive step of advanced Oral Potentially Malignant Lesions (OPMLs).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_141",
+   "query": "Auditory entrainment is strengthened when people see congruent visual and auditory information.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_142",
+   "query": "Autologous transplantation of mesenchymal stem cells causes a higher rate of opportunistic infections than induction therapy with anti-interleukin-2 receptor antibodies.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_143",
+   "query": "Autologous transplantation of mesenchymal stem cells causes fewer opportunistic infections than induction therapy with anti-interleukin-2 receptor antibodies.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_146",
+   "query": "Autologous transplantation of mesenchymal stem cells has lower rates of rejection than induction therapy with anti-interleukin-2 receptor antibodies.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_148",
+   "query": "Autophagy declines in aged organisms.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_163",
+   "query": "Bariatric surgery has a positive impact on mental health.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_171",
+   "query": "Basophils counteract disease development in patients with systemic lupus erythematosus (SLE).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_179",
+   "query": "Birth-weight is positively associated with breast cancer.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_180",
+   "query": "Blocking the interaction between TDP-43 and respiratory complex I proteins ND3 and ND6 leads to increased TDP-43-induced neuronal loss.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_183",
+   "query": "Bone marrow cells contribute to adult macrophage compartments.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_185",
+   "query": "Breast cancer development is determined exclusively by genetic factors.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_198",
+   "query": "CCL19 is absent within dLNs.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_208",
+   "query": "CHEK2 is not associated with breast cancer.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_212",
+   "query": "CR is associated with higher methylation age.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_213",
+   "query": "CRP is not predictive of postoperative mortality following Coronary Artery Bypass Graft (CABG) surgery.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_216",
+   "query": "CX3CR1 on the Th2 cells impairs T cell survival",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_217",
+   "query": "CX3CR1 on the Th2 cells promotes T cell survival",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_218",
+   "query": "CX3CR1 on the Th2 cells promotes airway inflammation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_219",
+   "query": "CX3CR1 on the Th2 cells suppresses airway inflammation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_230",
+   "query": "Carriers of the alcohol aldehyde dehydrogenase deficiency mutation drink less that non-carries.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_232",
+   "query": "Cataract and trachoma are the primary cause of blindness in Southern Sudan.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_233",
+   "query": "Cell autonomous sex determination in somatic cells does not occur in Galliformes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_236",
+   "query": "Cell autonomous sex determination in somatic cells occurs in Passeriformes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_237",
+   "query": "Cells lacking clpC have a defect in sporulation efficiency in Bacillus subtilis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_238",
+   "query": "Cells undergoing methionine restriction may activate miRNAs.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_239",
+   "query": "Cellular aging closely links to an older appearance.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_248",
+   "query": "Chenodeosycholic acid treatment increases whole-body energy expenditure.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_249",
+   "query": "Chenodeosycholic acid treatment reduces whole-body energy expenditure.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_261",
+   "query": "Chronic aerobic exercise alters endothelial function, improving vasodilating mechanisms mediated by NO.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_268",
+   "query": "Cold exposure increases BAT recruitment.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_269",
+   "query": "Cold exposure reduces BAT recruitment.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_274",
+   "query": "Combination nicotine replacement therapies with varenicline or bupropion lead to significantly higher long-term abstinence rates at 52 weeks than varenicline monotherapy.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_275",
+   "query": "Combining phosphatidylinositide 3-kinase and MEK 1/2 inhibitors is effective at treating KRAS mutant tumors.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_279",
+   "query": "Commelina yellow mottle virus' (ComYMV) genome consists of 7489 baise pairs.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_294",
+   "query": "Crossover hot spots are not found within gene promoters in Saccharomyces cerevisiae.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_295",
+   "query": "Crosstalk between dendritic cells (DCs) and innate lymphoid cells (ILCs) is important in the regulation of intestinal homeostasis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_298",
+   "query": "Cytochrome c is released from the mitochondrial intermembrane space to cytosol during apoptosis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_3",
+   "query": "1,000 genomes project enables mapping of genetic sequence variation consisting of rare variants with larger penetrance effects than common variants.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_300",
+   "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_303",
+   "query": "DMRT1 is a sex-determining gene that is epigenetically regulated by the MHM region.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_312",
+   "query": "De novo assembly of sequence data has more specific contigs than unassembled sequence data.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_314",
+   "query": "Deamination of cytidine to uridine on the minus strand of viral DNA results in catastrophic G-to-A mutations in the viral genome.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_324",
+   "query": "Deleting Raptor reduces G-CSF levels.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_327",
+   "query": "Deletion of αvβ8 does not result in a spontaneous inflammatory phenotype.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_338",
+   "query": "Dexamethasone decreases risk of postoperative bleeding.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_343",
+   "query": "Diabetic patients with acute coronary syndrome experience increased short-term and long-term risk for bleeding events.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_350",
+   "query": "Discrimination between the initiator and elongation tRNAs depends on the translation initiation factor IF3.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_354",
+   "query": "Downregulation and mislocalization of Scribble prevents cell transformation and mammary tumorigenesis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_36",
+   "query": "A deficiency of vitamin B12 increases blood levels of homocysteine.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_362",
+   "query": "During the primary early antibody response activated B cells migrate toward the inner-and outer paracortical areas where oxysterol accumulation is generated by stromal cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_380",
+   "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_384",
+   "query": "Epidemiological disease burden from noncommunicable diseases is more prevalent in low economic settings.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_385",
+   "query": "Epigenetic modulating agents (EMAs) modulate antitumor immune response in a cancer model system.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_386",
+   "query": "Errors in peripheral IV drug administration are most common during bolus administration and multiple-step medicine preparations.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_388",
+   "query": "Ethanol stress decreases the expression of IBP in bacteria.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_399",
+   "query": "Exposure to fine particulate air pollution is relate to anxiety prevalence.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_410",
+   "query": "Febrile seizures increase the threshold for development of epilepsy.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_411",
+   "query": "Febrile seizures reduce the threshold for development of epilepsy.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_415",
+   "query": "Female carriers of the Apolipoprotein E4 (APOE4) allele have increased risk for dementia.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_42",
+   "query": "A high microerythrocyte count raises vulnerability to severe anemia in homozygous alpha (+)- thalassemia trait subjects.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_421",
+   "query": "Flexible molecules experience greater steric hindrance in the tumor microenviroment than rigid molecules.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_431",
+   "query": "FoxO3a activation in neuronal death is mediated by reactive oxygen species (ROS).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_436",
+   "query": "Free histones are degraded by a Rad53-dependent mechanism once DNA has been replicated.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_437",
+   "query": "Functional consequences of genomic alterations due to Myelodysplastic syndrome (MDS) are poorly understood due to the lack of an animal model.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_439",
+   "query": "Fz/PCP-dependent Pk localizes to the anterior membrane of neuroectoderm cells during zebrafish neuralation",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_440",
+   "query": "Fz/PCP-dependent Pk localizes to the anterior membrane of notochord cells during zebrafish neuralation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_443",
+   "query": "GATA-3 is important for hematopoietic stem cell (HSC) function.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_452",
+   "query": "Gene expression does not vary appreciably across genetically identical cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_475",
+   "query": "Glycolysis is one of the primary glycometabolic pathways in cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_478",
+   "query": "Golli-deficient T-cells prefer to differentiate into an anergic phenotype in the adaptive immune response when there are increased levels of Ca2+ in the cytosol.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_48",
+   "query": "A total of 1,000 people in the UK are asymptomatic carriers of vCJD infection.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_49",
+   "query": "ADAR1 binds to Dicer to cleave pre-miRNA.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_491",
+   "query": "HNF4A mutations can cause diabetes in mutant carriers by the age of 14 years",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_5",
+   "query": "1/2000 in UK have abnormal PrP positivity.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_50",
+   "query": "AIRE is expressed in some skin tumors.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_501",
+   "query": "Headaches are not correlated with cognitive impairment.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_502",
+   "query": "Healthcare delivery efficiency in crowded delivery centers is impaired by improving structural, logistical, and interpersonal elements.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_507",
+   "query": "Helminths interfere with immune system control of macrophages activated by IL-4 favor Mycobacterium tuberculosis replication.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_508",
+   "query": "Hematopoietic Stem Cell purification reaches purity rate of up to 50%.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_51",
+   "query": "ALDH1 expression is associated with better breast cancer outcomes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_513",
+   "query": "High cardiopulmonary fitness causes increased mortality rate.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_514",
+   "query": "High dietary calcium intakes are unnecessary for prevention of secondary hyperparathyroidism in subjects with 25(OH)D levels above 75 nmol/liter.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_516",
+   "query": "High levels of CRP reduces the risk of exacerbations in chronic obstructive pulmonary disease (COPD).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_517",
+   "query": "High levels of copeptin decrease risk of diabetes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_521",
+   "query": "High-sensitivity cardiac troponin T (HSCT-T) dosage may not be diagnostic if the onset of symptoms occurs less than 3 hours before acute myocardial injury (AMI).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_525",
+   "query": "Histone demethylase recruitment and a transient decrease in histone methylation is necessary for ligand-dependent induction of transcription by nuclear receptors.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_527",
+   "query": "Homozygous deletion of murine Sbds gene from osterix-expressing mesenchymal stem and progenitor cells (MPCs) prevents oxidative stress.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_528",
+   "query": "Human T-lymphotropic virus type-I-associated myelopathy / tropical spastic paraparesis (HAM/TSP) patients produce Immunoglobulin G (IgG) antibodies which cross-react with an immunodominant epitope in Tax.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_53",
+   "query": "ALDH1 expression is associated with poorer prognosis in breast cancer.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_532",
+   "query": "Hyperfibrinogenemia decreases rates of femoropopliteal bypass thrombosis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_533",
+   "query": "Hyperfibrinogenemia increases rates of femoropopliteal bypass thrombosis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_535",
+   "query": "Hypertension is frequently observed in type 1 diabetes patients.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_536",
+   "query": "Hypocretin neurones induce panicprone state in rats.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_539",
+   "query": "Hypoglycemia increases the risk of dementia.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_54",
+   "query": "AMP-activated protein kinase (AMPK) activation increases inflammation-related fibrosis in the lungs.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_540",
+   "query": "Hypothalamic glutamate neurotransmission is crucial to energy balance.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_544",
+   "query": "IFIT1 restricts viral replication by sequestrating mis-capped viral RNAs.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_549",
+   "query": "IRG1 has antiviral effects against neurotropic viruses.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_551",
+   "query": "ITAM phosphorylation prevents the transfer of the T cell receptor (TCR) signal from the echo-domain to the cytoplasmic tail of the T cell receptor (TCR).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_552",
+   "query": "IgA plasma cells that are specific for transglutaminase 2 accumulate in the duodenal mucosa on commencement of a gluten-free diet.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_554",
+   "query": "Immune complex triggered cell death leads to extracellular release of neutrophil protein HMGB1.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_56",
+   "query": "APOE4 expression in iPSC-derived neurons increases AlphaBeta production and tau phosphorylation causing GABA neuron degeneration.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_560",
+   "query": "Immune responses result in the development of inflammatory Th17 cells and anti-inflammatory iTregs.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_569",
+   "query": "In adult tissue, most T cells are memory T cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_57",
+   "query": "APOE4 expression in iPSC-derived neurons increases AlphaBeta production and tau phosphorylation, delaying GABA neuron degeneration.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_575",
+   "query": "In domesticated populations of Saccharomyces cerevisiae, whole chromosome aneuploidy is very uncommon.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_577",
+   "query": "In mice, P. chabaudi parasites are able to proliferate faster early in infection when inoculated at lower numbers than when inoculated at high numbers.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_578",
+   "query": "In mouse models, the loss of CSF1R facilitates MOZ-TIF2-induced leuekmogenesis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_587",
+   "query": "In transgenic mice harboring green florescent protein under the control of the Sox2 promoter, less than ten percent of the cells with green florescent colocalize with cell proliferation markers.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_589",
+   "query": "In young and middle-aged adults, current or remote uses of ADHD medications do not increase the risk of serious cardiovascular events.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_593",
+   "query": "Incidence of heart failure decreased by 10% in women since 1979.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_597",
+   "query": "Incidence rates of cervical cancer have decreased.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_598",
+   "query": "Incidence rates of cervical cancer have increased due to nationwide screening programs based primarily on cytology to detect uterine cervical cancer.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_613",
+   "query": "Increased microtubule acetylation repairs LRRK2 Roc-COR domain mutation induced locomotor deficits.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_619",
+   "query": "Increased vessel density along with a reduction in fibrosis decreases the efficacy of chemotherapy treatments.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_623",
+   "query": "Individuals with low serum vitamin D concentrations have increased risk of multiple sclerosis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_628",
+   "query": "Infection of human T-cell lymphotropic virus type 1 is most frequent in individuals of African origin.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_636",
+   "query": "Inositol lipid 3-phosphatase PTEN converts Ptdlns(3,4)P 2 into phosphatidylinositol 4-phosphate.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_637",
+   "query": "Input from  mental and physical health care professionals is effective at decreasing homelessness.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_641",
+   "query": "Insomnia can be effectively treated with cognitive behavioral therapy.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_644",
+   "query": "Insulin increases risk of severe kidney failure.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_649",
+   "query": "Integrating classroom-based collaborative learning with Web-based collaborative learning leads to subpar class performance",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_659",
+   "query": "Ivermectin is used to treat lymphatic filariasis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_660",
+   "query": "Ivermectin is used to treat onchocerciasis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_674",
+   "query": "LDL cholesterol has no involvement in the development of cardiovascular disease.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_684",
+   "query": "Lack of clpC does not affect sporulation efficiency in Bacillus subtilis cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_690",
+   "query": "Less than 10% of the gabonese children with Schimmelpenning-Feuerstein-Mims syndrome (SFM) had a plasma lactate of more than 5mmol/L.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_691",
+   "query": "Leukemia associated Rho guanine nucleotide-exchange factor represses RhoA in response to SRC activation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_692",
+   "query": "Leuko-increased blood increases infectious complications in red blood cell transfusion.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_693",
+   "query": "Leuko-reduced blood reduces infectious complications in red blood cell transfusion.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_70",
+   "query": "Activation of PPM1D suppresses p53 function.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_700",
+   "query": "Localization of PIN1 in the Arabidopsis embryo does not require VPS9a",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_702",
+   "query": "Localization of PIN1 in the roots of Arabidopsis does not require VPS9a",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_715",
+   "query": "Low expression of miR7a does represses target genes and exerts a biological function in ovaries.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_716",
+   "query": "Low expression of miR7a exerts a biological function in testis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_718",
+   "query": "Low nucleosome occupancy correlates with low methylation levels across species.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_72",
+   "query": "Activator-inhibitor pairs are provided dorsally by Admpchordin.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_721",
+   "query": "Lupus-prone mice infected with curliproducing bacteria have higher autoantibody titers compared to controls.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_723",
+   "query": "Ly49Q directs the organization of neutrophil migration to inflammation sites by regulating membrane raft functions.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_727",
+   "query": "Ly6C hi monocytes have a lower inflammatory capacity compared to their Ly6C lo counterparts.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_728",
+   "query": "Ly6C hi monocytes have a lower inflammatory capacity than Ly6C lo monocytes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_729",
+   "query": "Lymphadenopathy is observed in knockin mouse lacking the SHP-2 MAPK pathway.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_742",
+   "query": "Macrolides have no protective effect against myocardial infarction.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_743",
+   "query": "Macrolides protect against myocardial infarction.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_744",
+   "query": "Macropinocytosis contributes to a cell's supply of amino acids via the intracellular uptake of protein.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_75",
+   "query": "Active H. pylori urease has a polymeric structure that compromises two subunits, UreA and UreB.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_756",
+   "query": "Many proteins in human cells can be post-translationally modified at lysine residues via acetylation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_759",
+   "query": "Mathematical models predict that using Artemisinin-based combination therapy over nongametocytocidal drugs have a dramatic impact in reducing malaria transmission.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_768",
+   "query": "Mercaptopurine is anabolized into the inactive methylmercaptopurine by thiopurine methyltrasnferase (TPMT).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_770",
+   "query": "Metastatic colorectal cancer treated with a single agent fluoropyrimidines resulted in reduced efficacy and lower quality of life when compared with oxaliplatin-based chemotherapy in elderly patients.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_775",
+   "query": "Mice defective for deoxyribonucleic acid (DNA) polymerase I (polI) reveal increased sensitivity to ionizing radiation (IR).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_781",
+   "query": "Mice that lack Interferon-γ or its receptor exhibit high resistance to experimental autoimmune myocarditis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_783",
+   "query": "Mice without IFN-γ or its receptor are resistant to EAM induced with α-MyHC/CFA.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_784",
+   "query": "MicroRNA is involved in the regulation of Neural Stem Cell (NSC) differentiation and proliferation dynamic homeostasis",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_785",
+   "query": "Microarray results from culture-amplified mixtures of serotypes correlate poorly with microarray results from uncultured mixtures.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_793",
+   "query": "Mitochondria are uninvolved in apoptosis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_800",
+   "query": "Modifying the epigenome in the brain affects the normal human aging process by affecting certain genes related to neurogenesis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_805",
+   "query": "Monoclonal antibody targeting of N-cadherin inhibits metastasis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_808",
+   "query": "Most termination events in Okazaki fragments are sequence specific.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_811",
+   "query": "Mutant mice lacking SVCT2 have greatly increased ascorbic acid levels in both brain and adrenals.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_814",
+   "query": "Mutations in G-Beta protein GNB2 are present in many cancers, resulting in loss of interaction with G-alpha subunits and concomitant activation of AKT pathway.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_820",
+   "query": "N-terminal cleavage increases success identifying transcription start sites.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_821",
+   "query": "N-terminal cleavage reduces success identifying transcription start sites.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_823",
+   "query": "N348I mutations cause resistance to zidovudine (AZT).",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_830",
+   "query": "NF2 (Merlin) causes phosphorylation and subsequent cytoplasmic sequestration of YAP in Drosophila by activating LATS1/2 kinases.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_831",
+   "query": "NF2 (Merlin) prevents phosphorylation and subsequent cytoplasmic sequestration of YAP in Drosophila.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_832",
+   "query": "NFAT4 activation requires IP3R-mediated Ca2+ mobilization.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_834",
+   "query": "NOX2-independent pathways can generate peroxynitrite by reacting with nitrogen intermediates.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_837",
+   "query": "NR5A2 is important in development of endometrial tissues.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_839",
+   "query": "Nanoparticles can be targeted against specific cell types by incorporating aptamers into lipid nanoparticles.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_845",
+   "query": "Neutrophil extracellular traps (NETs) are released by ANCA-stimulated neutrophils.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_847",
+   "query": "New drugs for tuberculosis often do not penetrate the necrotic portion of a tuberculosis lesion in high concentrations.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_852",
+   "query": "Non-invasive ventilation use should be decreased if there is inadequate response to conventional treatment.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_859",
+   "query": "Normal expression of RUNX1 has tumor-promoting effects.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_870",
+   "query": "Obesity decreases life quality.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_873",
+   "query": "Obesity is determined solely by environmental factors.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_879",
+   "query": "Occupancy of ribosomes by IncRNAs do not make functional peptides.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_880",
+   "query": "Occupancy of ribosomes by IncRNAs mirror 5 0-UTRs",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_882",
+   "query": "Omnivores produce less trimethylamine N-oxide from dietary I-carnitine than vegetarians.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_887",
+   "query": "Only a minority of cells survive development after differentiation into stress-resistant spores.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_903",
+   "query": "PD-1 triggering on monocytes reduces IL-10 production by monocytes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_904",
+   "query": "PDPN promotes efficient motility along stromal surfaces by activating the C-type lectin receptor to rearrange the actin cytoskeleton in dendritic cells.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_907",
+   "query": "PGE 2 promotes intestinal tumor growth by altering the expression of tumor suppressing and DNA repair genes.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_911",
+   "query": "PKG-la plays an essential role in expression of pain hypersensitivity in PGK-la knockout mice.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_913",
+   "query": "PPAR-RXRs are inhibited by PPAR ligands.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_914",
+   "query": "PPAR-RXRs can be activated by PPAR ligands.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_921",
+   "query": "Participating in six months of physical activity improves cognitive functioning.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_922",
+   "query": "Patients in stable partnerships have a faster progression from HIV to AIDS.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_936",
+   "query": "Peroxynitrite is required for nitration of TCR/CD8.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_94",
+   "query": "Albendazole is used to treat lymphatic filariasis.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_956",
+   "query": "Pleiotropic coupling of GLP-1R to intracellular effectors promotes distinct profiles of cellular signaling.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_957",
+   "query": "Podocytes are motile and migrate in the presence of injury.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_960",
+   "query": "Polymeal nutrition reduces cardiovascular mortality.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_967",
+   "query": "Pretreatment with the Arp2/3 inhibitor CK-666 affects lamelliopodia formation.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_971",
+   "query": "Primary cervical cancer screening with HPV detection has higher longitudinal sensitivity than conventional cytology to detect cervical intraepithelial neoplasia grade 2.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_975",
+   "query": "Primary pro-inflammatory cytokines induce secondary pro- and anti-inflammatory mediators.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_982",
+   "query": "Proteins synthesized at the growth cone are ubiquitinated at a higher rate than proteins from the cell body.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_985",
+   "query": "Pseudogene PTENP1 regulates the expression of PTEN by functioning as an miRNA decoy.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_99",
+   "query": "Alizarin forms hydrogen bonds with residues involved in PGAM1 substrate binding.",
+   "question_type": "beir_scifact"
+  },
+  {
+   "name": "beir_scifact_993",
+   "query": "Pyridostatin destabilizes the G - quadruplex in the telomeric region.",
+   "question_type": "beir_scifact"
+  }
+ ]
+}

@@ -1849,3 +1849,86 @@ class TestInterruptedFileResume:
             assert bfm._filter_to_unseen(files, db) == []
         finally:
             genome.close()
+
+
+class TestCoverIndex:
+    """Bench builds end with the shipped genes cover index.
+
+    ``idx_genes_id_chromatin`` is normally built by the store's background
+    autobuild on a writable open of a 50k+ row store, which bench builds and
+    read-only ladders never trigger. Without it, the tag tiers' chromatin
+    validity join reads a table row per candidate gene (ERB 5.1M-gene c580
+    bed: 39.7 s -> 4.6 s for the 'and'/'eng' postings once built).
+    """
+
+    def _db_with_genes(self, tmp_path):
+        from cymatix_context.knowledge_store import KnowledgeStore
+        from tests.conftest import make_gene
+        db = str(tmp_path / "c.db")
+        ks = KnowledgeStore(path=db, synonym_map={})
+        ks.upsert_gene(make_gene("cover index probe", gene_id="cover_gene_0000001"))
+        ks.close()
+        return db
+
+    @staticmethod
+    def _has_index(db):
+        con = sqlite3.connect(db)
+        try:
+            return con.execute("select 1 from sqlite_master where type='index' "
+                               "and name='idx_genes_id_chromatin'").fetchone() is not None
+        finally:
+            con.close()
+
+    def test_helper_builds_index(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("CYMATIX_BFM_COVER_INDEX", raising=False)
+        db = self._db_with_genes(tmp_path)
+        assert not self._has_index(db)
+        report = bfm._build_cover_index(db)
+        assert report["cover_index"] is True
+        assert self._has_index(db)
+
+    def test_env_kill_switch_skips(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("CYMATIX_BFM_COVER_INDEX", "0")
+        db = self._db_with_genes(tmp_path)
+        assert bfm._build_cover_index(db)["cover_index"] is False
+        assert not self._has_index(db)
+
+    def test_build_profile_ends_with_cover_index(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("CYMATIX_BFM_SPLADE", "0")
+        monkeypatch.setenv("CYMATIX_BFM_DENSE_BACKFILL", "0")
+        monkeypatch.delenv("CYMATIX_BFM_COVER_INDEX", raising=False)
+        corpus = tmp_path / "corpus"
+        corpus.mkdir()
+        for i in range(3):
+            (corpus / f"doc_{i}.txt").write_text(f"cover index document {i} " * 40, encoding="utf-8")
+        monkeypatch.setattr(bfm, "PROFILES", {"tinycover": {
+            "label": "cover index test", "active_roots": 1, "roots": [str(corpus)],
+            "extra_skip_dirs": set(), "extra_filename_filters": [],
+        }})
+        db = tmp_path / "b.db"
+        stats = bfm.build_profile("tinycover", str(db), parallel=False)
+        assert stats["cover_index"] is True
+        assert self._has_index(str(db))
+
+
+class TestChunkChars:
+    """``CYMATIX_BFM_CHUNK_CHARS`` sets the bench builder's chunk size.
+
+    The builder never loads cymatix.toml, so the grain-size ladder arm
+    (pi-scaled chunk sizes) must arrive via env, like the hub cutoff.
+    """
+
+    def test_default_is_4000(self, monkeypatch):
+        monkeypatch.delenv("CYMATIX_BFM_CHUNK_CHARS", raising=False)
+        assert bfm._make_chunker().max_chars == 4000
+
+    def test_env_overrides_chunk_size(self, monkeypatch):
+        monkeypatch.setenv("CYMATIX_BFM_CHUNK_CHARS", "580")
+        assert bfm._make_chunker().max_chars == 580
+
+    def test_env_size_bounds_text_strands(self, monkeypatch):
+        monkeypatch.setenv("CYMATIX_BFM_CHUNK_CHARS", "580")
+        text = "\n\n".join(f"paragraph {i} " + "word " * 60 for i in range(20))
+        strands = bfm._make_chunker().chunk(text, content_type="text")
+        assert len(strands) > 1
+        assert all(len(s.content) <= 580 for s in strands)

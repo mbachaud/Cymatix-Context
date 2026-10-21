@@ -1,0 +1,28 @@
+{
+  "tag": "beir_scifact",
+  "chunk_chars": 580,
+  "config": "grain_c580_charcap.toml",
+  "git_sha": "26ff5e609aa12d76c4a4075ae9b0b49828c6ac14",
+  "gene_sets_identical": true,
+  "per_needle_diffs": 0,
+  "diff_needles": [],
+  "arms": {
+    "full": {
+      "genes": 20118,
+      "digest": "d74127aa266e58466acf6018818846411835fbe3a25a4f97d70ebfc8ff5d6462",
+      "bytes": 74776576,
+      "b_per_gene": 3717,
+      "build_s": 110,
+      "delivered_gold": 218
+    },
+    "lean": {
+      "genes": 20118,
+      "digest": "d74127aa266e58466acf6018818846411835fbe3a25a4f97d70ebfc8ff5d6462",
+      "bytes": 71528448,
+      "b_per_gene": 3555,
+      "build_s": 97,
+      "delivered_gold": 218
+    }
+  },
+  "bytes_saved_pct": 4.3
+}

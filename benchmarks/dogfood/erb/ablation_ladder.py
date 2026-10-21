@@ -1325,6 +1325,9 @@ def run_arm(
                     n_queries=len(needles), wall_ms=wall_ms, signal_ms=sig,
                 )
                 record.update(dg_fields)
+                # Grain-size ladder: how much the packet actually carried.
+                record["delivered_chars"] = len(getattr(window, "expressed_context", "") or "")
+                record["delivered_gene_ids"] = expressed_gene_ids
                 record["budget_tier"] = (getattr(window, "metadata", None) or {}).get("budget_tier")
                 # #341: the FINAL retrieval order (post-rerank when it ran).
                 # last_query_scores cannot see a cross-encoder reorder — it

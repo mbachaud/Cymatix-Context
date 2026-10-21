@@ -1,0 +1,1972 @@
+{
+ "beir_scifact_1": [
+  "14131defad93aa48",
+  "3e4aaa5756f4afa2",
+  "44b31181b7279bae"
+ ],
+ "beir_scifact_100": [
+  "80f69e0a0143c762",
+  "cdd7613a38ac5d23",
+  "cf29d7889a63b305",
+  "ddd6064b7af41179"
+ ],
+ "beir_scifact_1012": [
+  "2f1f77856b353806",
+  "5b424831c177475a",
+  "7b99454a32d72df1",
+  "c6ca9d2c33f5da27",
+  "d558853c9700874a"
+ ],
+ "beir_scifact_1014": [
+  "11297df634858a6e",
+  "7f0ce41f7609859f",
+  "eb18664003e55d55"
+ ],
+ "beir_scifact_1019": [
+  "1ca8e30f75ad1507",
+  "28736120676d21e8",
+  "8746f31d29aff495",
+  "bb32dd917a7d9465"
+ ],
+ "beir_scifact_1020": [
+  "bfddbb957bd9a1ec",
+  "d4c565d54cda7cc6",
+  "f570065faaec64f6"
+ ],
+ "beir_scifact_1021": [
+  "bfddbb957bd9a1ec",
+  "d4c565d54cda7cc6",
+  "f570065faaec64f6"
+ ],
+ "beir_scifact_1024": [
+  "b2d47b1a7a24cdb2",
+  "f6201fe44a762866",
+  "fe16439e61ae8367"
+ ],
+ "beir_scifact_1029": [
+  "5e13ebbe96305926",
+  "722d4f56bbaa03e1",
+  "76faa7fabd13895e",
+  "78920fefff64406e",
+  "961408ecba1ab461",
+  "96f21975cb2493d3",
+  "a09c5e16ae5efcc3",
+  "a69cf3dc0fc56138",
+  "b482b6afd85aabbe",
+  "ec984fc303824ff3"
+ ],
+ "beir_scifact_1041": [
+  "0a7fdbeb7ff4750a",
+  "181d1ad7dec78bab",
+  "592d420498b065aa",
+  "5f6b72f9b192d79a",
+  "622f72c012c415cb",
+  "830907fb5efb44ab",
+  "961154e8060621c1"
+ ],
+ "beir_scifact_1049": [
+  "3baf744e3e8e2c0c",
+  "4d39cec493a69384",
+  "c337bcdcaecae8a7"
+ ],
+ "beir_scifact_1062": [
+  "12b88dd8df31f1b7",
+  "7ce1acdbf7cae9a5",
+  "d63939df11579f1a",
+  "dd4d55a7935c7cb7"
+ ],
+ "beir_scifact_1086": [
+  "2fad6a42e274e828",
+  "61f4d1add3587a9d",
+  "661d1a5d77473d42",
+  "8780d079124b19a3",
+  "dab200a8c9abdbad"
+ ],
+ "beir_scifact_1088": [
+  "3caa2823797fa318",
+  "c4e76b79cf0ccdc6",
+  "d8d1def163f5b99e"
+ ],
+ "beir_scifact_1089": [
+  "3c07738f3a203dbd",
+  "52f6fc043740e553",
+  "bad4550541aaa975",
+  "d2cd51c947814e7b"
+ ],
+ "beir_scifact_1099": [
+  "2ea86a1b81b2fbdf",
+  "cf3266585e29187b",
+  "f5a65621d17ae45e"
+ ],
+ "beir_scifact_1100": [
+  "2ea86a1b81b2fbdf",
+  "cf3266585e29187b",
+  "f5a65621d17ae45e"
+ ],
+ "beir_scifact_1104": [
+  "15c09581864b83d0",
+  "16c4a2f22f2375a4",
+  "3a07f5c2115d8694",
+  "410f5ef511ef19a1",
+  "6f77d8e18f1bf813",
+  "9d58e7ab0617e561"
+ ],
+ "beir_scifact_1107": [
+  "22a1181ead283aab",
+  "5588def0cf07c754",
+  "c85202da06bb7cd4"
+ ],
+ "beir_scifact_1110": [
+  "409370ca05c290bc",
+  "5593c1abfbe1aef5",
+  "5cefc127052f1545",
+  "6d522dc652e35558",
+  "6e56467bbec8cdc3",
+  "73b2553ded0f24d2",
+  "a09f342a6273518d",
+  "e1c09824f065a163",
+  "fe85cb5a2dbdd465"
+ ],
+ "beir_scifact_1121": [
+  "159fcd7d82fdb0b8",
+  "4d61085ad8217040",
+  "7cdc2fcc11ff1689",
+  "feeb6b17e00571ce"
+ ],
+ "beir_scifact_113": [
+  "054b159ae65844dd",
+  "a026a0ec65721a86",
+  "c15660a90406ddc2",
+  "f5cd2a782b612575",
+  "fefb27ead6308e06"
+ ],
+ "beir_scifact_1130": [
+  "3b6db2d1cc13b5d7",
+  "63b99ec29100da01",
+  "ce1b53b3c4872fa5"
+ ],
+ "beir_scifact_1132": [
+  "0d2baaf26d007ddc",
+  "549edce3349fcb05",
+  "64d2f4c812362717",
+  "885ef067fd43c3cb",
+  "b1aae39df94b97e2",
+  "dec804bfd8ae7b0a"
+ ],
+ "beir_scifact_1137": [
+  "2f2727bd4a636bd0",
+  "3c84ac948dc0ffbe",
+  "45b1888ddbd67025",
+  "aad2a528ca55197e",
+  "fbee4c6f5825a4df"
+ ],
+ "beir_scifact_1140": [
+  "3d26cd3c0e4fac47",
+  "7aebeab412eff9bb",
+  "c8e204201539ad80",
+  "cd3d5288bc153536",
+  "edc62c9f92aa7d7e",
+  "ff1d0ab4c8ae0da2"
+ ],
+ "beir_scifact_1144": [
+  "0db7b042fb50310b",
+  "5166bbe62628fbe9",
+  "aec4d0aac9889547",
+  "c62ac12092615305",
+  "cabd35c0f508b83d",
+  "dc7b984a2f562b8a"
+ ],
+ "beir_scifact_1146": [
+  "027d861d5fe01619",
+  "2837af7983264f18",
+  "3068039f06ab3f39",
+  "a99a3c2d3e59d4ea",
+  "f69bd7a7cd6fac5c"
+ ],
+ "beir_scifact_115": [
+  "0184f36fa8144a33",
+  "87909c8486613920",
+  "8f6eed11a810e634",
+  "ee9d7c16fac345f0"
+ ],
+ "beir_scifact_1150": [
+  "554acbb42bacaf97",
+  "bf67641829e87b1c",
+  "f6c94f6e434588fc"
+ ],
+ "beir_scifact_1163": [
+  "1bc1bfe4e296121f",
+  "be427d62c4848888",
+  "e5586c57b1083b57"
+ ],
+ "beir_scifact_1175": [
+  "7c8a956bfd29ed21",
+  "943431f02313a0bd",
+  "b06df7d78e988184"
+ ],
+ "beir_scifact_1179": [
+  "7c8a956bfd29ed21",
+  "943431f02313a0bd",
+  "b06df7d78e988184"
+ ],
+ "beir_scifact_118": [
+  "16af970f480ca728",
+  "c15deb56a58b23ef",
+  "dd5891cee9868cdf"
+ ],
+ "beir_scifact_1180": [
+  "7c8a956bfd29ed21",
+  "943431f02313a0bd",
+  "b06df7d78e988184"
+ ],
+ "beir_scifact_1185": [
+  "31548f28b97ccc32",
+  "42c617558f480552",
+  "7d7999c9b81bdcdb",
+  "e025a243e140f88b",
+  "e2d208b25b8c7648"
+ ],
+ "beir_scifact_1187": [
+  "2466239e6d7e914e",
+  "46f710e77581c96d",
+  "70110881ea0a3708",
+  "83922bdfe58caf4d"
+ ],
+ "beir_scifact_1191": [
+  "c8fd2048753ca136",
+  "d37ecadef8dc75e4",
+  "f59c92e7ef81a8b3"
+ ],
+ "beir_scifact_1194": [
+  "187300f9ffd10f4f",
+  "4e99b33f1698b7fa",
+  "af26638b81146e6b"
+ ],
+ "beir_scifact_1196": [
+  "474fcefedd88e242",
+  "bdbdd15b5b0822b3",
+  "dc297a71d12477c9",
+  "e46c627d84262057"
+ ],
+ "beir_scifact_1197": [
+  "474fcefedd88e242",
+  "bdbdd15b5b0822b3",
+  "dc297a71d12477c9",
+  "e46c627d84262057"
+ ],
+ "beir_scifact_1199": [
+  "07cfc03e505dea6f",
+  "301f8a90f79cdec7",
+  "37dbe49b385b3507",
+  "4c7ee8d060f861cb",
+  "6fee8412e7996301",
+  "e09c9f9c14982643"
+ ],
+ "beir_scifact_1200": [
+  "8bee24c34cc24fba",
+  "add08a15f6478350",
+  "b841445d493f13c2"
+ ],
+ "beir_scifact_1202": [
+  "40e491870c9c3e15",
+  "993768d089c999bf",
+  "a013de5bae184f7d",
+  "b3664def63f5a562"
+ ],
+ "beir_scifact_1204": [
+  "b14b2cab98026094",
+  "c29e9b07c39b445e",
+  "d7ee885d31883c16",
+  "dbaa01b4a8827ea8"
+ ],
+ "beir_scifact_1207": [
+  "490c8e49165ca41f",
+  "de8a8ccdc336075f",
+  "e9267007fad11ee8"
+ ],
+ "beir_scifact_1213": [
+  "5bd93e7ddf84c4af",
+  "88929a5bd1c2bda4",
+  "a87aeb43add189fe",
+  "bdb3a3fa7de1eed1",
+  "e1fb561d1f3850a8"
+ ],
+ "beir_scifact_1216": [
+  "21e81848e41c5ef9",
+  "8b72641821d9cf7a",
+  "e1b4c43c15a9a6f2"
+ ],
+ "beir_scifact_1221": [
+  "75bf6a4f5f2bd6bd",
+  "7bfbacab1e84c196",
+  "9ed526606b90789f",
+  "a8e9221ee9081402"
+ ],
+ "beir_scifact_1225": [
+  "baad0771a4887a6d",
+  "ce1941aaf6f1f1ef",
+  "eade0a95fc78444b"
+ ],
+ "beir_scifact_1226": [
+  "427fbba71aa2b09d",
+  "7a69a551e8024716",
+  "b5044332ab2c9ced"
+ ],
+ "beir_scifact_1232": [
+  "7365333d0d703d1c",
+  "a0214b359675da32",
+  "e3318e9eb1cf1d63"
+ ],
+ "beir_scifact_124": [
+  "1db2249694673bf7",
+  "6f6e43ce30d8f0b8",
+  "aa68432a2d51f978",
+  "ab0212262894fb22",
+  "ca5b0d6b95956e60"
+ ],
+ "beir_scifact_1241": [
+  "0dc3fc29ad26ac6c",
+  "3b982f9b824dbcb1",
+  "8cfcfc0fa96cf440",
+  "c945315954bde66c",
+  "f7b15bd0e193a6d1"
+ ],
+ "beir_scifact_1245": [
+  "17380dca89952246",
+  "2ba110ec2c78a54f",
+  "50c95445b528523d",
+  "cdeecdd31443c4a5"
+ ],
+ "beir_scifact_1259": [
+  "0f3bd9e469274344",
+  "25fb5251d0ecf0c7",
+  "75d9038afe56e651",
+  "cfbd4bf8ce91dd3c",
+  "d6cb477f86fc5053",
+  "ea7b52d6f01bab49"
+ ],
+ "beir_scifact_1262": [
+  "0099d6c91aeb7ed6",
+  "360ab5a586e2d744",
+  "6be0edc13882a384"
+ ],
+ "beir_scifact_1266": [
+  "054e3635b2792ff4",
+  "39d005871c878241",
+  "5cc42b69d47c6b0b",
+  "6df9e2909594d44b",
+  "975073cda619fca2",
+  "afefe70f12c79002"
+ ],
+ "beir_scifact_127": [
+  "71cc4e31c2bdcf50",
+  "bbeb472553aea898",
+  "c4b7bd46a0733395"
+ ],
+ "beir_scifact_1270": [
+  "27bba3f5743eea17",
+  "41493b02b65ba1a2",
+  "8be6a5ad9fb0e117",
+  "91dde0fc1e4a7eb0",
+  "d3df351c2a4817ed",
+  "ef06caac8f1c51a0"
+ ],
+ "beir_scifact_1271": [
+  "3f45c5e63eff44b9",
+  "43010c74b40a02a4",
+  "8615c0d47fcbb835",
+  "9110d59738bff262",
+  "f2fbafab66f8d17b"
+ ],
+ "beir_scifact_1272": [
+  "37a2e211d41bb6c8",
+  "9382c49404b6a693",
+  "99ad640620b130ae"
+ ],
+ "beir_scifact_1273": [
+  "75eb4a00c29ca22b",
+  "adbb846f3da4b153",
+  "cda187a51325da0f",
+  "dcb7c3b917254706"
+ ],
+ "beir_scifact_1274": [
+  "077404169755e46f",
+  "0f0be490d45ab5a7",
+  "14d7aa401fea3cb3",
+  "2923c5c2eebed31b",
+  "66d959a196ae81eb",
+  "9627a492261d1f1a",
+  "9cdd932294e37bd2",
+  "9f0254d596941cef",
+  "c63ef289e7beb6b6",
+  "d1484f088ab81f47"
+ ],
+ "beir_scifact_1278": [
+  "0c93a7fe9cb384e6",
+  "97d024cc8164f728",
+  "f377e6011f0fa12b"
+ ],
+ "beir_scifact_1279": [
+  "0c93a7fe9cb384e6",
+  "97d024cc8164f728",
+  "f377e6011f0fa12b"
+ ],
+ "beir_scifact_128": [
+  "3a0a8f0f689d6325",
+  "422da9b41307f8c7",
+  "a4efc2f1319d0923",
+  "fe649cd8aa5ea09d"
+ ],
+ "beir_scifact_1280": [
+  "0ab2ebe7a3e9315b",
+  "91006e6f973f59fa",
+  "b8a1177141a58562",
+  "ddb2a44d274fc359"
+ ],
+ "beir_scifact_1281": [
+  "0ab2ebe7a3e9315b",
+  "91006e6f973f59fa",
+  "b8a1177141a58562",
+  "ddb2a44d274fc359"
+ ],
+ "beir_scifact_1282": [
+  "ad82afacc386419b",
+  "c9ed480e3a81ad6a",
+  "e0480c582a247c31",
+  "e2c198f33e23178a"
+ ],
+ "beir_scifact_129": [
+  "0125fb1c0332d4e4",
+  "08425d9727762045",
+  "41db0864e7931590",
+  "506d9f45fb162192",
+  "6a6c66b3efebd541",
+  "883ea7eeb73e947d",
+  "8ef6882f2f95489f",
+  "8fd19bb7b697f6b7",
+  "9140d8f89fe6c2c0",
+  "ada4aca8dc565cf2",
+  "b4cfe967ff60076d",
+  "fb71aac06f27d9e2",
+  "fbc537bfb96f843a"
+ ],
+ "beir_scifact_1290": [
+  "3aef9a6542122ba6",
+  "b33c89f7ceb36b50",
+  "bbd5b6366d6797c6",
+  "c6e3f90f777fa352",
+  "c8add5d2ca89f2ee",
+  "e8365f511bfc3f58"
+ ],
+ "beir_scifact_1292": [
+  "6682ca0f4b5e4ed4",
+  "9cd3934611cf86c3",
+  "dc8e903ac4a092d4"
+ ],
+ "beir_scifact_1298": [
+  "1e359fb7290fe225",
+  "4cba747442111c8f",
+  "ac7fcbb48c0b8aa2",
+  "dfd44546908ebef9",
+  "fdf87d04a8478058"
+ ],
+ "beir_scifact_13": [
+  "2dfca5715e7170d5",
+  "6640639bd0f97d76",
+  "7a944ec3a99c0bf2",
+  "bb352c901ed1687b",
+  "d002dd92f6af2cc4",
+  "d93e4c2fe272a2c6"
+ ],
+ "beir_scifact_130": [
+  "0125fb1c0332d4e4",
+  "08425d9727762045",
+  "41db0864e7931590",
+  "506d9f45fb162192",
+  "6a6c66b3efebd541",
+  "883ea7eeb73e947d",
+  "8ef6882f2f95489f",
+  "8fd19bb7b697f6b7",
+  "9140d8f89fe6c2c0",
+  "ada4aca8dc565cf2",
+  "b4cfe967ff60076d",
+  "fb71aac06f27d9e2",
+  "fbc537bfb96f843a"
+ ],
+ "beir_scifact_1303": [
+  "01ced42584447142",
+  "09991e71ce344cfd",
+  "361121f002699f60",
+  "a4fb09de37c4c1b6"
+ ],
+ "beir_scifact_1316": [
+  "b6a095c3ad748711",
+  "b7227138c241800d",
+  "d608b1d63487da3e"
+ ],
+ "beir_scifact_1319": [
+  "64f45630c788e033",
+  "d1fab58f7af8f62c",
+  "f618b839fff0bd1f"
+ ],
+ "beir_scifact_132": [
+  "0a96d8302ce393e2",
+  "797cbea2fae40e60",
+  "8feeb75890282349"
+ ],
+ "beir_scifact_1320": [
+  "64f45630c788e033",
+  "d1fab58f7af8f62c",
+  "f618b839fff0bd1f"
+ ],
+ "beir_scifact_133": [
+  "01bf1ed965b4f214",
+  "06cfc13891e1793f",
+  "2377138b638f516b",
+  "2cdd1b2372c4daec",
+  "49ac4f7bce32b2de",
+  "61eb8b134dafc2a7",
+  "6c790024a013a388",
+  "70bbd618c5b17018",
+  "7214392e43d498d7",
+  "821adea9c17bbbf0",
+  "9619f94d3e77874f",
+  "a4a0b4515efe8726",
+  "b2c76d9fb6ef6975",
+  "b955f538ed06de46",
+  "b97cea3e94fedf30",
+  "e0a95f8933e32e30",
+  "e1b1da8c4bfe88fd",
+  "ffbc37b7c50f45ae"
+ ],
+ "beir_scifact_1332": [
+  "1a4f36d8eabb2a6a",
+  "3cedd55dd0ac7c09",
+  "5ec9d133fcf477fe",
+  "f0a9740a1a156673"
+ ],
+ "beir_scifact_1335": [
+  "b6a095c3ad748711",
+  "b7227138c241800d",
+  "d608b1d63487da3e"
+ ],
+ "beir_scifact_1336": [
+  "b6a095c3ad748711",
+  "b7227138c241800d",
+  "d608b1d63487da3e"
+ ],
+ "beir_scifact_1337": [
+  "47e19d0617297484",
+  "7890d04c97aa02b9",
+  "f0e7c0af930e25d2",
+  "f341c29f6999330a"
+ ],
+ "beir_scifact_1339": [
+  "22a56347d1616f4d",
+  "2df922cede43ca4a",
+  "540ec7b36132e0bf",
+  "7f06b9d2c43343af",
+  "c2e719f07b3e8179"
+ ],
+ "beir_scifact_1344": [
+  "71fffb5c09d2d42b",
+  "8a5422a5280c4259",
+  "8ed17e9e2ed18781"
+ ],
+ "beir_scifact_1352": [
+  "94cf440412a03b93",
+  "b0b707aae86e41f6",
+  "b4fe080cb28abddb"
+ ],
+ "beir_scifact_1359": [
+  "63abbda1161a0bfe",
+  "909a8a240d9afbbd",
+  "9b5045fa3cc65312",
+  "9eed1a9fcdd49e09",
+  "b14285c12170e398",
+  "b7ddf559e40be380"
+ ],
+ "beir_scifact_1362": [
+  "3a0a8f0f689d6325",
+  "422da9b41307f8c7",
+  "a4efc2f1319d0923",
+  "fe649cd8aa5ea09d"
+ ],
+ "beir_scifact_1363": [
+  "3a0a8f0f689d6325",
+  "422da9b41307f8c7",
+  "a4efc2f1319d0923",
+  "fe649cd8aa5ea09d"
+ ],
+ "beir_scifact_1368": [
+  "05b92d3ded6dc721",
+  "44b5aff98f568e8d",
+  "6caaf4d816b18ec4",
+  "6f2ddbce73d9dd6b",
+  "bb33b1fb8fd7d82f"
+ ],
+ "beir_scifact_137": [
+  "1e2c3bb2c0ec9638",
+  "6eb7fb7bb9669d09",
+  "9cce126e5faac845",
+  "bfbb5b0ba75b69e5"
+ ],
+ "beir_scifact_1370": [
+  "05b92d3ded6dc721",
+  "44b5aff98f568e8d",
+  "6caaf4d816b18ec4",
+  "6f2ddbce73d9dd6b",
+  "bb33b1fb8fd7d82f"
+ ],
+ "beir_scifact_1379": [
+  "0809ecfe0d75f3e0",
+  "17cc4dad7b20e253",
+  "2bab7691ffec67b6",
+  "3e41b05a72de866c",
+  "4bd71374077a4905",
+  "4e5776e288d3c0c7",
+  "5ec5446400c204d1",
+  "5f90e19a553247da",
+  "673892b3e0ba6c34",
+  "78a62523b902eac0",
+  "8ce44fbc6c7c8ca7",
+  "95ec741ce49e92ad",
+  "aef18cf8afd09cb5",
+  "b0aab228d44b7130",
+  "b64afb9651723166",
+  "c22a7b96c4564904",
+  "cba482c83bdfa1d0",
+  "ed103124dee87556",
+  "f5fa58cfc3a632c3"
+ ],
+ "beir_scifact_1382": [
+  "07c8ffc4c25ef770",
+  "935ae644c5d5d20d",
+  "e2b7fc238ded7ba6"
+ ],
+ "beir_scifact_1385": [
+  "5a7b22e39d8b5b3d",
+  "6d03be724ac7f2b5",
+  "8c4f261a90382f88"
+ ],
+ "beir_scifact_1389": [
+  "5ce6c5101658f2ae",
+  "c3b2a82fa9ec7a6e",
+  "ff046187a45f482f"
+ ],
+ "beir_scifact_1395": [
+  "2afedac3f01e7eae",
+  "6b5f96b670cae9b5",
+  "bd18fee9b1e1818d"
+ ],
+ "beir_scifact_141": [
+  "06c57eb0771b952f",
+  "12cfece1fcabd357",
+  "14e0bc8a5f092359",
+  "36d9eafe36ee58e4",
+  "3e6ca0fc091234e2",
+  "9291527d164c3778",
+  "96692b23a898711e",
+  "dc3289dc759faad6",
+  "e3a31cf94b9d6808"
+ ],
+ "beir_scifact_142": [
+  "05ea99f42088640d",
+  "4ccd42e932dca92d",
+  "57c83a49111719f8",
+  "baae08c88d3112fa",
+  "cbeda66e3ab435d8",
+  "fb2d6e6cc3a03bfc"
+ ],
+ "beir_scifact_143": [
+  "05ea99f42088640d",
+  "4ccd42e932dca92d",
+  "57c83a49111719f8",
+  "baae08c88d3112fa",
+  "cbeda66e3ab435d8",
+  "fb2d6e6cc3a03bfc"
+ ],
+ "beir_scifact_146": [
+  "05ea99f42088640d",
+  "4ccd42e932dca92d",
+  "57c83a49111719f8",
+  "baae08c88d3112fa",
+  "cbeda66e3ab435d8",
+  "fb2d6e6cc3a03bfc"
+ ],
+ "beir_scifact_148": [
+  "64951ed896d71a78",
+  "71dc8dd71e8cad11",
+  "cd11a89d248fd4a7",
+  "cf20d77b1ff8aeb9"
+ ],
+ "beir_scifact_163": [
+  "0463f7bd31ee523e",
+  "5db0aa2bcdf7a641",
+  "aba7d7e9edd3ee77",
+  "daf9cc4c6ef24b36",
+  "e65e6ec9268a64d7",
+  "f2cb2783fd09196c"
+ ],
+ "beir_scifact_171": [
+  "293ba34137ab5afc",
+  "44d09b77e7b7304b",
+  "7209d3206e4a3181"
+ ],
+ "beir_scifact_179": [
+  "0809ecfe0d75f3e0",
+  "17cc4dad7b20e253",
+  "2bab7691ffec67b6",
+  "3e41b05a72de866c",
+  "4bd71374077a4905",
+  "4e5776e288d3c0c7",
+  "5ec5446400c204d1",
+  "5f90e19a553247da",
+  "673892b3e0ba6c34",
+  "78a62523b902eac0",
+  "8ce44fbc6c7c8ca7",
+  "95ec741ce49e92ad",
+  "aef18cf8afd09cb5",
+  "b0aab228d44b7130",
+  "b64afb9651723166",
+  "c22a7b96c4564904",
+  "cba482c83bdfa1d0",
+  "ed103124dee87556",
+  "f5fa58cfc3a632c3"
+ ],
+ "beir_scifact_180": [
+  "0b69272cc5355538",
+  "17b78b186fea5f2f",
+  "ab7c8d7279833aca",
+  "e8b94dad62a2d5b8"
+ ],
+ "beir_scifact_183": [
+  "24e1ad891bc9ec13",
+  "ac5fcce4af13dd95",
+  "f87a91dc4607adbf"
+ ],
+ "beir_scifact_185": [
+  "71cb64a63cd23b62",
+  "9728e8d147777b7f",
+  "b4751af6d5022f93",
+  "c63619cc1f7ac826",
+  "ffad6db5829a9500"
+ ],
+ "beir_scifact_198": [
+  "0864e2413fea32fa",
+  "533df2eee59b3005",
+  "e63ca2accdbfe1cc"
+ ],
+ "beir_scifact_208": [
+  "075856b9cbfbaf90",
+  "2797ddeef451fcdc",
+  "6392da07a62ecdb6",
+  "bcf8f2b3bb7bc985"
+ ],
+ "beir_scifact_212": [
+  "184ef2de1ac7c8c9",
+  "8737a7b3c78deeda",
+  "89a767aa7514ca02",
+  "fcddf4d5b63201e4"
+ ],
+ "beir_scifact_213": [
+  "28b7750f6caa2a44",
+  "2aec3d76671a39b1",
+  "79da05e9b6d68771",
+  "cbb243e688702a2a",
+  "d554dbf11645273c",
+  "fd8ab6a85662acc5"
+ ],
+ "beir_scifact_216": [
+  "3297cf983b531c8d",
+  "62fec6db24eb90f3",
+  "eb0f4bc7ff65455f"
+ ],
+ "beir_scifact_217": [
+  "3297cf983b531c8d",
+  "62fec6db24eb90f3",
+  "eb0f4bc7ff65455f"
+ ],
+ "beir_scifact_218": [
+  "3297cf983b531c8d",
+  "62fec6db24eb90f3",
+  "eb0f4bc7ff65455f"
+ ],
+ "beir_scifact_219": [
+  "3297cf983b531c8d",
+  "62fec6db24eb90f3",
+  "eb0f4bc7ff65455f"
+ ],
+ "beir_scifact_230": [
+  "3b6288330b5307bf",
+  "61d383842ed8533e",
+  "8a7441268d78dc0c",
+  "8b7e3b2b39382d13",
+  "b8321637adbd7613"
+ ],
+ "beir_scifact_232": [
+  "6557feba4bb2fa8b"
+ ],
+ "beir_scifact_233": [
+  "142c69101d594c1d",
+  "225799d968be36b6",
+  "43f150a145cd5fe5",
+  "e511027fa63a7699"
+ ],
+ "beir_scifact_236": [
+  "142c69101d594c1d",
+  "225799d968be36b6",
+  "43f150a145cd5fe5",
+  "e511027fa63a7699"
+ ],
+ "beir_scifact_237": [
+  "0d3083fac6b971bc",
+  "b116d383c9a884fe",
+  "c0463236c156e95d",
+  "d51554021beedc9a",
+  "fa7135501193a085"
+ ],
+ "beir_scifact_238": [
+  "0573732030033c58"
+ ],
+ "beir_scifact_239": [
+  "2bccf4e45d35fd8c",
+  "308daf4a85bd123b",
+  "c5d89a853d38a4c8",
+  "d6cf9c317a8db247"
+ ],
+ "beir_scifact_248": [
+  "132d60009aeb2562",
+  "48440fbc6524c459",
+  "eac3aa0a53fad315"
+ ],
+ "beir_scifact_249": [
+  "132d60009aeb2562",
+  "48440fbc6524c459",
+  "eac3aa0a53fad315"
+ ],
+ "beir_scifact_261": [
+  "1ab75a988656e307",
+  "2b9d248f5209aec9",
+  "364c27c9f56d3835",
+  "4712cac4a77f1226",
+  "5a83d14127320ad9",
+  "82dc6b8bd020c5a3",
+  "9fb675617ae8b9ca",
+  "ea6921722b47553f",
+  "f4cfc42611ffb17e",
+  "ff9ac5b037ae4e46"
+ ],
+ "beir_scifact_268": [
+  "00e85e314bcf0290",
+  "1605e7fa9ab15f08",
+  "2c98225ab7ac791b",
+  "564948750e322c72"
+ ],
+ "beir_scifact_269": [
+  "00e85e314bcf0290",
+  "1605e7fa9ab15f08",
+  "2c98225ab7ac791b",
+  "564948750e322c72"
+ ],
+ "beir_scifact_274": [
+  "63abbda1161a0bfe",
+  "909a8a240d9afbbd",
+  "9b5045fa3cc65312",
+  "9eed1a9fcdd49e09",
+  "b14285c12170e398",
+  "b7ddf559e40be380"
+ ],
+ "beir_scifact_275": [
+  "38819aef71eb00e4",
+  "43bbde79c6b74bb2",
+  "4f5de46f578534e3",
+  "5a224cf58aade8bf",
+  "637473e0dfd93811",
+  "84e362a91bdb4ad6",
+  "8d862559d3c472e7",
+  "b0aa1ac98342dbdc",
+  "b60742dd0ee42221",
+  "c2cec1d2abffb68b",
+  "c62e731cfdc59de6",
+  "dce1706cb6064ef6",
+  "f56816696c0c429b"
+ ],
+ "beir_scifact_279": [
+  "25a097153ee01cc0",
+  "3df785c1b887f5c9",
+  "9b5f9cebea99d1c2",
+  "caf2884154c9fe0e"
+ ],
+ "beir_scifact_294": [
+  "022ef55620659d29",
+  "123bf18cbeb7562e",
+  "8805e1f6a2a77db1",
+  "bdb49844777bb635"
+ ],
+ "beir_scifact_295": [
+  "2d67564dd01cadc0",
+  "833fbe64f8a951c3",
+  "a9c9f72c63574c89"
+ ],
+ "beir_scifact_298": [
+  "802b443145643f61",
+  "e18ebacc1e5e9eb9",
+  "ef58e620088a5146"
+ ],
+ "beir_scifact_3": [
+  "360bf1342cb92d54",
+  "63f4132865df995c",
+  "6731b1199e29547b",
+  "718f6fc346fc5d84",
+  "c93f53cd5610e1c4"
+ ],
+ "beir_scifact_300": [
+  "58cdb4bf1510887c",
+  "b53b9b7dea510ad9",
+  "fc4dfa43c6e971ab",
+  "ff8b7e2a6b8b65bf"
+ ],
+ "beir_scifact_303": [
+  "142c69101d594c1d",
+  "225799d968be36b6",
+  "43f150a145cd5fe5",
+  "e511027fa63a7699"
+ ],
+ "beir_scifact_312": [
+  "2ac1b6234ff878c1",
+  "3f32ee6bdad76a06",
+  "44b5e66c6280c365",
+  "48a7a50784d60674",
+  "4999555cac3959d7"
+ ],
+ "beir_scifact_314": [
+  "47d6bf4138c21907",
+  "6981c4e8f7ff0465",
+  "c3c71bf80c211f94",
+  "eaad33eed8866a4c"
+ ],
+ "beir_scifact_324": [
+  "54f73b29996b7b6a",
+  "7164220c5b33101f",
+  "90bf5e1273fb6c45"
+ ],
+ "beir_scifact_327": [
+  "3b6db2d1cc13b5d7",
+  "63b99ec29100da01",
+  "ce1b53b3c4872fa5"
+ ],
+ "beir_scifact_338": [
+  "086d0bc1b2e4b20c",
+  "2ac7e8b14423ce49",
+  "5c80a504ba09e3f4",
+  "ba5faf8851d18ac4",
+  "ef576e95eeed4f9d"
+ ],
+ "beir_scifact_343": [
+  "3dbcf5559660e197",
+  "856c5a99d7445cda",
+  "862f5455c9c160d9",
+  "99d92e86c98f6d21",
+  "bdf8b67902834a56",
+  "c52ecf38886b4d65",
+  "cba0dc1c1ca88e80",
+  "e88ee5c080399dc8",
+  "fafd4a9caf55dd40"
+ ],
+ "beir_scifact_350": [
+  "8207701851d9e19f",
+  "87c4cf227560448f",
+  "f03ec0d982cd554b"
+ ],
+ "beir_scifact_354": [
+  "483cdf6f2cfaefc5",
+  "68e3c5f858c07731",
+  "a9d66cc008139e47"
+ ],
+ "beir_scifact_36": [
+  "2326f6849c059dfe",
+  "33e55163507c3402",
+  "5cbdba9a2d9e2291",
+  "aa6423f18e8f1679",
+  "bcfd3579fb65959b",
+  "d8ab9ba188c3ea14",
+  "efff78e5eab87839",
+  "fe219daa9cf41beb"
+ ],
+ "beir_scifact_362": [
+  "8802ac80da85391c",
+  "935c4acf3495ecf1",
+  "9cba6e753712afc9",
+  "c5916cc4c317b749"
+ ],
+ "beir_scifact_380": [
+  "0250fc580a3e6e07",
+  "1b8376ca1c44ddd5",
+  "52cc3ea040e0adcb"
+ ],
+ "beir_scifact_384": [
+  "409370ca05c290bc",
+  "5593c1abfbe1aef5",
+  "5cefc127052f1545",
+  "6d522dc652e35558",
+  "6e56467bbec8cdc3",
+  "73b2553ded0f24d2",
+  "a09f342a6273518d",
+  "e1c09824f065a163",
+  "fe85cb5a2dbdd465"
+ ],
+ "beir_scifact_385": [
+  "00bbd006a1b6da53",
+  "0c2ad1dab1395995",
+  "29c893909f36a450",
+  "2ac706cb5b5edb58",
+  "be1b27fd2d45149d",
+  "de6dd61b348afca4",
+  "fb1edbc1dbbf42de"
+ ],
+ "beir_scifact_386": [
+  "089fa1efc8596d84",
+  "1918fc68bfdc0e8c",
+  "36086d527e5ed167",
+  "c8f1b42e9cdffb93"
+ ],
+ "beir_scifact_388": [
+  "98c07f2d456f6c1d",
+  "a1712f042b5a387d",
+  "e32dec86bc357019",
+  "eeb9b9a0f93247ba"
+ ],
+ "beir_scifact_399": [
+  "4a3d02ee8bf86038",
+  "58bebcde746f129f",
+  "74966e75cdae11cd",
+  "a807bb47420ebb98",
+  "acd8bef9ecce11c0"
+ ],
+ "beir_scifact_410": [
+  "074003931a92f47f",
+  "857a013605a4ac38",
+  "c214143dc82b3fea"
+ ],
+ "beir_scifact_411": [
+  "074003931a92f47f",
+  "857a013605a4ac38",
+  "c214143dc82b3fea"
+ ],
+ "beir_scifact_415": [
+  "3c77d206423b4e82",
+  "4fcf561ced289eab",
+  "6fa010c14f3ae34d",
+  "a0272c0c8baf1554",
+  "c97de41f383e6d5d",
+  "d5172ff7238c893a"
+ ],
+ "beir_scifact_42": [
+  "0ced10c2b796ec58",
+  "106021d89da4f59a",
+  "3493f52a2441ab9a",
+  "34e9dc15746c7762",
+  "8866c1d977bc2e5f",
+  "a97f47f8ad9f4175"
+ ],
+ "beir_scifact_421": [
+  "7e0b1cff1185184d",
+  "c2fc67f23ef6344c",
+  "ce773e07bbcbb64d"
+ ],
+ "beir_scifact_431": [
+  "10e8eae94808b1a3",
+  "2fd84a26bbd1f8f0",
+  "cfa39c20bf2fb0a0"
+ ],
+ "beir_scifact_436": [
+  "542e608d07cbc86b",
+  "9c1b0a66754aae28",
+  "db2c530161446172"
+ ],
+ "beir_scifact_437": [
+  "3be684a1e4919c66",
+  "6d9d542a726159c5",
+  "d8b53184b9b24929"
+ ],
+ "beir_scifact_439": [
+  "4e4cd6089943d554",
+  "984d6334624cf3ea",
+  "ca3aa749779c4f4a",
+  "eac364605cc63f02"
+ ],
+ "beir_scifact_440": [
+  "4e4cd6089943d554",
+  "984d6334624cf3ea",
+  "ca3aa749779c4f4a",
+  "eac364605cc63f02"
+ ],
+ "beir_scifact_443": [
+  "4fb410f8c26c62a3",
+  "63ebb19c0fa73f1e",
+  "8a649997f2b86e28"
+ ],
+ "beir_scifact_452": [
+  "279ffc4db101b77c",
+  "55b142f4c0d4cd88",
+  "5a5de4bd0a9debcc",
+  "5f78e264687f9530",
+  "ea96a5b972172d18",
+  "ef00af2e9c6c62c4"
+ ],
+ "beir_scifact_475": [
+  "4cfa74e184a913e5",
+  "6bf83d26a65661c1",
+  "ccfb17f965c57707"
+ ],
+ "beir_scifact_478": [
+  "11f3c00d404bfb26",
+  "2a86f4e45699f227",
+  "9f02f1c23a50d368"
+ ],
+ "beir_scifact_48": [
+  "412f1dc6b18d117d",
+  "8ca5627a5e145c76",
+  "ae9b79731cf62117",
+  "c9762fbec43e317f",
+  "f089e8b4856b4ff3"
+ ],
+ "beir_scifact_49": [
+  "76bcb25b5ff4d6a7",
+  "afaf53b6e287cf1a",
+  "d67cff9e59fa4935"
+ ],
+ "beir_scifact_491": [
+  "6682ca0f4b5e4ed4",
+  "9cd3934611cf86c3",
+  "dc8e903ac4a092d4"
+ ],
+ "beir_scifact_5": [
+  "412f1dc6b18d117d",
+  "8ca5627a5e145c76",
+  "ae9b79731cf62117",
+  "c9762fbec43e317f",
+  "f089e8b4856b4ff3"
+ ],
+ "beir_scifact_50": [
+  "041fd0bbe6e88cb8",
+  "252942788f5e7bfd",
+  "93981a7272073afc"
+ ],
+ "beir_scifact_501": [
+  "24b6f1580939a347",
+  "2b2bb4f78a0c987e",
+  "53ec2468681fba7d",
+  "5b224e00901108a5",
+  "73df132135a58498"
+ ],
+ "beir_scifact_502": [
+  "123094dd1b82c14c",
+  "209058f7acbcc927",
+  "37c165c711afca54",
+  "6e6ec8a25bf79fa4",
+  "932232922766fcc9",
+  "a11eccff00da6145",
+  "a2da90102e8d7cef",
+  "eee3e513eddc8123"
+ ],
+ "beir_scifact_507": [
+  "0a460166b0f4201f",
+  "6d374e767433568a",
+  "75bd98840b8ed3da"
+ ],
+ "beir_scifact_508": [
+  "7aeeea69fa8183ed",
+  "adf9c8c43a75389b",
+  "c9bc89d45a630d56"
+ ],
+ "beir_scifact_51": [
+  "49dcd330a43aad9f",
+  "56b60a7993770b36",
+  "7c7c115a4d611e64"
+ ],
+ "beir_scifact_513": [
+  "124833547f0ce19c",
+  "3baa96e17d910c0e",
+  "6fbf1295c9259b4a",
+  "8b80ae321f2b6023",
+  "93f7ef4760ad6da4",
+  "b01e9e716a7c7a11"
+ ],
+ "beir_scifact_514": [
+  "28565da255f6b5b1",
+  "66d2f6f49c0195af",
+  "7c83093f111c9b4c",
+  "833917e4252a2a44",
+  "a29d6eb8b19a1129"
+ ],
+ "beir_scifact_516": [
+  "78f63d3523983f0f",
+  "961955b4a54b0acc",
+  "9744d14bca97b2d4",
+  "bcc2af7d923b0b63",
+  "bdcda56b5eb805fe",
+  "d34854989bbe5846",
+  "f18543cd516f3b45"
+ ],
+ "beir_scifact_517": [
+  "0e21f653fe7c52ff",
+  "43252e9f589088f7",
+  "61efe3926db20f1c",
+  "65d7f6c47e140f1e",
+  "b72b0db53833516d"
+ ],
+ "beir_scifact_521": [
+  "0438a5209444de81",
+  "1dda1dcc6a84bf60",
+  "43739e25b48f0b70",
+  "7941877a47b35b8a",
+  "7ad2cad5321a75b3",
+  "85a1c1c224194c43",
+  "f8d2ef2cf774a2cb"
+ ],
+ "beir_scifact_525": [
+  "120d80cccee6a057",
+  "2a6c3d6a1923c016",
+  "2f159b169c658838"
+ ],
+ "beir_scifact_527": [
+  "604f453d88f4e556",
+  "6edc7ec56f06b166",
+  "c01b0085e21f4635"
+ ],
+ "beir_scifact_528": [
+  "3860945ac174dbde",
+  "90aae24915e0ffe9",
+  "aecea30e780bfc3f",
+  "f47353309e7f5af8"
+ ],
+ "beir_scifact_53": [
+  "49dcd330a43aad9f",
+  "56b60a7993770b36",
+  "7c7c115a4d611e64"
+ ],
+ "beir_scifact_532": [
+  "1b23420f72d4cce1",
+  "306a5e43bbe3390e",
+  "3c975d4f0d77c9b4",
+  "524faeabb59ec3a2",
+  "858e6f45aa896f63"
+ ],
+ "beir_scifact_533": [
+  "1b23420f72d4cce1",
+  "306a5e43bbe3390e",
+  "3c975d4f0d77c9b4",
+  "524faeabb59ec3a2",
+  "858e6f45aa896f63"
+ ],
+ "beir_scifact_535": [
+  "1721f5f5c812c1d6",
+  "5b69f70f2c49a6f3",
+  "9a44b7a3a3638895",
+  "b30cf523dfc7ba3e",
+  "bfc667ec1866764b",
+  "ee72b90549b07a59"
+ ],
+ "beir_scifact_536": [
+  "1e834f5c6e5e0f42",
+  "72184e70fcbdb7b0",
+  "ed55dcb3a0ee0467",
+  "fe76a8abf9804d5c"
+ ],
+ "beir_scifact_539": [
+  "755cec43b419548c",
+  "7e62d8659621922c",
+  "890b5e4a663cffc5",
+  "af6e78232b61cdd2",
+  "d40fe8954b2ad3b4",
+  "fc462a069cb46bf6"
+ ],
+ "beir_scifact_54": [
+  "0cfe7101fcf6cbd4",
+  "31ff8c6bb2eff462",
+  "9d8763e384b4c4df",
+  "c994f513c8539aec"
+ ],
+ "beir_scifact_540": [
+  "15e613f8ce713f72",
+  "1e2c6e014f836b99",
+  "98b0326d453ccc79",
+  "b20326fc7060e12c",
+  "fb11a9c124d181a2",
+  "ffea7446e3164554"
+ ],
+ "beir_scifact_544": [
+  "6f8c0bd66b969994",
+  "749594afa7492aff",
+  "a7d0f650904e863d"
+ ],
+ "beir_scifact_549": [
+  "bfddbb957bd9a1ec",
+  "d4c565d54cda7cc6",
+  "f570065faaec64f6"
+ ],
+ "beir_scifact_551": [
+  "0d2baaf26d007ddc",
+  "64d2f4c812362717",
+  "885ef067fd43c3cb"
+ ],
+ "beir_scifact_552": [
+  "028a6b30869f6ba0",
+  "2a6dae1a67f9c183",
+  "57093cae10dd87cb",
+  "8ebd059232868d15"
+ ],
+ "beir_scifact_554": [
+  "07e50d310526c7fb",
+  "90936f8db8d6a0b3",
+  "faebc1d88ed8406d",
+  "ffd14fa00c912b88"
+ ],
+ "beir_scifact_56": [
+  "2d756ddb0b8ca8b6",
+  "5695fe6825083ee1",
+  "7e8cad2abf32cabf",
+  "bce3ebefa4264780"
+ ],
+ "beir_scifact_560": [
+  "732811dbf32315f1",
+  "941a470242b415f9",
+  "bf0388e0e55b4404",
+  "d154ba158662b599"
+ ],
+ "beir_scifact_569": [
+  "03a9615337ca819d",
+  "070c6088b74f2b55",
+  "5d858183710ba5b7",
+  "a0ad03b97237c2e4"
+ ],
+ "beir_scifact_57": [
+  "2d756ddb0b8ca8b6",
+  "5695fe6825083ee1",
+  "7e8cad2abf32cabf",
+  "bce3ebefa4264780"
+ ],
+ "beir_scifact_575": [
+  "3125253166726625",
+  "382ada126e49ea37",
+  "7249cda8053cb41e"
+ ],
+ "beir_scifact_577": [
+  "0a60cbbdc1401ae9",
+  "5799e0875484f88f",
+  "d11cb4c1a3fbbf83"
+ ],
+ "beir_scifact_578": [
+  "19b50efe1e82d190",
+  "40a9a246c69c5210",
+  "beed37570be0ad28",
+  "f5059a1398e648ca"
+ ],
+ "beir_scifact_587": [
+  "2a420067f8de7d73",
+  "c4c7686c6500d05b",
+  "cdcca304ad8ec1b0"
+ ],
+ "beir_scifact_589": [
+  "5d7e9857bd9935ab",
+  "6e8fb642f9e4a718",
+  "7b2e4678511523f3",
+  "7c22bed44e2f4c37",
+  "979991c37c4cc38a",
+  "b10d9de1b765a695"
+ ],
+ "beir_scifact_593": [
+  "16660f734f17e42f",
+  "236641094ce469ec",
+  "969933061edc2ad1",
+  "9d91b5d11756e0ed",
+  "b41867e7999bd4e6"
+ ],
+ "beir_scifact_597": [
+  "1bfb74bf1e66c18b",
+  "697a411121e24d6c",
+  "6d26890fc0ed02cd",
+  "723c50bea9c9ebed",
+  "783b682179240b3e",
+  "b110de777dd75cff",
+  "c6c46b4f52c78c37",
+  "d057582491e30d48",
+  "f0106e329874cedb",
+  "fbab7666f552abb9",
+  "fcc7d2678bce6d59"
+ ],
+ "beir_scifact_598": [
+  "697a411121e24d6c",
+  "723c50bea9c9ebed",
+  "783b682179240b3e",
+  "fcc7d2678bce6d59"
+ ],
+ "beir_scifact_613": [
+  "11235668a95076d2",
+  "7b97cb550b635f39",
+  "fbec248dabb710a6"
+ ],
+ "beir_scifact_619": [
+  "3790060154803ab2",
+  "405ca29f842d7920",
+  "917986fe0a9d95dc",
+  "99a21c919be03d43",
+  "d4a21109ac51ff34",
+  "e021d0575b226309",
+  "f096bca209e8b10b"
+ ],
+ "beir_scifact_623": [
+  "0b81c12b9c984140",
+  "147f9b8bba85243e",
+  "916a1064c5419af0",
+  "d8857fa2bd589655"
+ ],
+ "beir_scifact_628": [
+  "0299bd6e70293c55",
+  "982a6350c0a6d4fe",
+  "df8b6663bd97a9c7"
+ ],
+ "beir_scifact_636": [
+  "024dd2aa655eba2b",
+  "137cdedfda171bd1",
+  "70f369eef22bcce9"
+ ],
+ "beir_scifact_637": [
+  "474fcefedd88e242",
+  "bdbdd15b5b0822b3",
+  "dc297a71d12477c9",
+  "e46c627d84262057"
+ ],
+ "beir_scifact_641": [
+  "149bd00fd8a91879",
+  "18bf0a30cd8dd756",
+  "4180a54b8f7ab5e2",
+  "7ccfca33e7810be4",
+  "87692c7b87e45ae7",
+  "9f28b1370493a761",
+  "aea3eb24cca358a9",
+  "c503291fce773b64",
+  "e00e2b312562ec03"
+ ],
+ "beir_scifact_644": [
+  "27eba89d2d880b5e",
+  "75cda58c5c130173",
+  "76f141982ce32695",
+  "91177be012a9b14b",
+  "c5247d6ba6584679",
+  "e5c9eb0b8b1fdff4",
+  "f58bc0e7b8b23126"
+ ],
+ "beir_scifact_649": [
+  "0274654702329e8d",
+  "5663c8a4ec669464",
+  "59c5dc0bc01788ca",
+  "a441d2fc895eff7d",
+  "c93dba7953b4eefa"
+ ],
+ "beir_scifact_659": [
+  "0771528febfd0ea8",
+  "124e7a664dbe6b19",
+  "d608818555dc5402",
+  "f33e32df4b1720fc"
+ ],
+ "beir_scifact_660": [
+  "0771528febfd0ea8",
+  "124e7a664dbe6b19",
+  "d608818555dc5402",
+  "f33e32df4b1720fc"
+ ],
+ "beir_scifact_674": [
+  "820d5e23f67fe913",
+  "ab9631444e114414",
+  "d28a266db35e3ce0",
+  "dda9b17578fda5af",
+  "e89dc1503bf149e3"
+ ],
+ "beir_scifact_684": [
+  "0d3083fac6b971bc",
+  "b116d383c9a884fe",
+  "c0463236c156e95d",
+  "d51554021beedc9a",
+  "fa7135501193a085"
+ ],
+ "beir_scifact_690": [
+  "36cf48aa25bd4a66",
+  "71e9c37365054b68",
+  "cebfa5fc4ed0a98e",
+  "fdeb8e1744d8011f"
+ ],
+ "beir_scifact_691": [
+  "21d22f9a08ca1fdd",
+  "3a3ccb6b5a8499e0",
+  "3cf300a7debe245d"
+ ],
+ "beir_scifact_692": [
+  "5d00dc579f7ec7dc",
+  "8303dca73889c9bb",
+  "94ed6d6562308ebd",
+  "a2139d14f6662103",
+  "c695c580b32d4f14"
+ ],
+ "beir_scifact_693": [
+  "5d00dc579f7ec7dc",
+  "8303dca73889c9bb",
+  "94ed6d6562308ebd",
+  "a2139d14f6662103",
+  "c695c580b32d4f14"
+ ],
+ "beir_scifact_70": [
+  "41dc1b42a16597d3",
+  "5df548b4fec98d40",
+  "71effccd8185cd3a",
+  "753a4e2eda8beb3a",
+  "937065d5f0b4f791",
+  "c3fe984d0850626d",
+  "c56cb8442e23f0db",
+  "de6f5141ac2d34c9"
+ ],
+ "beir_scifact_700": [
+  "0113d2aef680a8dd",
+  "58d40907e350eff6",
+  "615f88d12bd1328a",
+  "f992800aae424348"
+ ],
+ "beir_scifact_702": [
+  "0113d2aef680a8dd",
+  "58d40907e350eff6",
+  "615f88d12bd1328a",
+  "f992800aae424348"
+ ],
+ "beir_scifact_715": [
+  "3735d5af21b402af",
+  "8726155032fe2483",
+  "c3f61a4edf1be6a1"
+ ],
+ "beir_scifact_716": [
+  "3735d5af21b402af",
+  "8726155032fe2483",
+  "c3f61a4edf1be6a1"
+ ],
+ "beir_scifact_718": [
+  "39d9eaf14c9a6dd1",
+  "4ae9dad86663b1b5",
+  "7ce5247361a08c60",
+  "9324272f8cdbb23f"
+ ],
+ "beir_scifact_72": [
+  "4643c91ad0f51a55",
+  "6faf37c63ad52d26",
+  "7e2cad7f3ba33132"
+ ],
+ "beir_scifact_721": [
+  "86e40e3a66e792a3",
+  "93819317c573bf4f",
+  "9e4fbea924cf038b"
+ ],
+ "beir_scifact_723": [
+  "01e88d295773a890",
+  "84c9cd12515e54e6",
+  "f4e3e53e5fa617c5"
+ ],
+ "beir_scifact_727": [
+  "5c511e8b94f2b7e4",
+  "6d26ece006b2a07d",
+  "e43e9e056e57d4a3"
+ ],
+ "beir_scifact_728": [
+  "2cf196de8918a5ec",
+  "5c511e8b94f2b7e4",
+  "6d26ece006b2a07d",
+  "82a3096672376fcd",
+  "b46b8adc9b89b310",
+  "c9a2025f8d226c79",
+  "e43e9e056e57d4a3"
+ ],
+ "beir_scifact_729": [
+  "84cdf4838c87dba0",
+  "89c78d10dbc5a19c",
+  "8ddd04d79324acdd"
+ ],
+ "beir_scifact_742": [
+  "30c0afbbe4d467df",
+  "3c9f87a0a2cbc8f1",
+  "5867fe2151724153",
+  "8d180bac242bc113",
+  "c33dd369dca790ef"
+ ],
+ "beir_scifact_743": [
+  "30c0afbbe4d467df",
+  "3c9f87a0a2cbc8f1",
+  "5867fe2151724153",
+  "8d180bac242bc113",
+  "c33dd369dca790ef"
+ ],
+ "beir_scifact_744": [
+  "014b33b0dfd0a19e",
+  "749190b6e5581037",
+  "862c3eca75cdc30a"
+ ],
+ "beir_scifact_75": [
+  "0ab2ebe7a3e9315b",
+  "91006e6f973f59fa",
+  "b8a1177141a58562",
+  "ddb2a44d274fc359"
+ ],
+ "beir_scifact_756": [
+  "4f679c6bc334fb11",
+  "c36d031b8497e2e0",
+  "e59efe342eb97aae"
+ ],
+ "beir_scifact_759": [
+  "1d10d3d808a0c66b",
+  "382b8dd665ba553b",
+  "5ce7b3ca404b6990",
+  "633d93a6b6890c90",
+  "67e5f7f2a71ece9d",
+  "dfacecb764cdbf9a",
+  "f19e6642d853bb19"
+ ],
+ "beir_scifact_768": [
+  "14aeb7330f7c331e",
+  "996a9ab69e8878ea",
+  "afb00dcb57389f82"
+ ],
+ "beir_scifact_770": [
+  "17d46d6bf8aa1875",
+  "1bb689d1e1e6628c",
+  "4016577f076a10ce",
+  "d22a4fdc93bda66e",
+  "dd1c099233463f76",
+  "e9ed64c158f4d3e0",
+  "f70db057bc1c5bf9"
+ ],
+ "beir_scifact_775": [
+  "7bc89daa33a22584",
+  "a847ba5ed5e0ed7a",
+  "ce7c915bf4bfacf6"
+ ],
+ "beir_scifact_781": [
+  "61516ca58e18970a",
+  "671d5952ca665a6c",
+  "aa132c3a0a7f6b8e",
+  "eda5e369b0e3bb1b"
+ ],
+ "beir_scifact_783": [
+  "46e9d1c4d1d59e99",
+  "727a3c224611c1d2",
+  "77bf9e8adf6d5ceb"
+ ],
+ "beir_scifact_784": [
+  "aa8ccd6d567899da",
+  "c485191a91da9352",
+  "e95711999515dfb7"
+ ],
+ "beir_scifact_785": [
+  "3f39ab09f228740a",
+  "6b6c5421e9541237",
+  "9169c899dd552ded",
+  "cf9148af470d1866",
+  "d75587f568c1b10e"
+ ],
+ "beir_scifact_793": [
+  "25e4d616d90655ed",
+  "7c6af98950ac595e",
+  "dfb41e5a605c2663"
+ ],
+ "beir_scifact_800": [
+  "91a0948fb6caa414",
+  "aba32fe4f403129a",
+  "ce7e0bdd9121013b"
+ ],
+ "beir_scifact_805": [
+  "078ccc01aad8e52a",
+  "db7a24f19bcb8d96",
+  "e9df3c7ac76c1ddc",
+  "f64d089725ab2ae8"
+ ],
+ "beir_scifact_808": [
+  "0c62e528589dec26",
+  "238d37a411add47a",
+  "73c0afc0435b22e3"
+ ],
+ "beir_scifact_811": [
+  "155491802583cad5",
+  "6c875da5d5819096",
+  "8f415a3208ae17d6",
+  "d3f7de8df70158be"
+ ],
+ "beir_scifact_814": [
+  "0a792d76cd997c8f",
+  "30b4568ea4adf4fd",
+  "b3b82172a1cd8c7f",
+  "c07f21f6fd586e18"
+ ],
+ "beir_scifact_820": [
+  "1fa4b11b2173ef19",
+  "38f66ecca62ec298",
+  "86cdd619a814ccc3",
+  "d6599f457c9dfd0d"
+ ],
+ "beir_scifact_821": [
+  "1fa4b11b2173ef19",
+  "38f66ecca62ec298",
+  "86cdd619a814ccc3",
+  "d6599f457c9dfd0d"
+ ],
+ "beir_scifact_823": [
+  "043a718774c572bd",
+  "3d487a3144ea0c0f",
+  "52d734413a1a9b79",
+  "7bf9ab40e98e3def",
+  "7faaeea4f3f0613a",
+  "aa2619af9686e937",
+  "c721a3d8afd721a8"
+ ],
+ "beir_scifact_830": [
+  "7791fd6de28bb103",
+  "9973be71f01949ca",
+  "fa7d47cdd709bc7b"
+ ],
+ "beir_scifact_831": [
+  "7791fd6de28bb103",
+  "9973be71f01949ca",
+  "fa7d47cdd709bc7b"
+ ],
+ "beir_scifact_832": [
+  "1932f21d7cadf187",
+  "1c3a2e104057a9a7",
+  "9e4a02d5ee43bfef"
+ ],
+ "beir_scifact_834": [
+  "149b12f874df496c",
+  "2ca7e0b009dc1fd4",
+  "9c029c963a40538e"
+ ],
+ "beir_scifact_837": [
+  "14960a649e18a45f",
+  "8b56b2f49cf8ec2c",
+  "b845a82647ce9707",
+  "c0fafc18ee373f9d"
+ ],
+ "beir_scifact_839": [
+  "0aeeabb820812af0",
+  "38b3c3b0a8ace84d",
+  "da63148a5685becd"
+ ],
+ "beir_scifact_845": [
+  "b24dfde9d22bd859",
+  "eb5a4397822998a9"
+ ],
+ "beir_scifact_847": [
+  "01d52c42301055f8",
+  "916456e77fac180b",
+  "e1df61bfd8aaa638",
+  "fc3d1e7d547dbc3f"
+ ],
+ "beir_scifact_852": [
+  "0ea8aab8050788a5",
+  "5dbfd516e0c0637f",
+  "95f1fb23b7f88292",
+  "974ad4267ab00caf"
+ ],
+ "beir_scifact_859": [
+  "10bb33993a7f9ce5",
+  "bda6f7e2fe3e5aa0",
+  "e91056308d105e98"
+ ],
+ "beir_scifact_870": [
+  "2b3bff84ac3951bf",
+  "47020c9256b120b6",
+  "7786b2c53fa4f823",
+  "7ee4a1b4531994ea",
+  "d0a61220f2f8ef59",
+  "d816bfd29021acd0"
+ ],
+ "beir_scifact_873": [
+  "400045ecbcbc2290",
+  "4a91e2aa5564dce6",
+  "4d06bed4c48e2c73",
+  "4eca7b36eee22434",
+  "56ed2e0b23f9dd31",
+  "5dc7a819ee8efa62",
+  "7319143f5abf5a29",
+  "8a37bfb884633f51",
+  "8d8f34283d175ab2",
+  "8ea3d24623aacb68",
+  "9b25bf5edcfb869d",
+  "a3d299677cd89000",
+  "a4b60b7acee8ca9e",
+  "aa970c30dc74750b",
+  "adfe3da46d855ad5",
+  "b39a58f5b802258b",
+  "b7146b27ff7ac86c",
+  "d09620ac47c8e2d1",
+  "dfb607736c2560a0",
+  "eb54b55f2a99e182"
+ ],
+ "beir_scifact_879": [
+  "4f5e9ce52c2646fb",
+  "ab8d56509cd683bf",
+  "c126ce2b5a2de210"
+ ],
+ "beir_scifact_880": [
+  "4f5e9ce52c2646fb",
+  "ab8d56509cd683bf",
+  "c126ce2b5a2de210"
+ ],
+ "beir_scifact_882": [
+  "505132b546568b16",
+  "67a41c939f333fcd",
+  "7a00bbd3012bd635",
+  "fd5a0191adc9ba43"
+ ],
+ "beir_scifact_887": [
+  "29f0de20ff236c7a",
+  "473f444031acba5c",
+  "a8b5aff2aae5a74f",
+  "cbf10d29557feab3",
+  "e9c2ce7303d86dc0",
+  "f0772d0c03d8826e"
+ ],
+ "beir_scifact_903": [
+  "342b3d4fcc9eb419",
+  "4f35c117022ad04e",
+  "74c3ea7cc5e107da"
+ ],
+ "beir_scifact_904": [
+  "6956777eb97a130b",
+  "7bffdb33d5519aca",
+  "8f5873e945e73c65"
+ ],
+ "beir_scifact_907": [
+  "a4231af4b1348fc0"
+ ],
+ "beir_scifact_911": [
+  "0c2b944941514b2d",
+  "89a8492219dcb42e",
+  "a073c26e7092aa1e",
+  "b13c86da4f9b3abe",
+  "dae9c6b6be17d72c"
+ ],
+ "beir_scifact_913": [
+  "057c736be746629e",
+  "84e3e748c3299da3",
+  "bf51f6be91f21e33"
+ ],
+ "beir_scifact_914": [
+  "057c736be746629e",
+  "84e3e748c3299da3",
+  "bf51f6be91f21e33"
+ ],
+ "beir_scifact_921": [
+  "2f5c691cb66487c2",
+  "43296e04a7f68577",
+  "6e2288bd44b52887",
+  "70ac927f4c4334e0",
+  "89fb794ed9edf646",
+  "f8ad9c437016acc9"
+ ],
+ "beir_scifact_922": [
+  "3591f3de91b91b69",
+  "a1cb57666c8a7c21",
+  "b44692c6c74e3124",
+  "ddddcaeff218dcab"
+ ],
+ "beir_scifact_936": [
+  "149b12f874df496c",
+  "2ca7e0b009dc1fd4",
+  "9c029c963a40538e"
+ ],
+ "beir_scifact_94": [
+  "0771528febfd0ea8",
+  "124e7a664dbe6b19",
+  "d608818555dc5402",
+  "f33e32df4b1720fc"
+ ],
+ "beir_scifact_956": [
+  "10377e5b082428a1",
+  "5ccb4aca07f7d006",
+  "f62303d7fb773b9a"
+ ],
+ "beir_scifact_957": [
+  "aa914094d89a99ac",
+  "beea03932a5c9773",
+  "e3c19ae6e2f960b0"
+ ],
+ "beir_scifact_960": [
+  "3735314248c69ec3",
+  "3a61d4cb22d66351",
+  "887283feeab61867",
+  "ddd7bf2ff806902f"
+ ],
+ "beir_scifact_967": [
+  "1100976b9cdfa4ff",
+  "37823897f7968c1b",
+  "44612333ffbc68a8",
+  "8f403490fe5b4428",
+  "965983049c2d166d",
+  "ac5b327d48fbecee",
+  "b9f58aeac207350e"
+ ],
+ "beir_scifact_971": [
+  "0bcd4ac679608146",
+  "0d3e5999ff8fcaf9",
+  "0f60f081dbe6611b",
+  "18114d1ff18b8ba6",
+  "1bce5dc251d3c12c",
+  "41cfc3fff682d4a8",
+  "45e1bcd22b80c131",
+  "4bd8b6e22b9ac19e",
+  "5129d7ae7434a2a9",
+  "5a7e5d76723fd9c1",
+  "5dd5c254eb9f04ef",
+  "5f1cedfa97397540",
+  "6b882cd6c0822b3a",
+  "6bf4b4a98082c99a",
+  "6e9a71e50a1fc08a",
+  "72a8668e1afa152d",
+  "8b856a709053a17e",
+  "957c4998bb617c5d",
+  "9def63c014bf7077",
+  "b51f7989b05f856f",
+  "b5b72b2302c5705f",
+  "ba569e5d0863ed0a",
+  "cde7cbfba7acd6c3",
+  "e6479fe6762f7b52",
+  "e76f2a2bd138715f",
+  "f00dcea5e12aeda7",
+  "f6ea87aa437822f0",
+  "f8b3af5ea753548b",
+  "f8ca09ff9d64c126"
+ ],
+ "beir_scifact_975": [
+  "1a4f36d8eabb2a6a",
+  "3cedd55dd0ac7c09",
+  "5ec9d133fcf477fe",
+  "f0a9740a1a156673"
+ ],
+ "beir_scifact_982": [
+  "8023a54fa19ddcd6",
+  "f02b010523068ae8",
+  "f6178b2c4cafdce6"
+ ],
+ "beir_scifact_985": [
+  "22f9954d96f5aaa8",
+  "e357168061daeda7",
+  "fd6f8f72814e9b31"
+ ],
+ "beir_scifact_99": [
+  "03b53c52b5fa43a7",
+  "425bc110e53f5cc4",
+  "e0c37f7a41acf366",
+  "e0ff95da02e2ed80"
+ ],
+ "beir_scifact_993": [
+  "3b419b27a87b6525",
+  "78f9af0168985e0a",
+  "abd86d64d22fd745",
+  "f46c54333a0d8d5f"
+ ]
+}
