@@ -4,10 +4,12 @@ Coordinate-index engine for LLM agents. It retrieves, weighs, and compresses
 a corpus into a context window — without a single LLM call on the retrieval
 path.
 
-- **Version:** this wiki documents **v0.10.0**, released 2026-09-29
-  (tag `v0.10.0`, PyPI `0.10.0`). The prior v0.9.2 release was published
-  2026-09-08. v0.10.0 changes no shipped retrieval or delivery default; its
-  new behaviour is opt-in. Changes are cited by PR number where they appear.
+- **Version:** this wiki documents **v0.11.3**, released 2026-10-11
+  (tag `v0.11.3`, PyPI `0.11.3`). The prior v0.11.2 release was published
+  2026-10-10. No release since v0.10.0 changes a shipped retrieval or
+  delivery default; the 0.11.x additions (multi-lane serving, delta sync,
+  per-store Freeze, packet trace) are opt-in or launcher-side. Changes are
+  cited by PR number where they appear.
   The Tier-2 lexicon aliases the pages present as canonical
   ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) follow the 0.9.1 tag and are not in the 0.9.1 wheel — on that
   wheel the legacy spellings are the ones that resolve. See
@@ -27,6 +29,11 @@ path.
 - Every response carries an explicit agent contract: `know { found,
   confidence }` (grounded — you may answer) or `miss { reason, escalate_to }`
   (not found — don't answer from the knowledge store).
+- Every `/context` and `/context/packet` response also carries a `packet_id`
+  (body field and `X-Cymatix-Packet-Id` header). With the opt-in `[trace]`
+  section on, the server records a metadata-only event per packet that you
+  can read back by that id
+  ([#493](https://github.com/mbachaud/Cymatix-Context/issues/493)).
 - The name comes from the engine's cymatics stage: each term is hashed (MD5)
   into one of 256 bins and given a small Gaussian spread, and query and
   candidate are compared as the resulting 256-dimensional vectors. "Cymatics"
@@ -111,7 +118,7 @@ path.
 | Page | What's on it |
 |---|---|
 | [Benchmarks and Receipts](Benchmarks-and-Receipts) | Token economics, shipped-defaults numbers, encoder-isolation receipts, comparability rules |
-| [Roadmap and Releases](Roadmap-and-Releases) | 0.9.2 release highlights, published 0.9.1 history, 0.9.0 disclosures, deferred ledger, versioning |
+| [Roadmap and Releases](Roadmap-and-Releases) | Release contents from 0.11.x back to 0.9.0, deferred ledger, versioning |
 
 ## Elsewhere
 

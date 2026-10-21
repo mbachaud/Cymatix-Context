@@ -1,12 +1,13 @@
 # Architecture Map
 
-- One import package, `cymatix_context`, organized into **16 sub-packages**
+- One import package, `cymatix_context`, organized into **17 sub-packages**
   plus a handful of top-level orchestration modules.
-- One store: a **single SQLite file** in WAL mode with an FTS5 index. Back it
-  up by copying the file; delete it to start fresh.
-- Two processes at most: the server on `127.0.0.1:11437`, and the optional
-  supervisor on `:11438`. An optional encoder daemon takes `:11440` when you
-  route encoding out of process.
+- One store per server: a **single SQLite file** in WAL mode with an FTS5
+  index. Back it up by copying the file; delete it to start fresh.
+- The server on `127.0.0.1:11437` and the optional supervisor on `:11438`. The
+  supervisor can also run extra servers, one per `[[lanes]]` entry, each on its
+  own port and store (0.11.0). An optional encoder daemon takes `:11440` when
+  you route encoding out of process.
 - This page is the *where things live* map. What the code does per turn is
   [Pipeline](Pipeline); what each retrieval signal is, is
   [Retrieval Dimensions](Retrieval-Dimensions).
@@ -16,21 +17,22 @@
 | Package | Purpose |
 |---|---|
 | `adapters/` | Cache, data-access layer, external retriever protocol |
-| `backends/` | Compressor (legacy: ribosome), BGE-M3 codec, DeBERTa, NLI, SEMA codec, SPLADE |
-| `cli/` | The `cymatix` CLI: query, packet, ingest, document, neighbors, diag, config, status |
+| `backends/` | Compressor (legacy: ribosome), BGE-M3 codec, cross-encoder rerank, DeBERTa, NLI, SEMA codec, SPLADE |
+| `cli/` | The `cymatix` CLI: query, packet, refresh-targets, ingest, document, neighbors, diag, config, status, mcp, compare, trace, serve |
 | `encoding/` | Chunking, fragment encoding, legibility headers, Headroom bridge |
 | `identity/` | CWoLa logger, session delivery, registry, provenance, claims |
 | `okf/` | Open Knowledge Format (OKF v0.1) bundle reader, canonical digest, ingest adapter |
 | `pipeline/` | Tier logic and pipeline-stage helpers |
-| `retrieval/` | Expand, freshness gate, RRF/additive fusion, PLR, intent router, SR, seeded edges, query classifier, tie-break |
-| `scoring/` | Cymatics, know-calibration, know-decision, ray-trace, TCM, blending |
-| `server/` | FastAPI app factory plus route modules (context, ingest, registry, admin) |
+| `retrieval/` | Expand, freshness gate, RRF/additive fusion, post-fusion rerank combinators, PLR, intent router, SR, seeded edges, COVER walk, query classifier, tie-break |
+| `scoring/` | Cymatics, know-calibration, know-decision, know lanes model, ray-trace, TCM, blending |
+| `server/` | FastAPI app factory plus route modules (context, ingest, registry, admin, sync, trace) |
 | `storage/` | DDL, indexes, co-activation graph |
-| `telemetry/` | OpenTelemetry metrics and histogram instrumentation |
+| `sync/` | In-process delta sync of tracked folders (`[sync]`, off by default): tracker and worker |
+| `telemetry/` | OpenTelemetry metrics and histogram instrumentation, plus the opt-in packet trace (writer, eval checks, label taxonomy, export) |
 | `vault/` | Obsidian vault export — read-only diagnostic traces |
-| `launcher/` | System-tray supervisor for the backend and telemetry stack |
+| `launcher/` | System-tray supervisor for the backend, extra lanes, and the telemetry stack |
 | `mcp/` | The MCP tool surface for Claude Code, Codex, Gemini CLI, and Antigravity |
-| `integrations/` | ScoreRift bridge |
+| `integrations/` | ScoreRift bridge, MCP host profiles |
 
 Top-level orchestration modules:
 
@@ -40,13 +42,18 @@ Top-level orchestration modules:
   fusion, tier weighting, and gating all live in this module.
 - `config.py` — the `cymatix.toml` loader, alias resolution, and env-var
   precedence. `schemas.py` — the Pydantic request and response models.
-- `codons.py` — chunker and fragment encoder. `tagger.py` — the CPU ingest
-  tagger (spaCy NER + EntityRuler + regex).
-- `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, and
-  `mcp_server.py` are **shims** that re-export from the packages above. They
-  are the domain metaphor, not a second implementation. The `helix_context`
-  alias package was removed in 0.8.5 — import `cymatix_context`. Full
-  vocabulary crosswalk: [Lexicon](Lexicon).
+- `context_packet.py` — the agent-safe packet builder behind
+  `/context/packet`. `wire.py` — the opt-in canonical wire projection.
+- `lanes.py` — `[[lanes]]` resolution and validation. `store_settings.py` —
+  the per-store sidecar (auto-sync folders, Freeze).
+- `tagger.py` — the CPU ingest tagger (spaCy NER + EntityRuler + regex). The
+  chunker and fragment encoder live in `encoding/fragments.py`.
+- `genome.py`, `ribosome.py`, `codons.py`, `replication.py`, `hgt.py`, and
+  `mcp_server.py` are **shims** that re-export from the modules above. They
+  are the domain metaphor, not a second implementation. `server` needs no
+  shim: the `server/` package keeps the old `cymatix_context.server` import
+  path working. The `helix_context` alias package was removed in 0.8.5 —
+  import `cymatix_context`. Full vocabulary crosswalk: [Lexicon](Lexicon).
 
 ## The knowledge store
 
@@ -70,6 +77,7 @@ which keep their legacy spellings; the software meaning is on the left.
 | What each session has already been delivered | `session_delivery_log` |
 | Human-in-the-loop pause events | `hitl_events` |
 | Store health snapshots, calibration rows, CWoLa traces | `health_log`, `genome_calibration`, `cwola_log` |
+| Delta-sync tracking (created on first use when `[sync]` is on) | `sync_tracked`, `sync_lock` |
 
 ### A document row
 
@@ -106,7 +114,9 @@ across all three** — the tier changes what gets queried, not what is kept.
 | Cold | `chromatin = 2` | HETEROCHROMATIN | Excluded; opt in with `[context] cold_tier_enabled` or a per-call `include_cold` |
 
 A density gate assigns the tier at ingest, and the working-set access rate can
-pull a document back toward hot as it gets used.
+pull a document back toward hot as it gets used. Delta sync's tombstones are
+cold-tier moves too: a superseded chunk keeps its content and drops out of
+default retrieval.
 
 ### Edges between documents
 
@@ -186,6 +196,14 @@ recipe that deliberately never runs `systemctl enable` or its equivalents for
 you. Architecture and failure-mode table:
 [`docs/architecture/LAUNCHER.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/architecture/LAUNCHER.md).
 
+Since 0.11.0 the launcher also supervises **lanes**: each `[[lanes]]` entry is
+one more server on its own port and its own store directory, and
+`genome_source = "snapshot:<lane>"` serves a consistent copy of another lane's
+store so a newer engine build never writes to the live one. The experimental
+desktop app (`desktop/`, Electron) runs the launcher as a headless sidecar.
+Lane keys: [Configuration](Configuration); `cymatix compare` and
+`cymatix mcp install --lane`: [CLI](CLI).
+
 ## Storage notes
 
 - **One file, WAL mode.** Default path `genomes/main/genome.db`, relative to
@@ -201,17 +219,29 @@ you. Architecture and failure-mode table:
   checkpoint, and `/admin/swap-db` hot-swaps the file without a restart. Scope
   `/admin/swap-db` with `[server] swap_db_roots` and gate the mutating surface
   with `[server] admin_token` — see [Configuration](Configuration).
+- **Per-store settings (0.11.2).** An optional sidecar
+  `<store>.db.cymatix.json` beside each store holds its auto-sync folders and a
+  **Freeze** flag. A frozen store opens read-only: documents, tiers, links and
+  health records are not written (including by queries, compaction and
+  tombstoning), its sync is off, and `/ingest` and `/consolidate` answer 409.
+  Session, delivery-log and query-log tables still write, so the file is not
+  byte-identical after use. With no sidecar nothing changes.
 - **Sharded scale gap.** Everything above describes the *unsharded* engine,
   which is where the published 829,131-fragment operating point was measured.
   The **sharded** path — a corpus split across shard databases — currently
   trails unsharded by **~31pp recall@10 and ~30pp MRR** on the xl bed, because
   dense recall and co-activation are not yet at parity across shards
-  ([#275](https://github.com/mbachaud/Cymatix-Context/issues/275)). Prefer the
-  unsharded engine for accuracy-sensitive corpora until that closes.
+  ([#275](https://github.com/mbachaud/Cymatix-Context/issues/275), closed as
+  deferred to the
+  [#377](https://github.com/mbachaud/Cymatix-Context/issues/377) ledger, gap
+  not fixed). Prefer the unsharded engine for accuracy-sensitive corpora until
+  that closes.
 - **Ports.** `11437` server, `11438` launcher, `11440` optional encoder daemon
   (`[encoder_daemon] url`, empty by default = every seam encodes in-process).
   `11439` is the bench port and is deliberately distinct
-  ([#376](https://github.com/mbachaud/Cymatix-Context/issues/376)).
+  ([#376](https://github.com/mbachaud/Cymatix-Context/issues/376)). Extra
+  lanes take the ports you declare; validation rejects duplicates and the
+  reserved `11438`, `11440` and `8787` (Headroom).
 
 ## Go deeper
 

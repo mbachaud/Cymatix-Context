@@ -7,7 +7,8 @@
   `do_not_answer_from_genome`).
 - There is no third "maybe" branch. The discriminator collapses every retrieval
   outcome onto one of the two blocks, and a response with both keys set — or
-  neither — is a server bug, not a fall-through case for you to handle.
+  neither — is a server bug, not a fall-through case for you to handle. The
+  one exception is opt-in; see [Packet semantics](#packet-semantics).
 - The contract exists so a downstream agent can calibrate trust **without
   guessing**. Branch on the structured block; do not parse prose out of the
   assembled window.
@@ -38,7 +39,7 @@
 | Field | Meaning |
 |---|---|
 | `found` | Always `true` on this branch — the discriminator's verdict |
-| `confidence` | `[0, 1]` from a 5-feature logistic. **Provisional** — see below |
+| `confidence` | `[0, 1]` from the shipped 5-feature logistic (`[know] model = "legacy"`; the opt-in `"lanes"` model is described below). **Provisional** — see below |
 | `top_score` | Rank-1 fused retrieval score |
 | `score_gap` | `top1 − top2`, a raw subtraction (the `miss` block's `ratio` is the division) |
 | `lexical_dense_agree` | `true` when the lexical and dense top-3 clusters share a document. Structurally `false` on the neural-free default path |
@@ -85,7 +86,7 @@ The full tuple, in wire order (clients that index into it depend on the order):
 | `denatured` | escalate | The store's shape is bad — corrupt or empty | Trust **no** answer from the store right now. Ask a human or search locally |
 | `sparse` | escalate | The top hit fell below the confidence floor | Retrieval saw something but does not trust its own match. Escalate or reframe |
 | `no_promoter_match` | escalate | Zero candidate documents came back at all | Tag vocabulary mismatch between query and corpus. See the `[synonyms]` note on [Troubleshooting](Troubleshooting) |
-| `stale` | refresh | Top-1's source mtime is newer than its last verification | Re-read the paths in `refresh_targets`, then retry the same query |
+| `stale` | refresh | Top-1's source mtime is newer than its last verification, or (under the default `[context] freshness_basis = "clock"`) its source is not on this disk | Re-read the paths in `refresh_targets`, then retry the same query |
 | `cold` | refresh | A sparse fall-through, but a cold-tier peek surfaced hits | Same loop — the answer is probably there, just demoted |
 | `superseded` | refresh | Top-1 has a successor row | Re-read the successor source and retry |
 
@@ -106,7 +107,7 @@ The full tuple, in wire order (clients that index into it depend on the order):
 
 ## The confidence honesty block
 
-- **At shipped 0.9.x defaults the `know` block effectively never fires.** The
+- **At shipped defaults (unchanged through 0.11.3) the `know` block effectively never fires.** The
   measured maximum confidence is **≈ 0.28** against a shipped `[know] emit_floor`
   of **0.45**, so the discriminator falls through to `miss(reason="sparse")`
   instead of emitting a `KnowBlock`.
@@ -128,9 +129,25 @@ The full tuple, in wire order (clients that index into it depend on the order):
 - **What to do about it today:** branch on `found` (presence of the `know` key)
   and on `miss.reason`. Do not gate behavior on `confidence > X`. Treat the
   scalar as provisional until the recalibration lands.
-- The `agent` block on every response carries `ann_threshold_mode` and
-  `abstain_mode`, so you can see *which* calibration set produced a response
-  without a second `/health` round trip.
+- **The opt-in replacement, `[know] model = "lanes"` (0.11.2, tooling from
+  0.11.1).** A dense-free logistic over inputs every query has: score shape,
+  `coordinate_confidence`, lane agreement, each with a missing indicator. On
+  the first fit (27 corpora, 32,299 queries) its leave-one-corpus-out pooled
+  AUC is **0.751 against 0.413** for the shipped betas; on 30-bed replays the
+  opt-in cross-encoder inputs (`lanes_ce_model`) lift it 0.743 → **0.823**.
+  Calibration does
+  not transfer across corpora, so `scripts/calibrate_know_store.py` fits a
+  per-store Platt rescale and `emit_floor` from that store's own labelled
+  queries, and writes no floor when held-out precision misses the target.
+  Measured: coderag_solutions reaches 0.80 held-out precision at 37% coverage;
+  ERB 947k and most text corpora cannot support a confident `know`, and the
+  script refuses there. It stays opt-in pending a receipt-gated A/B.
+- The `agent` block on every `/context` response (not the packet routes)
+  carries `ann_threshold_mode` and `abstain_mode`, so you can see *which*
+  calibration set produced a response without a second `/health` round trip.
+  Its `warnings` list adds `calibration_stale` and, when the calibration's
+  recorded fit profile differs from what the enabled lanes can produce,
+  `calibration_profile_mismatch`.
 
 ## The prompt fragment
 
@@ -151,7 +168,7 @@ SYSTEM_PROMPT = full_fragment() + "\n\nYou are a coding assistant ..."
 |---|---|
 | `CYMATIX_NO_MATCH_FRAGMENT` | The know/miss split, the four Stage-6 reasons, and the escalate-tool discipline |
 | `CYMATIX_REFRESH_FRAGMENT` | The Stage-7 addendum: refresh-versus-escalate, and the re-read-then-retry loop |
-| `full_fragment()` | Both, in order — the one call to make |
+| `full_fragment()` | Both, in order — the one call to make. Pass `full_fragment("canonical")` when the server runs `[budget] wire_format = "canonical"`, so the text names the canonical fields (`CANONICAL_NO_MATCH_FRAGMENT` / `CANONICAL_REFRESH_FRAGMENT`) |
 
 - The same text is published as prose in
   [`docs/agent-sdk-fragment.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/agent-sdk-fragment.md)
@@ -173,6 +190,15 @@ SYSTEM_PROMPT = full_fragment() + "\n\nYou are a coding assistant ..."
   padding documents accompany the stale needle.
 - `freshness_min` also enters the confidence logistic as its fifth feature, and
   is treated as neutral when there are no candidates.
+- **What counts as stale for top-1 depends on `[context] freshness_basis`**
+  (0.11.2). Under the default `"clock"`, a source this machine cannot find is
+  treated like a changed one and demotes to `miss(reason="stale")`; a static
+  store also turns all-stale about 15 days after ingest. On the 947k ERB bed
+  that forced 470/470 queries to `miss(stale)` before confidence was read.
+  The opt-in `"source"` verifies against the source instead: unchanged on disk
+  = verified, changed = needs refresh, not on this disk = unknown rather than
+  stale. Use it for archived or imported stores whose sources never lived on
+  this machine.
 - **Soft-stale is not a miss.** When the discriminator emits `know` but
   `freshness_min < 0.5`, `know.soft_stale = true` and the response's
   `agent.recommendation` becomes `"refresh"`. You may answer from the store and
@@ -223,11 +249,14 @@ to the top of the response and adds:
 |---|---|
 | `verified` | Evidence rows whose sources still check out against disk |
 | `stale_risk` | Evidence rows that are shown but flagged — the data is there, its verification is not current |
+| `companions` | Extra same-source chunks with their own freshness labels. Empty unless the opt-in `[budget] full_text_delivery` is on (0.10.0) |
 | `contradictions` | Rows the packet builder found in conflict with each other |
 | `refresh_targets` | `RefreshTarget` rows: what to re-read, in priority order |
 | `coordinate_confidence` | Folder- and file-grain agreement between query and delivered sources |
 | `file_coverage` | Fraction of the query's implied file set that the packet actually covers |
 | `notes` | Builder-emitted caveats about this particular packet |
+| `delivery` | `pool_size`, `delivered_count`, `delivered_gene_ids` (final item order) and `cap_binding` |
+| `packet_id` | A ULID naming this response, also sent as the `X-Cymatix-Packet-Id` header (0.11.2). Present whether or not `[trace]` is on; cite it when recording an action with `POST /trace/action`. See [HTTP API](HTTP-API) |
 
 - Request knobs: `query` (required), `task_type` (default `"explain"`),
   `max_genes` (the wire spelling of the per-turn document cap; default 8,
@@ -237,6 +266,12 @@ to the top of the response and adds:
 - **Branch on `miss` versus `know` before you read `stale_risk` or `verified`.**
   The packet's evidence lists are meaningful only once you know which branch you
   are on.
+- **One opt-in exception to "exactly one block".** Under
+  `[budget] full_text_delivery = true`, a packet that must drop items to fit
+  `context_max_chars` or the token budget clears the verdict, so it carries
+  neither `know` nor `miss` (and `delivery.cap_binding = "token_budget"`).
+  Treat that as no verdict: do not answer from it as if it were a `know`.
+  Shipped defaults never take this path.
 - The full request and response shapes, with a worked packet example: [HTTP
   API](HTTP-API).
 
@@ -251,12 +286,14 @@ to the top of the response and adds:
   byte-identical to pre-Stage-5 output. The full matrix is on
   [HTTP API](HTTP-API).
 
-*Wire field names are legacy. `gene_id_match`, `do_not_answer_from_genome`, and
-the `refresh_targets` path strings above are reproduced verbatim — the JSON
-contract still speaks the biology lexicon even though the prose and the config
-surface use software terms. Renaming them is a tracked Tier-3 change,
-deliberately not taken in 0.9.1 because it breaks every existing consumer. See
-[Lexicon](Lexicon).*
+*Wire field names are legacy by default. `gene_id_match`,
+`do_not_answer_from_genome`, and the `refresh_targets` path strings above are
+reproduced verbatim — the default JSON contract still speaks the biology
+lexicon even though the prose and the config surface use software terms.
+Since 0.10.0 the opt-in, experimental `[budget] wire_format = "canonical"`
+renames the response fields (`document_id_match`,
+`do_not_answer_from_knowledge_store`, …) across HTTP, CLI and MCP; the shape
+and semantics are unchanged. See [Lexicon](Lexicon).*
 
 ## Go deeper
 

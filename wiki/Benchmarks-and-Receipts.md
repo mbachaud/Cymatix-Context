@@ -16,6 +16,12 @@
 - **Some things are measured, some are estimated, and the two are labelled
   differently.** Where a figure is an unverified design estimate, this page says
   so on the same line as the figure.
+- **Receipt files are no longer in the main repository.** Since 0.11.1
+  ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) the
+  `benchmarks/dogfood/**/receipts*/` trees are untracked. Paths cited here are
+  kept as-is: receipts up to `e3825e4b` (the v0.11.0 release) stay readable at
+  that tag, and everything is archived in `cymatix-receipts` (see
+  [Comparability rules](#comparability-rules)).
 
 ## Token economics
 
@@ -68,7 +74,7 @@ it always has been.
 | median gold rank | 3.0 |
 
 - Receipt:
-  [`benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json`](https://github.com/mbachaud/Cymatix-Context/blob/master/benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json),
+  [`benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json`](https://github.com/mbachaud/Cymatix-Context/blob/v0.11.0/benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json),
   ledger row `2026-08-19-sema-readgate-decider`.
 - **This is a retrieval-layer measurement, not an end-to-end grade.** It says how
   often the gold document reached the delivered window. It does not say whether
@@ -225,6 +231,78 @@ artifacts. Fresh receipt on a 2,000-file deterministic EnronQA sample, seed
 - There is **no backfill script on purpose** — stripping entities in place would
   create hybrid v1/v2 beds. v2 beds are fresh builds.
 
+## Release witnesses (947k bed)
+
+Every final release from 0.9.2 on, except 0.11.0, carries a merged-stack
+witness: the integrated release candidate re-run as a whole on the 947k ERB bed
+(947,531 documents, gene-id set `729ca5d9…`, `ingest_c = 6`, tagger v1) with the
+shipped `cymatix.toml`, the full ordered 470-needle bank, k=12, baseline arm
+only. The verdict compares per-needle rank, delivery and diagnostic fields with
+the witness it is paired against.
+
+| Release | Witness run | Commit | Paired against | Delivered | r@12 / final r@12 | Verdict |
+|---|---|---|---|---|---|---|
+| 0.11.3 | 2026-10-11 | `00358af5` | v0.11.2 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 differences on 12 fields; packet tracing on, 470 packets written, hash chain verified |
+| 0.11.2 | 2026-10-09 | `83188261` | v0.10.0 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 on 11 fields |
+| 0.11.1 | 2026-10-07 | `1f039993` | v0.10.0 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 on 11 fields; a v0.11.0 control (`e3825e4b`) on the same bed also exact |
+| 0.11.0 | — | — | — | — | — | No witness, by owner decision: no retrieval or delivery path or default changed |
+| 0.10.0 | 2026-09-29 | `a5a5dbe` | v0.9.2 witness | 314/470 (0.6681) | 0.6809 / 0.6830 | **EXACT_REPRODUCE** on 11 fields |
+| 0.9.2 | 2026-09-08 | `8cab199` | frozen floor-12 reference | 314/470 (0.6681) | 0.6809 / 0.6830 | **EXACT_REPRODUCE** on 11 fields |
+
+- **The rows match because nothing they measure moved.** No retrieval or
+  delivery default has changed since 0.9.1; 0.9.2's one default flip is
+  ingest-side and does not touch an existing bed.
+- **Ranks and delivery only.** Every witness ran on a shared host, or
+  alongside a control, so none of them carries a latency claim.
+- **The 0.11.1 control** exists because the bed file changed size after the
+  v0.10.0 witness (tuning-campaign replays read it in place). The control
+  reproduced exactly, so that drift changed nothing measured.
+- **Tier 5 (harmonic) is skipped on this bed** in every witness
+  ([#431](https://github.com/mbachaud/Cymatix-Context/issues/431) bind limit),
+  so these numbers carry no Tier 5 signal. `delivered_count` is 6 on 152 of
+  470 needles and 12 on 318 (the TIGHT/FOCUSED tier cut,
+  [#430](https://github.com/mbachaud/Cymatix-Context/issues/430)).
+- Ledger rows `2026-10-11-v0113-merged-stack-witness-trace`,
+  `2026-10-09-v0112-merged-stack-witness`,
+  `2026-10-07-v0111-merged-stack-witness`,
+  `2026-09-29-v0100-merged-stack-witness` and
+  `2026-09-08-v092-merged-stack-witness`. The 0.11.x receipt files are in
+  `cymatix-receipts` commits `79b0e04`, `fecf47f` and `b6e9285` under
+  `untracked/` (for example
+  `benchmarks/dogfood/receipts/sweep_v0113_witness_947k_2026-10-11.json`);
+  the earlier ones are readable at the v0.11.0 tag, for example the
+  [v0.10.0 comparison](https://github.com/mbachaud/Cymatix-Context/blob/v0.11.0/benchmarks/dogfood/receipts/sweep_v0100_witness_947k_2026-09-29.json).
+
+### Packet trace overhead ([#493](https://github.com/mbachaud/Cymatix-Context/issues/493), 0.11.3)
+
+`[trace]` ships off. The question is what it costs per `/context` request when
+it is on. Trace work was timed directly on the request thread (a timer around
+the trace sample-and-emit path), through a FastAPI TestClient on a copy of the
+947k store: 150 measured ERB queries after 10 warm-up, off and on arms
+interleaved in rotating order, hash chain on.
+
+| Code | Metadata level, p50 / p95 | Full level, p50 / p95 |
+|---|---|---|
+| Before the fixes (a 431-round run) | 46.9 / 56.6 ms | 47.2 / 59.3 ms |
+| Replay fingerprint off the request path ([#501](https://github.com/mbachaud/Cymatix-Context/pull/501)) | 1.11 / 1.76 ms | 1.13 / 1.83 ms |
+| Plus chunks built from assembled documents ([#502](https://github.com/mbachaud/Cymatix-Context/pull/502)) | **0.19 / 0.70 ms** | **0.20 / 0.64 ms** |
+
+- **The writer thread's disk I/O is not included.** The number is the work the
+  request thread does; the append-only writer is asynchronous.
+- **The end-to-end deltas are inside noise.** Every paired bootstrap 95%
+  interval on whole-request latency between arms spans zero, so the
+  on-thread timing is the figure that carries.
+- **Tracing does not change retrieval.** Recorded field values are unchanged,
+  and the v0.11.3 witness above ran with tracing on and reproduced exactly.
+- This supersedes 0.11.2's microbench (event build and enqueue, 12 chunks,
+  p95 215 µs), which did not measure a whole request.
+- Receipts: `benchmarks/dogfood/receipts/trace_overhead_947k_2026-10-11/`
+  (`summary_before_fix.txt`, `receipt_trace_overhead_947k_89f7b23c.json`,
+  `receipt_trace_overhead_947k_7a9717be.json`) in `cymatix-receipts`
+  `b6e9285`, cited by ledger row
+  `2026-10-11-v0113-merged-stack-witness-trace`. The two fix runs were measured
+  on bench branches carrying each fix, not on the tag commit.
+
 ## The ERB pair-quote rule
 
 **The public leaderboard entry is the external number of record.** On the
@@ -338,7 +416,11 @@ receipt.
   `lexical_dense_agree` is structurally dead on the neural-free path. It fails in
   the safe direction (0% false-KNOW) and is tracked as
   [#287](https://github.com/mbachaud/Cymatix-Context/issues/287). Detail:
-  [Agent Contract](Agent-Contract).
+  [Agent Contract](Agent-Contract). The dense-free `[know] model = "lanes"`
+  added in 0.11.2 ([#482](https://github.com/mbachaud/Cymatix-Context/issues/482))
+  ships off; its fit and calibration figures are in the CHANGELOG 0.11.2
+  entries and on #482, with no ledger row yet, so this page does not carry
+  them as receipts.
 - **The sharded gap** ([#275](https://github.com/mbachaud/Cymatix-Context/issues/275)):
   every headline number on this page runs the **unsharded** engine. The sharded
   path currently trails unsharded by **~31pp recall@10 / ~30pp MRR** on the xl bed
@@ -400,10 +482,16 @@ From the 2026-08-09 receipt invalidations onward, the ledger enforces:
   profile (encoder daemon on, per-box worker counts) is for *comparative* work and
   is a documented exception, not the release path.
 
-Large captures, gitignored research outputs, and archived knowledge-store
-snapshots are mirrored to the companion repository
-<https://github.com/mbachaud/cymatix-receipts> — private while its bed contents
-are audited; ask the maintainer for access.
+Receipts live in the companion repository
+<https://github.com/mbachaud/cymatix-receipts>, private while its bed contents
+are audited; ask the maintainer for access. Since 0.11.1
+([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) the main
+repository no longer tracks `benchmarks/dogfood/**/receipts*/`. The archive's
+`mirror/` is a byte-identical export of every receipt tracked up to `e3825e4b`,
+later receipts go to `untracked/`, and a path cited in the ledger or on this
+page resolves at the same relative path under either. Large captures,
+gitignored research outputs, and archived knowledge-store snapshots are
+mirrored there too.
 
 ## Why the benchmarks look like this
 
