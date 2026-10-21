@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **bench(beir): dense tail-lane gold-recovery tool + EmbeddingGemma 2 receipts.**
+  `benchmarks/dogfood/beir/dense_tail_recovery.py` scores the wider-funnel
+  "reserved tail seats" design offline: the head is the shipped pipeline's
+  top-12 (ladder `--rank-dump`, untouched), the tail is a standalone dense
+  ranking (brute-force cosine over the bed, encoded exactly as dense ingest
+  does; bed opened read-only) with head documents removed, and it reports how
+  many head-missed gold documents N tail seats recover. First receipts at
+  63d69647 with `google/embeddinggemma-2` (768-d): SciFact head recall@12
+  0.734 -> 0.927 with 4 tail seats (69/94 missed gold recovered), NFCorpus
+  0.152 -> 0.212 with 8. Measurement only, no default changes; possible
+  training-set contamination of the dense model on these BEIR sets is not
+  ruled out. `stash_ladder_receipts.py` gains `--pattern`; manifest
+  `ladder_receipts_gemma-tail-2026-10-14.json`.
+
 - **feat(dense): opt-in EmbeddingGemma 2 support in the dense codec.**
   `[retrieval] dense_model = "google/embeddinggemma-2"` with
   `dense_embedding_dim` 768 / 512 / 256 / 128 loads the model text-only
