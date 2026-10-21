@@ -57,7 +57,7 @@ direct MCP; a healthy headless server is sufficient.
 ## Activate, refresh, and verify
 
 MCP activation follows the native `enabled` field. Restart Codex, confirm the
-entry and six lean tools, and call `cymatix_health`. A status report is:
+entry and 11 lean tools, and call `cymatix_health`. A status report is:
 
 ```bash
 cymatix-status --host codex --json
