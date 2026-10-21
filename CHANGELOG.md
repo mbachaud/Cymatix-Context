@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **fix(packet): the full-text budget trim keeps exactly one of `know` /
+  `miss`.** Under the opt-in `[budget] full_text_delivery`, a packet that had
+  to drop primary items to fit `context_max_chars` or the token budget cleared
+  both blocks and shipped neither, breaking the agent contract. The verdict is
+  now re-decided on the surviving items (trimmed documents leave the score map,
+  so `know.gene_id_match` and `top_score` name a delivered document), and the
+  re-decided block counts toward the cap. Dropping a companion leaves the
+  verdict alone. Shipped defaults never take this path.
+
 - **feat(dense): opt-in EmbeddingGemma 2 support in the dense codec.**
   `[retrieval] dense_model = "google/embeddinggemma-2"` with
   `dense_embedding_dim` 768 / 512 / 256 / 128 loads the model text-only

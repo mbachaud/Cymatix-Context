@@ -757,14 +757,34 @@ def build_context_packet(
         # Include all serialized metadata in the hard packet cap. Remove whole
         # supplements first, then trailing primary items; never clip a body.
         token_cap = budget_config.ribosome_tokens + budget_config.expression_tokens
+        trimmed_ids: set[str] = set()
         while (len(packet.model_dump_json()) > budget_config.context_max_chars
                or estimate_tokens(packet.model_dump_json()) > token_cap):
             items = packet.companions or packet.stale_risk or packet.verified
             if not items:
                 raise ValueError("context_max_chars is too small for packet metadata")
             removed = items.pop()
-            packet.know = None
-            packet.miss = None
+            if items is not packet.companions:
+                # A trimmed primary item may be the one know points at, so
+                # re-decide on the survivors: the packet keeps exactly one of
+                # know/miss, and the loop re-measures it in the cap.
+                trimmed_ids.add(removed.gene_id)
+                try:
+                    _attach_know_or_miss(
+                        packet,
+                        query=query,
+                        genes=[g for g in genes if g.gene_id not in trimmed_ids],
+                        score_map={k: v for k, v in score_map.items() if k not in trimmed_ids},
+                        coordinate_confidence=coordinate_confidence,
+                        tier_contributions={k: v for k, v in tier_contributions.items() if k not in trimmed_ids},
+                    )
+                except Exception:
+                    import logging
+                    logging.getLogger("cymatix.context_packet").warning(
+                        "Stage-6 know/miss re-attach after budget trim failed", exc_info=True
+                    )
+                    packet.know = None
+                    packet.miss = None
             surviving_sources = {i.source_id for i in (*packet.verified, *packet.stale_risk, *packet.companions)}
             packet.refresh_targets = [t for t in packet.refresh_targets if t.source_id in surviving_sources]
             if packet.delivery is not None:
