@@ -75,7 +75,7 @@ the optional model proxy or tray.
 Project approval and the host session determine activation; a configured file
 cannot prove that approval. Restart Claude Code after project approval or MCP
 configuration changes, then run `claude mcp get cymatix-context`,
-`claude mcp list`, or `/mcp`. Confirm the six lean tools are listed and call
+`claude mcp list`, or `/mcp`. Confirm the 11 lean tools are listed and call
 `cymatix_health`. For a read-only machine summary, run:
 
 ```bash
