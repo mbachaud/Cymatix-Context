@@ -1067,10 +1067,6 @@ class KnowledgeStore:
         except Exception:
             log.debug("WAL pre-open checkpoint failed", exc_info=True)
 
-        self.conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
-        self.conn.row_factory = sqlite3.Row
-        self.conn.execute("PRAGMA journal_mode=WAL")
-        self.conn.execute(f"PRAGMA busy_timeout={WRITER_BUSY_MS}")  # retry on lock
         # Issue #372: default NORMAL — under WAL a per-commit fsync (FULL,
         # SQLite's own default) is not needed for corruption-safety, and
         # ingest currently commits per strand. Invalid values fall back
@@ -1083,19 +1079,19 @@ class KnowledgeStore:
             )
             _sync = "NORMAL"
         self._synchronous = _sync
-        self.conn.execute(f"PRAGMA synchronous={_sync}")
-        # Cap WAL file size — without this, SQLite resets (zero-fills) the
-        # WAL on truncate but keeps the high-water-mark size on disk.
-        self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
         # RAM-aware SQLite budget (PRD 2026-05-30: dynamic-ram-scaling). The
         # plan scales the per-connection page cache + mmap to the host and
         # shard count; ShardRouter threads a shard-count-aware plan, standalone
         # KnowledgeStores resolve a single-DB budget. The `conservative`
         # profile reproduces v0.6.1 exactly (mmap off, 2/4 MB caches) — the
         # fan-out commit guard, now opt-in rather than the unconditional default.
-        _plan = self._mem_plan if self._mem_plan is not None else sqlite_memory_budget(1)
-        self.conn.execute(f"PRAGMA cache_size={_plan.writer_cache_size}")
-        self.conn.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
+        # Resolved once here and reused by every writer reopen: the auto
+        # profiles read live available RAM, so re-resolving after vacuum()
+        # could hand the writer a different budget mid-run.
+        self._sqlite_plan = (
+            self._mem_plan if self._mem_plan is not None else sqlite_memory_budget(1)
+        )
+        self.conn = self._open_writer_conn()
         self._upsert_count = 0  # WAL checkpoint cadence counter
         # Bug bash 2026-07-18: the write connection is shared across threads
         # (check_same_thread=False). Serialize multi-statement upsert
@@ -1225,8 +1221,8 @@ class KnowledgeStore:
             # FTS5/dense scan load, so under `conservative` it keeps the
             # historical larger 4 MB cap; under auto/aggressive both connections
             # share the scaled cache figure and the same mmap window.
-            self._reader.execute(f"PRAGMA cache_size={_plan.reader_cache_size}")
-            self._reader.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
+            self._reader.execute(f"PRAGMA cache_size={self._sqlite_plan.reader_cache_size}")
+            self._reader.execute(f"PRAGMA mmap_size={self._sqlite_plan.mmap_size}")
         else:
             self._reader = None
         # Perf slice 2: per-thread reader connections (see read_conn).
@@ -1876,6 +1872,26 @@ class KnowledgeStore:
                 local.conn = conn
             return conn
         return self.conn
+
+    def _open_writer_conn(self) -> sqlite3.Connection:
+        """The long-lived writer connection with every boot-path PRAGMA.
+
+        Boot, vacuum() and the refresh() fallback all open through here, so a
+        reopen cannot silently drop synchronous / cache_size / mmap_size back
+        to SQLite's defaults (tech-debt audit 2026-10-22, finding 9). The
+        caller installs the commit trace.
+        """
+        conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute(f"PRAGMA busy_timeout={WRITER_BUSY_MS}")  # retry on lock
+        conn.execute(f"PRAGMA synchronous={self._synchronous}")
+        # Cap WAL file size — without this, SQLite resets (zero-fills) the
+        # WAL on truncate but keeps the high-water-mark size on disk.
+        conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+        conn.execute(f"PRAGMA cache_size={self._sqlite_plan.writer_cache_size}")
+        conn.execute(f"PRAGMA mmap_size={self._sqlite_plan.mmap_size}")
+        return conn
 
     def _open_reader_conn(self) -> sqlite3.Connection:
         """One mode=ro autocommit connection, pragmas mirroring _reader."""
@@ -6019,11 +6035,7 @@ class KnowledgeStore:
                     self.conn.close()
                 except Exception:
                     pass
-                self.conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
-                self.conn.row_factory = sqlite3.Row
-                self.conn.execute("PRAGMA journal_mode=WAL")
-                self.conn.execute("PRAGMA busy_timeout=30000")
-                self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+                self.conn = self._open_writer_conn()
                 self._install_commit_trace()
 
     # ── Close ───────────────────────────────────────────────────────
@@ -6151,11 +6163,7 @@ class KnowledgeStore:
                 log.warning("VACUUM failed", exc_info=True)
 
             # Reopen the long-lived connection
-            self.conn = sqlite3.connect(path, check_same_thread=False, timeout=30)
-            self.conn.row_factory = sqlite3.Row
-            self.conn.execute("PRAGMA journal_mode=WAL")
-            self.conn.execute("PRAGMA busy_timeout=30000")
-            self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+            self.conn = self._open_writer_conn()
             self._install_commit_trace()
 
         after = os.path.getsize(path) if os.path.exists(path) else 0

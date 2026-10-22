@@ -143,6 +143,10 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # Perf slice 2: per-thread reader-connection factory — single-db
     # machinery; the adapter's per-shard stores each own their readers.
     "_open_reader_conn",
+    # Tech-debt audit 2026-10-22 (finding 9): the shared writer-connection
+    # opener for boot / vacuum() / refresh() — single-db machinery, same as
+    # the commit-trace installer above; the V1 adapter has no writer.
+    "_open_writer_conn",
 
     # 2026-08-03 ERB fix: Tier-2 SQL builder, internal to query_docs —
     # each shard store builds its own; the adapter never calls it.
