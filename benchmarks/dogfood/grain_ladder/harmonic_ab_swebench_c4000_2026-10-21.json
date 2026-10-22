@@ -1,0 +1,36 @@
+{
+  "tag": "swebench",
+  "grain": 4000,
+  "stamp": "2026-10-21",
+  "n": 489,
+  "git_sha": "71c5d2cf5d5aa1cca2925233b65965c1c2a99bb2",
+  "harmonic_links": 150295,
+  "links": {
+    "delivered_gold_rate": 0.3721881390593047,
+    "recall_at_k": 0.6401,
+    "mean_rank_of_gold": 8.36,
+    "chars_mean": 10686,
+    "wall_ms_p50": 1884,
+    "receipt": "F:\\tmp\\harmonic_ab_2026-10-21\\ladder_swebench_c4000_links_2026-10-21.json",
+    "bed": "F:\\tmp\\harmonic_ab_2026-10-21\\swebench_c4000_links\\swebench.db",
+    "config": "F:\\tmp\\harmonic_ab_2026-10-21\\swebench_c4000_links\\config.toml"
+  },
+  "nolinks": {
+    "delivered_gold_rate": 0.37423312883435583,
+    "recall_at_k": 0.638,
+    "mean_rank_of_gold": 8.36,
+    "chars_mean": 10686,
+    "wall_ms_p50": 1690,
+    "receipt": "F:\\tmp\\harmonic_ab_2026-10-21\\ladder_swebench_c4000_nolinks_2026-10-21.json",
+    "bed": "F:\\tmp\\harmonic_ab_2026-10-21\\swebench_c4000_nolinks\\swebench.db",
+    "config": "F:\\tmp\\harmonic_ab_2026-10-21\\swebench_c4000_nolinks\\config.toml"
+  },
+  "paired_links_vs_nolinks": "+0/-1",
+  "delivered_gained": [],
+  "delivered_lost": [
+    "swe_django__django-15732"
+  ],
+  "needles_rank_of_first_gold_moved": 48,
+  "needles_delivered_set_changed": 30,
+  "design": "same config (classcap + harmonic_batching_enabled=true) on byte copies; links copy backfilled with seeded same-source edges; per-needle pairing by name"
+}
