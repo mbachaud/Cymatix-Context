@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **fix(storage): the writer connection keeps its PRAGMAs across a reopen.**
+  `vacuum()` (so `/admin/vacuum`) and the `refresh()` fallback reopened the
+  long-lived writer with only WAL / busy_timeout / journal_size_limit, so the
+  writer silently fell back to SQLite's defaults: `synchronous=FULL` instead of
+  the #372 `[genome] synchronous` value (NORMAL), the default 2 MB page cache,
+  and no mmap, until the next restart. Boot and both reopen paths now share one
+  `_open_writer_conn()`, and the memory plan resolved at boot is reused rather
+  than re-read from live RAM. Query results are unaffected; boot issues the
+  same PRAGMA sequence as before.
+
 - **feat(dense): opt-in EmbeddingGemma 2 support in the dense codec.**
   `[retrieval] dense_model = "google/embeddinggemma-2"` with
   `dense_embedding_dim` 768 / 512 / 256 / 128 loads the model text-only
