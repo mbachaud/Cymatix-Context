@@ -82,6 +82,7 @@ SECTION_TO_CLASS: Dict[str, Optional[str]] = {
     "classifier": "ClassifierConfig",
     "retrieval": "RetrievalConfig",
     "plr": "PLRConfig",
+    "system_one": "SystemOneConfig",  # optional System One packet judge (experimental)
     "know": "KnowConfig",
     "abstain": "AbstainConfig",
     "vault": "VaultConfig",
