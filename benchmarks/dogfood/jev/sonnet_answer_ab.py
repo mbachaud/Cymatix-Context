@@ -419,6 +419,25 @@ def stage_report(run: Path) -> None:
         s["paired_cymatix_to_jev"] = dict(Counter(
             f"{by[(n, 'cymatix')]['label']}->{by[(n, 'jev')]['label']}" for n in names))
         summary[cohort] = s
+    # Among answers the model committed to (not NOT_FOUND): does Jev's packet
+    # probability separate right from wrong better than cymatix's own top score?
+    top = {x["needle"]: x["cymatix"]["top_score"] for x in git_json(JEV_RECEIPT)["needles"]}
+    summary["committed_answer_gate"] = {}
+    for arm in ("cymatix", "jev"):
+        ans = [g for g in rows if g["arm"] == arm and g["label"] != "not_found"]
+        y = [g["label"] == "correct" for g in ans]
+        s = {"answered": len(ans), "correct": sum(y),
+             "auroc_jev_packet": auroc([g["jev_packet"] for g in ans], y),
+             "auroc_cymatix_top_score": auroc([top[g["needle"]] for g in ans], y),
+             "drop_lowest": {}}
+        for k in (4, 8, 12):
+            for name, key in (("jev_packet", lambda g: g["jev_packet"]),
+                              ("cymatix_top_score", lambda g: top[g["needle"]])):
+                kept = sorted(ans, key=lambda g: (key(g), g["needle"]))[k:]
+                s["drop_lowest"][f"{k}_by_{name}"] = {
+                    "correct": sum(g["label"] == "correct" for g in kept),
+                    "wrong": sum(g["label"] != "correct" for g in kept)}
+        summary["committed_answer_gate"][arm] = s
     rk = [g for g in rows if g["cohort"] == "ranked"]
     summary["ranked_by_cymatix_gold_rank"] = {
         bucket: {arm: tally([g for g in rk if g["arm"] == arm and
