@@ -1357,6 +1357,55 @@ class PLRConfig:
 
 
 @dataclass
+class SystemOneConfig:
+    """Optional System One packet judge (EXPERIMENTAL, default off).
+
+    A "System One" model answers typed questions with calibrated
+    probabilities instead of generated text; TypeSafe's Jev is the reference
+    provider. When enabled, /context/packet gains an additive ``system_one``
+    block: the probability that the packet states the answer (one question-
+    type call + one packet call), and, with ``rerank_items``, a per-item
+    answers probability that reorders items inside each evidence bucket
+    (one call per item). It never drops items and never changes the
+    know/miss contract. Receipts: ERB 947k packet know/miss AUROC 0.900
+    without cymatix rankings in the request, gold MRR 0.69 -> 0.91 under
+    the rerank (docs/benchmarks/2026-10-23-jev-system-one-packet-judge.md).
+
+    Enabling it sends the query and the packet's item text to the provider.
+    The key is read from the ``api_key_env`` environment variable, never
+    from TOML.
+    """
+    # Master switch. Off = no provider calls and no `system_one` block.
+    enabled: bool = False
+    # Provider endpoint taking POST {model, state, questions}.
+    url: str = "https://api.typesafe.ai/v1/systemone"
+    # Provider model id; the response's resolved version is echoed in the block.
+    model: str = "jev-latest"
+    # Name of the environment variable holding the provider key (never the key).
+    api_key_env: str = "TYPESAFE_API_KEY"
+    # Per-request HTTP timeout, seconds.
+    timeout_s: float = 30.0
+    # Pacing floor between provider requests (conservative workload budget).
+    min_interval_s: float = 0.3
+    # answers_p >= know_threshold -> verdict "know". 0.5 measured accuracy
+    # 0.80 on ERB 947k; 0.7 trades recall for precision (see the receipts).
+    know_threshold: float = 0.5
+    # Per-item calls reorder items inside verified / stale_risk by answers_p.
+    rerank_items: bool = False
+    # Per-item text cap sent to the provider (Jev's per-question budget is
+    # ~150k chars across the packet).
+    max_item_chars: int = 8000
+
+    def __post_init__(self) -> None:
+        if not 0.0 <= self.know_threshold <= 1.0:
+            raise ValueError("[system_one] know_threshold must be in [0, 1]")
+        if self.timeout_s <= 0:
+            raise ValueError("[system_one] timeout_s must be positive")
+        if self.max_item_chars < 1:
+            raise ValueError("[system_one] max_item_chars must be positive")
+
+
+@dataclass
 class HeadroomConfig:
     """Headroom proxy lifecycle controls — launcher only.
 
@@ -1485,6 +1534,8 @@ class CymatixConfig:
     abstain: AbstainConfig = field(default_factory=AbstainConfig)
     session: SessionConfig = field(default_factory=SessionConfig)
     plr: PLRConfig = field(default_factory=PLRConfig)
+    # Optional System One packet judge (experimental, default off).
+    system_one: SystemOneConfig = field(default_factory=SystemOneConfig)
     headroom: HeadroomConfig = field(default_factory=HeadroomConfig)
     classifier: ClassifierConfig = field(default_factory=ClassifierConfig)
     # Stage 6 KnowBlock calibration — folded in from the know_calibration
@@ -1547,6 +1598,7 @@ _KNOWN_TOP_LEVEL_SECTIONS = {
     "ribosome", "budget", "genome", "server", "encoder_daemon", "telemetry",
     "ingestion", "context", "cymatics", "retrieval", "abstain", "session",
     "plr", "headroom", "classifier", "know", "hardware", "vault", "synonyms",
+    "system_one",
     # mem_sync is a real, documented, shipped [mem_sync] section (CLAUDE.md
     # [mem_sync]: watch_dirs, sync_interval_s) — but scripts/run_mem_sync.py
     # parses cymatix.toml itself and reads it directly; load_config() never
@@ -2252,6 +2304,23 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             high_risk_threshold=float(
                 p.get("high_risk_threshold", cfg.plr.high_risk_threshold)
             ),
+        )
+
+    # System One — optional typed-question packet judge (experimental, off)
+    if "system_one" in raw:
+        so = raw["system_one"]
+        _warn_unknown("system_one", so, SystemOneConfig)
+        d = cfg.system_one
+        cfg.system_one = SystemOneConfig(
+            enabled=bool(so.get("enabled", d.enabled)),
+            url=str(so.get("url", d.url)),
+            model=str(so.get("model", d.model)),
+            api_key_env=str(so.get("api_key_env", d.api_key_env)),
+            timeout_s=float(so.get("timeout_s", d.timeout_s)),
+            min_interval_s=float(so.get("min_interval_s", d.min_interval_s)),
+            know_threshold=float(so.get("know_threshold", d.know_threshold)),
+            rerank_items=bool(so.get("rerank_items", d.rerank_items)),
+            max_item_chars=int(so.get("max_item_chars", d.max_item_chars)),
         )
 
     # Headroom — optional proxy lifecycle controls
