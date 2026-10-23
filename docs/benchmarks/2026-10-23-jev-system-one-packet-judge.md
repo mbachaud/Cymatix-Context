@@ -43,8 +43,9 @@ the judge (AUROC 0.906 vs 0.900 without them, delta inside noise).
 All on branch `claude/jev-packet-assembly-test-138065` (local; cut from
 `bench/c580-multicorpus` a2793a7a for the c4000 profile, 0 behind master at run
 time), mirrored with harnesses in the private `cymatix-receipts` repo at
-`mirror-branches/claude__jev-packet-assembly-test-138065/` (commit 3760062).
-Every receipt carries every raw Jev response; `--rescore` needs no key.
+`mirror-branches/claude__jev-packet-assembly-test-138065/` (commit 3760062;
+re-exported with the Laya runs at branch head f1a23ae3 as 8ce1b52).
+Every receipt carries every raw provider response; `--rescore` needs no key.
 
 | run | harness commit | bed | needles | receipt |
 |---|---|---|---|---|
@@ -52,6 +53,7 @@ Every receipt carries every raw Jev response; `--rescore` needs no key.
 | ERB, with rankings | dd559101 | `erb_full_c4000_lean.db`, 947,532 genes | 470 | `jev_erb_packet_know_c4000_classcap_2026-10-23.json` |
 | ERB, without rankings | 29ae7e7f (replays the packets above) | same | 470 | `jev_erb_packet_know_c4000_classcap_noincoming_2026-10-23.json` |
 | paired comparison | 29ae7e7f | — | 470 | `compare_with_vs_no_incoming_erb_c4000_2026-10-23.json` |
+| Laya (local), 239b + ERB replay | 37f788a5 / f1a23ae3 | same beds; ERB packets replayed | 72 / 470 | `laya_*_2026-10-23.json`, `compare_jev_vs_laya*_erb_c4000_2026-10-23.json`, `laya_truncation_2026-10-23.txt` |
 
 ERB needle set `benchmarks/dogfood/erb/needles_resolved_grain4000_full.json`
 (n=470) with `gold_by_needle_grain4000.json`. **Bed parity:** the ERB run
@@ -117,6 +119,43 @@ packet calls took p50 3.0 s / p90 4.2 s per needle for 9.1 calls (the 0.3 s
 pacing floor dominates). Input tokens p50: question type 462, packet 9,018
 (p90 13,293), chunk 1,625. Judge-only (two calls) ≈ 9.5k input tokens per
 packet; its latency was not measured on its own.
+
+## Local open model: Laya
+
+Can an open, local System One model stand in for the hosted one? Laya 0.4.14
+(ConvAI Innovations, Apache-2.0, ModernBERT/mmBERT encoders) ships `laya-serve`,
+a Jev-compatible `/v1/systemone` server, so the same harness ran against it on
+an RTX 3080 Ti (checkpoint revision 7b928d82). Same no-incoming question set and,
+on ERB, the same 470 packets the Jev arm judged. Laya's server rejects states
+over 50,000 chars, so 48 ERB packets were trimmed evenly per item to fit.
+Truncation below is Laya's own `usage` report.
+
+| run | packet know/miss AUROC | per-chunk answers AUROC | rerank gold MRR | truncation |
+|---|---|---|---|---|
+| Jev 1.14.0, ERB | **0.900** | 0.813 | 0.914 | none |
+| Laya multilingual @ 8192, ERB | 0.563 | 0.532 | 0.567 | 281/470 packets (13% of tokens dropped); chunks none |
+| Laya typed-decisions @ 1024, ERB | 0.480 | 0.576 | 0.654 | 470/470 packets (read p50 944 of 9,057 tokens); 3,018/3,344 chunks (21%) |
+| Jev 1.14.0, 239b | **1.00** | 0.992 | 0.952 | none |
+| Laya english @ 512, 239b | 0.610 | 0.970 | 0.859 | 72/72 packets (21%); chunks none |
+| Laya multilingual @ 8192, 239b | 0.684 | 0.616 | 0.455 | none |
+| Laya typed-decisions @ 1024, 239b | 0.678 | 0.954 | 0.827 | none |
+
+ERB rerank baseline (cymatix order) is 0.691; 239b is 0.665. Against Jev on
+the same ERB packets the packet AUROC delta is −0.337 (multilingual, CI
+[−0.394, −0.275]) and −0.421 (typed-decisions, CI [−0.477, −0.362]); at the
+0.5 threshold both checkpoints call nearly every miss a know (174/179 and
+179/179).
+
+Reading: Laya is not a drop-in packet judge. Even with the whole packet in
+view (239b, no truncation) its packet question scores 0.68 against Jev's
+1.00. What it does do well is judge one short chunk: on 239b the English and
+typed-decisions checkpoints reach per-chunk AUROC 0.97 / 0.95, so the
+best-chunk score carries know/miss at 0.88 / 0.80. On ERB-sized chunks
+(p50 ~1.2k tokens) that strength does not hold. The base checkpoints are
+documented as over-confident (ECE 0.47 English) and Laya's own calibration
+refit was not applied; it would move thresholds, not these AUROCs. The
+`[system_one]` integration can point at a local `laya-serve` (`url`,
+`model`), but these receipts give no reason to.
 
 ## Reading limits
 
