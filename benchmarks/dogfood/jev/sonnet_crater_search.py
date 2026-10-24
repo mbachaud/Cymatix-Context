@@ -512,6 +512,7 @@ def stage_report(run: Path) -> None:
     graded = {g["needle"]: g for g in read_jsonl(run / "graded.jsonl")}   # last label wins
     oneshot = {(r["needle"], r["arm"]): r["label"] for r in
                json.loads((ONESHOT_DIR / "receipt.json").read_text(encoding="utf-8"))["rows"]}
+    receipt_delivered = {nd["needle"]: nd["receipt_delivered"] for nd in load_needles(0)}
     rows = []
     for n, r in sorted(recs.items()):
         lab = graded.get(n, {}).get("label", "ungraded")
@@ -525,16 +526,22 @@ def stage_report(run: Path) -> None:
         gold = set()
         for t in r["turns"]:
             gold |= set(t.get("gold_seen") or [])
-        gold_p = [round(p, 2) for t in r["turns"] for gid, p in (t.get("judge_p") or {}).items() if gid in gold]
+        gold_p = [round(p, 2) for t in r["turns"] if isinstance(t.get("judge_p"), dict)
+                  for gid, p in t["judge_p"].items() if gid in gold]
         gold_p += [round(t["judge_p"], 2) for t in r["turns"]
                    if t.get("cmd") == "READ" and t.get("gold_seen") and "judge_p" in t]
+        any_p = [p for t in r["turns"] for p in (t["judge_p"].values() if isinstance(t.get("judge_p"), dict)
+                                                 else [t.get("judge_p")]) if isinstance(p, (int, float))]
         rows.append({**{k: r[k] for k in ("needle", "erb_type", "final", "commands", "model_turns",
                                           "command_mix", "gold_seen_turn", "gold_full_turn", "tokens",
                                           "cost_usd", "wall_s", "round0_parity")},
                      "label": lab, "why": graded.get(n, {}).get("why"), "outcome": outcome,
                      "oneshot_cymatix": oneshot.get((n, "cymatix")), "oneshot_jev": oneshot.get((n, "jev")),
                      "packet_p_trace": [round(t["packet_p"], 2) for t in r["turns"] if "packet_p" in t],
-                     "gold_judge_p": gold_p})
+                     "gold_judge_p": gold_p,
+                     "max_judge_p": round(max(any_p, default=0.0), 3),
+                     "max_packet_p": round(max((t["packet_p"] for t in r["turns"] if "packet_p" in t), default=0.0), 3),
+                     "round0_set_parity": set(r["turns"][0]["delivered"]) == set(receipt_delivered[n])})
 
     def in_tokens(r):
         return r["tokens"]["input_tokens"] + r["tokens"]["cache_read"] + r["tokens"]["cache_write"]
@@ -553,11 +560,26 @@ def stage_report(run: Path) -> None:
                 "input_tokens_per_needle_median": median([in_tokens(r) for r in rs]),
                 "output_tokens_per_needle_median": median([r["tokens"]["output_tokens"] for r in rs]),
                 "cli_cost_usd": round(sum(r["cost_usd"] for r in rs), 2),
-                "round0_parity": sum(bool(r["round0_parity"]) for r in rs)}
+                "round0_parity": sum(bool(r["round0_parity"]) for r in rs),
+                "round0_set_parity": sum(r["round0_set_parity"] for r in rs)}
+
+    def auroc(pos, neg):
+        if not pos or not neg:
+            return None
+        return round(sum((p > q) + 0.5 * (p == q) for p in pos for q in neg) / (len(pos) * len(neg)), 3)
+
+    def answer_gate(key):
+        # Jev as a post-hoc answer gate: the max score seen anywhere in the loop, correct vs wrong/partial.
+        cor = [r[key] for r in rows if r["label"] == "correct"]
+        bad = [r[key] for r in rows if r["label"] in ("incorrect", "partial")]
+        return {"auroc_correct_vs_wrong": auroc(cor, bad), "n_correct": len(cor), "n_wrong": len(bad),
+                "thresholds": {str(t): {"keep_correct": sum(v >= t for v in cor), "keep_wrong": sum(v >= t for v in bad)}
+                               for t in (0.3, 0.5, 0.7, 0.9)}}
 
     summary = {"all": agg(rows), **{t: agg([r for r in rows if r["erb_type"] == t])
                                     for t in sorted({r["erb_type"] for r in rows})}}
-    summary["vs_oneshot_cymatix"] = dict(Counter(f"{r['oneshot_cymatix']}->{r['label']}" for r in rows))
+    summary["jev_answer_gate"] = {"max_judge_p": answer_gate("max_judge_p"), "max_packet_p": answer_gate("max_packet_p")}
+    summary["vs_oneshot_cymatix"] =dict(Counter(f"{r['oneshot_cymatix']}->{r['label']}" for r in rows))
     summary["by_label"] = {lab: {"n": len(rs), "commands_median": median([r["commands"] for r in rs]),
                                  "input_tokens_median": median([in_tokens(r) for r in rs])}
                            for lab in ("correct", "partial", "incorrect", "not_found", "no_answer")
