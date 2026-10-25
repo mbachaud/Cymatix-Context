@@ -36,7 +36,12 @@ Usage::
 
     $env:PYTHONHASHSEED=0
     python benchmarks/dogfood/jev/sonnet_crater_search.py --run-dir F:/tmp/sonnet_crater_search_2026-10-23 \\
-        --claude-bin <claude.exe 2.1.280+> [--limit 3] [--stage search|grade|report|all]
+        --claude-bin <claude.exe 2.1.280+> [--limit 3] [--stage search|grade|report|all] \\
+        [--answer-model claude-opus-5-5]
+
+``--answer-model`` swaps the searcher (default Sonnet 5.5); the prompts, tools,
+budget and Opus grader stay fixed. A usage-limit reply from ``claude -p`` is
+waited out (10-minute polls, up to 6 h) rather than recorded as an error.
 """
 
 from __future__ import annotations
@@ -79,6 +84,10 @@ GRADER_MODEL = "claude-opus-5-5"
 EFFORT = "high"
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 CLAUDE_BIN = ["claude"]
+# "You've hit your session limit · resets ..." from claude -p on a subscription plan.
+LIMIT_HIT = re.compile(r"hit your .{0,40}limit", re.I)
+LIMIT_POLL_S = 600
+LIMIT_WAIT_MAX_S = 6 * 3600
 
 SYSTEM = (
     "You answer questions about a company's internal documents (email, chat, tickets, "
@@ -161,8 +170,8 @@ def claude_turn(run: Path, system: str, prompt: str, model: str, last_call: list
     wait = 0.3 - (time.monotonic() - last_call[0])
     if wait > 0:
         time.sleep(wait)
-    rec = {}
-    for attempt in range(3):
+    rec, attempt, limit_wait = {}, 0, 0.0
+    while attempt < 3:
         t0 = time.perf_counter()
         try:
             p = subprocess.run(cmd, input=prompt, capture_output=True, text=True, encoding="utf-8",
@@ -187,11 +196,20 @@ def claude_turn(run: Path, system: str, prompt: str, model: str, last_call: list
                        "output_tokens": u.get("output_tokens") or 0,
                        "cost_usd": j.get("total_cost_usd") or 0.0}
         rec["wall_s"] = round(time.perf_counter() - t0, 1)
+        rec["limit_wait_s"] = round(limit_wait)
         last_call[0] = time.monotonic()
         if rec["status"] == "succeeded":
             return rec
-        print(f"  claude attempt {attempt + 1} failed: {str(rec.get('error'))[:200]}", flush=True)
-        time.sleep(5.0 * (attempt + 1))
+        if LIMIT_HIT.search(str(rec.get("error"))) and limit_wait < LIMIT_WAIT_MAX_S:
+            # The plan's usage window ran out: wait for the reset instead of spending
+            # an attempt, so a long run spans windows without recording errors.
+            print(f"  usage limit, waiting {LIMIT_POLL_S // 60} min: {str(rec.get('error'))[:120]}", flush=True)
+            time.sleep(LIMIT_POLL_S)
+            limit_wait += LIMIT_POLL_S
+            continue
+        attempt += 1
+        print(f"  claude attempt {attempt} failed: {str(rec.get('error'))[:200]}", flush=True)
+        time.sleep(5.0 * attempt)
     return rec
 
 
@@ -362,7 +380,7 @@ def run_needle(run: Path, tools: Tools, nd: dict, last_call: list) -> dict:
         cmd, arg = parse_command(m.get("text", ""))
         t = {"turn": len(turns), "by": "model", "cmd": cmd, "arg": arg, "reply": m.get("text"),
              **{k: m.get(k) for k in ("status", "error", "models", "input_tokens", "cache_read",
-                                      "cache_write", "output_tokens", "cost_usd", "wall_s")}}
+                                      "cache_write", "output_tokens", "cost_usd", "wall_s", "limit_wait_s")}}
         if m["status"] != "succeeded":
             turns.append(t)
             final = {"cmd": "ERROR", "text": m.get("error")}
@@ -611,17 +629,20 @@ def stage_report(run: Path) -> None:
 
 
 def main() -> int:
+    global ANSWER_MODEL
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-dir", required=True)
     ap.add_argument("--stage", choices=("search", "grade", "report", "all"), default="all")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--claude-bin", default="claude")
+    ap.add_argument("--answer-model", default=ANSWER_MODEL, help="the searcher; the grader stays Opus 5.5")
     a = ap.parse_args()
     if os.environ.get("PYTHONHASHSEED") != "0":
         print("ERROR: run with PYTHONHASHSEED=0", file=sys.stderr)
         return 2
     CLAUDE_BIN[0] = a.claude_bin
+    ANSWER_MODEL = a.answer_model
     run = Path(a.run_dir)
     run.mkdir(parents=True, exist_ok=True)
     lock = run / "run.lock"
