@@ -166,6 +166,10 @@ select = ["E9", "F63", "F7", "F82"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# A test still running after 10 minutes gets every thread's stack dumped to
+# stderr (it keeps running). CI's test-full-suite intermittently stalls just
+# past 50% until the 60-minute job timeout cancels it; this names the test.
+faulthandler_timeout = 600
 markers = [
     "live: requires Ollama running with at least one model",
     "requires_rocm: opt-in test that needs ROCm-capable hardware (gated by CYMATIX_TEST_ROCM=1)",
