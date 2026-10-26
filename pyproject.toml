@@ -66,7 +66,10 @@ gemma = ["numpy", "sentence-transformers>=6.1.0", "transformers>=5.19.0", "torch
 # spacy floor tracks the en_core_web_sm pipeline build the docs and setup
 # script install (3.8.0, see docs/SETUP.md). The pipeline itself is a
 # separate artifact that pip never pulls in (#313).
-cpu = ["spacy>=3.8"]
+# preshed 3.0.14 breaks loading en_core_web_sm 3.8.0 on spaCy 3.8.16
+# (OverflowError in Tokenizer._flush_specials); 3.0.13 loads. Excluded in
+# every extra that pulls spaCy.
+cpu = ["spacy>=3.8", "preshed!=3.0.14"]
 # MCP SDK — required for `python -m cymatix_context.mcp_server` (Claude Code,
 # Codex, Gemini CLI, and Antigravity integration). Core install does NOT pull
 # this; add the extra if you are an MCP host operator.
@@ -115,6 +118,7 @@ dev = [
     "pytest-asyncio",
     "numpy",
     "spacy>=3.8",
+    "preshed!=3.0.14",  # see the cpu extra
     "hypothesis>=6.0",
     "markdown>=3.4",  # scripts/build_wiki_site.py + its tests
     "rank-bm25>=0.2.2",  # offline RepoBench baseline tests
@@ -129,6 +133,7 @@ all = [
     "numpy",
     "sentence-transformers",
     "spacy>=3.8",
+    "preshed!=3.0.14",  # see the cpu extra
     "mcp>=2,<3",
     "torch>=2.0",
     "transformers>=4.30",

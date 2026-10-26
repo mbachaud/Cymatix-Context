@@ -35,6 +35,7 @@ PINNED = [
     "benchmarks/dogfood/erb/sema_readgate_cell.py",
     "benchmarks/dogfood/erb/verify_a1_code_trace.py",
     "benchmarks/dogfood/hit_slate_sample.py",
+    "benchmarks/dogfood/jev/sonnet_crater_search.py",
     "benchmarks/dogfood/mine_interlopers.py",
     "benchmarks/dogfood/run_baseline.py",
     "benchmarks/dogfood/run_expression_arms.py",
