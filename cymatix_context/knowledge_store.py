@@ -1920,8 +1920,9 @@ class KnowledgeStore:
 
         Below the bind cap, preserve the existing SQL. The opt-in large-pool
         path inserts IDs one parameter at a time into a connection-local TEMP
-        table, then joins both endpoints against it. No edge list is copied
-        into Python, and links crossing insertion batches remain eligible.
+        table, joins it to gene_id_a and filters gene_id_b by pool
+        membership while streaming. Links crossing insertion batches remain
+        eligible.
 
         A savepoint rolls back all staging on success or failure without
         committing callers' pending work. TEMP writes work on mode=ro readers.
@@ -1966,12 +1967,19 @@ class KnowledgeStore:
                         f"INSERT INTO temp.{name} (doc_id) VALUES (?)",
                         ((doc_id,) for doc_id in candidate_ids),
                     )
-                    yield staging.execute(
+                    # Drive the pool on gene_id_a only and filter gene_id_b
+                    # in Python, as the unbatched path does: ``b IN (pool)``
+                    # in SQL is planned as an (a, b) key probe for every
+                    # pair in P x P (171k pool ~ 15 min per query). CROSS
+                    # JOIN keeps the pool as the outer loop.
+                    members = frozenset(candidate_ids)
+                    rows = staging.execute(
                         "SELECT h.gene_id_a, h.gene_id_b, h.weight "
-                        "FROM harmonic_links AS h "
-                        f"WHERE h.gene_id_a IN (SELECT doc_id FROM temp.{name}) "
-                        f"AND h.gene_id_b IN (SELECT doc_id FROM temp.{name})"
+                        f"FROM temp.{name} AS p CROSS JOIN harmonic_links AS h "
+                        "ON h.gene_id_a = p.doc_id "
+                        "ORDER BY h.gene_id_a, h.gene_id_b"
                     )
+                    yield (r for r in rows if r["gene_id_b"] in members)
                 finally:
                     # Finalize a partially consumed SELECT before undoing its
                     # TEMP schema. Rollback also removes partially inserted IDs.
