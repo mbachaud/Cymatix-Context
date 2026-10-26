@@ -52,7 +52,7 @@ The pipeline emits a **know/miss agent contract** on `/context/packet`: every re
 
 ## Package Structure (post-PR #90)
 
-After the repo restructure, `cymatix_context/` is organized into 16 sub-packages plus a handful of top-level orchestration modules. (The old `helix_context` alias package was removed in 0.8.5.)
+After the repo restructure, `cymatix_context/` is organized into 17 sub-packages plus a handful of top-level orchestration modules. (The old `helix_context` alias package was removed in 0.8.5.)
 
 | Package | Purpose |
 |---------|---------|
@@ -67,6 +67,7 @@ After the repo restructure, `cymatix_context/` is organized into 16 sub-packages
 | `scoring/` | Cymatics, know-calibration, know-decision, ray-trace, TCM, blending |
 | `server/` | FastAPI app factory + route modules (context, ingest, registry, admin) |
 | `storage/` | DDL, indexes, co-activation graph |
+| `sync/` | In-process delta sync of tracked folders (`[sync]`): tracker + worker, re-ingest changed files, tombstone stale and deleted ones |
 | `telemetry/` | OTel metrics, histogram instrumentation |
 | `vault/` | Obsidian vault export (read-only diagnostic traces) |
 | `launcher/` | System-tray supervisor (backend + telemetry stack) |
@@ -75,7 +76,7 @@ After the repo restructure, `cymatix_context/` is organized into 16 sub-packages
 
 Top-level modules: `context_manager.py` (pipeline orchestrator), `config.py` (TOML loader), `schemas.py` (Pydantic models), `knowledge_store.py` (SQLite DDL + retrieval), `codons.py` (chunker + encoder), `tagger.py` (CPU ingest tagger).
 
-**Biology-lexicon shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations (the domain metaphor, not the helix brand). See the wiki Lexicon page (docs/ROSETTA.md is a stub) for the full biology-to-software lexicon. The `helix_context` alias package was removed in 0.8.5 — import `cymatix_context`.
+**Biology-lexicon shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `mcp_server.py` re-export from their new locations (`server` is the `server/` package itself, whose `__init__.py` keeps the old `cymatix_context.server` import names) (the domain metaphor, not the helix brand). See the wiki Lexicon page (docs/ROSETTA.md is a stub) for the full biology-to-software lexicon. The `helix_context` alias package was removed in 0.8.5 — import `cymatix_context`.
 
 ## Configuration
 

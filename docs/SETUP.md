@@ -489,30 +489,28 @@ near-instant.
 
 ### OTel exporter
 
-`start-cymatix-tray.bat` line 21 sets `CYMATIX_OTEL_ENABLED=1`. The cymatix
+`start-cymatix-tray.bat` sets `CYMATIX_OTEL_ENABLED=1`. The cymatix
 server reads that env var at boot and tries to construct an OTLP
 exporter. If the `[otel]` extra is **not** installed, the server logs a
 single WARN line on boot and continues serving — but emits no metrics,
 no traces, no structured logs. Grafana dashboards will be empty.
 
-Verify the exporter is wired:
+`/health` does not report exporter state. Verify the exporter is wired
+from the server's boot log instead (`cymatix_context/telemetry/otel.py`):
 
-```bash
-curl -s http://127.0.0.1:11437/health | python -m json.tool
-```
+- `OTel telemetry ON, endpoint=... insecure=... sampler=...` (WARNING) —
+  `[otel]` installed and the OTLP exporter built.
+- `OTel packages not installed — ...` (WARNING) — telemetry was enabled
+  but `[otel]` is not installed. Grafana will be empty until you add the
+  extra.
+- `OTel disabled (set CYMATIX_OTEL_ENABLED=1 ...)` (INFO, so hidden at the
+  default WARNING log level) — telemetry is off: `CYMATIX_OTEL_ENABLED` is
+  unset or `0` AND `[telemetry] enabled` in cymatix.toml is false (the
+  shipped default), and the tray launcher has not exported the enable (it
+  does so once the local stack's collector port is up). This is the
+  intended state for the proxy-only flow.
 
-Look for the `observability.exporter` field. Expected values:
-
-- `"otlp_grpc"` — `[otel]` installed and OTLP exporter built.
-- `"noop"` — `CYMATIX_OTEL_ENABLED=1` but `[otel]` not installed.
-  Grafana will be empty until you add the extra.
-- absent / `null` — telemetry is off: `CYMATIX_OTEL_ENABLED` is unset or
-  `0` AND `[telemetry] enabled` in cymatix.toml is false (the shipped
-  default), and the tray launcher has not exported the enable (it does
-  so once the local stack's collector port is up). This is the intended
-  state for the proxy-only flow.
-
-If the field shows `"noop"` and you want telemetry, run
+If the log shows `OTel packages not installed` and you want telemetry, run
 `pip install -e ".[otel]"` and restart the tray.
 
 ## Post-install operator actions for the 7-stage retrieval-fix
