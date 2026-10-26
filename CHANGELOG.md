@@ -4,6 +4,15 @@
 
 ## 0.11.4 (2026-10-26)
 
+- **Release gate: 947k merged-stack witness with packet tracing on,
+  EXACT_REPRODUCE** (BASELINES row
+  `2026-10-26-v0114-merged-stack-witness-trace`). Beta `31ad8261` delivered
+  314/470 (0.6681), with 0/470 per-needle differences from the v0.11.3
+  witness. 470 packet traces were written and the hash chain verified. The
+  release head adds only #513's BEIR bench files on top of the witnessed
+  commit. No shipped default changed. Receipts: `cymatix-receipts`
+  `e7117cb`.
+
 - **fix(deps): exclude preshed 3.0.14** (PR #524, commit `201fa6ee`).
   preshed 3.0.14 breaks loading `en_core_web_sm` 3.8.0 on spaCy 3.8.16
   (`OverflowError` in `Tokenizer._flush_specials`), so a fresh
