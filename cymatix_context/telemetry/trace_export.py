@@ -68,6 +68,7 @@ FIELD_DECISIONS = {
     "chunks[].source_kind": "keep", "chunks[].lane_contribs": "keep",
     "chunks[].ingested_at": "keep",
     "verdict": "keep", "timing_ms": "keep",
+    "timing_ms.stages": "keep", "timing_ms.signals": "keep", "pool": "keep",
     "trace.trace_id": "rekey", "trace.parent_span_id": "rekey",
     "trace.trace_flags": "keep", "prev_hash": "drop",
 }

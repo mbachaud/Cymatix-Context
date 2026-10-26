@@ -37,7 +37,20 @@
       },
       "additionalProperties": true
     },
-    "timing_ms": {"type": "object", "additionalProperties": {"type": "number"}},
+    "timing_ms": {
+      "type": "object",
+      "properties": {
+        "total": {"type": "number"},
+        "stages": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}},
+        "signals": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}}
+      },
+      "additionalProperties": {"type": "number"}
+    },
+    "pool": {
+      "type": "object",
+      "description": "Candidates scored per tier plus pool_total (pool reaching Tier 5).",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
     "trace": {
       "type": "object",
       "properties": {

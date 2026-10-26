@@ -146,3 +146,62 @@ def test_encode_batch_vectors_unchanged_by_release(monkeypatch):
     with patch.dict(sys.modules, {"torch": fake_torch}):
         on = _make_batch_codec(device="cuda").encode_batch(["a", "b", "c"])
     assert np.allclose(np.array(off), np.array(on))
+
+
+def _make_gemma_codec_with_mock(dim=768):
+    codec = BGEM3Codec(dim=dim, model_name="google/embeddinggemma-2")
+    mock_model = MagicMock()
+    mock_model.encode.side_effect = lambda x, **kw: (
+        np.ones(dim, dtype=np.float32) if isinstance(x, str)
+        else np.ones((len(x), dim), dtype=np.float32)
+    )
+    codec._model = mock_model
+    codec._backend = "sentence_transformers"
+    return codec
+
+
+def test_embeddinggemma_detected_by_name():
+    assert _codec_mod.is_embeddinggemma("google/embeddinggemma-2")
+    assert not _codec_mod.is_embeddinggemma("BAAI/bge-m3")
+
+
+def test_embeddinggemma_query_and_document_prefixes():
+    codec = _make_gemma_codec_with_mock()
+    codec.encode("why is the sky blue", task="query")
+    assert codec._model.encode.call_args[0][0] == "task: search result | query: why is the sky blue"
+    codec.encode_batch(["a doc"], task="passage")
+    assert codec._model.encode.call_args[0][0] == ["title: none | text: a doc"]
+
+
+def test_embeddinggemma_single_and_batch_encode_match():
+    codec = _make_gemma_codec_with_mock(dim=256)
+    assert codec.encode("x", task="passage") == codec.encode_batch(["x"], task="passage")[0]
+
+
+def test_embeddinggemma_mrl_dims_do_not_warn(caplog):
+    BGEM3Codec._UNSANCTIONED_DIM_WARNED.discard(256)
+    with caplog.at_level("WARNING"):
+        BGEM3Codec(dim=256, model_name="google/embeddinggemma-2")
+    assert "not a sanctioned" not in caplog.text
+
+
+def test_failed_load_is_not_retried():
+    codec = BGEM3Codec(dim=256, model_name="google/embeddinggemma-2")
+    with patch.object(BGEM3Codec, "_build_model", side_effect=RuntimeError("boom")) as build:
+        for _ in range(5):
+            with pytest.raises(RuntimeError):
+                codec.encode("doc", task="passage")
+    assert build.call_count == 1
+
+
+def test_embeddinggemma_stack_check_names_the_fix(monkeypatch):
+    from importlib import metadata
+
+    real = metadata.version
+    monkeypatch.setattr(
+        metadata, "version",
+        lambda pkg: "5.3.0" if pkg == "sentence-transformers" else real(pkg),
+    )
+    monkeypatch.setitem(_codec_mod._GEMMA_FLOORS, "torchvision", None)
+    with pytest.raises(RuntimeError, match=r"sentence-transformers 5\.3\.0 < 6\.1\.0.*cymatix-context\[gemma\]"):
+        _codec_mod.check_embeddinggemma_stack()

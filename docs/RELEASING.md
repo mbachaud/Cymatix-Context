@@ -210,8 +210,9 @@ git push origin --delete release/v0.9.2
 # 2. Wiki: GitHub wiki and the site render from the same wiki/ directory.
 python scripts/sync_github_wiki.py --dry-run
 python scripts/sync_github_wiki.py
-python scripts/build_wiki_site.py --site-dir F:/Projects/cymatix-context/site
-#    then commit and deploy the site checkout the way the site README says.
+python scripts/build_wiki_site.py --site-dir F:/Projects/cymatix-website
+#    then commit public/wiki/ on a branch of the cymatix-website repo and open
+#    a PR there; merging to its master deploys (see that repo's AGENTS.md).
 
 # 3. Ledger: add a comment on the 0.9.x ledger issue (#377) naming the tag,
 #    the gate receipt, and which deferred items moved.

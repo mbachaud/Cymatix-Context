@@ -624,6 +624,7 @@ def build_genome_kwargs(config, sema_codec=None) -> dict:
         synonym_map=config.synonym_map,
         sema_codec=sema_codec,
         synchronous=config.genome.synchronous,  # #372: writer PRAGMA synchronous
+        cover_index_autobuild=config.genome.cover_index_autobuild,
         splade_enabled=ingestion.splade_enabled,
         splade_model=ingestion.splade_model,  # #207 item 1
         splade_content_cap=ingestion.splade_content_cap,  # #207 item 3

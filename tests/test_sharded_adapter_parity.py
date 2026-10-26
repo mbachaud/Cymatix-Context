@@ -143,10 +143,17 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # Perf slice 2: per-thread reader-connection factory — single-db
     # machinery; the adapter's per-shard stores each own their readers.
     "_open_reader_conn",
+    # Tech-debt audit 2026-10-22 (finding 9): the shared writer-connection
+    # opener for boot / vacuum() / refresh() — single-db machinery, same as
+    # the commit-trace installer above; the V1 adapter has no writer.
+    "_open_writer_conn",
 
     # 2026-08-03 ERB fix: Tier-2 SQL builder, internal to query_docs —
     # each shard store builds its own; the adapter never calls it.
     "_tag_prefix_sql",
+    # #493 perf (PR #508): shared Tier-1/lex_anchor posting fetch, internal
+    # to query_docs on a single .db; each shard's store runs its own.
+    "_tag_postings", "_tag_postings_sql",
     # #431: connection-local TEMP staging is owned by each shard's store;
     # the adapter has no harmonic table or shared candidate SQL connection.
     "_harmonic_candidate_rows",

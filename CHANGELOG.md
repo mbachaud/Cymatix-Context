@@ -14,6 +14,70 @@
   questions, but there is no held-out set and it has not been measured on
   ERB. Receipts: `lexical_ab_2026-10-26/` (runner
   `benchmarks/dogfood/sweeps/run_financebench_lexical_ab.py`).
+- **bench(beir): dense tail-lane gold-recovery tool + EmbeddingGemma 2 receipts.**
+  `benchmarks/dogfood/beir/dense_tail_recovery.py` scores the wider-funnel
+  "reserved tail seats" design offline: the head is the shipped pipeline's
+  top-12 (ladder `--rank-dump`, untouched), the tail is a standalone dense
+  ranking (brute-force cosine over the bed, encoded exactly as dense ingest
+  does; bed opened read-only) with head documents removed, and it reports how
+  many head-missed gold documents N tail seats recover. First receipts at
+  63d69647 with `google/embeddinggemma-2` (768-d): SciFact head recall@12
+  0.734 -> 0.927 with 4 tail seats (69/94 missed gold recovered), NFCorpus
+  0.152 -> 0.212 with 8. Measurement only, no default changes; possible
+  training-set contamination of the dense model on these BEIR sets is not
+  ruled out. `stash_ladder_receipts.py` gains `--pattern`; manifest
+  `ladder_receipts_gemma-tail-2026-10-14.json`.
+
+- **fix(packet): the full-text budget trim keeps exactly one of `know` /
+  `miss`.** Under the opt-in `[budget] full_text_delivery`, a packet that had
+  to drop primary items to fit `context_max_chars` or the token budget cleared
+  both blocks and shipped neither, breaking the agent contract. The verdict is
+  now re-decided on the surviving items (trimmed documents leave the score map,
+  so `know.gene_id_match` and `top_score` name a delivered document), and the
+  re-decided block counts toward the cap. Dropping a companion leaves the
+  verdict alone. Shipped defaults never take this path.
+
+- **fix(storage): the writer connection keeps its PRAGMAs across a reopen.**
+  `vacuum()` (so `/admin/vacuum`) and the `refresh()` fallback reopened the
+  long-lived writer with only WAL / busy_timeout / journal_size_limit, so the
+  writer silently fell back to SQLite's defaults: `synchronous=FULL` instead of
+  the #372 `[genome] synchronous` value (NORMAL), the default 2 MB page cache,
+  and no mmap, until the next restart. Boot and both reopen paths now share one
+  `_open_writer_conn()`, and the memory plan resolved at boot is reused rather
+  than re-read from live RAM. Query results are unaffected; boot issues the
+  same PRAGMA sequence as before.
+
+- **feat(dense): opt-in EmbeddingGemma 2 support in the dense codec.**
+  `[retrieval] dense_model = "google/embeddinggemma-2"` with
+  `dense_embedding_dim` 768 / 512 / 256 / 128 loads the model text-only
+  (vision and audio encoders skipped), in fp32 on CPU or bf16 on capable CUDA
+  (never fp16), and applies its query and document task prefixes. Defaults are
+  unchanged: dense stays off and BGE-M3 stays the default model. Install the
+  model's dependencies with `pip install "cymatix-context[gemma]"`; an older
+  stack now fails once with an error naming the fix, and a failed dense model
+  load is remembered instead of being retried on every encode.
+
+- **perf(storage): `idx_genes_id_chromatin` is now built automatically in the
+  background.** After a writable open of a store with 50k+ `genes` rows and no
+  index, one daemon thread (own connection, 30 s busy_timeout with backoff
+  retry) runs `CREATE INDEX IF NOT EXISTS`; open never waits. Never for
+  read-only, `:memory:`, small stores, or when `[genome] cover_index_autobuild
+  = false` / `CYMATIX_COVER_INDEX_AUTOBUILD=0`. One build per store path per
+  process; across processes `IF NOT EXISTS` makes the loser a no-op. Writers
+  wait on the write lock for the duration of the build (WAL readers do not);
+  `close()` interrupts and rolls back an in-flight build. Replaces the
+  "run the migration" hint line; `scripts/migrate_genes_cover_index.py` still
+  works for explicit/offline builds (Runbook 11).
+- **perf(tier-sql): shared tag-posting fetch; covering index is an opt-in
+  migration** (PR #508). Tag tiers 1 and lex_anchor now share one posting
+  fetch and probe `genes` once per distinct gene (rank-identical, ties
+  included; no index needed). The covering index `idx_genes_id_chromatin` is
+  **not** built when a store opens (it blocked the first open of a 947k store
+  for ~38 s, +24.8 MB). Build it once on request with
+  `python scripts/migrate_genes_cover_index.py --db <store>` (idempotent;
+  holds the write lock while building; `--dry-run` available). Writable
+  stores of 50k+ rows without it log one info line naming the command.
+  Results are identical with or without the index.
 
 ## 0.11.3 (2026-10-11)
 

@@ -68,7 +68,7 @@ MCP edits; use `/skills reload` after skill edits.
 ## Activate, refresh, and verify
 
 Run `gemini mcp list` or `/mcp`, `/skills reload`, and `/skills list`. Confirm
-the six lean tools and call `cymatix_health`. Then inspect read-only status:
+the 11 lean tools and call `cymatix_health`. Then inspect read-only status:
 
 ```bash
 cymatix-status --host gemini-cli --json

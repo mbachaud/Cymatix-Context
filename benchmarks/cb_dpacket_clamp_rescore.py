@@ -70,6 +70,14 @@ Full example with all defaults shown:
       --config F:/tmp/cb_cymatix_probe/cymatix_probe.toml ^
       --out-dir benchmarks/contextbench/results
 """
+# bench-pin: cover-index autobuild
+# Bench drivers never let a background covering-index build start during a
+# measured run (it perturbs latency; results are unaffected). Set before any
+# store opens. Drivers with an explicit prebuild path set their own value.
+import os as _bench_os
+import sys as _bench_sys
+_bench_os.environ["CYMATIX_COVER_INDEX_AUTOBUILD"] = "0"
+print('cover-index autobuild pinned off (bench driver)', file=_bench_sys.stderr)
 import argparse
 import gc
 import json

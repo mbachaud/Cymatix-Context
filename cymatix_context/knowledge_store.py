@@ -51,6 +51,10 @@ from .retrieval.measurement import current_capture, current_retrieval, trace_ret
 
 log = logging.getLogger(__name__)
 
+#: Writer connection busy_timeout (ms). The cover-index background build
+#: temporarily raises it (storage.ddl._WRITER_BUILD_BUSY_MS).
+WRITER_BUSY_MS = 30000
+
 # W2.2-narrow (eps_band_coverage): how deep into the fused head the
 # distinct-term coverage map is computed. The bands that can move delivery
 # live in the head; 60 covers the receipted 13-45 target range with margin
@@ -390,6 +394,43 @@ _CORPUS_SIZE_TTL = 60.0
 # loops when callers pass huge candidate sets).
 _IN_BATCH_SIZE = 500
 
+# created_at as serialized by DocumentSignals.model_dump_json (first key,
+# compact form). Anything not in exactly this shape takes the model parse.
+_CREATED_AT_RE = re.compile(
+    r'\{"created_at":(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)[,}]'
+)
+# domains as serialized by DocumentTags.model_dump_json (first key).
+_DOMAINS_RE = re.compile(r'\{"domains":\[([^\]]*)\]')
+
+
+def _primary_domain_hit(raw_promoter: str, lower_terms: List[str]) -> bool:
+    """True when a query term equals one of the top-3 domains (lowercased).
+
+    Same answer as ``parse_promoter(raw).domains[:3]`` membership, without a
+    pydantic parse for the common case: compact model-serialized JSON whose
+    domains list is read directly (and rejected by substring before decoding).
+    Any other shape falls back to the model parse.
+    """
+    m = _DOMAINS_RE.match(raw_promoter)
+    if m is not None:
+        g = m.group(1)
+        if g.isascii() and "\\" not in g:
+            gl = g.lower()
+            if not any(t in gl for t in lower_terms):
+                return False
+        try:
+            doms = json_loads("[" + g + "]")
+        except ValueError:
+            doms = None  # e.g. a domain containing "]" truncated the match
+        if doms is not None and all(isinstance(d, str) for d in doms):
+            top = {d.lower() for d in doms[:3]}
+            return any(t in top for t in lower_terms)
+    prom = parse_promoter(raw_promoter)
+    if prom and prom.domains:
+        top = {d.lower() for d in prom.domains[:3]}
+        return any(t in top for t in lower_terms)
+    return False
+
 
 def _iter_in_batches(items, batch_size: int = _IN_BATCH_SIZE):
     """Yield (placeholder_string, batch_list) pairs for an IN-clause query.
@@ -615,6 +656,12 @@ class KnowledgeStore:
         # 89.5% of writer wall time). 0 = legacy behavior. Composition with
         # entity_autolink: off > cutoff > legacy.
         entity_autolink_hub_cutoff: int = 0,
+        # Lean bench beds: False skips path_key_index writes. The PKI read
+        # tier is off by default since #370 ([retrieval] pki_enabled), so
+        # the rows are query-inert at shipped defaults (~41 rows/gene on ERB
+        # 580-char chunks). True (default) = legacy writes. A bed built with
+        # False cannot serve pki_enabled=true.
+        pki_write: bool = True,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
         sr_k_steps: int = 4,
@@ -805,9 +852,14 @@ class KnowledgeStore:
         mem_plan: Optional[SqliteMemPlan] = None,
         # #431: opt-in full-pool harmonic staging above SQLite's bind cap.
         harmonic_batching_enabled: bool = False,
+        # perf: build idx_genes_id_chromatin in a background thread after a
+        # writable open of a large store ([genome] cover_index_autobuild).
+        cover_index_autobuild: bool = True,
     ):
         self.path = path
         self.read_only = read_only
+        self._cover_index_autobuild = cover_index_autobuild
+        self._cover_index_builder = None
         self._mem_plan = mem_plan
         self.synonym_map = synonym_map or {}
         self._sema_codec = sema_codec  # Optional SemaCodec for Tier 4 retrieval
@@ -835,6 +887,7 @@ class KnowledgeStore:
         self._entity_graph_enabled = entity_graph
         self._entity_autolink_enabled = bool(entity_autolink)
         self._entity_autolink_hub_cutoff = int(entity_autolink_hub_cutoff)
+        self._pki_write = bool(pki_write)
         # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
         # Separate from _entity_graph_enabled (write-side) — this controls
         # whether entity_graph rows are consulted during query_genes().
@@ -1021,10 +1074,6 @@ class KnowledgeStore:
         except Exception:
             log.debug("WAL pre-open checkpoint failed", exc_info=True)
 
-        self.conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
-        self.conn.row_factory = sqlite3.Row
-        self.conn.execute("PRAGMA journal_mode=WAL")
-        self.conn.execute("PRAGMA busy_timeout=30000")  # 30s retry on lock
         # Issue #372: default NORMAL — under WAL a per-commit fsync (FULL,
         # SQLite's own default) is not needed for corruption-safety, and
         # ingest currently commits per strand. Invalid values fall back
@@ -1037,19 +1086,19 @@ class KnowledgeStore:
             )
             _sync = "NORMAL"
         self._synchronous = _sync
-        self.conn.execute(f"PRAGMA synchronous={_sync}")
-        # Cap WAL file size — without this, SQLite resets (zero-fills) the
-        # WAL on truncate but keeps the high-water-mark size on disk.
-        self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
         # RAM-aware SQLite budget (PRD 2026-05-30: dynamic-ram-scaling). The
         # plan scales the per-connection page cache + mmap to the host and
         # shard count; ShardRouter threads a shard-count-aware plan, standalone
         # KnowledgeStores resolve a single-DB budget. The `conservative`
         # profile reproduces v0.6.1 exactly (mmap off, 2/4 MB caches) — the
         # fan-out commit guard, now opt-in rather than the unconditional default.
-        _plan = self._mem_plan if self._mem_plan is not None else sqlite_memory_budget(1)
-        self.conn.execute(f"PRAGMA cache_size={_plan.writer_cache_size}")
-        self.conn.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
+        # Resolved once here and reused by every writer reopen: the auto
+        # profiles read live available RAM, so re-resolving after vacuum()
+        # could hand the writer a different budget mid-run.
+        self._sqlite_plan = (
+            self._mem_plan if self._mem_plan is not None else sqlite_memory_budget(1)
+        )
+        self.conn = self._open_writer_conn()
         self._upsert_count = 0  # WAL checkpoint cadence counter
         # Bug bash 2026-07-18: the write connection is shared across threads
         # (check_same_thread=False). Serialize multi-statement upsert
@@ -1085,6 +1134,12 @@ class KnowledgeStore:
         # (same last-query contract and the same known cross-request-global
         # caveat — W1.6 scoops all of these into a request-scoped outcome).
         self.last_signal_timings: Dict[str, float] = {}
+        # #493: size of the candidate pool reaching Tier 5 on the last query
+        # (len(gene_scores) after Tiers 0-4), published under
+        # _last_query_scores_lock with last_query_scores. Same per-genome
+        # (not per-request) concurrency caveat; the manager snapshots it
+        # into the request's window right after retrieval.
+        self.last_pool_total: Optional[int] = None
         # Issue #341: the last query's final rank order, published under
         # _last_query_scores_lock on both retrieval paths and in BOTH rerank
         # arms — with rerank off it is the sim/fused order, so an A/B keeps an
@@ -1173,8 +1228,8 @@ class KnowledgeStore:
             # FTS5/dense scan load, so under `conservative` it keeps the
             # historical larger 4 MB cap; under auto/aggressive both connections
             # share the scaled cache figure and the same mmap window.
-            self._reader.execute(f"PRAGMA cache_size={_plan.reader_cache_size}")
-            self._reader.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
+            self._reader.execute(f"PRAGMA cache_size={self._sqlite_plan.reader_cache_size}")
+            self._reader.execute(f"PRAGMA mmap_size={self._sqlite_plan.mmap_size}")
         else:
             self._reader = None
         # Perf slice 2: per-thread reader connections (see read_conn).
@@ -1222,6 +1277,11 @@ class KnowledgeStore:
     def _init_db(self) -> None:
         from .storage.ddl import fts5_is_external_content, init_db
         self._fts_available = init_db(self.conn)
+        self._cover_index_builder = None
+        if not self.read_only:
+            from .storage.ddl import maybe_start_cover_index_build
+            self._cover_index_builder = maybe_start_cover_index_build(
+                self.conn, self.path, self._cover_index_autobuild)
         # Issue #338: which write discipline genes_fts needs. External-content
         # (new stores + migrated stores) has no shadow text of its own, so
         # deletes must re-supply the prior indexed values; legacy contentful
@@ -1820,6 +1880,26 @@ class KnowledgeStore:
             return conn
         return self.conn
 
+    def _open_writer_conn(self) -> sqlite3.Connection:
+        """The long-lived writer connection with every boot-path PRAGMA.
+
+        Boot, vacuum() and the refresh() fallback all open through here, so a
+        reopen cannot silently drop synchronous / cache_size / mmap_size back
+        to SQLite's defaults (tech-debt audit 2026-10-22, finding 9). The
+        caller installs the commit trace.
+        """
+        conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute(f"PRAGMA busy_timeout={WRITER_BUSY_MS}")  # retry on lock
+        conn.execute(f"PRAGMA synchronous={self._synchronous}")
+        # Cap WAL file size — without this, SQLite resets (zero-fills) the
+        # WAL on truncate but keeps the high-water-mark size on disk.
+        conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+        conn.execute(f"PRAGMA cache_size={self._sqlite_plan.writer_cache_size}")
+        conn.execute(f"PRAGMA mmap_size={self._sqlite_plan.mmap_size}")
+        return conn
+
     def _open_reader_conn(self) -> sqlite3.Connection:
         """One mode=ro autocommit connection, pragmas mirroring _reader."""
         conn = sqlite3.connect(
@@ -1840,8 +1920,9 @@ class KnowledgeStore:
 
         Below the bind cap, preserve the existing SQL. The opt-in large-pool
         path inserts IDs one parameter at a time into a connection-local TEMP
-        table, then joins both endpoints against it. No edge list is copied
-        into Python, and links crossing insertion batches remain eligible.
+        table, joins it to gene_id_a and filters gene_id_b by pool
+        membership while streaming. Links crossing insertion batches remain
+        eligible.
 
         A savepoint rolls back all staging on success or failure without
         committing callers' pending work. TEMP writes work on mode=ro readers.
@@ -1849,12 +1930,18 @@ class KnowledgeStore:
         existing locks so savepoint lifetimes cannot interleave.
         """
         if not batched:
+            # Bind the pool once and filter the b endpoint in Python.
+            # ``a IN (P) AND b IN (P)`` makes SQLite probe the (a, b) key
+            # for every pair in P x P (12k pool ~ 13 s). ORDER BY a, b
+            # reproduces the order that nested-loop plan emitted.
             cid_ph = ",".join("?" * len(candidate_ids))
-            yield cur.execute(
+            members = frozenset(candidate_ids)
+            rows = cur.execute(
                 f"SELECT gene_id_a, gene_id_b, weight FROM harmonic_links "
-                f"WHERE gene_id_a IN ({cid_ph}) AND gene_id_b IN ({cid_ph})",
-                (*candidate_ids, *candidate_ids),
+                f"WHERE gene_id_a IN ({cid_ph}) ORDER BY gene_id_a, gene_id_b",
+                tuple(candidate_ids),
             )
+            yield (r for r in rows if r["gene_id_b"] in members)
             return
 
         conn = cur.connection
@@ -1880,12 +1967,19 @@ class KnowledgeStore:
                         f"INSERT INTO temp.{name} (doc_id) VALUES (?)",
                         ((doc_id,) for doc_id in candidate_ids),
                     )
-                    yield staging.execute(
+                    # Drive the pool on gene_id_a only and filter gene_id_b
+                    # in Python, as the unbatched path does: ``b IN (pool)``
+                    # in SQL is planned as an (a, b) key probe for every
+                    # pair in P x P (171k pool ~ 15 min per query). CROSS
+                    # JOIN keeps the pool as the outer loop.
+                    members = frozenset(candidate_ids)
+                    rows = staging.execute(
                         "SELECT h.gene_id_a, h.gene_id_b, h.weight "
-                        "FROM harmonic_links AS h "
-                        f"WHERE h.gene_id_a IN (SELECT doc_id FROM temp.{name}) "
-                        f"AND h.gene_id_b IN (SELECT doc_id FROM temp.{name})"
+                        f"FROM temp.{name} AS p CROSS JOIN harmonic_links AS h "
+                        "ON h.gene_id_a = p.doc_id "
+                        "ORDER BY h.gene_id_a, h.gene_id_b"
                     )
+                    yield (r for r in rows if r["gene_id_b"] in members)
                 finally:
                     # Finalize a partially consumed SELECT before undoing its
                     # TEMP schema. Rollback also removes partially inserted IDs.
@@ -2210,7 +2304,8 @@ class KnowledgeStore:
                     autolink_enabled=self._entity_autolink_enabled,
                     hub_cutoff=self._entity_autolink_hub_cutoff,
                 )
-                sync_path_key_index(cur, gene_id, gene)
+                if self._pki_write:
+                    sync_path_key_index(cur, gene_id, gene)
                 sync_filename_index(cur, gene_id, gene.source_id)
                 # Issue #164: size-aware SPLADE auto-toggle. Refresh the cached
                 # gene_count whenever EITHER threshold is opted in; otherwise
@@ -2452,22 +2547,32 @@ class KnowledgeStore:
                         boost += 2.0
 
             # 2. Domain primacy: query term in top-3 tags domains
+            # Perf (perf/fusion-pool): a pydantic parse per candidate is the
+            # dominant post-tier cost on 100k+ pools; see _primary_domain_hit.
             try:
-                prom = parse_promoter(r["promoter"]) if r["promoter"] else None
-                if prom and prom.domains:
-                    primary_domains = {d.lower() for d in prom.domains[:3]}
-                    if any(t in primary_domains for t in lower_terms):
-                        boost += 1.5
+                raw_prom = r["promoter"]
+                if raw_prom and _primary_domain_hit(raw_prom, lower_terms):
+                    boost += 1.5
             except Exception:
                 pass
 
             # 3. Creation recency: document created in last 48h
+            # Read created_at straight from the serialized JSON (same float
+            # the model would parse); fall back to the model parse when the
+            # key is not found in the expected form.
             try:
-                epi = parse_epigenetics(r["epigenetics"]) if r["epigenetics"] else None
-                if epi and epi.created_at > 0:
-                    age = now - epi.created_at
-                    if 0 < age < recency_window:
-                        boost += 0.5
+                raw_epi = r["epigenetics"]
+                if raw_epi:
+                    _m = (_CREATED_AT_RE.match(raw_epi)
+                          if raw_epi.startswith('{"created_at"') else None)
+                    if _m is not None:
+                        created_at = float(_m.group(1))
+                    else:
+                        created_at = parse_epigenetics(raw_epi).created_at
+                    if created_at > 0:
+                        age = now - created_at
+                        if 0 < age < recency_window:
+                            boost += 0.5
             except Exception:
                 pass
 
@@ -2804,6 +2909,73 @@ class KnowledgeStore:
             return None
         finally:
             cur.close()
+
+    def _tag_postings_sql(
+        self,
+        terms: List[str],
+        party_filter: str = "",
+        party_params: tuple = (),
+        prefilter_clause: str = "",
+        prefilter_params: tuple = (),
+    ) -> Tuple[Tuple[str, str], Tuple[tuple, tuple]]:
+        """SQL for the shared exact-tag posting fetch (perf/tier-sql).
+
+        Tier 1 (tag_exact) and the lexical-anchor boost both need the live
+        postings of the query terms. They used to JOIN ``genes`` once per
+        posting ROW (a random PK probe each: 82k-116k per query at 947k).
+        Here the postings come from the covering index alone, and ``genes``
+        (chromatin / party / prefilter) is probed once per DISTINCT gene.
+        Returns ((rows_sql, valid_sql), (rows_params, valid_params)).
+        """
+        ph = ",".join("?" * len(terms))
+        rows_sql = (
+            f"SELECT tag_value, gene_id FROM promoter_index "
+            f"WHERE tag_value IN ({ph})"
+        )
+        valid_sql = (
+            f"SELECT g.gene_id FROM "
+            f"(SELECT DISTINCT gene_id FROM promoter_index "
+            f" WHERE tag_value IN ({ph})) v "
+            f"CROSS JOIN genes g ON g.gene_id = v.gene_id "
+            f"WHERE g.chromatin < ? {party_filter} {prefilter_clause}"
+        )
+        valid_params = (
+            *terms, int(ChromatinState.HETEROCHROMATIN),
+            *party_params, *prefilter_params,
+        )
+        return (rows_sql, valid_sql), (tuple(terms), valid_params)
+
+    def _tag_postings(
+        self,
+        cur,
+        terms: List[str],
+        party_filter: str = "",
+        party_params: tuple = (),
+        prefilter_clause: str = "",
+        prefilter_params: tuple = (),
+    ) -> Dict[str, List[str]]:
+        """``{term: [gene_id, ...]}`` of live postings, gene_id ascending.
+
+        Identical (rows, order, per-gene duplicates) to the legacy per-term
+        ``promoter_index JOIN genes WHERE tag_value = ? AND chromatin < ?``
+        fetch it replaces; terms with no live posting are absent.
+        """
+        uniq = sorted(set(terms))
+        if not uniq:
+            return {}
+        (rows_sql, valid_sql), (rows_params, valid_params) = self._tag_postings_sql(
+            uniq, party_filter, party_params, prefilter_clause, prefilter_params,
+        )
+        valid = {r[0] for r in cur.execute(valid_sql, valid_params)}
+        out: Dict[str, List[str]] = {}
+        if not valid:
+            return out
+        for tag_value, gid in cur.execute(rows_sql, rows_params):
+            if gid in valid:
+                out.setdefault(tag_value, []).append(gid)
+        for lst in out.values():
+            lst.sort()
+        return out
 
     def _tag_prefix_sql(
         self,
@@ -3289,6 +3461,12 @@ class KnowledgeStore:
         # ── Tier 1: exact tag match (weight: tag_exact_weight) ────
         _tag_exact_t0 = time.monotonic()
         placeholders = ",".join("?" * len(query_terms))
+        # perf/tier-sql: ONE posting fetch shared by Tier 1 and the lexical
+        # anchor (genes probed per distinct gene, not per posting row).
+        _postings = self._tag_postings(
+            cur, query_terms, _party_filter, tuple(_party_params),
+            _prefilter_aliased_clause, tuple(_prefilter_params),
+        )
         _effective_terms = list(query_terms)
         if self._tag_df_cap > 0.0:
             # #327 iteration 2: membership relief. Tags covering more than
@@ -3340,23 +3518,11 @@ class KnowledgeStore:
                 )
                 for r in _df_rows
             }
-            rows = cur.execute(
-                f"""
-                SELECT g.gene_id, pi.tag_value
-                FROM genes g
-                JOIN promoter_index pi ON g.gene_id = pi.gene_id
-                WHERE pi.tag_value IN ({_eff_placeholders})
-                  AND g.chromatin < ?
-                  {_party_filter}
-                  {_prefilter_aliased_clause}
-                """,
-                (*_effective_terms, int(ChromatinState.HETEROCHROMATIN),
-                 *_party_params, *_prefilter_params),
-            ).fetchall()
             _idf_scores: Dict[str, float] = {}
-            for r in rows:
-                _idf_scores[r["gene_id"]] = _idf_scores.get(r["gene_id"], 0.0) + \
-                    _idf.get(r["tag_value"], 1.0) * self._tag_exact_weight
+            for _t in sorted(set(_effective_terms)):
+                _w = _idf.get(_t, 1.0) * self._tag_exact_weight
+                for _gid in _postings.get(_t, ()):
+                    _idf_scores[_gid] = _idf_scores.get(_gid, 0.0) + _w
             _tag_exact_ranked = sorted(
                 _idf_scores.items(), key=lambda kv: kv[1], reverse=True
             )
@@ -3364,28 +3530,19 @@ class KnowledgeStore:
                 gene_scores[gid] = tag_score
                 tier_contrib.setdefault(gid, {})["tag_exact"] = tag_score
         else:
-            _eff_placeholders = ",".join("?" * len(_effective_terms))
-            rows = cur.execute(
-                f"""
-                SELECT g.gene_id, COUNT(pi.tag_value) AS match_count
-                FROM genes g
-                JOIN promoter_index pi ON g.gene_id = pi.gene_id
-                WHERE pi.tag_value IN ({_eff_placeholders})
-                  AND g.chromatin < ?
-                  {_party_filter}
-                  {_prefilter_aliased_clause}
-                GROUP BY g.gene_id
-                """,
-                (*_effective_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
-            ).fetchall()
+            _match_counts: Dict[str, int] = {}
+            for _t in set(_effective_terms):
+                for _gid in _postings.get(_t, ()):
+                    _match_counts[_gid] = _match_counts.get(_gid, 0) + 1
 
             _tag_exact_ranked = []  # Stage 3 RRF
-            for r in rows:
+            # gene_id ascending == the legacy GROUP BY g.gene_id order.
+            for _gid in sorted(_match_counts):
                 # #202: tag_exact_weight (default 3.0 == legacy literal).
-                tag_score = r["match_count"] * self._tag_exact_weight
-                gene_scores[r["gene_id"]] = tag_score
-                tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
-                _tag_exact_ranked.append((r["gene_id"], tag_score))
+                tag_score = _match_counts[_gid] * self._tag_exact_weight
+                gene_scores[_gid] = tag_score
+                tier_contrib.setdefault(_gid, {})["tag_exact"] = tag_score
+                _tag_exact_ranked.append((_gid, tag_score))
         # Stage 3: count tier — rank by raw score (= match_count ×
         # tag_exact_weight)
         # which is monotone in match_count, so the rank order matches
@@ -3837,16 +3994,7 @@ class KnowledgeStore:
             idf = _math.log(total_genes_est / term_freq) if term_freq > 0 else 0
             boost = min(idf * self._lex_anchor_weight, 2.0 * self._lex_anchor_weight)
             if boost > 1.0:
-                anchor_genes = cur.execute(
-                    f"SELECT pi.gene_id FROM promoter_index pi "
-                    f"JOIN genes g ON pi.gene_id = g.gene_id "
-                    f"WHERE pi.tag_value = ? AND g.chromatin < ?"
-                    f" {_party_filter}"
-                    f" {_prefilter_aliased_clause}",
-                    (term, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
-                ).fetchall()
-                for r in anchor_genes:
-                    gid = r["gene_id"]
+                for gid in _postings.get(term, ()):
                     gene_scores[gid] = gene_scores.get(gid, 0) + boost
                     # Anchor IDF can fire for multiple terms in same query; sum them.
                     tc = tier_contrib.setdefault(gid, {})
@@ -3867,18 +4015,22 @@ class KnowledgeStore:
         # ── Authority boosts: distinguish "about X" from "mentions X" ──
         # Stage 3: thread rerank_additive + tier_contrib so RRF mode
         # can apply the authority bonus on top of the fused score.
+        _authority_t0 = time.monotonic()
         self._apply_authority_boosts(
             cur, gene_scores, query_terms,
             rerank_additive=rerank_additive,
             tier_contrib=tier_contrib,
             rerank_by_class=rerank_by_class,
         )
+        _sig("authority", _authority_t0)
 
         # ── Tier 5: harmonic co-activation boost ──────────────────
         # For each candidate, add a score bonus from documents that are
         # harmonically linked to OTHER candidates (mutual reinforcement).
         # Weight: harmonic_weight per link (default 1.0), capped at a
         # total bonus of 3.0 × harmonic_weight (default 3.0) — #202.
+        _pool_total = len(gene_scores)  # #493: pool reaching Tier 5
+        _harmonic_t0 = time.monotonic()
         if use_harmonic and gene_scores:
             try:
                 _has_harmonic = cur.execute(
@@ -3933,6 +4085,7 @@ class KnowledgeStore:
                     # #431: was log.debug — a swallowed OperationalError hid
                     # the tier's absence on every large bed.
                     log.warning("Harmonic boost failed", exc_info=True)
+        _sig("harmonic", _harmonic_t0)
 
         # ── Tier 5.5: Successor Representation boost ──────────────
         # Discounted future-occupancy over the co-activation graph.
@@ -4028,15 +4181,21 @@ class KnowledgeStore:
         # ── Access-rate tiebreaker ────────────────────────────────
         # Small bonus: score += 0.05 * min(rate * 3600, 5). Max 0.25.
         # Only a tiebreaker — breaks ties for documents with equal scores.
+        _access_rate_t0 = time.monotonic()
         if gene_scores:
             try:
                 rate_ids = list(gene_scores.keys())
                 # Batched IN-clause — see _iter_in_batches.
                 epi_rows = []
+                # Perf (perf/fusion-pool): rows serialized with an empty
+                # ``recent_accesses`` have access_rate() == 0.0 and can never
+                # earn a bonus, so SQLite drops them before Python sees them.
+                # Differently formatted rows are kept and parsed as before.
                 for _ph, _batch in _iter_in_batches(rate_ids):
                     epi_rows.extend(cur.execute(
                         f"SELECT gene_id, epigenetics FROM genes "
-                        f"WHERE gene_id IN ({_ph}) AND epigenetics IS NOT NULL",
+                        f"WHERE gene_id IN ({_ph}) AND epigenetics IS NOT NULL "
+                        f"AND epigenetics NOT LIKE '%\"recent_accesses\":[]%'",
                         _batch,
                     ).fetchall())
                 for er in epi_rows:
@@ -4057,6 +4216,7 @@ class KnowledgeStore:
                         continue
             except Exception:
                 log.debug("Access-rate tiebreaker failed", exc_info=True)
+        _sig("access_rate", _access_rate_t0)
 
         # Layered fingerprints: inject parent-document aggregate scores when
         # ≥ 2 chunks of the same file surface in candidates. Opt-in via
@@ -4072,15 +4232,19 @@ class KnowledgeStore:
         # need to be under the same lock — concurrent /context calls
         # would otherwise read a (scores_from_call_A, tiers_from_call_B)
         # torn pair.
+        _publish_t0 = time.monotonic()
         with self._last_query_scores_lock:
             self.last_query_scores = dict(gene_scores)
             self.last_tier_contributions = tier_contrib
+            self.last_pool_total = _pool_total
+        _sig("publish_scores", _publish_t0)
 
         # Emit per-tier contribution telemetry (OTel — no-op when off).
         # One histogram observation per (tier, document) pair; a single
         # counter tick per tier that fired at all, labelled by tier
         # name. Makes the bench_skill_activation heatmap live-observable
         # instead of a one-shot static file.
+        _tier_tel_t0 = time.monotonic()
         try:
             from .telemetry import tier_contribution_histogram, tier_fired_counter
             hist = tier_contribution_histogram()
@@ -4097,6 +4261,7 @@ class KnowledgeStore:
             # The tier-activation + per-tier-contribution panels go dark
             # when this swallows; matching the cwola/latency/gauges pattern.
             log.warning("tier telemetry emit failed", exc_info=True)
+        _sig("tier_telemetry", _tier_tel_t0)
 
         if _measurement is not None:
             _measurement.record("pre_shortlist", gene_scores)
@@ -4194,6 +4359,7 @@ class KnowledgeStore:
         # runs on the RRF path).
         _cover_mass: Dict[str, float] = {}
         _cover_diag: Dict[str, Any] = {}
+        _fusion_t0 = time.monotonic()
         if self._fusion_mode == "rrf":
             fused_scores = fuser.all_scores()
             # The bm25_shortlist filter mutated gene_scores above; honor
@@ -4292,6 +4458,8 @@ class KnowledgeStore:
                     )
                     _coverage_map = None
                 _sig("coverage_tiebreak", _cov_t0)
+            _sig("fusion_prep", _fusion_t0)
+            _combine_t0 = time.monotonic()
             from .retrieval.rerank_combinators import combine_rerank
             final_scores, ranked_ids = combine_rerank(
                 _effective_combinator,
@@ -4304,6 +4472,7 @@ class KnowledgeStore:
                 _fuse_limit,
                 coverage=_coverage_map,
             )
+            _sig("rerank_combine", _combine_t0)
             # last_query_scores semantics under RRF: the combined final
             # score, NOT the raw additive accumulator. This is what
             # context_manager reads for ratio gates. Also stash the
@@ -4319,6 +4488,7 @@ class KnowledgeStore:
             # set per document (unbounded on large genomes), and the
             # distribution panel aggregates across documents anyway.
             # No-op instrument when OTel is off.
+            _rrf_tel_t0 = time.monotonic()
             try:
                 from .telemetry import rrf_fused_score_histogram
                 hist = rrf_fused_score_histogram()
@@ -4326,6 +4496,7 @@ class KnowledgeStore:
                     hist.record(float(score))
             except Exception:
                 pass
+            _sig("rrf_telemetry", _rrf_tel_t0)
         else:
             # Additive mode — pre-Stage-3 behavior, byte-identical.
             ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:_fuse_limit]
@@ -5880,11 +6051,7 @@ class KnowledgeStore:
                     self.conn.close()
                 except Exception:
                     pass
-                self.conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
-                self.conn.row_factory = sqlite3.Row
-                self.conn.execute("PRAGMA journal_mode=WAL")
-                self.conn.execute("PRAGMA busy_timeout=30000")
-                self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+                self.conn = self._open_writer_conn()
                 self._install_commit_trace()
 
     # ── Close ───────────────────────────────────────────────────────
@@ -6012,11 +6179,7 @@ class KnowledgeStore:
                 log.warning("VACUUM failed", exc_info=True)
 
             # Reopen the long-lived connection
-            self.conn = sqlite3.connect(path, check_same_thread=False, timeout=30)
-            self.conn.row_factory = sqlite3.Row
-            self.conn.execute("PRAGMA journal_mode=WAL")
-            self.conn.execute("PRAGMA busy_timeout=30000")
-            self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+            self.conn = self._open_writer_conn()
             self._install_commit_trace()
 
         after = os.path.getsize(path) if os.path.exists(path) else 0
@@ -6530,6 +6693,11 @@ class KnowledgeStore:
             return None
 
     def close(self) -> None:
+        # Abort an in-flight background index build first (interrupt rolls the
+        # CREATE INDEX back); bounded join so close() never hangs on it.
+        _b = getattr(self, "_cover_index_builder", None)
+        if _b is not None:
+            _b.stop()
         self.checkpoint("TRUNCATE")  # Flush all WAL data before closing
         if self._reader is not None:
             try:

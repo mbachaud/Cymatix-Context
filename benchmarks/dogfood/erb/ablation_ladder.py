@@ -944,6 +944,63 @@ def _resolve(path_str: str) -> Path:
     return p if p.is_absolute() else (REPO_ROOT / p)
 
 
+COVER_INDEX_MODES = ("off", "prebuild")
+
+
+def _load_migrate_cover_index():
+    """Import ``migrate`` from scripts/migrate_genes_cover_index.py (scripts/
+    is not a package, so load it by file path)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "migrate_genes_cover_index",
+        REPO_ROOT / "scripts" / "migrate_genes_cover_index.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = mod
+    spec.loader.exec_module(mod)
+    return mod.migrate
+
+
+def _index_present(db_path: str) -> bool:
+    import sqlite3
+    from cymatix_context.storage.ddl import GENES_COVER_INDEX
+    conn = sqlite3.connect(db_path, timeout=60)
+    try:
+        return conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='index' AND name=?",
+            (GENES_COVER_INDEX,),
+        ).fetchone() is not None
+    finally:
+        conn.close()
+
+
+def apply_cover_index_mode(mode: str, genome_path: str) -> Dict[str, Any]:
+    """Pin the covering-index state for a measured run. Call before any store
+    is opened.
+
+    Both modes set ``CYMATIX_COVER_INDEX_AUTOBUILD=0`` so no background builder
+    can start during measurement. ``off`` leaves the index as it is on the bed.
+    ``prebuild`` runs the migration synchronously first and times it. Returns
+    the receipt block (``cover_index`` in the payload).
+    """
+    if mode not in COVER_INDEX_MODES:
+        raise ValueError(f"cover-index mode must be one of {COVER_INDEX_MODES}, got {mode!r}")
+    os.environ["CYMATIX_COVER_INDEX_AUTOBUILD"] = "0"
+    rec: Dict[str, Any] = {
+        "mode": mode,
+        "autobuild_env": os.environ["CYMATIX_COVER_INDEX_AUTOBUILD"],
+        "prebuild_status": None,
+        "prebuild_elapsed_s": None,
+    }
+    if mode == "prebuild":
+        migrate = _load_migrate_cover_index()
+        t0 = time.perf_counter()
+        report = migrate(genome_path)
+        rec["prebuild_elapsed_s"] = round(time.perf_counter() - t0, 3)
+        rec["prebuild_status"] = report["status"]
+    rec["index_present_at_start"] = _index_present(genome_path)
+    return rec
+
+
 def _probe_synonym_expansions(genome: Any, probe_terms: Sequence[str]) -> int:
     """How many probe terms ``_expand_terms`` actually widened.
 
@@ -1030,11 +1087,12 @@ def emit_ladder_trace(
     the window and store; never raises into the run. Chunks and verdict come
     from the same helpers the /context route uses."""
     from cymatix_context.telemetry import trace as _trace
-    from cymatix_context.telemetry.trace_chunks import window_chunks
+    from cymatix_context.telemetry.trace_chunks import window_chunks, window_timing
 
     try:
         start = time.time() if t0 is None else t0
         tracer.emit(
+            **window_timing(window),
             genome=genome, config=config,
             packet_id=_trace.new_packet_id(), pipeline_request_id=(
                 (getattr(window, "metadata", None) or {}).get("pipeline_request_id")),
@@ -1267,6 +1325,9 @@ def run_arm(
                     n_queries=len(needles), wall_ms=wall_ms, signal_ms=sig,
                 )
                 record.update(dg_fields)
+                # Grain-size ladder: how much the packet actually carried.
+                record["delivered_chars"] = len(getattr(window, "expressed_context", "") or "")
+                record["delivered_gene_ids"] = expressed_gene_ids
                 record["budget_tier"] = (getattr(window, "metadata", None) or {}).get("budget_tier")
                 # #341: the FINAL retrieval order (post-rerank when it ran).
                 # last_query_scores cannot see a cross-encoder reorder — it
@@ -1406,6 +1467,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--trace-level", default="metadata", dest="trace_level",
                     choices=("metadata", "full"),
                     help="with --trace-dir: trace level (default metadata)")
+    ap.add_argument("--cover-index", default="off", dest="cover_index",
+                    choices=COVER_INDEX_MODES,
+                    help="idx_genes_id_chromatin state for the measured run. "
+                         "off (default): background autobuild disabled, index "
+                         "left as on the bed; prebuild: build it synchronously "
+                         "before the first query and record the time")
     args = ap.parse_args(argv)
 
     resolved_path = _resolve(args.resolved)
@@ -1422,6 +1489,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not Path(genome_path).exists():
         print(f"genome not found: {genome_path}", file=sys.stderr)
         return 2
+    # Before any store opens: pin the covering-index state for this run.
+    cover_index = apply_cover_index_mode(args.cover_index, genome_path)
+    print(f"cover-index: mode={cover_index['mode']} "
+          f"present_at_start={cover_index['index_present_at_start']} "
+          f"prebuild_s={cover_index['prebuild_elapsed_s']}", flush=True)
     os.environ["CYMATIX_GENOME_PATH"] = genome_path
 
     config_path: Optional[str] = None
@@ -1543,6 +1615,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "— within-run relatives only."
         ),
         "dropped_arms": dropped,
+        "cover_index": cover_index,
         "arms": rows,
     }
     if tracer is not None:

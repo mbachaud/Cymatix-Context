@@ -59,10 +59,17 @@ Issues = "https://github.com/mbachaud/Cymatix-Context/issues"
 # on specific features.
 accel = ["orjson>=3.9"]
 embeddings = ["numpy", "sentence-transformers"]
+# EmbeddingGemma 2 as the dense model (`[retrieval] dense_model =
+# "google/embeddinggemma-2"`): its checkpoint needs these floors, and its
+# processor imports torchvision even for the text-only load.
+gemma = ["numpy", "sentence-transformers>=6.1.0", "transformers>=5.19.0", "torchvision"]
 # spacy floor tracks the en_core_web_sm pipeline build the docs and setup
 # script install (3.8.0, see docs/SETUP.md). The pipeline itself is a
 # separate artifact that pip never pulls in (#313).
-cpu = ["spacy>=3.8"]
+# preshed 3.0.14 breaks loading en_core_web_sm 3.8.0 on spaCy 3.8.16
+# (OverflowError in Tokenizer._flush_specials); 3.0.13 loads. Excluded in
+# every extra that pulls spaCy.
+cpu = ["spacy>=3.8", "preshed!=3.0.14"]
 # MCP SDK — required for `python -m cymatix_context.mcp_server` (Claude Code,
 # Codex, Gemini CLI, and Antigravity integration). Core install does NOT pull
 # this; add the extra if you are an MCP host operator.
@@ -111,6 +118,7 @@ dev = [
     "pytest-asyncio",
     "numpy",
     "spacy>=3.8",
+    "preshed!=3.0.14",  # see the cpu extra
     "hypothesis>=6.0",
     "markdown>=3.4",  # scripts/build_wiki_site.py + its tests
     "rank-bm25>=0.2.2",  # offline RepoBench baseline tests
@@ -125,6 +133,7 @@ all = [
     "numpy",
     "sentence-transformers",
     "spacy>=3.8",
+    "preshed!=3.0.14",  # see the cpu extra
     "mcp>=2,<3",
     "torch>=2.0",
     "transformers>=4.30",
@@ -157,6 +166,10 @@ select = ["E9", "F63", "F7", "F82"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# A test still running after 10 minutes gets every thread's stack dumped to
+# stderr (it keeps running). CI's test-full-suite intermittently stalls just
+# past 50% until the 60-minute job timeout cancels it; this names the test.
+faulthandler_timeout = 600
 markers = [
     "live: requires Ollama running with at least one model",
     "requires_rocm: opt-in test that needs ROCm-capable hardware (gated by CYMATIX_TEST_ROCM=1)",

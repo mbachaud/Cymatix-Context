@@ -126,7 +126,8 @@ def last_touch(db: str) -> float:
 def child_env() -> dict:
     env = dict(os.environ)
     env.update({"PYTHONHASHSEED": "0", "PYTHONUTF8": "1", "PYTHONPATH": str(ROOT),
-                "CYMATIX_DISABLE_LEARN": "1", "CYMATIX_SQLITE_CACHE_SIZE": "-12582912"})
+                "CYMATIX_DISABLE_LEARN": "1", "CYMATIX_SQLITE_CACHE_SIZE": "-12582912",
+                "CYMATIX_COVER_INDEX_AUTOBUILD": "0"})
     env.pop("CYMATIX_ENCODER_URL", None)
     env.pop("CYMATIX_CONFIG", None)
     return env
@@ -159,7 +160,8 @@ def do_job(name: str, job: str) -> bool:
                       "--stamp", STAMP, "--out", str(outs[0])]
         return run(f"{job}_{name}", cmd) == 0 and outs[0].exists()
     if not outs[0].exists():
-        cmd = base + [str(LADDER), "--genome", bed["db"], "--resolved", str(bed["resolved"]),
+        cmd = base + [str(LADDER), "--cover-index", "off",
+                      "--genome", bed["db"], "--resolved", str(bed["resolved"]),
                       "--gold", str(bed["gold"]), "--limit", "0", "--k", "12", "--arms", "baseline",
                       "--config", str(MUTED), "--per-query", "--stamp", STAMP, "--out", str(outs[0])]
         if bed["beir"]:

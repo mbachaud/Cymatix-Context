@@ -176,14 +176,19 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
         ]
 
     def _emit_trace(request: Request, *, packet_id, traceparent, query, session_id,
-                    chunks_fn, kmblock, t0, pipeline_request_id=None) -> None:
+                    chunks_fn, kmblock, t0, pipeline_request_id=None,
+                    window=None) -> None:
         """Record the packet event; never raises into the request."""
         import time as _time
         try:
             tracer = request.app.state.packet_tracer
             if not tracer.sampled():
                 return
+            timing_kw = (
+                _trace_chunks.window_timing(window) if window is not None else {}
+            )
             tracer.emit(
+                **timing_kw,
                 genome=cymatix.genome, config=config,
                 packet_id=packet_id, pipeline_request_id=pipeline_request_id,
                 session_id=session_id, query=str(query), chunks=chunks_fn(),
@@ -671,6 +676,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             query=query, session_id=cwola_session_id,
             chunks_fn=lambda: _window_chunks(window), kmblock=kmblock, t0=t0,
             pipeline_request_id=(window.metadata or {}).get("pipeline_request_id"),
+            window=window,
         )
         return [response]
 
@@ -758,6 +764,17 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                     payload["plr_confidence"] = plr_block
             except Exception:
                 log.warning("plr_confidence compute failed", exc_info=True)
+
+        # Optional System One packet judge (experimental, default off). Sends
+        # the query + item text to the configured provider; blocking HTTP, so
+        # it runs off the event loop. Soft-fails inside the helper.
+        so_cfg = getattr(live_cfg, "system_one", None)
+        if so_cfg is not None and so_cfg.enabled:
+            from fastapi.concurrency import run_in_threadpool
+            from ..backends import system_one_backend
+            payload["system_one"] = await run_in_threadpool(
+                system_one_backend.compute_system_one_block, so_cfg, str(query), payload,
+            )
 
         return payload
 
