@@ -45,3 +45,20 @@ def test_all_extra_includes_platformdirs():
     including everything from individual extras."""
     extras = _extras()
     assert any("platformdirs" in d for d in extras["all"])
+
+
+def test_spacy_extras_exclude_preshed_3_0_14():
+    """preshed 3.0.14 breaks loading en_core_web_sm 3.8.0 on spaCy 3.8.16
+    (OverflowError in Tokenizer._flush_specials). Every extra that pulls
+    spaCy must exclude it, or a fresh install resolves to the broken pin."""
+    extras = _extras()
+    spacy_extras = [
+        name for name, deps in extras.items()
+        if any(d.replace(" ", "").startswith("spacy") for d in deps)
+    ]
+    assert {"cpu", "dev", "all"} <= set(spacy_extras)
+    missing = [
+        name for name in spacy_extras
+        if not any(d.replace(" ", "") == "preshed!=3.0.14" for d in extras[name])
+    ]
+    assert not missing, f"extras pulling spaCy without preshed!=3.0.14: {missing}"
