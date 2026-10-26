@@ -1,0 +1,1127 @@
+{
+ "beir_scifact_1": [
+  "150920cfce61831b"
+ ],
+ "beir_scifact_100": [
+  "cca7ca3666fa8881"
+ ],
+ "beir_scifact_1012": [
+  "6104c0fcec67c84c",
+  "84f97905cbcee3a8",
+  "d558853c9700874a"
+ ],
+ "beir_scifact_1014": [
+  "82f785394b02e2a0"
+ ],
+ "beir_scifact_1019": [
+  "54fc6fb3ce878c7c"
+ ],
+ "beir_scifact_1020": [
+  "23f87b774c98a9ce"
+ ],
+ "beir_scifact_1021": [
+  "23f87b774c98a9ce"
+ ],
+ "beir_scifact_1024": [
+  "94b9332f88dbc5de"
+ ],
+ "beir_scifact_1029": [
+  "31075befc6f9b62e",
+  "434d00a0056dd65a",
+  "ebd14d6fa78936e4"
+ ],
+ "beir_scifact_1041": [
+  "553b48666667bf6f",
+  "aee64405c257ac23"
+ ],
+ "beir_scifact_1049": [
+  "2940ff2016edd91e"
+ ],
+ "beir_scifact_1062": [
+  "d8636f9cc0bdf1ef"
+ ],
+ "beir_scifact_1086": [
+  "13634b13bea38dc0",
+  "62f15eec988ce046",
+  "dab200a8c9abdbad"
+ ],
+ "beir_scifact_1088": [
+  "11b83dda1183133b"
+ ],
+ "beir_scifact_1089": [
+  "e490205c729cb358"
+ ],
+ "beir_scifact_1099": [
+  "031d4fc4210be983"
+ ],
+ "beir_scifact_1100": [
+  "031d4fc4210be983"
+ ],
+ "beir_scifact_1104": [
+  "14503fba7bc1595c",
+  "3a07f5c2115d8694",
+  "6314e9a3df942297"
+ ],
+ "beir_scifact_1107": [
+  "c2a73c6d87ec112c"
+ ],
+ "beir_scifact_1110": [
+  "10e72821b6ddf759",
+  "5cefc127052f1545",
+  "7143e454fa166cbe",
+  "7acfa0f5c84e8b7a"
+ ],
+ "beir_scifact_1121": [
+  "396036b953f80ce1"
+ ],
+ "beir_scifact_113": [
+  "18cc52fe8692bcba",
+  "5dc3785d10cbbce4",
+  "f5cd2a782b612575"
+ ],
+ "beir_scifact_1130": [
+  "f8de85e35df9b719"
+ ],
+ "beir_scifact_1132": [
+  "67abf0cea4c17ec2",
+  "eef6f13a2eb624a4"
+ ],
+ "beir_scifact_1137": [
+  "aad2a528ca55197e",
+  "beff80089d091ba7",
+  "f647aa6225491165"
+ ],
+ "beir_scifact_1140": [
+  "0153fc072a4b146c",
+  "0f1649b11d6fbafd",
+  "cd3d5288bc153536"
+ ],
+ "beir_scifact_1144": [
+  "a4473b27f41713f2",
+  "b66acfe4516f360d",
+  "dc7b984a2f562b8a"
+ ],
+ "beir_scifact_1146": [
+  "2837af7983264f18",
+  "4abdfa7ec81d3778",
+  "7a5462f109e8fb9d"
+ ],
+ "beir_scifact_115": [
+  "184ba72de369dd73"
+ ],
+ "beir_scifact_1150": [
+  "e7cf51a0457c92db"
+ ],
+ "beir_scifact_1163": [
+  "396b1030a78f3b84"
+ ],
+ "beir_scifact_1175": [
+  "089eef30e8d1850f"
+ ],
+ "beir_scifact_1179": [
+  "089eef30e8d1850f"
+ ],
+ "beir_scifact_118": [
+  "44d05a38ca2219ca"
+ ],
+ "beir_scifact_1180": [
+  "089eef30e8d1850f"
+ ],
+ "beir_scifact_1185": [
+  "64e0685ef1066f11",
+  "e2d208b25b8c7648",
+  "fabdc8812fd2bf59"
+ ],
+ "beir_scifact_1187": [
+  "e366f6d15fddc47e"
+ ],
+ "beir_scifact_1191": [
+  "6d851ef229ef5792"
+ ],
+ "beir_scifact_1194": [
+  "12a9fcce9f6a47c0"
+ ],
+ "beir_scifact_1196": [
+  "e43f8459925bd28e"
+ ],
+ "beir_scifact_1197": [
+  "e43f8459925bd28e"
+ ],
+ "beir_scifact_1199": [
+  "37dbe49b385b3507",
+  "7a35c5c422624707",
+  "e7b6e0d52a9c6442"
+ ],
+ "beir_scifact_1200": [
+  "0e5456c4ede17347"
+ ],
+ "beir_scifact_1202": [
+  "92d5658d4add682a"
+ ],
+ "beir_scifact_1204": [
+  "adb83abe57eaa5af"
+ ],
+ "beir_scifact_1207": [
+  "80e161de818a80e8"
+ ],
+ "beir_scifact_1213": [
+  "5ebf1fd24e6119cb",
+  "7433b588d3bc2cc0",
+  "a87aeb43add189fe"
+ ],
+ "beir_scifact_1216": [
+  "6be7a621e08a04ce"
+ ],
+ "beir_scifact_1221": [
+  "a133d11ae070a8d1"
+ ],
+ "beir_scifact_1225": [
+  "78e3b27057393c45"
+ ],
+ "beir_scifact_1226": [
+  "0d6ee78fe3c1ef45"
+ ],
+ "beir_scifact_1232": [
+  "cc9502ae874bcf2b"
+ ],
+ "beir_scifact_124": [
+  "1e3674e7cca94ce8",
+  "78c7cee735111a17",
+  "ab0212262894fb22"
+ ],
+ "beir_scifact_1241": [
+  "384890aa25e9c24a",
+  "8cfcfc0fa96cf440",
+  "9e51294ed115646f"
+ ],
+ "beir_scifact_1245": [
+  "2b14fa5f4241cb4c"
+ ],
+ "beir_scifact_1259": [
+  "276357558b01e1b2",
+  "6a9ab66d7a3ea679",
+  "d6cb477f86fc5053"
+ ],
+ "beir_scifact_1262": [
+  "eab110108badebde"
+ ],
+ "beir_scifact_1266": [
+  "3fd277596c809cac",
+  "975073cda619fca2",
+  "fa53f7514b2da2a2"
+ ],
+ "beir_scifact_127": [
+  "686ddbc17767c0fd"
+ ],
+ "beir_scifact_1270": [
+  "14cd32a14c3bdc51",
+  "8be6a5ad9fb0e117",
+  "a5f80a723d2c0699"
+ ],
+ "beir_scifact_1271": [
+  "db15b97933506b65",
+  "e21a040308d67312",
+  "f2fbafab66f8d17b"
+ ],
+ "beir_scifact_1272": [
+  "29fff3ef1d5de68d"
+ ],
+ "beir_scifact_1273": [
+  "69c8f729ebc8f5c5"
+ ],
+ "beir_scifact_1274": [
+  "4dee2de409947d9a",
+  "aac457348e7ef792",
+  "d1e15d8c9b5d06c5"
+ ],
+ "beir_scifact_1278": [
+  "fb50dc57fb9799d2"
+ ],
+ "beir_scifact_1279": [
+  "fb50dc57fb9799d2"
+ ],
+ "beir_scifact_128": [
+  "38ed277a75667ab8"
+ ],
+ "beir_scifact_1280": [
+  "0ab2ebe7a3e9315b",
+  "fded68339272f37e"
+ ],
+ "beir_scifact_1281": [
+  "0ab2ebe7a3e9315b",
+  "fded68339272f37e"
+ ],
+ "beir_scifact_1282": [
+  "1b78c055dccb6725"
+ ],
+ "beir_scifact_129": [
+  "6341c7ea21dcf8b3",
+  "6d5d6589a1164d12",
+  "8268058b9da783c0",
+  "8ef6882f2f95489f",
+  "b4d944b063b0c81d"
+ ],
+ "beir_scifact_1290": [
+  "0a8a6f0dda31b345",
+  "3a0ab8c8be98545f",
+  "3aef9a6542122ba6"
+ ],
+ "beir_scifact_1292": [
+  "d319908244b4475c"
+ ],
+ "beir_scifact_1298": [
+  "369d5c744385cd0b",
+  "73297d8d67a3a65d",
+  "dfd44546908ebef9"
+ ],
+ "beir_scifact_13": [
+  "78b5921f2feec22a",
+  "8a648dc5ddd15fb3",
+  "d93e4c2fe272a2c6"
+ ],
+ "beir_scifact_130": [
+  "6341c7ea21dcf8b3",
+  "6d5d6589a1164d12",
+  "8268058b9da783c0",
+  "8ef6882f2f95489f",
+  "b4d944b063b0c81d"
+ ],
+ "beir_scifact_1303": [
+  "346c89f2be2ffaa0"
+ ],
+ "beir_scifact_1316": [
+  "61462eeed876ba82"
+ ],
+ "beir_scifact_1319": [
+  "413fbc6ece1c7e3f"
+ ],
+ "beir_scifact_132": [
+  "f14e2a415366aa4a"
+ ],
+ "beir_scifact_1320": [
+  "413fbc6ece1c7e3f"
+ ],
+ "beir_scifact_133": [
+  "1c2001086f6cd6be",
+  "3fd3b7a7c5c40015",
+  "57e4f1bf4f9f219d",
+  "6c790024a013a388",
+  "af1179c1d0138368",
+  "c9bbd89751731826",
+  "d0ec8e991a5b8f08"
+ ],
+ "beir_scifact_1332": [
+  "e28334be54749414"
+ ],
+ "beir_scifact_1335": [
+  "61462eeed876ba82"
+ ],
+ "beir_scifact_1336": [
+  "61462eeed876ba82"
+ ],
+ "beir_scifact_1337": [
+  "5a3a4402abae4eb6"
+ ],
+ "beir_scifact_1339": [
+  "22a56347d1616f4d",
+  "86bce378aec2c37f",
+  "ea70ef306a57e00a"
+ ],
+ "beir_scifact_1344": [
+  "0fc79293fdbf20fd"
+ ],
+ "beir_scifact_1352": [
+  "5fcf37e60e643927"
+ ],
+ "beir_scifact_1359": [
+  "4c314094d4c18b63",
+  "787c53ca625f3df1",
+  "909a8a240d9afbbd"
+ ],
+ "beir_scifact_1362": [
+  "38ed277a75667ab8"
+ ],
+ "beir_scifact_1363": [
+  "38ed277a75667ab8"
+ ],
+ "beir_scifact_1368": [
+  "44b5aff98f568e8d",
+  "f7003712540df5c2"
+ ],
+ "beir_scifact_137": [
+  "a830508935aee382"
+ ],
+ "beir_scifact_1370": [
+  "44b5aff98f568e8d",
+  "f7003712540df5c2"
+ ],
+ "beir_scifact_1379": [
+  "4bd71374077a4905",
+  "5ec5446400c204d1",
+  "6c48f74607f04ebe",
+  "a8312948e7264a5b",
+  "c9153222447c2e29",
+  "d29e38235678031c",
+  "db1d70518881aa2a",
+  "f20086324160c095"
+ ],
+ "beir_scifact_1382": [
+  "7d904a3e1fd204cf"
+ ],
+ "beir_scifact_1385": [
+  "d3dcec0729745983"
+ ],
+ "beir_scifact_1389": [
+  "905bc2c36d3ef57e"
+ ],
+ "beir_scifact_1395": [
+  "df5f90b4e4a8dac9"
+ ],
+ "beir_scifact_141": [
+  "128c6bfe38dfebed",
+  "14e0bc8a5f092359",
+  "31087b39fc0e4555",
+  "d2ba8c3226b91686"
+ ],
+ "beir_scifact_142": [
+  "cbeda66e3ab435d8",
+  "cf5641920c94f6e1",
+  "de1dc9a18a0c2d74"
+ ],
+ "beir_scifact_143": [
+  "cbeda66e3ab435d8",
+  "cf5641920c94f6e1",
+  "de1dc9a18a0c2d74"
+ ],
+ "beir_scifact_146": [
+  "cbeda66e3ab435d8",
+  "cf5641920c94f6e1",
+  "de1dc9a18a0c2d74"
+ ],
+ "beir_scifact_148": [
+  "e58d64b0ffdedb9b"
+ ],
+ "beir_scifact_163": [
+  "0463f7bd31ee523e",
+  "8dc968103a14fe39",
+  "b2e11bcea2db9829"
+ ],
+ "beir_scifact_171": [
+  "a65b9aa1c0dfdbf3"
+ ],
+ "beir_scifact_179": [
+  "4bd71374077a4905",
+  "5ec5446400c204d1",
+  "6c48f74607f04ebe",
+  "a8312948e7264a5b",
+  "c9153222447c2e29",
+  "d29e38235678031c",
+  "db1d70518881aa2a",
+  "f20086324160c095"
+ ],
+ "beir_scifact_180": [
+  "61a1668396889400"
+ ],
+ "beir_scifact_183": [
+  "4b9d245ecfe5d8ea"
+ ],
+ "beir_scifact_185": [
+  "6c81768db36c15fd",
+  "85a1ac10a2f744e4",
+  "ffad6db5829a9500"
+ ],
+ "beir_scifact_198": [
+  "37111d687b8f20d9"
+ ],
+ "beir_scifact_208": [
+  "39cd53da3151c527"
+ ],
+ "beir_scifact_212": [
+  "4bf53147895637dd"
+ ],
+ "beir_scifact_213": [
+  "37d135dad4052ea5",
+  "8094e03fa370ad61",
+  "cbb243e688702a2a"
+ ],
+ "beir_scifact_216": [
+  "73910dfe702be0bc"
+ ],
+ "beir_scifact_217": [
+  "73910dfe702be0bc"
+ ],
+ "beir_scifact_218": [
+  "73910dfe702be0bc"
+ ],
+ "beir_scifact_219": [
+  "73910dfe702be0bc"
+ ],
+ "beir_scifact_230": [
+  "27d411f9acffe283",
+  "8b7e3b2b39382d13"
+ ],
+ "beir_scifact_232": [
+  "6557feba4bb2fa8b"
+ ],
+ "beir_scifact_233": [
+  "763881c850afc093"
+ ],
+ "beir_scifact_236": [
+  "763881c850afc093"
+ ],
+ "beir_scifact_237": [
+  "5c0e729caa1830df",
+  "8a0a3bcb7df2641b",
+  "d51554021beedc9a"
+ ],
+ "beir_scifact_238": [
+  "0573732030033c58"
+ ],
+ "beir_scifact_239": [
+  "5e17bf60eac2f554"
+ ],
+ "beir_scifact_248": [
+  "3fb1d697f040fe9b"
+ ],
+ "beir_scifact_249": [
+  "3fb1d697f040fe9b"
+ ],
+ "beir_scifact_261": [
+  "0bf9518639ba7041",
+  "1ab75a988656e307",
+  "6a09bcf28f2fa196",
+  "b0d2d1d53f1be13e",
+  "ce1b758217e727cb",
+  "ff9ac5b037ae4e46"
+ ],
+ "beir_scifact_268": [
+  "4fd0558f3f86baf4"
+ ],
+ "beir_scifact_269": [
+  "4fd0558f3f86baf4"
+ ],
+ "beir_scifact_274": [
+  "4c314094d4c18b63",
+  "787c53ca625f3df1",
+  "909a8a240d9afbbd"
+ ],
+ "beir_scifact_275": [
+  "116fd08ad0d8c8d2",
+  "18ce4512cabaf0e4",
+  "408cb3cd963082af",
+  "8d862559d3c472e7"
+ ],
+ "beir_scifact_279": [
+  "ad1cfd63e6ad3c52"
+ ],
+ "beir_scifact_294": [
+  "5aa5371f05d21f99"
+ ],
+ "beir_scifact_295": [
+  "c49582288957d969"
+ ],
+ "beir_scifact_298": [
+  "f48320e091cdf5e5"
+ ],
+ "beir_scifact_3": [
+  "360bf1342cb92d54",
+  "500894b1e887e147",
+  "bead7bb5c3a3e798"
+ ],
+ "beir_scifact_300": [
+  "937ce224a0b4ed30"
+ ],
+ "beir_scifact_303": [
+  "763881c850afc093"
+ ],
+ "beir_scifact_312": [
+  "303cc23a780039e5",
+  "3f32ee6bdad76a06",
+  "58fc53bb2efb00d0"
+ ],
+ "beir_scifact_314": [
+  "a92a338c2517e06e"
+ ],
+ "beir_scifact_324": [
+  "2d9fb1c0f883ce17"
+ ],
+ "beir_scifact_327": [
+  "f8de85e35df9b719"
+ ],
+ "beir_scifact_338": [
+  "15e352cd73545909",
+  "5c80a504ba09e3f4",
+  "da69f89b8177c93c"
+ ],
+ "beir_scifact_343": [
+  "1fcd4ae277f3071b",
+  "45beb63fbc5f8bac",
+  "99d92e86c98f6d21",
+  "ad59ea4f05e0fbf8",
+  "fafd4a9caf55dd40"
+ ],
+ "beir_scifact_350": [
+  "0c416558b7b9096c"
+ ],
+ "beir_scifact_354": [
+  "b954ed409f566948"
+ ],
+ "beir_scifact_36": [
+  "41098d349d0e2185",
+  "5843aa4e077c5341"
+ ],
+ "beir_scifact_362": [
+  "ab10296504b96ebb"
+ ],
+ "beir_scifact_380": [
+  "5418d6d7b93e6ec6"
+ ],
+ "beir_scifact_384": [
+  "10e72821b6ddf759",
+  "5cefc127052f1545",
+  "7143e454fa166cbe",
+  "7acfa0f5c84e8b7a"
+ ],
+ "beir_scifact_385": [
+  "ab4df0584fd6de7d",
+  "bc45bb38f6ac2ca9"
+ ],
+ "beir_scifact_386": [
+  "c8a6a579eaf94cfe"
+ ],
+ "beir_scifact_388": [
+  "e3812ce07f62fedd"
+ ],
+ "beir_scifact_399": [
+  "a807bb47420ebb98",
+  "c5c6c0704927a21d",
+  "fca2cffafaf863bd"
+ ],
+ "beir_scifact_410": [
+  "e016cd38c4063a3d"
+ ],
+ "beir_scifact_411": [
+  "e016cd38c4063a3d"
+ ],
+ "beir_scifact_415": [
+  "24770417aa020134",
+  "c97de41f383e6d5d",
+  "f35ff36a67365d91"
+ ],
+ "beir_scifact_42": [
+  "106021d89da4f59a",
+  "f102814746c67e00",
+  "fb57991934caf7cd"
+ ],
+ "beir_scifact_421": [
+  "18d0e96fdcbbca79"
+ ],
+ "beir_scifact_431": [
+  "4849aa52c570c1db"
+ ],
+ "beir_scifact_436": [
+  "dd07d2def26a471e"
+ ],
+ "beir_scifact_437": [
+  "623c3e54eaf34d4b"
+ ],
+ "beir_scifact_439": [
+  "0d556f7b625b8076"
+ ],
+ "beir_scifact_440": [
+  "0d556f7b625b8076"
+ ],
+ "beir_scifact_443": [
+  "3e2ca237b4a3ef18"
+ ],
+ "beir_scifact_452": [
+  "4753c82b1563c430",
+  "f18c09daf717e2b2"
+ ],
+ "beir_scifact_475": [
+  "01c6d28576228d76"
+ ],
+ "beir_scifact_478": [
+  "d475ae9a8727842f"
+ ],
+ "beir_scifact_48": [
+  "24e324123f4fba4e",
+  "8ca5627a5e145c76",
+  "f8247828def2dea1"
+ ],
+ "beir_scifact_49": [
+  "6726bcb1d65ce6c8"
+ ],
+ "beir_scifact_491": [
+  "d319908244b4475c"
+ ],
+ "beir_scifact_5": [
+  "24e324123f4fba4e",
+  "8ca5627a5e145c76",
+  "f8247828def2dea1"
+ ],
+ "beir_scifact_50": [
+  "8ff1ba66a8a35569"
+ ],
+ "beir_scifact_501": [
+  "2b2bb4f78a0c987e",
+  "6c1626a56903606b",
+  "7e9df6f1b33c996d"
+ ],
+ "beir_scifact_502": [
+  "51e341bd39a36036",
+  "6e6ec8a25bf79fa4",
+  "7c5ceffbc3ec3c55"
+ ],
+ "beir_scifact_507": [
+  "8fd114945db6a3ed"
+ ],
+ "beir_scifact_508": [
+  "892e6dd6758533d7"
+ ],
+ "beir_scifact_51": [
+  "3f9827cc28ced925"
+ ],
+ "beir_scifact_513": [
+  "20021d0ea69b4f3b",
+  "93f7ef4760ad6da4",
+  "c92db4c1813e0f4e"
+ ],
+ "beir_scifact_514": [
+  "427fcc300391181c",
+  "508b0ad36e532c4e",
+  "66d2f6f49c0195af"
+ ],
+ "beir_scifact_516": [
+  "78f63d3523983f0f",
+  "bd3f627b276eed7c",
+  "c82966faf0ee8d87"
+ ],
+ "beir_scifact_517": [
+  "0e21f653fe7c52ff",
+  "32c72df6b15a68e2",
+  "9df3f11eb1295aae"
+ ],
+ "beir_scifact_521": [
+  "4dbeda887d535005",
+  "d0ec0600d8d2d798",
+  "f8d2ef2cf774a2cb"
+ ],
+ "beir_scifact_525": [
+  "c280fa8c10a5c3a3"
+ ],
+ "beir_scifact_527": [
+  "b85b5284ababb038"
+ ],
+ "beir_scifact_528": [
+  "5c62bc0bd4922299"
+ ],
+ "beir_scifact_53": [
+  "3f9827cc28ced925"
+ ],
+ "beir_scifact_532": [
+  "2ed11659dc998cf5",
+  "3c975d4f0d77c9b4",
+  "a0604469175d798b"
+ ],
+ "beir_scifact_533": [
+  "2ed11659dc998cf5",
+  "3c975d4f0d77c9b4",
+  "a0604469175d798b"
+ ],
+ "beir_scifact_535": [
+  "943fe4c7db503a34",
+  "bfc667ec1866764b",
+  "da7dcaaff0390797"
+ ],
+ "beir_scifact_536": [
+  "06025641ddc7494a"
+ ],
+ "beir_scifact_539": [
+  "94e2accbbb9cefa7",
+  "f987ed795d8feedd",
+  "fc462a069cb46bf6"
+ ],
+ "beir_scifact_54": [
+  "92c7b2b828bd7fb3"
+ ],
+ "beir_scifact_540": [
+  "a4de820d21e0ffe0",
+  "a5ea7fa462902f8f"
+ ],
+ "beir_scifact_544": [
+  "c52fa7de38e1acae"
+ ],
+ "beir_scifact_549": [
+  "23f87b774c98a9ce"
+ ],
+ "beir_scifact_551": [
+  "67abf0cea4c17ec2"
+ ],
+ "beir_scifact_552": [
+  "6fd1e257cdaf2986"
+ ],
+ "beir_scifact_554": [
+  "7e8976e2a6f7d9db"
+ ],
+ "beir_scifact_56": [
+  "456f0427ae2bc869"
+ ],
+ "beir_scifact_560": [
+  "0745fe18151a7043"
+ ],
+ "beir_scifact_569": [
+  "b343b32158dd8b59"
+ ],
+ "beir_scifact_57": [
+  "456f0427ae2bc869"
+ ],
+ "beir_scifact_575": [
+  "a0315e553bf085fc"
+ ],
+ "beir_scifact_577": [
+  "18f55c135dfc7192"
+ ],
+ "beir_scifact_578": [
+  "1817b69bce4fd663"
+ ],
+ "beir_scifact_587": [
+  "5841227a159c652c"
+ ],
+ "beir_scifact_589": [
+  "45cdd226fb64ed88",
+  "7c22bed44e2f4c37",
+  "8e4e29290e6bcb74"
+ ],
+ "beir_scifact_593": [
+  "7c5d7f9b7efdca5d",
+  "9d91b5d11756e0ed"
+ ],
+ "beir_scifact_597": [
+  "2b1bf673d16d0953",
+  "5556fea2620ba85a",
+  "b10d201dd1066e2e"
+ ],
+ "beir_scifact_598": [
+  "5556fea2620ba85a"
+ ],
+ "beir_scifact_613": [
+  "e766eacc315fea2a"
+ ],
+ "beir_scifact_619": [
+  "2e72271403923bc1",
+  "3e60d16575ea862a"
+ ],
+ "beir_scifact_623": [
+  "3e65162123373fe4"
+ ],
+ "beir_scifact_628": [
+  "c7c1c6e648e09b12"
+ ],
+ "beir_scifact_636": [
+  "b10dbeac4d389615"
+ ],
+ "beir_scifact_637": [
+  "e43f8459925bd28e"
+ ],
+ "beir_scifact_641": [
+  "205dc1fed54261e5",
+  "821b59db4d8600d5",
+  "aa5dcdc036ef21c3",
+  "c503291fce773b64"
+ ],
+ "beir_scifact_644": [
+  "57e19239b1c3ffa7",
+  "a3221952c1623601",
+  "c5247d6ba6584679"
+ ],
+ "beir_scifact_649": [
+  "45b23b44769b11f2",
+  "6b1b7d459607b04d",
+  "a441d2fc895eff7d"
+ ],
+ "beir_scifact_659": [
+  "1d5da648c01cf0ee"
+ ],
+ "beir_scifact_660": [
+  "1d5da648c01cf0ee"
+ ],
+ "beir_scifact_674": [
+  "4d81c1ecb2e4d131",
+  "dda9b17578fda5af",
+  "ee4737abe5bf8485"
+ ],
+ "beir_scifact_684": [
+  "5c0e729caa1830df",
+  "8a0a3bcb7df2641b",
+  "d51554021beedc9a"
+ ],
+ "beir_scifact_690": [
+  "c2497ca6b1a854d7"
+ ],
+ "beir_scifact_691": [
+  "f5956d6e10392759"
+ ],
+ "beir_scifact_692": [
+  "1d22c5c18f9c45d9",
+  "6bc360e55ada6afe",
+  "a2139d14f6662103"
+ ],
+ "beir_scifact_693": [
+  "1d22c5c18f9c45d9",
+  "6bc360e55ada6afe",
+  "a2139d14f6662103"
+ ],
+ "beir_scifact_70": [
+  "41dc1b42a16597d3",
+  "6f708763d30ff263",
+  "d312a8d5b4ec96a5"
+ ],
+ "beir_scifact_700": [
+  "401a7222e8026ab3"
+ ],
+ "beir_scifact_702": [
+  "401a7222e8026ab3"
+ ],
+ "beir_scifact_715": [
+  "53c6fb7675962621"
+ ],
+ "beir_scifact_716": [
+  "53c6fb7675962621"
+ ],
+ "beir_scifact_718": [
+  "6af76de66540bc88"
+ ],
+ "beir_scifact_72": [
+  "ac7e63c2427589b7"
+ ],
+ "beir_scifact_721": [
+  "d036a331ea6327fb"
+ ],
+ "beir_scifact_723": [
+  "0a787817db26ecc3"
+ ],
+ "beir_scifact_727": [
+  "d5db96a369cd53cb"
+ ],
+ "beir_scifact_728": [
+  "a3b7efc1c5a265f7",
+  "d5db96a369cd53cb"
+ ],
+ "beir_scifact_729": [
+  "8e6cfc5bd5eee0f9"
+ ],
+ "beir_scifact_742": [
+  "3c9f87a0a2cbc8f1",
+  "7ae955e10127422e"
+ ],
+ "beir_scifact_743": [
+  "3c9f87a0a2cbc8f1",
+  "7ae955e10127422e"
+ ],
+ "beir_scifact_744": [
+  "9d1a057c56af5ff5"
+ ],
+ "beir_scifact_75": [
+  "0ab2ebe7a3e9315b",
+  "fded68339272f37e"
+ ],
+ "beir_scifact_756": [
+  "4713163a0dab37ec"
+ ],
+ "beir_scifact_759": [
+  "0aae9b17dee6f07b",
+  "2fd5b6592a8cf657",
+  "633d93a6b6890c90"
+ ],
+ "beir_scifact_768": [
+  "916359b1c193c3b9"
+ ],
+ "beir_scifact_770": [
+  "16c280e6247fac9a",
+  "9aea21b0beb90bf0",
+  "dd1c099233463f76"
+ ],
+ "beir_scifact_775": [
+  "36337a95b8a75668"
+ ],
+ "beir_scifact_781": [
+  "a1a6cd0c3a6a2ed1"
+ ],
+ "beir_scifact_783": [
+  "f4532226e18f538e"
+ ],
+ "beir_scifact_784": [
+  "e6f05316e07bb022"
+ ],
+ "beir_scifact_785": [
+  "6b6c5421e9541237",
+  "dcfdb6c55684da7f",
+  "f4cbd6ccc833ddad"
+ ],
+ "beir_scifact_793": [
+  "f25ab43d0d0888e9"
+ ],
+ "beir_scifact_800": [
+  "a2a7b740d68a6735"
+ ],
+ "beir_scifact_805": [
+  "162e47334e033633"
+ ],
+ "beir_scifact_808": [
+  "96b157e2aa5547d6"
+ ],
+ "beir_scifact_811": [
+  "6057bcd17ff2ae15"
+ ],
+ "beir_scifact_814": [
+  "00336d5d4be67267"
+ ],
+ "beir_scifact_820": [
+  "b4666be003f68b1c"
+ ],
+ "beir_scifact_821": [
+  "b4666be003f68b1c"
+ ],
+ "beir_scifact_823": [
+  "3d487a3144ea0c0f",
+  "60d1701ea12ccc24",
+  "6c174e83ac09ed4d"
+ ],
+ "beir_scifact_830": [
+  "214dc5778b9657c9"
+ ],
+ "beir_scifact_831": [
+  "214dc5778b9657c9"
+ ],
+ "beir_scifact_832": [
+  "34ba2d540794363a"
+ ],
+ "beir_scifact_834": [
+  "9c4c08d530934362"
+ ],
+ "beir_scifact_837": [
+  "88450a6b5c8d2596"
+ ],
+ "beir_scifact_839": [
+  "274f80ad7f12f0fe"
+ ],
+ "beir_scifact_845": [
+  "c0eb830966d00e07"
+ ],
+ "beir_scifact_847": [
+  "4d293b5046aba6b3"
+ ],
+ "beir_scifact_852": [
+  "974ad4267ab00caf",
+  "ec235255a4afcebd"
+ ],
+ "beir_scifact_859": [
+  "e8d099868046dbb4"
+ ],
+ "beir_scifact_870": [
+  "7786b2c53fa4f823",
+  "c2566314b47cd9f6",
+  "d0a0f784561f5e1c"
+ ],
+ "beir_scifact_873": [
+  "1b583ec9da9485f5",
+  "267e395aad2633db",
+  "50a5372f5c13dc74",
+  "5dc7a819ee8efa62",
+  "5f98bff0120209b4",
+  "deff1213cd2e36a2",
+  "ffe05ce2e6debbec"
+ ],
+ "beir_scifact_879": [
+  "1185353357c2ac7c"
+ ],
+ "beir_scifact_880": [
+  "1185353357c2ac7c"
+ ],
+ "beir_scifact_882": [
+  "19b3d2dbaf4a7e35"
+ ],
+ "beir_scifact_887": [
+  "29f0de20ff236c7a",
+  "58240775a407e96f",
+  "acdb9c1da45e6d21"
+ ],
+ "beir_scifact_903": [
+  "8ebfdea8a09bd4bd"
+ ],
+ "beir_scifact_904": [
+  "27149f3f9218dbf9"
+ ],
+ "beir_scifact_907": [
+  "a4231af4b1348fc0"
+ ],
+ "beir_scifact_911": [
+  "a073c26e7092aa1e",
+  "f53cdb52bb992e56",
+  "fc27d9e2a331dbfe"
+ ],
+ "beir_scifact_913": [
+  "164ea5cd71f24f30"
+ ],
+ "beir_scifact_914": [
+  "164ea5cd71f24f30"
+ ],
+ "beir_scifact_921": [
+  "70ac927f4c4334e0",
+  "ab67284712f5b3af",
+  "f2e76250d5dcbcd9"
+ ],
+ "beir_scifact_922": [
+  "e403b22758fc5b23"
+ ],
+ "beir_scifact_936": [
+  "9c4c08d530934362"
+ ],
+ "beir_scifact_94": [
+  "1d5da648c01cf0ee"
+ ],
+ "beir_scifact_956": [
+  "649304b1988dd63d"
+ ],
+ "beir_scifact_957": [
+  "cfba98b44a9d36ae"
+ ],
+ "beir_scifact_960": [
+  "fd5e73f0f390f21e"
+ ],
+ "beir_scifact_967": [
+  "56fa223193e6233f",
+  "6e3fa9c27974ea00"
+ ],
+ "beir_scifact_971": [
+  "068f97cec3fe6dda",
+  "1b70feb0c9cb7bf9",
+  "38ae324f222983d0",
+  "4bd8b6e22b9ac19e",
+  "5a7e5d76723fd9c1",
+  "6bf4b4a98082c99a",
+  "79056b18cf357750",
+  "98b933619812b3d9",
+  "a8dbdcd9b23f1cdc",
+  "a9043f6e684e78a5",
+  "b73b11d74f7a5693",
+  "f00dcea5e12aeda7",
+  "fa328dc83db21e19"
+ ],
+ "beir_scifact_975": [
+  "e28334be54749414"
+ ],
+ "beir_scifact_982": [
+  "61959bda43585bd8"
+ ],
+ "beir_scifact_985": [
+  "b8ba420b96786708"
+ ],
+ "beir_scifact_99": [
+  "6c86b4ae2c949a94"
+ ],
+ "beir_scifact_993": [
+  "c4cbf4628d6fec7b"
+ ]
+}

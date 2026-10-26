@@ -12,19 +12,80 @@
   [`docs/ROADMAP.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROADMAP.md)** —
   the sequencing layer that says which track a piece of work sits under.
 - **Install from PyPI:** `pip install cymatix-context`. Released versions are
-  git-tagged (`v0.11.0`, `v0.10.0`, `v0.9.2`, …) on the repository; pre-releases
-  (`vX.Y.ZbN`, cut from `beta`) install with `pip install --pre cymatix-context`.
-- This wiki documents **v0.11.0**. Each item below carries
-  its PR or issue number. The first section highlights changes since the
-  published v0.10.0 release (2026-09-30).
+  git-tagged (`v0.11.3`, `v0.11.2`, `v0.11.1`, `v0.11.0`, `v0.10.0`, …) on the
+  repository; pre-releases (`vX.Y.ZbN`, cut from `beta`) install with
+  `pip install --pre cymatix-context`.
+- This wiki documents **v0.11.3** (2026-10-11). Each item below carries
+  its PR or issue number. Work merged to `beta` after that tag is listed
+  first, under its own unreleased heading; the release sections follow,
+  newest first.
+
+## On `beta`, not yet released
+
+Merged to `beta` after the v0.11.3 tag. **None of this is in a published
+wheel**, and none of it has a release witness yet. The record is the
+`Unreleased` section of the CHANGELOG on `beta`.
+
+| Thread | What it is | Default impact |
+|---|---|---|
+| Per-stage trace timings ([#506](https://github.com/mbachaud/Cymatix-Context/pull/506), [#493](https://github.com/mbachaud/Cymatix-Context/issues/493)) | Packet records gain per-stage and per-signal timings and per-tier pool counts; existing timers reused | Only with `[trace]` on; no retrieval change |
+| Large-pool fusion cost ([#507](https://github.com/mbachaud/Cymatix-Context/pull/507)) | Post-tier boosts read compact JSON instead of parsing per candidate; top-K selection replaces full sorts in the rerank combinators | Perf only; ranked ids and scores unchanged, ties included |
+| Linear Tier 5 candidate query ([#509](https://github.com/mbachaud/Cymatix-Context/pull/509)) | The harmonic candidate query binds the pool once instead of probing every pair | Perf only |
+| Shared tag-posting fetch ([#508](https://github.com/mbachaud/Cymatix-Context/pull/508)) | Tag tiers 1 and `lex_anchor` share one posting fetch; covering index `idx_genes_id_chromatin` becomes an explicit migration (`scripts/migrate_genes_cover_index.py`) | Rank-identical with or without the index |
+| Background cover-index build ([#510](https://github.com/mbachaud/Cymatix-Context/pull/510), [#511](https://github.com/mbachaud/Cymatix-Context/pull/511)) | A writable open of a store with 50k+ documents and no covering index builds it on a background thread; bench drivers pin it off | Store-side; off with `[genome] cover_index_autobuild = false` |
+| EmbeddingGemma 2 dense codec ([#512](https://github.com/mbachaud/Cymatix-Context/pull/512)) | `[retrieval] dense_model = "google/embeddinggemma-2"`, text-only load, task prefixes, MRL dims; `cymatix-context[gemma]` extra | **Opt-in**; dense stays off and BGE-M3 stays the default model |
+
+## 0.11.3 (2026-10-11) — release contents
+
+Packet tracing becomes cheap enough to leave on, and the release witness ran
+with it on. No shipped default changed.
+
+| Thread | What it is | Default impact |
+|---|---|---|
+| Trace overhead fixes ([#501](https://github.com/mbachaud/Cymatix-Context/pull/501), [#502](https://github.com/mbachaud/Cymatix-Context/pull/502), [#493](https://github.com/mbachaud/Cymatix-Context/issues/493)) | The replay fingerprint's `COUNT(*)` moves to a background thread; trace chunks are built from documents assembly already holds. Trace work per `/context` request at 947k: **47 ms → 0.19 ms** p50 (metadata level) | `[trace]` stays **off** |
+| Packet trace phases 2-5, first wave ([#500](https://github.com/mbachaud/Cymatix-Context/pull/500)) | Eval checks, `POST /trace/action` events, `label` events with a security taxonomy (mappings marked unverified, no detectors yet), `cymatix trace export` with per-export re-keying, a JSON Schema, and a `trace-export` extra | Opt-in |
+| Ladder packet traces ([#503](https://github.com/mbachaud/Cymatix-Context/pull/503)) | The ERB ladder's `--trace-dir` / `--trace-level` write one packet per query; the receipt records `packets_written` and `chain_verified` | Bench only |
+| Release witness | October 11 at `00358af5`, **tracing on**: 314/470 delivered (0.6681), 0/470 per-needle differences from the v0.11.2 witness, 470 packets written and the hash chain verified | Release evidence; ranks and delivery only, no latency claim |
+
+- Still open on #493: harness adapters, grounding, detectors, replay.
+
+## 0.11.2 (2026-10-10) — release contents
+
+Opt-in groundwork for a usable know signal and for packet tracing. No shipped
+default changed.
+
+| Thread | What it is | Default impact |
+|---|---|---|
+| Packet trace, Phase 1 ([#497](https://github.com/mbachaud/Cymatix-Context/pull/497), [#493](https://github.com/mbachaud/Cymatix-Context/issues/493)) | Every `/context` and `/context/packet` response carries a ULID `packet_id` (body and `X-Cymatix-Packet-Id` header); with tracing on, metadata-level events go to an append-only JSONL file; `GET /trace/{id}` and `GET /trace/recent` | `[trace] enabled = false`; the `packet_id` is always returned |
+| Dense-free know model ([#492](https://github.com/mbachaud/Cymatix-Context/pull/492), [#482](https://github.com/mbachaud/Cymatix-Context/issues/482)) | `[know] model = "lanes"`, built from inputs every query has, with missing indicators | **Off** (`"legacy"`); stays opt-in until a per-store floor and a receipt-gated A/B exist |
+| Per-store know calibration and served cross-encoder input ([#494](https://github.com/mbachaud/Cymatix-Context/pull/494), [#496](https://github.com/mbachaud/Cymatix-Context/pull/496)) | `[know] lanes_platt_a` / `lanes_platt_b`, `scripts/calibrate_know_store.py`; `[know] lanes_ce_model`; a Platt-fit divergence fix | Opt-in; identity / empty by default |
+| Source-based freshness ([#491](https://github.com/mbachaud/Cymatix-Context/pull/491)) | `[context] freshness_basis = "source"`: unchanged on disk = verified, changed = needs refresh, not on this disk = unknown rather than stale | **Off** (`"clock"`) |
+| Tier-2 compound-SELECT fix ([#483](https://github.com/mbachaud/Cymatix-Context/pull/483)) | `tag_prefix` survives queries over 500 terms; SQL byte-identical at 500 terms or fewer | Bug fix; published BEIR ArguAna and RepoBench-R cff-easy numbers are slightly low and need a rescore |
+| Per-store settings and Freeze ([#486](https://github.com/mbachaud/Cymatix-Context/pull/486)) | Optional `<store>.db.cymatix.json` sidecar with auto-sync folders and a Freeze flag (read-only content, sync off, `/ingest` and `/consolidate` answer 409); Delivery and observability panels in the dashboard | Inert with no sidecar |
+| Desktop Node and Electron notes ([#480](https://github.com/mbachaud/Cymatix-Context/pull/480)) | Declares Node >= 22.12 and documents Electron's lazy binary download | Docs only |
+| Release witness | October 9 at `83188261`: 314/470 delivered (0.6681), 0/470 per-needle differences from the v0.10.0 witness on all 11 rank and delivery fields | Release evidence; ranks and delivery only, no latency claim |
+
+## 0.11.1 (2026-10-07) — release contents
+
+A deadlock fix, bench expansion, and the first witness since v0.10.0. No
+shipped default changed.
+
+| Thread | What it is | Default impact |
+|---|---|---|
+| Concurrent `/context` deadlock fix ([#488](https://github.com/mbachaud/Cymatix-Context/pull/488)) | `get_doc` read through the shared writer connection while another request held the write lock, which could stop the server answering everything, `/health` included; it now uses the per-thread read connection | Bug fix |
+| Dashboard UX pass, part 1 ([#485](https://github.com/mbachaud/Cymatix-Context/pull/485)) | One Start/Stop toggle, a switchboard showing only settings in effect, "Chunks" in place of "Genes" in labels, verbatim agent names | Launcher only; API keys unchanged |
+| BEIR rounds 1-2 and know tooling ([#487](https://github.com/mbachaud/Cymatix-Context/pull/487), [#482](https://github.com/mbachaud/Cymatix-Context/issues/482)) | BEIR corpus builders and profiles, `beir_ndcg.py`, ladder `--rank-dump`, a tag-lanes-muted diagnostic arm, and two opt-in `[know]` keys (`neutral`, `fitted_inputs`) | Bench only; the new keys default to `None` |
+| Receipt trees untracked ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) | `benchmarks/dogfood/**/receipts*/` is ignored; receipts are archived in the private `cymatix-receipts` repository, and history up to `e3825e4b` keeps the old copies | Repository layout only |
+| Release witness | October 7 at `1f039993`: 314/470 delivered (0.6681), 0/470 per-needle differences from the v0.10.0 witness; a v0.11.0 control on the same bed also reproduced exactly | Release evidence; ranks and delivery only, no latency claim |
 
 ## 0.11.0 (2026-10-01) — release contents
 
 Built so you can use Cymatix while building with it. No shipped retrieval or
 delivery default changes: every new behaviour is opt-in or launcher-side.
 This release ships **without** a 947k witness, by owner decision, because no
-retrieval path or default changed. The v0.10.0 witness remains the latest
-rank and delivery receipt.
+retrieval path or default changed. The v0.10.0 witness remained the latest
+rank and delivery receipt until the 0.11.1 witness, whose v0.11.0 control
+run reproduced it exactly.
 
 | Thread | What it is | Default impact |
 |---|---|---|
@@ -252,6 +313,15 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
   know-gate recalibration (#287), the sharded structural gap (#275), the
   retrieval-profile layer (#205), and the rest. Read it before proposing that
   something be picked up; it usually says why it was not.
+- **The know-gate track now has an opt-in candidate, not a fix.** 0.11.2's
+  `[know] model = "lanes"` and per-store calibration
+  ([#482](https://github.com/mbachaud/Cymatix-Context/issues/482)) ship off;
+  the CHANGELOG says the model stays opt-in until a per-store floor and a
+  receipt-gated A/B exist. The shipped `legacy` know surface is unchanged.
+- **Packet trace is partly built.** Phase 1 of
+  [#493](https://github.com/mbachaud/Cymatix-Context/issues/493) shipped in
+  0.11.2 and a first wave of phases 2-5 in 0.11.3; harness adapters,
+  grounding, detectors and replay are still open.
 - **The `entity_graph` layer ships on and has never been ablated** on the
   delivered basis. It sits on the retrieval-layer ledger as a
   REMOVE-CANDIDATE, and the arm is still owed.
@@ -285,10 +355,18 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
 - **Releases are receipt-gated, not calendar-gated.** A shipped-default
   change needs its paired receipt and `BASELINES.md` row before it merges to
   `beta`, and a final release needs a merged-stack witness ladder on the 947k
-  bed. The [September 8 final witness](https://github.com/mbachaud/Cymatix-Context/blob/master/benchmarks/dogfood/receipts/sweep_v092_witness_947k_2026-09-08.json)
-  at `8cab199` is **EXACT_REPRODUCE** on all 11 compared fields. The
-  September 4 witness remains historical evidence for its own pinned
-  stack; v0.9.1's gate remains `sweep_v091_gate_2026-08-30.json` (ALL PASS).
+  bed. The latest, the v0.11.3 witness at `00358af5` with packet tracing on,
+  is **EXACT_REPRODUCE** against the v0.11.2 witness: 314/470 delivered,
+  0/470 per-needle differences (BASELINES row
+  `2026-10-11-v0113-merged-stack-witness-trace`). 0.11.0 is the one final
+  release that shipped without a witness, by owner decision. Since 0.11.1
+  ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) witness
+  receipt files are archived in the private `cymatix-receipts` repository
+  and the BASELINES row is what lands on `beta`; older receipts such as the
+  [September 8 0.9.2 witness](https://github.com/mbachaud/Cymatix-Context/blob/v0.11.0/benchmarks/dogfood/receipts/sweep_v092_witness_947k_2026-09-08.json)
+  stay readable at tags up to v0.11.0. v0.9.1's gate remains
+  `sweep_v091_gate_2026-08-30.json` (ALL PASS). The release witnesses
+  together are on [Benchmarks and Receipts](Benchmarks-and-Receipts).
   When the receipt says a change is null or negative, the change does not
   ship: the wave-2
   COVER-walk arm in the 0.9.x window was killed by its own receipt

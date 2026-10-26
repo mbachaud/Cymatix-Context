@@ -214,6 +214,10 @@ def test_shared_builder_covers_every_config_driven_ctor_knob():
         # stores must keep the default (True), so it is deliberately not
         # threaded through cymatix.toml.
         "entity_autolink",
+        # Lean bench-bed writes (2026-10-16, PR #514): bed builders skip
+        # query-inert PKI rows; config-driven stores keep the default (True)
+        # so pki_enabled=true still has rows to read.
+        "pki_write",
     }
     expected = set(sig.parameters) - non_config
 

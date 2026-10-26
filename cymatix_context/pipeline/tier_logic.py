@@ -39,6 +39,25 @@ class TierResult:
     abstain_ratio: float = 0.0
 
 
+def _seats_within_chars(candidates: List[Gene], cap: int) -> int:
+    """How many ranked candidates fit in ``cap`` content chars (at least 1)."""
+    total = 0
+    for i, g in enumerate(candidates):
+        total += len(g.content or "")
+        if total > cap:
+            return max(1, i)
+    return len(candidates)
+
+
+def seats_for_char_cap(candidates: List[Gene], seats: int, ref_chars: int) -> int:
+    """Classifier cap of ``seats`` documents as ``seats * ref_chars`` chars.
+
+    Ranked candidates are kept while their content fits the char budget,
+    never fewer than ``seats`` (the legacy cap) nor more than are available.
+    """
+    return min(len(candidates), max(seats, _seats_within_chars(candidates, seats * ref_chars)))
+
+
 def apply_budget_tiers(
     candidates: List[Gene],
     all_scores: Optional[Dict[str, float]],
@@ -53,6 +72,8 @@ def apply_budget_tiers(
     abstain_ratio_threshold: float = 1.8,
     abstain_ratio_threshold_rrf_norm: float = 1.5,
     min_seats: int = 0,
+    tight_chars: int = 0,
+    focused_chars: int = 0,
 ) -> TierResult:
     """Apply TIGHT / FOCUSED / BROAD tiering + score floor + shadow pool.
 
@@ -76,6 +97,11 @@ def apply_budget_tiers(
     is limited to the score-gated pool; when fewer than three pass, the
     inherited sparse fallback stays at its legacy cut. It does not change
     BROAD or bypass ABSTAIN. The default 0 preserves the legacy tier cuts.
+
+    ``tight_chars`` / ``focused_chars`` (> 0) measure the TIGHT / FOCUSED
+    cut in characters instead of documents: ranked candidates are kept
+    while their cumulative content fits the cap (at least one), so the cut
+    scales with chunk size. ``min_seats`` still raises it. 0 = legacy 3 / 6.
 
     Issue #207 item 4 (default-inert knobs): the tier constants above are
     keyword parameters whose defaults reproduce the prior hard-coded
@@ -262,7 +288,8 @@ def apply_budget_tiers(
     ):
         # High confidence -- top document dominates AND is strong.
         # Preserve the delivery floor before downstream caps and trimming.
-        seat_limit = max(3, min(min_seats, len(gated)))
+        base = _seats_within_chars(candidates, tight_chars) if tight_chars > 0 else 3
+        seat_limit = max(base, min(min_seats, len(gated)))
         shadow_pool = shadow_pool + candidates[seat_limit:]
         candidates = candidates[:seat_limit]
         budget_tier = "tight"
@@ -273,7 +300,8 @@ def apply_budget_tiers(
         and len(candidates) >= 6
     ):
         # Moderate confidence -- narrow while honoring the delivery floor.
-        seat_limit = max(6, min(min_seats, len(gated)))
+        base = _seats_within_chars(candidates, focused_chars) if focused_chars > 0 else 6
+        seat_limit = max(base, min(min_seats, len(gated)))
         shadow_pool = shadow_pool + candidates[seat_limit:]
         candidates = candidates[:seat_limit]
         budget_tier = "focused"
