@@ -375,6 +375,13 @@ def _create_genes_indexes(cur: sqlite3.Cursor) -> None:
 # promoter_index
 # ---------------------------------------------------------------------------
 
+def _lean_indexes() -> bool:
+    """``CYMATIX_LEAN_INDEXES=1``: skip indexes that are a left prefix of
+    another index on the same table (every lookup stays index-served).
+    Read at schema-init time; existing indexes are never dropped."""
+    return os.environ.get("CYMATIX_LEAN_INDEXES", "").strip().lower() in ("1", "true", "yes", "on")
+
+
 def _create_promoter_index(cur: sqlite3.Cursor) -> None:
     cur.execute("""
     CREATE TABLE IF NOT EXISTS promoter_index (
@@ -383,10 +390,12 @@ def _create_promoter_index(cur: sqlite3.Cursor) -> None:
         tag_value TEXT
     )
     """)
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_promoter_value "
-        "ON promoter_index(tag_value)"
-    )
+    if not _lean_indexes():
+        # Left prefix of idx_promoter_cover: redundant, kept for legacy beds.
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_promoter_value "
+            "ON promoter_index(tag_value)"
+        )
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_promoter_gene "
         "ON promoter_index(gene_id)"
@@ -468,10 +477,12 @@ def _create_entity_graph(cur: sqlite3.Cursor) -> None:
         PRIMARY KEY (entity, gene_id)
     )
     """)
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_entity_graph_entity "
-        "ON entity_graph(entity)"
-    )
+    if not _lean_indexes():
+        # Left prefix of the (entity, gene_id) primary key: redundant.
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_entity_graph_entity "
+            "ON entity_graph(entity)"
+        )
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_entity_graph_gene "
         "ON entity_graph(gene_id)"

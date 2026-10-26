@@ -212,6 +212,17 @@ class BudgetConfig:
     # #430: extend min_delivered_docs to TIGHT/FOCUSED tier cuts while
     # preserving tier labels. Off until the paired delivery gates pass.
     tier_seat_floor_enabled: bool = False
+    # Grain-size ladder: TIGHT / FOCUSED cuts in characters instead of
+    # documents (keep ranked candidates while their content fits). 0 =
+    # legacy 3 / 6 seats. 4500 / 9000 reproduce what the legacy cuts ship
+    # on 4000-char beds (2026-10-15 BEIR grain ladder); opt-in, unreceipted.
+    tier_tight_chars: int = 0
+    tier_focused_chars: int = 0
+    # Grain-size ladder: the classifier's per-class assembly cap (2/5/6/8
+    # seats) becomes seats x classifier_cap_ref_chars content chars, never
+    # fewer than the legacy seats. 0 = legacy seat cap. Opt-in, unreceipted
+    # (ERB c580 no-floor arms delivered exactly 8 chunks on 268/470 needles).
+    classifier_cap_ref_chars: int = 0
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
@@ -266,6 +277,10 @@ class BudgetConfig:
                 "[budget] min_delivered_docs must be >= 0 "
                 f"(0 = legacy eviction-only trim), got {self.min_delivered_docs!r}"
             )
+        if self.classifier_cap_ref_chars < 0:
+            raise ValueError("[budget] classifier_cap_ref_chars must be >= 0 (0 = legacy seat cap)")
+        if self.tier_tight_chars < 0 or self.tier_focused_chars < 0:
+            raise ValueError("[budget] tier_tight_chars / tier_focused_chars must be >= 0 (0 = legacy seats)")
 
 
 @dataclass
@@ -1900,6 +1915,9 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             # W2.4: delivered-seat floor. Default-inert (0).
             min_delivered_docs=int(b.get("min_delivered_docs", cfg.budget.min_delivered_docs)),
             tier_seat_floor_enabled=bool(b.get("tier_seat_floor_enabled", cfg.budget.tier_seat_floor_enabled)),
+            tier_tight_chars=int(b.get("tier_tight_chars", cfg.budget.tier_tight_chars)),
+            tier_focused_chars=int(b.get("tier_focused_chars", cfg.budget.tier_focused_chars)),
+            classifier_cap_ref_chars=int(b.get("classifier_cap_ref_chars", cfg.budget.classifier_cap_ref_chars)),
             abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
             foveated_enabled=bool(b.get("foveated_enabled", cfg.budget.foveated_enabled)),
             foveated_alpha=float(b.get("foveated_alpha", cfg.budget.foveated_alpha)),
