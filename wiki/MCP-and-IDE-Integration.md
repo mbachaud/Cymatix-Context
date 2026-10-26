@@ -11,7 +11,7 @@
   up, and everything on [Configuration](Configuration) applies unchanged.
 - The default tool surface is deliberately **lean**. Every registered tool's
   name, description, and JSON schema is injected into the host's context on
-  *every* turn, so the default profile is ten core tools, hiding the admin,
+  *every* turn, so the default profile is eleven core tools, hiding the admin,
   diagnostic, and legacy surface behind `CYMATIX_MCP_FULL=1`.
 - **Canonical `cymatix_document_*` names are the ones to call.** The legacy
   biology-named tools still work under the full surface, with a deprecation
@@ -31,6 +31,19 @@ pip install "cymatix-context[mcp]"
 cymatix-server                      # binds 127.0.0.1:11437
 ```
 
+For Claude Code, Claude Desktop, Cursor, and Gemini CLI the CLI can write the
+entry for you:
+
+```bash
+cymatix mcp install --host claude-code          # or claude-desktop, cursor, gemini-cli
+cymatix mcp install --host claude-code --dry-run   # print the entry, write nothing
+```
+
+It writes the `cymatix-context` entry (with `CYMATIX_MCP_HOST` and
+`CYMATIX_AGENT_KIND` set to the host) after backing the target file up; on an
+existing entry it keeps your command, args, and `env` keys and rewrites only
+`CYMATIX_MCP_URL` and the host tags. By hand:
+
 ```json
 {
   "mcpServers": {
@@ -46,23 +59,29 @@ cymatix-server                      # binds 127.0.0.1:11437
 }
 ```
 
-- Claude Code reads this from a project-level `.mcp.json` or a user-level
-  `~/.claude/mcp.json`. Gemini CLI (`.gemini/settings.json`) and Antigravity
+- Claude Code reads this from a project-level `.mcp.json` or the user-level
+  `~/.claude.json`. Gemini CLI (`.gemini/settings.json`) and Antigravity
   (`~/.gemini/config/mcp_config.json`) take the same `mcpServers` entry;
   Codex takes the equivalent `[mcp_servers.cymatix-context]` table in
-  `.codex/config.toml`. The native shapes and the per-host `CYMATIX_MCP_HOST`
+  `.codex/config.toml` (`cymatix mcp install` does not write TOML). The
+  native shapes and the per-host `CYMATIX_MCP_HOST`
   values (`codex`, `gemini-cli`, `antigravity`) are in the guides under
   [`docs/clients/`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/clients/cymatix-context.md).
   Direct MCP needs neither the model proxy nor the tray; a healthy headless
   server is sufficient.
-- The server self-identifies as `cymatix`, so tools appear to the host as
-  `mcp__cymatix__*`.
+- **Lanes.** If you run extra servers under `[[lanes]]` (0.11.0),
+  `cymatix mcp lanes` lists each lane's port and entry name, and
+  `cymatix mcp install --host ... --lane NAME` adds a `cymatix-context-<lane>`
+  entry beside the primary one, so one host can reach several stores.
+- The server self-identifies as `cymatix` and its tools are named
+  `cymatix_*`. Hosts prefix them with the entry name, so Claude Code shows
+  `mcp__cymatix-context__cymatix_health`.
 - On Windows, wrap the stdio launcher as `cmd /c python ...` when `python` is
   not directly resolvable in the host's spawn environment.
 
 ## The tool surface
 
-**Core set — what ships by default (ten tools).**
+**Core set — what ships by default (eleven tools).**
 
 | Tool | Does | Backed by |
 |---|---|---|
@@ -76,6 +95,7 @@ cymatix-server                      # binds 127.0.0.1:11437
 | `cymatix_ingest` | Contribute content to the knowledge store | `POST /ingest` |
 | `cymatix_health` | Readiness probe — compressor, document count, upstream | `GET /health` |
 | `cymatix_sessions_list` | Sibling-agent awareness: who else is registered | `GET /sessions` |
+| `cymatix_announce` | Self-report the agent's `model_id` (and optionally override the detected IDE) for the dashboard badge. Call once, after `cymatix_health` | `POST /sessions/{participant}/announce` |
 
 `cymatix_document_query` defaults its `session_id` to the MCP subprocess's own
 session, so repeated calls within one host session elide already-delivered
@@ -92,12 +112,12 @@ pass-throughs to existing handlers — identical behavior, better names.
 | `cymatix_document_fingerprint` | `cymatix_fingerprint` |
 | `cymatix_document_neighbors` | `cymatix_neighbors` |
 
-**`CYMATIX_MCP_FULL=1` unhides everything else** — 24+ tools in total. Set it
+**`CYMATIX_MCP_FULL=1` unhides everything else** — 25 tools in total. Set it
 in the same `env` block. What appears:
 
 - **Retrieval / store:** `cymatix_refresh_targets`, `cymatix_stats`,
   `cymatix_resonance`, `cymatix_consolidate`, plus the legacy names above.
-- **Session registry:** `cymatix_session_recent`, `cymatix_announce`.
+- **Session registry:** `cymatix_session_recent`.
 - **HITL events:** `cymatix_hitl_emit`, `cymatix_hitl_recent`.
 - **Operational:** `cymatix_metrics_tokens`, `cymatix_bridge_status`,
   `cymatix_swap_db`.
@@ -135,6 +155,7 @@ falls back to a default that erodes attribution: badges read `unknown` and the
 | `CYMATIX_MCP_HOST` | Which IDE spawned the process — becomes a capability tag. **Optional since 2026-05-06:** the adapter auto-detects the host from `VSCODE_PID` / `CURSOR_TRACE_ID`. Set it only to override the detection |
 | `CYMATIX_AGENT_KIND` | The vendor/family axis (`claude-code`, `gemini-cli`, `codex`) — orthogonal to host |
 | `CYMATIX_ORG` / `CYMATIX_USER` / `CYMATIX_AGENT` / `CYMATIX_DEVICE` | The four attribution layers stamped on ingested content |
+| `CYMATIX_ADMIN_TOKEN` | Sent as `Authorization: Bearer <token>` on every call (0.11.0). Set it when the server has `[server] admin_token`, or `cymatix_ingest` gets a 401 |
 | `CYMATIX_MCP_FULL` | Expose the full tool surface |
 
 Per-host conventions:
@@ -168,20 +189,24 @@ Claude Code  --stdio JSON-RPC-->  cymatix_context.mcp  --HTTP-->  cymatix-server
   Stop the host process and the participant TTLs out naturally.
 
 **Verifying the route.** Ask the agent to call `cymatix_health`, then check the
-dashboard at `http://127.0.0.1:11437/launcher`: the **Parties** panel should
-show your `CYMATIX_PARTY_ID`, **Identities** your `CYMATIX_USER` workspace, and
-**Agents** a participant matching `CYMATIX_MCP_HANDLE` with the
-`host:<...>` capability tag.
+launcher dashboard (`cymatix-launcher`, at `http://127.0.0.1:11438`): the
+**Parties** panel should show your `CYMATIX_PARTY_ID`, **Identities** your
+`CYMATIX_USER` workspace, and **Agents** a participant matching
+`CYMATIX_MCP_HANDLE` with the `host:<...>` capability tag. Without the
+launcher, `curl -s http://127.0.0.1:11437/sessions` lists the same
+participants.
 
 | Symptom | Cause | Fix |
 |---|---|---|
 | Tool calls return network errors | `CYMATIX_MCP_URL` unreachable; backend not running | Start `cymatix-server` |
+| `cymatix_ingest` returns 401 | The server has `[server] admin_token` set | Set `CYMATIX_ADMIN_TOKEN` in the `env` block |
+| `cymatix_ingest` returns 409 | The store is frozen | Unfreeze it in the dashboard; see [Troubleshooting](Troubleshooting) |
 | Calls work but no participant in the dashboard | Registration silently failed | Read the adapter's stderr for the `_register_with_registry` warning |
 | Ingested content shows `agent=unknown` | `CYMATIX_AGENT` unset in the MCP env | Set it in the `env` block |
 | Agent appears as `mcp-<pid>` | `CYMATIX_MCP_HANDLE` did not carry | Set it, or accept the per-process unique default |
 | Two panels collide on one handle | Both share `CYMATIX_MCP_HANDLE` | Give each a distinct handle, or omit it |
 | `cymatix_sessions_list` empty | The bridge import failed at adapter startup | Check the adapter's startup log — usually a missing dependency in the spawn environment |
-| Only ten tools visible | The lean default profile | Set `CYMATIX_MCP_FULL=1` |
+| Only eleven tools visible | The lean default profile | Set `CYMATIX_MCP_FULL=1` |
 
 ## The agent-side skill
 
@@ -243,12 +268,14 @@ All three run the same pipeline against the same store and return the same
 JSON shapes, so an integration can move between them without changing its
 parser.
 
-*Tool responses keep legacy field names on the wire — `gene_id` in a
-`cymatix_document_get` or `cymatix_document_neighbors` result is verbatim, not
-a leak from an unconverted page. The tool names and the prose moved to software
-terms; renaming the JSON contract is a tracked Tier-3 change, deliberately not
-taken in 0.9.1 because it breaks every existing consumer. See
-[Lexicon](Lexicon).*
+*Tool responses keep legacy field names on the wire by default — `gene_id` in
+a `cymatix_document_get` or `cymatix_document_neighbors` result is verbatim,
+not a leak from an unconverted page. The tool names and the prose moved to
+software terms. Renaming the JSON contract breaks every existing consumer, so
+it ships only as the experimental opt-in `[budget] wire_format = "canonical"`
+(0.10.0, [#417](https://github.com/mbachaud/Cymatix-Context/issues/417)),
+which switches tags, headers, and JSON fields across HTTP, CLI, and MCP; pair
+it with `full_fragment(wire_format="canonical")`. See [Lexicon](Lexicon).*
 
 ## Go deeper
 

@@ -81,10 +81,13 @@ wins when both are supplied.
 
 ## Lean MCP surface
 
-The default profile exposes exactly these six tools:
+The default profile exposes exactly these 11 tools:
 
 `cymatix_context`, `cymatix_context_packet`, `cymatix_ingest`,
-`cymatix_health`, `cymatix_sessions_list`, and `cymatix_announce`.
+`cymatix_health`, `cymatix_sessions_list`, `cymatix_announce`, and the five
+canonical document aliases `cymatix_document_get`, `cymatix_document_query`,
+`cymatix_document_preview`, `cymatix_document_fingerprint`, and
+`cymatix_document_neighbors` (full list: [MCP tools](../api/mcp-tools.md)).
 
 Administrative and debug tools are available only with `CYMATIX_MCP_FULL=1`.
 If a host cached an older list, refresh or restart that host before diagnosing
@@ -134,7 +137,7 @@ native repository tools. Cymatix improves a task but never blocks it.
    `python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437`
 2. Launch `python -m cymatix_context.mcp_server` through the host's native
    stdio configuration.
-3. Confirm the six lean tools are listed and call `cymatix_health`.
+3. Confirm the 11 lean tools are listed and call `cymatix_health`.
 4. Call `cymatix_announce` with a descriptive `model_id`.
 5. Call `cymatix_context` with an explicit `caller_model_class` (and `model`
    when known), then inspect its response metadata.

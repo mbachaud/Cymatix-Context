@@ -23,11 +23,13 @@ ARCHIVE = Path(r"F:\Projects\cymatix-receipts\captures\beir")
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--round", required=True)
+    ap.add_argument("--pattern", default="ladder_beir_*.json",
+                    help="receipt filename glob under beir_*/receipts/ (e.g. '*_2026-10-14.json')")
     args = ap.parse_args(argv)
     dest = ARCHIVE / args.round
     dest.mkdir(parents=True, exist_ok=True)
     rows = []
-    for src in sorted((ROOT / "benchmarks" / "dogfood").glob("beir_*/receipts/ladder_beir_*.json")):
+    for src in sorted((ROOT / "benchmarks" / "dogfood").glob(f"beir_*/receipts/{args.pattern}")):
         data = src.read_bytes()
         sha = hashlib.sha256(data).hexdigest()
         target = dest / src.name

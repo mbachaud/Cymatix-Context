@@ -61,7 +61,11 @@ One JSON object per line in `packets.jsonl`.
               "rank": 1, "score": 2.5, "source_kind": "code",
               "lane_contribs": {"fts5": 1.0}}],
   "verdict": {"kind": "know", "confidence": 0.8},
-  "timing_ms": {"total": 12.5},
+  "timing_ms": {"total": 12.5,
+                "stages": {"classify": 0.04, "extract": 0.31, "express": 8.12,
+                           "rerank": 0.2, "splice": 0.9, "assemble": 2.4},
+                "signals": {"tag_exact": 0.6, "fts5": 5.3, "harmonic": 1.1}},
+  "pool": {"tag_exact": 12, "fts5": 190, "harmonic": 30, "pool_total": 205},
   "trace": {"trace_id": "..", "parent_span_id": "..", "trace_flags": "01"},
   "prev_hash": null
 }
@@ -72,7 +76,32 @@ Fields that are unavailable are omitted, not invented. `verdict.kind` is
 from `miss`. `index_fingerprint` is a hash of document count and max rowid,
 cached for 60 s; it is a cheap change detector, not a content hash.
 `config_hash` is the sha256 of the loaded runtime config with secrets
-redacted. `timing_ms` carries only the total in Phase 1.
+redacted.
+
+### Latency profiling fields
+
+`timing_ms.total` is unchanged (route wall time). Three additive fields say
+where the time went; all reuse timers that already run, are not content, and
+are kept at both levels and by `trace_export`. Values are ms rounded to 0.01.
+
+- `timing_ms.stages`: per-request pipeline stage ms (the same `_stage_timer`
+  stages as `cymatix_pipeline_stage_seconds`: `classify`, `extract`,
+  `express`, `rerank`, `splice`, `assemble`, plus sub-stages such as
+  `delivery_lookup`). Sub-stages nest inside their parent, so do not sum.
+  `persist` runs in the background and is not included.
+- `timing_ms.signals`: the store's per-signal ms for the retrieval inside
+  `express` (`tag_exact`, `tag_prefix`, `fts5`, `harmonic`, ...; only signals
+  that ran). Multi-sub-query requests sum across sub-queries.
+- `pool`: candidates scored per tier (genes carrying a contribution from that
+  tier) and `pool_total`, the candidate pool size reaching Tier 5.
+
+Emitted by `POST /context` and the ERB ablation ladder; `/context/packet`
+records carry `timing_ms.total` only. Concurrency: stages are contextvar
+scoped (exact per request). Signals and `pool_total` are read from the store's
+`last_*` attributes under the same lock and at the same point as
+`last_query_scores` (issue #350 semantics), so under concurrent serving on one
+store they can reflect a neighbouring request; profile with serial requests
+for exact attribution.
 
 ## `action` event (schema_version "0")
 
@@ -180,4 +209,4 @@ and `action` events, Phase 4 security detectors (the `label` event and
 taxonomy schema are in place; nothing emits labels yet), Phase 5
 export, re-keying, replay tool and JSON Schema. Also not in Phase 1:
 `usurpers`, `ingested_at` (only emitted when supplied), `rbac_scope`,
-`ingest_source_hash`, instruction-like-text flags, per-stage `timing_ms`.
+`ingest_source_hash`, instruction-like-text flags.

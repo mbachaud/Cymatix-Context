@@ -22,11 +22,12 @@ is the condensed path; the canonical install document with every nuance is
   ```
 
 - **Ollama** (reachable at `http://localhost:11434`) — the default chat
-  upstream for the OpenAI-compatible proxy, and one of the optional compressor
-  (legacy: ribosome) backends. The retrieval path makes no model call, so with
-  the compressor disabled (the shipped default) the CLI and `/context` work
-  without it. Verify with `curl -s http://localhost:11434/api/tags` — the
-  response must be JSON.
+  upstream for the OpenAI-compatible proxy, and the usual local target of
+  the optional compressor (legacy: ribosome) when it runs through the
+  `litellm` backend with an `ollama/` model. The retrieval path makes no
+  model call, so with the compressor disabled (the shipped default) the CLI
+  and `/context` work without it. Verify with
+  `curl -s http://localhost:11434/api/tags` — the response must be JSON.
 - **Disk.** A full `[all]` install pulls roughly 2 GB (dominated by `torch`,
   `sentence-transformers`, `headroom-ai`, tree-sitter parsers). The lean
   proxy-only path (`embeddings,cpu`) is roughly 150 MB. The knowledge store
@@ -52,13 +53,15 @@ install two or three extras, not `[all]`.
 | `launcher-tray` | `launcher` plus `pystray` + Pillow + pywin32 (Windows) — the system-tray icon | Daily-driver desktop flow. `pystray` is **LGPL-3**, runtime-only optional |
 | `codec` | `headroom-ai[proxy,code]` — the CPU-resident compression proxy + dashboard | You want the Headroom proxy lifecycle |
 | `accel` | `orjson` fast path on `/context` and `/ingest` | Small always-on perf win |
+| `trace-export` | `datasets` + `pyarrow` + `jsonschema` for `cymatix trace export` | You export packet traces (new in 0.11.3) |
 | `scorerift` | The ScoreRift companion package | You run the ScoreRift integration (most do not) |
-| `all` | The full feature surface minus `dev` (contributor-only), `launcher-tray` (LGPL), and `scorerift` (separate package); ~2 GB | You want everything Apache-2.0-clean and do not care about disk |
+| `all` | The full feature surface minus `dev` (contributor-only), `launcher-tray` (LGPL), `launcher-native` (pywebview), `trace-export`, and `scorerift` (separate package); ~2 GB | You want everything Apache-2.0-clean and do not care about disk |
 
 Two things that have bitten operators:
 
-- `[all]` does **not** include `launcher-tray` (LGPL) or `scorerift`
-  (separate package). Add `,launcher-tray` explicitly if you want the tray.
+- `[all]` does **not** include `launcher-tray` (LGPL), `scorerift`
+  (separate package), or `trace-export`. Add `,launcher-tray` explicitly if
+  you want the tray.
 - `[embeddings]` transitively pulls `torch`. Per `docs/SETUP.md`: if you do
   not need semantic retrieval you do not need torch — skip the extra and
   accept that the ΣĒMA-cosine tier and dense recall become no-ops. Note the
@@ -116,6 +119,12 @@ For a headless proxy instead of the CLI, the lean set is
   path = "genomes/main/genome.db"
   ```
 
+- **Keeping a folder fresh.** `cymatix ingest` only adds. To keep tracked
+  folders in step with the store (changed files re-ingested, the stale and
+  deleted files' chunks tombstoned), turn on `[sync]` with
+  `enabled = true` and `roots = [...]` — default off, it runs inside the
+  server, and `GET /sync/status` reports it
+  ([#473](https://github.com/mbachaud/Cymatix-Context/pull/473), 0.11.0).
 - **Dense vectors are not written at ingest by default**
   (`[ingestion] dense_embed_on_ingest = false` since 2026-08-19,
   [#371](https://github.com/mbachaud/Cymatix-Context/issues/371)). If you
@@ -138,10 +147,12 @@ curl -s http://127.0.0.1:11437/health | python -m json.tool
 - `cymatix diag corpus` reports total documents, total fragments, the tier
   distribution (open / euchromatin / heterochromatin), the compression ratio,
   and best-effort staleness.
-- `/health` reports the model, the document count, the upstream URL, and
-  `observability.exporter` — `"otlp_grpc"` means telemetry is wired, `"noop"`
-  means `CYMATIX_OTEL_ENABLED=1` but the `otel` extra is missing, and absent
-  means telemetry is off (the shipped default).
+- `/health` reports `status` (`ok` or `degraded`), the package `version`, the
+  document count (`genes`), the compressor, the upstream URL, and
+  `upstream_state`. With the compressor disabled (the shipped default) the
+  upstream is not probed and reads `"inactive"`; otherwise it is `"ok"` or
+  `"unreachable"`. Telemetry state is not on `/health` — see
+  [Observability](Observability).
 
 A `Connection refused` on `/health` just means no server is running — the CLI
 workflow below does not need one.
@@ -157,7 +168,8 @@ workflow below does not need one.
   `cymatix query`, `cymatix packet`, `cymatix refresh-targets`,
   `cymatix document get` (legacy: `cymatix gene get`), `cymatix neighbors`.
 - Operator commands: `cymatix ingest`, `cymatix status`,
-  `cymatix diag corpus`, `cymatix config show`.
+  `cymatix diag corpus`, `cymatix config show`, `cymatix mcp lanes` /
+  `cymatix mcp install`, `cymatix compare`, and `cymatix trace export`.
 - Because there is no daemon, each invocation pays its own start-up. Prefer
   the proxy if you are issuing many queries in a tight loop.
 - Reference: [CLI](CLI).
@@ -176,15 +188,24 @@ workflow below does not need one.
     -d '{"query": "how does the freshness gate demote stale docs?"}'
   ```
 
+- Each of those responses carries a `packet_id` (also the
+  `X-Cymatix-Packet-Id` header) whether or not tracing is on. Set
+  `[trace] enabled = true` to record the packet and read it back with
+  `GET /trace/{packet_id}`; the default `metadata` level stores keyed hashes
+  and ids, no raw query or chunk text.
 - In Continue IDE, use **Chat mode, not Agent mode** — the proxy does not
   handle tool routing.
 - A loopback bind is **not** authentication: any process on the host can reach
-  the port. Set `[server] admin_token` to gate `/admin/*`, `/ingest`, and
-  `/consolidate`. Reference: [HTTP API](HTTP-API), [Configuration](Configuration).
+  the port. Set `[server] admin_token` to gate `/admin/*`, `/ingest`,
+  `/consolidate`, and `/trace/*`. Reference: [HTTP API](HTTP-API),
+  [Configuration](Configuration).
 
 ### MCP — Claude Code, Codex, Gemini CLI, Antigravity
 
-- Install the `mcp` extra, run the backend, then register the shim:
+- Install the `mcp` extra, run the backend, then register the shim. For
+  Claude Code, Claude Desktop, Cursor, or Gemini CLI,
+  `cymatix mcp install --host claude-code` (or `claude-desktop`, `cursor`,
+  `gemini-cli`) writes the entry for you, backing up the file first. By hand:
 
   ```json
   {
@@ -199,11 +220,13 @@ workflow below does not need one.
   }
   ```
 
-- The server self-identifies as `cymatix`, so client tools appear as
-  `mcp__cymatix__*`.
+- The server self-identifies as `cymatix` and its tools are named
+  `cymatix_*`; hosts prefix them with the entry name, so Claude Code shows
+  `mcp__cymatix-context__cymatix_health`.
 - Set `CYMATIX_AGENT`, `CYMATIX_USER`, and `CYMATIX_PARTY_ID` in that `env`
   block so multi-agent sessions do not collide on the same attribution
-  identity.
+  identity. If the server has `[server] admin_token` set, add
+  `CYMATIX_ADMIN_TOKEN` too, or `cymatix_ingest` gets a 401.
 - **The consuming agent must import the prompt fragment.** Without it, capable
   models paint over `do_not_answer_from_genome=true` and answer from their
   training prior. Prepend `cymatix_context.agent_prompt.full_fragment()` to
@@ -215,8 +238,9 @@ workflow below does not need one.
 ## When something goes wrong
 
 Start at [Troubleshooting](Troubleshooting) — port conflicts, missing extras,
-malformed config, an unreachable upstream, a locked knowledge store, and the
-empty-`/context` cases are all indexed there by symptom.
+malformed config, an unreachable upstream, a locked or frozen knowledge
+store, all-stale misses, and the empty-`/context` cases are all indexed there
+by symptom.
 
 ## Go deeper
 

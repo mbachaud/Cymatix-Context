@@ -98,6 +98,7 @@ def env_for_run():
     env = dict(os.environ)
     env["CYMATIX_SQLITE_CACHE_SIZE"] = "-12582912"  # 12 GiB, user-approved band
     env.pop("CYMATIX_ENCODER_URL", None)            # match all prior receipts
+    env["CYMATIX_COVER_INDEX_AUTOBUILD"] = "0"      # no background index build while timing
     return env
 
 
@@ -196,6 +197,7 @@ def run_ladder(bed, arm):
     out.parent.mkdir(parents=True, exist_ok=True)
     name = f"{bed}__{arm}"
     cmd = [sys.executable, str(LADDER),
+           "--cover-index", "off",
            "--genome", b["db"],
            "--resolved", str(b["resolved"]),
            "--gold", str(b["gold"]),

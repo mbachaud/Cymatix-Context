@@ -2,6 +2,158 @@
 
 ## Unreleased
 
+## 0.11.4 (2026-10-26)
+
+- **Release gate: 947k merged-stack witness with packet tracing on,
+  EXACT_REPRODUCE** (BASELINES row
+  `2026-10-26-v0114-merged-stack-witness-trace`). Beta `31ad8261` delivered
+  314/470 (0.6681), with 0/470 per-needle differences from the v0.11.3
+  witness. 470 packet traces were written and the hash chain verified. The
+  release head adds only #513's BEIR bench files on top of the witnessed
+  commit. No shipped default changed. Receipts: `cymatix-receipts`
+  `e7117cb`.
+
+- **fix(deps): exclude preshed 3.0.14** (PR #524, commit `201fa6ee`).
+  preshed 3.0.14 breaks loading `en_core_web_sm` 3.8.0 on spaCy 3.8.16
+  (`OverflowError` in `Tokenizer._flush_specials`), so a fresh
+  `pip install "cymatix-context[cpu]==0.11.3"` resolved a CpuTagger that
+  could not load its pipeline. The `cpu`, `dev` and `all` extras now
+  require `preshed!=3.0.14` next to `spacy>=3.8`. It is an exclusion, not a
+  cap, so a fixed preshed release is picked up automatically. Workaround on
+  0.11.3: `pip install "preshed!=3.0.14"`.
+
+- **feat(experimental): optional System One packet judge on
+  `/context/packet`** (PR #522; `[system_one] enabled = false` by default).
+  When enabled, the packet gains an additive `system_one` block: the
+  probability that the packet states the answer (2 provider calls per
+  packet), and with `rerank_items = true` a per-item probability that
+  reorders items inside `verified` / `stale_risk` (1 more call per item). It
+  never drops items, never moves them across buckets and never changes the
+  know/miss contract. It soft-fails to `{"available": false}`. **Privacy:**
+  enabling it sends the query and each item's text to `url`. The key is read
+  from the env var named by `api_key_env` (default `TYPESAFE_API_KEY`), never
+  from TOML. On ERB 947k, TypeSafe's Jev reached packet know/miss AUROC 0.900
+  against 0.703 for cymatix `top_score`. Write-up:
+  `docs/benchmarks/2026-10-23-jev-system-one-packet-judge.md`, BASELINES row
+  `2026-10-23-jev-system-one-packet-judge`.
+
+- **feat(experimental): char-basis tier caps and the grain-size ladder**
+  (PR #514; all default off, nothing changes at shipped defaults).
+  - `[budget] tier_tight_chars` / `tier_focused_chars` size the TIGHT /
+    FOCUSED cut in content characters instead of a fixed 3 / 6 documents.
+  - `[budget] classifier_cap_ref_chars` turns the classifier's per-rule seat
+    cap into seats × N characters.
+  - Bench builder: `CYMATIX_BFM_CHUNK_CHARS` (chunk size, stamped into the
+    bed manifest) and lean bench-bed writes, which skip query-inert PKI rows,
+    COVER edges and redundant indexes. The builder now ends every build with
+    the genes cover index.
+  - Harness: `benchmarks/dogfood/grain_ladder/`. On BEIR scifact / nfcorpus,
+    580-char grains with char caps delivered +17/−13 and +16/−9 paired
+    against the 4000-char control. On ERB, against the caps-only c4000
+    reference, lean c580 lost (+28/−49) and c580 with classifier char caps
+    gained (+46/−24, delivered 0.638). Single seed, so this is not a
+    default-flip receipt.
+
+- **fix(retrieval): the opt-in batched Tier 5 harmonic query no longer probes
+  pool × pool** (#431, #454, PR #519). With
+  `[retrieval] harmonic_batching_enabled = true`, SQLite planned the
+  two-sided pool filter as a primary-key probe for every pair. On a SWE-bench
+  c580 bed with 2.5M links that meant about 15 minutes per query. The pool is
+  now joined on `gene_id_a` only and `gene_id_b` is filtered while streaming,
+  as the unbatched path already did. Row order is unchanged. The default
+  (`false`) never reaches this code.
+
+- **bench(jev): Claude answers on ERB packets with Jev as judge**
+  (PRs #523, #524; EXPERIMENTAL, no runtime changes).
+  - Sonnet 5.5 answering from delivered c4000 packets: reordering by Jev has
+    no measurable effect (96/100 paired labels identical). As a gate on
+    committed answers, Jev's packet probability reaches AUROC 0.774 against
+    0.535 for `top_score`.
+  - On the 50 crater needles (gold not delivered), a search loop over the
+    947k bed with Jev judging each `SEARCH` result answers 34/50 (Sonnet 5.5)
+    and 33/50 (Opus 5.5), against 0/50 one-shot.
+  - Write-ups: `docs/benchmarks/2026-10-23-sonnet-answer-jev-erb.md`,
+    `2026-10-23-sonnet-crater-search-jev.md` and
+    `2026-10-25-opus-crater-search-jev.md`.
+
+- **docs:** the 2026-10-22 tech-debt audit
+  (`docs/reviews/2026-10-22-tech-debt-audit.md`, PR #521: 40 findings and a
+  five-phase remediation plan; its owner decisions are still open). Stale
+  counts are fixed in `CLAUDE.md`, `docs/SETUP.md` and the client guides
+  (17 sub-packages, 11 lean MCP tools, `/health` has no exporter field;
+  PR #517).
+
+- **ci(tests): a test still running after 10 minutes dumps every thread's
+  stack** (PR #527; `faulthandler_timeout = 600` in pytest config).
+  `test-full-suite` intermittently stalls just past 50% until the 60-minute
+  job timeout cancels it, and re-runs pass. The next stall will name the
+  test.
+
+- **bench(beir): dense tail-lane gold-recovery tool + EmbeddingGemma 2 receipts.**
+  `benchmarks/dogfood/beir/dense_tail_recovery.py` scores the wider-funnel
+  "reserved tail seats" design offline: the head is the shipped pipeline's
+  top-12 (ladder `--rank-dump`, untouched), the tail is a standalone dense
+  ranking (brute-force cosine over the bed, encoded exactly as dense ingest
+  does; bed opened read-only) with head documents removed, and it reports how
+  many head-missed gold documents N tail seats recover. First receipts at
+  63d69647 with `google/embeddinggemma-2` (768-d): SciFact head recall@12
+  0.734 -> 0.927 with 4 tail seats (69/94 missed gold recovered), NFCorpus
+  0.152 -> 0.212 with 8. Measurement only, no default changes; possible
+  training-set contamination of the dense model on these BEIR sets is not
+  ruled out. `stash_ladder_receipts.py` gains `--pattern`; manifest
+  `ladder_receipts_gemma-tail-2026-10-14.json`.
+
+- **fix(packet): the full-text budget trim keeps exactly one of `know` /
+  `miss`.** Under the opt-in `[budget] full_text_delivery`, a packet that had
+  to drop primary items to fit `context_max_chars` or the token budget cleared
+  both blocks and shipped neither, breaking the agent contract. The verdict is
+  now re-decided on the surviving items (trimmed documents leave the score map,
+  so `know.gene_id_match` and `top_score` name a delivered document), and the
+  re-decided block counts toward the cap. Dropping a companion leaves the
+  verdict alone. Shipped defaults never take this path.
+
+- **fix(storage): the writer connection keeps its PRAGMAs across a reopen.**
+  `vacuum()` (so `/admin/vacuum`) and the `refresh()` fallback reopened the
+  long-lived writer with only WAL / busy_timeout / journal_size_limit, so the
+  writer silently fell back to SQLite's defaults: `synchronous=FULL` instead of
+  the #372 `[genome] synchronous` value (NORMAL), the default 2 MB page cache,
+  and no mmap, until the next restart. Boot and both reopen paths now share one
+  `_open_writer_conn()`, and the memory plan resolved at boot is reused rather
+  than re-read from live RAM. Query results are unaffected; boot issues the
+  same PRAGMA sequence as before.
+
+- **feat(dense): opt-in EmbeddingGemma 2 support in the dense codec.**
+  `[retrieval] dense_model = "google/embeddinggemma-2"` with
+  `dense_embedding_dim` 768 / 512 / 256 / 128 loads the model text-only
+  (vision and audio encoders skipped), in fp32 on CPU or bf16 on capable CUDA
+  (never fp16), and applies its query and document task prefixes. Defaults are
+  unchanged: dense stays off and BGE-M3 stays the default model. Install the
+  model's dependencies with `pip install "cymatix-context[gemma]"`; an older
+  stack now fails once with an error naming the fix, and a failed dense model
+  load is remembered instead of being retried on every encode.
+
+- **perf(storage): `idx_genes_id_chromatin` is now built automatically in the
+  background.** After a writable open of a store with 50k+ `genes` rows and no
+  index, one daemon thread (own connection, 30 s busy_timeout with backoff
+  retry) runs `CREATE INDEX IF NOT EXISTS`; open never waits. Never for
+  read-only, `:memory:`, small stores, or when `[genome] cover_index_autobuild
+  = false` / `CYMATIX_COVER_INDEX_AUTOBUILD=0`. One build per store path per
+  process; across processes `IF NOT EXISTS` makes the loser a no-op. Writers
+  wait on the write lock for the duration of the build (WAL readers do not);
+  `close()` interrupts and rolls back an in-flight build. Replaces the
+  "run the migration" hint line; `scripts/migrate_genes_cover_index.py` still
+  works for explicit/offline builds (Runbook 11).
+- **perf(tier-sql): shared tag-posting fetch; covering index is an opt-in
+  migration** (PR #508). Tag tiers 1 and lex_anchor now share one posting
+  fetch and probe `genes` once per distinct gene (rank-identical, ties
+  included; no index needed). The covering index `idx_genes_id_chromatin` is
+  **not** built when a store opens (it blocked the first open of a 947k store
+  for ~38 s, +24.8 MB). Build it once on request with
+  `python scripts/migrate_genes_cover_index.py --db <store>` (idempotent;
+  holds the write lock while building; `--dry-run` available). Writable
+  stores of 50k+ rows without it log one info line naming the command.
+  Results are identical with or without the index.
+
 ## 0.11.3 (2026-10-11)
 
 - **Release gate: 947k merged-stack witness with packet tracing on,

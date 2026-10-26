@@ -121,16 +121,40 @@ class TestTitleAndCanonical:
 
 @requires_markdown
 class TestChromePreserved:
-    def test_header_brand_footer_and_wiki_nav_link_present(self, tmp_path, mod):
+    def test_header_placeholder_footer_and_stylesheet_present(self, tmp_path, mod):
         wiki = _make_wiki(tmp_path)
         mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
         idx = (tmp_path / "site" / "public" / "wiki" / "index.html").read_text(encoding="utf-8")
         assert '<link rel="stylesheet" href="/style.css">' in idx
-        assert 'class="app-header"' in idx
-        assert 'class="brand-name">Cymatix Context</span>' in idx
         assert 'class="app-footer"' in idx
-        assert '<a class="gh" href="/wiki/">' in idx
         assert '<main class="wiki-page">' in idx
+
+    def test_header_is_left_to_the_site_chrome(self, tmp_path, mod):
+        # The site swaps chrome/header.html into every page's
+        # <header class="app-header"> at serve and build time, so the
+        # generator emits only the empty element; a copied nav would drift.
+        wiki = _make_wiki(tmp_path)
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        idx = (tmp_path / "site" / "public" / "wiki" / "index.html").read_text(encoding="utf-8")
+        header = idx.split('<header class="app-header">', 1)[1].split("</header>", 1)[0]
+        assert "<a " not in header
+
+    def test_footer_matches_site_footer_without_hosting(self, tmp_path, mod):
+        # /hosting/ was retired from the site (it redirects to /contact/).
+        wiki = _make_wiki(tmp_path)
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        for page in (
+            tmp_path / "site" / "public" / "wiki" / "index.html",
+            tmp_path / "site" / "public" / "wiki" / "getting-started" / "index.html",
+        ):
+            html = page.read_text(encoding="utf-8")
+            assert "/hosting/" not in html
+            footer = html.split('<footer class="app-footer">', 1)[1].split("</footer>", 1)[0]
+            for href in ("/", "/about/", "/contact/", "/privacy/"):
+                assert f'<a href="{href}">' in footer
+
+    def test_default_site_dir_is_the_website_repo(self, mod):
+        assert mod.DEFAULT_SITE_DIR.name == "cymatix-website"
 
     def test_external_anchor_and_asset_hrefs_untouched(self, tmp_path, mod):
         wiki = tmp_path / "wiki"

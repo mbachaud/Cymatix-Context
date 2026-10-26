@@ -41,6 +41,7 @@ log = logging.getLogger("v2c_ab")
 def env_for_run():
     env = dict(os.environ)
     env["CYMATIX_SQLITE_CACHE_SIZE"] = "-12582912"
+    env["CYMATIX_COVER_INDEX_AUTOBUILD"] = "0"  # no background index build while timing
     env.pop("CYMATIX_ENCODER_URL", None)
     return env
 
@@ -58,6 +59,7 @@ def run_arm(arm, last_bed_touch):
         time.sleep(wait)
     out = ENQ_DIR / "receipts" / f"ladder_enronqa_v2c_{arm}_{STAMP}.json"
     cmd = [sys.executable, str(LADDER),
+           "--cover-index", "off",
            "--genome", V2C_DB,
            "--resolved", str(ENQ_DIR / "needles_resolved_enronqa_full.json"),
            "--gold", str(ENQ_DIR / "gold_by_needle_enronqa.json"),

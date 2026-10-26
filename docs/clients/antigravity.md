@@ -64,7 +64,7 @@ does not require the model proxy or tray; a healthy backend can run headless.
 ## Activate, refresh, and verify
 
 In the MCP manager, use Refresh/Manage Servers and restart the application.
-Confirm the six lean tools and call `cymatix_health`, then run:
+Confirm the 11 lean tools and call `cymatix_health`, then run:
 
 ```bash
 cymatix-status --host antigravity --json

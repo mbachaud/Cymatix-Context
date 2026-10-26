@@ -201,8 +201,17 @@ def build_packet_event(
     hasher: KeyedHasher,
     traceparent: Optional[Dict[str, str]] = None,
     ts: Optional[float] = None,
+    stage_ms: Optional[Dict[str, float]] = None,
+    signal_ms: Optional[Dict[str, float]] = None,
+    pool: Optional[Dict[str, int]] = None,
 ) -> Dict[str, Any]:
     """Assemble a schema-v0 ``packet`` event.
+
+    ``stage_ms`` / ``signal_ms`` land under ``timing_ms.stages`` /
+    ``timing_ms.signals`` (rounded to 0.01 ms); ``pool`` is the top-level
+    candidate-count object. All are latency metadata, not content, so they
+    are kept at every level. Empty/None inputs add no keys.
+
 
     Chunk inputs are dicts with ``gene_id`` and optionally ``text``,
     ``rank``, ``score``, ``source_kind``, ``lane_contribs``,
@@ -240,6 +249,16 @@ def build_packet_event(
         "verdict": verdict,
         "timing_ms": timing_ms,
     }
+    if stage_ms or signal_ms:
+        ev["timing_ms"] = dict(timing_ms)
+        if stage_ms:
+            ev["timing_ms"]["stages"] = {
+                k: round(float(v), 2) for k, v in list(stage_ms.items())}
+        if signal_ms:
+            ev["timing_ms"]["signals"] = {
+                k: round(float(v), 2) for k, v in list(signal_ms.items())}
+    if pool:
+        ev["pool"] = {k: int(v) for k, v in pool.items()}
     if traceparent:
         ev["trace"] = dict(traceparent)
     if full:

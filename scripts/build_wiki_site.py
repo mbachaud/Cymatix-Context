@@ -30,9 +30,11 @@ src="assets/foo.svg" -> src="/wiki/assets/foo.svg" (see
 _rewrite_asset_img_srcs). Absolute URLs and non-assets/ srcs are left
 untouched.
 
-The page chrome (header, brand mark, footer, /style.css link) is copied
-verbatim from site/public/contributing/index.html, with a Wiki link added
-to the header nav. See PAGE_TEMPLATE below.
+The page chrome (head, footer, /style.css link) matches the site's own
+pages (public/about/index.html in the cymatix-website repo). The header is
+left as an empty <header class="app-header"> placeholder: the site swaps
+its shared chrome/header.html into every page at serve and build time, so
+the nav lives in one place. See PAGE_TEMPLATE below.
 
 Usage:
     python scripts/build_wiki_site.py [--wiki-dir DIR] [--site-dir DIR]
@@ -60,15 +62,15 @@ else:
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_WIKI_DIR = REPO_ROOT / "wiki"
-DEFAULT_SITE_DIR = Path("F:/Projects/cymatix-context/site")
+DEFAULT_SITE_DIR = Path("F:/Projects/cymatix-website")
 
 SKIP_PAGES = {"_Sidebar.md", "_Footer.md"}
 MARKDOWN_EXTENSIONS = ["tables", "fenced_code", "toc"]
 CANONICAL_BASE = "https://cymatixcontext.com"
 
-# Chrome copied verbatim from site/public/contributing/index.html (header,
-# brand SVG, footer, /style.css link), plus a new "Wiki" nav link. Content
-# is substituted via plain str.replace (not str.format) so that rendered
+# Head and footer match the site's own pages; the header is the empty
+# placeholder the site fills from chrome/header.html. Content is
+# substituted via plain str.replace (not str.format) so that rendered
 # markdown containing literal `{`/`}` -- code samples, JSON examples -- can
 # never collide with template placeholders.
 PAGE_TEMPLATE = """<!DOCTYPE html>
@@ -86,58 +88,14 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
 <div class="shell shell-wide">
-  <header class="app-header">
-    <a class="brand" href="/">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 84 84">
-          <path d="M24 12c24 8 24 52 0 60" />
-          <path d="M60 12c-24 8-24 52 0 60" />
-          <circle cx="24" cy="12" r="4" />
-          <circle cx="60" cy="12" r="4" />
-          <circle cx="32" cy="30" r="4" />
-          <circle cx="52" cy="30" r="4" />
-          <circle cx="52" cy="54" r="4" />
-          <circle cx="32" cy="54" r="4" />
-          <circle cx="60" cy="72" r="4" />
-          <circle cx="24" cy="72" r="4" />
-        </svg>
-      </span>
-      <span class="brand-name">Cymatix Context</span>
-    </a>
-    <div class="header-links">
-      <a class="gh" href="/hosting/">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="4.5" rx="1.2"/><rect x="1.5" y="9" width="13" height="4.5" rx="1.2"/></svg>
-        Hosting
-      </a>
-      <a class="gh" href="/wiki/">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 2.5A.5.5 0 0 1 1.5 2H7a1 1 0 0 1 1 1v10.5a.5.5 0 0 1-.777.416A5.984 5.984 0 0 0 4 13H1.5a.5.5 0 0 1-.5-.5v-10Z"/><path d="M14.5 2H9a1 1 0 0 0-1 1v10.5a.5.5 0 0 0 .777.416A5.984 5.984 0 0 1 12 13h2.5a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5Z"/></svg>
-        Wiki
-      </a>
-      <a class="gh" href="https://discord.gg/pX7x7pA3Da" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
-        Discord
-      </a>
-      <a class="gh" href="https://github.com/mbachaud/Cymatix-Context" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-        GitHub
-      </a>
-      <a class="gh" href="https://github.com/mbachaud/Cymatix-Context/issues" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg>
-        Issues
-      </a>
-      <a class="gh" href="/contributing/">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"/></svg>
-        Contribute
-      </a>
-    </div>
-  </header>
+  <header class="app-header"><!-- filled from chrome/header.html by server.py and tools/build_site.py --></header>
   <div class="wiki-layout">
 __SIDEBAR__    <main class="wiki-page">
 __CONTENT__
     </main>
   </div>
   <footer class="app-footer">
-    <span>Cymatix Context &middot; Apache-2.0 &middot; <a href="/">Home</a> &middot; <a href="/hosting/">Hosting</a></span>
+    <span>Cymatix Context &middot; Apache-2.0 &middot; <a href="/">Home</a> &middot; <a href="/about/">About</a> &middot; <a href="/contact/">Contact</a> &middot; <a href="/privacy/">Privacy</a></span>
   </footer>
 </div>
 </body>

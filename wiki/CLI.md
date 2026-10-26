@@ -6,9 +6,10 @@
 - That makes it the natural surface for **scripts, CI, and subprocess-driving
   agents**. An agent can run a full retrieve → verify → drill → reread loop
   without an MCP host or an HTTP port.
-- **Every agent-facing command takes `--json`,** and the shapes are identical
-  to the matching MCP tool and HTTP endpoint, so a caller can swap surfaces
-  without changing its parser.
+- **Every agent-facing command takes `--json`,** built by the same code as the
+  matching MCP tool and HTTP endpoint, so the item shapes match and a caller
+  can swap surfaces with little or no parser change. The envelopes differ in
+  a few places; see the shapes table under the `--json` workflow below.
 - **Canonical spellings come first.** `cymatix document get` and `--max-docs`
   are the software-lexicon forms; `cymatix gene get` and `--max-genes` are
   legacy aliases and remain fully supported, not deprecated.
@@ -28,7 +29,12 @@
 | `cymatix ingest <path>` | Add a file or directory to the knowledge store |
 | `cymatix status` | Store reachable, config valid, optional server probe |
 | `cymatix diag corpus` | Corpus shape: documents, fragments, tier mix, compression ratio, staleness |
-| `cymatix config show` | The effective configuration — TOML merged with env overrides |
+| `cymatix diag bed [--db PATH] [--identity]` | Bed provenance: what built this store, on what code, and how it has aged. `--identity` adds the live document-id digest (a full scan) |
+| `cymatix config show [--text] [--config PATH]` | The effective configuration — TOML merged with env overrides. JSON by default; `--text` prints flat `key=value` lines |
+| `cymatix mcp lanes` | List the configured lanes: name, role, URL, MCP entry name, store path (0.11.0) |
+| `cymatix mcp install --host H [--lane L]` | Point a chat host's MCP config at a lane (0.11.0) |
+| `cymatix compare --lanes A,B --queries FILE` | Run the same queries against two lanes and write a diff receipt (0.11.0) |
+| `cymatix trace export --in SRC --out DIR` | Shareable, re-keyed export of metadata-level packet traces (0.11.3) |
 | `cymatix serve` | Deferred. Prints a pointer at `cymatix-server` and exits **4** |
 
 `cymatix document` and `cymatix gene` resolve to the same module, so
@@ -46,6 +52,7 @@ byte-identical in behavior.
 | Look around a result before acting | `cymatix neighbors` |
 | Check that the store is healthy | `cymatix status`, `cymatix diag corpus` |
 | See what config actually loaded | `cymatix config show` |
+| Check an engine change 1:1 against the live build | `cymatix compare` |
 
 ## Flags that matter
 
@@ -98,7 +105,49 @@ Returns `count: 0` with **no error** when the SEMA codec is unavailable — the
 | `--deterministic` | Deterministic-ingest profile: no SEMA / dense / SPLADE encodes at ingest, so the store holds no float tensors. `--okf` only |
 
 Single-file inputs are extension-filtered too — `cymatix ingest binary.exe`
-errors rather than silently ingesting garbage.
+errors rather than silently ingesting garbage. `--json` prints a
+machine-readable summary.
+
+## Lanes, compare, and trace export
+
+**`cymatix mcp install --host H [--lane L] [--scope workspace|user] [--dry-run]`**
+
+- `--host` ∈ `{claude-code, claude-desktop, cursor, gemini-cli}`. The primary
+  lane is written as the canonical `cymatix-context` entry; any other lane as
+  `cymatix-context-<lane>` beside it, so one host can reach several lanes.
+- Only the entry's `CYMATIX_MCP_URL` and host tags are rewritten; its command,
+  args and any env keys you added are kept. The file is backed up and
+  replaced atomically. Only JSON `mcpServers` hosts are written; Codex (TOML)
+  keeps using `cymatix-status` snippets. `--dry-run` prints the entry
+  without writing.
+- `--server-command` / `--server-arg` (repeatable) override the launch
+  command; the desktop app passes its bundled engine here.
+
+**`cymatix compare --lanes A,B --queries FILE [--max-docs N] [--out PATH] [--token T]`**
+
+- Sends each query to both lanes' `/context/packet` with `ignore_delivered`,
+  and writes a receipt (default `compare-<a>-vs-<b>-<timestamp>.json`) with
+  per-query delivered ids, `identical` / `same_set` / `top1_same` /
+  `jaccard`, the know/miss verdict of each side, and each lane's
+  `/admin/config-dump`. Queries are matched by text, never by position.
+- `--queries` reads `.txt` (one per line, `#` comments), `.jsonl` or `.json`
+  (strings, or objects with `question` / `query`). `--max-docs` defaults to
+  8. `--token` defaults to `$CYMATIX_ADMIN_TOKEN`.
+- Tie-breaks can depend on Python's hash seed: start both lanes with the same
+  `PYTHONHASHSEED` before reading a small diff as a change. Lane setup:
+  [Configuration](Configuration).
+
+**`cymatix trace export --in SRC --out DIR`**
+
+- `SRC` is a trace directory or a `packets*.jsonl` file. The export refuses
+  `full`-level records, re-keys every hash and every content- or path-derived
+  id under a fresh per-export key (document ids are content hashes, so they
+  are never exported in the clear), drops raw text and the chain hash, aborts
+  on a secret-scan hit, and writes a per-field keep / rekey / drop manifest.
+- The output is JSONL; a Parquet copy is written beside it only when
+  `pyarrow` is installed (the `trace-export` extra,
+  `pip install "cymatix-context[trace-export]"`). Exit **1** when the export
+  is refused or the input is missing.
 
 ## The `--json` agent workflow
 
@@ -127,8 +176,8 @@ The shapes:
 | Command | `--json` shape |
 |---|---|
 | `query` | `verdict` (`know` / `miss` / `unknown`), `expressed_context`, `evidence` (document ids), `estimated_tokens`, `decision_reason`, `next_action`, plus the `know` **or** `miss` block |
-| `packet` | The full `ContextPacket` — `task_type`, `query`, `verified[]`, `stale_risk[]`, `contradictions[]`, `refresh_targets[]`, `coordinate_confidence`, `file_coverage`, `know` / `miss`, `notes`. Identical to `POST /context/packet` |
-| `refresh-targets` | `{ refresh_targets: [...], count: int }`. Identical to `POST /context/refresh-plan` |
+| `packet` | The full `ContextPacket` — `task_type`, `query`, `verified[]`, `stale_risk[]`, `companions[]`, `contradictions[]`, `refresh_targets[]`, `coordinate_confidence`, `file_coverage`, `know` / `miss`, `delivery`, `notes`. Same model as `POST /context/packet`, but printed as-is: the unused one of `know` / `miss` is present as `null`, and there is no `packet_id`, `response_mode` or `plr_confidence` |
+| `refresh-targets` | `{ refresh_targets: [...], count: int }`. The rows are the same `RefreshTarget` objects `POST /context/refresh-plan` returns; the HTTP envelope is `{ query, task_type, refresh_targets, response_mode }` |
 | `document get` | The full document model |
 | `document preview` | `{ gene_id, preview, truncated, total_chars, path }` |
 | `neighbors` | `{ query, k, neighbors: [{ gene_id, sema_cos_sim, preview, path }], count }`. Identical to `GET /debug/neighbors` |
@@ -142,10 +191,11 @@ Two things to branch on, in order:
 2. **`decision_reason`.** One string explaining *why* the verdict landed where
    it did, so a failing run is diagnosable without re-reading the bytes.
 
-*The JSON keeps legacy field names on the wire — `gene_id` in the preview and
-neighbor shapes above is verbatim, not a typo. The prose and the config surface
-moved to software terms; renaming the wire contract is a tracked Tier-3 change,
-deliberately not taken in 0.9.1. See [Lexicon](Lexicon).*
+*The JSON keeps legacy field names on the wire by default — `gene_id` in the
+preview and neighbor shapes above is verbatim, not a typo. Since 0.10.0 the
+opt-in, experimental `[budget] wire_format = "canonical"` renames those fields
+(`gene_id` → `document_id`, …) in every `--json` output; the legacy names stay
+the default. See [Configuration](Configuration) and [Lexicon](Lexicon).*
 
 ## `cymatix status`
 
@@ -215,8 +265,9 @@ Exit **0** success, **1** if the stats call failed.
   of calls that is the right trade; for a tight query loop, run
   `cymatix-server` and hit [HTTP API](HTTP-API) instead.
 - `[hardware] lazy_encoders = true` (the default) keeps the cost down by
-  deferring heavy encoder construction to first use — and at 0.9.x defaults the
-  SEMA and dense encoders are never constructed on the retrieval path at all.
+  deferring heavy encoder construction to first use — and at shipped defaults
+  (since 0.9.x) the SEMA and dense encoders are never constructed on the
+  retrieval path at all.
 - `cymatix --help` deliberately does not import the retrieval stack:
   subcommand modules import their dependencies lazily inside `run()`.
 - Daemon mode (`cymatix serve`) is deferred with no design doc. It exits **4**
@@ -237,6 +288,8 @@ Exit **0** success, **1** if the stats call failed.
 - `CYMATIX_CONFIG` — path to `cymatix.toml`. Default `./cymatix.toml`.
 - `CYMATIX_STORE_PATH` *(legacy `CYMATIX_GENOME_PATH`, which wins on conflict)*
   — overrides the store path. Use `:memory:` for tests and ephemeral runs.
+- `CYMATIX_ADMIN_TOKEN` — the bearer `cymatix compare` sends (its `--token`
+  default), for lanes with `[server] admin_token` set.
 
 Full env table: [Configuration](Configuration).
 
