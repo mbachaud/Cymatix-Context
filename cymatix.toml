@@ -659,6 +659,29 @@ model_path = "training/models/stacked_plr.joblib"
 expected_sha256 = ""                    # Empty = trust the .sha256 sidecar (written by the trainer)
 high_risk_threshold = 0.5               # `prob_B > this` surfaces a coarse "likely-to-re-query" boolean
 
+[system_one]
+# EXPERIMENTAL optional System One packet judge (default off).
+#
+# A "System One" model answers typed questions with calibrated probabilities
+# instead of generated text; TypeSafe's Jev is the reference provider. When
+# enabled, /context/packet gains an additive `system_one` block with the
+# probability that the packet states the answer (2 calls per packet), and with
+# rerank_items a per-item probability that reorders items inside verified /
+# stale_risk (1 more call per item). Never drops items; never changes know/miss.
+#
+# PRIVACY: enabling this sends the query and each item's text to `url`.
+# The key is read from the env var named by api_key_env, never from this file.
+# Receipts: docs/benchmarks/2026-10-23-jev-system-one-packet-judge.md
+enabled = false
+url = "https://api.typesafe.ai/v1/systemone"
+model = "jev-latest"
+api_key_env = "TYPESAFE_API_KEY"
+timeout_s = 30.0
+min_interval_s = 0.3                    # Pacing floor between provider requests
+know_threshold = 0.5                    # answers_p >= this -> verdict "know"
+rerank_items = false                    # Per-item calls; reorders within each bucket
+max_item_chars = 8000                   # Per-item text cap sent to the provider
+
 [know]
 # Fitted 2026-07-06 on located_n1000 union (xl_clean 1000 + erb50k 617
 # rows, shipped stack + fusion_mode=rrf, seed 42; sklearn logistic).

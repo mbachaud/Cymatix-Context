@@ -298,7 +298,7 @@ def _init_worker():
     global _worker_chunker, _worker_tagger
     from cymatix_context.codons import CodonChunker
     from cymatix_context.tagger import CpuTagger
-    _worker_chunker = CodonChunker()
+    _worker_chunker = _make_chunker()
     _worker_tagger = CpuTagger()
 
 
@@ -1267,6 +1267,23 @@ def _env_hub_cutoff() -> int:
     return int(os.environ.get("CYMATIX_BFM_HUB_CUTOFF", "0") or 0)
 
 
+DEFAULT_CHUNK_CHARS = 4000
+
+
+def _env_chunk_chars() -> int:
+    """``CYMATIX_BFM_CHUNK_CHARS`` — max characters per chunk (strand) for
+    bench builds. Env-only for the same reason as the hub cutoff; spawn
+    workers inherit it. Default 4000 = the shipped CodonChunker size.
+    """
+    return int(os.environ.get("CYMATIX_BFM_CHUNK_CHARS", "0") or 0) or DEFAULT_CHUNK_CHARS
+
+
+def _make_chunker():
+    """CodonChunker at the env-selected chunk size (see _env_chunk_chars)."""
+    from cymatix_context.codons import CodonChunker
+    return CodonChunker(max_chars_per_strand=_env_chunk_chars())
+
+
 def _env_flag(name: str, default: str = "1") -> bool:
     """Read a boolean env toggle. Truthy unless set to 0/false/no/off.
 
@@ -1280,6 +1297,39 @@ def _env_flag(name: str, default: str = "1") -> bool:
     return os.environ.get(name, default).strip().lower() not in (
         "0", "false", "no", "off",
     )
+
+
+def _build_cover_index(db_path: str) -> dict:
+    """Post-build: create the shipped genes cover index on ``db_path``.
+
+    ``idx_genes_id_chromatin`` (storage.ddl.GENES_COVER_INDEX_SQL) is what
+    the store's background autobuild creates on a writable open of a 50k+
+    row store — bench builds and read-only ladders never trigger it, so
+    bench beds lacked it and the tag tiers' chromatin validity join read a
+    table row per candidate (ERB 5.1M-gene c580 bed, 'and'/'eng' postings:
+    39.7 s -> 4.6 s once built). Index only: no row changes, so retrieval
+    results are unchanged. ``CYMATIX_BFM_COVER_INDEX=0`` skips it.
+    """
+    if not _env_flag("CYMATIX_BFM_COVER_INDEX"):
+        log.info("cover index skipped (CYMATIX_BFM_COVER_INDEX=0): %s", db_path)
+        return {"cover_index": False}
+    import sqlite3
+    from cymatix_context.storage.ddl import GENES_COVER_INDEX_SQL
+    t0 = time.perf_counter()
+    con = sqlite3.connect(db_path, timeout=600)
+    try:
+        cols = {r[1] for r in con.execute("PRAGMA table_info(genes)")}
+        if not {"gene_id", "chromatin"} <= cols:
+            # Not a knowledge-store schema (stub/test DBs): nothing to index.
+            log.warning("cover index skipped: no genes(gene_id, chromatin) in %s", db_path)
+            return {"cover_index": False, "cover_index_skipped": "no genes.chromatin"}
+        con.execute(GENES_COVER_INDEX_SQL)
+        con.commit()
+    finally:
+        con.close()
+    secs = round(time.perf_counter() - t0, 1)
+    log.info("cover index built in %.1fs: %s", secs, db_path)
+    return {"cover_index": True, "cover_index_s": secs}
 
 
 def _backfill_dense(db_path: str) -> dict:
@@ -1415,6 +1465,8 @@ def build_profile(
         # digests are unchanged. Default on = byte-identical to prior builds.
         entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
+        # Lean beds: CYMATIX_BFM_PKI_WRITE=0 skips query-inert PKI rows.
+        pki_write=_env_flag("CYMATIX_BFM_PKI_WRITE"),
     )
     log.info("entity_autolink_hub_cutoff=%d (CYMATIX_BFM_HUB_CUTOFF)",
              _env_hub_cutoff())
@@ -1443,6 +1495,13 @@ def build_profile(
         # Recorded only when overridden, so default-profile manifests keep
         # their exact pre-#482 shape.
         stats["min_file_bytes"] = min_bytes
+    if _env_chunk_chars() != DEFAULT_CHUNK_CHARS:
+        # Bed identity: a non-default grain size makes a different bed.
+        stats["chunk_chars"] = _env_chunk_chars()
+    if not _env_flag("CYMATIX_BFM_PKI_WRITE"):
+        stats["pki_write"] = False
+    if os.environ.get("CYMATIX_LEAN_INDEXES", "").strip().lower() in ("1", "true", "yes", "on"):
+        stats["lean_indexes"] = True
 
     if parallel:
         from cymatix_context.parallel import auto_workers
@@ -1476,7 +1535,7 @@ def build_profile(
         stats["workers"] = n_workers
     else:
         tagger = CpuTagger()
-        chunker = CodonChunker()
+        chunker = _make_chunker()
         for root in profile["roots"]:
             ingest_tree(
                 root=root,
@@ -1520,6 +1579,12 @@ def build_profile(
         log.warning("  missing roots: %s", stats["missing_roots"])
 
     genome.close()
+
+    stats.update(_build_cover_index(db_path))
+    try:
+        stats["bytes"] = os.path.getsize(db_path)
+    except OSError:
+        pass
 
     # Tier-0 PR-2: post-build dense pass. The builder's per-gene write path
     # is lean (no inline BGE-M3 encode); populate ``embedding_dense_v2`` here
@@ -1911,6 +1976,8 @@ def _build_one_shard(
         splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"), entity_graph=True,
         entity_autolink=_env_flag("CYMATIX_BFM_ENTITY_AUTOLINK"),
         entity_autolink_hub_cutoff=_env_hub_cutoff(),
+        # Lean beds: CYMATIX_BFM_PKI_WRITE=0 skips query-inert PKI rows.
+        pki_write=_env_flag("CYMATIX_BFM_PKI_WRITE"),
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,
@@ -1953,7 +2020,7 @@ def _build_one_shard(
                 )
         else:
             tagger = CpuTagger()
-            chunker = CodonChunker()
+            chunker = _make_chunker()
             ingest_tree(
                 root=root,
                 genome=shard,
@@ -2080,6 +2147,7 @@ def _build_one_shard(
     # cross-shard ``main.genome.db`` routing DB is NOT backfilled here: it
     # carries no ``genes`` rows (only fingerprint_index / source_index), so
     # per-shard dense recall reads each shard's own ``embedding_dense_v2``.
+    result.update(_build_cover_index(str(p)))
     dense_report = _backfill_dense(str(p))
     result["dense_coverage"] = dense_report["dense_coverage"]
     result["dense_genes_populated"] = dense_report.get("populated_after", 0)

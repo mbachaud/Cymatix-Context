@@ -9,11 +9,16 @@
   whatever agent called `/context` in the first place.
 - Every turn ends at the same fork: `know { found, confidence, gene_id_match }`
   or `miss { reason, escalate_to }`. See [Agent Contract](Agent-Contract).
-- This page documents **v0.9.2**. The wave-1 ranking flip
+- This page documents **v0.11.3**. The wave-1 ranking flip
   ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)) and the
   `min_delivered_docs` seat floor
   ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) shipped in
-  v0.9.1 (2026-08-30) and are marked where they appear.
+  v0.9.1 (2026-08-30) and are marked where they appear. No release from
+  0.10.0 through 0.11.3 changed a shipped retrieval or delivery default, and
+  every 947k release witness in that run reproduced the one before it exactly
+  (314/470 delivered, 0/470 per-needle differences; 0.11.0 shipped without a
+  witness by owner decision). Everything those releases added to this path is
+  opt-in and marked as such below.
 
 ![The seven-stage pipeline](assets/pipeline-flow.svg)
 
@@ -69,6 +74,18 @@
   path-key index (`[retrieval] pki_enabled`, off since 2026-08-17). Each flip
   is receipt-gated; the receipts are on
   [Benchmarks and Receipts](Benchmarks-and-Receipts).
+- **Harmonic tier on large pools.** When a candidate pool would bind more
+  parameters than SQLite allows, the harmonic co-activation tier is skipped
+  (one warning per store) rather than failing the query. The experimental
+  `[retrieval] harmonic_batching_enabled` (0.10.0,
+  [#431](https://github.com/mbachaud/Cymatix-Context/issues/431), default
+  `false`) stages the full pool in a connection-local temporary table so the
+  tier runs at any size; its default flip waits on the paired gate in
+  [#469](https://github.com/mbachaud/Cymatix-Context/issues/469).
+- **0.11.2 fix:** the prefix tag tier no longer fails on queries with more
+  than 500 terms (SQLite's compound-SELECT limit,
+  [#483](https://github.com/mbachaud/Cymatix-Context/pull/483)). At 500 terms
+  or fewer the SQL is byte-identical, so ordinary queries cannot change rank.
 - **Fusion.** Candidates are ranked by Reciprocal Rank Fusion, the default
   since 2026-07-06 — measured **+12pp gold-document delivery** over the legacy
   additive accumulator on the hardest internal bed (**0.74 vs 0.62**).
@@ -136,6 +153,14 @@
   superseded documents — downgrading the response to
   `miss(reason="stale" | "cold" | "superseded")`. It is the reason a document
   can be retrieved and still not be answerable from.
+- **Freshness basis (0.11.2, opt-in).** The default `[context] freshness_basis
+  = "clock"` is age-since-verification decay, so a static store turns
+  all-stale about 15 days after ingest, and a source this machine cannot find
+  reads as stale. `"source"` checks the source instead: unchanged on disk since
+  verification = verified, changed = needs refresh, not on this disk =
+  unknown (`stale_risk` for ordinary tasks) rather than stale. On the ERB 947k
+  bed the clock basis forced 470/470 queries to `miss(stale)` before know
+  confidence was read.
 - **Session delivery register** (`session_delivery_enabled = true`) tracks what
   each session has already received and elides repeats behind a pointer stub.
   The multi-turn savings figure (~40%) is an **unverified design estimate**
@@ -159,6 +184,22 @@
   corpora with zero paired delivered losses and the ranking bases untouched.
   The receipts grade delivery, not answer quality under a widened seat count —
   that lane is still owed.
+- **The floor does not reach the TIGHT and FOCUSED budget-tier cuts** at
+  shipped defaults: about a third of ERB queries still deliver 6 seats
+  ([#430](https://github.com/mbachaud/Cymatix-Context/issues/430)). The
+  experimental `[budget] tier_seat_floor_enabled` (0.10.0, default `false`)
+  applies the floor to those cuts too, keeping tier labels and the final
+  token budget.
+- **Other 0.10.0 opt-ins at this stage**, all default off and all gated on
+  [#469](https://github.com/mbachaud/Cymatix-Context/issues/469):
+  - `[budget] full_text_delivery` delivers complete stored bodies plus up to
+    `companion_chunks` (default 4) question-ranked chunks from sources already
+    selected. Primary ranking is untouched; packets expose the supplements in
+    `companions`. It uses more downstream tokens: on the 947k bed a 12 + 4
+    packet averaged 15,917 tokens against 8,345 compressed.
+  - `[budget] wire_format = "canonical"` writes `<DOCUMENT>` blocks,
+    `[document=…]` headers and canonical JSON keys instead of the legacy
+    `<GENE>` vocabulary. See [Lexicon](Lexicon).
 
 ## Stage 6 — Persist
 
@@ -166,6 +207,25 @@
   the background, off the response path. **Algorithmic** (the CPU tagger path).
 - This is what makes the store grow with use, and why co-activation edges
   strengthen between documents that keep getting retrieved together.
+- **Not on the per-turn path:** `[sync]` (0.11.0, default off) runs its own
+  in-process pass over tracked folders, re-ingesting changed files and
+  tombstoning the stale chunks of changed or deleted ones. A store marked
+  Freeze (0.11.2) opens read-only: its knowledge content is not written,
+  including by queries. See [Architecture Map](Architecture-Map).
+
+## After the pipeline: the packet trace (opt-in)
+
+- Every `/context` and `/context/packet` response carries a ULID `packet_id`
+  (body field and `X-Cymatix-Packet-Id` header) since 0.11.2, whether tracing
+  is on or not.
+- With `[trace] enabled = true` (default **false**,
+  [#493](https://github.com/mbachaud/Cymatix-Context/issues/493)), the HTTP
+  route writes one record per request **after** assembly and the know/miss
+  decision: delivered chunk ids, keyed hashes, ranks, scores, the verdict,
+  and a replay fingerprint. It reads what the pipeline already produced and
+  changes nothing it delivers; the 0.11.3 witness with tracing on reproduced
+  exactly. Cost at 947k is under 1 ms per request since 0.11.3. Details:
+  [Observability](Observability).
 
 ## Where the model boundary actually sits
 
@@ -182,6 +242,12 @@
 - The honest one-line version: *ingest → tag → encode → store → query →
   retrieve → weigh → label → emit* is all CPU; the pipeline crosses the model
   boundary exactly once, at answer generation, and that call is the caller's.
+- Two opt-in know/miss inputs added in 0.11.2 sit outside this table because
+  they run after ranking: `[know] model = "lanes"` is algorithmic, and
+  `[know] lanes_ce_model` (empty = off) scores the fused top-1 and top-2
+  through the cross-encoder, a model call when it is set. Neither changes
+  ranking or delivery; both feed only the know confidence. See
+  [Agent Contract](Agent-Contract).
 
 ## The four entry flows share these stages
 
@@ -201,5 +267,6 @@
 - [`docs/architecture/PIPELINE_LANES.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/architecture/PIPELINE_LANES.md) — the swim-lane reference: who writes what, which table each stage touches, the four flows in full
 - [`docs/architecture/DIMENSIONS.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/architecture/DIMENSIONS.md) — the formal signal inventory behind Stage 2
 - [`docs/api/context-endpoint.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/api/context-endpoint.md) — request and response fields for `/context` and `/context/packet`
+- [`docs/specs/packet-trace-v0.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/specs/packet-trace-v0.md) — the packet trace record, levels, and read endpoints
 - [`docs/benchmarks/2026-08-06-retrieval-layer-ledger.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-08-06-retrieval-layer-ledger.md) — the dated cost/impact ledger this page cites for splice and classifier
 - Next: [Retrieval Dimensions](Retrieval-Dimensions) · [Agent Contract](Agent-Contract) · [Configuration](Configuration) · [Benchmarks and Receipts](Benchmarks-and-Receipts)

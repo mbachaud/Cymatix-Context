@@ -1,8 +1,9 @@
 # Configuration
 
 - Everything lives in one file: **`cymatix.toml`**, read once at process start
-  by `cymatix_context.config.load_config()`. There is no second config source
-  and no dotfile.
+  by `cymatix_context.config.load_config()`. There is no dotfile; the one
+  other source is the optional per-store settings sidecar (sync folders and
+  Freeze), described under [Opt-in since 0.9.2](#opt-in-since-092).
 - Malformed TOML logs an error and uses defaults. Unknown keys and non-table
   known sections log warnings and are ignored. Invalid fields inside valid
   tables can still raise errors — for example, a nonnumeric timeout or
@@ -18,7 +19,7 @@
   [Lexicon](Lexicon). The aliases come from the Tier-2 lexicon pass
   ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)), which follows the 0.9.1 tag — on a 0.9.1 wheel only the legacy
   spellings resolve.
-- This page documents **v0.9.2**. The wave-1 ranking
+- This page documents **v0.11.3** (released 2026-10-11). The wave-1 ranking
   defaults ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)),
   the delivered-seat floor and its graduation to 12
   ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)), the entity
@@ -27,6 +28,9 @@
   tagger v2 behavior change
   ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) all shipped
   in v0.9.1 (released 2026-08-30) and are cited where they appear.
+- **No shipped retrieval or delivery default has changed since 0.9.2.**
+  Everything added in 0.10.0 through 0.11.3 is opt-in or launcher-side; see
+  [Opt-in since 0.9.2](#opt-in-since-092).
 
 ## Where a value comes from
 
@@ -81,19 +85,22 @@ destination, so passing both is plain last-wins. See [CLI](CLI).)
 |---|---|---|
 | `[compressor]` *(legacy `[ribosome]`)* | The optional compression / enrichment layer. Off the retrieval hot path entirely. | `enabled = false`, `backend = "none"` (only `"litellm"` and `"deberta"` are honored when enabled; anything else, including `"claude"` and legacy `"ollama"`, dispatches the no-op DisabledBackend), `model = "gemma4:e2b"`, `timeout = 120`, `query_expansion_enabled = false` |
 | `[hardware]` | Device picker and per-model batch-size policy. | `device = "auto"` (cuda → rocm → mps → cpu), `batch_sizes = "auto"`, `low_vram_threshold_gb = 4.0`, `lazy_encoders = true` |
-| `[budget]` | Token caps, per-turn document caps, decoder mode, assembly-time safety. | `retrieval_tokens = 7000` *(legacy `expression_tokens`)*, `max_docs_per_turn = 12` *(legacy `max_genes_per_turn`)*, `decoder_mode = "condensed"`, `splice_aggressiveness = 0.3`, `legibility_enabled = true`, `session_delivery_enabled = true`, `abstain_enabled = true`, `neutralize_control_tags = true`, `min_delivered_docs = 12` *(0.9.1; graduated from 0)* |
+| `[budget]` | Token caps, per-turn document caps, decoder mode, assembly-time safety. | `retrieval_tokens = 7000` *(legacy `expression_tokens`)*, `max_docs_per_turn = 12` *(legacy `max_genes_per_turn`)*, `decoder_mode = "condensed"`, `splice_aggressiveness = 0.3`, `legibility_enabled = true`, `session_delivery_enabled = true`, `abstain_enabled = true`, `neutralize_control_tags = true`, `min_delivered_docs = 12` *(0.9.1; graduated from 0)*, `full_text_delivery = false`, `companion_chunks = 4`, `context_max_chars = 100000`, `wire_format = "legacy"`, `tier_seat_floor_enabled = false` *(last five 0.10.0, opt-in)* |
 | `[session]` | Session and party attribution fallbacks for the CWoLa label logger. | `default_party_id = "default"`, `synthetic_session_enabled = true`, `synthetic_session_window_s = 300` |
 | `[knowledge_store]` *(legacy `[genome]`)* | Store path, compaction cadence, write durability. | `path = "genomes/main/genome.db"`, `compact_interval = 3600`, `cold_start_threshold = 10`, `replicas = []`, `synchronous = "NORMAL"` (WAL-safe; skips SQLite's per-commit fsync) |
 | `[server]` | HTTP bind, chat upstream, and the two admin-surface hardening knobs. | `host = "127.0.0.1"`, `port = 11437`, `upstream = "http://localhost:11434"`, `upstream_timeout = 180`, `admin_token = ""`, `swap_db_roots = []`, `bench_enabled = false`, `bench_port = 11439` |
+| `[[lanes]]` | Extra launcher-supervised servers, one per port and store directory (0.11.0). Absent from the shipped file except as a commented example. | Each entry: `name`, `port`, `genome_path` (required); `role = "custom"`, `python_executable = ""`, `engine_path = ""`, `config_path = ""`, `autostart = true`, `genome_source = ""` |
 | `[telemetry]` | OpenTelemetry export defaults. | `enabled = false`, `endpoint = "localhost:4317"`, `insecure = true`, `sampler_ratio = 1.0`, `redact_query = true`, `logs_enabled = true`, `logs_level = "INFO"` |
+| `[trace]` | Opt-in packet trace (0.11.2). Shipped commented out. | `enabled = false`, `level = "metadata"` (`"off"` / `"metadata"` / `"full"`), `path = ""` (= `<store dir>/traces`), `hash_chain = false`, `sampler_ratio = 1.0`, `rotate_bytes = 67108864` |
 | `[headroom]` | Optional Headroom compression-proxy lifecycle — launcher only. | `enabled = true`, `autostart = true`, `port = 8787`, `mode = "token"`, `route_upstream = false` |
 | `[ingestion]` | What happens to content on the way in. | `backend = "cpu"` (spaCy + regex), `entity_graph = true`, `splade_enabled = false`, `sema_embed_on_ingest = false`, `dense_embed_on_ingest = false`, `symbol_graph = false`, `entity_autolink_hub_cutoff = 200` *(0.9.2; was 0)*, `locale_demotion_enabled = true` |
-| `[context]` | Cold-tier fallthrough and the fingerprint profile. | `cold_tier_enabled = false`, `cold_tier_k = 3`, `cold_tier_min_cosine = 0.15`, `fingerprint_mode_profile = "balanced"` |
+| `[context]` | Cold-tier fallthrough, the fingerprint profile, and what decides freshness. | `cold_tier_enabled = false`, `cold_tier_k = 3`, `cold_tier_min_cosine = 0.15`, `fingerprint_mode_profile = "balanced"`, `freshness_basis = "clock"` *(0.11.2; `"source"` is opt-in)* |
 | `[cymatics]` | The 256-bin term-spectrum scorer. Blends as a bonus, never re-sorts. | `enabled = true`, `harmonic_links = true`, `distance_metric = "cosine"` (or `"w1"`), `peak_width` unset (derives from `[budget] splice_aggressiveness`) |
 | `[classifier]` | The Stage-0 rule-based query classifier. | `enabled = true` — and that is the whole surface. Per-class caps and decoder hints are code constants pending [#205](https://github.com/mbachaud/Cymatix-Context/issues/205) |
-| `[retrieval]` | The big one: every recall tier, the fuser, the rerank layer. | `fusion_mode = "rrf"`, `rrf_k = 20` *(0.9.1; was 60)*, `rerank_combinator_by_class` = all five classes → `eps_band` *(0.9.1; was `{multi_hop, default}`)*, `cover_walk_enabled = false` *(0.9.1, W2.1 — shipped inert, killed by its receipt, [#408](https://github.com/mbachaud/Cymatix-Context/pull/408))*, `dense_embedding_enabled = false`, `pki_enabled = false`, `rerank_enabled = false`, `filename_anchor_enabled = true`, `bm25_shortlist_enabled = true`, `sr_enabled = false`, `seeded_edges_enabled = false`, `blend_mode = "scale_relative"` |
+| `[retrieval]` | The big one: every recall tier, the fuser, the rerank layer. | `fusion_mode = "rrf"`, `rrf_k = 20` *(0.9.1; was 60)*, `rerank_combinator_by_class` = all five classes → `eps_band` *(0.9.1; was `{multi_hop, default}`)*, `cover_walk_enabled = false` *(0.9.1, W2.1 — shipped inert, killed by its receipt, [#408](https://github.com/mbachaud/Cymatix-Context/pull/408))*, `dense_embedding_enabled = false`, `pki_enabled = false`, `rerank_enabled = false`, `filename_anchor_enabled = true`, `bm25_shortlist_enabled = true`, `sr_enabled = false`, `seeded_edges_enabled = false`, `harmonic_batching_enabled = false` *(0.10.0, opt-in)*, `blend_mode = "scale_relative"` |
 | `[plr]` | The PLR query-confidence head that decorates `/context/packet`. | `enabled = true`, `model_path = "training/models/stacked_plr.joblib"`, `expected_sha256 = ""` (empty trusts the trainer's `.sha256` sidecar), `high_risk_threshold = 0.5` |
-| `[know]` | The KnowBlock confidence logistic and its calibration provenance. | `emit_floor = 0.45`, `s_ref = 4.2503`, `g_ref = 0.4386`, `betas` (6 coefficients), `calibrated_at` / `calibrated_on_n` written by `scripts/calibrate_know_confidence.py`, `stale_after_days = 30` |
+| `[know]` | The KnowBlock confidence logistic and its calibration provenance. | `emit_floor = 0.45`, `s_ref = 4.2503`, `g_ref = 0.4386`, `betas` (6 coefficients), `calibrated_at` / `calibrated_on_n` written by `scripts/calibrate_know_confidence.py`, `stale_after_days = 30`. Opt-in since 0.11.1/0.11.2: `model = "legacy"` (or `"lanes"`), `lanes_intercept`, `lanes_betas`, `lanes_platt_a = 1.0`, `lanes_platt_b = 0.0`, `lanes_ce_model = ""`, `neutral` / `fitted_inputs` (unset) |
+| `[sync]` | In-process delta sync of tracked folders (0.11.0). | `enabled = false`, `roots = []`, `include` (same extension set as `cymatix ingest`), `exclude` (`.git`, `node_modules`, `.venv`, …), `interval_s = 30`, `max_delete_fraction = 0.2`, `max_files_per_pass = 200`, `max_file_bytes = 2000000` |
 | `[mem_sync]` | Auto-sync of a watched notes directory into the store. Consumed by `scripts/run_mem_sync.py`, not by the server. | `enabled = false`, `watch_dirs = []`, `sync_interval_s = 60`, `agent_kind = "claude-code"` |
 | `[synonyms]` | Query-keyword → tag expansion. Flat `key = [values]` map; read once at start. | Ships ~40 rows (`cache`, `auth`, `db`, `api`, …). **Add your own project vocabulary here** — see the note below |
 | `[abstain]` | Confidence floors for the ABSTAIN tier. | `mode = "global"` (legacy hard-coded floors, byte-for-byte), `ratio_threshold = 1.8` (additive), `ratio_threshold_rrf_norm = 1.5` (RRF). `"per_classifier"` requires an `[abstain.default]` sub-table |
@@ -109,7 +116,7 @@ concluding that retrieval is broken.
 ## Default-off, and when it flipped
 
 Every one of these was flipped by a measurement, not a preference. The default
-retrieval path in 0.9.1 makes **zero model calls** as a result.
+retrieval path has made **zero model calls** since 0.9.1 as a result.
 
 | Knob | Default | Since | Why |
 |---|---|---|---|
@@ -241,6 +248,130 @@ entity_autolink_hub_cutoff = 200  # default since 0.9.2 (#425, closes #411); 0 =
   requires matching versions for a cross-bed claim. See
   [Benchmarks and Receipts](Benchmarks-and-Receipts).
 
+## Opt-in since 0.9.2
+
+Every knob below ships off (or at a value that reproduces the released
+behavior byte-for-byte). Releases 0.11.1, 0.11.2 and 0.11.3 each passed the
+947k merged-stack witness with 0/470 per-needle differences; 0.11.0 shipped
+without one by owner decision, since nothing on the retrieval or delivery
+path changed. See [Roadmap and Releases](Roadmap-and-Releases).
+
+### Full-text delivery and companions (0.10.0)
+
+```toml
+[budget]
+full_text_delivery = false   # true = complete stored bodies plus same-source companions
+companion_chunks = 4         # same-source chunks added after primary selection; 0 disables (0..32)
+context_max_chars = 100000   # hard ceiling on serialized packet evidence
+expression_tokens = 7000     # set 25000 for the full-text companion profile
+```
+
+- With `full_text_delivery = true`, `/context/packet` items carry the whole
+  stored body, and up to `companion_chunks` question-ranked chunks from
+  already-selected sources land in the packet's `companions` list. Primary
+  scores and ordering are untouched.
+- Oversized packets drop whole items (companions first) rather than clipping
+  a body. This costs real downstream tokens: on the 947k ERB bed the 12 + 4
+  companion profile averaged **15,917** tokens per packet against **8,345**
+  for compressed delivery (1.9x).
+
+### Experimental migrations (0.10.0)
+
+| Knob | Default | What `true` / the non-default does |
+|---|---|---|
+| `[budget] wire_format` | `"legacy"` | `"canonical"` renames owned JSON response fields to software terms across HTTP, CLI `--json` and MCP (`gene_id` → `document_id`, `do_not_answer_from_genome` → `do_not_answer_from_knowledge_store`, …). Request field names, SQL and the `/v1/*` proxy are unchanged. See [Lexicon](Lexicon) ([#417](https://github.com/mbachaud/Cymatix-Context/issues/417)) |
+| `[budget] tier_seat_floor_enabled` | `false` | TIGHT and FOCUSED tier cuts also honor `min_delivered_docs` when eligible candidates exist ([#430](https://github.com/mbachaud/Cymatix-Context/issues/430)) |
+| `[retrieval] harmonic_batching_enabled` | `false` | Oversized Tier-5 pools stream through connection-local temp storage instead of hitting SQLite's bind limit ([#431](https://github.com/mbachaud/Cymatix-Context/issues/431)) |
+
+All three keep their benchmark gates open; none is a promoted default.
+
+### `[[lanes]]`: several stores and engine builds at once (0.11.0)
+
+```toml
+[[lanes]]
+name = "staging"
+role = "staging"
+port = 11441
+genome_path = "genomes/staging/genome.db"
+engine_path = "F:/path/to/a/worktree"   # serve this source tree instead of the installed package
+genome_source = "snapshot:stable"       # serve a consistent copy of another lane's store
+autostart = false
+```
+
+- One server serves one store. The launcher always runs the primary `stable`
+  lane (from `[server] port` + `[knowledge_store] path`) and `bench` (from
+  `[server] bench_*`); each `[[lanes]]` entry adds one more. Existing configs
+  resolve unchanged.
+- Validation rejects duplicate names or ports, shared store directories, and
+  the reserved ports 11438 (launcher UI), 11440 (encoder daemon) and 8787
+  (Headroom).
+- `genome_source = "snapshot:<lane>"` serves an SQLite-backup copy, so a newer
+  engine build never writes to a live store. A chat picks a lane with
+  `cymatix mcp install --lane NAME`; `cymatix compare` diffs two lanes. See
+  [CLI](CLI).
+
+### `[sync]`: keep tracked folders fresh (0.11.0)
+
+- An in-process worker walks `roots` every `interval_s`: new files are
+  ingested, changed files re-ingested with their stale chunks
+  soft-tombstoned, deleted files tombstoned. Before this, every ingest path
+  left the old version of a changed file live beside the new one.
+- Guards: a missing root is skipped, never read as "everything deleted"; if
+  more than `max_delete_fraction` of tracked files vanish in one pass, the
+  pass tombstones nothing until `POST /sync/rescan {"allow_mass_delete": true}`;
+  `max_files_per_pass` throttles cold starts; a single-writer lease.
+- State: `GET /sync/status`. Supersedes `[mem_sync]` for repo folders.
+
+**Per-store settings and Freeze (0.11.2).** A store may carry a sidecar
+`<store>.db.cymatix.json` with its own sync folders and a Freeze flag. A
+store's own sync block overrides the global `[sync]` enabled / roots /
+interval for that store only. Freeze opens the store read-only for knowledge
+content, turns its sync off, and makes `/ingest` and `/consolidate` answer
+**409**. With no sidecar nothing changes. Both are set from the dashboard's
+Database panel.
+
+### `[trace]`: opt-in packet trace (0.11.2, faster in 0.11.3)
+
+- With `enabled = true`, each `/context` and `/context/packet` request
+  appends one event to `packets.jsonl` under `path`, through an async writer.
+  `"metadata"` holds keyed HMAC hashes, ids, ranks, scores and the verdict,
+  never raw query or chunk text; `"full"` adds the raw text and is for local
+  debugging only. `hash_chain` makes the file tamper-evident.
+- Precedence is env > TOML > default per knob (`CYMATIX_TRACE_ENABLED`,
+  `CYMATIX_TRACE_LEVEL`, `CYMATIX_TRACE_PATH`), resolved at use time like the
+  OTel settings.
+- Measured cost in 0.11.3: **0.19 ms p50 / 0.70 ms p95** of trace work per
+  request at metadata level on the 947k store, down from 47 / 57 ms in 0.11.2.
+- The packet id is returned whether or not tracing is on. Read-back routes and
+  the id contract: [HTTP API](HTTP-API#packet-ids-and-traces). Schema:
+  [`docs/specs/packet-trace-v0.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/specs/packet-trace-v0.md).
+
+### `[context] freshness_basis`: verify on the source (0.11.2)
+
+- `"clock"` (default) decays freshness by age since last verification, so a
+  static store turns all-stale about 15 days after ingest, and a source this
+  machine cannot find reads as stale. On the 947k ERB bed that forced 470/470
+  queries to `miss(stale)`.
+- `"source"` asks the source instead: unchanged on disk = verified, changed =
+  needs refresh, not on this disk = unknown (`stale_risk` for ordinary
+  tasks), not stale. Any other value logs a warning and falls back to
+  `"clock"`. See [Agent Contract](Agent-Contract).
+
+### `[know] model = "lanes"`: a dense-free know confidence (0.11.1-0.11.2)
+
+- `"legacy"` (default) is the shipped 5-feature logistic. `"lanes"` scores
+  inputs every query has (score shape, `coordinate_confidence`, lane
+  agreement), each with a missing indicator. The gates before confidence are
+  unchanged.
+- Fit it with `scripts/fit_know_lanes.py` (writes a `[know]` block, never
+  edits `cymatix.toml`), then calibrate per store with
+  `scripts/calibrate_know_store.py`, which writes `lanes_platt_a` /
+  `lanes_platt_b` and an `emit_floor`, or refuses when held-out precision
+  misses the target. `lanes_ce_model` (empty = off) adds cross-encoder
+  features at one CE call per query.
+- It stays opt-in: calibration does not transfer across corpora yet. Numbers
+  and caveats: [Agent Contract](Agent-Contract#the-confidence-honesty-block).
+
 ## Security knobs
 
 A loopback bind is **not** authentication — any process on the same host can
@@ -249,7 +380,7 @@ by default.
 
 ```toml
 [server]
-admin_token = "your-secret"              # 401s /admin/*, /ingest, /consolidate without the bearer
+admin_token = "your-secret"              # 401s /admin/*, /ingest, /consolidate, /sync/rescan, /trace/* without the bearer
 swap_db_roots = ["F:/cymatix/genomes"]   # 403s /admin/swap-db targets outside these roots
 
 [budget]
@@ -257,9 +388,11 @@ neutralize_control_tags = true           # default since 2026-08-19 (#351) — s
 ```
 
 - **`admin_token`** (default `""` = no auth). When non-empty, every `/admin/*`
-  route plus `/ingest` and `/consolidate` demands
-  `Authorization: Bearer <token>` and returns 401 otherwise. Read-only routes
-  (`/stats`, `/health`, `/context`, …) stay open.
+  route plus `/ingest`, `/consolidate`, `POST /sync/rescan` and the `/trace/*`
+  routes demands `Authorization: Bearer <token>` and returns 401 otherwise.
+  Read-only routes (`/stats`, `/health`, `/context`, `/sync/status`, …) stay
+  open. The MCP proxy and `cymatix compare` send `$CYMATIX_ADMIN_TOKEN` as
+  that bearer (0.11.0; ingest through MCP used to 401 when a token was set).
 - **`swap_db_roots`** (default `[]` = unrestricted). When non-empty,
   `POST /admin/swap-db` only opens `.db` paths that resolve under one of the
   listed roots; anything else is rejected 403 before a store is opened. A root
@@ -291,6 +424,7 @@ All process-level overrides use the `CYMATIX_` prefix and beat the TOML file.
 |---|---|
 | `CYMATIX_CONFIG` | Path to the TOML file (default `./cymatix.toml`) |
 | `CYMATIX_STORE_PATH` *(legacy `CYMATIX_GENOME_PATH`, which wins on conflict)* | `[knowledge_store] path`. `:memory:` for ephemeral runs |
+| `CYMATIX_SERVER_PORT` | `[server] port` (read since 0.11.0; a non-integer value logs a warning and is ignored) |
 | `CYMATIX_SERVER_UPSTREAM` / `CYMATIX_SERVER_UPSTREAM_TIMEOUT` | `[server] upstream` / `upstream_timeout` |
 | `CYMATIX_DEVICE` | One-shot device pin, consumed by `hardware.init_from_config()` |
 | `CYMATIX_PARTY_ID` | `[session] default_party_id` — the preferred way to set it |
@@ -302,6 +436,8 @@ All process-level overrides use the `CYMATIX_` prefix and beat the TOML file.
 | `CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO` | `[headroom] route_upstream`, per launch |
 | `CYMATIX_MCP_FULL` | Exposes the full MCP tool surface — see [MCP and IDE Integration](MCP-and-IDE-Integration) |
 | `CYMATIX_OTEL_*` | `[telemetry]` — see the precedence note below |
+| `CYMATIX_TRACE_ENABLED`, `CYMATIX_TRACE_LEVEL`, `CYMATIX_TRACE_PATH` | `[trace] enabled` / `level` / `path`, resolved at use time like the OTel set |
+| `CYMATIX_ADMIN_TOKEN` | Client side, not a server override: the bearer the MCP proxy and `cymatix compare` send. The server reads `[server] admin_token` |
 
 **The OTel rule is env-wins in both directions.** `CYMATIX_OTEL_ENABLED=0`
 silences a `[telemetry] enabled = true`, and the tray launcher's auto-export of
@@ -319,8 +455,14 @@ CYMATIX_OTEL_ENABLED=1 CYMATIX_OTEL_ENDPOINT=localhost:4317 cymatix-server
 
 - **Restart required** for most of the surface: `[compressor]`, `[hardware]`,
   `[server]`, `[knowledge_store]`, `[ingestion]`, `[cymatics]`, `[classifier]`,
-  `[plr]`, `[abstain]`, `[mem_sync]`, `[synonyms]`, `[vault]`, `[headroom]`,
-  the `[budget]` token caps, and the `[retrieval]` weights and mode.
+  `[plr]`, `[abstain]`, `[mem_sync]`, `[sync]`, `[trace]`, `[synonyms]`,
+  `[vault]`, `[headroom]`, the `[budget]` token caps, and the `[retrieval]`
+  weights and mode. `[[lanes]]` is read by the launcher, so it needs a
+  launcher restart.
+- **`POST /admin/reload`** re-reads the file but keeps the running values of
+  `[budget] wire_format` and `[retrieval] harmonic_batching_enabled`, which
+  are installed at startup; a changed value is listed under
+  `restart_required` in its response.
 - **Read per request:** `[budget] foveated_alpha` / `foveated_c_min` /
   `foveated_base_chars`, `[retrieval] ann_threshold_mode`, and
   `[retrieval] fusion_mode`.
@@ -334,8 +476,10 @@ CYMATIX_OTEL_ENABLED=1 CYMATIX_OTEL_ENDPOINT=localhost:4317 cymatix-server
 the legacy spellings (`[ribosome]`, `[genome]`, `genome.db`,
 `max_genes_per_turn`), and this page reproduces them verbatim where it quotes
 the file. Renaming the on-disk file and the SQL columns is a tracked Tier-3
-change, deliberately not taken in 0.9.1 because it breaks every existing store
-and consumer. See [Lexicon](Lexicon).*
+change, deliberately not taken because it breaks every existing store and
+consumer. The opt-in `[budget] wire_format = "canonical"` (0.10.0) renames
+JSON response fields only; SQL and persistence are unchanged. See
+[Lexicon](Lexicon).*
 
 ## Go deeper
 

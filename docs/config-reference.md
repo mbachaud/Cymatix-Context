@@ -223,6 +223,9 @@ the dataclass.
 | `neutralize_control_tags` | `bool` | `true` | Control-tag neutralization (2026-08-08 audit). When on, the assembly loop escapes content-sourced "<cymatix:" to "&lt;cymatix:" so a document cannot forge the genuine control tags (<cymatix:no_match/>, <cymatix:slate>) that downstream agents adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine no-match tag is emitted on a separate parts-empty branch and is never escaped. Closes tag-forgery only — general indirect prompt injection via document text remains (inherent to context injection). 2026-08-19: default flipped to true (#351 decision 2). The escape runs at ASSEMBLY time (after retrieval/fusion/rank publication), so retrieval metrics are unchangeable by construction; the 141-needle 100k-carve A/B receipt measured the delivered basis AND assembled window bytes identical across arms (141/141 windows byte-identical, genuine abstain tags untouched) — receipt: benchmarks/dogfood/erb/receipts/neutralize_ab_100k.json. Set false to opt out (documents legitimately containing literal "<cymatix:" then ship verbatim). |
 | `min_delivered_docs` | `int` | `12` | W2.4 (2026-08-28): delivered-seat floor, guarding BOTH seat-losing mechanisms. (1) The classifier's per-rule assembly cap (2/5/6/8, retrieval/query_classifier.py) cuts the candidate list BEFORE splice — the measured crater cat-(b) mechanism (w1c receipts: splice_n_candidates == delivered_count on every such needle; gold at map rank 9-12 above the cap never gets a seat); the floor lifts that cap to at least N (model-class caps like small_moe=4 are a model- capability concern and stay untouched). (2) The Stage-5 budget trimmer's whole-document eviction; at the floor the trimmer switches to shrinking the LARGEST parts (tail-truncation, header-preserving, marked " ...[budget-trimmed]") until the prompt fits — and if every part is at the truncation char floor and the prompt still overflows, eviction resumes below the floor: the token budget always wins last. 0 = both mechanisms byte-identical legacy. Wave-1's 235/235 coupling attribution unlocked cap raises (phase-plan L1.2); this is the knob-gated form. GRADUATED 12 (2026-08-30, [w24-floor-flip]): receipt-gated on three corpora with zero paired delivered losses — ERB 829k .630→.668 (+18/−0, w24 arm receipt), EnronQA v2 .820→.856 (+18/−0), EnronQA padded 597k .776→.792 (+8/−0); ranking bases (r@12/fr@12) untouched in every cell. Rows: BASELINES 2026-08-30-v091-gate-sweep + 2026-08-27-ranking-under-width-wave1; revert = git revert of the [w24-floor-flip] commit. When tier_seat_floor_enabled is true, this also floors TIGHT/FOCUSED tier cuts, subject to available eligible candidates and token limits. |
 | `tier_seat_floor_enabled` | `bool` | `false` | #430: extend min_delivered_docs to TIGHT/FOCUSED tier cuts while preserving tier labels. Off until the paired delivery gates pass. |
+| `tier_tight_chars` | `int` | `0` | Grain-size ladder: TIGHT / FOCUSED cuts in characters instead of documents (keep ranked candidates while their content fits). 0 = legacy 3 / 6 seats. 4500 / 9000 reproduce what the legacy cuts ship on 4000-char beds (2026-10-15 BEIR grain ladder); opt-in, unreceipted. |
+| `tier_focused_chars` | `int` | `0` |  |
+| `classifier_cap_ref_chars` | `int` | `0` | Grain-size ladder: the classifier's per-class assembly cap (2/5/6/8 seats) becomes seats x classifier_cap_ref_chars content chars, never fewer than the legacy seats. 0 = legacy seat cap. Opt-in, unreceipted (ERB c580 no-floor arms delivered exactly 8 chunks on 268/470 needles). |
 | `abstain_enabled` | `bool` | `true` | NEW — see docs/specs/2026-05-02-abstain-tier-design.md |
 | `foveated_enabled` | `bool` | `false` | Foveated-splice (BROAD tier only). Off by default for the measurement period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the phased α-sweep bench (§9) identifies a winning configuration. |
 | `foveated_alpha` | `float` | `1.0` | Power-law exponent for c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle decay, α=1.0 = harmonic-ish, α=2.0 = aggressive top-bias. |
@@ -1086,6 +1089,66 @@ python scripts/pwpc/sprint3.py <windowed_export.json> \
 **Cross-refs.** `cymatix_context/config.py:387-410` (`PLRConfig`),
 `cymatix_context/fusion_plr.py` (consumer),
 `docs/archive/FUTURE/STATISTICAL_FUSION.md` §C3.
+
+---
+
+## `[system_one]`
+
+**Purpose.** EXPERIMENTAL, default off. Optional "System One" packet
+judge: a hosted model that answers typed questions with calibrated
+probabilities instead of generated text (TypeSafe's Jev is the reference
+provider). When enabled, `/context/packet` responses gain an additive
+`system_one` block:
+
+```json
+{"available": true, "model": "jev-1.14.0", "question_type": "fact_lookup",
+ "answers_p": 0.93, "verdict": "know", "threshold": 0.5,
+ "reranked": false, "calls": 2}
+```
+
+`answers_p` is the provider's probability that some item in the packet
+states the answer. With `rerank_items = true` the block also carries
+`items: [{gene_id, bucket, answers_p}]` and items inside `verified` and
+`stale_risk` are reordered by `answers_p` (stable; never moved across
+buckets, never dropped). The `delivery` block keeps the cymatix order.
+The know/miss contract is never changed. Any provider failure soft-fails
+to `{"available": false, "error": "..."}`.
+
+**Privacy.** Enabling this sends the query and each item's text (capped
+at `max_item_chars`) to `url`. The key is read from the environment
+variable named by `api_key_env`; it is never read from TOML.
+
+**Cost.** Two provider calls per packet, plus one per item with
+`rerank_items`. Requests are paced at `min_interval_s` or more.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:system_one -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | `bool` | `false` | Master switch. Off = no provider calls and no `system_one` block. |
+| `url` | `str` | `"https://api.typesafe.ai/v1/systemone"` | Provider endpoint taking POST {model, state, questions}. |
+| `model` | `str` | `"jev-latest"` | Provider model id; the response's resolved version is echoed in the block. |
+| `api_key_env` | `str` | `"TYPESAFE_API_KEY"` | Name of the environment variable holding the provider key (never the key). |
+| `timeout_s` | `float` | `30.0` | Per-request HTTP timeout, seconds. |
+| `min_interval_s` | `float` | `0.3` | Pacing floor between provider requests (conservative workload budget). |
+| `know_threshold` | `float` | `0.5` | answers_p >= know_threshold -> verdict "know". 0.5 measured accuracy 0.80 on ERB 947k; 0.7 trades recall for precision (see the receipts). |
+| `rerank_items` | `bool` | `false` | Per-item calls reorder items inside verified / stale_risk by answers_p. |
+| `max_item_chars` | `int` | `8000` | Per-item text cap sent to the provider (Jev's per-question budget is ~150k chars across the packet). |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[system_one]
+enabled = true
+rerank_items = true
+know_threshold = 0.7   # precision over recall
+```
+
+**Cross-refs.** `cymatix_context/backends/system_one_backend.py`,
+`cymatix_context/server/routes_context.py` (`/context/packet`),
+`docs/benchmarks/2026-10-23-jev-system-one-packet-judge.md` (receipts).
 
 ---
 

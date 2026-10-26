@@ -1,0 +1,55 @@
+{
+  "c580_receipt": "F:\\tmp\\grain_erb_full_c580_2026-10-16\\ladder_erb_full_c580_charcap_2026-10-16.json",
+  "c580_git_sha": "dcf98c9ec532c5eea3219a7c4d3fa73ce880d96a",
+  "c580_config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\v0-10-beta-master-release-d72499\\benchmarks\\dogfood\\grain_ladder\\configs\\grain_c580_charcap.toml",
+  "c580_bed": "F:\\tmp\\grain_erb_full_c580_2026-10-16\\erb_full_c580_lean.db",
+  "reference_receipt": "F:\\tmp\\grain_erb_ref_c4000_2026-10-16\\ladder_erb947k_grain_c4000_charcap_2026-10-16.json",
+  "witness_receipt": "F:\\tmp\\release-witness-v0113\\ladder_v0113-merged-witness-trace-2026-10-11_947k.json",
+  "join": "query text",
+  "n_common": 470,
+  "n_c580_only": 0,
+  "n_ref_only": 0,
+  "c580_lean_charcap": {
+    "delivered_gold": 0.5468,
+    "chars_mean": 6856,
+    "misses": {
+      "delivered": 257,
+      "cut_by_packing": 71,
+      "ranked_below_cap": 0,
+      "never_ranked": 142,
+      "abstain": 0,
+      "util_mean": 0.381,
+      "util_p50": 0.354,
+      "pre_pack_rank_p50": 1,
+      "post_pack_rank_p50": 1
+    }
+  },
+  "c4000_charcap_reference": {
+    "delivered_gold": 0.5915,
+    "chars_mean": 15049,
+    "misses": {
+      "delivered": 278,
+      "cut_by_packing": 43,
+      "ranked_below_cap": 21,
+      "never_ranked": 128,
+      "abstain": 0,
+      "util_mean": 0.836,
+      "util_p50": 1.028,
+      "pre_pack_rank_p50": 1.0,
+      "post_pack_rank_p50": 1.0
+    }
+  },
+  "witness_shipped": {
+    "delivered_gold": 0.6681,
+    "chars_mean": null,
+    "misses": null
+  },
+  "paired_c580_vs_reference": {
+    "wins": 28,
+    "losses": 49
+  },
+  "paired_c580_vs_witness": {
+    "wins": 13,
+    "losses": 70
+  }
+}

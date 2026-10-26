@@ -17,6 +17,10 @@
   inline, so navigation stays one step. The bidirectional index is
   [Lexicon](Lexicon).
 - Seven Grafana dashboards ship with the repo and are auto-provisioned.
+- Separate from OTel, an opt-in **packet trace** (0.11.2) writes one local
+  JSONL record per `/context` or `/context/packet` request: what was delivered,
+  as keyed hashes, ranks and scores, plus the verdict.
+  [See below](#packet-trace-opt-in).
 
 ## Bring the stack up
 
@@ -135,8 +139,10 @@ Names below are **verbatim** — they are the query contract.
 
 | Metric | Type | Labels |
 |---|---|---|
-| `cymatix_context_latency_seconds` | histogram | `health`, `budget_tier`, `cold_tier_used` |
-| `cymatix_pipeline_stage_seconds` | histogram | `stage` — all seven stages |
+| `cymatix_context_latency_seconds` | histogram | `health`, `budget_tier`, `cold_tier_used`, `class`, `agent` |
+| `cymatix_context_calls_by_class` | counter | `class` ∈ {generic, small_moe, frontier}, `agent` — Prometheus appends `_total` |
+| `cymatix_budget_tier_total` | counter | `tier` ∈ {tight, focused, broad, abstain} |
+| `cymatix_pipeline_stage_seconds` | histogram | `stage` — the seven stages as `classify`, `extract`, `express` (Retrieve), `rerank`, `splice`, `assemble`, `persist`; plus histogram-only sub-stages `tail_writes`, `delivery_lookup`, `delivery_log` and the ingest stages `ingest_chunk` / `_encode` / `_tag` / `_upsert` / `_commit` |
 | `cymatix_context_health_status_total` | counter | `status` ∈ {aligned, sparse, stale, denatured} |
 | `cymatix_context_ellipticity` | histogram | `party` — coverage × density × freshness per query |
 | `cymatix_context_cache_outcome_total` | counter | `outcome` ∈ {hit, miss, partial} |
@@ -187,6 +193,11 @@ Names below are **verbatim** — they are the query contract.
 | `cymatix_cwola_bucket_total` | counter | `bucket` ∈ {A, B, pending} — A/B partition fill |
 | `cymatix_cwola_f_gap_sq` | gauge | none — partition divergence gate (≥ 0.16 passes) |
 | `cymatix_ingest_vram_bytes` | gauge | none — CUDA memory per dense ingest batch |
+| `cymatix_sync_events_total` | counter | `event` ∈ {ingested, unchanged, tombstoned, deleted, skipped, errors, guard_tripped} — delta-sync file outcomes per pass (`[sync]`, 0.11.0) |
+| `cymatix_hitl_events_total` | counter | `pause_type`, `party` — human-in-the-loop pause events |
+| `cymatix_vault_export_seconds`, `cymatix_vault_pruner_seconds` | histogram | none — vault export and pruner-cycle latency |
+| `cymatix_vault_force_prune_total` | counter | none — pinned traces force-deleted past the hard retention cap |
+| `cymatix_vault_file_count` | gauge | `folder` |
 
 - **The `/stats`-sourced gauges go stale unless something polls `/stats`.**
   Prometheus scrapes every 15 s, but these gauges only refresh when the endpoint
@@ -227,6 +238,9 @@ Names below are **verbatim** — they are the query contract.
   emitted from the background learn task *after* the response ships, by which time
   the `build_context` root has closed. On the server path it attaches to the
   enclosing HTTP request span, outside the waterfall.
+- **`cymatix.packet_id`** is set on the request span for every `/context` and
+  `/context/packet` call (0.11.2), so a Tempo trace joins to its packet trace
+  record and to the `X-Cymatix-Packet-Id` response header.
 - **GenAI client spans** — OTel semantic-convention spans named `<operation>
   <model>` (e.g. `chat qwen3:8b`). **Caveat: the streaming path opens its span
   after the stream completes**, since the response was already forwarded
@@ -248,6 +262,52 @@ Names below are **verbatim** — they are the query contract.
 ```
 {logger="cymatix.proxy"} |= "proxy.call"
 ```
+
+## Packet trace (opt-in)
+
+- **Experimental, off by default**
+  ([#493](https://github.com/mbachaud/Cymatix-Context/issues/493), still
+  open). It is not part of the OTel stack: records go to a local
+  append-only JSONL file and never leave the machine unless you export them.
+- **Always on, even with tracing off:** every `/context` and `/context/packet`
+  response carries a ULID `packet_id` (body field and `X-Cymatix-Packet-Id`
+  header). An inbound W3C `traceparent` is validated and recorded.
+- **What a record holds** at the default `metadata` level: HMAC-keyed query
+  and content hashes, delivered chunk and document ids, ranks, scores, lane
+  contributions, the know/miss verdict, total timing, and a replay fingerprint
+  (document count, config hash, version, git SHA). No raw query or chunk text.
+  `full` adds the raw text, for local debugging only. The HMAC key is
+  `<trace dir>/.trace_key`, created on first use.
+- **Cost:** since 0.11.3 the per-request trace work at 947k is 0.19 ms at p50
+  and 0.70 ms at p95 (metadata level); on 0.11.2 it was 47 / 57 ms. The 0.11.3
+  release witness ran with tracing on and reproduced the previous release
+  exactly.
+
+| Env var | `[trace]` key | Default | Purpose |
+|---|---|---|---|
+| `CYMATIX_TRACE_ENABLED` | `enabled` | off | Master switch (env: `1` = on). Off means no file and no writer thread |
+| `CYMATIX_TRACE_LEVEL` | `level` | `metadata` | `off`, `metadata` or `full` |
+| `CYMATIX_TRACE_PATH` | `path` | `""` | Trace directory; empty = `<genome dir>/traces` |
+| — | `hash_chain` | `false` | Each record carries the sha256 of the previous line |
+| — | `sampler_ratio` | `1.0` | Fraction of requests recorded |
+| — | `rotate_bytes` | 64 MiB | Rotate `packets.jsonl` past this size |
+
+- Precedence is env > `[trace]` TOML > default, resolved at use time, the
+  same split as `[telemetry]`.
+- **Read it back** with `GET /trace/{packet_id}` and
+  `GET /trace/recent?session_id=&limit=&event=`; `POST /trace/action` records
+  an agent tool call joined to the session's latest packet (arguments
+  HMAC-hashed server-side). All three sit behind the `[server] admin_token`
+  guard. Shapes: [HTTP API](HTTP-API).
+- **Share it** with `cymatix trace export --in … --out …` (0.11.3, install the
+  `trace-export` extra). It refuses `full`-level records, re-keys every hash
+  and content- or path-derived id under a fresh per-export key, drops raw text
+  and the chain hash, aborts on a secret-scan hit, and writes a per-field
+  manifest.
+- Also in 0.11.3: pure eval checks over records (delivery hit and rank,
+  know/miss compliance, over-delivery) and a `label` event with a security
+  taxonomy. **No detectors ship yet**, and the OWASP and MITRE ATLAS mappings
+  are marked unverified.
 
 ## Privacy and redaction
 
@@ -303,5 +363,6 @@ Symptom-first coverage of the rest of the system: [Troubleshooting](Troubleshoot
 - [`deploy/otel/grafana/dashboards/`](https://github.com/mbachaud/Cymatix-Context/tree/master/deploy/otel/grafana/dashboards) — the seven dashboard JSON files
 - [`deploy/otel/README.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/deploy/otel/README.md) — the containerized stack, bit-for-bit compatible with the native one
 - [`cymatix_context/telemetry/genai_telemetry.py`](https://github.com/mbachaud/Cymatix-Context/blob/master/cymatix_context/telemetry/genai_telemetry.py) — the `gen_ai.*` instruments, the price table, and the proxy log line
+- [`docs/specs/packet-trace-v0.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/specs/packet-trace-v0.md) — the packet trace record schema, levels, read endpoints, and overhead receipts
 - [`docs/specs/2026-07-01-goal-gates-hallucination-visibility.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/specs/2026-07-01-goal-gates-hallucination-visibility.md) — the gates and alert queries the Know/Miss dashboard was built against
 - Next: [Configuration](Configuration) · [Agent Contract](Agent-Contract) · [Benchmarks and Receipts](Benchmarks-and-Receipts) · [Troubleshooting](Troubleshooting)

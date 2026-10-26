@@ -5,11 +5,13 @@ symptom → fix. Sections are in the same order as
 [`docs/TROUBLESHOOTING.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/TROUBLESHOOTING.md),
 which is ordered by observed frequency in the issue tracker and carries the
 full **Symptom / Cause / Fix / Verify / Prevention** treatment for each entry.
+Entries for behaviour new in 0.11.x (hang fix, `401`s, frozen stores,
+all-stale misses, packet traces) have no counterpart there yet.
 
 Conventions: snippets are bash unless noted; on Windows use the PowerShell
 equivalent (`$env:VAR=...`, `Get-Process`). The default proxy port is `11437`
-and the default launcher UI port is `11438`; both are configurable under
-`[server]` in `cymatix.toml`.
+(`[server] port` in `cymatix.toml`) and the default launcher UI port is
+`11438` (`cymatix-launcher --port`).
 
 ## Server will not start
 
@@ -51,22 +53,35 @@ and the default launcher UI port is `11438`; both are configurable under
   interleaved with other sections instead of following their parent, and a
   deprecated `[compressor] device` (legacy: `[ribosome] device`) that should
   move to `[hardware]`. On the malformed path the loader silently falls back
-  to defaults — port 11437, store path `genome.db` relative to cwd — which is
-  rarely what you configured; the `[abstain]` case refuses to boot instead.
+  to defaults — port 11437, store path `genomes/main/genome.db` relative to
+  cwd — which is rarely what you configured; the `[abstain]` case refuses to
+  boot instead.
 
 ## Runtime and integration
 
 ### Ollama unreachable, wrong upstream, or model not pulled
 
-- **Symptom.** `/health` shows `"upstream_reachable": false`;
-  `/v1/chat/completions` returns 502 or `httpx.ConnectError`. With the
-  compressor enabled the log adds `TranscriptionError: Ribosome model call
-  failed entirely`.
+- **Symptom.** `/v1/chat/completions` returns 502 or `httpx.ConnectError`.
+  With the compressor enabled, `/health` also shows
+  `"upstream_state": "unreachable"` (`"status": "degraded"`) and compressor
+  calls raise `TranscriptionError`. With the compressor disabled (the
+  default) `/health` does not probe the upstream and reports `"inactive"`,
+  so a healthy `/health` does not prove the chat proxy can reach Ollama.
 - **Fix.** Confirm Ollama is up (`curl -s http://localhost:11434/api/tags`
-  must return JSON), confirm the URL cymatix is actually using via `/health`,
-  correct `[server] upstream` or `CYMATIX_SERVER_UPSTREAM`, and pull the
-  models you configured. Note the retrieval path itself never calls the
-  upstream — this affects the chat proxy and the optional compressor only.
+  must return JSON), confirm the URL cymatix is actually using via the
+  `upstream` field of `/health`, correct `[server] upstream` or
+  `CYMATIX_SERVER_UPSTREAM`, and pull the models you configured. Note the
+  retrieval path itself never calls the upstream — this affects the chat
+  proxy and the optional compressor only.
+
+### The server stops answering, `/health` included
+
+- **Symptom.** Under concurrent `/context` traffic the server wedges: every
+  endpoint, `/health` included, stops responding until it is restarted. Seen
+  with Python 3.14's `sqlite3`.
+- **Fix.** Upgrade to 0.11.1 or later. Before that, a `/context` request
+  could read through the shared writer connection while another request held
+  the write lock mid-update; reads now use a per-thread connection.
 
 ### Knowledge store is locked
 
@@ -86,6 +101,23 @@ and the default launcher UI port is `11438`; both are configurable under
   `CYMATIX_GENOME_PATH`). Run long backfills against a snapshot copy and
   hot-swap during a maintenance window.
 
+### `/ingest` returns 409 — the store is frozen
+
+- **Symptom.** `/ingest` (and `cymatix_ingest` over MCP) answers HTTP 409
+  `This knowledge store is frozen (read-only)`; `/consolidate` does the same,
+  and `[sync]` never updates that store.
+- **Fix.** The store was frozen from the dashboard's Database panel (0.11.2):
+  its sidecar `<store>.db.cymatix.json` carries the Freeze flag. Unfreeze it
+  there. The server reads the sidecar at boot, so the change applies on the
+  next start.
+
+### `401` from `/ingest`, `/admin/*`, or `/trace/*`
+
+- **Symptom.** Those routes answer 401 while `/context` works.
+- **Fix.** `[server] admin_token` is set, and those routes need
+  `Authorization: Bearer <token>`. For MCP, set `CYMATIX_ADMIN_TOKEN` in the
+  MCP `env` block; the shim sends it on every call (0.11.0 and later).
+
 ### A frontier model answers anyway when `/context` returns a miss
 
 - **Symptom.** The response carries `miss { do_not_answer_from_genome: true }`
@@ -99,10 +131,24 @@ and the default launcher UI port is `11438`; both are configurable under
   is here but stale) distinct from `"escalate"` (the answer is not here).
   See [Agent Contract](Agent-Contract).
 
+### Nearly every query returns `miss { reason: "stale" }`
+
+- **Symptom.** Queries the store clearly covers come back as a stale miss with
+  the top source as the refresh target. Typical on a store built on another
+  machine, or one that has not been re-ingested for a couple of weeks.
+- **Fix.** Under the default `[context] freshness_basis = "clock"`, freshness
+  decays with time since verification (a static store reads all-stale about
+  15 days after ingest), and a source file this machine cannot find counts as
+  stale. Set `freshness_basis = "source"` (opt-in since 0.11.2,
+  [#482](https://github.com/mbachaud/Cymatix-Context/issues/482)): a source
+  unchanged on disk is verified, a changed one needs refresh, and one that is
+  not on this disk is unknown (`stale_risk`) rather than stale.
+
 ### Dense recall returns nothing
 
-- **Symptom.** Debug logs show `query_genes_dense_recall: empty matrix,
-  falling back to lexical-only`, and needle-bench retrieval rate stays low.
+- **Symptom.** The log warns once
+  `embedding_dense_v2 coverage is empty; dense recall disabled`, and
+  needle-bench retrieval rate stays low.
 - **Fix.** First check whether you meant to be running dense at all — it is
   **default-off since 2026-08-15** and ingest-time dense writes are off since
   2026-08-19, so this is expected behavior at shipped defaults. If you have
@@ -110,6 +156,17 @@ and the default launcher UI port is `11438`; both are configurable under
   `embedding_dense_v2` column must be populated: stop cymatix, snapshot-copy
   the store, run `python scripts/backfill_bgem3_v2.py <copy>` until it reports
   `coverage=100.00%`, then hot-swap it in.
+
+### `GET /trace/{packet_id}` returns 404
+
+- **Symptom.** Responses carry a `packet_id` (and an `X-Cymatix-Packet-Id`
+  header), but `GET /trace/{packet_id}` answers `trace not found` and
+  `/trace/recent` is empty.
+- **Fix.** The id is minted on every `/context` and `/context/packet`
+  response; recording is opt-in. Set `[trace] enabled = true` (or
+  `CYMATIX_TRACE_ENABLED=1`) and restart. Packets go to
+  `<store dir>/traces` unless `[trace] path` says otherwise; ids from before
+  the switch were never written.
 
 ## Platform
 
@@ -197,16 +254,19 @@ and the default launcher UI port is `11438`; both are configurable under
   at shipped defaults the KnowBlock does not fire
   ([#287](https://github.com/mbachaud/Cymatix-Context/issues/287),
   [#239](https://github.com/mbachaud/Cymatix-Context/issues/239)). Branch on
-  `found` / `reason`.
+  `found` / `reason`. The opt-in `[know] model = "lanes"` (0.11.2) can be
+  calibrated per store with `scripts/calibrate_know_store.py`, which writes
+  no floor when the store cannot reach the target precision.
 - **Biology names in the code are not a different system.** `gene`, `genome`,
   and `ribosome` are the same things as document, knowledge store, and
   compressor. Both vocabularies work in code; wire fields and file paths keep
-  the legacy spellings. See [Lexicon](Lexicon).
+  the legacy spellings by default (`[budget] wire_format = "canonical"` is
+  the experimental opt-in for canonical wire names). See [Lexicon](Lexicon).
 
 ## Still stuck
 
 If your symptom is not above and `/health` reports a non-zero document count
-with `upstream_reachable = true`, open an issue at
+with `"status": "ok"`, open an issue at
 <https://github.com/mbachaud/Cymatix-Context/issues> with `/health`, `/stats`,
 the relevant log lines, and your `cymatix.toml` with secrets redacted. Or ask
 on Discord: <https://discord.gg/pX7x7pA3Da>.

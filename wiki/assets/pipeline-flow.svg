@@ -78,8 +78,8 @@
       <text x="310" y="190">no model call</text>
 
       <text x="310" y="236">FTS5 BM25 + tag lookup &#183; synonym expansion &#183; co-activation</text>
-      <text x="310" y="251">SR &#183; cymatics 256-bin spectrum &#183; ranked by RRF fusion</text>
-      <text x="310" y="266">opt-in, off by default: BGE-M3 dense &#183; SPLADE sparse</text>
+      <text x="310" y="251">cymatics 256-bin spectrum &#183; ranked by RRF fusion (rrf_k 20)</text>
+      <text x="310" y="266">opt-in, off by default: BGE-M3 dense &#183; SPLADE sparse &#183; PKI &#183; SR</text>
 
       <text x="310" y="311">CPU cross-encoder scores the candidate list</text>
       <text x="310" y="326">optional &#8212; off at shipped defaults</text>

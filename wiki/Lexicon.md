@@ -18,7 +18,7 @@
   [see below](#what-is-still-legacy-named-and-why).
   The experimental `[budget] wire_format = "canonical"` arm projects
   canonical response keys and assembly tags without changing SQL or Python
-  persistence fields. See [the migration contract](../docs/ROSETTA.md).
+  persistence fields. See [the migration contract](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROSETTA.md).
 - In-repo, [`docs/ROSETTA.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROSETTA.md)
   is now a stub that points here. This page is the living document; add a row
   when a new term surfaces.
@@ -86,7 +86,7 @@
 | `harmonic_bin_boost` | `random_walk_boost` | The Monte Carlo neighbour-expansion tier. |
 | `gene_attribution` | `document_attribution` | The party/participant authorship metadata on each document. |
 | `GeneAttribution` | `DocumentAttribution` | |
-| `HGT` (horizontal gene transfer) | `cross_store_import` | Importing documents from another cymatix instance. **Forward-pointer:** no code under either name today; `cross_store_import` is the name the feature ships under when it lands. |
+| `HGT` (horizontal gene transfer) | `cross_store_import` | Moving documents between cymatix instances as a portable `.cymatix` JSON export. The module is `cross_store_import.py` (`hgt.py` is its shim); the function names (`export_genome`, `import_genome`, `genome_diff`) are still legacy-spelled. |
 
 ## Identity vocabulary
 
@@ -116,7 +116,7 @@ and they keep their engineering names everywhere.
 |---|---|
 | `ContextWindow` | Full pipeline output — the bytes the agent reads. Carries `expressed_context`, `expressed_gene_ids`, `total_estimated_tokens`, and the `metadata` dict that pipes `know` / `miss` upward. |
 | `QueryResult` | Agent-facing projection of `ContextWindow`, adding `verdict` / `next_action` / `decision_reason`. The shape `cymatix query --json` emits. |
-| `ContextPacket` | Freshness-labeled agent-safe bundle: `verified[]`, `stale_risk[]`, `refresh_targets[]`, plus `coordinate_confidence` and `file_coverage`. |
+| `ContextPacket` | Freshness-labeled agent-safe bundle: `verified[]`, `stale_risk[]`, `refresh_targets[]`, plus `coordinate_confidence` and `file_coverage`. `companions[]` carries same-source supplements, filled only under the opt-in `[budget] full_text_delivery`. |
 | `ContextItem` | One evidence row inside a packet — `gene_id`, `title`, `content`, `relevance_score`, `live_truth_score`, `status`. |
 | `RefreshTarget` | One reread directive — `target_kind`, `source_id`, `reason`, `priority`. |
 | `KnowBlock` | The "you may answer from this evidence" verdict — `found`, `confidence`, `gene_id_match`, `soft_stale`. Mutually exclusive with `MissBlock`. |
@@ -136,7 +136,7 @@ Contract semantics for `know` / `miss` and the packet labels live on
   contract" logic that freezes the SQL schema applies to them: **cymatix does
   not rename metrics.** `cymatix_chromatin_state_total`,
   `cymatix_harmonic_edges_total`, `cymatix_ribosome_call_seconds`,
-  `cymatix_genome_size_genes` and the rest keep their names permanently.
+  `cymatix_genome_size_bytes` and the rest keep their names permanently.
 - Dashboard **panel titles** do use the engineering vocabulary, with the legacy
   term referenced inline so panel-hunting stays one step ("Compressor call
   latency p95 by operation", description "Legacy term: ribosome call").
@@ -169,10 +169,12 @@ bigger one.
 Two surfaces were deliberately left alone. Both are contracts with something
 outside the repository.
 
-**The wire surface** — tracked as
-[#417](https://github.com/mbachaud/Cymatix-Context/issues/417), not taken in
-0.9.1. These remain the defaults; the experimental canonical format changes
-them only when `[budget] wire_format = "canonical"` is selected:
+**The wire surface** — the canonical format shipped **opt-in** in 0.10.0
+([#417](https://github.com/mbachaud/Cymatix-Context/issues/417)); the default
+flip waits on its paired-receipt gate in
+[#469](https://github.com/mbachaud/Cymatix-Context/issues/469). These remain
+the defaults, and change only when `[budget] wire_format = "canonical"` is
+selected:
 
 - The `<GENE src=…>` blocks that wrap each spliced fragment in an assembled
   context window.
@@ -220,8 +222,11 @@ lexicon pass that followed the 0.9.1 tag; the three tiers are:
 - **Tier 2** — additive aliases on every operator-facing surface. Shipped
   after the 0.9.1 tag via
   [#419](https://github.com/mbachaud/Cymatix-Context/pull/419); listed below.
-- **Tier 3** — the wire surface. Deferred to
-  [#417](https://github.com/mbachaud/Cymatix-Context/issues/417).
+- **Tier 3** — the wire surface. Shipped opt-in in 0.10.0 as `[budget]
+  wire_format = "canonical"`
+  ([#417](https://github.com/mbachaud/Cymatix-Context/issues/417)); the
+  default stays `"legacy"` until the
+  [#469](https://github.com/mbachaud/Cymatix-Context/issues/469) gate passes.
 
 ### The Tier 2 aliases
 
@@ -284,5 +289,6 @@ Pydantic field names (`gene_id`, `promoter`, `epigenetics`, `chromatin`,
 - [`cymatix_context/schemas.py`](https://github.com/mbachaud/Cymatix-Context/blob/master/cymatix_context/schemas.py) — where the canonical classes and their one-line legacy aliases are declared side by side
 - [`docs/ROSETTA.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROSETTA.md) — the in-repo stub that points here
 - [Agentome](https://mbachaud.substack.com/p/agentome) — the paper the biology framing came from
-- [#417](https://github.com/mbachaud/Cymatix-Context/issues/417) — the Tier 3 wire-surface remainder, with the gate it has to clear
+- [`cymatix_context/wire.py`](https://github.com/mbachaud/Cymatix-Context/blob/master/cymatix_context/wire.py) — the complete legacy-to-canonical field map for the opt-in wire format
+- [#469](https://github.com/mbachaud/Cymatix-Context/issues/469) — the default-flip gate the canonical wire format still has to clear ([#417](https://github.com/mbachaud/Cymatix-Context/issues/417) shipped it opt-in)
 - Next: [Configuration](Configuration) · [Observability](Observability) · [Architecture Map](Architecture-Map) · [Roadmap and Releases](Roadmap-and-Releases)
