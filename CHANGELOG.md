@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.11.4 (2026-10-26)
+
 - **fix(deps): exclude preshed 3.0.14** (PR #524, commit `201fa6ee`).
   preshed 3.0.14 breaks loading `en_core_web_sm` 3.8.0 on spaCy 3.8.16
   (`OverflowError` in `Tokenizer._flush_specials`), so a fresh
