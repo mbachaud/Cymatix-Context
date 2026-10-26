@@ -1089,6 +1089,66 @@ python scripts/pwpc/sprint3.py <windowed_export.json> \
 
 ---
 
+## `[system_one]`
+
+**Purpose.** EXPERIMENTAL, default off. Optional "System One" packet
+judge: a hosted model that answers typed questions with calibrated
+probabilities instead of generated text (TypeSafe's Jev is the reference
+provider). When enabled, `/context/packet` responses gain an additive
+`system_one` block:
+
+```json
+{"available": true, "model": "jev-1.14.0", "question_type": "fact_lookup",
+ "answers_p": 0.93, "verdict": "know", "threshold": 0.5,
+ "reranked": false, "calls": 2}
+```
+
+`answers_p` is the provider's probability that some item in the packet
+states the answer. With `rerank_items = true` the block also carries
+`items: [{gene_id, bucket, answers_p}]` and items inside `verified` and
+`stale_risk` are reordered by `answers_p` (stable; never moved across
+buckets, never dropped). The `delivery` block keeps the cymatix order.
+The know/miss contract is never changed. Any provider failure soft-fails
+to `{"available": false, "error": "..."}`.
+
+**Privacy.** Enabling this sends the query and each item's text (capped
+at `max_item_chars`) to `url`. The key is read from the environment
+variable named by `api_key_env`; it is never read from TOML.
+
+**Cost.** Two provider calls per packet, plus one per item with
+`rerank_items`. Requests are paced at `min_interval_s` or more.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:system_one -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | `bool` | `false` | Master switch. Off = no provider calls and no `system_one` block. |
+| `url` | `str` | `"https://api.typesafe.ai/v1/systemone"` | Provider endpoint taking POST {model, state, questions}. |
+| `model` | `str` | `"jev-latest"` | Provider model id; the response's resolved version is echoed in the block. |
+| `api_key_env` | `str` | `"TYPESAFE_API_KEY"` | Name of the environment variable holding the provider key (never the key). |
+| `timeout_s` | `float` | `30.0` | Per-request HTTP timeout, seconds. |
+| `min_interval_s` | `float` | `0.3` | Pacing floor between provider requests (conservative workload budget). |
+| `know_threshold` | `float` | `0.5` | answers_p >= know_threshold -> verdict "know". 0.5 measured accuracy 0.80 on ERB 947k; 0.7 trades recall for precision (see the receipts). |
+| `rerank_items` | `bool` | `false` | Per-item calls reorder items inside verified / stale_risk by answers_p. |
+| `max_item_chars` | `int` | `8000` | Per-item text cap sent to the provider (Jev's per-question budget is ~150k chars across the packet). |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[system_one]
+enabled = true
+rerank_items = true
+know_threshold = 0.7   # precision over recall
+```
+
+**Cross-refs.** `cymatix_context/backends/system_one_backend.py`,
+`cymatix_context/server/routes_context.py` (`/context/packet`),
+`docs/benchmarks/2026-10-23-jev-system-one-packet-judge.md` (receipts).
+
+---
+
 ## `[know]`
 
 **Purpose.** Stage-6 KnowBlock confidence logistic. Maps four (Stage
