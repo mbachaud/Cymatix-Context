@@ -32,7 +32,10 @@ jobs:
           path-to-signatures: signatures/contributors.json
           branch: cla-signatures
           path-to-document: https://cymatixcontext.com/contributing
-          allowlist: mbachaud,addiplus,Claude,dependabot[bot],github-actions[bot]
+          # The action names a committer by the GitHub login its email resolves
+          # to and compares case-sensitively: noreply@anthropic.com is the login
+          # `claude`; `Claude` covers commits whose email maps to no account.
+          allowlist: mbachaud,addiplus,claude,Claude,dependabot[bot],github-actions[bot]
           custom-pr-sign-comment: I have read the Contributor Guidelines and I hereby sign up as a Cymatix Context contributor
           custom-notsigned-prcomment: >
             Thanks for the PR! One quick step before it can be reviewed: complete the
