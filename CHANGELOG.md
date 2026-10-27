@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **feat(query): FY-prefixed years become bare years in query extraction**
+  (`accel.extract_query_signals`). `FY2018`, `FY 2018`, `FY'18` and `FY22`
+  now become `2018` / `2022` before tokenizing. Filings write "fiscal 2018"
+  or a bare `2018` column header, so `fy2018` matched nothing, and `FY'18`
+  was dropped by the length filter. Only uppercase `FY` is rewritten. On
+  FinanceBench (bed `F:/tmp/financebench_bed/financebench.db`, k=12,
+  `PYTHONHASHSEED=0`) delivered rose from 23/150 to 28/150 (+6/−1). This
+  matches the A/B arm that rewrote the question text, question by question,
+  including gold rank. The rule is general rather than tuned to these
+  questions, but there is no held-out set and it has not been measured on
+  ERB. Receipts: `lexical_ab_2026-10-26/` (runner
+  `benchmarks/dogfood/sweeps/run_financebench_lexical_ab.py`).
+
 ## 0.11.4 (2026-10-26)
 
 - **Release gate: 947k merged-stack witness with packet tracing on,
