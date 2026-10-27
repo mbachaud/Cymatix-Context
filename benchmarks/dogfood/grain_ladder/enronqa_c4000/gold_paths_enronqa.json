@@ -1,0 +1,1502 @@
+{
+ "enron_000_o": [
+  "allen-p/_sent_mail/416.txt"
+ ],
+ "enron_000_r": [
+  "allen-p/_sent_mail/416.txt"
+ ],
+ "enron_001_o": [
+  "arnold-j/notes_inbox/64.txt"
+ ],
+ "enron_001_r": [
+  "arnold-j/notes_inbox/64.txt"
+ ],
+ "enron_002_o": [
+  "arora-h/deleted_items/148.txt"
+ ],
+ "enron_002_r": [
+  "arora-h/deleted_items/148.txt"
+ ],
+ "enron_003_o": [
+  "badeer-r/discussion_threads/72.txt"
+ ],
+ "enron_003_r": [
+  "badeer-r/discussion_threads/72.txt"
+ ],
+ "enron_004_o": [
+  "bailey-s/deleted_items/163.txt"
+ ],
+ "enron_004_r": [
+  "bailey-s/deleted_items/163.txt"
+ ],
+ "enron_005_o": [
+  "bass-e/deleted_items/231.txt"
+ ],
+ "enron_005_r": [
+  "bass-e/deleted_items/231.txt"
+ ],
+ "enron_006_o": [
+  "baughman-d/inbox/118.txt"
+ ],
+ "enron_006_r": [
+  "baughman-d/inbox/118.txt"
+ ],
+ "enron_007_o": [
+  "beck-s/sent_items/92.txt"
+ ],
+ "enron_007_r": [
+  "beck-s/sent_items/92.txt"
+ ],
+ "enron_008_o": [
+  "benson-r/deleted_items/29.txt"
+ ],
+ "enron_008_r": [
+  "benson-r/deleted_items/29.txt"
+ ],
+ "enron_009_o": [
+  "blair-l/sent_items/677.txt"
+ ],
+ "enron_009_r": [
+  "blair-l/sent_items/677.txt"
+ ],
+ "enron_010_o": [
+  "brawner-s/misc/3.txt"
+ ],
+ "enron_010_r": [
+  "brawner-s/misc/3.txt"
+ ],
+ "enron_011_o": [
+  "buy-r/inbox/877.txt"
+ ],
+ "enron_011_r": [
+  "buy-r/inbox/877.txt"
+ ],
+ "enron_012_o": [
+  "campbell-l/discussion_threads/51.txt"
+ ],
+ "enron_012_r": [
+  "campbell-l/discussion_threads/51.txt"
+ ],
+ "enron_013_o": [
+  "carson-m/deleted_items/192.txt"
+ ],
+ "enron_013_r": [
+  "carson-m/deleted_items/192.txt"
+ ],
+ "enron_014_o": [
+  "cash-m/all_documents/501.txt"
+ ],
+ "enron_014_r": [
+  "cash-m/all_documents/501.txt"
+ ],
+ "enron_015_o": [
+  "causholli-m/sent_items/245.txt"
+ ],
+ "enron_015_r": [
+  "causholli-m/sent_items/245.txt"
+ ],
+ "enron_016_o": [
+  "corman-s/sent_items/440.txt"
+ ],
+ "enron_016_r": [
+  "corman-s/sent_items/440.txt"
+ ],
+ "enron_017_o": [
+  "crandell-s/deleted_items/86.txt"
+ ],
+ "enron_017_r": [
+  "crandell-s/deleted_items/86.txt"
+ ],
+ "enron_018_o": [
+  "cuilla-m/inbox/56.txt"
+ ],
+ "enron_018_r": [
+  "cuilla-m/inbox/56.txt"
+ ],
+ "enron_019_o": [
+  "dasovich-j/all_documents/4159.txt"
+ ],
+ "enron_019_r": [
+  "dasovich-j/all_documents/4159.txt"
+ ],
+ "enron_020_o": [
+  "davis-d/all_documents/27.txt"
+ ],
+ "enron_020_r": [
+  "davis-d/all_documents/27.txt"
+ ],
+ "enron_021_o": [
+  "dean-c/inbox/852.txt"
+ ],
+ "enron_021_r": [
+  "dean-c/inbox/852.txt"
+ ],
+ "enron_022_o": [
+  "delainey-d/_sent_mail/12.txt"
+ ],
+ "enron_022_r": [
+  "delainey-d/_sent_mail/12.txt"
+ ],
+ "enron_023_o": [
+  "derrick-j/sent_items/328.txt"
+ ],
+ "enron_023_r": [
+  "derrick-j/sent_items/328.txt"
+ ],
+ "enron_024_o": [
+  "dickson-s/all_documents/15.txt"
+ ],
+ "enron_024_r": [
+  "dickson-s/all_documents/15.txt"
+ ],
+ "enron_025_o": [
+  "donoho-l/deleted_items/30.txt"
+ ],
+ "enron_025_r": [
+  "donoho-l/deleted_items/30.txt"
+ ],
+ "enron_026_o": [
+  "donohoe-t/inbox/5.txt"
+ ],
+ "enron_026_r": [
+  "donohoe-t/inbox/5.txt"
+ ],
+ "enron_027_o": [
+  "dorland-c/sent_items/5.txt"
+ ],
+ "enron_027_r": [
+  "dorland-c/sent_items/5.txt"
+ ],
+ "enron_028_o": [
+  "ermis-f/inbox/22.txt"
+ ],
+ "enron_028_r": [
+  "ermis-f/inbox/22.txt"
+ ],
+ "enron_029_o": [
+  "farmer-d/deleted_items/254.txt"
+ ],
+ "enron_029_r": [
+  "farmer-d/deleted_items/254.txt"
+ ],
+ "enron_030_o": [
+  "fischer-m/notes_inbox/362.txt"
+ ],
+ "enron_030_r": [
+  "fischer-m/notes_inbox/362.txt"
+ ],
+ "enron_031_o": [
+  "forney-j/sent_items/86.txt"
+ ],
+ "enron_031_r": [
+  "forney-j/sent_items/86.txt"
+ ],
+ "enron_032_o": [
+  "fossum-d/_sent_mail/504.txt"
+ ],
+ "enron_032_r": [
+  "fossum-d/_sent_mail/504.txt"
+ ],
+ "enron_033_o": [
+  "gang-l/deleted_items/327.txt"
+ ],
+ "enron_033_r": [
+  "gang-l/deleted_items/327.txt"
+ ],
+ "enron_034_o": [
+  "gay-r/all_documents/81.txt"
+ ],
+ "enron_034_r": [
+  "gay-r/all_documents/81.txt"
+ ],
+ "enron_035_o": [
+  "geaccone-t/sent_items/135.txt"
+ ],
+ "enron_035_r": [
+  "geaccone-t/sent_items/135.txt"
+ ],
+ "enron_036_o": [
+  "germany-c/all_documents/1987.txt"
+ ],
+ "enron_036_r": [
+  "germany-c/all_documents/1987.txt"
+ ],
+ "enron_037_o": [
+  "gilbertsmith-d/deleted_items/168.txt"
+ ],
+ "enron_037_r": [
+  "gilbertsmith-d/deleted_items/168.txt"
+ ],
+ "enron_038_o": [
+  "giron-d/sent_items/236.txt"
+ ],
+ "enron_038_r": [
+  "giron-d/sent_items/236.txt"
+ ],
+ "enron_039_o": [
+  "griffith-j/discussion_threads/46.txt"
+ ],
+ "enron_039_r": [
+  "griffith-j/discussion_threads/46.txt"
+ ],
+ "enron_040_o": [
+  "grigsby-m/deleted_items/241.txt"
+ ],
+ "enron_040_r": [
+  "grigsby-m/deleted_items/241.txt"
+ ],
+ "enron_041_o": [
+  "guzman-m/discussion_threads/59.txt"
+ ],
+ "enron_041_r": [
+  "guzman-m/discussion_threads/59.txt"
+ ],
+ "enron_042_o": [
+  "haedicke-m/sent_items/5.txt"
+ ],
+ "enron_042_r": [
+  "haedicke-m/sent_items/5.txt"
+ ],
+ "enron_043_o": [
+  "hain-m/all_documents/1280.txt"
+ ],
+ "enron_043_r": [
+  "hain-m/all_documents/1280.txt"
+ ],
+ "enron_044_o": [
+  "harris-s/deleted_items/309.txt"
+ ],
+ "enron_044_r": [
+  "harris-s/deleted_items/309.txt"
+ ],
+ "enron_045_o": [
+  "hayslett-r/sent_items/323.txt"
+ ],
+ "enron_045_r": [
+  "hayslett-r/sent_items/323.txt"
+ ],
+ "enron_046_o": [
+  "heard-m/brokerage_agreements/1.txt"
+ ],
+ "enron_046_r": [
+  "heard-m/brokerage_agreements/1.txt"
+ ],
+ "enron_047_o": [
+  "hendrickson-s/deleted_items/178.txt"
+ ],
+ "enron_047_r": [
+  "hendrickson-s/deleted_items/178.txt"
+ ],
+ "enron_048_o": [
+  "hernandez-j/discussion_threads/371.txt"
+ ],
+ "enron_048_r": [
+  "hernandez-j/discussion_threads/371.txt"
+ ],
+ "enron_049_o": [
+  "hodge-j/inbox/162.txt"
+ ],
+ "enron_049_r": [
+  "hodge-j/inbox/162.txt"
+ ],
+ "enron_050_o": [
+  "holst-k/sent_items/46.txt"
+ ],
+ "enron_050_r": [
+  "holst-k/sent_items/46.txt"
+ ],
+ "enron_051_o": [
+  "horton-s/sent_items/14.txt"
+ ],
+ "enron_051_r": [
+  "horton-s/sent_items/14.txt"
+ ],
+ "enron_052_o": [
+  "hyatt-k/sent_items/6.txt"
+ ],
+ "enron_052_r": [
+  "hyatt-k/sent_items/6.txt"
+ ],
+ "enron_053_o": [
+  "hyvl-d/all_documents/1439.txt"
+ ],
+ "enron_053_r": [
+  "hyvl-d/all_documents/1439.txt"
+ ],
+ "enron_054_o": [
+  "jones-t/all_documents/9570.txt"
+ ],
+ "enron_054_r": [
+  "jones-t/all_documents/9570.txt"
+ ],
+ "enron_055_o": [
+  "kaminski-v/_sent_mail/1305.txt"
+ ],
+ "enron_055_r": [
+  "kaminski-v/_sent_mail/1305.txt"
+ ],
+ "enron_056_o": [
+  "kean-s/archiving/untitled/6521.txt"
+ ],
+ "enron_056_r": [
+  "kean-s/archiving/untitled/6521.txt"
+ ],
+ "enron_057_o": [
+  "keavey-p/notes_inbox/33.txt"
+ ],
+ "enron_057_r": [
+  "keavey-p/notes_inbox/33.txt"
+ ],
+ "enron_058_o": [
+  "keiser-k/deleted_items/290.txt"
+ ],
+ "enron_058_r": [
+  "keiser-k/deleted_items/290.txt"
+ ],
+ "enron_059_o": [
+  "king-j/deleted_items/78.txt"
+ ],
+ "enron_059_r": [
+  "king-j/deleted_items/78.txt"
+ ],
+ "enron_060_o": [
+  "kitchen-l/sent_items/1560.txt"
+ ],
+ "enron_060_r": [
+  "kitchen-l/sent_items/1560.txt"
+ ],
+ "enron_061_o": [
+  "kuykendall-t/sent_items/74.txt"
+ ],
+ "enron_061_r": [
+  "kuykendall-t/sent_items/74.txt"
+ ],
+ "enron_062_o": [
+  "lavorato-j/analyst_associate/9.txt"
+ ],
+ "enron_062_r": [
+  "lavorato-j/analyst_associate/9.txt"
+ ],
+ "enron_063_o": [
+  "lay-k/all_documents/277.txt"
+ ],
+ "enron_063_r": [
+  "lay-k/all_documents/277.txt"
+ ],
+ "enron_064_o": [
+  "lenhart-m/sent_items/290.txt"
+ ],
+ "enron_064_r": [
+  "lenhart-m/sent_items/290.txt"
+ ],
+ "enron_065_o": [
+  "lewis-a/inbox/104.txt"
+ ],
+ "enron_065_r": [
+  "lewis-a/inbox/104.txt"
+ ],
+ "enron_066_o": [
+  "linder-e/notes_inbox/215.txt"
+ ],
+ "enron_066_r": [
+  "linder-e/notes_inbox/215.txt"
+ ],
+ "enron_067_o": [
+  "lokay-m/articles/33.txt"
+ ],
+ "enron_067_r": [
+  "lokay-m/articles/33.txt"
+ ],
+ "enron_068_o": [
+  "lokey-t/inbox/102.txt"
+ ],
+ "enron_068_r": [
+  "lokey-t/inbox/102.txt"
+ ],
+ "enron_069_o": [
+  "love-p/sent_items/768.txt"
+ ],
+ "enron_069_r": [
+  "love-p/sent_items/768.txt"
+ ],
+ "enron_070_o": [
+  "lucci-p/deleted_items/396.txt"
+ ],
+ "enron_070_r": [
+  "lucci-p/deleted_items/396.txt"
+ ],
+ "enron_071_o": [
+  "maggi-m/deleted_items/473.txt"
+ ],
+ "enron_071_r": [
+  "maggi-m/deleted_items/473.txt"
+ ],
+ "enron_072_o": [
+  "mann-k/sent/50.txt"
+ ],
+ "enron_072_r": [
+  "mann-k/sent/50.txt"
+ ],
+ "enron_073_o": [
+  "martin-t/inbox/302.txt"
+ ],
+ "enron_073_r": [
+  "martin-t/inbox/302.txt"
+ ],
+ "enron_074_o": [
+  "may-l/all_documents/66.txt"
+ ],
+ "enron_074_r": [
+  "may-l/all_documents/66.txt"
+ ],
+ "enron_075_o": [
+  "mccarty-d/calendar/66.txt"
+ ],
+ "enron_075_r": [
+  "mccarty-d/calendar/66.txt"
+ ],
+ "enron_076_o": [
+  "mcconnell-m/deleted_items/17.txt"
+ ],
+ "enron_076_r": [
+  "mcconnell-m/deleted_items/17.txt"
+ ],
+ "enron_077_o": [
+  "mckay-b/discussion_threads/18.txt"
+ ],
+ "enron_077_r": [
+  "mckay-b/discussion_threads/18.txt"
+ ],
+ "enron_078_o": [
+  "mckay-j/sent_items/210.txt"
+ ],
+ "enron_078_r": [
+  "mckay-j/sent_items/210.txt"
+ ],
+ "enron_079_o": [
+  "mclaughlin-e/inbox/97.txt"
+ ],
+ "enron_079_r": [
+  "mclaughlin-e/inbox/97.txt"
+ ],
+ "enron_080_o": [
+  "merriss-s/discussion_threads/197.txt"
+ ],
+ "enron_080_r": [
+  "merriss-s/discussion_threads/197.txt"
+ ],
+ "enron_081_o": [
+  "meyers-a/deleted_items/1121.txt"
+ ],
+ "enron_081_r": [
+  "meyers-a/deleted_items/1121.txt"
+ ],
+ "enron_082_o": [
+  "mims-thurston-p/deleted_items/141.txt"
+ ],
+ "enron_082_r": [
+  "mims-thurston-p/deleted_items/141.txt"
+ ],
+ "enron_083_o": [
+  "motley-m/deleted_items/50.txt"
+ ],
+ "enron_083_r": [
+  "motley-m/deleted_items/50.txt"
+ ],
+ "enron_084_o": [
+  "neal-s/deleted_items/556.txt"
+ ],
+ "enron_084_r": [
+  "neal-s/deleted_items/556.txt"
+ ],
+ "enron_085_o": [
+  "nemec-g/all_documents/896.txt"
+ ],
+ "enron_085_r": [
+  "nemec-g/all_documents/896.txt"
+ ],
+ "enron_086_o": [
+  "panus-s/inbox/9.txt"
+ ],
+ "enron_086_r": [
+  "panus-s/inbox/9.txt"
+ ],
+ "enron_087_o": [
+  "parks-j/deleted_items/272.txt"
+ ],
+ "enron_087_r": [
+  "parks-j/deleted_items/272.txt"
+ ],
+ "enron_088_o": [
+  "pereira-s/sent_items/4.txt"
+ ],
+ "enron_088_r": [
+  "pereira-s/sent_items/4.txt"
+ ],
+ "enron_089_o": [
+  "perlingiere-d/all_documents/976.txt"
+ ],
+ "enron_089_r": [
+  "perlingiere-d/all_documents/976.txt"
+ ],
+ "enron_090_o": [
+  "phanis-s/deleted_items/1.txt"
+ ],
+ "enron_090_r": [
+  "phanis-s/deleted_items/1.txt"
+ ],
+ "enron_091_o": [
+  "pimenov-v/deleted_items/46.txt"
+ ],
+ "enron_091_r": [
+  "pimenov-v/deleted_items/46.txt"
+ ],
+ "enron_092_o": [
+  "platter-p/sent_items/20.txt"
+ ],
+ "enron_092_r": [
+  "platter-p/sent_items/20.txt"
+ ],
+ "enron_093_o": [
+  "presto-k/sent_items/34.txt"
+ ],
+ "enron_093_r": [
+  "presto-k/sent_items/34.txt"
+ ],
+ "enron_094_o": [
+  "quenet-j/inbox/15.txt"
+ ],
+ "enron_094_r": [
+  "quenet-j/inbox/15.txt"
+ ],
+ "enron_095_o": [
+  "quigley-d/inbox/22.txt"
+ ],
+ "enron_095_r": [
+  "quigley-d/inbox/22.txt"
+ ],
+ "enron_096_o": [
+  "rapp-b/inbox/117.txt"
+ ],
+ "enron_096_r": [
+  "rapp-b/inbox/117.txt"
+ ],
+ "enron_097_o": [
+  "reitmeyer-j/deleted_items/98.txt"
+ ],
+ "enron_097_r": [
+  "reitmeyer-j/deleted_items/98.txt"
+ ],
+ "enron_098_o": [
+  "richey-c/_sent_mail/39.txt"
+ ],
+ "enron_098_r": [
+  "richey-c/_sent_mail/39.txt"
+ ],
+ "enron_099_o": [
+  "ring-a/deleted_items/23.txt"
+ ],
+ "enron_099_r": [
+  "ring-a/deleted_items/23.txt"
+ ],
+ "enron_100_o": [
+  "ring-r/eesiisopjm/17.txt"
+ ],
+ "enron_100_r": [
+  "ring-r/eesiisopjm/17.txt"
+ ],
+ "enron_101_o": [
+  "rodrique-r/sent/94.txt"
+ ],
+ "enron_101_r": [
+  "rodrique-r/sent/94.txt"
+ ],
+ "enron_102_o": [
+  "rogers-b/genco_jv_ipo/134.txt"
+ ],
+ "enron_102_r": [
+  "rogers-b/genco_jv_ipo/134.txt"
+ ],
+ "enron_103_o": [
+  "ruscitti-k/inbox/175.txt"
+ ],
+ "enron_103_r": [
+  "ruscitti-k/inbox/175.txt"
+ ],
+ "enron_104_o": [
+  "sager-e/sent_items/153.txt"
+ ],
+ "enron_104_r": [
+  "sager-e/sent_items/153.txt"
+ ],
+ "enron_105_o": [
+  "saibi-e/inbox/141.txt"
+ ],
+ "enron_105_r": [
+  "saibi-e/inbox/141.txt"
+ ],
+ "enron_106_o": [
+  "salisbury-h/inbox/1107.txt"
+ ],
+ "enron_106_r": [
+  "salisbury-h/inbox/1107.txt"
+ ],
+ "enron_107_o": [
+  "sanchez-m/deleted_items/1.txt"
+ ],
+ "enron_107_r": [
+  "sanchez-m/deleted_items/1.txt"
+ ],
+ "enron_108_o": [
+  "sanders-r/all_documents/1919.txt"
+ ],
+ "enron_108_r": [
+  "sanders-r/all_documents/1919.txt"
+ ],
+ "enron_109_o": [
+  "scholtes-d/west_bank/42.txt"
+ ],
+ "enron_109_r": [
+  "scholtes-d/west_bank/42.txt"
+ ],
+ "enron_110_o": [
+  "schoolcraft-d/inbox/junk/627.txt"
+ ],
+ "enron_110_r": [
+  "schoolcraft-d/inbox/junk/627.txt"
+ ],
+ "enron_111_o": [
+  "schwieger-j/deleted_items/159.txt"
+ ],
+ "enron_111_r": [
+  "schwieger-j/deleted_items/159.txt"
+ ],
+ "enron_112_o": [
+  "scott-s/sent_items/644.txt"
+ ],
+ "enron_112_r": [
+  "scott-s/sent_items/644.txt"
+ ],
+ "enron_113_o": [
+  "semperger-c/deleted_items/216.txt"
+ ],
+ "enron_113_r": [
+  "semperger-c/deleted_items/216.txt"
+ ],
+ "enron_114_o": [
+  "shackleton-s/all_documents/8632.txt"
+ ],
+ "enron_114_r": [
+  "shackleton-s/all_documents/8632.txt"
+ ],
+ "enron_115_o": [
+  "shankman-j/all_documents/270.txt"
+ ],
+ "enron_115_r": [
+  "shankman-j/all_documents/270.txt"
+ ],
+ "enron_116_o": [
+  "shapiro-r/federal_legis_/71.txt"
+ ],
+ "enron_116_r": [
+  "shapiro-r/federal_legis_/71.txt"
+ ],
+ "enron_117_o": [
+  "shively-h/deleted_items/477.txt"
+ ],
+ "enron_117_r": [
+  "shively-h/deleted_items/477.txt"
+ ],
+ "enron_118_o": [
+  "skilling-j/inbox/1533.txt"
+ ],
+ "enron_118_r": [
+  "skilling-j/inbox/1533.txt"
+ ],
+ "enron_119_o": [
+  "slinger-r/deleted_items/2.txt"
+ ],
+ "enron_119_r": [
+  "slinger-r/deleted_items/2.txt"
+ ],
+ "enron_120_o": [
+  "smith-m/inbox/258.txt"
+ ],
+ "enron_120_r": [
+  "smith-m/inbox/258.txt"
+ ],
+ "enron_121_o": [
+  "solberg-g/deleted_items/617.txt"
+ ],
+ "enron_121_r": [
+  "solberg-g/deleted_items/617.txt"
+ ],
+ "enron_122_o": [
+  "south-s/notes_inbox/6.txt"
+ ],
+ "enron_122_r": [
+  "south-s/notes_inbox/6.txt"
+ ],
+ "enron_123_o": [
+  "staab-t/to_do_list/5.txt"
+ ],
+ "enron_123_r": [
+  "staab-t/to_do_list/5.txt"
+ ],
+ "enron_124_o": [
+  "stclair-c/sent/477.txt"
+ ],
+ "enron_124_r": [
+  "stclair-c/sent/477.txt"
+ ],
+ "enron_125_o": [
+  "steffes-j/nerc/1.txt"
+ ],
+ "enron_125_r": [
+  "steffes-j/nerc/1.txt"
+ ],
+ "enron_126_o": [
+  "stepenovitch-j/all_documents/199.txt"
+ ],
+ "enron_126_r": [
+  "stepenovitch-j/all_documents/199.txt"
+ ],
+ "enron_127_o": [
+  "stokley-c/chris_stokley/sent/272.txt"
+ ],
+ "enron_127_r": [
+  "stokley-c/chris_stokley/sent/272.txt"
+ ],
+ "enron_128_o": [
+  "storey-g/it/28.txt"
+ ],
+ "enron_128_r": [
+  "storey-g/it/28.txt"
+ ],
+ "enron_129_o": [
+  "sturm-f/sent_items/122.txt"
+ ],
+ "enron_129_r": [
+  "sturm-f/sent_items/122.txt"
+ ],
+ "enron_130_o": [
+  "swerzbin-m/inbox/106.txt"
+ ],
+ "enron_130_r": [
+  "swerzbin-m/inbox/106.txt"
+ ],
+ "enron_131_o": [
+  "symes-k/sent/1119.txt"
+ ],
+ "enron_131_r": [
+  "symes-k/sent/1119.txt"
+ ],
+ "enron_132_o": [
+  "taylor-m/archive/9_00/119.txt"
+ ],
+ "enron_132_r": [
+  "taylor-m/archive/9_00/119.txt"
+ ],
+ "enron_133_o": [
+  "tholt-j/deleted_items/219.txt"
+ ],
+ "enron_133_r": [
+  "tholt-j/deleted_items/219.txt"
+ ],
+ "enron_134_o": [
+  "thomas-p/deleted_items/210.txt"
+ ],
+ "enron_134_r": [
+  "thomas-p/deleted_items/210.txt"
+ ],
+ "enron_135_o": [
+  "townsend-j/inbox/155.txt"
+ ],
+ "enron_135_r": [
+  "townsend-j/inbox/155.txt"
+ ],
+ "enron_136_o": [
+  "tycholiz-b/inbox/12.txt"
+ ],
+ "enron_136_r": [
+  "tycholiz-b/inbox/12.txt"
+ ],
+ "enron_137_o": [
+  "ward-k/citizens_utilities/55.txt"
+ ],
+ "enron_137_r": [
+  "ward-k/citizens_utilities/55.txt"
+ ],
+ "enron_138_o": [
+  "watson-k/deleted_items/221.txt"
+ ],
+ "enron_138_r": [
+  "watson-k/deleted_items/221.txt"
+ ],
+ "enron_139_o": [
+  "weldon-c/all_documents/306.txt"
+ ],
+ "enron_139_r": [
+  "weldon-c/all_documents/306.txt"
+ ],
+ "enron_140_o": [
+  "whalley-g/connect_deletes/162.txt"
+ ],
+ "enron_140_r": [
+  "whalley-g/connect_deletes/162.txt"
+ ],
+ "enron_141_o": [
+  "whalley-l/all_documents/891.txt"
+ ],
+ "enron_141_r": [
+  "whalley-l/all_documents/891.txt"
+ ],
+ "enron_142_o": [
+  "white-s/deleted_items/406.txt"
+ ],
+ "enron_142_r": [
+  "white-s/deleted_items/406.txt"
+ ],
+ "enron_143_o": [
+  "whitt-m/deleted_items/32.txt"
+ ],
+ "enron_143_r": [
+  "whitt-m/deleted_items/32.txt"
+ ],
+ "enron_144_o": [
+  "williams-j/deleted_items/71.txt"
+ ],
+ "enron_144_r": [
+  "williams-j/deleted_items/71.txt"
+ ],
+ "enron_145_o": [
+  "williams-w3/bill_williams_iii/320.txt"
+ ],
+ "enron_145_r": [
+  "williams-w3/bill_williams_iii/320.txt"
+ ],
+ "enron_146_o": [
+  "wolfe-j/07_saved/63.txt"
+ ],
+ "enron_146_r": [
+  "wolfe-j/07_saved/63.txt"
+ ],
+ "enron_147_o": [
+  "ybarbo-p/inbox/138.txt"
+ ],
+ "enron_147_r": [
+  "ybarbo-p/inbox/138.txt"
+ ],
+ "enron_148_o": [
+  "zipper-a/deleted_items/367.txt"
+ ],
+ "enron_148_r": [
+  "zipper-a/deleted_items/367.txt"
+ ],
+ "enron_149_o": [
+  "zufferli-j/sent_items/62.txt"
+ ],
+ "enron_149_r": [
+  "zufferli-j/sent_items/62.txt"
+ ],
+ "enron_150_o": [
+  "allen-p/notes_inbox/38.txt"
+ ],
+ "enron_150_r": [
+  "allen-p/notes_inbox/38.txt"
+ ],
+ "enron_151_o": [
+  "arnold-j/deleted_items/765.txt"
+ ],
+ "enron_151_r": [
+  "arnold-j/deleted_items/765.txt"
+ ],
+ "enron_152_o": [
+  "arora-h/deleted_items/146.txt"
+ ],
+ "enron_152_r": [
+  "arora-h/deleted_items/146.txt"
+ ],
+ "enron_153_o": [
+  "badeer-r/discussion_threads/78.txt"
+ ],
+ "enron_153_r": [
+  "badeer-r/discussion_threads/78.txt"
+ ],
+ "enron_154_o": [
+  "bailey-s/deleted_items/190.txt"
+ ],
+ "enron_154_r": [
+  "bailey-s/deleted_items/190.txt"
+ ],
+ "enron_155_o": [
+  "bass-e/discussion_threads/1195.txt"
+ ],
+ "enron_155_r": [
+  "bass-e/discussion_threads/1195.txt"
+ ],
+ "enron_156_o": [
+  "baughman-d/enron_power/interviews/9.txt"
+ ],
+ "enron_156_r": [
+  "baughman-d/enron_power/interviews/9.txt"
+ ],
+ "enron_157_o": [
+  "beck-s/recruiting/86.txt"
+ ],
+ "enron_157_r": [
+  "beck-s/recruiting/86.txt"
+ ],
+ "enron_158_o": [
+  "benson-r/inbox/112.txt"
+ ],
+ "enron_158_r": [
+  "benson-r/inbox/112.txt"
+ ],
+ "enron_159_o": [
+  "blair-l/sent_items/265.txt"
+ ],
+ "enron_159_r": [
+  "blair-l/sent_items/265.txt"
+ ],
+ "enron_160_o": [
+  "brawner-s/sent_items/56.txt"
+ ],
+ "enron_160_r": [
+  "brawner-s/sent_items/56.txt"
+ ],
+ "enron_161_o": [
+  "buy-r/inbox/143.txt"
+ ],
+ "enron_161_r": [
+  "buy-r/inbox/143.txt"
+ ],
+ "enron_162_o": [
+  "campbell-l/inbox/904.txt"
+ ],
+ "enron_162_r": [
+  "campbell-l/inbox/904.txt"
+ ],
+ "enron_163_o": [
+  "carson-m/deleted_items/101.txt"
+ ],
+ "enron_163_r": [
+  "carson-m/deleted_items/101.txt"
+ ],
+ "enron_164_o": [
+  "cash-m/prc/8.txt"
+ ],
+ "enron_164_r": [
+  "cash-m/prc/8.txt"
+ ],
+ "enron_165_o": [
+  "causholli-m/deleted_items/150.txt"
+ ],
+ "enron_165_r": [
+  "causholli-m/deleted_items/150.txt"
+ ],
+ "enron_166_o": [
+  "corman-s/inbox/15.txt"
+ ],
+ "enron_166_r": [
+  "corman-s/inbox/15.txt"
+ ],
+ "enron_167_o": [
+  "crandell-s/inbox/rto_west/12.txt"
+ ],
+ "enron_167_r": [
+  "crandell-s/inbox/rto_west/12.txt"
+ ],
+ "enron_168_o": [
+  "cuilla-m/sent_items/67.txt"
+ ],
+ "enron_168_r": [
+  "cuilla-m/sent_items/67.txt"
+ ],
+ "enron_169_o": [
+  "dasovich-j/all_documents/11441.txt"
+ ],
+ "enron_169_r": [
+  "dasovich-j/all_documents/11441.txt"
+ ],
+ "enron_170_o": [
+  "davis-d/all_documents/60.txt"
+ ],
+ "enron_170_r": [
+  "davis-d/all_documents/60.txt"
+ ],
+ "enron_171_o": [
+  "dean-c/deleted_items/372.txt"
+ ],
+ "enron_171_r": [
+  "dean-c/deleted_items/372.txt"
+ ],
+ "enron_172_o": [
+  "delainey-d/_sent_mail/545.txt"
+ ],
+ "enron_172_r": [
+  "delainey-d/_sent_mail/545.txt"
+ ],
+ "enron_173_o": [
+  "derrick-j/sent_items/393.txt"
+ ],
+ "enron_173_r": [
+  "derrick-j/sent_items/393.txt"
+ ],
+ "enron_174_o": [
+  "dickson-s/all_documents/3.txt"
+ ],
+ "enron_174_r": [
+  "dickson-s/all_documents/3.txt"
+ ],
+ "enron_175_o": [
+  "donoho-l/sent_items/63.txt"
+ ],
+ "enron_175_r": [
+  "donoho-l/sent_items/63.txt"
+ ],
+ "enron_176_o": [
+  "donohoe-t/inbox/466.txt"
+ ],
+ "enron_176_r": [
+  "donohoe-t/inbox/466.txt"
+ ],
+ "enron_177_o": [
+  "dorland-c/deleted_items/56.txt"
+ ],
+ "enron_177_r": [
+  "dorland-c/deleted_items/56.txt"
+ ],
+ "enron_178_o": [
+  "ermis-f/inbox/546.txt"
+ ],
+ "enron_178_r": [
+  "ermis-f/inbox/546.txt"
+ ],
+ "enron_179_o": [
+  "farmer-d/sent_items/291.txt"
+ ],
+ "enron_179_r": [
+  "farmer-d/sent_items/291.txt"
+ ],
+ "enron_180_o": [
+  "fischer-m/inbox/4.txt"
+ ],
+ "enron_180_r": [
+  "fischer-m/inbox/4.txt"
+ ],
+ "enron_181_o": [
+  "forney-j/sent_items/101.txt"
+ ],
+ "enron_181_r": [
+  "forney-j/sent_items/101.txt"
+ ],
+ "enron_182_o": [
+  "fossum-d/sent/389.txt"
+ ],
+ "enron_182_r": [
+  "fossum-d/sent/389.txt"
+ ],
+ "enron_183_o": [
+  "gang-l/deleted_items/340.txt"
+ ],
+ "enron_183_r": [
+  "gang-l/deleted_items/340.txt"
+ ],
+ "enron_184_o": [
+  "gay-r/all_documents/216.txt"
+ ],
+ "enron_184_r": [
+  "gay-r/all_documents/216.txt"
+ ],
+ "enron_185_o": [
+  "geaccone-t/sent_items/275.txt"
+ ],
+ "enron_185_r": [
+  "geaccone-t/sent_items/275.txt"
+ ],
+ "enron_186_o": [
+  "germany-c/memos/10.txt"
+ ],
+ "enron_186_r": [
+  "germany-c/memos/10.txt"
+ ],
+ "enron_187_o": [
+  "gilbertsmith-d/personal/3.txt"
+ ],
+ "enron_187_r": [
+  "gilbertsmith-d/personal/3.txt"
+ ],
+ "enron_188_o": [
+  "giron-d/sent_items/157.txt"
+ ],
+ "enron_188_r": [
+  "giron-d/sent_items/157.txt"
+ ],
+ "enron_189_o": [
+  "griffith-j/personal/2.txt"
+ ],
+ "enron_189_r": [
+  "griffith-j/personal/2.txt"
+ ],
+ "enron_190_o": [
+  "grigsby-m/deleted_items/155.txt"
+ ],
+ "enron_190_r": [
+  "grigsby-m/deleted_items/155.txt"
+ ],
+ "enron_191_o": [
+  "guzman-m/discussion_threads/127.txt"
+ ],
+ "enron_191_r": [
+  "guzman-m/discussion_threads/127.txt"
+ ],
+ "enron_192_o": [
+  "haedicke-m/all_documents/26.txt"
+ ],
+ "enron_192_r": [
+  "haedicke-m/all_documents/26.txt"
+ ],
+ "enron_193_o": [
+  "hain-m/notes_inbox/95.txt"
+ ],
+ "enron_193_r": [
+  "hain-m/notes_inbox/95.txt"
+ ],
+ "enron_194_o": [
+  "harris-s/deleted_items/5.txt"
+ ],
+ "enron_194_r": [
+  "harris-s/deleted_items/5.txt"
+ ],
+ "enron_195_o": [
+  "hayslett-r/projects/hold/28.txt"
+ ],
+ "enron_195_r": [
+  "hayslett-r/projects/hold/28.txt"
+ ],
+ "enron_196_o": [
+  "heard-m/inbox/master_netting/48.txt"
+ ],
+ "enron_196_r": [
+  "heard-m/inbox/master_netting/48.txt"
+ ],
+ "enron_197_o": [
+  "hendrickson-s/deleted_items/37.txt"
+ ],
+ "enron_197_r": [
+  "hendrickson-s/deleted_items/37.txt"
+ ],
+ "enron_198_o": [
+  "hernandez-j/inbox/263.txt"
+ ],
+ "enron_198_r": [
+  "hernandez-j/inbox/263.txt"
+ ],
+ "enron_199_o": [
+  "hodge-j/notes_inbox/45.txt"
+ ],
+ "enron_199_r": [
+  "hodge-j/notes_inbox/45.txt"
+ ],
+ "enron_200_o": [
+  "holst-k/inbox/59.txt"
+ ],
+ "enron_200_r": [
+  "holst-k/inbox/59.txt"
+ ],
+ "enron_201_o": [
+  "horton-s/deleted_items/94.txt"
+ ],
+ "enron_201_r": [
+  "horton-s/deleted_items/94.txt"
+ ],
+ "enron_202_o": [
+  "hyatt-k/deleted_items/536.txt"
+ ],
+ "enron_202_r": [
+  "hyatt-k/deleted_items/536.txt"
+ ],
+ "enron_203_o": [
+  "hyvl-d/all_documents/518.txt"
+ ],
+ "enron_203_r": [
+  "hyvl-d/all_documents/518.txt"
+ ],
+ "enron_204_o": [
+  "jones-t/all_documents/9532.txt"
+ ],
+ "enron_204_r": [
+  "jones-t/all_documents/9532.txt"
+ ],
+ "enron_205_o": [
+  "kaminski-v/discussion_threads/2332.txt"
+ ],
+ "enron_205_r": [
+  "kaminski-v/discussion_threads/2332.txt"
+ ],
+ "enron_206_o": [
+  "kean-s/calendar/untitled/1545.txt"
+ ],
+ "enron_206_r": [
+  "kean-s/calendar/untitled/1545.txt"
+ ],
+ "enron_207_o": [
+  "keavey-p/all_documents/179.txt"
+ ],
+ "enron_207_r": [
+  "keavey-p/all_documents/179.txt"
+ ],
+ "enron_208_o": [
+  "keiser-k/deleted_items/27.txt"
+ ],
+ "enron_208_r": [
+  "keiser-k/deleted_items/27.txt"
+ ],
+ "enron_209_o": [
+  "king-j/deleted_items/242.txt"
+ ],
+ "enron_209_r": [
+  "king-j/deleted_items/242.txt"
+ ],
+ "enron_210_o": [
+  "kitchen-l/sent_items/650.txt"
+ ],
+ "enron_210_r": [
+  "kitchen-l/sent_items/650.txt"
+ ],
+ "enron_211_o": [
+  "kuykendall-t/friends/12.txt"
+ ],
+ "enron_211_r": [
+  "kuykendall-t/friends/12.txt"
+ ],
+ "enron_212_o": [
+  "lavorato-j/sent_items/634.txt"
+ ],
+ "enron_212_r": [
+  "lavorato-j/sent_items/634.txt"
+ ],
+ "enron_213_o": [
+  "lay-k/deleted_items/549.txt"
+ ],
+ "enron_213_r": [
+  "lay-k/deleted_items/549.txt"
+ ],
+ "enron_214_o": [
+  "lenhart-m/deleted_items/277.txt"
+ ],
+ "enron_214_r": [
+  "lenhart-m/deleted_items/277.txt"
+ ],
+ "enron_215_o": [
+  "lewis-a/inbox/10.txt"
+ ],
+ "enron_215_r": [
+  "lewis-a/inbox/10.txt"
+ ],
+ "enron_216_o": [
+  "linder-e/all_documents/636.txt"
+ ],
+ "enron_216_r": [
+  "linder-e/all_documents/636.txt"
+ ],
+ "enron_217_o": [
+  "lokay-m/all_documents/2159.txt"
+ ],
+ "enron_217_r": [
+  "lokay-m/all_documents/2159.txt"
+ ],
+ "enron_218_o": [
+  "lokey-t/deleted_items/148.txt"
+ ],
+ "enron_218_r": [
+  "lokey-t/deleted_items/148.txt"
+ ],
+ "enron_219_o": [
+  "love-p/personal/61.txt"
+ ],
+ "enron_219_r": [
+  "love-p/personal/61.txt"
+ ],
+ "enron_220_o": [
+  "lucci-p/deleted_items/130.txt"
+ ],
+ "enron_220_r": [
+  "lucci-p/deleted_items/130.txt"
+ ],
+ "enron_221_o": [
+  "maggi-m/deleted_items/926.txt"
+ ],
+ "enron_221_r": [
+  "maggi-m/deleted_items/926.txt"
+ ],
+ "enron_222_o": [
+  "mann-k/_sent_mail/2325.txt"
+ ],
+ "enron_222_r": [
+  "mann-k/_sent_mail/2325.txt"
+ ],
+ "enron_223_o": [
+  "martin-t/sent_items/173.txt"
+ ],
+ "enron_223_r": [
+  "martin-t/sent_items/173.txt"
+ ],
+ "enron_224_o": [
+  "may-l/inbox/587.txt"
+ ],
+ "enron_224_r": [
+  "may-l/inbox/587.txt"
+ ],
+ "enron_225_o": [
+  "mccarty-d/deleted_items/312.txt"
+ ],
+ "enron_225_r": [
+  "mccarty-d/deleted_items/312.txt"
+ ],
+ "enron_226_o": [
+  "mcconnell-m/gaza/1.txt"
+ ],
+ "enron_226_r": [
+  "mcconnell-m/gaza/1.txt"
+ ],
+ "enron_227_o": [
+  "mckay-b/deleted_items/165.txt"
+ ],
+ "enron_227_r": [
+  "mckay-b/deleted_items/165.txt"
+ ],
+ "enron_228_o": [
+  "mckay-j/pipeline_info/29.txt"
+ ],
+ "enron_228_r": [
+  "mckay-j/pipeline_info/29.txt"
+ ],
+ "enron_229_o": [
+  "mclaughlin-e/all_documents/333.txt"
+ ],
+ "enron_229_r": [
+  "mclaughlin-e/all_documents/333.txt"
+ ],
+ "enron_230_o": [
+  "merriss-s/notes_inbox/304.txt"
+ ],
+ "enron_230_r": [
+  "merriss-s/notes_inbox/304.txt"
+ ],
+ "enron_231_o": [
+  "meyers-a/deleted_items/215.txt"
+ ],
+ "enron_231_r": [
+  "meyers-a/deleted_items/215.txt"
+ ],
+ "enron_232_o": [
+  "mims-thurston-p/_sent_mail/188.txt"
+ ],
+ "enron_232_r": [
+  "mims-thurston-p/_sent_mail/188.txt"
+ ],
+ "enron_233_o": [
+  "motley-m/deleted_items/16.txt"
+ ],
+ "enron_233_r": [
+  "motley-m/deleted_items/16.txt"
+ ],
+ "enron_234_o": [
+  "neal-s/deleted_items/388.txt"
+ ],
+ "enron_234_r": [
+  "neal-s/deleted_items/388.txt"
+ ],
+ "enron_235_o": [
+  "nemec-g/sent/845.txt"
+ ],
+ "enron_235_r": [
+  "nemec-g/sent/845.txt"
+ ],
+ "enron_236_o": [
+  "panus-s/deleted_items/344.txt"
+ ],
+ "enron_236_r": [
+  "panus-s/deleted_items/344.txt"
+ ],
+ "enron_237_o": [
+  "parks-j/deleted_items/396.txt"
+ ],
+ "enron_237_r": [
+  "parks-j/deleted_items/396.txt"
+ ],
+ "enron_238_o": [
+  "pereira-s/_sent_mail/33.txt"
+ ],
+ "enron_238_r": [
+  "pereira-s/_sent_mail/33.txt"
+ ],
+ "enron_239_o": [
+  "perlingiere-d/all_documents/2811.txt"
+ ],
+ "enron_239_r": [
+  "perlingiere-d/all_documents/2811.txt"
+ ],
+ "enron_240_o": [
+  "phanis-s/deleted_items/13.txt"
+ ],
+ "enron_240_r": [
+  "phanis-s/deleted_items/13.txt"
+ ],
+ "enron_241_o": [
+  "pimenov-v/inbox/77.txt"
+ ],
+ "enron_241_r": [
+  "pimenov-v/inbox/77.txt"
+ ],
+ "enron_242_o": [
+  "platter-p/inbox/204.txt"
+ ],
+ "enron_242_r": [
+  "platter-p/inbox/204.txt"
+ ],
+ "enron_243_o": [
+  "presto-k/deleted_items/123.txt"
+ ],
+ "enron_243_r": [
+  "presto-k/deleted_items/123.txt"
+ ],
+ "enron_244_o": [
+  "quenet-j/all_documents/43.txt"
+ ],
+ "enron_244_r": [
+  "quenet-j/all_documents/43.txt"
+ ],
+ "enron_245_o": [
+  "quigley-d/bmr/28.txt"
+ ],
+ "enron_245_r": [
+  "quigley-d/bmr/28.txt"
+ ],
+ "enron_246_o": [
+  "rapp-b/inbox/157.txt"
+ ],
+ "enron_246_r": [
+  "rapp-b/inbox/157.txt"
+ ],
+ "enron_247_o": [
+  "reitmeyer-j/inbox/101.txt"
+ ],
+ "enron_247_r": [
+  "reitmeyer-j/inbox/101.txt"
+ ],
+ "enron_248_o": [
+  "richey-c/inbox/4.txt"
+ ],
+ "enron_248_r": [
+  "richey-c/inbox/4.txt"
+ ],
+ "enron_249_o": [
+  "ring-a/sent_items/7.txt"
+ ],
+ "enron_249_r": [
+  "ring-a/sent_items/7.txt"
+ ]
+}

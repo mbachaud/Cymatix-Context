@@ -1,0 +1,14 @@
+{
+ "resolved": 680,
+ "dropped": 7,
+ "dropped_names": [
+  "muloc_0037",
+  "muloc_0173",
+  "muloc_0303",
+  "muloc_0598",
+  "muloc_0663",
+  "muloc_0705",
+  "muloc_0777"
+ ],
+ "note": "dropped = every gold file size-gated (50..200,000 bytes) or dedup-overwritten out of source_id; no sha-twin pass (code files rarely twin)"
+}

@@ -30,7 +30,9 @@
   in v0.9.1 (released 2026-08-30) and are cited where they appear.
 - **No shipped retrieval or delivery default has changed since 0.9.2.**
   Everything added in 0.10.0 through 0.11.3 is opt-in or launcher-side; see
-  [Opt-in since 0.9.2](#opt-in-since-092).
+  [Opt-in since 0.9.2](#opt-in-since-092). The knobs from 0.11.4 (merged to
+  `master`, not yet tagged or on PyPI) are opt-in too and are listed there
+  under their own heading.
 
 ## Where a value comes from
 
@@ -371,6 +373,57 @@ Database panel.
   features at one CE call per query.
 - It stays opt-in: calibration does not transfer across corpora yet. Numbers
   and caveats: [Agent Contract](Agent-Contract#the-confidence-honesty-block).
+
+### New in 0.11.4 (merged, not yet published)
+
+These are in the `master` tree but not in any wheel yet; a 0.11.3 install
+does not act on them.
+
+**`[system_one]`: an external packet judge (experimental).**
+
+```toml
+[system_one]
+enabled = false                   # true = 2 provider calls per /context/packet
+url = "https://api.typesafe.ai/v1/systemone"
+model = "jev-latest"
+api_key_env = "TYPESAFE_API_KEY"  # the variable's name; the key is never read from TOML
+know_threshold = 0.5
+rerank_items = false              # true = 1 more call per item, reorders inside each bucket
+max_item_chars = 8000
+```
+
+- When on, `/context/packet` gains a `system_one` block. Items are never
+  dropped or moved across buckets, and know/miss is unchanged. A provider
+  failure yields `{"available": false}`.
+- **Privacy:** the query and each item's text go to `url`.
+- `timeout_s` (30) and `min_interval_s` (0.3) bound the calls. Receipts:
+  [Benchmarks and Receipts](Benchmarks-and-Receipts).
+
+**Char-basis caps for small chunks (experimental).**
+
+| Knob | Default | What a non-zero value does |
+|---|---|---|
+| `[budget] tier_tight_chars` / `tier_focused_chars` | `0` | The TIGHT / FOCUSED cut keeps ranked candidates while their content fits this many characters, instead of 3 / 6 documents. 4500 / 9000 reproduce the legacy cuts on 4000-char beds |
+| `[budget] classifier_cap_ref_chars` | `0` | The classifier's per-class seat cap (2 / 5 / 6 / 8) becomes seats × N characters, never fewer than the legacy seats |
+
+These matter only on beds chunked smaller than the default (the bench
+builder's `CYMATIX_BFM_CHUNK_CHARS`). The c580 vs c4000 results, and why they
+are not a default-flip receipt, are on
+[Benchmarks and Receipts](Benchmarks-and-Receipts).
+
+**Also in 0.11.4:**
+
+- `[retrieval] dense_model = "google/embeddinggemma-2"` loads EmbeddingGemma 2
+  text-only, with `dense_embedding_dim` 768 / 512 / 256 / 128. Install with
+  `pip install "cymatix-context[gemma]"`. Dense stays off and BGE-M3 stays
+  the default model.
+- `[knowledge_store] cover_index_autobuild` *(legacy `[genome]`)* (default **`true`**) builds the
+  `idx_genes_id_chromatin` covering index in a background thread after a
+  writable open of a store with 50k+ rows. At 947k it holds the write lock
+  for about 38 s; readers are not blocked. `false` or
+  `CYMATIX_COVER_INDEX_AUTOBUILD=0` turns it off, and
+  `scripts/migrate_genes_cover_index.py` builds it explicitly. Results are
+  identical with or without the index.
 
 ## Security knobs
 

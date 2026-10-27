@@ -242,6 +242,7 @@ the witness it is paired against.
 
 | Release | Witness run | Commit | Paired against | Delivered | r@12 / final r@12 | Verdict |
 |---|---|---|---|---|---|---|
+| 0.11.4 (merged to `master` 2026-10-26; not yet tagged or on PyPI) | 2026-10-26 | `31ad8261` | v0.11.3 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 differences on 12 fields; packet tracing on, hash chain verified. The release head `9dc93527` adds only #513's BEIR bench files |
 | 0.11.3 | 2026-10-11 | `00358af5` | v0.11.2 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 differences on 12 fields; packet tracing on, 470 packets written, hash chain verified |
 | 0.11.2 | 2026-10-09 | `83188261` | v0.10.0 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 on 11 fields |
 | 0.11.1 | 2026-10-07 | `1f039993` | v0.10.0 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 on 11 fields; a v0.11.0 control (`e3825e4b`) on the same bed also exact |
@@ -262,12 +263,13 @@ the witness it is paired against.
   so these numbers carry no Tier 5 signal. `delivered_count` is 6 on 152 of
   470 needles and 12 on 318 (the TIGHT/FOCUSED tier cut,
   [#430](https://github.com/mbachaud/Cymatix-Context/issues/430)).
-- Ledger rows `2026-10-11-v0113-merged-stack-witness-trace`,
+- Ledger rows `2026-10-26-v0114-merged-stack-witness-trace`,
+  `2026-10-11-v0113-merged-stack-witness-trace`,
   `2026-10-09-v0112-merged-stack-witness`,
   `2026-10-07-v0111-merged-stack-witness`,
   `2026-09-29-v0100-merged-stack-witness` and
   `2026-09-08-v092-merged-stack-witness`. The 0.11.x receipt files are in
-  `cymatix-receipts` commits `79b0e04`, `fecf47f` and `b6e9285` under
+  `cymatix-receipts` commits `79b0e04`, `fecf47f`, `b6e9285` and `e7117cb` under
   `untracked/` (for example
   `benchmarks/dogfood/receipts/sweep_v0113_witness_947k_2026-10-11.json`);
   the earlier ones are readable at the v0.11.0 tag, for example the
@@ -302,6 +304,106 @@ interleaved in rotating order, hash chain on.
   `b6e9285`, cited by ledger row
   `2026-10-11-v0113-merged-stack-witness-trace`. The two fix runs were measured
   on bench branches carrying each fix, not on the tag commit.
+
+## Chunk size: 580 vs 4,000 characters (experimental, 0.11.4)
+
+Shipped beds cut files into chunks of up to 4,000 characters (c4000). The
+grain-size ladder ([#514](https://github.com/mbachaud/Cymatix-Context/pull/514))
+rebuilt the same corpora at 580 characters (c580) to ask whether smaller
+chunks deliver more gold. Small chunks only fit a packet if the caps count
+characters instead of seats, so c580 runs the opt-in
+`grain_c580_classcap.toml` profile: classifier caps of seats ×
+`classifier_cap_ref_chars`, ladder k=83. Two c4000 controls run on the same
+c4000 bed: the same character-capped policy (`grain_c4000_classcap.toml`,
+k=12) and the shipped `cymatix.toml`.
+
+| Corpus | n | c580 classcap | c4000 classcap (paired) | c4000 shipped (paired) | Chars per packet, c580 vs shipped |
+|---|---:|---:|---:|---:|---:|
+| ERB 947k | 470 | **0.638** | 0.619 (+34 / −25) | — | 19.0k vs 17.4k (classcap) |
+| EnronQA v2 | 500 | **0.886** | 0.816 (+54 / −19) | 0.836 (+43 / −18) | 20.3k vs 21.1k |
+| LoCoMo | 2,366 | **0.608** | 0.486 (+289 / −0) | 0.435 (+410 / −0) | 16.0k vs 3.7k |
+| CosQA | 500 | **0.618** | 0.362 (+128 / −0) | 0.286 (+166 / −0) | 20.3k vs 6.0k |
+| SWE-bench | 489 | 0.554 | 0.374 (+102 / −14) | **0.599** (c580 +39 / −61) | 10.1k vs 25.6k |
+| MULoc | 680 | 0.418 | 0.257 (+125 / −16) | **0.444** (c580 +41 / −59) | 9.1k vs 25.6k |
+| BEIR SciFact | 300 | **0.727** | 0.703 (+20 / −13), char-capped control | — | 8.3k vs 12.9k |
+| BEIR NFCorpus | 323 | **0.687** | 0.659 (+17 / −8), char-capped control | — | 8.2k vs 11.7k |
+
+Paired counts are c580 wins / losses: the needles where only one side
+delivered gold.
+
+- **Most of the large gains come from packet size, not chunk size.** On
+  LoCoMo and CosQA the c580 packet carries 4–5× the characters of the
+  shipped one. On ERB, where both packets are about the same size, c580 vs
+  c4000 is +34 / −25: net +9 of 470, inside single-seed noise. Most of the
+  earlier ERB gain (+46 / −24 against the tagger-v1 reference) came from
+  tagger v2 and the classifier char caps, not from grain.
+- **On the code beds c580 loses to the shipped config.** Its packets
+  underfill (about 10k characters against 25.6k), so SWE-bench and MULoc
+  deliver less gold. The c4000 classcap control sits far below shipped
+  there, so the classcap pairs overstate c580 on code.
+- **Without char caps, c580 loses outright.** At the legacy 3 / 6-seat tier
+  cuts, SciFact fell 0.713 → 0.590 and NFCorpus 0.666 → 0.591. Lean c580 with
+  tier char caps but seat-counted classifier caps lost on ERB, +28 / −49.
+- **Against the shipped ERB witness** (tagger v1 bed, 0.668), c580 classcap
+  is 0.638, +25 / −39. These are different beds, so the pair is context, not
+  a like-for-like result.
+- **Latency moves both ways.** ERB p50 wall rose 12.0 s → 46.9 s (3.9×; the
+  c580 bed holds about 5.1M chunks). Against shipped c4000, EnronQA fell
+  2.3 s → 0.4 s and SWE-bench 6.9 s → 2.9 s.
+- **Tier 5 (harmonic) does not change it.** With `harmonic_batching_enabled`
+  on SWE-bench bed copies with links populated, c580 delivered 0.5542 both
+  ways (+1 / −1) and c4000 0.3722 vs 0.3742 (+0 / −1).
+- **Not a default-flip receipt.** One seed (`PYTHONHASHSEED=0`). Every bed is
+  tagger v2 with lean bench writes and dense/SPLADE off. The raw ladder JSONs
+  are held locally; the committed files are the paired comparisons. The ERB
+  c580 run predates the pinned scoring clock (`CYMATIX_SCORING_EPOCH`). The
+  knobs (`[budget] tier_tight_chars`, `tier_focused_chars`,
+  `classifier_cap_ref_chars`, and the bench builder's
+  `CYMATIX_BFM_CHUNK_CHARS`) ship at `0`, which leaves behavior unchanged.
+- Receipts in
+  [`benchmarks/dogfood/grain_ladder/`](https://github.com/mbachaud/Cymatix-Context/tree/beta/benchmarks/dogfood/grain_ladder):
+  `erb_matched_c580_vs_c4000_classcap_2026-10-19.json`,
+  `<corpus>_matched_c580_vs_c4000_{classcap,shipped}_2026-10-20.json` for
+  EnronQA, LoCoMo, CosQA, SWE-bench and MULoc,
+  `summary_2026-10-15{,_charcap}.json` (BEIR),
+  `erb_full_c580_*_vs_c4000_reference_2026-10-1{6,7}.json` (the earlier ERB
+  arms against the tagger-v1 reference) and
+  `harmonic_ab_swebench_{c580,c4000}_2026-10-21.json`.
+
+## External packet judge: System One / Jev (experimental, 0.11.4)
+
+`[system_one]` ([#522](https://github.com/mbachaud/Cymatix-Context/pull/522))
+ships **off**. When on, it sends the query and each item's text to an
+external provider and adds a `system_one` block to `/context/packet`. It
+never drops items and never changes know/miss. It was tested with TypeSafe's
+Jev on the c4000 classcap ERB packets, whose delivered ids match the classcap
+ladder on 470/470 needles. Every row below judges the same packets; none is a
+retrieval result, and none compares against the retrieval rows above.
+
+| Measurement (ERB 947k unless noted) | Result |
+|---|---|
+| Packet know/miss AUROC | **Jev 0.900** · cymatix `top_score` 0.703 · the know/miss contract 0.50 (it calls every ERB packet a miss) |
+| Same, local open model (Laya 0.4.14) | 0.563 multilingual@8192; 0.480 typed-decisions@1024, where every packet was truncated |
+| 239b synthetic, 72 packets | Jev know/miss 72 / 72 |
+| Sonnet 5.5 answering, items reordered by Jev | No measurable effect: 96 / 100 paired labels identical |
+| Jev as a gate on Sonnet's committed answers | AUROC **0.774** vs 0.535 for `top_score` |
+| Crater needles (50; gold never delivered by c4000 classcap), search loop with Jev judging each search result | **34 / 50** correct with Sonnet 5.5, **33 / 50** with Opus 5.5, against 0 / 50 one-shot |
+
+- **The model gap on the crater is noise.** Run-to-run variance is larger
+  than the one-needle difference between Sonnet and Opus.
+- **The crater result says the gold is findable.** An agent loop with a judge
+  reaches it; the single-shot pipeline does not. It is not a delivery number.
+- **Privacy.** Enabling the hook sends query and item text to `url`. The key
+  is read from the environment variable named by `api_key_env`
+  (`TYPESAFE_API_KEY`), never from TOML.
+- Ledger row `2026-10-23-jev-system-one-packet-judge`. Write-ups:
+  [packet judge](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-10-23-jev-system-one-packet-judge.md),
+  [Sonnet answers](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-10-23-sonnet-answer-jev-erb.md),
+  [Sonnet crater search](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-10-23-sonnet-crater-search-jev.md),
+  [Opus crater search](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-10-25-opus-crater-search-jev.md).
+  The judge receipts are in `cymatix-receipts`; the answer and search receipts
+  are in
+  [`benchmarks/dogfood/jev/`](https://github.com/mbachaud/Cymatix-Context/tree/master/benchmarks/dogfood/jev).
 
 ## The ERB pair-quote rule
 
@@ -432,8 +534,10 @@ receipt.
   in the [#377](https://github.com/mbachaud/Cymatix-Context/issues/377) 0.9.x
   backlog.
 - **End-to-end answer accuracy with Claude answering.** No Haiku or Sonnet
-  answer-accuracy run exists on current defaults. The only committed
-  Claude-answered receipts are the July 2026 SIKE sweeps (pre-rename tree, n=50
+  answer-accuracy run exists on the shipped defaults. The October 2026 Sonnet
+  and Opus runs in the System One / Jev section above answer from c4000 classcap packets, an opt-in profile, and grade
+  judge-gating and search, not the shipped packet. Before them, the
+  Claude-answered receipts were the July 2026 SIKE sweeps (pre-rename tree, n=50
   needles per bed, Sonnet answering, deterministic accept-substring scoring, no
   LLM judge): **21/50, 23/50 and 18/50 correct** on the 42k, 16k and 80k beds,
   with 0.70 / 0.85 / 0.82 correct among answered questions and the rest
@@ -529,6 +633,8 @@ The multi-valid-gold rule is what makes ERB gradable at all; it is documented at
 - [`docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md) — the 829K-fragment ERB methodology and repro
 - [`docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md) — the RRF-versus-additive receipt
 - [`docs/benchmarks/2026-08-07-rerank-wiring-receipts.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-08-07-rerank-wiring-receipts.md) — the cross-encoder rerank cost and its population caveat
+- [`docs/benchmarks/2026-10-23-jev-system-one-packet-judge.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-10-23-jev-system-one-packet-judge.md) — the external packet-judge receipts, with the local open-model comparison
+- [`benchmarks/dogfood/grain_ladder/`](https://github.com/mbachaud/Cymatix-Context/tree/beta/benchmarks/dogfood/grain_ladder) — the chunk-size ladder harness, configs and paired comparisons
 - [`docs/benchmarks/BENCHMARKS.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/BENCHMARKS.md) — the practical harness reference
 - [`CHANGELOG.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/CHANGELOG.md) — every flip entry with its receipt path and its re-opt-in story
 - Next: [Retrieval Dimensions](Retrieval-Dimensions) · [Configuration](Configuration) · [Roadmap and Releases](Roadmap-and-Releases) · [Observability](Observability)

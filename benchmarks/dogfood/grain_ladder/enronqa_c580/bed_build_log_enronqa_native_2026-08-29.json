@@ -1,0 +1,35 @@
+{
+  "bed": "F:/tmp/enronqa_bed/enronqa.db",
+  "bytes": 1169428480,
+  "built": "2026-08-29T07:09:02Z",
+  "elapsed_s": 9037.8,
+  "ingest_c": 1,
+  "profile": "enronqa",
+  "builder": "scripts/build_fixture_matrix.py",
+  "builder_commit": "8beddcc",
+  "branch": "claude/enronqa-bed",
+  "files_ingested": 73762,
+  "files_on_disk": 73772,
+  "files_skipped_note": "10 files in three Enron mail folders literally named 'training' (lokay-m/training, taylor-m/inbox/training, weldon-c/training) — excluded by the walker's SKIP_DIRS_COMMON denylist. None are gold files (verified against gold_paths_enronqa.json).",
+  "genes_ingested": 85104,
+  "total_genes": 84665,
+  "dedup_note": "439 content-hash collisions across sources dedup'd to single rows (identical email bytes under multiple mailbox paths; last writer wins attribution). Needle resolver has a sha-twin fallback for this; the 2026-08-29 resolve needed it 0 times — all 250 gold files joined directly on source_id.",
+  "harmonic_links": 0,
+  "dense_backfill": "skipped (CYMATIX_BFM_DENSE_BACKFILL=0; neural-free defaults)",
+  "errors": 0,
+  "corpus": {
+    "root": "F:/Projects/enronqa/corpus",
+    "source": "hf:MichaelR207/enron_qa_0922 (CC BY 4.0, arXiv:2505.00263)",
+    "emitter": "scripts/build_enronqa_corpus.py",
+    "emit_seed": 20260828,
+    "unique_emails": 73772
+  },
+  "needles": {
+    "resolver": "scripts/resolve_enronqa_needles.py",
+    "resolve_seed": 20260829,
+    "pairs": 250,
+    "needles": 500,
+    "design": "paired enron_original / enron_rephrased sharing identical gold; half split samples pairs, never splits variants"
+  },
+  "comparability": "NOT comparable to ERB rows in BASELINES.md (different corpus, needle design, and scale). Sequential ingest; the parallel arm failed the equivalence gate on this corpus (benchmarks/dogfood/receipts/ingest_equivalence_enronqa.json)."
+}

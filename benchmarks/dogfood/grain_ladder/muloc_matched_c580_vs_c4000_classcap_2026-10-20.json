@@ -1,0 +1,51 @@
+{
+  "tag": "muloc",
+  "stamp": "2026-10-20",
+  "join": "query text",
+  "n_common": 680,
+  "n_c580_only": 0,
+  "n_c4000_only": 0,
+  "c580": {
+    "delivered_gold": 0.4176,
+    "chars_mean": 9086,
+    "wall_ms_p50": 7671,
+    "misses": {
+      "delivered": 284,
+      "cut_by_packing": 146,
+      "ranked_below_cap": 0,
+      "never_ranked": 250,
+      "abstain": 0,
+      "util_mean": 0.505,
+      "util_p50": 0.324,
+      "pre_pack_rank_p50": 2.0,
+      "post_pack_rank_p50": 3.0
+    },
+    "receipt": "F:\\tmp\\grain_multicorpus_2026-10-20\\ladder_muloc_c580_classcap_2026-10-20.json",
+    "bed": "F:\\tmp\\grain_multicorpus_2026-10-20\\muloc_c580\\muloc.db",
+    "git_sha": "055c19caca3f2972a64f36801a222881ca777202"
+  },
+  "c4000": {
+    "delivered_gold": 0.2574,
+    "chars_mean": 9537,
+    "wall_ms_p50": 3521,
+    "misses": {
+      "delivered": 175,
+      "cut_by_packing": 157,
+      "ranked_below_cap": 59,
+      "never_ranked": 289,
+      "abstain": 0,
+      "util_mean": 0.53,
+      "util_p50": 0.462,
+      "pre_pack_rank_p50": 1,
+      "post_pack_rank_p50": 1
+    },
+    "receipt": "F:\\tmp\\grain_multicorpus_2026-10-20\\ladder_muloc_c4000_classcap_2026-10-20.json",
+    "bed": "F:\\tmp\\grain_multicorpus_2026-10-20\\muloc_c4000\\muloc.db",
+    "git_sha": "055c19caca3f2972a64f36801a222881ca777202"
+  },
+  "paired_c580_vs_c4000": {
+    "wins": 125,
+    "losses": 16
+  },
+  "beta_witness_2026_09_04_delivered_gold_rate": null
+}

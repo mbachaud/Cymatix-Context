@@ -15,19 +15,31 @@
   git-tagged (`v0.11.3`, `v0.11.2`, `v0.11.1`, `v0.11.0`, `v0.10.0`, …) on the
   repository; pre-releases (`vX.Y.ZbN`, cut from `beta`) install with
   `pip install --pre cymatix-context`.
-- This wiki documents **v0.11.3** (2026-10-11). Each item below carries
-  its PR or issue number. Work merged to `beta` after that tag is listed
-  first, under its own unreleased heading; the release sections follow,
-  newest first.
+- This wiki documents **v0.11.3** (2026-10-11), the newest published
+  release. Each item below carries its PR or issue number. The 0.11.4
+  release, merged to `master` but not yet tagged or on PyPI, is listed
+  first; the published release sections follow, newest first.
 
-## On `beta`, not yet released
+## 0.11.4 — merged to `master` 2026-10-26, not yet published
 
-Merged to `beta` after the v0.11.3 tag. **None of this is in a published
-wheel**, and none of it has a release witness yet. The record is the
-`Unreleased` section of the CHANGELOG on `beta`.
+The release PR ([#529](https://github.com/mbachaud/Cymatix-Context/pull/529))
+is merged and the release witness passed, but **there is no `v0.11.4` tag,
+GitHub release or PyPI wheel yet**. `pip install cymatix-context` still
+installs 0.11.3. The record is the `0.11.4` section of the CHANGELOG. No
+shipped default changed.
 
 | Thread | What it is | Default impact |
 |---|---|---|
+| Release witness | October 26 at `31ad8261`, **tracing on**: 314/470 delivered (0.6681), 0/470 per-needle differences from the v0.11.3 witness. The release head `9dc93527` adds only #513's BEIR bench files | Release evidence; ranks and delivery only, no latency claim |
+| System One packet judge ([#522](https://github.com/mbachaud/Cymatix-Context/pull/522)) | `[system_one]`: an external judge adds a `system_one` block to `/context/packet` (probability that the packet answers; with `rerank_items`, a per-item reorder inside `verified` / `stale_risk`). Sends query and item text to the provider. ERB 947k know/miss AUROC 0.900 with TypeSafe's Jev; see [Benchmarks and Receipts](Benchmarks-and-Receipts) | **Off**; experimental |
+| Grain-size ladder and char-basis caps ([#514](https://github.com/mbachaud/Cymatix-Context/pull/514)) | `[budget] tier_tight_chars` / `tier_focused_chars` / `classifier_cap_ref_chars`; bench builder `CYMATIX_BFM_CHUNK_CHARS` and lean bench-bed writes. c580 vs c4000 results: [Benchmarks and Receipts](Benchmarks-and-Receipts) | All `0` = unchanged; experimental |
+| Batched Tier 5 fix ([#519](https://github.com/mbachaud/Cymatix-Context/pull/519), [#431](https://github.com/mbachaud/Cymatix-Context/issues/431)) | The opt-in batched harmonic query no longer probes pool × pool (about 15 minutes per query on a 2.5M-link bed before) | Only with `harmonic_batching_enabled = true` |
+| Full-text trim keeps know/miss ([#518](https://github.com/mbachaud/Cymatix-Context/pull/518)) | A `full_text_delivery` packet that drops items to fit now re-decides exactly one of `know` / `miss` on what survives | Opt-in path only |
+| Writer PRAGMAs survive reopen ([#520](https://github.com/mbachaud/Cymatix-Context/pull/520)) | `vacuum()` and the `refresh()` fallback no longer reset the writer to SQLite defaults (`synchronous=FULL`, 2 MB cache, no mmap) | Bug fix; query results unaffected |
+| preshed exclusion ([#524](https://github.com/mbachaud/Cymatix-Context/pull/524)) | `preshed!=3.0.14` in the `cpu`, `dev` and `all` extras; 3.0.14 broke loading `en_core_web_sm` | Dependency fix; on 0.11.3 run `pip install "preshed!=3.0.14"` |
+| Claude answers with Jev ([#523](https://github.com/mbachaud/Cymatix-Context/pull/523), [#524](https://github.com/mbachaud/Cymatix-Context/pull/524)) | Sonnet 5.5 answer A/B and the Sonnet / Opus crater search loop | Bench only |
+| Dense tail-lane recovery ([#513](https://github.com/mbachaud/Cymatix-Context/pull/513)) | Offline scorer for reserved tail seats, with EmbeddingGemma 2 receipts on SciFact and NFCorpus | Bench only |
+| Docs and CI ([#517](https://github.com/mbachaud/Cymatix-Context/pull/517), [#521](https://github.com/mbachaud/Cymatix-Context/pull/521), [#527](https://github.com/mbachaud/Cymatix-Context/pull/527)) | Stale counts fixed; the 2026-10-22 tech-debt audit (owner decisions still open); a stalled test dumps every thread's stack after 10 minutes | None |
 | Per-stage trace timings ([#506](https://github.com/mbachaud/Cymatix-Context/pull/506), [#493](https://github.com/mbachaud/Cymatix-Context/issues/493)) | Packet records gain per-stage and per-signal timings and per-tier pool counts; existing timers reused | Only with `[trace]` on; no retrieval change |
 | Large-pool fusion cost ([#507](https://github.com/mbachaud/Cymatix-Context/pull/507)) | Post-tier boosts read compact JSON instead of parsing per candidate; top-K selection replaces full sorts in the rerank combinators | Perf only; ranked ids and scores unchanged, ties included |
 | Linear Tier 5 candidate query ([#509](https://github.com/mbachaud/Cymatix-Context/pull/509)) | The harmonic candidate query binds the pool once instead of probing every pair | Perf only |

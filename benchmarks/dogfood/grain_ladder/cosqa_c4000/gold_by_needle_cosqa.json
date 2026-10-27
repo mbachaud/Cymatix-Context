@@ -1,0 +1,1502 @@
+{
+ "cosqa_q20105": [
+  "2428a787826d33ec"
+ ],
+ "cosqa_q20106": [
+  "a75e13449f7b4833"
+ ],
+ "cosqa_q20107": [
+  "df051718f81ca7fe"
+ ],
+ "cosqa_q20108": [
+  "a14d2c106b1914fe"
+ ],
+ "cosqa_q20109": [
+  "47429fc708734e54"
+ ],
+ "cosqa_q20110": [
+  "126e23eef33f4a07"
+ ],
+ "cosqa_q20111": [
+  "84f4c77695424029"
+ ],
+ "cosqa_q20112": [
+  "a89cad45b598d102"
+ ],
+ "cosqa_q20113": [
+  "df57958833f6bac6"
+ ],
+ "cosqa_q20114": [
+  "90d9dea27c566af3"
+ ],
+ "cosqa_q20115": [
+  "a357a72fd1af5c42"
+ ],
+ "cosqa_q20116": [
+  "4c5e403951f79cb2"
+ ],
+ "cosqa_q20117": [
+  "7677b4077bd09262"
+ ],
+ "cosqa_q20118": [
+  "f7ecb8bb0ad9c4c5"
+ ],
+ "cosqa_q20119": [
+  "d2568117f3d79611"
+ ],
+ "cosqa_q20120": [
+  "849c243b62eb2401"
+ ],
+ "cosqa_q20121": [
+  "6a49f497666f1038"
+ ],
+ "cosqa_q20122": [
+  "10d07873fa70dc8b"
+ ],
+ "cosqa_q20123": [
+  "007ef467fed09e23"
+ ],
+ "cosqa_q20124": [
+  "288f428131a9e540"
+ ],
+ "cosqa_q20125": [
+  "27c90d7948e04441"
+ ],
+ "cosqa_q20126": [
+  "b553faa3a029e8b2"
+ ],
+ "cosqa_q20127": [
+  "3e9d2b47034be8d2"
+ ],
+ "cosqa_q20128": [
+  "23dfc592ef82ced6"
+ ],
+ "cosqa_q20129": [
+  "6a081a7e02ffdb03"
+ ],
+ "cosqa_q20130": [
+  "19bf3b698da0425b"
+ ],
+ "cosqa_q20131": [
+  "a0a043582038cae8"
+ ],
+ "cosqa_q20132": [
+  "a14d2c106b1914fe"
+ ],
+ "cosqa_q20133": [
+  "ee46666bceba615f"
+ ],
+ "cosqa_q20134": [
+  "fd40d665411cef16"
+ ],
+ "cosqa_q20135": [
+  "7048e2600aa6c622"
+ ],
+ "cosqa_q20136": [
+  "d7fa4fccc403b0a6"
+ ],
+ "cosqa_q20137": [
+  "55eef87558df1b6c"
+ ],
+ "cosqa_q20138": [
+  "a84fe71465333a46"
+ ],
+ "cosqa_q20139": [
+  "7f4e7a79fc36d1d7"
+ ],
+ "cosqa_q20140": [
+  "3f2c8bc3117905e6"
+ ],
+ "cosqa_q20141": [
+  "34b56688e8993962"
+ ],
+ "cosqa_q20142": [
+  "1e194c49f830cad4"
+ ],
+ "cosqa_q20143": [
+  "67dc71c8facf853a"
+ ],
+ "cosqa_q20144": [
+  "6e5c6a6a5a665b63"
+ ],
+ "cosqa_q20145": [
+  "462e7119f67c589d"
+ ],
+ "cosqa_q20146": [
+  "df40e5bda6e73bfa"
+ ],
+ "cosqa_q20147": [
+  "b113e50acce9a8e5"
+ ],
+ "cosqa_q20148": [
+  "3bee766b9373e1db"
+ ],
+ "cosqa_q20149": [
+  "a6da1f421f8e75e2"
+ ],
+ "cosqa_q20150": [
+  "1688a00606e869eb"
+ ],
+ "cosqa_q20151": [
+  "9e48b0c1969e8289"
+ ],
+ "cosqa_q20152": [
+  "138c7b88e347beb6"
+ ],
+ "cosqa_q20153": [
+  "6d1f808fc90adb6d"
+ ],
+ "cosqa_q20154": [
+  "c6947c6d5868ca7b"
+ ],
+ "cosqa_q20155": [
+  "b553faa3a029e8b2"
+ ],
+ "cosqa_q20156": [
+  "fcab755b519635c3"
+ ],
+ "cosqa_q20157": [
+  "d932963781049ef0"
+ ],
+ "cosqa_q20158": [
+  "ac0015f0525d2116"
+ ],
+ "cosqa_q20159": [
+  "0249976019381dd9"
+ ],
+ "cosqa_q20160": [
+  "388be8572f261ff9"
+ ],
+ "cosqa_q20161": [
+  "373936e4bda41d7d"
+ ],
+ "cosqa_q20162": [
+  "01b2ec7ba8acb4a9"
+ ],
+ "cosqa_q20163": [
+  "76ae7484ab4ab513"
+ ],
+ "cosqa_q20164": [
+  "069cd5569f8bfb47"
+ ],
+ "cosqa_q20165": [
+  "2eaff940e8d62f21"
+ ],
+ "cosqa_q20166": [
+  "45a92e9781a64b1c"
+ ],
+ "cosqa_q20167": [
+  "82142afb439255c5"
+ ],
+ "cosqa_q20168": [
+  "cae44197921bb227"
+ ],
+ "cosqa_q20169": [
+  "fb174126a2faa631"
+ ],
+ "cosqa_q20170": [
+  "9cc7217eb6a02601"
+ ],
+ "cosqa_q20171": [
+  "1f962d6aac400720"
+ ],
+ "cosqa_q20172": [
+  "d7c1657af723aab0"
+ ],
+ "cosqa_q20173": [
+  "7913a0c28b827821"
+ ],
+ "cosqa_q20174": [
+  "c32b93ff45288606"
+ ],
+ "cosqa_q20175": [
+  "b6a75651e92afb29"
+ ],
+ "cosqa_q20176": [
+  "5eb4b524bb428632"
+ ],
+ "cosqa_q20177": [
+  "3d89825b9acdec7a"
+ ],
+ "cosqa_q20178": [
+  "9449ff48ea5a5bfe"
+ ],
+ "cosqa_q20179": [
+  "1adffebcfd14c464"
+ ],
+ "cosqa_q20180": [
+  "62f810ee5048e105"
+ ],
+ "cosqa_q20181": [
+  "4e9fe968c33b68e8"
+ ],
+ "cosqa_q20182": [
+  "486bc8de2d9607c2"
+ ],
+ "cosqa_q20183": [
+  "e28694b9c7cab6fa"
+ ],
+ "cosqa_q20184": [
+  "786bb6e0eceb4db7"
+ ],
+ "cosqa_q20185": [
+  "2eaff940e8d62f21"
+ ],
+ "cosqa_q20186": [
+  "08ec80e5c5980d1e"
+ ],
+ "cosqa_q20187": [
+  "2926ffe8c72ca658"
+ ],
+ "cosqa_q20188": [
+  "6f12295d8307cf7e"
+ ],
+ "cosqa_q20189": [
+  "6e5dfba8cd1be173"
+ ],
+ "cosqa_q20190": [
+  "ad01bdb29de289d2"
+ ],
+ "cosqa_q20191": [
+  "33f668a2646b5c1c"
+ ],
+ "cosqa_q20192": [
+  "3b7ae348ba2e2c78"
+ ],
+ "cosqa_q20193": [
+  "4c5e403951f79cb2"
+ ],
+ "cosqa_q20194": [
+  "0989af118349923e"
+ ],
+ "cosqa_q20195": [
+  "b06adea2fd3bda95"
+ ],
+ "cosqa_q20196": [
+  "3e86e8de19c738af"
+ ],
+ "cosqa_q20197": [
+  "73c1e626b84d5413"
+ ],
+ "cosqa_q20198": [
+  "891b4d9424dce2f0"
+ ],
+ "cosqa_q20199": [
+  "54daf6b4807f3972"
+ ],
+ "cosqa_q20200": [
+  "d21771371f53824f"
+ ],
+ "cosqa_q20201": [
+  "62a9be3b5f42a0ad"
+ ],
+ "cosqa_q20202": [
+  "2208a5bfb24bc338"
+ ],
+ "cosqa_q20203": [
+  "2ec1c87cc9209bc9"
+ ],
+ "cosqa_q20204": [
+  "30cdd3e98ab32bb9"
+ ],
+ "cosqa_q20205": [
+  "26feb901aaad1cc3"
+ ],
+ "cosqa_q20206": [
+  "b456ae0b35662372"
+ ],
+ "cosqa_q20207": [
+  "34fe667a15282aaa"
+ ],
+ "cosqa_q20208": [
+  "2b562c1bf99cc5de"
+ ],
+ "cosqa_q20209": [
+  "6ff36a98aac5572a"
+ ],
+ "cosqa_q20210": [
+  "cfd3566140348f30"
+ ],
+ "cosqa_q20211": [
+  "142d6056c7bc5789"
+ ],
+ "cosqa_q20212": [
+  "86b4297056e27287"
+ ],
+ "cosqa_q20213": [
+  "83f637540a205441"
+ ],
+ "cosqa_q20214": [
+  "c63ba037d1a5f9a8"
+ ],
+ "cosqa_q20215": [
+  "38ec2f2100305f0d"
+ ],
+ "cosqa_q20216": [
+  "17ca53cca7d66afe"
+ ],
+ "cosqa_q20217": [
+  "239a5208b679ce1b"
+ ],
+ "cosqa_q20218": [
+  "35477fe1a7ae48fa"
+ ],
+ "cosqa_q20219": [
+  "e48fdedbca452242"
+ ],
+ "cosqa_q20220": [
+  "53d6edc3463249f5"
+ ],
+ "cosqa_q20221": [
+  "1c34990ee2755a55"
+ ],
+ "cosqa_q20222": [
+  "4b8a09a069a4bf94"
+ ],
+ "cosqa_q20223": [
+  "4c810405b039e743"
+ ],
+ "cosqa_q20224": [
+  "2d626900c75d1416"
+ ],
+ "cosqa_q20225": [
+  "c8dc08141104013a"
+ ],
+ "cosqa_q20226": [
+  "c6067c20c9894802"
+ ],
+ "cosqa_q20227": [
+  "56224be3ebcdda4a"
+ ],
+ "cosqa_q20228": [
+  "ab8012b7d8f08b16"
+ ],
+ "cosqa_q20229": [
+  "e2c2acea59f92cb6"
+ ],
+ "cosqa_q20230": [
+  "03275dc155c86b5a"
+ ],
+ "cosqa_q20231": [
+  "ef6727149d8b1d29"
+ ],
+ "cosqa_q20232": [
+  "1b92be8445cc1c93"
+ ],
+ "cosqa_q20233": [
+  "95139934b0ad7575"
+ ],
+ "cosqa_q20234": [
+  "a0872693f9ce5273"
+ ],
+ "cosqa_q20235": [
+  "b4a902a43af0d59e"
+ ],
+ "cosqa_q20236": [
+  "08fb53cbd2871778"
+ ],
+ "cosqa_q20237": [
+  "c2e2e8ba4a60dd3f"
+ ],
+ "cosqa_q20238": [
+  "934f38381c3534b5"
+ ],
+ "cosqa_q20239": [
+  "6c5650b28a0e9719"
+ ],
+ "cosqa_q20240": [
+  "f9d63196ebe85edb"
+ ],
+ "cosqa_q20241": [
+  "6fe2cb107c5f1e93"
+ ],
+ "cosqa_q20242": [
+  "4c5d0fb150fff621"
+ ],
+ "cosqa_q20243": [
+  "7f359ac36648095c"
+ ],
+ "cosqa_q20244": [
+  "7daf7217bb820ce2"
+ ],
+ "cosqa_q20245": [
+  "a15981c6c5d1eebc"
+ ],
+ "cosqa_q20246": [
+  "144befb57931b726"
+ ],
+ "cosqa_q20247": [
+  "9a66e21753ae110f"
+ ],
+ "cosqa_q20248": [
+  "6f6f9e5b6d31e5b7"
+ ],
+ "cosqa_q20249": [
+  "3e86e8de19c738af"
+ ],
+ "cosqa_q20250": [
+  "6b6d8429490989d7"
+ ],
+ "cosqa_q20251": [
+  "5e8303148b5dfc6a"
+ ],
+ "cosqa_q20252": [
+  "6a6fa85ddb95af82"
+ ],
+ "cosqa_q20253": [
+  "2ee75082912b6eec"
+ ],
+ "cosqa_q20254": [
+  "92773f7fa539916c"
+ ],
+ "cosqa_q20255": [
+  "5cd156432866c609"
+ ],
+ "cosqa_q20256": [
+  "fd7536cefa152d9a"
+ ],
+ "cosqa_q20257": [
+  "c90d1842250dca8a"
+ ],
+ "cosqa_q20258": [
+  "1a6f36f99b882c75"
+ ],
+ "cosqa_q20259": [
+  "70942390bcacd008"
+ ],
+ "cosqa_q20260": [
+  "c86b2f81cfb38542"
+ ],
+ "cosqa_q20261": [
+  "726be92c42124a4b"
+ ],
+ "cosqa_q20262": [
+  "a0a043582038cae8"
+ ],
+ "cosqa_q20263": [
+  "11ac403a36e12e0e"
+ ],
+ "cosqa_q20264": [
+  "77f8c0b666b3d1e6"
+ ],
+ "cosqa_q20265": [
+  "ea1fa3d35c4b5d30"
+ ],
+ "cosqa_q20266": [
+  "78b06a0f69a5ce1b"
+ ],
+ "cosqa_q20267": [
+  "89a6498fd40a7f4c"
+ ],
+ "cosqa_q20268": [
+  "750d80351a7970d9"
+ ],
+ "cosqa_q20269": [
+  "2853416f61257dc7"
+ ],
+ "cosqa_q20270": [
+  "f547427c6bef9381"
+ ],
+ "cosqa_q20271": [
+  "b93ebc0afd51a829"
+ ],
+ "cosqa_q20272": [
+  "07afa7c2fbd4c503"
+ ],
+ "cosqa_q20273": [
+  "9ad83b50dc74ace1"
+ ],
+ "cosqa_q20274": [
+  "afe3b7780c2bae90"
+ ],
+ "cosqa_q20275": [
+  "8aae589314cf3a87"
+ ],
+ "cosqa_q20276": [
+  "6378664a37538aa2"
+ ],
+ "cosqa_q20277": [
+  "24e5bd855ccc5b08"
+ ],
+ "cosqa_q20278": [
+  "297667e224c716fd"
+ ],
+ "cosqa_q20279": [
+  "a2526da1bd6a1a35"
+ ],
+ "cosqa_q20280": [
+  "54e0998c518d1651"
+ ],
+ "cosqa_q20281": [
+  "f07130301a518972"
+ ],
+ "cosqa_q20282": [
+  "fae091db7ee1acd9"
+ ],
+ "cosqa_q20283": [
+  "ed2c2ad645370f95"
+ ],
+ "cosqa_q20284": [
+  "205e1f85ebd224bb"
+ ],
+ "cosqa_q20285": [
+  "4be269fc5a9ac642"
+ ],
+ "cosqa_q20286": [
+  "44ca1d70f0a45ae3"
+ ],
+ "cosqa_q20287": [
+  "1b6a4b67ca517499"
+ ],
+ "cosqa_q20288": [
+  "81592f9934e96d44"
+ ],
+ "cosqa_q20289": [
+  "a01e57a4d1b2ed41"
+ ],
+ "cosqa_q20290": [
+  "8ccde40660a99148"
+ ],
+ "cosqa_q20291": [
+  "c67b538d87259e30"
+ ],
+ "cosqa_q20292": [
+  "0a36b7a167438135"
+ ],
+ "cosqa_q20293": [
+  "6b7c4918b657d724"
+ ],
+ "cosqa_q20294": [
+  "dae9e39e8d4d1bce"
+ ],
+ "cosqa_q20295": [
+  "7e6e6b046720df47"
+ ],
+ "cosqa_q20296": [
+  "9c689f56c9ec7ecc"
+ ],
+ "cosqa_q20297": [
+  "9ec7c93dc00451b9"
+ ],
+ "cosqa_q20298": [
+  "d39b37a523249ccd"
+ ],
+ "cosqa_q20299": [
+  "bfd5bbac181f2327"
+ ],
+ "cosqa_q20300": [
+  "257e36a38f369cfa"
+ ],
+ "cosqa_q20301": [
+  "2a977094e85e672b"
+ ],
+ "cosqa_q20302": [
+  "958d5f8a03a63510"
+ ],
+ "cosqa_q20303": [
+  "811f3692ef7c6216"
+ ],
+ "cosqa_q20304": [
+  "8603f441e8fbbdb2"
+ ],
+ "cosqa_q20305": [
+  "5cc36bb5eafb16de"
+ ],
+ "cosqa_q20306": [
+  "161c4ae069078975"
+ ],
+ "cosqa_q20307": [
+  "0f69b7789ed0dacf"
+ ],
+ "cosqa_q20308": [
+  "70c0aa05c966921c"
+ ],
+ "cosqa_q20309": [
+  "570b8c1a147cfb2c"
+ ],
+ "cosqa_q20310": [
+  "e2828e3dea59870e"
+ ],
+ "cosqa_q20311": [
+  "20e6d36ea7b809d5"
+ ],
+ "cosqa_q20312": [
+  "6d717acede911abd"
+ ],
+ "cosqa_q20313": [
+  "148066f5f7ab38ff"
+ ],
+ "cosqa_q20314": [
+  "1ddd96709b636a13"
+ ],
+ "cosqa_q20315": [
+  "1ddd96709b636a13"
+ ],
+ "cosqa_q20316": [
+  "bf62a6275d1e7c7c"
+ ],
+ "cosqa_q20317": [
+  "520b794c7d7222f3"
+ ],
+ "cosqa_q20318": [
+  "872fa712b9c148df"
+ ],
+ "cosqa_q20319": [
+  "871c1c4421d8cc9e"
+ ],
+ "cosqa_q20320": [
+  "71a0da139c2fcdc3"
+ ],
+ "cosqa_q20321": [
+  "3af1731a96138b69"
+ ],
+ "cosqa_q20322": [
+  "fd0a37fa3bef1fcb"
+ ],
+ "cosqa_q20323": [
+  "fea1ca61ae4e765c"
+ ],
+ "cosqa_q20324": [
+  "88a1e2bf7bfa1750"
+ ],
+ "cosqa_q20325": [
+  "5c7e2810ceeb12fc"
+ ],
+ "cosqa_q20326": [
+  "482b16ab3b41cd45"
+ ],
+ "cosqa_q20327": [
+  "da8c40bf110b00c9"
+ ],
+ "cosqa_q20328": [
+  "d147f5424498deca"
+ ],
+ "cosqa_q20329": [
+  "05005de8c00f77f0"
+ ],
+ "cosqa_q20330": [
+  "b42c2ac4f42c6f2b"
+ ],
+ "cosqa_q20331": [
+  "126e23eef33f4a07"
+ ],
+ "cosqa_q20332": [
+  "0b17769493d8a3ad"
+ ],
+ "cosqa_q20333": [
+  "fb99657aa62aff2e"
+ ],
+ "cosqa_q20334": [
+  "f7b8c7fb64f50dcb"
+ ],
+ "cosqa_q20335": [
+  "91b7f5a857ed57c0"
+ ],
+ "cosqa_q20336": [
+  "49b9d783863eebc3"
+ ],
+ "cosqa_q20337": [
+  "97d6f2558a5d82f9"
+ ],
+ "cosqa_q20338": [
+  "098e759db96313b4"
+ ],
+ "cosqa_q20339": [
+  "90fbda8ceeecaa3b"
+ ],
+ "cosqa_q20340": [
+  "df4d03769ab1d2fb"
+ ],
+ "cosqa_q20341": [
+  "487ee49503b86d3e"
+ ],
+ "cosqa_q20342": [
+  "f4a5cb817d089181"
+ ],
+ "cosqa_q20343": [
+  "c393ef5b8e3efc19"
+ ],
+ "cosqa_q20344": [
+  "073cd1e1fafa1240"
+ ],
+ "cosqa_q20345": [
+  "bd1d7cd546e72526"
+ ],
+ "cosqa_q20346": [
+  "17c00d6242a0fd74"
+ ],
+ "cosqa_q20347": [
+  "9308a191a8f55653"
+ ],
+ "cosqa_q20348": [
+  "10bfd3cef5aa674d"
+ ],
+ "cosqa_q20349": [
+  "46ef9ef81d8f7dad"
+ ],
+ "cosqa_q20350": [
+  "ed48710e84412cfb"
+ ],
+ "cosqa_q20351": [
+  "fa66edc11478d8e9"
+ ],
+ "cosqa_q20352": [
+  "e17e60e16dc9456f"
+ ],
+ "cosqa_q20353": [
+  "8f0d5c22548ceb72"
+ ],
+ "cosqa_q20354": [
+  "53d6edc3463249f5"
+ ],
+ "cosqa_q20355": [
+  "08dda84b1feb16f9"
+ ],
+ "cosqa_q20356": [
+  "8c551eea2add5c45"
+ ],
+ "cosqa_q20357": [
+  "6e31869edc1d9403"
+ ],
+ "cosqa_q20358": [
+  "da4f7564c0e471dc"
+ ],
+ "cosqa_q20359": [
+  "7eba5627cc043f13"
+ ],
+ "cosqa_q20360": [
+  "7a2e3abaa28c5029"
+ ],
+ "cosqa_q20361": [
+  "66a267b00120077f"
+ ],
+ "cosqa_q20362": [
+  "cfbdd4cee4a77d1a"
+ ],
+ "cosqa_q20363": [
+  "053d4ec2cfb7f4c0"
+ ],
+ "cosqa_q20364": [
+  "5bbeb4c6b9672ee5"
+ ],
+ "cosqa_q20365": [
+  "b594396e81a13ccb"
+ ],
+ "cosqa_q20366": [
+  "6c5650b28a0e9719"
+ ],
+ "cosqa_q20367": [
+  "694cf7d45b30ca95"
+ ],
+ "cosqa_q20368": [
+  "97dea82e49e65a76"
+ ],
+ "cosqa_q20369": [
+  "2a7aeb653e6f6e1a"
+ ],
+ "cosqa_q20370": [
+  "05b7790279f11f64"
+ ],
+ "cosqa_q20371": [
+  "6f12295d8307cf7e"
+ ],
+ "cosqa_q20372": [
+  "f7bce96fb5431e21"
+ ],
+ "cosqa_q20373": [
+  "b89bf5153c54cefd"
+ ],
+ "cosqa_q20374": [
+  "b71daf94e3ff178c"
+ ],
+ "cosqa_q20375": [
+  "ec1b51b9d4dc255a"
+ ],
+ "cosqa_q20376": [
+  "a4a2c99e61782cf8"
+ ],
+ "cosqa_q20377": [
+  "d40208516995a3b4"
+ ],
+ "cosqa_q20378": [
+  "b42afeb721c3f7ba"
+ ],
+ "cosqa_q20379": [
+  "9212305a5409d9e3"
+ ],
+ "cosqa_q20380": [
+  "14bae640bc4cbd7f"
+ ],
+ "cosqa_q20381": [
+  "ee808fd5297ec4fa"
+ ],
+ "cosqa_q20382": [
+  "2dc87b02261ad101"
+ ],
+ "cosqa_q20383": [
+  "1d76d6b27ad734e9"
+ ],
+ "cosqa_q20384": [
+  "2f30529ed303a0c2"
+ ],
+ "cosqa_q20385": [
+  "1259eb89b60f9a49"
+ ],
+ "cosqa_q20386": [
+  "df7b22cb328455a6"
+ ],
+ "cosqa_q20387": [
+  "b4a902a43af0d59e"
+ ],
+ "cosqa_q20388": [
+  "1dec4700d5b02d08"
+ ],
+ "cosqa_q20389": [
+  "8c0c2ab189b34368"
+ ],
+ "cosqa_q20390": [
+  "2b68c7c8634f4711"
+ ],
+ "cosqa_q20391": [
+  "b2879006f2dc0e92"
+ ],
+ "cosqa_q20392": [
+  "1801799f967245d9"
+ ],
+ "cosqa_q20393": [
+  "8d4231a406882d8c"
+ ],
+ "cosqa_q20394": [
+  "9e48b0c1969e8289"
+ ],
+ "cosqa_q20395": [
+  "3486b3f3b718d8f5"
+ ],
+ "cosqa_q20396": [
+  "6845c71ab9fe9565"
+ ],
+ "cosqa_q20397": [
+  "332dd84a9be75294"
+ ],
+ "cosqa_q20398": [
+  "2f54c691c6c85a22"
+ ],
+ "cosqa_q20399": [
+  "faf9bb30c24fcaf4"
+ ],
+ "cosqa_q20400": [
+  "f05bf8f4f4b02980"
+ ],
+ "cosqa_q20401": [
+  "b84d0fee7bf2e001"
+ ],
+ "cosqa_q20402": [
+  "dd751ca676d31b30"
+ ],
+ "cosqa_q20403": [
+  "00d9216c98cca913"
+ ],
+ "cosqa_q20404": [
+  "2b1315378df90be6"
+ ],
+ "cosqa_q20405": [
+  "441bb27f5c07da34"
+ ],
+ "cosqa_q20406": [
+  "ee28b530207d0979"
+ ],
+ "cosqa_q20407": [
+  "70722d72819eac8c"
+ ],
+ "cosqa_q20408": [
+  "79352d679defddf5"
+ ],
+ "cosqa_q20409": [
+  "ac0015f0525d2116"
+ ],
+ "cosqa_q20410": [
+  "573af5cf3037a1e3"
+ ],
+ "cosqa_q20411": [
+  "ed4a9164c1419706"
+ ],
+ "cosqa_q20412": [
+  "3494744199f628f1"
+ ],
+ "cosqa_q20413": [
+  "552940d24205af89"
+ ],
+ "cosqa_q20414": [
+  "ef751f4319417b2e"
+ ],
+ "cosqa_q20415": [
+  "ab453fcd23ed687f"
+ ],
+ "cosqa_q20416": [
+  "3fb43c6c62c926a7"
+ ],
+ "cosqa_q20417": [
+  "f7a075042671fb63"
+ ],
+ "cosqa_q20418": [
+  "e1ba8c1966531226"
+ ],
+ "cosqa_q20419": [
+  "0f0b7d9467e2151c"
+ ],
+ "cosqa_q20420": [
+  "43d70fc80fa32699"
+ ],
+ "cosqa_q20421": [
+  "44b36c3a11db429b"
+ ],
+ "cosqa_q20422": [
+  "b73c19d239374346"
+ ],
+ "cosqa_q20423": [
+  "922fcb7576dbae4c"
+ ],
+ "cosqa_q20424": [
+  "9f6424740928b9bc"
+ ],
+ "cosqa_q20425": [
+  "405e0bcab6e7abc5"
+ ],
+ "cosqa_q20426": [
+  "2f4e1d34171d55bf"
+ ],
+ "cosqa_q20427": [
+  "f14594061e4d1b07"
+ ],
+ "cosqa_q20428": [
+  "179a240e8784d4ff"
+ ],
+ "cosqa_q20429": [
+  "6a797938ecd1e504"
+ ],
+ "cosqa_q20430": [
+  "e08cde4850a38b6c"
+ ],
+ "cosqa_q20431": [
+  "496523f94b25474b"
+ ],
+ "cosqa_q20432": [
+  "fc816d3320e58313"
+ ],
+ "cosqa_q20433": [
+  "f149275acfeb385b"
+ ],
+ "cosqa_q20434": [
+  "4f7e87ebff499002"
+ ],
+ "cosqa_q20435": [
+  "44927c283e86b46d"
+ ],
+ "cosqa_q20436": [
+  "bc5d0982a29924a2"
+ ],
+ "cosqa_q20437": [
+  "cf2664727f83e758"
+ ],
+ "cosqa_q20438": [
+  "17f4ed5040a24321"
+ ],
+ "cosqa_q20439": [
+  "0989af118349923e"
+ ],
+ "cosqa_q20440": [
+  "7ea5cb12df095910"
+ ],
+ "cosqa_q20441": [
+  "d6a4a1de0b127524"
+ ],
+ "cosqa_q20442": [
+  "3343c3aea8131906"
+ ],
+ "cosqa_q20443": [
+  "1f7ff0f8b0ea7f97"
+ ],
+ "cosqa_q20444": [
+  "a8ae20bc1d7d813a"
+ ],
+ "cosqa_q20445": [
+  "1a43e403ff597fc7"
+ ],
+ "cosqa_q20446": [
+  "3f0172f432e9f22d"
+ ],
+ "cosqa_q20447": [
+  "30a158bbefb455b3"
+ ],
+ "cosqa_q20448": [
+  "3ae91c43de3eaa03"
+ ],
+ "cosqa_q20449": [
+  "0b146f7c2dabb6b3"
+ ],
+ "cosqa_q20450": [
+  "85a124b6b55c995d"
+ ],
+ "cosqa_q20451": [
+  "31f4d08a7c5b0a01"
+ ],
+ "cosqa_q20452": [
+  "0d7fa09068cb2230"
+ ],
+ "cosqa_q20453": [
+  "31984c7de491d75c"
+ ],
+ "cosqa_q20454": [
+  "b9589582229199e4"
+ ],
+ "cosqa_q20455": [
+  "82ab77cc2c2d2dca"
+ ],
+ "cosqa_q20456": [
+  "b80d0d05a9a9acce"
+ ],
+ "cosqa_q20457": [
+  "877a8c53fa691b3a"
+ ],
+ "cosqa_q20458": [
+  "b77217666b138688"
+ ],
+ "cosqa_q20459": [
+  "9a0c862f93e237b9"
+ ],
+ "cosqa_q20460": [
+  "3dcbe08ec5f34762"
+ ],
+ "cosqa_q20461": [
+  "f9ae5d99a8341f60"
+ ],
+ "cosqa_q20462": [
+  "cb4c7e6ffa4ac602"
+ ],
+ "cosqa_q20463": [
+  "18b51b545b4f02c4"
+ ],
+ "cosqa_q20464": [
+  "218790401c1d2ff5"
+ ],
+ "cosqa_q20465": [
+  "a07ba0fb75fecfe0"
+ ],
+ "cosqa_q20466": [
+  "0f190e21a7d48d60"
+ ],
+ "cosqa_q20467": [
+  "77347017b097d892"
+ ],
+ "cosqa_q20468": [
+  "5f0e8b726693c707"
+ ],
+ "cosqa_q20469": [
+  "02f22d23775bbda7"
+ ],
+ "cosqa_q20470": [
+  "014b31d8f662d65f"
+ ],
+ "cosqa_q20471": [
+  "4c701df59918cac5"
+ ],
+ "cosqa_q20472": [
+  "a5cc810583646881"
+ ],
+ "cosqa_q20473": [
+  "68b185a7f068fba2"
+ ],
+ "cosqa_q20474": [
+  "14ff9ede30b3e016"
+ ],
+ "cosqa_q20475": [
+  "c2777245b8623a57"
+ ],
+ "cosqa_q20476": [
+  "4ab3b9b050ba916d"
+ ],
+ "cosqa_q20477": [
+  "555e44b157e2f395"
+ ],
+ "cosqa_q20478": [
+  "973eddea6f038757"
+ ],
+ "cosqa_q20479": [
+  "50b2a80309baa60c"
+ ],
+ "cosqa_q20480": [
+  "c33318253f2eb2f2"
+ ],
+ "cosqa_q20481": [
+  "db7bcf11190fd677"
+ ],
+ "cosqa_q20482": [
+  "73d0aa22f920f6b5"
+ ],
+ "cosqa_q20483": [
+  "9cbc6d1be4cb62a7"
+ ],
+ "cosqa_q20484": [
+  "3d0ab3587fff4212"
+ ],
+ "cosqa_q20485": [
+  "b9cd8a0d6c978520"
+ ],
+ "cosqa_q20486": [
+  "8705d9f74f9eb6e2"
+ ],
+ "cosqa_q20487": [
+  "88641c26ed5319cf"
+ ],
+ "cosqa_q20488": [
+  "573af5cf3037a1e3"
+ ],
+ "cosqa_q20489": [
+  "ad44e8f575813937"
+ ],
+ "cosqa_q20490": [
+  "fba067ff94f0b777"
+ ],
+ "cosqa_q20491": [
+  "1f7ff0f8b0ea7f97"
+ ],
+ "cosqa_q20492": [
+  "6c9f2bbb5aefa435"
+ ],
+ "cosqa_q20493": [
+  "31053276ab4832d1"
+ ],
+ "cosqa_q20494": [
+  "125f1ebcdd54aef2"
+ ],
+ "cosqa_q20495": [
+  "d5574f7887a43a3e"
+ ],
+ "cosqa_q20496": [
+  "0e6a8ebfd320f9e2"
+ ],
+ "cosqa_q20497": [
+  "0dec149d0911b66d"
+ ],
+ "cosqa_q20498": [
+  "1694a40975a87e1e"
+ ],
+ "cosqa_q20499": [
+  "d2279fd5aa544446"
+ ],
+ "cosqa_q20500": [
+  "209e45d4c37b9bab"
+ ],
+ "cosqa_q20501": [
+  "053c77866bbb71ff"
+ ],
+ "cosqa_q20502": [
+  "62d011ae0b755dbe"
+ ],
+ "cosqa_q20503": [
+  "43aa7d7d16c581ed"
+ ],
+ "cosqa_q20504": [
+  "fd856f0730dfb15c"
+ ],
+ "cosqa_q20505": [
+  "e53e398fa334f734"
+ ],
+ "cosqa_q20506": [
+  "2ce8ce79ed581603"
+ ],
+ "cosqa_q20507": [
+  "136b12a995172eb0"
+ ],
+ "cosqa_q20508": [
+  "98156d2a8c8bf7ba"
+ ],
+ "cosqa_q20509": [
+  "e86fb329b2530f7b"
+ ],
+ "cosqa_q20510": [
+  "473eb890e41da60b"
+ ],
+ "cosqa_q20511": [
+  "85c344622c8d1fd2"
+ ],
+ "cosqa_q20512": [
+  "2e16755e12f6782a"
+ ],
+ "cosqa_q20513": [
+  "2222ea9bbc030fb6"
+ ],
+ "cosqa_q20514": [
+  "8d85ab6449c2d470"
+ ],
+ "cosqa_q20515": [
+  "b4757cd0e7c78fce"
+ ],
+ "cosqa_q20516": [
+  "d0671ea8d300462a"
+ ],
+ "cosqa_q20517": [
+  "b29a82e50000a895"
+ ],
+ "cosqa_q20518": [
+  "c3ead688ed3d700b"
+ ],
+ "cosqa_q20519": [
+  "fdd9df8af8936829"
+ ],
+ "cosqa_q20520": [
+  "6d775baa78643b2b"
+ ],
+ "cosqa_q20521": [
+  "d1c9a5fd8a710415"
+ ],
+ "cosqa_q20522": [
+  "32afea37f94cf09a"
+ ],
+ "cosqa_q20523": [
+  "889f81dac7ccd526"
+ ],
+ "cosqa_q20524": [
+  "6dc2c7791e002613"
+ ],
+ "cosqa_q20525": [
+  "126d66f9a2df0d3d"
+ ],
+ "cosqa_q20526": [
+  "40e5e746030dbc1b"
+ ],
+ "cosqa_q20527": [
+  "9272f7f85cf1fb15"
+ ],
+ "cosqa_q20528": [
+  "79b6ab97a74740a8"
+ ],
+ "cosqa_q20529": [
+  "81d7105d7ccba7d6"
+ ],
+ "cosqa_q20530": [
+  "0b097ad19afab6df"
+ ],
+ "cosqa_q20531": [
+  "76a8cabea2779fc6"
+ ],
+ "cosqa_q20532": [
+  "b064d1124987d62f"
+ ],
+ "cosqa_q20533": [
+  "42c0c8addc51fc9a"
+ ],
+ "cosqa_q20534": [
+  "4b7eeaa62ae6adf0"
+ ],
+ "cosqa_q20535": [
+  "d7c1657af723aab0"
+ ],
+ "cosqa_q20536": [
+  "6f80f9bed8cd6cc0"
+ ],
+ "cosqa_q20537": [
+  "05b7790279f11f64"
+ ],
+ "cosqa_q20538": [
+  "ccb56bfaa65ddd34"
+ ],
+ "cosqa_q20539": [
+  "1ef2d5ee89964577"
+ ],
+ "cosqa_q20540": [
+  "84c3b47b16dfca82"
+ ],
+ "cosqa_q20541": [
+  "b1a72933d4374073"
+ ],
+ "cosqa_q20542": [
+  "a89cad45b598d102"
+ ],
+ "cosqa_q20543": [
+  "8337efbe10a9a383"
+ ],
+ "cosqa_q20544": [
+  "47b62fa9c658494b"
+ ],
+ "cosqa_q20545": [
+  "5db0190c3b324204"
+ ],
+ "cosqa_q20546": [
+  "b55d1e73418f0462"
+ ],
+ "cosqa_q20547": [
+  "5cf89794a1a0bc09"
+ ],
+ "cosqa_q20548": [
+  "9ef08d01917d1f5c"
+ ],
+ "cosqa_q20549": [
+  "90289f6f2fb4b020"
+ ],
+ "cosqa_q20550": [
+  "6c0a6a24bc0a51e3"
+ ],
+ "cosqa_q20551": [
+  "0249976019381dd9"
+ ],
+ "cosqa_q20552": [
+  "97ef3ecc20d240e3"
+ ],
+ "cosqa_q20553": [
+  "6ff52d9a8bf89552"
+ ],
+ "cosqa_q20554": [
+  "4f7e87ebff499002"
+ ],
+ "cosqa_q20555": [
+  "8e51e40a95c95bc9"
+ ],
+ "cosqa_q20556": [
+  "5c0f7a8c9d5111dc"
+ ],
+ "cosqa_q20557": [
+  "44af78c918485c33"
+ ],
+ "cosqa_q20558": [
+  "877a8c53fa691b3a"
+ ],
+ "cosqa_q20559": [
+  "14fb1956f6aa7a12"
+ ],
+ "cosqa_q20560": [
+  "48415708cf280c26"
+ ],
+ "cosqa_q20561": [
+  "ed3fe0390c6309ff"
+ ],
+ "cosqa_q20562": [
+  "ac4ce271740b2bbe"
+ ],
+ "cosqa_q20563": [
+  "91b1c2ef8d48d792"
+ ],
+ "cosqa_q20564": [
+  "7a26dddc97c01707"
+ ],
+ "cosqa_q20565": [
+  "f1fa321c3789048f"
+ ],
+ "cosqa_q20566": [
+  "b608cc91fbf60266"
+ ],
+ "cosqa_q20567": [
+  "382bef512180e238"
+ ],
+ "cosqa_q20568": [
+  "5242928c9ffafd06"
+ ],
+ "cosqa_q20569": [
+  "622dede502642d8f"
+ ],
+ "cosqa_q20570": [
+  "01fcb905a82e6585"
+ ],
+ "cosqa_q20571": [
+  "07afa7c2fbd4c503"
+ ],
+ "cosqa_q20572": [
+  "845ba560edef9627"
+ ],
+ "cosqa_q20573": [
+  "eb1615f487284b6b"
+ ],
+ "cosqa_q20574": [
+  "db789897172c79c7"
+ ],
+ "cosqa_q20575": [
+  "a8e6bf85e86f9766"
+ ],
+ "cosqa_q20576": [
+  "f72407ca4fe716ad"
+ ],
+ "cosqa_q20577": [
+  "948823badbf3f0b2"
+ ],
+ "cosqa_q20578": [
+  "ba4f2fda6dc9a8fc"
+ ],
+ "cosqa_q20579": [
+  "6ff36a98aac5572a"
+ ],
+ "cosqa_q20580": [
+  "0bf0f2e46b293eb5"
+ ],
+ "cosqa_q20581": [
+  "8fb8c1b53689751f"
+ ],
+ "cosqa_q20582": [
+  "2a9deded13982c32"
+ ],
+ "cosqa_q20583": [
+  "689f6b305506cbcc"
+ ],
+ "cosqa_q20584": [
+  "d958a98807b90471"
+ ],
+ "cosqa_q20585": [
+  "92fc4a0aa6532ecd"
+ ],
+ "cosqa_q20586": [
+  "36a6e7270000c41d"
+ ],
+ "cosqa_q20587": [
+  "a44136e1f70c60bd"
+ ],
+ "cosqa_q20588": [
+  "437f7a2f5ee14255"
+ ],
+ "cosqa_q20589": [
+  "385a51c39279863c"
+ ],
+ "cosqa_q20590": [
+  "055edfde48dbf67e"
+ ],
+ "cosqa_q20591": [
+  "ec72daa802e882ff"
+ ],
+ "cosqa_q20592": [
+  "f4a5cb817d089181"
+ ],
+ "cosqa_q20593": [
+  "874a74c140dba9e2"
+ ],
+ "cosqa_q20594": [
+  "42a5c943da3e49bd"
+ ],
+ "cosqa_q20595": [
+  "5e0cff0ee367410b"
+ ],
+ "cosqa_q20596": [
+  "f9481481440ac12a"
+ ],
+ "cosqa_q20597": [
+  "0ab85f818b38f963"
+ ],
+ "cosqa_q20598": [
+  "50f08ee94529ef37"
+ ],
+ "cosqa_q20599": [
+  "9308a191a8f55653"
+ ],
+ "cosqa_q20600": [
+  "b1d9375bd359caf2"
+ ],
+ "cosqa_q20601": [
+  "e85f6eedb5dd64a9"
+ ],
+ "cosqa_q20602": [
+  "6cba153f78760256"
+ ],
+ "cosqa_q20603": [
+  "845ba560edef9627"
+ ],
+ "cosqa_q20604": [
+  "de2b7a9ec91d46fa"
+ ]
+}
