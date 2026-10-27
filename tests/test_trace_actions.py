@@ -132,6 +132,7 @@ def test_full_level_keeps_args(tmp_path):
 
 def test_disabled_tracer_is_noop(tmp_path):
     s = dict(tr._TRACE_DEFAULTS)
+    s["enabled"] = False  # default is ON since 2026-10-18
     s["path"] = str(tmp_path / "traces")
     t = tr.PacketTracer(s)
     assert t.emit_action("s", "Read", ARGS) is None
@@ -172,7 +173,7 @@ def test_endpoint_requires_admin_token_when_set(tmp_path):
 
 
 def test_endpoint_disabled_tracing(tmp_path):
-    c = _client(tmp_path)
+    c = _client(tmp_path, enabled=False)
     r = c.post("/trace/action", json={"session_id": "s", "tool_name": "Read", "args": {}})
     assert r.status_code == 404
     assert not (tmp_path / "traces").exists()

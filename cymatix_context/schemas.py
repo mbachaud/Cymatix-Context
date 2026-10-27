@@ -135,7 +135,8 @@ class DocumentSignals(BaseModel):
             return 0.0
         if window_seconds <= 0:
             return 0.0
-        cutoff = time.time() - window_seconds
+        from .clock import scoring_now  # CYMATIX_SCORING_EPOCH pins it for bench runs
+        cutoff = scoring_now() - window_seconds
         n = sum(1 for t in self.recent_accesses if t > cutoff)
         return n / window_seconds
 
