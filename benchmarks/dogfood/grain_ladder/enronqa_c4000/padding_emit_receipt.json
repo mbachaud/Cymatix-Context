@@ -1,0 +1,14 @@
+{
+ "tool": "build_enron_padding",
+ "stamp": "2026-08-29T07:25:53.113390+00:00",
+ "tarball": "F:/Projects/enronqa/enron_mail_20150507.tar.gz",
+ "tarball_sha256": "b3da1b3fe0369ec3140bb4fbce94702c33b7da810ec15d718b3fadf5cd748ca7",
+ "padding_root": "F:\\Projects\\enronqa\\padding",
+ "members_total": 517401,
+ "excluded_qa_paths": 73772,
+ "excluded_size_gate": 48,
+ "name_collisions_skipped": 0,
+ "emitted": 443581,
+ "elapsed_s": 209.0,
+ "gold_twin_caveat": "raw dump duplicates messages across folders; padding may hold raw near-copies of gold emails under unclaimed paths \u2014 answer-carrying non-gold. Paraphrase delta unaffected (both variants share gold); absolute recall is a lower bound. Audit missed needles at readout."
+}

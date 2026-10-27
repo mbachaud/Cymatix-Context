@@ -1,0 +1,1761 @@
+{
+ "pairs": [
+  {
+   "pair": 0,
+   "path": "allen-p/_sent_mail/416.txt",
+   "user": "allen-p",
+   "question_index": 0,
+   "gold_answer": "Phillip Allen is seeking help with adding more cabinets, possibly changing the shape of the island, and finding a way to enlarge the pantry in the kitchen."
+  },
+  {
+   "pair": 1,
+   "path": "arnold-j/notes_inbox/64.txt",
+   "user": "arnold-j",
+   "question_index": 0,
+   "gold_answer": "The expected month of the first closing of the Tamarack International Fund is June."
+  },
+  {
+   "pair": 2,
+   "path": "arora-h/deleted_items/148.txt",
+   "user": "arora-h",
+   "question_index": 1,
+   "gold_answer": "The Thai economy is expected to head into a recession after recording 1.9% GDP growth during the first half of 2001."
+  },
+  {
+   "pair": 3,
+   "path": "badeer-r/discussion_threads/72.txt",
+   "user": "badeer-r",
+   "question_index": 0,
+   "gold_answer": "Byron Woertz's title is Director, Client Relations."
+  },
+  {
+   "pair": 4,
+   "path": "bailey-s/deleted_items/163.txt",
+   "user": "bailey-s",
+   "question_index": 0,
+   "gold_answer": "The date of the Houston's Termination Log that was used to create the Master Logs is 2-11-02."
+  },
+  {
+   "pair": 5,
+   "path": "bass-e/deleted_items/231.txt",
+   "user": "bass-e",
+   "question_index": 0,
+   "gold_answer": "The customer needs to approve the delay in their order by visiting the Order Update page in their Amazon.com account."
+  },
+  {
+   "pair": 6,
+   "path": "baughman-d/inbox/118.txt",
+   "user": "baughman-d",
+   "question_index": 0,
+   "gold_answer": "The editor-in-chief of Blue Dolphin is Sam Jackson, according to the email."
+  },
+  {
+   "pair": 7,
+   "path": "beck-s/sent_items/92.txt",
+   "user": "beck-s",
+   "question_index": 0,
+   "gold_answer": "The ConfirmLogic IT team was rebuilding the code for the ConfirmLogic module."
+  },
+  {
+   "pair": 8,
+   "path": "benson-r/deleted_items/29.txt",
+   "user": "benson-r",
+   "question_index": 1,
+   "gold_answer": "According to Dr. Arusi Agbara's email, if a civil servant like him were to operate a foreign account in his country, it would raise suspicions and attract unwanted attention."
+  },
+  {
+   "pair": 9,
+   "path": "blair-l/sent_items/677.txt",
+   "user": "blair-l",
+   "question_index": 0,
+   "gold_answer": "Rebecca Cantrell and Lynn Blair provided Mauro Formaggio with a great lot of information and advice during his visit to Enron in Houston, according to his email."
+  },
+  {
+   "pair": 10,
+   "path": "brawner-s/misc/3.txt",
+   "user": "brawner-s",
+   "question_index": 0,
+   "gold_answer": "Steve Touchstone's phone number is 212-232-5330."
+  },
+  {
+   "pair": 11,
+   "path": "buy-r/inbox/877.txt",
+   "user": "buy-r",
+   "question_index": 0,
+   "gold_answer": "The top three interests that Data Systems & Solutions is hearing from their customers on the topic of EMIS are Sustainable Development \"Triple Bottom Line\" coupled with Key Performance Metrics/Roll-Up Reporting, Integrating Information Systems with EMIS, and Risk Reduction."
+  },
+  {
+   "pair": 12,
+   "path": "campbell-l/discussion_threads/51.txt",
+   "user": "campbell-l",
+   "question_index": 0,
+   "gold_answer": "The total invoice amount for the 2nd quarter was $280,633.48."
+  },
+  {
+   "pair": 13,
+   "path": "carson-m/deleted_items/192.txt",
+   "user": "carson-m",
+   "question_index": 0,
+   "gold_answer": "The m100 Journal provides timely information on the investment activities of top investors, including their top buys, sells, holdings, tips, and commentary."
+  },
+  {
+   "pair": 14,
+   "path": "cash-m/all_documents/501.txt",
+   "user": "cash-m",
+   "question_index": 0,
+   "gold_answer": "Term sheets list future grants or bonus payments as outlined in employment agreements and include a description that may say \"Guaranteed Grant\"."
+  },
+  {
+   "pair": 15,
+   "path": "causholli-m/sent_items/245.txt",
+   "user": "causholli-m",
+   "question_index": 0,
+   "gold_answer": "Monika originally requested to see Margaret in her office that day, asking Margaret to suggest a good time for her to come."
+  },
+  {
+   "pair": 16,
+   "path": "corman-s/sent_items/440.txt",
+   "user": "corman-s",
+   "question_index": 0,
+   "gold_answer": "The URL of the XMS system is https://expensexms.enron.com/ewp/."
+  },
+  {
+   "pair": 17,
+   "path": "crandell-s/deleted_items/86.txt",
+   "user": "crandell-s",
+   "question_index": 1,
+   "gold_answer": "The Houston bureau will cover the Texas power market and the negative effects of Enron on the national power industry, while the Washington bureau will cover the return of Congress and the ongoing investigations into Enron."
+  },
+  {
+   "pair": 18,
+   "path": "cuilla-m/inbox/56.txt",
+   "user": "cuilla-m",
+   "question_index": 0,
+   "gold_answer": "The odds at the online casino are better than those in Las Vegas."
+  },
+  {
+   "pair": 19,
+   "path": "dasovich-j/all_documents/4159.txt",
+   "user": "dasovich-j",
+   "question_index": 0,
+   "gold_answer": "According to Joe Paul, the proposed Code of Conduct goes beyond the authority that the PX thinks may have been delegated to it by FERC."
+  },
+  {
+   "pair": 20,
+   "path": "davis-d/all_documents/27.txt",
+   "user": "davis-d",
+   "question_index": 0,
+   "gold_answer": "Velma Still Cooks in Leeway."
+  },
+  {
+   "pair": 21,
+   "path": "dean-c/inbox/852.txt",
+   "user": "dean-c",
+   "question_index": 0,
+   "gold_answer": "The date of the contest entry record mentioned in the email from Sportingbetusa is 10.9.2001."
+  },
+  {
+   "pair": 22,
+   "path": "delainey-d/_sent_mail/12.txt",
+   "user": "delainey-d",
+   "question_index": 0,
+   "gold_answer": "The email was forwarded by David Delainey on December 8, 2000, at 12:40 PM."
+  },
+  {
+   "pair": 23,
+   "path": "derrick-j/sent_items/328.txt",
+   "user": "derrick-j",
+   "question_index": 0,
+   "gold_answer": "James Derrick forwards Steven Pincus' information to Mark Haedicke and Vicki Sharp for consideration in connection with any opportunities that may exist or come up at Enron."
+  },
+  {
+   "pair": 24,
+   "path": "dickson-s/all_documents/15.txt",
+   "user": "dickson-s",
+   "question_index": 0,
+   "gold_answer": "The questions in the survey cover various aspects of the DSL pilot, including the ease of the ordering process, the installation timeline, the quality of the installation, the condition of the premise after installation, the handling of personal belongings, any additional charges, and the accuracy of the internet service bill."
+  },
+  {
+   "pair": 25,
+   "path": "donoho-l/deleted_items/30.txt",
+   "user": "donoho-l",
+   "question_index": 1,
+   "gold_answer": "One of the topics that will be covered in the Technical Analysis Class is \"When to Buy or Sell (Entry Techniques)\"."
+  },
+  {
+   "pair": 26,
+   "path": "donohoe-t/inbox/5.txt",
+   "user": "donohoe-t",
+   "question_index": 0,
+   "gold_answer": "Laura Pena."
+  },
+  {
+   "pair": 27,
+   "path": "dorland-c/sent_items/5.txt",
+   "user": "dorland-c",
+   "question_index": 0,
+   "gold_answer": "Chris Dorland characterizes his previous message as a joke, stating that he was \"just yanking your chain.\""
+  },
+  {
+   "pair": 28,
+   "path": "ermis-f/inbox/22.txt",
+   "user": "ermis-f",
+   "question_index": 0,
+   "gold_answer": "The contract number for Parcel 8867 is 08076, and the path is from Kingsgate to Malin."
+  },
+  {
+   "pair": 29,
+   "path": "farmer-d/deleted_items/254.txt",
+   "user": "farmer-d",
+   "question_index": 0,
+   "gold_answer": "Elizabeth Webb is asking the recipients to comment on the desk setup, integration of commercial & retail teams on the same floor, and any other move details they would like to add for the newsletter."
+  },
+  {
+   "pair": 30,
+   "path": "fischer-m/notes_inbox/362.txt",
+   "user": "fischer-m",
+   "question_index": 0,
+   "gold_answer": "Kim Nguyen tested about 50% of the fault/status conditions using the EW1.5 software simulator."
+  },
+  {
+   "pair": 31,
+   "path": "forney-j/sent_items/86.txt",
+   "user": "forney-j",
+   "question_index": 0,
+   "gold_answer": "The price at which Enron would fix Frontera's price for hours ending 7-11 is $20."
+  },
+  {
+   "pair": 32,
+   "path": "fossum-d/_sent_mail/504.txt",
+   "user": "fossum-d",
+   "question_index": 0,
+   "gold_answer": "The contract is for one year and the daily volume of gas to be transported is 10,000 Dth/d."
+  },
+  {
+   "pair": 33,
+   "path": "gang-l/deleted_items/327.txt",
+   "user": "gang-l",
+   "question_index": 0,
+   "gold_answer": "Michael Frazier posted the associated text files to Sparky."
+  },
+  {
+   "pair": 34,
+   "path": "gay-r/all_documents/81.txt",
+   "user": "gay-r",
+   "question_index": 0,
+   "gold_answer": "The purpose of the file attached by Jeremy Dawson to his email on 12/14/2000 02:54 PM is to be used as a reference or guide during the conference call the next day."
+  },
+  {
+   "pair": 35,
+   "path": "geaccone-t/sent_items/135.txt",
+   "user": "geaccone-t",
+   "question_index": 0,
+   "gold_answer": "The margin requirement for the fund brokerage contracts is $500,000."
+  },
+  {
+   "pair": 36,
+   "path": "germany-c/all_documents/1987.txt",
+   "user": "germany-c",
+   "question_index": 0,
+   "gold_answer": "The deadline for bids on the Columbia Gas capacity is March 15th at 9am."
+  },
+  {
+   "pair": 37,
+   "path": "gilbertsmith-d/deleted_items/168.txt",
+   "user": "gilbertsmith-d",
+   "question_index": 0,
+   "gold_answer": "The deadline for submitting a request to participate in the Mock TCR Auction is January 8, 2002."
+  },
+  {
+   "pair": 38,
+   "path": "giron-d/sent_items/236.txt",
+   "user": "giron-d",
+   "question_index": 0,
+   "gold_answer": "The address of HireSynergy's office is 723 Main Street, Suite 511, Houston, TX 77002."
+  },
+  {
+   "pair": 39,
+   "path": "griffith-j/discussion_threads/46.txt",
+   "user": "griffith-j",
+   "question_index": 0,
+   "gold_answer": "The estimated rate for a backhaul on IT is $.22."
+  },
+  {
+   "pair": 40,
+   "path": "grigsby-m/deleted_items/241.txt",
+   "user": "grigsby-m",
+   "question_index": 0,
+   "gold_answer": "The California-Arizona border."
+  },
+  {
+   "pair": 41,
+   "path": "guzman-m/discussion_threads/59.txt",
+   "user": "guzman-m",
+   "question_index": 0,
+   "gold_answer": "Matt Wilson plans to leave Eugene on Thursday at 4pm and expects to arrive at the Starkey camp at around 10pm."
+  },
+  {
+   "pair": 42,
+   "path": "haedicke-m/sent_items/5.txt",
+   "user": "haedicke-m",
+   "question_index": 0,
+   "gold_answer": "As a result of the parties agreeing to \"book out\" the James River physical deliveries against EPMI sales to BPA at the Mid-C delivery point, no power will flow."
+  },
+  {
+   "pair": 43,
+   "path": "hain-m/all_documents/1280.txt",
+   "user": "hain-m",
+   "question_index": 0,
+   "gold_answer": "The recipient of the email from Tim Heizenrader regarding public hydro data sources is Mary Hain."
+  },
+  {
+   "pair": 44,
+   "path": "harris-s/deleted_items/309.txt",
+   "user": "harris-s",
+   "question_index": 0,
+   "gold_answer": "A \"walk-on\" television role."
+  },
+  {
+   "pair": 45,
+   "path": "hayslett-r/sent_items/323.txt",
+   "user": "hayslett-r",
+   "question_index": 0,
+   "gold_answer": "Pam Daily suggested considering tables for data rooms and contractors, in addition to offices and cubicles, when coordinating moves."
+  },
+  {
+   "pair": 46,
+   "path": "heard-m/brokerage_agreements/1.txt",
+   "user": "heard-m",
+   "question_index": 0,
+   "gold_answer": "Sara Shackleton's phone number is 713-853-5620, according to the email about the list of authorized traders for Enron NA Corp."
+  },
+  {
+   "pair": 47,
+   "path": "hendrickson-s/deleted_items/178.txt",
+   "user": "hendrickson-s",
+   "question_index": 0,
+   "gold_answer": "The email address provided for unsubscribing from the Texans News newsletter is leave-texansnews-183211D@newsletter.houstontexans.com."
+  },
+  {
+   "pair": 48,
+   "path": "hernandez-j/discussion_threads/371.txt",
+   "user": "hernandez-j",
+   "question_index": 0,
+   "gold_answer": "The date mentioned in the \"Bible Verse of the Day\" section is Tuesday November 14, 2000, and the presidential election referenced is the one between Bush and Gore."
+  },
+  {
+   "pair": 49,
+   "path": "hodge-j/inbox/162.txt",
+   "user": "hodge-j",
+   "question_index": 0,
+   "gold_answer": "Jeff Coltharp assisted in managing document productions related to mergers and acquisitions."
+  },
+  {
+   "pair": 50,
+   "path": "holst-k/sent_items/46.txt",
+   "user": "holst-k",
+   "question_index": 0,
+   "gold_answer": "Keith Holst will be out of the office on Friday and will return on Monday."
+  },
+  {
+   "pair": 51,
+   "path": "horton-s/sent_items/14.txt",
+   "user": "horton-s",
+   "question_index": 0,
+   "gold_answer": "Susan Ralph aims to obtain a quote from the carrier within 30 days, but she also wants to try to get it sooner, and she considers 30 days to be an acceptable time frame."
+  },
+  {
+   "pair": 52,
+   "path": "hyatt-k/sent_items/6.txt",
+   "user": "hyatt-k",
+   "question_index": 0,
+   "gold_answer": "The estimated cost of sponsoring a child in the Enron Kids program is about $55 to $75, depending on how good a shopper you are."
+  },
+  {
+   "pair": 53,
+   "path": "hyvl-d/all_documents/1439.txt",
+   "user": "hyvl-d",
+   "question_index": 0,
+   "gold_answer": "The suite number of Autry, Horton & Cole, LLP is 210."
+  },
+  {
+   "pair": 54,
+   "path": "jones-t/all_documents/9570.txt",
+   "user": "jones-t",
+   "question_index": 0,
+   "gold_answer": "The new system is requiring badge numbers instead of social security numbers."
+  },
+  {
+   "pair": 55,
+   "path": "kaminski-v/_sent_mail/1305.txt",
+   "user": "kaminski-v",
+   "question_index": 0,
+   "gold_answer": "According to Larry Roberts' email, Section 508 of the Rehabilitation Act requires federal contractors to procure through accessible mediums that are inclusive."
+  },
+  {
+   "pair": 56,
+   "path": "kean-s/archiving/untitled/6521.txt",
+   "user": "kean-s",
+   "question_index": 0,
+   "gold_answer": "Pattye Sanders' new extension is 56871."
+  },
+  {
+   "pair": 57,
+   "path": "keavey-p/notes_inbox/33.txt",
+   "user": "keavey-p",
+   "question_index": 0,
+   "gold_answer": "The recipients of the original email with the subject \"SPECIAL FILTERS FOR EAST DESK\" and attachment \"NEW PIPE FILTERS\" are Tricia Spence, Scott Neal, Victor Lamadrid, Katherine L Kelly, Edward Terry, Jayant Krishnaswamy, Jeff Lewis, George Grant, Scott Mills, and Jeffrey C Gossett."
+  },
+  {
+   "pair": 58,
+   "path": "keiser-k/deleted_items/290.txt",
+   "user": "keiser-k",
+   "question_index": 0,
+   "gold_answer": "The re-start/integration plans should be forwarded to Louise."
+  },
+  {
+   "pair": 59,
+   "path": "king-j/deleted_items/78.txt",
+   "user": "king-j",
+   "question_index": 0,
+   "gold_answer": "The TNRCC imposed the new speed limits that led to the change on I-45 between Hobby Airport and NASA Rd. 1."
+  },
+  {
+   "pair": 60,
+   "path": "kitchen-l/sent_items/1560.txt",
+   "user": "kitchen-l",
+   "question_index": 1,
+   "gold_answer": "The rate per night of Sloane Apartments' 2-bedroom apartment is GBP195 per night."
+  },
+  {
+   "pair": 61,
+   "path": "kuykendall-t/sent_items/74.txt",
+   "user": "kuykendall-t",
+   "question_index": 0,
+   "gold_answer": "The first email address in the \"To:\" field of the original email with the subject \"Redneck Medical Terms-Too funny!!\" is hof@swbell.net."
+  },
+  {
+   "pair": 62,
+   "path": "lavorato-j/analyst_associate/9.txt",
+   "user": "lavorato-j",
+   "question_index": 0,
+   "gold_answer": "The names of the summer interns that Kevin's group is interested in will be forwarded to the recipients of the email as soon as possible."
+  },
+  {
+   "pair": 63,
+   "path": "lay-k/all_documents/277.txt",
+   "user": "lay-k",
+   "question_index": 0,
+   "gold_answer": "The student who was the victim of the police shooting was Prince C. Jones Jr."
+  },
+  {
+   "pair": 64,
+   "path": "lenhart-m/sent_items/290.txt",
+   "user": "lenhart-m",
+   "question_index": 0,
+   "gold_answer": "PG&E Core is noted as being \"(no credit)\"."
+  },
+  {
+   "pair": 65,
+   "path": "lewis-a/inbox/104.txt",
+   "user": "lewis-a",
+   "question_index": 1,
+   "gold_answer": "The newsletter is called \"stockfirst\"."
+  },
+  {
+   "pair": 66,
+   "path": "linder-e/notes_inbox/215.txt",
+   "user": "linder-e",
+   "question_index": 0,
+   "gold_answer": "Parents are required to attend PGE activities with their child(ren) on Bring Your Kid to Work Day."
+  },
+  {
+   "pair": 67,
+   "path": "lokay-m/articles/33.txt",
+   "user": "lokay-m",
+   "question_index": 0,
+   "gold_answer": "The final weld that completed the construction phase of the Alliance pipeline was located near Regina, SK."
+  },
+  {
+   "pair": 68,
+   "path": "lokey-t/inbox/102.txt",
+   "user": "lokey-t",
+   "question_index": 0,
+   "gold_answer": "Richard Wendt will pick up Debra Thompson's surplus laptop."
+  },
+  {
+   "pair": 69,
+   "path": "love-p/sent_items/768.txt",
+   "user": "love-p",
+   "question_index": 0,
+   "gold_answer": "Rachel Bonilla-Kragel is affiliated with Accenture, according to the email sent by Phillip Love to her on October 26, 2001, in response to her email with the subject \"Hey\" and the mention of her friend Chad who worked for Raymond James in Houston."
+  },
+  {
+   "pair": 70,
+   "path": "lucci-p/deleted_items/396.txt",
+   "user": "lucci-p",
+   "question_index": 0,
+   "gold_answer": "The link to unsubscribe from the PrizeFlow.com email list is http://jdrmedia1.net/unsub.php?client=jdrmedia1&email=plucci@ect.enron.com&listname=SB&msgid=24120100001, or alternatively, users can go to http://jdrmedia1.net/unsub.php?client=jdrmedia1&listname=SB&msgid=24120100001 and enter their email address."
+  },
+  {
+   "pair": 71,
+   "path": "maggi-m/deleted_items/473.txt",
+   "user": "maggi-m",
+   "question_index": 0,
+   "gold_answer": "Michelle stayed up until 2 after her argument with Wade on Saturday night."
+  },
+  {
+   "pair": 72,
+   "path": "mann-k/sent/50.txt",
+   "user": "mann-k",
+   "question_index": 0,
+   "gold_answer": "The fax number to which Kay Mann was instructed to send a signed copy of the Assignment of Option Agreement is (312) 240-4486."
+  },
+  {
+   "pair": 73,
+   "path": "martin-t/inbox/302.txt",
+   "user": "martin-t",
+   "question_index": 0,
+   "gold_answer": "Jody is expecting a delivered price off of MOPS in the range of HSC - $0.10 to $0.12, based on gas he's buying at El Paso Blessing."
+  },
+  {
+   "pair": 74,
+   "path": "may-l/all_documents/66.txt",
+   "user": "may-l",
+   "question_index": 0,
+   "gold_answer": "The crowd started to thin out after about 15 miles."
+  },
+  {
+   "pair": 75,
+   "path": "mccarty-d/calendar/66.txt",
+   "user": "mccarty-d",
+   "question_index": 0,
+   "gold_answer": "The purpose of the meeting is to share recommendations with the attendees, which were put together by Beth and Cindy as a result of the All Employee Survey."
+  },
+  {
+   "pair": 76,
+   "path": "mcconnell-m/deleted_items/17.txt",
+   "user": "mcconnell-m",
+   "question_index": 0,
+   "gold_answer": "Riley needs to be the only pet in a home without children, have a yard, and be cared for by an older, settled couple or person who can provide a secure environment to help him build his confidence back."
+  },
+  {
+   "pair": 77,
+   "path": "mckay-b/discussion_threads/18.txt",
+   "user": "mckay-b",
+   "question_index": 0,
+   "gold_answer": "The current capability of the new version of TrueQuote is view-only."
+  },
+  {
+   "pair": 78,
+   "path": "mckay-j/sent_items/210.txt",
+   "user": "mckay-j",
+   "question_index": 0,
+   "gold_answer": "A funeral was being held for Geof Storey's father on Saturday, according to Jonathan McKay's email to Jeffrey Pearson."
+  },
+  {
+   "pair": 79,
+   "path": "mclaughlin-e/inbox/97.txt",
+   "user": "mclaughlin-e",
+   "question_index": 0,
+   "gold_answer": "The main goal of the Stage release of PortCalc version 4.2.3s2 is to consolidate the three different PortCalc executables and simplify Estate support in the future."
+  },
+  {
+   "pair": 80,
+   "path": "merriss-s/discussion_threads/197.txt",
+   "user": "merriss-s",
+   "question_index": 0,
+   "gold_answer": "The preferred field of study for a candidate's Bachelor's degree is Finance, Business, Accounting, or a related field."
+  },
+  {
+   "pair": 81,
+   "path": "meyers-a/deleted_items/1121.txt",
+   "user": "meyers-a",
+   "question_index": 0,
+   "gold_answer": "Ryan at PSCO agreed to be billed liquidated damages for HE 01 and HE 02 on the MEAD 230 part of the transaction."
+  },
+  {
+   "pair": 82,
+   "path": "mims-thurston-p/deleted_items/141.txt",
+   "user": "mims-thurston-p",
+   "question_index": 0,
+   "gold_answer": "According to the email, the company claims that paying $2.00 for each envelope stuffed is the highest pay available in their industry."
+  },
+  {
+   "pair": 83,
+   "path": "motley-m/deleted_items/50.txt",
+   "user": "motley-m",
+   "question_index": 1,
+   "gold_answer": "The organization mentioned in the advertisement is SmartDebtManagement.com."
+  },
+  {
+   "pair": 84,
+   "path": "neal-s/deleted_items/556.txt",
+   "user": "neal-s",
+   "question_index": 0,
+   "gold_answer": "The date range when Line SM-123 is expected to be taken out of service due to long-wall mining activity is between October 25th and October 27th."
+  },
+  {
+   "pair": 85,
+   "path": "nemec-g/all_documents/896.txt",
+   "user": "nemec-g",
+   "question_index": 0,
+   "gold_answer": "Bradley Penn expects Marathon to be in their new offices in Houston on June 29, according to the email about the Lease of Platform Space Agreement (LOPSA)."
+  },
+  {
+   "pair": 86,
+   "path": "panus-s/inbox/9.txt",
+   "user": "panus-s",
+   "question_index": 0,
+   "gold_answer": "The purpose of the ISDA is to cover e prime Energy Marketing Inc.'s trading activities."
+  },
+  {
+   "pair": 87,
+   "path": "parks-j/deleted_items/272.txt",
+   "user": "parks-j",
+   "question_index": 0,
+   "gold_answer": "Carr Futures."
+  },
+  {
+   "pair": 88,
+   "path": "pereira-s/sent_items/4.txt",
+   "user": "pereira-s",
+   "question_index": 0,
+   "gold_answer": "Terrie Sechrist is the Service Unit Cookie Manager for Bending Bayous."
+  },
+  {
+   "pair": 89,
+   "path": "perlingiere-d/all_documents/976.txt",
+   "user": "perlingiere-d",
+   "question_index": 0,
+   "gold_answer": "Debra Perlingiere's phone number is 713-853-7658 and her fax number is 713-646-3490, according to the email about the Superior Water Light & Power transaction."
+  },
+  {
+   "pair": 90,
+   "path": "phanis-s/deleted_items/1.txt",
+   "user": "phanis-s",
+   "question_index": 0,
+   "gold_answer": "The specific subject line that users must include in their email to unsubscribe from BlueMountain.com's promotional emails is \"Remove\"."
+  },
+  {
+   "pair": 91,
+   "path": "pimenov-v/deleted_items/46.txt",
+   "user": "pimenov-v",
+   "question_index": 0,
+   "gold_answer": "The historical Nymex settle file was created by Vladi Pimenov to support Lavo's spread analysis."
+  },
+  {
+   "pair": 92,
+   "path": "platter-p/sent_items/20.txt",
+   "user": "platter-p",
+   "question_index": 0,
+   "gold_answer": "The first turn to make after passing the cemetery is to take the left fork."
+  },
+  {
+   "pair": 93,
+   "path": "presto-k/sent_items/34.txt",
+   "user": "presto-k",
+   "question_index": 0,
+   "gold_answer": "Carson demonstrated improvement in risk management skills during the last 6 months of the previous year, according to Kevin Presto's email about Marcello Romano."
+  },
+  {
+   "pair": 94,
+   "path": "quenet-j/inbox/15.txt",
+   "user": "quenet-j",
+   "question_index": 0,
+   "gold_answer": "The Generation InfoGrid is updated monthly, according to the email from Jon T. Brock."
+  },
+  {
+   "pair": 95,
+   "path": "quigley-d/inbox/22.txt",
+   "user": "quigley-d",
+   "question_index": 0,
+   "gold_answer": "The phone number provided in the email for users to contact the ISC Help Desk if they need further assistance with resetting their password is 713-345-4727."
+  },
+  {
+   "pair": 96,
+   "path": "rapp-b/inbox/117.txt",
+   "user": "rapp-b",
+   "question_index": 0,
+   "gold_answer": "Kimberly Watson is asking Bill Rapp to review the revised letter agreement and check if any further changes are needed."
+  },
+  {
+   "pair": 97,
+   "path": "reitmeyer-j/deleted_items/98.txt",
+   "user": "reitmeyer-j",
+   "question_index": 0,
+   "gold_answer": "The entity providing the cell phone service for the offer mentioned in the email to Jay Reitmeyer is AT&T."
+  },
+  {
+   "pair": 98,
+   "path": "richey-c/_sent_mail/39.txt",
+   "user": "richey-c",
+   "question_index": 0,
+   "gold_answer": "Christopher Spann's job title is Sr Specialist, Web Operations, and his department is Enron Net Works."
+  },
+  {
+   "pair": 99,
+   "path": "ring-a/deleted_items/23.txt",
+   "user": "ring-a",
+   "question_index": 0,
+   "gold_answer": "The email from Mary Cook with the subject \"Firm Gas General Terms and Conditions\" was sent at 2:37 PM."
+  },
+  {
+   "pair": 100,
+   "path": "ring-r/eesiisopjm/17.txt",
+   "user": "ring-r",
+   "question_index": 0,
+   "gold_answer": "Mike Smith is concerned that the delta between the EESI Energy Price and the \"Spot Price\" could result in charges for excess and deficiency usage."
+  },
+  {
+   "pair": 101,
+   "path": "rodrique-r/sent/94.txt",
+   "user": "rodrique-r",
+   "question_index": 0,
+   "gold_answer": "Becky Pitre is annoyed with the lady who sits in Robin's old spot because the lady is constantly on the phone discussing personal matters, including her brother's divorce, and Becky can't help but overhear the conversations."
+  },
+  {
+   "pair": 102,
+   "path": "rogers-b/genco_jv_ipo/134.txt",
+   "user": "rogers-b",
+   "question_index": 0,
+   "gold_answer": "The first 85,000/day of interruptible transport is eligible for the discounted rate."
+  },
+  {
+   "pair": 103,
+   "path": "ruscitti-k/inbox/175.txt",
+   "user": "ruscitti-k",
+   "question_index": 0,
+   "gold_answer": "To recover a forgotten password, a user should visit My Stuff and select \"forgot your password\"."
+  },
+  {
+   "pair": 104,
+   "path": "sager-e/sent_items/153.txt",
+   "user": "sager-e",
+   "question_index": 0,
+   "gold_answer": "Elizabeth Sager is unavailable to play tennis this Saturday, according to her email response to Cindy Madi."
+  },
+  {
+   "pair": 105,
+   "path": "saibi-e/inbox/141.txt",
+   "user": "saibi-e",
+   "question_index": 0,
+   "gold_answer": "NYMEX March crude oil is called to open at $19.24/bbl and February heating oil is called to open at 52.00 cts/gal."
+  },
+  {
+   "pair": 106,
+   "path": "salisbury-h/inbox/1107.txt",
+   "user": "salisbury-h",
+   "question_index": 0,
+   "gold_answer": "The deal numbers for the LADWP-CISO(T)LDWP/SYL GF-LDWP(T)SYL/MALIN path are 630912 and 556517."
+  },
+  {
+   "pair": 107,
+   "path": "sanchez-m/deleted_items/1.txt",
+   "user": "sanchez-m",
+   "question_index": 0,
+   "gold_answer": "Jeff Skilling's \"open mike\" session will take place at 10 a.m. Houston time on the eSpeak platform."
+  },
+  {
+   "pair": 108,
+   "path": "sanders-r/all_documents/1919.txt",
+   "user": "sanders-r",
+   "question_index": 0,
+   "gold_answer": "Carl Eklund was trying to schedule his travel plans."
+  },
+  {
+   "pair": 109,
+   "path": "scholtes-d/west_bank/42.txt",
+   "user": "scholtes-d",
+   "question_index": 0,
+   "gold_answer": "Stacey White consolidated the list of counterparties that have not turned in termination letters, according to the email chain about non-terminated power transactions."
+  },
+  {
+   "pair": 110,
+   "path": "schoolcraft-d/inbox/junk/627.txt",
+   "user": "schoolcraft-d",
+   "question_index": 0,
+   "gold_answer": "The names of the individuals listed in the \"To\" field are Art_R_Morris@fpl.com, Spraggins, Gary, Linhart, Joe, Michael_Jessop@fpl.com, Janzen, Randy, and Ronald_Scheirer@fpl.com, and the names of the individuals listed in the \"Cc\" field are Forbish, Sherry and Greaney, Chris."
+  },
+  {
+   "pair": 111,
+   "path": "schwieger-j/deleted_items/159.txt",
+   "user": "schwieger-j",
+   "question_index": 0,
+   "gold_answer": "The minimum purchase amount required to receive the $20 discount is $60."
+  },
+  {
+   "pair": 112,
+   "path": "scott-s/sent_items/644.txt",
+   "user": "scott-s",
+   "question_index": 0,
+   "gold_answer": "A massage."
+  },
+  {
+   "pair": 113,
+   "path": "semperger-c/deleted_items/216.txt",
+   "user": "semperger-c",
+   "question_index": 0,
+   "gold_answer": "Kathryn Sheppard has not received clarification on cell phone expenses because she is waiting for Tim Belden to make a decision on the matter."
+  },
+  {
+   "pair": 114,
+   "path": "shackleton-s/all_documents/8632.txt",
+   "user": "shackleton-s",
+   "question_index": 0,
+   "gold_answer": "Friday."
+  },
+  {
+   "pair": 115,
+   "path": "shankman-j/all_documents/270.txt",
+   "user": "shankman-j",
+   "question_index": 0,
+   "gold_answer": "The Oil Spill Crisis Management Plan."
+  },
+  {
+   "pair": 116,
+   "path": "shapiro-r/federal_legis_/71.txt",
+   "user": "shapiro-r",
+   "question_index": 1,
+   "gold_answer": "The Administration comments on the Bingaman draft electricity bill were released last month."
+  },
+  {
+   "pair": 117,
+   "path": "shively-h/deleted_items/477.txt",
+   "user": "shively-h",
+   "question_index": 0,
+   "gold_answer": "The A&A Program will contact Laura Luce's office regarding the new hire process set up for the A&A Interns allocated to ENA."
+  },
+  {
+   "pair": 118,
+   "path": "skilling-j/inbox/1533.txt",
+   "user": "skilling-j",
+   "question_index": 0,
+   "gold_answer": "The first question that Erick Schonfeld will ask Jeff Skilling during the telephone interview is about the single biggest change in the business landscape over the past five years that Jeff grapples with in a very real way every single day."
+  },
+  {
+   "pair": 119,
+   "path": "slinger-r/deleted_items/2.txt",
+   "user": "slinger-r",
+   "question_index": 0,
+   "gold_answer": "South High School."
+  },
+  {
+   "pair": 120,
+   "path": "smith-m/inbox/258.txt",
+   "user": "smith-m",
+   "question_index": 0,
+   "gold_answer": "The name of the online store where U-Haul boxes and moving supplies can be shipped to the user's door is the Online Box Store."
+  },
+  {
+   "pair": 121,
+   "path": "solberg-g/deleted_items/617.txt",
+   "user": "solberg-g",
+   "question_index": 0,
+   "gold_answer": "Employees should contact Grace or Julie if they would like to change their parking or mass transit option."
+  },
+  {
+   "pair": 122,
+   "path": "south-s/notes_inbox/6.txt",
+   "user": "south-s",
+   "question_index": 0,
+   "gold_answer": "The two phone numbers provided in the email for contacting Jerry Ribnick about the Atlanta LDC Forum are 763-545-1515 and 800-427-3976."
+  },
+  {
+   "pair": 123,
+   "path": "staab-t/to_do_list/5.txt",
+   "user": "staab-t",
+   "question_index": 1,
+   "gold_answer": "The two deal numbers mentioned in the email are 896559 and 921936."
+  },
+  {
+   "pair": 124,
+   "path": "stclair-c/sent/477.txt",
+   "user": "stclair-c",
+   "question_index": 0,
+   "gold_answer": "Carol St. Clair's phone number is 713-853-3989 and her fax number is 713-646-3393."
+  },
+  {
+   "pair": 125,
+   "path": "steffes-j/nerc/1.txt",
+   "user": "steffes-j",
+   "question_index": 0,
+   "gold_answer": "The two main concerns regarding the PJM proposal are the states' role regarding \"adequacy\" and their right to adopt \"more stringent\" standards, and limited provision for coordination with Canada and Mexico, while the two positive aspects are its simplicity and FERC and the RTOs having primary jurisdiction over development and enforcement of reliability standards."
+  },
+  {
+   "pair": 126,
+   "path": "stepenovitch-j/all_documents/199.txt",
+   "user": "stepenovitch-j",
+   "question_index": 0,
+   "gold_answer": "The course registration requires approval from Joseph Stepenovitch's manager before it can be processed."
+  },
+  {
+   "pair": 127,
+   "path": "stokley-c/chris_stokley/sent/272.txt",
+   "user": "stokley-c",
+   "question_index": 0,
+   "gold_answer": "Chris Stokley provided the phone number 503-464-8219 as a contact number in case Elizabeth needs to reach him."
+  },
+  {
+   "pair": 128,
+   "path": "storey-g/it/28.txt",
+   "user": "storey-g",
+   "question_index": 0,
+   "gold_answer": "The domain of Beth Perlman's email address is enron.com."
+  },
+  {
+   "pair": 129,
+   "path": "sturm-f/sent_items/122.txt",
+   "user": "sturm-f",
+   "question_index": 0,
+   "gold_answer": "Rogers contributed the idea of a buildup of the strategic petroleum reserve to Fletcher Sturm's conspiracy theory about the U.S. government building up military arms and parts in the Midwest."
+  },
+  {
+   "pair": 130,
+   "path": "swerzbin-m/inbox/106.txt",
+   "user": "swerzbin-m",
+   "question_index": 0,
+   "gold_answer": "The three types of traded instruments mentioned in the email are forwards, swaps, and options."
+  },
+  {
+   "pair": 131,
+   "path": "symes-k/sent/1119.txt",
+   "user": "symes-k",
+   "question_index": 0,
+   "gold_answer": "Wing Lau's phone number is 510-627-1457, according to Kate Symes' email to Sharen Cason."
+  },
+  {
+   "pair": 132,
+   "path": "taylor-m/archive/9_00/119.txt",
+   "user": "taylor-m",
+   "question_index": 0,
+   "gold_answer": "The two Korean laws mentioned in Matthias Lee's email as possibly requiring amendments to ETA for EnronOnline are the Electronic Transactions Basic Law and the Standardized Contract Regulation Law."
+  },
+  {
+   "pair": 133,
+   "path": "tholt-j/deleted_items/219.txt",
+   "user": "tholt-j",
+   "question_index": 1,
+   "gold_answer": "The California Energy Commission forecasts a supply surplus of approximately 340 megawatts in California by July 2002, including new generation."
+  },
+  {
+   "pair": 134,
+   "path": "thomas-p/deleted_items/210.txt",
+   "user": "thomas-p",
+   "question_index": 0,
+   "gold_answer": "The two types of fuel mentioned in the news release as being used by the General Electric combustion turbine/generator sets at the Osceola Peaking Plant are natural gas and distillate fuel oil."
+  },
+  {
+   "pair": 135,
+   "path": "townsend-j/inbox/155.txt",
+   "user": "townsend-j",
+   "question_index": 1,
+   "gold_answer": "Dominion Transmission, Inc. (DTI) is filing revised tariff sheets in Docket No. RP01-632."
+  },
+  {
+   "pair": 136,
+   "path": "tycholiz-b/inbox/12.txt",
+   "user": "tycholiz-b",
+   "question_index": 0,
+   "gold_answer": "Rebecca Cantrell plans to review the protests filed by Burlington and Amoco/BP, check their filings, and then inform Mark Whitt about her findings after completing her review."
+  },
+  {
+   "pair": 137,
+   "path": "ward-k/citizens_utilities/55.txt",
+   "user": "ward-k",
+   "question_index": 0,
+   "gold_answer": "The purpose of the side letter agreement is to provide for the insurance premium payment."
+  },
+  {
+   "pair": 138,
+   "path": "watson-k/deleted_items/221.txt",
+   "user": "watson-k",
+   "question_index": 0,
+   "gold_answer": "The GDS now allows users to select all pipelines by state."
+  },
+  {
+   "pair": 139,
+   "path": "weldon-c/all_documents/306.txt",
+   "user": "weldon-c",
+   "question_index": 0,
+   "gold_answer": "The project name is the Ft. Pierce project."
+  },
+  {
+   "pair": 140,
+   "path": "whalley-g/connect_deletes/162.txt",
+   "user": "whalley-g",
+   "question_index": 0,
+   "gold_answer": "The URL provided in the email for readers to view TheStreet.com's privacy policy is http://www.thestreet.com/tsc/about/privacy.html."
+  },
+  {
+   "pair": 141,
+   "path": "whalley-l/all_documents/891.txt",
+   "user": "whalley-l",
+   "question_index": 0,
+   "gold_answer": "Iris Meunier was in Madrid when she was talking about Greg Whalley and Jay, according to her email to Greg Whalley."
+  },
+  {
+   "pair": 142,
+   "path": "white-s/deleted_items/406.txt",
+   "user": "white-s",
+   "question_index": 0,
+   "gold_answer": "Casey Evans was cc'd on the email sent by Stacey White on January 8, 2002, with the subject \"RE: PSEG final settlements\", which was sent to Laurel Bolt."
+  },
+  {
+   "pair": 143,
+   "path": "whitt-m/deleted_items/32.txt",
+   "user": "whitt-m",
+   "question_index": 0,
+   "gold_answer": "Heidi DuBose's phone number is 303.260.6560 and her fax number is 303.534.0552, according to her email to Mark Whitt about cell phones."
+  },
+  {
+   "pair": 144,
+   "path": "williams-j/deleted_items/71.txt",
+   "user": "williams-j",
+   "question_index": 0,
+   "gold_answer": "Joanna Williams will be out of the office until Thursday, May 17th."
+  },
+  {
+   "pair": 145,
+   "path": "williams-w3/bill_williams_iii/320.txt",
+   "user": "williams-w3",
+   "question_index": 0,
+   "gold_answer": "The email address provided in the CAISO notification email for Scheduling Coordinators to contact their Client Relations Account Manager with questions about Charge Type 1487 is CRCommunications@caiso.com."
+  },
+  {
+   "pair": 146,
+   "path": "wolfe-j/07_saved/63.txt",
+   "user": "wolfe-j",
+   "question_index": 1,
+   "gold_answer": "The Deal Fixed Price report captures all five of the new West business units, which are ENA - IM WKEYSTON, ENA - IM WPGE, ENA - IM WROCKIES, ENA - IM WSJ, and ENA - IM WSOCAL, in one report."
+  },
+  {
+   "pair": 147,
+   "path": "ybarbo-p/inbox/138.txt",
+   "user": "ybarbo-p",
+   "question_index": 0,
+   "gold_answer": "The Savannah Pilots Association."
+  },
+  {
+   "pair": 148,
+   "path": "zipper-a/deleted_items/367.txt",
+   "user": "zipper-a",
+   "question_index": 0,
+   "gold_answer": "Kevin Morrissey's phone number is 303-488-8226, according to the email with the subject \"FW: First Data Corp introduction\"."
+  },
+  {
+   "pair": 149,
+   "path": "zufferli-j/sent_items/62.txt",
+   "user": "zufferli-j",
+   "question_index": 0,
+   "gold_answer": "John Zufferli had to fly to Houston on Monday on last-minute notice, according to his email to Livia Zufferli."
+  },
+  {
+   "pair": 150,
+   "path": "allen-p/notes_inbox/38.txt",
+   "user": "allen-p",
+   "question_index": 0,
+   "gold_answer": "The first step in the basic marketing plan for the Stage Coach is to mail out flyers to all apartment owners in Seguin, followed up with phone calls to good potential buyers."
+  },
+  {
+   "pair": 151,
+   "path": "arnold-j/deleted_items/765.txt",
+   "user": "arnold-j",
+   "question_index": 0,
+   "gold_answer": "The real estate implications of the growth of the entertainment industry may be felt nationally, but most particularly in a select handful of locales."
+  },
+  {
+   "pair": 152,
+   "path": "arora-h/deleted_items/146.txt",
+   "user": "arora-h",
+   "question_index": 1,
+   "gold_answer": "The quarter-over-quarter increase in investment in Q3 was +0.1%."
+  },
+  {
+   "pair": 153,
+   "path": "badeer-r/discussion_threads/78.txt",
+   "user": "badeer-r",
+   "question_index": 0,
+   "gold_answer": "The URL of Steve Peace's personal webpage is http://www.stevepeace.net."
+  },
+  {
+   "pair": 154,
+   "path": "bailey-s/deleted_items/190.txt",
+   "user": "bailey-s",
+   "question_index": 1,
+   "gold_answer": "Beth Apollo is referring to a review or analysis of transactions related to settlements, specifically to identify any potentially preferential transactions that may have occurred before the bankruptcy filing."
+  },
+  {
+   "pair": 155,
+   "path": "bass-e/discussion_threads/1195.txt",
+   "user": "bass-e",
+   "question_index": 0,
+   "gold_answer": "The Marines will be present at the Toys for Tots Bratwurst Promotion on Friday, December 8 at the Midtown Station."
+  },
+  {
+   "pair": 156,
+   "path": "baughman-d/enron_power/interviews/9.txt",
+   "user": "baughman-d",
+   "question_index": 0,
+   "gold_answer": "The file that Christine Walton attached to her email to Don Baughman is named ChristineWaltonResume.doc."
+  },
+  {
+   "pair": 157,
+   "path": "beck-s/recruiting/86.txt",
+   "user": "beck-s",
+   "question_index": 1,
+   "gold_answer": "The company jet may be used for transportation to some or all of the recruiting events, especially those at neighboring schools."
+  },
+  {
+   "pair": 158,
+   "path": "benson-r/inbox/112.txt",
+   "user": "benson-r",
+   "question_index": 0,
+   "gold_answer": "Global Strategic Sourcing (GSS) has created a Task Force to improve the Accounts Payable process."
+  },
+  {
+   "pair": 159,
+   "path": "blair-l/sent_items/265.txt",
+   "user": "blair-l",
+   "question_index": 0,
+   "gold_answer": "The document that Lynn Blair attached to her email about the Demarc Allocation Presentation is named \"DEMARC ALLOCATION.doc\"."
+  },
+  {
+   "pair": 160,
+   "path": "brawner-s/sent_items/56.txt",
+   "user": "brawner-s",
+   "question_index": 0,
+   "gold_answer": "Jana Rosenbaum, and her phone number is 713.798.4856."
+  },
+  {
+   "pair": 161,
+   "path": "buy-r/inbox/143.txt",
+   "user": "buy-r",
+   "question_index": 1,
+   "gold_answer": "Gary Taylor is affiliated with Enron, although he is currently an independent specialist."
+  },
+  {
+   "pair": 162,
+   "path": "campbell-l/inbox/904.txt",
+   "user": "campbell-l",
+   "question_index": 0,
+   "gold_answer": "The phone number is 1-800-495-4285 and the code is \"smartdmvs\"."
+  },
+  {
+   "pair": 163,
+   "path": "carson-m/deleted_items/101.txt",
+   "user": "carson-m",
+   "question_index": 0,
+   "gold_answer": "The previous high attendance for a K-State women's game was set at a game against Kansas on Feb. 22, 1997."
+  },
+  {
+   "pair": 164,
+   "path": "cash-m/prc/8.txt",
+   "user": "cash-m",
+   "question_index": 0,
+   "gold_answer": "According to Melissa Becker, a part-time employee who adds value in the time they work will likely be rated poorly in the PRC process, which could be demotivating and impact Enron's ability to attract and retain part-time talent."
+  },
+  {
+   "pair": 165,
+   "path": "causholli-m/deleted_items/150.txt",
+   "user": "causholli-m",
+   "question_index": 0,
+   "gold_answer": "VCP currently holds a 28% share in Aracruz, which they recently purchased from Mondi."
+  },
+  {
+   "pair": 166,
+   "path": "corman-s/inbox/15.txt",
+   "user": "corman-s",
+   "question_index": 0,
+   "gold_answer": "Elizabeth asks TK to verify the discounted IT rates for contracts 20248 and 22136."
+  },
+  {
+   "pair": 167,
+   "path": "crandell-s/inbox/rto_west/12.txt",
+   "user": "crandell-s",
+   "question_index": 1,
+   "gold_answer": "The Kingstad Conference Center is located at 5933 NE Win Sivers Drive."
+  },
+  {
+   "pair": 168,
+   "path": "cuilla-m/sent_items/67.txt",
+   "user": "cuilla-m",
+   "question_index": 0,
+   "gold_answer": "The tourist who took the picture atop the World Trade Center has not yet been found."
+  },
+  {
+   "pair": 169,
+   "path": "dasovich-j/all_documents/11441.txt",
+   "user": "dasovich-j",
+   "question_index": 0,
+   "gold_answer": "The Transmission Agency of Northern California conditioned its offer to finance the transmission-line expansion on the state's promise to reimburse it."
+  },
+  {
+   "pair": 170,
+   "path": "davis-d/all_documents/60.txt",
+   "user": "davis-d",
+   "question_index": 0,
+   "gold_answer": "According to the biblical passage quoted in Edith Kelly's email, Simon tried to buy the gift of the Holy Spirit with money, and Peter responded by saying that Simon's money would perish with him and that he had no part in the ministry because his heart was not right before God."
+  },
+  {
+   "pair": 171,
+   "path": "dean-c/deleted_items/372.txt",
+   "user": "dean-c",
+   "question_index": 0,
+   "gold_answer": "The names of the recipients are Samantha Moreno, Kelli Stubbs, Kayla Harmon, Jill Arredondo, Jamie Somerville, Emmy Melancon, and Anji Ivory."
+  },
+  {
+   "pair": 172,
+   "path": "delainey-d/_sent_mail/545.txt",
+   "user": "delainey-d",
+   "question_index": 0,
+   "gold_answer": "Kay asked David Delainey about the ENA Final VP PRC on July 7th."
+  },
+  {
+   "pair": 173,
+   "path": "derrick-j/sent_items/393.txt",
+   "user": "derrick-j",
+   "question_index": 0,
+   "gold_answer": "Whalley."
+  },
+  {
+   "pair": 174,
+   "path": "dickson-s/all_documents/3.txt",
+   "user": "dickson-s",
+   "question_index": 0,
+   "gold_answer": "The current version of the special provisions that Enron tries to negotiate into each GISB is included in the GISB agreement that is attached to the email."
+  },
+  {
+   "pair": 175,
+   "path": "donoho-l/sent_items/63.txt",
+   "user": "donoho-l",
+   "question_index": 0,
+   "gold_answer": "Lindy Donoho mentions that she finally figured out the digital camera so that she can send pictures to Amy and Ahmed."
+  },
+  {
+   "pair": 176,
+   "path": "donohoe-t/inbox/466.txt",
+   "user": "donohoe-t",
+   "question_index": 0,
+   "gold_answer": "The gas prices mentioned in the email are $2.60 for the East region and $2.535 for the West region."
+  },
+  {
+   "pair": 177,
+   "path": "dorland-c/deleted_items/56.txt",
+   "user": "dorland-c",
+   "question_index": 0,
+   "gold_answer": "The bankruptcy creditors' committee had pressured Kenneth Lay to step down as Enron Chairman and CEO."
+  },
+  {
+   "pair": 178,
+   "path": "ermis-f/inbox/546.txt",
+   "user": "ermis-f",
+   "question_index": 0,
+   "gold_answer": "The email address provided in the email for unsubscribing from ALL Platts promotions is ikristufek@ftenergy.com."
+  },
+  {
+   "pair": 179,
+   "path": "farmer-d/sent_items/291.txt",
+   "user": "farmer-d",
+   "question_index": 0,
+   "gold_answer": "The recipients of Victor Lamadrid's email about Bosses' Day, aside from Suzanne Calcagno and Daren Farmer, are Jaquet, Tammy; Smith, George F.; Sullivan, Patti; Greif, Donna; Kinsey, Lisa; and Olinger, Kimberly S."
+  },
+  {
+   "pair": 180,
+   "path": "fischer-m/inbox/4.txt",
+   "user": "fischer-m",
+   "question_index": 0,
+   "gold_answer": "The entities included in the MTM analysis schedules are 1572, 890, 20Q, and 20R."
+  },
+  {
+   "pair": 181,
+   "path": "forney-j/sent_items/101.txt",
+   "user": "forney-j",
+   "question_index": 0,
+   "gold_answer": "The two people that John Forney cc'd in his original email about Enpower changes are Smith L. Day and Andrea Dahlke."
+  },
+  {
+   "pair": 182,
+   "path": "fossum-d/sent/389.txt",
+   "user": "fossum-d",
+   "question_index": 0,
+   "gold_answer": "Yes, the meeting that Drew Fossum is referring to in the email with the subject \"Re: San Juan Prices\" is the meeting of the recipient, Tino."
+  },
+  {
+   "pair": 183,
+   "path": "gang-l/deleted_items/340.txt",
+   "user": "gang-l",
+   "question_index": 0,
+   "gold_answer": "The SI servers will be unavailable on Thursday, April 25, 2002, from 14:20 to 14:50 pst."
+  },
+  {
+   "pair": 184,
+   "path": "gay-r/all_documents/216.txt",
+   "user": "gay-r",
+   "question_index": 0,
+   "gold_answer": "The maximum decrease in the shares of Parana state integrated power company Copel on the Sao Paulo stock market mentioned in the email is 4.4%."
+  },
+  {
+   "pair": 185,
+   "path": "geaccone-t/sent_items/275.txt",
+   "user": "geaccone-t",
+   "question_index": 0,
+   "gold_answer": "Kevin Howard recalled a $300MM number as the current Fair Value balance of TPC."
+  },
+  {
+   "pair": 186,
+   "path": "germany-c/memos/10.txt",
+   "user": "germany-c",
+   "question_index": 0,
+   "gold_answer": "According to Steve Cooper's email, he and possibly other members of the executive office or the Office of the Chief Executive will be narrowing down the list of name suggestions for the new company."
+  },
+  {
+   "pair": 187,
+   "path": "gilbertsmith-d/personal/3.txt",
+   "user": "gilbertsmith-d",
+   "question_index": 0,
+   "gold_answer": "The reason given in the email for why the LCRA number can be released is that Enron has Sandhill and the transmission market is no longer set up as it was in September 2000."
+  },
+  {
+   "pair": 188,
+   "path": "giron-d/sent_items/157.txt",
+   "user": "giron-d",
+   "question_index": 0,
+   "gold_answer": "Diane Anderson was going to ask Richard Deming to contact Darron Giron regarding the Heartland termination."
+  },
+  {
+   "pair": 189,
+   "path": "griffith-j/personal/2.txt",
+   "user": "griffith-j",
+   "question_index": 0,
+   "gold_answer": "The premiere of Cirque de Soleil's Dralion is on January 17, 2002, at 8:00 p.m."
+  },
+  {
+   "pair": 190,
+   "path": "grigsby-m/deleted_items/155.txt",
+   "user": "grigsby-m",
+   "question_index": 0,
+   "gold_answer": "NYMEX President Robert Collins is scheduled to join the newscast at 9:00 a.m. ET to discuss the status of NYMEX operations and trading following the September 11th attacks."
+  },
+  {
+   "pair": 191,
+   "path": "guzman-m/discussion_threads/127.txt",
+   "user": "guzman-m",
+   "question_index": 0,
+   "gold_answer": "Caroline is responsible for making the appropriate entries into the DMS (Dispute Management System), according to John Forney's email about settlements issues."
+  },
+  {
+   "pair": 192,
+   "path": "haedicke-m/all_documents/26.txt",
+   "user": "haedicke-m",
+   "question_index": 0,
+   "gold_answer": "The Litigation Unit is defending the case."
+  },
+  {
+   "pair": 193,
+   "path": "hain-m/notes_inbox/95.txt",
+   "user": "hain-m",
+   "question_index": 0,
+   "gold_answer": "The address of Lopez Velarde, Heftye, Abogados is Guillermo Gonzalez Camarena No. 1600, Piso 6 Col. Santa Fe, Centro de Ciudad 01210 Mexico, D.F."
+  },
+  {
+   "pair": 194,
+   "path": "harris-s/deleted_items/5.txt",
+   "user": "harris-s",
+   "question_index": 0,
+   "gold_answer": "According to the email, WinFix makes Windows 95, 98, and ME fault-tolerant and self-repairing."
+  },
+  {
+   "pair": 195,
+   "path": "hayslett-r/projects/hold/28.txt",
+   "user": "hayslett-r",
+   "question_index": 0,
+   "gold_answer": "Rick Craig and Dan Pribble will continue to office in Houston."
+  },
+  {
+   "pair": 196,
+   "path": "heard-m/inbox/master_netting/48.txt",
+   "user": "heard-m",
+   "question_index": 0,
+   "gold_answer": "The netting agreement with ConAgra is expected to be executed by the end of the week, according to John Viverito's email."
+  },
+  {
+   "pair": 197,
+   "path": "hendrickson-s/deleted_items/37.txt",
+   "user": "hendrickson-s",
+   "question_index": 0,
+   "gold_answer": "Diana Keith Neal holds the titles of Chairman of Sotheby's Institute of Art, Senior Director of Sotheby's Europe, and Director of the Sculpture and Works of Art Department at Sotheby's London."
+  },
+  {
+   "pair": 198,
+   "path": "hernandez-j/inbox/263.txt",
+   "user": "hernandez-j",
+   "question_index": 0,
+   "gold_answer": "The names and phone numbers of the two contacts are Tom Moore at 713-345-5552 and Keith Dziadek at 713-646-6236."
+  },
+  {
+   "pair": 199,
+   "path": "hodge-j/notes_inbox/45.txt",
+   "user": "hodge-j",
+   "question_index": 1,
+   "gold_answer": "Guadalupe Power Partners LP was associated with a huge term sale, which was notable for having considerable delivery risk."
+  },
+  {
+   "pair": 200,
+   "path": "holst-k/inbox/59.txt",
+   "user": "holst-k",
+   "question_index": 0,
+   "gold_answer": "Stevie Salas works with various genres of music, including blues-rock, metal, hard rock, and funk, and he is a guitarist who works with Mick Jagger."
+  },
+  {
+   "pair": 201,
+   "path": "horton-s/deleted_items/94.txt",
+   "user": "horton-s",
+   "question_index": 0,
+   "gold_answer": "Kevin Miller has worked with EOTT to determine the best crude oil export option for each deepwater project in the Gulf of Mexico."
+  },
+  {
+   "pair": 202,
+   "path": "hyatt-k/deleted_items/536.txt",
+   "user": "hyatt-k",
+   "question_index": 0,
+   "gold_answer": "The phone numbers for the ETS Solution Center in Houston and Omaha are 713-345-4745 and 402-398-7454, respectively."
+  },
+  {
+   "pair": 203,
+   "path": "hyvl-d/all_documents/518.txt",
+   "user": "hyvl-d",
+   "question_index": 0,
+   "gold_answer": "Participants in Pilot 2 will be testing program offerings, program communications, product and service ordering, vendor services, and program support."
+  },
+  {
+   "pair": 204,
+   "path": "jones-t/all_documents/9532.txt",
+   "user": "jones-t",
+   "question_index": 0,
+   "gold_answer": "According to the database mentioned in Tana Jones' email, Leslie approved Western Area Power Administration - CRSP to trade power in July of the previous year."
+  },
+  {
+   "pair": 205,
+   "path": "kaminski-v/discussion_threads/2332.txt",
+   "user": "kaminski-v",
+   "question_index": 0,
+   "gold_answer": "The Gas and Power Trading organizations."
+  },
+  {
+   "pair": 206,
+   "path": "kean-s/calendar/untitled/1545.txt",
+   "user": "kean-s",
+   "question_index": 1,
+   "gold_answer": "The four email addresses that Sherri Sera sent the forwarded email with the list of Al Gore quotes to are jrt29@msn.com, jeffr@smig.net, linda@excelonline.com, and pattyr@bevcomm.net."
+  },
+  {
+   "pair": 207,
+   "path": "keavey-p/all_documents/179.txt",
+   "user": "keavey-p",
+   "question_index": 0,
+   "gold_answer": "The specific problem Peter Keavey mentions is working out a procedure for readjusting the number of futures swaps that are traded each day."
+  },
+  {
+   "pair": 208,
+   "path": "keiser-k/deleted_items/27.txt",
+   "user": "keiser-k",
+   "question_index": 1,
+   "gold_answer": "Japan manufactured more than 20 million J2ME phones last year."
+  },
+  {
+   "pair": 209,
+   "path": "king-j/deleted_items/242.txt",
+   "user": "king-j",
+   "question_index": 1,
+   "gold_answer": "Os Hillman is the president of Marketplace Leaders."
+  },
+  {
+   "pair": 210,
+   "path": "kitchen-l/sent_items/650.txt",
+   "user": "kitchen-l",
+   "question_index": 0,
+   "gold_answer": "The producer focus will remain unchanged in the Western U.S. and Texas, and will report to Mark Whitt and Brian Redmond respectively."
+  },
+  {
+   "pair": 211,
+   "path": "kuykendall-t/friends/12.txt",
+   "user": "kuykendall-t",
+   "question_index": 0,
+   "gold_answer": "The sender is currently staying at their parents' house."
+  },
+  {
+   "pair": 212,
+   "path": "lavorato-j/sent_items/634.txt",
+   "user": "lavorato-j",
+   "question_index": 0,
+   "gold_answer": "John Lavorato says that Punit Rawal is always whining about his fake trading account."
+  },
+  {
+   "pair": 213,
+   "path": "lay-k/deleted_items/549.txt",
+   "user": "lay-k",
+   "question_index": 0,
+   "gold_answer": "The two funds mentioned in Jim Zane's email that he suggests Ken Lay should donate the proceeds from his Enron stock sales to are the Enron Employee Transition Fund and REACH."
+  },
+  {
+   "pair": 214,
+   "path": "lenhart-m/deleted_items/277.txt",
+   "user": "lenhart-m",
+   "question_index": 1,
+   "gold_answer": "There is no condition specified for receiving \"free snowjobs\", it is simply stated that they will be provided if the recipient acts now."
+  },
+  {
+   "pair": 215,
+   "path": "lewis-a/inbox/10.txt",
+   "user": "lewis-a",
+   "question_index": 0,
+   "gold_answer": "The two contact options provided by Stephanie Sever are contacting her directly at x33465 or reaching out to the Call Center at 713-584-4444."
+  },
+  {
+   "pair": 216,
+   "path": "linder-e/all_documents/636.txt",
+   "user": "linder-e",
+   "question_index": 0,
+   "gold_answer": "The ancillary service deals are being incorrectly included with the regular deal entry summary instead of being summed separately in the ancillary section."
+  },
+  {
+   "pair": 217,
+   "path": "lokay-m/all_documents/2159.txt",
+   "user": "lokay-m",
+   "question_index": 0,
+   "gold_answer": "The volume of the block of east to east capacity with alternate rights to the California border that is being bid on is 400,000 MMBtu/d."
+  },
+  {
+   "pair": 218,
+   "path": "lokey-t/deleted_items/148.txt",
+   "user": "lokey-t",
+   "question_index": 0,
+   "gold_answer": "Debra Danburg is ranked number 10 in seniority in the state office, according to the email from Ed Gonzales."
+  },
+  {
+   "pair": 219,
+   "path": "love-p/personal/61.txt",
+   "user": "love-p",
+   "question_index": 0,
+   "gold_answer": "The sender woke up at 4:00 a.m. the morning they wrote the email."
+  },
+  {
+   "pair": 220,
+   "path": "lucci-p/deleted_items/130.txt",
+   "user": "lucci-p",
+   "question_index": 0,
+   "gold_answer": "According to Mike Grigsby's email, employees are supposed to coordinate their vacation and early afternoon departures with Ina and Mike Grigsby."
+  },
+  {
+   "pair": 221,
+   "path": "maggi-m/deleted_items/926.txt",
+   "user": "maggi-m",
+   "question_index": 0,
+   "gold_answer": "The sender, Allen Paine, is part of the New Member Welcome Team."
+  },
+  {
+   "pair": 222,
+   "path": "mann-k/_sent_mail/2325.txt",
+   "user": "mann-k",
+   "question_index": 1,
+   "gold_answer": "The changes to the NRG Confidentiality Agreement have been accepted, according to John Keffer's email dated 12/18/2000."
+  },
+  {
+   "pair": 223,
+   "path": "martin-t/sent_items/173.txt",
+   "user": "martin-t",
+   "question_index": 1,
+   "gold_answer": "The \"Meet the Team Party\" is scheduled to take place on Tuesday, October 2nd, from 6pm to 8pm, at the Compaq Center."
+  },
+  {
+   "pair": 224,
+   "path": "may-l/inbox/587.txt",
+   "user": "may-l",
+   "question_index": 0,
+   "gold_answer": "The Dow Jones Interactive training sessions will be held on April 27 in room EB564, with sessions scheduled from 1:00 - 2:00 PM, 2:00 - 3:00 PM, and 3:00 - 4:00 PM."
+  },
+  {
+   "pair": 225,
+   "path": "mccarty-d/deleted_items/312.txt",
+   "user": "mccarty-d",
+   "question_index": 0,
+   "gold_answer": "The Click at Home program has not been cancelled, and eligible employees are still able to place orders."
+  },
+  {
+   "pair": 226,
+   "path": "mcconnell-m/gaza/1.txt",
+   "user": "mcconnell-m",
+   "question_index": 0,
+   "gold_answer": "The US Ambassador's intervention with the Government of Israel (GOI) resulted in the lifting of the Israeli embargo on sending plant goods to the site in Gaza."
+  },
+  {
+   "pair": 227,
+   "path": "mckay-b/deleted_items/165.txt",
+   "user": "mckay-b",
+   "question_index": 0,
+   "gold_answer": "Williams Energy News Live will report on the final day of the FERC's weeklong workshop on Regional Transmission Organizations, including how the meetings might impact FERC's implementation of RTOs and an interview with former FERC Commissioner Don Santa on the current state of RTOs."
+  },
+  {
+   "pair": 228,
+   "path": "mckay-j/pipeline_info/29.txt",
+   "user": "mckay-j",
+   "question_index": 0,
+   "gold_answer": "The document mentioned in the email is Texas Eastern's FERC Gas Tariff."
+  },
+  {
+   "pair": 229,
+   "path": "mclaughlin-e/all_documents/333.txt",
+   "user": "mclaughlin-e",
+   "question_index": 0,
+   "gold_answer": "According to the Fantasy Golf Commissioner, the composition of the team that participants will pick each week in the Fantasy Golf game is two A players, four B players, and two C players."
+  },
+  {
+   "pair": 230,
+   "path": "merriss-s/notes_inbox/304.txt",
+   "user": "merriss-s",
+   "question_index": 0,
+   "gold_answer": "The BPA account numbers that Mark Guzman set up for CISO to PUGET, CISO to WWP, CISO to SCL, and CISO to Tacoma are 882716, 681713, 882790, and 882791, respectively."
+  },
+  {
+   "pair": 231,
+   "path": "meyers-a/deleted_items/215.txt",
+   "user": "meyers-a",
+   "question_index": 0,
+   "gold_answer": "All past historical data that is not available on the current site is located on the P drive under P:\\trading\\california\\realtime."
+  },
+  {
+   "pair": 232,
+   "path": "mims-thurston-p/_sent_mail/188.txt",
+   "user": "mims-thurston-p",
+   "question_index": 0,
+   "gold_answer": "According to Patrice Mims' email, Gas Daily published a price of $15.70 for the December 22-26 time period."
+  },
+  {
+   "pair": 233,
+   "path": "motley-m/deleted_items/16.txt",
+   "user": "motley-m",
+   "question_index": 0,
+   "gold_answer": "The URL provided in the email for finding more synonyms for the word \"exculpate\" on Thesaurus.com is http://www.thesaurus.com/roget/VI/970.html."
+  },
+  {
+   "pair": 234,
+   "path": "neal-s/deleted_items/388.txt",
+   "user": "neal-s",
+   "question_index": 0,
+   "gold_answer": "The dates of the weekend during which Dan Shelton will be the available Columbia Gulf Representative are June 9th through June 10th."
+  },
+  {
+   "pair": 235,
+   "path": "nemec-g/sent/845.txt",
+   "user": "nemec-g",
+   "question_index": 0,
+   "gold_answer": "The reason for the increased pressures at the San Arroyo Plant was that Wildhorse pulled out a compressor last week."
+  },
+  {
+   "pair": 236,
+   "path": "panus-s/deleted_items/344.txt",
+   "user": "panus-s",
+   "question_index": 0,
+   "gold_answer": "The street address of Enron Wholesale Services is 1400 Smith Street, according to the email about the Non-Disclosure Agreement."
+  },
+  {
+   "pair": 237,
+   "path": "parks-j/deleted_items/396.txt",
+   "user": "parks-j",
+   "question_index": 0,
+   "gold_answer": "Pig will be drinking Beliken Beer during the work weekend, according to the email."
+  },
+  {
+   "pair": 238,
+   "path": "pereira-s/_sent_mail/33.txt",
+   "user": "pereira-s",
+   "question_index": 0,
+   "gold_answer": "Renato got home late the previous night, according to Susan Pereira's response to Janis Pereira's email about summer travel plans."
+  },
+  {
+   "pair": 239,
+   "path": "perlingiere-d/all_documents/2811.txt",
+   "user": "perlingiere-d",
+   "question_index": 0,
+   "gold_answer": "The address of Enron North America Corp.'s Legal Department is 1400 Smith Street, EB 3885, Houston, Texas 77002."
+  },
+  {
+   "pair": 240,
+   "path": "phanis-s/deleted_items/13.txt",
+   "user": "phanis-s",
+   "question_index": 0,
+   "gold_answer": "Sara gave two lists to Harlan to look at, according to Stephanie's email, in the context of reviewing termination lists."
+  },
+  {
+   "pair": 241,
+   "path": "pimenov-v/inbox/77.txt",
+   "user": "pimenov-v",
+   "question_index": 0,
+   "gold_answer": "Christian uses the term \"amigo ruso\" to affectionately refer to Vladi in the email."
+  },
+  {
+   "pair": 242,
+   "path": "platter-p/inbox/204.txt",
+   "user": "platter-p",
+   "question_index": 0,
+   "gold_answer": "The effective date of the updated ISO Operating Procedure T-121 is 12/31/2001."
+  },
+  {
+   "pair": 243,
+   "path": "presto-k/deleted_items/123.txt",
+   "user": "presto-k",
+   "question_index": 0,
+   "gold_answer": "The first step in exporting contacts from Outlook is to open Outlook and select the contacts folder."
+  },
+  {
+   "pair": 244,
+   "path": "quenet-j/all_documents/43.txt",
+   "user": "quenet-j",
+   "question_index": 0,
+   "gold_answer": "Joe Quenet was scheduled to close on his new house on Wednesday."
+  },
+  {
+   "pair": 245,
+   "path": "quigley-d/bmr/28.txt",
+   "user": "quigley-d",
+   "question_index": 0,
+   "gold_answer": "Monica L. Brown is asking Dutch Quigley to review the \"Futures Graphic ideas and practices_2.doc\" and \"Options Graphic ideas and practices_3.doc\" files."
+  },
+  {
+   "pair": 246,
+   "path": "rapp-b/inbox/157.txt",
+   "user": "rapp-b",
+   "question_index": 0,
+   "gold_answer": "According to Shelley Corman's email, TW lacks penalty provisions and OFOs (Operational Flow Orders)."
+  },
+  {
+   "pair": 247,
+   "path": "reitmeyer-j/inbox/101.txt",
+   "user": "reitmeyer-j",
+   "question_index": 0,
+   "gold_answer": "The Winter X Forecast numbers will be firmed up today."
+  },
+  {
+   "pair": 248,
+   "path": "richey-c/inbox/4.txt",
+   "user": "richey-c",
+   "question_index": 0,
+   "gold_answer": "The three main topics that the Robust Statistics and Data Mining for Outliers course will cover are the key concepts and model fitting methods of modern robust statistics, automatic outlier detection with robust statistics, and hands-on computing exercises using the S-PLUS Robust Library."
+  },
+  {
+   "pair": 249,
+   "path": "ring-a/sent_items/7.txt",
+   "user": "ring-a",
+   "question_index": 0,
+   "gold_answer": "Dick was asked to stay on as a key person to help close down the business."
+  }
+ ],
+ "n_pairs": 250,
+ "seed": 20260828,
+ "split": "test",
+ "corpus_root": "F:\\Projects\\enronqa\\corpus",
+ "unique_emails": 73772,
+ "size_gate_excluded": [],
+ "source": "hf:MichaelR207/enron_qa_0922 (CC BY 4.0)"
+}

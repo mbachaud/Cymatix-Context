@@ -1,0 +1,3223 @@
+{
+ "muloc_0000": [
+  "scikit-learn__scikit-learn/examples/feature_selection/plot_select_from_model_diabetes.py"
+ ],
+ "muloc_0001": [
+  "pallets__flask/flask/cli.py",
+  "pallets__flask/tests/test_cli.py"
+ ],
+ "muloc_0002": [
+  "localstack__localstack/README.md",
+  "localstack__localstack/localstack/config.py",
+  "localstack__localstack/localstack/services/kinesis/kinesis_starter.py"
+ ],
+ "muloc_0003": [
+  "huggingface__transformers/src/transformers/modeling_utils.py",
+  "huggingface__transformers/src/transformers/trainer.py",
+  "huggingface__transformers/src/transformers/training_args.py"
+ ],
+ "muloc_0004": [
+  "pandas-dev__pandas/asv_bench/benchmarks/frame_methods.py",
+  "pandas-dev__pandas/doc/source/whatsnew/v0.17.1.txt",
+  "pandas-dev__pandas/pandas/core/frame.py"
+ ],
+ "muloc_0005": [
+  "zylon-ai__private-gpt/README.md",
+  "zylon-ai__private-gpt/ingest.py",
+  "zylon-ai__private-gpt/privateGPT.py"
+ ],
+ "muloc_0007": [
+  "psf__requests/requests/models.py"
+ ],
+ "muloc_0008": [
+  "pallets__flask/docs/blueprints.rst",
+  "pallets__flask/tests/test_blueprints.py"
+ ],
+ "muloc_0009": [
+  "AUTOMATIC1111__stable-diffusion-webui/modules/styles.py"
+ ],
+ "muloc_0010": [
+  "home-assistant__core/homeassistant/components/environment_canada/camera.py",
+  "home-assistant__core/homeassistant/components/environment_canada/manifest.json",
+  "home-assistant__core/requirements_all.txt",
+  "home-assistant__core/requirements_test_all.txt"
+ ],
+ "muloc_0011": [
+  "abi__screenshot-to-code/backend/llm.py",
+  "abi__screenshot-to-code/frontend/package.json",
+  "abi__screenshot-to-code/frontend/src/App.tsx"
+ ],
+ "muloc_0012": [
+  "Significant-Gravitas__AutoGPT/autogpt/chat.py",
+  "Significant-Gravitas__AutoGPT/autogpt/config/ai_config.py",
+  "Significant-Gravitas__AutoGPT/autogpt/llm_utils.py",
+  "Significant-Gravitas__AutoGPT/autogpt/memory/base.py",
+  "Significant-Gravitas__AutoGPT/autogpt/prompts/prompt.py",
+  "Significant-Gravitas__AutoGPT/autogpt/setup.py",
+  "Significant-Gravitas__AutoGPT/tests/unit/test_commands.py",
+  "Significant-Gravitas__AutoGPT/tests/unit/test_setup.py"
+ ],
+ "muloc_0013": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/generic.py"
+ ],
+ "muloc_0014": [
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/ui.py"
+ ],
+ "muloc_0015": [
+  "keras-team__keras/keras/preprocessing/image.py",
+  "keras-team__keras/tests/keras/preprocessing/image_test.py"
+ ],
+ "muloc_0016": [
+  "scrapy__scrapy/.bumpversion.cfg",
+  "scrapy__scrapy/pytest.ini",
+  "scrapy__scrapy/setup.cfg",
+  "scrapy__scrapy/setup.py",
+  "scrapy__scrapy/tests/test_crawler.py",
+  "scrapy__scrapy/tests/test_spiderloader/__init__.py",
+  "scrapy__scrapy/tox.ini"
+ ],
+ "muloc_0019": [
+  "ansible__ansible/lib/ansible/modules/windows/win_robocopy.py"
+ ],
+ "muloc_0020": [
+  "psf__requests/requests/utils.py"
+ ],
+ "muloc_0021": [
+  "scikit-learn__scikit-learn/doc/whats_new/v1.3.rst",
+  "scikit-learn__scikit-learn/sklearn/impute/_knn.py",
+  "scikit-learn__scikit-learn/sklearn/impute/tests/test_common.py"
+ ],
+ "muloc_0022": [
+  "nvbn__thefuck/thefuck/rules/sudo.py"
+ ],
+ "muloc_0023": [
+  "scikit-learn__scikit-learn/sklearn/utils/parallel.py",
+  "scikit-learn__scikit-learn/sklearn/utils/tests/test_parallel.py"
+ ],
+ "muloc_0024": [
+  "All-Hands-AI__OpenHands/containers/runtime/README.md",
+  "All-Hands-AI__OpenHands/frontend/src/components/AgentStatusBar.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/i18n/translation.json",
+  "All-Hands-AI__OpenHands/frontend/src/services/actions.ts",
+  "All-Hands-AI__OpenHands/frontend/src/services/session.ts",
+  "All-Hands-AI__OpenHands/frontend/src/store.ts",
+  "All-Hands-AI__OpenHands/frontend/src/types/Message.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/types/ResponseType.tsx",
+  "All-Hands-AI__OpenHands/openhands/core/main.py",
+  "All-Hands-AI__OpenHands/openhands/runtime/client/client.py",
+  "All-Hands-AI__OpenHands/openhands/runtime/client/runtime.py",
+  "All-Hands-AI__OpenHands/openhands/runtime/e2b/runtime.py",
+  "All-Hands-AI__OpenHands/openhands/runtime/remote/runtime.py",
+  "All-Hands-AI__OpenHands/openhands/runtime/runtime.py",
+  "All-Hands-AI__OpenHands/openhands/server/session/agent.py",
+  "All-Hands-AI__OpenHands/openhands/server/session/manager.py",
+  "All-Hands-AI__OpenHands/openhands/server/session/session.py"
+ ],
+ "muloc_0025": [
+  "All-Hands-AI__OpenHands/agenthub/codeact_agent/codeact_agent.py"
+ ],
+ "muloc_0026": [
+  "deepfakes__faceswap/lib/FaceLandmarksExtractor/FaceLandmarksExtractor.py",
+  "deepfakes__faceswap/lib/cli.py",
+  "deepfakes__faceswap/lib/faces_detect.py",
+  "deepfakes__faceswap/scripts/extract.py"
+ ],
+ "muloc_0027": [
+  "fastapi__fastapi/fastapi/dependencies/utils.py",
+  "fastapi__fastapi/fastapi/param_functions.py",
+  "fastapi__fastapi/fastapi/params.py",
+  "fastapi__fastapi/fastapi/utils.py",
+  "fastapi__fastapi/tests/main.py",
+  "fastapi__fastapi/tests/test_application.py",
+  "fastapi__fastapi/tests/test_params_repr.py",
+  "fastapi__fastapi/tests/test_path.py"
+ ],
+ "muloc_0028": [
+  "scikit-learn__scikit-learn/doc/modules/clustering.rst",
+  "scikit-learn__scikit-learn/examples/cluster/plot_birch_vs_minibatchkmeans.py",
+  "scikit-learn__scikit-learn/examples/cluster/plot_cluster_comparison.py",
+  "scikit-learn__scikit-learn/sklearn/cluster/_birch.py"
+ ],
+ "muloc_0029": [
+  "localstack__localstack/localstack/services/dynamodbstreams/dynamodbstreams_api.py"
+ ],
+ "muloc_0030": [
+  "pallets__flask/flask/app.py"
+ ],
+ "muloc_0031": [
+  "ansible__ansible/lib/ansible/modules/cloud/amazon/ec2_vpc_nacl.py"
+ ],
+ "muloc_0032": [
+  "geekan__MetaGPT/config/puppeteer-config.json",
+  "geekan__MetaGPT/metagpt/configs/llm_config.py",
+  "geekan__MetaGPT/metagpt/provider/__init__.py",
+  "geekan__MetaGPT/metagpt/utils/token_counter.py",
+  "geekan__MetaGPT/requirements.txt",
+  "geekan__MetaGPT/tests/metagpt/provider/mock_llm_config.py",
+  "geekan__MetaGPT/tests/metagpt/provider/req_resp_const.py"
+ ],
+ "muloc_0034": [
+  "scikit-learn__scikit-learn/doc/whats_new/v0.23.rst",
+  "scikit-learn__scikit-learn/sklearn/decomposition/_pca.py",
+  "scikit-learn__scikit-learn/sklearn/decomposition/tests/test_pca.py"
+ ],
+ "muloc_0035": [
+  "pallets__flask/docs/config.rst",
+  "pallets__flask/tests/test_basic.py",
+  "pallets__flask/tests/test_blueprints.py"
+ ],
+ "muloc_0036": [
+  "ansible__ansible/lib/ansible/modules/web_infrastructure/htpasswd.py"
+ ],
+ "muloc_0037": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/youtube.py"
+ ],
+ "muloc_0039": [
+  "ultralytics__yolov5/models/tf.py",
+  "ultralytics__yolov5/models/yolo.py"
+ ],
+ "muloc_0041": [
+  "All-Hands-AI__OpenHands/.github/workflows/dummy-agent-test.yml",
+  "All-Hands-AI__OpenHands/.github/workflows/py-unit-tests.yml",
+  "All-Hands-AI__OpenHands/frontend/src/services/actions.ts",
+  "All-Hands-AI__OpenHands/frontend/src/services/observations.ts"
+ ],
+ "muloc_0042": [
+  "All-Hands-AI__OpenHands/agenthub/codeact_agent/codeact_agent.py"
+ ],
+ "muloc_0045": [
+  "scrapy__scrapy/scrapy/spiders/sitemap.py",
+  "scrapy__scrapy/scrapy/utils/sitemap.py",
+  "scrapy__scrapy/tests/test_spider.py",
+  "scrapy__scrapy/tests/test_utils_sitemap.py"
+ ],
+ "muloc_0046": [
+  "ageitgey__face_recognition/README.md",
+  "ageitgey__face_recognition/face_recognition/cli.py",
+  "ageitgey__face_recognition/setup.py",
+  "ageitgey__face_recognition/tests/test_face_recognition.py"
+ ],
+ "muloc_0047": [
+  "oobabooga__text-generation-webui/extensions/openai/script.py"
+ ],
+ "muloc_0048": [
+  "Textualize__rich/rich/console.py"
+ ],
+ "muloc_0050": [
+  "fastapi__fastapi/fastapi/openapi/utils.py"
+ ],
+ "muloc_0051": [
+  "All-Hands-AI__OpenHands/README.md"
+ ],
+ "muloc_0052": [
+  "scrapy__scrapy/scrapy/utils/python.py"
+ ],
+ "muloc_0053": [
+  "huggingface__transformers/tests/test_modeling_tf_lxmert.py"
+ ],
+ "muloc_0056": [
+  "huggingface__transformers/src/transformers/__init__.py",
+  "huggingface__transformers/src/transformers/modeling_flax_utils.py",
+  "huggingface__transformers/src/transformers/models/auto/modeling_flax_auto.py",
+  "huggingface__transformers/src/transformers/utils/dummy_flax_objects.py"
+ ],
+ "muloc_0057": [
+  "pandas-dev__pandas/doc/source/install.rst",
+  "pandas-dev__pandas/doc/source/io.rst",
+  "pandas-dev__pandas/doc/source/whatsnew/v0.17.0.txt",
+  "pandas-dev__pandas/pandas/core/frame.py",
+  "pandas-dev__pandas/pandas/io/excel.py",
+  "pandas-dev__pandas/pandas/io/tests/test_excel.py",
+  "pandas-dev__pandas/vb_suite/packers.py"
+ ],
+ "muloc_0058": [
+  "3b1b__manim/manimlib/scene/scene.py"
+ ],
+ "muloc_0059": [
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/CONTRIBUTORS.md",
+  "Textualize__rich/rich/console.py"
+ ],
+ "muloc_0060": [
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py"
+ ],
+ "muloc_0061": [
+  "langflow-ai__langflow/pyproject.toml",
+  "langflow-ai__langflow/src/backend/langflow/interface/agents/custom.py",
+  "langflow-ai__langflow/src/backend/langflow/interface/agents/prebuilt.py",
+  "langflow-ai__langflow/src/backend/langflow/interface/tools/util.py",
+  "langflow-ai__langflow/src/backend/langflow/interface/utils.py",
+  "langflow-ai__langflow/src/backend/langflow/template/nodes.py"
+ ],
+ "muloc_0063": [
+  "localstack__localstack/localstack/services/s3/s3_listener.py",
+  "localstack__localstack/tests/integration/test_s3.py"
+ ],
+ "muloc_0065": [
+  "pandas-dev__pandas/asv_bench/benchmarks/categoricals.py"
+ ],
+ "muloc_0066": [
+  "geekan__MetaGPT/metagpt/roles/role.py",
+  "geekan__MetaGPT/tests/metagpt/roles/test_role.py"
+ ],
+ "muloc_0067": [
+  "geekan__MetaGPT/config/config2.example.yaml",
+  "geekan__MetaGPT/metagpt/configs/embedding_config.py",
+  "geekan__MetaGPT/metagpt/rag/schema.py"
+ ],
+ "muloc_0068": [
+  "scrapy__scrapy/conftest.py",
+  "scrapy__scrapy/docs/topics/request-response.rst",
+  "scrapy__scrapy/scrapy/core/downloader/__init__.py",
+  "scrapy__scrapy/scrapy/core/downloader/handlers/http11.py",
+  "scrapy__scrapy/scrapy/http/response/__init__.py",
+  "scrapy__scrapy/tests/mockserver.py",
+  "scrapy__scrapy/tests/test_crawl.py",
+  "scrapy__scrapy/tests/test_crawler.py"
+ ],
+ "muloc_0069": [
+  "psf__requests/requests/adapters.py"
+ ],
+ "muloc_0070": [
+  "pandas-dev__pandas/pandas/tseries/offsets.py"
+ ],
+ "muloc_0071": [
+  "ultralytics__yolov5/detect.py",
+  "ultralytics__yolov5/utils/general.py"
+ ],
+ "muloc_0072": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0073": [
+  "home-assistant__core/homeassistant/components/honeywell/__init__.py",
+  "home-assistant__core/homeassistant/components/honeywell/climate.py",
+  "home-assistant__core/tests/components/honeywell/test_init.py"
+ ],
+ "muloc_0074": [
+  "deepfakes__faceswap/lib/faces_detect.py",
+  "deepfakes__faceswap/lib/utils.py"
+ ],
+ "muloc_0075": [
+  "pytorch__pytorch/test/onnx/test_pytorch_onnx_no_runtime.py",
+  "pytorch__pytorch/test/onnx/test_pytorch_onnx_onnxruntime.py",
+  "pytorch__pytorch/torch/onnx/__init__.py",
+  "pytorch__pytorch/torch/onnx/_constants.py"
+ ],
+ "muloc_0076": [
+  "Z4nzu__hackingtool/hackingtool.py",
+  "Z4nzu__hackingtool/tools/others/socialmedia.py"
+ ],
+ "muloc_0077": [
+  "ultralytics__yolov5/utils/loggers/__init__.py",
+  "ultralytics__yolov5/utils/loggers/wandb/wandb_utils.py"
+ ],
+ "muloc_0078": [
+  "AntonOsika__gpt-engineer/gpt_engineer/steps.py",
+  "AntonOsika__gpt-engineer/tests/test_collect.py"
+ ],
+ "muloc_0079": [
+  "OpenInterpreter__open-interpreter/interpreter/code_interpreters/subprocess_code_interpreter.py"
+ ],
+ "muloc_0080": [
+  "ansible__ansible/lib/ansible/plugins/cache/__init__.py"
+ ],
+ "muloc_0081": [
+  "AUTOMATIC1111__stable-diffusion-webui/modules/extensions.py",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/ui_extensions.py"
+ ],
+ "muloc_0082": [
+  "ansible__ansible/lib/ansible/modules/cloud/amazon/cloudformation.py"
+ ],
+ "muloc_0083": [
+  "scikit-learn__scikit-learn/doc/whats_new.rst",
+  "scikit-learn__scikit-learn/sklearn/ensemble/tests/test_forest.py"
+ ],
+ "muloc_0084": [
+  "fastapi__fastapi/fastapi/dependencies/utils.py"
+ ],
+ "muloc_0085": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0086": [
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py"
+ ],
+ "muloc_0087": [
+  "scrapy__scrapy/scrapy/utils/reactor.py",
+  "scrapy__scrapy/tests/test_commands.py",
+  "scrapy__scrapy/tests/test_crawler.py",
+  "scrapy__scrapy/tests/test_downloader_handlers.py"
+ ],
+ "muloc_0088": [
+  "pandas-dev__pandas/pandas/core/indexing.py"
+ ],
+ "muloc_0089": [
+  "geekan__MetaGPT/metagpt/actions/design_api_an.py",
+  "geekan__MetaGPT/metagpt/actions/project_management_an.py"
+ ],
+ "muloc_0090": [
+  "CorentinJ__Real-Time-Voice-Cloning/README.md",
+  "CorentinJ__Real-Time-Voice-Cloning/demo_cli.py",
+  "CorentinJ__Real-Time-Voice-Cloning/demo_toolbox.py",
+  "CorentinJ__Real-Time-Voice-Cloning/encoder/audio.py",
+  "CorentinJ__Real-Time-Voice-Cloning/requirements.txt",
+  "CorentinJ__Real-Time-Voice-Cloning/requirements_gpu.txt",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/LICENSE.txt",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/audio.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/feeder.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/hparams.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/inference.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/infolog.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/__init__.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/architecture_wrappers.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/attention.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/custom_decoder.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/helpers.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/modules.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/tacotron.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/preprocess.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/synthesize.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/tacotron2.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/train.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/utils/__init__.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer_train.py",
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/__init__.py",
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/ui.py",
+  "CorentinJ__Real-Time-Voice-Cloning/vocoder_preprocess.py"
+ ],
+ "muloc_0092": [
+  "oobabooga__text-generation-webui/extensions/silero_tts/script.py",
+  "oobabooga__text-generation-webui/modules/shared.py",
+  "oobabooga__text-generation-webui/modules/text_generation.py"
+ ],
+ "muloc_0093": [
+  "pandas-dev__pandas/pandas/core/series.py"
+ ],
+ "muloc_0094": [
+  "All-Hands-AI__OpenHands/pyproject.toml",
+  "All-Hands-AI__OpenHands/tests/unit/test_agent_skill.py"
+ ],
+ "muloc_0096": [
+  "pallets__flask/docs/api.rst",
+  "pallets__flask/docs/installation.rst",
+  "pallets__flask/tests/test_helpers.py",
+  "pallets__flask/tox.ini"
+ ],
+ "muloc_0097": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/tiktok.py"
+ ],
+ "muloc_0098": [
+  "xtekky__gpt4free/g4f/Provider/Ai4Chat.py",
+  "xtekky__gpt4free/g4f/Provider/Mhystical.py",
+  "xtekky__gpt4free/g4f/Provider/you/har_file.py",
+  "xtekky__gpt4free/g4f/__init__.py",
+  "xtekky__gpt4free/g4f/api/__init__.py",
+  "xtekky__gpt4free/g4f/api/_logging.py",
+  "xtekky__gpt4free/g4f/gui/server/api.py",
+  "xtekky__gpt4free/requirements.txt",
+  "xtekky__gpt4free/setup.py"
+ ],
+ "muloc_0099": [
+  "pandas-dev__pandas/pandas/core/index.py",
+  "pandas-dev__pandas/pandas/tests/test_indexing.py"
+ ],
+ "muloc_0100": [
+  "pandas-dev__pandas/doc/source/indexing.rst",
+  "pandas-dev__pandas/pandas/core/index.py",
+  "pandas-dev__pandas/pandas/core/indexing.py",
+  "pandas-dev__pandas/pandas/index.pyx",
+  "pandas-dev__pandas/pandas/lib.pyx",
+  "pandas-dev__pandas/pandas/tests/test_frame.py",
+  "pandas-dev__pandas/pandas/tests/test_indexing.py"
+ ],
+ "muloc_0101": [
+  "deepfakes__faceswap/faceswap.py",
+  "deepfakes__faceswap/lib/ModelAE.py",
+  "deepfakes__faceswap/lib/cli.py",
+  "deepfakes__faceswap/lib/training_data.py",
+  "deepfakes__faceswap/lib/utils.py",
+  "deepfakes__faceswap/plugins/Convert_Adjust.py",
+  "deepfakes__faceswap/plugins/Convert_GAN.py",
+  "deepfakes__faceswap/plugins/Convert_Masked.py",
+  "deepfakes__faceswap/plugins/Extract_Align.py",
+  "deepfakes__faceswap/plugins/Model_GAN/Model.py",
+  "deepfakes__faceswap/plugins/Model_GAN/Trainer.py",
+  "deepfakes__faceswap/plugins/Model_LowMem.py",
+  "deepfakes__faceswap/plugins/Model_Original.py",
+  "deepfakes__faceswap/scripts/convert.py",
+  "deepfakes__faceswap/scripts/extract.py",
+  "deepfakes__faceswap/scripts/train.py"
+ ],
+ "muloc_0102": [
+  "scrapy__scrapy/docs/topics/signals.rst",
+  "scrapy__scrapy/scrapy/core/scraper.py"
+ ],
+ "muloc_0103": [
+  "comfyanonymous__ComfyUI/comfy/samplers.py",
+  "comfyanonymous__ComfyUI/nodes.py"
+ ],
+ "muloc_0105": [
+  "huggingface__transformers/src/transformers/models/gptj/modeling_gptj.py"
+ ],
+ "muloc_0106": [
+  "deepfakes__faceswap/plugins/PluginLoader.py",
+  "deepfakes__faceswap/scripts/convert.py",
+  "deepfakes__faceswap/scripts/train.py"
+ ],
+ "muloc_0107": [
+  "xtekky__gpt4free/g4f/Provider/Bing.py"
+ ],
+ "muloc_0108": [
+  "psf__requests/setup.py"
+ ],
+ "muloc_0109": [
+  "AUTOMATIC1111__stable-diffusion-webui/extensions-builtin/Lora/networks.py"
+ ],
+ "muloc_0110": [
+  "scikit-learn__scikit-learn/sklearn/cluster/tests/test_k_means.py",
+  "scikit-learn__scikit-learn/sklearn/utils/tests/test_extmath.py"
+ ],
+ "muloc_0111": [
+  "scrapy__scrapy/docs/topics/email.rst",
+  "scrapy__scrapy/docs/topics/settings.rst",
+  "scrapy__scrapy/scrapy/extensions/memusage.py",
+  "scrapy__scrapy/scrapy/extensions/statsmailer.py",
+  "scrapy__scrapy/scrapy/mail.py",
+  "scrapy__scrapy/scrapy/settings/default_settings.py",
+  "scrapy__scrapy/scrapy/utils/test.py",
+  "scrapy__scrapy/tests/test_mail.py"
+ ],
+ "muloc_0112": [
+  "3b1b__manim/manimlib/scene/scene_file_writer.py"
+ ],
+ "muloc_0113": [
+  "python__cpython/Doc/library/os.path.rst",
+  "python__cpython/Lib/ntpath.py",
+  "python__cpython/Lib/test/test_ntpath.py",
+  "python__cpython/Modules/clinic/posixmodule.c.h",
+  "python__cpython/Modules/posixmodule.c"
+ ],
+ "muloc_0114": [
+  "psf__requests/requests/adapters.py",
+  "psf__requests/requests/exceptions.py"
+ ],
+ "muloc_0115": [
+  "AUTOMATIC1111__stable-diffusion-webui/scripts/outpainting_mk_2.py"
+ ],
+ "muloc_0116": [
+  "AntonOsika__gpt-engineer/gpt_engineer/ai.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/chat_to_files.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/collect.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/db.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/learning.py"
+ ],
+ "muloc_0117": [
+  "huggingface__transformers/docs/source/model_doc/dpr.rst",
+  "huggingface__transformers/src/transformers/__init__.py",
+  "huggingface__transformers/src/transformers/convert_pytorch_checkpoint_to_tf2.py",
+  "huggingface__transformers/src/transformers/utils/dummy_pt_objects.py",
+  "huggingface__transformers/src/transformers/utils/dummy_tf_objects.py",
+  "huggingface__transformers/tests/test_modeling_dpr.py",
+  "huggingface__transformers/utils/check_repo.py"
+ ],
+ "muloc_0119": [
+  "scrapy__scrapy/docs/contributing.rst",
+  "scrapy__scrapy/scrapy/utils/url.py"
+ ],
+ "muloc_0121": [
+  "oobabooga__text-generation-webui/README.md",
+  "oobabooga__text-generation-webui/download-model.py",
+  "oobabooga__text-generation-webui/models/config.yaml",
+  "oobabooga__text-generation-webui/modules/chat.py",
+  "oobabooga__text-generation-webui/modules/models.py",
+  "oobabooga__text-generation-webui/modules/shared.py"
+ ],
+ "muloc_0122": [
+  "scikit-learn__scikit-learn/doc/modules/cross_validation.rst",
+  "scikit-learn__scikit-learn/doc/tutorial/statistical_inference/model_selection.rst",
+  "scikit-learn__scikit-learn/doc/whats_new.rst",
+  "scikit-learn__scikit-learn/sklearn/feature_selection/tests/test_rfe.py",
+  "scikit-learn__scikit-learn/sklearn/tests/test_naive_bayes.py"
+ ],
+ "muloc_0123": [
+  "Significant-Gravitas__AutoGPT/.github/PULL_REQUEST_TEMPLATE.md",
+  "Significant-Gravitas__AutoGPT/.github/workflows/ci.yml",
+  "Significant-Gravitas__AutoGPT/.pre-commit-config.yaml",
+  "Significant-Gravitas__AutoGPT/autogpt/plugins.py"
+ ],
+ "muloc_0126": [
+  "pandas-dev__pandas/pandas/io/pytables.py"
+ ],
+ "muloc_0128": [
+  "scrapy__scrapy/scrapy/utils/conf.py"
+ ],
+ "muloc_0129": [
+  "fastapi__fastapi/fastapi/applications.py",
+  "fastapi__fastapi/fastapi/openapi/utils.py"
+ ],
+ "muloc_0131": [
+  "AntonOsika__gpt-engineer/gpt_engineer/chat_to_files.py"
+ ],
+ "muloc_0132": [
+  "geekan__MetaGPT/config/config2.example.yaml",
+  "geekan__MetaGPT/metagpt/actions/action_node.py",
+  "geekan__MetaGPT/metagpt/configs/llm_config.py",
+  "geekan__MetaGPT/metagpt/const.py",
+  "geekan__MetaGPT/metagpt/provider/anthropic_api.py",
+  "geekan__MetaGPT/metagpt/provider/base_llm.py",
+  "geekan__MetaGPT/metagpt/provider/dashscope_api.py",
+  "geekan__MetaGPT/metagpt/provider/general_api_base.py",
+  "geekan__MetaGPT/metagpt/provider/google_gemini_api.py",
+  "geekan__MetaGPT/metagpt/provider/human_provider.py",
+  "geekan__MetaGPT/metagpt/provider/ollama_api.py",
+  "geekan__MetaGPT/metagpt/provider/openai_api.py",
+  "geekan__MetaGPT/metagpt/provider/qianfan_api.py",
+  "geekan__MetaGPT/metagpt/provider/spark_api.py",
+  "geekan__MetaGPT/metagpt/provider/zhipuai_api.py",
+  "geekan__MetaGPT/requirements.txt"
+ ],
+ "muloc_0133": [
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/rich/file_proxy.py",
+  "Textualize__rich/tests/test_file_proxy.py"
+ ],
+ "muloc_0135": [
+  "scikit-learn__scikit-learn/doc/modules/multiclass.rst",
+  "scikit-learn__scikit-learn/doc/modules/svm.rst",
+  "scikit-learn__scikit-learn/doc/whats_new/v0.21.rst",
+  "scikit-learn__scikit-learn/sklearn/utils/estimator_checks.py",
+  "scikit-learn__scikit-learn/sklearn/utils/multiclass.py",
+  "scikit-learn__scikit-learn/sklearn/utils/tests/test_multiclass.py"
+ ],
+ "muloc_0136": [
+  "scrapy__scrapy/docs/index.rst",
+  "scrapy__scrapy/docs/topics/architecture.rst",
+  "scrapy__scrapy/docs/topics/exporters.rst",
+  "scrapy__scrapy/docs/topics/item-pipeline.rst",
+  "scrapy__scrapy/docs/topics/items.rst",
+  "scrapy__scrapy/docs/topics/practices.rst",
+  "scrapy__scrapy/docs/topics/signals.rst",
+  "scrapy__scrapy/docs/topics/spider-middleware.rst",
+  "scrapy__scrapy/docs/topics/spiders.rst",
+  "scrapy__scrapy/scrapy/commands/parse.py",
+  "scrapy__scrapy/scrapy/contracts/default.py",
+  "scrapy__scrapy/scrapy/core/scraper.py",
+  "scrapy__scrapy/tests/spiders.py",
+  "scrapy__scrapy/tests/test_commands.py",
+  "scrapy__scrapy/tests/test_contracts.py",
+  "scrapy__scrapy/tests/test_engine.py",
+  "scrapy__scrapy/tests/test_pipeline_files.py",
+  "scrapy__scrapy/tests/test_pipeline_images.py"
+ ],
+ "muloc_0137": [
+  "scikit-learn__scikit-learn/doc/whats_new/v0.20.rst",
+  "scikit-learn__scikit-learn/sklearn/cluster/tests/test_k_means.py"
+ ],
+ "muloc_0138": [
+  "scrapy__scrapy/scrapy/utils/misc.py"
+ ],
+ "muloc_0139": [
+  "scikit-learn__scikit-learn/doc/whats_new/v0.24.rst",
+  "scikit-learn__scikit-learn/sklearn/decomposition/tests/test_kernel_pca.py",
+  "scikit-learn__scikit-learn/sklearn/utils/validation.py"
+ ],
+ "muloc_0140": [
+  "localstack__localstack/localstack/services/s3/s3_listener.py",
+  "localstack__localstack/tests/integration/test_s3.py"
+ ],
+ "muloc_0141": [
+  "Significant-Gravitas__AutoGPT/autogpt/config/config.py",
+  "Significant-Gravitas__AutoGPT/autogpt/processing/text.py",
+  "Significant-Gravitas__AutoGPT/requirements.txt"
+ ],
+ "muloc_0142": [
+  "ansible__ansible/lib/ansible/modules/files/stat.py"
+ ],
+ "muloc_0143": [
+  "huggingface__transformers/README.md",
+  "huggingface__transformers/docs/source/index.rst",
+  "huggingface__transformers/docs/source/model_doc/byt5.rst",
+  "huggingface__transformers/docs/source/model_doc/mt5.rst",
+  "huggingface__transformers/docs/source/model_doc/t5.rst",
+  "huggingface__transformers/src/transformers/models/t5/modeling_flax_t5.py",
+  "huggingface__transformers/src/transformers/models/t5/modeling_t5.py",
+  "huggingface__transformers/src/transformers/models/t5/modeling_tf_t5.py"
+ ],
+ "muloc_0144": [
+  "pandas-dev__pandas/pandas/compat/__init__.py",
+  "pandas-dev__pandas/pandas/core/panel.py"
+ ],
+ "muloc_0146": [
+  "huggingface__transformers/docs/source/index.rst",
+  "huggingface__transformers/src/transformers/__init__.py",
+  "huggingface__transformers/src/transformers/modeling_utils.py"
+ ],
+ "muloc_0148": [
+  "pandas-dev__pandas/pandas/io/pytables.py"
+ ],
+ "muloc_0149": [
+  "scrapy__scrapy/scrapy/exporters.py",
+  "scrapy__scrapy/tests/test_exporters.py"
+ ],
+ "muloc_0150": [
+  "AntonOsika__gpt-engineer/gpt_engineer/ai.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/steps.py",
+  "AntonOsika__gpt-engineer/pyproject.toml"
+ ],
+ "muloc_0151": [
+  "huggingface__transformers/src/transformers/models/clip/processing_clip.py",
+  "huggingface__transformers/src/transformers/models/layoutlmv2/processing_layoutlmv2.py"
+ ],
+ "muloc_0153": [
+  "scikit-learn__scikit-learn/doc/modules/classes.rst",
+  "scikit-learn__scikit-learn/doc/modules/cross_validation.rst",
+  "scikit-learn__scikit-learn/doc/modules/grid_search.rst",
+  "scikit-learn__scikit-learn/doc/modules/model_evaluation.rst",
+  "scikit-learn__scikit-learn/doc/whats_new.rst",
+  "scikit-learn__scikit-learn/sklearn/metrics/tests/test_score_objects.py",
+  "scikit-learn__scikit-learn/sklearn/model_selection/__init__.py",
+  "scikit-learn__scikit-learn/sklearn/model_selection/_search.py",
+  "scikit-learn__scikit-learn/sklearn/model_selection/_validation.py",
+  "scikit-learn__scikit-learn/sklearn/model_selection/tests/test_search.py",
+  "scikit-learn__scikit-learn/sklearn/model_selection/tests/test_validation.py"
+ ],
+ "muloc_0154": [
+  "huggingface__transformers/src/transformers/trainer_callback.py"
+ ],
+ "muloc_0155": [
+  "nvbn__thefuck/README.md",
+  "nvbn__thefuck/thefuck/conf.py",
+  "nvbn__thefuck/thefuck/types.py"
+ ],
+ "muloc_0156": [
+  "scrapy__scrapy/scrapy/spiderloader.py",
+  "scrapy__scrapy/tests/test_spiderloader/__init__.py"
+ ],
+ "muloc_0157": [
+  "scikit-learn__scikit-learn/sklearn/ensemble/tests/test_iforest.py"
+ ],
+ "muloc_0158": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/cbc.py"
+ ],
+ "muloc_0159": [
+  "sherlock-project__sherlock/requirements.txt",
+  "sherlock-project__sherlock/sherlock/sherlock.py"
+ ],
+ "muloc_0160": [
+  "geekan__MetaGPT/examples/llm_vision.py",
+  "geekan__MetaGPT/metagpt/configs/llm_config.py",
+  "geekan__MetaGPT/metagpt/provider/general_api_base.py",
+  "geekan__MetaGPT/metagpt/provider/general_api_requestor.py",
+  "geekan__MetaGPT/metagpt/provider/ollama_api.py",
+  "geekan__MetaGPT/tests/metagpt/provider/test_ollama_api.py"
+ ],
+ "muloc_0161": [
+  "3b1b__manim/manimlib/scene/scene_file_writer.py"
+ ],
+ "muloc_0162": [
+  "yt-dlp__yt-dlp/README.md",
+  "yt-dlp__yt-dlp/yt_dlp/downloader/youtube_live_chat.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/youtube.py"
+ ],
+ "muloc_0163": [
+  "deepfakes__faceswap/lib/cli.py",
+  "deepfakes__faceswap/lib/faces_detect.py",
+  "deepfakes__faceswap/lib/utils.py",
+  "deepfakes__faceswap/scripts/convert.py",
+  "deepfakes__faceswap/scripts/extract.py"
+ ],
+ "muloc_0164": [
+  "deepfakes__faceswap/scripts/convert.py"
+ ],
+ "muloc_0165": [
+  "geekan__MetaGPT/metagpt/actions/research.py",
+  "geekan__MetaGPT/metagpt/config2.py",
+  "geekan__MetaGPT/metagpt/utils/token_counter.py"
+ ],
+ "muloc_0166": [
+  "scikit-learn__scikit-learn/doc/glossary.rst",
+  "scikit-learn__scikit-learn/doc/modules/classes.rst",
+  "scikit-learn__scikit-learn/doc/modules/neighbors.rst",
+  "scikit-learn__scikit-learn/doc/whats_new/v0.22.rst",
+  "scikit-learn__scikit-learn/sklearn/cluster/tests/test_dbscan.py",
+  "scikit-learn__scikit-learn/sklearn/cluster/tests/test_spectral.py",
+  "scikit-learn__scikit-learn/sklearn/manifold/_utils.pyx",
+  "scikit-learn__scikit-learn/sklearn/manifold/tests/test_isomap.py",
+  "scikit-learn__scikit-learn/sklearn/manifold/tests/test_spectral_embedding.py",
+  "scikit-learn__scikit-learn/sklearn/manifold/tests/test_t_sne.py",
+  "scikit-learn__scikit-learn/sklearn/neighbors/__init__.py",
+  "scikit-learn__scikit-learn/sklearn/neighbors/tests/test_neighbors.py",
+  "scikit-learn__scikit-learn/sklearn/utils/estimator_checks.py"
+ ],
+ "muloc_0167": [
+  "python__cpython/Include/internal/pycore_global_objects_fini_generated.h",
+  "python__cpython/Include/internal/pycore_global_strings.h",
+  "python__cpython/Include/internal/pycore_runtime_init_generated.h",
+  "python__cpython/Include/internal/pycore_typeobject.h",
+  "python__cpython/Include/internal/pycore_unicodeobject_generated.h",
+  "python__cpython/Include/pybuffer.h",
+  "python__cpython/Lib/_collections_abc.py",
+  "python__cpython/Lib/inspect.py",
+  "python__cpython/Lib/test/test_buffer.py",
+  "python__cpython/Lib/test/test_collections.py",
+  "python__cpython/Lib/test/test_doctest.py",
+  "python__cpython/Modules/_testcapi/parts.h",
+  "python__cpython/Modules/_testcapimodule.c",
+  "python__cpython/Objects/clinic/memoryobject.c.h",
+  "python__cpython/Objects/memoryobject.c",
+  "python__cpython/Objects/object.c",
+  "python__cpython/Objects/typeobject.c",
+  "python__cpython/Tools/build/generate_global_objects.py"
+ ],
+ "muloc_0168": [
+  "scrapy__scrapy/pytest.ini",
+  "scrapy__scrapy/tests/mockserver.py",
+  "scrapy__scrapy/tests/test_downloader_handlers.py",
+  "scrapy__scrapy/tests/test_webclient.py",
+  "scrapy__scrapy/tox.ini"
+ ],
+ "muloc_0169": [
+  "ultralytics__yolov5/.github/workflows/ci-testing.yml",
+  "ultralytics__yolov5/README.md",
+  "ultralytics__yolov5/detect.py",
+  "ultralytics__yolov5/train.py",
+  "ultralytics__yolov5/utils/general.py"
+ ],
+ "muloc_0170": [
+  "psf__requests/requests/sessions.py"
+ ],
+ "muloc_0171": [
+  "Significant-Gravitas__AutoGPT/autogpt/memory/pinecone.py"
+ ],
+ "muloc_0172": [
+  "scikit-learn__scikit-learn/doc/whats_new/v1.0.rst",
+  "scikit-learn__scikit-learn/sklearn/feature_extraction/_dict_vectorizer.py",
+  "scikit-learn__scikit-learn/sklearn/feature_extraction/tests/test_dict_vectorizer.py"
+ ],
+ "muloc_0173": [
+  "scikit-learn__scikit-learn/doc/modules/classes.rst",
+  "scikit-learn__scikit-learn/doc/modules/neighbors.rst",
+  "scikit-learn__scikit-learn/doc/whats_new.rst"
+ ],
+ "muloc_0174": [
+  "deepfakes__faceswap/scripts/train.py"
+ ],
+ "muloc_0175": [
+  "pallets__flask/tests/test_basic.py"
+ ],
+ "muloc_0176": [
+  "lllyasviel__Fooocus/launch.py"
+ ],
+ "muloc_0177": [
+  "binary-husky__gpt_academic/functional_crazy.py"
+ ],
+ "muloc_0178": [
+  "scikit-learn__scikit-learn/doc/whats_new/v0.24.rst",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/tests/test_gradient_boosting.py"
+ ],
+ "muloc_0181": [
+  "sherlock-project__sherlock/sites.md"
+ ],
+ "muloc_0182": [
+  "geekan__MetaGPT/config/config2.example.yaml",
+  "geekan__MetaGPT/metagpt/configs/embedding_config.py",
+  "geekan__MetaGPT/metagpt/rag/schema.py"
+ ],
+ "muloc_0185": [
+  "pandas-dev__pandas/pandas/core/common.py",
+  "pandas-dev__pandas/pandas/core/generic.py",
+  "pandas-dev__pandas/pandas/core/indexing.py",
+  "pandas-dev__pandas/pandas/tests/test_multilevel.py"
+ ],
+ "muloc_0186": [
+  "deepfakes__faceswap/faceswap.py",
+  "deepfakes__faceswap/requirements-gpu-python35-cuda8.txt",
+  "deepfakes__faceswap/requirements-gpu-python36-cuda9.txt",
+  "deepfakes__faceswap/requirements-python35.txt",
+  "deepfakes__faceswap/requirements-python36.txt",
+  "deepfakes__faceswap/scripts/convert.py",
+  "deepfakes__faceswap/scripts/train.py"
+ ],
+ "muloc_0188": [
+  "keras-team__keras/keras/utils/io_utils.py",
+  "keras-team__keras/tests/keras/utils/io_utils_test.py"
+ ],
+ "muloc_0189": [
+  "home-assistant__core/homeassistant/components/google_assistant/helpers.py",
+  "home-assistant__core/tests/components/google_assistant/test_helpers.py"
+ ],
+ "muloc_0191": [
+  "psf__requests/requests/cookies.py"
+ ],
+ "muloc_0193": [
+  "deepfakes__faceswap/lib/FaceLandmarksExtractor/FaceLandmarksExtractor.py",
+  "deepfakes__faceswap/lib/ModelAE.py"
+ ],
+ "muloc_0194": [
+  "huggingface__transformers/docs/source/benchmarks.rst",
+  "huggingface__transformers/utils/style_doc.py"
+ ],
+ "muloc_0195": [
+  "scrapy__scrapy/docs/topics/logging.rst",
+  "scrapy__scrapy/docs/topics/settings.rst",
+  "scrapy__scrapy/scrapy/logformatter.py"
+ ],
+ "muloc_0196": [
+  "scrapy__scrapy/docs/faq.rst",
+  "scrapy__scrapy/docs/topics/broad-crawls.rst",
+  "scrapy__scrapy/docs/topics/settings.rst",
+  "scrapy__scrapy/pytest.ini",
+  "scrapy__scrapy/scrapy/crawler.py",
+  "scrapy__scrapy/scrapy/settings/default_settings.py",
+  "scrapy__scrapy/scrapy/utils/defer.py",
+  "scrapy__scrapy/scrapy/utils/log.py",
+  "scrapy__scrapy/scrapy/utils/reactor.py",
+  "scrapy__scrapy/tests/test_commands.py",
+  "scrapy__scrapy/tests/test_crawler.py"
+ ],
+ "muloc_0197": [
+  "pallets__flask/tests/test_instance_config.py",
+  "pallets__flask/tox.ini"
+ ],
+ "muloc_0198": [
+  "huggingface__transformers/src/transformers/tokenization_utils_base.py"
+ ],
+ "muloc_0200": [
+  "ultralytics__yolov5/utils/datasets.py"
+ ],
+ "muloc_0201": [
+  "Significant-Gravitas__AutoGPT/autogpt/config/config.py"
+ ],
+ "muloc_0202": [
+  "nvbn__thefuck/tests/rules/test_git_push.py",
+  "nvbn__thefuck/thefuck/rules/git_push.py"
+ ],
+ "muloc_0203": [
+  "huggingface__transformers/templates/adding_a_new_model/cookiecutter-template-{{cookiecutter.modelname}}/test_modeling_tf_{{cookiecutter.lowercase_modelname}}.py",
+  "huggingface__transformers/tests/test_modeling_tf_common.py"
+ ],
+ "muloc_0204": [
+  "pallets__flask/flask/helpers.py",
+  "pallets__flask/tests/test_helpers.py"
+ ],
+ "muloc_0205": [
+  "pallets__flask/flask/cli.py"
+ ],
+ "muloc_0207": [
+  "keras-team__keras/keras/engine/saving.py",
+  "keras-team__keras/tests/test_model_saving.py"
+ ],
+ "muloc_0208": [
+  "nvbn__thefuck/tests/rules/test_git_checkout.py",
+  "nvbn__thefuck/thefuck/rules/git_checkout.py"
+ ],
+ "muloc_0209": [
+  "nvbn__thefuck/tests/shells/test_fish.py",
+  "nvbn__thefuck/thefuck/shells/fish.py"
+ ],
+ "muloc_0210": [
+  "nvbn__thefuck/README.md",
+  "nvbn__thefuck/tests/test_conf.py",
+  "nvbn__thefuck/tests/test_utils.py",
+  "nvbn__thefuck/thefuck/conf.py",
+  "nvbn__thefuck/thefuck/const.py",
+  "nvbn__thefuck/thefuck/utils.py"
+ ],
+ "muloc_0211": [
+  "nvbn__thefuck/setup.py",
+  "nvbn__thefuck/thefuck/rules/no_command.py"
+ ],
+ "muloc_0212": [
+  "nvbn__thefuck/README.md",
+  "nvbn__thefuck/thefuck/main.py"
+ ],
+ "muloc_0213": [
+  "nvbn__thefuck/tests/rules/test_apt_get.py"
+ ],
+ "muloc_0214": [
+  "home-assistant__core/homeassistant/components/google_assistant/trait.py",
+  "home-assistant__core/tests/components/google_assistant/test_trait.py"
+ ],
+ "muloc_0215": [
+  "home-assistant__core/homeassistant/components/velux/__init__.py",
+  "home-assistant__core/homeassistant/components/velux/cover.py",
+  "home-assistant__core/homeassistant/components/velux/light.py"
+ ],
+ "muloc_0217": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/vrv.py"
+ ],
+ "muloc_0218": [
+  "yt-dlp__yt-dlp/yt_dlp/YoutubeDL.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/aliexpress.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/applepodcasts.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/arte.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/audiomack.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/bbc.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/extractors.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/nuvid.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/rutv.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/streamcz.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/tele5.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/tv2dk.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/uol.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/urplay.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/videa.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/vimeo.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/wdr.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/zdf.py"
+ ],
+ "muloc_0219": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/generic.py",
+  "yt-dlp__yt-dlp/yt_dlp/utils.py"
+ ],
+ "muloc_0220": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/vlive.py"
+ ],
+ "muloc_0221": [
+  "yt-dlp__yt-dlp/yt_dlp/__init__.py"
+ ],
+ "muloc_0222": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/anvato.py"
+ ],
+ "muloc_0223": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/ard.py"
+ ],
+ "muloc_0224": [
+  "AntonOsika__gpt-engineer/.github/CONTRIBUTING.md"
+ ],
+ "muloc_0225": [
+  "AntonOsika__gpt-engineer/gpt_engineer/chat_to_files.py"
+ ],
+ "muloc_0227": [
+  "lllyasviel__Fooocus/fooocus_version.py",
+  "lllyasviel__Fooocus/modules/async_worker.py",
+  "lllyasviel__Fooocus/modules/private_logger.py",
+  "lllyasviel__Fooocus/update_log.md",
+  "lllyasviel__Fooocus/webui.py"
+ ],
+ "muloc_0228": [
+  "lllyasviel__Fooocus/modules/async_worker.py",
+  "lllyasviel__Fooocus/modules/config.py",
+  "lllyasviel__Fooocus/modules/sdxl_styles.py",
+  "lllyasviel__Fooocus/modules/util.py"
+ ],
+ "muloc_0229": [
+  "lllyasviel__Fooocus/extras/ip_adapter.py",
+  "lllyasviel__Fooocus/fooocus_version.py"
+ ],
+ "muloc_0230": [
+  "lllyasviel__Fooocus/readme.md",
+  "lllyasviel__Fooocus/ldm_patched/modules/args_parser.py"
+ ],
+ "muloc_0231": [
+  "odoo__odoo/addons/account/account_bank_statement.py"
+ ],
+ "muloc_0233": [
+  "binary-husky__gpt_academic/config.py"
+ ],
+ "muloc_0235": [
+  "binary-husky__gpt_academic/config.py"
+ ],
+ "muloc_0237": [
+  "binary-husky__gpt_academic/config.py"
+ ],
+ "muloc_0238": [
+  "deepfakes__faceswap/faceswap.py",
+  "deepfakes__faceswap/lib/aligner.py",
+  "deepfakes__faceswap/lib/cli.py",
+  "deepfakes__faceswap/lib/faces_detect.py",
+  "deepfakes__faceswap/lib/training_data.py",
+  "deepfakes__faceswap/lib/utils.py",
+  "deepfakes__faceswap/plugins/Convert_Adjust.py",
+  "deepfakes__faceswap/plugins/Convert_Masked.py",
+  "deepfakes__faceswap/plugins/Extract_Align.py",
+  "deepfakes__faceswap/plugins/Extract_Crop.py",
+  "deepfakes__faceswap/plugins/PluginLoader.py",
+  "deepfakes__faceswap/scripts/convert.py",
+  "deepfakes__faceswap/scripts/extract.py",
+  "deepfakes__faceswap/scripts/train.py"
+ ],
+ "muloc_0240": [
+  "deepfakes__faceswap/lib/cli.py"
+ ],
+ "muloc_0241": [
+  "All-Hands-AI__OpenHands/openhands/llm/llm.py"
+ ],
+ "muloc_0242": [
+  "scrapy__scrapy/docs/topics/media-pipeline.rst",
+  "scrapy__scrapy/scrapy/pipelines/files.py",
+  "scrapy__scrapy/scrapy/pipelines/media.py",
+  "scrapy__scrapy/tests/mockserver.py",
+  "scrapy__scrapy/tests/test_pipeline_media.py"
+ ],
+ "muloc_0243": [
+  "ansible__ansible/lib/ansible/modules/network/nxos/nxos_vpc.py"
+ ],
+ "muloc_0246": [
+  "ansible__ansible/lib/ansible/module_utils/azure_rm_common.py",
+  "ansible__ansible/lib/ansible/modules/cloud/azure/azure_rm_networkinterface.py"
+ ],
+ "muloc_0248": [
+  "ansible__ansible/lib/ansible/module_utils/nxos.py",
+  "ansible__ansible/lib/ansible/modules/network/nxos/nxos_interface.py"
+ ],
+ "muloc_0250": [
+  "ultralytics__yolov5/data/coco.yaml",
+  "ultralytics__yolov5/data/coco128.yaml",
+  "ultralytics__yolov5/data/scripts/get_coco.sh",
+  "ultralytics__yolov5/utils/general.py"
+ ],
+ "muloc_0251": [
+  "ultralytics__yolov5/models/yolo.py"
+ ],
+ "muloc_0252": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0253": [
+  "ultralytics__yolov5/train.py",
+  "ultralytics__yolov5/utils/torch_utils.py"
+ ],
+ "muloc_0254": [
+  "CorentinJ__Real-Time-Voice-Cloning/README.md",
+  "CorentinJ__Real-Time-Voice-Cloning/demo_cli.py",
+  "CorentinJ__Real-Time-Voice-Cloning/demo_toolbox.py",
+  "CorentinJ__Real-Time-Voice-Cloning/encoder/audio.py",
+  "CorentinJ__Real-Time-Voice-Cloning/requirements.txt",
+  "CorentinJ__Real-Time-Voice-Cloning/requirements_gpu.txt",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/LICENSE.txt",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/audio.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/feeder.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/hparams.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/inference.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/infolog.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/__init__.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/architecture_wrappers.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/attention.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/custom_decoder.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/helpers.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/modules.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/tacotron.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/preprocess.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/synthesize.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/tacotron2.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/train.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/utils/__init__.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer_train.py",
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/__init__.py",
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/ui.py",
+  "CorentinJ__Real-Time-Voice-Cloning/vocoder_preprocess.py"
+ ],
+ "muloc_0256": [
+  "AUTOMATIC1111__stable-diffusion-webui/javascript/extraNetworks.js",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/shared_options.py",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/ui_extra_networks.py"
+ ],
+ "muloc_0257": [
+  "AUTOMATIC1111__stable-diffusion-webui/modules/ui.py"
+ ],
+ "muloc_0258": [
+  "huggingface__transformers/src/transformers/__init__.py"
+ ],
+ "muloc_0259": [
+  "huggingface__transformers/src/transformers/modeling_tf_utils.py",
+  "huggingface__transformers/src/transformers/modeling_utils.py"
+ ],
+ "muloc_0260": [
+  "geekan__MetaGPT/metagpt/configs/mermaid_config.py",
+  "geekan__MetaGPT/metagpt/utils/mermaid.py",
+  "geekan__MetaGPT/config/config2.yaml"
+ ],
+ "muloc_0261": [
+  "geekan__MetaGPT/metagpt/const.py",
+  "geekan__MetaGPT/metagpt/rag/factories/ranker.py",
+  "geekan__MetaGPT/metagpt/rag/schema.py",
+  "geekan__MetaGPT/setup.py"
+ ],
+ "muloc_0262": [
+  "geekan__MetaGPT/metagpt/utils/mmdc_playwright.py"
+ ],
+ "muloc_0263": [
+  "langflow-ai__langflow/src/frontend/src/CustomNodes/GenericNode/components/parameterComponent/index.tsx"
+ ],
+ "muloc_0267": [
+  "fastapi__fastapi/fastapi/utils.py"
+ ],
+ "muloc_0269": [
+  "oobabooga__text-generation-webui/modules/html_generator.py"
+ ],
+ "muloc_0270": [
+  "oobabooga__text-generation-webui/server.py"
+ ],
+ "muloc_0271": [
+  "oobabooga__text-generation-webui/modules/models.py"
+ ],
+ "muloc_0272": [
+  "oobabooga__text-generation-webui/server.py"
+ ],
+ "muloc_0273": [
+  "oobabooga__text-generation-webui/extensions/openai/script.py"
+ ],
+ "muloc_0274": [
+  "hacksider__Deep-Live-Cam/README.md",
+  "hacksider__Deep-Live-Cam/modules/ui.py"
+ ],
+ "muloc_0275": [
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/rich/console.py",
+  "Textualize__rich/rich/measure.py",
+  "Textualize__rich/rich/table.py",
+  "Textualize__rich/tests/test_measure.py",
+  "Textualize__rich/tests/test_table.py"
+ ],
+ "muloc_0276": [
+  "ytdl-org__youtube-dl/youtube_dl/extractor/uplynk.py",
+  "ytdl-org__youtube-dl/youtube_dl/extractor/viceland.py"
+ ],
+ "muloc_0277": [
+  "ytdl-org__youtube-dl/youtube_dl/extractor/vimeo.py"
+ ],
+ "muloc_0278": [
+  "ytdl-org__youtube-dl/youtube_dl/extractor/pluralsight.py"
+ ],
+ "muloc_0279": [
+  "ytdl-org__youtube-dl/youtube_dl/extractor/youtube.py"
+ ],
+ "muloc_0280": [
+  "ytdl-org__youtube-dl/youtube_dl/extractor/extractors.py"
+ ],
+ "muloc_0282": [
+  "localstack__localstack/localstack/services/awslambda/lambda_executors.py",
+  "localstack__localstack/tests/integration/test_lambda.py"
+ ],
+ "muloc_0283": [
+  "localstack__localstack/localstack/services/s3/s3_listener.py",
+  "localstack__localstack/tests/integration/test_s3.py"
+ ],
+ "muloc_0285": [
+  "abi__screenshot-to-code/backend/image_generation.py",
+  "abi__screenshot-to-code/backend/llm.py",
+  "abi__screenshot-to-code/backend/main.py",
+  "abi__screenshot-to-code/frontend/src/App.tsx",
+  "abi__screenshot-to-code/frontend/src/components/SettingsDialog.tsx",
+  "abi__screenshot-to-code/frontend/src/types.ts"
+ ],
+ "muloc_0286": [
+  "pytorch__pytorch/test/test_overrides.py",
+  "pytorch__pytorch/torch/functional.py"
+ ],
+ "muloc_0287": [
+  "pytorch__pytorch/test/dynamo/test_misc.py",
+  "pytorch__pytorch/torch/_dynamo/variables/tensor.py",
+  "pytorch__pytorch/torch/_dynamo/variables/torch.py"
+ ],
+ "muloc_0288": [
+  "pytorch__pytorch/test/test_multiprocessing.py"
+ ],
+ "muloc_0289": [
+  "pytorch__pytorch/aten/src/ATen/core/jit_type.h",
+  "pytorch__pytorch/test/test_jit.py"
+ ],
+ "muloc_0290": [
+  "xtekky__gpt4free/g4f/Provider/Bing.py"
+ ],
+ "muloc_0291": [
+  "xtekky__gpt4free/README.md",
+  "xtekky__gpt4free/etc/testing/test_chat_completion.py",
+  "xtekky__gpt4free/g4f/Provider/__init__.py",
+  "xtekky__gpt4free/g4f/Provider/deprecated/__init__.py",
+  "xtekky__gpt4free/g4f/models.py"
+ ],
+ "muloc_0292": [
+  "Z4nzu__hackingtool/tools/ddos.py"
+ ],
+ "muloc_0293": [
+  "Z4nzu__hackingtool/tools/ddos.py"
+ ],
+ "muloc_0294": [
+  "Z4nzu__hackingtool/tools/ddos.py"
+ ],
+ "muloc_0295": [
+  "Z4nzu__hackingtool/tools/ddos.py"
+ ],
+ "muloc_0296": [
+  "Z4nzu__hackingtool/tools/ddos.py"
+ ],
+ "muloc_0297": [
+  "Z4nzu__hackingtool/tools/ddos.py"
+ ],
+ "muloc_0298": [
+  "scikit-learn__scikit-learn/sklearn/metrics/_classification.py",
+  "scikit-learn__scikit-learn/sklearn/metrics/tests/test_classification.py",
+  "scikit-learn__scikit-learn/sklearn/utils/_testing.py"
+ ],
+ "muloc_0300": [
+  "pandas-dev__pandas/pandas/core/frame.py",
+  "pandas-dev__pandas/pandas/core/generic.py",
+  "pandas-dev__pandas/pandas/core/series.py",
+  "pandas-dev__pandas/pandas/core/sparse.py",
+  "pandas-dev__pandas/pandas/tests/test_frame.py"
+ ],
+ "muloc_0302": [
+  "pallets__flask/flask/helpers.py",
+  "pallets__flask/tests/test_helpers.py"
+ ],
+ "muloc_0303": [
+  "pallets__flask/docs/tutorial/views.rst"
+ ],
+ "muloc_0304": [
+  "pallets__flask/docs/security.rst",
+  "pallets__flask/flask/json.py",
+  "pallets__flask/tests/test_helpers.py"
+ ],
+ "muloc_0305": [
+  "pallets__flask/flask/blueprints.py",
+  "pallets__flask/tests/test_blueprints.py"
+ ],
+ "muloc_0306": [
+  "pallets__flask/flask/cli.py",
+  "pallets__flask/tests/test_cli.py"
+ ],
+ "muloc_0307": [
+  "pallets__flask/flask/config.py",
+  "pallets__flask/tests/test_config.py"
+ ],
+ "muloc_0308": [
+  "pallets__flask/docs/config.rst",
+  "pallets__flask/docs/errorhandling.rst",
+  "pallets__flask/flask/app.py",
+  "pallets__flask/flask/logging.py",
+  "pallets__flask/tests/test_basic.py",
+  "pallets__flask/tests/test_helpers.py",
+  "pallets__flask/tests/test_subclassing.py",
+  "pallets__flask/tests/test_templating.py",
+  "pallets__flask/tests/test_testing.py"
+ ],
+ "muloc_0309": [
+  "pallets__flask/docs/config.rst",
+  "pallets__flask/docs/errorhandling.rst",
+  "pallets__flask/tests/test_templating.py"
+ ],
+ "muloc_0312": [
+  "sherlock-project__sherlock/README.md"
+ ],
+ "muloc_0313": [
+  "sherlock-project__sherlock/requirements.txt"
+ ],
+ "muloc_0314": [
+  "sherlock-project__sherlock/README.md",
+  "sherlock-project__sherlock/sites.md"
+ ],
+ "muloc_0317": [
+  "keras-team__keras/keras/preprocessing/image.py"
+ ],
+ "muloc_0318": [
+  "keras-team__keras/keras/utils/data_utils.py",
+  "keras-team__keras/tests/keras/utils/data_utils_test.py"
+ ],
+ "muloc_0320": [
+  "keras-team__keras/setup.py"
+ ],
+ "muloc_0321": [
+  "keras-team__keras/keras/engine/training.py",
+  "keras-team__keras/keras/legacy/interfaces.py",
+  "keras-team__keras/keras/models.py",
+  "keras-team__keras/keras/utils/__init__.py",
+  "keras-team__keras/keras/utils/data_utils.py",
+  "keras-team__keras/tests/keras/engine/test_training.py",
+  "keras-team__keras/tests/keras/legacy/interface_test.py",
+  "keras-team__keras/tests/keras/test_sequential_model.py",
+  "keras-team__keras/tests/keras/utils/data_utils_test.py",
+  "keras-team__keras/tests/test_multiprocessing.py"
+ ],
+ "muloc_0322": [
+  "keras-team__keras/keras/engine/training_generator.py",
+  "keras-team__keras/tests/keras/engine/test_training.py"
+ ],
+ "muloc_0323": [
+  "keras-team__keras/.travis.yml",
+  "keras-team__keras/keras/backend/tensorflow_backend.py",
+  "keras-team__keras/keras/optimizers.py"
+ ],
+ "muloc_0324": [
+  "keras-team__keras/keras/backend/theano_backend.py",
+  "keras-team__keras/keras/layers/advanced_activations.py"
+ ],
+ "muloc_0325": [
+  "nvbn__thefuck/tests/rules/test_git_push.py",
+  "nvbn__thefuck/thefuck/rules/git_push.py"
+ ],
+ "muloc_0326": [
+  "nvbn__thefuck/thefuck/shells/zsh.py"
+ ],
+ "muloc_0327": [
+  "nvbn__thefuck/tests/shells/test_bash.py",
+  "nvbn__thefuck/tests/shells/test_fish.py",
+  "nvbn__thefuck/tests/shells/test_tcsh.py",
+  "nvbn__thefuck/tests/shells/test_zsh.py",
+  "nvbn__thefuck/thefuck/shells/fish.py",
+  "nvbn__thefuck/thefuck/shells/tcsh.py"
+ ],
+ "muloc_0328": [
+  "nvbn__thefuck/thefuck/system/win32.py"
+ ],
+ "muloc_0329": [
+  "nvbn__thefuck/thefuck/shells/__init__.py"
+ ],
+ "muloc_0330": [
+  "nvbn__thefuck/thefuck/shells/fish.py"
+ ],
+ "muloc_0331": [
+  "nvbn__thefuck/tests/rules/test_tmux.py",
+  "nvbn__thefuck/thefuck/rules/tmux.py"
+ ],
+ "muloc_0332": [
+  "nvbn__thefuck/thefuck/utils.py"
+ ],
+ "muloc_0333": [
+  "nvbn__thefuck/thefuck/utils.py"
+ ],
+ "muloc_0334": [
+  "home-assistant__core/homeassistant/components/homekit/accessories.py",
+  "home-assistant__core/tests/components/homekit/test_accessories.py"
+ ],
+ "muloc_0335": [
+  "home-assistant__core/requirements_all.txt"
+ ],
+ "muloc_0336": [
+  "home-assistant__core/homeassistant/components/twinkly/const.py",
+  "home-assistant__core/homeassistant/components/twinkly/light.py",
+  "home-assistant__core/tests/components/twinkly/__init__.py"
+ ],
+ "muloc_0338": [
+  "home-assistant__core/homeassistant/components/ambiclimate/climate.py"
+ ],
+ "muloc_0340": [
+  "home-assistant__core/homeassistant/components/denon/media_player.py"
+ ],
+ "muloc_0341": [
+  "home-assistant__core/homeassistant/components/gree/const.py",
+  "home-assistant__core/tests/components/gree/test_climate.py"
+ ],
+ "muloc_0342": [
+  "home-assistant__core/homeassistant/components/sonos/alarms.py",
+  "home-assistant__core/homeassistant/components/sonos/favorites.py",
+  "home-assistant__core/homeassistant/components/sonos/household_coordinator.py",
+  "home-assistant__core/homeassistant/components/sonos/manifest.json",
+  "home-assistant__core/homeassistant/components/sonos/speaker.py",
+  "home-assistant__core/homeassistant/components/sonos/switch.py",
+  "home-assistant__core/requirements_all.txt",
+  "home-assistant__core/requirements_test_all.txt",
+  "home-assistant__core/tests/components/sonos/conftest.py",
+  "home-assistant__core/tests/components/sonos/test_switch.py"
+ ],
+ "muloc_0343": [
+  "home-assistant__core/requirements_all.txt"
+ ],
+ "muloc_0344": [
+  "home-assistant__core/homeassistant/components/homekit/type_remotes.py",
+  "home-assistant__core/tests/components/homekit/test_type_media_players.py"
+ ],
+ "muloc_0345": [
+  "home-assistant__core/homeassistant/components/octoprint/sensor.py",
+  "home-assistant__core/tests/components/octoprint/test_sensor.py"
+ ],
+ "muloc_0346": [
+  "home-assistant__core/homeassistant/components/synology_dsm/const.py",
+  "home-assistant__core/homeassistant/components/synology_dsm/sensor.py"
+ ],
+ "muloc_0347": [
+  "home-assistant__core/homeassistant/components/renault/__init__.py",
+  "home-assistant__core/tests/components/renault/test_init.py"
+ ],
+ "muloc_0348": [
+  "home-assistant__core/homeassistant/components/metoffice/__init__.py",
+  "home-assistant__core/homeassistant/components/metoffice/config_flow.py",
+  "home-assistant__core/homeassistant/components/metoffice/const.py",
+  "home-assistant__core/homeassistant/components/metoffice/data.py",
+  "home-assistant__core/homeassistant/components/metoffice/manifest.json",
+  "home-assistant__core/homeassistant/components/metoffice/sensor.py",
+  "home-assistant__core/homeassistant/components/metoffice/weather.py",
+  "home-assistant__core/requirements_all.txt",
+  "home-assistant__core/requirements_test_all.txt",
+  "home-assistant__core/tests/components/metoffice/test_config_flow.py",
+  "home-assistant__core/tests/components/metoffice/test_sensor.py",
+  "home-assistant__core/tests/components/metoffice/test_weather.py",
+  "home-assistant__core/tests/fixtures/metoffice.json"
+ ],
+ "muloc_0349": [
+  "zylon-ai__private-gpt/ingest.py"
+ ],
+ "muloc_0350": [
+  "zylon-ai__private-gpt/privateGPT.py"
+ ],
+ "muloc_0351": [
+  "zylon-ai__private-gpt/README.md",
+  "zylon-ai__private-gpt/ingest.py",
+  "zylon-ai__private-gpt/privateGPT.py"
+ ],
+ "muloc_0352": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/tiktok.py"
+ ],
+ "muloc_0353": [
+  "yt-dlp__yt-dlp/README.md",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/common.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/youtube.py"
+ ],
+ "muloc_0354": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/vk.py"
+ ],
+ "muloc_0355": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/ceskatelevize.py"
+ ],
+ "muloc_0356": [
+  "yt-dlp__yt-dlp/yt_dlp/downloader/fragment.py",
+  "yt-dlp__yt-dlp/yt_dlp/downloader/http.py",
+  "yt-dlp__yt-dlp/yt_dlp/utils.py"
+ ],
+ "muloc_0357": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/ninegag.py"
+ ],
+ "muloc_0358": [
+  "yt-dlp__yt-dlp/yt_dlp/downloader/youtube_live_chat.py"
+ ],
+ "muloc_0359": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/globo.py"
+ ],
+ "muloc_0360": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/odnoklassniki.py"
+ ],
+ "muloc_0361": [
+  "yt-dlp__yt-dlp/README.md",
+  "yt-dlp__yt-dlp/test/test_utils.py",
+  "yt-dlp__yt-dlp/yt_dlp/utils.py"
+ ],
+ "muloc_0362": [
+  "yt-dlp__yt-dlp/yt_dlp/cookies.py"
+ ],
+ "muloc_0363": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/sportdeutschland.py"
+ ],
+ "muloc_0364": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/orf.py"
+ ],
+ "muloc_0365": [
+  "yt-dlp__yt-dlp/test/test_cookies.py",
+  "yt-dlp__yt-dlp/yt_dlp/cookies.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/common.py"
+ ],
+ "muloc_0367": [
+  "yt-dlp__yt-dlp/test/test_utils.py",
+  "yt-dlp__yt-dlp/yt_dlp/cookies.py"
+ ],
+ "muloc_0368": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/tiktok.py"
+ ],
+ "muloc_0369": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/linkedin.py"
+ ],
+ "muloc_0370": [
+  "yt-dlp__yt-dlp/devscripts/bash-completion.py",
+  "yt-dlp__yt-dlp/devscripts/fish-completion.py",
+  "yt-dlp__yt-dlp/devscripts/zsh-completion.py",
+  "yt-dlp__yt-dlp/setup.py"
+ ],
+ "muloc_0371": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/tubitv.py"
+ ],
+ "muloc_0372": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/chilloutzone.py"
+ ],
+ "muloc_0373": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/youku.py"
+ ],
+ "muloc_0374": [
+  "yt-dlp__yt-dlp/yt_dlp/cookies.py"
+ ],
+ "muloc_0377": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/wat.py"
+ ],
+ "muloc_0378": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/sonyliv.py"
+ ],
+ "muloc_0380": [
+  "comfyanonymous__ComfyUI/execution.py"
+ ],
+ "muloc_0381": [
+  "comfyanonymous__ComfyUI/comfy/samplers.py",
+  "comfyanonymous__ComfyUI/nodes.py"
+ ],
+ "muloc_0382": [
+  "ageitgey__face_recognition/docs/conf.py",
+  "ageitgey__face_recognition/face_recognition/__init__.py",
+  "ageitgey__face_recognition/face_recognition/api.py",
+  "ageitgey__face_recognition/face_recognition/cli.py",
+  "ageitgey__face_recognition/setup.cfg",
+  "ageitgey__face_recognition/setup.py",
+  "ageitgey__face_recognition/tests/test_face_recognition.py"
+ ],
+ "muloc_0383": [
+  "ageitgey__face_recognition/face_recognition/cli.py"
+ ],
+ "muloc_0384": [
+  "PaddlePaddle__PaddleOCR/PPOCRLabel/PPOCRLabel.py",
+  "PaddlePaddle__PaddleOCR/PPOCRLabel/libs/utils.py"
+ ],
+ "muloc_0386": [
+  "AntonOsika__gpt-engineer/README.md",
+  "AntonOsika__gpt-engineer/gpt_engineer/ai.py"
+ ],
+ "muloc_0390": [
+  "AntonOsika__gpt-engineer/tests/test_collect.py"
+ ],
+ "muloc_0391": [
+  "AntonOsika__gpt-engineer/gpt_engineer/db.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/steps.py",
+  "AntonOsika__gpt-engineer/tests/steps/test_archive.py",
+  "AntonOsika__gpt-engineer/tests/test_collect.py",
+  "AntonOsika__gpt-engineer/tests/test_db.py"
+ ],
+ "muloc_0393": [
+  "AntonOsika__gpt-engineer/gpt_engineer/collect.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/learning.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/ai.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/chat_to_files.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/db.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/domain.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/steps.py",
+  "AntonOsika__gpt-engineer/scripts/rerun_edited_message_logs.py",
+  "AntonOsika__gpt-engineer/tests/steps/test_archive.py",
+  "AntonOsika__gpt-engineer/tests/test_ai.py",
+  "AntonOsika__gpt-engineer/tests/test_chat_to_files.py",
+  "AntonOsika__gpt-engineer/tests/test_collect.py",
+  "AntonOsika__gpt-engineer/tests/test_db.py"
+ ],
+ "muloc_0394": [
+  "AntonOsika__gpt-engineer/gpt_engineer/chat_to_files.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/steps.py"
+ ],
+ "muloc_0395": [
+  "AntonOsika__gpt-engineer/gpt_engineer/db.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/steps.py",
+  "AntonOsika__gpt-engineer/tests/test_collect.py",
+  "AntonOsika__gpt-engineer/tests/test_db.py"
+ ],
+ "muloc_0396": [
+  "AntonOsika__gpt-engineer/gpt_engineer/collect.py"
+ ],
+ "muloc_0397": [
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py",
+  "AntonOsika__gpt-engineer/scripts/benchmark.py"
+ ],
+ "muloc_0398": [
+  "AntonOsika__gpt-engineer/gpt_engineer/ai.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/chat_to_files.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/steps.py",
+  "AntonOsika__gpt-engineer/pyproject.toml",
+  "AntonOsika__gpt-engineer/scripts/rerun_edited_message_logs.py",
+  "AntonOsika__gpt-engineer/tests/test_ai.py"
+ ],
+ "muloc_0399": [
+  "AntonOsika__gpt-engineer/README.md",
+  "AntonOsika__gpt-engineer/gpt_engineer/ai.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/learning.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/main.py",
+  "AntonOsika__gpt-engineer/gpt_engineer/steps.py"
+ ],
+ "muloc_0401": [
+  "AntonOsika__gpt-engineer/README.md"
+ ],
+ "muloc_0404": [
+  "binary-husky__gpt_academic/config.py"
+ ],
+ "muloc_0405": [
+  "deepfakes__faceswap/.github/ISSUE_TEMPLATE.md",
+  "deepfakes__faceswap/lib/aligner.py",
+  "deepfakes__faceswap/lib/umeyama.py",
+  "deepfakes__faceswap/lib/utils.py"
+ ],
+ "muloc_0406": [
+  "deepfakes__faceswap/plugins/Convert_Masked.py",
+  "deepfakes__faceswap/scripts/convert.py"
+ ],
+ "muloc_0407": [
+  "deepfakes__faceswap/lib/training_data.py"
+ ],
+ "muloc_0408": [
+  "deepfakes__faceswap/INSTALL.md",
+  "deepfakes__faceswap/README.md",
+  "deepfakes__faceswap/lib/utils.py"
+ ],
+ "muloc_0409": [
+  "deepfakes__faceswap/INSTALL.md",
+  "deepfakes__faceswap/README.md",
+  "deepfakes__faceswap/lib/utils.py"
+ ],
+ "muloc_0410": [
+  "deepfakes__faceswap/faceswap.py",
+  "deepfakes__faceswap/lib/aligner.py",
+  "deepfakes__faceswap/lib/cli.py",
+  "deepfakes__faceswap/lib/faces_detect.py",
+  "deepfakes__faceswap/lib/training_data.py",
+  "deepfakes__faceswap/lib/utils.py",
+  "deepfakes__faceswap/plugins/Convert_Adjust.py",
+  "deepfakes__faceswap/plugins/Convert_Masked.py",
+  "deepfakes__faceswap/plugins/Extract_Align.py",
+  "deepfakes__faceswap/plugins/Extract_Crop.py",
+  "deepfakes__faceswap/plugins/PluginLoader.py",
+  "deepfakes__faceswap/scripts/convert.py",
+  "deepfakes__faceswap/scripts/extract.py",
+  "deepfakes__faceswap/scripts/train.py"
+ ],
+ "muloc_0411": [
+  "deepfakes__faceswap/lib/cli.py",
+  "deepfakes__faceswap/lib/utils.py",
+  "deepfakes__faceswap/scripts/extract.py"
+ ],
+ "muloc_0412": [
+  "3b1b__manim/manimlib/__init__.py"
+ ],
+ "muloc_0414": [
+  "3b1b__manim/manimlib/mobject/svg/tex_mobject.py"
+ ],
+ "muloc_0415": [
+  "3b1b__manim/manimlib/mobject/svg/svg_mobject.py",
+  "3b1b__manim/manimlib/mobject/svg/text_mobject.py"
+ ],
+ "muloc_0416": [
+  "3b1b__manim/example_scenes.py"
+ ],
+ "muloc_0418": [
+  "All-Hands-AI__OpenHands/pyproject.toml"
+ ],
+ "muloc_0420": [
+  "All-Hands-AI__OpenHands/openhands/core/config/sandbox_config.py"
+ ],
+ "muloc_0421": [
+  "All-Hands-AI__OpenHands/openhands/runtime/utils/runtime_build.py",
+  "All-Hands-AI__OpenHands/pyproject.toml",
+  "All-Hands-AI__OpenHands/tests/unit/test_runtime_build.py"
+ ],
+ "muloc_0422": [
+  "All-Hands-AI__OpenHands/agenthub/micro/agent.py"
+ ],
+ "muloc_0424": [
+  "All-Hands-AI__OpenHands/openhands/runtime/README.md",
+  "All-Hands-AI__OpenHands/openhands/runtime/__init__.py",
+  "All-Hands-AI__OpenHands/openhands/runtime/plugins/jupyter/__init__.py",
+  "All-Hands-AI__OpenHands/openhands/runtime/utils/bash.py",
+  "All-Hands-AI__OpenHands/pyproject.toml",
+  "All-Hands-AI__OpenHands/tests/runtime/conftest.py",
+  "All-Hands-AI__OpenHands/tests/runtime/test_bash.py",
+  "All-Hands-AI__OpenHands/tests/runtime/test_browsing.py",
+  "All-Hands-AI__OpenHands/tests/runtime/test_env_vars.py",
+  "All-Hands-AI__OpenHands/tests/runtime/test_images.py",
+  "All-Hands-AI__OpenHands/tests/runtime/test_ipython.py"
+ ],
+ "muloc_0425": [
+  "All-Hands-AI__OpenHands/README.md"
+ ],
+ "muloc_0426": [
+  "All-Hands-AI__OpenHands/frontend/package.json",
+  "All-Hands-AI__OpenHands/frontend/src/components/AgentControlBar.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/AgentStatusBar.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/chat/Chat.test.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/chat/Chat.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/chat/ChatInterface.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/chat/ChatMessage.test.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/chat/ChatMessage.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/modals/settings/SettingsForm.test.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/modals/settings/SettingsForm.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/modals/settings/SettingsModal.test.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/components/modals/settings/SettingsModal.tsx",
+  "All-Hands-AI__OpenHands/frontend/src/i18n/translation.json",
+  "All-Hands-AI__OpenHands/frontend/src/services/actions.ts",
+  "All-Hands-AI__OpenHands/frontend/src/services/session.test.ts",
+  "All-Hands-AI__OpenHands/frontend/src/services/settings.test.ts",
+  "All-Hands-AI__OpenHands/frontend/src/services/settings.ts",
+  "All-Hands-AI__OpenHands/frontend/src/types/AgentState.tsx"
+ ],
+ "muloc_0427": [
+  "scrapy__scrapy/scrapy/contracts/__init__.py",
+  "scrapy__scrapy/tests/test_contracts.py"
+ ],
+ "muloc_0428": [
+  "scrapy__scrapy/scrapy/settings/__init__.py",
+  "scrapy__scrapy/tests/test_settings/__init__.py"
+ ],
+ "muloc_0429": [
+  "scrapy__scrapy/scrapy/utils/misc.py",
+  "scrapy__scrapy/tests/test_utils_misc/__init__.py"
+ ],
+ "muloc_0431": [
+  "scrapy__scrapy/scrapy/pipelines/images.py",
+  "scrapy__scrapy/tests/test_pipeline_images.py"
+ ],
+ "muloc_0432": [
+  "scrapy__scrapy/docs/topics/feed-exports.rst",
+  "scrapy__scrapy/scrapy/extensions/feedexport.py",
+  "scrapy__scrapy/scrapy/settings/default_settings.py",
+  "scrapy__scrapy/scrapy/utils/conf.py",
+  "scrapy__scrapy/tests/test_feedexport.py",
+  "scrapy__scrapy/tests/test_utils_conf.py",
+  "scrapy__scrapy/tox.ini"
+ ],
+ "muloc_0433": [
+  "scrapy__scrapy/docs/topics/feed-exports.rst",
+  "scrapy__scrapy/scrapy/extensions/feedexport.py",
+  "scrapy__scrapy/tests/test_feedexport.py"
+ ],
+ "muloc_0434": [
+  "scrapy__scrapy/docs/topics/feed-exports.rst",
+  "scrapy__scrapy/scrapy/extensions/feedexport.py",
+  "scrapy__scrapy/tests/test_feedexport.py"
+ ],
+ "muloc_0435": [
+  "scrapy__scrapy/tests/test_feedexport.py"
+ ],
+ "muloc_0436": [
+  "scrapy__scrapy/scrapy/settings/default_settings.py"
+ ],
+ "muloc_0437": [
+  "scrapy__scrapy/docs/topics/signals.rst",
+  "scrapy__scrapy/scrapy/core/downloader/__init__.py",
+  "scrapy__scrapy/scrapy/signals.py",
+  "scrapy__scrapy/tests/test_engine.py"
+ ],
+ "muloc_0438": [
+  "scrapy__scrapy/scrapy/downloadermiddlewares/retry.py"
+ ],
+ "muloc_0439": [
+  "scrapy__scrapy/scrapy/spidermiddlewares/offsite.py",
+  "scrapy__scrapy/tests/test_spidermiddleware_offsite.py"
+ ],
+ "muloc_0440": [
+  "scrapy__scrapy/scrapy/commands/crawl.py",
+  "scrapy__scrapy/scrapy/commands/runspider.py"
+ ],
+ "muloc_0441": [
+  "scrapy__scrapy/setup.py",
+  "scrapy__scrapy/tests/test_crawler.py",
+  "scrapy__scrapy/tox.ini"
+ ],
+ "muloc_0442": [
+  "scrapy__scrapy/scrapy/core/engine.py",
+  "scrapy__scrapy/tests/test_engine.py"
+ ],
+ "muloc_0444": [
+  "scrapy__scrapy/scrapy/utils/gz.py",
+  "scrapy__scrapy/tests/test_downloadermiddleware_httpcompression.py"
+ ],
+ "muloc_0445": [
+  "scrapy__scrapy/scrapy/downloadermiddlewares/httpcompression.py",
+  "scrapy__scrapy/tests/test_downloadermiddleware_httpcompression.py"
+ ],
+ "muloc_0446": [
+  "scrapy__scrapy/scrapy/utils/project.py"
+ ],
+ "muloc_0447": [
+  "scrapy__scrapy/scrapy/resolver.py",
+  "scrapy__scrapy/tests/test_crawler.py"
+ ],
+ "muloc_0448": [
+  "scrapy__scrapy/scrapy/linkextractors/lxmlhtml.py",
+  "scrapy__scrapy/tests/test_linkextractors.py"
+ ],
+ "muloc_0449": [
+  "scrapy__scrapy/scrapy/commands/shell.py",
+  "scrapy__scrapy/scrapy/utils/url.py",
+  "scrapy__scrapy/tests/test_utils_url.py"
+ ],
+ "muloc_0450": [
+  "psf__requests/requests/adapters.py"
+ ],
+ "muloc_0451": [
+  "psf__requests/requests/utils.py",
+  "psf__requests/test_requests.py"
+ ],
+ "muloc_0452": [
+  "psf__requests/requests/models.py",
+  "psf__requests/test_requests.py"
+ ],
+ "muloc_0453": [
+  "psf__requests/requests/api.py"
+ ],
+ "muloc_0454": [
+  "psf__requests/AUTHORS.rst",
+  "psf__requests/requests/adapters.py",
+  "psf__requests/requests/api.py",
+  "psf__requests/requests/sessions.py",
+  "psf__requests/test_requests.py"
+ ],
+ "muloc_0455": [
+  "psf__requests/requests/sessions.py",
+  "psf__requests/test_requests.py"
+ ],
+ "muloc_0456": [
+  "psf__requests/requests/auth.py"
+ ],
+ "muloc_0457": [
+  "psf__requests/HISTORY.rst",
+  "psf__requests/requests/utils.py"
+ ],
+ "muloc_0458": [
+  "psf__requests/requests/sessions.py"
+ ],
+ "muloc_0459": [
+  "psf__requests/requests/compat.py",
+  "psf__requests/requests/utils.py",
+  "psf__requests/test_requests.py"
+ ],
+ "muloc_0460": [
+  "psf__requests/requests/compat.py",
+  "psf__requests/requests/exceptions.py",
+  "psf__requests/requests/models.py"
+ ],
+ "muloc_0462": [
+  "ansible__ansible/lib/ansible/constants.py"
+ ],
+ "muloc_0464": [
+  "ansible__ansible/lib/ansible/modules/cloud/docker/docker_network.py"
+ ],
+ "muloc_0465": [
+  "ansible__ansible/lib/ansible/module_utils/basic.py"
+ ],
+ "muloc_0466": [
+  "ansible__ansible/lib/ansible/modules/network/nxos/nxos_snmp_user.py"
+ ],
+ "muloc_0467": [
+  "ansible__ansible/lib/ansible/plugins/lookup/password.py"
+ ],
+ "muloc_0468": [
+  "ansible__ansible/lib/ansible/module_utils/facts.py"
+ ],
+ "muloc_0470": [
+  "ansible__ansible/lib/ansible/modules/cloud/amazon/ec2_vpc_route_table.py"
+ ],
+ "muloc_0473": [
+  "ansible__ansible/lib/ansible/playbook/task.py",
+  "ansible__ansible/lib/ansible/plugins/action/__init__.py"
+ ],
+ "muloc_0474": [
+  "ansible__ansible/lib/ansible/plugins/callback/minimal.py",
+  "ansible__ansible/lib/ansible/plugins/callback/oneline.py"
+ ],
+ "muloc_0476": [
+  "ansible__ansible/contrib/inventory/ec2.py"
+ ],
+ "muloc_0477": [
+  "ansible__ansible/lib/ansible/modules/cloud/docker/docker_network.py"
+ ],
+ "muloc_0478": [
+  "ansible__ansible/lib/ansible/plugins/connection/ssh.py"
+ ],
+ "muloc_0479": [
+  "ansible__ansible/lib/ansible/plugins/filter/core.py"
+ ],
+ "muloc_0480": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0481": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0482": [
+  "ultralytics__yolov5/utils/activations.py"
+ ],
+ "muloc_0484": [
+  "ultralytics__yolov5/utils/datasets.py"
+ ],
+ "muloc_0485": [
+  "ultralytics__yolov5/models/yolo.py",
+  "ultralytics__yolov5/train.py",
+  "ultralytics__yolov5/utils/aws/resume.py"
+ ],
+ "muloc_0486": [
+  "ultralytics__yolov5/train.py",
+  "ultralytics__yolov5/utils/torch_utils.py"
+ ],
+ "muloc_0487": [
+  "ultralytics__yolov5/models/common.py"
+ ],
+ "muloc_0488": [
+  "ultralytics__yolov5/utils/augmentations.py"
+ ],
+ "muloc_0489": [
+  "ultralytics__yolov5/utils/torch_utils.py"
+ ],
+ "muloc_0490": [
+  "ultralytics__yolov5/README.md",
+  "ultralytics__yolov5/hubconf.py",
+  "ultralytics__yolov5/utils/plots.py"
+ ],
+ "muloc_0491": [
+  "ultralytics__yolov5/train.py",
+  "ultralytics__yolov5/utils/loss.py"
+ ],
+ "muloc_0492": [
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/__init__.py",
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/ui.py"
+ ],
+ "muloc_0493": [
+  "CorentinJ__Real-Time-Voice-Cloning/demo_cli.py",
+  "CorentinJ__Real-Time-Voice-Cloning/encoder/inference.py",
+  "CorentinJ__Real-Time-Voice-Cloning/encoder/train.py",
+  "CorentinJ__Real-Time-Voice-Cloning/requirements.txt",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/feeder.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/inference.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/attention.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/helpers.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/modules.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/models/tacotron.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/tacotron2.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/train.py",
+  "CorentinJ__Real-Time-Voice-Cloning/vocoder/inference.py",
+  "CorentinJ__Real-Time-Voice-Cloning/vocoder/models/fatchord_version.py"
+ ],
+ "muloc_0494": [
+  "CorentinJ__Real-Time-Voice-Cloning/vocoder/display.py"
+ ],
+ "muloc_0495": [
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/preprocess.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer_preprocess_audio.py"
+ ],
+ "muloc_0496": [
+  "CorentinJ__Real-Time-Voice-Cloning/demo_cli.py",
+  "CorentinJ__Real-Time-Voice-Cloning/encoder/audio.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/inference.py",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/preprocess.py",
+  "CorentinJ__Real-Time-Voice-Cloning/vocoder/audio.py"
+ ],
+ "muloc_0497": [
+  "CorentinJ__Real-Time-Voice-Cloning/encoder/audio.py",
+  "CorentinJ__Real-Time-Voice-Cloning/encoder_preprocess.py",
+  "CorentinJ__Real-Time-Voice-Cloning/requirements.txt",
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer_preprocess_audio.py",
+  "CorentinJ__Real-Time-Voice-Cloning/vocoder_preprocess.py"
+ ],
+ "muloc_0498": [
+  "AUTOMATIC1111__stable-diffusion-webui/modules/processing.py"
+ ],
+ "muloc_0499": [
+  "AUTOMATIC1111__stable-diffusion-webui/modules/modelloader.py"
+ ],
+ "muloc_0500": [
+  "AUTOMATIC1111__stable-diffusion-webui/modules/images.py",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/processing.py",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/scripts.py",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/sd_samplers_cfg_denoiser.py"
+ ],
+ "muloc_0501": [
+  "AUTOMATIC1111__stable-diffusion-webui/modules/cmd_args.py",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/extensions.py",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/ui_extensions.py"
+ ],
+ "muloc_0502": [
+  "AUTOMATIC1111__stable-diffusion-webui/extensions-builtin/Lora/lora.py"
+ ],
+ "muloc_0503": [
+  "python__cpython/Lib/pathlib.py"
+ ],
+ "muloc_0504": [
+  "python__cpython/Lib/test/test_patma.py",
+  "python__cpython/Python/compile.c"
+ ],
+ "muloc_0505": [
+  "python__cpython/Lib/test/test_importlib/fixtures.py"
+ ],
+ "muloc_0506": [
+  "THUDM__ChatGLM-6B/cli_demo.py"
+ ],
+ "muloc_0507": [
+  "huggingface__transformers/README.md",
+  "huggingface__transformers/README_zh-hans.md",
+  "huggingface__transformers/README_zh-hant.md",
+  "huggingface__transformers/src/transformers/models/auto/configuration_auto.py"
+ ],
+ "muloc_0508": [
+  "huggingface__transformers/src/transformers/pipelines/automatic_speech_recognition.py"
+ ],
+ "muloc_0509": [
+  "huggingface__transformers/src/transformers/training_args.py"
+ ],
+ "muloc_0511": [
+  "huggingface__transformers/README.md",
+  "huggingface__transformers/README_zh-hans.md",
+  "huggingface__transformers/README_zh-hant.md",
+  "huggingface__transformers/src/transformers/__init__.py",
+  "huggingface__transformers/src/transformers/convert_slow_tokenizer.py",
+  "huggingface__transformers/src/transformers/models/__init__.py",
+  "huggingface__transformers/src/transformers/models/auto/configuration_auto.py",
+  "huggingface__transformers/src/transformers/models/auto/modeling_auto.py",
+  "huggingface__transformers/src/transformers/models/auto/tokenization_auto.py",
+  "huggingface__transformers/src/transformers/utils/dummy_pt_objects.py",
+  "huggingface__transformers/src/transformers/utils/dummy_sentencepiece_objects.py",
+  "huggingface__transformers/src/transformers/utils/dummy_tokenizers_objects.py"
+ ],
+ "muloc_0513": [
+  "huggingface__transformers/src/transformers/models/bart/modeling_bart.py",
+  "huggingface__transformers/src/transformers/models/bart/modeling_tf_bart.py",
+  "huggingface__transformers/src/transformers/models/blenderbot/modeling_blenderbot.py",
+  "huggingface__transformers/src/transformers/models/blenderbot/modeling_tf_blenderbot.py",
+  "huggingface__transformers/src/transformers/models/blenderbot_small/modeling_blenderbot_small.py",
+  "huggingface__transformers/src/transformers/models/blenderbot_small/modeling_tf_blenderbot_small.py",
+  "huggingface__transformers/src/transformers/models/fsmt/modeling_fsmt.py",
+  "huggingface__transformers/src/transformers/models/m2m_100/modeling_m2m_100.py",
+  "huggingface__transformers/src/transformers/models/marian/modeling_marian.py",
+  "huggingface__transformers/src/transformers/models/marian/modeling_tf_marian.py",
+  "huggingface__transformers/src/transformers/models/mbart/modeling_mbart.py",
+  "huggingface__transformers/src/transformers/models/mbart/modeling_tf_mbart.py",
+  "huggingface__transformers/src/transformers/models/pegasus/modeling_pegasus.py",
+  "huggingface__transformers/src/transformers/models/pegasus/modeling_tf_pegasus.py",
+  "huggingface__transformers/src/transformers/models/prophetnet/modeling_prophetnet.py",
+  "huggingface__transformers/src/transformers/models/speech_to_text/modeling_speech_to_text.py",
+  "huggingface__transformers/src/transformers/models/t5/modeling_t5.py"
+ ],
+ "muloc_0514": [
+  "huggingface__transformers/src/transformers/tokenization_utils_base.py"
+ ],
+ "muloc_0515": [
+  "huggingface__transformers/src/transformers/data/processors/squad.py"
+ ],
+ "muloc_0516": [
+  "huggingface__transformers/src/transformers/models/albert/tokenization_albert_fast.py",
+  "huggingface__transformers/src/transformers/models/barthez/tokenization_barthez_fast.py",
+  "huggingface__transformers/src/transformers/models/big_bird/tokenization_big_bird_fast.py",
+  "huggingface__transformers/src/transformers/models/camembert/tokenization_camembert_fast.py",
+  "huggingface__transformers/src/transformers/models/herbert/tokenization_herbert_fast.py",
+  "huggingface__transformers/src/transformers/models/mbart50/tokenization_mbart50_fast.py",
+  "huggingface__transformers/src/transformers/models/pegasus/tokenization_pegasus_fast.py",
+  "huggingface__transformers/src/transformers/models/reformer/tokenization_reformer_fast.py",
+  "huggingface__transformers/src/transformers/models/t5/tokenization_t5_fast.py",
+  "huggingface__transformers/src/transformers/models/xlm_roberta/tokenization_xlm_roberta_fast.py",
+  "huggingface__transformers/src/transformers/models/xlnet/tokenization_xlnet_fast.py",
+  "huggingface__transformers/src/transformers/tokenization_utils_fast.py",
+  "huggingface__transformers/tests/test_tokenization_common.py"
+ ],
+ "muloc_0520": [
+  "huggingface__transformers/src/transformers/models/hubert/modeling_hubert.py",
+  "huggingface__transformers/src/transformers/models/wav2vec2/modeling_wav2vec2.py"
+ ],
+ "muloc_0521": [
+  "huggingface__transformers/src/transformers/configuration_utils.py",
+  "huggingface__transformers/src/transformers/trainer.py",
+  "huggingface__transformers/tests/test_trainer.py"
+ ],
+ "muloc_0522": [
+  "geekan__MetaGPT/metagpt/roles/di/data_interpreter.py"
+ ],
+ "muloc_0523": [
+  "geekan__MetaGPT/metagpt/configs/llm_config.py"
+ ],
+ "muloc_0524": [
+  "geekan__MetaGPT/metagpt/actions/search_and_summarize.py",
+  "geekan__MetaGPT/metagpt/document_store/faiss_store.py",
+  "geekan__MetaGPT/metagpt/roles/sales.py"
+ ],
+ "muloc_0525": [
+  "geekan__MetaGPT/metagpt/provider/dashscope_api.py"
+ ],
+ "muloc_0526": [
+  "geekan__MetaGPT/metagpt/provider/openai_api.py"
+ ],
+ "muloc_0527": [
+  "geekan__MetaGPT/metagpt/configs/llm_config.py",
+  "geekan__MetaGPT/metagpt/provider/base_llm.py"
+ ],
+ "muloc_0528": [
+  "geekan__MetaGPT/metagpt/provider/openai_api.py"
+ ],
+ "muloc_0529": [
+  "geekan__MetaGPT/metagpt/configs/llm_config.py"
+ ],
+ "muloc_0530": [
+  "geekan__MetaGPT/metagpt/provider/google_gemini_api.py",
+  "geekan__MetaGPT/requirements.txt"
+ ],
+ "muloc_0531": [
+  "geekan__MetaGPT/metagpt/actions/action.py",
+  "geekan__MetaGPT/metagpt/llm.py",
+  "geekan__MetaGPT/metagpt/roles/role.py",
+  "geekan__MetaGPT/tests/metagpt/utils/test_custom_decoder.py"
+ ],
+ "muloc_0539": [
+  "Significant-Gravitas__AutoGPT/README.md"
+ ],
+ "muloc_0540": [
+  "fastapi__fastapi/fastapi/openapi/utils.py"
+ ],
+ "muloc_0541": [
+  "fastapi__fastapi/docs/en/docs/advanced/custom-response.md",
+  "fastapi__fastapi/docs_src/custom_response/tutorial006.py",
+  "fastapi__fastapi/fastapi/applications.py",
+  "fastapi__fastapi/fastapi/openapi/utils.py",
+  "fastapi__fastapi/fastapi/routing.py",
+  "fastapi__fastapi/tests/test_tutorial/test_custom_response/test_tutorial006.py"
+ ],
+ "muloc_0542": [
+  "fastapi__fastapi/pyproject.toml",
+  "fastapi__fastapi/tests/test_starlette_urlconvertors.py"
+ ],
+ "muloc_0543": [
+  "fastapi__fastapi/docs/en/docs/tutorial/body.md",
+  "fastapi__fastapi/fastapi/dependencies/utils.py",
+  "fastapi__fastapi/fastapi/openapi/constants.py"
+ ],
+ "muloc_0544": [
+  "fastapi__fastapi/fastapi/openapi/docs.py"
+ ],
+ "muloc_0545": [
+  "fastapi__fastapi/docs_src/openapi_callbacks/tutorial001.py",
+  "fastapi__fastapi/fastapi/__init__.py",
+  "fastapi__fastapi/fastapi/applications.py",
+  "fastapi__fastapi/fastapi/background.py",
+  "fastapi__fastapi/fastapi/concurrency.py",
+  "fastapi__fastapi/fastapi/datastructures.py",
+  "fastapi__fastapi/fastapi/dependencies/models.py",
+  "fastapi__fastapi/fastapi/dependencies/utils.py",
+  "fastapi__fastapi/fastapi/encoders.py",
+  "fastapi__fastapi/fastapi/middleware/__init__.py",
+  "fastapi__fastapi/fastapi/middleware/cors.py",
+  "fastapi__fastapi/fastapi/middleware/gzip.py",
+  "fastapi__fastapi/fastapi/middleware/httpsredirect.py",
+  "fastapi__fastapi/fastapi/middleware/trustedhost.py",
+  "fastapi__fastapi/fastapi/middleware/wsgi.py",
+  "fastapi__fastapi/fastapi/openapi/docs.py",
+  "fastapi__fastapi/fastapi/openapi/models.py",
+  "fastapi__fastapi/fastapi/openapi/utils.py",
+  "fastapi__fastapi/fastapi/param_functions.py",
+  "fastapi__fastapi/fastapi/params.py",
+  "fastapi__fastapi/fastapi/responses.py",
+  "fastapi__fastapi/fastapi/routing.py",
+  "fastapi__fastapi/fastapi/security/__init__.py",
+  "fastapi__fastapi/fastapi/security/oauth2.py",
+  "fastapi__fastapi/fastapi/staticfiles.py",
+  "fastapi__fastapi/fastapi/templating.py",
+  "fastapi__fastapi/fastapi/testclient.py",
+  "fastapi__fastapi/fastapi/utils.py",
+  "fastapi__fastapi/fastapi/websockets.py"
+ ],
+ "muloc_0546": [
+  "oobabooga__text-generation-webui/README.md",
+  "oobabooga__text-generation-webui/requirements.txt"
+ ],
+ "muloc_0547": [
+  "oobabooga__text-generation-webui/modules/llamacpp_model.py",
+  "oobabooga__text-generation-webui/modules/text_generation.py"
+ ],
+ "muloc_0548": [
+  "oobabooga__text-generation-webui/modules/models.py"
+ ],
+ "muloc_0549": [
+  "oobabooga__text-generation-webui/README.md",
+  "oobabooga__text-generation-webui/download-model.py",
+  "oobabooga__text-generation-webui/server.py"
+ ],
+ "muloc_0550": [
+  "oobabooga__text-generation-webui/modules/html_generator.py"
+ ],
+ "muloc_0551": [
+  "hacksider__Deep-Live-Cam/modules/processors/frame/face_enhancer.py"
+ ],
+ "muloc_0552": [
+  "hacksider__Deep-Live-Cam/modules/processors/frame/face_enhancer.py",
+  "hacksider__Deep-Live-Cam/modules/processors/frame/face_swapper.py"
+ ],
+ "muloc_0553": [
+  "Textualize__rich/.github/workflows/pythonpackage.yml",
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/docs/source/reference/emoji.rst",
+  "Textualize__rich/pyproject.toml",
+  "Textualize__rich/rich/__main__.py",
+  "Textualize__rich/rich/_palettes.py",
+  "Textualize__rich/rich/color.py",
+  "Textualize__rich/rich/console.py",
+  "Textualize__rich/rich/markdown.py",
+  "Textualize__rich/rich/palette.py",
+  "Textualize__rich/rich/progress.py",
+  "Textualize__rich/rich/syntax.py",
+  "Textualize__rich/rich/text.py",
+  "Textualize__rich/tests/_card_render.py",
+  "Textualize__rich/tests/test_card.py",
+  "Textualize__rich/tests/test_color.py",
+  "Textualize__rich/tests/test_console.py",
+  "Textualize__rich/tests/test_log.py",
+  "Textualize__rich/tests/test_markdown.py",
+  "Textualize__rich/tests/test_markdown_no_hyperlinks.py",
+  "Textualize__rich/tests/test_progress.py",
+  "Textualize__rich/tests/test_rich_print.py",
+  "Textualize__rich/tests/test_rule.py"
+ ],
+ "muloc_0554": [
+  "Textualize__rich/.github/workflows/pythonpackage.yml",
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/README.md",
+  "Textualize__rich/pyproject.toml",
+  "Textualize__rich/rich/highlighter.py",
+  "Textualize__rich/rich/rule.py"
+ ],
+ "muloc_0555": [
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/rich/markdown.py",
+  "Textualize__rich/tests/test_markdown.py"
+ ],
+ "muloc_0556": [
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/rich/file_proxy.py"
+ ],
+ "muloc_0557": [
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/CONTRIBUTORS.md",
+  "Textualize__rich/tests/test_console.py"
+ ],
+ "muloc_0558": [
+  "Textualize__rich/CONTRIBUTING.md",
+  "Textualize__rich/rich/__init__.py",
+  "Textualize__rich/rich/_inspect.py",
+  "Textualize__rich/rich/_log_render.py",
+  "Textualize__rich/rich/_ratio.py",
+  "Textualize__rich/rich/align.py",
+  "Textualize__rich/rich/bar.py",
+  "Textualize__rich/rich/color.py",
+  "Textualize__rich/rich/columns.py",
+  "Textualize__rich/rich/console.py",
+  "Textualize__rich/rich/containers.py",
+  "Textualize__rich/rich/layout.py",
+  "Textualize__rich/rich/live.py",
+  "Textualize__rich/rich/logging.py",
+  "Textualize__rich/rich/markdown.py",
+  "Textualize__rich/rich/measure.py",
+  "Textualize__rich/rich/panel.py",
+  "Textualize__rich/rich/pretty.py",
+  "Textualize__rich/rich/progress.py",
+  "Textualize__rich/rich/progress_bar.py",
+  "Textualize__rich/rich/prompt.py",
+  "Textualize__rich/rich/scope.py",
+  "Textualize__rich/rich/screen.py",
+  "Textualize__rich/rich/segment.py",
+  "Textualize__rich/rich/spinner.py",
+  "Textualize__rich/rich/status.py",
+  "Textualize__rich/rich/style.py",
+  "Textualize__rich/rich/syntax.py",
+  "Textualize__rich/rich/table.py"
+ ],
+ "muloc_0559": [
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/rich/live.py"
+ ],
+ "muloc_0560": [
+  "Textualize__rich/.pre-commit-config.yaml",
+  "Textualize__rich/CHANGELOG.md",
+  "Textualize__rich/rich/console.py",
+  "Textualize__rich/rich/markdown.py",
+  "Textualize__rich/rich/syntax.py",
+  "Textualize__rich/rich/text.py",
+  "Textualize__rich/tests/test_markdown.py",
+  "Textualize__rich/tests/test_markdown_no_hyperlinks.py"
+ ],
+ "muloc_0561": [
+  "ytdl-org__youtube-dl/test/test_jsinterp.py",
+  "ytdl-org__youtube-dl/test/test_utils.py",
+  "ytdl-org__youtube-dl/test/test_youtube_signature.py",
+  "ytdl-org__youtube-dl/youtube_dl/compat.py",
+  "ytdl-org__youtube-dl/youtube_dl/jsinterp.py",
+  "ytdl-org__youtube-dl/youtube_dl/utils.py"
+ ],
+ "muloc_0562": [
+  "ytdl-org__youtube-dl/youtube_dl/extractor/ceskatelevize.py",
+  "ytdl-org__youtube-dl/youtube_dl/extractor/extractors.py"
+ ],
+ "muloc_0564": [
+  "localstack__localstack/tests/integration/test_sns.py"
+ ],
+ "muloc_0565": [
+  "localstack__localstack/README.md",
+  "localstack__localstack/localstack/constants.py",
+  "localstack__localstack/localstack/services/install.py",
+  "localstack__localstack/requirements.txt"
+ ],
+ "muloc_0566": [
+  "localstack__localstack/localstack/services/install.py",
+  "localstack__localstack/localstack/services/stepfunctions/stepfunctions_listener.py",
+  "localstack__localstack/localstack/services/stepfunctions/stepfunctions_starter.py"
+ ],
+ "muloc_0568": [
+  "localstack__localstack/localstack/services/sns/sns_listener.py",
+  "localstack__localstack/tests/integration/test_sns.py"
+ ],
+ "muloc_0569": [
+  "localstack__localstack/localstack/services/generic_proxy.py",
+  "localstack__localstack/localstack/services/s3/s3_listener.py",
+  "localstack__localstack/tests/integration/test_s3.py"
+ ],
+ "muloc_0570": [
+  "localstack__localstack/README.md",
+  "localstack__localstack/localstack/config.py",
+  "localstack__localstack/localstack/services/kinesis/kinesis_listener.py",
+  "localstack__localstack/localstack/services/kinesis/kinesis_starter.py",
+  "localstack__localstack/tests/integration/test_cloudformation.py",
+  "localstack__localstack/tests/integration/test_dynamodb.py"
+ ],
+ "muloc_0571": [
+  "localstack__localstack/localstack/utils/cloudformation/template_deployer.py",
+  "localstack__localstack/tests/integration/test_cloudformation.py"
+ ],
+ "muloc_0572": [
+  "localstack__localstack/README.md",
+  "localstack__localstack/localstack/constants.py",
+  "localstack__localstack/localstack/plugins.py",
+  "localstack__localstack/localstack/services/infra.py",
+  "localstack__localstack/localstack/services/s3/s3_listener.py",
+  "localstack__localstack/localstack/utils/persistence.py"
+ ],
+ "muloc_0573": [
+  "localstack__localstack/localstack/utils/common.py",
+  "localstack__localstack/tests/integration/test_sqs.py"
+ ],
+ "muloc_0574": [
+  "localstack__localstack/localstack/services/awslambda/lambda_api.py"
+ ],
+ "muloc_0575": [
+  "localstack__localstack/tests/integration/test_events.py"
+ ],
+ "muloc_0576": [
+  "localstack__localstack/localstack/services/awslambda/lambda_api.py",
+  "localstack__localstack/localstack/utils/testutil.py",
+  "localstack__localstack/tests/integration/test_lambda.py"
+ ],
+ "muloc_0577": [
+  "localstack__localstack/localstack/plugins.py",
+  "localstack__localstack/localstack/services/infra.py"
+ ],
+ "muloc_0581": [
+  "localstack__localstack/localstack/services/awslambda/lambda_api.py"
+ ],
+ "muloc_0582": [
+  "localstack__localstack/localstack/services/iam/iam_listener.py"
+ ],
+ "muloc_0583": [
+  "localstack__localstack/localstack/plugins.py",
+  "localstack__localstack/requirements.txt"
+ ],
+ "muloc_0584": [
+  "localstack__localstack/tests/integration/test_lambda.py"
+ ],
+ "muloc_0585": [
+  "localstack__localstack/localstack/services/generic_proxy.py",
+  "localstack__localstack/localstack/services/kinesis/kinesis_listener.py",
+  "localstack__localstack/localstack/services/s3/s3_listener.py",
+  "localstack__localstack/requirements.txt",
+  "localstack__localstack/tests/integration/test_s3.py"
+ ],
+ "muloc_0586": [
+  "localstack__localstack/localstack/services/sqs/sqs_listener.py",
+  "localstack__localstack/localstack/utils/aws/aws_stack.py",
+  "localstack__localstack/tests/integration/test_sqs.py"
+ ],
+ "muloc_0587": [
+  "localstack__localstack/tests/integration/test_ssm.py"
+ ],
+ "muloc_0588": [
+  "localstack__localstack/localstack/services/generic_proxy.py",
+  "localstack__localstack/tests/integration/test_dynamodb.py"
+ ],
+ "muloc_0589": [
+  "localstack__localstack/localstack/utils/aws/aws_stack.py",
+  "localstack__localstack/requirements.txt"
+ ],
+ "muloc_0590": [
+  "localstack__localstack/README.md",
+  "localstack__localstack/localstack/config.py",
+  "localstack__localstack/localstack/constants.py",
+  "localstack__localstack/localstack/utils/aws/aws_stack.py",
+  "localstack__localstack/localstack/utils/common.py",
+  "localstack__localstack/localstack/utils/testutil.py",
+  "localstack__localstack/setup.py"
+ ],
+ "muloc_0591": [
+  "localstack__localstack/localstack/utils/cli.py"
+ ],
+ "muloc_0592": [
+  "localstack__localstack/localstack/services/awslambda/lambda_executors.py"
+ ],
+ "muloc_0593": [
+  "localstack__localstack/tests/integration/test_lambda.py"
+ ],
+ "muloc_0595": [
+  "OpenInterpreter__open-interpreter/pyproject.toml"
+ ],
+ "muloc_0596": [
+  "pytorch__pytorch/test/test_nn.py",
+  "pytorch__pytorch/torch/nn/modules/container.py",
+  "pytorch__pytorch/torch/nn/modules/module.py"
+ ],
+ "muloc_0597": [
+  "pytorch__pytorch/c10/cuda/CUDACachingAllocator.h",
+  "pytorch__pytorch/test/test_cuda.py",
+  "pytorch__pytorch/torch/cuda/memory.py"
+ ],
+ "muloc_0598": [
+  "pytorch__pytorch/test/test_autograd.py",
+  "pytorch__pytorch/test/test_torch.py"
+ ],
+ "muloc_0600": [
+  "xtekky__gpt4free/README.md",
+  "xtekky__gpt4free/g4f/Provider/HuggingChat.py",
+  "xtekky__gpt4free/g4f/Provider/__init__.py",
+  "xtekky__gpt4free/g4f/Provider/base_provider.py",
+  "xtekky__gpt4free/g4f/__init__.py",
+  "xtekky__gpt4free/g4f/models.py"
+ ],
+ "muloc_0601": [
+  "xtekky__gpt4free/g4f/api/__init__.py"
+ ],
+ "muloc_0602": [
+  "xtekky__gpt4free/g4f/api/__init__.py"
+ ],
+ "muloc_0603": [
+  "xtekky__gpt4free/README.md",
+  "xtekky__gpt4free/docs/async_client.md",
+  "xtekky__gpt4free/docs/client.md",
+  "xtekky__gpt4free/docs/docker.md",
+  "xtekky__gpt4free/docs/git.md",
+  "xtekky__gpt4free/docs/interference-api.md",
+  "xtekky__gpt4free/docs/providers-and-models.md",
+  "xtekky__gpt4free/g4f/Provider/AIUncensored.py",
+  "xtekky__gpt4free/g4f/Provider/Ai4Chat.py",
+  "xtekky__gpt4free/g4f/Provider/AiMathGPT.py",
+  "xtekky__gpt4free/g4f/Provider/Airforce.py",
+  "xtekky__gpt4free/g4f/Provider/Allyfy.py",
+  "xtekky__gpt4free/g4f/Provider/Bing.py",
+  "xtekky__gpt4free/g4f/Provider/Blackbox.py",
+  "xtekky__gpt4free/g4f/Provider/ChatGot.py",
+  "xtekky__gpt4free/g4f/Provider/ChatGpt.py",
+  "xtekky__gpt4free/g4f/Provider/ChatGptEs.py",
+  "xtekky__gpt4free/g4f/Provider/ChatHub.py",
+  "xtekky__gpt4free/g4f/Provider/ChatifyAI.py",
+  "xtekky__gpt4free/g4f/Provider/Cloudflare.py",
+  "xtekky__gpt4free/g4f/Provider/DarkAI.py",
+  "xtekky__gpt4free/g4f/Provider/DeepInfraChat.py",
+  "xtekky__gpt4free/g4f/Provider/Editee.py",
+  "xtekky__gpt4free/g4f/Provider/Free2GPT.py",
+  "xtekky__gpt4free/g4f/Provider/FreeChatgpt.py",
+  "xtekky__gpt4free/g4f/Provider/FreeGpt.py",
+  "xtekky__gpt4free/g4f/Provider/GizAI.py",
+  "xtekky__gpt4free/g4f/Provider/HuggingChat.py"
+ ],
+ "muloc_0604": [
+  "xtekky__gpt4free/g4f/Provider/needs_auth/OpenaiChat.py"
+ ],
+ "muloc_0605": [
+  "Z4nzu__hackingtool/tools/forensic_tools.py",
+  "Z4nzu__hackingtool/tools/information_gathering_tools.py",
+  "Z4nzu__hackingtool/tools/others/socialmedia_finder.py",
+  "Z4nzu__hackingtool/tools/payload_creator.py",
+  "Z4nzu__hackingtool/tools/phising_attack.py",
+  "Z4nzu__hackingtool/tools/webattack.py",
+  "Z4nzu__hackingtool/tools/wireless_attack_tools.py",
+  "Z4nzu__hackingtool/tools/xss_attack.py"
+ ],
+ "muloc_0606": [
+  "Z4nzu__hackingtool/tools/ddos.py"
+ ],
+ "muloc_0608": [
+  "scikit-learn__scikit-learn/azure-pipelines.yml",
+  "scikit-learn__scikit-learn/doc/computing/parallelism.rst",
+  "scikit-learn__scikit-learn/sklearn/_build_utils/__init__.py"
+ ],
+ "muloc_0609": [
+  "scikit-learn__scikit-learn/doc/whats_new.rst",
+  "scikit-learn__scikit-learn/sklearn/model_selection/_split.py"
+ ],
+ "muloc_0610": [
+  "scikit-learn__scikit-learn/doc/whats_new/v0.20.rst",
+  "scikit-learn__scikit-learn/sklearn/mixture/tests/test_bayesian_mixture.py",
+  "scikit-learn__scikit-learn/sklearn/mixture/tests/test_gaussian_mixture.py"
+ ],
+ "muloc_0611": [
+  "scikit-learn__scikit-learn/doc/whats_new/v0.23.rst",
+  "scikit-learn__scikit-learn/sklearn/datasets/_samples_generator.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/tests/test_samples_generator.py"
+ ],
+ "muloc_0612": [
+  "scikit-learn__scikit-learn/doc/whats_new.rst",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_gradient_boosting.pyx",
+  "scikit-learn__scikit-learn/sklearn/ensemble/tests/test_forest.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/tests/test_gradient_boosting.py",
+  "scikit-learn__scikit-learn/sklearn/tree/_tree.pyx",
+  "scikit-learn__scikit-learn/sklearn/tree/tests/test_tree.py"
+ ],
+ "muloc_0613": [
+  "scikit-learn__scikit-learn/sklearn/datasets/_samples_generator.py"
+ ],
+ "muloc_0614": [
+  "scikit-learn__scikit-learn/doc/whats_new/v1.1.rst",
+  "scikit-learn__scikit-learn/sklearn/datasets/_base.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/tests/test_base.py"
+ ],
+ "muloc_0615": [
+  "scikit-learn__scikit-learn/examples/svm/plot_separating_hyperplane.py"
+ ],
+ "muloc_0616": [
+  "scikit-learn__scikit-learn/sklearn/datasets/_base.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_california_housing.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_covtype.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_kddcup99.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_lfw.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_olivetti_faces.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_openml.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_rcv1.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_samples_generator.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_species_distributions.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_svmlight_format_io.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/_twenty_newsgroups.py",
+  "scikit-learn__scikit-learn/sklearn/datasets/tests/test_base.py",
+  "scikit-learn__scikit-learn/sklearn/linear_model/tests/test_omp.py"
+ ],
+ "muloc_0617": [
+  "scikit-learn__scikit-learn/sklearn/impute/_base.py"
+ ],
+ "muloc_0618": [
+  "scikit-learn__scikit-learn/doc/whats_new/v1.1.rst",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_stacking.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/tests/test_stacking.py"
+ ],
+ "muloc_0619": [
+  "scikit-learn__scikit-learn/sklearn/tree/tests/test_tree.py"
+ ],
+ "muloc_0620": [
+  "scikit-learn__scikit-learn/doc/modules/classes.rst",
+  "scikit-learn__scikit-learn/sklearn/cluster/__init__.py"
+ ],
+ "muloc_0621": [
+  "scikit-learn__scikit-learn/benchmarks/bench_covertype.py",
+  "scikit-learn__scikit-learn/benchmarks/bench_sgd_regression.py",
+  "scikit-learn__scikit-learn/benchmarks/bench_sparsify.py",
+  "scikit-learn__scikit-learn/doc/modules/kernel_approximation.rst",
+  "scikit-learn__scikit-learn/doc/modules/linear_model.rst",
+  "scikit-learn__scikit-learn/doc/modules/sgd.rst",
+  "scikit-learn__scikit-learn/doc/tutorial/text_analytics/working_with_text_data.rst",
+  "scikit-learn__scikit-learn/doc/whats_new.rst",
+  "scikit-learn__scikit-learn/examples/linear_model/plot_sgd_iris.py",
+  "scikit-learn__scikit-learn/examples/linear_model/plot_sgd_separating_hyperplane.py",
+  "scikit-learn__scikit-learn/examples/linear_model/plot_sgd_weighted_samples.py",
+  "scikit-learn__scikit-learn/sklearn/decomposition/tests/test_kernel_pca.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/tests/test_bagging.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/tests/test_base.py",
+  "scikit-learn__scikit-learn/sklearn/feature_selection/tests/test_from_model.py",
+  "scikit-learn__scikit-learn/sklearn/linear_model/tests/test_huber.py",
+  "scikit-learn__scikit-learn/sklearn/linear_model/tests/test_passive_aggressive.py",
+  "scikit-learn__scikit-learn/sklearn/linear_model/tests/test_perceptron.py",
+  "scikit-learn__scikit-learn/sklearn/linear_model/tests/test_sgd.py",
+  "scikit-learn__scikit-learn/sklearn/model_selection/tests/test_search.py",
+  "scikit-learn__scikit-learn/sklearn/model_selection/tests/test_validation.py",
+  "scikit-learn__scikit-learn/sklearn/tests/test_multiclass.py",
+  "scikit-learn__scikit-learn/sklearn/tests/test_multioutput.py",
+  "scikit-learn__scikit-learn/sklearn/utils/estimator_checks.py"
+ ],
+ "muloc_0623": [
+  "scikit-learn__scikit-learn/sklearn/base.py",
+  "scikit-learn__scikit-learn/sklearn/cluster/tests/test_k_means.py"
+ ],
+ "muloc_0625": [
+  "scikit-learn__scikit-learn/.circleci/config.yml",
+  "scikit-learn__scikit-learn/azure-pipelines.yml",
+  "scikit-learn__scikit-learn/build_tools/azure/install.sh",
+  "scikit-learn__scikit-learn/build_tools/azure/test_script.sh",
+  "scikit-learn__scikit-learn/doc/conftest.py",
+  "scikit-learn__scikit-learn/doc/modules/sgd.rst",
+  "scikit-learn__scikit-learn/doc/tutorial/statistical_inference/supervised_learning.rst",
+  "scikit-learn__scikit-learn/doc/whats_new/v1.0.rst",
+  "scikit-learn__scikit-learn/pyproject.toml",
+  "scikit-learn__scikit-learn/sklearn/_min_dependencies.py",
+  "scikit-learn__scikit-learn/sklearn/decomposition/_truncated_svd.py",
+  "scikit-learn__scikit-learn/sklearn/utils/tests/test_validation.py"
+ ],
+ "muloc_0626": [
+  "scikit-learn__scikit-learn/sklearn/ensemble/_forest.py"
+ ],
+ "muloc_0628": [
+  "scikit-learn__scikit-learn/sklearn/feature_selection/tests/test_rfe.py"
+ ],
+ "muloc_0629": [
+  "scikit-learn__scikit-learn/sklearn/linear_model/_coordinate_descent.py",
+  "scikit-learn__scikit-learn/sklearn/linear_model/tests/test_coordinate_descent.py"
+ ],
+ "muloc_0630": [
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/tests/test_gradient_boosting.py",
+  "scikit-learn__scikit-learn/sklearn/inspection/tests/test_permutation_importance.py",
+  "scikit-learn__scikit-learn/sklearn/preprocessing/_discretization.py",
+  "scikit-learn__scikit-learn/sklearn/preprocessing/tests/test_discretization.py",
+  "scikit-learn__scikit-learn/sklearn/preprocessing/tests/test_polynomial.py",
+  "scikit-learn__scikit-learn/sklearn/preprocessing/tests/test_target_encoder.py",
+  "scikit-learn__scikit-learn/sklearn/tests/test_docstring_parameters.py",
+  "scikit-learn__scikit-learn/sklearn/utils/stats.py",
+  "scikit-learn__scikit-learn/sklearn/utils/tests/test_stats.py"
+ ],
+ "muloc_0631": [
+  "scikit-learn__scikit-learn/doc/modules/ensemble.rst",
+  "scikit-learn__scikit-learn/doc/whats_new/v0.23.rst",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/grower.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/splitting.pyx",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/tests/test_gradient_boosting.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/tests/test_grower.py",
+  "scikit-learn__scikit-learn/sklearn/ensemble/_hist_gradient_boosting/tests/test_splitting.py"
+ ],
+ "muloc_0632": [
+  "scikit-learn__scikit-learn/sklearn/model_selection/_validation.py",
+  "scikit-learn__scikit-learn/sklearn/model_selection/tests/test_validation.py"
+ ],
+ "muloc_0633": [
+  "scikit-learn__scikit-learn/doc/whats_new.rst",
+  "scikit-learn__scikit-learn/sklearn/preprocessing/tests/test_data.py"
+ ],
+ "muloc_0634": [
+  "scikit-learn__scikit-learn/doc/whats_new/v0.21.rst",
+  "scikit-learn__scikit-learn/sklearn/linear_model/tests/test_ridge.py"
+ ],
+ "muloc_0635": [
+  "pandas-dev__pandas/pandas/core/base.py",
+  "pandas-dev__pandas/pandas/tests/test_base.py",
+  "pandas-dev__pandas/pandas/tseries/index.py"
+ ],
+ "muloc_0636": [
+  "pandas-dev__pandas/doc/source/timeseries.rst",
+  "pandas-dev__pandas/pandas/core/generic.py",
+  "pandas-dev__pandas/pandas/tseries/index.py",
+  "pandas-dev__pandas/pandas/tseries/tests/test_timezones.py",
+  "pandas-dev__pandas/pandas/tseries/tests/test_tslib.py",
+  "pandas-dev__pandas/pandas/tslib.pyx"
+ ],
+ "muloc_0637": [
+  "pandas-dev__pandas/asv_bench/benchmarks/sparse.py"
+ ],
+ "muloc_0642": [
+  "pandas-dev__pandas/pandas/core/frame.py",
+  "pandas-dev__pandas/pandas/core/internals.py",
+  "pandas-dev__pandas/pandas/core/series.py",
+  "pandas-dev__pandas/pandas/tests/test_frame.py",
+  "pandas-dev__pandas/pandas/tests/test_internals.py"
+ ],
+ "muloc_0643": [
+  "pandas-dev__pandas/pandas/core/algorithms.py",
+  "pandas-dev__pandas/pandas/tests/test_algos.py"
+ ],
+ "muloc_0645": [
+  "pandas-dev__pandas/pandas/src/generate_code.py",
+  "pandas-dev__pandas/pandas/tests/test_common.py"
+ ],
+ "muloc_0646": [
+  "pandas-dev__pandas/asv_bench/benchmarks/groupby.py"
+ ],
+ "muloc_0649": [
+  "pandas-dev__pandas/pandas/core/groupby.py",
+  "pandas-dev__pandas/pandas/tests/test_groupby.py"
+ ],
+ "muloc_0650": [
+  "pandas-dev__pandas/doc/source/release.rst",
+  "pandas-dev__pandas/pandas/core/common.py",
+  "pandas-dev__pandas/pandas/core/groupby.py",
+  "pandas-dev__pandas/pandas/core/indexing.py",
+  "pandas-dev__pandas/pandas/core/internals.py",
+  "pandas-dev__pandas/pandas/tests/test_common.py",
+  "pandas-dev__pandas/pandas/tests/test_frame.py",
+  "pandas-dev__pandas/pandas/tests/test_indexing.py"
+ ],
+ "muloc_0653": [
+  "pandas-dev__pandas/doc/source/whatsnew/v0.16.1.txt",
+  "pandas-dev__pandas/pandas/tseries/tests/test_timedeltas.py",
+  "pandas-dev__pandas/pandas/tseries/timedeltas.py"
+ ],
+ "muloc_0654": [
+  "pandas-dev__pandas/pandas/core/indexing.py",
+  "pandas-dev__pandas/pandas/tseries/index.py",
+  "pandas-dev__pandas/pandas/tseries/tests/test_timeseries.py"
+ ],
+ "muloc_0656": [
+  "pandas-dev__pandas/pandas/tools/merge.py",
+  "pandas-dev__pandas/pandas/tools/tests/test_merge.py"
+ ],
+ "muloc_0659": [
+  "pandas-dev__pandas/asv_bench/benchmarks/groupby.py"
+ ],
+ "muloc_0660": [
+  "pandas-dev__pandas/doc/source/faq.rst",
+  "pandas-dev__pandas/pandas/core/common.py",
+  "pandas-dev__pandas/pandas/core/config_init.py",
+  "pandas-dev__pandas/pandas/core/format.py",
+  "pandas-dev__pandas/pandas/core/frame.py",
+  "pandas-dev__pandas/pandas/tests/test_format.py"
+ ],
+ "muloc_0661": [
+  "pandas-dev__pandas/pandas/core/groupby.py"
+ ],
+ "muloc_0663": [
+  "pandas-dev__pandas/doc/source/merging.rst"
+ ],
+ "muloc_0664": [
+  "pandas-dev__pandas/pandas/tests/test_algos.py"
+ ],
+ "muloc_0666": [
+  "pandas-dev__pandas/pandas/core/base.py",
+  "pandas-dev__pandas/pandas/core/frame.py",
+  "pandas-dev__pandas/pandas/core/generic.py",
+  "pandas-dev__pandas/pandas/core/series.py"
+ ],
+ "muloc_0667": [
+  "pandas-dev__pandas/doc/source/conf.py",
+  "pandas-dev__pandas/pandas/core/frame.py"
+ ],
+ "muloc_0670": [
+  "pandas-dev__pandas/pandas/core/base.py",
+  "pandas-dev__pandas/pandas/core/series.py",
+  "pandas-dev__pandas/pandas/tests/test_base.py",
+  "pandas-dev__pandas/pandas/tests/test_categorical.py",
+  "pandas-dev__pandas/pandas/tseries/base.py",
+  "pandas-dev__pandas/pandas/util/testing.py"
+ ],
+ "muloc_0671": [
+  "pandas-dev__pandas/pandas/tools/plotting.py"
+ ],
+ "muloc_0672": [
+  "meta-llama__llama/llama/model.py"
+ ],
+ "muloc_0673": [
+  "pallets__flask/flask/views.py"
+ ],
+ "muloc_0674": [
+  "pallets__flask/flask/sessions.py"
+ ],
+ "muloc_0675": [
+  "pallets__flask/setup.py"
+ ],
+ "muloc_0676": [
+  "pallets__flask/flask/json.py"
+ ],
+ "muloc_0677": [
+  "sherlock-project__sherlock/README.md",
+  "sherlock-project__sherlock/sherlock/sherlock.py"
+ ],
+ "muloc_0678": [
+  "sherlock-project__sherlock/sherlock/sites.py"
+ ],
+ "muloc_0679": [
+  "keras-team__keras/keras/engine/training.py"
+ ],
+ "muloc_0680": [
+  "keras-team__keras/keras/preprocessing/image.py"
+ ],
+ "muloc_0682": [
+  "keras-team__keras/keras/engine/training.py"
+ ],
+ "muloc_0683": [
+  "keras-team__keras/docs/autogen.py"
+ ],
+ "muloc_0685": [
+  "keras-team__keras/examples/cifar10_cnn.py"
+ ],
+ "muloc_0686": [
+  "keras-team__keras/keras/engine/training.py",
+  "keras-team__keras/keras/backend/tensorflow_backend.py"
+ ],
+ "muloc_0687": [
+  "keras-team__keras/keras/applications/vgg16.py"
+ ],
+ "muloc_0689": [
+  "nvbn__thefuck/thefuck/rules/sl_ls.py"
+ ],
+ "muloc_0692": [
+  "hiyouga__LLaMA-Factory/src/llmtuner/tuner/sft/workflow.py"
+ ],
+ "muloc_0693": [
+  "hiyouga__LLaMA-Factory/src/llmtuner/tuner/sft/metric.py"
+ ],
+ "muloc_0694": [
+  "hiyouga__LLaMA-Factory/src/llmtuner/extras/template.py"
+ ],
+ "muloc_0697": [
+  "hiyouga__LLaMA-Factory/src/export_model.py"
+ ],
+ "muloc_0698": [
+  "hiyouga__LLaMA-Factory/src/llmtuner/dsets/preprocess.py"
+ ],
+ "muloc_0699": [
+  "zylon-ai__private-gpt/ingest.py"
+ ],
+ "muloc_0701": [
+  "zylon-ai__private-gpt/privateGPT.py"
+ ],
+ "muloc_0702": [
+  "zylon-ai__private-gpt/ingest.py"
+ ],
+ "muloc_0703": [
+  "zylon-ai__private-gpt/privateGPT.py"
+ ],
+ "muloc_0705": [
+  "yt-dlp__yt-dlp/yt_dlp/extractor/youtube.py",
+  "yt-dlp__yt-dlp/yt_dlp/extractor/youtube.py"
+ ],
+ "muloc_0706": [
+  "yt-dlp__yt-dlp/yt_dlp/options.py"
+ ],
+ "muloc_0707": [
+  "yt-dlp__yt-dlp/yt_dlp/__init__.py",
+  "yt-dlp__yt-dlp/README.md"
+ ],
+ "muloc_0708": [
+  "yt-dlp__yt-dlp/yt_dlp/YoutubeDL.py",
+  "yt-dlp__yt-dlp/yt_dlp/__init__.py"
+ ],
+ "muloc_0709": [
+  "yt-dlp__yt-dlp/README.md",
+  "yt-dlp__yt-dlp/yt_dlp/options.py"
+ ],
+ "muloc_0711": [
+  "ageitgey__face_recognition/examples/facerec_from_webcam_faster.py"
+ ],
+ "muloc_0712": [
+  "ageitgey__face_recognition/face_recognition/api.py"
+ ],
+ "muloc_0715": [
+  "PaddlePaddle__PaddleOCR/tools/infer/predict_system.py"
+ ],
+ "muloc_0716": [
+  "PaddlePaddle__PaddleOCR/deploy/pdserving/web_service.py"
+ ],
+ "muloc_0717": [
+  "PaddlePaddle__PaddleOCR/ppocr/modeling/backbones/rec_mobilenet_v3.py"
+ ],
+ "muloc_0718": [
+  "PaddlePaddle__PaddleOCR/paddleocr.py"
+ ],
+ "muloc_0719": [
+  "PaddlePaddle__PaddleOCR/deploy/pdserving/ocr_reader.py",
+  "PaddlePaddle__PaddleOCR/deploy/pdserving/web_service.py"
+ ],
+ "muloc_0720": [
+  "PaddlePaddle__PaddleOCR/configs/det/det_mv3_db.yml",
+  "PaddlePaddle__PaddleOCR/tools/infer/predict_det.py"
+ ],
+ "muloc_0721": [
+  "PaddlePaddle__PaddleOCR/paddleocr.py"
+ ],
+ "muloc_0722": [
+  "PaddlePaddle__PaddleOCR/tools/program.py"
+ ],
+ "muloc_0723": [
+  "PaddlePaddle__PaddleOCR/requirements.txt",
+  "PaddlePaddle__PaddleOCR/setup.py"
+ ],
+ "muloc_0724": [
+  "PaddlePaddle__PaddleOCR/tools/program.py"
+ ],
+ "muloc_0725": [
+  "AntonOsika__gpt-engineer/scripts/rerun_edited_message_logs.py"
+ ],
+ "muloc_0726": [
+  "binary-husky__gpt_academic/main.py"
+ ],
+ "muloc_0728": [
+  "binary-husky__gpt_academic/check_proxy.py"
+ ],
+ "muloc_0730": [
+  "binary-husky__gpt_academic/config.py",
+  "binary-husky__gpt_academic/README.md"
+ ],
+ "muloc_0731": [
+  "binary-husky__gpt_academic/main.py"
+ ],
+ "muloc_0732": [
+  "binary-husky__gpt_academic/config.py"
+ ],
+ "muloc_0734": [
+  "binary-husky__gpt_academic/main.py"
+ ],
+ "muloc_0735": [
+  "binary-husky__gpt_academic/config.py"
+ ],
+ "muloc_0736": [
+  "deepseek-ai__DeepSeek-V3/inference/model.py"
+ ],
+ "muloc_0737": [
+  "deepfakes__faceswap/lib/training_data.py"
+ ],
+ "muloc_0740": [
+  "deepfakes__faceswap/lib/aligner.py"
+ ],
+ "muloc_0741": [
+  "deepfakes__faceswap/faceswap.py"
+ ],
+ "muloc_0743": [
+  "3b1b__manim/manimlib/scene/scene.py"
+ ],
+ "muloc_0745": [
+  "3b1b__manim/manimlib/scene/scene.py"
+ ],
+ "muloc_0746": [
+  "3b1b__manim/manimlib/mobject/svg/tex_mobject.py"
+ ],
+ "muloc_0747": [
+  "3b1b__manim/manimlib/mobject/svg/svg_mobject.py"
+ ],
+ "muloc_0748": [
+  "3b1b__manim/manimlib/mobject/types/vectorized_mobject.py"
+ ],
+ "muloc_0749": [
+  "3b1b__manim/manimlib/animation/fading.py"
+ ],
+ "muloc_0750": [
+  "3b1b__manim/manimlib/mobject/types/vectorized_mobject.py"
+ ],
+ "muloc_0751": [
+  "scrapy__scrapy/scrapy/http/response/text.py"
+ ],
+ "muloc_0752": [
+  "scrapy__scrapy/scrapy/commands/settings.py"
+ ],
+ "muloc_0753": [
+  "psf__requests/requests/models.py"
+ ],
+ "muloc_0755": [
+  "ansible__ansible/lib/ansible/template/__init__.py"
+ ],
+ "muloc_0757": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0758": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0759": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0760": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0761": [
+  "ultralytics__yolov5/export.py"
+ ],
+ "muloc_0762": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0763": [
+  "ultralytics__yolov5/utils/plots.py"
+ ],
+ "muloc_0764": [
+  "ultralytics__yolov5/val.py"
+ ],
+ "muloc_0765": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0766": [
+  "ultralytics__yolov5/detect.py",
+  "ultralytics__yolov5/utils/general.py"
+ ],
+ "muloc_0767": [
+  "ultralytics__yolov5/utils/augmentations.py"
+ ],
+ "muloc_0768": [
+  "ultralytics__yolov5/train.py"
+ ],
+ "muloc_0769": [
+  "ultralytics__yolov5/detect.py"
+ ],
+ "muloc_0770": [
+  "ultralytics__yolov5/val.py"
+ ],
+ "muloc_0771": [
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/preprocess.py"
+ ],
+ "muloc_0772": [
+  "CorentinJ__Real-Time-Voice-Cloning/encoder/inference.py"
+ ],
+ "muloc_0773": [
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer_preprocess_audio.py"
+ ],
+ "muloc_0774": [
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/ui.py"
+ ],
+ "muloc_0775": [
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/hparams.py"
+ ],
+ "muloc_0776": [
+  "CorentinJ__Real-Time-Voice-Cloning/demo_toolbox.py"
+ ],
+ "muloc_0777": [
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/__init__.py"
+ ],
+ "muloc_0778": [
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/__init__.py"
+ ],
+ "muloc_0779": [
+  "CorentinJ__Real-Time-Voice-Cloning/encoder/preprocess.py"
+ ],
+ "muloc_0780": [
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/hparams.py"
+ ],
+ "muloc_0781": [
+  "CorentinJ__Real-Time-Voice-Cloning/synthesizer/hparams.py"
+ ],
+ "muloc_0782": [
+  "CorentinJ__Real-Time-Voice-Cloning/encoder_preprocess.py"
+ ],
+ "muloc_0783": [
+  "CorentinJ__Real-Time-Voice-Cloning/toolbox/__init__.py"
+ ],
+ "muloc_0784": [
+  "CorentinJ__Real-Time-Voice-Cloning/demo_cli.py"
+ ],
+ "muloc_0785": [
+  "AUTOMATIC1111__stable-diffusion-webui/modules/sd_models.py"
+ ],
+ "muloc_0786": [
+  "AUTOMATIC1111__stable-diffusion-webui/extensions-builtin/LDSR/sd_hijack_ddpm_v1.py",
+  "AUTOMATIC1111__stable-diffusion-webui/modules/models/diffusion/ddpm_edit.py"
+ ],
+ "muloc_0787": [
+  "THUDM__ChatGLM-6B/cli_demo.py"
+ ],
+ "muloc_0788": [
+  "THUDM__ChatGLM-6B/web_demo.py",
+  "THUDM__ChatGLM-6B/cli_demo.py"
+ ],
+ "muloc_0789": [
+  "THUDM__ChatGLM-6B/ptuning/main.py"
+ ],
+ "muloc_0790": [
+  "THUDM__ChatGLM-6B/ptuning/README.md",
+  "THUDM__ChatGLM-6B/ptuning/arguments.py"
+ ],
+ "muloc_0791": [
+  "huggingface__transformers/src/transformers/models/bert/modeling_bert.py"
+ ],
+ "muloc_0792": [
+  "huggingface__transformers/src/transformers/models/gpt2/modeling_flax_gpt2.py",
+  "huggingface__transformers/src/transformers/models/gpt2/tokenization_gpt2_fast.py"
+ ],
+ "muloc_0793": [
+  "huggingface__transformers/src/transformers/tokenization_utils_fast.py"
+ ],
+ "muloc_0794": [
+  "huggingface__transformers/src/transformers/trainer.py"
+ ],
+ "muloc_0795": [
+  "huggingface__transformers/src/transformers/modeling_utils.py"
+ ],
+ "muloc_0797": [
+  "huggingface__transformers/src/transformers/tokenization_utils_base.py"
+ ],
+ "muloc_0798": [
+  "huggingface__transformers/src/transformers/models/roberta/configuration_roberta.py"
+ ],
+ "muloc_0799": [
+  "geekan__MetaGPT/metagpt/provider/openai_api.py"
+ ],
+ "muloc_0800": [
+  "geekan__MetaGPT/metagpt/strategy/planner.py"
+ ],
+ "muloc_0803": [
+  "fastapi__fastapi/fastapi/routing.py"
+ ],
+ "muloc_0804": [
+  "fastapi__fastapi/fastapi/background.py"
+ ],
+ "muloc_0805": [
+  "fastapi__fastapi/fastapi/routing.py"
+ ],
+ "muloc_0807": [
+  "oobabooga__text-generation-webui/modules/GPTQ_loader.py"
+ ],
+ "muloc_0808": [
+  "oobabooga__text-generation-webui/download-model.py"
+ ],
+ "muloc_0809": [
+  "oobabooga__text-generation-webui/modules/chat.py"
+ ],
+ "muloc_0810": [
+  "hacksider__Deep-Live-Cam/modules/ui.py"
+ ],
+ "muloc_0811": [
+  "hacksider__Deep-Live-Cam/modules/ui.py"
+ ],
+ "muloc_0812": [
+  "hacksider__Deep-Live-Cam/modules/ui.py"
+ ],
+ "muloc_0813": [
+  "hacksider__Deep-Live-Cam/modules/ui.py"
+ ],
+ "muloc_0814": [
+  "hacksider__Deep-Live-Cam/modules/ui.py",
+  "hacksider__Deep-Live-Cam/modules/core.py"
+ ],
+ "muloc_0815": [
+  "Textualize__rich/rich/cells.py"
+ ],
+ "muloc_0816": [
+  "Textualize__rich/rich/progress.py",
+  "Textualize__rich/rich/progress.py"
+ ],
+ "muloc_0817": [
+  "Textualize__rich/rich/console.py"
+ ],
+ "muloc_0818": [
+  "ytdl-org__youtube-dl/youtube_dl/downloader/hls.py"
+ ],
+ "muloc_0819": [
+  "ytdl-org__youtube-dl/youtube_dl/YoutubeDL.py"
+ ],
+ "muloc_0820": [
+  "ytdl-org__youtube-dl/youtube_dl/extractor/bilibili.py"
+ ],
+ "muloc_0821": [
+  "ytdl-org__youtube-dl/youtube_dl/options.py"
+ ],
+ "muloc_0822": [
+  "ytdl-org__youtube-dl/youtube_dl/extractor/youtube.py"
+ ],
+ "muloc_0823": [
+  "ytdl-org__youtube-dl/youtube_dl/options.py"
+ ],
+ "muloc_0824": [
+  "OpenInterpreter__open-interpreter/interpreter/core/core.py"
+ ],
+ "muloc_0826": [
+  "abi__screenshot-to-code/backend/config.py"
+ ],
+ "muloc_0827": [
+  "abi__screenshot-to-code/backend/main.py"
+ ],
+ "muloc_0828": [
+  "pytorch__pytorch/torch/autograd/variable.py"
+ ],
+ "muloc_0830": [
+  "xtekky__gpt4free/g4f/Provider/Liaobots.py"
+ ],
+ "muloc_0831": [
+  "xtekky__gpt4free/g4f/models.py"
+ ],
+ "muloc_0832": [
+  "xtekky__gpt4free/g4f/cli.py"
+ ],
+ "muloc_0833": [
+  "xtekky__gpt4free/projects/windows/main.py"
+ ],
+ "muloc_0834": [
+  "xtekky__gpt4free/g4f/client/__init__.py"
+ ],
+ "muloc_0836": [
+  "xtekky__gpt4free/g4f/Provider/HuggingChat.py"
+ ],
+ "muloc_0838": [
+  "scikit-learn__scikit-learn/sklearn/preprocessing/_encoders.py"
+ ],
+ "muloc_0840": [
+  "meta-llama__llama/llama/tokenizer.py"
+ ],
+ "muloc_0841": [
+  "meta-llama__llama/example_text_completion.py"
+ ]
+}

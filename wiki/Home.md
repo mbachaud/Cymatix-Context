@@ -9,7 +9,10 @@ path.
   2026-10-10. No release since v0.10.0 changes a shipped retrieval or
   delivery default; the 0.11.x additions (multi-lane serving, delta sync,
   per-store Freeze, packet trace) are opt-in or launcher-side. Changes are
-  cited by PR number where they appear.
+  cited by PR number where they appear. **0.11.4** is merged to `master`
+  (2026-10-26) and passed its release witness, but is not yet tagged or on
+  PyPI. It adds only opt-in experiments (an external packet judge,
+  char-basis chunk caps) and fixes.
   The Tier-2 lexicon aliases the pages present as canonical
   ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) follow the 0.9.1 tag and are not in the 0.9.1 wheel — on that
   wheel the legacy spellings are the ones that resolve. See

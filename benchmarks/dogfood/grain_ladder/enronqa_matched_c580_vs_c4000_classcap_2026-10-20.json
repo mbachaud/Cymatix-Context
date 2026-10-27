@@ -1,0 +1,51 @@
+{
+  "tag": "enronqa",
+  "stamp": "2026-10-20",
+  "join": "query text",
+  "n_common": 500,
+  "n_c580_only": 0,
+  "n_c4000_only": 0,
+  "c580": {
+    "delivered_gold": 0.886,
+    "chars_mean": 20312,
+    "wall_ms_p50": 436,
+    "misses": {
+      "delivered": 443,
+      "cut_by_packing": 11,
+      "ranked_below_cap": 0,
+      "never_ranked": 46,
+      "abstain": 0,
+      "util_mean": 1.128,
+      "util_p50": 1.203,
+      "pre_pack_rank_p50": 3,
+      "post_pack_rank_p50": 3
+    },
+    "receipt": "F:\\tmp\\grain_multicorpus_2026-10-20\\ladder_enronqa_c580_classcap_2026-10-20.json",
+    "bed": "F:\\tmp\\grain_multicorpus_2026-10-20\\enronqa_c580\\enronqa.db",
+    "git_sha": "055c19caca3f2972a64f36801a222881ca777202"
+  },
+  "c4000": {
+    "delivered_gold": 0.816,
+    "chars_mean": 17658,
+    "wall_ms_p50": 3362,
+    "misses": {
+      "delivered": 408,
+      "cut_by_packing": 23,
+      "ranked_below_cap": 41,
+      "never_ranked": 28,
+      "abstain": 0,
+      "util_mean": 0.981,
+      "util_p50": 0.974,
+      "pre_pack_rank_p50": 3.0,
+      "post_pack_rank_p50": 3.0
+    },
+    "receipt": "F:\\tmp\\grain_multicorpus_2026-10-20\\ladder_enronqa_c4000_classcap_2026-10-20.json",
+    "bed": "F:\\tmp\\grain_multicorpus_2026-10-20\\enronqa_c4000\\enronqa.db",
+    "git_sha": "055c19caca3f2972a64f36801a222881ca777202"
+  },
+  "paired_c580_vs_c4000": {
+    "wins": 54,
+    "losses": 19
+  },
+  "beta_witness_2026_09_04_delivered_gold_rate": null
+}
