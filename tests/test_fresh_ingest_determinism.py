@@ -17,7 +17,7 @@ import time
 
 from cymatix_context.config import GenomeConfig
 from cymatix_context.context_manager import CymatixContextManager
-from tests.conftest import make_cymatix_config, make_gene
+from tests.conftest import make_cymatix_config, make_gene, requires_spacy_model
 
 N_EARLY = 10
 N_LATE = 290
@@ -51,6 +51,7 @@ def _ingest(mgr: CymatixContextManager, docs: list[str]) -> None:
         mgr.ingest(d)
 
 
+@requires_spacy_model
 def test_read_only_query_does_not_change_a_later_answer(tmp_path, monkeypatch):
     """A store queried mid-ingest answers like one that was never queried."""
     monkeypatch.setenv("CYMATIX_DISABLE_LEARN", "1")
@@ -68,6 +69,7 @@ def test_read_only_query_does_not_change_a_later_answer(tmp_path, monkeypatch):
         warm.close()
 
 
+@requires_spacy_model
 def test_answer_does_not_depend_on_elapsed_wall_clock(tmp_path, monkeypatch):
     """Same operations, same content; only the clock between queries differs.
 
