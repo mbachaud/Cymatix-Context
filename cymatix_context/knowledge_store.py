@@ -1827,6 +1827,14 @@ class KnowledgeStore:
         ``_CORPUS_SIZE_TTL`` seconds. Used by the IDF-weighted lexical
         anchor tier so rare-term boosts reflect the *knowledge store* size, not
         the size of the scored-candidate pool.
+
+        This store's own writes (``upsert_doc``, ``delete_gene``, and the
+        commit of a ``deferred_commits`` scope) drop the memo, so the count
+        is exact after in-process ingest. Without that, ingest -> query ->
+        ingest -> query reused the first query's count until the TTL ran
+        out, and the IDF tier depended on wall-clock elapsed time (the
+        2026-10-07 compaction-recall determinism diff). The TTL now only
+        bounds how long other processes' writes go unseen.
         """
         now = time.time()
         # Check the timestamp, not the value: a legitimately empty knowledge store
@@ -1845,6 +1853,10 @@ class KnowledgeStore:
             log.warning("corpus_size refresh failed", exc_info=True)
             # Fall back to whatever we have (may be 0 on first failure).
         return self._corpus_size
+
+    def _invalidate_corpus_size(self) -> None:
+        """Drop the corpus_size() memo; the next call recounts."""
+        self._corpus_size_ts = 0.0
 
     @property
     def read_conn(self) -> sqlite3.Connection:
@@ -2050,6 +2062,10 @@ class KnowledgeStore:
             else:
                 if outermost:
                     self.conn.commit()
+                    # The per-upsert invalidations ran before this commit;
+                    # a corpus_size() read on a reader in between counted
+                    # the pre-commit table. Drop it now the rows are visible.
+                    self._invalidate_corpus_size()
                     # Checkpoint cadence deferred by upsert_doc while the
                     # transaction was open — run it now that it can advance.
                     pending, self._pending_checkpoint = (
@@ -2370,6 +2386,8 @@ class KnowledgeStore:
         # (~78 MiB / sub-200 ms at 18.9k rows) on first dense recall after
         # this batch. See spec §4 "Invalidation".
         self._invalidate_dense_matrix()
+        # IDF denominator: a new document changes the count.
+        self._invalidate_corpus_size()
 
         # Notify persistence manager (if attached)
         if self._replication_mgr is not None:
@@ -6494,6 +6512,7 @@ class KnowledgeStore:
             self.invalidate_sema_cache()
             self.invalidate_cold_sema_cache()
             self._invalidate_dense_matrix()
+            self._invalidate_corpus_size()
             log.debug("Deleted gene %s (+ index, symbol, and edge rows)", gene_id)
         return deleted
 
