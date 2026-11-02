@@ -1,6 +1,7 @@
 # Compaction recall, stage 1: what survives a compaction, and can retrieval bring back the rest?
 
 **Status:** stage 1 (retrieval-level, no model calls). Pilot scale: 19 compaction events.
+Post-fix rerun 2026-11-02: cymatix 0.517 vs BM25 0.594, paired +55 / −119.
 **Harness:** `benchmarks/compaction_recall/` (tests: `tests/test_compaction_recall.py`).
 **Motivation:** Schwartz, *Claude-shaped science* (Anthropic, Oct 2026) reports that long
 agentic research sessions lost key details at compaction, and that the working fix was
@@ -108,7 +109,7 @@ Qualifier needles: n = 12. Too few to read; reported in the receipt only.
 3. **Retrieval over the raw history recovers about half of what compaction dropped.**
    today ∪ BM25 reaches 0.727.
 4. **On this task the shipped cymatix pipeline is below plain BM25** (−7.6 pp, paired
-   +55/−118) and above BGE-M3 dense (+134/−76). Same signature as the published-comparator
+   +55/−118; post-fix +55/−119, see the post-fix rerun) and above BGE-M3 dense (+134/−76). Same signature as the published-comparator
    summary (`2026-09-04-published-comparators.md`): BM25-class, with fused lanes displacing
    the top lexical hit on short lexical queries. The queries here are lexical-heavy proxies,
    which favours BM25. Stage 2 (model-written queries) is the fairer test of the extra
@@ -130,9 +131,59 @@ Both cymatix diffs are in one event (`17b68b9c`, the longest incrementally-inges
 the same needle verdict, but a different delivered size (1,601 vs 1,806 tokens; 3,387 vs
 3,385). So **retrieval outcomes reproduced exactly, delivered bytes did not** when the store
 was rebuilt by fresh ingest. This is narrower than the 2026-09-04 witness sweep, which
-re-queried prebuilt beds bit-exactly. Unverified hypothesis: an ingest-time input that varies
-with wall-clock time (created-at timestamps feeding the freshness gate or a tie-break) and
-not with content. Root cause not chased in this pass.
+re-queried prebuilt beds bit-exactly.
+
+**Root cause (found after this run, fixed with
+`tests/test_fresh_ingest_determinism.py`):** `KnowledgeStore.corpus_size()` memoized the
+document count for 60 s of wall clock, and in-process writes never cleared the memo. The
+IDF lexical-anchor tier computes `1.5 * ln(N / df)`, gated at > 1.0 and capped at 3.0. In an
+incremental chain, the first boundary's query cached N, then later boundaries ingested more
+chunks and queried against that old N until 60 s had passed. A chain replay of the four
+`17b68b9c` boundaries showed a cached N of 698 against a true N of up to 2,604. Forcing the
+memo always stale reproduced run-02 byte-for-byte; forcing it always fresh reproduced run-01
+on both differing needles. Which run refreshed was decided by how long ingest took. Prebuilt
+beds don't change size between queries, which is why the witness sweep never saw this.
+
+The fix drops the memo on `upsert_doc`, on `delete_gene` and at the outermost
+`deferred_commits` commit. The 60 s TTL now bounds only other processes' writes. **The
+run-01 and run-02 cymatix numbers above were measured before the fix.** On incrementally
+ingested chains their IDF denominator was stale. In the `17b68b9c` chain, the fix changes 20
+of 51 delivered texts and flips 0 hits. The full post-fix rerun is the next section.
+
+## Post-fix rerun (run-03, run-04, 2026-11-02)
+
+Same 14 transcripts (each sha256 byte-identical to run-01's), same needle set
+(`ffbbcb692cc0…`), k = 12, `PYTHONHASHSEED=0`, every arm rebuilt by fresh ingest with the
+`corpus_size()` fix applied. Two code bases:
+
+- **run-03** (`receipts/run-03-postfix-v0110_2026-11-02.json`): v0.11.0 + this harness +
+  the fix, cymatix config sha256 `ead66d2d…`, the same file run-01 loaded.
+- **run-04** (`receipts/run-04-postfix-pinned_2026-11-02.json`): `origin/master` `4ba432c3`
+  (v0.11.4) + the harness + the fix, with the shipped `cymatix.toml` of that tree. Its
+  `cymatix_context/` is identical to beta `091dab94` apart from the fix.
+
+`compare_runs run-03 run-04 --arms bm25,dense,cymatix`: **834 / 834 rows identical in every
+arm.** The v0.11.0 → v0.11.4 releases didn't move a row on this bench, and fresh-ingest
+rebuilds now reproduce.
+
+| arm | hit | macro over events | median tokens | ∪ today | recovers today's misses |
+|---|---|---|---|---|---|
+| `bm25` | **0.594** | 0.609 | 2,889 | **0.727** | **0.508** |
+| `dense` (BGE-M3) | 0.447 | 0.476 | 2,648 | 0.648 | 0.365 |
+| `cymatix` (shipped, post-fix) | 0.517 | 0.517 | 3,613 | 0.699 | 0.458 |
+
+The text arms (`today`, `summary`, `plan`, `handoff`) are unchanged from run-01.
+
+Paired: cymatix vs BM25 **+55 / −119** (exact two-sided sign test p = 1.4 × 10⁻⁶);
+cymatix vs dense +134 / −76. Against run-01, the fix changed the delivered tokens on 44 of
+834 cymatix rows and one hit (a loss). The BM25 gap is not a determinism artifact.
+
+Dense moved 374 → 373 hits against run-01 though the fix doesn't touch it; run-03 and
+run-04 agree with each other. Not chased.
+
+Both runs predate the `CYMATIX_COVER_INDEX_AUTOBUILD=0` pin in `arms.py` (added for the
+bench-driver ratchet). Autobuild only fires on stores of 50k+ rows; the largest
+haystack here is 3,302 chunks, so the pin can't change these numbers.
 
 ## Limitations
 
