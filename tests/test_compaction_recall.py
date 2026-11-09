@@ -9,7 +9,9 @@ extraction, query masking, and the scoring predicates.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -209,3 +211,47 @@ def test_bm25_arm_delivers_the_needle_chunk():
     delivered = arm.query("which commit did we pin for the release tag", k=1)
     assert SHA in delivered.text
     assert delivered.n_chunks == 1
+
+
+# ── receipts carry no machine-specific names ─────────────────────────────
+
+_RECEIPTS = Path(__file__).resolve().parents[1] / "benchmarks" / "compaction_recall" / "receipts"
+# A drive letter (not the "p:" of "http://"), a Claude project folder name
+# ("F--Projects-..."), or a home directory.
+_LOCAL_PATH = re.compile(r"(?<![A-Za-z])[A-Za-z]:[\\/]|\b[A-Za-z]--[A-Za-z]|/Users/|/home/")
+
+
+def test_transcript_identity_hides_the_project_folder(tmp_path):
+    from benchmarks.compaction_recall.run import transcript_identity
+
+    folder = tmp_path / "F--Projects-secret-client"
+    folder.mkdir()
+    a, b = folder / "aaa.jsonl", folder / "bbb.jsonl"
+    a.write_text("one\n", encoding="utf-8")
+    b.write_text("two\n", encoding="utf-8")
+    ids = transcript_identity([a, b])
+    assert [t["name"] for t in ids] == ["transcript-01.jsonl", "transcript-02.jsonl"]
+    assert ids[0]["sha256"] == hashlib.sha256(b"one\n").hexdigest()
+    assert ids[0]["bytes"] == 4
+    assert "secret" not in json.dumps(ids)
+
+
+@pytest.mark.parametrize("receipt", sorted(_RECEIPTS.glob("*.json")), ids=lambda p: p.name)
+def test_committed_receipts_have_no_local_paths_or_project_names(receipt):
+    data = json.loads(receipt.read_text(encoding="utf-8"))
+    for t in data["transcripts"]:
+        assert re.fullmatch(r"transcript-\d{2}\.jsonl", t["name"]), t["name"]
+        assert re.fullmatch(r"[0-9a-f]{64}", t["sha256"])
+
+    def strings(node):
+        if isinstance(node, dict):
+            for v in node.values():
+                yield from strings(v)
+        elif isinstance(node, list):
+            for v in node:
+                yield from strings(v)
+        elif isinstance(node, str):
+            yield node
+
+    leaks = [s for s in strings(data) if _LOCAL_PATH.search(s)]
+    assert not leaks, leaks[:5]

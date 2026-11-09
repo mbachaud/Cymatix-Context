@@ -259,6 +259,12 @@ class CymatixArm:
         cfg.genome.path = os.path.join(gdir, "genome.db")
         if self.config_snapshot is None:
             self.config_snapshot = _config_dump(cfg)
+            # Receipts are committed: keep the store path relative to the
+            # run's scratch root, not this machine's absolute path.
+            _genome = self.config_snapshot.get("genome")
+            if isinstance(_genome, dict) and _genome.get("path"):
+                _genome["path"] = Path(
+                    os.path.relpath(cfg.genome.path, self.root)).as_posix()
         self.manager = CymatixContextManager(cfg)
         self.dedup = _Dedup()
         self.size = 0
@@ -280,7 +286,7 @@ class CymatixArm:
         resolved = os.path.abspath(path) if os.path.exists(path) else "built-in defaults"
         sha = (hashlib.sha256(Path(path).read_bytes()).hexdigest()
                if os.path.exists(path) else None)
-        return {"config_resolved": resolved, "config_sha256": sha,
+        return {"config_resolved": os.path.basename(str(resolved)), "config_sha256": sha,
                 "loaded_config": self.config_snapshot}
 
     def close(self) -> None:

@@ -10,72 +10,72 @@
   "chunk_chars": 1200,
   "transcripts": [
     {
-      "name": "E--Wow/97b6feaa-e349-4172-938f-3ee19bc51230.jsonl",
+      "name": "transcript-01.jsonl",
       "bytes": 9393523,
       "sha256": "c9822807efb9731e5bdb1de9649aff9c9d4b8f0f8e52e2eaa4c4cb725b988150"
     },
     {
-      "name": "E--Wow/beda201e-4f65-4db7-8e10-fae458fd1cb5.jsonl",
+      "name": "transcript-02.jsonl",
       "bytes": 4464783,
       "sha256": "737f1b2928e921a7b1f815b69c36f0d1ee6f0ad669863cdc856f5d7f03b15560"
     },
     {
-      "name": "F--Projects/6a19d9e9-e9e8-49a3-bbbe-8910548e5943.jsonl",
+      "name": "transcript-03.jsonl",
       "bytes": 6989108,
       "sha256": "a7404b5c402cbe5b88ac58f3d9efd49fca4e9660863f9452390d7569c31617a1"
     },
     {
-      "name": "F--Projects/b3f1f367-552c-45ad-99d9-b4780718cb1d.jsonl",
+      "name": "transcript-04.jsonl",
       "bytes": 8181185,
       "sha256": "41eab24124e2a815c659c29fa310186a6d049b67e7fa95660d7a874932613f09"
     },
     {
-      "name": "F--Projects-archestra--claude-worktrees-hardcore-allen-66a06e/b59020bd-947e-4015-b930-458e0c3db7a2.jsonl",
+      "name": "transcript-05.jsonl",
       "bytes": 28676832,
       "sha256": "c9d2837b51b8d49d283d19878ada5faf4504405fd45e12cdc78aa7d43788031d"
     },
     {
-      "name": "F--Projects-cymatix-context--claude-worktrees-backlog-clearing-v0-9-0-534508/05d779bf-25b3-4c53-a2ee-06fa26ccc4cc.jsonl",
+      "name": "transcript-06.jsonl",
       "bytes": 4252701,
       "sha256": "251cb80975c03e2ee4d09c7c5a850e16630e5d0342a273ef325ed36f7b3e9fe1"
     },
     {
-      "name": "F--Projects-cymatix-context--claude-worktrees-nostalgic-elion-5304a1/d0fd5c23-19cb-4896-9e2e-a7986ebb3b97.jsonl",
+      "name": "transcript-07.jsonl",
       "bytes": 6230141,
       "sha256": "98616f0ef87a2317b169b966958264c4b7a30f134c8bef4f96efd1e174d2ca89"
     },
     {
-      "name": "F--Projects-cymatix-context--claude-worktrees-pending-pr-checks-charts-cfcc04/be17001b-252b-4e62-96c3-7b44f98f6886.jsonl",
+      "name": "transcript-08.jsonl",
       "bytes": 6892884,
       "sha256": "e6a069551767ae33cce9ddce3e05e9ce688840a2e990421ed29e7dec307002bb"
     },
     {
-      "name": "F--Projects-cymatix-context--claude-worktrees-perf-slice1/2833387a-94e7-45b0-9839-057d690bff47.jsonl",
+      "name": "transcript-09.jsonl",
       "bytes": 9308882,
       "sha256": "ecce0c3c49a4147b5c93ae608e7a96a937da4d2969f2d56ebf1686e17d726c51"
     },
     {
-      "name": "F--Projects-cymatix-context--claude-worktrees-wave-1-semantic-ranking-5f1dab/c4b08676-f796-48c9-8984-3892e33dd52e.jsonl",
+      "name": "transcript-10.jsonl",
       "bytes": 4967243,
       "sha256": "80aec8b81444dfa4378431fcb3e1694cab0a8472cee60c10beb0c3baea6c5cd9"
     },
     {
-      "name": "F--Projects-cymatix-context--claude-worktrees-website-reconnection-errors-fb70d7/8585da1a-f0d5-48ed-bf3f-d7fbadfbae1b.jsonl",
+      "name": "transcript-11.jsonl",
       "bytes": 7811181,
       "sha256": "76ca96c4df3a01da6de013028d454cc9f65a37430b4d6e67200108bba43dc942"
     },
     {
-      "name": "F--Projects-helix-context--claude-worktrees-focused-agnesi-5c356b/05bfa48d-6b33-42fc-a5d3-dab6a1e226b7.jsonl",
+      "name": "transcript-12.jsonl",
       "bytes": 15100647,
       "sha256": "e880e287c03afd55b8d39486db4d0cbcc83782272a12cae1ee1e49cfc11536bf"
     },
     {
-      "name": "F--Projects-helix-context--claude-worktrees-funny-archimedes-f85b9d/6b313ae1-3e1b-4815-a78a-59c00ed50e68.jsonl",
+      "name": "transcript-13.jsonl",
       "bytes": 8915825,
       "sha256": "269505dcf9e944a0a8e5b22f9c7635505bdb28ecf51b97ba5784f66a7dd288ce"
     },
     {
-      "name": "F--Projects-Reco/a38ad4ad-d908-4f83-bfe3-4ca4e91cfcee.jsonl",
+      "name": "transcript-14.jsonl",
       "bytes": 6890078,
       "sha256": "22c01ebd8be06b3850e90b75a0b31b52915f0aeb22218b4bb11b995bbcdac1d5"
     }
@@ -499,7 +499,7 @@
       "query_s": 74.64992618560791,
       "queries": 834,
       "describe": {
-        "config_resolved": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\keen-heisenberg-745c4b\\cymatix.toml",
+        "config_resolved": "cymatix.toml",
         "config_sha256": "ead66d2defc3bc4fd73aa2e086adf2d6eb849390f6899414b5b1a4d0e3b183e4",
         "loaded_config": {
           "ribosome": {
@@ -553,7 +553,7 @@
             "tier_lagrange_frac": 0.7
           },
           "genome": {
-            "path": "F:\\tmp\\compaction-recall\\run-02-determinism\\genomes\\g1\\genome.db",
+            "path": "genomes/g1/genome.db",
             "compact_interval": 3600.0,
             "cold_start_threshold": 10,
             "replicas": [],

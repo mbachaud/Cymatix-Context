@@ -263,6 +263,17 @@ def aggregate(events, needles_by_event, arm_names, out_dir: Path) -> dict:
     return out
 
 
+def transcript_identity(files) -> list[dict]:
+    """Receipt identity for the input transcripts: size and sha256 only.
+
+    A transcript's folder is named after the local project it came from, so
+    the receipt carries a positional label instead of the real name. The
+    sha256 is what identifies the file.
+    """
+    return [{"name": f"transcript-{i:02d}.jsonl", "bytes": p.stat().st_size,
+             "sha256": _sha256(p)} for i, p in enumerate(files, 1)]
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--transcripts", action="append",
@@ -279,8 +290,7 @@ def main(argv: list[str] | None = None) -> int:
 
     files = discover(args.transcripts or [str(Path.home() / ".claude" / "projects" / "*")])
     # Hash before parsing: live sessions keep appending to their files.
-    transcript_ids = [{"name": f"{p.parent.name}/{p.name}", "bytes": p.stat().st_size,
-                       "sha256": _sha256(p)} for p in files]
+    transcript_ids = transcript_identity(files)
     events = load_events(files)
     if args.limit_events:
         events = events[: args.limit_events]
