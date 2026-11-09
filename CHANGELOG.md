@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **fix(retrieval): concurrent requests no longer tier on another request's
+  scores.** `query_docs` publishes its score maps on the store and
+  `build_context` read them back after retrieval returned; a second thread's
+  query could publish in that gap, including its intermediate
+  additive-scale map. The reader then saw a flat score profile and
+  abstained. On a file-backed store, 12 threads x 15 identical queries gave
+  39 to 45 false `no_match` responses out of 180. Each thread now reads
+  back the maps its own query published (`cymatix_context/request_scoped.py`),
+  on the single-store, sharded and `/context/packet` paths. The plain
+  `last_query_scores` attributes keep their meaning (most recent query, any
+  thread). Single-threaded results are unchanged.
+
 ## 0.11.4 (2026-10-26)
 
 - **Release gate: 947k merged-stack witness with packet tracing on,
