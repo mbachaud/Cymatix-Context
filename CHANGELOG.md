@@ -11,6 +11,12 @@
   unchanged: they keep their per-thread read connections. This was also the
   cause of the intermittent 60-minute `test-full-suite` timeout.
 
+- **change(launcher): the PyPI update check is off by default** (issue
+  #481). The desktop launcher no longer makes an outbound request to
+  pypi.org unless you opt in with `CYMATIX_LAUNCHER_UPDATE_CHECK=1`
+  (`true` / `yes` / `on` also work). Before, it was on unless set to `0`.
+  If you relied on the tray's update notice, set the variable to `1`.
+
 ## 0.11.4 (2026-10-26)
 
 - **Release gate: 947k merged-stack witness with packet tracing on,
