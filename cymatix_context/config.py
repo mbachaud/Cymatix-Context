@@ -15,10 +15,7 @@ from typing import Any, Dict, List, Optional
 
 log = logging.getLogger(__name__)
 
-try:
-    import tomllib  # Python 3.11+
-except ImportError:
-    import tomli as tomllib  # type: ignore[no-redef]
+import tomllib  # stdlib since 3.11; requires-python >= 3.11
 
 
 @dataclass
@@ -63,8 +60,9 @@ class RibosomeConfig:
     # by /health and by a server-startup WARNING so operators are never
     # surprised by paid-API compressor calls. Add new backends to the
     # appropriate tuple.
-    _LOCAL_BACKENDS = ("ollama", "deberta")
-    _PAID_API_BACKENDS = ("claude",)
+    # Only "litellm" and "deberta" survive ``effective_backend``; every other
+    # value (legacy "ollama", "claude") resolves to "disabled".
+    _LOCAL_BACKENDS = ("deberta",)
     # litellm is paid OR local depending on the underlying model string;
     # classified separately by ``cost_class`` (see below).
 
@@ -91,10 +89,11 @@ class RibosomeConfig:
         """Return one of ``disabled`` | ``local`` | ``api+free`` | ``api+paid``.
 
         - ``disabled``= compressor is intentionally inactive.
-        - ``local``   = runs on the operator's machine (Ollama / DeBERTa).
+        - ``local``   = runs on the operator's machine (DeBERTa, or LiteLLM
+                        routed to a local ``ollama/`` model).
         - ``api+free``= remote API with no metered cost (none today).
-        - ``api+paid``= remote API that bills per call (Claude direct, or
-                        LiteLLM routed to a paid model string).
+        - ``api+paid``= remote API that bills per call (LiteLLM routed to a
+                        paid model string).
 
         litellm with a model that starts with ``ollama/`` is treated as
         local (the call goes to the local Ollama). Any other litellm
@@ -105,8 +104,6 @@ class RibosomeConfig:
             return "disabled"
         if b in self._LOCAL_BACKENDS:
             return "local"
-        if b in self._PAID_API_BACKENDS:
-            return "api+paid"
         if b == "litellm":
             return "local" if self.litellm_model.startswith("ollama/") else "api+paid"
         return "api+paid"  # unknown backend defaults to paid for safety
@@ -117,8 +114,6 @@ class RibosomeConfig:
         b = self.effective_backend
         if b == "disabled":
             return "disabled"
-        if b == "claude":
-            return self.claude_model
         if b == "litellm":
             return self.litellm_model
         return self.model
