@@ -35,6 +35,7 @@ if TYPE_CHECKING:
 
     from .backends.bgem3_codec import BGEM3Codec
 
+from .serialized_conn import SerializedConnection
 from .accel import (
     json_loads,
     json_dumps,
@@ -1105,7 +1106,9 @@ class KnowledgeStore:
         # transactions so a concurrent caller's commit can never publish
         # another request's half-written gene. RLock so a locked caller can
         # re-enter upsert paths without deadlocking.
-        self._write_lock = threading.RLock()
+        # Issue #505: a :memory: store's connection serializes every call on
+        # its own RLock; adopt that lock so writers and readers share one.
+        self._write_lock = getattr(self.conn, "serial_lock", None) or threading.RLock()
         # Issue #372: document-scoped transaction state. _defer_depth > 0
         # means a deferred_commits() scope is open on the thread that holds
         # _write_lock — write units then run as SAVEPOINTs and the single
@@ -1888,7 +1891,18 @@ class KnowledgeStore:
         to SQLite's defaults (tech-debt audit 2026-10-22, finding 9). The
         caller installs the commit trace.
         """
-        conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
+        if self.path == ":memory:":
+            # Issue #505: reads share this one connection (see read_conn), so
+            # every call into it is serialized on the store's write lock.
+            conn = sqlite3.connect(
+                self.path, check_same_thread=False, timeout=30,
+                factory=SerializedConnection,
+            )
+            _store_lock = getattr(self, "_write_lock", None)
+            if _store_lock is not None:
+                conn.serial_lock = _store_lock
+        else:
+            conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute(f"PRAGMA busy_timeout={WRITER_BUSY_MS}")  # retry on lock
