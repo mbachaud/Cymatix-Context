@@ -107,4 +107,4 @@ Baseline: full `pytest tests/ -m "not live"` on merged master (receipt in the
 worker report).
 
 Results are appended as the worker report in
-`docs/superpowers/plans/2026-08-18-issue-batch-testing-report.md`.
+`docs/archive/superpowers/plans/2026-08-18-issue-batch-testing-report.md`.

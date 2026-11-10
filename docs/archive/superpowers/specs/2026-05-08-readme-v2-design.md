@@ -250,7 +250,7 @@ full tool schemas in `docs/api/mcp-tools.md`.
 |---|---|
 | `docs/research/` (all) | Internal sprint research, not user-facing |
 | `docs/collab/` (all) | batman_output, collab dumps |
-| `docs/superpowers/` (all) | Internal Claude Code plans/specs |
+| `docs/archive/superpowers/` (all) | Internal Claude Code plans/specs |
 | `docs/papers/` (all) | Draft papers; link from README to Substack instead |
 | `docs/positioning/` (all) | Internal competitive positioning |
 | `docs/specs/` — dated pre-2026-05 | Completed/superseded specs |

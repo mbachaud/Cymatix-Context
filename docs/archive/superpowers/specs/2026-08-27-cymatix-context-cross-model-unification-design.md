@@ -494,7 +494,7 @@ The lint's included surface is deterministic:
 - `skills/**`, MCP templates, and package entry points.
 
 It explicitly excludes `CHANGELOG.md`, `docs/archive/**`,
-`docs/superpowers/**`, benchmark data/receipts, and historical fixtures. Any
+`docs/archive/superpowers/**`, benchmark data/receipts, and historical fixtures. Any
 additional exclusion is a reviewed whitelist change, not an ad-hoc substring
 skip.
 

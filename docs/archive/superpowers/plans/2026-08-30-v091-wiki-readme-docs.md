@@ -9,13 +9,13 @@ software-term sweep of all current docs, shipping as one PR on
 
 **Architecture:** `wiki/` is the source of truth; two thin scripts render
 it (site HTML build; GitHub-wiki git mirror). Docs sweep and README
-rewrite are text-only. PR A (`docs/superpowers/plans/2026-08-30-rosetta-tier2-aliases.md`)
+rewrite are text-only. PR A (`docs/archive/superpowers/plans/2026-08-30-rosetta-tier2-aliases.md`)
 merges first — this PR's docs present those canonical names as primary.
 
 **Tech Stack:** Markdown, hand-authored SVG, Python (`markdown` package)
 for the site build, git for the wiki mirror.
 
-**Spec:** `docs/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`
+**Spec:** `docs/archive/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`
 
 ## Global Constraints
 

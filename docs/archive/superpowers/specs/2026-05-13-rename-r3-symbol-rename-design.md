@@ -5,7 +5,7 @@ Stage D + E in flight via PR #89.
 
 **Predecessor specs:** [R2 prose sweep design](2026-05-11-rename-r2-prose-sweep-design.md).
 **Tracking issue:** #87.
-**Lexicon source-of-truth:** [`docs/ROSETTA.md`](../../ROSETTA.md).
+**Lexicon source-of-truth:** [`docs/ROSETTA.md`](../../../ROSETTA.md).
 
 ---
 
@@ -252,6 +252,6 @@ larger risk):
 
 ## Lookup
 
-For any term not covered here, consult [`docs/ROSETTA.md`](../../ROSETTA.md)
+For any term not covered here, consult [`docs/ROSETTA.md`](../../../ROSETTA.md)
 — it remains the canonical bidirectional glossary across the entire
 biology-tax rename effort.

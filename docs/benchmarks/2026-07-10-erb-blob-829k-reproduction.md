@@ -160,7 +160,7 @@ under #239 (know calibration).
 ## 5. Hardware & runtime (one consumer desktop)
 
 Live-verified on the run box (internally "gandalf") on 2026-07-10, cross-checked against
-`docs/investigations/2026-06-02-hardware-optimization-investigation.md` §2:
+`docs/archive/investigations/2026-06-02-hardware-optimization-investigation.md` §2:
 
 | Component | Spec |
 |---|---|
@@ -477,5 +477,5 @@ Other TODOs:
 `scripts/shard_to_blob.py`, `scripts/bench_chain/{erb500k_scored.py, s4_erb500k_scored.ps1,
 erb_to_sweep_queries.py}`, `benchmarks/ab_semantic_probe.py`, `helix.toml`,
 `docs/specs/2026-07-01-goal-gates-hallucination-visibility.md`,
-`docs/investigations/2026-06-02-hardware-optimization-investigation.md`,
+`docs/archive/investigations/2026-06-02-hardware-optimization-investigation.md`,
 `F:\Projects\EnterpriseRAG-Bench-main\{README.md, methodology.md, answer_evaluation/README.md}`.*

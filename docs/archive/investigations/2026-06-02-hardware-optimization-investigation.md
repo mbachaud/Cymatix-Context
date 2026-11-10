@@ -330,7 +330,7 @@ Good for isolation, but a dual-genome switchboard must **query both daemons and 
 **Risks:** R1 RAM wall (concurrent + 850K = OOM) · R2 encoder bundles not process-shareable · R3 single-NVMe
 contention · R4 split registry presence · R5 provenance (which tree/venv each lane launches) · R6 probe URL hardcoding.
 
-**Minimal step (PRD-first — touches launcher + ports + feature behaviour):** scope `docs/prds/2026-06-xx-dual-genome-tray.md` around the **small-corpus pairing**, with:
+**Minimal step (PRD-first — touches launcher + ports + feature behaviour):** scope `docs/archive/prds/2026-06-xx-dual-genome-tray.md` around the **small-corpus pairing**, with:
 - **Phase 0 (zero-code, validate):** by hand, launch a 2nd daemon on :11439 → *medium* corpus, leave the tray dev
   daemon untouched, run `bench_enterprise_rag_recall.py --helix-url http://127.0.0.1:11439 --external-helix`.
   Proves two-lane concurrency *and* measures real 2-genome RAM cost. (Do **after** the current bench finishes.)

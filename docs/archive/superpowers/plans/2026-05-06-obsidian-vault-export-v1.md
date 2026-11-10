@@ -8,8 +8,8 @@
 
 **Tech Stack:** Python 3.11+, FastAPI (existing), SQLite + WAL (existing), `filelock` (NEW dep), `watchdog` deferred to v1.1, OTel histograms (existing pattern), pytest.
 
-**Spec:** `docs/superpowers/specs/2026-05-06-obsidian-vault-export-design.md`
-**Future-design (deferred):** `docs/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md`
+**Spec:** `docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-design.md`
+**Future-design (deferred):** `docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md`
 
 ---
 
@@ -3040,7 +3040,7 @@ class VaultManager:
             "## v1.1 follow-up\n\n"
             "Authored fields (operator_notes, operator_tags, pinned, supersedes...) "
             "are placeholders in v1. v1.1 enables write-back via watcher + validator. "
-            "See `docs/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md`.\n"
+            "See `docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md`.\n"
         )
         readme.write_text(content, encoding="utf-8")
 
@@ -4041,7 +4041,7 @@ retention_hours = 48
 ```
 
 CLI: `helix-vault {export, status, trace, pin, unpin}`. See
-`docs/superpowers/specs/2026-05-06-obsidian-vault-export-design.md` for the
+`docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-design.md` for the
 full v1 surface, and the `-full-design-v1.1plus.md` sibling for the deferred
 authored-delta-sync work.
 ```
@@ -4076,7 +4076,7 @@ git push -u origin spec/obsidian-vault-export
 gh pr create --base master --head spec/obsidian-vault-export \
     --title "feat(vault): Obsidian vault export v1 (read-only + diagnostic traces)" \
     --body "$(cat <<'EOF'
-Implements [`docs/superpowers/specs/2026-05-06-obsidian-vault-export-design.md`](docs/superpowers/specs/2026-05-06-obsidian-vault-export-design.md).
+Implements [`docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-design.md`](docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-design.md).
 
 v1 is the read-only subset: snapshot export to a configurable Obsidian vault
 directory, every-`/context` trace export with TTL prune + hour-sharded
@@ -4086,7 +4086,7 @@ forward-compat with v1.1.
 
 The deferred v1.1+ design (watcher, validator, shadow-store, inbox ingest,
 `_unresolved/` resolution loop, retrieval-contract changes) lives at
-[`-full-design-v1.1plus.md`](docs/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md).
+[`-full-design-v1.1plus.md`](docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md).
 
 Stacks on PR #32 + PR #36 (both merged). Closes Discussion #34.
 EOF

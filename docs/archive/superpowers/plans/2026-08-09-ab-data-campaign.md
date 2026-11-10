@@ -21,7 +21,7 @@ Date: 2026-08-09 · Branch: `claude/ab-data-cymatics-pki-dff9c6`
 > Companion analysis: `docs/benchmarks/2026-08-09-candidate-cascade-map.md`.
 
 Driver: the seven "immediate no-regret actions" in
-[`docs/benchmarks/2026-08-06-retrieval-layer-ledger.md`](../../benchmarks/2026-08-06-retrieval-layer-ledger.md),
+[`docs/benchmarks/2026-08-06-retrieval-layer-ledger.md`](../../../benchmarks/2026-08-06-retrieval-layer-ledger.md),
 plus the standing question *"how do we use PKI to increase recall?"*.
 
 ## Why this order
@@ -169,7 +169,7 @@ the blend.
 Two consequences worth stating before any measurement:
 
 1. ~~**PKI is a precision instrument with a narrow trigger.**~~ **REFUTED
-   2026-08-09 — see [ledger addendum 7 (authored as 5)](../../benchmarks/2026-08-06-retrieval-layer-ledger.md#addendum-7-2026-08-09-ported-2026-08-19-pki--tags-armed-and-measured-at-two-scales-354-re-run-methodology-results).**
+   2026-08-09 — see [ledger addendum 7 (authored as 5)](../../../benchmarks/2026-08-06-retrieval-layer-ledger.md#addendum-7-2026-08-09-ported-2026-08-19-pki--tags-armed-and-measured-at-two-scales-354-re-run-methodology-results).**
    The hypothesis was that a layer firing rarely but decisively would look
    "neutral" on aggregate recall@12 while being the sole reason a small class of
    queries works at all — the #340 static-miss class: needles whose *body text*
@@ -221,7 +221,7 @@ Two consequences worth stating before any measurement:
 ## Outcome (2026-08-09, Wave 4)
 
 Evidence recorded in
-[ledger addendum 7 (authored as 5)](../../benchmarks/2026-08-06-retrieval-layer-ledger.md#addendum-7-2026-08-09-ported-2026-08-19-pki--tags-armed-and-measured-at-two-scales-354-re-run-methodology-results).
+[ledger addendum 7 (authored as 5)](../../../benchmarks/2026-08-06-retrieval-layer-ledger.md#addendum-7-2026-08-09-ported-2026-08-19-pki--tags-armed-and-measured-at-two-scales-354-re-run-methodology-results).
 Verdicts, with the confirming receipt named (receipts live in the
 `cymatix-receipts` mirror named in the provenance block above unless stated):
 

@@ -2,7 +2,7 @@
 
 - **Date:** 2026-07-13
 - **Format:** 6-lens panel (bench-epistemics, retrieval-science, oss-upstream-strategy, product-positioning, engineering-cost, red-team) + chair synthesis. Panelists grounded in both repos (helix-context and a local clone of IBM/AssetOpsBench @ f855d4a); the chair verified every load-bearing code citation against the clone before ruling. Raw panel verdicts: [`2026-07-13-assetopsbench-reshape-council.panel.json`](2026-07-13-assetopsbench-reshape-council.panel.json).
-- **Reviews:** [`docs/benchmarks/2026-07-13-assetopsbench-eval-verdict.md`](../benchmarks/2026-07-13-assetopsbench-eval-verdict.md) (the NO-GO this council reshapes), issue #284, PR #285.
+- **Reviews:** [`docs/benchmarks/2026-07-13-assetopsbench-eval-verdict.md`](../../benchmarks/2026-07-13-assetopsbench-eval-verdict.md) (the NO-GO this council reshapes), issue #284, PR #285.
 - **Status:** decision record — **DP1 (B primary): GO_WITH_CHANGES · DP2 (A trial first): GO_WITH_CHANGES (operative — owner pre-approved contingent on this council).**
 
 ---

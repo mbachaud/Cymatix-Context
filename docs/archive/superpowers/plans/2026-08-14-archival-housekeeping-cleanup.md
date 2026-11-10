@@ -175,7 +175,7 @@ found (a) 100+ provenance citations in code docstrings pointing at `docs/specs/`
 `docs/research/` paths, (b) live docs (`config-reference.md`, `CHANGELOG.md`, the 829k
 reproduction runbook, `ROSETTA.md`, `docs/clients/claude-code.md`) linking into `prds/`,
 `councils/`, `investigations/`, `architecture/`, and (c) an explicit standing policy in
-`docs/superpowers/plans/2026-07-20-cymatix-context-rename.md:809`: dated files are
+`docs/archive/superpowers/plans/2026-07-20-cymatix-context-rename.md:809`: dated files are
 point-in-time records — do not move/rename them. The dated-dir convention IS this repo's
 archive; `docs/archive/` is only for retired, uncited material. Moving would have broken
 dozens of links to gain tidiness. The `docs/ops/` + `docs/operations/` merge was also

@@ -16,7 +16,7 @@ issues/255#issuecomment-5005983077): the proposed map
 semantic beds (10k 10→5, 50k 12→6), lift confined to the mapped classes, and
 byte-identical unmapped (xl literal) rows — so it is now the shipped default.
 RE-GRADUATED 2026-08-28 (wave-1 ranking-under-width,
-docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md): the map now
+docs/archive/superpowers/plans/2026-08-27-ranking-under-width-wave1.md): the map now
 covers ALL FIVE classes -> eps_band — extending the band to
 arithmetic/factual/procedural was +7/−2 delivered on the 829k v09x bed and
 stacks with rrf_k=20 (receipts ladder_v09x_w1c_*_2026-08-28.json).

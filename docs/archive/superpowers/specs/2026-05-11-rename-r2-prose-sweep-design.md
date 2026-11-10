@@ -100,7 +100,7 @@ The mapping the sweep applies (canonical = right column from ROSETTA.md):
    - `docs/ops/**` (incl. `RESTART_PROTOCOL.md`, `SKILLS_BUNDLE.md`)
    - `docs/benchmarks/**` (incl. `BENCHMARKS.md`, `BENCHMARK_RATIONALE.md`)
    - `docs/clients/**` (incl. `claude-code.md`)
-   - Excludes: `docs/archive/**`, `docs/ROSETTA.md`, `docs/superpowers/**` (these are spec/plan docs that talk about the rename — their bio terms are legitimate). **This spec and its sibling plan are explicitly out of scope for the sweep** — a future automated pass must not rewrite the spec's own legacy-term references.
+   - Excludes: `docs/archive/**`, `docs/ROSETTA.md`, `docs/archive/superpowers/**` (these are spec/plan docs that talk about the rename — their bio terms are legitimate). **This spec and its sibling plan are explicitly out of scope for the sweep** — a future automated pass must not rewrite the spec's own legacy-term references.
 4. **Top-of-repo docs**: `README.md`, `CLAUDE.md`.
 
 ### Commit cadence
@@ -197,6 +197,6 @@ These are sketched in `docs/ROSETTA.md`'s phase table and re-confirmed during th
 1. This spec is committed to `rename/r2-prose-sweep`.
 2. Spec review loop runs (subagent-driven).
 3. User reviews the spec.
-4. Once approved, `superpowers:writing-plans` produces the step-by-step implementation plan at `docs/superpowers/plans/2026-05-11-rename-r2-prose-sweep.md`.
+4. Once approved, `superpowers:writing-plans` produces the step-by-step implementation plan at `docs/archive/superpowers/plans/2026-05-11-rename-r2-prose-sweep.md`.
 5. `superpowers:executing-plans` drives the actual sweep on the worktree.
 6. PR opened with the verification artifacts from §4.

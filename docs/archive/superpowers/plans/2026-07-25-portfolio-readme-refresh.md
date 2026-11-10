@@ -4,13 +4,13 @@
 
 **Goal:** Ship an honesty-passed Cymatix README plus a new `mbachaud/mbachaud` profile README draft and a ready-to-paste BigEd authorship block, all representing the human/model division of labor truthfully.
 
-**Architecture:** Pure documentation edits. One in-place edit of the flagship `README.md` (six targeted prose changes), and two new staging artifacts under `docs/superpowers/artifacts/` — the profile README and the BigEd credit block — that the user reviews here before creating/editing the destination repos (gated follow-up, not this plan).
+**Architecture:** Pure documentation edits. One in-place edit of the flagship `README.md` (six targeted prose changes), and two new staging artifacts under `docs/archive/superpowers/artifacts/` — the profile README and the BigEd credit block — that the user reviews here before creating/editing the destination repos (gated follow-up, not this plan).
 
 **Tech Stack:** Markdown, git. Verification via `grep`/`rg` (or the Grep tool) and manual render check.
 
 ## Global Constraints
 
-Copied verbatim from the spec (`docs/superpowers/specs/2026-07-25-portfolio-readme-refresh-design.md`). Every task implicitly includes these:
+Copied verbatim from the spec (`docs/archive/superpowers/specs/2026-07-25-portfolio-readme-refresh-design.md`). Every task implicitly includes these:
 
 - **No external image services** in any new markdown (no github-readme-stats, shields badges, streak/trophy images). Self-contained markdown only.
 - **No code, config, or product surface touched.** Docs only.
@@ -242,7 +242,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ### Task 2: New `mbachaud/mbachaud` profile README (staging draft)
 
 **Files:**
-- Create: `docs/superpowers/artifacts/2026-07-25-mbachaud-profile-README.md`
+- Create: `docs/archive/superpowers/artifacts/2026-07-25-mbachaud-profile-README.md`
 
 **Interfaces:**
 - Consumes: nothing.
@@ -250,7 +250,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 1: Create the staging file with the full profile README**
 
-Create `docs/superpowers/artifacts/2026-07-25-mbachaud-profile-README.md` with exactly this content (the `mkdir` for `artifacts/` is implicit in file creation):
+Create `docs/archive/superpowers/artifacts/2026-07-25-mbachaud-profile-README.md` with exactly this content (the `mkdir` for `artifacts/` is implicit in file creation):
 
 ````markdown
 # Michael Bachaud
@@ -298,7 +298,7 @@ Run (Bash):
 
 ```bash
 cd f:/Projects/cymatix-context
-F=docs/superpowers/artifacts/2026-07-25-mbachaud-profile-README.md
+F=docs/archive/superpowers/artifacts/2026-07-25-mbachaud-profile-README.md
 grep -cE '!\[|img\.shields|github-readme-stats|streak|\.svg\)' "$F"   # expect 0 (no external images)
 grep -c "hypothesis → specification" "$F"                              # expect 1 (method loop)
 grep -c "How I split the work with models" "$F"                        # expect 1 (authorship footer)
@@ -312,7 +312,7 @@ Expected: `0`, `1`, `1`, the repo list, `0`. Then render the file (GitHub markdo
 
 ```bash
 cd f:/Projects/cymatix-context
-git add docs/superpowers/artifacts/2026-07-25-mbachaud-profile-README.md
+git add docs/archive/superpowers/artifacts/2026-07-25-mbachaud-profile-README.md
 git commit -m "docs(profile): draft mbachaud/mbachaud profile README (staging)
 
 Structured-hierarchy profile: architect headline, adversarial-loop method block,
@@ -329,7 +329,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ### Task 3: BigEd authorship credit block (staging draft, no push)
 
 **Files:**
-- Create: `docs/superpowers/artifacts/2026-07-25-biged-authorship-block.md`
+- Create: `docs/archive/superpowers/artifacts/2026-07-25-biged-authorship-block.md`
 
 **Interfaces:**
 - Consumes: nothing.
@@ -337,7 +337,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 1: Create the staging file**
 
-Create `docs/superpowers/artifacts/2026-07-25-biged-authorship-block.md` with exactly this content:
+Create `docs/archive/superpowers/artifacts/2026-07-25-biged-authorship-block.md` with exactly this content:
 
 ````markdown
 # BigEd authorship credit — replacement block
@@ -367,7 +367,7 @@ Run (Bash):
 
 ```bash
 cd f:/Projects/cymatix-context
-F=docs/superpowers/artifacts/2026-07-25-biged-authorship-block.md
+F=docs/archive/superpowers/artifacts/2026-07-25-biged-authorship-block.md
 grep -c "70%" "$F"                          # expect 0 (old mis-credit not reintroduced)
 grep -c "architected and QA-directed" "$F"  # expect 1
 grep -c "laboratory, not a product" "$F"    # expect 1
@@ -379,7 +379,7 @@ Expected: `0`, `1`, `1`.
 
 ```bash
 cd f:/Projects/cymatix-context
-git add docs/superpowers/artifacts/2026-07-25-biged-authorship-block.md
+git add docs/archive/superpowers/artifacts/2026-07-25-biged-authorship-block.md
 git commit -m "docs(artifact): ready-to-paste BigEd authorship block (draft)
 
 Replaces the '70% Claude / 5% Max' credit with the architect-framing role split.

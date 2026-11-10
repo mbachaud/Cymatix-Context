@@ -13,7 +13,7 @@ configs/calls — legacy wins on collision, with a warning.
 
 **Tech Stack:** Python 3.11, FastAPI + TestClient, pytest, argparse, MCP SDK.
 
-**Spec:** `docs/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`
+**Spec:** `docs/archive/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`
 
 ## Global Constraints
 

@@ -1,6 +1,6 @@
 # EXPERIMENT SPEC — Semantic-aware routing + dense-dominant fusion (the wiring lever)
 
-**Status:** DRAFT — PRD-gated (touches retrieval behavior; see project PRD-first workflow). Write `docs/prds/2026-06-02-semantic-wiring-arm.md` and obtain sign-off BEFORE implementing.
+**Status:** DRAFT — PRD-gated (touches retrieval behavior; see project PRD-first workflow). Write `docs/archive/prds/2026-06-02-semantic-wiring-arm.md` and obtain sign-off BEFORE implementing.
 **Worktree (live, runs the bench):** `F:/Projects/helix-context/.claude/worktrees/vibrant-easley-73d68a` (NOT master — master is stale 0.5.0).
 **Author of map:** grounded codemap + adversarial verdicts, re-verified against the live worktree 2026-06-02.
 **Owner of run:** Raude. **Mode at spec time:** READ-ONLY map; this spec authorizes a code change + a fresh daemon for the *experiment arm only* (do not restart the currently-wrapped baseline daemon mid-bench).

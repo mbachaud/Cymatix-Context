@@ -4,7 +4,7 @@
 
 **Goal:** Open a pull-ready task board for Joe in cc-exchange (BOARD.md + 10 cards + announcement thread) and freeze the SCBench baselines (two annotated tags + `docs/benchmarks/BASELINES.md`).
 
-**Architecture:** Two repos, two change-sets. Repo A (`Cymatix-Context`, branch `claude/cc-exchange-task-board-ece78f`) gets the baselines ledger and two annotated tags. Repo B (`f:/Projects/cc-exchange`) gets the board files in the max lane only, landed as ONE logical drop via the repo's push wrapper. Spec: `docs/superpowers/specs/2026-08-11-cc-exchange-task-board-design.md`.
+**Architecture:** Two repos, two change-sets. Repo A (`Cymatix-Context`, branch `claude/cc-exchange-task-board-ece78f`) gets the baselines ledger and two annotated tags. Repo B (`f:/Projects/cc-exchange`) gets the board files in the max lane only, landed as ONE logical drop via the repo's push wrapper. Spec: `docs/archive/superpowers/specs/2026-08-11-cc-exchange-task-board-design.md`.
 
 **Tech Stack:** Markdown, git (annotated tags), bash, the cc-exchange protocol scripts (`bin/exchange-push.sh`, `bin/gen-index.sh`).
 

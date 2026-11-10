@@ -73,7 +73,7 @@ Expected: `Successfully installed helix-context-0.7.2b1` (name changes later in 
 
 Committed to the repo on purpose: the rename PR is rebased over inflight
 work by re-running this script (see the Rebase Runbook in
-docs/superpowers/plans/2026-07-20-cymatix-context-rename.md). Running it
+docs/archive/superpowers/plans/2026-07-20-cymatix-context-rename.md). Running it
 twice is a no-op.
 """
 import re
@@ -709,13 +709,13 @@ git commit -m "rename: MCP server name helix -> cymatix (client namespace mcp__c
 ### Task 8: README + CLAUDE.md rebrand
 
 **Files:**
-- Modify: `README.md` — replace entirely with the reviewed draft at `docs/superpowers/plans/2026-07-20-cymatix-readme-draft.md` (drop that file's top provenance comment block if present)
+- Modify: `README.md` — replace entirely with the reviewed draft at `docs/archive/superpowers/plans/2026-07-20-cymatix-readme-draft.md` (drop that file's top provenance comment block if present)
 - Modify: `CLAUDE.md`
 
 - [ ] **Step 1: Swap README**
 
 ```bash
-cp docs/superpowers/plans/2026-07-20-cymatix-readme-draft.md README.md
+cp docs/archive/superpowers/plans/2026-07-20-cymatix-readme-draft.md README.md
 ```
 
 Then open `README.md` and delete the HTML comment header (`<!-- draft … -->`) if the draft carries one. Verify every relative link target exists (`docs/SETUP.md`, `docs/clients/cli.md`, etc. — they are unrenamed and must still resolve).
@@ -806,7 +806,7 @@ git commit -m "rename: LICENSE handle + NOTICE rebrand (fixes stale headroom_bri
 
 **Files:**
 - Modify: the 31 live docs below.
-- NEVER touch: `docs/benchmarks/`, `docs/archive/`, `docs/superpowers/`, `docs/investigations/`, any file with a `YYYY-MM-DD` date in its name or path. These are point-in-time records (bench runbooks, council verdicts, plans) — renaming them would falsify history. This is policy, not deferral.
+- NEVER touch: `docs/benchmarks/`, `docs/archive/`, `docs/archive/superpowers/`, `docs/archive/investigations/`, any file with a `YYYY-MM-DD` date in its name or path. These are point-in-time records (bench runbooks, council verdicts, plans) — renaming them would falsify history. This is policy, not deferral.
 
 Live-doc list (enumerated 2026-07-20 via `grep -rli helix docs/ --include='*.md'` minus historical paths — re-run at execution time to catch docs added since):
 

@@ -1,6 +1,6 @@
 # Test / Tuning / Balancing Roadmap
 
-Date: 2026-06-10 · Baseline: v0.7.1 + 2026-06-09 research loop (profiles spec `docs/specs/2026-06-09-retrieval-profiles.md`, evidence roadmap `docs/audits/2026-06-09-next-steps-evidence.md`) · Open tuning issues: #202 #203 #204 #205 #206 #207, plus #93 (500K bench) and #165 (storage verification).
+Date: 2026-06-10 · Baseline: v0.7.1 + 2026-06-09 research loop (profiles spec `docs/specs/2026-06-09-retrieval-profiles.md`, evidence roadmap `docs/archive/audits/2026-06-09-next-steps-evidence.md`) · Open tuning issues: #202 #203 #204 #205 #206 #207, plus #93 (500K bench) and #165 (storage verification).
 
 ## 0) Current evidence state
 

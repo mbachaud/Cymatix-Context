@@ -1,6 +1,6 @@
 """Phase 1a — global Ledoit-Wolf whitening A/B vs raw cosine (measured).
 
-J-space roadmap council move #4 (docs/councils/2026-07-06-jspace-roadmap
+J-space roadmap council move #4 (docs/archive/councils/2026-07-06-jspace-roadmap
 -council.md): *"Phase 1a: one global Ledoit-Wolf whitening over
 `embedding_dense_v2`, A/B'd (measured, not assumed) against cosine on
 the now-committed harness."* The council's verified anisotropy evidence:

@@ -266,7 +266,7 @@ the same 100k-neutral → blob-confirm path splade walked before its REMOVE.
 > edits; everything else is the 2026-08-09 text verbatim.
 
 Wave 3 of the A/B data campaign
-(plan: `docs/superpowers/plans/2026-08-09-ab-data-campaign.md` *[port note:
+(plan: `docs/archive/superpowers/plans/2026-08-09-ab-data-campaign.md` *[port note:
 ported to beta 2026-09-01 together with
 `docs/benchmarks/2026-08-09-candidate-cascade-map.md`]*). This addendum
 closes ledger actions **6** (gates + arms for pki and tags — the two largest

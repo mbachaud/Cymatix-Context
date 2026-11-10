@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.11+, MCP Python SDK 2.x, FastAPI, Pydantic 2, standard-library `dataclasses`, `json`, `tomllib`, `urllib`, Markdown Agent Skills, pytest, Windows PowerShell for local operator verification.
 
-**Spec:** `docs/superpowers/specs/2026-08-27-cymatix-context-cross-model-unification-design.md`
+**Spec:** `docs/archive/superpowers/specs/2026-08-27-cymatix-context-cross-model-unification-design.md`
 
 ## Global Constraints
 
@@ -1447,7 +1447,7 @@ ACTIVE_SKILLS = tuple(
 )
 ```
 
-Exclude `CHANGELOG.md`, `docs/archive/**`, `docs/superpowers/**`, benchmark data/receipts, historical fixtures, and `deploy/pypi-tombstone/**` from the generic lint. Whitelist/count-pin only:
+Exclude `CHANGELOG.md`, `docs/archive/**`, `docs/archive/superpowers/**`, benchmark data/receipts, historical fixtures, and `deploy/pypi-tombstone/**` from the generic lint. Whitelist/count-pin only:
 
 - the bounded migration notice/table in `README.md`;
 - the clean-break notes in `CLAUDE.md`;
