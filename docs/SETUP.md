@@ -720,7 +720,7 @@ documentation belongs in `.env.example` (cross-link below).
 | `CYMATIX_URL` | Default URL for client SDK callers. |
 | `CYMATIX_LAYERED_FINGERPRINTS` | Enable layered fingerprint payloads in `/fingerprint`. |
 | `CYMATIX_FORMAT_VERSION` | Output format version pin (for reproducible bench runs). |
-| `CYMATIX_LAUNCHER_UPDATE_CHECK` | `0` to disable the launcher's update check. |
+| `CYMATIX_LAUNCHER_UPDATE_CHECK` | `1` to enable the launcher's update check (an outbound request to pypi.org). Off by default. |
 | `CYMATIX_CODEGRAPH_PATH` | Path to a code graph database (optional). |
 | `CYMATIX_EMBED_CODEGRAPH` | Enable code graph embedding generation. |
 | `CYMATIX_WALKING_TIEBREAK` | Tiebreaker selection for walking retrieval (research-bench only). |
