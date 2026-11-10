@@ -123,6 +123,12 @@ REQUIRED_CALLER_SURFACE = frozenset({
 # it with a comment.
 
 ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
+    # Per-query timing map and Tier-5 pool size: class-level on
+    # KnowledgeStore since they became LastQueryValue descriptors. The
+    # adapter does not aggregate them across shards, and the manager reads
+    # both with a None default (own_last / getattr).
+    "last_signal_timings", "last_pool_total",
+
     # Chromatin tier sentinels — adapter has no chromatin lifecycle,
     # per-shard Genomes own theirs.
     "TIER_EUCHROMATIN", "TIER_HETEROCHROMATIN", "TIER_OPEN",
@@ -221,6 +227,7 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # of these off cymatix.genome, move them out of the whitelist and
     # mirror them.
     "apply_density_gate", "compute_density_score", "corpus_size",
+    "_invalidate_corpus_size",  # corpus_size's own write-path invalidator
     "emit_wal_health_gauges", "get_relations", "store_relation",
     "mark_verified", "upsert_calibration", "reassemble",
 })

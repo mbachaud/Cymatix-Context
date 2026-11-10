@@ -1,0 +1,1458 @@
+{
+  "bench": "compaction_recall stage 1 (retrieval-level, no model calls)",
+  "measured_at": "2026-10-07T14:52:09-0700",
+  "commit": "30024c9a744e782af3a74d61c3357bfe19536806",
+  "dirty": true,
+  "behind_origin_master": "0",
+  "python": "3.14.3",
+  "pythonhashseed": "0",
+  "k": 12,
+  "chunk_chars": 1200,
+  "transcripts": [
+    {
+      "name": "transcript-01.jsonl",
+      "bytes": 9393523,
+      "sha256": "c9822807efb9731e5bdb1de9649aff9c9d4b8f0f8e52e2eaa4c4cb725b988150"
+    },
+    {
+      "name": "transcript-02.jsonl",
+      "bytes": 4464783,
+      "sha256": "737f1b2928e921a7b1f815b69c36f0d1ee6f0ad669863cdc856f5d7f03b15560"
+    },
+    {
+      "name": "transcript-03.jsonl",
+      "bytes": 6989108,
+      "sha256": "a7404b5c402cbe5b88ac58f3d9efd49fca4e9660863f9452390d7569c31617a1"
+    },
+    {
+      "name": "transcript-04.jsonl",
+      "bytes": 8181185,
+      "sha256": "41eab24124e2a815c659c29fa310186a6d049b67e7fa95660d7a874932613f09"
+    },
+    {
+      "name": "transcript-05.jsonl",
+      "bytes": 28676832,
+      "sha256": "c9d2837b51b8d49d283d19878ada5faf4504405fd45e12cdc78aa7d43788031d"
+    },
+    {
+      "name": "transcript-06.jsonl",
+      "bytes": 4252701,
+      "sha256": "251cb80975c03e2ee4d09c7c5a850e16630e5d0342a273ef325ed36f7b3e9fe1"
+    },
+    {
+      "name": "transcript-07.jsonl",
+      "bytes": 6230141,
+      "sha256": "98616f0ef87a2317b169b966958264c4b7a30f134c8bef4f96efd1e174d2ca89"
+    },
+    {
+      "name": "transcript-08.jsonl",
+      "bytes": 6892884,
+      "sha256": "e6a069551767ae33cce9ddce3e05e9ce688840a2e990421ed29e7dec307002bb"
+    },
+    {
+      "name": "transcript-09.jsonl",
+      "bytes": 9308882,
+      "sha256": "ecce0c3c49a4147b5c93ae608e7a96a937da4d2969f2d56ebf1686e17d726c51"
+    },
+    {
+      "name": "transcript-10.jsonl",
+      "bytes": 4967243,
+      "sha256": "80aec8b81444dfa4378431fcb3e1694cab0a8472cee60c10beb0c3baea6c5cd9"
+    },
+    {
+      "name": "transcript-11.jsonl",
+      "bytes": 7811181,
+      "sha256": "76ca96c4df3a01da6de013028d454cc9f65a37430b4d6e67200108bba43dc942"
+    },
+    {
+      "name": "transcript-12.jsonl",
+      "bytes": 15100647,
+      "sha256": "e880e287c03afd55b8d39486db4d0cbcc83782272a12cae1ee1e49cfc11536bf"
+    },
+    {
+      "name": "transcript-13.jsonl",
+      "bytes": 8915825,
+      "sha256": "269505dcf9e944a0a8e5b22f9c7635505bdb28ecf51b97ba5784f66a7dd288ce"
+    },
+    {
+      "name": "transcript-14.jsonl",
+      "bytes": 6890078,
+      "sha256": "22c01ebd8be06b3850e90b75a0b31b52915f0aeb22218b4bb11b995bbcdac1d5"
+    }
+  ],
+  "needle_set_sha256": "ffbbcb692cc0104a53df97e5e2b761c41f1dc94c42541324087206ae46cbcbc7",
+  "census": [
+    {
+      "event": "2440ef0f-f224-4e91-8460-6b5e20c353e7",
+      "trigger": "manual",
+      "pre_tokens": 450696,
+      "post_tokens": null,
+      "haystack_chunks": 821,
+      "haystack_tokens": 120467,
+      "today_tokens": 14780,
+      "plan": false,
+      "handoff": true,
+      "post_units": 100,
+      "needles": 17,
+      "by_class": {
+        "sha": 0,
+        "path": 9,
+        "ref": 0,
+        "number": 1,
+        "ident": 7
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "9c0936d3-1135-438c-a393-1fa09f0a68f5",
+      "trigger": "manual",
+      "pre_tokens": 450032,
+      "post_tokens": null,
+      "haystack_chunks": 929,
+      "haystack_tokens": 133605,
+      "today_tokens": 18802,
+      "plan": false,
+      "handoff": true,
+      "post_units": 47,
+      "needles": 4,
+      "by_class": {
+        "sha": 0,
+        "path": 3,
+        "ref": 0,
+        "number": 0,
+        "ident": 1
+      },
+      "qualifier": 2
+    },
+    {
+      "event": "a8453c21-c72c-4ef2-890a-9b6a391b367e",
+      "trigger": "manual",
+      "pre_tokens": 661963,
+      "post_tokens": 17053,
+      "haystack_chunks": 1643,
+      "haystack_tokens": 225233,
+      "today_tokens": 13105,
+      "plan": false,
+      "handoff": false,
+      "post_units": 336,
+      "needles": 57,
+      "by_class": {
+        "sha": 2,
+        "path": 27,
+        "ref": 13,
+        "number": 1,
+        "ident": 14
+      },
+      "qualifier": 1
+    },
+    {
+      "event": "8c361fa6-5bed-4f70-883b-66e9d9910515",
+      "trigger": "manual",
+      "pre_tokens": 536297,
+      "post_tokens": 12738,
+      "haystack_chunks": 2176,
+      "haystack_tokens": 312116,
+      "today_tokens": 8817,
+      "plan": false,
+      "handoff": false,
+      "post_units": 31,
+      "needles": 23,
+      "by_class": {
+        "sha": 4,
+        "path": 9,
+        "ref": 2,
+        "number": 0,
+        "ident": 8
+      },
+      "qualifier": 1
+    },
+    {
+      "event": "7b8b0bca-09ce-4714-a8de-eae07b0cfeab",
+      "trigger": "manual",
+      "pre_tokens": 740137,
+      "post_tokens": 16058,
+      "haystack_chunks": 2636,
+      "haystack_tokens": 400067,
+      "today_tokens": 11987,
+      "plan": false,
+      "handoff": false,
+      "post_units": 25,
+      "needles": 8,
+      "by_class": {
+        "sha": 2,
+        "path": 4,
+        "ref": 0,
+        "number": 0,
+        "ident": 2
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "7ed0e6b2-4b8e-4ec5-a583-79e59b161e2f",
+      "trigger": "auto",
+      "pre_tokens": 837383,
+      "post_tokens": 16723,
+      "haystack_chunks": 721,
+      "haystack_tokens": 134052,
+      "today_tokens": 12523,
+      "plan": true,
+      "handoff": false,
+      "post_units": 304,
+      "needles": 4,
+      "by_class": {
+        "sha": 0,
+        "path": 1,
+        "ref": 2,
+        "number": 0,
+        "ident": 1
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "8d243453-f9b7-4086-9c18-654db107d24c",
+      "trigger": "manual",
+      "pre_tokens": 343395,
+      "post_tokens": 12832,
+      "haystack_chunks": 2100,
+      "haystack_tokens": 471085,
+      "today_tokens": 9120,
+      "plan": true,
+      "handoff": false,
+      "post_units": 287,
+      "needles": 12,
+      "by_class": {
+        "sha": 0,
+        "path": 6,
+        "ref": 2,
+        "number": 0,
+        "ident": 4
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "788100b6-a7ff-4fef-ba85-56683d20696b",
+      "trigger": "manual",
+      "pre_tokens": 606848,
+      "post_tokens": 17295,
+      "haystack_chunks": 2493,
+      "haystack_tokens": 530419,
+      "today_tokens": 13184,
+      "plan": true,
+      "handoff": false,
+      "post_units": 219,
+      "needles": 17,
+      "by_class": {
+        "sha": 1,
+        "path": 10,
+        "ref": 2,
+        "number": 0,
+        "ident": 4
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "17b68b9c-bee3-45f0-9996-8a60586240a4",
+      "trigger": "manual",
+      "pre_tokens": 346284,
+      "post_tokens": 20910,
+      "haystack_chunks": 3326,
+      "haystack_tokens": 733644,
+      "today_tokens": 16490,
+      "plan": true,
+      "handoff": false,
+      "post_units": 422,
+      "needles": 18,
+      "by_class": {
+        "sha": 2,
+        "path": 11,
+        "ref": 2,
+        "number": 0,
+        "ident": 3
+      },
+      "qualifier": 1
+    },
+    {
+      "event": "a00397d4-8ecb-4109-b343-c4d6aab8bd25",
+      "trigger": "manual",
+      "pre_tokens": 787091,
+      "post_tokens": 15768,
+      "haystack_chunks": 4192,
+      "haystack_tokens": 878706,
+      "today_tokens": 11004,
+      "plan": true,
+      "handoff": false,
+      "post_units": 29,
+      "needles": 4,
+      "by_class": {
+        "sha": 0,
+        "path": 2,
+        "ref": 2,
+        "number": 0,
+        "ident": 0
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "67137b8f-45dd-4d05-a0dc-a188b8644282",
+      "trigger": "manual",
+      "pre_tokens": 870717,
+      "post_tokens": 32434,
+      "haystack_chunks": 686,
+      "haystack_tokens": 88875,
+      "today_tokens": 25620,
+      "plan": false,
+      "handoff": false,
+      "post_units": 358,
+      "needles": 44,
+      "by_class": {
+        "sha": 0,
+        "path": 13,
+        "ref": 0,
+        "number": 0,
+        "ident": 31
+      },
+      "qualifier": 1
+    },
+    {
+      "event": "cc4afb39-0bbe-4960-9c31-837d3feb7ce5",
+      "trigger": "manual",
+      "pre_tokens": 660450,
+      "post_tokens": 26766,
+      "haystack_chunks": 1578,
+      "haystack_tokens": 251625,
+      "today_tokens": 23376,
+      "plan": true,
+      "handoff": false,
+      "post_units": 928,
+      "needles": 86,
+      "by_class": {
+        "sha": 1,
+        "path": 32,
+        "ref": 5,
+        "number": 13,
+        "ident": 35
+      },
+      "qualifier": 1
+    },
+    {
+      "event": "396911aa-7e28-4daf-be13-b71a6559ad5d",
+      "trigger": "manual",
+      "pre_tokens": 234586,
+      "post_tokens": 21804,
+      "haystack_chunks": 356,
+      "haystack_tokens": 75630,
+      "today_tokens": 14617,
+      "plan": false,
+      "handoff": false,
+      "post_units": 521,
+      "needles": 136,
+      "by_class": {
+        "sha": 0,
+        "path": 54,
+        "ref": 0,
+        "number": 1,
+        "ident": 81
+      },
+      "qualifier": 3
+    },
+    {
+      "event": "ffd32517-90a1-49a2-a812-003cfc32c05b",
+      "trigger": "manual",
+      "pre_tokens": 552672,
+      "post_tokens": 35382,
+      "haystack_chunks": 1449,
+      "haystack_tokens": 211980,
+      "today_tokens": 27109,
+      "plan": true,
+      "handoff": false,
+      "post_units": 446,
+      "needles": 37,
+      "by_class": {
+        "sha": 2,
+        "path": 16,
+        "ref": 0,
+        "number": 0,
+        "ident": 19
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "594576f9-3f68-42ba-ab72-38c4980dcf64",
+      "trigger": "manual",
+      "pre_tokens": 585865,
+      "post_tokens": 29065,
+      "haystack_chunks": 880,
+      "haystack_tokens": 158239,
+      "today_tokens": 21593,
+      "plan": true,
+      "handoff": false,
+      "post_units": 509,
+      "needles": 83,
+      "by_class": {
+        "sha": 0,
+        "path": 22,
+        "ref": 3,
+        "number": 22,
+        "ident": 36
+      },
+      "qualifier": 1
+    },
+    {
+      "event": "14603ef9-f343-4ec4-ade2-5c8a17a5947a",
+      "trigger": "manual",
+      "pre_tokens": 383626,
+      "post_tokens": 29765,
+      "haystack_chunks": 1602,
+      "haystack_tokens": 266415,
+      "today_tokens": 22141,
+      "plan": true,
+      "handoff": false,
+      "post_units": 178,
+      "needles": 45,
+      "by_class": {
+        "sha": 1,
+        "path": 16,
+        "ref": 3,
+        "number": 12,
+        "ident": 13
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "5fc7c99a-a30d-472e-a13c-21418bcb7b3c",
+      "trigger": "manual",
+      "pre_tokens": 669727,
+      "post_tokens": 24215,
+      "haystack_chunks": 1356,
+      "haystack_tokens": 229815,
+      "today_tokens": 16886,
+      "plan": false,
+      "handoff": false,
+      "post_units": 217,
+      "needles": 42,
+      "by_class": {
+        "sha": 2,
+        "path": 14,
+        "ref": 1,
+        "number": 5,
+        "ident": 20
+      },
+      "qualifier": 1
+    },
+    {
+      "event": "56bec399-6538-4782-9ae8-e0fe4015b254",
+      "trigger": "manual",
+      "pre_tokens": 587049,
+      "post_tokens": 20330,
+      "haystack_chunks": 1063,
+      "haystack_tokens": 175719,
+      "today_tokens": 12969,
+      "plan": false,
+      "handoff": false,
+      "post_units": 377,
+      "needles": 104,
+      "by_class": {
+        "sha": 0,
+        "path": 42,
+        "ref": 8,
+        "number": 15,
+        "ident": 39
+      },
+      "qualifier": 0
+    },
+    {
+      "event": "fb20b0d4-5b89-4da0-bf39-19917e3a1251",
+      "trigger": "auto",
+      "pre_tokens": 1004576,
+      "post_tokens": 25986,
+      "haystack_chunks": 2057,
+      "haystack_tokens": 464602,
+      "today_tokens": 18366,
+      "plan": false,
+      "handoff": false,
+      "post_units": 470,
+      "needles": 93,
+      "by_class": {
+        "sha": 6,
+        "path": 35,
+        "ref": 8,
+        "number": 13,
+        "ident": 31
+      },
+      "qualifier": 0
+    }
+  ],
+  "arm_stats": {
+    "bm25": {
+      "events": 19,
+      "ingest_s": 0.30465006828308105,
+      "query_s": 3.6647658348083496,
+      "queries": 834,
+      "describe": {
+        "engine": "sqlite 3.50.4 fts5 bm25 unicode61",
+        "max_query_terms": 64
+      }
+    },
+    "cymatix": {
+      "events": 19,
+      "ingest_s": 661.0972950458527,
+      "query_s": 74.64992618560791,
+      "queries": 834,
+      "describe": {
+        "config_resolved": "cymatix.toml",
+        "config_sha256": "ead66d2defc3bc4fd73aa2e086adf2d6eb849390f6899414b5b1a4d0e3b183e4",
+        "loaded_config": {
+          "ribosome": {
+            "enabled": false,
+            "model": "gemma4:e2b",
+            "base_url": "http://localhost:11434",
+            "timeout": 120.0,
+            "keep_alive": "30m",
+            "warmup": false,
+            "backend": "none",
+            "claude_model": "claude-haiku-4-5-20251001",
+            "claude_base_url": "",
+            "litellm_model": "gemini/gemini-2.5-flash",
+            "rerank_model_path": "training/models/rerank",
+            "splice_model_path": "training/models/splice",
+            "splice_threshold": 0.5,
+            "nli_model_path": "training/models/nli",
+            "nli_splice_bonus": 0.15,
+            "nli_splice_penalty": 0.15,
+            "device": "auto",
+            "query_expansion_enabled": false,
+            "query_decomposition_enabled": false
+          },
+          "budget": {
+            "ribosome_tokens": 3000,
+            "expression_tokens": 7000,
+            "full_text_delivery": false,
+            "companion_chunks": 4,
+            "context_max_chars": 100000,
+            "max_genes_per_turn": 12,
+            "max_fingerprints_per_turn": 40,
+            "splice_aggressiveness": 0.3,
+            "decoder_mode": "condensed",
+            "wire_format": "legacy",
+            "decoder_mode_overrides": {},
+            "legibility_enabled": true,
+            "slate_char_budget": 1500,
+            "session_delivery_enabled": true,
+            "neutralize_control_tags": true,
+            "min_delivered_docs": 12,
+            "tier_seat_floor_enabled": false,
+            "abstain_enabled": true,
+            "foveated_enabled": false,
+            "foveated_alpha": 1.0,
+            "foveated_c_min": 0.15,
+            "foveated_base_chars": 1000,
+            "splice_target_chars": 0,
+            "tier_tight_ratio": 3.0,
+            "tier_focused_ratio": 1.8,
+            "tier_hard_floor_frac": 0.15,
+            "tier_lagrange_frac": 0.7
+          },
+          "genome": {
+            "path": "genomes/g1/genome.db",
+            "compact_interval": 3600.0,
+            "cold_start_threshold": 10,
+            "replicas": [],
+            "replica_sync_interval": 100,
+            "synchronous": "NORMAL"
+          },
+          "server": {
+            "host": "127.0.0.1",
+            "port": 11437,
+            "upstream": "http://localhost:11434",
+            "bench_enabled": false,
+            "bench_port": 11439,
+            "bench_genome_path": "genomes/bench/bench.genome.db",
+            "upstream_timeout": 180.0,
+            "admin_token": "",
+            "swap_db_roots": []
+          },
+          "telemetry": {
+            "enabled": false,
+            "endpoint": "localhost:4317",
+            "insecure": true,
+            "sampler_ratio": 1.0,
+            "redact_query": true,
+            "logs_enabled": true,
+            "logs_level": "INFO"
+          },
+          "ingestion": {
+            "backend": "cpu",
+            "splade_enabled": false,
+            "rerank_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+            "entity_graph": true,
+            "entity_autolink_hub_cutoff": 200,
+            "dense_embed_on_ingest": false,
+            "sema_embed_on_ingest": false,
+            "symbol_graph": false,
+            "splade_auto_enable_below_genes": 0,
+            "splade_auto_disable_above_genes": 0,
+            "splade_model": "naver/splade-cocondenser-ensembledistil",
+            "sema_model": "all-MiniLM-L6-v2",
+            "splade_content_cap": 1000,
+            "dense_passage_char_cap": 2000,
+            "citation_path_anchors": [
+              "sources",
+              "Projects"
+            ],
+            "deny_list_extra": [],
+            "locale_demotion_enabled": true
+          },
+          "context": {
+            "cold_tier_enabled": false,
+            "cold_tier_min_hot_genes": 0,
+            "cold_tier_k": 3,
+            "cold_tier_min_cosine": 0.15,
+            "fingerprint_mode_profile": "balanced"
+          },
+          "cymatics": {
+            "enabled": true,
+            "peak_width": null,
+            "harmonic_links": true,
+            "distance_metric": "cosine"
+          },
+          "retrieval": {
+            "sr_enabled": false,
+            "sr_gamma": 0.85,
+            "sr_k_steps": 4,
+            "sr_weight": 1.5,
+            "sr_cap": 3.0,
+            "ray_trace_theta": false,
+            "theta_weight": 1.0,
+            "seeded_edges_enabled": false,
+            "symbol_expansion_cap": 8,
+            "filename_anchor_enabled": true,
+            "filename_anchor_weight": 4.0,
+            "bm25_shortlist_enabled": true,
+            "bm25_shortlist_size": 50,
+            "bm25_prefilter_enabled": false,
+            "bm25_prefilter_size": 200,
+            "fts5_candidate_depth": 0,
+            "entity_graph_retrieval_enabled": false,
+            "dense_embedding_enabled": false,
+            "dense_embedding_dim": 1024,
+            "dense_model": "BAAI/bge-m3",
+            "ann_similarity_threshold": 0.58,
+            "ann_threshold_min_genes": 1,
+            "ann_threshold_max_genes": 12,
+            "ann_threshold_mode": "absolute",
+            "ann_threshold_sigma_multiplier": 3.0,
+            "dense_pool_floor_genes": 8,
+            "dense_pool_size": 500,
+            "fusion_mode": "rrf",
+            "rrf_k": 20,
+            "rrf_gate_enabled": false,
+            "rrf_gate_top_m": 0,
+            "rrf_gate_min_score": 0.0,
+            "cover_walk_enabled": false,
+            "cover_walk_seed_m": 12,
+            "cover_walk_hops": 2,
+            "cover_walk_gamma": 0.5,
+            "cover_walk_degree_cap": 1000,
+            "cover_walk_frontier_cap": 2000,
+            "cover_walk_append_slots": 3,
+            "cover_walk_append_min_mass": 0.0,
+            "cover_walk_band_weight": 1.0,
+            "rerank_combinator": "additive",
+            "rerank_band_delta": 0.05,
+            "rerank_tier_weight": 1.0,
+            "rerank_combinator_by_class": {
+              "arithmetic": "eps_band",
+              "factual": "eps_band",
+              "procedural": "eps_band",
+              "multi_hop": "eps_band",
+              "default": "eps_band"
+            },
+            "blend_mode": "scale_relative",
+            "fts5_weight": 3.0,
+            "splade_weight": 3.5,
+            "tag_exact_weight": 3.0,
+            "tag_prefix_weight": 1.5,
+            "tag_idf_enabled": false,
+            "tag_df_cap": 0.0,
+            "splade_df_cap_fraction": 0.0,
+            "sema_boost_weight": 2.0,
+            "sema_cold_weight": 3.0,
+            "lex_anchor_weight": 1.5,
+            "harmonic_weight": 1.0,
+            "harmonic_batching_enabled": false,
+            "entity_graph_weight": 0.5,
+            "dense_weight": 1.0,
+            "dense_additive_weight": 4.0,
+            "dense_additive_min_cosine": 0.15,
+            "semantic_dense_additive_weight": 16.0,
+            "semantic_broaden_routing": true,
+            "pki_weight": 1.0,
+            "pki_enabled": false,
+            "shard_fetch_multiplier": 2.0,
+            "shard_fetch_scale_with_shards": false,
+            "coact_reserved_slots": 0,
+            "coact_link_boost": 0.5,
+            "doc_type_boost_mode": "additive",
+            "authority_path_selectivity": false,
+            "rerank_enabled": false,
+            "rerank_depth": 50,
+            "rerank_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+            "rerank_enabled_by_class": {}
+          },
+          "abstain": {
+            "mode": "global",
+            "ratio_threshold": 1.8,
+            "ratio_threshold_rrf_norm": 1.5,
+            "per_class": {}
+          },
+          "session": {
+            "default_party_id": "default",
+            "synthetic_session_window_s": 300,
+            "synthetic_session_enabled": true
+          },
+          "plr": {
+            "enabled": true,
+            "model_path": "training/models/stacked_plr.joblib",
+            "expected_sha256": "",
+            "high_risk_threshold": 0.5
+          },
+          "headroom": {
+            "enabled": true,
+            "autostart": true,
+            "host": "127.0.0.1",
+            "port": 8787,
+            "mode": "token",
+            "dashboard_path": "/dashboard",
+            "route_upstream": false
+          },
+          "classifier": {
+            "enabled": true
+          },
+          "know": {
+            "emit_floor": 0.45,
+            "s_ref": 4.2503,
+            "g_ref": 0.4386,
+            "betas": [
+              -2.1222,
+              -1.1442,
+              0.8794,
+              0.9407,
+              0.2999,
+              0.7979
+            ],
+            "calibrated_at": "2026-07-07T01:39:23+00:00",
+            "calibrated_on_n": 1617,
+            "stale_after_days": 30
+          },
+          "hardware": {
+            "device": "auto",
+            "dense_device": "auto",
+            "splade_device": "auto",
+            "sema_device": "auto",
+            "rerank_device": "auto",
+            "batch_sizes": {},
+            "low_vram_threshold_gb": 4.0,
+            "lazy_encoders": true
+          },
+          "vault": {
+            "enabled": false,
+            "path": "~/.cymatix/vault",
+            "party_id": "",
+            "fan_out_threshold": 5000,
+            "redact_body": false,
+            "stale_threshold": 0.5,
+            "traces": {
+              "enabled": true,
+              "retention_hours": 48,
+              "max_retention_hours_hard": 720,
+              "max_count": 10000,
+              "rollup_enabled": true,
+              "rollup_shard": "hour",
+              "prune_interval_minutes": 60,
+              "trigger_only": false
+            }
+          },
+          "synonym_map": {
+            "slow": [
+              "performance",
+              "latency",
+              "bottleneck",
+              "timeout",
+              "lag"
+            ],
+            "fast": [
+              "performance",
+              "speed",
+              "optimization",
+              "cache"
+            ],
+            "cache": [
+              "redis",
+              "ttl",
+              "invalidation",
+              "cdn",
+              "caching",
+              "eviction"
+            ],
+            "auth": [
+              "jwt",
+              "login",
+              "security",
+              "token",
+              "session",
+              "oauth"
+            ],
+            "protein": [
+              "folding",
+              "amino",
+              "alpha_helix",
+              "beta_sheet",
+              "alphafold",
+              "biochemistry"
+            ],
+            "tree": [
+              "btree",
+              "b-tree",
+              "data_structures",
+              "index",
+              "binary_tree"
+            ],
+            "cymatix": [
+              "genome",
+              "ribosome",
+              "codons",
+              "splice",
+              "chromatin",
+              "promoter",
+              "context compression"
+            ],
+            "pipeline": [
+              "steps",
+              "expression",
+              "workflow",
+              "process",
+              "stages"
+            ],
+            "scoring": [
+              "divergence",
+              "audit",
+              "grades",
+              "ratchet",
+              "dimensions"
+            ],
+            "compress": [
+              "compression",
+              "ratio",
+              "target",
+              "context_compression"
+            ],
+            "ratio": [
+              "compression",
+              "ratio",
+              "target",
+              "factor"
+            ],
+            "error": [
+              "exception",
+              "crash",
+              "failure",
+              "bug",
+              "traceback"
+            ],
+            "port": [
+              "proxy",
+              "server",
+              "configuration",
+              "system_settings",
+              "api"
+            ],
+            "threshold": [
+              "divergence",
+              "scoring",
+              "reconciliation",
+              "configuration"
+            ],
+            "model": [
+              "ollama",
+              "llm",
+              "configuration",
+              "deployment",
+              "agent_frameworks"
+            ],
+            "skills": [
+              "fleet",
+              "agent",
+              "worker",
+              "llm_systems",
+              "systems_architecture"
+            ],
+            "monetary": [
+              "decimal",
+              "financial",
+              "data_processing",
+              "bookkeeping"
+            ],
+            "budget": [
+              "tokens",
+              "configuration",
+              "ribosome",
+              "expression"
+            ],
+            "dimensions": [
+              "audit",
+              "scoring",
+              "preset",
+              "ci_cd"
+            ],
+            "binary": [
+              "rust",
+              "deployment",
+              "packaging",
+              "compatibility"
+            ],
+            "default": [
+              "configuration",
+              "system_settings",
+              "deployment"
+            ],
+            "db": [
+              "database",
+              "sqlite",
+              "postgres",
+              "sql",
+              "query",
+              "schema"
+            ],
+            "api": [
+              "endpoint",
+              "route",
+              "rest",
+              "http",
+              "request",
+              "response"
+            ],
+            "ui": [
+              "frontend",
+              "component",
+              "render",
+              "layout",
+              "css",
+              "style"
+            ],
+            "test": [
+              "pytest",
+              "unittest",
+              "mock",
+              "assert",
+              "coverage"
+            ],
+            "deploy": [
+              "docker",
+              "kubernetes",
+              "ci",
+              "cd",
+              "pipeline",
+              "helm"
+            ],
+            "config": [
+              "settings",
+              "toml",
+              "env",
+              "environment",
+              "dotenv"
+            ],
+            "conductor": [
+              "llm",
+              "agent",
+              "orchestration",
+              "model",
+              "fleet"
+            ],
+            "vacuum": [
+              "reclaim",
+              "sqlite",
+              "pages",
+              "compact",
+              "shrink",
+              "admin"
+            ],
+            "sike": [
+              "scale_invariant",
+              "benchmark",
+              "retrieval",
+              "sike_score"
+            ],
+            "moe": [
+              "mixture_of_experts",
+              "sliding_window",
+              "swa",
+              "gemma4",
+              "tissue",
+              "answer_slate"
+            ],
+            "slate": [
+              "answer_slate",
+              "kv_facts",
+              "front_loaded",
+              "extraction",
+              "moe"
+            ],
+            "decoder": [
+              "decoder_mode",
+              "condensed",
+              "moe",
+              "ribosome_prompt",
+              "instructions"
+            ],
+            "maintenance": [
+              "admin",
+              "vacuum",
+              "refresh",
+              "checkpoint",
+              "compact"
+            ],
+            "ribosome": [
+              "decoder",
+              "ribosome_prompt",
+              "compressor",
+              "splice",
+              "budget",
+              "tokens"
+            ],
+            "expression": [
+              "pipeline",
+              "stages",
+              "steps",
+              "expressed_context",
+              "decoder"
+            ],
+            "agents": [
+              "agent",
+              "fleet",
+              "conductor",
+              "worker",
+              "orchestration"
+            ],
+            "dashboard": [
+              "port",
+              "ui",
+              "frontend",
+              "server",
+              "fleet"
+            ],
+            "tables": [
+              "database",
+              "db",
+              "sqlite",
+              "schema",
+              "ddl"
+            ]
+          },
+          "encoder_daemon": {
+            "url": ""
+          },
+          "sync": {
+            "enabled": false,
+            "roots": [],
+            "include": [
+              ".txt",
+              ".md",
+              ".rst",
+              ".py",
+              ".ts",
+              ".js",
+              ".json",
+              ".toml",
+              ".yml",
+              ".yaml"
+            ],
+            "exclude": [
+              ".git",
+              "node_modules",
+              ".venv",
+              "venv",
+              "__pycache__",
+              "genomes",
+              ".claude",
+              "dist",
+              "build"
+            ],
+            "interval_s": 30.0,
+            "max_delete_fraction": 0.2,
+            "max_files_per_pass": 200,
+            "max_file_bytes": 2000000
+          },
+          "lanes": []
+        }
+      }
+    }
+  },
+  "seconds": 743.1,
+  "results": {
+    "needles": 834,
+    "events_with_needles": 19,
+    "by_class_counts": {
+      "ident": 349,
+      "number": 83,
+      "path": 326,
+      "ref": 53,
+      "sha": 23
+    },
+    "by_origin_counts": {
+      "refetched": 473,
+      "unprompted": 338,
+      "user_supplied": 23
+    },
+    "qualifier_needles": 12,
+    "arms": {
+      "today": {
+        "hit": {
+          "n": 834,
+          "rate": 0.4448
+        },
+        "by_class": {
+          "ident": {
+            "n": 349,
+            "rate": 0.447
+          },
+          "number": {
+            "n": 83,
+            "rate": 0.5181
+          },
+          "path": {
+            "n": 326,
+            "rate": 0.4049
+          },
+          "ref": {
+            "n": 53,
+            "rate": 0.5849
+          },
+          "sha": {
+            "n": 23,
+            "rate": 0.3913
+          }
+        },
+        "by_origin": {
+          "refetched": {
+            "n": 473,
+            "rate": 0.3615
+          },
+          "unprompted": {
+            "n": 338,
+            "rate": 0.568
+          },
+          "user_supplied": {
+            "n": 23,
+            "rate": 0.3478
+          }
+        },
+        "hedge_kept_on_qualifier_needles": {
+          "n": 12,
+          "rate": 0.5
+        },
+        "hit_on_qualifier_needles": {
+          "n": 12,
+          "rate": 0.75
+        },
+        "median_tokens": 16886.0,
+        "hit_macro_over_events": 0.4937
+      },
+      "summary": {
+        "hit": {
+          "n": 834,
+          "rate": 0.3249
+        },
+        "by_class": {
+          "ident": {
+            "n": 349,
+            "rate": 0.3009
+          },
+          "number": {
+            "n": 83,
+            "rate": 0.3253
+          },
+          "path": {
+            "n": 326,
+            "rate": 0.319
+          },
+          "ref": {
+            "n": 53,
+            "rate": 0.566
+          },
+          "sha": {
+            "n": 23,
+            "rate": 0.2174
+          }
+        },
+        "by_origin": {
+          "refetched": {
+            "n": 473,
+            "rate": 0.2495
+          },
+          "unprompted": {
+            "n": 338,
+            "rate": 0.4349
+          },
+          "user_supplied": {
+            "n": 23,
+            "rate": 0.2609
+          }
+        },
+        "hedge_kept_on_qualifier_needles": {
+          "n": 12,
+          "rate": 0.5
+        },
+        "hit_on_qualifier_needles": {
+          "n": 12,
+          "rate": 0.75
+        },
+        "median_tokens": 4236.0,
+        "hit_macro_over_events": 0.3638,
+        "today_union": {
+          "n": 834,
+          "rate": 0.4448
+        },
+        "recovers_today_misses": {
+          "n": 463,
+          "rate": 0.0
+        }
+      },
+      "plan": {
+        "hit": {
+          "n": 306,
+          "rate": 0.1797
+        },
+        "by_class": {
+          "ident": {
+            "n": 115,
+            "rate": 0.2696
+          },
+          "number": {
+            "n": 47,
+            "rate": 0.1915
+          },
+          "path": {
+            "n": 116,
+            "rate": 0.1207
+          },
+          "ref": {
+            "n": 21,
+            "rate": 0.0476
+          },
+          "sha": {
+            "n": 7,
+            "rate": 0.0
+          }
+        },
+        "by_origin": {
+          "refetched": {
+            "n": 130,
+            "rate": 0.1846
+          },
+          "unprompted": {
+            "n": 164,
+            "rate": 0.1829
+          },
+          "user_supplied": {
+            "n": 12,
+            "rate": 0.0833
+          }
+        },
+        "hedge_kept_on_qualifier_needles": {
+          "n": 3,
+          "rate": 0.0
+        },
+        "hit_on_qualifier_needles": {
+          "n": 3,
+          "rate": 0.0
+        },
+        "median_tokens": 7154.0,
+        "hit_macro_over_events": 0.1108,
+        "today_union": {
+          "n": 306,
+          "rate": 0.5686
+        },
+        "recovers_today_misses": {
+          "n": 132,
+          "rate": 0.0
+        }
+      },
+      "handoff": {
+        "hit": {
+          "n": 21,
+          "rate": 0.1905
+        },
+        "by_class": {
+          "ident": {
+            "n": 8,
+            "rate": 0.25
+          },
+          "number": {
+            "n": 1,
+            "rate": 0.0
+          },
+          "path": {
+            "n": 12,
+            "rate": 0.1667
+          },
+          "ref": null,
+          "sha": null
+        },
+        "by_origin": {
+          "refetched": {
+            "n": 14,
+            "rate": 0.0
+          },
+          "unprompted": {
+            "n": 7,
+            "rate": 0.5714
+          },
+          "user_supplied": null
+        },
+        "hedge_kept_on_qualifier_needles": {
+          "n": 2,
+          "rate": 0.0
+        },
+        "hit_on_qualifier_needles": {
+          "n": 2,
+          "rate": 0.0
+        },
+        "median_tokens": 1854,
+        "hit_macro_over_events": 0.1177,
+        "today_union": {
+          "n": 21,
+          "rate": 0.4286
+        },
+        "recovers_today_misses": {
+          "n": 12,
+          "rate": 0.0
+        }
+      },
+      "bm25": {
+        "hit": {
+          "n": 834,
+          "rate": 0.5935
+        },
+        "by_class": {
+          "ident": {
+            "n": 349,
+            "rate": 0.6963
+          },
+          "number": {
+            "n": 83,
+            "rate": 0.506
+          },
+          "path": {
+            "n": 326,
+            "rate": 0.4908
+          },
+          "ref": {
+            "n": 53,
+            "rate": 0.7358
+          },
+          "sha": {
+            "n": 23,
+            "rate": 0.4783
+          }
+        },
+        "by_origin": {
+          "refetched": {
+            "n": 473,
+            "rate": 0.63
+          },
+          "unprompted": {
+            "n": 338,
+            "rate": 0.568
+          },
+          "user_supplied": {
+            "n": 23,
+            "rate": 0.2174
+          }
+        },
+        "hedge_kept_on_qualifier_needles": {
+          "n": 12,
+          "rate": 0.5833
+        },
+        "hit_on_qualifier_needles": {
+          "n": 12,
+          "rate": 1.0
+        },
+        "median_tokens": 2889.0,
+        "hit_macro_over_events": 0.6088,
+        "today_union": {
+          "n": 834,
+          "rate": 0.7266
+        },
+        "recovers_today_misses": {
+          "n": 463,
+          "rate": 0.5076
+        }
+      },
+      "cymatix": {
+        "hit": {
+          "n": 834,
+          "rate": 0.518
+        },
+        "by_class": {
+          "ident": {
+            "n": 349,
+            "rate": 0.639
+          },
+          "number": {
+            "n": 83,
+            "rate": 0.3253
+          },
+          "path": {
+            "n": 326,
+            "rate": 0.4479
+          },
+          "ref": {
+            "n": 53,
+            "rate": 0.5283
+          },
+          "sha": {
+            "n": 23,
+            "rate": 0.3478
+          }
+        },
+        "by_origin": {
+          "refetched": {
+            "n": 473,
+            "rate": 0.5814
+          },
+          "unprompted": {
+            "n": 338,
+            "rate": 0.4438
+          },
+          "user_supplied": {
+            "n": 23,
+            "rate": 0.3043
+          }
+        },
+        "hedge_kept_on_qualifier_needles": {
+          "n": 12,
+          "rate": 0.4167
+        },
+        "hit_on_qualifier_needles": {
+          "n": 12,
+          "rate": 1.0
+        },
+        "median_tokens": 3616.5,
+        "hit_macro_over_events": 0.5239,
+        "today_union": {
+          "n": 834,
+          "rate": 0.699
+        },
+        "recovers_today_misses": {
+          "n": 463,
+          "rate": 0.4579
+        }
+      }
+    },
+    "paired_cymatix_vs_bm25": {
+      "n": 834,
+      "cymatix_only": 55,
+      "bm25_only": 118
+    }
+  }
+}

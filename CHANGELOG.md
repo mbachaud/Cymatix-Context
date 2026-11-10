@@ -15,6 +15,18 @@
   ERB. Receipts: `lexical_ab_2026-10-26/` (runner
   `benchmarks/dogfood/sweeps/run_financebench_lexical_ab.py`).
 
+- **fix(retrieval): concurrent requests no longer tier on another request's
+  scores.** `query_docs` publishes its score maps on the store and
+  `build_context` read them back after retrieval returned; a second thread's
+  query could publish in that gap, including its intermediate
+  additive-scale map. The reader then saw a flat score profile and
+  abstained. On a file-backed store, 12 threads x 15 identical queries gave
+  39 to 45 false `no_match` responses out of 180. Each thread now reads
+  back the maps its own query published (`cymatix_context/request_scoped.py`),
+  on the single-store, sharded and `/context/packet` paths. The plain
+  `last_query_scores` attributes keep their meaning (most recent query, any
+  thread). Single-threaded results are unchanged.
+
 - **fix(store): concurrent use of a `:memory:` store no longer hangs**
   (issue #505). A `:memory:` store has one connection, shared by every
   thread, and concurrent `build_context` calls (or a query running while

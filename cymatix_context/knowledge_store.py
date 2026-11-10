@@ -35,6 +35,7 @@ if TYPE_CHECKING:
 
     from .backends.bgem3_codec import BGEM3Codec
 
+from .request_scoped import LastQueryValue, own_last
 from .serialized_conn import SerializedConnection
 from .accel import (
     json_loads,
@@ -620,6 +621,14 @@ def _rerank_doc_text(doc) -> str:
 
 class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
+
+    # Published by every query. Each is global on read and also recorded
+    # per thread on write; pipeline readers use own_last() to get the value
+    # their own query published (see request_scoped.py).
+    last_query_scores = LastQueryValue()
+    last_tier_contributions = LastQueryValue()
+    last_signal_timings = LastQueryValue()
+    last_pool_total = LastQueryValue()
 
     def __init__(
         self,
@@ -1700,8 +1709,12 @@ class KnowledgeStore:
             # Expose similarity scores via last_query_scores for the
             # caller (context_manager uses this for tier-budget decisions)
             with self._last_query_scores_lock:
+                # This thread's own map (query_docs ran on this thread just
+                # before); the plain attribute may already be another
+                # request's.
+                _own_scores = own_last(self, "last_query_scores")
                 for gid, sim in selected_sims.items():
-                    self.last_query_scores[gid] = sim
+                    _own_scores[gid] = sim
 
             return genes
         except Exception:
@@ -1830,6 +1843,14 @@ class KnowledgeStore:
         ``_CORPUS_SIZE_TTL`` seconds. Used by the IDF-weighted lexical
         anchor tier so rare-term boosts reflect the *knowledge store* size, not
         the size of the scored-candidate pool.
+
+        This store's own writes (``upsert_doc``, ``delete_gene``, and the
+        commit of a ``deferred_commits`` scope) drop the memo, so the count
+        is exact after in-process ingest. Without that, ingest -> query ->
+        ingest -> query reused the first query's count until the TTL ran
+        out, and the IDF tier depended on wall-clock elapsed time (the
+        2026-10-07 compaction-recall determinism diff). The TTL now only
+        bounds how long other processes' writes go unseen.
         """
         now = time.time()
         # Check the timestamp, not the value: a legitimately empty knowledge store
@@ -1848,6 +1869,10 @@ class KnowledgeStore:
             log.warning("corpus_size refresh failed", exc_info=True)
             # Fall back to whatever we have (may be 0 on first failure).
         return self._corpus_size
+
+    def _invalidate_corpus_size(self) -> None:
+        """Drop the corpus_size() memo; the next call recounts."""
+        self._corpus_size_ts = 0.0
 
     @property
     def read_conn(self) -> sqlite3.Connection:
@@ -2064,6 +2089,10 @@ class KnowledgeStore:
             else:
                 if outermost:
                     self.conn.commit()
+                    # The per-upsert invalidations ran before this commit;
+                    # a corpus_size() read on a reader in between counted
+                    # the pre-commit table. Drop it now the rows are visible.
+                    self._invalidate_corpus_size()
                     # Checkpoint cadence deferred by upsert_doc while the
                     # transaction was open — run it now that it can advance.
                     pending, self._pending_checkpoint = (
@@ -2384,6 +2413,8 @@ class KnowledgeStore:
         # (~78 MiB / sub-200 ms at 18.9k rows) on first dense recall after
         # this batch. See spec §4 "Invalidation".
         self._invalidate_dense_matrix()
+        # IDF denominator: a new document changes the count.
+        self._invalidate_corpus_size()
 
         # Notify persistence manager (if attached)
         if self._replication_mgr is not None:
@@ -5132,7 +5163,7 @@ class KnowledgeStore:
         # the signal map the inner query_docs just published, so one read
         # of last_signal_timings covers the whole ANN retrieval.
         with self._last_query_scores_lock:
-            _merged = dict(getattr(self, "last_signal_timings", None) or {})
+            _merged = dict(own_last(self, "last_signal_timings") or {})
             _merged["ann_dense_leg"] = _merged.get("ann_dense_leg", 0.0) + _ann_dense_ms
             _merged["ann_body_fetch"] = _merged.get("ann_body_fetch", 0.0) + _ann_body_ms
             self.last_signal_timings = _merged
@@ -5216,7 +5247,7 @@ class KnowledgeStore:
                     d.gene_id for d, _ in scored if d.gene_id not in _in_cand
                 ]
             with self._last_query_scores_lock:
-                _m = dict(getattr(self, "last_signal_timings", None) or {})
+                _m = dict(own_last(self, "last_signal_timings") or {})
                 _m["xenc_rerank"] = (
                     _m.get("xenc_rerank", 0.0) + (time.monotonic() - _xenc_t0) * 1000.0
                 )
@@ -6508,6 +6539,7 @@ class KnowledgeStore:
             self.invalidate_sema_cache()
             self.invalidate_cold_sema_cache()
             self._invalidate_dense_matrix()
+            self._invalidate_corpus_size()
             log.debug("Deleted gene %s (+ index, symbol, and edge rows)", gene_id)
         return deleted
 
