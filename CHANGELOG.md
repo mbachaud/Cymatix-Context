@@ -15,6 +15,21 @@
   ERB. Receipts: `lexical_ab_2026-10-26/` (runner
   `benchmarks/dogfood/sweeps/run_financebench_lexical_ab.py`).
 
+- **fix(store): concurrent use of a `:memory:` store no longer hangs**
+  (issue #505). A `:memory:` store has one connection, shared by every
+  thread, and concurrent `build_context` calls (or a query running while
+  the packet-trace fingerprint thread counted rows) never returned. That
+  connection is now serialized on the store's write lock and reads each
+  result in full under it. File-backed stores were not affected and are
+  unchanged: they keep their per-thread read connections. This was also the
+  cause of the intermittent 60-minute `test-full-suite` timeout.
+
+- **change(launcher): the PyPI update check is off by default** (issue
+  #481). The desktop launcher no longer makes an outbound request to
+  pypi.org unless you opt in with `CYMATIX_LAUNCHER_UPDATE_CHECK=1`
+  (`true` / `yes` / `on` also work). Before, it was on unless set to `0`.
+  If you relied on the tray's update notice, set the variable to `1`.
+
 ## 0.11.4 (2026-10-26)
 
 - **Release gate: 947k merged-stack witness with packet tracing on,
