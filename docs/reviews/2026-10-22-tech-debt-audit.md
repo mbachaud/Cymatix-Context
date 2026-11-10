@@ -102,26 +102,26 @@ Last-commit dates are from `git log`. "Refs" counts inbound references outside `
 
 | Path | Last commit | Why | Refs |
 |---|---|---|---|
-| `docs/superpowers/plans/2026-05-11-helix-cli-v1.md` | 05-11 | helix CLI plan; shipped as `cli/` | 0 |
-| `docs/superpowers/plans/2026-05-13-issue-92-parallel-ingest.md` | 05-13 | Shipped, PR #94 | 0 |
-| `docs/superpowers/plans/2026-07-05-test-suite-consolidation.md` | 07-05 | Shipped, #238 | 2 (data JSON) |
-| `docs/superpowers/{plans,specs}/2026-07-13-codex-helix-mcp-reliability*` | 07-18 | Pre-0.8.5 helix MCP fix; target module gone | 0 |
-| `docs/superpowers/{plans,specs}/2026-07-13-launcher-graph-summary*` | 07-18 | Shipped (PR #444) | 0–1 |
-| `docs/superpowers/plans/2026-07-20-cymatix-context-rename.md`, `specs/2026-05-11-rename-r2-*`, `specs/2026-05-13-rename-r3-*` | 05–07 | Rename done; the plan describes the back-compat approach 0.8.5 reversed | ≤2 (siblings) |
-| `docs/superpowers/plans/2026-08-06-rerank-wiring.md` and `docs/design/2026-08-06-rerank-wiring-kickoff.md` | 08-06 | #341 shipped default-off | 1–2 |
-| `docs/superpowers/{plans,specs}/2026-08-11-cc-exchange-task-board*` | 08-12 | Board shipped and reconciled | 0–1 |
-| `docs/superpowers/plans/2026-08-14-archival-housekeeping-cleanup.md` | 08-17 | All gates executed | 0 |
-| `docs/superpowers/plans/2026-08-18-issue-batch-testing-paths*.md` | 08-18 | Dated batch report; board cleared at v0.9.0 | 1 |
-| `docs/superpowers/plans/2026-08-28-w2.1-cover-walk.md` | 08-28 | **Killed by receipt** (PR #408); archive with a "killed" banner | 1 (test) |
-| `docs/superpowers/plans/2026-08-28-w2.4-min-delivered-floor.md` | 08-28 | Shipped and graduated 08-30 | 0 |
-| `docs/superpowers/{plans,specs}/2026-08-27-cymatix-context-cross-model-unification*` | 08-27 | Shipped as `docs/clients/*`, `skills/` | 0–1 |
-| `docs/superpowers/plans/2026-08-30-{rosetta-tier2-aliases,v091-wiki-readme-docs}.md`, `specs/2026-08-30-v091-readme-wiki-rosetta-design.md` | 08-30 | v0.9.1 docs wave shipped | 0–3 |
-| `docs/prds/` (all 7, 05-30 to 06-16) | ≤07-01 | helix-era. Three are "DRAFT awaiting sign-off" for 5 months; RRF shipped; `HELIX_OTEL_*` env names removed; the semantic-wiring arm's premise (dense) was refuted. **Patch first:** `config.py` comment and `config-reference` cite `semantic-wiring-arm` | 0–2 |
-| `docs/investigations/` (all 6) | ≤07-05 | Pre-rename cc-exchange exports and handoffs; `dense-ann-cap` assumes "v0.6.3 ships dense ON". **Patch first:** the `storage/indexes.py` comment cites `165_path_key_index_consensus.md` | 0–1 |
-| `docs/audits/` (all 3, v0.7.1-era) | 06-09…12 | helix baseline; cite only each other plus the roadmap-lineage council | 1–2 |
-| `docs/councils/2026-05-30-multihop-scale-inference.md` | 07-01 | Sharded-Onyx fusion ladder era | 0 |
+| `docs/archive/superpowers/plans/2026-05-11-helix-cli-v1.md` | 05-11 | helix CLI plan; shipped as `cli/` | 0 |
+| `docs/archive/superpowers/plans/2026-05-13-issue-92-parallel-ingest.md` | 05-13 | Shipped, PR #94 | 0 |
+| `docs/archive/superpowers/plans/2026-07-05-test-suite-consolidation.md` | 07-05 | Shipped, #238 | 2 (data JSON) |
+| `docs/archive/superpowers/{plans,specs}/2026-07-13-codex-helix-mcp-reliability*` | 07-18 | Pre-0.8.5 helix MCP fix; target module gone | 0 |
+| `docs/archive/superpowers/{plans,specs}/2026-07-13-launcher-graph-summary*` | 07-18 | Shipped (PR #444) | 0–1 |
+| `docs/archive/superpowers/plans/2026-07-20-cymatix-context-rename.md`, `specs/2026-05-11-rename-r2-*`, `specs/2026-05-13-rename-r3-*` | 05–07 | Rename done; the plan describes the back-compat approach 0.8.5 reversed | ≤2 (siblings) |
+| `docs/archive/superpowers/plans/2026-08-06-rerank-wiring.md` and `docs/design/2026-08-06-rerank-wiring-kickoff.md` | 08-06 | #341 shipped default-off | 1–2 |
+| `docs/archive/superpowers/{plans,specs}/2026-08-11-cc-exchange-task-board*` | 08-12 | Board shipped and reconciled | 0–1 |
+| `docs/archive/superpowers/plans/2026-08-14-archival-housekeeping-cleanup.md` | 08-17 | All gates executed | 0 |
+| `docs/archive/superpowers/plans/2026-08-18-issue-batch-testing-paths*.md` | 08-18 | Dated batch report; board cleared at v0.9.0 | 1 |
+| `docs/archive/superpowers/plans/2026-08-28-w2.1-cover-walk.md` | 08-28 | **Killed by receipt** (PR #408); archive with a "killed" banner | 1 (test) |
+| `docs/archive/superpowers/plans/2026-08-28-w2.4-min-delivered-floor.md` | 08-28 | Shipped and graduated 08-30 | 0 |
+| `docs/archive/superpowers/{plans,specs}/2026-08-27-cymatix-context-cross-model-unification*` | 08-27 | Shipped as `docs/clients/*`, `skills/` | 0–1 |
+| `docs/archive/superpowers/plans/2026-08-30-{rosetta-tier2-aliases,v091-wiki-readme-docs}.md`, `specs/2026-08-30-v091-readme-wiki-rosetta-design.md` | 08-30 | v0.9.1 docs wave shipped | 0–3 |
+| `docs/archive/prds/` (all 7, 05-30 to 06-16) | ≤07-01 | helix-era. Three are "DRAFT awaiting sign-off" for 5 months; RRF shipped; `HELIX_OTEL_*` env names removed; the semantic-wiring arm's premise (dense) was refuted. **Patch first:** `config.py` comment and `config-reference` cite `semantic-wiring-arm` | 0–2 |
+| `docs/archive/investigations/` (all 6) | ≤07-05 | Pre-rename cc-exchange exports and handoffs; `dense-ann-cap` assumes "v0.6.3 ships dense ON". **Patch first:** the `storage/indexes.py` comment cites `165_path_key_index_consensus.md` | 0–1 |
+| `docs/archive/audits/` (all 3, v0.7.1-era) | 06-09…12 | helix baseline; cite only each other plus the roadmap-lineage council | 1–2 |
+| `docs/archive/councils/2026-05-30-multihop-scale-inference.md` | 07-01 | Sharded-Onyx fusion ladder era | 0 |
 | **J-space cluster:** `councils/2026-07-06-jspace-roadmap-council.md` (+`.panel.json`), `councils/2026-07-06-roadmap-lineage.md`, `design/2026-07-06-jspace-{roadmap-review,splat-roadmap}.md`, `research/2026-07-06-{phase0-remetric-prereg,phase1a-whitening-ab-results,ann-threshold-recalibration,rrf-gold-block-deficit}.md` | 07-06…07-27 | A dormant program that appears nowhere in README, CHANGELOG or wiki. The Phase 1a verdict was "do not adopt"; it rests on a dense premise. Move as one cluster (it cross-cites internally). `benchmarks/sweep_ann_sigma.py` cites the whitening doc. | 0–3 |
-| `docs/councils/2026-07-13-assetopsbench-reshape-council.md` (+`.panel.json`) | 07-18 | Decision record for a NO-GO; sole citer is its verdict doc | 0–1 |
+| `docs/archive/councils/2026-07-13-assetopsbench-reshape-council.md` (+`.panel.json`) | 07-18 | Decision record for a NO-GO; sole citer is its verdict doc | 0–1 |
 | `docs/specs/2026-05-28-folder-picker-and-tracked-sources.md` | 07-01 | "draft, no code yet", superseded by the folder picker, `[sync]` and `[[lanes]]`; has a dead link | 0 |
 | `docs/design/2026-08-05-fork1-{encoder-daemon-kickoff,graduation-note}.md` | 08-05 | One-shot session prompts; the daemon shipped. (Keep `fork1-slice1-contract.md`: code cites it.) | 1–2 |
 | `docs/ops/dense-ingest-on-12gb-rigs.md` | 08-18 | **Duplicate** of `operations/DENSE_VRAM.md`; says "not yet merged as of 2026-06-07" (✔ `:59`) though the env knobs it describes are in code | 1 |
@@ -134,19 +134,19 @@ Last-commit dates are from `git log`. "Refs" counts inbound references outside `
 | Path | Why / precondition |
 |---|---|
 | `docs/ROADMAP.md` (08-20) | Says "0.9.0 on master", "Open issues: 15", plus a July ledger, so it has been wrong for about 2 months. **Rewrite or retire.** If retired, leave a pointer to `wiki/Roadmap-and-Releases.md` plus CHANGELOG. The wiki links it at `:12,321`, so relink first. |
-| `docs/superpowers/plans/2026-07-20-cymatix-readme-draft.md`, `2026-07-25-portfolio-readme-refresh.md` and its spec | Shipped, but **DOGFOOD-GOLD**. Move them only with a needle re-resolve. Keep `docs/superpowers/artifacts/*`: it is the source for the profile README. |
-| `docs/superpowers/plans/2026-08-24-v09x-retrieval-refinement-phase.md`, `2026-08-09-ab-data-campaign.md` | Closed, but cited by BASELINES/CHANGELOG. Relink, then move. |
+| `docs/archive/superpowers/plans/2026-07-20-cymatix-readme-draft.md`, `2026-07-25-portfolio-readme-refresh.md` and its spec | Shipped, but **DOGFOOD-GOLD**. Move them only with a needle re-resolve. Keep `docs/archive/superpowers/artifacts/*`: it is the source for the profile README. |
+| `docs/archive/superpowers/plans/2026-08-24-v09x-retrieval-refinement-phase.md`, `2026-08-09-ab-data-campaign.md` | Closed, but cited by BASELINES/CHANGELOG. Relink, then move. |
 | `docs/architecture/raude_antigravity_persona.md` | An agent-persona draft, not architecture. Move to `docs/clients/` or archive. |
 | `docs/dashboards/cymatix-pipeline.json` | Orphan Grafana JSON; not among the 7 provisioned dashboards. |
 | `docs/benchmarks/2026-06-{18,27,28}-*contextbench*`, `2026-06-04-code-context-benchmark-strategy.md`, `coderag_bench_runbook.md`, `repobench_r_runbook.md` | v0.6-era code-bench receipts and helix-named runbooks. These are receipts, so move them as a cluster and only if not cited. |
 
 ### Do NOT archive (looks stale, but is load-bearing)
 
-- `docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md`: 17 refs from config comments and TOMLs. It is the receipt basis for the rrf_k=20 and eps_band defaults.
+- `docs/archive/superpowers/plans/2026-08-27-ranking-under-width-wave1.md`: 17 refs from config comments and TOMLs. It is the receipt basis for the rrf_k=20 and eps_band defaults.
 - `docs/specs/2026-05-08-stage-{1..7}-*.md`: cited by code, SETUP and TROUBLESHOOTING (up to 43 refs). Stage 2 ("promote dense") is reversed. **Add a "superseded defaults" banner instead.**
 - `docs/specs/2026-06-09-retrieval-profiles.md` (#205, live) and `specs/2026-07-13-snow-v2-*` (#208, blocked): live roadmap.
 - `docs/benchmarks/BENCHMARKS.md` already carries a "Historical" banner and has 18 refs. Fix only its "Helix Context Benchmarks" title.
-- `docs/superpowers/plans/2026-08-08-scbench-codex-cymatix-ab-harness.md`: **not shipped** (88 unchecked boxes, no code). This needs an owner decision to build or shelve. It is not "done".
+- `docs/archive/superpowers/plans/2026-08-08-scbench-codex-cymatix-ab-harness.md`: **not shipped** (88 unchecked boxes, no code). This needs an owner decision to build or shelve. It is not "done".
 
 ### Structural doc debt
 

@@ -15,10 +15,7 @@ from typing import Any, Dict, List, Optional
 
 log = logging.getLogger(__name__)
 
-try:
-    import tomllib  # Python 3.11+
-except ImportError:
-    import tomli as tomllib  # type: ignore[no-redef]
+import tomllib  # stdlib since 3.11; requires-python >= 3.11
 
 
 @dataclass
@@ -63,8 +60,9 @@ class RibosomeConfig:
     # by /health and by a server-startup WARNING so operators are never
     # surprised by paid-API compressor calls. Add new backends to the
     # appropriate tuple.
-    _LOCAL_BACKENDS = ("ollama", "deberta")
-    _PAID_API_BACKENDS = ("claude",)
+    # Only "litellm" and "deberta" survive ``effective_backend``; every other
+    # value (legacy "ollama", "claude") resolves to "disabled".
+    _LOCAL_BACKENDS = ("deberta",)
     # litellm is paid OR local depending on the underlying model string;
     # classified separately by ``cost_class`` (see below).
 
@@ -91,10 +89,11 @@ class RibosomeConfig:
         """Return one of ``disabled`` | ``local`` | ``api+free`` | ``api+paid``.
 
         - ``disabled``= compressor is intentionally inactive.
-        - ``local``   = runs on the operator's machine (Ollama / DeBERTa).
+        - ``local``   = runs on the operator's machine (DeBERTa, or LiteLLM
+                        routed to a local ``ollama/`` model).
         - ``api+free``= remote API with no metered cost (none today).
-        - ``api+paid``= remote API that bills per call (Claude direct, or
-                        LiteLLM routed to a paid model string).
+        - ``api+paid``= remote API that bills per call (LiteLLM routed to a
+                        paid model string).
 
         litellm with a model that starts with ``ollama/`` is treated as
         local (the call goes to the local Ollama). Any other litellm
@@ -105,8 +104,6 @@ class RibosomeConfig:
             return "disabled"
         if b in self._LOCAL_BACKENDS:
             return "local"
-        if b in self._PAID_API_BACKENDS:
-            return "api+paid"
         if b == "litellm":
             return "local" if self.litellm_model.startswith("ollama/") else "api+paid"
         return "api+paid"  # unknown backend defaults to paid for safety
@@ -117,8 +114,6 @@ class RibosomeConfig:
         b = self.effective_backend
         if b == "disabled":
             return "disabled"
-        if b == "claude":
-            return self.claude_model
         if b == "litellm":
             return self.litellm_model
         return self.model
@@ -770,7 +765,7 @@ class RetrievalConfig:
     # floors were calibrated on additive scores.
     fusion_mode: str = "rrf"                # "rrf" | "additive" (legacy)
     # rrf_k GRADUATED 60 → 20 (2026-08-28, wave-1 ranking-under-width,
-    # docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md): with
+    # docs/archive/superpowers/plans/2026-08-27-ranking-under-width-wave1.md): with
     # the all-classes eps_band map below, delivered_gold 0.555 → 0.630 and
     # r@12 0.651 → 0.681 on the 829k-scale v09x bed (n=470, paired +18/−4,
     # zero question-type regressions; receipts benchmarks/dogfood/erb/
@@ -879,7 +874,7 @@ class RetrievalConfig:
     # explicit empty dict ({}) in TOML to restore the pre-graduation
     # byte-identical global-combinator behavior.
     # RE-GRADUATED 2026-08-28 to ALL FIVE classes (wave-1 ranking-under-
-    # width, docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md):
+    # width, docs/archive/superpowers/plans/2026-08-27-ranking-under-width-wave1.md):
     # extending eps_band to arithmetic/factual/procedural was +3/−1 r@12 /
     # +7/−2 delivered on the 829k v09x bed and stacks with rrf_k=20 (combo
     # receipts ladder_v09x_w1c_*_2026-08-28.json). The band also PROTECTS
@@ -992,7 +987,7 @@ class RetrievalConfig:
     # negligible weight). Consistent with the cold tier's 0.15 min_cosine;
     # deliberately gentle so it removes only noise-grade hits. Unused under RRF.
     dense_additive_min_cosine: float = 0.15
-    # Semantic-wiring arm (2026-06-02; PRD docs/prds/2026-06-02-semantic-wiring-arm.md).
+    # Semantic-wiring arm (2026-06-02; PRD docs/archive/prds/2026-06-02-semantic-wiring-arm.md).
     # When query_type=="semantic" AND env CYMATIX_SEMANTIC_ARM=1, the per-shard
     # dense term is scaled by semantic_dense_additive_weight (instead of
     # dense_additive_weight) AND routing broadens to all healthy shards. The two

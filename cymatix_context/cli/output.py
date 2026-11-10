@@ -9,7 +9,7 @@ import json
 import sys
 from typing import Any
 
-# Exit codes (see docs/superpowers/plans/2026-05-11-cymatix-cli-v1.md).
+# Exit codes (see docs/archive/superpowers/plans/2026-05-11-cymatix-cli-v1.md).
 EXIT_OK = 0
 EXIT_ERROR = 1
 EXIT_BAD_ARGS = 2          # argparse hands this out itself

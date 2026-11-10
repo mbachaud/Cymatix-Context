@@ -3,7 +3,7 @@
 - **Reviews:** [`docs/design/2026-07-06-jspace-splat-roadmap.md`](2026-07-06-jspace-splat-roadmap.md)
 - **New inputs:** Anthropic, *A Global Workspace in Language Models* (Transformer Circuits, Feb 2026, `transformer-circuits.pub/2026/workspace`); a Gemini Deep-Research literature sweep (*"Aligning Retrieval Geometry with the Transformer Residual Stream"*, provided 2026-07-06 — the share link was client-rendered and unfetchable, content pasted by the operator).
 - **Grounding:** our own empirical work of 2026-07-06 — SIKE Run-2 (fts-depth × fusion), the `content_has_answer` metric fix, and the splice-truncation root-cause. See [`docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md`](../benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md) and [`docs/benchmarks/2026-07-06-faithfulness-experiment-runbook.md`](../benchmarks/2026-07-06-faithfulness-experiment-runbook.md).
-- **Status:** advisory — the shared evidence base for the roadmap council (see `docs/councils/2026-07-06-jspace-roadmap-council.md`).
+- **Status:** advisory — the shared evidence base for the roadmap council (see `docs/archive/councils/2026-07-06-jspace-roadmap-council.md`).
 
 ---
 

@@ -85,7 +85,7 @@ _SEMA_CODEC = None
 def _get_codec():
     global _SEMA_CODEC
     if _SEMA_CODEC is None:
-        from cymatix_context.sema import SemaCodec
+        from cymatix_context.backends.sema import SemaCodec
         _SEMA_CODEC = SemaCodec()
     return _SEMA_CODEC
 

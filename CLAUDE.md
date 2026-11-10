@@ -1,6 +1,6 @@
 # Cymatix Context
 
-Knowledge-store-based context compression for local LLMs. v0.10.0 (clean break in 0.8.5: renamed from helix-context in July 2026; the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
+Knowledge-store-based context compression for local LLMs. v0.11.4 (clean break in 0.8.5: renamed from helix-context in July 2026; the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
 
 ## Quick Start
 
@@ -157,7 +157,7 @@ GET  /vault/status         — Obsidian vault export state
 ## Testing
 
 ```bash
-# ~4,165 tests, no external services needed
+# ~5,900 tests (~9 min serial), no external services needed
 python -m pytest tests/ -m "not live" -v
 
 # Live tests (requires Ollama running)

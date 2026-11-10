@@ -127,7 +127,7 @@ is not present in the new set.
 | `bookkeeper_version` | `0.13.0` | `BookKeeper/pyproject.toml`, `bookkeeper/cli.py`, `CLAUDE.md`, `README.md` | pyproject `version = "0.13.0b"`; CLI `__version__`; CLAUDE phase ladder. |
 | `bookkeeper_test_count` | `507` | `BookKeeper/README.md` | Sole authoritative claim ("507 tests passing"). |
 | `bookkeeper_backup_interval` | `1200` | `BookKeeper/bookkeeper.toml` | `[backup] interval_secs = 1200  # 20 minutes`. |
-| `cosmictasha_template_count` | `14` | `CosmicTasha/README.md`, `docs/superpowers/plans/2026-04-07-auth-biged-templates.md`, `web/src/lib/compliance-kb/soc2/templates/index.ts` | README repo-tour table; plan doc; the templates index module. |
+| `cosmictasha_template_count` | `14` | `CosmicTasha/README.md`, `docs/archive/superpowers/plans/2026-04-07-auth-biged-templates.md`, `web/src/lib/compliance-kb/soc2/templates/index.ts` | README repo-tour table; plan doc; the templates index module. |
 | `cosmictasha_default_model` | `qwen3:8b` | `CosmicTasha/README.md`, `.github/workflows/ci.yml` | README env-var table and CI matrix both pin `qwen3:8b`. |
 | `cosmictasha_biged_port` | `5555` | `CosmicTasha/README.md`, `docker-compose.yml`, `.github/workflows/ci.yml` | All three set `BIGED_URL=https://localhost:5555`. |
 | `cosmictasha_auth_library` | `Lucia` | `CosmicTasha/README.md`, `.planning/03-architecture-decisions.md` | README architecture bullet; ADR-006 captures the decision rationale. |
@@ -137,12 +137,12 @@ is not present in the new set.
 | `scorerift_pkg_version` | `2.0.0` | `two-brain-audit/pyproject.toml` | `version = "2.0.0"` — note v1.0.0 plan docs exist but pyproject is authoritative. |
 | `mek_version` | `0.1.3` | `MaxExpressKit/package.json`, `pyproject.toml`, `marketplace.json` | All three pin `0.1.3`; marketplace.json is the install entry. |
 | `mek_min_python` | `3.11` | `MaxExpressKit/pyproject.toml` | `requires-python = ">=3.11"`. |
-| `mek_source_apps` | `three` | `MaxExpressKit/README.md`, `docs/superpowers/specs/2026-05-10-mek-design.md` | "distilled from three full apps (CosmicTasha, ScoreRift, BookKeeper)". |
+| `mek_source_apps` | `three` | `MaxExpressKit/README.md`, `docs/archive/superpowers/specs/2026-05-10-mek-design.md` | "distilled from three full apps (CosmicTasha, ScoreRift, BookKeeper)". |
 | `biged_dashboard_port` | `5555` | `Education/README.md`, `DEVELOPMENT.md` | "Real-time web UI at localhost:5555"; DEVELOPMENT health-check curl. |
 | `biged_ram_ceiling` | `97` | `Education/fleet/fleet.toml`, `CLAUDE.md`, `FRAMEWORK_BLUEPRINT.md` | toml `ram_ceiling_pct = 97`; CLAUDE & blueprint state same. |
 | `biged_max_workers` | `14` | `Education/fleet/fleet.toml`, `biged-rs/tests/contract_test.rs` | toml `max_workers = 14`; Rust contract test pins the same value. |
 | `biged_core_agents` | `4` | `Education/README.md`, `ROADMAP.md`, `docs/flowcharts/boot_sequence.txt` | README feature bullet; ROADMAP dynamic-scaling section; ASCII boot diagram. |
-| `biged_audit_dimensions` | `12` | `Education/CLAUDE.md`, `ROADMAP.md`, `docs/superpowers/plans/ray_trace_plan.md` | CLAUDE docs-pointer table; ROADMAP audit-coverage check; ray_trace plan's BigEd graph. |
+| `biged_audit_dimensions` | `12` | `Education/CLAUDE.md`, `ROADMAP.md`, `docs/archive/superpowers/plans/ray_trace_plan.md` | CLAUDE docs-pointer table; ROADMAP audit-coverage check; ray_trace plan's BigEd graph. |
 | `biged_db_tables` | `34` | `Education/CLAUDE.md`, `AUDIT_TRACKER.md`, `AUDIT_TRACKER_COMPLIANCE_REPORT.md` | Fleet-status banner duplicated across the three. |
 | `biged_thermal_target` | `75` | `Education/fleet/fleet.toml`, `FRAMEWORK_BLUEPRINT.md` | toml `cooldown_target_c = 75`; blueprint thermal section. |
 | `biged_vision_model` | `llava` | `Education/fleet/fleet.toml`, `biged-rs/tests/contract_test.rs` | toml `vision_model = "llava"`; Rust contract test pins same. |
@@ -160,7 +160,7 @@ is not present in the new set.
 | `helix_calibration_staleness` | `30` | `helix-context/helix.toml`, `docs/specs/2026-05-08-stage-6-know-miss-blocks.md` | `[know] stale_after_days = 30`; Stage-4 spec §9. |
 | `helix_dense_encoder` | `BGE-M3` | `helix-context/CLAUDE.md`, `README.md`, `helix.toml` | CLAUDE pipeline description; README how-it-works; toml retrieval section comment. |
 | `helix_filename_anchor` | `4.0` | `helix-context/helix.toml`, `docs/config-reference.md` | `[retrieval] filename_anchor_weight = 4.0`; config-reference duplicate. |
-| `helix_subpackages_count` | `16` | `helix-context/CLAUDE.md`, `docs/superpowers/plans/2026-05-13-readme-v3-plan.md` | CLAUDE post-PR#90 package-structure table heading. |
+| `helix_subpackages_count` | `16` | `helix-context/CLAUDE.md`, `docs/archive/superpowers/plans/2026-05-13-readme-v3-plan.md` | CLAUDE post-PR#90 package-structure table heading. |
 
 ### Headline expansion
 

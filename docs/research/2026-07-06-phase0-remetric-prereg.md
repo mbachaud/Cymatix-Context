@@ -4,7 +4,7 @@
 Phase 1a whitening A/B result per council move #5 (*"Only then, the
 re-scoped Phase 0 re-metric probe… pre-registered against whitened
 BGE-M3 on a pinned fp16 model with a real parent — costed as research"*,
-docs/councils/2026-07-06-jspace-roadmap-council.md).
+docs/archive/councils/2026-07-06-jspace-roadmap-council.md).
 
 ## What this is — and is not
 

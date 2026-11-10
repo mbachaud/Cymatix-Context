@@ -12,6 +12,7 @@ packages = ["cymatix_context"]
 exclude = [
     "/benchmarks",
     "/docs/research/data",
+    "/archive",
 ]
 
 [project]
