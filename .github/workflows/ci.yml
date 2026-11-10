@@ -169,7 +169,7 @@ jobs:
         run: pytest tests/ -m "not live" -q -rs
 
   test-macos-mps:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
@@ -183,7 +183,7 @@ jobs:
       # The MPS smoke test is the integration check this platform job adds.
       #
       # PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 disables PyTorch's internal MPS
-      # memory ceiling. On the GHA macos-14 runner the default ceiling is
+      # memory ceiling. On the GHA macOS arm64 runner (seen on macos-14) the default ceiling is
       # too tight and trips on tiny allocations even when ~7 GiB is free.
       # This is the documented workaround
       # (https://pytorch.org/docs/stable/notes/mps.html).
