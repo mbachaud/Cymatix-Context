@@ -40,6 +40,16 @@ def test_launcher_tray_extra_includes_pywin32_with_windows_marker():
     )
 
 
+def test_sdist_excludes_non_package_trees():
+    """Bench receipts, research data and retired scripts are repo
+    artifacts, not package sources. Each would bloat the sdist."""
+    with PYPROJECT.open("rb") as f:
+        spec = tomllib.load(f)
+    exclude = spec["tool"]["hatch"]["build"]["targets"]["sdist"]["exclude"]
+    for tree in ("/benchmarks", "/docs/research/data", "/archive"):
+        assert tree in exclude, f"{tree} must be excluded from the sdist"
+
+
 def test_all_extra_includes_platformdirs():
     """[all] (the meta-extra) keeps the extras-matrix sensible by
     including everything from individual extras."""

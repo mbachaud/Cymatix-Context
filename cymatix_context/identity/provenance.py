@@ -8,14 +8,14 @@ questions. Without these fields, every packet item degrades to
 
 This module centralizes the inference rules so that:
 
-- ``scripts/backfill_gene_provenance.py`` (retroactive sweep) and
+- ``archive/scripts/backfill_gene_provenance.py`` (retroactive sweep) and
 - ``CymatixContextManager.ingest`` (steady-state population)
 
 share the same logic. Changing an extension -> kind mapping here flows
 through both paths without drift.
 
 See also:
-    - ``scripts/backfill_gene_provenance.py`` - initial sweep
+    - ``archive/scripts/backfill_gene_provenance.py`` - initial sweep
     - ``cymatix_context/schemas.py::Gene`` - target fields
     - ``cymatix_context/context_packet.py`` - consumer
 """
