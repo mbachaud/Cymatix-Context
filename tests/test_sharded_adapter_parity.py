@@ -221,6 +221,7 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # of these off cymatix.genome, move them out of the whitelist and
     # mirror them.
     "apply_density_gate", "compute_density_score", "corpus_size",
+    "_invalidate_corpus_size",  # corpus_size's own write-path invalidator
     "emit_wal_health_gauges", "get_relations", "store_relation",
     "mark_verified", "upsert_calibration", "reassemble",
 })
