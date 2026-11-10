@@ -228,7 +228,7 @@ def _get_sema_codec():
     """Lazy-load the SemaCodec. First call may download MiniLM weights."""
     global _SEMA_CODEC
     if _SEMA_CODEC is None:
-        from cymatix_context.sema import SemaCodec
+        from cymatix_context.backends.sema import SemaCodec
         _SEMA_CODEC = SemaCodec()
     return _SEMA_CODEC
 
@@ -460,7 +460,7 @@ def cell_cymatix_full_stack(client: httpx.Client, needle: dict,
     # DAG: resolve claims for every gene the packet touched
     resolved_claims: list[dict] = []
     try:
-        from cymatix_context.claims_graph import resolve_from_packet
+        from cymatix_context.identity.claims_graph import resolve_from_packet
         from cymatix_context.shard_schema import open_main_db
         main_db = open_main_db(MAIN_DB_PATH)
         try:

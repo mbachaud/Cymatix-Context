@@ -198,7 +198,7 @@ def do_sweep(conn: sqlite3.Connection) -> int:
     # Now import and run sweep_buckets
     repo_root = Path(__file__).resolve().parent.parent
     sys.path.insert(0, str(repo_root))
-    from cymatix_context import cwola
+    from cymatix_context.identity import cwola
     updates = cwola.sweep_buckets(conn)
     log.info("sweep_buckets assigned %d new bucket labels", updates)
     return updates

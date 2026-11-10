@@ -857,7 +857,8 @@ breakout). See Stage 7 spec §11 for the round-trip mapping between
    replica snapshot under `[genome] replicas`.
 4. Re-ingest from source paths: each document carries a `source_id`
    pointing back at the file or URL it was extracted from. Bulk path:
-   `python scripts/ingest_all.py <source_root>` against the recovered
+   `cymatix ingest <source_root> --recursive` (or
+   `python scripts/ingest_all.py --sources <source_root>=<label>`) against the recovered
    knowledge store. Single-source: POST `/consolidate` (Runbook 6), which uses
    each document's `source_id` fingerprint to rewrite the body.
 5. Re-run all three calibration runbooks — the `genome_calibration`

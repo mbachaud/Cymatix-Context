@@ -47,7 +47,7 @@ import sqlite3
 from typing import Dict, Iterable, List, Optional, Tuple, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .genome import Genome
+    from ..genome import Genome
 
 log = logging.getLogger("cymatix.seeded_edges")
 

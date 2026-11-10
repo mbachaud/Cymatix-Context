@@ -50,7 +50,7 @@ try:
 except Exception:
     pass
 
-from cymatix_context.provenance import infer_source_kind, infer_volatility
+from cymatix_context.identity.provenance import infer_source_kind, infer_volatility
 
 DEFAULT_GENOME = "F:/Projects/cymatix-context/genomes/main/genome.db"
 
