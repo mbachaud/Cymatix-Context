@@ -973,8 +973,19 @@ class TestInstallCompletionWatcher:
         icon._auto_restart_launcher.assert_not_called()
 
 
+def test_tray_bat_name_matches_the_tracked_file_exactly():
+    """The auto-restart relaunches a repo-root .bat by name. Windows path
+    lookups ignore case, so compare against the real directory listing:
+    a case mismatch would only break on a case-sensitive filesystem."""
+    import os
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parent.parent
+    assert tray_mod.TRAY_BAT_NAME in os.listdir(repo_root)
+
+
 class TestAutoRestart:
-    """On Windows the auto-restart path spawns Start-cymatix-tray.bat in
+    """On Windows the auto-restart path spawns start-cymatix-tray.bat in
     a fully detached process (DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP)
     so the new tray survives the dying one, then calls icon.stop() to wind
     down the current tray cleanly."""
@@ -986,7 +997,7 @@ class TestAutoRestart:
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        bat = repo_root / "Start-cymatix-tray.bat"
+        bat = repo_root / "start-cymatix-tray.bat"
         bat.write_text("@echo on\n")
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 
@@ -999,7 +1010,7 @@ class TestAutoRestart:
         cmd = args[0]
         # First element is the bat path.
         from pathlib import Path
-        assert Path(cmd[0]).name == "Start-cymatix-tray.bat"
+        assert Path(cmd[0]).name == "start-cymatix-tray.bat"
         # Detach flags: DETACHED_PROCESS (0x08) | CREATE_NEW_PROCESS_GROUP (0x200) = 0x208.
         cf = kwargs.get("creationflags", 0)
         DETACHED_PROCESS = 0x00000008
@@ -1018,7 +1029,7 @@ class TestAutoRestart:
         icon._icon.stop.assert_called_once()
 
     def test_auto_restart_skips_if_bat_missing(self, tmp_path, monkeypatch):
-        """If Start-cymatix-tray.bat doesn't exist, auto-restart logs a
+        """If start-cymatix-tray.bat doesn't exist, auto-restart logs a
         warning and skips — icon.stop is NOT called (don't kill the
         current tray when we can't bring up a replacement)."""
         monkeypatch.setattr(tray_mod.sys, "platform", "win32")
@@ -1042,7 +1053,7 @@ class TestAutoRestart:
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        bat = repo_root / "Start-cymatix-tray.bat"
+        bat = repo_root / "start-cymatix-tray.bat"
         bat.write_text("@echo on\n")
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 

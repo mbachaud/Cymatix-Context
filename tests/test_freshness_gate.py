@@ -475,21 +475,11 @@ def test_genome_mark_verified_noop_under_read_only(tmp_path):
 # §13 case 7 — unknown freshness is neutral
 # ─────────────────────────────────────────────────────────────────────
 
-def test_unknown_freshness_treated_as_neither_fresh_nor_stale():
+def test_unknown_freshness_keeps_know_block_emittable(tmp_path):
     """Spec §13 case 7: ``last_verified_at IS NULL`` means freshness is
     "unknown". A strong score gap still emits KnowBlock; β5 contributes
     zero (neutral) rather than max-stale.
     """
-    cache: dict[str, tuple[float, float]] = {}
-    gene = _make_gene("g1", decay=0.9, source_id="/nonexistent/file")
-    gene.last_verified_at = None  # legacy row
-    # File doesn't exist at the synthetic path — should land on
-    # "missing" not "unknown" actually. To get "unknown" we need
-    # ``last_verified_at`` to be None AND the file to exist.
-    # Use a real tmp file:
-
-
-def test_unknown_freshness_keeps_know_block_emittable(tmp_path):
     src = tmp_path / "legacy.txt"
     src.write_text("legacy content")
     cache: dict[str, tuple[float, float]] = {}
