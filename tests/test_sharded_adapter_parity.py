@@ -123,6 +123,12 @@ REQUIRED_CALLER_SURFACE = frozenset({
 # it with a comment.
 
 ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
+    # Per-query timing map and Tier-5 pool size: class-level on
+    # KnowledgeStore since they became LastQueryValue descriptors. The
+    # adapter does not aggregate them across shards, and the manager reads
+    # both with a None default (own_last / getattr).
+    "last_signal_timings", "last_pool_total",
+
     # Chromatin tier sentinels — adapter has no chromatin lifecycle,
     # per-shard Genomes own theirs.
     "TIER_EUCHROMATIN", "TIER_HETEROCHROMATIN", "TIER_OPEN",

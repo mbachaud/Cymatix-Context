@@ -35,6 +35,7 @@ if TYPE_CHECKING:
 
     from .backends.bgem3_codec import BGEM3Codec
 
+from .request_scoped import LastQueryValue, own_last
 from .serialized_conn import SerializedConnection
 from .accel import (
     json_loads,
@@ -620,6 +621,14 @@ def _rerank_doc_text(doc) -> str:
 
 class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
+
+    # Published by every query. Each is global on read and also recorded
+    # per thread on write; pipeline readers use own_last() to get the value
+    # their own query published (see request_scoped.py).
+    last_query_scores = LastQueryValue()
+    last_tier_contributions = LastQueryValue()
+    last_signal_timings = LastQueryValue()
+    last_pool_total = LastQueryValue()
 
     def __init__(
         self,
@@ -1700,8 +1709,12 @@ class KnowledgeStore:
             # Expose similarity scores via last_query_scores for the
             # caller (context_manager uses this for tier-budget decisions)
             with self._last_query_scores_lock:
+                # This thread's own map (query_docs ran on this thread just
+                # before); the plain attribute may already be another
+                # request's.
+                _own_scores = own_last(self, "last_query_scores")
                 for gid, sim in selected_sims.items():
-                    self.last_query_scores[gid] = sim
+                    _own_scores[gid] = sim
 
             return genes
         except Exception:
@@ -5150,7 +5163,7 @@ class KnowledgeStore:
         # the signal map the inner query_docs just published, so one read
         # of last_signal_timings covers the whole ANN retrieval.
         with self._last_query_scores_lock:
-            _merged = dict(getattr(self, "last_signal_timings", None) or {})
+            _merged = dict(own_last(self, "last_signal_timings") or {})
             _merged["ann_dense_leg"] = _merged.get("ann_dense_leg", 0.0) + _ann_dense_ms
             _merged["ann_body_fetch"] = _merged.get("ann_body_fetch", 0.0) + _ann_body_ms
             self.last_signal_timings = _merged
@@ -5234,7 +5247,7 @@ class KnowledgeStore:
                     d.gene_id for d, _ in scored if d.gene_id not in _in_cand
                 ]
             with self._last_query_scores_lock:
-                _m = dict(getattr(self, "last_signal_timings", None) or {})
+                _m = dict(own_last(self, "last_signal_timings") or {})
                 _m["xenc_rerank"] = (
                     _m.get("xenc_rerank", 0.0) + (time.monotonic() - _xenc_t0) * 1000.0
                 )

@@ -33,6 +33,8 @@ import math
 import os
 import threading
 from concurrent.futures import ThreadPoolExecutor
+
+from .request_scoped import LastQueryValue, own_last
 from typing import Dict, List, Optional, Tuple
 
 from .genome import Genome
@@ -654,6 +656,9 @@ class ShardRouter:
     lands in Task 6).
     """
 
+    last_query_scores = LastQueryValue()
+    last_tier_contributions = LastQueryValue()
+
     def __init__(self, main_path: str, **genome_kwargs):
         """Open main.db. Shard KnowledgeStores open lazily on first access.
 
@@ -1089,8 +1094,8 @@ class ShardRouter:
 
             # Snapshot per-query introspection NOW — it is instance state that
             # a later query on the same shard would overwrite.
-            scores_snapshot = dict(shard.last_query_scores)
-            tiers_src = shard.last_tier_contributions
+            scores_snapshot = dict(own_last(shard, "last_query_scores") or {})
+            tiers_src = own_last(shard, "last_tier_contributions") or {}
             tiers_snapshot = {
                 doc.gene_id: dict(tiers_src.get(doc.gene_id, {})) for doc in genes
             }
