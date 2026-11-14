@@ -6,7 +6,7 @@ This document describes the local federation primitive shipped 2026-04-12.
 It captures **4-layer** identity attribution for every ingested document
 with zero auth infrastructure — using OS environment as the source of
 truth. It's the on-ramp to the full enterprise federation model in
-[`ENTERPRISE.md`](ENTERPRISE.md): same schema, different ID resolver.
+[`ENTERPRISE.md`](../archive/positioning/ENTERPRISE.md): same schema, different ID resolver.
 
 ---
 
@@ -87,7 +87,7 @@ forensics:
 Terminology note: the canonical schema names remain `org`, `party`,
 `participant`, and `agent`. In prose we may gloss them as trust root,
 physical substrate, human principal, and software actor respectively.
-See [`ROSETTA.md`](ROSETTA.md) for the translation layer.
+See [`ROSETTA.md`](../ROSETTA.md) for the translation layer.
 
 ## Schema
 
@@ -199,7 +199,7 @@ The same `CYMATIX_DEVICE` env var is read by two consumers, and they
 parse it differently. The overload is intentional and safe — this
 section documents the parse rules so operators don't have to read
 both consumers' code. Design decision recorded in
-[ADR 2026-05-14](../adr/2026-05-14-spec-vs-code-design-decisions.md#q1-cymatix_device-overloaded-between-hardware-picker-and-federation-attribution).
+[ADR 2026-05-14](adr/2026-05-14-spec-vs-code-design-decisions.md#q1-cymatix_device-overloaded-between-hardware-picker-and-federation-attribution).
 
 | Consumer | Source | Parse rule |
 |---|---|---|
@@ -356,7 +356,7 @@ SELECT party_id, COUNT(*) FROM gene_attribution
    logging is in `hitl_events` infrastructure but not yet auto-populated.
 
 These gaps are exactly what the enterprise edge layer in
-[`ENTERPRISE.md`](ENTERPRISE.md) addresses. The local-first design here
+[`ENTERPRISE.md`](../archive/positioning/ENTERPRISE.md) addresses. The local-first design here
 is the runway, not the runway's destination.
 
 ## Migration story when SSO arrives

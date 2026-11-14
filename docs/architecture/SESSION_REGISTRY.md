@@ -10,7 +10,7 @@ commit-level trail. Remaining work is post-landing refinement, not
 core implementation.
 **Target version:** `cymatix-context v0.4.0b1`.
 **Depends on:** nothing — purely additive to v0.3.0b5.
-**Related:** [`RESTART_PROTOCOL.md`](RESTART_PROTOCOL.md) (complementary — restart
+**Related:** [`RESTART_PROTOCOL.md`](../ops/RESTART_PROTOCOL.md) (complementary — restart
 protocol announces outages, session registry announces presence).
 
 ## Status — what shipped
@@ -94,7 +94,7 @@ Terminology note: in the 4-layer authored-ingest model, `participant` refers
 to the human principal and `agent` to the software actor working on that
 human's behalf. The session registry predates that fuller split, so older
 registry prose may describe a live Claude session itself as a participant.
-That historical wording remains readable; see [`ROSETTA.md`](ROSETTA.md) and
+That historical wording remains readable; see [`ROSETTA.md`](../ROSETTA.md) and
 [`FEDERATION_LOCAL.md`](FEDERATION_LOCAL.md) for the current crosswalk.
 
 **Why this layering?** Shamir Secret Sharing and threshold-cryptography
@@ -652,7 +652,7 @@ testable unit.
 
 ## Related
 
-- [`RESTART_PROTOCOL.md`](RESTART_PROTOCOL.md) — how multiple sessions handle
+- [`RESTART_PROTOCOL.md`](../ops/RESTART_PROTOCOL.md) — how multiple sessions handle
   server restarts. Complementary: restart protocol is about absence, session
   registry is about presence.
 - [Discussion #5 — Shamir Secret Sharing exploration](https://github.com/SwiftWing21/cymatix-context/discussions/5)

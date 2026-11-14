@@ -3,7 +3,7 @@
 This directory holds Cymatix Context's benchmark harness — the scripts that
 measure retrieval correctness, compression ratio, cache hit-rate, latency,
 and end-to-end agent answer quality against frozen genome fixtures. It has
-~40 scripts and no single entry point; this README orients a reader and
+~90 scripts and no single entry point; this README orients a reader and
 points at the pieces that matter. Most benches assume a running Cymatix
 server (`cymatix-server`, port 11437) and read from `genomes/`.
 

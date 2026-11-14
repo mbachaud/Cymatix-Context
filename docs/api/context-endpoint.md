@@ -8,7 +8,10 @@ post-2026-05-10 7-stage retrieval-fix surface.
 
 All file references link to the cymatix-context repository. Pydantic models
 are at [`cymatix_context/schemas.py`](../../cymatix_context/schemas.py); route
-handlers are at [`cymatix_context/server.py`](../../cymatix_context/server.py).
+handlers are at [`cymatix_context/server/routes_context.py`](../../cymatix_context/server/routes_context.py).
+Inline `server.py:NNNN` line references below predate the PR #90 split of
+`server.py` into the `server/` package; search `server/routes_context.py` for
+the named function instead of trusting the line number.
 
 ---
 
@@ -49,9 +52,9 @@ SQL-and-numpy code from the post-fusion score map.
 
 `POST /context` accepts a JSON object. All fields are optional except
 `query`. Fields marked **(verified)** are read by
-[`server.py:1010-1170`](../../cymatix_context/server.py#L1010);
+[`server/routes_context.py`](../../cymatix_context/server/routes_context.py);
 fields documented from `_request_read_only` are at
-[`server.py:1000-1008`](../../cymatix_context/server.py#L1000).
+[`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 
 | Field | Type | Default | Semantics |
 |---|---|---|---|
@@ -445,7 +448,7 @@ Templates at
 
 When legibility headers are enabled, each delivered document is preceded by
 a single bracketed line emitted by `format_gene_header` at
-[`legibility.py:122-157`](../../cymatix_context/legibility.py#L122):
+[`legibility.py:122-157`](../../cymatix_context/encoding/legibility.py#L122):
 
 ```
 [gene=<short_id> <symbol> fired=<tier1>:<score1>,... <chars→compressed>]
@@ -527,7 +530,7 @@ schemas, follow the route handler line numbers.
 
 ### 9.1 `POST /context/packet` — agent-safe evidence packet
 
-Handler: [`server.py:1461-1544`](../../cymatix_context/server.py#L1461).
+Handler: [`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 Request fields: `query` (required), `task_type` (default `"explain"`),
 `max_genes` (default 8, clamped to `[1, 32]`), `clean`, `read_only`,
 `include_raw` (default `false` — when true, item content is the full
@@ -542,7 +545,7 @@ Response is a `ContextPacket` dict (see
 
 ### 9.2 `POST /context/refresh-plan` — refresh-only convenience
 
-Handler: [`server.py:1546-1593`](../../cymatix_context/server.py#L1546).
+Handler: [`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 Thin wrapper over `get_refresh_targets`; returns
 `{"query", "task_type", "refresh_targets": [RefreshTarget...],
 "response_mode": "refresh_plan"}`. Useful when the caller already has
@@ -551,7 +554,7 @@ Honors `clean` / `read_only` identically to `/context`.
 
 ### 9.3 `POST /fingerprint` — navigation-first payload
 
-Handler: [`server.py:1595-1825`](../../cymatix_context/server.py#L1595).
+Handler: [`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 Request fields: `query` (required), `profile`
 (`"fast" | "balanced" | "quality"`, default from
 `config.context.fingerprint_mode_profile`), `include_cold`,
@@ -595,7 +598,7 @@ the body of `/consolidate` itself.
 
 ### 9.5 `POST /sessions/register` — participant registration
 
-Handler: [`server.py:2239-2320`](../../cymatix_context/server.py#L2239).
+Handler: [`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 Required body fields: `party_id`, `handle` (both must be non-null
 strings, ≥3 chars, no NULL bytes). Optional: `workspace`, `pid`,
 `capabilities`, `metadata`, `display_name`, `agent_kind`, `mcp_host`,
@@ -605,14 +608,14 @@ for `party_id`. Returns `{"participant_id", "party_id",
 
 ### 9.6 `POST /admin/refresh` — reopen knowledge store connection
 
-Handler: [`server.py:2805-2810`](../../cymatix_context/server.py#L2805).
+Handler: [`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 No body. Reopens the knowledge store connection so external changes
 (deletions, thinning) become visible. Returns
 `{"refreshed": true, "genes": <new_count>}`.
 
 ### 9.7 `POST /admin/vacuum` — reclaim SQLite pages
 
-Handler: [`server.py:2812-2828`](../../cymatix_context/server.py#L2812).
+Handler: [`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 No body. Runs SQLite `VACUUM` to compact the knowledge store file after
 thinning, compaction, or large-scale deletions. Blocks all writers
 during the operation — run during maintenance windows. Returns
@@ -621,7 +624,7 @@ with `{"ok": false, "error": str}`.
 
 ### 9.8 `GET /health` — readiness + provenance
 
-Handler: [`server.py:2694-2788`](../../cymatix_context/server.py#L2694).
+Handler: [`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 Returns `status` (`"ok" | "degraded"`), `message`, `ribosome` model,
 `ribosome_backend`, `ribosome_configured_backend`, `ribosome_cost_class`,
 `genes` (total count), `upstream` URL, `upstream_reachable`, a
@@ -631,7 +634,7 @@ Returns `status` (`"ok" | "degraded"`), `message`, `ribosome` model,
 
 ### 9.9 `GET /stats` — knowledge store metrics
 
-Handler: [`server.py:1829-1838`](../../cymatix_context/server.py#L1829).
+Handler: [`server/routes_context.py`](../../cymatix_context/server/routes_context.py).
 Returns `cymatix.stats()` — knowledge store metrics, compression ratio, per-tier
 counters. Cheap synchronous DB read; safe to poll.
 
@@ -805,7 +808,7 @@ The `agent` block in every `/context` response carries
 `ann_threshold_mode` and `abstain_mode` so the agent can see WHICH
 calibration set the response was produced under without an extra
 `/health` roundtrip
-([`server.py:1349-1350`](../../cymatix_context/server.py#L1349)).
+([`server/routes_context.py`](../../cymatix_context/server/routes_context.py)).
 
 **Freshness signals.** Three fields on `ContextHealth`
 ([`schemas.py:182-184`](../../cymatix_context/schemas.py#L182)) replace
@@ -826,7 +829,7 @@ but `freshness_min < 0.5`, `know.soft_stale = true` and
 `agent.recommendation = "refresh"`. The agent MAY answer from the
 knowledge store (top-1 is fresh) AND should plan a refresh of lower-ranked
 supporting documents on its own schedule
-([`server.py:1310-1319`](../../cymatix_context/server.py#L1310)).
+([`server/routes_context.py`](../../cymatix_context/server/routes_context.py)).
 
 **Refresh tool layer.** `MissBlock.refresh_targets` is the contract
 surface for the agent's refresh tool layer. Each entry is an absolute

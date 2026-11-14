@@ -286,18 +286,18 @@ for the full results table.
 
 ## Companion docs
 
-- [`MUSIC_OF_RETRIEVAL.md`](MUSIC_OF_RETRIEVAL.md) — the 12-signal +
+- [`MUSIC_OF_RETRIEVAL.md`](../archive/research/MUSIC_OF_RETRIEVAL.md) — the 12-signal +
   octave-gate periodicity that creates the multi-axis structure
-- [`FEDERATION_LOCAL.md`](FEDERATION_LOCAL.md) — the 4-layer attribution
+- [`FEDERATION_LOCAL.md`](../architecture/FEDERATION_LOCAL.md) — the 4-layer attribution
   axes (org / device / user / agent / tz)
-- [`PIPELINE_LANES.md`](PIPELINE_LANES.md) — full ingest + query data flow
+- [`PIPELINE_LANES.md`](../architecture/PIPELINE_LANES.md) — full ingest + query data flow
 - [`BENCHMARKS.md`](BENCHMARKS.md) — practical bench harness reference
 - [`GENOME_FIXTURE_MATRIX.md`](GENOME_FIXTURE_MATRIX.md) — fixture roots,
   including the EnterpriseRAG-Bench family that backs Layer 3
 
 ## Companion bench
 
-- [`benchmarks/bench_dimensional_lock.py`](../benchmarks/bench_dimensional_lock.py)
+- [`benchmarks/bench_dimensional_lock.py`](../../benchmarks/bench_dimensional_lock.py)
   — implementation of the 4-variant grid described above. Reuses the
   same KV-harvesting code from `bench_needle_1000.py` so it's directly
   comparable to prior NIAH runs.

@@ -32,7 +32,7 @@ additions since v1:
 - `/context/packet` — the **agent-safe** retrieval surface. Returns
   pointers + `verified / stale_risk / needs_refresh` labels +
   `refresh_targets`, not assembled content. See
-  [`docs/specs/2026-04-17-agent-context-index-build-spec.md`](../specs/2026-04-17-agent-context-index-build-spec.md).
+  [`docs/specs/2026-04-17-agent-context-index-build-spec.md`](../archive/specs/2026-04-17-agent-context-index-build-spec.md).
 - `/context/refresh-plan` — thin convenience over packet; returns only
   the refresh plan.
 - `/fingerprint` — navigation-first retrieval (scores + metadata, no
@@ -408,7 +408,7 @@ The status label encodes the composition:
 
 This is the SIKE pathway-layer identity ("Cymatix weighs, doesn't
 retrieve") implemented. See
-[`docs/specs/2026-04-17-agent-context-index-build-spec.md`](../specs/2026-04-17-agent-context-index-build-spec.md)
+[`docs/specs/2026-04-17-agent-context-index-build-spec.md`](../archive/specs/2026-04-17-agent-context-index-build-spec.md)
 for the authoritative design.
 
 ---
@@ -461,9 +461,9 @@ for the authoritative design.
 
 ## Companion docs
 
-- [`../specs/2026-04-17-agent-context-index-build-spec.md`](../specs/2026-04-17-agent-context-index-build-spec.md) — authoritative packet-mode spec (657 lines)
+- [`../archive/specs/2026-04-17-agent-context-index-build-spec.md`](../archive/specs/2026-04-17-agent-context-index-build-spec.md) — authoritative packet-mode spec (657 lines)
 - [`FEDERATION_LOCAL.md`](FEDERATION_LOCAL.md) — 4-layer + tz attribution model that every ingest writes through
-- [`../research/MUSIC_OF_RETRIEVAL.md`](../research/MUSIC_OF_RETRIEVAL.md) — why the 12 signals + 1 octave gate is the chromatic structure
+- [`../archive/research/MUSIC_OF_RETRIEVAL.md`](../archive/research/MUSIC_OF_RETRIEVAL.md) — why the 12 signals + 1 octave gate is the chromatic structure
 - [`DIMENSIONS.md`](DIMENSIONS.md) — formal retrieval dimension inventory
 - [`../../benchmarks/bench_packet.py`](../../benchmarks/bench_packet.py) — Phase 5 bench source
 - [`../../benchmarks/results/packet_bench_2026-04-18.json`](../../benchmarks/results/packet_bench_2026-04-18.json) — Phase 5 artifact

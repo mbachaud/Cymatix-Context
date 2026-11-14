@@ -74,7 +74,7 @@ with self._dense_matrix_lock:
     self._dense_matrix_ids = list(ids)
 ```
 
-**Hot-tier only.** Dense recall scans hot-tier (lifecycle tier < HETEROCHROMATIN) documents only — matches the existing hot-tier convention at [genome.py:1135](../../helix_context/genome.py#L1135) and [:1182-1184](../../helix_context/genome.py#L1182-L1184). Cold-tier documents are reachable via the separate `query_cold_tier()` path. Stage 7 surfaces cold-tier matches as `MissBlock(reason="cold", refresh_targets=[...])` rather than silently filtering them — see Stage 7 §6.
+**Hot-tier only.** Dense recall scans hot-tier (lifecycle tier < HETEROCHROMATIN) documents only — matches the existing hot-tier convention at [genome.py:1135](../../cymatix_context/genome.py#L1135) and [:1182-1184](../../cymatix_context/genome.py#L1182-L1184). Cold-tier documents are reachable via the separate `query_cold_tier()` path. Stage 7 surfaces cold-tier matches as `MissBlock(reason="cold", refresh_targets=[...])` rather than silently filtering them — see Stage 7 §6.
 
 **Invalidation.** Coverage-based + count-based. After every insert/update path (ingest, persist, consolidate) call `self._invalidate_dense_matrix()` which sets `_dense_matrix=None`. Rebuild is full, not incremental — at 78 MiB and 18.9k rows, full rebuild is ≤ 200 ms and triggered only on first query after an ingest batch. (Incremental append is a future optimisation if ingest QPS rises.) An explicit refresh tick on `/admin/refresh` also calls `_invalidate_dense_matrix(force=True)`.
 

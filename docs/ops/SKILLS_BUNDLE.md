@@ -210,5 +210,5 @@ When federation ships, the bundle extends:
 ```
 
 This is the D7 (document attribution) dependency. Until `gene_attribution` has data
-flowing, federation is schema-only. See [DIMENSIONS.md](DIMENSIONS.md) for the
+flowing, federation is schema-only. See [DIMENSIONS.md](../architecture/DIMENSIONS.md) for the
 lane graph.

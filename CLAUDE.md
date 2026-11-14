@@ -1,6 +1,6 @@
 # Cymatix Context
 
-Knowledge-store-based context compression for local LLMs. v0.10.0 (clean break in 0.8.5: renamed from helix-context in July 2026; the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
+Knowledge-store-based context compression for local LLMs. Version: see `pyproject.toml` (released tags are on `master`; `beta` may be ahead). (Clean break in 0.8.5: renamed from helix-context in July 2026; the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
 
 ## Quick Start
 
@@ -77,6 +77,14 @@ After the repo restructure, `cymatix_context/` is organized into 17 sub-packages
 Top-level modules: `context_manager.py` (pipeline orchestrator), `config.py` (TOML loader), `schemas.py` (Pydantic models), `knowledge_store.py` (SQLite DDL + retrieval), `codons.py` (chunker + encoder), `tagger.py` (CPU ingest tagger).
 
 **Biology-lexicon shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `mcp_server.py` re-export from their new locations (`server` is the `server/` package itself, whose `__init__.py` keeps the old `cymatix_context.server` import names) (the domain metaphor, not the helix brand). See the wiki Lexicon page (docs/ROSETTA.md is a stub) for the full biology-to-software lexicon. The `helix_context` alias package was removed in 0.8.5 — import `cymatix_context`.
+
+## Branches and sibling repos
+
+- **`beta` is the default and integration branch.** Open PRs against `beta`. `master` holds released code only (`release/vX.Y.Z` and `hotfix/*` merge there). "Latest build" means `origin/beta`. See `CONTRIBUTING.md` and `docs/RELEASING.md`.
+- **Receipts are not in this repo.** Benchmark receipt trees under `benchmarks/dogfood/receipts/` were untracked in `e034010` and live in **`mbachaud/cymatix-receipts`** (`mirror/` = exported tracked receipts, `untracked/` = receipts that were never committed here; rebuild its `index.json` with its `scripts/build_index.py`). A receipt path cited in a doc resolves there, or via `git show <old-sha>:<path>` here.
+- **`mbachaud/cymatix-website`** serves cymatixcontext.com. Its `public/wiki/` is generated from this repo's `wiki/` by `scripts/build_wiki_site.py`. Edit the wiki here, never there.
+- **`addiplus/cc-exchange`** is the shared Joe/Max bench exchange (run requests, replies, results). It lands on `main` via `bin/exchange-push.sh`; read its `CLAUDE.md` before writing.
+- **Where things are:** `docs/README.md` maps the docs tree, `benchmarks/README.md` maps the harnesses, and `docs/benchmarks/BASELINES.md` holds the current baselines. The `wiki/` pages are the user-facing reference and are kept current; dated docs under `docs/` are point-in-time records.
 
 ## Configuration
 
@@ -157,7 +165,7 @@ GET  /vault/status         — Obsidian vault export state
 ## Testing
 
 ```bash
-# ~4,165 tests, no external services needed
+# ~5,000 tests (count drifts; `pytest --co -q | tail -1`), no external services needed
 python -m pytest tests/ -m "not live" -v
 
 # Live tests (requires Ollama running)
@@ -185,6 +193,8 @@ See [`docs/architecture/OBSERVABILITY.md`](docs/architecture/OBSERVABILITY.md) f
 
 ## Gotchas
 
+- **Windows-only bench paths:** many scripts under `scripts/` and `benchmarks/` default to `F:\Projects\...` checkouts (some still `helix-context`). On Linux or a cloud VM, pass the corpus and bed paths explicitly. Bench builders may still write SPLADE vectors at ingest even though retrieval keeps it off; check the builder's flags before a long build.
+- **Dates in `git log` lie for old files:** the July 2026 rename sweeps touched almost every file, so "last modified" often means "renamed", not "reviewed".
 - **Knowledge store path:** Default is `genomes/main/genome.db` (not project root). Delete to start fresh; auto-creates on first use.
 - **Synonym map is critical:** If queries return "no relevant context", check that query keywords map to the tags assigned at ingest. Add synonyms in `[synonyms]`.
 - **Stage 2 backfill:** only relevant if you opt in to dense (`[retrieval] dense_embedding_enabled = true`, default off since 2026-08-15). Ingest-time dense writes are also off by default (`[ingestion] dense_embed_on_ingest = false` since 2026-08-19, #371), so BGE-M3 vectors (`embedding_dense_v2`) are NULL until you run `scripts/backfill_bgem3_v2.py` (or re-ingest with the knob on) — the dense tier retrieves nothing without them.

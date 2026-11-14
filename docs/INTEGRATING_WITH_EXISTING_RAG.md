@@ -651,11 +651,11 @@ infrastructure now, measure its value on the right question later.
 
 ## Further reading
 
-- [`docs/specs/2026-04-17-agent-context-index-build-spec.md`](specs/2026-04-17-agent-context-index-build-spec.md)
+- [`docs/specs/2026-04-17-agent-context-index-build-spec.md`](archive/specs/2026-04-17-agent-context-index-build-spec.md)
   — full packet-mode design spec
 - [`benchmarks/bench_cymatix_rag_composition.py`](../benchmarks/bench_cymatix_rag_composition.py)
   — the 4-cell composition benchmark source
-- [`cymatix_context/claims_graph.py`](../cymatix_context/claims_graph.py)
+- [`cymatix_context/claims_graph.py`](../cymatix_context/identity/claims_graph.py)
   — DAG walker reference implementation
 - [`cymatix_context/adapters/dal.py`](../cymatix_context/adapters/dal.py)
   — DAL reference implementation
