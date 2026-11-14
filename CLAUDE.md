@@ -84,7 +84,7 @@ Top-level modules: `context_manager.py` (pipeline orchestrator), `config.py` (TO
 - **Receipts are not in this repo.** Benchmark receipt trees under `benchmarks/dogfood/receipts/` were untracked in `e034010` and live in **`mbachaud/cymatix-receipts`** (`mirror/` = exported tracked receipts, `untracked/` = receipts that were never committed here; rebuild its `index.json` with its `scripts/build_index.py`). A receipt path cited in a doc resolves there, or via `git show <old-sha>:<path>` here.
 - **`mbachaud/cymatix-website`** serves cymatixcontext.com. Its `public/wiki/` is generated from this repo's `wiki/` by `scripts/build_wiki_site.py`. Edit the wiki here, never there.
 - **`addiplus/cc-exchange`** is the shared Joe/Max bench exchange (run requests, replies, results). It lands on `main` via `bin/exchange-push.sh`; read its `CLAUDE.md` before writing.
-- **Where things are:** `docs/README.md` maps the docs tree, `benchmarks/README.md` maps the harnesses, and `docs/benchmarks/BASELINES.md` holds the current baselines. The `wiki/` pages are the user-facing reference and are kept current; dated docs under `docs/` are point-in-time records.
+- **Where things are:** `docs/README.md` maps the docs tree, `docs/benchmarks/INDEX.md` maps corpora, profiles, runners and judges, `benchmarks/README.md` maps the harnesses, and `docs/benchmarks/BASELINES.md` holds the current baselines. The `wiki/` pages are the user-facing reference and are kept current; dated docs under `docs/` are point-in-time records.
 
 ## Configuration
 

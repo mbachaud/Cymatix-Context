@@ -16,6 +16,7 @@ code as it was on that date. Check the code or the wiki before acting on one.
 | `clients/` | Per-host MCP and Agent Skill guides (Claude Code, Codex, Gemini CLI, Antigravity) and the CLI reference |
 | `api/` | HTTP endpoint and MCP tool reference |
 | `architecture/` | Subsystem write-ups: launcher, lanes, session registry, observability, knowledge graph; ADRs in `architecture/adr/` |
+| `benchmarks/INDEX.md` | Where each benchmark lives: corpora, needles, profiles, runners, judges |
 | `benchmarks/BASELINES.md` | Current baseline numbers per bed, and the ingest-concurrency pin |
 | `operator-runbooks.md`, `ops/`, `operations/` | Operator procedures (`ops/` and `operations/` overlap and are candidates to merge) |
 
