@@ -1,0 +1,478 @@
+{
+  "summary": {
+    "n": 40,
+    "grader_model": "sonnet",
+    "grader_cost_usd": 0.386,
+    "labels": {
+      "incorrect": 19,
+      "not_found": 8,
+      "correct": 8,
+      "partial": 5
+    },
+    "outcomes": {
+      "hallucinated": 18,
+      "abstained": 8,
+      "recovered_correct": 7,
+      "recovered_wrong": 6,
+      "lucky": 1
+    },
+    "outcomes_by_type": {
+      "semantic": {
+        "recovered_correct": 4,
+        "hallucinated": 8,
+        "recovered_wrong": 4,
+        "abstained": 4
+      },
+      "basic": {
+        "hallucinated": 10,
+        "abstained": 4,
+        "recovered_correct": 3,
+        "recovered_wrong": 2,
+        "lucky": 1
+      }
+    },
+    "answers_correct_or_partial": 13
+  },
+  "rows": [
+    {
+      "needle": "erb_001",
+      "type": "basic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Gives wrong/rambling metric names, never states stream.timebox_finalized.",
+      "candidate": "provisional_credit_count and final_credit_count — but the specific \"hit time limit, finalized\" metric is backpressure_signal_delay_ms\n\nWait, let me reconsider.\n\nSEARCH: metric emitted when streaming session forcibly finalized after exceeding max duration time limit",
+      "gold_answer": "The new metric is `stream.timebox_finalized` (with labels for route and model)."
+    },
+    {
+      "needle": "erb_006",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "not_found",
+      "outcome": "abstained",
+      "why": "Candidate explicitly says not found.",
+      "candidate": "not found",
+      "gold_answer": "In the first comparison run, the baseline build averaged 2.7 while the newer optimized build averaged 1.9, a decrease of 0.8 rubric points."
+    },
+    {
+      "needle": "erb_030",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "correct",
+      "outcome": "recovered_correct",
+      "why": "Matches all key facts: control plane steps, CLI fallback, verification curl.",
+      "candidate": "In the control plane, go to tenant config → Telemetry → select 'no-external-telemetry' → apply (or CLI fallback: `redwoodctl tenant update --id <TENANT> --telemetry-mode local-only`); verify with `curl -sS http://localhost:9100/telemetry/status?tenant=<TENANT> | jq '.mode'`, which should return \"local-only\".",
+      "gold_answer": "To switch a tenant to local-only telemetry mode, in the control plane open the tenant config, go to Telemetry, select \"no-external-telemetry\" and apply; if needed, use the CLI fallback: `redwoodctl tenant update --id <TENANT> --telemetry-mode local-only`. Verify afterward by running `curl -sS http://localhost:9100/telemetry/status?tenant=<TENANT> | jq '.mode'`, which should return \"local-only\"."
+    },
+    {
+      "needle": "erb_036",
+      "type": "basic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Cites FD exhaustion cause, contradicting gateway backpressure/hedged retries/pthread cause.",
+      "candidate": "Ephemeral keepalive file-descriptor (FD) exhaustion during a mixed embedding+chat traffic burst (SUP-634120, Acme AI dedicated tenant, us-east-1, created 2026-03-13) caused the 502/503 surge on the embeddings endpoint.",
+      "gold_answer": "The 502/503 spike was driven by API gateway backpressure and hedged retries amplifying load on the us-east dedicated pool (dsp-6), which led the serving runtime to exhaust its process/thread limits (pthread_create failures, SIGABRT exits). A recent increase to prefetch.window_size further increased work and contributed to the overload."
+    },
+    {
+      "needle": "erb_046",
+      "type": "basic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Describes a stability-vs-accuracy tradeoff, not the prefix-caching interaction stated in gold.",
+      "candidate": "Rotating exemplars reduced surface-level copying/variance but sometimes hurt semantic accuracy on small, high-precision classification tasks (a stability-vs-accuracy tradeoff).",
+      "gold_answer": "The notes say rotating exemplars can reduce position bias, but it interacts badly with prefix caching-rotating defeats the cached prefix and may require cache bypass/invalidations, making it less suitable for high-QPS routes."
+    },
+    {
+      "needle": "erb_061",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "incorrect",
+      "outcome": "recovered_wrong",
+      "why": "Proposes different endpoints/params than GET /v1/traces/{id} with level/time_window.",
+      "candidate": "Server endpoints proposed: `/trace/:id/summary` (grouped/summary view) and `/trace/:id/grouped-spans?window=...` (full/grouped span detail), with per-span logs fetched separately via `/span/:id/logs?sample=1`.",
+      "gold_answer": "The playbook proposes a backend trace fetch API of `GET /v1/traces/{id}?level=grouped|full&time_window=start,end`, where `level` selects grouped vs full detail and `time_window` optionally constrains the returned data to a start/end range."
+    },
+    {
+      "needle": "erb_073",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "partial",
+      "outcome": "hallucinated",
+      "why": "Mentions 422 but hedges with 400, omits fail-closed framing and forced-call validation specifics.",
+      "candidate": "ENG-20321 defines a canonical function/tool parameter JSON Schema with standardized validation error objects (code, path, message, suggestion) and maps schema validation failures to 4xx HTTP responses (per ENG-9461, synchronous validation returns structured errors with HTTP 400/422 semantics; unsupported advanced schema constructs like anyOf/oneOf/allOf/$ref fail validation with error_code \"unsupported_schema_feature\").",
+      "gold_answer": "The compatibility layer validates forced tool/function calls against the registered schemas and fails closed if the schema is invalid. On validation failure, it returns an HTTP 422 with a structured error payload (and emits a telemetry event)."
+    },
+    {
+      "needle": "erb_081",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "incorrect",
+      "outcome": "recovered_wrong",
+      "why": "Cites mixed fleet autoscaling/kernel selection, contradicting networking flake/route table cause.",
+      "candidate": "Mixed fleet autoscaling caused some jobs to land on a different node profile, leading to kernel selection differences during inference, which caused the p95 latency variance.",
+      "gold_answer": "Samir said the early December latency incident was caused by a networking flake in a single region-specifically route table asymmetry (with slower-than-expected KV cache warming during autoscale reshuffling contributing to the impact)."
+    },
+    {
+      "needle": "erb_086",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "States 30 seconds instead of the correct 5-minute lookahead window.",
+      "candidate": "30 seconds",
+      "gold_answer": "The design chose a default forecasting lookahead (horizon) of 5 minutes for predicting future load on Dedicated capacity."
+    },
+    {
+      "needle": "erb_099",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Cites different fix (block_size, max_batch_size=8) contradicting disabling continuous batching and stated token/timeout values.",
+      "candidate": "block_manager.block_size was reduced from 64k to 32k (block_size=32768) on the us-west-2 cluster, along with lowering continuous-batching max_batch_size to 8 and max_batch_latency_ms to 8 and switching eviction_policy to aggressive-size, applied via redwoodctl runtime-config.",
+      "gold_answer": "They hotpatched the affected model routes to disable continuous batching and tightened batching limits (e.g., lowering max_batch_tokens from 4096 to 2048 and batch_timeout_ms from 15 to 5), which quickly reduced queue depth and brought p95 latency back down."
+    },
+    {
+      "needle": "erb_107",
+      "type": "basic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": false,
+      "label": "not_found",
+      "outcome": "abstained",
+      "why": "Candidate explicitly says not found.",
+      "candidate": "not found",
+      "gold_answer": "The thread estimated the KV cache would use about ~4GB of GPU memory for a single 8192-token sequence at batch size 1."
+    },
+    {
+      "needle": "erb_111",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "correct",
+      "outcome": "recovered_correct",
+      "why": "Matches gold: $25/month Builder tier includes 10M tokens.",
+      "candidate": "$25/month \"Builder\" tier includes 10M tokens/month",
+      "gold_answer": "The $25/month plan (Builder) includes 10 million tokens per month."
+    },
+    {
+      "needle": "erb_114",
+      "type": "basic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Gives a different mechanism (combined quota bucket) omitting/contradicting epoch swap and async priority recalc specifics.",
+      "candidate": "Separate token-bucket accounting treats background backfill/batch jobs and real-time/interactive traffic as one combined per-tenant quota, so when a tier upgrade raises the burst allowance, queued backfill/batch jobs greedily drain that newly increased burst pool first, leaving no quota for concurrent real-time chat/streaming requests, which then get 429'd (tenant_quota_exhausted/burst_pool_depleted) — the fix requested in these tickets is separate refill intervals/priority classes (reserved capacity for interactive/critical vs. background) so backfill can't consume the real-time burst allowance.",
+      "gold_answer": "During the tier promotion there's a short transition window where rate-limiter refill/priority state isn't fully synchronized (an epoch swap caused ~45s refill-assignment lag, and priority weight recalculation is asynchronous). Background flush workers that spin up immediately after the upgrade can temporarily retain an oversized share of the token pool and grab the newly increased burst credits first, draining availability so high-priority chat/SSE routes start returning 429 quota_exhausted within a few minutes."
+    },
+    {
+      "needle": "erb_115",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "correct",
+      "outcome": "lucky",
+      "why": "States 90-day retention flagged as risk, matching gold.",
+      "candidate": "90 days (default log retention mentioned as a risk/compliance concern for some environments)",
+      "gold_answer": "The notes mention that in some environments logs are only retained for 90 days, which is flagged as a potential risk."
+    },
+    {
+      "needle": "erb_127",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Gives different hours (06:00-20:00, Mon-Thu 10-18 PT) contradicting weekdays 09:00-16:00 default.",
+      "candidate": "Standard/day changes are allowed 06:00–20:00 local business hours when SRE is available (night/EOD changes need on-call overlap); low-risk infra changes default to Mon–Thu 10:00–18:00 PT, with high-risk/customer-facing changes needing agreed off-peak/weekend windows.",
+      "gold_answer": "Production changes are normally deployed during the default change window and are not allowed during declared change freezes. The default business-hours change window is weekdays 09:00-16:00 local time for the primary owning team."
+    },
+    {
+      "needle": "erb_143",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "not_found",
+      "outcome": "abstained",
+      "why": "Candidate explicitly says not found.",
+      "candidate": "not found",
+      "gold_answer": "The notes reported that continuous batching reduced median token latency by approximately 8% (on the p99 test set)."
+    },
+    {
+      "needle": "erb_149",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Lists different scopes (inference.generate, rerank.write, embeddings.create) contradicting inference:invoke/metrics:read.",
+      "candidate": "`inference.generate` and `rerank.write` (plus `embeddings.create`) — i.e. the key needs the \"inference\" and \"embeddings\" scopes checked when creating the API key in Console → Developer → API keys.",
+      "gold_answer": "The API key must include the permission scopes: inference:invoke and metrics:read."
+    },
+    {
+      "needle": "erb_158",
+      "type": "basic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": false,
+      "label": "not_found",
+      "outcome": "abstained",
+      "why": "Candidate explicitly says not found.",
+      "candidate": "not found",
+      "gold_answer": "The SRE suggested two immediate options: (1) move the reservation to eu-central-1, or (2) use Dedicated plus burst capacity (temporary shared nodes) while the team tried to free up reserved units in eu-west-1."
+    },
+    {
+      "needle": "erb_165",
+      "type": "basic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": true,
+      "label": "correct",
+      "outcome": "recovered_correct",
+      "why": "States end of Q1 2027, matching gold.",
+      "candidate": "End of Q1 2027",
+      "gold_answer": "ClearPath Health's procurement target is to have an agreement signed by the end of Q1 2027, assuming the benchmarks and security checks align."
+    },
+    {
+      "needle": "erb_167",
+      "type": "basic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Unfinished, confused answer never states correct POST /optimize/v1/suggestions endpoint.",
+      "candidate": "POST /internal/savedqueries/{id}/estimate — wait, that's not it.\n\nLet me reconsider: the Cost Hint Scorer offline service's console endpoint is \"econ.hint-preview\" feature flag, not a clear REST path in context.\n\nSEARCH: econ-hint-preview endpoint path GET console API cost_hint_scorer",
+      "gold_answer": "The new service is exposed as a POST request to the endpoint `/optimize/v1/suggestions`."
+    },
+    {
+      "needle": "erb_177",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "correct",
+      "outcome": "recovered_correct",
+      "why": "Matches 0.92 default pass-rate threshold.",
+      "candidate": "0.92 (kernel_stability_threshold default)",
+      "gold_answer": "The default pass-rate threshold is 0.92 (i.e., 92% of the microbenchmark runs must pass) before a node is allowed to step down from the safest precision."
+    },
+    {
+      "needle": "erb_181",
+      "type": "semantic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Gives 30 seconds instead of correct 45 seconds.",
+      "candidate": "30 seconds (runtime.streaming.grace_window_seconds default)",
+      "gold_answer": "The default token-grace window is 45 seconds, during which a valid resume token is accepted on the destination region before full authentication revalidation."
+    },
+    {
+      "needle": "erb_182",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Cites wrong source with different threshold numbers entirely.",
+      "candidate": "Per cheaper-config-quality-gates-scenarios.json: overall eval-score drop ≤6% (low-risk), ≤3% (medium-risk), ≤1% (high-risk) tiers; no regressions allowed on safety/critical slices; embedding-semantic shift ≤0.02 cosine for retrieval-heavy routes; latency p99 increase ≤+50ms (low), +25ms (medium), +10ms (high); minimum cost improvement ≥12% (low), ≥6% (medium), ≥3% (high). Canary: start 1% traffic/24h, then 10%/48h, then 50%/72h before full promotion. Auto-rollback if error rate exceeds baseline+0.5% absolute or 7-day sampled eval drift exceeds threshold.",
+      "gold_answer": "The Lab gates compressed variants on primary-metric thresholds: for chat/completion, mean embedding-cosine drop must be ≤ 0.012 and the 99th-percentile semantic delta must be ≤ 0.02; for code generation, pass@1 drop must be ≤ 1.5 percentage points and compilation-failure delta must be ≤ 0.5pp; for embeddings, mean cosine-similarity drop must be ≤ 0.015 and downstream retrieval MAP drop must be ≤ 0.8%. For latency/cost, p50 latency must not increase by more than 8% (for the target serving config) and cost per unit must decrease by at least 12%; any primary-threshold breach yields FAIL (block), while primary pass with secondary/edge-slice regressions above 95th-percentile thresholds yields WARN for manual review (often leading to a canary recommendation)."
+    },
+    {
+      "needle": "erb_187",
+      "type": "semantic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": true,
+      "label": "correct",
+      "outcome": "recovered_correct",
+      "why": "Both dates (Jan 4 and Jan 18, 2027) match exactly.",
+      "candidate": "Jan 4, 2027 (provisional/remote, limited access) and Jan 18, 2027 (full start)",
+      "gold_answer": "The thread proposed a provisional, limited-access start on Jan 4, 2027, and a full start on Jan 18, 2027 once relocation and work authorization are sorted."
+    },
+    {
+      "needle": "erb_188",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "incorrect",
+      "outcome": "recovered_wrong",
+      "why": "Different PR/mechanism, omits schema v2 origins block, enforce flag.",
+      "candidate": "The manifest-rollup + attestation-gating feature (PR #90214, \"manifest rollup + attestation gating: canonical index and CI enforcement\") in redwood-private-installer: the manifest rollup transformer ingests per-arch/per-release artifact metadata into a canonical, content-addressed index exposing each component's build-system/commit provenance, and wires an optional CI gating check that rejects (fails) the release if attestations are missing or provenance verification fails.",
+      "gold_answer": "We extend the private-installer release index (schema v2) to include an per-artifact `origins` block that records the source repo, build system/job ID, build commit, and optional SBOM/cosign references, populated by the indexer querying an origin-mapper service and cross-referencing artifact digests to upstream build metadata. The indexer verifies cosign signatures on the origin blobs and records the verification result, and operators can make failed/missing origin verification a hard failure by running the indexer with `--enforce-origin-verification`."
+    },
+    {
+      "needle": "erb_202",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "partial",
+      "outcome": "hallucinated",
+      "why": "General shape right but misses 30-day default, S3/SSE-KMS, naming specifics.",
+      "candidate": "INT-963210 — \"Provision siloed experiment workspace template with approval webhook, ephemeral Slack channel policy, and seeded Confluence docs\": a reusable, approval-gated experiment-workspace template provisioning a Jira project, seeded Confluence space, and ephemeral Slack channel (approval webhook + JIT role assignment), with configurable TTL/retention and audit exports generated on create/archival.",
+      "gold_answer": "Implement a single auditable orchestration (e.g., a lightweight Lambda/worker) triggered by creating a Jira issue in the \"Sandbox Requests\" project. On trigger, have it (1) create a team-scoped Jira namespace/subproject with templated issue types (Experiment, Runbook, Cleanup), (2) instantiate Confluence child pages from the \"Sandbox Playbook\" template and link them to the Jira workspace, and (3) create a private Slack channel named `sandbox-{team}-{shortid}` inviting the requester and the approver group (e.g., `model-eval-admins`). Keep the Slack channel inactive/muted until an approval step is completed (via Slack approval flow or Okta group-based approver validation), then enable access.\n\nFor teardown, store a TTL per sandbox (default 30 days) and run an archive job when it expires, with a grace/renew option via a single Slack command limited to the owner (and/or approvers). At archive time, export an audit bundle to S3 at `s3://redwood-audit/sandboxes/{sandbox-id}/` containing a Confluence snapshot plus a channel membership CSV, encrypted with SSE-KMS and controlled by a reviewed bucket policy and retention rules; also emit step-by-step logs to the central ops log index and publish success/failure metrics."
+    },
+    {
+      "needle": "erb_206",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "not_found",
+      "outcome": "abstained",
+      "why": "Candidate explicitly states not found.",
+      "candidate": "not found",
+      "gold_answer": "It's gated behind the experiment flag \"obs.route_tags_tool_calls\" and rolls out as three days in canary, then staged to 25% of traffic, then to full rollout assuming no regressions."
+    },
+    {
+      "needle": "erb_208",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "partial",
+      "outcome": "hallucinated",
+      "why": "Correct 250ms but wrong concurrency (15 vs 50).",
+      "candidate": "Streaming/first-token start under 250ms, tested at 15 concurrent sessions (Lilypad Logic's trial pass criteria)",
+      "gold_answer": "Their POC pass criteria called for consistent first-token (first response) latency under 250 ms while handling 50 concurrent small sessions."
+    },
+    {
+      "needle": "erb_221",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Wrong page title, not 'Operational Flows and Policy Gallery'.",
+      "candidate": "confluence/policies-and-process/company-operations-reference-2025 — \"Company Operations Reference: Access, Change, Data, Procurement & Travel\"",
+      "gold_answer": "Use the Confluence page titled **\"Operational Flows and Policy Gallery\"**-it's the single-entry reference that summarizes approval paths and SLAs for access, change management, data retention, procurement, vendor onboarding, and travel. The standard request templates are linked in the **\"Templates and artifacts (canonical)\"** section (e.g., /confluence/templates/access-request-template, /confluence/templates/change-request-template, /confluence/templates/data-deletion-request, /confluence/templates/vendor-onboarding-checklist, /confluence/templates/requisition-lowvalue, /confluence/templates/expense-report-template)."
+    },
+    {
+      "needle": "erb_223",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "States user_id, not correct tokenized_actor_id.",
+      "candidate": "user_id",
+      "gold_answer": "Examples should use a non-email identifier-specifically `tokenized_actor_id` (instead of something like `user_email`)-to avoid exposing sensitive personal data."
+    },
+    {
+      "needle": "erb_234",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "not_found",
+      "outcome": "abstained",
+      "why": "Candidate states not found.",
+      "candidate": "Not found in the retrieved context — no document identifies the four specific categories from the first contract markup for the payments-company AI pilot.",
+      "gold_answer": "In their first markup, Greenfield's procurement and counsel asked for changes in four areas: (1) data residency (US-only) plus a 30-day data export guarantee, (2) audit logs and retention (7 years) and SOC 2 evidence, (3) a lower liability cap for the pilot phase, and (4) minor tweaks to IP/derivative works language."
+    },
+    {
+      "needle": "erb_241",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "not_found",
+      "outcome": "abstained",
+      "why": "Candidate states not found.",
+      "candidate": "not found",
+      "gold_answer": "The security lead (Liam) targeted 2025-03-24 to complete the pre-publication AMI/image security smoke test (security QA)."
+    },
+    {
+      "needle": "erb_246",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "incorrect",
+      "outcome": "hallucinated",
+      "why": "Wrong parties and dates (Juno/9-19 vs Orbital/12-22 etc).",
+      "candidate": "Juno to send traces and acceptance criteria by 9/19 2025; Redwood to send sizing worksheet, POC runbook/timeline, security pack, and commercial pilot proposal by target send date 2025-09-15 (not found for a \"late December\" instance).",
+      "gold_answer": "Orbital (the ISV) committed to send the pilot inputs-target account list, topology, and sample prompts-by 12/22. Redwood (the vendor) committed to send the co-sell one-pager and pricing spreadsheet by 12/23, and to deliver benchmark results by 12/29."
+    },
+    {
+      "needle": "erb_249",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "not_found",
+      "outcome": "abstained",
+      "why": "Candidate admits it didn't find the correct answer, proposes further search.",
+      "candidate": "Based on the retrieved context, the smoothing policy document describes a \"72-hour rolling smoothing window\" but this relates to smoothing credits, not specifically the overage event grouping window described in the question. Let me search more specifically.\n\nSEARCH: billable overage event grouping window demand spike dedicated GPU plan",
+      "gold_answer": "The default cooldown window is 15 minutes after a surge event; any additional spikes within that 15-minute window are treated as part of the same billable overage (surge) event."
+    },
+    {
+      "needle": "erb_255",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": false,
+      "label": "partial",
+      "outcome": "hallucinated",
+      "why": "Right general fix (pin enforced) but wrong mechanism/ticket, no tokenizer-family detail.",
+      "candidate": "SUP-13579 (NarrativeAI canary cutover sticky-routing leak) — the request routing layer was hotfixed to treat an active version pin as authoritative over sticky/canary affinity, rejecting sticky/canary routing assignment when a pin is present so pinned sessions can no longer be diverted to the canary/compressed variant.",
+      "gold_answer": "They hotfixed the edge route-resolver to enforce the pin header at selection time: if a request includes an explicit model pin, the router rejects any fallback variant whose tokenizer family doesn't match the pinned model (preventing routing to the quantized q4 build when the pin is provided)."
+    },
+    {
+      "needle": "erb_265",
+      "type": "semantic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": true,
+      "label": "correct",
+      "outcome": "recovered_correct",
+      "why": "SessionDecorator and ResumeToken v2 both correctly named.",
+      "candidate": "SessionDecorator (with ResumeToken v2)",
+      "gold_answer": "It's called the **SessionDecorator**-a lightweight wrapper around the stream iterator that automatically refreshes expired credentials and supports resuming via a small persisted **ResumeToken v2** checkpoint token."
+    },
+    {
+      "needle": "erb_278",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "correct",
+      "outcome": "recovered_correct",
+      "why": "Matches date and UTC window exactly.",
+      "candidate": "02:00–04:00 UTC on 2026-03-24",
+      "gold_answer": "The secrets rotation and KMS rekey are scheduled for the off-hours maintenance window on 2026-03-24 from 02:00 to 04:00 UTC."
+    },
+    {
+      "needle": "erb_289",
+      "type": "semantic",
+      "miss_kind": "ranked_cut",
+      "gold_recovered": true,
+      "label": "partial",
+      "outcome": "recovered_wrong",
+      "why": "Correct doc path but omits docstring as primary documentation location.",
+      "candidate": "docs/api/model-catalog.md (compatibility_score field added by PR #63789's OpenAI-compat shim mapping)",
+      "gold_answer": "The advisory 0-100 \"compatibility_score\" is documented in the expanded docstring for the compatibility mapping, and the release notes point to `docs/api/model-catalog.md` for examples of the field in the model catalog API."
+    },
+    {
+      "needle": "erb_294",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "incorrect",
+      "outcome": "recovered_wrong",
+      "why": "States v2.5.0 instead of correct v2.4.1/revision 3.",
+      "candidate": "chart v2.5.0 (prior known-good chart version before the overlay-hotpatch, i.e. payments-service chart v2.5.0 without the overlay)",
+      "gold_answer": "They rolled back the payments-service chart to v2.4.1 (helm revision 3)."
+    },
+    {
+      "needle": "erb_299",
+      "type": "semantic",
+      "miss_kind": "never_ranked",
+      "gold_recovered": true,
+      "label": "incorrect",
+      "outcome": "recovered_wrong",
+      "why": "Names hybrid-evict instead of correct core-tiling-multiplex/$0.062.",
+      "candidate": "hybrid-evict had the cheapest $/1k tokens for mid-length (mid-thread) requests",
+      "gold_answer": "For the mid-thread (medium-length) workload, the centralized batching approach (core-tiling-multiplex) had the lowest cost at $0.062 per 1k tokens."
+    }
+  ]
+}

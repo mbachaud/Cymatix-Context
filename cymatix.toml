@@ -268,7 +268,7 @@ logs_enabled = true                     # Ship Python logs to the collector -> L
 logs_level = "INFO"                     # Min level forwarded: DEBUG/INFO/WARNING/ERROR/CRITICAL (CYMATIX_OTEL_LOGS_LEVEL)
 
 # ----------------------------------------------------------------------
-# [trace] - OPT-IN PACKET TRACE (issue #493, schema v0; off by default).
+# [trace] - PACKET TRACE (issue #493, schema v0; ON by default since 2026-10-18, metadata level).
 #
 # Append-only JSONL of what each /context call delivered, keyed by the
 # packet_id every response already carries. Precedence per knob:
@@ -277,7 +277,7 @@ logs_level = "INFO"                     # Min level forwarded: DEBUG/INFO/WARNIN
 # or chunk text); "full" adds both and is local-only.
 # ----------------------------------------------------------------------
 # [trace]
-# enabled = false
+# enabled = true                  # set false (or CYMATIX_TRACE_ENABLED=0) to write nothing
 # level = "metadata"              # "off" | "metadata" | "full"
 # path = ""                       # "" = <genome dir>/traces
 # hash_chain = false              # tamper-evident prev_hash chain

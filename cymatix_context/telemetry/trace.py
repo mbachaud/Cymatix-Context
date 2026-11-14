@@ -58,7 +58,7 @@ _QUEUE_MAX = 10_000
 # config.TraceConfig's field defaults (config import avoided to keep this
 # module dependency-free; tests cross-check).
 _TRACE_DEFAULTS: Dict[str, Any] = {
-    "enabled": False,
+    "enabled": True,   # default ON since 2026-10-18 (metadata level)
     "level": "metadata",
     "path": "",
     "hash_chain": False,

@@ -1474,6 +1474,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                          "left as on the bed; prebuild: build it synchronously "
                          "before the first query and record the time")
     args = ap.parse_args(argv)
+    # Capture HEAD at launch: the code that runs is the code loaded now, not
+    # whatever HEAD points at hours later when the receipt is written.
+    launch_git_sha = _git_sha(REPO_ROOT)
 
     resolved_path = _resolve(args.resolved)
     gold_path = _resolve(args.gold)
@@ -1584,7 +1587,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "bed": genome_path,
         "bed_bytes": Path(genome_path).stat().st_size,
         "config": config_path or "(auto-discovered)",
-        "git_sha": _git_sha(REPO_ROOT),
+        "git_sha": launch_git_sha,
         "needles_file": str(resolved_path),
         "gold_file": str(gold_path),
         "needle_count": len(needles),
@@ -1595,6 +1598,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "CYMATIX_DISABLE_HEADROOM": os.environ.get("CYMATIX_DISABLE_HEADROOM"),
             "CYMATIX_DISABLE_LEARN": os.environ.get("CYMATIX_DISABLE_LEARN"),
             "CYMATIX_GENOME_PATH": os.environ.get("CYMATIX_GENOME_PATH"),
+            # Pinned scoring clock (cymatix_context.clock); None = wall clock.
+            "CYMATIX_SCORING_EPOCH": os.environ.get("CYMATIX_SCORING_EPOCH"),
+            "CYMATIX_LEAN_INDEXES": os.environ.get("CYMATIX_LEAN_INDEXES"),
         },
         "note": (
             "Ranks read from genome.last_query_scores (post-blend; blend "

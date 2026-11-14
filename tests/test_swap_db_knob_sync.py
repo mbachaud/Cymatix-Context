@@ -218,6 +218,8 @@ def test_shared_builder_covers_every_config_driven_ctor_knob():
         # query-inert PKI rows; config-driven stores keep the default (True)
         # so pki_enabled=true still has rows to read.
         "pki_write",
+        # Opt-in per-file promoter_index tag dedup for bench-bed builders.
+        "file_tags",
     }
     expected = set(sig.parameters) - non_config
 

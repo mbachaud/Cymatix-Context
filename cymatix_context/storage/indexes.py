@@ -32,20 +32,28 @@ def rebuild_promoter_index(
     cur: sqlite3.Cursor,
     gene_id: str,
     gene: Gene,
+    seen: Optional[set] = None,
 ) -> None:
-    """Delete + re-insert promoter_index rows for *gene_id*."""
+    """Delete + re-insert promoter_index rows for *gene_id*.
+
+    ``seen`` (file-tag dedup, opt-in): the (kind, tag) pairs already indexed
+    for earlier chunks of this gene's source file. Pairs in it are skipped;
+    new pairs are added to it. None = legacy (write everything).
+    """
     cur.execute("DELETE FROM promoter_index WHERE gene_id = ?", (gene_id,))
 
-    for d in gene.promoter.domains:
-        cur.execute(
-            "INSERT INTO promoter_index VALUES (?, 'domain', ?)",
-            (gene_id, d.lower()),
-        )
-    for e in gene.promoter.entities:
-        cur.execute(
-            "INSERT INTO promoter_index VALUES (?, 'entity', ?)",
-            (gene_id, e.lower()),
-        )
+    for kind, tags in (("domain", gene.promoter.domains),
+                       ("entity", gene.promoter.entities)):
+        for t in tags:
+            v = t.lower()
+            if seen is not None:
+                if (kind, v) in seen:
+                    continue
+                seen.add((kind, v))
+            cur.execute(
+                "INSERT INTO promoter_index VALUES (?, ?, ?)",
+                (gene_id, kind, v),
+            )
 
 
 # ---------------------------------------------------------------------------
