@@ -193,7 +193,7 @@ See [`docs/architecture/OBSERVABILITY.md`](docs/architecture/OBSERVABILITY.md) f
 
 ## Gotchas
 
-- **Windows-only bench paths:** many scripts under `scripts/` and `benchmarks/` default to `F:\Projects\...` checkouts (some still `helix-context`). On Linux or a cloud VM, pass the corpus and bed paths explicitly. Bench builders may still write SPLADE vectors at ingest even though retrieval keeps it off; check the builder's flags before a long build.
+- **Windows-only bench paths:** many scripts under `scripts/` and `benchmarks/` default to `F:\Projects\...` checkouts, some still at the pre-rename checkout name. On Linux or a cloud VM, pass the corpus and bed paths explicitly. Bench builders may still write SPLADE vectors at ingest even though retrieval keeps it off; check the builder's flags before a long build.
 - **Dates in `git log` lie for old files:** the July 2026 rename sweeps touched almost every file, so "last modified" often means "renamed", not "reviewed".
 - **Knowledge store path:** Default is `genomes/main/genome.db` (not project root). Delete to start fresh; auto-creates on first use.
 - **Synonym map is critical:** If queries return "no relevant context", check that query keywords map to the tags assigned at ingest. Add synonyms in `[synonyms]`.
