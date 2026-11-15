@@ -26,4 +26,4 @@ common cases, but template-first is the right starting point.
 - Adopts an already-running cymatix from the state file at
   `~/.cymatix/launcher/state.json` if the launcher itself is restarted
 
-See [`docs/LAUNCHER.md`](../docs/LAUNCHER.md) for the full architecture.
+See [`docs/LAUNCHER.md`](../docs/architecture/LAUNCHER.md) for the full architecture.

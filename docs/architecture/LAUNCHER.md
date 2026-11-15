@@ -6,7 +6,7 @@ problem and gives a live view of what's actually running.
 **Status:** Implemented in the repo and shipped as `cymatix-launcher`.
 **Maturity:** Beta; this document is now the architecture/reference doc for the shipped launcher.
 **Depends on:** session registry (for party/participant counts on the dashboard).
-**Related:** [`SESSION_REGISTRY.md`](SESSION_REGISTRY.md), [`RESTART_PROTOCOL.md`](RESTART_PROTOCOL.md).
+**Related:** [`SESSION_REGISTRY.md`](SESSION_REGISTRY.md), [`RESTART_PROTOCOL.md`](../ops/RESTART_PROTOCOL.md).
 
 ---
 
@@ -883,7 +883,7 @@ doesn't run it):
 cymatix-launcher uninstall-service
 ```
 
-Windows users: see [`deploy/windows/README.md`](../deploy/windows/README.md)
+Windows users: see [`deploy/windows/README.md`](../../deploy/windows/README.md)
 for the NSSM walkthrough.
 
 ## Cymatix-side endpoint: `POST /admin/shutdown`
@@ -954,7 +954,7 @@ Rough ordering for the first PR. Each is independently testable.
 
 - [`SESSION_REGISTRY.md`](SESSION_REGISTRY.md) — parties + participants
   feed the launcher's dashboard.
-- [`RESTART_PROTOCOL.md`](RESTART_PROTOCOL.md) — the launcher uses
+- [`RESTART_PROTOCOL.md`](../ops/RESTART_PROTOCOL.md) — the launcher uses
   `POST /admin/announce_restart` before every Stop/Restart so observer
   sessions (Claude panels, external agents) don't misread the outage.
 - `cymatix_context/server.py::main` — existing thin entry point; stays

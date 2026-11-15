@@ -57,7 +57,7 @@ confidence = 1.0 / (1.0 + exp(-z))
 
 `s_ref`, `g_ref`, and the four `β` coefficients live in `[know]` of `helix.toml`. Defaults shipped in code (cold-start) until calibration runs: `β = (-2.0, +2.0, +1.5, +0.7, +1.8)`, `s_ref = 1.0`, `g_ref = 0.5`. These defaults intentionally produce `confidence ≈ 0.5` at boundary cases — a `know` block is only emitted when `confidence >= know.emit_floor` (default `0.55`); below that we fall through to `MissBlock(reason="sparse")`.
 
-**Stage 7 extension (forthcoming).** Stage 7 adds `freshness_min` (the worst per-document decay score across top-K) as a fifth feature β5 with default ≈ +1.5. The logistic becomes 5-feature; `know` cannot be emitted if the top-1 document's source is stale. This is required because the current `_compute_health` averages decay scores ([context_manager.py:2315](../../helix_context/context_manager.py#L2315)), masking a stale needle when fresh padding accompanies it. Stage 6 ships with the 4-feature logistic; Stage 7 retunes via the same calibration script.
+**Stage 7 extension (forthcoming).** Stage 7 adds `freshness_min` (the worst per-document decay score across top-K) as a fifth feature β5 with default ≈ +1.5. The logistic becomes 5-feature; `know` cannot be emitted if the top-1 document's source is stale. This is required because the current `_compute_health` averages decay scores ([context_manager.py:2315](../../cymatix_context/context_manager.py#L2315)), masking a stale needle when fresh padding accompanies it. Stage 6 ships with the 4-feature logistic; Stage 7 retunes via the same calibration script.
 
 ## 4. New schema — `MissBlock`
 
