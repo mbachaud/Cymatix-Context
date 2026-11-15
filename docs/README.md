@@ -25,12 +25,15 @@ code as it was on that date. Check the code or the wiki before acting on one.
 | Path | What |
 |---|---|
 | `benchmarks/` | Bench write-ups and verdicts, `YYYY-MM-DD-*.md`. The receipts they cite live in the `mbachaud/cymatix-receipts` repo |
-| `research/`, `investigations/` | Experiments, refutations, and consensus notes |
-| `design/`, `specs/`, `prds/` | Design proposals and specs; check whether they shipped |
-| `councils/`, `reviews/`, `audits/` | Multi-model reviews and audits |
-| `superpowers/` | Agent-generated plans, specs, and artifacts |
-| `archive/` | Superseded material; not maintained |
+| `research/` | Experiments, refutations, and consensus notes |
+| `design/`, `specs/` | Design proposals and specs; check whether they shipped |
+| `reviews/` | Code, security and test audits |
+| `archive/` | Finished plans, PRDs, councils, investigations and audits, plus superseded docs; not maintained |
 
 `MISSION.md`, `DESIGN_TARGET.md`, and `ROADMAP.md` are positioning documents.
 `ROADMAP.md` stops at 0.9.0; the wiki `Roadmap and Releases` page is current.
 `ROSETTA.md` is a stub that points to the wiki Lexicon page.
+
+Retired scripts, harnesses and uncited bench data live in the repo-root
+`archive/` at their original relative path (`scripts/x.py` becomes
+`archive/scripts/x.py`); see `archive/README.md`.
