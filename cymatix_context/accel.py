@@ -176,6 +176,21 @@ def expand_query_terms(terms: list[str]) -> list[str]:
     return expanded
 
 
+# Fiscal-year prefixes: filings print "fiscal 2018" or a bare "2018" column
+# header, so the query token "fy2018" matches nothing, and "FY'18" / "FY 18"
+# fall to the length filter. Uppercase-only, so a lowercase code identifier
+# such as fy2018 is left alone. Receipt: FinanceBench lexical A/B 2026-10-26,
+# arm A1_fy (+6/-1 delivered vs A0 at 91f88952).
+_RE_FY4 = re.compile(r"\bFY\s?'?(\d{4})(?!\d)")
+_RE_FY2 = re.compile(r"\bFY\s?'?(\d{2})(?!\d)")
+
+
+def normalize_fiscal_years(query: str) -> str:
+    """Rewrite FY2018 / FY 2018 / FY'18 / FY22 to the bare four-digit year."""
+    query = _RE_FY4.sub(r"\1", query)
+    return _RE_FY2.sub(r"20\1", query)
+
+
 def extract_query_signals(query: str) -> Tuple[List[str], List[str]]:
     """
     Fast keyword extraction from query for tags matching.
@@ -183,7 +198,7 @@ def extract_query_signals(query: str) -> Tuple[List[str], List[str]]:
     Uses pre-built frozenset and avoids per-call set construction.
     Returns (domains, entities) tuple.
     """
-    words = re.findall(r"[a-z0-9_/\-]+", query.lower())
+    words = re.findall(r"[a-z0-9_/\-]+", normalize_fiscal_years(query).lower())
     keywords = []
     for w in words:
         stripped = w.strip(_STRIP_CHARS)

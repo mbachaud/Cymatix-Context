@@ -15,6 +15,7 @@ from cymatix_context.accel import (
     estimate_tokens,
     expand_query_terms,
     extract_query_signals,
+    normalize_fiscal_years,
     STOP_WORDS,
     PromptBuilder,
     batch_update_epigenetics,
@@ -197,6 +198,34 @@ class TestQuerySignalExtraction:
         assert "type" in combined
         assert "values" in combined
         assert "value" in combined
+
+
+class TestFiscalYearNormalization:
+    """FY-prefixed years become bare years so they match filing text.
+
+    Filings write "fiscal 2018" or a bare "2018" column header; the query
+    token "fy2018" matches neither, and "FY'18" / "FY 18" were dropped
+    entirely by the length filter. Receipt: FinanceBench lexical A/B
+    2026-10-26, arm A1_fy (+6/-1 delivered vs A0 at 91f88952).
+    """
+
+    @pytest.mark.parametrize("query, year", [
+        ("What was 3M's FY2018 capex?", "2018"),
+        ("capex in FY 2018", "2018"),
+        ("capex in FY'18", "2018"),
+        ("capex in FY22", "2022"),
+        ("capex in FY 22", "2022"),
+    ])
+    def test_fy_forms_become_bare_year(self, query, year):
+        domains, entities = extract_query_signals(query)
+        combined = set(domains) | set(entities)
+        assert year in combined
+        assert not any(t.startswith("fy") for t in combined)
+
+    def test_normalize_leaves_other_text_alone(self):
+        assert normalize_fiscal_years("FY2018 and FY22 margin") == "2018 and 2022 margin"
+        assert normalize_fiscal_years("AMPLIFY2018 fy2018 FY123456") == "AMPLIFY2018 fy2018 FY123456"
+        assert normalize_fiscal_years("no years here") == "no years here"
 
 
 # ── Pre-compiled regex patterns ──────────────────────────────────
