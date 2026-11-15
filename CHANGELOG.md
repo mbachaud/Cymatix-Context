@@ -637,7 +637,7 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   undirected COVER links beside the stored row count, `CHUNK_OF` structure
   links, harmonic co-activation links, and distinct entities beside their
   membership rows. Implements
-  `docs/superpowers/specs/2026-07-13-launcher-graph-summary-design.md`; it is a
+  `docs/archive/superpowers/specs/2026-07-13-launcher-graph-summary-design.md`; it is a
   ledger, not a renderer, and nothing is drawn. New
   `cymatix_context/launcher/graph_summary.py` reads the genome over a
   short-lived `mode=ro` connection with `PRAGMA query_only=ON`, does not modify
@@ -866,7 +866,7 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
 - **docs: the 2026-08-09 A/B data campaign's analysis and plan are ported
   from `claude/ab-data-cymatics-pki-dff9c6`** —
   `docs/benchmarks/2026-08-09-candidate-cascade-map.md` (`daaa6af`, "PKI
-  admits zero gold") and `docs/superpowers/plans/2026-08-09-ab-data-campaign.md`
+  admits zero gold") and `docs/archive/superpowers/plans/2026-08-09-ab-data-campaign.md`
   (`fe2ef73`/`b164be4`), each with a port-provenance block; their ~5.4 MB of
   wave0a/wave3b/wave3d ladder receipts are archived in the `cymatix-receipts`
   repository (`mirror-branches/claude__ab-data-cymatics-pki-dff9c6/`), not
@@ -920,7 +920,7 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   patched here.
 
 **ROSETTA Tier 2 — software-lexicon aliases (spec:
-`docs/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`).**
+`docs/archive/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`).**
 Additive-only canonical-name aliases across the config, CLI, HTTP, and MCP
 surfaces — every legacy bio-named surface keeps working unchanged. On the
 config/env surfaces, collision (both names present) resolves legacy-wins
@@ -1905,7 +1905,7 @@ per-shard `mmap_size` / `cache_size` to the host.
     over-reports inside a constrained container).
   - Hard overrides: `HELIX_SQLITE_MMAP_SIZE` (bytes) and `HELIX_SQLITE_CACHE_SIZE`
     (raw pragma value) win over the profile.
-  - PRD: `docs/prds/2026-05-30-dynamic-ram-scaling.md`. Unit-tested (budget
+  - PRD: `docs/archive/prds/2026-05-30-dynamic-ram-scaling.md`. Unit-tested (budget
     contract + plan-application through Genome / ShardRouter / main.db); the
     end-to-end 100-shard perf delta is validated separately on the bench fixture.
 

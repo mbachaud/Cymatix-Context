@@ -10,7 +10,7 @@ Design is grounded in three existing harnesses:
     answer model via the CYMATIX_MODEL env var and hits CYMATIX_URL /context +
     /v1/chat/completions -- so an ollama rung is just "set CYMATIX_MODEL and run
     find_needle".
-  * scripts/bench_claude_matrix.py -- the claude -p convention: json output,
+  * archive/scripts/bench_claude_matrix.py -- the claude -p convention: json output,
     per-question --max-budget-usd cost cap, sonnet default. We reuse
     score_answer's {-1,0,+1} trinary and the ABSTAIN markers.
   * benchmarks/bench_orchestrator.py -- NOT imported here (the .ps1 owns the
@@ -64,7 +64,7 @@ import bench_needle  # noqa: E402
 
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 
-# Abstain markers + trinary scorer copied from scripts/bench_claude_matrix.py
+# Abstain markers + trinary scorer copied from archive/scripts/bench_claude_matrix.py
 # so Claude-rung scoring matches the existing matrix runner exactly.
 _ABSTAIN_MARKERS = [
     r"\bi (?:don't|cannot|can't|am unable to|do not) (?:find|know|determine)\b",
@@ -134,7 +134,7 @@ def _run_claude_sonnet(query: str, ctx_text: str, model: str,
                        max_usd: float, timeout_s: int = 180) -> dict:
     """claude -p, Sonnet, context as an appended system prompt, cost-capped.
 
-    Mirrors scripts/bench_claude_matrix.run_claude (json output, budget cap)
+    Mirrors archive/scripts/bench_claude_matrix.run_claude (json output, budget cap)
     and bench_enterprise_rag.run_claude (context via --append-system-prompt-file
     + an empty --mcp-config so no local MCP is consulted).
     """

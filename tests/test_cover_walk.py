@@ -1,7 +1,7 @@
 """W2.1: COVER-edge walk — reverse index, walk module, knobs, query wiring.
 
 Spec: docs/research/2026-08-28-wave2-semantic-ranking-graph-research.md
-(lane 1) + docs/superpowers/plans/2026-08-28-w2.1-cover-walk.md. The walk
+(lane 1) + docs/archive/superpowers/plans/2026-08-28-w2.1-cover-walk.md. The walk
 reads the ingest-built ``gene_relations`` COVER graph (relation=5,
 entity-overlap kNN, storage/co_activation.py:29-63) — the one populated
 gene-gene substrate on bulk-ingested beds — as a query-time ranking signal:

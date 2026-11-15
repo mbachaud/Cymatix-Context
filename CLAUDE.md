@@ -165,7 +165,7 @@ GET  /vault/status         — Obsidian vault export state
 ## Testing
 
 ```bash
-# ~5,000 tests (count drifts; `pytest --co -q | tail -1`), no external services needed
+# ~5,900 tests (~9 min serial; count drifts, `pytest --co -q | tail -1`), no external services needed
 python -m pytest tests/ -m "not live" -v
 
 # Live tests (requires Ollama running)

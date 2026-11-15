@@ -21,8 +21,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from cymatix_context.claims import extract_literal_claims, persist_claims  # noqa: E402
-from cymatix_context.claims_analyze import detect_and_persist_edges  # noqa: E402
+from cymatix_context.identity.claims import extract_literal_claims, persist_claims  # noqa: E402
+from cymatix_context.identity.claims_analyze import detect_and_persist_edges  # noqa: E402
 from cymatix_context.genome import Genome  # noqa: E402
 from cymatix_context.shard_schema import (  # noqa: E402
     init_main_db, open_main_db, register_shard, SHARD_CATEGORIES,

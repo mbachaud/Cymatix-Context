@@ -144,7 +144,7 @@ curl -X POST http://localhost:11437/ingest \
 
 ### Bulk ingest (all .md files in a directory)
 ```bash
-python scripts/ingest_all.py --roots skills/ --ext .md
+cymatix ingest skills/ --recursive
 ```
 
 ### From another cymatix instance (cross-store import)

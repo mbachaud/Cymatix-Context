@@ -227,8 +227,9 @@ def test_transcript_identity_hides_the_project_folder(tmp_path):
     folder = tmp_path / "F--Projects-secret-client"
     folder.mkdir()
     a, b = folder / "aaa.jsonl", folder / "bbb.jsonl"
-    a.write_text("one\n", encoding="utf-8")
-    b.write_text("two\n", encoding="utf-8")
+    # write_bytes: write_text would emit CRLF on Windows and change the hash.
+    a.write_bytes(b"one\n")
+    b.write_bytes(b"two\n")
     ids = transcript_identity([a, b])
     assert [t["name"] for t in ids] == ["transcript-01.jsonl", "transcript-02.jsonl"]
     assert ids[0]["sha256"] == hashlib.sha256(b"one\n").hexdigest()
