@@ -20,7 +20,7 @@ Grounding (all read on the rig, file:line in the chain report):
     make_gold_index / match_delivered_to_gold (worktree copy; fields:
     q["question"], q.get("gold_answer"), q.get("expected_doc_ids"), mapped via
     generated_data/uuid_index.json -> generated_data/sources/<rel>).
-  * claude -p convention: scripts/bench_claude_matrix.py (json output,
+  * claude -p convention: archive/scripts/bench_claude_matrix.py (json output,
     --max-budget-usd cap, short model aliases sonnet/opus) and
     bench_enterprise_rag.run_claude (--append-system-prompt-file to dodge the
     32K arg-line limit + an empty --mcp-config).

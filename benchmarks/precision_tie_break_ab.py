@@ -47,7 +47,7 @@ except Exception:
     pass
 
 from cymatix_context import CymatixContextManager, load_config  # noqa: E402
-from cymatix_context import tie_break  # noqa: E402
+from cymatix_context.retrieval import tie_break  # noqa: E402
 
 
 GENOME_DB = "genome-bench-2026-04-14.db"

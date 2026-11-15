@@ -55,6 +55,11 @@ from . import genome_registry
 
 log = logging.getLogger("cymatix.launcher.tray")
 
+# The repo-root batch file the Windows auto-restart relaunches. Must match
+# the tracked filename exactly: a case mismatch is invisible on Windows but
+# fails on a case-sensitive filesystem.
+TRAY_BAT_NAME = "start-cymatix-tray.bat"
+
 
 def is_tray_available() -> bool:
     """Probe pystray + PIL imports without raising. Used for --tray fail-fast."""
@@ -726,7 +731,7 @@ class CymatixTrayIcon:
         """Spawn a fresh tray launcher in a fully-detached process and
         stop the current tray icon.
 
-        Windows relaunches via Start-cymatix-tray.bat (it carries the
+        Windows relaunches via TRAY_BAT_NAME (it carries the
         canonical env setup) with DETACHED_PROCESS |
         CREATE_NEW_PROCESS_GROUP so the new launcher survives the
         current process exiting. Linux/macOS relaunch the module via
@@ -735,12 +740,12 @@ class CymatixTrayIcon:
         """
         repo_root = self._repo_root()
         if sys.platform == "win32":
-            bat_path = repo_root / "Start-cymatix-tray.bat"
+            bat_path = repo_root / TRAY_BAT_NAME
             if not bat_path.exists():
                 log.warning(
-                    "Tray: auto-restart skipped — Start-cymatix-tray.bat not "
+                    "Tray: auto-restart skipped — %s not "
                     "found at %s. User must manually relaunch.",
-                    bat_path,
+                    TRAY_BAT_NAME, bat_path,
                 )
                 return
             cmd = [str(bat_path)]

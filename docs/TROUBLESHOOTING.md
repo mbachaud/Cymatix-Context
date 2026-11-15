@@ -730,7 +730,7 @@ ingested at all.
 3. Re-send any documents whose `/ingest` POST failed while the pipeline
    was missing; none of them were ingested. For file-based corpora:
    ```bash
-   python scripts/docs_tidy_reingest.py <path>
+   cymatix ingest <path> --recursive
    ```
    Or use the `/admin/refresh` endpoint to trigger a retrieval-layer
    refresh after re-ingest.

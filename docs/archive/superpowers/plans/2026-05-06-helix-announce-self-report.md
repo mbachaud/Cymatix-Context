@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.11+, SQLite (via `genome.conn`), Pydantic v2, FastAPI, Jinja2, pytest. Pure CSS for tooltip (no JS).
 
-**Spec:** [docs/superpowers/specs/2026-05-06-helix-announce-self-report-design.md](../specs/2026-05-06-helix-announce-self-report-design.md)
+**Spec:** [docs/archive/superpowers/specs/2026-05-06-helix-announce-self-report-design.md](../specs/2026-05-06-helix-announce-self-report-design.md)
 
 **Prerequisite:** PR #26 (`feat/vendor-host-badges` — `agent_kind`/`mcp_host` columns + chip plumbing) must be merged into master first, OR this branch must branch off `feat/vendor-host-badges`. The implementation assumes PR #26's schema + collector + template wiring is in place.
 
@@ -241,7 +241,7 @@ In `helix_context/genome.py::_ensure_registry_schema`, locate the existing PR-#2
 
 ```python
         # Announce columns (added 2026-05-06; design spec
-        # docs/superpowers/specs/2026-05-06-helix-announce-self-report-design.md).
+        # docs/archive/superpowers/specs/2026-05-06-helix-announce-self-report-design.md).
         # `ide_detected`:      adapter-side env-var fingerprint at register time
         #                      ("vscode", "cursor", "claude-code", or NULL on no_match).
         # `ide_detection_via`: how we figured it out — "env:VSCODE_PID",

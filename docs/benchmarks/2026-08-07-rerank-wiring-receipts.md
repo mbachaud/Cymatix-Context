@@ -1,7 +1,7 @@
 # Rerank production wiring — receipts & verdict (#341)
 
 **Date:** 2026-08-06/07 · **Branch:** `fork1/rerank-wiring` (base `fork1/encoder-daemon` @ 2060f55) ·
-**Kickoff:** `docs/design/2026-08-06-rerank-wiring-kickoff.md` · **Plan:** `docs/superpowers/plans/2026-08-06-rerank-wiring.md`
+**Kickoff:** `docs/design/2026-08-06-rerank-wiring-kickoff.md` · **Plan:** `docs/archive/superpowers/plans/2026-08-06-rerank-wiring.md`
 **Probe being productionized:** `2026-08-04-rerank-and-fork1-inputs.md` §1 (GO: 0.433→0.500 recall@12 at 829k).
 
 **Metric names used throughout.** *Final-order recall* = `final_recall_at_k`, gold's rank in

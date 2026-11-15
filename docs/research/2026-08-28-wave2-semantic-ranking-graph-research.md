@@ -2,8 +2,8 @@
 
 **Date:** 2026-08-28 · **Charter:** user, 2026-08-28 ("dispatch some research into
 adding a semantic ranking graph to see if we can lift semantic without
-encoders") · **Phase parent:** `docs/superpowers/plans/2026-08-24-v09x-retrieval-refinement-phase.md`
-· **Wave-1 record:** `docs/superpowers/plans/2026-08-27-ranking-under-width-wave1.md`
+encoders") · **Phase parent:** `docs/archive/superpowers/plans/2026-08-24-v09x-retrieval-refinement-phase.md`
+· **Wave-1 record:** `docs/archive/superpowers/plans/2026-08-27-ranking-under-width-wave1.md`
 
 Produced by a 7-agent research fan-out (3 grounding, 4 external survey) plus an
 adversarial skeptic pass that tried to kill every candidate lane against the

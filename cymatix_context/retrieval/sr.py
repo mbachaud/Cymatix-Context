@@ -31,7 +31,7 @@ import logging
 from typing import Dict, List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .genome import Genome
+    from ..genome import Genome
 
 log = logging.getLogger("cymatix.sr")
 

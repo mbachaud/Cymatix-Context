@@ -77,12 +77,11 @@ benchmarks/*_report_utf8.txt
 .vscode/
 .idea/
 
-# Build
-dist/
-*.egg-info/
-
-# Trained models (users train their own)
-training/models/
+# Trained models (users train their own). The shipped PLR artifact is the
+# one exception: [plr] model_path points at it and it is tracked.
+training/models/*
+!training/models/stacked_plr.joblib
+!training/models/stacked_plr.joblib.sha256
 training/data/
 
 # Ingest logs
@@ -147,8 +146,6 @@ benchmarks/contextbench/
 google_doc.*
 
 # Personal/scratch (2026-07-01, supersedes #226)
-.obsidian/
-overnight_logs/
 GEMINI.md
 scripts/.ingest_progress
 
