@@ -309,6 +309,45 @@ def test_path_traversal_in_files_refused(tmp_path, key, bad):
     assert sys.path == before
 
 
+def test_stale_pycache_purged_and_plugin_loads(tmp_path, key):
+    pdir = make_plugin(tmp_path, key)
+    cache = pdir / "src" / "pkg" / "__pycache__"
+    cache.mkdir(parents=True)
+    (cache / "x.cpython-312.pyc").write_bytes(b"junk")
+    [lp] = run(tmp_path, keys=[_pub(key)])
+    assert lp.status == "loaded", lp.reason
+    assert not cache.exists()
+
+
+def test_second_discovery_after_load_still_loads(tmp_path, key):
+    make_plugin(tmp_path, key)
+    assert run(tmp_path, keys=[_pub(key)])[0].status == "loaded"
+    assert run(tmp_path, keys=[_pub(key)])[0].status == "loaded"
+
+
+def test_pyc_outside_pycache_still_refused(tmp_path, key):
+    pdir = make_plugin(tmp_path, key)
+    (pdir / "src" / "evil.pyc").write_bytes(b"junk")
+    [lp] = run(tmp_path, keys=[_pub(key)])
+    assert lp.status == "skipped"
+    assert "evil.pyc" in lp.reason
+
+
+def test_pycache_removal_failure_refuses(tmp_path, key, monkeypatch):
+    import shutil
+
+    pdir = make_plugin(tmp_path, key)
+    (pdir / "src" / "__pycache__").mkdir()
+
+    def boom(*a, **k):
+        raise PermissionError("locked")
+
+    monkeypatch.setattr(shutil, "rmtree", boom)
+    [lp] = run(tmp_path, keys=[_pub(key)])
+    assert lp.status == "skipped"
+    assert "__pycache__" in lp.reason
+
+
 def test_verify_plugin_dir_ok_and_unsigned(tmp_path, key):
     pdir = make_plugin(tmp_path, key)
     assert verify_plugin_dir(pdir, [_pub(key)]) == (True, None)

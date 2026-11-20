@@ -9,6 +9,11 @@ A signed plugin directory looks like::
     <name>/src/...       the plugin code; ``files`` maps every file under
                          src/ (posix-style relative path) to its sha256 hex
 
+Stale ``__pycache__`` directories under src/ are deleted before the file scan;
+any other unlisted file (including a stray .pyc) is refused. A residual TOCTOU
+exists between hashing and import; exploiting it requires write access to the
+user's data directory.
+
 Verification never imports or executes anything from the plugin. Every
 failure is returned as ``(False, reason)``; this module does not raise on bad
 input.
@@ -82,6 +87,33 @@ def _scan_src(src: Path) -> Tuple[Optional[Dict[str, Path]], Optional[str]]:
     return found, None
 
 
+def _purge_pycache(src: Path) -> Optional[str]:
+    """Delete every real __pycache__ directory under src/ (stale bytecode is
+    never trusted, and our own import may have created it). Links are left for
+    the scan to refuse. Returns a refusal reason if a deletion fails."""
+    import shutil
+
+    try:
+        st = os.lstat(src)
+    except OSError:
+        return None  # the scan reports a missing src/
+    if _is_link(st) or not stat.S_ISDIR(st.st_mode):
+        return None
+    for root, dirs, _files in os.walk(src, followlinks=False):
+        for name in list(dirs):
+            if name != "__pycache__":
+                continue
+            p = Path(root) / name
+            dirs.remove(name)
+            try:
+                if _is_link(os.lstat(p)):
+                    continue
+                shutil.rmtree(p)
+            except OSError as exc:
+                return f"cannot remove stale bytecode cache {p.relative_to(src).as_posix()}: {exc!r}"
+    return None
+
+
 def verify_manifest_bytes(
     path: Path, manifest: bytes, sig: bytes, keys: Sequence[bytes]
 ) -> Tuple[bool, Optional[str], Optional[dict]]:
@@ -131,6 +163,9 @@ def verify_manifest_bytes(
         ):
             return False, f"bad sha256 for {key}", None
 
+    err = _purge_pycache(path / SRC_NAME)
+    if err is not None:
+        return False, err, None
     actual, err = _scan_src(path / SRC_NAME)
     if err is not None or actual is None:
         return False, err, None
