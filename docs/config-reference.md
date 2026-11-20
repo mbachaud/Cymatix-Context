@@ -1593,6 +1593,38 @@ interval_s = 30
 
 ---
 
+## `[plugins]`
+
+**Purpose.** Optional add-ons. Installed packages advertise a plugin through
+the `cymatix.plugins` entry-point group (the value is a zero-argument factory
+returning the plugin object). A plugin can contribute CLI commands, services,
+routes, panels and menu items. Core is fully functional with none installed;
+`cymatix plugins list` shows what was discovered and each plugin's status
+(`loaded`, `skipped` or `disabled`, with the reason).
+
+A plugin whose `requires_core` specifier does not match the running version is
+skipped. An exception in a plugin hook is logged and disables that plugin for
+the process; it never affects core.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:plugins -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | `bool` | `true` | False = no discovery at all; nothing is imported. |
+| `disabled` | `List[str]` | `[]` | Plugin names to skip (reported as skipped, never imported past discovery). |
+| `dir` | `str` | `""` | Plugin directory override. "" = <user data dir>/cymatix/plugins. |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[plugins]
+disabled = ["some-addon"]
+```
+
+---
+
 ## `[[lanes]]`
 
 **Purpose.** Extra cymatix instances the launcher (`cymatix-launcher`)
