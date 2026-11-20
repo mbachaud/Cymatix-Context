@@ -69,7 +69,10 @@ def _scan_src(src: Path) -> Tuple[Optional[Dict[str, Path]], Optional[str]]:
     if _is_link(st) or not stat.S_ISDIR(st.st_mode):
         return None, "src/ is not a plain directory (symlink or file)"
     found: Dict[str, Path] = {}
-    for root, dirs, files in os.walk(src, followlinks=False):
+    walk_errors: list = []
+    for root, dirs, files in os.walk(src, followlinks=False, onerror=walk_errors.append):
+        if walk_errors:  # an unlistable directory is a refusal, never a skip
+            break
         root_p = Path(root)
         for name in list(dirs) + list(files):
             p = root_p / name
@@ -84,6 +87,8 @@ def _scan_src(src: Path) -> Tuple[Optional[Dict[str, Path]], Optional[str]]:
                 if not stat.S_ISREG(pst.st_mode):
                     return None, f"not a regular file: {rel}"
                 found[rel] = p
+    if walk_errors:
+        return None, f"cannot list a directory under src/: {walk_errors[0]!r}"
     return found, None
 
 
@@ -99,8 +104,19 @@ def _purge_pycache(src: Path) -> Optional[str]:
         return None  # the scan reports a missing src/
     if _is_link(st) or not stat.S_ISDIR(st.st_mode):
         return None
-    for root, dirs, _files in os.walk(src, followlinks=False):
+    walk_errors: list = []
+    for root, dirs, _files in os.walk(src, followlinks=False, onerror=walk_errors.append):
+        if walk_errors:
+            break
         for name in list(dirs):
+            # os.walk's islink check misses NTFS junctions: prune every link or
+            # reparse point ourselves so we never descend out of src/.
+            try:
+                if _is_link(os.lstat(Path(root) / name)):
+                    dirs.remove(name)
+                    continue
+            except OSError as exc:
+                return f"cannot stat {name}: {exc!r}"
             if name != "__pycache__":
                 continue
             p = Path(root) / name
@@ -111,6 +127,8 @@ def _purge_pycache(src: Path) -> Optional[str]:
                 shutil.rmtree(p)
             except OSError as exc:
                 return f"cannot remove stale bytecode cache {p.relative_to(src).as_posix()}: {exc!r}"
+    if walk_errors:
+        return f"cannot list a directory under src/: {walk_errors[0]!r}"
     return None
 
 

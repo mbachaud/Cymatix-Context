@@ -298,6 +298,46 @@ def test_junction_in_src_refused(tmp_path, key):
     assert lp.status == "skipped"
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="NTFS junctions are Windows-only")
+def test_junction_target_pycache_not_deleted(tmp_path, key):
+    import subprocess
+
+    pdir = make_plugin(tmp_path, key)
+    outside = tmp_path.parent / f"{tmp_path.name}_outside2"
+    victim = outside / "__pycache__"
+    victim.mkdir(parents=True)
+    (victim / "keep.pyc").write_bytes(b"keep")
+    r = subprocess.run(
+        ["cmd", "/c", "mklink", "/J", str(pdir / "src" / "jn"), str(outside)],
+        capture_output=True,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        timeout=30,
+    )
+    assert r.returncode == 0, r.stderr
+    [lp] = run(tmp_path, keys=[_pub(key)])
+    assert lp.status == "skipped"
+    assert (victim / "keep.pyc").exists()
+
+
+def test_unlistable_subdir_refused(tmp_path, key, monkeypatch):
+    import os
+
+    pdir = make_plugin(tmp_path, key)
+    (pdir / "src" / "sub").mkdir()
+    (pdir / "src" / "sub" / "planted.py").write_text("x = 1\n")
+    real = os.scandir
+
+    def deny(p="."):
+        if Path(os.fspath(p)).name == "sub":
+            raise PermissionError("denied")
+        return real(p)
+
+    monkeypatch.setattr(os, "scandir", deny)
+    [lp] = run(tmp_path, keys=[_pub(key)])
+    assert lp.status == "skipped"
+    assert "cannot list" in lp.reason
+
+
 @pytest.mark.parametrize("bad", ["../escape.py", "/abs.py", "a/../../b.py", "C:evil.py", "a\\b.py"])
 def test_path_traversal_in_files_refused(tmp_path, key, bad):
     # Manifest is validly signed: the refusal must come from the key check.
