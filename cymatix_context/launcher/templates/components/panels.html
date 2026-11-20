@@ -111,6 +111,11 @@
   </section>
 {% endif %}
 
+{# Plugin panels: render() output is trusted plugin HTML; ids and titles are escaped. #}
+{% for p in plugin_panels or [] %}
+<section class="panel plugin-panel" id="{{ p.id }}"><h2>{{ p.title }}</h2>{{ p.html | safe }}</section>
+{% endfor %}
+
 {# Observability renders whenever the launcher owns (or expects) the
    sidecar — independent of cymatix state. #}
 {% if state.observability %}
