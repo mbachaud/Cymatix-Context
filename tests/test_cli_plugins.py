@@ -5,7 +5,7 @@ import logging
 
 import pytest
 
-from cymatix_context.cli import main
+from cymatix_context.cli import dispatcher, main
 from cymatix_context.plugins import loader
 from cymatix_context.plugins.loader import LoadedPlugin
 from tests.conftest import run_cli as _run
@@ -29,9 +29,90 @@ def _lp(name="pro", status="loaded", obj=None, signed=False, reason=None):
 
 @pytest.fixture(autouse=True)
 def _reset():
+    from cymatix_context.cli import cmd_plugins
+
     loader.reset_plugins_cache()
+    cmd_plugins.reset_warned()
     yield
     loader.reset_plugins_cache()
+    cmd_plugins.reset_warned()
+
+
+def test_builtin_command_runs_and_plugin_fn_never_called(monkeypatch):
+    from cymatix_context.cli import cmd_query
+
+    def fn(args):
+        raise AssertionError("plugin fn must not be called")
+
+    monkeypatch.setattr(loader, "get_plugins", lambda: [_lp(obj=_P({"query": fn}))])
+    ran = []
+    monkeypatch.setattr(cmd_query, "run", lambda a: ran.append(a) or 0)
+    assert main(["query", "q"]) == 0
+    assert ran == [["q"]]
+
+
+def test_builtin_commands_match_parser():
+    import argparse
+
+    parser = dispatcher._build_parser()
+    sub = next(a for a in parser._actions if isinstance(a, argparse._SubParsersAction))
+    assert set(sub.choices) == set(dispatcher.BUILTIN_COMMANDS)
+
+
+def test_cross_plugin_command_collision_registers_neither(monkeypatch, caplog):
+    a = _lp("a", obj=_P({"pro": lambda x: 1}))
+    b = _lp("b", obj=_P({"pro": lambda x: 2}))
+    monkeypatch.setattr(loader, "get_plugins", lambda: [a, b])
+    with caplog.at_level(logging.WARNING):
+        with pytest.raises(SystemExit) as exc:
+            main(["pro"])
+    assert exc.value.code == 2
+    assert any("a" in r.getMessage() and "b" in r.getMessage() and "pro" in r.getMessage()
+               for r in caplog.records)
+
+
+def test_non_dict_cli_commands_disables_plugin(monkeypatch, caplog):
+    lp = _lp(obj=_P(["not", "a", "dict"]))
+    monkeypatch.setattr(loader, "get_plugins", lambda: [lp])
+    with caplog.at_level(logging.WARNING):
+        with pytest.raises(SystemExit) as exc:
+            main(["pro"])
+    assert exc.value.code == 2
+    assert lp.status == "disabled"
+    assert any("pro" in r.getMessage() for r in caplog.records)
+
+
+def test_non_callable_command_disables_plugin(monkeypatch, caplog):
+    lp = _lp(obj=_P({"pro": "nope"}))
+    monkeypatch.setattr(loader, "get_plugins", lambda: [lp])
+    with caplog.at_level(logging.WARNING):
+        with pytest.raises(SystemExit) as exc:
+            main(["pro"])
+    assert exc.value.code == 2
+    assert lp.status == "disabled"
+    assert any("pro" in r.getMessage() for r in caplog.records)
+
+
+def test_discovery_failure_falls_through_to_argparse(monkeypatch, caplog):
+    def boom():
+        raise RuntimeError("broken toml")
+
+    monkeypatch.setattr(loader, "get_plugins", boom)
+    with caplog.at_level(logging.WARNING):
+        with pytest.raises(SystemExit) as exc:
+            main(["typo"])
+    assert exc.value.code == 2
+    assert any("discovery" in r.getMessage() for r in caplog.records)
+
+
+def test_plugins_list_reason_single_line_truncated(monkeypatch):
+    reason = "line1\nline2 " + "x" * 300
+    monkeypatch.setattr(loader, "get_plugins", lambda: [_lp("bad", status="disabled", reason=reason)])
+    rc, out, _ = _run(["plugins", "list"])
+    assert rc == 0
+    lines = out.splitlines()
+    assert len(lines) == 2
+    assert len(lines[1]) < 200
 
 
 def test_plugins_list_prints_rows(monkeypatch):

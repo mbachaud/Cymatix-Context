@@ -10,6 +10,7 @@ inside ``run()`` so `cymatix --help` stays sub-100ms cold-start.
 from __future__ import annotations
 
 import argparse
+import logging
 import ntpath
 import os
 import sys
@@ -186,7 +187,13 @@ def main(argv: Optional[list[str]] = None) -> int:
     if argv[0] not in BUILTIN_COMMANDS and not argv[0].startswith("-"):
         from .cmd_plugins import plugin_cli_commands
 
-        plugin_cmd = plugin_cli_commands(set(BUILTIN_COMMANDS)).get(argv[0])
+        try:
+            plugin_cmd = plugin_cli_commands(set(BUILTIN_COMMANDS)).get(argv[0])
+        except Exception:  # noqa: BLE001 - discovery must never break the CLI
+            logging.getLogger(__name__).warning(
+                "plugin discovery failed; continuing without plugins", exc_info=True
+            )
+            plugin_cmd = None
         if plugin_cmd is not None:
             return plugin_cmd(argv[1:])
 

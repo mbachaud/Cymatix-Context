@@ -50,10 +50,12 @@ def _load_entry_point(ep: Any, cfg: PluginsConfig) -> LoadedPlugin:
     except Exception as exc:  # noqa: BLE001 - isolation boundary: any plugin failure
         log.warning("plugin %s failed to load: %r", name, exc)
         return make("disabled", repr(exc))
-    name = str(getattr(obj, "name", name))
+    reported = str(getattr(obj, "name", name))
+    if reported != name:
+        log.warning(
+            "plugin entry point %r reports name %r; using the entry-point name", name, reported
+        )
     version = str(getattr(obj, "version", "?"))
-    if name in cfg.disabled:
-        return make("skipped", "disabled in [plugins]", version)
     spec = getattr(obj, "requires_core", None)
     try:
         from packaging.specifiers import SpecifierSet
@@ -100,7 +102,7 @@ def call_hook(lp: LoadedPlugin, hook: str, *args: Any, default: T) -> T:
         return default
     try:
         return fn(*args)
-    except Exception as exc:  # noqa: BLE001 - isolation boundary
+    except (Exception, SystemExit) as exc:  # noqa: BLE001 - isolation boundary
         log.warning("plugin %s hook %s failed", lp.name, hook, exc_info=True)
         lp.status = "disabled"
         lp.reason = repr(exc)

@@ -101,7 +101,7 @@ launcher-native = [
 # pystray, so the core package stays Apache-2.0-clean.
 launcher-tray = [
     "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0",
-    "pystray>=0.19", "Pillow>=10",
+    "pystray>=0.19", "Pillow>=10", "cryptography>=42",
     "pywin32>=306; sys_platform == 'win32'",
 ]
 ast = [

@@ -63,6 +63,53 @@ def test_disabled_by_config():
     assert out[0].reason == "disabled in [plugins]"
 
 
+def test_identity_is_entry_point_name(caplog):
+    class Liar(_Plugin):
+        name = "other"
+
+    with caplog.at_level(logging.WARNING):
+        out = _discover(PluginsConfig(disabled=["other"]), _FakeEP("demo", lambda: Liar()))
+    assert out[0].name == "demo"
+    assert out[0].status == "loaded"
+    msgs = [r.getMessage() for r in caplog.records]
+    assert any("demo" in m and "other" in m for m in msgs)
+
+
+def test_disabled_ep_name_never_calls_factory():
+    def factory():
+        raise AssertionError("factory must not run")
+
+    class EP(_FakeEP):
+        def load(self):
+            return factory
+
+    out = _discover(PluginsConfig(disabled=["demo"]), EP("demo"))
+    assert out[0].status == "skipped"
+
+
+def test_call_hook_systemexit_disables(caplog):
+    class P(_Plugin):
+        def menu(self):
+            raise SystemExit(3)
+
+    lp = _discover(None, _FakeEP("demo", lambda: P()))[0]
+    with caplog.at_level(logging.WARNING):
+        assert call_hook(lp, "menu", default=[]) == []
+    assert lp.status == "disabled"
+
+
+def test_call_hook_keyboardinterrupt_propagates():
+    import pytest
+
+    class P(_Plugin):
+        def menu(self):
+            raise KeyboardInterrupt
+
+    lp = _discover(None, _FakeEP("demo", lambda: P()))[0]
+    with pytest.raises(KeyboardInterrupt):
+        call_hook(lp, "menu", default=[])
+
+
 def test_plugins_off():
     assert _discover(PluginsConfig(enabled=False), _FakeEP("demo", lambda: _Plugin())) == []
 
