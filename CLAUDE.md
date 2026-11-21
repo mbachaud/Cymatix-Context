@@ -33,7 +33,9 @@ and [Antigravity](docs/clients/antigravity.md). Direct MCP needs neither the
 model proxy nor the tray; a healthy headless server is sufficient.
 `cymatix mcp serve --http` serves the same tools over loopback-only
 streamable HTTP (port 11441, `--profile lean|full|remote-read`; identity via
-`X-Cymatix-Agent/User/Party` headers); stdio stays the default.
+`X-Cymatix-Agent/User/Party` headers; optional bearer token
+`CYMATIX_MCP_HTTP_TOKEN`; a caller's `session_id` is ignored and delivery
+elision is off over HTTP); stdio stays the default.
 
 ## How It Works
 

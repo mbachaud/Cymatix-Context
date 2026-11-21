@@ -22,7 +22,14 @@
   exposes only the eight retrieval and document-read tools. The
   `X-Cymatix-Agent`, `X-Cymatix-User` and `X-Cymatix-Party` headers set the
   request identity on this transport only; stdio is unchanged and remains
-  the default. Retrieval-inert.
+  the default. Hardening: an optional bearer token
+  (`CYMATIX_MCP_HTTP_TOKEN`; when set, a request without
+  `Authorization: Bearer <token>` gets 401); DNS-rebinding refusal, so a
+  request whose `Host` or `Origin` is not loopback is rejected; over HTTP a
+  caller's `session_id` is ignored and session delivery elision is off
+  (`ignore_delivered`), so remote clients never share or touch a working
+  set; and `remote-read` fails closed, refusing to start if its tools
+  cannot be pruned to exactly the read set. Retrieval-inert.
 - **fix(retrieval): concurrent requests no longer tier on another request's
   scores.** `query_docs` publishes its score maps on the store and
   `build_context` read them back after retrieval returned; a second thread's

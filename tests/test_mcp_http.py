@@ -123,22 +123,22 @@ def test_identity_headers_override_env(restore_tools, monkeypatch):
     _rpcs(
         app,
         [
-            ("tools/call", args, {"X-Cymatix-Agent": "  claude-mobile  "}),
+            ("tools/call", args, {"X-Cymatix-Agent": "  agent-x  "}),
             ("tools/call", args, None),
         ],
     )
-    assert [b["agent"] for b in seen] == ["claude-mobile", "a"]
+    assert [b["agent"] for b in seen] == ["agent-x", "a"]
 
 
 def test_request_identity_headers_user_party_and_cap():
     token = mcp_server._identity_headers.set(
-        {"agent": "x", "user": "max", "party": "phone"}
+        {"agent": "x", "user": "user-a", "party": "laptop"}
     )
     try:
         ident = mcp_server._request_identity()
     finally:
         mcp_server._identity_headers.reset(token)
-    assert ident == {"agent": "x", "user": "max", "party": "phone"}
+    assert ident == {"agent": "x", "user": "user-a", "party": "laptop"}
 
 
 def test_header_parsing_strips_and_validates(caplog):
