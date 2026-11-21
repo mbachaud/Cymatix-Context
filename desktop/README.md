@@ -38,6 +38,16 @@ Electron main ──spawn──▶ cymatix-engine launcher --headless --port 0
   - amber when an autostart lane is stopped;
   - red when the launcher or the primary lane is down.
 
+  A loaded plugin that reports a warn or error status also makes a green
+  state amber, never red.
+
+  Plugin menu items come from `GET /api/plugins` (polled with the lanes)
+  and appear in the tray menu after `Lanes`. A disabled item is greyed and
+  does nothing; an enabled one calls
+  `POST /api/plugins/{name}/actions/{id}` with the `X-Cymatix-Action: 1`
+  header. If the plugins request fails, the tray shows none and health is
+  unchanged.
+
   The state is shown as the tray icon, the Windows taskbar overlay, the
   macOS dock badge, or the Linux badge count.
 - **Connect a chat**: runs `cymatix mcp install --host … --lane …`. In

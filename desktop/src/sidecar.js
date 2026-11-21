@@ -139,9 +139,9 @@ class LauncherSidecar extends EventEmitter {
     });
   }
 
-  async request(method, urlPath, body) {
+  async request(method, urlPath, body, extraHeaders) {
     if (!this.baseUrl) throw new Error('launcher is not running');
-    const headers = { Authorization: `Bearer ${this.token}` };
+    const headers = { ...extraHeaders, Authorization: `Bearer ${this.token}` };
     const init = { method, headers, signal: AbortSignal.timeout(this.requestTimeoutMs) };
     if (body !== undefined) {
       headers['Content-Type'] = 'application/json';

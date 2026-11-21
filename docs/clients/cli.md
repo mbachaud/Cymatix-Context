@@ -234,6 +234,18 @@ file that is not valid JSON is left untouched. Restart the host afterwards.
 Exit codes: `0` success, `1` target unreadable or unwritable, `2` unknown
 lane or unsupported scope.
 
+### `cymatix plugins list`
+
+List the add-ons (plugins) found in the `cymatix.plugins` entry-point group
+and the plugin directory. One row per plugin: name, version, source
+(`entry_point` or `directory`), whether its signature verified, and status
+(`loaded`, `skipped` or `disabled`, with the reason). Core works the same
+with none installed. A plugin can also add its own subcommands; they appear
+in `cymatix --help` once it is loaded. See `[plugins]` in the config
+reference.
+
+Exit codes: `0` success.
+
 ### `cymatix compare --lanes A,B --queries FILE [--max-docs N] [--out PATH] [--token T]`
 
 Runs every query against both lanes' `/context/packet` (with
