@@ -141,15 +141,139 @@ def test_request_identity_headers_user_party_and_cap():
     assert ident == {"agent": "x", "user": "max", "party": "phone"}
 
 
-def test_header_parsing_strips_empties_and_caps():
-    parsed = mcp_server._parse_identity_headers(
+def test_header_parsing_strips_and_validates(caplog):
+    mcp_server._warned_identity_headers.clear()
+    with caplog.at_level("WARNING", logger="cymatix.mcp"):
+        parsed = mcp_server._parse_identity_headers(
+            [
+                (b"x-cymatix-agent", b"  a.b:c@d-1  "),
+                (b"x-cymatix-user", b"   "),
+                (b"x-cymatix-party", b"p" * 65),  # too long: ignored, not truncated
+            ]
+        )
+        mcp_server._parse_identity_headers([(b"x-cymatix-party", b"bad value!")])
+    assert parsed == {"agent": "a.b:c@d-1"}
+    warnings = [r for r in caplog.records if "x-cymatix-party" in r.getMessage().lower()]
+    assert len(warnings) == 1  # once per header name
+
+
+def test_header_parsing_rejects_bad_characters():
+    assert mcp_server._parse_identity_headers(
+        [(b"x-cymatix-agent", b"a b"), (b"x-cymatix-user", b"x/y")]
+    ) == {}
+
+
+_LOOP = "http://127.0.0.1:11441"
+
+
+def _statuses(app, cases):
+    """Status codes for ``(headers, base_url)`` cases within one app lifespan."""
+
+    async def go():
+        out = []
+        async with app.router.lifespan_context(app):
+            transport = httpx.ASGITransport(app=app)
+            for headers, base in cases:
+                async with httpx.AsyncClient(transport=transport, base_url=base) as client:
+                    resp = await client.post(
+                        "/mcp",
+                        json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
+                        headers={**_HEADERS, **(headers or {})},
+                    )
+                    out.append(resp.status_code)
+        return out
+
+    return asyncio.run(go())
+
+
+def test_dns_rebinding_guard_is_explicit_and_rejects(restore_tools, monkeypatch):
+    calls = []
+    monkeypatch.setattr(mcp_server, "_http", lambda *a, **k: calls.append(a) or {})
+    app = mcp_server.build_http_app()
+    assert _statuses(
+        app,
         [
-            (b"x-cymatix-agent", b"  a  "),
-            (b"x-cymatix-user", b"   "),
-            (b"x-cymatix-party", b"p" * 300),
-        ]
-    )
-    assert parsed == {"agent": "a", "party": "p" * 128}
+            ({}, _LOOP),
+            ({}, "http://evil.example:11441"),
+            ({"Origin": "http://evil.example"}, _LOOP),
+            ({"Origin": "http://127.0.0.1:3000"}, _LOOP),
+        ],
+    ) == [200, 421, 403, 200]
+    assert calls == []
+
+
+def test_bearer_token_required_when_set(restore_tools, monkeypatch):
+    monkeypatch.setenv("CYMATIX_MCP_HTTP_TOKEN", "s3cret")
+    calls = []
+    monkeypatch.setattr(mcp_server, "_http", lambda *a, **k: calls.append(a) or {})
+    app = mcp_server.build_http_app()
+    assert _statuses(
+        app,
+        [
+            ({}, _LOOP),
+            ({"Authorization": "Bearer wrong"}, _LOOP),
+            ({"Authorization": "Basic s3cret"}, _LOOP),
+            ({"Authorization": "Bearer s3cret"}, _LOOP),
+        ],
+    ) == [401, 401, 401, 200]
+    assert calls == []
+
+
+def test_no_token_means_open(restore_tools, monkeypatch):
+    monkeypatch.delenv("CYMATIX_MCP_HTTP_TOKEN", raising=False)
+    app = mcp_server.build_http_app()
+    assert _statuses(app, [({}, _LOOP)]) == [200]
+
+
+def test_remote_read_fails_closed_on_enumeration_error(restore_tools, monkeypatch):
+    import uvicorn
+
+    ran = []
+    monkeypatch.setattr(uvicorn, "run", lambda *a, **k: ran.append(1))
+    monkeypatch.setattr(mcp_server, "_register_with_registry", lambda: None)
+    real = mcp_server.mcp._tool_manager
+
+    class Broken:
+        @property
+        def _tools(self):
+            raise RuntimeError("internal shape changed")
+
+    monkeypatch.setattr(mcp_server.mcp, "_tool_manager", Broken())
+    try:
+        with pytest.raises(RuntimeError):
+            mcp_server.serve_http(11450, "remote-read")
+    finally:
+        monkeypatch.setattr(mcp_server.mcp, "_tool_manager", real)
+    assert ran == []
+
+
+def test_remote_read_fails_closed_on_removal_error(restore_tools, monkeypatch):
+    import uvicorn
+
+    ran = []
+    monkeypatch.setattr(uvicorn, "run", lambda *a, **k: ran.append(1))
+    monkeypatch.setattr(mcp_server, "_register_with_registry", lambda: None)
+
+    def boom(name):
+        raise RuntimeError("cannot remove")
+
+    monkeypatch.setattr(mcp_server.mcp, "remove_tool", boom)
+    with pytest.raises(RuntimeError):
+        mcp_server.serve_http(11450, "remote-read")
+    assert ran == []
+
+
+def test_explicit_profile_beats_ambient_full_env(restore_tools, monkeypatch):
+    monkeypatch.setenv("CYMATIX_MCP_FULL", "1")
+
+    def cymatix_zz_extra() -> str:
+        return "x"
+
+    mcp_server.mcp.add_tool(cymatix_zz_extra)
+    assert "cymatix_zz_extra" in mcp_server.mcp._tool_manager._tools
+    mcp_server._apply_mcp_profile(mcp_server.mcp, "lean")
+    assert "cymatix_zz_extra" not in mcp_server.mcp._tool_manager._tools
+    assert set(mcp_server.mcp._tool_manager._tools) <= set(mcp_server._MCP_CORE_TOOLS)
 
 
 def test_non_loopback_host_rejected(capsys):
@@ -238,13 +362,15 @@ def test_http_without_session_id_ignores_delivered(restore_tools, monkeypatch):
         assert "session_id" not in body
 
 
-def test_http_explicit_session_id_passes_through(restore_tools, monkeypatch):
+def test_http_explicit_session_id_is_ignored(restore_tools, monkeypatch):
+    """Remote callers must not touch other sessions' working sets."""
     bodies = _call_context_tools(
         monkeypatch, {"query": "q", "session_id": "conv-1"}, over_http=True
     )
+    assert len(bodies) == 2
     for body in bodies:
-        assert body["session_id"] == "conv-1"
-        assert "ignore_delivered" not in body
+        assert body["ignore_delivered"] is True
+        assert "session_id" not in body
 
 
 def test_stdio_session_behaviour_unchanged(restore_tools, monkeypatch):

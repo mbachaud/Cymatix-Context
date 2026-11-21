@@ -110,9 +110,11 @@ See note at bottom of this file for the sketch.
 from __future__ import annotations
 
 import contextvars
+import hmac
 import json
 import logging
 import os
+import re
 import socket
 import urllib.error
 import urllib.request
@@ -208,7 +210,6 @@ MCP_AGENT_HANDLE: Optional[str] = (
 
 # Per-request identity from the HTTP transport's X-Cymatix-{Agent,User,Party}
 # headers. Only the HTTP ASGI wrapper ever sets it, so stdio never sees it.
-_IDENTITY_HEADER_MAX = 128
 _identity_headers: "contextvars.ContextVar[Dict[str, str]]" = contextvars.ContextVar(
     "cymatix_mcp_identity_headers", default={}
 )
@@ -224,11 +225,12 @@ def _apply_http_session_policy(body: Dict[str, Any], session_id: Optional[str]) 
     """HTTP transport only: never use the shared process session id.
 
     The per-process MCP_SESSION_ID would be shared by unrelated remote
-    clients, so they would elide each other's documents. Without an explicit
-    ``session_id`` from the caller, drop it and turn elision off instead.
-    stdio (and an explicit session_id) leave the body untouched.
+    clients, so they would elide each other's documents, and a caller-supplied
+    ``session_id`` would let a remote client touch another session's working
+    set. Over HTTP any session id is dropped and elision is turned off.
+    stdio leaves the body untouched.
     """
-    if session_id or not _http_transport.get():
+    if not _http_transport.get():
         return
     body.pop("session_id", None)
     body["ignore_delivered"] = True
@@ -1263,21 +1265,27 @@ def _apply_mcp_profile(
     """Prune tools from ``server`` according to ``profile``.
 
     ``None`` keeps the legacy behaviour (lean core set unless CYMATIX_MCP_FULL
-    opts into the full surface); ``"lean"`` is the core set, ``"full"``
-    removes nothing, ``"remote-read"`` keeps only ``_REMOTE_READ_TOOLS``.
+    opts into the full surface); an explicit ``"lean"`` is the core set
+    regardless of the environment, ``"full"`` removes nothing, ``"remote-read"``
+    keeps only ``_REMOTE_READ_TOOLS``.
 
     Returns the names removed (empty list when the full surface is active).
-    Uses MCPServer's public ``remove_tool``; any failure is non-fatal and falls
-    back to leaving the full surface exposed (correctness over token savings).
+    Uses MCPServer's public ``remove_tool``. For the legacy and lean profiles a
+    failure is non-fatal and leaves the surface exposed (correctness over token
+    savings); ``remote-read`` fails CLOSED: any failure raises, and the exposed
+    names must be a subset of ``_REMOTE_READ_TOOLS`` afterwards.
     """
-    if profile == "full" or (profile in (None, "lean") and _mcp_full_surface()):
+    strict = profile == "remote-read"
+    if profile == "full" or (profile is None and _mcp_full_surface()):
         return []
     try:
         names = list(server._tool_manager._tools.keys())
-    except Exception:  # pragma: no cover - MCPServer internal shape changed
+    except Exception as exc:
+        if strict:
+            raise RuntimeError("could not enumerate MCP tools for remote-read") from exc
         log.warning("could not enumerate MCP tools; exposing full surface")
         return []
-    keep = _REMOTE_READ_TOOLS if profile == "remote-read" else _effective_core_tools()
+    keep = _REMOTE_READ_TOOLS if strict else _effective_core_tools()
     removed: List[str] = []
     for name in names:
         if name in keep:
@@ -1285,8 +1293,15 @@ def _apply_mcp_profile(
         try:
             server.remove_tool(name)
             removed.append(name)
-        except Exception:  # pragma: no cover - remove_tool contract changed
+        except Exception as exc:
+            if strict:
+                raise RuntimeError(f"could not prune MCP tool {name} for remote-read") from exc
             log.warning("could not prune MCP tool %s; leaving it exposed", name)
+    if strict:
+        exposed = set(server._tool_manager._tools.keys())
+        extra = exposed - _REMOTE_READ_TOOLS
+        if extra:
+            raise RuntimeError(f"remote-read exposes unexpected tools: {sorted(extra)}")
     if removed:
         log.info(
             "lean MCP profile: %d core tools exposed, %d hidden "
@@ -1424,36 +1439,71 @@ _IDENTITY_HEADER_NAMES = {
 }
 
 
+_IDENTITY_VALUE_RE = re.compile(r"^[A-Za-z0-9._:@-]{1,64}$")
+_warned_identity_headers: set = set()
+
+
 def _parse_identity_headers(raw_headers) -> Dict[str, str]:
     """Pull the three identity headers out of ASGI headers.
 
-    Values are stripped; empty means unset; anything longer than
-    ``_IDENTITY_HEADER_MAX`` is truncated so unbounded values never reach the
-    Cymatix server.
+    Values are stripped; empty means unset. A value that does not match
+    ``^[A-Za-z0-9._:@-]{1,64}$`` is ignored (treated as unset, never
+    truncated) and logged once per header name. The headers are self-asserted
+    labels, not authentication.
     """
     found: Dict[str, str] = {}
     for name, value in raw_headers:
-        key = _IDENTITY_HEADER_NAMES.get(bytes(name).lower())
+        lname = bytes(name).lower()
+        key = _IDENTITY_HEADER_NAMES.get(lname)
         if key is None:
             continue
-        text = bytes(value).decode("latin-1").strip()[:_IDENTITY_HEADER_MAX]
-        if text:
-            found[key] = text
+        text = bytes(value).decode("latin-1").strip()
+        if not text:
+            continue
+        if not _IDENTITY_VALUE_RE.match(text):
+            if lname not in _warned_identity_headers:
+                _warned_identity_headers.add(lname)
+                log.warning("ignoring invalid %s header value", lname.decode())
+            continue
+        found[key] = text
     return found
 
 
-class _IdentityASGI:
-    """ASGI wrapper that scopes the identity headers to one request."""
+async def _send_status(send, status: int, body: bytes) -> None:
+    await send({"type": "http.response.start", "status": status,
+                "headers": [(b"content-type", b"application/json"),
+                            (b"content-length", str(len(body)).encode())]})
+    await send({"type": "http.response.body", "body": body})
 
-    def __init__(self, inner: Any) -> None:
+
+class _IdentityASGI:
+    """ASGI wrapper: optional bearer-token gate, and per-request identity."""
+
+    def __init__(self, inner: Any, token: Optional[str] = None) -> None:
         self.inner = inner
+        self._token = token
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self.inner, name)
 
+    def _authorized(self, scope) -> bool:
+        if not self._token:
+            return True
+        for name, value in scope.get("headers", []):
+            if bytes(name).lower() == b"authorization":
+                parts = bytes(value).decode("latin-1").split(None, 1)
+                if len(parts) == 2 and parts[0].lower() == "bearer":
+                    return hmac.compare_digest(
+                        parts[1].strip().encode("utf-8"), self._token.encode("utf-8")
+                    )
+        return False
+
     async def __call__(self, scope, receive, send) -> None:
         if scope.get("type") != "http":
             await self.inner(scope, receive, send)
+            return
+        if not self._authorized(scope):
+            await _send_status(send, 401, b'{"error": "unauthorized"}')
             return
         token = _identity_headers.set(_parse_identity_headers(scope.get("headers", [])))
         flag = _http_transport.set(True)
@@ -1466,8 +1516,18 @@ class _IdentityASGI:
 
 def build_http_app() -> Any:
     """Streamable-HTTP ASGI app for the current tool surface (stateless)."""
-    inner = mcp.streamable_http_app(stateless_http=True, json_response=True)
-    return _IdentityASGI(inner)
+    from mcp.server.transport_security import TransportSecuritySettings
+
+    security = TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=["127.0.0.1:*", "localhost:*", "[::1]:*"],
+        allowed_origins=["http://127.0.0.1:*", "http://localhost:*", "http://[::1]:*"],
+    )
+    inner = mcp.streamable_http_app(
+        stateless_http=True, json_response=True, transport_security=security
+    )
+    token = os.environ.get("CYMATIX_MCP_HTTP_TOKEN", "").strip() or None
+    return _IdentityASGI(inner, token)
 
 
 def serve_http(
@@ -1492,6 +1552,7 @@ def serve_http(
     _apply_mcp_profile(mcp, profile)
     log.info("cymatix-mcp HTTP on %s:%d, profile=%s, proxying to %s",
              host, port, profile, CYMATIX_URL)
+    log.info("exposed tools: %s", sorted(mcp._tool_manager._tools.keys()))
     try:
         _register_with_registry()
     except Exception:

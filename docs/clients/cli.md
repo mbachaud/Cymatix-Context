@@ -259,8 +259,13 @@ five `cymatix_document_*` read tools; no ingest or session tools.
 On this transport each request may carry `X-Cymatix-Agent`, `X-Cymatix-User`
 and `X-Cymatix-Party` headers; they override the `CYMATIX_AGENT`,
 `CYMATIX_USER` and `CYMATIX_PARTY_ID` environment identity for that request
-only (values are trimmed, empty means unset, capped at 128 characters).
-Stdio ignores these headers.
+only (values are trimmed, empty means unset, and a value must match
+`^[A-Za-z0-9._:@-]{1,64}$` or it is ignored). Stdio ignores these headers.
+The headers are self-asserted labels, not authentication: to require a
+credential, set `CYMATIX_MCP_HTTP_TOKEN` when serving and clients must send
+`Authorization: Bearer <token>`. Over HTTP a caller-supplied `session_id` is
+ignored and delivery elision is always off, so remote clients never touch
+another session's working set.
 
 Exit codes: `0` clean stop, `2` unknown lane, non-loopback host or missing
 `--http`.
