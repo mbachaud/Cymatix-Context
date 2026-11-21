@@ -31,6 +31,9 @@ with native guides for [Claude Code](docs/clients/claude-code.md),
 [Codex](docs/clients/codex.md), [Gemini CLI](docs/clients/gemini-cli.md),
 and [Antigravity](docs/clients/antigravity.md). Direct MCP needs neither the
 model proxy nor the tray; a healthy headless server is sufficient.
+`cymatix mcp serve --http` serves the same tools over loopback-only
+streamable HTTP (port 11441, `--profile lean|full|remote-read`; identity via
+`X-Cymatix-Agent/User/Party` headers); stdio stays the default.
 
 ## How It Works
 

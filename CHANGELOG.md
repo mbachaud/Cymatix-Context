@@ -15,7 +15,14 @@
   loaded plugin reporting a warn or error status turns a green tray icon
   amber (never red). Core behaves the same with no plugins installed;
   retrieval is unchanged.
-
+- **feat(mcp): loopback streamable-HTTP transport.** `cymatix mcp serve
+  --http [--port 11441] [--lane NAME] [--profile lean|full|remote-read]`
+  serves the MCP tools over HTTP for remote clients. Loopback bind only
+  (`--host` other than `127.0.0.1` exits 2). The new `remote-read` profile
+  exposes only the eight retrieval and document-read tools. The
+  `X-Cymatix-Agent`, `X-Cymatix-User` and `X-Cymatix-Party` headers set the
+  request identity on this transport only; stdio is unchanged and remains
+  the default. Retrieval-inert.
 - **fix(retrieval): concurrent requests no longer tier on another request's
   scores.** `query_docs` publishes its score maps on the store and
   `build_context` read them back after retrieval returned; a second thread's

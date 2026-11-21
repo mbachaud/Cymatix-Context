@@ -246,6 +246,25 @@ reference.
 
 Exit codes: `0` success.
 
+### `cymatix mcp serve --http [--port N] [--lane NAME] [--profile lean|full|remote-read] [--host 127.0.0.1]`
+
+Serves the MCP tools over streamable HTTP (stateless, endpoint `/mcp`) for
+remote clients that cannot spawn a stdio process. The server binds loopback
+only: any `--host` other than `127.0.0.1` is refused. Defaults: port `11441`,
+lane `stable` (the lane's port becomes the proxied Cymatix URL, as in
+`install`), profile `lean` (the same tools as stdio). `remote-read` exposes
+only `cymatix_context`, `cymatix_context_packet`, `cymatix_health` and the
+five `cymatix_document_*` read tools; no ingest or session tools.
+
+On this transport each request may carry `X-Cymatix-Agent`, `X-Cymatix-User`
+and `X-Cymatix-Party` headers; they override the `CYMATIX_AGENT`,
+`CYMATIX_USER` and `CYMATIX_PARTY_ID` environment identity for that request
+only (values are trimmed, empty means unset, capped at 128 characters).
+Stdio ignores these headers.
+
+Exit codes: `0` clean stop, `2` unknown lane, non-loopback host or missing
+`--http`.
+
 ### `cymatix compare --lanes A,B --queries FILE [--max-docs N] [--out PATH] [--token T]`
 
 Runs every query against both lanes' `/context/packet` (with

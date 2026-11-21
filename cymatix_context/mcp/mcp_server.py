@@ -109,6 +109,7 @@ See note at bottom of this file for the sketch.
 
 from __future__ import annotations
 
+import contextvars
 import json
 import logging
 import os
@@ -203,7 +204,34 @@ MCP_SESSION_ID = os.environ.get("CYMATIX_MCP_HANDLE", f"mcp-{os.getpid()}")
 # fallback (Claude Code, OpenWebUI, etc. commonly set this).
 MCP_AGENT_HANDLE: Optional[str] = (
     os.environ.get("CYMATIX_AGENT") or os.environ.get("CYMATIX_MCP_HANDLE") or None
+)  # import-time snapshot, back-compat alias only; call sites use _request_identity()
+
+# Per-request identity from the HTTP transport's X-Cymatix-{Agent,User,Party}
+# headers. Only the HTTP ASGI wrapper ever sets it, so stdio never sees it.
+_IDENTITY_HEADER_MAX = 128
+_identity_headers: "contextvars.ContextVar[Dict[str, str]]" = contextvars.ContextVar(
+    "cymatix_mcp_identity_headers", default={}
 )
+
+
+def _header_identity(key: str) -> Optional[str]:
+    return _identity_headers.get().get(key) or None
+
+
+def _request_identity() -> Dict[str, Optional[str]]:
+    """Identity for outgoing requests: HTTP headers first, then env, then host.
+
+    Keys ``agent``, ``user``, ``party``. Over stdio the contextvar is never
+    set, so this is the env lookup the module used to do at import.
+    """
+    agent = (
+        _header_identity("agent")
+        or os.environ.get("CYMATIX_AGENT")
+        or os.environ.get("CYMATIX_MCP_HANDLE")
+        or None
+    )
+    user = _header_identity("user") or os.environ.get("CYMATIX_USER") or None
+    return {"agent": agent, "user": user, "party": _default_party_id()}
 
 # Set by _register_with_registry on success; consumed by the
 # cymatix_announce MCP tool to PATCH the same participant row.
@@ -219,6 +247,9 @@ def _default_party_id() -> str:
     Falls back to ``"unknown-host"`` only if the hostname lookup itself
     fails, so the caller always gets a usable string.
     """
+    header_party = _header_identity("party")
+    if header_party:
+        return header_party
     for key in ("CYMATIX_PARTY_ID", "CYMATIX_DEVICE", "CYMATIX_PARTY"):
         val = os.environ.get(key)
         if val:
@@ -409,13 +440,18 @@ def _default_ingest_identity() -> Dict[str, Any]:
     """
     org_id = _normalize_identity_token(os.environ.get("CYMATIX_ORG"))
     party_id = _normalize_identity_token(
-        os.environ.get("CYMATIX_DEVICE")
+        _header_identity("party")
+        or os.environ.get("CYMATIX_DEVICE")
         or os.environ.get("CYMATIX_PARTY_ID")
         or os.environ.get("CYMATIX_PARTY")
     )
-    participant_handle = _normalize_identity_token(os.environ.get("CYMATIX_USER"))
+    participant_handle = _normalize_identity_token(
+        _header_identity("user") or os.environ.get("CYMATIX_USER")
+    )
     agent_handle = _normalize_identity_token(
-        os.environ.get("CYMATIX_AGENT") or os.environ.get("CYMATIX_MCP_HANDLE")
+        _header_identity("agent")
+        or os.environ.get("CYMATIX_AGENT")
+        or os.environ.get("CYMATIX_MCP_HANDLE")
     )
     agent_kind = _normalize_identity_token(
         os.environ.get("CYMATIX_AGENT_KIND") or os.environ.get("CYMATIX_MCP_HOST")
@@ -475,11 +511,12 @@ def cymatix_context(
         body["decoder_mode"] = decoder_mode
     if model is not None:
         body["model"] = model
-    if MCP_AGENT_HANDLE:
+    agent_handle = _request_identity()["agent"]
+    if agent_handle:
         # Plumb agent identity through so cymatix's per-agent telemetry
         # labels (request rate / latency by agent) reflect THIS shim,
         # not the bare CYMATIX_AGENT env on the cymatix server process.
-        body["agent"] = MCP_AGENT_HANDLE
+        body["agent"] = agent_handle
     return _unwrap_context_list(_http("POST", "/context", body))
 
 
@@ -1060,11 +1097,12 @@ def cymatix_document_query(
         body["decoder_mode"] = decoder_mode
     if model is not None:
         body["model"] = model
-    if MCP_AGENT_HANDLE:
+    agent_handle = _request_identity()["agent"]
+    if agent_handle:
         # Plumb agent identity through so cymatix's per-agent telemetry
         # labels (request rate / latency by agent) reflect THIS shim,
         # not the bare CYMATIX_AGENT env on the cymatix server process.
-        body["agent"] = MCP_AGENT_HANDLE
+        body["agent"] = agent_handle
     return _unwrap_context_list(_http("POST", "/context", body))
 
 
@@ -1183,21 +1221,41 @@ def _mcp_full_surface() -> bool:
     return os.environ.get("CYMATIX_MCP_FULL", "").strip().lower() in _TRUTHY
 
 
-def _apply_mcp_profile(server: MCPServer = mcp) -> List[str]:
-    """Prune non-core tools from ``server`` unless the full surface is requested.
+# Read-only retrieval surface for remote clients over the HTTP transport: no
+# ingest, no session mutation, no announce.
+_REMOTE_READ_TOOLS = frozenset({
+    "cymatix_context",
+    "cymatix_context_packet",
+    "cymatix_health",
+    "cymatix_document_get",
+    "cymatix_document_query",
+    "cymatix_document_preview",
+    "cymatix_document_fingerprint",
+    "cymatix_document_neighbors",
+})
+
+
+def _apply_mcp_profile(
+    server: MCPServer = mcp, profile: Optional[str] = None
+) -> List[str]:
+    """Prune tools from ``server`` according to ``profile``.
+
+    ``None`` keeps the legacy behaviour (lean core set unless CYMATIX_MCP_FULL
+    opts into the full surface); ``"lean"`` is the core set, ``"full"``
+    removes nothing, ``"remote-read"`` keeps only ``_REMOTE_READ_TOOLS``.
 
     Returns the names removed (empty list when the full surface is active).
     Uses MCPServer's public ``remove_tool``; any failure is non-fatal and falls
     back to leaving the full surface exposed (correctness over token savings).
     """
-    if _mcp_full_surface():
+    if profile == "full" or (profile in (None, "lean") and _mcp_full_surface()):
         return []
     try:
         names = list(server._tool_manager._tools.keys())
     except Exception:  # pragma: no cover - MCPServer internal shape changed
         log.warning("could not enumerate MCP tools; exposing full surface")
         return []
-    keep = _effective_core_tools()
+    keep = _REMOTE_READ_TOOLS if profile == "remote-read" else _effective_core_tools()
     removed: List[str] = []
     for name in names:
         if name in keep:
@@ -1335,6 +1393,86 @@ def main() -> None:
         )
 
     mcp.run()
+
+
+_IDENTITY_HEADER_NAMES = {
+    b"x-cymatix-agent": "agent",
+    b"x-cymatix-user": "user",
+    b"x-cymatix-party": "party",
+}
+
+
+def _parse_identity_headers(raw_headers) -> Dict[str, str]:
+    """Pull the three identity headers out of ASGI headers.
+
+    Values are stripped; empty means unset; anything longer than
+    ``_IDENTITY_HEADER_MAX`` is truncated so unbounded values never reach the
+    Cymatix server.
+    """
+    found: Dict[str, str] = {}
+    for name, value in raw_headers:
+        key = _IDENTITY_HEADER_NAMES.get(bytes(name).lower())
+        if key is None:
+            continue
+        text = bytes(value).decode("latin-1").strip()[:_IDENTITY_HEADER_MAX]
+        if text:
+            found[key] = text
+    return found
+
+
+class _IdentityASGI:
+    """ASGI wrapper that scopes the identity headers to one request."""
+
+    def __init__(self, inner: Any) -> None:
+        self.inner = inner
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.inner, name)
+
+    async def __call__(self, scope, receive, send) -> None:
+        if scope.get("type") != "http":
+            await self.inner(scope, receive, send)
+            return
+        token = _identity_headers.set(_parse_identity_headers(scope.get("headers", [])))
+        try:
+            await self.inner(scope, receive, send)
+        finally:
+            _identity_headers.reset(token)
+
+
+def build_http_app() -> Any:
+    """Streamable-HTTP ASGI app for the current tool surface (stateless)."""
+    inner = mcp.streamable_http_app(stateless_http=True, json_response=True)
+    return _IdentityASGI(inner)
+
+
+def serve_http(
+    port: int,
+    profile: str = "lean",
+    *,
+    host: str = "127.0.0.1",
+    upstream_url: Optional[str] = None,
+) -> None:
+    """Serve the MCP tools over streamable HTTP, loopback only."""
+    global CYMATIX_URL
+    if host != "127.0.0.1":
+        raise ValueError("non-loopback MCP HTTP binds are not supported")
+    import uvicorn
+
+    logging.basicConfig(
+        level=os.environ.get("CYMATIX_MCP_LOG_LEVEL", "INFO"),
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
+    if upstream_url:
+        CYMATIX_URL = upstream_url.rstrip("/")
+    _apply_mcp_profile(mcp, profile)
+    log.info("cymatix-mcp HTTP on %s:%d, profile=%s, proxying to %s",
+             host, port, profile, CYMATIX_URL)
+    try:
+        _register_with_registry()
+    except Exception:
+        log.exception("Registry handshake failed — continuing without registration.")
+    uvicorn.run(build_http_app(), host=host, port=port, log_level="info")
 
 
 if __name__ == "__main__":
