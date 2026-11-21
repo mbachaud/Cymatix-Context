@@ -807,6 +807,8 @@ def _install_plugin_support(
     plugin is disabled instead of breaking the launcher.
     """
     from fastapi import APIRouter
+    from fastapi.routing import APIRoute
+    from starlette.routing import Route
 
     from ..plugins.api import MenuItem, Panel
     from ..plugins.loader import call_hook
@@ -835,7 +837,13 @@ def _install_plugin_support(
         if not _PLUGIN_NAME_RE.match(lp.name):
             _disable(lp, "plugin name is not usable in a URL")
             continue
-        app.include_router(router, prefix=f"/api/plugins/{lp.name}")
+        if any(not isinstance(r, (APIRoute, Route)) for r in router.routes):
+            _disable(lp, "router contains non-HTTP routes (WebSocket routes are refused)")
+            continue
+        try:
+            app.include_router(router, prefix=f"/api/plugins/{lp.name}")
+        except Exception as exc:  # noqa: BLE001 - plugin-supplied router
+            _disable(lp, f"include_router failed: {exc!r}")
 
     # -- guard + containment (one middleware, cannot be bypassed by routers)
     @app.middleware("http")
@@ -934,6 +942,7 @@ def _install_plugin_support(
                 if not isinstance(panel, Panel):
                     continue
                 try:
+                    title = str(panel.title)
                     html = panel.render()
                     if not isinstance(html, str):
                         raise TypeError(f"render() returned {type(html).__name__}")
@@ -941,10 +950,10 @@ def _install_plugin_support(
                     log.warning("plugin %s panel %s failed", lp.name, panel.id, exc_info=True)
                     _disable(lp, f"panel {panel.id} render failed: {exc!r}")
                     out.append({"id": f"plugin-{lp.name}-{panel.id}",
-                                "title": str(panel.title), "html": _PANEL_UNAVAILABLE})
+                                "title": "Plugin", "html": _PANEL_UNAVAILABLE})
                     break
                 out.append({"id": f"plugin-{lp.name}-{panel.id}",
-                            "title": str(panel.title), "html": html})
+                            "title": title, "html": html})
         return out
 
     app.state.plugin_panels = plugin_panels
@@ -1748,7 +1757,11 @@ def main(argv: Optional[list] = None) -> int:
         except Exception as exc:
             log.error("Failed to start lane %s: %s", rt.config.name, exc)
 
-    plugins = get_plugins()
+    try:
+        plugins = get_plugins()
+    except Exception:  # noqa: BLE001 - core must run without plugins
+        log.warning("plugin discovery failed; continuing without plugins", exc_info=True)
+        plugins = []
     plugin_services = PluginServiceSupervisor(plugins)
     plugin_services.start_all()  # exactly once, after the lanes are up
     plugin_services.run_in_thread()

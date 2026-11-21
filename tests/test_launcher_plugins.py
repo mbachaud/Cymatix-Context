@@ -285,3 +285,54 @@ def test_token_mode_still_requires_header_and_token(parts):
         assert r.status_code == 403
         r = c.post("/api/plugins/demo/actions/pair", headers={**ACTION, **auth})
         assert r.status_code == 200
+
+
+def test_router_with_websocket_route_refused(parts):
+    obj = FakePlugin()
+
+    @obj.router.websocket("/ws")
+    async def ws(websocket):
+        await websocket.accept()
+        await websocket.close()
+
+    lp = _loaded(obj)
+    with _client(parts, [lp]) as c:
+        assert lp.status == "disabled"
+        r = c.get("/api/plugins/demo/ping", headers=LOOPBACK)
+        assert r.status_code == 404
+        with pytest.raises(Exception):
+            with c.websocket_connect("/api/plugins/demo/ws"):
+                pass
+
+
+def test_include_router_failure_contained(parts, monkeypatch):
+    from fastapi import FastAPI
+
+    bad = _loaded(FakePlugin(), name="bad")
+    good_obj = FakePlugin()
+    good = _loaded(good_obj, name="good")
+    real = FastAPI.include_router
+
+    def flaky(self, router, *a, prefix="", **kw):
+        if prefix.endswith("/bad"):
+            raise RuntimeError("include boom")
+        return real(self, router, *a, prefix=prefix, **kw)
+
+    monkeypatch.setattr(FastAPI, "include_router", flaky)
+    with _client(parts, [bad, good]) as c:
+        assert bad.status == "disabled"
+        assert good.status == "loaded"
+        assert c.get("/api/plugins/good/ping", headers=LOOPBACK).status_code == 200
+
+
+def test_panel_title_failure_contained(parts):
+    class Bad:
+        def __str__(self):
+            raise RuntimeError("title boom")
+
+    obj = FakePlugin()
+    obj.panels = lambda: [Panel("mobile", Bad(), lambda: "x")]
+    lp = _loaded(obj)
+    with _client(parts, [lp]) as c:
+        assert c.get("/api/state/panels").status_code == 200
+    assert lp.status == "disabled"
