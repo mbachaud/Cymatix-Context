@@ -23,7 +23,7 @@ class FakePlugin:
 
     def __init__(self):
         self.actions = []
-        self.panel_html = "<p>hello mobile</p>"
+        self.panel_html = "<p>hello demo</p>"
         self.router = APIRouter()
 
         @self.router.get("/ping")
@@ -40,20 +40,20 @@ class FakePlugin:
             raise RuntimeError("secret traceback detail")
 
     def menu(self):
-        return [MenuItem("pair", "Pair a phone"), MenuItem("off", "Off", enabled=False)]
+        return [MenuItem("connect", "Connect device"), MenuItem("off", "Off", enabled=False)]
 
     def on_action(self, action_id):
         self.actions.append(action_id)
         return {"did": action_id}
 
     def status(self):
-        return {"level": "warn", "text": "not paired"}
+        return {"level": "warn", "text": "not connected"}
 
     def routes(self):
         return self.router
 
     def panels(self):
-        return [Panel("mobile", "Mobile <b>", lambda: self.panel_html)]
+        return [Panel("demo-panel", "Demo <b>", lambda: self.panel_html)]
 
 
 def _loaded(obj=None, name="demo"):
@@ -98,10 +98,10 @@ def test_api_plugins_lists_menu_and_status(parts):
     assert p["source"] == "entry_point" and p["signed"] is False
     assert p["status"] == "loaded" and p["reason"] is None
     assert p["menu"] == [
-        {"id": "pair", "label": "Pair a phone", "enabled": True},
+        {"id": "connect", "label": "Connect device", "enabled": True},
         {"id": "off", "label": "Off", "enabled": False},
     ]
-    assert p["status_info"] == {"level": "warn", "text": "not paired"}
+    assert p["status_info"] == {"level": "warn", "text": "not connected"}
 
 
 def test_api_plugins_without_services(parts):
@@ -112,16 +112,16 @@ def test_api_plugins_without_services(parts):
 def test_action_dispatches_on_action(parts):
     obj = FakePlugin()
     with _client(parts, [_loaded(obj)]) as c:
-        r = c.post("/api/plugins/demo/actions/pair", headers=ACTION)
+        r = c.post("/api/plugins/demo/actions/connect", headers=ACTION)
     assert r.status_code == 200
-    assert r.json() == {"ok": True, "result": {"did": "pair"}}
-    assert obj.actions == ["pair"]
+    assert r.json() == {"ok": True, "result": {"did": "connect"}}
+    assert obj.actions == ["connect"]
 
 
 def test_action_without_header_refused(parts):
     obj = FakePlugin()
     with _client(parts, [_loaded(obj)]) as c:
-        r = c.post("/api/plugins/demo/actions/pair", headers=LOOPBACK)
+        r = c.post("/api/plugins/demo/actions/connect", headers=LOOPBACK)
     assert r.status_code == 403
     assert r.json() == {"error": "plugin action requires X-Cymatix-Action header"}
     assert obj.actions == []
@@ -131,7 +131,7 @@ def test_action_non_loopback_host_refused(parts):
     obj = FakePlugin()
     with _client(parts, [_loaded(obj)]) as c:
         r = c.post(
-            "/api/plugins/demo/actions/pair",
+            "/api/plugins/demo/actions/connect",
             headers={"Host": "evil.example", "X-Cymatix-Action": "1"},
         )
     assert r.status_code == 403
@@ -143,7 +143,7 @@ def test_action_non_loopback_host_refused(parts):
 def test_loopback_host_spellings_accepted(parts, host):
     with _client(parts, [_loaded()]) as c:
         r = c.post(
-            "/api/plugins/demo/actions/pair",
+            "/api/plugins/demo/actions/connect",
             headers={"Host": host, "X-Cymatix-Action": "1"},
         )
     assert r.status_code == 200
@@ -151,7 +151,7 @@ def test_loopback_host_spellings_accepted(parts, host):
 
 def test_unknown_plugin_and_action_404(parts):
     with _client(parts, [_loaded()]) as c:
-        r = c.post("/api/plugins/nope/actions/pair", headers=ACTION)
+        r = c.post("/api/plugins/nope/actions/connect", headers=ACTION)
         assert r.status_code == 404 and r.json() == {"error": "unknown plugin"}
         r = c.post("/api/plugins/demo/actions/nope", headers=ACTION)
         assert r.status_code == 404 and r.json() == {"error": "unknown action"}
@@ -162,10 +162,10 @@ def test_action_non_dict_result_disables_plugin(parts):
     obj.on_action = lambda action_id: "not a dict"
     lp = _loaded(obj)
     with _client(parts, [lp]) as c:
-        r = c.post("/api/plugins/demo/actions/pair", headers=ACTION)
+        r = c.post("/api/plugins/demo/actions/connect", headers=ACTION)
         assert r.status_code == 500 and r.json() == {"error": "plugin error"}
         assert lp.status == "disabled"
-        r = c.post("/api/plugins/demo/actions/pair", headers=ACTION)
+        r = c.post("/api/plugins/demo/actions/connect", headers=ACTION)
         assert r.status_code == 404 and r.json() == {"error": "unknown plugin"}
 
 
@@ -178,7 +178,7 @@ def test_action_raising_gives_500_and_disables(parts):
     obj.on_action = bad
     lp = _loaded(obj)
     with _client(parts, [lp]) as c:
-        r = c.post("/api/plugins/demo/actions/pair", headers=ACTION)
+        r = c.post("/api/plugins/demo/actions/connect", headers=ACTION)
     assert r.status_code == 500 and r.json() == {"error": "plugin error"}
     assert lp.status == "disabled"
 
@@ -219,16 +219,16 @@ def test_non_router_routes_disables_plugin(parts):
 
 def test_panel_rendered_in_partial(parts):
     with _client(parts, [_loaded()]) as c:
-        html = c.get("/api/state/panels").text
-    assert 'id="plugin-demo-mobile"' in html
+        html = c.get("/api/state/panels", headers=LOOPBACK).text
+    assert 'id="plugin-demo-demo-panel"' in html
     assert "plugin-panel" in html
-    assert "<p>hello mobile</p>" in html
-    assert "Mobile &lt;b&gt;" in html  # title escaped
+    assert "<p>hello demo</p>" in html
+    assert "Demo &lt;b&gt;" in html  # title escaped
 
 
 def test_panel_rendered_on_dashboard(parts):
     with _client(parts, [_loaded()]) as c:
-        assert 'id="plugin-demo-mobile"' in c.get("/").text
+        assert 'id="plugin-demo-demo-panel"' in c.get("/", headers=LOOPBACK).text
 
 
 def test_panel_render_failure_contained(parts):
@@ -237,10 +237,10 @@ def test_panel_render_failure_contained(parts):
     def boom():
         raise RuntimeError("render boom")
 
-    obj.panels = lambda: [Panel("mobile", "Mobile", boom)]
+    obj.panels = lambda: [Panel("demo-panel", "Demo", boom)]
     lp = _loaded(obj)
     with _client(parts, [lp]) as c:
-        r = c.get("/api/state/panels")
+        r = c.get("/api/state/panels", headers=LOOPBACK)
     assert r.status_code == 200
     assert "Plugin panel unavailable" in r.text
     assert "Cymatix is stopped" in r.text  # built-in panels still render
@@ -249,21 +249,21 @@ def test_panel_render_failure_contained(parts):
 
 def test_panel_render_non_str_is_failure(parts):
     obj = FakePlugin()
-    obj.panels = lambda: [Panel("mobile", "Mobile", lambda: 42)]
+    obj.panels = lambda: [Panel("demo-panel", "Demo", lambda: 42)]
     lp = _loaded(obj)
     with _client(parts, [lp]) as c:
-        r = c.get("/api/state/panels")
+        r = c.get("/api/state/panels", headers=LOOPBACK)
     assert r.status_code == 200 and "Plugin panel unavailable" in r.text
     assert lp.status == "disabled"
 
 
 def test_no_plugins_dashboard_unchanged(parts):
     with _client(parts, None) as c:
-        base_root = c.get("/").text
-        base_panels = c.get("/api/state/panels").text
+        base_root = c.get("/", headers=LOOPBACK).text
+        base_panels = c.get("/api/state/panels", headers=LOOPBACK).text
     with _client(parts, []) as c:
-        assert c.get("/").text == base_root
-        assert c.get("/api/state/panels").text == base_panels
+        assert c.get("/", headers=LOOPBACK).text == base_root
+        assert c.get("/api/state/panels", headers=LOOPBACK).text == base_panels
     assert "plugin-panel" not in base_root and "plugin-panel" not in base_panels
 
 
@@ -279,11 +279,11 @@ def test_token_mode_still_requires_header_and_token(parts):
     obj = FakePlugin()
     with _client(parts, [_loaded(obj)], token="s3cret") as c:
         auth = {"Authorization": "Bearer s3cret"}
-        r = c.post("/api/plugins/demo/actions/pair", headers={**LOOPBACK})
+        r = c.post("/api/plugins/demo/actions/connect", headers={**LOOPBACK})
         assert r.status_code == 401
-        r = c.post("/api/plugins/demo/actions/pair", headers={**LOOPBACK, **auth})
+        r = c.post("/api/plugins/demo/actions/connect", headers={**LOOPBACK, **auth})
         assert r.status_code == 403
-        r = c.post("/api/plugins/demo/actions/pair", headers={**ACTION, **auth})
+        r = c.post("/api/plugins/demo/actions/connect", headers={**ACTION, **auth})
         assert r.status_code == 200
 
 
@@ -325,14 +325,44 @@ def test_include_router_failure_contained(parts, monkeypatch):
         assert c.get("/api/plugins/good/ping", headers=LOOPBACK).status_code == 200
 
 
+BAD_HOST = {"Host": "evil.example"}
+
+
+def test_api_plugins_get_non_loopback_host_refused(parts):
+    with _client(parts, [_loaded()]) as c:
+        r = c.get("/api/plugins", headers=BAD_HOST)
+    assert r.status_code == 403
+    assert r.json() == {"error": "non-loopback host"}
+
+
+def test_plugin_route_get_non_loopback_host_refused(parts):
+    with _client(parts, [_loaded()]) as c:
+        r = c.get("/api/plugins/demo/ping", headers=BAD_HOST)
+        assert r.status_code == 403
+        assert r.json() == {"error": "non-loopback host"}
+        assert c.get("/api/plugins/demo/ping", headers=LOOPBACK).status_code == 200
+
+
+def test_panels_only_rendered_for_loopback_host(parts):
+    with _client(parts, [_loaded()]) as c:
+        bad = c.get("/api/state/panels", headers=BAD_HOST)
+        good = c.get("/api/state/panels", headers=LOOPBACK)
+        root_bad = c.get("/", headers=BAD_HOST)
+    assert bad.status_code == 200 and root_bad.status_code == 200
+    assert "plugin-demo-demo-panel" not in bad.text
+    assert "hello demo" not in bad.text
+    assert "plugin-demo-demo-panel" not in root_bad.text
+    assert "plugin-demo-demo-panel" in good.text
+
+
 def test_panel_title_failure_contained(parts):
     class Bad:
         def __str__(self):
             raise RuntimeError("title boom")
 
     obj = FakePlugin()
-    obj.panels = lambda: [Panel("mobile", Bad(), lambda: "x")]
+    obj.panels = lambda: [Panel("demo-panel", Bad(), lambda: "x")]
     lp = _loaded(obj)
     with _client(parts, [lp]) as c:
-        assert c.get("/api/state/panels").status_code == 200
+        assert c.get("/api/state/panels", headers=LOOPBACK).status_code == 200
     assert lp.status == "disabled"

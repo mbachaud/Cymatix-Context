@@ -240,8 +240,8 @@ List the add-ons (plugins) found in the `cymatix.plugins` entry-point group
 and the plugin directory. One row per plugin: name, version, source
 (`entry_point` or `directory`), whether its signature verified, and status
 (`loaded`, `skipped` or `disabled`, with the reason). Core works the same
-with none installed. A plugin can also add its own subcommands; they appear
-in `cymatix --help` once it is loaded. See `[plugins]` in the config
+with none installed. A plugin can also add its own subcommands; they run as
+`cymatix <command> ...` but are not listed in `cymatix --help`. See `[plugins]` in the config
 reference.
 
 Exit codes: `0` success.

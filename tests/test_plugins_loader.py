@@ -57,6 +57,42 @@ def test_requires_core_mismatch_skipped():
     assert "requires_core" in out[0].reason
 
 
+def test_factory_systemexit_isolated():
+    def factory():
+        raise SystemExit(3)
+
+    good = _FakeEP("good", lambda: _Plugin())
+    out = _discover(None, _FakeEP("exits", factory), good)
+    by = {lp.name: lp for lp in out}
+    assert by["exits"].status == "disabled"
+    assert "SystemExit" in by["exits"].reason
+    assert by["good"].status == "loaded"
+
+
+def test_raising_version_property_isolated():
+    class _BadVersion(_Plugin):
+        @property
+        def version(self):
+            raise RuntimeError("version boom")
+
+    good = _FakeEP("good", lambda: _Plugin())
+    out = _discover(None, _FakeEP("badver", lambda: _BadVersion()), good)
+    by = {lp.name: lp for lp in out}
+    assert by["badver"].status == "disabled"
+    assert "version boom" in by["badver"].reason
+    assert by["good"].status == "loaded"
+
+
+def test_keyboardinterrupt_during_load_propagates():
+    import pytest
+
+    def factory():
+        raise KeyboardInterrupt
+
+    with pytest.raises(KeyboardInterrupt):
+        _discover(None, _FakeEP("ki", factory))
+
+
 def test_disabled_by_config():
     out = _discover(PluginsConfig(disabled=["demo"]), _FakeEP("demo", lambda: _Plugin()))
     assert out[0].status == "skipped"

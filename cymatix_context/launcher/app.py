@@ -321,7 +321,7 @@ def create_app(
         template = templates.get_template("dashboard.html")
         html = template.render(
             state=state,
-            plugin_panels=app.state.plugin_panels(),
+            plugin_panels=app.state.plugin_panels(request),
             launcher_port=_launcher_port(request),
             # Desktop app window: compact chrome + the native-actions rail.
             embedded=request.query_params.get("embedded") == "1",
@@ -337,7 +337,7 @@ def create_app(
             return RedirectResponse("/", status_code=303)
         state = _enrich(collector.collect())
         template = templates.get_template("components/panels.html")
-        html = template.render(state=state, plugin_panels=app.state.plugin_panels())
+        html = template.render(state=state, plugin_panels=app.state.plugin_panels(request))
         return HTMLResponse(html)
 
     # ── JSON state API ─────────────────────────────────────────────
@@ -849,7 +849,7 @@ def _install_plugin_support(
     @app.middleware("http")
     async def _plugin_guard(request: Request, call_next):
         path = request.url.path
-        if not path.startswith("/api/plugins/"):
+        if path != "/api/plugins" and not path.startswith("/api/plugins/"):
             return await call_next(request)
         if request.method not in ("GET", "HEAD", "OPTIONS"):
             if request.headers.get("x-cymatix-action") != "1":
@@ -857,8 +857,12 @@ def _install_plugin_support(
                     {"error": "plugin action requires X-Cymatix-Action header"},
                     status_code=403,
                 )
-            if not _is_loopback_host_header(request.headers.get("host")):
-                return JSONResponse({"error": "non-loopback host"}, status_code=403)
+        # Every method: a DNS-rebinding page must not read plugin data either.
+        # Scoped to plugin paths; the core dashboard may serve a non-loopback --host.
+        if not _is_loopback_host_header(request.headers.get("host")):
+            return JSONResponse({"error": "non-loopback host"}, status_code=403)
+        if path == "/api/plugins":
+            return await call_next(request)
         name = path[len("/api/plugins/"):].split("/", 1)[0]
         lp = _find(name)
         if lp is None:
@@ -930,7 +934,11 @@ def _install_plugin_support(
         return {"ok": True, "result": result}
 
     # -- dashboard panels --------------------------------------------------
-    def plugin_panels() -> List[dict]:
+    def plugin_panels(request: Request) -> List[dict]:
+        # Panels may hold add-on secrets (e.g. a one-time code): render them only
+        # for a loopback Host, so a DNS-rebinding page gets the core panels alone.
+        if not _is_loopback_host_header(request.headers.get("host")):
+            return []
         out: List[dict] = []
         for lp in plugin_list:
             if lp.status != "loaded":

@@ -412,5 +412,32 @@ def test_import_failure_isolated_and_path_restored(tmp_path, key):
     assert sys.path == before
 
 
+def test_vendored_stdlib_name_does_not_shadow_core(tmp_path, key):
+    """A plugin's src/ is appended to sys.path, so a vendored module named like a
+    stdlib/core module never replaces core's copy after the plugin loads."""
+    import importlib
+
+    shadow = b"SHADOWED = True\n"
+    files_extra = {
+        "colorsys.py": hashlib.sha256(shadow).hexdigest(),
+        "json.py": hashlib.sha256(shadow).hexdigest(),
+    }
+    pdir = make_plugin(tmp_path, None, files_extra=files_extra, sign=False)
+    (pdir / "src" / "colorsys.py").write_bytes(shadow)
+    (pdir / "src" / "json.py").write_bytes(shadow)
+    raw = (pdir / "plugin.json").read_bytes()
+    (pdir / "plugin.sig").write_bytes(key.sign(raw))
+    [lp] = run(tmp_path, keys=[_pub(key)])
+    assert lp.status in ("loaded", "disabled"), lp.reason
+    src = str((pdir / "src").resolve())
+    sys.modules.pop("colorsys", None)
+    colorsys = importlib.import_module("colorsys")
+    assert not getattr(colorsys, "SHADOWED", False)
+    assert not str(Path(colorsys.__file__).resolve()).startswith(src)
+    json_mod = importlib.import_module("json")
+    assert not getattr(json_mod, "SHADOWED", False)
+    assert hasattr(json_mod, "loads")
+
+
 def test_missing_dir_is_empty(tmp_path):
     assert run(tmp_path / "nope") == []

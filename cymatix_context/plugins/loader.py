@@ -49,18 +49,21 @@ def _load_entry_point(ep: Any, cfg: PluginsConfig) -> LoadedPlugin:
 
     if name in cfg.disabled:
         return make("skipped", "disabled in [plugins]")
+    # Everything that runs plugin code (import, factory, attribute reads that may
+    # be properties) is inside one boundary; KeyboardInterrupt still propagates.
     try:
         obj = ep.load()()
-    except Exception as exc:  # noqa: BLE001 - isolation boundary: any plugin failure
+        reported = str(getattr(obj, "name", name))
+        if reported != name:
+            log.warning(
+                "plugin entry point %r reports name %r; using the entry-point name",
+                name, reported,
+            )
+        version = str(getattr(obj, "version", "?"))
+        problem = _requires_core_problem(getattr(obj, "requires_core", None))
+    except (Exception, SystemExit) as exc:  # noqa: BLE001 - isolation boundary
         log.warning("plugin %s failed to load: %r", name, exc)
         return make("disabled", repr(exc))
-    reported = str(getattr(obj, "name", name))
-    if reported != name:
-        log.warning(
-            "plugin entry point %r reports name %r; using the entry-point name", name, reported
-        )
-    version = str(getattr(obj, "version", "?"))
-    problem = _requires_core_problem(getattr(obj, "requires_core", None))
     if problem:
         return make("skipped", problem, version)
     return make("loaded", None, version, obj)
@@ -204,7 +207,9 @@ def _load_directory_plugin(
     module_name, factory_path = _ENTRY_RE.match(data["entry"]).groups()
     before_modules = set(sys.modules)
     prev_dont_write = sys.dont_write_bytecode
-    sys.path.insert(0, src)
+    # Appended, never prepended: a vendored module named like a stdlib/core module
+    # must not shadow core's copy. A shadowed entry module fails the src/ check below.
+    sys.path.append(src)
     sys.dont_write_bytecode = True  # a later run must not see our own .pyc as unlisted files
     try:
         import importlib
@@ -219,6 +224,7 @@ def _load_directory_plugin(
         for attr in factory_path.split("."):
             target = getattr(target, attr)
         obj = target()
+        reported = str(getattr(obj, "name", ident))
     except (Exception, SystemExit) as exc:  # noqa: BLE001 - isolation boundary
         log.warning("plugin %s failed to load: %r", ident, exc)
         _unload(src, before_modules)
@@ -226,7 +232,6 @@ def _load_directory_plugin(
     finally:
         sys.dont_write_bytecode = prev_dont_write
     # Keep src/ on sys.path only for a plugin that loaded (lazy imports).
-    reported = str(getattr(obj, "name", ident))
     if reported != ident:
         log.warning(
             "plugin directory %r reports name %r; using the directory name", ident, reported
