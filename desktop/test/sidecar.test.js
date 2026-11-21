@@ -108,6 +108,16 @@ test('request sends the bearer token', async () => {
   assert.equal(calls[0].init.headers.Authorization, 'Bearer tok-123');
 });
 
+test('request passes extra headers without losing the bearer token', async () => {
+  const { sidecar, spawned, calls } = harness();
+  const ready = sidecar.start();
+  spawned[0].child.stdout.write('CYMATIX_LAUNCHER_READY {"port": 50123}\n');
+  await ready;
+  await sidecar.request('POST', '/api/plugins/p/actions/a', undefined, { 'X-Cymatix-Action': '1' });
+  assert.equal(calls[0].init.headers['X-Cymatix-Action'], '1');
+  assert.equal(calls[0].init.headers.Authorization, 'Bearer tok-123');
+});
+
 test('unexpected exit restarts with backoff', async () => {
   const { sidecar, spawned, timers } = harness();
   const exits = [];

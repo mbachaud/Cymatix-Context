@@ -606,9 +606,12 @@ APPROVED_GROUP_KEYS = {
 
 # Every route this app is allowed to serve. The host status panel is
 # delivered through the three that already existed, so this list must
-# not grow; it is the no-new-route check.
+# not grow for it; it is the no-new-route check. The two plugin-connector
+# routes below are unrelated to host status (plugin add-on surface).
 EXPECTED_ROUTES = {
     "/",
+    "/api/plugins",
+    "/api/plugins/{name}/actions/{action_id}",
     "/api/control/bench/start",
     "/api/control/bench/stop",
     "/api/control/lanes/{name}/{action}",

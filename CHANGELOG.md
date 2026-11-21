@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **feat(plugins): a connector for optional add-ons.** Installed packages
+  (entry-point group `cymatix.plugins`) and signed directory plugins can add
+  CLI commands, supervised services, launcher routes and panels, and tray
+  menu items. New `[plugins]` config section (`enabled`, `disabled`, `dir`),
+  `cymatix plugins list`, and launcher endpoints `GET /api/plugins` and
+  `POST /api/plugins/{name}/actions/{id}` (requires header
+  `X-Cymatix-Action: 1` and a loopback Host). Directory plugins load only
+  when signed, unless `CYMATIX_ALLOW_UNSIGNED_PLUGINS=1`. An exception in a
+  plugin hook disables that plugin for the process and never affects core.
+  The Python tray and the Electron tray both show plugin menu items, and a
+  loaded plugin reporting a warn or error status turns a green tray icon
+  amber (never red). Core behaves the same with no plugins installed;
+  retrieval is unchanged.
+
 - **fix(retrieval): concurrent requests no longer tier on another request's
   scores.** `query_docs` publishes its score maps on the store and
   `build_context` read them back after retrieval returned; a second thread's

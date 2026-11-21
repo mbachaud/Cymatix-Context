@@ -328,6 +328,19 @@ class SyncConfig:
 
 
 @dataclass
+class PluginsConfig:
+    """[plugins] — optional add-ons discovered at startup.
+
+    Add-ons come from installed packages (entry-point group
+    ``cymatix.plugins``) and from a per-user plugin directory. Core is fully
+    functional with none installed.
+    """
+    enabled: bool = True                # False = no discovery at all; nothing is imported.
+    disabled: List[str] = field(default_factory=list)  # Plugin names to skip (reported as skipped, never imported past discovery).
+    dir: str = ""                       # Plugin directory override. "" = <user data dir>/cymatix/plugins.
+
+
+@dataclass
 class LaneConfig:
     """One ``[[lanes]]`` entry: an extra cymatix instance the launcher
     supervises on its own port against its own knowledge store.
@@ -1561,6 +1574,8 @@ class CymatixConfig:
     sync: SyncConfig = field(default_factory=SyncConfig)
     # Multi-lane serving: extra launcher-supervised instances ([[lanes]]).
     lanes: List[LaneConfig] = field(default_factory=list)
+    # Optional add-ons ([plugins]).
+    plugins: PluginsConfig = field(default_factory=PluginsConfig)
 
 
 def _warn_unknown(section: str, raw_section: Dict[str, Any], dataclass_type: type) -> None:
@@ -1617,6 +1632,7 @@ _KNOWN_TOP_LEVEL_SECTIONS = {
     # spurious unknown-section warning on every load.
     "mem_sync",
     "sync",
+    "plugins",
     *_ARRAY_SECTIONS,
     *_SECTION_ALIASES.keys(),
 }
@@ -1986,6 +2002,16 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             max_delete_fraction=float(sy.get("max_delete_fraction", d.max_delete_fraction)),
             max_files_per_pass=int(sy.get("max_files_per_pass", d.max_files_per_pass)),
             max_file_bytes=int(sy.get("max_file_bytes", d.max_file_bytes)),
+        )
+
+    if "plugins" in raw:
+        pl = raw["plugins"]
+        _warn_unknown("plugins", pl, PluginsConfig)
+        d = PluginsConfig()
+        cfg.plugins = PluginsConfig(
+            enabled=bool(pl.get("enabled", d.enabled)),
+            disabled=[str(n) for n in pl.get("disabled", d.disabled)],
+            dir=str(pl.get("dir", d.dir)),
         )
 
     if "lanes" in raw:

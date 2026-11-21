@@ -7,6 +7,7 @@ Run via the ``cymatix-launcher`` console script. See ``docs/LAUNCHER.md``.
 from __future__ import annotations
 
 import argparse
+import atexit
 
 from ..cli.cmd_mcp import supported_hosts
 from ..cli.dispatcher import invoked_prog
@@ -15,6 +16,7 @@ import json
 import logging
 import socket
 import os
+import re
 import sys
 import threading
 import time
@@ -29,6 +31,8 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from ..config import GenomeConfig, LaneConfig, ServerConfig
+from ..plugins.loader import get_plugins
+from ..plugins.services import PluginServiceSupervisor
 from ..lanes import BENCH_LANE, PRIMARY_LANE, LaneConfigError
 from .collector import StateCollector
 from .lane_supervisors import LaneRuntime, build_lane_runtimes, ensure_snapshot
@@ -66,6 +70,7 @@ DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/cymatix-overview/cymatix-overview
 DEFAULT_PROMETHEUS_URL = "http://127.0.0.1:9090/graph"
 
 if TYPE_CHECKING:
+    from ..plugins.loader import LoadedPlugin
     from .observability_control import ObservabilityControl
     from .observability_supervisor import ObservabilitySupervisor
 
@@ -107,6 +112,8 @@ def create_app(
     primary_lane: Optional[LaneConfig] = None,
     token: Optional[str] = None,
     ready_info: Optional[dict] = None,
+    plugins: Optional[List["LoadedPlugin"]] = None,
+    plugin_services: Optional["PluginServiceSupervisor"] = None,
 ) -> FastAPI:
     """Build the launcher FastAPI app.
 
@@ -233,6 +240,11 @@ def create_app(
             print(f"{READY_PREFIX} {json.dumps({**ready_info, 'pid': os.getpid()})}",
                   flush=True)
         yield
+        if plugin_services is not None:
+            try:
+                plugin_services.stop_all()  # idempotent
+            except Exception:
+                log.warning("Plugin service stop failed during launcher shutdown", exc_info=True)
         # On shutdown, stop only processes this launcher spawned itself.
         # Adopted Cymatix instances should keep running when the launcher exits.
         if supervisor.is_running() and supervisor.owns_process():
@@ -250,7 +262,10 @@ def create_app(
     app.state.collector = collector
     app.state.uvicorn_server = None  # set by the headless runner
 
-    if token:
+    plugin_list = list(plugins or [])
+    _install_plugin_support(app, plugin_list, plugin_services)
+
+    if token:  # added after the plugin guard, so it is the outermost middleware
         expected = f"Bearer {token}"
 
         @app.middleware("http")
@@ -306,6 +321,7 @@ def create_app(
         template = templates.get_template("dashboard.html")
         html = template.render(
             state=state,
+            plugin_panels=app.state.plugin_panels(request),
             launcher_port=_launcher_port(request),
             # Desktop app window: compact chrome + the native-actions rail.
             embedded=request.query_params.get("embedded") == "1",
@@ -321,7 +337,7 @@ def create_app(
             return RedirectResponse("/", status_code=303)
         state = _enrich(collector.collect())
         template = templates.get_template("components/panels.html")
-        html = template.render(state=state)
+        html = template.render(state=state, plugin_panels=app.state.plugin_panels(request))
         return HTMLResponse(html)
 
     # ── JSON state API ─────────────────────────────────────────────
@@ -750,6 +766,11 @@ def create_app(
                 left_running.append(name)
         if observability_control is not None:
             observability_control.shutdown()
+        if plugin_services is not None:
+            try:
+                plugin_services.stop_all()  # idempotent
+            except Exception:
+                log.warning("shutdown: stopping plugin services failed", exc_info=True)
         server = getattr(app.state, "uvicorn_server", None)
         if server is not None:
             server.should_exit = True
@@ -757,6 +778,193 @@ def create_app(
 
     app.state.shutdown_all = _shutdown_all  # also used by the parent watchdog
     return app
+
+
+_PLUGIN_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+_LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
+_PLUGIN_ERROR = {"error": "plugin error"}
+_PANEL_UNAVAILABLE = '<p class="muted">Plugin panel unavailable</p>'
+
+
+def _is_loopback_host_header(value: Optional[str]) -> bool:
+    if not value:
+        return False
+    try:
+        host = urlparse("//" + value.strip()).hostname
+    except ValueError:
+        return False
+    return host is not None and host.lower() in _LOOPBACK_HOSTS
+
+
+def _install_plugin_support(
+    app: FastAPI,
+    plugin_list: List["LoadedPlugin"],
+    plugin_services: Optional["PluginServiceSupervisor"],
+) -> None:
+    """Wire plugin routes, the guard middleware, /api/plugins, actions, panels.
+
+    Everything a plugin contributes runs through ``call_hook`` so a failing
+    plugin is disabled instead of breaking the launcher.
+    """
+    from fastapi import APIRouter
+    from fastapi.routing import APIRoute
+    from starlette.routing import Route
+
+    from ..plugins.api import MenuItem, Panel
+    from ..plugins.loader import call_hook
+
+    def _find(name: str) -> Optional["LoadedPlugin"]:
+        for lp in plugin_list:
+            if lp.name == name and lp.status == "loaded":
+                return lp
+        return None
+
+    def _disable(lp: "LoadedPlugin", why: str) -> None:
+        log.warning("plugin %s disabled: %s", lp.name, why)
+        lp.status = "disabled"
+        lp.reason = why
+
+    # -- plugin routers ------------------------------------------------
+    for lp in plugin_list:
+        if lp.status != "loaded":
+            continue
+        router = call_hook(lp, "routes", default=None)
+        if router is None:
+            continue
+        if not isinstance(router, APIRouter):
+            _disable(lp, f"routes() returned {type(router).__name__}, expected APIRouter")
+            continue
+        if not _PLUGIN_NAME_RE.match(lp.name):
+            _disable(lp, "plugin name is not usable in a URL")
+            continue
+        if any(not isinstance(r, (APIRoute, Route)) for r in router.routes):
+            _disable(lp, "router contains non-HTTP routes (WebSocket routes are refused)")
+            continue
+        try:
+            app.include_router(router, prefix=f"/api/plugins/{lp.name}")
+        except Exception as exc:  # noqa: BLE001 - plugin-supplied router
+            _disable(lp, f"include_router failed: {exc!r}")
+
+    # -- guard + containment (one middleware, cannot be bypassed by routers)
+    @app.middleware("http")
+    async def _plugin_guard(request: Request, call_next):
+        path = request.url.path
+        if path != "/api/plugins" and not path.startswith("/api/plugins/"):
+            return await call_next(request)
+        if request.method not in ("GET", "HEAD", "OPTIONS"):
+            if request.headers.get("x-cymatix-action") != "1":
+                return JSONResponse(
+                    {"error": "plugin action requires X-Cymatix-Action header"},
+                    status_code=403,
+                )
+        # Every method: a DNS-rebinding page must not read plugin data either.
+        # Scoped to plugin paths; the core dashboard may serve a non-loopback --host.
+        if not _is_loopback_host_header(request.headers.get("host")):
+            return JSONResponse({"error": "non-loopback host"}, status_code=403)
+        if path == "/api/plugins":
+            return await call_next(request)
+        name = path[len("/api/plugins/"):].split("/", 1)[0]
+        lp = _find(name)
+        if lp is None:
+            return JSONResponse({"error": "unknown plugin"}, status_code=404)
+        try:
+            return await call_next(request)
+        except Exception:  # noqa: BLE001 - containment boundary for plugin routes
+            log.warning("plugin %s route failed", lp.name, exc_info=True)
+            _disable(lp, "route handler raised")
+            return JSONResponse(_PLUGIN_ERROR, status_code=500)
+
+    # -- JSON surface ----------------------------------------------------
+    def _menu(lp: "LoadedPlugin") -> List[dict]:
+        items = call_hook(lp, "menu", default=[])
+        if not isinstance(items, list):
+            return []
+        return [
+            {"id": m.id, "label": m.label, "enabled": bool(m.enabled)}
+            for m in items if isinstance(m, MenuItem)
+        ]
+
+    def _status_info(lp: "LoadedPlugin") -> dict:
+        if lp.status != "loaded":
+            return {"level": "warn" if lp.status == "skipped" else "error",
+                    "text": lp.reason or lp.status}
+        info = call_hook(lp, "status", default=None)
+        if info is None:
+            return {"level": "ok", "text": ""}
+        if (
+            not isinstance(info, dict)
+            or info.get("level") not in ("ok", "warn", "error")
+            or not isinstance(info.get("text"), str)
+        ):
+            _disable(lp, "status() returned an invalid value")
+            return {"level": "error", "text": lp.reason or ""}
+        return {"level": info["level"], "text": info["text"]}
+
+    @app.get("/api/plugins")
+    def api_plugins():
+        rows = []
+        for lp in plugin_list:
+            menu = _menu(lp) if lp.status == "loaded" else []
+            info = _status_info(lp)
+            rows.append({
+                "name": lp.name, "version": lp.version, "source": lp.source,
+                "signed": lp.signed, "status": lp.status, "reason": lp.reason,
+                "menu": menu if lp.status == "loaded" else [],
+                "status_info": info,
+            })
+        services = plugin_services.snapshot() if plugin_services is not None else []
+        return {"plugins": rows, "services": services}
+
+    @app.post("/api/plugins/{name}/actions/{action_id}")
+    def api_plugin_action(name: str, action_id: str):
+        lp = _find(name)
+        if lp is None:
+            return JSONResponse({"error": "unknown plugin"}, status_code=404)
+        menu_ids = {m["id"] for m in _menu(lp)}
+        if lp.status != "loaded":
+            return JSONResponse(_PLUGIN_ERROR, status_code=500)
+        if action_id not in menu_ids:
+            return JSONResponse({"error": "unknown action"}, status_code=404)
+        result = call_hook(lp, "on_action", action_id, default=None)
+        if lp.status != "loaded":
+            return JSONResponse(_PLUGIN_ERROR, status_code=500)
+        if not isinstance(result, dict):
+            _disable(lp, "on_action() did not return a dict")
+            return JSONResponse(_PLUGIN_ERROR, status_code=500)
+        return {"ok": True, "result": result}
+
+    # -- dashboard panels --------------------------------------------------
+    def plugin_panels(request: Request) -> List[dict]:
+        # Panels may hold add-on secrets (e.g. a one-time code): render them only
+        # for a loopback Host, so a DNS-rebinding page gets the core panels alone.
+        if not _is_loopback_host_header(request.headers.get("host")):
+            return []
+        out: List[dict] = []
+        for lp in plugin_list:
+            if lp.status != "loaded":
+                continue
+            panels = call_hook(lp, "panels", default=[])
+            if not isinstance(panels, list):
+                continue
+            for panel in panels:
+                if not isinstance(panel, Panel):
+                    continue
+                try:
+                    title = str(panel.title)
+                    html = panel.render()
+                    if not isinstance(html, str):
+                        raise TypeError(f"render() returned {type(html).__name__}")
+                except (Exception, SystemExit) as exc:  # noqa: BLE001 - plugin boundary
+                    log.warning("plugin %s panel %s failed", lp.name, panel.id, exc_info=True)
+                    _disable(lp, f"panel {panel.id} render failed: {exc!r}")
+                    out.append({"id": f"plugin-{lp.name}-{panel.id}",
+                                "title": "Plugin", "html": _PANEL_UNAVAILABLE})
+                    break
+                out.append({"id": f"plugin-{lp.name}-{panel.id}",
+                            "title": title, "html": html})
+        return out
+
+    app.state.plugin_panels = plugin_panels
 
 
 PARENT_PID_ENV = "CYMATIX_DESKTOP_PARENT_PID"
@@ -1557,10 +1765,23 @@ def main(argv: Optional[list] = None) -> int:
         except Exception as exc:
             log.error("Failed to start lane %s: %s", rt.config.name, exc)
 
+    try:
+        plugins = get_plugins()
+    except Exception:  # noqa: BLE001 - core must run without plugins
+        log.warning("plugin discovery failed; continuing without plugins", exc_info=True)
+        plugins = []
+    plugin_services = PluginServiceSupervisor(plugins)
+    plugin_services.start_all()  # exactly once, after the lanes are up
+    plugin_services.run_in_thread()
+    # Idempotent: covers tray/native quit paths that never call /api/shutdown.
+    atexit.register(plugin_services.stop_all)
+
     app = create_app(
         store=store,
         supervisor=supervisor,
         collector=collector,
+        plugins=plugins,
+        plugin_services=plugin_services,
         observability=observability_sup,
         observability_install_pending=observability_install_pending,
         grafana_url=args.grafana_url,
@@ -1634,6 +1855,7 @@ def main(argv: Optional[list] = None) -> int:
             install_pending=observability_install_pending,
             update_checker=update_checker,
             lanes=lane_runtimes,
+            plugins=plugins,
         )
 
         # Surface the install-needed balloon if the build helper flagged it.

@@ -46,6 +46,8 @@ dependencies = [
     # have imported yaml unconditionally since the vault shipped, but no
     # dependency list declared it.
     "pyyaml>=6.0",
+    # Plugin API: requires_core version-specifier matching (cymatix_context/plugins/).
+    "packaging>=23",
 ]
 
 [project.urls]
@@ -87,9 +89,11 @@ otel = [
     "opentelemetry-exporter-otlp-proto-grpc>=1.27",
     "opentelemetry-instrumentation-fastapi>=0.48b0",
 ]
-launcher = ["jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0"]
+# Signature verification for plugins loaded from the plugin directory.
+plugins = ["cryptography>=42", "platformdirs>=4.0"]
+launcher = ["jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0", "cryptography>=42"]
 launcher-native = [
-    "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0",
+    "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0", "cryptography>=42",
     "pywebview>=5.0",
 ]
 # pystray is LGPL-3. It is a runtime-only optional dep that the user
@@ -97,7 +101,7 @@ launcher-native = [
 # pystray, so the core package stays Apache-2.0-clean.
 launcher-tray = [
     "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0",
-    "pystray>=0.19", "Pillow>=10",
+    "pystray>=0.19", "Pillow>=10", "cryptography>=42",
     "pywin32>=306; sys_platform == 'win32'",
 ]
 ast = [
