@@ -209,6 +209,51 @@ def test_serve_http_points_requests_at_lane(restore_tools, monkeypatch):
     assert seen_urls == ["http://127.0.0.1:11439/health"]
 
 
+def _call_context_tools(monkeypatch, arguments, over_http):
+    """Call cymatix_context and cymatix_document_query; return the bodies sent."""
+    seen = []
+    monkeypatch.setattr(
+        mcp_server, "_http", lambda m, p, body=None: seen.append((p, body)) or {"items": []}
+    )
+    if over_http:
+        app = mcp_server.build_http_app()
+        _rpcs(
+            app,
+            [
+                ("tools/call", {"name": "cymatix_context", "arguments": arguments}, None),
+                ("tools/call", {"name": "cymatix_document_query", "arguments": arguments}, None),
+            ],
+        )
+    else:
+        mcp_server.cymatix_context(**arguments)
+        mcp_server.cymatix_document_query(**arguments)
+    return [b for _p, b in seen]
+
+
+def test_http_without_session_id_ignores_delivered(restore_tools, monkeypatch):
+    bodies = _call_context_tools(monkeypatch, {"query": "q"}, over_http=True)
+    assert len(bodies) == 2
+    for body in bodies:
+        assert body["ignore_delivered"] is True
+        assert "session_id" not in body
+
+
+def test_http_explicit_session_id_passes_through(restore_tools, monkeypatch):
+    bodies = _call_context_tools(
+        monkeypatch, {"query": "q", "session_id": "conv-1"}, over_http=True
+    )
+    for body in bodies:
+        assert body["session_id"] == "conv-1"
+        assert "ignore_delivered" not in body
+
+
+def test_stdio_session_behaviour_unchanged(restore_tools, monkeypatch):
+    bodies = _call_context_tools(monkeypatch, {"query": "q"}, over_http=False)
+    for body in bodies:
+        assert body["session_id"] == mcp_server.MCP_SESSION_ID
+        assert "ignore_delivered" not in body
+
+
 def test_stdio_default_unchanged(monkeypatch):
     calls = []
     monkeypatch.setattr(mcp_server.mcp, "run", lambda *a, **k: calls.append((a, k)))

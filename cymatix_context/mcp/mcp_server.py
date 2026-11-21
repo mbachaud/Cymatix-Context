@@ -214,6 +214,26 @@ _identity_headers: "contextvars.ContextVar[Dict[str, str]]" = contextvars.Contex
 )
 
 
+# True only while the HTTP ASGI wrapper is serving a request.
+_http_transport: "contextvars.ContextVar[bool]" = contextvars.ContextVar(
+    "cymatix_mcp_http_transport", default=False
+)
+
+
+def _apply_http_session_policy(body: Dict[str, Any], session_id: Optional[str]) -> None:
+    """HTTP transport only: never use the shared process session id.
+
+    The per-process MCP_SESSION_ID would be shared by unrelated remote
+    clients, so they would elide each other's documents. Without an explicit
+    ``session_id`` from the caller, drop it and turn elision off instead.
+    stdio (and an explicit session_id) leave the body untouched.
+    """
+    if session_id or not _http_transport.get():
+        return
+    body.pop("session_id", None)
+    body["ignore_delivered"] = True
+
+
 def _header_identity(key: str) -> Optional[str]:
     return _identity_headers.get().get(key) or None
 
@@ -511,6 +531,7 @@ def cymatix_context(
         body["decoder_mode"] = decoder_mode
     if model is not None:
         body["model"] = model
+    _apply_http_session_policy(body, session_id)
     agent_handle = _request_identity()["agent"]
     if agent_handle:
         # Plumb agent identity through so cymatix's per-agent telemetry
@@ -1097,6 +1118,7 @@ def cymatix_document_query(
         body["decoder_mode"] = decoder_mode
     if model is not None:
         body["model"] = model
+    _apply_http_session_policy(body, session_id)
     agent_handle = _request_identity()["agent"]
     if agent_handle:
         # Plumb agent identity through so cymatix's per-agent telemetry
@@ -1434,9 +1456,11 @@ class _IdentityASGI:
             await self.inner(scope, receive, send)
             return
         token = _identity_headers.set(_parse_identity_headers(scope.get("headers", [])))
+        flag = _http_transport.set(True)
         try:
             await self.inner(scope, receive, send)
         finally:
+            _http_transport.reset(flag)
             _identity_headers.reset(token)
 
 
