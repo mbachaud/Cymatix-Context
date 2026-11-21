@@ -1847,6 +1847,7 @@ def main(argv: Optional[list] = None) -> int:
             install_pending=observability_install_pending,
             update_checker=update_checker,
             lanes=lane_runtimes,
+            plugins=plugins,
         )
 
         # Surface the install-needed balloon if the build helper flagged it.
