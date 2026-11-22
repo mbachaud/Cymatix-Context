@@ -1,0 +1,1179 @@
+{
+ "needles": [
+  {
+   "name": "erb_000",
+   "query": "What are the default size limits for file uploads and total request size for the new multipart upload support on the OpenAI-compatible API endpoints?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_002",
+   "query": "What are the acceptance criteria for the project introducing an algorithm to generate interactive UI color states and a Kappa-style elevation scale for dense table and grid components?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_008",
+   "query": "In the EdgePath evaluation email thread, what alternative Year 1 pricing package did Redwood propose instead of matching the competitor's 50 percent first-year discount and migration credit?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_010",
+   "query": "How long is the validity period for the telemetry driven runbook author certification from the operator training bootcamp?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_011",
+   "query": "What was identified as the root cause of the intermittent VPN connectivity blackholes and duplicate IP warnings for users on the corporate Wi-Fi in the SF2 building behind a specific edge switch?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_012",
+   "query": "What is the recommended two-stage process for rotating the signing credentials used by GPU image build and promotion pipelines, including how to cut over safely and roll back if something goes wrong?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_013",
+   "query": "In the on-prem private upgrade deep dive with an air-gapped healthcare customer, what did they describe as their current rollback approach when an upgrade goes wrong?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_014",
+   "query": "What was the high-percentile latency concern reported after a smoke test of about 50 concurrent streaming chat sessions for Satellite Grove?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_018",
+   "query": "After a recent network change at the SoMa office, users on corporate WiFi saw VPN access to an internal 10.11.x service fail and SSO logins time out because an office bridge was translating client addresses. What device mode misconfiguration caused the source IP rewrite?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_024",
+   "query": "In the enterprise tenant cutover go-live runbook, what latency threshold triggers escalation based on the 95th percentile being too high, and how long does it need to be sustained?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_025",
+   "query": "For a customer upgrading a private deployment in their own cloud environment, what restore time did support say is typical if the upgrade fails and a rollback is needed (assuming snapshots were taken)?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_028",
+   "query": "What caused the nightly evaluation cron jobs in the production us-east cluster to fail with an invalid refresh token error after an identity provider policy change?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_030",
+   "query": "What is the operator procedure to put a private deployment tenant into local-only telemetry mode and how can you verify the mode afterward?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_032",
+   "query": "In the security review meeting about private cloud upgrades for a financial services customer, what was the stated minimum audit log retention period they wanted?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_033",
+   "query": "In the Console nav redesign prototype with compact workspace chips and a contextual micro-rail, how is the micro-rail state preserved in shareable URLs?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_038",
+   "query": "In the 3-hour customer workshop plan for taking a team from initial evaluation to a proof of concept, what are the three types of go/no-go acceptance gates?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_039",
+   "query": "What are the retention time windows for these lightweight kernel state snapshots (in-memory cache, indexed store, and any cold archive) used for post-incident diagnostics?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_042",
+   "query": "What caused the brief p99 latency jump on the hosted text generation endpoint in us-west-2, and what mitigation was applied to bring it back down?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_044",
+   "query": "What is the estimated compressed size for the customers requested 12 month structured audit log export for their SIEM privacy scan?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_046",
+   "query": "In some lab notes about reducing few-shot example copying, what tradeoff was noted when rotating the order of exemplars in prompts?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_047",
+   "query": "What are the initial weighting percentages for the signals used in the Model Resilience Propensity Index, before the 4-week recalibration?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_048",
+   "query": "In the email thread about BrightPath considering a marketplace pilot versus a direct contract for an AI inference vendor, what lead time was given for getting marketplace entitlement after onboarding?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_049",
+   "query": "What is the proposed HTTP header scheme for attributing API traffic to quickstart templates, including how the header value is formatted and the opt-in header?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_050",
+   "query": "In the cost-aware model routing proposal, what telemetry fields were suggested to emit so the team can analyze routing decisions and tradeoffs between spend and quality?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_053",
+   "query": "What was the decision for when and how to roll out the new lattice scheduler into a limited canary, and what condition would allow expanding it to higher traffic models?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_056",
+   "query": "In our staging cluster, checkpoint downloads sometimes hang when resuming with an HTTP Range request to a cloud storage signed URL; what unexpected HTTP status code is sometimes returned instead of partial content that triggers the stall?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_057",
+   "query": "In the email thread about renewing the feature flag vendor for Redwood, what peak burst capacity was proposed in the multi year renewal option SLA?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_059",
+   "query": "What was identified as the root cause of the hover double-outline or glow issue on small icon-style buttons, and what change was proposed to prevent stacked shadow artifacts?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_061",
+   "query": "What is the proposed backend API endpoint and query parameters for fetching a trace in either grouped or full detail for the console timeline view?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_062",
+   "query": "For the NorthPoint Signalworks dedicated pilot, what p95 latency target did they set for short chat interactions?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_064",
+   "query": "During the November 2025 us-east incident where streaming chat responses were dropping, what was the internal start and mitigation time that support shared with the affected customer?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_066",
+   "query": "What did the internal usability test with six reviewers conclude about the table column compression feature, especially regarding its discoverability?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_067",
+   "query": "What is the default wait time used by the new tool-call batching invoker, and how does it differ between hosted and dedicated tiers?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_068",
+   "query": "In an ops day log about GPU rebalancing and brief west region network instability, what was the target slot capacity for the small hosted pool in the slot metrics dashboard?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_069",
+   "query": "In our internal dry run of marketplace onboarding, what time window did the team suggest we describe as a normal entitlement sync delay before telling customers to contact support?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_071",
+   "query": "In the security incident about leaked encrypted log fragments in a partners cloud storage archive, what steps were listed in the triage checklist?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_072",
+   "query": "What was the credit memo amount AWS Marketplace issued after fixing the March billing issue with duplicated reserved usage and reversing incorrectly applied VAT for a US buyer?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_074",
+   "query": "What change was introduced to prevent oscillations in the new GPU scratch memory allocator that can trigger repeated micro-batch splits?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_077",
+   "query": "In the proposal for an anchor-based trace drilldown panel that pins a span or request correlation, what is the MVP limitation on how many anchors can be pinned in a workspace?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_080",
+   "query": "In the design for tenant credit based routing that can spill over to hosted capacity, what are the hysteresis window durations used for the different credit tiers?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_081",
+   "query": "During the year end handoff meeting, what was identified as the cause of the early December latency incident impacting some p95 requests?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_084",
+   "query": "What are the three request quality and cost tiers proposed in the lightweight interaction tiering model for user facing features?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_088",
+   "query": "What are the three runtime precision settings introduced for controlling fp32 vs lower precision execution, and what does each mode allow?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_089",
+   "query": "What summary turnaround time after transcription completion is the call-summarization customer targeting?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_093",
+   "query": "What is the recommended emergency action to temporarily simplify routing policy rules when the edge route agent is causing high evaluation latency and end to end latency spikes?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_097",
+   "query": "In the MedSecure logging and PII redaction POC email thread, what method did Redwood propose for pseudonymizing trace or request IDs so correlation works within a tenant but not across customers?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_098",
+   "query": "What was the temporary mitigation applied to the internal load balancer serving the gen-infer VIPs around 03:40 UTC that immediately reduced TCP retransmits?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_100",
+   "query": "In the meeting about Zephyrus Labs unit cost and deployment options, what utilization threshold was mentioned as the point where a dedicated reserved setup typically becomes cheaper than hosted?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_101",
+   "query": "What are the default significance threshold and minimum sample size guidelines for deciding whether a model regression is actionable in the causal regression investigation handbook?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_102",
+   "query": "How is the baseline token cost computed for the per-span cost delta metric in the new tracing observability change?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_103",
+   "query": "What is the standard amount of time a new hire buddy is expected to spend per day during the first two weeks when a long-term contractor is converted to a full-time employee?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_104",
+   "query": "What are the proposed internal time to mitigate targets by severity for incident response, regardless of customer deployment tier?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_105",
+   "query": "What baseline metrics are listed for the Console activation health panel in the quarterly activation plan for customer-hosted Private VPC deployments?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_107",
+   "query": "In an internal onboarding thread for a new language model, what was the estimated GPU memory used by the attention key value cache for a single 8192 token sequence (batch 1)?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_108",
+   "query": "What was the performance threshold for short requests that the solo iOS founder said would convince them to buy after a demo?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_109",
+   "query": "What is the rollout ramp schedule and time window used for the canary phase when validating adaptive degradation behavior in the Redwood serving runtime?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_110",
+   "query": "What are the acceptance thresholds for rerank performance in the mini-bundle unified inference API, including the required top-1 precision and the P95 latency limit?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_111",
+   "query": "In the proposed small business token pricing tiers, what is the monthly included token allowance for the plan priced at $25 per month?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_112",
+   "query": "What is the phased rollout schedule for removing the legacy compatibility proxy and migrating old persisted flag configs to a single newer schema?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_114",
+   "query": "Why would a tenant start getting rate limit 429 errors on real time chat or streaming endpoints a few minutes after being upgraded to a higher tier, apparently because background catch up jobs consume the newly increased burst allowance first?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_118",
+   "query": "When the audit event buffer is full or the local durable queue hits its size limit, what should happen to must-log admin actions and what HTTP status is returned?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_119",
+   "query": "What documents did Silver Birch ScribeCo say they needed from us before they could proceed with using real customer data in their trial?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_124",
+   "query": "What is the formula used by the new autoscaling approach that combines a high-percentile request rate with request variability to compute effective demand, including the default weights?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_128",
+   "query": "What was the temporary workaround used to prevent the Windows 11 imaging task sequence from failing when a provisioning script breaks under certain non-default locale collation settings?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_129",
+   "query": "What latency goals did the founder of Birch Branch Apps mention for short in-app chat responses during their early discovery call?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_132",
+   "query": "What are the pass fail criteria used in the quick pull request smoke checks for the embedding robustness noise and input length evaluation suite?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_134",
+   "query": "What is the recommended step-by-step rollback and traffic split plan to mitigate correctness issues and tail latency spikes after a healthcare customer enabled adaptive batching together with an INT8 quantized model on their dedicated production route?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_135",
+   "query": "What was the temporary mitigation applied for the enterprise customer whose SSE streaming chat responses were getting truncated after an edge proxy handoff in us-east?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_136",
+   "query": "What KPI targets did the customer set for improving support ticket handling time and high priority triage speed in their Zendesk automation pilot?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_137",
+   "query": "What was the CTOs non negotiable security requirement mentioned on the early 2026 demo call for the analytics SaaS customer moving from hosted API to a dedicated VPC deployment?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_138",
+   "query": "What false positive threshold did the prospect set for suggested code review comments in the evaluation criteria for their PR review assistant POC?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_140",
+   "query": "What was the target goal for average router queue time for very short token sequences, compared to the baseline of 28 ms, in the weekly sprint anchor about reducing staging inference queuing latency?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_143",
+   "query": "In the recent Friday all-hands notes, what was the reported median latency improvement attributed to continuous batching?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_144",
+   "query": "For the upcoming joint demo with a Japan-based logistics customer, what document did they prefer for trial procurement instead of a full purchase order?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_145",
+   "query": "What change was introduced to reduce tail latency in a paged key value cache by defragmenting free space during frees and keeping frequently used key prefixes from being evicted?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_146",
+   "query": "What is the planned cutoff date when the old model capability format may stop being accepted for new writes?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_148",
+   "query": "When do reservations open for the new dedicated GPU option that is rolling out first in the EU Central and India South regions?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_152",
+   "query": "In the engineering chat about a Go refactor PR, what did they change in the linter config to get CI passing when a gocritic rule complained about context parameter types in tests?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_153",
+   "query": "What success targets were suggested for the four week micro credential pilot with SI partners (completion percentage and number of integrations started within about two months)?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_155",
+   "query": "In the planning meeting about a strict deployment change freeze and automatic fallback during a model rollout, what composite health score thresholds defined green, amber, and red states?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_156",
+   "query": "What is the corrective journal number created to move a supplier credit amount from the DEV cost center to the OPS cost center after it was posted incorrectly during the March close?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_158",
+   "query": "What were the two immediate options the SRE suggested when a finance customer could not reserve four A100 GPUs in eu-west-1 due to insufficient capacity?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_159",
+   "query": "What change reduced GPU memory use and improved first-token latency by prepacking INT8 weights and fusing smoothquant dequantization into the GEMM kernel without creating intermediate tensors?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_161",
+   "query": "What caused the brief period where a few tenants were not being throttled correctly after a shard reassignment happened at the same time as a runtime policy reload?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_163",
+   "query": "In the HyperOnboard 30-60-90 onboarding template, what are the escalation conditions that should trigger an email to people ops and the hiring manager?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_168",
+   "query": "Who is responsible for signing off on latency regression in the weekly customer rollout tracker for Nimbus Health?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_170",
+   "query": "In a production incident during a staggered canary rollout in us-east-1, what ordering change was made to the autoscaler prewarm handshake to stop some tenant-pinned traffic from getting routed to an older model variant?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_171",
+   "query": "In the eng-platform standup about staging 401 spikes on the generate endpoint, what header value caused the requests to miss both the primary and fallback route predicates and hit the fallthrough route?",
+   "question_type": "basic"
+  },
+  {
+   "name": "erb_176",
+   "query": "What were the final concession terms approved for the retail partner purchase through the major cloud providers marketplace, specifically the first year price reduction and the referral payout schedule after launch?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_177",
+   "query": "In the recent change that made low bit math safer for inference, what is the default pass rate used to decide when a machine is allowed to step down from the safest numeric mode?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_178",
+   "query": "What caused an enterprise tenant in Western Europe to suddenly get routed to a Southeast Asia edge during a short mid March 2026 load spike on the vectorization service, adding about 200ms and triggering ingestion timeouts, even though the tenant was supposed to stay in Europe?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_179",
+   "query": "In our rollout system, what is the name of the new mechanism that prevents a candidate release from getting full user traffic until a dry run with replayed requests and smoke checks has passed?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_180",
+   "query": "During a large overnight upload run using short lived credentials refreshed by many transient workers, what client side scheduling change was recommended to stop periodic too many requests errors after a partial worker restart caused refresh bursts?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_185",
+   "query": "In the notes about keeping long, stop-and-go chat sessions cheap without replaying the whole history, what storage setup and time-to-live were proposed for keeping the compact per-session state for recent sessions versus longer retention?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_186",
+   "query": "When a production model experiment shows a sustained increase in harmful output warnings for two evaluation windows, what automated actions should the platform take regarding traffic shifting and incident/oncall notifications?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_187",
+   "query": "In the recent recruiting email thread about an offer being sent for signature, what were the two proposed onboarding start dates (one earlier limited-access option and one later full start) mentioned due to immigration timing?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_188",
+   "query": "In our offline installer release process, how do we expose per-component supply chain provenance so an operator can see which build system and commit produced each piece and optionally enforce that missing or bad attestations fail the index step?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_192",
+   "query": "For the European customer kickoff scheduled the morning of Dec 21, who is assigned as the standby person to handle operational issues during the hands-on portion?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_193",
+   "query": "After moving a HIPAA customers production private VPC environment to a new internal token exchange service, why would an automation-run service identity start getting 403s when trying to act on behalf of a human admin for user management, even though the same action works with the humans own token?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_195",
+   "query": "In the quick A100 microbenchmark notes comparing 4-bit weight compression to half precision on a 7B model at single-item batching, what speedup and quality hit were observed for the simplest run?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_196",
+   "query": "During a major production outage, what is the prescribed sequence of actions for the first 60 to 90 minutes, from opening the live coordination call through confirming the service is healthy again?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_197",
+   "query": "In the EU West production setup where token streaming to browsers sometimes reconnects after a short handshake reset at the CDN layer, what change on the gateway side reduced cases where the last bit of generated text never arrives even though the backend says it finished?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_198",
+   "query": "After a recent refactor to request grouping and the per request memoization layer, what is the specific risk if the cache key canonicalization now treats a trailing slash differently between callers, especially in a multi customer environment?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_199",
+   "query": "For the hospital system that wants to run an interactive intake chatbot and auto-generate discharge writeups entirely inside its own locked-down data center with no patient data leaving the network, what end-to-end response time target did they set for producing about 200 tokens under peak load?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_204",
+   "query": "What fields are included in the proposed runtime metadata JSON that apps can use as the single source of truth for whether a hosted model can do streaming or tool calls, what token ceilings apply (soft vs enforced), and what the expected output format guarantees are?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_205",
+   "query": "In the 2027 renewal email thread about moving a customer from four capacity bands to a two level reserved plus overflow setup, what p95 response time was promised for the reranking endpoint under the base reservation assumptions?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_209",
+   "query": "What is the numeric rule that turns recent automated test slice failure patterns plus latency and vector drift into a single 0 to 100 release risk score that decides whether to proceed, slow down, pause, or revert a staged model change?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_211",
+   "query": "How should we set up low-noise oncall dashboards and tiered paging for a streaming text generation service so that responders can jump from a latency spike to a trace with hashed prompt references and cache hotness context and resolve issues within about 15 minutes?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_212",
+   "query": "For a content templating company planning tens of millions of very short generations during a Q3 ramp, what was the requested plan for a time limited evaluation that included a large free usage allowance?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_213",
+   "query": "In the mid March 2026 incident where a regional dedicated serving cluster briefly ran out of spare capacity and the automatic scaler couldnt add nodes due to provider limit type errors, what exact build version did on call revert to in order to restore capacity?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_218",
+   "query": "In the negotiation where a healthcare customer pushed for stronger protection against outside patent or copyright lawsuits for an AI hosting service, what dollar limit did the vendor propose per claim as the compromise?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_219",
+   "query": "In our GPU inference runtime, what configuration change was shown to eliminate out of memory crashes caused by combining lookahead cache allocation with aggressive request coalescing on long context runs, even though it slightly increased tail latency?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_220",
+   "query": "When someone new starts at Redwood Inference, what is the target turnaround time for getting them fully set up with accounts and tools in North America versus Europe/Asia-Pacific?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_224",
+   "query": "Before an external audit rehearsal happening in about three weeks, what are the due dates and owners for the main evidence gaps around deployment rollback proof, contractor access end date confirmation, encryption key rotation documentation placement, and two overdue third party security questionnaires?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_230",
+   "query": "For the healthcare client contract review about sending patient records through our connector into the vendor platform, what is the promised retention duration for ingestion related audit traces and the default way customers can obtain exports?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_232",
+   "query": "What is the target success criteria for the internal two week cross team rehearsal that practices incident response for model endpoint reliability, especially the time limit from alert to starting the incident call?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_233",
+   "query": "During the rollout of the new version of our inference cost optimizer, what is the suggested traffic ramp schedule for moving from a small canary to full production, including the minimum stabilization wait between increases?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_236",
+   "query": "In the vendor email thread about a dedicated GPU capacity plan for AuroraEdge, what utilization threshold and measurement window did they propose as the trigger to start billing the next ramped capacity tranche after the initial time gate?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_238",
+   "query": "For the fintech prospect doing merchant reconciliation and dispute handling, what are the specific compliance items their ops and security teams said must be in place before moving past the pilot phase?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_239",
+   "query": "During a multi region switchover, what is causing some customers to get bursty too many requests and occasional service unavailable responses because different parts of the traffic gatekeeper disagree briefly on the time boundary used for quota calculations?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_243",
+   "query": "After our single sign on provider URL changed, access approvals look successful in the internal approval UI but engineers still get a forbidden error when trying to open privileged operational tools; what caused the approval to not actually translate into permissions?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_246",
+   "query": "In the partner sales planning call between a vendor and an ISV, what were the concrete due dates in late December for each side to send the pilot inputs and the vendor deliverables?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_248",
+   "query": "What is the step by step readiness checklist for bringing up a new managed Kubernetes cluster in the Frankfurt secondary region with preemptible GPU workers for batch inference, including the key quota checks and the basic validation command to confirm the GPUs are usable?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_252",
+   "query": "For the outsourced customer support company planning an isolated always-on deployment for AI agent guidance and end-of-chat ticket writeups, what peak simultaneous staff load and response-time target did they specify for real-time streaming suggestions?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_253",
+   "query": "Need the account notes for a tiny two person dev shop building a browser based coding assistant that struggled with keeping API secrets safe in a serverless front end, is pushing hard for incremental responses to keep the UI snappy, and is asking about cheap usage plus some starter credit before converting from prototype to paid.",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_254",
+   "query": "When is the 45 minute video call finally locked in for the vendor walkthrough that got moved because the client team was traveling to a Denver conference in early October 2026?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_255",
+   "query": "During a gradual rollout of a new large model on a single production tenant in early March 2026, some sessions that were supposed to stay on a customer-specified version briefly got routed to a cheaper compressed build, causing worse answers without any server error spike. What was the immediate mitigation applied at the request routing layer to prevent this kind of misrouting when a version lock is provided?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_258",
+   "query": "In the disconnected installer package for the on prem product, what are the mandatory items that must exist at the top level of the extracted folder before the installer will accept it (including the signed inventory files and the human instructions file)?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_259",
+   "query": "From a late July 2025 call with a vendor, what was the specific console tuning recommendation for the search route that included both a suggested batch size and a quantization setting?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_263",
+   "query": "I need the most recent vendor continuity evidence packet for the bank security intake that includes measured switchover recovery timing samples showing a big difference when the in memory cache is prewarmed versus cold, along with a planned live non production witness window in mid August 2027; where is that packet shared and what is the confirmed demo time slot?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_264",
+   "query": "Why do some long range analytics charts in the US East production console briefly show zero or outdated values and the drill through to traces disappears, then fixes itself after about 10 to 30 minutes?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_265",
+   "query": "In the recent SDK update that made streaming behave the same across Python, TypeScript, and Go, what is the new wrapper layer called that handles automatic reauthentication on expired credentials and lets a client resume a dropped stream using a small persisted checkpoint token?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_267",
+   "query": "In the March 2026 production incident where long streamed chat replies started arriving chopped up and in the wrong order and the customers usage charges jumped because their client kept reissuing the same request, what was identified as the underlying platform cause?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_269",
+   "query": "Which bank client got a temporary signoff to keep normal processing in Europe but let traffic switch to a US site only during disaster recovery drills or when the EU cluster is degraded, with payload logging turned off, and what were the start and end dates of that allowance?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_272",
+   "query": "What dates did the team set for the three stage launch of the new high end compute hardware offering (restricted trial, broader preview, and public release) that follows the late July readiness work and the early August go no go decision?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_273",
+   "query": "For the small legal document review firm that came in via a website contact form in late Feb 2026, what was their target p95 response time for an interactive single-user chat experience?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_275",
+   "query": "In our model serving stack, what change was proposed to reduce cost swings when traffic mixes tiny chat style requests with much longer generations, by dynamically choosing between a few preset group sizes under latency budgets instead of waiting for one fixed threshold?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_276",
+   "query": "For the mid sized software company building outbound sales chat reps that trigger actions in email, calendar, and a CRM, what latency targets did they set for live token streaming and for the full message to action acknowledgement flow during their planned short evaluation?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_277",
+   "query": "Our finance team is seeing totals in our accounting system come out a bit higher than what the payment processor exported, mostly when customers switch tiers in the middle of a billing period; what change should we make so each charge or credit line maps 1:1 and we stop the penny level rounding drift?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_278",
+   "query": "What is the planned overnight time window in late March 2026 for rotating and rekeying the secrets used by automation accounts during a contractor to full time transition?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_284",
+   "query": "How does the proposed multi-region traffic controller proactively avoid tail-latency blowups by warming likely failover locations ahead of time and using a three-level degrade/shed mechanism before hard failures occur?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_285",
+   "query": "For a small mobile game studio adding realtime global chat and match lobby messaging, what latency goal did they set for typical short messages so players dont notice added delay?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_286",
+   "query": "What were the target responsiveness and peak simultaneous agent usage thresholds for the short pilot of the customer support assistant that required partial replies to appear immediately while also invoking internal lookups?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_287",
+   "query": "In the late Q3 email thread about rescuing a near-lost senior platform hire for a customer-facing performance pipeline, what one-time pay-range exception did People Ops approve (how far above the midpoint)?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_291",
+   "query": "What change reduced out of memory failures for long context transformer serving by reusing temporary GPU buffers across microbatches and adding an optional recompute mode, and what kind of memory savings was observed on an A100 at around 4k tokens?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_293",
+   "query": "In the internal workshop where we deliberately sabotage a client library via a local proxy to test resiliency, what exact fields are required in the saved run trace file format (the per-span identifiers, timestamps, and the single flattened attributes string) so our baseline and failure runs are comparable?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_294",
+   "query": "In the late March 2026 payments rollout, what was the prior deployment version the team reverted to after the early Europe canary started restart looping due to a shutdown hook issue?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_295",
+   "query": "Who on the team committed to producing a short animated demo to embed in the upcoming renewal business review materials, and what was the demo supposed to showcase?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_296",
+   "query": "For the tiny production experiment that tweaks how the model serving layer keeps and evicts attention memory, what are the concrete pass or fail thresholds for error rate and tail latency during the first hour?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_299",
+   "query": "In the internal routing performance memo that compared a nearby low latency serving path versus a centralized high throughput batching path and a split strategy that starts local then hands off when the response gets longer, which approach had the cheapest cost per 1k tokens for medium length requests and what was that cost?",
+   "question_type": "semantic"
+  },
+  {
+   "name": "erb_304",
+   "query": "When using the python async batching helper for embeddings then rerank, what singleton-wrapped rerank response shape can show up during auth refresh, and what redwood.utils normalizer did the sampleapp add to fix the output shape?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_305",
+   "query": "During the us-west-2 incident with TLS handshake failures on edge.redwood.ai, what alert triggered the PagerDuty page and what two preventative follow-ups were planned before closing the thread?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_306",
+   "query": "For the StrataCore joint benchmark on the S100 card, what model and metrics are they benchmarking, and what artifacts will be included in the post run internal results bundle for signoff?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_307",
+   "query": "For the Praxis Health Redwood Private connectivity plan, what hybrid approach did Redwood recommend for a customer with both on-prem colo and AWS us-west-2, and when was the proposed 30-minute follow-up call scheduled?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_308",
+   "query": "After the docs deploy failed due to mkdocs linkcheck reporting broken anchor fragments from an include refactor, what final deploy-bot status was reported once prod was updated?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_313",
+   "query": "For the Jupiter Therapeutics rollout, if the target go-live is 2028-07-22 and the canary is planned as 7 days with a 10/90 traffic split, what date should the canary period start?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_314",
+   "query": "What UI indicator did the team plan to show for tenants in escalation mode, and what default grace-window duration was chosen for the circuit-breaker?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_315",
+   "query": "For the ProofPoint pentest artifact audit-proxy escrow, what is the default retention period, what is the standard access request turnaround time, and who is billed for the AuditWorks storage fees?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_318",
+   "query": "After the kernel-selector change caused OOMs on canary during 1k-token generations, what allocator and KV config values were hot-reloaded, and how did that change impact fallback allocations per minute in the follow-up metrics?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_320",
+   "query": "During the initial staging rollout of decision breadcrumbs, what sampling approach and percentage are planned, and who said it would start by end of week?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_322",
+   "query": "Which issue filed after two customer escalations describes transient admin privileges or permission denied after SSO due to SAML assertion ordering and session stitching, and what environment(s) was it reproduced on?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_323",
+   "query": "For the Q3 KPI dashboard email thread, what was the quarterly uptime percentage and how far below the target was it, and which JIRA ticket was Jonas going to create to track the infra changes?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_328",
+   "query": "After the procurement kickoff call that requested a draft SLA and pricing model, what were the latency targets the bank wanted for interactive IDE edits and streaming token delivery?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_329",
+   "query": "What trace job ID did they queue for the prefetch triage, and where did cheng say he would upload the perf artifacts for it?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_330",
+   "query": "In the incident where Meridian Analytics saw pinned sessions revert to the fallback variant during a tiered canary in us-east, which model rollout was affected and what type of customer contract did they have?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_333",
+   "query": "Why were SSE streaming connections getting cleanly closed after about 60 seconds only when going through the edge proxy, and what heartbeat change was implemented to mitigate it?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_335",
+   "query": "For the CartPilot Redwood trial POC, when is the kickoff sync scheduled and what peak request rate did they say they expect during bursts?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_336",
+   "query": "In the resilient streaming schema proposal, what resume success rate is targeted in the success metrics and what resume_success_rate threshold would trigger a rollback during rollout?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_337",
+   "query": "Who owns the mixed-priority cgroup and soft-quota playbook for multi-tenant inference, and what is the best email or Slack channel to contact for rollout coordination?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_338",
+   "query": "For the Usage Insights reconciliation drift alert, what drift percentage and time window trigger warn vs page, and which severity level includes workspace_id in the alert labels?",
+   "question_type": "intra_document_reasoning"
+  },
+  {
+   "name": "erb_340",
+   "query": "For the Proxima Bank 429 spike after priority routing rollout, what caused the throttling and what temporary policy exception did we apply, and how do we verify it is not burning the enterprise route SLOs?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_341",
+   "query": "Our Key Management Standard says we must not cache plaintext DEKs, but ADR-007 allows a short-lived in-memory DEK cache. What is the actual policy we should follow, and how should we describe DEK caching and KMS outage behavior in customer-facing rotation materials?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_342",
+   "query": "What caused the savings $/day estimates in Optimization Suggestions beta to not match Arkadia Finance billing, and what UI or API changes should we make to prevent this confusion going forward?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_345",
+   "query": "After the Northwind latency spike, what metric wording ended up approved for the public case study and what exactly can Sales share privately without triggering new legal approval?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_346",
+   "query": "For an air-gapped on-prem restore into a brand new cluster, what do we need to install before running restore apply, and what will the installer check and report if those prerequisites are missing?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_352",
+   "query": "Before we re-enable paging and hook perf-canary into rollout gates, what exact baseline key, min-sample requirements, and incident-bot dedupe key should we enforce to avoid another false-positive alert storm?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_354",
+   "query": "What is the approved wording to use when a prospect demands EU-only data residency and no non-EU support access for the Hosted API, and who do we need to escalate to if they want that as a contractual commitment?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_356",
+   "query": "A customer subscribed via AWS Marketplace but our console cannot verify the entitlement. What is the approved manual workaround, and what steps do we take afterward to link the subscription and keep marketplace metering and revenue recognition correct?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_359",
+   "query": "Customers behind strict corporate proxies are seeing 4xx failures when the quickstart templates add telemetry tags. What tagging approach and opt-out setting should we use, and how will that affect TTFS and activation KPI measurement?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_364",
+   "query": "Fast tier p99 is regressing in canary, what SLO targets and abort criteria apply and what rollback steps should we take? Which dashboards and reason codes should we use to confirm whether admission control or requeue behavior is causing it.",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_365",
+   "query": "A non-burst Dedicated tenant is seeing tail latency spikes during another tenant's burst window; what should we check first, and when do we reduce burst caps versus trigger the SLO gate or circuit breaker, and what denial reason code will burst customers see?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_366",
+   "query": "For an enterprise ticket like SUP-1842 where streaming disconnects happen in us-east, when should we escalate from a Support bridge to a formal incident and post a status page update, and what customer update cadence and credits wording should we use?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_367",
+   "query": "For the Northwind Analytics long-context latency regression after enabling Runtime 1.21 kernel auto-selection v2 on L40S, what mitigations were applied and what is the recommended plan and criteria to safely re-enable v2?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_368",
+   "query": "Why were some Hosted API overload errors missing Retry-After, and what changes and alerts ensure it stays consistent across gateway, routing, and streaming paths going forward?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_369",
+   "query": "Why can the observed canary traffic percentage in a single region diverge from what the Console rollout step shows, and what are the recommended oncall mitigations and GA preventative fixes?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_373",
+   "query": "For the runtime 1.19 Dedicated canary, what TP watchdog mode and default timeouts should we start with, and what specific metrics or alert conditions should trigger an immediate rollback if we see false positives or drain storms?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_375",
+   "query": "Northbridge Bank is seeing request logs older than their configured retention window in us-east after a maintenance window. What is the recommended remediation and what customer-safe evidence artifacts should we provide to prove the retention policy is configured correctly and enforcement has caught up?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_377",
+   "query": "What are the current suppression rules and cooldown windows for PLG signals (especially intent-only), and how do they prevent HubSpot task creation after cases like Quartz Commerce?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_378",
+   "query": "If a Private upgrade fails on a Postgres migration lock timeout, what is the recommended operator path to recover or roll back, and what upgrade artifacts and audit events need to be captured for change management?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_379",
+   "query": "Which template telemetry header format are we standardizing on for KPI tracking, and how do the quickstart templates behave by default when a corporate proxy blocks those headers?",
+   "question_type": "project_related"
+  },
+  {
+   "name": "erb_380",
+   "query": "In the planned controlled failover game day on 2026-01-15 (Hosted API us-east \u2192 eu-west), what caused the routing automation to oscillate (flip/rollback), and what follow-up ticket and target ship date were created to fix the streaming disconnect/reconnect behavior clients saw during cross-region redirects?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_381",
+   "query": "In the Feb 12, 2026 incident where daily usage exports briefly overstated output tokens (while invoices stayed correct), what was the root cause and what mitigation + follow-up steps were taken to prevent a repeat?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_383",
+   "query": "In Runtime 1.22 on Hosted (Shared) pools, we're seeing burst-time p99 latency spikes that correlate with KV compaction activity. Which two compaction knobs should oncall tune first (and by roughly what amount), and what's the emergency kill-switch plus the specific counters/metrics to check to confirm the disable took effect?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_390",
+   "query": "In the hosted API incident in late April 2026 where streaming requests started returning 502/504 and non-streaming requests also saw a sharp tail-latency increase, what was the underlying trigger (involving an edge keepalive/connection-TTL change) and what immediate mitigations were used to restore service?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_393",
+   "query": "For Incident Bot v2, when responders use break-glass during a Sev0/Sev1 incident to view tenant-scoped config diffs or run privileged telemetry queries, which audit events must be emitted and how long are those audit events retained (SIEM vs immutable archive)? Also, what baseline vs break-glass permission scopes does the bot use for these reads?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_394",
+   "query": "What was the root cause and planned server-side fix for the March 2026 incident where function-call webhook callbacks were retried after a timeout and the JSON payload stayed the same, but the HMAC signature header changed between the first delivery and the retry due to gzip/encoding differences?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_395",
+   "query": "After rotating a Hosted API key in the Console, why might the Usage \u2192 Ad-hoc Query still show request IDs tied to the old key and 'View trace' links that 404, and what immediate mitigation did Support/SRE apply before a proper fix shipped?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_397",
+   "query": "In a private deployment, we saw a security bug where an RBAC exclusion rule (meant to block admin/superuser access) allowed access to an admin route when a JWT omitted the entitlements claim in mid-March 2026. What was the root cause in the policy evaluator, and what were the immediate workaround and the server-side fix plus rollout timeline?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_398",
+   "query": "In the mid-March 2026 eu-west canary rollout where sticky fallback kept pinning requests back onto the failing canary instead of the stable quantized variant, what configuration mistake caused the loop and what mitigations were applied to stop it?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_399",
+   "query": "For a shadow evaluation running in a private deployment using an evaluator sidecar, what fields are required in each shadow probe telemetry record, and which run-lifecycle telemetry events must the evaluator emit?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_402",
+   "query": "In the March 2026 fix for Hosted API issues where SSE streams were truncated/partial behind corporate proxies (e.g., NGINX/Envoy idle timeouts), what resume identifier format did we choose for Last-Event-ID-style reconnects, and per our 2026 partial-result checkpointing/resume standard what are the default checkpoint emission cadence and checkpoint TTL?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_403",
+   "query": "We saw quality regressions after enabling an INT8/mixed-precision variant and suspect KV-cache rounding on long-context requests. What request header can we set as a quick mitigation to bypass the KV cache, and in the dynamic quant handoff policy for the interactive-chat route what minimum KV-cache hit-rate and max sequence length are required before routing to a quant variant?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_407",
+   "query": "After the Feb 22, 2026 SEV-2 where Console rollout actions caused a rollback loop, which HTTP status code was wrongly treated as retryable, what server-side idempotency change was added for rollback requests, and (per the Dedicated staged rollouts audit-log spec) which service must emit the canonical audit events and what identifiers are used to de-duplicate retries?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_408",
+   "query": "In a Private deployment incident in early March 2026, a scheduled KMS envelope key rotation caused about an 18-minute gap where audit events weren't being indexed and some requests saw stale SSO attributes that broke RBAC reconciliation. What was the root cause, and what immediate mitigation/hotfix was applied?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_409",
+   "query": "In the EU hosted API, streaming generate requests over HTTP/2 intermittently returned 502 only when the client included a ~12KB base64-encoded user-metadata header. What was the root cause in our proxy chain, and what server-side mitigation did we deploy to stop the 502s (include the header and cutoff/behavior)?",
+   "question_type": "constrained"
+  },
+  {
+   "name": "erb_412",
+   "query": "Who approves terminating STALE-ORPHAN test instances after the 72h grace window-infra manager or cost-ops?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_413",
+   "query": "INC-9821: was the degraded GPU node an OOM or intermittent driver/kernel launch stalls?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_414",
+   "query": "What must `--deterministic true` enforce in the eval runner (decoding settings)?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_416",
+   "query": "What does Redwood Private on-prem recommend for signing backup manifests?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_417",
+   "query": "In the SLO\u2192customer impact classifier, what score ranges map to Tiers 1-4 in v2, and what were the previous thresholds?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_418",
+   "query": "What is the API endpoint to start a Unified Capacity Transition migration?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_421",
+   "query": "How do audit log exports access records older than the retention cutoff (super-admin override vs legal hold)?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_422",
+   "query": "For the office keycard audit, how many months of access logs should we export?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_425",
+   "query": "What are the automated rollback trigger thresholds (safety sentinel, composite quality, business KPI) in the Optimize cohort-driven gates PRD?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_429",
+   "query": "Does the Hosted AWS Marketplace SKU support customer-managed KMS keys (BYOK)?",
+   "question_type": "conflicting_info"
+  },
+  {
+   "name": "erb_430",
+   "query": "What is the procedure for an emergency rollback of a Serving Runtime release (Hosted and Dedicated)?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_431",
+   "query": "Which intake channel has the most reports of \"token accounting discrepancy\"?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_432",
+   "query": "What is Redwood Inference's end-to-end process for rotating secrets and credentials used by production services (including emergency rotation)?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_434",
+   "query": "How many weekly status updates for Project Orion marked the project as 'At Risk'?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_438",
+   "query": "How many internal incident writeups at Redwood Inference describe activating automatic fallback (to a different model or region) as part of mitigation?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_440",
+   "query": "For an enterprise Redwood Private deployment upgrade, what is the complete go/no-go gate (required validations, required approvals, and required customer communications) mandated by Redwood's internal standards?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_441",
+   "query": "What is Redwood Inference's end-to-end process for making a production change (definition, required approvals, pre-deploy verification, deploy execution, customer/internal communications, and rollback/post-change requirements) for the Hosted API and Console?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_445",
+   "query": "Has any customer other than Kestrel Labs reported timeouts specifically when using the JSON-schema structured output feature on the hosted API?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_446",
+   "query": "What is Redwood Inference's complete end-to-end process for shipping an emergency serving-runtime hotfix to production (Hosted + Dedicated), including required approvals, checklists, rollout/rollback steps, and mandatory customer communications?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_447",
+   "query": "Which customers have been granted an exception to Redwood\u2019s default inference request log retention policy, and what retention period was approved for each?",
+   "question_type": "completeness"
+  },
+  {
+   "name": "erb_451",
+   "query": "Who owns the messy go-to-market misc assets dump with placeholder marketing files and micro-copy ideas created during a last-minute scramble before a partner call?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_453",
+   "query": "When is the professional deep cleaning scheduled for the smelly refrigerator in the 4th floor office kitchen?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_455",
+   "query": "What time was the fantasy football mock draft scheduled for, and which time zone was it in?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_457",
+   "query": "How often should facilities water common-area snake plants and ZZ plants in the office?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_459",
+   "query": "In a first round technical interview for a senior sales engineer candidate, what were the agreed next steps after the call?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_460",
+   "query": "What is the proposed weekly cleanup schedule and routine for tidying the engineering kitchen fridge so old opened items get discarded?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_461",
+   "query": "What caused the courtyard entrance badge kiosk to intermittently show card read errors and freeze for a few minutes after a recent vendor update?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_465",
+   "query": "Who volunteered to be the captain for the office summer softball team and help organize practices?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_468",
+   "query": "What noise range is considered normal in the company cafeteria during the day, and what short-term maximum is allowed at lunch?",
+   "question_type": "miscellaneous"
+  },
+  {
+   "name": "erb_469",
+   "query": "In a backend inference engineer interview about multi-tenant GPU scheduling, what strategy did the candidate propose to reduce cold misses for growing attention cache in long chat histories?",
+   "question_type": "miscellaneous"
+  }
+ ]
+}

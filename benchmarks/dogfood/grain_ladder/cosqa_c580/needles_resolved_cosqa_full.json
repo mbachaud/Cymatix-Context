@@ -1,0 +1,2504 @@
+{
+ "needles": [
+  {
+   "name": "cosqa_q20105",
+   "query": "sort by a token in string python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20106",
+   "query": "python check file is readonly",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20107",
+   "query": "declaring empty numpy array in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20108",
+   "query": "test for iterable is string in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20109",
+   "query": "python print results of query loop",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20110",
+   "query": "how to save header of fits file to export python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20111",
+   "query": "python calc page align",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20112",
+   "query": "python numpy array as float",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20113",
+   "query": "input string that replaces occurences python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20114",
+   "query": "python check all items in list are ints",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20115",
+   "query": "how to save variable to text file python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20116",
+   "query": "how to skip an index in a for loop python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20117",
+   "query": "how to create a tokenization code in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20118",
+   "query": "python raise without parentheses",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20119",
+   "query": "how to seperate list with commas python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20120",
+   "query": "python asynchronous function call return",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20121",
+   "query": "how to make a seconds to time in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20122",
+   "query": "python cast true or false as numbers",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20123",
+   "query": "add milliseconds to datetime python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20124",
+   "query": "how to read the last n lines of a program on python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20125",
+   "query": "python mysql get list of table columns",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20126",
+   "query": "how to get domain part of a url in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20127",
+   "query": "python flatten a nested dictionaary",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20128",
+   "query": "python session set get",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20129",
+   "query": "python save graph into file",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20130",
+   "query": "chmod python windows to remove file",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20131",
+   "query": "add suffixes on concat python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20132",
+   "query": "how to check python object iterable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20133",
+   "query": "python 3 tkinter open file dialog",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20134",
+   "query": "how to indent self python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20135",
+   "query": "tracking centroid of an object python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20136",
+   "query": "python3 ctypes return float array",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20137",
+   "query": "how to make paragraphs in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20138",
+   "query": "python rest requests delete",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20139",
+   "query": "python replace month number",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20140",
+   "query": "how to tell what type of data object is in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20141",
+   "query": "python jsonschema validate schema file",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20142",
+   "query": "get wechat access token python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20143",
+   "query": "python change str value to int",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20144",
+   "query": "implementing drag and drop python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20145",
+   "query": "get unique list from two lists python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20146",
+   "query": "python 3 not runnning in git bash",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20147",
+   "query": "create unknown number of names to print in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20148",
+   "query": "python json if element exists",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20149",
+   "query": "number of unique values in list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20150",
+   "query": "how to randomize items in a list in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20151",
+   "query": "python windows check for keypress",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20152",
+   "query": "python bind scrollbar to canvas",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20153",
+   "query": "python setlevel how to only record error",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20154",
+   "query": "format string with *args python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20155",
+   "query": "python get hostip from url",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20156",
+   "query": "python numpy masked vailding",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20157",
+   "query": "python child widget close signal",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20158",
+   "query": "python read from csv into numpy array",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20159",
+   "query": "cast string to bytearray python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20160",
+   "query": "load str into python object",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20161",
+   "query": "python ldap get all groups a user belongs to",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20162",
+   "query": "python check type if string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20163",
+   "query": "python get current globals",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20164",
+   "query": "get child loggers python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20165",
+   "query": "how to know if a text file is empty in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20166",
+   "query": "python normal distribution p values",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20167",
+   "query": "python ctypes array of arrays",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20168",
+   "query": "scale 1d array python to between 0 and 1",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20169",
+   "query": "python upper case lower case converter",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20170",
+   "query": "ply python expression evaluator",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20171",
+   "query": "python hashlib calc sha1 of file",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20172",
+   "query": "python pdb no capture std output",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20173",
+   "query": "python how to write a factorial",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20174",
+   "query": "python get the last column",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20175",
+   "query": "python how to change file extension",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20176",
+   "query": "python get process memory info",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20177",
+   "query": "check if 2 string are equal python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20178",
+   "query": "flask python create one table sqlalchemy",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20179",
+   "query": "clean output folder in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20180",
+   "query": "python print nodes binary tree",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20181",
+   "query": "python query string parsing",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20182",
+   "query": "cycle through a folder of images python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20183",
+   "query": "check if a date is valid python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20184",
+   "query": "python spherical bessel functions",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20185",
+   "query": "how to check a file is empty in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20186",
+   "query": "python stop process multiprocessing",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20187",
+   "query": "python make sure all words are separated by a single space",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20188",
+   "query": "making a multidimensional array of only 1 in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20189",
+   "query": "python initialize variable of an object",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20190",
+   "query": "python elasticsearch limit results",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20191",
+   "query": "how to force exit python without raise",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20192",
+   "query": "python weak reference to bound method",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20193",
+   "query": "calling index iterable python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20194",
+   "query": "python datetime maybe undefined",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20195",
+   "query": "python go to next page",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20196",
+   "query": "filling null value sin data frame in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20197",
+   "query": "python run external command and get output",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20198",
+   "query": "how to compile python program to use in c++",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20199",
+   "query": "python img to bytearray",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20200",
+   "query": "how to use access token oauth python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20201",
+   "query": "have python line continue on to next line",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20202",
+   "query": "precision of ints in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20203",
+   "query": "modify the dice roll program to call a function for the die roll s python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20204",
+   "query": "python 'namespace' object is not iterable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20205",
+   "query": "how to specify seed for python random",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20206",
+   "query": "python use default arg",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20207",
+   "query": "python change array dtype to int",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20208",
+   "query": "python forcible close socket before opening",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20209",
+   "query": "python series'value non zero index",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20210",
+   "query": "how to add a number to certain elements of an array numpy python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20211",
+   "query": "python unit test and coverage at same time",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20212",
+   "query": "python only list files with specific extension",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20213",
+   "query": "python global type hinting",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20214",
+   "query": "how to make a function in python to take the average of list numbers",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20215",
+   "query": "check if two arrays are equal python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20216",
+   "query": "python round down numpy",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20217",
+   "query": "python pywin32 screenshoot refresh",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20218",
+   "query": "get largest date from a list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20219",
+   "query": "python lock no blocking",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20220",
+   "query": "delete item from a set python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20221",
+   "query": "how to make a sentence into underscores with python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20222",
+   "query": "python timestamp remove timezone",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20223",
+   "query": "python sanic change all object id to string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20224",
+   "query": "python mock mark a test as expected failure",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20225",
+   "query": "python get current users desktop",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20226",
+   "query": "python connect to redis in other docker container",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20227",
+   "query": "python subplot second y axis",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20228",
+   "query": "python function to detect first element of list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20229",
+   "query": "how to flip a matrix in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20230",
+   "query": "python full name of object from global",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20231",
+   "query": "check if input is an integer or boolean python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20232",
+   "query": "storing columns as array python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20233",
+   "query": "create column in python by joining columns",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20234",
+   "query": "how to remove blank lines in python file",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20235",
+   "query": "how to know size of queue in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20236",
+   "query": "python substring index of",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20237",
+   "query": "comparing int to none python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20238",
+   "query": "json to protobuf python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20239",
+   "query": "how to join 2 data frames in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20240",
+   "query": "how to product of a list in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20241",
+   "query": "get all dates between range datetime python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20242",
+   "query": "python access file on remote",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20243",
+   "query": "how to download txt file from internet in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20244",
+   "query": "stopwords list remove python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20245",
+   "query": "limit on open file handles in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20246",
+   "query": "determine the longest sentence in corpus in nlp python ocde",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20247",
+   "query": "python deterministic dictionary printing",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20248",
+   "query": "remove namespace from xml tag python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20249",
+   "query": "fill is null with other columns python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20250",
+   "query": "python async input from gui",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20251",
+   "query": "how to identify the index of an element of a set in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20252",
+   "query": "python 3 print object string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20253",
+   "query": "python get most recent file containing string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20254",
+   "query": "python sqlite3 delete doesn't delete records",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20255",
+   "query": "python apply function to iterator",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20256",
+   "query": "use python next to iterate through",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20257",
+   "query": "how to print all the variables in an object python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20258",
+   "query": "how to determine the index interval for given range of array python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20259",
+   "query": "python print numpy array with string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20260",
+   "query": "python assert value is of type",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20261",
+   "query": "python multiproccessing map with multiple inputs",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20262",
+   "query": "python add suffix to filename",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20263",
+   "query": "best way to deal with pagination in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20264",
+   "query": "finding factors in python and return list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20265",
+   "query": "best way to read xml in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20266",
+   "query": "how to put a string in a yaml file python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20267",
+   "query": "python move cursor to secific line",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20268",
+   "query": "token to id python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20269",
+   "query": "python urlparse get domain",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20270",
+   "query": "python turn a string into a number",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20271",
+   "query": "python check if all are type string in a column",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20272",
+   "query": "bin means python numpy",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20273",
+   "query": "python boto3 delete key from s3",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20274",
+   "query": "random walk steps python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20275",
+   "query": "python delete objects inside of objects",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20276",
+   "query": "truncate seconds from a timestamp in python code",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20277",
+   "query": "python json load unorde",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20278",
+   "query": "python yaml expected single document",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20279",
+   "query": "python filter object at",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20280",
+   "query": "python nonetype object has no attributte",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20281",
+   "query": "python tkinter how to create scrollable canvas",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20282",
+   "query": "geojson to topojson python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20283",
+   "query": "python get png image dimensions",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20284",
+   "query": "python flask separate functions get and post",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20285",
+   "query": "return year from date python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20286",
+   "query": "how to get all modes python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20287",
+   "query": "integer and returns a random bitstring of size python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20288",
+   "query": "how to get the encoding of a file python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20289",
+   "query": "python connect to aws rds",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20290",
+   "query": "python cv2 check if image is empty",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20291",
+   "query": "how to hide a window using a button in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20292",
+   "query": "python marshmallow validation schema from parent",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20293",
+   "query": "fillna with string for specific columnin python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20294",
+   "query": "how to separate list elements by white space python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20295",
+   "query": "how to default value in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20296",
+   "query": "python dict keys lowercase",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20297",
+   "query": "python get index of list values that equal",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20298",
+   "query": "python requests logging not work",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20299",
+   "query": "python static files flask",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20300",
+   "query": "rest json schema validation python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20301",
+   "query": "write in bold and read in color of the print mesaage in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20302",
+   "query": "python type cast to bigint",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20303",
+   "query": "converts matrix to pictures by python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20304",
+   "query": "python random selection from function",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20305",
+   "query": "python keep processpool open until tasks complete",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20306",
+   "query": "running a def a specified amount of time python 3",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20307",
+   "query": "python str to dateal time",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20308",
+   "query": "python check if file is executable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20309",
+   "query": "python how to check the queue lenght",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20310",
+   "query": "query server objects ldap in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20311",
+   "query": "python docx document section different page",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20312",
+   "query": "write a json object to file python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20313",
+   "query": "how to compute the minimum value of a tensor in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20314",
+   "query": "python unittest how to assert 2 lists are almost equal",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20315",
+   "query": "how to check if 2 inputs are equal in python assert equal",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20316",
+   "query": "python loop through proxies request",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20317",
+   "query": "python loess with gaussian kernel",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20318",
+   "query": "greatest common divisor function in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20319",
+   "query": "how to clear up memory python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20320",
+   "query": "get eucliedan distance between two vectors python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20321",
+   "query": "python interactive shell color",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20322",
+   "query": "passing a range of values python years",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20323",
+   "query": "python yaml for each key value",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20324",
+   "query": "python test if value is ctypes array",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20325",
+   "query": "function return apply async python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20326",
+   "query": "reload device program code in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20327",
+   "query": "split string into n parts python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20328",
+   "query": "python get object as dict",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20329",
+   "query": "selecting a range of 2d elements from a numpy array gives empty array in python 3",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20330",
+   "query": "python read tokens from line",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20331",
+   "query": "write data into fits file python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20332",
+   "query": "python print string with visible ansi codes",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20333",
+   "query": "python check if value in enum",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20334",
+   "query": "python sqlite table names in database",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20335",
+   "query": "how to remove all element from a python dictionary",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20336",
+   "query": "python parse query string from url",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20337",
+   "query": "python remove element set",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20338",
+   "query": "manhattan distance in python using longitude and latitude",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20339",
+   "query": "how to read from a file to a list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20340",
+   "query": "dynamically update value in dictionary python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20341",
+   "query": "python replace string from right",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20342",
+   "query": "how to check if a path is writeable python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20343",
+   "query": "get attribute type in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20344",
+   "query": "get fields of object python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20345",
+   "query": "how to fetch one value from one row from mysql query in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20346",
+   "query": "python flask routes add",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20347",
+   "query": "define function arg type and default values python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20348",
+   "query": "python image shape detect",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20349",
+   "query": "what can iterators be iterated only once in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20350",
+   "query": "remove all characters in string in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20351",
+   "query": "python circle in a square bitmap array",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20352",
+   "query": "location of maya python exe",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20353",
+   "query": "how to make letters uppercase in python skipping spaces",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20354",
+   "query": "python delete element from set",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20355",
+   "query": "python get current git branch",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20356",
+   "query": "how to make a restart button using python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20357",
+   "query": "tracing python code execution",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20358",
+   "query": "delete pyc files from python script",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20359",
+   "query": "sleep holding up python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20360",
+   "query": "traversal in tree in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20361",
+   "query": "timing a function call python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20362",
+   "query": "python how to stop playsound",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20363",
+   "query": "python change dictioinary values in place",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20364",
+   "query": "can i pass instance method as variable python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20365",
+   "query": "pickle python read entiere file",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20366",
+   "query": "should there be equal no of columns to concanate two df python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20367",
+   "query": "python flatten deep nested list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20368",
+   "query": "how to show a variable amount of precision in python string format",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20369",
+   "query": "python array get element by index with default",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20370",
+   "query": "check if string is int in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20371",
+   "query": "how to change numpy array to list in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20372",
+   "query": "read a file into a set python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20373",
+   "query": "python round float to int",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20374",
+   "query": "how to write a parser on python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20375",
+   "query": "python dict with keys no value",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20376",
+   "query": "how to remove blank lines from a text file in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20377",
+   "query": "how to hash a binary file in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20378",
+   "query": "python get function keyword names",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20379",
+   "query": "iterate through words in text file python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20380",
+   "query": "python make a put request to restful endpoint",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20381",
+   "query": "python get the id of the current thread",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20382",
+   "query": "python function returning a list of all entities is called",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20383",
+   "query": "how to flat a list of list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20384",
+   "query": "python read yaml to numpy",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20385",
+   "query": "discord python get user from id string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20386",
+   "query": "list of arbitrary objects to counts in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20387",
+   "query": "how to know queue size in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20388",
+   "query": "impute missing values in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20389",
+   "query": "python dict rank by value",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20390",
+   "query": "generate short unique id python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20391",
+   "query": "python numpy inverse of the matrix",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20392",
+   "query": "python how to mix backslash and forward slashes in path",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20393",
+   "query": "reduce functon not defined in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20394",
+   "query": "python detect key press linux",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20395",
+   "query": "how to generate random binary tree in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20396",
+   "query": "python get epoch milis from datetime",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20397",
+   "query": "python get environ user windows",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20398",
+   "query": "iterator is past the end python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20399",
+   "query": "python if file not exist then creat",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20400",
+   "query": "python howe to tell if path passed in is absolute or relative",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20401",
+   "query": "maker a string lowercase pythong",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20402",
+   "query": "python sys stdout write new line",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20403",
+   "query": "python how to create a iterable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20404",
+   "query": "how to use python function in tensorflow",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20405",
+   "query": "python how to get range of array with positive values numpy",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20406",
+   "query": "python 3 a build string from iterable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20407",
+   "query": "unchecking a radio button python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20408",
+   "query": "python expected type sized",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20409",
+   "query": "python load csv to numpy array",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20410",
+   "query": "python remove element from list time complexity",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20411",
+   "query": "python property by string name",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20412",
+   "query": "index of an entry in a list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20413",
+   "query": "python how to determine if an iterable is iterable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20414",
+   "query": "python how to create date from string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20415",
+   "query": "how to append a line in a file in the middle of file in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20416",
+   "query": "how to split a string by every character in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20417",
+   "query": "python get index of element each time it appears in list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20418",
+   "query": "python how to make dot character",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20419",
+   "query": "python heap top element",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20420",
+   "query": "in python, how to print strings in different colours",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20421",
+   "query": "python yield unsupported operand type(s)",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20422",
+   "query": "how to sort files by filename python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20423",
+   "query": "how to change the axis range in a plot in python for subplots",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20424",
+   "query": "python view vector to asimuth elevation",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20425",
+   "query": "python sort data by variable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20426",
+   "query": "compute the middle index in list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20427",
+   "query": "python josn dump to file",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20428",
+   "query": "python remove condition apply to dict",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20429",
+   "query": "python remove directory tree if no files",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20430",
+   "query": "how to pop a node off a stack python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20431",
+   "query": "python open file with exclusive access permissions",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20432",
+   "query": "python gevent combine multiprocessing",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20433",
+   "query": "create copy that doesn't alter original python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20434",
+   "query": "remove trailing whitespace in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20435",
+   "query": "python default menuitem select",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20436",
+   "query": "get sort indexes in a list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20437",
+   "query": "how to start a new line in python gui",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20438",
+   "query": "how to get tuple of colors in image python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20439",
+   "query": "make datetime aware python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20440",
+   "query": "python dict drop empty",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20441",
+   "query": "python pretty print without sort",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20442",
+   "query": "python check if interactive",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20443",
+   "query": "python pid determine existence",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20444",
+   "query": "python pymongo insert without duplicatte",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20445",
+   "query": "how to read json files with multiple object python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20446",
+   "query": "python discord leave voice channel",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20447",
+   "query": "python unittest make tests discoverable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20448",
+   "query": "multiline text send message python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20449",
+   "query": "extract integers from string in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20450",
+   "query": "python take a string after the title",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20451",
+   "query": "how to randomly select rows in ndarray in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20452",
+   "query": "how to open a file with a path in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20453",
+   "query": "python count distance between two vectors",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20454",
+   "query": "python get dimensions of list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20455",
+   "query": "python filter lowpass minmum cutoff frequency",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20456",
+   "query": "python 3, seperate a string into a list at comma",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20457",
+   "query": "how to delete an element in a python dictionary",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20458",
+   "query": "how know if the box was selected in checkbox in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20459",
+   "query": "standard scalar function in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20460",
+   "query": "python random gaussian distribution noise",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20461",
+   "query": "return the number of numeric attributes in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20462",
+   "query": "python pil camera capture",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20463",
+   "query": "python flask create cookie expiration",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20464",
+   "query": "python sqlalchemy model *",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20465",
+   "query": "python how to move to next command in for loop",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20466",
+   "query": "python check if object is a char",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20467",
+   "query": "how to achieve logarithmic complexity in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20468",
+   "query": "python listbox scrollbar not tk",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20469",
+   "query": "identify the most common number in an array python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20470",
+   "query": "pull multiple values to make table python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20471",
+   "query": "python adjust data to normal distribution",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20472",
+   "query": "python check if float has no floating points",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20473",
+   "query": "string remove the last blank python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20474",
+   "query": "python how to display object attributes",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20475",
+   "query": "determine if a list of numbers contains duplicates python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20476",
+   "query": "python figure add title label size",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20477",
+   "query": "python networkx longest path directed acyclic graph",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20478",
+   "query": "how to take list as input in python seperated with spaces",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20479",
+   "query": "is a list in python an array",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20480",
+   "query": "python cosine similarity of two vectors",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20481",
+   "query": "how to model a sphere python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20482",
+   "query": "how to check paths in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20483",
+   "query": "python test truth value of list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20484",
+   "query": "python string value of enum",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20485",
+   "query": "python create null pointer with ctypes",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20486",
+   "query": "python md5 hash string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20487",
+   "query": "python how to match dictionarys",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20488",
+   "query": "select elements from a list, then delete these elements in the original list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20489",
+   "query": "pybool to c++ python 3",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20490",
+   "query": "how to add a ? in python url",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20491",
+   "query": "python how to check whether the process with pid exist",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20492",
+   "query": "how to cehck if somethign is a constant python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20493",
+   "query": "python check if variable exists in locals",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20494",
+   "query": "python filter a dictionary by value",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20495",
+   "query": "read json file and turn into dictionary using python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20496",
+   "query": "python change the shape of list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20497",
+   "query": "how to get the datatypes in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20498",
+   "query": "initializing an empty string with a size python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20499",
+   "query": "cast str as int in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20500",
+   "query": "python, sql table column details",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20501",
+   "query": "python pathlib to traverse directories",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20502",
+   "query": "python create list of columns with their dtype",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20503",
+   "query": "python turn all nested object to dict",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20504",
+   "query": "python read dicom images",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20505",
+   "query": "python making string lower case",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20506",
+   "query": "how to implement a macro in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20507",
+   "query": "python subprocess close stdin",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20508",
+   "query": "sum within a comprehension python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20509",
+   "query": "python timedelta without microseconds",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20510",
+   "query": "change python object to string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20511",
+   "query": "eit request header in python flask",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20512",
+   "query": "python lower all elements in list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20513",
+   "query": "using sort to move element in to new position in list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20514",
+   "query": "remove special characters from column names in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20515",
+   "query": "calculate the average of a given list in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20516",
+   "query": "past python git clone",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20517",
+   "query": "python lambda function with 3 params",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20518",
+   "query": "check for punctuation python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20519",
+   "query": "unsupported media type json python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20520",
+   "query": "python separate string to list",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20521",
+   "query": "python remove phrase from list of strings",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20522",
+   "query": "python fastest way to load data",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20523",
+   "query": "add noise to the audio python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20524",
+   "query": "object with commas turned into list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20525",
+   "query": "python set limits on x axis",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20526",
+   "query": "is python ssl socket connection thread safe",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20527",
+   "query": "python3 encode decode bytes",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20528",
+   "query": "xsd file to python object",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20529",
+   "query": "python expand a path",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20530",
+   "query": "python flask template table example",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20531",
+   "query": "how to check if object defined python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20532",
+   "query": "s3 sync between bucket python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20533",
+   "query": "change the position of 3d coordinate in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20534",
+   "query": "python how to get the number of cores in a computer",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20535",
+   "query": "python how to use pdb set trace",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20536",
+   "query": "python dictionary url encode",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20537",
+   "query": "how to check whether a string is int in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20538",
+   "query": "python 3 change permission of file chmod",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20539",
+   "query": "python gaussian filter array",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20540",
+   "query": "how to cut off a calculated number to two decimals in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20541",
+   "query": "replace many value at once in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20542",
+   "query": "python numpy conver to float64",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20543",
+   "query": "python how to rank a list object",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20544",
+   "query": "how to check if file doesn't exist in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20545",
+   "query": "how to get the parent directory in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20546",
+   "query": "resize an image python pil",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20547",
+   "query": "python boxplot data frame",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20548",
+   "query": "python glpk read from lp file",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20549",
+   "query": "python threadpool close join",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20550",
+   "query": "python sklearn onehotencoder string values",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20551",
+   "query": "python change to bytes",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20552",
+   "query": "python json loads try",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20553",
+   "query": "create an empty column in data frame python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20554",
+   "query": "remove whitespace at end of line in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20555",
+   "query": "python file opening modes",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20556",
+   "query": "python code input prompt for questions",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20557",
+   "query": "python parse a log file that is logging",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20558",
+   "query": "remove an entry from a dict python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20559",
+   "query": "new line statemnt pythong write",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20560",
+   "query": "python view as series column format string",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20561",
+   "query": "python select not null column values",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20562",
+   "query": "how do functions in python know the parametr type",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20563",
+   "query": "cursor positioning python windows",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20564",
+   "query": "python how to equally space points in an ellipse",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20565",
+   "query": "how to see how similar two images are in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20566",
+   "query": "how to make a input to have no spaces in python\\",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20567",
+   "query": "next line to read in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20568",
+   "query": "move an item in list to front python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20569",
+   "query": "python wrap (s,w) print",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20570",
+   "query": "how to check if missing values are blanks or nan or none in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20571",
+   "query": "python to get the indices of bin edges",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20572",
+   "query": "python comma separated value",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20573",
+   "query": "python requests disable ssl certificate verification",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20574",
+   "query": "python var and distribution of probability",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20575",
+   "query": "how to determine it's a orthogonal matrix using python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20576",
+   "query": "strip html tags in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20577",
+   "query": "center align python text",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20578",
+   "query": "python get list of keys on an object",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20579",
+   "query": "is there any python function to check for nan valu",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20580",
+   "query": "python get cookie for request",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20581",
+   "query": "python is list no na",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20582",
+   "query": "python determine if a file is image",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20583",
+   "query": "python reorganise a data frame",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20584",
+   "query": "read first line in txt file in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20585",
+   "query": "pass defined parser object to subparser python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20586",
+   "query": "how to print generic error in python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20587",
+   "query": "python change the name of a key",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20588",
+   "query": "moving mouse python click",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20589",
+   "query": "python to determine if services are running",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20590",
+   "query": "python set contains multiple items",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20591",
+   "query": "python protobyf parse from byte",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20592",
+   "query": "python check if a directory is writable",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20593",
+   "query": "object as list python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20594",
+   "query": "replace function nan python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20595",
+   "query": "python hash table check if key exist",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20596",
+   "query": "take all points in box python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20597",
+   "query": "python create enum by name",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20598",
+   "query": "python matplotlib use arrow markers",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20599",
+   "query": "python function default args",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20600",
+   "query": "python how to select first 100 rows",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20601",
+   "query": "removing columnsns in data frame python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20602",
+   "query": "python array to torch tensor",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20603",
+   "query": "how to turn a list into a csv python",
+   "question_type": "cosqa_web_query"
+  },
+  {
+   "name": "cosqa_q20604",
+   "query": "how do i unzip file in python",
+   "question_type": "cosqa_web_query"
+  }
+ ]
+}

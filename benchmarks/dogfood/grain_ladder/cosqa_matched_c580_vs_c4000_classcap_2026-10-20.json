@@ -1,0 +1,51 @@
+{
+  "tag": "cosqa",
+  "stamp": "2026-10-20",
+  "join": "query text",
+  "n_common": 500,
+  "n_c580_only": 0,
+  "n_c4000_only": 0,
+  "c580": {
+    "delivered_gold": 0.618,
+    "chars_mean": 20281,
+    "wall_ms_p50": 34,
+    "misses": {
+      "delivered": 309,
+      "cut_by_packing": 26,
+      "ranked_below_cap": 0,
+      "never_ranked": 165,
+      "abstain": 0,
+      "util_mean": 1.127,
+      "util_p50": 1.012,
+      "pre_pack_rank_p50": 11,
+      "post_pack_rank_p50": 10
+    },
+    "receipt": "F:\\tmp\\grain_multicorpus_2026-10-20\\ladder_cosqa_c580_classcap_2026-10-20.json",
+    "bed": "F:\\tmp\\grain_multicorpus_2026-10-20\\cosqa_c580\\cosqa.db",
+    "git_sha": "055c19caca3f2972a64f36801a222881ca777202"
+  },
+  "c4000": {
+    "delivered_gold": 0.362,
+    "chars_mean": 6800,
+    "wall_ms_p50": 19,
+    "misses": {
+      "delivered": 181,
+      "cut_by_packing": 0,
+      "ranked_below_cap": 86,
+      "never_ranked": 233,
+      "abstain": 0,
+      "util_mean": 0.378,
+      "util_p50": 0.37,
+      "pre_pack_rank_p50": 7,
+      "post_pack_rank_p50": 7
+    },
+    "receipt": "F:\\tmp\\grain_multicorpus_2026-10-20\\ladder_cosqa_c4000_classcap_2026-10-20.json",
+    "bed": "F:\\tmp\\grain_multicorpus_2026-10-20\\cosqa_c4000\\cosqa.db",
+    "git_sha": "055c19caca3f2972a64f36801a222881ca777202"
+  },
+  "paired_c580_vs_c4000": {
+    "wins": 128,
+    "losses": 0
+  },
+  "beta_witness_2026_09_04_delivered_gold_rate": null
+}

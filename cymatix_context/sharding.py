@@ -186,6 +186,8 @@ import logging
 import threading
 from typing import Any, List
 
+from .request_scoped import LastQueryValue, own_last
+
 log = logging.getLogger(__name__)
 
 
@@ -235,6 +237,9 @@ class ShardedGenomeAdapter:
     # input. Fully reversible — one string.
     _fusion_mode: str = "additive"
 
+    last_query_scores = LastQueryValue()
+    last_tier_contributions = LastQueryValue()
+
     def __init__(self, main_path: str, **genome_kwargs: Any) -> None:
         from .shard_router import ShardRouter
 
@@ -277,8 +282,9 @@ class ShardedGenomeAdapter:
         # can clobber each other's last_query_scores between the
         # router-finishes-write and adapter-finishes-copy gap.
         with self._last_query_scores_lock:
-            self.last_query_scores = dict(self._router.last_query_scores)
-            self.last_tier_contributions = dict(self._router.last_tier_contributions)
+            self.last_query_scores = dict(own_last(self._router, "last_query_scores") or {})
+            self.last_tier_contributions = dict(
+                own_last(self._router, "last_tier_contributions") or {})
         return genes
 
     # Back-compat alias so older callers (and the existing shard-router

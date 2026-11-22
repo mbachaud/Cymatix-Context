@@ -28,6 +28,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import Callable, Dict, List, Optional, Tuple
 
+from .request_scoped import own_last
 from .accel import extract_query_signals, estimate_tokens
 from .codons import CodonChunker, CodonEncoder
 from .config import CymatixConfig
@@ -2083,16 +2084,18 @@ class CymatixContextManager:
                     rerank_override=_rerank_override,
                 )
                 with self.genome._last_query_scores_lock:
+                    # own_last: what THIS thread's retrieval published. The
+                    # plain attributes can already hold a concurrent
+                    # request's maps (including its intermediate ones).
                     query_scores: Dict[str, float] = dict(
-                        self.genome.last_query_scores or {}
+                        own_last(self.genome, "last_query_scores") or {}
                     )
                     tier_contribs: Dict = dict(
-                        getattr(self.genome, "last_tier_contributions", None)
-                        or {}
+                        own_last(self.genome, "last_tier_contributions") or {}
                     )
                     _capture_request_signals(
-                        getattr(self.genome, "last_signal_timings", None),
-                        getattr(self.genome, "last_pool_total", None),
+                        own_last(self.genome, "last_signal_timings"),
+                        own_last(self.genome, "last_pool_total"),
                     )
             else:
                 import concurrent.futures
@@ -2108,17 +2111,14 @@ class CymatixContextManager:
                         rerank_override=_rerank_override,
                     )
                     with self.genome._last_query_scores_lock:
-                        scores = dict(self.genome.last_query_scores or {})
+                        scores = dict(own_last(self.genome, "last_query_scores") or {})
                         contribs = dict(
-                            getattr(
-                                self.genome, "last_tier_contributions", None,
-                            ) or {}
+                            own_last(self.genome, "last_tier_contributions") or {}
                         )
                         _sub_sig = dict(
-                            getattr(self.genome, "last_signal_timings", None)
-                            or {}
+                            own_last(self.genome, "last_signal_timings") or {}
                         )
-                        _sub_pool = getattr(self.genome, "last_pool_total", None)
+                        _sub_pool = own_last(self.genome, "last_pool_total")
                     return genes, scores, contribs, _sub_sig, _sub_pool
 
                 with concurrent.futures.ThreadPoolExecutor(

@@ -24,6 +24,7 @@ PINNED = [
     "benchmarks/bench_oauth_scope.py",
     "benchmarks/cb_cymatix_pred.py",
     "benchmarks/cb_dpacket_clamp_rescore.py",
+    "benchmarks/compaction_recall/arms.py",
     "benchmarks/coderag_diag.py",
     "benchmarks/diag_rrf_tier_breadth.py",
     "benchmarks/dogfood/ablate_cymatics.py",

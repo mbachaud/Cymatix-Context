@@ -16,6 +16,7 @@ const { pathToFileURL } = require('node:url');
 const { buildDiagnostics } = require('./diagnostics');
 const { HEALTH_LABEL, laneHealth } = require('./health');
 const { buildInstallCommand, validateInstall } = require('./mcp');
+const { pluginTrayItems, pluginsKey } = require('./plugins');
 const { LauncherSidecar, engineCommand } = require('./sidecar');
 const { ensureUserConfig } = require('./userconfig');
 
@@ -36,6 +37,7 @@ let sidecar = null;
 let health = null;
 let lanes = [];
 let lanesKey = '';
+let pluginsPayload = null;
 let pollTimer = null;
 let quitting = false;
 let shutdownDone = false;
@@ -186,16 +188,29 @@ async function poll() {
   try {
     const body = await sidecar.request('GET', '/api/lanes');
     lanes = Array.isArray(body.lanes) ? body.lanes : [];
-    setHealth(laneHealth(lanes));
   } catch {
     lanes = [];
-    setHealth('error');
   }
-  const key = JSON.stringify(lanes.map((l) => [l.name, l.port, l.running]));
+  // Plugins are optional: a failed fetch means no plugin items and no amber.
+  try {
+    pluginsPayload = await sidecar.request('GET', '/api/plugins');
+  } catch {
+    pluginsPayload = null;
+  }
+  const plugins = pluginsPayload && Array.isArray(pluginsPayload.plugins) ? pluginsPayload.plugins : [];
+  setHealth(laneHealth(lanes, plugins));
+  const key = JSON.stringify([lanes.map((l) => [l.name, l.port, l.running]), pluginsKey(pluginsPayload)]);
   if (key !== lanesKey) {
     lanesKey = key;
     buildTrayMenu();
   }
+}
+
+function pluginAction(name, id) {
+  sidecar.request('POST', `/api/plugins/${encodeURIComponent(name)}/actions/${encodeURIComponent(id)}`,
+    undefined, { 'X-Cymatix-Action': '1' })
+    .catch((err) => log(`plugin ${name} action ${id} failed`, err.message))
+    .finally(poll);
 }
 
 function laneAction(name, action) {
@@ -218,6 +233,7 @@ function buildTrayMenu() {
     { label: 'Open Cymatix', click: showWindow },
     { type: 'separator' },
     { label: 'Lanes', submenu: laneItems },
+    ...pluginTrayItems(pluginsPayload, pluginAction),
     { label: 'Copy diagnostics', click: () => copyDiagnostics().catch((e) => log(e)) },
     { label: 'Open logs folder', click: () => shell.openPath(LAUNCHER_LOGS) },
     { type: 'separator' },

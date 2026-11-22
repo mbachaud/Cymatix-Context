@@ -27,7 +27,7 @@ import sqlite3
 import time
 from pathlib import Path
 
-from cymatix_context import cwola
+from cymatix_context.identity import cwola
 
 
 def main() -> None:

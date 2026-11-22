@@ -90,6 +90,7 @@ SECTION_TO_CLASS: Dict[str, Optional[str]] = {
     "synonyms": None,  # free-form Dict[str, List[str]] -> CymatixConfig.synonym_map
     "encoder_daemon": "EncoderDaemonConfig",  # Fork 1 slice 1: shared encoder daemon URL
     "sync": "SyncConfig",  # Phase 3: in-process delta sync of tracked folders
+    "plugins": "PluginsConfig",  # optional add-ons: entry-point + directory discovery
     "lanes": "LaneConfig",  # [[lanes]] array of tables; one row set describes each entry
 }
 

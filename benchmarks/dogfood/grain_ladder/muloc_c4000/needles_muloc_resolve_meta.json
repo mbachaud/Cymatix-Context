@@ -1,0 +1,5520 @@
+{
+ "date": "2026-10-21T04:54:23.222578+00:00",
+ "db": "F:\\tmp\\grain_multicorpus_2026-10-20\\muloc_c4000\\muloc.db",
+ "corpus_root": "F:\\Projects\\mulocbench\\corpus",
+ "min_file_bytes": 50,
+ "needles_total": 687,
+ "needles_resolvable": 680,
+ "dropped": [
+  "muloc_0037",
+  "muloc_0173",
+  "muloc_0303",
+  "muloc_0598",
+  "muloc_0663",
+  "muloc_0705",
+  "muloc_0777"
+ ],
+ "gold_files_wanted": 1203,
+ "gold_files_size_gated": 19,
+ "gold_files_missing_on_disk": [],
+ "twin_fallbacks": 1,
+ "per_needle": {
+  "muloc_0000": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0001": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0002": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0003": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 79,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0004": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [
+    "frame.py:203392"
+   ],
+   "via_twin": []
+  },
+  "muloc_0005": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0007": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0008": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0009": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0010": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0011": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0012": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0013": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 43,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0014": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0015": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0016": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0019": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0020": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0021": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0022": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0023": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0024": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 50,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0025": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0026": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0027": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 36,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0028": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 3,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0029": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0030": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0031": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0032": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0034": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0035": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0036": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0039": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0041": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0042": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0045": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0046": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0047": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0048": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0050": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0051": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0052": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0053": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0056": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 49,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0057": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 4,
+   "gold_genes": 58,
+   "gold_size_gated": [
+    "frame.py:203392"
+   ],
+   "via_twin": []
+  },
+  "muloc_0058": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0059": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0060": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0061": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0063": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0065": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0066": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0067": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0068": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 7,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0069": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0070": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0071": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0072": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0073": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0074": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0075": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 3,
+   "gold_genes": 14,
+   "gold_size_gated": [
+    "test_pytorch_onnx_onnxruntime.py:453094"
+   ],
+   "via_twin": []
+  },
+  "muloc_0076": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0077": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0078": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0079": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0080": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0081": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0082": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0083": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0084": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0085": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0086": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0087": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0088": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0089": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0090": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 28,
+   "gold_files_resolved": 28,
+   "gold_genes": 88,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0092": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0093": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0094": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0096": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 2,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0097": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0098": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0099": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 48,
+   "gold_size_gated": [
+    "index.py:212933"
+   ],
+   "via_twin": []
+  },
+  "muloc_0100": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 2,
+   "gold_genes": 66,
+   "gold_size_gated": [
+    "index.py:212933",
+    "test_frame.py:627047"
+   ],
+   "via_twin": []
+  },
+  "muloc_0101": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0102": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0103": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0105": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0106": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0107": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0108": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0109": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0110": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0111": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 6,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0112": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0113": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 2,
+   "gold_genes": 24,
+   "gold_size_gated": [
+    "posixmodule.c.h:331045",
+    "posixmodule.c:451159"
+   ],
+   "via_twin": []
+  },
+  "muloc_0114": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0115": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0116": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0117": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 6,
+   "gold_genes": 88,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0119": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0121": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0122": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 2,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0123": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0126": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 47,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0128": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0129": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0131": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0132": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 16,
+   "gold_files_resolved": 16,
+   "gold_genes": 42,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0133": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0135": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 3,
+   "gold_genes": 62,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0136": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 18,
+   "gold_files_resolved": 9,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0137": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0138": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0139": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0140": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0141": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0142": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0143": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 4,
+   "gold_genes": 78,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0144": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0146": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 64,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0148": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 47,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0149": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0150": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0151": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0153": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 11,
+   "gold_files_resolved": 6,
+   "gold_genes": 107,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0154": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0155": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0156": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0157": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0158": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0159": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0160": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0161": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0162": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 45,
+   "gold_size_gated": [
+    "youtube.py:246756"
+   ],
+   "via_twin": []
+  },
+  "muloc_0163": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0164": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0165": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0166": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 13,
+   "gold_files_resolved": 8,
+   "gold_genes": 104,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0167": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 18,
+   "gold_files_resolved": 17,
+   "gold_genes": 319,
+   "gold_size_gated": [
+    "typeobject.c:323533"
+   ],
+   "via_twin": []
+  },
+  "muloc_0168": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0169": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0170": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0171": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0172": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0174": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0175": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0176": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0177": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0178": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0181": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0182": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0185": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 119,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0186": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0188": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0189": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0191": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0193": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0194": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0195": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0196": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 11,
+   "gold_files_resolved": 8,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0197": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0198": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 44,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0200": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0201": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0202": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0203": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 28,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0204": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0205": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0207": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0208": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0209": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0210": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0211": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0212": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0213": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0214": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 61,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0215": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0217": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0218": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 131,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0219": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 43,
+   "gold_size_gated": [
+    "utils.py:210245"
+   ],
+   "via_twin": []
+  },
+  "muloc_0220": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0221": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0222": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0223": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0224": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0225": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0227": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 4,
+   "gold_genes": 56,
+   "gold_size_gated": [
+    "fooocus_version.py:17"
+   ],
+   "via_twin": []
+  },
+  "muloc_0228": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 40,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0229": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [
+    "fooocus_version.py:17"
+   ],
+   "via_twin": []
+  },
+  "muloc_0230": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0231": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0233": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0235": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0237": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0238": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0240": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0241": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0242": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 4,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0243": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0246": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0248": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0250": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0251": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0252": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0253": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0254": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 28,
+   "gold_files_resolved": 28,
+   "gold_genes": 88,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0256": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0257": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0258": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0259": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 55,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0260": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0261": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0262": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0263": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0267": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0269": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0270": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0271": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0272": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0273": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0274": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0275": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 58,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0276": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0277": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0278": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0279": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0280": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0282": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 18,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0283": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0285": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0286": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 40,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0287": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 52,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0288": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0289": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [
+    "test_jit.py:579289"
+   ],
+   "via_twin": []
+  },
+  "muloc_0290": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0291": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0292": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0293": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0294": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0295": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0296": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0297": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0298": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 77,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0300": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 3,
+   "gold_genes": 70,
+   "gold_size_gated": [
+    "frame.py:203392",
+    "test_frame.py:627047"
+   ],
+   "via_twin": []
+  },
+  "muloc_0302": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0304": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0305": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0306": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0307": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0308": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 9,
+   "gold_files_resolved": 7,
+   "gold_genes": 56,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0309": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0312": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0313": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0314": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0317": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0318": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0320": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0321": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 93,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0322": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0323": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 51,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0324": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0325": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0326": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0327": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0328": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0329": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0330": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0331": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0332": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0333": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0334": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0335": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0336": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0338": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0340": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0341": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0342": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 10,
+   "gold_files_resolved": 10,
+   "gold_genes": 47,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0343": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0344": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0345": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0346": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0347": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0348": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 57,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0349": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0350": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0351": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0352": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0353": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 87,
+   "gold_size_gated": [
+    "youtube.py:246756"
+   ],
+   "via_twin": []
+  },
+  "muloc_0354": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0355": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0356": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 13,
+   "gold_size_gated": [
+    "utils.py:210245"
+   ],
+   "via_twin": []
+  },
+  "muloc_0357": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0358": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0359": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0360": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0361": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 63,
+   "gold_size_gated": [
+    "utils.py:210245"
+   ],
+   "via_twin": []
+  },
+  "muloc_0362": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0363": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0364": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0365": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 61,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0367": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0368": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0369": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0370": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0371": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0372": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0373": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0374": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0377": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0378": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0380": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0381": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 27,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0382": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0383": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0384": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0386": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0390": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0391": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0393": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0394": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0395": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0396": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0397": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0398": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0399": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0401": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0404": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0405": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0406": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0407": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0408": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0409": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0410": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0411": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0412": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0414": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0415": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0416": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0418": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0420": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0421": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0422": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0424": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 11,
+   "gold_files_resolved": 11,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0425": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0426": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 18,
+   "gold_files_resolved": 18,
+   "gold_genes": 37,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0427": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0428": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0429": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0431": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0432": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 6,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0433": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0434": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0435": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0436": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0437": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 3,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0438": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0439": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0440": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0441": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0442": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0444": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0445": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0446": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0447": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0448": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0449": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0450": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0451": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0452": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0453": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0454": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 4,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0455": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0456": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0457": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0458": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0459": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0460": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0462": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0464": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0465": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0466": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0467": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0468": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 49,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0470": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0473": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0474": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0476": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0477": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0478": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0479": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0480": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0481": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0482": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0484": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0485": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0486": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0487": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0488": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0489": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0490": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0491": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0492": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0493": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 56,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0494": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0495": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0496": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0497": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0498": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0499": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0500": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 45,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0501": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0502": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0503": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0504": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [
+    "compile.c:257089"
+   ],
+   "via_twin": []
+  },
+  "muloc_0505": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0506": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0507": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 36,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0508": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0509": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0511": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 12,
+   "gold_files_resolved": 12,
+   "gold_genes": 126,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0513": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 17,
+   "gold_files_resolved": 17,
+   "gold_genes": 405,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0514": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 44,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0515": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0516": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 13,
+   "gold_files_resolved": 13,
+   "gold_genes": 89,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0520": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 40,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0521": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 62,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0522": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0523": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0524": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0525": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0526": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0527": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0528": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0529": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0530": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0531": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0539": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0540": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0541": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0542": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0543": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0544": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0545": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 79,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0546": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0547": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0548": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0549": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0550": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0551": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0552": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0553": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 23,
+   "gold_files_resolved": 22,
+   "gold_genes": 122,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0554": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0555": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0556": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 16,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0557": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0558": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 29,
+   "gold_files_resolved": 29,
+   "gold_genes": 148,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0559": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0560": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 71,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0561": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 73,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0562": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0564": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0565": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 4,
+   "gold_genes": 17,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0566": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0568": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0569": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0570": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0571": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0572": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0573": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0574": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0575": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0576": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0577": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0581": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0582": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0583": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0584": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0585": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 5,
+   "gold_genes": 24,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0586": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0587": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0588": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0589": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0590": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 7,
+   "gold_files_resolved": 7,
+   "gold_genes": 37,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0591": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0592": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0593": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0595": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0596": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 39,
+   "gold_size_gated": [
+    "test_nn.py:564536"
+   ],
+   "via_twin": []
+  },
+  "muloc_0597": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 13,
+   "gold_size_gated": [
+    "test_cuda.py:228144"
+   ],
+   "via_twin": []
+  },
+  "muloc_0600": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0601": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0602": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0603": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 28,
+   "gold_files_resolved": 28,
+   "gold_genes": 76,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0604": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0605": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 8,
+   "gold_genes": 14,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0606": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0608": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0609": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 34,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0610": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 20,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0611": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0612": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 3,
+   "gold_genes": 56,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0613": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 23,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0614": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0615": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0616": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 14,
+   "gold_files_resolved": 14,
+   "gold_genes": 99,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0617": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0618": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 2,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0619": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0620": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0621": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 24,
+   "gold_files_resolved": 19,
+   "gold_genes": 179,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0623": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0625": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 12,
+   "gold_files_resolved": 9,
+   "gold_genes": 35,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0626": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0628": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0629": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 50,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0630": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 9,
+   "gold_files_resolved": 9,
+   "gold_genes": 58,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0631": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 5,
+   "gold_genes": 67,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0632": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 49,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0633": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 30,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0634": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 21,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0635": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 37,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0636": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 4,
+   "gold_genes": 96,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0637": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0642": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 5,
+   "gold_files_resolved": 3,
+   "gold_genes": 88,
+   "gold_size_gated": [
+    "frame.py:203392",
+    "test_frame.py:627047"
+   ],
+   "via_twin": []
+  },
+  "muloc_0643": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0645": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 29,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0646": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0649": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 39,
+   "gold_size_gated": [
+    "test_groupby.py:219237"
+   ],
+   "via_twin": []
+  },
+  "muloc_0650": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 8,
+   "gold_files_resolved": 6,
+   "gold_genes": 197,
+   "gold_size_gated": [
+    "release.rst:233600",
+    "test_frame.py:627047"
+   ],
+   "via_twin": []
+  },
+  "muloc_0653": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0654": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 3,
+   "gold_files_resolved": 3,
+   "gold_genes": 90,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0656": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 42,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0659": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0660": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 4,
+   "gold_genes": 104,
+   "gold_size_gated": [
+    "frame.py:203392"
+   ],
+   "via_twin": []
+  },
+  "muloc_0661": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 39,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0664": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0666": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 4,
+   "gold_files_resolved": 3,
+   "gold_genes": 75,
+   "gold_size_gated": [
+    "frame.py:203392"
+   ],
+   "via_twin": []
+  },
+  "muloc_0667": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [
+    "frame.py:203392"
+   ],
+   "via_twin": []
+  },
+  "muloc_0670": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 6,
+   "gold_files_resolved": 6,
+   "gold_genes": 111,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0671": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 42,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0672": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0673": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0674": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0675": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0676": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0677": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0678": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0679": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0680": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0682": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0683": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0685": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0686": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 58,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0687": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0689": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0692": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0693": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0694": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0697": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0698": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0699": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0701": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0702": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0703": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0706": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0707": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 52,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0708": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 57,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0709": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 63,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0711": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0712": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0715": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0716": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0717": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0718": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0719": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": [
+    "F:\\Projects\\mulocbench\\corpus\\PaddlePaddle__PaddleOCR\\deploy\\pdserving\\win\\ocr_reader.py"
+   ]
+  },
+  "muloc_0720": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0721": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0722": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0723": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0724": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0725": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0726": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0728": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0730": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0731": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0732": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0734": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0735": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0736": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0737": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0740": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0741": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0743": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0745": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0746": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0747": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0748": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0749": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0750": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0751": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0752": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0753": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0755": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0757": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0758": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0759": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0760": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0761": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0762": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0763": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0764": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0765": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0766": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0767": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0768": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0769": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0770": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0771": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0772": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0773": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0774": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 7,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0775": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0776": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0778": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0779": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0780": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0781": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0782": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0783": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0784": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0785": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 10,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0786": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 38,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0787": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0788": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 2,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0789": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 6,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0790": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 5,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0791": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 25,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0792": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0793": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0794": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 33,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0795": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 31,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0797": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 44,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0798": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0799": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0800": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0803": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0804": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0805": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 15,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0807": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0808": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0809": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0810": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0811": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0812": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0813": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 9,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0814": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 13,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0815": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0816": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 2,
+   "gold_files_resolved": 2,
+   "gold_genes": 12,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0817": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 22,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0818": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0819": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 26,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0820": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0821": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0822": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 32,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0823": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 11,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0824": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0826": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0827": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0828": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0830": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 4,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0831": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 8,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0832": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0833": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0834": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0836": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 3,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0838": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 19,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0840": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  },
+  "muloc_0841": {
+   "question_type": "muloc_file_loc",
+   "gold_files": 1,
+   "gold_files_resolved": 1,
+   "gold_genes": 1,
+   "gold_size_gated": [],
+   "via_twin": []
+  }
+ }
+}

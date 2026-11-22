@@ -2,6 +2,93 @@
 
 ## Unreleased
 
+## 0.12.0 (2026-11-21)
+
+- **Release gate: no 947k witness (owner waiver).** This release was not
+  witnessed against v0.11.4 on the 947k ERB bed. Three changes in it touch
+  the retrieval path: per-thread score read-back (#537), the serialized
+  `:memory:` connection (#536) and `corpus_size()` memo invalidation
+  (#533). Each was merged on its own test-first receipt: #537 and #536
+  state single-threaded and file-backed results are unchanged, and #533
+  changes only queries that run within 60 s of an in-process write. CI
+  (full non-live suite on Linux, Windows and macOS) passed on the release
+  head. Treat v0.12.0 retrieval numbers as unwitnessed until a witness row
+  lands in `docs/benchmarks/BASELINES.md`.
+
+- **feat(plugins): a connector for optional add-ons.** Installed packages
+  (entry-point group `cymatix.plugins`) and signed directory plugins can add
+  CLI commands, supervised services, launcher routes and panels, and tray
+  menu items. New `[plugins]` config section (`enabled`, `disabled`, `dir`),
+  `cymatix plugins list`, and launcher endpoints `GET /api/plugins` and
+  `POST /api/plugins/{name}/actions/{id}` (requires header
+  `X-Cymatix-Action: 1` and a loopback Host). Directory plugins load only
+  when signed, unless `CYMATIX_ALLOW_UNSIGNED_PLUGINS=1`. An exception in a
+  plugin hook disables that plugin for the process and never affects core.
+  The Python tray and the Electron tray both show plugin menu items, and a
+  loaded plugin reporting a warn or error status turns a green tray icon
+  amber (never red). Core behaves the same with no plugins installed;
+  retrieval is unchanged.
+- **feat(mcp): loopback streamable-HTTP transport.** `cymatix mcp serve
+  --http [--port 11441] [--lane NAME] [--profile lean|full|remote-read]`
+  serves the MCP tools over HTTP for remote clients. Loopback bind only
+  (`--host` other than `127.0.0.1` exits 2). The new `remote-read` profile
+  exposes only the eight retrieval and document-read tools. The
+  `X-Cymatix-Agent`, `X-Cymatix-User` and `X-Cymatix-Party` headers set the
+  request identity on this transport only; stdio is unchanged and remains
+  the default. Hardening: an optional bearer token
+  (`CYMATIX_MCP_HTTP_TOKEN`; when set, a request without
+  `Authorization: Bearer <token>` gets 401); DNS-rebinding refusal, so a
+  request whose `Host` or `Origin` is not loopback is rejected; over HTTP a
+  caller's `session_id` is ignored and session delivery elision is off
+  (`ignore_delivered`), so remote clients never share or touch a working
+  set; and `remote-read` fails closed, refusing to start if its tools
+  cannot be pruned to exactly the read set. Retrieval-inert.
+- **fix(retrieval): concurrent requests no longer tier on another request's
+  scores.** `query_docs` publishes its score maps on the store and
+  `build_context` read them back after retrieval returned; a second thread's
+  query could publish in that gap, including its intermediate
+  additive-scale map. The reader then saw a flat score profile and
+  abstained. On a file-backed store, 12 threads x 15 identical queries gave
+  39 to 45 false `no_match` responses out of 180. Each thread now reads
+  back the maps its own query published (`cymatix_context/request_scoped.py`),
+  on the single-store, sharded and `/context/packet` paths. The plain
+  `last_query_scores` attributes keep their meaning (most recent query, any
+  thread). Single-threaded results are unchanged.
+
+- **fix(store): concurrent use of a `:memory:` store no longer hangs**
+  (issue #505). A `:memory:` store has one connection, shared by every
+  thread, and concurrent `build_context` calls (or a query running while
+  the packet-trace fingerprint thread counted rows) never returned. That
+  connection is now serialized on the store's write lock and reads each
+  result in full under it. File-backed stores were not affected and are
+  unchanged: they keep their per-thread read connections. This was also the
+  cause of the intermittent 60-minute `test-full-suite` timeout.
+
+- **change(launcher): the PyPI update check is off by default** (issue
+  #481). The desktop launcher no longer makes an outbound request to
+  pypi.org unless you opt in with `CYMATIX_LAUNCHER_UPDATE_CHECK=1`
+  (`true` / `yes` / `on` also work). Before, it was on unless set to `0`.
+  If you relied on the tray's update notice, set the variable to `1`.
+
+- **fix(store): `corpus_size()` no longer goes stale during in-process
+  ingest** (PR #533). The document count was memoized for 60 s and no write
+  cleared it, so the IDF lexical-anchor tier could use an old N in an
+  ingest, query, ingest, query chain (one replay used N = 698 against a true
+  N of up to 2,604), and fresh-ingest rebuilds did not reproduce.
+  `upsert_doc`, `delete_gene` and the outermost `deferred_commits` commit now
+  drop the memo; the 60 s TTL only bounds other processes' writes. Also adds
+  the compaction-recall stage-1 bench (`benchmarks/compaction_recall/`).
+
+- **fix(tray): auto-restart finds `start-cymatix-tray.bat`** (PR #540). It
+  looked for `Start-cymatix-tray.bat`, which fails on case-sensitive
+  filesystems. The same PR repoints stale imports in `scripts/` and
+  `benchmarks/`, removes byte-identical duplicate files, and moves retired
+  scripts, uncited bench data and finished design docs to `archive/` and
+  `docs/archive/` (excluded from the sdist).
+
+- **fix(bench): `resolve_bench_needles` uses native path separators** (PR
+  #534), so needle resolution works on Linux. Bench-only.
+
 ## 0.11.4 (2026-10-26)
 
 - **Release gate: 947k merged-stack witness with packet tracing on,
@@ -610,7 +697,7 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   undirected COVER links beside the stored row count, `CHUNK_OF` structure
   links, harmonic co-activation links, and distinct entities beside their
   membership rows. Implements
-  `docs/superpowers/specs/2026-07-13-launcher-graph-summary-design.md`; it is a
+  `docs/archive/superpowers/specs/2026-07-13-launcher-graph-summary-design.md`; it is a
   ledger, not a renderer, and nothing is drawn. New
   `cymatix_context/launcher/graph_summary.py` reads the genome over a
   short-lived `mode=ro` connection with `PRAGMA query_only=ON`, does not modify
@@ -839,7 +926,7 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
 - **docs: the 2026-08-09 A/B data campaign's analysis and plan are ported
   from `claude/ab-data-cymatics-pki-dff9c6`** —
   `docs/benchmarks/2026-08-09-candidate-cascade-map.md` (`daaa6af`, "PKI
-  admits zero gold") and `docs/superpowers/plans/2026-08-09-ab-data-campaign.md`
+  admits zero gold") and `docs/archive/superpowers/plans/2026-08-09-ab-data-campaign.md`
   (`fe2ef73`/`b164be4`), each with a port-provenance block; their ~5.4 MB of
   wave0a/wave3b/wave3d ladder receipts are archived in the `cymatix-receipts`
   repository (`mirror-branches/claude__ab-data-cymatics-pki-dff9c6/`), not
@@ -893,7 +980,7 @@ supersedes the 0.9.1 entry below that shipped the same knob at `0`.**
   patched here.
 
 **ROSETTA Tier 2 — software-lexicon aliases (spec:
-`docs/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`).**
+`docs/archive/superpowers/specs/2026-08-30-v091-readme-wiki-rosetta-design.md`).**
 Additive-only canonical-name aliases across the config, CLI, HTTP, and MCP
 surfaces — every legacy bio-named surface keeps working unchanged. On the
 config/env surfaces, collision (both names present) resolves legacy-wins
@@ -1878,7 +1965,7 @@ per-shard `mmap_size` / `cache_size` to the host.
     over-reports inside a constrained container).
   - Hard overrides: `HELIX_SQLITE_MMAP_SIZE` (bytes) and `HELIX_SQLITE_CACHE_SIZE`
     (raw pragma value) win over the profile.
-  - PRD: `docs/prds/2026-05-30-dynamic-ram-scaling.md`. Unit-tested (budget
+  - PRD: `docs/archive/prds/2026-05-30-dynamic-ram-scaling.md`. Unit-tested (budget
     contract + plan-application through Genome / ShardRouter / main.db); the
     end-to-end 100-shard perf delta is validated separately on the bench fixture.
 

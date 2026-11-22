@@ -1,0 +1,52 @@
+{
+  "tag": "cosqa",
+  "stamp": "2026-10-20",
+  "join": "query text",
+  "n_common": 500,
+  "n_c580_only": 0,
+  "n_c4000_only": 0,
+  "c580": {
+    "delivered_gold": 0.618,
+    "chars_mean": 20281,
+    "wall_ms_p50": 34,
+    "misses": {
+      "delivered": 309,
+      "cut_by_packing": 26,
+      "ranked_below_cap": 0,
+      "never_ranked": 165,
+      "abstain": 0,
+      "util_mean": 1.127,
+      "util_p50": 1.012,
+      "pre_pack_rank_p50": 11,
+      "post_pack_rank_p50": 10
+    },
+    "receipt": "F:\\tmp\\grain_multicorpus_2026-10-20\\ladder_cosqa_c580_classcap_2026-10-20.json",
+    "bed": "F:\\tmp\\grain_multicorpus_2026-10-20\\cosqa_c580\\cosqa.db",
+    "git_sha": "055c19caca3f2972a64f36801a222881ca777202"
+  },
+  "c4000": {
+    "delivered_gold": 0.286,
+    "chars_mean": 6023,
+    "wall_ms_p50": 17,
+    "misses": {
+      "delivered": 143,
+      "cut_by_packing": 38,
+      "ranked_below_cap": 86,
+      "never_ranked": 233,
+      "abstain": 0,
+      "util_mean": 0.335,
+      "util_p50": 0.35,
+      "pre_pack_rank_p50": 6,
+      "post_pack_rank_p50": 6
+    },
+    "receipt": "F:\\tmp\\grain_multicorpus_2026-10-20\\ladder_cosqa_c4000_shipped_2026-10-20.json",
+    "bed": "F:\\tmp\\grain_multicorpus_2026-10-20\\cosqa_c4000\\cosqa.db",
+    "git_sha": "055c19caca3f2972a64f36801a222881ca777202",
+    "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\580-char-packet-databases-39714c\\cymatix.toml"
+  },
+  "paired_c580_vs_c4000": {
+    "wins": 166,
+    "losses": 0
+  },
+  "beta_witness_2026_09_04_delivered_gold_rate": null
+}

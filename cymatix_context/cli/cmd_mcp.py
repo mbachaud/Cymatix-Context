@@ -110,7 +110,45 @@ def _build_parser() -> argparse.ArgumentParser:
                       help="Argument for --server-command (repeatable).")
     inst.add_argument("--dry-run", action="store_true",
                       help="Print the entry and target file without writing.")
+    serve = sub.add_parser("serve", help="Serve the MCP tools over loopback streamable HTTP.")
+    serve.add_argument("--http", action="store_true",
+                       help="Use the HTTP transport (required; stdio is the default `mcp_server`).")
+    serve.add_argument("--port", type=int, default=11441, help="Port (default: 11441).")
+    serve.add_argument("--host", default="127.0.0.1",
+                       help="Bind address; only 127.0.0.1 is supported.")
+    serve.add_argument("--lane", default="stable",
+                       help="Lane whose server the tools proxy to (default: stable).")
+    serve.add_argument("--profile", choices=("lean", "full", "remote-read"), default="lean",
+                       help="Tool surface (default: lean; remote-read is retrieval only).")
     return parser
+
+
+def _cmd_serve(args: argparse.Namespace) -> int:
+    if args.host != "127.0.0.1":
+        output.eprint("non-loopback MCP HTTP binds are not supported")
+        return output.EXIT_BAD_ARGS
+    if not args.http:
+        output.eprint("mcp serve requires --http")
+        return output.EXIT_BAD_ARGS
+    _cfg, lanes = _lanes()
+    by_name = {lane.name: lane for lane in lanes}
+    lane = by_name.get(args.lane)
+    if lane is None:
+        output.eprint(f"no lane named {args.lane!r}; known lanes: {', '.join(by_name)}")
+        return output.EXIT_BAD_ARGS
+    if args.profile == "full":
+        # The full surface must be requested before the server module prunes
+        # its tools at import.
+        os.environ["CYMATIX_MCP_FULL"] = "1"
+    from ..mcp import mcp_server
+    try:
+        mcp_server.serve_http(
+            args.port, args.profile, host=args.host,
+            upstream_url=f"http://127.0.0.1:{lane.port}",
+        )
+    except KeyboardInterrupt:
+        pass
+    return output.EXIT_OK
 
 
 def _cmd_lanes() -> int:
@@ -226,5 +264,7 @@ def run(argv: list[str]) -> int:
         return _cmd_lanes()
     if args.action == "install":
         return _cmd_install(args)
+    if args.action == "serve":
+        return _cmd_serve(args)
     parser.print_help(file=sys.stderr)
     return output.EXIT_BAD_ARGS

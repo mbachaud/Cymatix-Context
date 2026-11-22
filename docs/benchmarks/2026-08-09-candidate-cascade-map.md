@@ -16,7 +16,7 @@ production code touched).
 > `mirror-branches/claude__ab-data-cymatics-pki-dff9c6/benchmarks/dogfood/erb/receipts/`
 > (exported from the branch head; see that repo's
 > `mirror-branches/BRANCHES.md`). Companion plan:
-> `docs/superpowers/plans/2026-08-09-ab-data-campaign.md` (ported alongside).
+> `docs/archive/superpowers/plans/2026-08-09-ab-data-campaign.md` (ported alongside).
 > Frozen SHAs cited in this document are campaign-branch commits.
 
 **Question this answers.** The PKI and cymatics delete decisions were taken on

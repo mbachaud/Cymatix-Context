@@ -973,8 +973,19 @@ class TestInstallCompletionWatcher:
         icon._auto_restart_launcher.assert_not_called()
 
 
+def test_tray_bat_name_matches_the_tracked_file_exactly():
+    """The auto-restart relaunches a repo-root .bat by name. Windows path
+    lookups ignore case, so compare against the real directory listing:
+    a case mismatch would only break on a case-sensitive filesystem."""
+    import os
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parent.parent
+    assert tray_mod.TRAY_BAT_NAME in os.listdir(repo_root)
+
+
 class TestAutoRestart:
-    """On Windows the auto-restart path spawns Start-cymatix-tray.bat in
+    """On Windows the auto-restart path spawns start-cymatix-tray.bat in
     a fully detached process (DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP)
     so the new tray survives the dying one, then calls icon.stop() to wind
     down the current tray cleanly."""
@@ -986,7 +997,7 @@ class TestAutoRestart:
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        bat = repo_root / "Start-cymatix-tray.bat"
+        bat = repo_root / "start-cymatix-tray.bat"
         bat.write_text("@echo on\n")
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 
@@ -999,7 +1010,7 @@ class TestAutoRestart:
         cmd = args[0]
         # First element is the bat path.
         from pathlib import Path
-        assert Path(cmd[0]).name == "Start-cymatix-tray.bat"
+        assert Path(cmd[0]).name == "start-cymatix-tray.bat"
         # Detach flags: DETACHED_PROCESS (0x08) | CREATE_NEW_PROCESS_GROUP (0x200) = 0x208.
         cf = kwargs.get("creationflags", 0)
         DETACHED_PROCESS = 0x00000008
@@ -1018,7 +1029,7 @@ class TestAutoRestart:
         icon._icon.stop.assert_called_once()
 
     def test_auto_restart_skips_if_bat_missing(self, tmp_path, monkeypatch):
-        """If Start-cymatix-tray.bat doesn't exist, auto-restart logs a
+        """If start-cymatix-tray.bat doesn't exist, auto-restart logs a
         warning and skips — icon.stop is NOT called (don't kill the
         current tray when we can't bring up a replacement)."""
         monkeypatch.setattr(tray_mod.sys, "platform", "win32")
@@ -1042,7 +1053,7 @@ class TestAutoRestart:
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        bat = repo_root / "Start-cymatix-tray.bat"
+        bat = repo_root / "start-cymatix-tray.bat"
         bat.write_text("@echo on\n")
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 
@@ -1199,3 +1210,161 @@ class TestHardwareFallbackBalloon:
 
         from cymatix_context.launcher.tray import _should_fire_hardware_fallback_balloon
         assert _should_fire_hardware_fallback_balloon() is expected
+
+
+# ── Plugin menu section ────────────────────────────────────────────────
+
+
+class _MenuPlugin:
+    """Minimal plugin object; ``items`` is what menu() returns."""
+
+    def __init__(self, items, action_result=None, raise_on_action=False):
+        self._items = items
+        self._action_result = {} if action_result is None else action_result
+        self._raise = raise_on_action
+        self.actions: list = []
+
+    def menu(self):
+        if isinstance(self._items, Exception):
+            raise self._items
+        return self._items
+
+    def on_action(self, action_id):
+        self.actions.append(action_id)
+        if self._raise:
+            raise RuntimeError("boom")
+        return self._action_result
+
+
+def _lp(name, obj, status="loaded"):
+    from cymatix_context.plugins.loader import LoadedPlugin
+
+    return LoadedPlugin(name, "1.0", "entry_point", False, status, None, obj)
+
+
+def _plugin_tray(fake_supervisor, plugins=None):
+    return CymatixTrayIcon(
+        supervisor=fake_supervisor,
+        dashboard_url="http://127.0.0.1:11438/",
+        plugins=plugins,
+    )
+
+
+def test_plugin_menu_entries_order_and_enabled():
+    from cymatix_context.plugins.api import MenuItem
+
+    a = _lp("alpha", _MenuPlugin([MenuItem("a1", "Alpha One"),
+                                  MenuItem("a2", "Alpha Two", enabled=False)]))
+    b = _lp("beta", _MenuPlugin([MenuItem("b1", "Beta One")]))
+    skipped = _lp("gamma", _MenuPlugin([MenuItem("g1", "Gamma")]), status="skipped")
+    assert tray_mod.plugin_menu_entries([a, skipped, b]) == [
+        ("alpha", "a1", "Alpha One", True),
+        ("alpha", "a2", "Alpha Two", False),
+        ("beta", "b1", "Beta One", True),
+    ]
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        RuntimeError("menu blew up"),
+        "not-a-list",
+        [object()],
+        [("a1", "label")],
+    ],
+    ids=["raises", "non-list", "non-menuitem", "tuple-element"],
+)
+def test_plugin_menu_hook_failure_skips_plugin(bad, caplog):
+    from cymatix_context.plugins.api import MenuItem
+
+    broken = _lp("broken", _MenuPlugin(bad))
+    good = _lp("good", _MenuPlugin([MenuItem("g1", "Good")]))
+    with caplog.at_level("WARNING"):
+        entries = tray_mod.plugin_menu_entries([broken, good])
+    assert entries == [("good", "g1", "Good", True)]
+    assert broken.status == "disabled"
+    assert good.status == "loaded"
+    assert any("broken" in r.getMessage() for r in caplog.records)
+
+
+def test_plugin_menu_partly_bad_list_shows_none_of_its_entries():
+    from cymatix_context.plugins.api import MenuItem
+
+    mixed = _lp("mixed", _MenuPlugin([MenuItem("m1", "Fine"), object()]))
+    assert tray_mod.plugin_menu_entries([mixed]) == []
+    assert mixed.status == "disabled"
+
+
+def test_menu_unchanged_without_plugins(fake_supervisor):
+    pytest.importorskip("pystray")
+    base = _menu_titles(_plugin_tray(fake_supervisor, None)._build_menu())
+    empty = _menu_titles(_plugin_tray(fake_supervisor, [])._build_menu())
+    inert = _menu_titles(
+        _plugin_tray(fake_supervisor, [_lp("quiet", _MenuPlugin([]))])._build_menu()
+    )
+    assert base == empty == inert
+
+
+def test_menu_shows_plugin_entries_after_separator(fake_supervisor):
+    pytest.importorskip("pystray")
+    from cymatix_context.plugins.api import MenuItem
+
+    base = _menu_titles(_plugin_tray(fake_supervisor)._build_menu())
+    lp = _lp("alpha", _MenuPlugin([MenuItem("a1", "Alpha One"),
+                                   MenuItem("a2", "Alpha Two", enabled=False)]))
+    menu = _plugin_tray(fake_supervisor, [lp])._build_menu()
+    titles = _menu_titles(menu)
+    assert "Alpha One" in titles and "Alpha Two" in titles
+    first = titles.index("Alpha One")
+    assert titles[first + 1] == "Alpha Two"
+    # One separator precedes the section; removing it and the entries gives
+    # back the plugin-free menu.
+    assert titles[first - 1] == base[first - 1]  # same separator text
+    assert titles[: first - 1] + titles[first + 2:] == base
+    items = {getattr(i, "text", None): i for i in menu.items}
+    assert items["Alpha One"].enabled is True
+    assert items["Alpha Two"].enabled is False
+
+
+def test_plugin_click_calls_on_action_then_rebuilds(fake_supervisor):
+    from cymatix_context.plugins.api import MenuItem
+
+    obj = _MenuPlugin([MenuItem("a1", "Alpha One")])
+    icon = _plugin_tray(fake_supervisor, [_lp("alpha", obj)])
+    icon._rebuild_menu = MagicMock()  # type: ignore[method-assign]
+    icon._on_plugin_click("alpha", "a1")
+    assert obj.actions == ["a1"]
+    icon._rebuild_menu.assert_called_once()
+
+
+def test_disabled_plugin_item_click_does_not_call_on_action(fake_supervisor):
+    from cymatix_context.plugins.api import MenuItem
+
+    obj = _MenuPlugin([MenuItem("a1", "Alpha One", enabled=False)])
+    icon = _plugin_tray(fake_supervisor, [_lp("alpha", obj)])
+    icon._rebuild_menu = MagicMock()  # type: ignore[method-assign]
+    icon._on_plugin_click("alpha", "a1")
+    assert obj.actions == []
+
+
+def test_plugin_click_on_action_raising_does_not_propagate(fake_supervisor):
+    from cymatix_context.plugins.api import MenuItem
+
+    obj = _MenuPlugin([MenuItem("a1", "Alpha One")], raise_on_action=True)
+    lp = _lp("alpha", obj)
+    icon = _plugin_tray(fake_supervisor, [lp])
+    icon._rebuild_menu = MagicMock()  # type: ignore[method-assign]
+    icon._on_plugin_click("alpha", "a1")  # must not raise
+    assert lp.status == "disabled"
+    icon._rebuild_menu.assert_called_once()
+
+
+def test_plugin_click_non_dict_result_disables(fake_supervisor):
+    from cymatix_context.plugins.api import MenuItem
+
+    obj = _MenuPlugin([MenuItem("a1", "Alpha One")], action_result="nope")
+    lp = _lp("alpha", obj)
+    icon = _plugin_tray(fake_supervisor, [lp])
+    icon._rebuild_menu = MagicMock()  # type: ignore[method-assign]
+    icon._on_plugin_click("alpha", "a1")
+    assert lp.status == "disabled"

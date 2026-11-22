@@ -55,6 +55,11 @@ from . import genome_registry
 
 log = logging.getLogger("cymatix.launcher.tray")
 
+# The repo-root batch file the Windows auto-restart relaunches. Must match
+# the tracked filename exactly: a case mismatch is invisible on Windows but
+# fails on a case-sensitive filesystem.
+TRAY_BAT_NAME = "start-cymatix-tray.bat"
+
 
 def is_tray_available() -> bool:
     """Probe pystray + PIL imports without raising. Used for --tray fail-fast."""
@@ -232,6 +237,43 @@ def _fire_hardware_fallback_balloon(tray_icon) -> None:
         log.warning("Could not write hardware-fallback sentinel %s", sentinel, exc_info=True)
 
 
+def _plugin_menu_items(lp) -> Optional[list]:
+    """Validated ``menu()`` result for one loaded plugin, or None.
+
+    Anything other than a list of ``MenuItem`` with str id/label disables the
+    plugin (WARNING) and yields None, so none of its entries are shown.
+    """
+    from ..plugins.api import MenuItem
+    from ..plugins.loader import call_hook
+
+    items = call_hook(lp, "menu", default=[])
+    if lp.status != "loaded":
+        return None
+    if not isinstance(items, list) or not all(
+        isinstance(m, MenuItem) and isinstance(m.id, str) and isinstance(m.label, str)
+        for m in items
+    ):
+        log.warning("plugin %s disabled: menu() returned an invalid value", lp.name)
+        lp.status = "disabled"
+        lp.reason = "menu() returned an invalid value"
+        return None
+    return items
+
+
+def plugin_menu_entries(plugins) -> list:
+    """Tray entries for loaded plugins as ``(plugin, action_id, label, enabled)``
+    tuples, in plugin order."""
+    entries = []
+    for lp in plugins or []:
+        if lp.status != "loaded":
+            continue
+        items = _plugin_menu_items(lp)
+        if not items:
+            continue
+        entries.extend((lp.name, m.id, m.label, bool(m.enabled)) for m in items)
+    return entries
+
+
 class CymatixTrayIcon:
     """Wraps a pystray.Icon with launcher-aware menu actions.
 
@@ -255,8 +297,12 @@ class CymatixTrayIcon:
         install_pending: bool = False,
         update_checker=None,
         lanes=None,
+        plugins=None,
     ) -> None:
         self.supervisor = supervisor
+        # Loaded add-ons (plugins.loader.LoadedPlugin); drive the plugin
+        # section of the menu. Empty = menu identical to a plugin-free build.
+        self.plugins = list(plugins or [])
         # Non-primary lanes (launcher.lane_supervisors.LaneRuntime); drives
         # the Lanes submenu. The primary lane keeps the top-level controls.
         self.lanes = list(lanes or [])
@@ -423,6 +469,39 @@ class CymatixTrayIcon:
             self._icon.notify(message, title=title)
         except Exception:
             log.debug("Tray notify failed", exc_info=True)
+
+    def _plugin_click_handler(self, plugin_name: str, action_id: str):
+        # pystray inspects the action's arity, so it must be exactly (icon, item).
+        def _handler(icon, item):  # noqa: ARG001
+            self._on_plugin_click(plugin_name, action_id)
+
+        return _handler
+
+    def _on_plugin_click(self, plugin_name: str, action_id: str) -> None:
+        """Run a plugin menu action in-process. Never raises into pystray."""
+        try:
+            from ..plugins.loader import call_hook
+
+            lp = next(
+                (p for p in self.plugins if p.name == plugin_name and p.status == "loaded"),
+                None,
+            )
+            if lp is None:
+                return
+            # Re-evaluate so a stale/disabled entry never fires its action.
+            entry = next(
+                (e for e in plugin_menu_entries([lp]) if e[1] == action_id), None
+            )
+            if entry is None or not entry[3]:
+                return
+            result = call_hook(lp, "on_action", action_id, default={})
+            if lp.status == "loaded" and not isinstance(result, dict):
+                log.warning("plugin %s disabled: on_action() returned a non-dict", lp.name)
+                lp.status = "disabled"
+                lp.reason = "on_action() returned a non-dict"
+        except Exception:  # noqa: BLE001 - pystray callback boundary
+            log.warning("plugin menu action failed", exc_info=True)
+        self._rebuild_menu()
 
     def _rebuild_menu(self) -> None:
         """Fully rebuild the icon's menu tree — needed when STRUCTURE
@@ -726,7 +805,7 @@ class CymatixTrayIcon:
         """Spawn a fresh tray launcher in a fully-detached process and
         stop the current tray icon.
 
-        Windows relaunches via Start-cymatix-tray.bat (it carries the
+        Windows relaunches via TRAY_BAT_NAME (it carries the
         canonical env setup) with DETACHED_PROCESS |
         CREATE_NEW_PROCESS_GROUP so the new launcher survives the
         current process exiting. Linux/macOS relaunch the module via
@@ -735,12 +814,12 @@ class CymatixTrayIcon:
         """
         repo_root = self._repo_root()
         if sys.platform == "win32":
-            bat_path = repo_root / "Start-cymatix-tray.bat"
+            bat_path = repo_root / TRAY_BAT_NAME
             if not bat_path.exists():
                 log.warning(
-                    "Tray: auto-restart skipped — Start-cymatix-tray.bat not "
+                    "Tray: auto-restart skipped — %s not "
                     "found at %s. User must manually relaunch.",
-                    bat_path,
+                    TRAY_BAT_NAME, bat_path,
                 )
                 return
             cmd = [str(bat_path)]
@@ -1075,6 +1154,15 @@ class CymatixTrayIcon:
         ])
         if self.lanes:
             items.append(pystray.MenuItem("Lanes", self._build_lanes_submenu()))
+        plugin_entries = plugin_menu_entries(self.plugins)
+        if plugin_entries:
+            items.append(pystray.Menu.SEPARATOR)
+            for pname, action_id, label, enabled in plugin_entries:
+                items.append(pystray.MenuItem(
+                    label,
+                    self._plugin_click_handler(pname, action_id),
+                    enabled=enabled,
+                ))
         items.extend([
             pystray.Menu.SEPARATOR,
             pystray.MenuItem(

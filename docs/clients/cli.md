@@ -234,6 +234,42 @@ file that is not valid JSON is left untouched. Restart the host afterwards.
 Exit codes: `0` success, `1` target unreadable or unwritable, `2` unknown
 lane or unsupported scope.
 
+### `cymatix plugins list`
+
+List the add-ons (plugins) found in the `cymatix.plugins` entry-point group
+and the plugin directory. One row per plugin: name, version, source
+(`entry_point` or `directory`), whether its signature verified, and status
+(`loaded`, `skipped` or `disabled`, with the reason). Core works the same
+with none installed. A plugin can also add its own subcommands; they run as
+`cymatix <command> ...` but are not listed in `cymatix --help`. See `[plugins]` in the config
+reference.
+
+Exit codes: `0` success.
+
+### `cymatix mcp serve --http [--port N] [--lane NAME] [--profile lean|full|remote-read] [--host 127.0.0.1]`
+
+Serves the MCP tools over streamable HTTP (stateless, endpoint `/mcp`) for
+remote clients that cannot spawn a stdio process. The server binds loopback
+only: any `--host` other than `127.0.0.1` is refused. Defaults: port `11441`,
+lane `stable` (the lane's port becomes the proxied Cymatix URL, as in
+`install`), profile `lean` (the same tools as stdio). `remote-read` exposes
+only `cymatix_context`, `cymatix_context_packet`, `cymatix_health` and the
+five `cymatix_document_*` read tools; no ingest or session tools.
+
+On this transport each request may carry `X-Cymatix-Agent`, `X-Cymatix-User`
+and `X-Cymatix-Party` headers; they override the `CYMATIX_AGENT`,
+`CYMATIX_USER` and `CYMATIX_PARTY_ID` environment identity for that request
+only (values are trimmed, empty means unset, and a value must match
+`^[A-Za-z0-9._:@-]{1,64}$` or it is ignored). Stdio ignores these headers.
+The headers are self-asserted labels, not authentication: to require a
+credential, set `CYMATIX_MCP_HTTP_TOKEN` when serving and clients must send
+`Authorization: Bearer <token>`. Over HTTP a caller-supplied `session_id` is
+ignored and delivery elision is always off, so remote clients never touch
+another session's working set.
+
+Exit codes: `0` clean stop, `2` unknown lane, non-loopback host or missing
+`--http`.
+
 ### `cymatix compare --lanes A,B --queries FILE [--max-docs N] [--out PATH] [--token T]`
 
 Runs every query against both lanes' `/context/packet` (with

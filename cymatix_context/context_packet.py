@@ -14,6 +14,7 @@ from pathlib import PurePath
 from types import SimpleNamespace
 from typing import Optional
 
+from .request_scoped import own_last
 from .accel import extract_query_signals
 from .exceptions import PromoterMismatch
 from .genome import file_tokens, path_tokens
@@ -479,12 +480,12 @@ def _snapshot_retrieval_state(handle) -> tuple[dict, dict]:
     if lock is not None:
         with lock:
             return (
-                dict(getattr(handle, "last_query_scores", None) or {}),
-                dict(getattr(handle, "last_tier_contributions", None) or {}),
+                dict(own_last(handle, "last_query_scores") or {}),
+                dict(own_last(handle, "last_tier_contributions") or {}),
             )
     return (
-        dict(getattr(handle, "last_query_scores", None) or {}),
-        dict(getattr(handle, "last_tier_contributions", None) or {}),
+        dict(own_last(handle, "last_query_scores") or {}),
+        dict(own_last(handle, "last_tier_contributions") or {}),
     )
 
 

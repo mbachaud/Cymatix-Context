@@ -82,8 +82,11 @@ class UpdateChecker:
         self.enabled = (
             enabled
             if enabled is not None
-            else os.environ.get("CYMATIX_LAUNCHER_UPDATE_CHECK", "1").strip().lower()
-            not in {"0", "false", "no", "off"}
+            # Off unless the operator opts in (issue #481): the check is an
+            # outbound request to pypi.org, and nothing leaves the machine by
+            # default.
+            else os.environ.get("CYMATIX_LAUNCHER_UPDATE_CHECK", "0").strip().lower()
+            in {"1", "true", "yes", "on"}
         )
         self._cached: Optional[UpdateInfo] = None
 

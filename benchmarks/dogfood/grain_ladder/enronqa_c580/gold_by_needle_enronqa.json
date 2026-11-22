@@ -1,0 +1,3238 @@
+{
+ "enron_000_o": [
+  "09de82d6dc6ba5e7",
+  "614bbc8b16027f6b",
+  "78230aa2a8f6c7ea"
+ ],
+ "enron_000_r": [
+  "09de82d6dc6ba5e7",
+  "614bbc8b16027f6b",
+  "78230aa2a8f6c7ea"
+ ],
+ "enron_001_o": [
+  "4aa6b58d6430a448",
+  "65ffbc4a716ea9ca",
+  "a1581369e54acaf2",
+  "c1139f5e9a0c5660",
+  "df42115834281872"
+ ],
+ "enron_001_r": [
+  "4aa6b58d6430a448",
+  "65ffbc4a716ea9ca",
+  "a1581369e54acaf2",
+  "c1139f5e9a0c5660",
+  "df42115834281872"
+ ],
+ "enron_002_o": [
+  "0850c4bc6b33af45",
+  "4d78b1314455d3a9",
+  "77d4636d3daf73ec",
+  "7d2d82a6275b6a3f",
+  "9283db08e3dcd0d2",
+  "eabf503d37e18667"
+ ],
+ "enron_002_r": [
+  "0850c4bc6b33af45",
+  "4d78b1314455d3a9",
+  "77d4636d3daf73ec",
+  "7d2d82a6275b6a3f",
+  "9283db08e3dcd0d2",
+  "eabf503d37e18667"
+ ],
+ "enron_003_o": [
+  "0edaf7a9a619759f",
+  "2a66fde2c19d0684",
+  "763e3d81335263d4",
+  "93c24a59159d41ec",
+  "a09f30a35c791503",
+  "b7b12addd399711a"
+ ],
+ "enron_003_r": [
+  "0edaf7a9a619759f",
+  "2a66fde2c19d0684",
+  "763e3d81335263d4",
+  "93c24a59159d41ec",
+  "a09f30a35c791503",
+  "b7b12addd399711a"
+ ],
+ "enron_004_o": [
+  "7b2f52bb7c7a46ef",
+  "db076389c994d3fc"
+ ],
+ "enron_004_r": [
+  "7b2f52bb7c7a46ef",
+  "db076389c994d3fc"
+ ],
+ "enron_005_o": [
+  "2683b41083f40246",
+  "b0f5bfc933e19aa8",
+  "e48404175e22d4c1"
+ ],
+ "enron_005_r": [
+  "2683b41083f40246",
+  "b0f5bfc933e19aa8",
+  "e48404175e22d4c1"
+ ],
+ "enron_006_o": [
+  "6a428bf5941f0518",
+  "9b265e4d09e2b314",
+  "cbe9a033fa42e5c4",
+  "cf49f63e307463d7",
+  "de93ee1372f0f865",
+  "fb10d8eeae0e2126"
+ ],
+ "enron_006_r": [
+  "6a428bf5941f0518",
+  "9b265e4d09e2b314",
+  "cbe9a033fa42e5c4",
+  "cf49f63e307463d7",
+  "de93ee1372f0f865",
+  "fb10d8eeae0e2126"
+ ],
+ "enron_007_o": [
+  "aa97f3f5ba3eff5c"
+ ],
+ "enron_007_r": [
+  "aa97f3f5ba3eff5c"
+ ],
+ "enron_008_o": [
+  "1b2e7d5d35f56006",
+  "42bdb01e04e0e000",
+  "5c6a8319cf80e89a",
+  "91e0a0f27bb49ef4",
+  "97a0ae043f657c7e",
+  "b675dab97afa6614",
+  "cdf2a8c6f36c46c6",
+  "cf830d76ed034b5f",
+  "d01c881525b5677d"
+ ],
+ "enron_008_r": [
+  "1b2e7d5d35f56006",
+  "42bdb01e04e0e000",
+  "5c6a8319cf80e89a",
+  "91e0a0f27bb49ef4",
+  "97a0ae043f657c7e",
+  "b675dab97afa6614",
+  "cdf2a8c6f36c46c6",
+  "cf830d76ed034b5f",
+  "d01c881525b5677d"
+ ],
+ "enron_009_o": [
+  "186f93977422cc12",
+  "835f1d8828ce369a",
+  "edeaa14f34f3b17c",
+  "f148035575b91706"
+ ],
+ "enron_009_r": [
+  "186f93977422cc12",
+  "835f1d8828ce369a",
+  "edeaa14f34f3b17c",
+  "f148035575b91706"
+ ],
+ "enron_010_o": [
+  "564c12652c7d30a6",
+  "69256454b73855a0",
+  "85aafc69e9802468",
+  "c35ce86a294f3a12"
+ ],
+ "enron_010_r": [
+  "564c12652c7d30a6",
+  "69256454b73855a0",
+  "85aafc69e9802468",
+  "c35ce86a294f3a12"
+ ],
+ "enron_011_o": [
+  "1285e431457aa928",
+  "131a3d592dde8fc7",
+  "15a7114cb5c07c13",
+  "72d57a61166f3294",
+  "ac624b516c374378",
+  "c942392b50b6b3aa"
+ ],
+ "enron_011_r": [
+  "1285e431457aa928",
+  "131a3d592dde8fc7",
+  "15a7114cb5c07c13",
+  "72d57a61166f3294",
+  "ac624b516c374378",
+  "c942392b50b6b3aa"
+ ],
+ "enron_012_o": [
+  "02075664cd1821e2",
+  "90e09ffabf5b8e50",
+  "d0306bb62415d33f"
+ ],
+ "enron_012_r": [
+  "02075664cd1821e2",
+  "90e09ffabf5b8e50",
+  "d0306bb62415d33f"
+ ],
+ "enron_013_o": [
+  "59f793b7387d1ad2",
+  "80be1197874d1e2b",
+  "9661052a589f6c89",
+  "a402088f56d17986",
+  "c3aac7c6dcef3e61",
+  "d3d68cf3da2d854f",
+  "e9e18a040c2da8b8"
+ ],
+ "enron_013_r": [
+  "59f793b7387d1ad2",
+  "80be1197874d1e2b",
+  "9661052a589f6c89",
+  "a402088f56d17986",
+  "c3aac7c6dcef3e61",
+  "d3d68cf3da2d854f",
+  "e9e18a040c2da8b8"
+ ],
+ "enron_014_o": [
+  "74cf166937aadfc9",
+  "8345facee5ae5fad"
+ ],
+ "enron_014_r": [
+  "74cf166937aadfc9",
+  "8345facee5ae5fad"
+ ],
+ "enron_015_o": [
+  "5113e07ab55e2c4b",
+  "937417a5e7451e95",
+  "bd1bb7d06492b350"
+ ],
+ "enron_015_r": [
+  "5113e07ab55e2c4b",
+  "937417a5e7451e95",
+  "bd1bb7d06492b350"
+ ],
+ "enron_016_o": [
+  "019f5ee25f5a69c0",
+  "1a6f854378f946cd",
+  "3623664bdee0de26",
+  "395e543996ece805",
+  "50c14efea3fdcb06",
+  "96b1b0fa1551673e",
+  "9fb6921bbcdf1edd",
+  "9fe1e8d45bdf08fd",
+  "c3aaa71d39bb202a",
+  "e47c489b6fdb9ccd",
+  "fe7c6540c022d657"
+ ],
+ "enron_016_r": [
+  "019f5ee25f5a69c0",
+  "1a6f854378f946cd",
+  "3623664bdee0de26",
+  "395e543996ece805",
+  "50c14efea3fdcb06",
+  "96b1b0fa1551673e",
+  "9fb6921bbcdf1edd",
+  "9fe1e8d45bdf08fd",
+  "c3aaa71d39bb202a",
+  "e47c489b6fdb9ccd",
+  "fe7c6540c022d657"
+ ],
+ "enron_017_o": [
+  "0fce029efe161680",
+  "2ad8f8565f14c901",
+  "435a4d6b5c406754",
+  "4a36811c9e9c2d43",
+  "5030bc4278ba7594",
+  "7f8c806d9a41e8fc",
+  "f4df799d29558448"
+ ],
+ "enron_017_r": [
+  "0fce029efe161680",
+  "2ad8f8565f14c901",
+  "435a4d6b5c406754",
+  "4a36811c9e9c2d43",
+  "5030bc4278ba7594",
+  "7f8c806d9a41e8fc",
+  "f4df799d29558448"
+ ],
+ "enron_018_o": [
+  "3a106ea686208700",
+  "594f01a10161eda6"
+ ],
+ "enron_018_r": [
+  "3a106ea686208700",
+  "594f01a10161eda6"
+ ],
+ "enron_019_o": [
+  "07db7266eeeb3bbc",
+  "48d02acf7a37a6c8",
+  "5bdcff3a4f735fd0",
+  "5ceb1e4469f38e2d",
+  "85a08951c194f948",
+  "9e19409fb9827374"
+ ],
+ "enron_019_r": [
+  "07db7266eeeb3bbc",
+  "48d02acf7a37a6c8",
+  "5bdcff3a4f735fd0",
+  "5ceb1e4469f38e2d",
+  "85a08951c194f948",
+  "9e19409fb9827374"
+ ],
+ "enron_020_o": [
+  "0d812b845506f2cb",
+  "2405d65fa4c1aa3e",
+  "3e0cc541cb2ff2a5",
+  "5a4840a552fe87f4",
+  "6789659f647ac7e5",
+  "8dfbe9068399d18c",
+  "f702fe3c2d1a84ea"
+ ],
+ "enron_020_r": [
+  "0d812b845506f2cb",
+  "2405d65fa4c1aa3e",
+  "3e0cc541cb2ff2a5",
+  "5a4840a552fe87f4",
+  "6789659f647ac7e5",
+  "8dfbe9068399d18c",
+  "f702fe3c2d1a84ea"
+ ],
+ "enron_021_o": [
+  "70ffec86e9355eb5",
+  "acffd8d3ace0f1b5"
+ ],
+ "enron_021_r": [
+  "70ffec86e9355eb5",
+  "acffd8d3ace0f1b5"
+ ],
+ "enron_022_o": [
+  "037a9fe19fb1e9d3",
+  "052d89866bc30b31",
+  "0596b0d964dfc757",
+  "296809aa570aff0e",
+  "29fa0710b4bcf69f",
+  "3772c46b0a7a4d2c",
+  "6b7fb1349ea3abea",
+  "9c3173d54c2babc5",
+  "a3f4d7a7ff18ff08",
+  "c38027894c225a15",
+  "ca2609a9c5e44c33",
+  "db0f7e0a741e41f9",
+  "ecc9eae0df9297c7"
+ ],
+ "enron_022_r": [
+  "037a9fe19fb1e9d3",
+  "052d89866bc30b31",
+  "0596b0d964dfc757",
+  "296809aa570aff0e",
+  "29fa0710b4bcf69f",
+  "3772c46b0a7a4d2c",
+  "6b7fb1349ea3abea",
+  "9c3173d54c2babc5",
+  "a3f4d7a7ff18ff08",
+  "c38027894c225a15",
+  "ca2609a9c5e44c33",
+  "db0f7e0a741e41f9",
+  "ecc9eae0df9297c7"
+ ],
+ "enron_023_o": [
+  "672800631968157a",
+  "c52dc32737c389dd",
+  "c93240b86b24b95a"
+ ],
+ "enron_023_r": [
+  "672800631968157a",
+  "c52dc32737c389dd",
+  "c93240b86b24b95a"
+ ],
+ "enron_024_o": [
+  "1c51ae2abc8eaf31",
+  "9d1dae8d273d9a27",
+  "f95e473ccd3ab6f0"
+ ],
+ "enron_024_r": [
+  "1c51ae2abc8eaf31",
+  "9d1dae8d273d9a27",
+  "f95e473ccd3ab6f0"
+ ],
+ "enron_025_o": [
+  "1eb45aaeb43fa678",
+  "f2489de317e6aa8f"
+ ],
+ "enron_025_r": [
+  "1eb45aaeb43fa678",
+  "f2489de317e6aa8f"
+ ],
+ "enron_026_o": [
+  "6327b6e568f84f36",
+  "6661b66bb930e98c",
+  "d093c002169d6c30",
+  "dfe8f955d40cc18c"
+ ],
+ "enron_026_r": [
+  "6327b6e568f84f36",
+  "6661b66bb930e98c",
+  "d093c002169d6c30",
+  "dfe8f955d40cc18c"
+ ],
+ "enron_027_o": [
+  "5c6489f0fc68a808",
+  "5f46e3892f0878ee",
+  "7c2e3f95fc6bf394",
+  "90ee2bd1c9c3a176"
+ ],
+ "enron_027_r": [
+  "5c6489f0fc68a808",
+  "5f46e3892f0878ee",
+  "7c2e3f95fc6bf394",
+  "90ee2bd1c9c3a176"
+ ],
+ "enron_028_o": [
+  "7968bf79cf5e47c2",
+  "812ff394eed50410"
+ ],
+ "enron_028_r": [
+  "7968bf79cf5e47c2",
+  "812ff394eed50410"
+ ],
+ "enron_029_o": [
+  "20faa20cf92c4fe3",
+  "2607549282a35813",
+  "266c321a1ef06bc5",
+  "795cd9197fc9ec49",
+  "7b9aaa57d18d9c8a",
+  "ba70a625870e0106",
+  "d78fd8967d4c7c61"
+ ],
+ "enron_029_r": [
+  "20faa20cf92c4fe3",
+  "2607549282a35813",
+  "266c321a1ef06bc5",
+  "795cd9197fc9ec49",
+  "7b9aaa57d18d9c8a",
+  "ba70a625870e0106",
+  "d78fd8967d4c7c61"
+ ],
+ "enron_030_o": [
+  "4d267029807d9ea6",
+  "690a3e7dba9d7a13",
+  "853285f2efc784b6",
+  "c175f1bd1843deb6"
+ ],
+ "enron_030_r": [
+  "4d267029807d9ea6",
+  "690a3e7dba9d7a13",
+  "853285f2efc784b6",
+  "c175f1bd1843deb6"
+ ],
+ "enron_031_o": [
+  "1f19554a18a3eb5b",
+  "2c6553aecdfd2396",
+  "3f5f73aa5706e2be",
+  "67462eabb25e9d56",
+  "798ce3ebe710fef6",
+  "b411cd8c29383826",
+  "ce1038abaaf0a7a4",
+  "dfa00917196464b6"
+ ],
+ "enron_031_r": [
+  "1f19554a18a3eb5b",
+  "2c6553aecdfd2396",
+  "3f5f73aa5706e2be",
+  "67462eabb25e9d56",
+  "798ce3ebe710fef6",
+  "b411cd8c29383826",
+  "ce1038abaaf0a7a4",
+  "dfa00917196464b6"
+ ],
+ "enron_032_o": [
+  "637d48cabd094f41"
+ ],
+ "enron_032_r": [
+  "637d48cabd094f41"
+ ],
+ "enron_033_o": [
+  "31c134fe1cd52d40",
+  "9450866b715ce3d0"
+ ],
+ "enron_033_r": [
+  "31c134fe1cd52d40",
+  "9450866b715ce3d0"
+ ],
+ "enron_034_o": [
+  "1ccfaf6e471a9eed",
+  "290ddd49e76267bf",
+  "42e826f8bb34f629",
+  "5527c89152b93ec6",
+  "6116d5e617eac69b",
+  "8b34d6f16548e8a9",
+  "ee911bc7d062410e"
+ ],
+ "enron_034_r": [
+  "1ccfaf6e471a9eed",
+  "290ddd49e76267bf",
+  "42e826f8bb34f629",
+  "5527c89152b93ec6",
+  "6116d5e617eac69b",
+  "8b34d6f16548e8a9",
+  "ee911bc7d062410e"
+ ],
+ "enron_035_o": [
+  "2b1cbfda0d85b0e8",
+  "598ebf2339a20d29",
+  "5cda0d341335542a"
+ ],
+ "enron_035_r": [
+  "2b1cbfda0d85b0e8",
+  "598ebf2339a20d29",
+  "5cda0d341335542a"
+ ],
+ "enron_036_o": [
+  "065d9fe166ebd173",
+  "24304cedaa1b536b",
+  "a9d1378cc9f68ce4"
+ ],
+ "enron_036_r": [
+  "065d9fe166ebd173",
+  "24304cedaa1b536b",
+  "a9d1378cc9f68ce4"
+ ],
+ "enron_037_o": [
+  "46dfc73bf29a3372",
+  "88237bc146f15d63",
+  "931fa43c2c0d7316",
+  "a76121c63c6172b4",
+  "ec2515bc7b34fbed"
+ ],
+ "enron_037_r": [
+  "46dfc73bf29a3372",
+  "88237bc146f15d63",
+  "931fa43c2c0d7316",
+  "a76121c63c6172b4",
+  "ec2515bc7b34fbed"
+ ],
+ "enron_038_o": [
+  "0ed4c92014b7f3ab",
+  "1176f364a88b61b8",
+  "c6b78a451922c0b5",
+  "f21dee17566014de",
+  "f858d588a66a31cf"
+ ],
+ "enron_038_r": [
+  "0ed4c92014b7f3ab",
+  "1176f364a88b61b8",
+  "c6b78a451922c0b5",
+  "f21dee17566014de",
+  "f858d588a66a31cf"
+ ],
+ "enron_039_o": [
+  "29cfb79806bdba53",
+  "a310f6605aa502c5"
+ ],
+ "enron_039_r": [
+  "29cfb79806bdba53",
+  "a310f6605aa502c5"
+ ],
+ "enron_040_o": [
+  "2cd33adfc9b81e8d",
+  "5afd86ae401bc389",
+  "957e0ae0e2f49858",
+  "a89220c90731f255",
+  "c5bc4f24736d2ddc",
+  "cc2b8e8b9bf79e7a",
+  "dc93fea16f989f3c",
+  "de7fe405a1094980",
+  "f85693e0067e9687"
+ ],
+ "enron_040_r": [
+  "2cd33adfc9b81e8d",
+  "5afd86ae401bc389",
+  "957e0ae0e2f49858",
+  "a89220c90731f255",
+  "c5bc4f24736d2ddc",
+  "cc2b8e8b9bf79e7a",
+  "dc93fea16f989f3c",
+  "de7fe405a1094980",
+  "f85693e0067e9687"
+ ],
+ "enron_041_o": [
+  "12d8c59f94c4a3a6",
+  "a1bf430e309d35fa",
+  "affb1eb5886f79d6"
+ ],
+ "enron_041_r": [
+  "12d8c59f94c4a3a6",
+  "a1bf430e309d35fa",
+  "affb1eb5886f79d6"
+ ],
+ "enron_042_o": [
+  "390c05cf24fa7ba1",
+  "5c1ef711b0b2f991",
+  "70f54adc1bf21ac4",
+  "80df6fb89fc1c049",
+  "980fa44ba19ecad5",
+  "9a4c257e3214916e",
+  "b142be32163b61cb"
+ ],
+ "enron_042_r": [
+  "390c05cf24fa7ba1",
+  "5c1ef711b0b2f991",
+  "70f54adc1bf21ac4",
+  "80df6fb89fc1c049",
+  "980fa44ba19ecad5",
+  "9a4c257e3214916e",
+  "b142be32163b61cb"
+ ],
+ "enron_043_o": [
+  "49a8ab5d675b6013",
+  "56a9366ad9d4b4f1",
+  "5bab3b4b20e83f9f",
+  "9d69f20461346c12",
+  "d623dd7cd1097511",
+  "dd65fe6d629da584"
+ ],
+ "enron_043_r": [
+  "49a8ab5d675b6013",
+  "56a9366ad9d4b4f1",
+  "5bab3b4b20e83f9f",
+  "9d69f20461346c12",
+  "d623dd7cd1097511",
+  "dd65fe6d629da584"
+ ],
+ "enron_044_o": [
+  "1d28ed16d7f5aeb1",
+  "4ee18b572ed2c8a0",
+  "72337f1559a17bac",
+  "a2d6d1f4dd6ee09e",
+  "ca395615d23fa1c2",
+  "fff5641f40fbe378"
+ ],
+ "enron_044_r": [
+  "1d28ed16d7f5aeb1",
+  "4ee18b572ed2c8a0",
+  "72337f1559a17bac",
+  "a2d6d1f4dd6ee09e",
+  "ca395615d23fa1c2",
+  "fff5641f40fbe378"
+ ],
+ "enron_045_o": [
+  "0e466f500a945543",
+  "2403ab9cf09fe853",
+  "50baed8cb88b7586",
+  "86e0a0ca89cfe7c6",
+  "9372ee054e1215cd",
+  "d44546ea42749f18",
+  "fa1d5b0488d6238b"
+ ],
+ "enron_045_r": [
+  "0e466f500a945543",
+  "2403ab9cf09fe853",
+  "50baed8cb88b7586",
+  "86e0a0ca89cfe7c6",
+  "9372ee054e1215cd",
+  "d44546ea42749f18",
+  "fa1d5b0488d6238b"
+ ],
+ "enron_046_o": [
+  "9b06e199239dc5fb",
+  "bb51ee50b420b42f"
+ ],
+ "enron_046_r": [
+  "9b06e199239dc5fb",
+  "bb51ee50b420b42f"
+ ],
+ "enron_047_o": [
+  "187c6cf589401a71",
+  "59d80aaf835aeedd",
+  "c2651f4b9c2af655",
+  "e20cc2d8789e3082",
+  "f47eb144bc484062"
+ ],
+ "enron_047_r": [
+  "187c6cf589401a71",
+  "59d80aaf835aeedd",
+  "c2651f4b9c2af655",
+  "e20cc2d8789e3082",
+  "f47eb144bc484062"
+ ],
+ "enron_048_o": [
+  "3cdf36b20b8ca7a0",
+  "6bd70149a577ed99",
+  "d730cd8ecd3b21eb",
+  "f4070337f8661d5e",
+  "fd6dcb25c906567d"
+ ],
+ "enron_048_r": [
+  "3cdf36b20b8ca7a0",
+  "6bd70149a577ed99",
+  "d730cd8ecd3b21eb",
+  "f4070337f8661d5e",
+  "fd6dcb25c906567d"
+ ],
+ "enron_049_o": [
+  "35245394ba38390e",
+  "8e645e6df0567ed0",
+  "9c7b51f778853d98"
+ ],
+ "enron_049_r": [
+  "35245394ba38390e",
+  "8e645e6df0567ed0",
+  "9c7b51f778853d98"
+ ],
+ "enron_050_o": [
+  "16b814f36ebfffd9",
+  "3a6eca54d8793aaf",
+  "4d9b9911fba33a85",
+  "c42540c7ae87dc3b",
+  "d80fba53b363d316"
+ ],
+ "enron_050_r": [
+  "16b814f36ebfffd9",
+  "3a6eca54d8793aaf",
+  "4d9b9911fba33a85",
+  "c42540c7ae87dc3b",
+  "d80fba53b363d316"
+ ],
+ "enron_051_o": [
+  "2598d39191b90c9b",
+  "976a4a285a5fb25e",
+  "db382759c3daa1ef"
+ ],
+ "enron_051_r": [
+  "2598d39191b90c9b",
+  "976a4a285a5fb25e",
+  "db382759c3daa1ef"
+ ],
+ "enron_052_o": [
+  "b0708a6564d3e9b9",
+  "d455b810f4f06b90"
+ ],
+ "enron_052_r": [
+  "b0708a6564d3e9b9",
+  "d455b810f4f06b90"
+ ],
+ "enron_053_o": [
+  "0ec02256ce8d485a",
+  "1a1981c6d9e73e90",
+  "7a06b7eec235db98",
+  "fbb52ad65e15f8d0"
+ ],
+ "enron_053_r": [
+  "0ec02256ce8d485a",
+  "1a1981c6d9e73e90",
+  "7a06b7eec235db98",
+  "fbb52ad65e15f8d0"
+ ],
+ "enron_054_o": [
+  "8a89c6905ba2a877",
+  "90643dc590b4d3f9"
+ ],
+ "enron_054_r": [
+  "8a89c6905ba2a877",
+  "90643dc590b4d3f9"
+ ],
+ "enron_055_o": [
+  "1440b0ecdccef96c",
+  "20bff07f9bd248a0",
+  "358770d9d0772aa8",
+  "55d573571e9317b3",
+  "6104ced3136f6a1a",
+  "8dbd2ad2a4a19e79",
+  "c5e0acac86ba47fb",
+  "f9893c249e167124"
+ ],
+ "enron_055_r": [
+  "1440b0ecdccef96c",
+  "20bff07f9bd248a0",
+  "358770d9d0772aa8",
+  "55d573571e9317b3",
+  "6104ced3136f6a1a",
+  "8dbd2ad2a4a19e79",
+  "c5e0acac86ba47fb",
+  "f9893c249e167124"
+ ],
+ "enron_056_o": [
+  "0a8e2964956bec3c",
+  "452c106f74b91793",
+  "e930a88165b77a48",
+  "f48679a18e6acf8f"
+ ],
+ "enron_056_r": [
+  "0a8e2964956bec3c",
+  "452c106f74b91793",
+  "e930a88165b77a48",
+  "f48679a18e6acf8f"
+ ],
+ "enron_057_o": [
+  "2def796feee6d5d6",
+  "529c19b3f2a76859",
+  "797a7d86b5393dad",
+  "b50a754e12e0b013"
+ ],
+ "enron_057_r": [
+  "2def796feee6d5d6",
+  "529c19b3f2a76859",
+  "797a7d86b5393dad",
+  "b50a754e12e0b013"
+ ],
+ "enron_058_o": [
+  "548475684cdc6201",
+  "676bff09d505e113",
+  "725219747664b374"
+ ],
+ "enron_058_r": [
+  "548475684cdc6201",
+  "676bff09d505e113",
+  "725219747664b374"
+ ],
+ "enron_059_o": [
+  "a3846c99a24094c3",
+  "abf6539278fbd6d9"
+ ],
+ "enron_059_r": [
+  "a3846c99a24094c3",
+  "abf6539278fbd6d9"
+ ],
+ "enron_060_o": [
+  "02421e38f647a4db",
+  "20b20501e4890688",
+  "324cdc7d0a1653d3",
+  "5328a9336f926ac7",
+  "5c81692e5159f3ea",
+  "82a52ac877d22ccc",
+  "8f9613355669217a",
+  "8fc8c908a2c35505",
+  "9036337c2179d97d",
+  "98288312be3e6557",
+  "f0944603ea9a5b12",
+  "ffde7692aeb4c15a"
+ ],
+ "enron_060_r": [
+  "02421e38f647a4db",
+  "20b20501e4890688",
+  "324cdc7d0a1653d3",
+  "5328a9336f926ac7",
+  "5c81692e5159f3ea",
+  "82a52ac877d22ccc",
+  "8f9613355669217a",
+  "8fc8c908a2c35505",
+  "9036337c2179d97d",
+  "98288312be3e6557",
+  "f0944603ea9a5b12",
+  "ffde7692aeb4c15a"
+ ],
+ "enron_061_o": [
+  "04c81104c4d81973",
+  "359c74dc011de435",
+  "7bdae6c30c4d881d",
+  "bfa5745b105b428e"
+ ],
+ "enron_061_r": [
+  "04c81104c4d81973",
+  "359c74dc011de435",
+  "7bdae6c30c4d881d",
+  "bfa5745b105b428e"
+ ],
+ "enron_062_o": [
+  "30f3928054c5ee4b",
+  "db1ce10dd2b4de62"
+ ],
+ "enron_062_r": [
+  "30f3928054c5ee4b",
+  "db1ce10dd2b4de62"
+ ],
+ "enron_063_o": [
+  "47428a1943b1db35",
+  "50563281889a6383",
+  "9028a6ef27982b56"
+ ],
+ "enron_063_r": [
+  "47428a1943b1db35",
+  "50563281889a6383",
+  "9028a6ef27982b56"
+ ],
+ "enron_064_o": [
+  "526940b5f28eebe3",
+  "835a6c9332032357",
+  "9e7f6559b49c3e49"
+ ],
+ "enron_064_r": [
+  "526940b5f28eebe3",
+  "835a6c9332032357",
+  "9e7f6559b49c3e49"
+ ],
+ "enron_065_o": [
+  "093c81a9140469e2",
+  "10588f64cb56f248",
+  "108165e348f197e4",
+  "333fee769e5b793c",
+  "79354f6f4406e212",
+  "7eb3bee603a1bfb5",
+  "9254e78d563e230a",
+  "9328725f441a1142",
+  "9c6b8f23fa7a8a18",
+  "c1b8ead8475f9d28",
+  "d45bb8a19194fbf6",
+  "dbb1972eb3ceec40",
+  "f9d277af5bad57bb"
+ ],
+ "enron_065_r": [
+  "093c81a9140469e2",
+  "10588f64cb56f248",
+  "108165e348f197e4",
+  "333fee769e5b793c",
+  "79354f6f4406e212",
+  "7eb3bee603a1bfb5",
+  "9254e78d563e230a",
+  "9328725f441a1142",
+  "9c6b8f23fa7a8a18",
+  "c1b8ead8475f9d28",
+  "d45bb8a19194fbf6",
+  "dbb1972eb3ceec40",
+  "f9d277af5bad57bb"
+ ],
+ "enron_066_o": [
+  "26d0d24788eeffa3",
+  "70f48a6adca9c1b9",
+  "fd5e37701a352853"
+ ],
+ "enron_066_r": [
+  "26d0d24788eeffa3",
+  "70f48a6adca9c1b9",
+  "fd5e37701a352853"
+ ],
+ "enron_067_o": [
+  "165c66f71a587ad6",
+  "5401305f248b20f8",
+  "9e4626803aad10f5",
+  "da5e51ceef48f92c",
+  "e849d42f26f39ded"
+ ],
+ "enron_067_r": [
+  "165c66f71a587ad6",
+  "5401305f248b20f8",
+  "9e4626803aad10f5",
+  "da5e51ceef48f92c",
+  "e849d42f26f39ded"
+ ],
+ "enron_068_o": [
+  "0c0614b4c5524813",
+  "14d7b4a9fab34578",
+  "7cf0f30fbc601b5b",
+  "cf2c283749c57ba9"
+ ],
+ "enron_068_r": [
+  "0c0614b4c5524813",
+  "14d7b4a9fab34578",
+  "7cf0f30fbc601b5b",
+  "cf2c283749c57ba9"
+ ],
+ "enron_069_o": [
+  "b96e301a07c40995",
+  "c74b71e5dd94c100",
+  "d5301b539737d8c4",
+  "de3453cca51ced25",
+  "e597d46ace951254"
+ ],
+ "enron_069_r": [
+  "b96e301a07c40995",
+  "c74b71e5dd94c100",
+  "d5301b539737d8c4",
+  "de3453cca51ced25",
+  "e597d46ace951254"
+ ],
+ "enron_070_o": [
+  "07a3ee9f05fade1b",
+  "22a5340112299b0c",
+  "702c3faaeb13ba70"
+ ],
+ "enron_070_r": [
+  "07a3ee9f05fade1b",
+  "22a5340112299b0c",
+  "702c3faaeb13ba70"
+ ],
+ "enron_071_o": [
+  "543fb7cd7df3edb8",
+  "7e9d59811ebd752e",
+  "c8b84200c4d4f7b9",
+  "db9720b492534a58"
+ ],
+ "enron_071_r": [
+  "543fb7cd7df3edb8",
+  "7e9d59811ebd752e",
+  "c8b84200c4d4f7b9",
+  "db9720b492534a58"
+ ],
+ "enron_072_o": [
+  "117446f3bc46f912",
+  "30f2cb89e1cf1dc1",
+  "3a3e2e5a5c1203e9",
+  "df242542a351dd4c"
+ ],
+ "enron_072_r": [
+  "117446f3bc46f912",
+  "30f2cb89e1cf1dc1",
+  "3a3e2e5a5c1203e9",
+  "df242542a351dd4c"
+ ],
+ "enron_073_o": [
+  "29a3c7f659474007",
+  "a2cafab35ad578b5"
+ ],
+ "enron_073_r": [
+  "29a3c7f659474007",
+  "a2cafab35ad578b5"
+ ],
+ "enron_074_o": [
+  "16e1a06e44872cd9",
+  "62ff4fd2ec47a8ff",
+  "7469b76ba7743740",
+  "d1b8bdb44ea139c8",
+  "eab5c77d0196911e"
+ ],
+ "enron_074_r": [
+  "16e1a06e44872cd9",
+  "62ff4fd2ec47a8ff",
+  "7469b76ba7743740",
+  "d1b8bdb44ea139c8",
+  "eab5c77d0196911e"
+ ],
+ "enron_075_o": [
+  "0c52a3ba352e9ebd",
+  "362502402247055b",
+  "4cbf1ea2eb6e2e8d",
+  "69a1cfca2be79853",
+  "f8076bd67da19760",
+  "f91f7fbe61937970"
+ ],
+ "enron_075_r": [
+  "0c52a3ba352e9ebd",
+  "362502402247055b",
+  "4cbf1ea2eb6e2e8d",
+  "69a1cfca2be79853",
+  "f8076bd67da19760",
+  "f91f7fbe61937970"
+ ],
+ "enron_076_o": [
+  "30148c31d4dceae9",
+  "4ed9d0f4b2704ee9",
+  "5633e92bb4230a07",
+  "6ec31af3053728f5",
+  "a7e882a3d5e465fa",
+  "d64f987dfe66aacf",
+  "e6ea65a67d20e5f4"
+ ],
+ "enron_076_r": [
+  "30148c31d4dceae9",
+  "4ed9d0f4b2704ee9",
+  "5633e92bb4230a07",
+  "6ec31af3053728f5",
+  "a7e882a3d5e465fa",
+  "d64f987dfe66aacf",
+  "e6ea65a67d20e5f4"
+ ],
+ "enron_077_o": [
+  "4a8156a0bfa82ef6"
+ ],
+ "enron_077_r": [
+  "4a8156a0bfa82ef6"
+ ],
+ "enron_078_o": [
+  "1c8aacb48585dbfe",
+  "2ecba6fc4279a44d",
+  "665ce95f085c6156",
+  "98ab82952355c7a3"
+ ],
+ "enron_078_r": [
+  "1c8aacb48585dbfe",
+  "2ecba6fc4279a44d",
+  "665ce95f085c6156",
+  "98ab82952355c7a3"
+ ],
+ "enron_079_o": [
+  "4fd2e0dd4d2c8150",
+  "5f9e9a1cd4ab6ae3",
+  "710d78a59448d29e"
+ ],
+ "enron_079_r": [
+  "4fd2e0dd4d2c8150",
+  "5f9e9a1cd4ab6ae3",
+  "710d78a59448d29e"
+ ],
+ "enron_080_o": [
+  "1bb7a5176e6fc867",
+  "3d348c7b096a3c38",
+  "506cca84d8555658",
+  "a9d9d49be20920d2",
+  "b6f9c695e0081c2a",
+  "d774a382a7875765",
+  "ee3569486891dab5"
+ ],
+ "enron_080_r": [
+  "1bb7a5176e6fc867",
+  "3d348c7b096a3c38",
+  "506cca84d8555658",
+  "a9d9d49be20920d2",
+  "b6f9c695e0081c2a",
+  "d774a382a7875765",
+  "ee3569486891dab5"
+ ],
+ "enron_081_o": [
+  "1217bfbf4f57831a",
+  "a45d05bacaa5dccb",
+  "b94ae637bfaec42a",
+  "cc1759857b5fc024"
+ ],
+ "enron_081_r": [
+  "1217bfbf4f57831a",
+  "a45d05bacaa5dccb",
+  "b94ae637bfaec42a",
+  "cc1759857b5fc024"
+ ],
+ "enron_082_o": [
+  "07925e39ad80f01b",
+  "63204c8f7144743d",
+  "7631d3ec59779219",
+  "b3ab35a5dbf511fa",
+  "f5aa54aa80d24408"
+ ],
+ "enron_082_r": [
+  "07925e39ad80f01b",
+  "63204c8f7144743d",
+  "7631d3ec59779219",
+  "b3ab35a5dbf511fa",
+  "f5aa54aa80d24408"
+ ],
+ "enron_083_o": [
+  "6a4f7485d9c70108",
+  "6ebbc1786d78091f",
+  "7f31cc7cf25db60e",
+  "a3ac40cb2f34cafb",
+  "d93c838a017ff211"
+ ],
+ "enron_083_r": [
+  "6a4f7485d9c70108",
+  "6ebbc1786d78091f",
+  "7f31cc7cf25db60e",
+  "a3ac40cb2f34cafb",
+  "d93c838a017ff211"
+ ],
+ "enron_084_o": [
+  "41cb500e8cec5f16",
+  "820456d3cf35a997",
+  "9d94e9420c4df093",
+  "c0565a31e47b774b"
+ ],
+ "enron_084_r": [
+  "41cb500e8cec5f16",
+  "820456d3cf35a997",
+  "9d94e9420c4df093",
+  "c0565a31e47b774b"
+ ],
+ "enron_085_o": [
+  "1d5d7faa4c9ace12",
+  "d5a75f359dc470ff"
+ ],
+ "enron_085_r": [
+  "1d5d7faa4c9ace12",
+  "d5a75f359dc470ff"
+ ],
+ "enron_086_o": [
+  "013063455ddb7dcb",
+  "604f73b830e5333d",
+  "7a53e43521f8f6d0",
+  "7e05bb32dbdbfe66",
+  "8056eb281490a195",
+  "983eaeacdd9605f4",
+  "ad4f5821a05a0741",
+  "ce740b3d2bc21720",
+  "d175afeacfe47ae3"
+ ],
+ "enron_086_r": [
+  "013063455ddb7dcb",
+  "604f73b830e5333d",
+  "7a53e43521f8f6d0",
+  "7e05bb32dbdbfe66",
+  "8056eb281490a195",
+  "983eaeacdd9605f4",
+  "ad4f5821a05a0741",
+  "ce740b3d2bc21720",
+  "d175afeacfe47ae3"
+ ],
+ "enron_087_o": [
+  "11dfb335ef512c9b",
+  "2a5952fe015b7513",
+  "7fe2f71c8ed14cfb"
+ ],
+ "enron_087_r": [
+  "11dfb335ef512c9b",
+  "2a5952fe015b7513",
+  "7fe2f71c8ed14cfb"
+ ],
+ "enron_088_o": [
+  "8d76aff6671cc0a1",
+  "9c3dffb658e188f9",
+  "ebe40351668c09c3"
+ ],
+ "enron_088_r": [
+  "8d76aff6671cc0a1",
+  "9c3dffb658e188f9",
+  "ebe40351668c09c3"
+ ],
+ "enron_089_o": [
+  "6a267aa517addc1f",
+  "d455fd9047e2cc6f"
+ ],
+ "enron_089_r": [
+  "6a267aa517addc1f",
+  "d455fd9047e2cc6f"
+ ],
+ "enron_090_o": [
+  "17c20b12df9a832c",
+  "ef24b8ca74df965f"
+ ],
+ "enron_090_r": [
+  "17c20b12df9a832c",
+  "ef24b8ca74df965f"
+ ],
+ "enron_091_o": [
+  "3a69aad8ca72fc05",
+  "4c0e89960c46004f"
+ ],
+ "enron_091_r": [
+  "3a69aad8ca72fc05",
+  "4c0e89960c46004f"
+ ],
+ "enron_092_o": [
+  "6c60a2a952982e35",
+  "970e54d72ffd13ea",
+  "989b48945716b34f"
+ ],
+ "enron_092_r": [
+  "6c60a2a952982e35",
+  "970e54d72ffd13ea",
+  "989b48945716b34f"
+ ],
+ "enron_093_o": [
+  "01c3aa03caa6df88",
+  "4897ac0a9526c585",
+  "90115dbb70d9113b",
+  "989365d445ab76c9"
+ ],
+ "enron_093_r": [
+  "01c3aa03caa6df88",
+  "4897ac0a9526c585",
+  "90115dbb70d9113b",
+  "989365d445ab76c9"
+ ],
+ "enron_094_o": [
+  "28ab3a28df95c063",
+  "bbe94eaead1bd1e6",
+  "f91e58c5de57f952"
+ ],
+ "enron_094_r": [
+  "28ab3a28df95c063",
+  "bbe94eaead1bd1e6",
+  "f91e58c5de57f952"
+ ],
+ "enron_095_o": [
+  "5ba50d63ffa47979",
+  "ba0353a3336df98d"
+ ],
+ "enron_095_r": [
+  "5ba50d63ffa47979",
+  "ba0353a3336df98d"
+ ],
+ "enron_096_o": [
+  "68e7fce9eec49357",
+  "782083dc9bcb53f5",
+  "e7def6964f86a2b6"
+ ],
+ "enron_096_r": [
+  "68e7fce9eec49357",
+  "782083dc9bcb53f5",
+  "e7def6964f86a2b6"
+ ],
+ "enron_097_o": [
+  "2dc90b758d0fc3d6",
+  "38e551bed69f43fd",
+  "ac8caf422ad47bfb"
+ ],
+ "enron_097_r": [
+  "2dc90b758d0fc3d6",
+  "38e551bed69f43fd",
+  "ac8caf422ad47bfb"
+ ],
+ "enron_098_o": [
+  "129d99bc92fb02b4",
+  "268c77fcc7e1b7db",
+  "3c21c484654ba9fd",
+  "5b86df2ebbd56bc9",
+  "85241b3016c444df",
+  "8ca846e54ed88d11",
+  "b7e63cec485a2f12",
+  "c01a125e9c0b47cf",
+  "efe70f1ed9001e21"
+ ],
+ "enron_098_r": [
+  "129d99bc92fb02b4",
+  "268c77fcc7e1b7db",
+  "3c21c484654ba9fd",
+  "5b86df2ebbd56bc9",
+  "85241b3016c444df",
+  "8ca846e54ed88d11",
+  "b7e63cec485a2f12",
+  "c01a125e9c0b47cf",
+  "efe70f1ed9001e21"
+ ],
+ "enron_099_o": [
+  "2a8c788edce93e7b",
+  "2dfb41edb32b2d3e",
+  "e0a77f25b041b9de",
+  "e649ec2b716eeafd"
+ ],
+ "enron_099_r": [
+  "2a8c788edce93e7b",
+  "2dfb41edb32b2d3e",
+  "e0a77f25b041b9de",
+  "e649ec2b716eeafd"
+ ],
+ "enron_100_o": [
+  "5cd924e8f8a007f5",
+  "96a86460cd764109",
+  "c41584e4805596a2",
+  "c6058217857af7a3"
+ ],
+ "enron_100_r": [
+  "5cd924e8f8a007f5",
+  "96a86460cd764109",
+  "c41584e4805596a2",
+  "c6058217857af7a3"
+ ],
+ "enron_101_o": [
+  "5648a73d6f8256b0",
+  "dbc64fbcecaf90a8"
+ ],
+ "enron_101_r": [
+  "5648a73d6f8256b0",
+  "dbc64fbcecaf90a8"
+ ],
+ "enron_102_o": [
+  "071fd490dd3dc041",
+  "32858b2a253f6f6b",
+  "4f25bcd21caa313b",
+  "76b98661acd17c78",
+  "7a0b34020a2ff360"
+ ],
+ "enron_102_r": [
+  "071fd490dd3dc041",
+  "32858b2a253f6f6b",
+  "4f25bcd21caa313b",
+  "76b98661acd17c78",
+  "7a0b34020a2ff360"
+ ],
+ "enron_103_o": [
+  "49197bbce44241aa",
+  "5bf85b7dcb6ff686",
+  "5d319ed0c3c0316c",
+  "80efac88315b3c25",
+  "89a9ef80f4038991",
+  "afa0c3abbd5f6d1b",
+  "bc32ac558eb725dc",
+  "bf255662c230df9e",
+  "ee77922c42c6b051",
+  "feb0c335a6151099"
+ ],
+ "enron_103_r": [
+  "49197bbce44241aa",
+  "5bf85b7dcb6ff686",
+  "5d319ed0c3c0316c",
+  "80efac88315b3c25",
+  "89a9ef80f4038991",
+  "afa0c3abbd5f6d1b",
+  "bc32ac558eb725dc",
+  "bf255662c230df9e",
+  "ee77922c42c6b051",
+  "feb0c335a6151099"
+ ],
+ "enron_104_o": [
+  "7dc398ab34fa7788",
+  "88faf594617b677f",
+  "d34814619a92c23e"
+ ],
+ "enron_104_r": [
+  "7dc398ab34fa7788",
+  "88faf594617b677f",
+  "d34814619a92c23e"
+ ],
+ "enron_105_o": [
+  "08154fb06cfc2989",
+  "3f1f97189cf6a1a0",
+  "3f639cd8a0e1ea65",
+  "58bffa6eccf8870c",
+  "76bad2dd0907b75f",
+  "a1e117857bee687d",
+  "b26f802fe04ff108",
+  "b2ec1684a000bb5f",
+  "b93689eb136dd433",
+  "bf4368ef195a68fa",
+  "cbda6676ffb3224c"
+ ],
+ "enron_105_r": [
+  "08154fb06cfc2989",
+  "3f1f97189cf6a1a0",
+  "3f639cd8a0e1ea65",
+  "58bffa6eccf8870c",
+  "76bad2dd0907b75f",
+  "a1e117857bee687d",
+  "b26f802fe04ff108",
+  "b2ec1684a000bb5f",
+  "b93689eb136dd433",
+  "bf4368ef195a68fa",
+  "cbda6676ffb3224c"
+ ],
+ "enron_106_o": [
+  "103be98db9802e83",
+  "765baa8aec58ddf1",
+  "8d1dd03045255229",
+  "cbf8038cda4871f3"
+ ],
+ "enron_106_r": [
+  "103be98db9802e83",
+  "765baa8aec58ddf1",
+  "8d1dd03045255229",
+  "cbf8038cda4871f3"
+ ],
+ "enron_107_o": [
+  "555a5a1132eba024",
+  "e8712a373907e8ab"
+ ],
+ "enron_107_r": [
+  "555a5a1132eba024",
+  "e8712a373907e8ab"
+ ],
+ "enron_108_o": [
+  "391ed0e7afa230d3",
+  "e1fc6dad8fabd3a0"
+ ],
+ "enron_108_r": [
+  "391ed0e7afa230d3",
+  "e1fc6dad8fabd3a0"
+ ],
+ "enron_109_o": [
+  "2a791836ea3ff3b8",
+  "790e82313628afb6",
+  "98427aaa7d1e4a57",
+  "fd435ee3f4ebc2d4",
+  "fd7036abd6a25fff"
+ ],
+ "enron_109_r": [
+  "2a791836ea3ff3b8",
+  "790e82313628afb6",
+  "98427aaa7d1e4a57",
+  "fd435ee3f4ebc2d4",
+  "fd7036abd6a25fff"
+ ],
+ "enron_110_o": [
+  "337774a51f972c56",
+  "3f94fa09fe469fc4",
+  "d69ed7bd7d4e5ac2"
+ ],
+ "enron_110_r": [
+  "337774a51f972c56",
+  "3f94fa09fe469fc4",
+  "d69ed7bd7d4e5ac2"
+ ],
+ "enron_111_o": [
+  "12060fae9f26b118",
+  "41ba8adc18fb03bd",
+  "ac89da72ac1afdc4",
+  "e1d8b89a5df68886",
+  "ed0c0e187e0cc2df",
+  "eec5638176de37ce",
+  "fd16f189043757b0"
+ ],
+ "enron_111_r": [
+  "12060fae9f26b118",
+  "41ba8adc18fb03bd",
+  "ac89da72ac1afdc4",
+  "e1d8b89a5df68886",
+  "ed0c0e187e0cc2df",
+  "eec5638176de37ce",
+  "fd16f189043757b0"
+ ],
+ "enron_112_o": [
+  "166e4c36aecc1cdc",
+  "213fffff4e64dd13",
+  "5c7c253685f156d1",
+  "6b57e16348148531",
+  "96ecd6e37ef29511"
+ ],
+ "enron_112_r": [
+  "166e4c36aecc1cdc",
+  "213fffff4e64dd13",
+  "5c7c253685f156d1",
+  "6b57e16348148531",
+  "96ecd6e37ef29511"
+ ],
+ "enron_113_o": [
+  "577c85070d40b30b",
+  "ee101eafed5ca7bc"
+ ],
+ "enron_113_r": [
+  "577c85070d40b30b",
+  "ee101eafed5ca7bc"
+ ],
+ "enron_114_o": [
+  "36069823a86f30b3",
+  "7fd0c29894d88e8d",
+  "8be8a6916629a994",
+  "93859bdc980a380d",
+  "b264e9044cf4d8b1",
+  "d9721b7adca05cf2"
+ ],
+ "enron_114_r": [
+  "36069823a86f30b3",
+  "7fd0c29894d88e8d",
+  "8be8a6916629a994",
+  "93859bdc980a380d",
+  "b264e9044cf4d8b1",
+  "d9721b7adca05cf2"
+ ],
+ "enron_115_o": [
+  "227b5fe7e518a2f0",
+  "49056c671200d48d",
+  "4dd4a01938422419",
+  "b11f28981ca9fc0a",
+  "c0e685becd653f84",
+  "c52a365c71031de6"
+ ],
+ "enron_115_r": [
+  "227b5fe7e518a2f0",
+  "49056c671200d48d",
+  "4dd4a01938422419",
+  "b11f28981ca9fc0a",
+  "c0e685becd653f84",
+  "c52a365c71031de6"
+ ],
+ "enron_116_o": [
+  "09a0dc0f443b62de",
+  "6a4a67c36a2401d5",
+  "6bb22df91d239d40",
+  "900f1822909e20cf",
+  "9498daac8184989b",
+  "b874d2d46a2945c9"
+ ],
+ "enron_116_r": [
+  "09a0dc0f443b62de",
+  "6a4a67c36a2401d5",
+  "6bb22df91d239d40",
+  "900f1822909e20cf",
+  "9498daac8184989b",
+  "b874d2d46a2945c9"
+ ],
+ "enron_117_o": [
+  "2a187c5a1db3e937",
+  "9446712b5f7cd049"
+ ],
+ "enron_117_r": [
+  "2a187c5a1db3e937",
+  "9446712b5f7cd049"
+ ],
+ "enron_118_o": [
+  "03313c9ce9da3381",
+  "4db1c147b6b153b5",
+  "65ecf64e6099f71f",
+  "e2806ce8a5f0efee"
+ ],
+ "enron_118_r": [
+  "03313c9ce9da3381",
+  "4db1c147b6b153b5",
+  "65ecf64e6099f71f",
+  "e2806ce8a5f0efee"
+ ],
+ "enron_119_o": [
+  "3b0b3d01c79729aa",
+  "493038dd2a69b17e",
+  "6b85941158a13f77",
+  "6e6fcd5f85762c47",
+  "9efe0aefc4a0dabd",
+  "a6b3611a2d6436c2",
+  "ad9d201f45d4ad00",
+  "d202739ce8a83d03",
+  "d58a60dcfeff0829",
+  "e937ab37d71c3a48"
+ ],
+ "enron_119_r": [
+  "3b0b3d01c79729aa",
+  "493038dd2a69b17e",
+  "6b85941158a13f77",
+  "6e6fcd5f85762c47",
+  "9efe0aefc4a0dabd",
+  "a6b3611a2d6436c2",
+  "ad9d201f45d4ad00",
+  "d202739ce8a83d03",
+  "d58a60dcfeff0829",
+  "e937ab37d71c3a48"
+ ],
+ "enron_120_o": [
+  "40cb9ce28b095a8f",
+  "4230097b320a312d",
+  "d9095a14ed9875bf"
+ ],
+ "enron_120_r": [
+  "40cb9ce28b095a8f",
+  "4230097b320a312d",
+  "d9095a14ed9875bf"
+ ],
+ "enron_121_o": [
+  "30de714f0ba97dc0",
+  "4a4c92b75a47d7b7",
+  "513370a240a8ac8b",
+  "5b481aa23b98c3fd",
+  "677033998924a2d9",
+  "91ff655061c193b1"
+ ],
+ "enron_121_r": [
+  "30de714f0ba97dc0",
+  "4a4c92b75a47d7b7",
+  "513370a240a8ac8b",
+  "5b481aa23b98c3fd",
+  "677033998924a2d9",
+  "91ff655061c193b1"
+ ],
+ "enron_122_o": [
+  "6c9149a8d85921c4",
+  "96f37bb40a7675c8",
+  "f7ed27cd583188fe",
+  "ff497ff400467529"
+ ],
+ "enron_122_r": [
+  "6c9149a8d85921c4",
+  "96f37bb40a7675c8",
+  "f7ed27cd583188fe",
+  "ff497ff400467529"
+ ],
+ "enron_123_o": [
+  "716fb5f498545039",
+  "986ff07aefd11cdf",
+  "b039661cb433702b",
+  "d600bdec8bedc3c1",
+  "d93caaa329059cb9",
+  "e7d34ede56e5901b",
+  "f8392ae2e765dec5",
+  "fe9da81578f620d7"
+ ],
+ "enron_123_r": [
+  "716fb5f498545039",
+  "986ff07aefd11cdf",
+  "b039661cb433702b",
+  "d600bdec8bedc3c1",
+  "d93caaa329059cb9",
+  "e7d34ede56e5901b",
+  "f8392ae2e765dec5",
+  "fe9da81578f620d7"
+ ],
+ "enron_124_o": [
+  "01e651729835f83e",
+  "1dd4f395308ce160",
+  "4f2c2957d5d17d40",
+  "879be9df5c7a1398"
+ ],
+ "enron_124_r": [
+  "01e651729835f83e",
+  "1dd4f395308ce160",
+  "4f2c2957d5d17d40",
+  "879be9df5c7a1398"
+ ],
+ "enron_125_o": [
+  "0468ad996ec97408",
+  "12ba63e233a63880",
+  "29a86d66dda85fa6",
+  "40d0fac6b570cf14",
+  "5378be195ea273e1",
+  "5396ac4f7f5b796d",
+  "5d6bb84c0ff1f137",
+  "753bd6012ed976f7",
+  "81ca6f0a6a6c126b",
+  "9663fb28a6a8d9a6",
+  "ad19d6b084811fad",
+  "b6529694f93f2bfb",
+  "e9ad22256b222b45",
+  "fd17dc50b94397d7"
+ ],
+ "enron_125_r": [
+  "0468ad996ec97408",
+  "12ba63e233a63880",
+  "29a86d66dda85fa6",
+  "40d0fac6b570cf14",
+  "5378be195ea273e1",
+  "5396ac4f7f5b796d",
+  "5d6bb84c0ff1f137",
+  "753bd6012ed976f7",
+  "81ca6f0a6a6c126b",
+  "9663fb28a6a8d9a6",
+  "ad19d6b084811fad",
+  "b6529694f93f2bfb",
+  "e9ad22256b222b45",
+  "fd17dc50b94397d7"
+ ],
+ "enron_126_o": [
+  "3f86e6aa532e31ac",
+  "6c9be5fe889d790e",
+  "96b4e9cf2f11fbb7"
+ ],
+ "enron_126_r": [
+  "3f86e6aa532e31ac",
+  "6c9be5fe889d790e",
+  "96b4e9cf2f11fbb7"
+ ],
+ "enron_127_o": [
+  "6910c2276d90ee5b",
+  "74160aa2aac6f21a",
+  "7a24a384491b33a1"
+ ],
+ "enron_127_r": [
+  "6910c2276d90ee5b",
+  "74160aa2aac6f21a",
+  "7a24a384491b33a1"
+ ],
+ "enron_128_o": [
+  "4ac2cbf86e726b42",
+  "a65d64224eebdb24",
+  "a9af16a62685414d",
+  "ac134198a540b65a",
+  "c2127046707140fd",
+  "e6352159ca8d7b68"
+ ],
+ "enron_128_r": [
+  "4ac2cbf86e726b42",
+  "a65d64224eebdb24",
+  "a9af16a62685414d",
+  "ac134198a540b65a",
+  "c2127046707140fd",
+  "e6352159ca8d7b68"
+ ],
+ "enron_129_o": [
+  "10d717283214ad6f",
+  "19ea4b7bcd7b5cfb",
+  "87ade28b53752c6f",
+  "8db497e5412f3415"
+ ],
+ "enron_129_r": [
+  "10d717283214ad6f",
+  "19ea4b7bcd7b5cfb",
+  "87ade28b53752c6f",
+  "8db497e5412f3415"
+ ],
+ "enron_130_o": [
+  "81a6d94d24ceee32",
+  "a3616991f413bc1f"
+ ],
+ "enron_130_r": [
+  "81a6d94d24ceee32",
+  "a3616991f413bc1f"
+ ],
+ "enron_131_o": [
+  "21b072fbf84bc045",
+  "23cf3913de7f7658"
+ ],
+ "enron_131_r": [
+  "21b072fbf84bc045",
+  "23cf3913de7f7658"
+ ],
+ "enron_132_o": [
+  "0fb03f56cc0c70ff",
+  "a52a6e4f6e054d54",
+  "d67ba7a6a7024ee2",
+  "d6e0e56ab280e0fd"
+ ],
+ "enron_132_r": [
+  "0fb03f56cc0c70ff",
+  "a52a6e4f6e054d54",
+  "d67ba7a6a7024ee2",
+  "d6e0e56ab280e0fd"
+ ],
+ "enron_133_o": [
+  "071318e7f475a800",
+  "0716c4632d8f57dd",
+  "0fe5d0d89af3cef3",
+  "370cb96fd0647aa1",
+  "38a9e19f5fc97c5d",
+  "590f125aa1d4c038",
+  "9bc997fe59349458",
+  "a2ab32c0c0e47670",
+  "ac85fe48b782c86b",
+  "bf9a03baeab7f76d",
+  "ca2c014dd8bd7fb5",
+  "f4b83ae3d61e2469"
+ ],
+ "enron_133_r": [
+  "071318e7f475a800",
+  "0716c4632d8f57dd",
+  "0fe5d0d89af3cef3",
+  "370cb96fd0647aa1",
+  "38a9e19f5fc97c5d",
+  "590f125aa1d4c038",
+  "9bc997fe59349458",
+  "a2ab32c0c0e47670",
+  "ac85fe48b782c86b",
+  "bf9a03baeab7f76d",
+  "ca2c014dd8bd7fb5",
+  "f4b83ae3d61e2469"
+ ],
+ "enron_134_o": [
+  "19315aebc28b1157",
+  "46dcb318c92af385",
+  "4bf657b81ebda510",
+  "6c1d13e5c690a095",
+  "f0139f1227bf6ebd"
+ ],
+ "enron_134_r": [
+  "19315aebc28b1157",
+  "46dcb318c92af385",
+  "4bf657b81ebda510",
+  "6c1d13e5c690a095",
+  "f0139f1227bf6ebd"
+ ],
+ "enron_135_o": [
+  "12d197761222d03a",
+  "25c6c6030b279ac3",
+  "39e9732d3e339f5b",
+  "50f79e82f3eea8a2",
+  "60577b268f9ccc9e",
+  "8d7b190244b90292",
+  "96ce1df6846ca950",
+  "a76db801f8d5df6d",
+  "cf333d021f6b7e7f"
+ ],
+ "enron_135_r": [
+  "12d197761222d03a",
+  "25c6c6030b279ac3",
+  "39e9732d3e339f5b",
+  "50f79e82f3eea8a2",
+  "60577b268f9ccc9e",
+  "8d7b190244b90292",
+  "96ce1df6846ca950",
+  "a76db801f8d5df6d",
+  "cf333d021f6b7e7f"
+ ],
+ "enron_136_o": [
+  "38efbc37df20e937",
+  "58998cf02b0d1617",
+  "71d8b8ebd5ec1513"
+ ],
+ "enron_136_r": [
+  "38efbc37df20e937",
+  "58998cf02b0d1617",
+  "71d8b8ebd5ec1513"
+ ],
+ "enron_137_o": [
+  "13baad1694b79adc",
+  "417baf4006e0d0e0",
+  "48bfa46ebe2dd9aa",
+  "8bcf9600abf2eb84"
+ ],
+ "enron_137_r": [
+  "13baad1694b79adc",
+  "417baf4006e0d0e0",
+  "48bfa46ebe2dd9aa",
+  "8bcf9600abf2eb84"
+ ],
+ "enron_138_o": [
+  "378e3b2613acb139",
+  "46c07151470e21fd",
+  "7d16fcec8f072750"
+ ],
+ "enron_138_r": [
+  "378e3b2613acb139",
+  "46c07151470e21fd",
+  "7d16fcec8f072750"
+ ],
+ "enron_139_o": [
+  "37455acd7b2e76f7",
+  "59878dd356dd2005",
+  "a1631589ada0230f"
+ ],
+ "enron_139_r": [
+  "37455acd7b2e76f7",
+  "59878dd356dd2005",
+  "a1631589ada0230f"
+ ],
+ "enron_140_o": [
+  "23af70e537529c86",
+  "448f956688168de1",
+  "7c5d1787c2fd3d4c",
+  "fb45abd4a74b35d4"
+ ],
+ "enron_140_r": [
+  "23af70e537529c86",
+  "448f956688168de1",
+  "7c5d1787c2fd3d4c",
+  "fb45abd4a74b35d4"
+ ],
+ "enron_141_o": [
+  "c7ec1e283f19c7aa",
+  "d6a47128a1df3dec"
+ ],
+ "enron_141_r": [
+  "c7ec1e283f19c7aa",
+  "d6a47128a1df3dec"
+ ],
+ "enron_142_o": [
+  "2c939a6cec939e05",
+  "3980d3aa1d0f2953"
+ ],
+ "enron_142_r": [
+  "2c939a6cec939e05",
+  "3980d3aa1d0f2953"
+ ],
+ "enron_143_o": [
+  "05b7ac9218a94931",
+  "c1b1ca4cf257326e"
+ ],
+ "enron_143_r": [
+  "05b7ac9218a94931",
+  "c1b1ca4cf257326e"
+ ],
+ "enron_144_o": [
+  "346b407b543524ee",
+  "40b5001ad44631e6",
+  "de5a81c6dab4f541"
+ ],
+ "enron_144_r": [
+  "346b407b543524ee",
+  "40b5001ad44631e6",
+  "de5a81c6dab4f541"
+ ],
+ "enron_145_o": [
+  "211401d9c6ccabbc",
+  "2515a8a61fbc5745",
+  "43e8821132f20b12",
+  "4c6260e5be1a4430",
+  "fd3b4a4351ba296a"
+ ],
+ "enron_145_r": [
+  "211401d9c6ccabbc",
+  "2515a8a61fbc5745",
+  "43e8821132f20b12",
+  "4c6260e5be1a4430",
+  "fd3b4a4351ba296a"
+ ],
+ "enron_146_o": [
+  "5bad7cd44d8a0161",
+  "6c1fc74ac10d5ed0",
+  "6ef278f7f2bd5fe6",
+  "9f92ae5788109776",
+  "c73df02e1c160d57",
+  "dde07118c9442295",
+  "f7d6e41ea6746188"
+ ],
+ "enron_146_r": [
+  "5bad7cd44d8a0161",
+  "6c1fc74ac10d5ed0",
+  "6ef278f7f2bd5fe6",
+  "9f92ae5788109776",
+  "c73df02e1c160d57",
+  "dde07118c9442295",
+  "f7d6e41ea6746188"
+ ],
+ "enron_147_o": [
+  "30f35f09ba9cb5d9",
+  "35ee46690496cc0a",
+  "4a44e941aaf116fb",
+  "590a9f88df07311c",
+  "786a456e37b8a7a6",
+  "b26f4fd23f5e558c"
+ ],
+ "enron_147_r": [
+  "30f35f09ba9cb5d9",
+  "35ee46690496cc0a",
+  "4a44e941aaf116fb",
+  "590a9f88df07311c",
+  "786a456e37b8a7a6",
+  "b26f4fd23f5e558c"
+ ],
+ "enron_148_o": [
+  "15109edbeb478944",
+  "1d9e71435fcc7a17",
+  "2cf2b04b1bae57d1",
+  "5bc418df69a1f6bc",
+  "fa220931167e8560"
+ ],
+ "enron_148_r": [
+  "15109edbeb478944",
+  "1d9e71435fcc7a17",
+  "2cf2b04b1bae57d1",
+  "5bc418df69a1f6bc",
+  "fa220931167e8560"
+ ],
+ "enron_149_o": [
+  "3986bf8d6ae908cc",
+  "559dd6b1c85e35c4"
+ ],
+ "enron_149_r": [
+  "3986bf8d6ae908cc",
+  "559dd6b1c85e35c4"
+ ],
+ "enron_150_o": [
+  "0e6761a7f8916ac2",
+  "141a09f05c486d14",
+  "dfa7721f9506ba91",
+  "ea18b8210e95cecb"
+ ],
+ "enron_150_r": [
+  "0e6761a7f8916ac2",
+  "141a09f05c486d14",
+  "dfa7721f9506ba91",
+  "ea18b8210e95cecb"
+ ],
+ "enron_151_o": [
+  "0e917372e5e9ebbe",
+  "8cb0949b5a254057",
+  "8d0e3d88b6346ba2",
+  "b1fed8994f8345d8",
+  "f33281eae575db79"
+ ],
+ "enron_151_r": [
+  "0e917372e5e9ebbe",
+  "8cb0949b5a254057",
+  "8d0e3d88b6346ba2",
+  "b1fed8994f8345d8",
+  "f33281eae575db79"
+ ],
+ "enron_152_o": [
+  "5e514115932f91ff",
+  "6895e997c0aff84a",
+  "926c6e067f10bc6d",
+  "c04eb5e199b50f11",
+  "c89fecb94e4900d3"
+ ],
+ "enron_152_r": [
+  "5e514115932f91ff",
+  "6895e997c0aff84a",
+  "926c6e067f10bc6d",
+  "c04eb5e199b50f11",
+  "c89fecb94e4900d3"
+ ],
+ "enron_153_o": [
+  "47a40d91e27ecc9a",
+  "69d399a51c485495",
+  "cb01071aa578b954",
+  "d5302c26b2951597"
+ ],
+ "enron_153_r": [
+  "47a40d91e27ecc9a",
+  "69d399a51c485495",
+  "cb01071aa578b954",
+  "d5302c26b2951597"
+ ],
+ "enron_154_o": [
+  "0eb51826fa0963bc",
+  "cc4a9076b787008c"
+ ],
+ "enron_154_r": [
+  "0eb51826fa0963bc",
+  "cc4a9076b787008c"
+ ],
+ "enron_155_o": [
+  "051c060e70a3f8d9",
+  "337624f48f890b2e",
+  "4264272392688207",
+  "6cd85eab3a10555f",
+  "bf38fa35ca75c36c",
+  "df14084e04964a47",
+  "fa039fd3b577da8b"
+ ],
+ "enron_155_r": [
+  "051c060e70a3f8d9",
+  "337624f48f890b2e",
+  "4264272392688207",
+  "6cd85eab3a10555f",
+  "bf38fa35ca75c36c",
+  "df14084e04964a47",
+  "fa039fd3b577da8b"
+ ],
+ "enron_156_o": [
+  "258e5974dabed5ed",
+  "dd16957370672e2c"
+ ],
+ "enron_156_r": [
+  "258e5974dabed5ed",
+  "dd16957370672e2c"
+ ],
+ "enron_157_o": [
+  "050fecbc277973da",
+  "1bfd7b77d3c60ea6",
+  "728ed53773aea40b",
+  "74521b502c0c7ef5",
+  "ccbc9ffaa472ffb0",
+  "e272096c2dff9192"
+ ],
+ "enron_157_r": [
+  "050fecbc277973da",
+  "1bfd7b77d3c60ea6",
+  "728ed53773aea40b",
+  "74521b502c0c7ef5",
+  "ccbc9ffaa472ffb0",
+  "e272096c2dff9192"
+ ],
+ "enron_158_o": [
+  "54004ec1b5e68f2f",
+  "7f660b7d08f948e5"
+ ],
+ "enron_158_r": [
+  "54004ec1b5e68f2f",
+  "7f660b7d08f948e5"
+ ],
+ "enron_159_o": [
+  "58266707a6456e08",
+  "9b3d8cb983a8f125",
+  "f8ccb11707a0e8ad"
+ ],
+ "enron_159_r": [
+  "58266707a6456e08",
+  "9b3d8cb983a8f125",
+  "f8ccb11707a0e8ad"
+ ],
+ "enron_160_o": [
+  "17f1f6922af5d897",
+  "5cd9070a07bc9656",
+  "c50119c9d07c6138"
+ ],
+ "enron_160_r": [
+  "17f1f6922af5d897",
+  "5cd9070a07bc9656",
+  "c50119c9d07c6138"
+ ],
+ "enron_161_o": [
+  "2f94ca45fa6040de",
+  "3a39015c1541c165",
+  "3b15462fa800f9d3",
+  "4d4e1d323e28bdc2",
+  "7be9838d6d85b4be",
+  "81c9df8798846d55",
+  "c5ee41b717570260"
+ ],
+ "enron_161_r": [
+  "2f94ca45fa6040de",
+  "3a39015c1541c165",
+  "3b15462fa800f9d3",
+  "4d4e1d323e28bdc2",
+  "7be9838d6d85b4be",
+  "81c9df8798846d55",
+  "c5ee41b717570260"
+ ],
+ "enron_162_o": [
+  "24e623df7cdda12b",
+  "9cd229652d18f158",
+  "9d57ff6ea7383d54",
+  "fcc5bb1658401d63"
+ ],
+ "enron_162_r": [
+  "24e623df7cdda12b",
+  "9cd229652d18f158",
+  "9d57ff6ea7383d54",
+  "fcc5bb1658401d63"
+ ],
+ "enron_163_o": [
+  "274254784131729f",
+  "47c584b5f0408a09",
+  "5211fda0692896bc",
+  "6094e49d97989522",
+  "95347f5a32e5c04c",
+  "b2b3ca8f7e753d99",
+  "ce05ca8a192bb4c2",
+  "e056bcc8dfa8c45a"
+ ],
+ "enron_163_r": [
+  "274254784131729f",
+  "47c584b5f0408a09",
+  "5211fda0692896bc",
+  "6094e49d97989522",
+  "95347f5a32e5c04c",
+  "b2b3ca8f7e753d99",
+  "ce05ca8a192bb4c2",
+  "e056bcc8dfa8c45a"
+ ],
+ "enron_164_o": [
+  "04bbb97a36ef102f",
+  "2dc4fd7d2d4c2a8e",
+  "409cd4f93e9d006b",
+  "80b2a1382aeb69ed",
+  "848cfa69432571b8",
+  "8e4f6e1d7cde8800",
+  "a21f30a12f5dcbb8",
+  "bbbb5b7d22931976"
+ ],
+ "enron_164_r": [
+  "04bbb97a36ef102f",
+  "2dc4fd7d2d4c2a8e",
+  "409cd4f93e9d006b",
+  "80b2a1382aeb69ed",
+  "848cfa69432571b8",
+  "8e4f6e1d7cde8800",
+  "a21f30a12f5dcbb8",
+  "bbbb5b7d22931976"
+ ],
+ "enron_165_o": [
+  "2acd4e2a1fd5f94f",
+  "59264eefc0202263",
+  "b1bf54d0b0c1197c",
+  "fd9261e213218d9a"
+ ],
+ "enron_165_r": [
+  "2acd4e2a1fd5f94f",
+  "59264eefc0202263",
+  "b1bf54d0b0c1197c",
+  "fd9261e213218d9a"
+ ],
+ "enron_166_o": [
+  "56b31d624ff17ea1",
+  "dcdf92605228da8d"
+ ],
+ "enron_166_r": [
+  "56b31d624ff17ea1",
+  "dcdf92605228da8d"
+ ],
+ "enron_167_o": [
+  "0a947c385dbc5f0f",
+  "245ee394b4f096cf",
+  "7e88973acf9d40d9",
+  "8da971f496979d70",
+  "d723ee3ed635ee66",
+  "f88fadf36876667b"
+ ],
+ "enron_167_r": [
+  "0a947c385dbc5f0f",
+  "245ee394b4f096cf",
+  "7e88973acf9d40d9",
+  "8da971f496979d70",
+  "d723ee3ed635ee66",
+  "f88fadf36876667b"
+ ],
+ "enron_168_o": [
+  "119eb984aab81967",
+  "622997887770c82a"
+ ],
+ "enron_168_r": [
+  "119eb984aab81967",
+  "622997887770c82a"
+ ],
+ "enron_169_o": [
+  "023dd7e1dc82c69c",
+  "04f41a16043c60f7",
+  "0dfb95e2e37b2baf",
+  "118108cd2175fb65",
+  "2a55997e0ca4b703",
+  "2c64939076e2a6b3",
+  "3398a302721633b6",
+  "38ea0e826e81fd39",
+  "4f4388a3d38222ed",
+  "705302398d14427d",
+  "72bb863d7d54a323",
+  "e2d08dff5a1aa32f"
+ ],
+ "enron_169_r": [
+  "023dd7e1dc82c69c",
+  "04f41a16043c60f7",
+  "0dfb95e2e37b2baf",
+  "118108cd2175fb65",
+  "2a55997e0ca4b703",
+  "2c64939076e2a6b3",
+  "3398a302721633b6",
+  "38ea0e826e81fd39",
+  "4f4388a3d38222ed",
+  "705302398d14427d",
+  "72bb863d7d54a323",
+  "e2d08dff5a1aa32f"
+ ],
+ "enron_170_o": [
+  "0f83a9a50b79b2bd",
+  "802e01c33b8977ff",
+  "cd24f34fb1619b7d"
+ ],
+ "enron_170_r": [
+  "0f83a9a50b79b2bd",
+  "802e01c33b8977ff",
+  "cd24f34fb1619b7d"
+ ],
+ "enron_171_o": [
+  "16b6a757f0a711cc",
+  "a74bc4fd5c136f8b",
+  "c9b7301f557c76be",
+  "fc46d8f89c122530",
+  "fd53d56a74ee6796"
+ ],
+ "enron_171_r": [
+  "16b6a757f0a711cc",
+  "a74bc4fd5c136f8b",
+  "c9b7301f557c76be",
+  "fc46d8f89c122530",
+  "fd53d56a74ee6796"
+ ],
+ "enron_172_o": [
+  "142936760da6a044",
+  "5c01a46f764e9c5f",
+  "71f4af7d26a697d6"
+ ],
+ "enron_172_r": [
+  "142936760da6a044",
+  "5c01a46f764e9c5f",
+  "71f4af7d26a697d6"
+ ],
+ "enron_173_o": [
+  "0e0e087b71f66892",
+  "5728c3c45625f76e",
+  "6c12f020de374e91"
+ ],
+ "enron_173_r": [
+  "0e0e087b71f66892",
+  "5728c3c45625f76e",
+  "6c12f020de374e91"
+ ],
+ "enron_174_o": [
+  "7162504628adaabe",
+  "c413ea916a8a0169",
+  "f64bf3a2654180ee"
+ ],
+ "enron_174_r": [
+  "7162504628adaabe",
+  "c413ea916a8a0169",
+  "f64bf3a2654180ee"
+ ],
+ "enron_175_o": [
+  "17417936edc16642",
+  "69560f254cabd94e",
+  "6dbe2df31037e7d2"
+ ],
+ "enron_175_r": [
+  "17417936edc16642",
+  "69560f254cabd94e",
+  "6dbe2df31037e7d2"
+ ],
+ "enron_176_o": [
+  "2cb6c14ce3d136cf",
+  "6cbf75d3a719621d",
+  "8023f69ef90495f7",
+  "839b77b87f12a8ba",
+  "e663381e93438fcf"
+ ],
+ "enron_176_r": [
+  "2cb6c14ce3d136cf",
+  "6cbf75d3a719621d",
+  "8023f69ef90495f7",
+  "839b77b87f12a8ba",
+  "e663381e93438fcf"
+ ],
+ "enron_177_o": [
+  "4a573fd16437ca60",
+  "54b2607ac5c2de91"
+ ],
+ "enron_177_r": [
+  "4a573fd16437ca60",
+  "54b2607ac5c2de91"
+ ],
+ "enron_178_o": [
+  "5d9fdd690e154e5f",
+  "7ba254e2dc2b67a8",
+  "7e715e669aaad238",
+  "822c774687cbc49e",
+  "acd9c1c2fc1be68b",
+  "af790ccbc2025ce7",
+  "c476f552f23e67ac"
+ ],
+ "enron_178_r": [
+  "5d9fdd690e154e5f",
+  "7ba254e2dc2b67a8",
+  "7e715e669aaad238",
+  "822c774687cbc49e",
+  "acd9c1c2fc1be68b",
+  "af790ccbc2025ce7",
+  "c476f552f23e67ac"
+ ],
+ "enron_179_o": [
+  "76b3df052dcdc46b",
+  "87a72c6e94ecaa0d"
+ ],
+ "enron_179_r": [
+  "76b3df052dcdc46b",
+  "87a72c6e94ecaa0d"
+ ],
+ "enron_180_o": [
+  "045d1254a3e7edbf",
+  "5cc97ef57914d1aa",
+  "7fb9942852339c20",
+  "942087c5e2feead2",
+  "996a8d42078352d6",
+  "db7552dcdb5bf858"
+ ],
+ "enron_180_r": [
+  "045d1254a3e7edbf",
+  "5cc97ef57914d1aa",
+  "7fb9942852339c20",
+  "942087c5e2feead2",
+  "996a8d42078352d6",
+  "db7552dcdb5bf858"
+ ],
+ "enron_181_o": [
+  "6440c269e791f28b",
+  "8c20296f8c5ab42a",
+  "bdc1f8d32bb0dabb"
+ ],
+ "enron_181_r": [
+  "6440c269e791f28b",
+  "8c20296f8c5ab42a",
+  "bdc1f8d32bb0dabb"
+ ],
+ "enron_182_o": [
+  "167428ea8a7b6d61",
+  "56cac4937ede71ab"
+ ],
+ "enron_182_r": [
+  "167428ea8a7b6d61",
+  "56cac4937ede71ab"
+ ],
+ "enron_183_o": [
+  "77232257f8f1994a",
+  "8e531deb35c1d617",
+  "fdd943b5ac447e07"
+ ],
+ "enron_183_r": [
+  "77232257f8f1994a",
+  "8e531deb35c1d617",
+  "fdd943b5ac447e07"
+ ],
+ "enron_184_o": [
+  "0afb166fd28799a5",
+  "2889f958577de5eb",
+  "54d6324b666fe840",
+  "660d23f27a9f56a3",
+  "7a771f26b8e74a5e",
+  "b052e2ad928065f3",
+  "ebb4c1d9fb8c86dd"
+ ],
+ "enron_184_r": [
+  "0afb166fd28799a5",
+  "2889f958577de5eb",
+  "54d6324b666fe840",
+  "660d23f27a9f56a3",
+  "7a771f26b8e74a5e",
+  "b052e2ad928065f3",
+  "ebb4c1d9fb8c86dd"
+ ],
+ "enron_185_o": [
+  "2b92ec66019981da",
+  "62b642e624d8c193"
+ ],
+ "enron_185_r": [
+  "2b92ec66019981da",
+  "62b642e624d8c193"
+ ],
+ "enron_186_o": [
+  "12b729c72a666c07",
+  "63c9b7096cd7c78f",
+  "b6e15f60660e055d"
+ ],
+ "enron_186_r": [
+  "12b729c72a666c07",
+  "63c9b7096cd7c78f",
+  "b6e15f60660e055d"
+ ],
+ "enron_187_o": [
+  "324fe7c318158a7c",
+  "8042c53deec3738a",
+  "baa24295370de53c"
+ ],
+ "enron_187_r": [
+  "324fe7c318158a7c",
+  "8042c53deec3738a",
+  "baa24295370de53c"
+ ],
+ "enron_188_o": [
+  "4f0bf91711f4f480",
+  "aeee92b8ad322b64"
+ ],
+ "enron_188_r": [
+  "4f0bf91711f4f480",
+  "aeee92b8ad322b64"
+ ],
+ "enron_189_o": [
+  "134da8ce82db7588",
+  "327f35efb55ee76a",
+  "d00ec87d7807874b",
+  "e048dc4dc42d5c72"
+ ],
+ "enron_189_r": [
+  "134da8ce82db7588",
+  "327f35efb55ee76a",
+  "d00ec87d7807874b",
+  "e048dc4dc42d5c72"
+ ],
+ "enron_190_o": [
+  "1360fa0e0b921ffb",
+  "1da6fda9fb03fa03",
+  "2b999ab657d076dc",
+  "32c870357dc0c029",
+  "32d560220986cc18",
+  "864dc27e8dea3d09",
+  "bfd7344c0de8d336",
+  "f13867a2591ba9d8"
+ ],
+ "enron_190_r": [
+  "1360fa0e0b921ffb",
+  "1da6fda9fb03fa03",
+  "2b999ab657d076dc",
+  "32c870357dc0c029",
+  "32d560220986cc18",
+  "864dc27e8dea3d09",
+  "bfd7344c0de8d336",
+  "f13867a2591ba9d8"
+ ],
+ "enron_191_o": [
+  "5231e68c3cc40d76",
+  "8aeb04055ad9e35a",
+  "b8445dba3eca0b76"
+ ],
+ "enron_191_r": [
+  "5231e68c3cc40d76",
+  "8aeb04055ad9e35a",
+  "b8445dba3eca0b76"
+ ],
+ "enron_192_o": [
+  "0d000ea1bbd9c25a",
+  "98beea4d446bf33d",
+  "eb9b8780491edcf4",
+  "f3d0cbc5ca532aa6"
+ ],
+ "enron_192_r": [
+  "0d000ea1bbd9c25a",
+  "98beea4d446bf33d",
+  "eb9b8780491edcf4",
+  "f3d0cbc5ca532aa6"
+ ],
+ "enron_193_o": [
+  "24b6c347b0b30fc2",
+  "42396b14a0ae3a9d",
+  "6179b41236f3589e"
+ ],
+ "enron_193_r": [
+  "24b6c347b0b30fc2",
+  "42396b14a0ae3a9d",
+  "6179b41236f3589e"
+ ],
+ "enron_194_o": [
+  "a95de537fd55f9d6",
+  "b095b84f6607e375"
+ ],
+ "enron_194_r": [
+  "a95de537fd55f9d6",
+  "b095b84f6607e375"
+ ],
+ "enron_195_o": [
+  "155167d949e9aa85",
+  "3729931278c13862",
+  "905d5061caa4ff55",
+  "d246e3a859c3d10e",
+  "dbcb846555a8095a",
+  "e911473809e3dc2a"
+ ],
+ "enron_195_r": [
+  "155167d949e9aa85",
+  "3729931278c13862",
+  "905d5061caa4ff55",
+  "d246e3a859c3d10e",
+  "dbcb846555a8095a",
+  "e911473809e3dc2a"
+ ],
+ "enron_196_o": [
+  "13ac81747b0cebb3",
+  "32d11180a24406d0",
+  "5b27a5b8fb29a2d8",
+  "fafb445004b03491"
+ ],
+ "enron_196_r": [
+  "13ac81747b0cebb3",
+  "32d11180a24406d0",
+  "5b27a5b8fb29a2d8",
+  "fafb445004b03491"
+ ],
+ "enron_197_o": [
+  "37a5974ad1f3aa15",
+  "7dd94629a801e0db",
+  "9fa09d610859f801",
+  "d7437ccf44e2776c"
+ ],
+ "enron_197_r": [
+  "37a5974ad1f3aa15",
+  "7dd94629a801e0db",
+  "9fa09d610859f801",
+  "d7437ccf44e2776c"
+ ],
+ "enron_198_o": [
+  "5ffe6fa1aacac543",
+  "78d1911bc07aeca7",
+  "c05ece625c2bbf45"
+ ],
+ "enron_198_r": [
+  "5ffe6fa1aacac543",
+  "78d1911bc07aeca7",
+  "c05ece625c2bbf45"
+ ],
+ "enron_199_o": [
+  "05391519fd536226",
+  "090e2287ebdda525",
+  "09310d4ee172f751",
+  "22b0acc468ef1ce6",
+  "3e67fe6b05e989df",
+  "4a3302d3105385bf",
+  "75b0f288c8254f47",
+  "97c37d7058704d20",
+  "b2d2f5012b26ec4c",
+  "c37b9efa94a3b2ff",
+  "cbaacd9b2a5af35b"
+ ],
+ "enron_199_r": [
+  "05391519fd536226",
+  "090e2287ebdda525",
+  "09310d4ee172f751",
+  "22b0acc468ef1ce6",
+  "3e67fe6b05e989df",
+  "4a3302d3105385bf",
+  "75b0f288c8254f47",
+  "97c37d7058704d20",
+  "b2d2f5012b26ec4c",
+  "c37b9efa94a3b2ff",
+  "cbaacd9b2a5af35b"
+ ],
+ "enron_200_o": [
+  "099580872442fd2c",
+  "0c2242e13fb1f53b",
+  "21e6c1894776668f",
+  "24d9919fbdc6bba5",
+  "378c845000c4b705",
+  "3b02bdaeead80240",
+  "64a3821e1a68ba47",
+  "6b744eedd315d29a",
+  "878257404d961b71",
+  "9cadb68975baa765",
+  "a2e79c63cc964e1b",
+  "adeb0551a3c77074",
+  "bd01c8c3d5a737b8",
+  "cc0edb7ba65e11f0"
+ ],
+ "enron_200_r": [
+  "099580872442fd2c",
+  "0c2242e13fb1f53b",
+  "21e6c1894776668f",
+  "24d9919fbdc6bba5",
+  "378c845000c4b705",
+  "3b02bdaeead80240",
+  "64a3821e1a68ba47",
+  "6b744eedd315d29a",
+  "878257404d961b71",
+  "9cadb68975baa765",
+  "a2e79c63cc964e1b",
+  "adeb0551a3c77074",
+  "bd01c8c3d5a737b8",
+  "cc0edb7ba65e11f0"
+ ],
+ "enron_201_o": [
+  "5d04681ea75f0c25",
+  "9c98908d65b5ccd2"
+ ],
+ "enron_201_r": [
+  "5d04681ea75f0c25",
+  "9c98908d65b5ccd2"
+ ],
+ "enron_202_o": [
+  "076f09b02c28aeed",
+  "b418cec1cdcc1746"
+ ],
+ "enron_202_r": [
+  "076f09b02c28aeed",
+  "b418cec1cdcc1746"
+ ],
+ "enron_203_o": [
+  "013cbcb6cc078969",
+  "0ae459e873cb1b88",
+  "c86c5182235b741b",
+  "e379eaaadbfc1d07"
+ ],
+ "enron_203_r": [
+  "013cbcb6cc078969",
+  "0ae459e873cb1b88",
+  "c86c5182235b741b",
+  "e379eaaadbfc1d07"
+ ],
+ "enron_204_o": [
+  "0762799bbfd86600",
+  "5396f50b26b603a1",
+  "fd95b2e6b219190a"
+ ],
+ "enron_204_r": [
+  "0762799bbfd86600",
+  "5396f50b26b603a1",
+  "fd95b2e6b219190a"
+ ],
+ "enron_205_o": [
+  "3b692dbc7df6f677",
+  "83cc9215c11923bf",
+  "cf35691299a02fcf",
+  "da70b17a65b45e56",
+  "e23d2dd14dd1972c"
+ ],
+ "enron_205_r": [
+  "3b692dbc7df6f677",
+  "83cc9215c11923bf",
+  "cf35691299a02fcf",
+  "da70b17a65b45e56",
+  "e23d2dd14dd1972c"
+ ],
+ "enron_206_o": [
+  "1e33fa46ef62af21",
+  "5aacd4f9c272a98c",
+  "61b0ce843960763f",
+  "6833d96a81a0648b",
+  "8e56eb7568d86176",
+  "94f307ac7ba446fc",
+  "cd8be1bcb384bf7d",
+  "e980d178b57e6d46"
+ ],
+ "enron_206_r": [
+  "1e33fa46ef62af21",
+  "5aacd4f9c272a98c",
+  "61b0ce843960763f",
+  "6833d96a81a0648b",
+  "8e56eb7568d86176",
+  "94f307ac7ba446fc",
+  "cd8be1bcb384bf7d",
+  "e980d178b57e6d46"
+ ],
+ "enron_207_o": [
+  "ccfb5b87f546cf5a",
+  "d41368b78a38b879"
+ ],
+ "enron_207_r": [
+  "ccfb5b87f546cf5a",
+  "d41368b78a38b879"
+ ],
+ "enron_208_o": [
+  "1a4450829a0752a8",
+  "26814a903d000ee0",
+  "2c6208fb8219d2f6",
+  "4ae857172421acbb",
+  "569c12c1fa491e09",
+  "764f4779ac5fdcc0",
+  "7964154ff53d5460",
+  "8ed904daba86efc0",
+  "9a52cca6ab8286fa",
+  "9ee27373a11a7c39",
+  "ac3f81166db45bfd",
+  "df8e12e0bfeb7887",
+  "ea880c8f1938c519"
+ ],
+ "enron_208_r": [
+  "1a4450829a0752a8",
+  "26814a903d000ee0",
+  "2c6208fb8219d2f6",
+  "4ae857172421acbb",
+  "569c12c1fa491e09",
+  "764f4779ac5fdcc0",
+  "7964154ff53d5460",
+  "8ed904daba86efc0",
+  "9a52cca6ab8286fa",
+  "9ee27373a11a7c39",
+  "ac3f81166db45bfd",
+  "df8e12e0bfeb7887",
+  "ea880c8f1938c519"
+ ],
+ "enron_209_o": [
+  "0d6b1fff4f20229e",
+  "2399472226d07f2c",
+  "2d14c8b621d070e0",
+  "53b4cc1d5421d312",
+  "7a0d2fad1417013d",
+  "92d08e611927c76f",
+  "c3b77a643f365bec"
+ ],
+ "enron_209_r": [
+  "0d6b1fff4f20229e",
+  "2399472226d07f2c",
+  "2d14c8b621d070e0",
+  "53b4cc1d5421d312",
+  "7a0d2fad1417013d",
+  "92d08e611927c76f",
+  "c3b77a643f365bec"
+ ],
+ "enron_210_o": [
+  "0eb01a7e0f71c8e4",
+  "3a4543b6b0dd6a92",
+  "7aef4818f3644d71"
+ ],
+ "enron_210_r": [
+  "0eb01a7e0f71c8e4",
+  "3a4543b6b0dd6a92",
+  "7aef4818f3644d71"
+ ],
+ "enron_211_o": [
+  "4329058cf95bc413",
+  "883f7cf089d56a02",
+  "a87a6c5c7b9f95e5"
+ ],
+ "enron_211_r": [
+  "4329058cf95bc413",
+  "883f7cf089d56a02",
+  "a87a6c5c7b9f95e5"
+ ],
+ "enron_212_o": [
+  "1fe99b8846bd2ebd",
+  "6dd9d84c8e96278e",
+  "727448d487c0e3c7",
+  "cb0982301cd18654"
+ ],
+ "enron_212_r": [
+  "1fe99b8846bd2ebd",
+  "6dd9d84c8e96278e",
+  "727448d487c0e3c7",
+  "cb0982301cd18654"
+ ],
+ "enron_213_o": [
+  "8ee3f10f175cde7a",
+  "a4f3cc8747083b05"
+ ],
+ "enron_213_r": [
+  "8ee3f10f175cde7a",
+  "a4f3cc8747083b05"
+ ],
+ "enron_214_o": [
+  "0e8ab503a00a33dc",
+  "1a23a84153bc8942",
+  "3666650acc8e234a",
+  "40c2f2bd47858f02",
+  "92687012886151fc",
+  "ab660a8e8cb42670",
+  "b80e97e81be68e94",
+  "ef1e2244a6156994",
+  "f37ecd432781fd83"
+ ],
+ "enron_214_r": [
+  "0e8ab503a00a33dc",
+  "1a23a84153bc8942",
+  "3666650acc8e234a",
+  "40c2f2bd47858f02",
+  "92687012886151fc",
+  "ab660a8e8cb42670",
+  "b80e97e81be68e94",
+  "ef1e2244a6156994",
+  "f37ecd432781fd83"
+ ],
+ "enron_215_o": [
+  "36bc3b22392c7c3f",
+  "57f3df78bd23eec4",
+  "e9360ca9c376334c"
+ ],
+ "enron_215_r": [
+  "36bc3b22392c7c3f",
+  "57f3df78bd23eec4",
+  "e9360ca9c376334c"
+ ],
+ "enron_216_o": [
+  "399316ff22f6c866",
+  "7f819932aa317e0b",
+  "fbfedcf85efb331f"
+ ],
+ "enron_216_r": [
+  "399316ff22f6c866",
+  "7f819932aa317e0b",
+  "fbfedcf85efb331f"
+ ],
+ "enron_217_o": [
+  "40aba026a9183e9f",
+  "c8dcf2a637db5eb2",
+  "fd0135db24eed753"
+ ],
+ "enron_217_r": [
+  "40aba026a9183e9f",
+  "c8dcf2a637db5eb2",
+  "fd0135db24eed753"
+ ],
+ "enron_218_o": [
+  "22102198b7082ee9",
+  "35fc7f34540b58c5",
+  "449c3af67cc8f623",
+  "718f9e0de6ad9173"
+ ],
+ "enron_218_r": [
+  "22102198b7082ee9",
+  "35fc7f34540b58c5",
+  "449c3af67cc8f623",
+  "718f9e0de6ad9173"
+ ],
+ "enron_219_o": [
+  "40bd1205848308b6",
+  "6060a600c8b80652",
+  "7a003dfc63be1aeb",
+  "b9a9af4f07773330"
+ ],
+ "enron_219_r": [
+  "40bd1205848308b6",
+  "6060a600c8b80652",
+  "7a003dfc63be1aeb",
+  "b9a9af4f07773330"
+ ],
+ "enron_220_o": [
+  "2d5895be5c13a704",
+  "35f86c3bf24b6f3a"
+ ],
+ "enron_220_r": [
+  "2d5895be5c13a704",
+  "35f86c3bf24b6f3a"
+ ],
+ "enron_221_o": [
+  "53b2f0237698db09",
+  "a18fbe75c9d8de36",
+  "cb20fa4240c86404"
+ ],
+ "enron_221_r": [
+  "53b2f0237698db09",
+  "a18fbe75c9d8de36",
+  "cb20fa4240c86404"
+ ],
+ "enron_222_o": [
+  "71fc0dc474742a93",
+  "8f5161c7ea8bd5fb",
+  "8fe83de5acd53276",
+  "bf86a61eedf8da9b"
+ ],
+ "enron_222_r": [
+  "71fc0dc474742a93",
+  "8f5161c7ea8bd5fb",
+  "8fe83de5acd53276",
+  "bf86a61eedf8da9b"
+ ],
+ "enron_223_o": [
+  "02caab26df9b2be8",
+  "1a59216dfdbd1e0a",
+  "4a9a0322d30a9389",
+  "8146cff45272c043",
+  "c3649af4bf0330fb",
+  "e21ae5911535e2f9"
+ ],
+ "enron_223_r": [
+  "02caab26df9b2be8",
+  "1a59216dfdbd1e0a",
+  "4a9a0322d30a9389",
+  "8146cff45272c043",
+  "c3649af4bf0330fb",
+  "e21ae5911535e2f9"
+ ],
+ "enron_224_o": [
+  "32c562e55b414afd",
+  "fea2ac702c3a2250"
+ ],
+ "enron_224_r": [
+  "32c562e55b414afd",
+  "fea2ac702c3a2250"
+ ],
+ "enron_225_o": [
+  "1bd9167546bcb8a1",
+  "558c3ad1971d9343",
+  "5d4aab9acf5c0a8e",
+  "6bfb4d6c8389de23",
+  "76c3f5262213eed3",
+  "886e2821e7c0b9ad",
+  "b418a0afb1ab6fc4",
+  "e97e6fe46389565f"
+ ],
+ "enron_225_r": [
+  "1bd9167546bcb8a1",
+  "558c3ad1971d9343",
+  "5d4aab9acf5c0a8e",
+  "6bfb4d6c8389de23",
+  "76c3f5262213eed3",
+  "886e2821e7c0b9ad",
+  "b418a0afb1ab6fc4",
+  "e97e6fe46389565f"
+ ],
+ "enron_226_o": [
+  "2312e5cf13898a2a",
+  "85932a0953878eca",
+  "8f5b2ad789cc2b18",
+  "93b03ac41da64a9c",
+  "9bc391e05403d81f",
+  "bf440e37f69836e7",
+  "cedeb73e5e46e6bc",
+  "d14b3c1cdf5d6f48",
+  "f11b1b8d7ab015ba",
+  "f18fcd39b7c2b6ac"
+ ],
+ "enron_226_r": [
+  "2312e5cf13898a2a",
+  "85932a0953878eca",
+  "8f5b2ad789cc2b18",
+  "93b03ac41da64a9c",
+  "9bc391e05403d81f",
+  "bf440e37f69836e7",
+  "cedeb73e5e46e6bc",
+  "d14b3c1cdf5d6f48",
+  "f11b1b8d7ab015ba",
+  "f18fcd39b7c2b6ac"
+ ],
+ "enron_227_o": [
+  "3e7ba9f24b5eb895",
+  "459718eba32b4913",
+  "8398e97d280d7c6c",
+  "8f0230bb6f39582c",
+  "ab3898c1c7036d16",
+  "c357e2d5462d853c",
+  "d3537e516e11126d"
+ ],
+ "enron_227_r": [
+  "3e7ba9f24b5eb895",
+  "459718eba32b4913",
+  "8398e97d280d7c6c",
+  "8f0230bb6f39582c",
+  "ab3898c1c7036d16",
+  "c357e2d5462d853c",
+  "d3537e516e11126d"
+ ],
+ "enron_228_o": [
+  "17b563df4b0f43d9",
+  "2b29bad1b3d32dcf",
+  "a556e9dbdb315c19",
+  "e3484688d8b53340"
+ ],
+ "enron_228_r": [
+  "17b563df4b0f43d9",
+  "2b29bad1b3d32dcf",
+  "a556e9dbdb315c19",
+  "e3484688d8b53340"
+ ],
+ "enron_229_o": [
+  "33090802ef5e0e7f",
+  "8897080bc6f77fae",
+  "bc345e21d18076fb"
+ ],
+ "enron_229_r": [
+  "33090802ef5e0e7f",
+  "8897080bc6f77fae",
+  "bc345e21d18076fb"
+ ],
+ "enron_230_o": [
+  "3e5bd543ca11daa5",
+  "98a5503710383043",
+  "dea69043da09c506"
+ ],
+ "enron_230_r": [
+  "3e5bd543ca11daa5",
+  "98a5503710383043",
+  "dea69043da09c506"
+ ],
+ "enron_231_o": [
+  "8fa865f25926e149",
+  "bcdfaee12bc802b9"
+ ],
+ "enron_231_r": [
+  "8fa865f25926e149",
+  "bcdfaee12bc802b9"
+ ],
+ "enron_232_o": [
+  "4c93e813466a3795",
+  "a9a8d91a816f06a9",
+  "f8ec10cd4552100e",
+  "fdc9ed5e9b1935c9"
+ ],
+ "enron_232_r": [
+  "4c93e813466a3795",
+  "a9a8d91a816f06a9",
+  "f8ec10cd4552100e",
+  "fdc9ed5e9b1935c9"
+ ],
+ "enron_233_o": [
+  "189142c958a79076",
+  "a6263c340fa046a3",
+  "cb9e0b4c1dcc9085",
+  "cc3a8266575fd161",
+  "f9f44fe475a1eefc"
+ ],
+ "enron_233_r": [
+  "189142c958a79076",
+  "a6263c340fa046a3",
+  "cb9e0b4c1dcc9085",
+  "cc3a8266575fd161",
+  "f9f44fe475a1eefc"
+ ],
+ "enron_234_o": [
+  "0b6f734fe0a86c0f",
+  "2e1c5684a215d5f4",
+  "3ec53edafe752c03"
+ ],
+ "enron_234_r": [
+  "0b6f734fe0a86c0f",
+  "2e1c5684a215d5f4",
+  "3ec53edafe752c03"
+ ],
+ "enron_235_o": [
+  "37f9f0148d1f5bfd",
+  "552b922e8a55e330",
+  "88ebc57922cb6dae",
+  "b76a144d7dae4720",
+  "d040478fe5dcefde",
+  "d75af38402641b80"
+ ],
+ "enron_235_r": [
+  "37f9f0148d1f5bfd",
+  "552b922e8a55e330",
+  "88ebc57922cb6dae",
+  "b76a144d7dae4720",
+  "d040478fe5dcefde",
+  "d75af38402641b80"
+ ],
+ "enron_236_o": [
+  "bb75b1bcde7a9110",
+  "e35ef3257050c759"
+ ],
+ "enron_236_r": [
+  "bb75b1bcde7a9110",
+  "e35ef3257050c759"
+ ],
+ "enron_237_o": [
+  "390defa75b5ef013",
+  "d4a01591f235ce2c"
+ ],
+ "enron_237_r": [
+  "390defa75b5ef013",
+  "d4a01591f235ce2c"
+ ],
+ "enron_238_o": [
+  "6c4801e911a74b1c",
+  "b44e7dc690cedf2a",
+  "e7760c79f279e81a"
+ ],
+ "enron_238_r": [
+  "6c4801e911a74b1c",
+  "b44e7dc690cedf2a",
+  "e7760c79f279e81a"
+ ],
+ "enron_239_o": [
+  "224429718b444454",
+  "3d3b58e4e815cb55",
+  "6f4f46ad892acf1a",
+  "a2cb10befeb9702d",
+  "ae65935dbe99f436",
+  "b51b94fbb9a7fb96",
+  "d29f9e2eba1a651f"
+ ],
+ "enron_239_r": [
+  "224429718b444454",
+  "3d3b58e4e815cb55",
+  "6f4f46ad892acf1a",
+  "a2cb10befeb9702d",
+  "ae65935dbe99f436",
+  "b51b94fbb9a7fb96",
+  "d29f9e2eba1a651f"
+ ],
+ "enron_240_o": [
+  "5eda677ee3cbd164",
+  "c482d6f143baee48"
+ ],
+ "enron_240_r": [
+  "5eda677ee3cbd164",
+  "c482d6f143baee48"
+ ],
+ "enron_241_o": [
+  "110ca8977a69bce4",
+  "3124a00892ef3497",
+  "c874b4a86dda10b2"
+ ],
+ "enron_241_r": [
+  "110ca8977a69bce4",
+  "3124a00892ef3497",
+  "c874b4a86dda10b2"
+ ],
+ "enron_242_o": [
+  "dc91e7489180a9df",
+  "f6b92c248fb82825"
+ ],
+ "enron_242_r": [
+  "dc91e7489180a9df",
+  "f6b92c248fb82825"
+ ],
+ "enron_243_o": [
+  "0a107a6e7b0790d4",
+  "146b7cd4e2b008a0",
+  "bfdf394d5e3b940a",
+  "f0e5a9c240b0b8d1"
+ ],
+ "enron_243_r": [
+  "0a107a6e7b0790d4",
+  "146b7cd4e2b008a0",
+  "bfdf394d5e3b940a",
+  "f0e5a9c240b0b8d1"
+ ],
+ "enron_244_o": [
+  "1d0a32f73247de44",
+  "7adf9f84f7e1b3ce",
+  "808e9ca7a1984644"
+ ],
+ "enron_244_r": [
+  "1d0a32f73247de44",
+  "7adf9f84f7e1b3ce",
+  "808e9ca7a1984644"
+ ],
+ "enron_245_o": [
+  "23b96d7e09ec6fae",
+  "45a1ded293828cf9",
+  "7d08f4cb866f30ca",
+  "88a80a2b55ff00bc"
+ ],
+ "enron_245_r": [
+  "23b96d7e09ec6fae",
+  "45a1ded293828cf9",
+  "7d08f4cb866f30ca",
+  "88a80a2b55ff00bc"
+ ],
+ "enron_246_o": [
+  "02b2047df05c1600",
+  "7803af400956e7fa",
+  "c94db45d1f5071c4"
+ ],
+ "enron_246_r": [
+  "02b2047df05c1600",
+  "7803af400956e7fa",
+  "c94db45d1f5071c4"
+ ],
+ "enron_247_o": [
+  "583de83e0046b5b2",
+  "ab3a95a7bb5d3d47",
+  "c8462d493c76a206",
+  "de94776d6bace35f"
+ ],
+ "enron_247_r": [
+  "583de83e0046b5b2",
+  "ab3a95a7bb5d3d47",
+  "c8462d493c76a206",
+  "de94776d6bace35f"
+ ],
+ "enron_248_o": [
+  "8b3e655878473b4d",
+  "9f1b8c590126e885",
+  "d5f6973b22ef37b9",
+  "f05cffa768bf69f1"
+ ],
+ "enron_248_r": [
+  "8b3e655878473b4d",
+  "9f1b8c590126e885",
+  "d5f6973b22ef37b9",
+  "f05cffa768bf69f1"
+ ],
+ "enron_249_o": [
+  "21d728e296628ed1",
+  "449ecd710bbbf99b",
+  "5bedf81d9ecc5dce",
+  "64b65cec90226cc8",
+  "b66e4fff17b9984a",
+  "cd25df32fb3825ee"
+ ],
+ "enron_249_r": [
+  "21d728e296628ed1",
+  "449ecd710bbbf99b",
+  "5bedf81d9ecc5dce",
+  "64b65cec90226cc8",
+  "b66e4fff17b9984a",
+  "cd25df32fb3825ee"
+ ]
+}

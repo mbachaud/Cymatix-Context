@@ -10,6 +10,7 @@ inside ``run()`` so `cymatix --help` stays sub-100ms cold-start.
 from __future__ import annotations
 
 import argparse
+import logging
 import ntpath
 import os
 import sys
@@ -105,8 +106,20 @@ def _build_parser() -> argparse.ArgumentParser:
         "serve",
         help="(DEFERRED in v1 — run the HTTP proxy via `cymatix-server`)",
     )
+    sub.add_parser(
+        "plugins",
+        help="List installed add-ons (`cymatix plugins list`).",
+    )
 
     return parser
+
+
+# Names owned by core; plugins can never claim these.
+BUILTIN_COMMANDS = frozenset({
+    "query", "packet", "refresh-targets", "document", "gene", "neighbors",
+    "ingest", "status", "diag", "config", "mcp", "compare", "trace", "serve",
+    "plugins",
+})
 
 
 def _resolve(name: str) -> Optional[Callable[[list[str]], int]]:
@@ -150,6 +163,9 @@ def _resolve(name: str) -> Optional[Callable[[list[str]], int]]:
     if name == "serve":
         from . import cmd_serve
         return cmd_serve.run
+    if name == "plugins":
+        from . import cmd_plugins
+        return cmd_plugins.run
     return None
 
 
@@ -164,6 +180,22 @@ def main(argv: Optional[list[str]] = None) -> int:
     if not argv:
         parser.print_help(file=sys.stderr)
         return output.EXIT_ERROR
+
+    # A non-builtin first token may be a command contributed by a plugin.
+    # Discovery happens only here (and in `cymatix plugins`), so builtin
+    # commands never pay for it.
+    if argv[0] not in BUILTIN_COMMANDS and not argv[0].startswith("-"):
+        from .cmd_plugins import plugin_cli_commands
+
+        try:
+            plugin_cmd = plugin_cli_commands(set(BUILTIN_COMMANDS)).get(argv[0])
+        except Exception:  # noqa: BLE001 - discovery must never break the CLI
+            logging.getLogger(__name__).warning(
+                "plugin discovery failed; continuing without plugins", exc_info=True
+            )
+            plugin_cmd = None
+        if plugin_cmd is not None:
+            return plugin_cmd(argv[1:])
 
     # Let argparse handle top-level flags (--help → SystemExit(0); unknown
     # subcommand → SystemExit(2); future --version / --verbose work as

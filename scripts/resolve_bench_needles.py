@@ -85,7 +85,7 @@ def main(argv=None) -> int:
     log.info("%d needles, %d gold entries", len(needles_in), len(gold_paths))
 
     def abs_path(rel: str) -> str:
-        return str(corpus_root / rel.replace("/", "\\"))
+        return str(corpus_root.joinpath(*rel.split("/")))  # native separators (Windows output unchanged)
 
     wanted = sorted({abs_path(p) for paths in gold_paths.values() for p in paths})
     size_gated: dict[str, int] = {}
