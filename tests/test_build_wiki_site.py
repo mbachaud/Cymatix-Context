@@ -96,6 +96,28 @@ class TestBuildRendersPagesAndRewritesLinks:
         ).read_text(encoding="utf-8")
         assert 'href="/wiki/"' in page
 
+    def test_page_anchor_link_rewrites_and_keeps_fragment(self, tmp_path, mod):
+        """Regression: `Page#anchor` links were left as raw page names (the
+        href pattern excluded '#'), so they 404'd on cymatixcontext.com."""
+        wiki = tmp_path / "wiki"
+        wiki.mkdir()
+        (wiki / "Home.md").write_text("# Home\nhello", encoding="utf-8")
+        (wiki / "HTTP-API.md").write_text("# HTTP API\nhello", encoding="utf-8")
+        (wiki / "Configuration.md").write_text(
+            "# Configuration\n"
+            "See [ids](HTTP-API#packet-ids-and-traces), "
+            "[top](Home#intro), and [gone](No-Such-Page#x).",
+            encoding="utf-8",
+        )
+        mod.build(wiki_dir=wiki, site_dir=tmp_path / "site")
+        page = (
+            tmp_path / "site" / "public" / "wiki" / "configuration" / "index.html"
+        ).read_text(encoding="utf-8")
+        assert 'href="/wiki/http-api/#packet-ids-and-traces"' in page
+        assert 'href="/wiki/#intro"' in page
+        # Unknown pages are still left alone, fragment and all.
+        assert 'href="No-Such-Page#x"' in page
+
 
 @requires_markdown
 class TestTitleAndCanonical:
