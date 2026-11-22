@@ -136,7 +136,8 @@ machine-readable summary.
   `cymatix_health` and the five `cymatix_document_*` read tools, and refuses
   to start if the surface cannot be pruned to exactly that set.
 - Identity, the optional `CYMATIX_MCP_HTTP_TOKEN` bearer, and the session
-  rules for this transport: [MCP and IDE Integration](MCP-and-IDE-Integration#streamable-http-transport-0120).
+  rules for this transport: "Streamable HTTP transport" on
+  [MCP and IDE Integration](MCP-and-IDE-Integration).
 - Exit **0** clean stop, **2** unknown lane, non-loopback host or missing
   `--http`.
 
@@ -173,8 +174,8 @@ machine-readable summary.
   whether its signature verified, and status (`loaded`, `skipped` or
   `disabled`, with the reason). Exit **0**.
 - A plugin can add its own subcommands. They run as `cymatix <command> ...`
-  but are not listed in `cymatix --help`. Configuration:
-  [`[plugins]`](Configuration#plugins-optional-add-ons-0120).
+  but are not listed in `cymatix --help`. Configuration: `[plugins]` on
+  [Configuration](Configuration).
 
 ## The `--json` agent workflow
 
