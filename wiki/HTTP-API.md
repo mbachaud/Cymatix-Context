@@ -282,7 +282,7 @@ The `know` branch replaces the `miss` object with:
 ```
 
 **Calibration honesty:** the contract *shape* is stable and load-bearing, but
-`confidence` is not. At shipped defaults (unchanged through 0.11.3) the KnowBlock effectively never
+`confidence` is not. At shipped defaults (unchanged through 0.12.0) the KnowBlock effectively never
 fires — measured maximum confidence ≈ 0.28 against an `emit_floor` of 0.45,
 because the `lexical_dense_agree` feature is structurally dead on the
 neural-free path. That fails safe (0% false-KNOW) but it means you should

@@ -9,15 +9,21 @@
   whatever agent called `/context` in the first place.
 - Every turn ends at the same fork: `know { found, confidence, gene_id_match }`
   or `miss { reason, escalate_to }`. See [Agent Contract](Agent-Contract).
-- This page documents **v0.11.3**. The wave-1 ranking flip
+- This page documents **v0.12.0**. The wave-1 ranking flip
   ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)) and the
   `min_delivered_docs` seat floor
   ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)) shipped in
   v0.9.1 (2026-08-30) and are marked where they appear. No release from
-  0.10.0 through 0.11.3 changed a shipped retrieval or delivery default, and
-  every 947k release witness in that run reproduced the one before it exactly
-  (314/470 delivered, 0/470 per-needle differences; 0.11.0 shipped without a
-  witness by owner decision). Everything those releases added to this path is
+  0.10.0 through 0.12.0 changed a shipped retrieval or delivery default.
+  Every 947k release witness from 0.10.0 through the 0.11.4 merge reproduced
+  the one before it exactly (314/470 delivered, 0/470 per-needle
+  differences; 0.11.0 shipped without a witness by owner decision).
+  **0.12.0 shipped without a 947k witness, by owner waiver.** Three of its
+  fixes touch this path: per-thread score read-back (#537), the serialized
+  `:memory:` connection (#536) and `corpus_size()` memo invalidation
+  (#533). Each merged on its own test-first receipt, and #537 and #536 leave
+  single-threaded and file-backed results unchanged, but 0.12.0 retrieval
+  numbers are unwitnessed. Everything those releases added to this path is
   opt-in and marked as such below.
 
 ![The seven-stage pipeline](assets/pipeline-flow.svg)

@@ -107,7 +107,7 @@ The full tuple, in wire order (clients that index into it depend on the order):
 
 ## The confidence honesty block
 
-- **At shipped defaults (unchanged through 0.11.3) the `know` block effectively never fires.** The
+- **At shipped defaults (unchanged through 0.12.0) the `know` block effectively never fires.** The
   measured maximum confidence is **≈ 0.28** against a shipped `[know] emit_floor`
   of **0.45**, so the discriminator falls through to `miss(reason="sparse")`
   instead of emitting a `KnowBlock`.
