@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## 0.12.0 (2026-11-21)
+
+- **Release gate: no 947k witness (owner waiver).** This release was not
+  witnessed against v0.11.4 on the 947k ERB bed. Three changes in it touch
+  the retrieval path: per-thread score read-back (#537), the serialized
+  `:memory:` connection (#536) and `corpus_size()` memo invalidation
+  (#533). Each was merged on its own test-first receipt: #537 and #536
+  state single-threaded and file-backed results are unchanged, and #533
+  changes only queries that run within 60 s of an in-process write. CI
+  (full non-live suite on Linux, Windows and macOS) passed on the release
+  head. Treat v0.12.0 retrieval numbers as unwitnessed until a witness row
+  lands in `docs/benchmarks/BASELINES.md`.
+
 - **feat(plugins): a connector for optional add-ons.** Installed packages
   (entry-point group `cymatix.plugins`) and signed directory plugins can add
   CLI commands, supervised services, launcher routes and panels, and tray
@@ -56,6 +69,25 @@
   pypi.org unless you opt in with `CYMATIX_LAUNCHER_UPDATE_CHECK=1`
   (`true` / `yes` / `on` also work). Before, it was on unless set to `0`.
   If you relied on the tray's update notice, set the variable to `1`.
+
+- **fix(store): `corpus_size()` no longer goes stale during in-process
+  ingest** (PR #533). The document count was memoized for 60 s and no write
+  cleared it, so the IDF lexical-anchor tier could use an old N in an
+  ingest, query, ingest, query chain (one replay used N = 698 against a true
+  N of up to 2,604), and fresh-ingest rebuilds did not reproduce.
+  `upsert_doc`, `delete_gene` and the outermost `deferred_commits` commit now
+  drop the memo; the 60 s TTL only bounds other processes' writes. Also adds
+  the compaction-recall stage-1 bench (`benchmarks/compaction_recall/`).
+
+- **fix(tray): auto-restart finds `start-cymatix-tray.bat`** (PR #540). It
+  looked for `Start-cymatix-tray.bat`, which fails on case-sensitive
+  filesystems. The same PR repoints stale imports in `scripts/` and
+  `benchmarks/`, removes byte-identical duplicate files, and moves retired
+  scripts, uncited bench data and finished design docs to `archive/` and
+  `docs/archive/` (excluded from the sdist).
+
+- **fix(bench): `resolve_bench_needles` uses native path separators** (PR
+  #534), so needle resolution works on Linux. Bench-only.
 
 ## 0.11.4 (2026-10-26)
 
