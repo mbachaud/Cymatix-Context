@@ -19,8 +19,10 @@ public/wiki/assets/.
 Intra-wiki links written the normal markdown way -- [text](Page-Name), the
 form that also resolves correctly on github.com/.../wiki -- are rewritten
 to the site's URL scheme: href="Page-Name" -> href="/wiki/page-name/", and
-href="Home" -> href="/wiki/". External URLs, anchors, and asset-relative
-hrefs are left untouched (see _rewrite_intrawiki_hrefs).
+href="Home" -> href="/wiki/". A `#fragment` is carried across:
+href="Page-Name#sec" -> href="/wiki/page-name/#sec". External URLs,
+same-page anchors, and asset-relative hrefs are left untouched (see
+_rewrite_intrawiki_hrefs).
 
 Diagrams embedded the normal markdown way -- ![alt](assets/foo.svg) --
 render to <img src="assets/foo.svg">, which resolves relative to the page
@@ -107,12 +109,13 @@ __CONTENT__
 # than a bare `href="..."` anywhere in the rendered HTML) keeps this from
 # corrupting a literal `href="Home"` that shows up as prose or inside
 # <code>/<pre> (e.g. a wiki page documenting markdown link syntax). Within
-# the href value itself, only bare page-name text (letters, digits,
-# hyphens -- no scheme, slash, or anchor) is even a candidate; that
-# character class alone already excludes external URLs (contain "://"),
-# anchors (contain "#"), and asset-relative paths (contain "/") -- see
+# the href value itself, only a bare page name (letters, digits, hyphens --
+# no scheme or slash), optionally followed by a `#fragment`, is a candidate;
+# that alone already excludes external URLs (contain "://"), same-page
+# anchors (start with "#"), and asset-relative paths (contain "/") -- see
 # _rewrite_intrawiki_hrefs for the second gate (must also be a known page).
-_HREF_RE = re.compile(r'(<a\b[^>]*\bhref=")([A-Za-z0-9-]+)(")')
+# The fragment is kept verbatim: `Page#anchor` -> `/wiki/page/#anchor`.
+_HREF_RE = re.compile(r'(<a\b[^>]*\bhref=")([A-Za-z0-9-]+)(#[^"]*)?(")')
 
 # Same tag-scoped technique as _HREF_RE, for <img src="assets/...">: only
 # src attributes on real <img ...> tags that start with the literal
@@ -157,9 +160,9 @@ def _extract_title(markdown_text: str, stem: str) -> str:
 
 def _rewrite_intrawiki_hrefs(html_fragment: str, href_targets: dict[str, str]) -> str:
     def _replace(match: re.Match) -> str:
-        prefix, stem, suffix = match.group(1), match.group(2), match.group(3)
+        prefix, stem, fragment, suffix = match.group(1, 2, 3, 4)
         if stem in href_targets:
-            return f"{prefix}{href_targets[stem]}{suffix}"
+            return f"{prefix}{href_targets[stem]}{fragment or ''}{suffix}"
         return match.group(0)
 
     return _HREF_RE.sub(_replace, html_fragment)
