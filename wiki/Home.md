@@ -4,15 +4,17 @@ Coordinate-index engine for LLM agents. It retrieves, weighs, and compresses
 a corpus into a context window — without a single LLM call on the retrieval
 path.
 
-- **Version:** this wiki documents **v0.11.3**, released 2026-10-11
-  (tag `v0.11.3`, PyPI `0.11.3`). The prior v0.11.2 release was published
-  2026-10-10. No release since v0.10.0 changes a shipped retrieval or
-  delivery default; the 0.11.x additions (multi-lane serving, delta sync,
-  per-store Freeze, packet trace) are opt-in or launcher-side. Changes are
-  cited by PR number where they appear. **0.11.4** is merged to `master`
-  (2026-10-26) and passed its release witness, but is not yet tagged or on
-  PyPI. It adds only opt-in experiments (an external packet judge,
-  char-basis chunk caps) and fixes.
+- **Version:** this wiki documents **v0.12.0**, released 2026-11-21
+  (tag `v0.12.0` on `bd1b5193`, PyPI `0.12.0`). It adds a plugin connector
+  for optional add-ons and a loopback streamable-HTTP transport for the MCP
+  tools. **0.11.4** was merged to `master` (2026-10-26) and passed its
+  release witness, but was never tagged or published to PyPI; its contents
+  (opt-in experiments such as an external packet judge and char-basis chunk
+  caps, plus fixes) shipped inside 0.12.0. The last release before 0.12.0 on
+  PyPI was v0.11.3 (2026-10-11). No release since v0.10.0 changes a shipped
+  retrieval or delivery default; the additions are opt-in or launcher-side.
+  0.12.0 shipped without a 947k witness, by owner waiver. Changes are cited
+  by PR number where they appear.
   The Tier-2 lexicon aliases the pages present as canonical
   ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)) follow the 0.9.1 tag and are not in the 0.9.1 wheel — on that
   wheel the legacy spellings are the ones that resolve. See

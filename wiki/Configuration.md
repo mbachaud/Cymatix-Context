@@ -19,7 +19,7 @@
   [Lexicon](Lexicon). The aliases come from the Tier-2 lexicon pass
   ([#419](https://github.com/mbachaud/Cymatix-Context/pull/419)), which follows the 0.9.1 tag — on a 0.9.1 wheel only the legacy
   spellings resolve.
-- This page documents **v0.11.3** (released 2026-10-11). The wave-1 ranking
+- This page documents **v0.12.0** (released 2026-11-21). The wave-1 ranking
   defaults ([#407](https://github.com/mbachaud/Cymatix-Context/pull/407)),
   the delivered-seat floor and its graduation to 12
   ([#409](https://github.com/mbachaud/Cymatix-Context/pull/409)), the entity
@@ -29,10 +29,11 @@
   ([#413](https://github.com/mbachaud/Cymatix-Context/pull/413)) all shipped
   in v0.9.1 (released 2026-08-30) and are cited where they appear.
 - **No shipped retrieval or delivery default has changed since 0.9.2.**
-  Everything added in 0.10.0 through 0.11.3 is opt-in or launcher-side; see
-  [Opt-in since 0.9.2](#opt-in-since-092). The knobs from 0.11.4 (merged to
-  `master`, not yet tagged or on PyPI) are opt-in too and are listed there
-  under their own heading.
+  Everything added in 0.10.0 through 0.12.0 is opt-in or launcher-side; see
+  [Opt-in since 0.9.2](#opt-in-since-092). 0.11.4 was never tagged or
+  published to PyPI; its knobs first ship in the 0.12.0 wheel and are listed
+  under their own heading there. 0.12.0 adds `[plugins]`, which is on by
+  default but does nothing until an add-on is installed.
 
 ## Where a value comes from
 
@@ -103,6 +104,7 @@ destination, so passing both is plain last-wins. See [CLI](CLI).)
 | `[plr]` | The PLR query-confidence head that decorates `/context/packet`. | `enabled = true`, `model_path = "training/models/stacked_plr.joblib"`, `expected_sha256 = ""` (empty trusts the trainer's `.sha256` sidecar), `high_risk_threshold = 0.5` |
 | `[know]` | The KnowBlock confidence logistic and its calibration provenance. | `emit_floor = 0.45`, `s_ref = 4.2503`, `g_ref = 0.4386`, `betas` (6 coefficients), `calibrated_at` / `calibrated_on_n` written by `scripts/calibrate_know_confidence.py`, `stale_after_days = 30`. Opt-in since 0.11.1/0.11.2: `model = "legacy"` (or `"lanes"`), `lanes_intercept`, `lanes_betas`, `lanes_platt_a = 1.0`, `lanes_platt_b = 0.0`, `lanes_ce_model = ""`, `neutral` / `fitted_inputs` (unset) |
 | `[sync]` | In-process delta sync of tracked folders (0.11.0). | `enabled = false`, `roots = []`, `include` (same extension set as `cymatix ingest`), `exclude` (`.git`, `node_modules`, `.venv`, …), `interval_s = 30`, `max_delete_fraction = 0.2`, `max_files_per_pass = 200`, `max_file_bytes = 2000000` |
+| `[plugins]` | Optional add-ons found through the `cymatix.plugins` entry-point group or the plugin directory (0.12.0). Core works the same with none installed. | `enabled = true` (`false` = no discovery, nothing imported), `disabled = []` (names to skip), `dir = ""` (= `<user data dir>/cymatix/plugins`) |
 | `[mem_sync]` | Auto-sync of a watched notes directory into the store. Consumed by `scripts/run_mem_sync.py`, not by the server. | `enabled = false`, `watch_dirs = []`, `sync_interval_s = 60`, `agent_kind = "claude-code"` |
 | `[synonyms]` | Query-keyword → tag expansion. Flat `key = [values]` map; read once at start. | Ships ~40 rows (`cache`, `auth`, `db`, `api`, …). **Add your own project vocabulary here** — see the note below |
 | `[abstain]` | Confidence floors for the ABSTAIN tier. | `mode = "global"` (legacy hard-coded floors, byte-for-byte), `ratio_threshold = 1.8` (additive), `ratio_threshold_rrf_norm = 1.5` (RRF). `"per_classifier"` requires an `[abstain.default]` sub-table |
@@ -253,10 +255,14 @@ entity_autolink_hub_cutoff = 200  # default since 0.9.2 (#425, closes #411); 0 =
 ## Opt-in since 0.9.2
 
 Every knob below ships off (or at a value that reproduces the released
-behavior byte-for-byte). Releases 0.11.1, 0.11.2 and 0.11.3 each passed the
-947k merged-stack witness with 0/470 per-needle differences; 0.11.0 shipped
-without one by owner decision, since nothing on the retrieval or delivery
-path changed. See [Roadmap and Releases](Roadmap-and-Releases).
+behavior byte-for-byte). Releases 0.11.1, 0.11.2 and 0.11.3, and the
+never-published 0.11.4 merge, each passed the 947k merged-stack witness with
+0/470 per-needle differences; 0.11.0 shipped without one by owner decision,
+since nothing on the retrieval or delivery path changed. **0.12.0 shipped
+without a 947k witness, by owner waiver**: three of its fixes touch the
+retrieval path (#537, #536, #533) and each merged on its own test-first
+receipt, so treat 0.12.0 retrieval numbers as unwitnessed. See
+[Roadmap and Releases](Roadmap-and-Releases).
 
 ### Full-text delivery and companions (0.10.0)
 
@@ -374,10 +380,11 @@ Database panel.
 - It stays opt-in: calibration does not transfer across corpora yet. Numbers
   and caveats: [Agent Contract](Agent-Contract#the-confidence-honesty-block).
 
-### New in 0.11.4 (merged, not yet published)
+### New in 0.11.4 (first published in 0.12.0)
 
-These are in the `master` tree but not in any wheel yet; a 0.11.3 install
-does not act on them.
+0.11.4 was merged to `master` on 2026-10-26 but never tagged or published to
+PyPI. Its contents shipped inside 0.12.0, so these knobs need a 0.12.0
+install; a 0.11.3 install does not act on them.
 
 **`[system_one]`: an external packet judge (experimental).**
 
@@ -424,6 +431,31 @@ are not a default-flip receipt, are on
   `CYMATIX_COVER_INDEX_AUTOBUILD=0` turns it off, and
   `scripts/migrate_genes_cover_index.py` builds it explicitly. Results are
   identical with or without the index.
+
+### `[plugins]`: optional add-ons (0.12.0)
+
+```toml
+[plugins]
+enabled = true     # false = no discovery at all; nothing is imported
+disabled = []      # plugin names to skip (reported as skipped)
+dir = ""           # "" = <user data dir>/cymatix/plugins
+```
+
+- Add-ons come from installed packages (entry-point group
+  `cymatix.plugins`) and from the plugin directory. They can add CLI
+  commands, supervised services, launcher routes and panels, and tray menu
+  items ([#542](https://github.com/mbachaud/Cymatix-Context/pull/542)).
+  Core behaves the same with none installed, and retrieval is unchanged.
+- **Directory plugins load only when signed.** Set
+  `CYMATIX_ALLOW_UNSIGNED_PLUGINS=1` to load unsigned ones. An exception in a
+  plugin hook disables that plugin for the process and never affects core.
+- `cymatix plugins list` shows each plugin's source, signature check and
+  status (see [CLI](CLI)). The launcher serves `GET /api/plugins` and
+  `POST /api/plugins/{name}/actions/{id}`; the action route requires the
+  header `X-Cymatix-Action: 1` and a loopback `Host`.
+- Both trays (Python and Electron) show plugin menu items. A loaded plugin
+  that reports a warn or error status turns a green tray icon amber, never
+  red.
 
 ## Security knobs
 
@@ -491,6 +523,9 @@ All process-level overrides use the `CYMATIX_` prefix and beat the TOML file.
 | `CYMATIX_OTEL_*` | `[telemetry]` — see the precedence note below |
 | `CYMATIX_TRACE_ENABLED`, `CYMATIX_TRACE_LEVEL`, `CYMATIX_TRACE_PATH` | `[trace] enabled` / `level` / `path`, resolved at use time like the OTel set |
 | `CYMATIX_ADMIN_TOKEN` | Client side, not a server override: the bearer the MCP proxy and `cymatix compare` send. The server reads `[server] admin_token` |
+| `CYMATIX_MCP_HTTP_TOKEN` | Optional bearer for `cymatix mcp serve --http` (0.12.0): when set, a request without `Authorization: Bearer <token>` gets 401 |
+| `CYMATIX_ALLOW_UNSIGNED_PLUGINS` | `1` loads unsigned directory plugins (0.12.0); otherwise only signed ones load |
+| `CYMATIX_LAUNCHER_UPDATE_CHECK` | `1` (or `true` / `yes` / `on`) turns on the launcher's PyPI update check. **Off by default since 0.12.0** ([#481](https://github.com/mbachaud/Cymatix-Context/issues/481)); before, it was on unless set to `0` |
 
 **The OTel rule is env-wins in both directions.** `CYMATIX_OTEL_ENABLED=0`
 silences a `[telemetry] enabled = true`, and the tray launcher's auto-export of

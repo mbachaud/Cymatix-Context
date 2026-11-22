@@ -233,7 +233,7 @@ artifacts. Fresh receipt on a 2,000-file deterministic EnronQA sample, seed
 
 ## Release witnesses (947k bed)
 
-Every final release from 0.9.2 on, except 0.11.0, carries a merged-stack
+Every final release from 0.9.2 on, except 0.11.0 and 0.12.0, carries a merged-stack
 witness: the integrated release candidate re-run as a whole on the 947k ERB bed
 (947,531 documents, gene-id set `729ca5d9…`, `ingest_c = 6`, tagger v1) with the
 shipped `cymatix.toml`, the full ordered 470-needle bank, k=12, baseline arm
@@ -242,7 +242,8 @@ the witness it is paired against.
 
 | Release | Witness run | Commit | Paired against | Delivered | r@12 / final r@12 | Verdict |
 |---|---|---|---|---|---|---|
-| 0.11.4 (merged to `master` 2026-10-26; not yet tagged or on PyPI) | 2026-10-26 | `31ad8261` | v0.11.3 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 differences on 12 fields; packet tracing on, hash chain verified. The release head `9dc93527` adds only #513's BEIR bench files |
+| 0.12.0 | — | — | — | — | — | No witness (owner waiver). Three retrieval-path fixes (#537, #536, #533) merged on their own test-first receipts; treat 0.12.0 retrieval numbers as unwitnessed until a witness row lands in `docs/benchmarks/BASELINES.md` |
+| 0.11.4 (merged to `master` 2026-10-26; never tagged or published, contents shipped in 0.12.0) | 2026-10-26 | `31ad8261` | v0.11.3 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 differences on 12 fields; packet tracing on, hash chain verified. The release head `9dc93527` adds only #513's BEIR bench files |
 | 0.11.3 | 2026-10-11 | `00358af5` | v0.11.2 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 differences on 12 fields; packet tracing on, 470 packets written, hash chain verified |
 | 0.11.2 | 2026-10-09 | `83188261` | v0.10.0 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 on 11 fields |
 | 0.11.1 | 2026-10-07 | `1f039993` | v0.10.0 witness | 314/470 (0.6681) | 0.6809 / 0.683 | **EXACT_REPRODUCE**, 0/470 on 11 fields; a v0.11.0 control (`e3825e4b`) on the same bed also exact |

@@ -34,7 +34,9 @@
 | `cymatix mcp lanes` | List the configured lanes: name, role, URL, MCP entry name, store path (0.11.0) |
 | `cymatix mcp install --host H [--lane L]` | Point a chat host's MCP config at a lane (0.11.0) |
 | `cymatix compare --lanes A,B --queries FILE` | Run the same queries against two lanes and write a diff receipt (0.11.0) |
+| `cymatix mcp serve --http [--port N] [--lane L] [--profile P]` | Serve the MCP tools over loopback streamable HTTP for clients that cannot spawn a stdio process (0.12.0) |
 | `cymatix trace export --in SRC --out DIR` | Shareable, re-keyed export of metadata-level packet traces (0.11.3) |
+| `cymatix plugins list` | The add-ons found, with source, signature check and status (0.12.0) |
 | `cymatix serve` | Deferred. Prints a pointer at `cymatix-server` and exits **4** |
 
 `cymatix document` and `cymatix gene` resolve to the same module, so
@@ -108,7 +110,7 @@ Single-file inputs are extension-filtered too — `cymatix ingest binary.exe`
 errors rather than silently ingesting garbage. `--json` prints a
 machine-readable summary.
 
-## Lanes, compare, and trace export
+## Lanes, MCP over HTTP, compare, trace export, and plugins
 
 **`cymatix mcp install --host H [--lane L] [--scope workspace|user] [--dry-run]`**
 
@@ -122,6 +124,22 @@ machine-readable summary.
   without writing.
 - `--server-command` / `--server-arg` (repeatable) override the launch
   command; the desktop app passes its bundled engine here.
+
+**`cymatix mcp serve --http [--port N] [--lane NAME] [--profile lean|full|remote-read] [--host 127.0.0.1]`** (0.12.0)
+
+- Serves the MCP tools over stateless streamable HTTP at `/mcp`. Defaults:
+  port `11441`, lane `stable` (the lane's port becomes the proxied Cymatix
+  URL, as in `install`), profile `lean` (the same tools as stdio).
+- **Loopback only.** Any `--host` other than `127.0.0.1` exits **2**, and a
+  request whose `Host` or `Origin` is not loopback is rejected.
+- `remote-read` exposes only `cymatix_context`, `cymatix_context_packet`,
+  `cymatix_health` and the five `cymatix_document_*` read tools, and refuses
+  to start if the surface cannot be pruned to exactly that set.
+- Identity, the optional `CYMATIX_MCP_HTTP_TOKEN` bearer, and the session
+  rules for this transport: "Streamable HTTP transport" on
+  [MCP and IDE Integration](MCP-and-IDE-Integration).
+- Exit **0** clean stop, **2** unknown lane, non-loopback host or missing
+  `--http`.
 
 **`cymatix compare --lanes A,B --queries FILE [--max-docs N] [--out PATH] [--token T]`**
 
@@ -148,6 +166,16 @@ machine-readable summary.
   `pyarrow` is installed (the `trace-export` extra,
   `pip install "cymatix-context[trace-export]"`). Exit **1** when the export
   is refused or the input is missing.
+
+**`cymatix plugins list`** (0.12.0)
+
+- One row per add-on found in the `cymatix.plugins` entry-point group and the
+  plugin directory: name, version, source (`entry_point` or `directory`),
+  whether its signature verified, and status (`loaded`, `skipped` or
+  `disabled`, with the reason). Exit **0**.
+- A plugin can add its own subcommands. They run as `cymatix <command> ...`
+  but are not listed in `cymatix --help`. Configuration: `[plugins]` on
+  [Configuration](Configuration).
 
 ## The `--json` agent workflow
 
@@ -290,6 +318,9 @@ Exit **0** success, **1** if the stats call failed.
   — overrides the store path. Use `:memory:` for tests and ephemeral runs.
 - `CYMATIX_ADMIN_TOKEN` — the bearer `cymatix compare` sends (its `--token`
   default), for lanes with `[server] admin_token` set.
+- `CYMATIX_MCP_HTTP_TOKEN` — when set, `cymatix mcp serve --http` requires
+  `Authorization: Bearer <token>` on every request.
+- `CYMATIX_ALLOW_UNSIGNED_PLUGINS=1` — load unsigned directory plugins.
 
 Full env table: [Configuration](Configuration).
 

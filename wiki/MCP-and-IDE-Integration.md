@@ -9,6 +9,10 @@
   JSON-RPC to the host and proxies every tool call over HTTP to a running
   `cymatix-server`. It does no retrieval of its own — so the backend must be
   up, and everything on [Configuration](Configuration) applies unchanged.
+  Since 0.12.0 the same tools can also be served over loopback streamable
+  HTTP (`cymatix mcp serve --http`) for clients that cannot spawn a stdio
+  process; stdio stays the default. See
+  [Streamable HTTP transport](#streamable-http-transport-0120).
 - The default tool surface is deliberately **lean**. Every registered tool's
   name, description, and JSON schema is injected into the host's context on
   *every* turn, so the default profile is eleven core tools, hiding the admin,
@@ -79,6 +83,40 @@ existing entry it keeps your command, args, and `env` keys and rewrites only
 - On Windows, wrap the stdio launcher as `cmd /c python ...` when `python` is
   not directly resolvable in the host's spawn environment.
 
+## Streamable HTTP transport (0.12.0)
+
+```bash
+cymatix mcp serve --http                         # 127.0.0.1:11441, lane stable, profile lean
+cymatix mcp serve --http --profile remote-read   # read tools only
+```
+
+- Stateless streamable HTTP at `/mcp`, added in
+  [#543](https://github.com/mbachaud/Cymatix-Context/pull/543). Flags:
+  `--port` (default `11441`), `--lane` (default `stable`; that lane's port
+  becomes the proxied Cymatix URL), `--profile lean|full|remote-read`
+  (default `lean`, the same tools as stdio). Like stdio, it proxies to a
+  running `cymatix-server`.
+- **Loopback only.** `--host` other than `127.0.0.1` exits 2. DNS-rebinding
+  refusal: a request whose `Host` or `Origin` is not loopback is rejected.
+- **`remote-read`** exposes only the eight retrieval and document-read tools
+  (`cymatix_context`, `cymatix_context_packet`, `cymatix_health` and the five
+  `cymatix_document_*` tools), with no ingest or session tools. It fails
+  closed: the server refuses to start if the surface cannot be pruned to
+  exactly that set.
+- **Identity per request.** `X-Cymatix-Agent`, `X-Cymatix-User` and
+  `X-Cymatix-Party` override `CYMATIX_AGENT`, `CYMATIX_USER` and
+  `CYMATIX_PARTY_ID` for that request only. Values are trimmed, empty means
+  unset, and a value that does not match `^[A-Za-z0-9._:@-]{1,64}$` is
+  ignored. Stdio ignores these headers.
+- **The headers are labels, not authentication.** To require a credential,
+  set `CYMATIX_MCP_HTTP_TOKEN` when serving; a request without
+  `Authorization: Bearer <token>` then gets 401.
+- **No shared working set.** Over HTTP a caller's `session_id` is ignored and
+  session delivery elision is off (`ignore_delivered`), so remote clients
+  never share or touch another session's delivered set.
+- Retrieval-inert: the transport changes how tools are reached, not what
+  they return.
+
 ## The tool surface
 
 **Core set — what ships by default (eleven tools).**
@@ -99,7 +137,7 @@ existing entry it keeps your command, args, and `env` keys and rewrites only
 
 `cymatix_document_query` defaults its `session_id` to the MCP subprocess's own
 session, so repeated calls within one host session elide already-delivered
-documents automatically.
+documents automatically. (Over the HTTP transport, elision is off.)
 
 **Canonical and legacy names.** The five `document_*` tools are thin
 pass-throughs to existing handlers — identical behavior, better names.
@@ -157,6 +195,7 @@ falls back to a default that erodes attribution: badges read `unknown` and the
 | `CYMATIX_ORG` / `CYMATIX_USER` / `CYMATIX_AGENT` / `CYMATIX_DEVICE` | The four attribution layers stamped on ingested content |
 | `CYMATIX_ADMIN_TOKEN` | Sent as `Authorization: Bearer <token>` on every call (0.11.0). Set it when the server has `[server] admin_token`, or `cymatix_ingest` gets a 401 |
 | `CYMATIX_MCP_FULL` | Expose the full tool surface |
+| `CYMATIX_MCP_HTTP_TOKEN` | Server side, HTTP transport only (0.12.0): the bearer `cymatix mcp serve --http` requires when set |
 
 Per-host conventions:
 

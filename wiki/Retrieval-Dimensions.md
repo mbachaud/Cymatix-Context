@@ -16,7 +16,7 @@
 
 ## The dimensions
 
-| Dimension | Signal | Cost | Default state (v0.11.3) |
+| Dimension | Signal | Cost | Default state (v0.12.0) |
 |---|---|---|---|
 | **D1** Semantic content | FTS5 BM25 over document text; SPLADE sparse term expansion; SEMA 20-dim cosine as a cold fallthrough | A primary query cost — the lexical backbone the best-scoring arms lean on | **FTS5 on.** SPLADE **off** since 2026-08-16. SEMA cold tier **off** (`[context] cold_tier_enabled`) |
 | **D2** Tagging | Exact and prefix lookup against the ingest-time tag index, with query terms expanded through `[synonyms]` | ms-scale at 100k; a substantial per-query cost at 829k in the dated ledger | **on**; since 0.11.2 the prefix tier no longer errors on queries over 500 terms ([#483](https://github.com/mbachaud/Cymatix-Context/pull/483)) |

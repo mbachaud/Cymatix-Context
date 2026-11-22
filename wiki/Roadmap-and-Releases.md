@@ -12,21 +12,41 @@
   [`docs/ROADMAP.md`](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/ROADMAP.md)** —
   the sequencing layer that says which track a piece of work sits under.
 - **Install from PyPI:** `pip install cymatix-context`. Released versions are
-  git-tagged (`v0.11.3`, `v0.11.2`, `v0.11.1`, `v0.11.0`, `v0.10.0`, …) on the
-  repository; pre-releases (`vX.Y.ZbN`, cut from `beta`) install with
-  `pip install --pre cymatix-context`.
-- This wiki documents **v0.11.3** (2026-10-11), the newest published
-  release. Each item below carries its PR or issue number. The 0.11.4
-  release, merged to `master` but not yet tagged or on PyPI, is listed
-  first; the published release sections follow, newest first.
+  git-tagged (`v0.12.0`, `v0.11.3`, `v0.11.2`, `v0.11.1`, `v0.11.0`,
+  `v0.10.0`, …) on the repository; pre-releases (`vX.Y.ZbN`, cut from
+  `beta`) install with `pip install --pre cymatix-context`.
+- This wiki documents **v0.12.0** (2026-11-21), the newest published
+  release. Each item below carries its PR or issue number. Sections run
+  newest first.
 
-## 0.11.4 — merged to `master` 2026-10-26, not yet published
+## 0.12.0 (2026-11-21) — release contents
+
+Published on PyPI and GitHub, tag `v0.12.0` on `bd1b5193` (release PR
+[#544](https://github.com/mbachaud/Cymatix-Context/pull/544)). It is the
+first release with the plugin connector and the MCP HTTP transport, and the
+first wheel to carry the 0.11.4 contents below. No shipped retrieval or
+delivery default changed; the launcher's PyPI update check is now off by
+default.
+
+| Thread | What it is | Default impact |
+|---|---|---|
+| Release gate | **No 947k witness, by owner waiver.** Three changes touch the retrieval path (#537, #536, #533), each merged on its own test-first receipt; CI (full non-live suite on Linux, Windows and macOS) passed on the release head | Treat 0.12.0 retrieval numbers as unwitnessed |
+| Plugin connector ([#542](https://github.com/mbachaud/Cymatix-Context/pull/542)) | Installed packages (`cymatix.plugins` entry points) and signed directory plugins can add CLI commands, supervised services, launcher routes and panels, and tray menu items. `[plugins]` section, `cymatix plugins list`, launcher `GET /api/plugins` and `POST /api/plugins/{name}/actions/{id}` (header `X-Cymatix-Action: 1`, loopback `Host`). Unsigned directory plugins need `CYMATIX_ALLOW_UNSIGNED_PLUGINS=1`; a plugin hook exception disables that plugin, never core | `enabled = true`, inert with nothing installed; retrieval unchanged |
+| MCP streamable HTTP ([#543](https://github.com/mbachaud/Cymatix-Context/pull/543)) | `cymatix mcp serve --http [--port 11441] [--lane NAME] [--profile P]`, with profile `lean` (default), `full` or `remote-read`. Loopback only, DNS-rebinding refusal, optional `CYMATIX_MCP_HTTP_TOKEN` bearer, per-request identity headers, `session_id` ignored and elision off, `remote-read` fails closed. See [MCP and IDE Integration](MCP-and-IDE-Integration) | Opt-in; stdio stays the default; retrieval-inert |
+| Per-thread score read-back (#537) | Concurrent requests no longer tier on another request's score maps; on a file-backed store, 12 threads x 15 identical queries had given 39 to 45 false `no_match` out of 180 | Bug fix; single-threaded results unchanged |
+| Serialized `:memory:` connection (#536, issue [#505](https://github.com/mbachaud/Cymatix-Context/issues/505)) | Concurrent use of a `:memory:` store no longer hangs; also the cause of the intermittent 60-minute `test-full-suite` timeout | Bug fix; file-backed stores unchanged |
+| Launcher update check (issue [#481](https://github.com/mbachaud/Cymatix-Context/issues/481)) | No outbound request to pypi.org unless `CYMATIX_LAUNCHER_UPDATE_CHECK=1` (`true` / `yes` / `on`) | **Off** by default (was on unless `0`) |
+| `corpus_size()` memo invalidation ([#533](https://github.com/mbachaud/Cymatix-Context/pull/533)) | `upsert_doc`, `delete_gene` and the outermost `deferred_commits` commit drop the 60 s document-count memo, so the IDF lexical-anchor tier no longer uses a stale N during in-process ingest. Adds the compaction-recall stage-1 bench | Changes only queries within 60 s of an in-process write |
+| Tray auto-restart ([#540](https://github.com/mbachaud/Cymatix-Context/pull/540)) | Finds `start-cymatix-tray.bat` on case-sensitive filesystems; stale imports repointed, duplicates removed, retired scripts and finished docs moved to `archive/` and `docs/archive/` | None |
+| Bench needle paths ([#534](https://github.com/mbachaud/Cymatix-Context/pull/534)) | `resolve_bench_needles` uses native path separators, so it works on Linux | Bench only |
+
+## 0.11.4 — merged to `master` 2026-10-26, never published (shipped in 0.12.0)
 
 The release PR ([#529](https://github.com/mbachaud/Cymatix-Context/pull/529))
-is merged and the release witness passed, but **there is no `v0.11.4` tag,
-GitHub release or PyPI wheel yet**. `pip install cymatix-context` still
-installs 0.11.3. The record is the `0.11.4` section of the CHANGELOG. No
-shipped default changed.
+was merged and the release witness passed, but **0.11.4 was never tagged or
+published**: there is no `v0.11.4` tag, GitHub release or PyPI wheel. Its
+contents shipped inside 0.12.0. The record is the `0.11.4` section of the
+CHANGELOG. No shipped default changed.
 
 | Thread | What it is | Default impact |
 |---|---|---|
@@ -367,11 +387,12 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
 - **Releases are receipt-gated, not calendar-gated.** A shipped-default
   change needs its paired receipt and `BASELINES.md` row before it merges to
   `beta`, and a final release needs a merged-stack witness ladder on the 947k
-  bed. The latest, the v0.11.3 witness at `00358af5` with packet tracing on,
-  is **EXACT_REPRODUCE** against the v0.11.2 witness: 314/470 delivered,
+  bed. The latest, the 0.11.4 witness at `31ad8261` with packet tracing on,
+  is **EXACT_REPRODUCE** against the v0.11.3 witness: 314/470 delivered,
   0/470 per-needle differences (BASELINES row
-  `2026-10-11-v0113-merged-stack-witness-trace`). 0.11.0 is the one final
-  release that shipped without a witness, by owner decision. Since 0.11.1
+  `2026-10-26-v0114-merged-stack-witness-trace`). Two final releases shipped
+  without a witness: 0.11.0, by owner decision, and 0.12.0, by owner waiver
+  (its retrieval numbers are unwitnessed). Since 0.11.1
   ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) witness
   receipt files are archived in the private `cymatix-receipts` repository
   and the BASELINES row is what lands on `beta`; older receipts such as the
