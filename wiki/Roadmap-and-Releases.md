@@ -107,7 +107,7 @@ shipped default changed.
 | Concurrent `/context` deadlock fix ([#488](https://github.com/mbachaud/Cymatix-Context/pull/488)) | `get_doc` read through the shared writer connection while another request held the write lock, which could stop the server answering everything, `/health` included; it now uses the per-thread read connection | Bug fix |
 | Dashboard UX pass, part 1 ([#485](https://github.com/mbachaud/Cymatix-Context/pull/485)) | One Start/Stop toggle, a switchboard showing only settings in effect, "Chunks" in place of "Genes" in labels, verbatim agent names | Launcher only; API keys unchanged |
 | BEIR rounds 1-2 and know tooling ([#487](https://github.com/mbachaud/Cymatix-Context/pull/487), [#482](https://github.com/mbachaud/Cymatix-Context/issues/482)) | BEIR corpus builders and profiles, `beir_ndcg.py`, ladder `--rank-dump`, a tag-lanes-muted diagnostic arm, and two opt-in `[know]` keys (`neutral`, `fitted_inputs`) | Bench only; the new keys default to `None` |
-| Receipt trees untracked ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) | `benchmarks/dogfood/**/receipts*/` is ignored; receipts are archived in the private `cymatix-receipts` repository, and history up to `e3825e4b` keeps the old copies | Repository layout only |
+| Receipt trees untracked ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) | `benchmarks/dogfood/**/receipts*/` is ignored; receipts are kept in the maintainer's private receipts archive, and history up to `e3825e4b` keeps the old copies | Repository layout only |
 | Release witness | October 7 at `1f039993`: 314/470 delivered (0.6681), 0/470 per-needle differences from the v0.10.0 witness; a v0.11.0 control on the same bed also reproduced exactly | Release evidence; ranks and delivery only, no latency claim |
 
 ## 0.11.0 (2026-10-01) — release contents
@@ -394,7 +394,7 @@ software terms — is a separate story, told on [Lexicon](Lexicon).
   without a witness: 0.11.0, by owner decision, and 0.12.0, by owner waiver
   (its retrieval numbers are unwitnessed). Since 0.11.1
   ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) witness
-  receipt files are archived in the private `cymatix-receipts` repository
+  receipt files are kept in the maintainer's private receipts archive
   and the BASELINES row is what lands on `beta`; older receipts such as the
   [September 8 0.9.2 witness](https://github.com/mbachaud/Cymatix-Context/blob/v0.11.0/benchmarks/dogfood/receipts/sweep_v092_witness_947k_2026-09-08.json)
   stay readable at tags up to v0.11.0. v0.9.1's gate remains

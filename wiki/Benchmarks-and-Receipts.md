@@ -20,7 +20,8 @@
   ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) the
   `benchmarks/dogfood/**/receipts*/` trees are untracked. Paths cited here are
   kept as-is: receipts up to `e3825e4b` (the v0.11.0 release) stay readable at
-  that tag, and everything is archived in `cymatix-receipts` (see
+  that tag, and everything is kept in the maintainer's private receipts
+  archive (see
   [Comparability rules](#comparability-rules)).
 
 ## Token economics
@@ -269,8 +270,8 @@ the witness it is paired against.
   `2026-10-09-v0112-merged-stack-witness`,
   `2026-10-07-v0111-merged-stack-witness`,
   `2026-09-29-v0100-merged-stack-witness` and
-  `2026-09-08-v092-merged-stack-witness`. The 0.11.x receipt files are in
-  `cymatix-receipts` commits `79b0e04`, `fecf47f`, `b6e9285` and `e7117cb` under
+  `2026-09-08-v092-merged-stack-witness`. The 0.11.x receipt files are in the
+  private receipts archive, commits `79b0e04`, `fecf47f`, `b6e9285` and `e7117cb` under
   `untracked/` (for example
   `benchmarks/dogfood/receipts/sweep_v0113_witness_947k_2026-10-11.json`);
   the earlier ones are readable at the v0.11.0 tag, for example the
@@ -301,8 +302,8 @@ interleaved in rotating order, hash chain on.
   p95 215 µs), which did not measure a whole request.
 - Receipts: `benchmarks/dogfood/receipts/trace_overhead_947k_2026-10-11/`
   (`summary_before_fix.txt`, `receipt_trace_overhead_947k_89f7b23c.json`,
-  `receipt_trace_overhead_947k_7a9717be.json`) in `cymatix-receipts`
-  `b6e9285`, cited by ledger row
+  `receipt_trace_overhead_947k_7a9717be.json`) in the private receipts
+  archive at `b6e9285`, cited by ledger row
   `2026-10-11-v0113-merged-stack-witness-trace`. The two fix runs were measured
   on bench branches carrying each fix, not on the tag commit.
 
@@ -402,7 +403,7 @@ retrieval result, and none compares against the retrieval rows above.
   [Sonnet answers](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-10-23-sonnet-answer-jev-erb.md),
   [Sonnet crater search](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-10-23-sonnet-crater-search-jev.md),
   [Opus crater search](https://github.com/mbachaud/Cymatix-Context/blob/master/docs/benchmarks/2026-10-25-opus-crater-search-jev.md).
-  The judge receipts are in `cymatix-receipts`; the answer and search receipts
+  The judge receipts are in the private receipts archive; the answer and search receipts
   are in
   [`benchmarks/dogfood/jev/`](https://github.com/mbachaud/Cymatix-Context/tree/master/benchmarks/dogfood/jev).
 
@@ -587,9 +588,8 @@ From the 2026-08-09 receipt invalidations onward, the ledger enforces:
   profile (encoder daemon on, per-box worker counts) is for *comparative* work and
   is a documented exception, not the release path.
 
-Receipts live in the companion repository
-<https://github.com/mbachaud/cymatix-receipts>, private while its bed contents
-are audited; ask the maintainer for access. Since 0.11.1
+Receipts live in a private receipts archive kept by the maintainer. It stays
+private while its bed contents are audited; ask the maintainer for access. Since 0.11.1
 ([#484](https://github.com/mbachaud/Cymatix-Context/pull/484)) the main
 repository no longer tracks `benchmarks/dogfood/**/receipts*/`. The archive's
 `mirror/` is a byte-identical export of every receipt tracked up to `e3825e4b`,
