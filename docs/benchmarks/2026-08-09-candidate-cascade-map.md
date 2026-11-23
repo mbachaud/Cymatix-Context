@@ -12,7 +12,7 @@ production code touched).
 > the links below point at that heading. The campaign-branch receipts this
 > map is derived from (`wave3b_*`, `wave3d_ladder_blob_*`, `wave0a_*`,
 > `delivered_gold_ab_erb10k*`, ~5.4 MB) are **not** in this repository:
-> they are archived in the `cymatix-receipts` repository under
+> they are archived in the private receipts archive under
 > `mirror-branches/claude__ab-data-cymatics-pki-dff9c6/benchmarks/dogfood/erb/receipts/`
 > (exported from the branch head; see that repo's
 > `mirror-branches/BRANCHES.md`). Companion plan:
@@ -32,7 +32,7 @@ the code at HEAD, not copied from the ledger:
 
 | receipt | bed | needles | arms | frozen SHA | where (as of 2026-09-01) |
 |---|---|---|---|---|---|
-| `wave3b_ladder_100k_pass{A_forward,B_reversed}.json` | `erb_100k.db`, 6.45GB | 141 carve | 6 | `7294526` | `cymatix-receipts` → `mirror-branches/claude__ab-data-cymatics-pki-dff9c6/benchmarks/dogfood/erb/receipts/` |
+| `wave3b_ladder_100k_pass{A_forward,B_reversed}.json` | `erb_100k.db`, 6.45GB | 141 carve | 6 | `7294526` | private receipts archive → `mirror-branches/claude__ab-data-cymatics-pki-dff9c6/benchmarks/dogfood/erb/receipts/` |
 | `wave3d_ladder_blob_pass{A_forward,B_reversed}.json` | `erb_blob_probe.db`, 56.7GB / 829k | 30 `blob_probe30` | 3 | `46ce3f6` | same mirror directory |
 | `wave3d_cymatics_354_100k_carve.json` | `erb_100k.db` | 141 carve | 6 | `46ce3f6`+`e983618` | this repo, `benchmarks/dogfood/erb/receipts/` (ported by PR #388) |
 | `storage_audit_{100k,blob}.json` | `erb_100k.db` / `erb_blob.db` | — | — | — | this repo, `benchmarks/dogfood/erb/receipts/` |

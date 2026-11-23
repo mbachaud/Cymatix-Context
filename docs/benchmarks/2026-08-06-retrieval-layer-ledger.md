@@ -276,7 +276,7 @@ receipt metric), and re-runs **#354** with the treatment proven applied.
 Receipts, all committed *[port note: on the campaign branch. Master carries
 only `wave3d_cymatics_354_100k_carve.json`, ported verbatim with this
 addendum; the two ladder-pass receipts (~140k lines) are archived in the
-`cymatix-receipts` repository under
+private receipts archive under
 `mirror-branches/claude__ab-data-cymatics-pki-dff9c6/benchmarks/dogfood/erb/receipts/`
 (exported 2026-09-01 from the campaign-branch head `daaa6af`, alongside the
 `wave0a_*` and `delivered_gold_ab_erb10k*` receipts). The frozen SHAs below are

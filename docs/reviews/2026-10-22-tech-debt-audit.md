@@ -152,7 +152,7 @@ Last-commit dates are from `git log`. "Refs" counts inbound references outside `
 
 - **`docs/ops/` and `docs/operations/` duplicate each other**, and `operator-runbooks.md` sits at the root. Collapse to one directory; `ops/SKILLS_BUNDLE.md` is DOGFOOD-GOLD.
 - **Two archive conventions:** `docs/archive/superpowers/{plans,specs}/` mirrors the source path, while `docs/archive/{plans,specs}/` dropped the prefix. Pick the mirror convention.
-- **Receipts live in the private `cymatix-receipts` repo**, but no public doc says so (finding 4).
+- **Receipts live in a private receipts archive**, but no public doc says so (finding 4).
 - **About 71 helix-mentioning `.md` files remain outside the archive.** A one-line "pre-rename, historical" banner is a cheaper fix than moving them all.
 - **`docs/ROSETTA.md` stub** holds about 40 lines of unrelated wire-format (#417) prose. Move that to `config-reference` or a wire doc and keep the stub as a redirect.
 
@@ -185,7 +185,7 @@ Each phase is sized to run alongside feature work. Bug fixes go through `/tddfix
 **Phase 0: one afternoon of hygiene (items 1–6, 11, 24, 25, 27, 40).** None of these touch retrieval behavior, so none needs a 947k witness.
 - SHA-pin the CLA action, then add `dependabot.yml` (github-actions), `SECURITY.md` and `permissions: contents: read` to `ci.yml`.
 - Declare the `plr` extra (`joblib`, `scikit-learn`), floors for `embeddings`, and `tiktoken`/`pystray`/`mcp` in `dev`. Drop the manual pip tails in CI.
-- Docs: point receipt links at cymatix-receipts or say "private"; delete the stale TOML dump; reframe dense as opt-in in SETUP, TROUBLESHOOTING and operator-runbooks; fix the CLAUDE.md drift and wiki banners; relink about 20 dead links.
+- Docs: point receipt links at the private receipts archive or say "private"; delete the stale TOML dump; reframe dense as opt-in in SETUP, TROUBLESHOOTING and operator-runbooks; fix the CLAUDE.md drift and wiki banners; relink about 20 dead links.
 - Fix the 11 broken script imports, or archive the scripts with the batch below.
 - Move `test_stress`'s Ollama probe into a fixture.
 

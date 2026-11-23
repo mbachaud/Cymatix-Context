@@ -42,7 +42,7 @@ the judge (AUROC 0.906 vs 0.900 without them, delta inside noise).
 
 All on branch `claude/jev-packet-assembly-test-138065` (local; cut from
 `bench/c580-multicorpus` a2793a7a for the c4000 profile, 0 behind master at run
-time), mirrored with harnesses in the private `cymatix-receipts` repo at
+time), mirrored with harnesses in the private receipts archive at
 `mirror-branches/claude__jev-packet-assembly-test-138065/` (commit 3760062;
 re-exported with the Laya runs at branch head f1a23ae3 as 8ce1b52).
 Every receipt carries every raw provider response; `--rescore` needs no key.
