@@ -64,7 +64,7 @@ Each item is reversible and touches nothing a receipt depends on.
 ## 4. Wave B — archive moves (owner picks the destination)
 
 **Destination question:** move into an in-repo archive directory, or out to the private
-`mbachaud/cymatix-receipts` mirror. Out-of-repo is the bigger win but breaks links from issues/PRs;
+receipts archive. Out-of-repo is the bigger win but breaks links from issues/PRs;
 for receipts dated ≥ 2026-10-14 confirm the mirror already holds them first (unchecked).
 
 | Group | Size | Inbound links to rewrite | Notes |
@@ -147,7 +147,7 @@ Each removes package code plus its tests together; none should be split.
 ## 8. Not covered
 
 - `.env.example` vs env vars read in code (the file read was refused by permission settings).
-- References from outside this repo (GitHub issues/PRs, cymatix-receipts mirror, cc-exchange, the website): "unreferenced" here means unreferenced inside this repo.
+- References from outside this repo (GitHub issues/PRs, the private receipts archive, cc-exchange, the website): "unreferenced" here means unreferenced inside this repo.
 - Whether the receipts mirror holds receipts dated ≥ 2026-10-14.
 - Runtime replay of keep-as-receipt scripts; argparse/SQL/route compatibility of archive-class scripts.
 - Root causes of the four slow test outliers and of the CI stall.

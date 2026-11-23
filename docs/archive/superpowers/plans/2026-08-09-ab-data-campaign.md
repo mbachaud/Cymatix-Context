@@ -16,7 +16,7 @@ Date: 2026-08-09 · Branch: `claude/ab-data-cymatics-pki-dff9c6`
 > stayed on the campaign branch — they conflict with the ladder as it now
 > stands and the tag layer never graduated (ledger verdict "SPLIT"). The
 > `wave0a_*`, `wave3b_*`, `wave3d_ladder_blob_*` and `delivered_gold_ab_erb10k*`
-> receipts (~5.4 MB) are archived in the `cymatix-receipts` repository under
+> receipts (~5.4 MB) are archived in the private receipts archive under
 > `mirror-branches/claude__ab-data-cymatics-pki-dff9c6/benchmarks/dogfood/erb/receipts/`.
 > Companion analysis: `docs/benchmarks/2026-08-09-candidate-cascade-map.md`.
 
@@ -223,7 +223,7 @@ Two consequences worth stating before any measurement:
 Evidence recorded in
 [ledger addendum 7 (authored as 5)](../../../benchmarks/2026-08-06-retrieval-layer-ledger.md#addendum-7-2026-08-09-ported-2026-08-19-pki--tags-armed-and-measured-at-two-scales-354-re-run-methodology-results).
 Verdicts, with the confirming receipt named (receipts live in the
-`cymatix-receipts` mirror named in the provenance block above unless stated):
+private receipts archive named in the provenance block above unless stated):
 
 | Wave | Item | Outcome |
 |---|---|---|

@@ -27,7 +27,7 @@ matches exactly, freelist 0, no gene written after 2026-08-26 — WAL checkpoint
 Tool `benchmarks/dogfood/erb/probe_pool_depth.py` (sha256 86ef6893…3bba), receipt
 `receipts/pool_depth_forensics_2026-09-01.json`, capture
 `receipts/pool_depth_capture_2026-09-01.sqlite` (full score map of both arms for all 216 targets;
-archived in the `cymatix-receipts` repository under `captures/erb/`). Targets: the 156 misses plus 60
+archived in the private receipts archive under `captures/erb/`). Targets: the 156 misses plus 60
 hit controls (fixed seed 20260901, largest-remainder stratified over the hit question_type mix).
 Two arms: `shipped` (auto FTS depth 48, `bm25_shortlist_size` 50) and `deep1000` (both knobs 1000).
 
@@ -275,7 +275,7 @@ remaining budget belongs to ordering under width (items 4 and 6) and to the deli
 |---|---|
 | ARM-1 forensics | `benchmarks/dogfood/erb/receipts/pool_depth_forensics_2026-09-01.json` |
 | ARM-1 addendum (ceiling, inertness, latency curve) | `receipts/pool_depth_addendum_2026-09-01.json` + `.NOTE.md` |
-| ARM-1 capture (28 MB, both arms' full maps) | `cymatix-receipts` repo `captures/erb/pool_depth_capture_2026-09-01.sqlite`; checkpoints under `receipts/pool_depth_ck_2026-09-01/` |
+| ARM-1 capture (28 MB, both arms' full maps) | private receipts archive `captures/erb/pool_depth_capture_2026-09-01.sqlite`; checkpoints under `receipts/pool_depth_ck_2026-09-01/` |
 | ARM-1 verification, three lenses + critic | `receipts/verify_a1_{method_basis,code-trace,recompute,completeness}_2026-09-01.json` |
 | ARM-3 head-chunk lane | `receipts/head_chunk_lane_2026-09-01.json`, `head_lane_live_2026-09-01.json` |
 | ARM-5 verification of P0/P3/P5 | `receipts/verify_p0p3p5_2026-09-01.json` |

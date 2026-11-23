@@ -90,7 +90,7 @@ different points:
    The final witness receipt is
    committed to `beta` before the release branch is cut, so the release cut
    carries it. Since #484 untracked the receipt trees (0.11.1 onward), the
-   receipt files go to `cymatix-receipts` (`untracked/`, same relative path)
+   receipt files go to the private receipts archive (`untracked/`, same relative path)
    and the BASELINES row is what gets committed to `beta`.
 
 A pre-release does not need the witness ladder; that is what makes it a
