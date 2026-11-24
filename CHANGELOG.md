@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 0.12.1 (2026-11-24)
+
+- **Hotfix: project links point at cymatix.tech.** Docs and package
+  metadata only; no code or default changes, so no witness run. The README
+  Website badge and the PyPI `Homepage` URL now point at
+  <https://cymatix.tech>; a new PyPI `Documentation` URL points at the
+  open-core docs, <https://cymatixcontext.com/wiki/>. The wiki home page and
+  footer list cymatix.tech first and cymatixcontext.com as the open-core docs.
+
 ## 0.12.0 (2026-11-21)
 
 - **Release gate: no 947k witness (owner waiver).** This release was not

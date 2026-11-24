@@ -125,7 +125,8 @@ path.
 
 ## Elsewhere
 
-- Site: <https://cymatixcontext.com>
+- Site: <https://cymatix.tech>
+- Open-core docs: <https://cymatixcontext.com>
 - Repository: <https://github.com/mbachaud/Cymatix-Context>
 - Package: <https://pypi.org/project/cymatix-context/>
 - Discord: <https://discord.gg/pX7x7pA3Da>
