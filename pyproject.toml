@@ -51,7 +51,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mbachaud/Cymatix-Context"
+Homepage = "https://cymatix.tech"
+Documentation = "https://cymatixcontext.com/wiki/"
 Repository = "https://github.com/mbachaud/Cymatix-Context"
 Issues = "https://github.com/mbachaud/Cymatix-Context/issues"
 
