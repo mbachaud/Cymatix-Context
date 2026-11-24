@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.12.1 (2026-11-24)
+
 - **Hotfix: project links point at cymatix.tech.** Docs and package
   metadata only; no code or default changes, so no witness run. The README
   Website badge and the PyPI `Homepage` URL now point at
